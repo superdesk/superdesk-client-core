@@ -1,9 +1,9 @@
 // External Modules
 import * as React from 'react';
 import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
 
 // Types
-import {Dispatch} from 'redux';
 import {ISuperdesk} from 'superdesk-api';
 import {ISetItem, IStorageDestinationItem, IApplicationState} from '../../interfaces';
 
@@ -18,16 +18,14 @@ import {SetListGroup} from './setListGroup';
 
 interface IProps {
     storageDestinations: Dictionary<string, IStorageDestinationItem>;
+
+    previewSet(set: ISetItem): void;
+    deleteSet(set: ISetItem): void;
+    editSet(set: ISetItem): void;
+
     currentSetId?: string;
     sets: ISetArrays;
-    dispatch: Dispatch;
 }
-
-const mapStateToProps = (state: IApplicationState) => ({
-    sets: getSetsGroupedByState(state),
-    storageDestinations: getStorageDestinationsById(state),
-    currentSetId: getSelectedSetId(state),
-});
 
 type ISetArrays = {
     draft: Array<ISetItem>;
@@ -38,27 +36,19 @@ type ISetArrays = {
 export function getSetListPanel(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
 
+    const mapStateToProps = (state: IApplicationState) => ({
+        sets: getSetsGroupedByState(state),
+        storageDestinations: getStorageDestinationsById(state),
+        currentSetId: getSelectedSetId(state),
+    });
+
+    const mapDispatchToProps = (dispatch: Dispatch) => ({
+        editSet: (set: ISetItem) => dispatch(setsBranch.editSet.action(set._id)),
+        previewSet: (set: ISetItem) => dispatch(setsBranch.previewSet.action(set._id)),
+        deleteSet: (set: ISetItem) => dispatch<any>(confirmBeforeDeletingSet(set)),
+    });
+
     class SetListPanelComponent extends React.PureComponent<IProps> {
-        constructor(props: IProps) {
-            super(props);
-
-            this.editSet = this.editSet.bind(this);
-            this.previewSet = this.previewSet.bind(this);
-            this.deleteSet = this.deleteSet.bind(this);
-        }
-
-        editSet(set: ISetItem) {
-            this.props.dispatch(setsBranch.editSet.action(set._id));
-        }
-
-        previewSet(set: ISetItem) {
-            this.props.dispatch(setsBranch.previewSet.action(set._id));
-        }
-
-        deleteSet(set: ISetItem) {
-            this.props.dispatch<any>(confirmBeforeDeletingSet(set));
-        }
-
         render() {
             if (Object.keys(this.props.storageDestinations).length === 0) {
                 return null;
@@ -71,9 +61,9 @@ export function getSetListPanel(superdesk: ISuperdesk) {
                         noItemTitle={gettext('No draft sets configured')}
                         sets={this.props.sets.draft ?? []}
                         storageDestinations={this.props.storageDestinations}
-                        previewSet={this.previewSet}
-                        deleteSet={this.deleteSet}
-                        editSet={this.editSet}
+                        previewSet={this.props.previewSet}
+                        deleteSet={this.props.deleteSet}
+                        editSet={this.props.editSet}
                         currentSetId={this.props.currentSetId}
                     />
                     <SetListGroup
@@ -82,8 +72,8 @@ export function getSetListPanel(superdesk: ISuperdesk) {
                         marginTop={true}
                         sets={this.props.sets.usable ?? []}
                         storageDestinations={this.props.storageDestinations}
-                        previewSet={this.previewSet}
-                        editSet={this.editSet}
+                        previewSet={this.props.previewSet}
+                        editSet={this.props.editSet}
                         currentSetId={this.props.currentSetId}
                     />
                     <SetListGroup
@@ -92,8 +82,8 @@ export function getSetListPanel(superdesk: ISuperdesk) {
                         marginTop={true}
                         sets={this.props.sets.disabled ?? []}
                         storageDestinations={this.props.storageDestinations}
-                        previewSet={this.previewSet}
-                        editSet={this.editSet}
+                        previewSet={this.props.previewSet}
+                        editSet={this.props.editSet}
                         currentSetId={this.props.currentSetId}
                     />
                 </React.Fragment>
@@ -101,5 +91,8 @@ export function getSetListPanel(superdesk: ISuperdesk) {
         }
     }
 
-    return connect(mapStateToProps)(SetListPanelComponent);
+    return connect(
+        mapStateToProps,
+        mapDispatchToProps,
+    )(SetListPanelComponent);
 }
