@@ -1,13 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {closeActionsMenu} from '../helpers';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
+import {IArticle} from 'superdesk-api';
 
-export class HighlightsList extends React.Component<any, any> {
+interface IProps {
+    item: IArticle;
+    highlights: any;
+    highlightsById: any;
+    viewType: string;
+}
+
+export class HighlightsList extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
     timeout: any;
+    highlightsService: any;
+    $rootScope: any;
+    $timeout: any;
 
     constructor(props) {
         super(props);
@@ -16,23 +27,24 @@ export class HighlightsList extends React.Component<any, any> {
         this.stopTimeout = this.stopTimeout.bind(this);
         this.close = this.close.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
+
+        this.highlightsService = ng.get('highlightsService');
+        this.$rootScope = ng.get('$rootScope');
+        this.$timeout = ng.get('$timeout');
     }
 
     removeHighlight(highlight, event) {
-        const {highlightsService, $rootScope} = this.props.svc;
-        const {scope} = this.props;
-
         event.stopPropagation();
 
-        highlightsService.markItem(highlight._id, this.props.item);
+        this.highlightsService.markItem(highlight._id, this.props.item);
         this.closeMenu();
 
         // TODO: Decouple highlights from multi-select feature
         // This event is removing an item from the list of multi-selected items when a highlight is removed
         // it doesn't work when a highlight is removed by another user
         // or an item disappears from the list because of different reasons - spiking or change of filters.
-        if (scope.viewType === 'highlights' && this.props.item.highlights.length === 1) {
-            $rootScope.$broadcast('multi:remove', this.props.item._id);
+        if (this.props.viewType === 'highlights' && this.props.item.highlights.length === 1) {
+            this.$rootScope.$broadcast('multi:remove', this.props.item._id);
         }
     }
 
@@ -45,9 +57,7 @@ export class HighlightsList extends React.Component<any, any> {
     }
 
     stopTimeout() {
-        const {$timeout} = this.props.svc;
-
-        this.timeout = $timeout.cancel(this.timeout);
+        this.timeout = this.$timeout.cancel(this.timeout);
     }
 
     closeMenu() {
@@ -55,13 +65,10 @@ export class HighlightsList extends React.Component<any, any> {
     }
 
     close() {
-        const {$timeout} = this.props.svc;
-
-        this.timeout = $timeout(this.closeMenu, 2000, false);
+        this.timeout = this.$timeout(this.closeMenu, 2000, false);
     }
 
     render() {
-        const {highlightsService} = this.props.svc;
         const highlights = this.props.highlights;
         const highlightsById = this.props.highlightsById || {};
 
@@ -89,7 +96,7 @@ export class HighlightsList extends React.Component<any, any> {
                                 <li key={id}>
                                     {highlight.name}
                                     {
-                                        highlightsService.hasMarkItemPrivilege()
+                                        this.highlightsService.hasMarkItemPrivilege()
                                             ? (
                                                 <button
                                                     className="btn btn--small btn--hollow btn--primary btn--ui-dark"
@@ -110,11 +117,3 @@ export class HighlightsList extends React.Component<any, any> {
         );
     }
 }
-
-HighlightsList.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    item: PropTypes.any,
-    highlights: PropTypes.any,
-    highlightsById: PropTypes.any,
-};

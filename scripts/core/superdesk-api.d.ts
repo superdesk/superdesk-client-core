@@ -404,6 +404,7 @@ declare module 'superdesk-api' {
         actioning?: {
             archive?: boolean;
             externalsource: boolean;
+            archiveContent?: boolean;
         };
         _autosave?: any;
         _locked?: boolean;
@@ -1133,6 +1134,9 @@ declare module 'superdesk-api' {
         /** allow users who are not members of a desk to duplicate its content */
         workflow_allow_duplicate_non_members: boolean;
 
+        /** allow users to copy from desk to personal space */
+        workflow_allow_copy_to_personal: boolean;
+
         allow_updating_scheduled_items: boolean;
 
         // TANSA SERVER CONFIG
@@ -1237,6 +1241,12 @@ declare module 'superdesk-api' {
                 secondLine: Array<string>,
             };
         };
+        gridViewFields: Array<string>;
+        gridViewFooterFields: {
+            left: Array<string>;
+            right: Array<string>;
+        };
+        swimlaneViewFields: any;
         item_profile: {
             change_profile: any;
         };

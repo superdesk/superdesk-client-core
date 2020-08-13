@@ -10,7 +10,7 @@ interface IProps {
     item: IArticle;
 }
 
-export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item' | 'svc'>> = (props: IProps) => {
+export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
     if (props.item.state != null) {
         let title = removeLodash(props.item.state);
 

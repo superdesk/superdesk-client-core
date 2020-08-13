@@ -2,14 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {PhotoDeskFields} from './PhotoDeskFields';
 import {DEFAULT_GRID_VIEW_FIELDS_CONFIG} from 'apps/search/constants';
-import {get, flatMap} from 'lodash';
-import {extensions} from 'appConfig';
+import {flatMap} from 'lodash';
+import ng from 'core/services/ng';
+import {extensions, appConfig} from 'appConfig';
+import {IArticle} from 'superdesk-api';
 
-export const PhotoDeskInfo: React.StatelessComponent<any> = (props) => {
-    const {datetime} = props.svc;
-    const {item, svc} = props;
+interface IProps {
+    item: IArticle;
+}
 
-    const gridViewFieldsConfig = get(svc.config, 'gridViewFields', DEFAULT_GRID_VIEW_FIELDS_CONFIG);
+export const PhotoDeskInfo: React.StatelessComponent<IProps> = (props) => {
+    const {item} = props;
+
+    const datetime = ng.get('datetime');
+
+    const gridViewFieldsConfig = appConfig.gridViewFields ?? DEFAULT_GRID_VIEW_FIELDS_CONFIG;
 
     const articleDisplayWidgets = flatMap(
         Object.values(extensions).map(({activationResult}) => activationResult),
@@ -28,7 +35,6 @@ export const PhotoDeskInfo: React.StatelessComponent<any> = (props) => {
             <PhotoDeskFields
                 fieldsConfig={gridViewFieldsConfig}
                 item={item}
-                svc={svc}
                 itemClassName="sd-grid-item__content-block"
                 labelMode="never-with-custom-renderer"
             />
@@ -48,6 +54,5 @@ export const PhotoDeskInfo: React.StatelessComponent<any> = (props) => {
 };
 
 PhotoDeskInfo.propTypes = {
-    svc: PropTypes.object.isRequired,
     item: PropTypes.any,
 };

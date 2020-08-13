@@ -8,11 +8,9 @@ export const priority: React.StatelessComponent<IPropsItemListInfo> = (props) =>
         ItemPriority,
         angular.extend({
             key: 'priority',
-            svc: props.svc,
         }, props.item),
     ) : null;
 
 priority.propTypes = {
-    svc: PropTypes.any.isRequired,
     item: PropTypes.any,
 };

@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {gettext} from 'core/utils';
 import {IPropsItemListInfo} from '../ListItemInfo';
+import ng from 'core/services/ng';
 
 export const expiry: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    const {datetime} = props.svc;
+    const datetime = ng.get('datetime');
 
     if (props.item.is_spiked) {
         return React.createElement(
@@ -18,6 +19,5 @@ export const expiry: React.StatelessComponent<IPropsItemListInfo> = (props) => {
 };
 
 expiry.propTypes = {
-    svc: PropTypes.any.isRequired,
     item: PropTypes.any,
 };
