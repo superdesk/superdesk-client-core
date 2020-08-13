@@ -2,7 +2,8 @@
 import {createSelector} from 'reselect';
 
 // Types
-import {IStorageDestinationItem, IApplicationState} from '../../interfaces';
+import {IStorageDestinationItem} from '../../interfaces';
+import {IApplicationState} from '../index';
 
 export function getStorageDestinations(state: IApplicationState): Array<IStorageDestinationItem> {
     return state.storageDestinations.destinations ?? [];

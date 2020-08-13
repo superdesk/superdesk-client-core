@@ -5,11 +5,11 @@ import {Dispatch} from 'redux';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
-import {ISetItem, IStorageDestinationItem, IApplicationState} from '../../interfaces';
+import {ISetItem, IStorageDestinationItem} from '../../interfaces';
+import {IApplicationState} from '../../store';
 
 // Redux Actions & Selectors
-import {confirmBeforeDeletingSet} from '../../store/sets/actions';
-import {setsBranch} from '../../store/sets/branch';
+import {confirmBeforeDeletingSet, editSet, previewSet} from '../../store/sets/actions';
 import {getSetsGroupedByState, getSelectedSetId} from '../../store/sets/selectors';
 import {getStorageDestinationsById} from '../../store/storageDestinations/selectors';
 
@@ -43,8 +43,8 @@ export function getSetListPanel(superdesk: ISuperdesk) {
     });
 
     const mapDispatchToProps = (dispatch: Dispatch) => ({
-        editSet: (set: ISetItem) => dispatch(setsBranch.editSet.action(set._id)),
-        previewSet: (set: ISetItem) => dispatch(setsBranch.previewSet.action(set._id)),
+        editSet: (set: ISetItem) => dispatch(editSet(set._id)),
+        previewSet: (set: ISetItem) => dispatch(previewSet(set._id)),
         deleteSet: (set: ISetItem) => dispatch<any>(confirmBeforeDeletingSet(set)),
     });
 

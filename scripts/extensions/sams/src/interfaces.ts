@@ -1,7 +1,6 @@
 // Types
-import {Action, Store} from 'redux';
-import {ThunkAction} from 'redux-thunk';
 import {IBaseRestApiResponse, IExtension, ISuperdesk} from 'superdesk-api';
+import {Store} from 'redux';
 
 export interface ISamsExtension extends IExtension {
     exposes: {
@@ -46,28 +45,5 @@ export interface ISamsAPI {
         getAll(): Promise<Array<IStorageDestinationItem>>;
     };
 }
-
-export type IApplicationState = {
-    sets: {
-        sets: Array<ISetItem>;
-        contentPanelState: CONTENT_PANEL_STATE;
-        selectedSetId?: string;
-    };
-    storageDestinations: {
-        destinations: Array<IStorageDestinationItem>;
-    };
-};
-
-export interface IThunkExtraArguments {
-    api: ISamsAPI;
-    superdesk: ISuperdesk;
-}
-
-export type IThunkAction<R> = ThunkAction<
-    Promise<R>,
-    IApplicationState,
-    IThunkExtraArguments,
-    Action
->;
 
 export type IConnectComponentToSuperdesk = (superdesk: ISuperdesk) => React.ComponentType;

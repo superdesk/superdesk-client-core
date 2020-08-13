@@ -5,10 +5,11 @@ import {Dispatch} from 'redux';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
-import {CONTENT_PANEL_STATE, IApplicationState} from '../../interfaces';
+import {CONTENT_PANEL_STATE} from '../../interfaces';
+import {IApplicationState} from '../../store';
 
 // Redux Actions & Selectors
-import {setsBranch} from '../../store/sets/branch';
+import {editSet, onManageSetsModalClosed} from '../../store/sets/actions';
 import {getSetContentPanelState, getSelectedSetId} from '../../store/sets/selectors';
 
 // UI
@@ -43,8 +44,8 @@ const mapStateToProps = (state: IApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    createSet: () => dispatch(setsBranch.editSet.action()),
-    onModalClosed: () => dispatch(setsBranch.closeContentPanel.action()),
+    createSet: () => dispatch(editSet()),
+    onModalClosed: () => dispatch(onManageSetsModalClosed()),
 });
 
 export function getShowManageSetsModalFunction(superdesk: ISuperdesk) {

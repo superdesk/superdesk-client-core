@@ -5,7 +5,7 @@ import {Provider} from 'react-redux';
 // Types
 import {ISuperdesk} from 'superdesk-api';
 import {IConnectComponentToSuperdesk} from '../interfaces';
-import {createReduxStore} from '../store';
+import {createReduxStore, rootReducer} from '../store';
 
 // Redux Actions
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -31,7 +31,11 @@ export function getSamsApp(superdesk: ISuperdesk, getApp: IConnectComponentToSup
         }
 
         componentDidMount() {
-            extension.exposes.store = createReduxStore({superdesk, api});
+            extension.exposes.store = createReduxStore(
+                {superdesk, api},
+                {},
+                rootReducer,
+            );
 
             Promise.all([
                 extension.exposes.store.dispatch<any>(loadStorageDestinations()),
