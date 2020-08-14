@@ -40,6 +40,8 @@ function crashReporter() {
     };
 }
 
+let store: Store | undefined;
+
 export function createReduxStore(
     extraArguments: any,
     initialState: {},
@@ -56,9 +58,19 @@ export function createReduxStore(
         middlewares.push(createLogger());
     }
 
-    return createStore(
+    store = createStore(
         reducer,
         initialState,
         compose(applyMiddleware(...middlewares)),
     );
+
+    return store;
+}
+
+export function getStore(): Store | undefined {
+    return store;
+}
+
+export function unsetStore() {
+    store = undefined;
 }

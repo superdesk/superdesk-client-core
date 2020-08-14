@@ -5,7 +5,7 @@ import {Provider} from 'react-redux';
 // Types
 import {ISuperdesk} from 'superdesk-api';
 import {IConnectComponentToSuperdesk} from '../interfaces';
-import {createReduxStore, rootReducer} from '../store';
+import {createReduxStore, rootReducer, getStore, unsetStore} from '../store';
 
 // Redux Actions
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -13,7 +13,6 @@ import {loadSets} from '../store/sets/actions';
 
 // APIs
 import {getSamsAPIs} from '../api';
-import extension from '../extension';
 
 interface IState {
     ready: boolean;
@@ -31,15 +30,15 @@ export function getSamsApp(superdesk: ISuperdesk, getApp: IConnectComponentToSup
         }
 
         componentDidMount() {
-            extension.exposes.store = createReduxStore(
+            const store = createReduxStore(
                 {superdesk, api},
                 {},
                 rootReducer,
             );
 
             Promise.all([
-                extension.exposes.store.dispatch<any>(loadStorageDestinations()),
-                extension.exposes.store.dispatch<any>(loadSets()),
+                store.dispatch<any>(loadStorageDestinations()),
+                store.dispatch<any>(loadSets()),
             ])
                 .then(() => {
                     this.setState({ready: true});
@@ -47,16 +46,18 @@ export function getSamsApp(superdesk: ISuperdesk, getApp: IConnectComponentToSup
         }
 
         componentWillUnmount() {
-            extension.exposes.store = undefined;
+            unsetStore();
         }
 
         render() {
-            if (this.state.ready === false || extension.exposes.store == null) {
+            const store = getStore();
+
+            if (this.state.ready === false || store == null) {
                 return null;
             }
 
             return (
-                <Provider store={extension.exposes.store}>
+                <Provider store={store}>
                     <App />
                 </Provider>
             );

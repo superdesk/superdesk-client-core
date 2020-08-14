@@ -1,12 +1,5 @@
 // Types
-import {IBaseRestApiResponse, IExtension, ISuperdesk} from 'superdesk-api';
-import {Store} from 'redux';
-
-export interface ISamsExtension extends IExtension {
-    exposes: {
-        store?: Store;
-    };
-}
+import {IBaseRestApiResponse, ISuperdesk} from 'superdesk-api';
 
 export enum SET_STATE {
     DRAFT = 'draft',
