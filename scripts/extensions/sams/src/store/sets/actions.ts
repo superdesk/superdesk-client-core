@@ -81,7 +81,7 @@ export function openDeleteConfirmationModal(set: ISetItem): IThunkAction<boolean
 
         const el = document.createElement('div');
 
-        // Add an extra backdrop that will cover the Manage Sets modal
+        // FIXME: Add an extra backdrop that will cover the Manage Sets modal
         // This is required because the ui-framework calculates z-index
         // based on the number of active modals, where as we're using
         // a mixture of the ui-framework and pure React modals
