@@ -1,4 +1,5 @@
 // Types
+import {ISuperdesk} from 'superdesk-api';
 import {ISetItem} from '../../interfaces';
 import {IThunkAction} from '../types';
 
@@ -74,36 +75,34 @@ export function loadSets(): IThunkAction<Array<ISetItem>> {
     };
 }
 
-export function openDeleteConfirmationModal(set: ISetItem): IThunkAction<boolean> {
-    return (_dispatch, _getState, {superdesk}) => {
-        const {gettext} = superdesk.localization;
-        const {confirm} = superdesk.ui;
+function openDeleteConfirmationModal(superdesk: ISuperdesk, set: ISetItem): Promise<boolean> {
+    const {gettext} = superdesk.localization;
+    const {confirm} = superdesk.ui;
 
-        const el = document.createElement('div');
+    const el = document.createElement('div');
 
-        // FIXME: Add an extra backdrop that will cover the Manage Sets modal
-        // This is required because the ui-framework calculates z-index
-        // based on the number of active modals, where as we're using
-        // a mixture of the ui-framework and pure React modals
-        // (superdesk.ui.showModal vs superdesk.ui.confirm)
-        el.classList.add('modal__backdrop', 'fade', 'in');
-        el.style.zIndex = '1050';
-        document.body.append(el);
+    // FIXME: Add an extra backdrop that will cover the Manage Sets modal
+    // This is required because the ui-framework calculates z-index
+    // based on the number of active modals, where as we're using
+    // a mixture of the ui-framework and pure React modals
+    // (superdesk.ui.showModal vs superdesk.ui.confirm)
+    el.classList.add('modal__backdrop', 'fade', 'in');
+    el.style.zIndex = '1050';
+    document.body.append(el);
 
-        return confirm(
-            gettext('Are you sure you want to delete the Set "{{name}}"?', {name: set.name}),
-            gettext('Delete Set?'),
-        )
-            .then((response: boolean) => {
-                el.remove();
-                return response;
-            });
-    };
+    return confirm(
+        gettext('Are you sure you want to delete the Set "{{name}}"?', {name: set.name}),
+        gettext('Delete Set?'),
+    )
+        .then((response: boolean) => {
+            el.remove();
+            return response;
+        });
 }
 
 export function confirmBeforeDeletingSet(set: ISetItem): IThunkAction<void> {
-    return (dispatch, getState, {api}) => {
-        return dispatch(openDeleteConfirmationModal(set))
+    return (dispatch, getState, {superdesk, api}) => {
+        return openDeleteConfirmationModal(superdesk, set)
             .then((response: boolean) => {
                 if (response === true) {
                     return api.sets.delete(set)
