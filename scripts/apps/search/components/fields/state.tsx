@@ -34,6 +34,7 @@ interface IProps {
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
     if (props.item.state != null) {
         let title = getStateLabel(props.item.state);
+        const text = title;
 
         if (props.item.state === 'scheduled') {
             const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
@@ -49,7 +50,7 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
                 className={'state-label state-' + props.item.state}
                 key="state"
             >
-                {title}
+                {text}
             </span>
         );
     } else {
