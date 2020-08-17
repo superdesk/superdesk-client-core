@@ -16,44 +16,6 @@ import {applyDefault} from 'core/helpers/typescript-helpers';
 UserPreferencesDirective.$inject = ['session', 'preferencesService', 'notify', 'asset',
     'metadata', 'desks', 'modal', '$timeout', '$q', 'userList', 'lodash', 'search'];
 
-function translatePreferenceLabel(label) {
-    switch (label.toLowerCase()) {
-    case 'allow desktop notifications': return gettext('Allow Desktop Notifications');
-    case 'allow notifications to slack': return gettext('Allow Notifications To Slack');
-    case 'archive': return gettext('archive');
-    case 'article_defaults': return gettext('article_defaults');
-    case 'assignments': return gettext('Assignments');
-    case 'categories': return gettext('categories');
-    case 'contacts': return gettext('contacts');
-    case 'cvs': return gettext('cvs');
-    case 'default agenda': return gettext('Default Agenda');
-    case 'default calendar': return gettext('Default Calendar');
-    case 'default desk for coverage types': return gettext('Default desk for coverage types');
-    case 'default events planning filter': return gettext('Default Events Planning Filter');
-    case 'default sort preferences for assignment lists': return gettext('Default sort preferences for Assignment lists');
-    case 'desks': return gettext('desks');
-    case 'enable feature preview': return gettext('Enable Feature Preview');
-    case 'enable single line view': return gettext('Enable Single Line View');
-    case 'feature': return gettext('feature');
-    case 'located': return gettext('Located');
-    case 'monitoring view': return gettext('Monitoring View');
-    case 'monitoring': return gettext('monitoring');
-    case 'notifications': return gettext('notifications');
-    case 'open advanced mode when adding coverages': return gettext('Open advanced mode when adding coverages');
-    case 'place': return gettext('Place');
-    case 'planning': return gettext('planning');
-    case 'prefered cv items': return gettext('Prefered CV items');
-    case 'preferred categories': return gettext('Preferred Categories');
-    case 'preferred desks': return gettext('Preferred Desks');
-    case 'rows': return gettext('rows');
-    case 'send notifications via email': return gettext('Send notifications via email');
-    case 'users archive view format': return gettext('Users archive view format');
-    case 'users contacts view format': return gettext('Users contacts view format');
-    }
-
-    return label;
-}
-
 export function UserPreferencesDirective(
     session, preferencesService, notify, asset, metadata, desks, modal,
     $timeout, $q, userList, _, search,
