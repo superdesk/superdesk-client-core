@@ -403,7 +403,7 @@ msgstr ""
 #: scripts/apps/desks/views/settings.html:29
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:2
 #: scripts/apps/monitoring/views/item-actions-menu.html:15
-#: scripts/apps/search/components/actions-menu/MenuItems.tsx:235
+#: scripts/apps/search/components/actions-menu/MenuItems.tsx:240
 #: scripts/apps/templates/views/templates.html:34
 #: scripts/apps/workspace/content/views/profile-settings.html:29
 #: scripts/core/editor3/components/spellchecker/SpellcheckerContextMenu.tsx:88
@@ -650,7 +650,7 @@ msgstr ""
 msgid "Add rule"
 msgstr ""
 
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:45
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:46
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:90
 msgid "Add step"
 msgstr ""
@@ -1077,9 +1077,12 @@ msgstr ""
 msgid "Annotations"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/src/extension.js:60
 #: scripts/extensions/annotationsLibrary/dist/src/extension.js:71
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:102
+msgid "Annotations Library"
+msgstr ""
+
+#: scripts/extensions/annotationsLibrary/dist/src/extension.js:60
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:90
 msgid "Annotations library"
 msgstr ""
@@ -1533,7 +1536,7 @@ msgid "Associated/featuremedia path"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:415
-#: scripts/apps/archive/index.tsx:115
+#: scripts/apps/archive/index.tsx:116
 #: scripts/apps/authoring/attachments/attachments.html:23
 msgid "Attach files"
 msgstr ""
@@ -1667,7 +1670,7 @@ msgstr ""
 msgid "Back to original view"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:12
+#: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:30
 msgid "Back to results"
 msgstr ""
@@ -1974,9 +1977,9 @@ msgstr ""
 #: scripts/core/ui/components/SubNav/SlidingToolBar.tsx:18
 #: scripts/core/ui/views/datepicker-wrapper.html:15
 #: scripts/core/ui/views/sd-timepicker-popup.html:33
-#: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:17
+#: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:18
 #: scripts/extensions/annotationsLibrary/src/AnnotationsSelect.tsx:38
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:24
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:25
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:89
 msgid "Cancel"
 msgstr ""
@@ -2630,7 +2633,7 @@ msgstr ""
 msgid "Converted to recurring event"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:250
+#: scripts/apps/archive/index.tsx:265
 msgid "Copy"
 msgstr ""
 
@@ -2691,6 +2694,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:38
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:87
+#: scripts/apps/search/components/fields/state.tsx:22
 msgid "Corrected"
 msgstr ""
 
@@ -2865,7 +2869,7 @@ msgstr ""
 msgid "Create & Post"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:228
+#: scripts/apps/archive/index.tsx:243
 msgid "Create Broadcast"
 msgstr ""
 
@@ -2991,7 +2995,7 @@ msgstr ""
 msgid "Created by"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:116
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:115
 msgid "Created by this user"
 msgstr ""
 
@@ -3247,7 +3251,7 @@ msgstr ""
 msgid "Dateline"
 msgstr ""
 
-#: scripts/extensions/datetimeField/dist/src/extension.js:32
+#: scripts/extensions/datetimeField/dist/src/extension.js:33
 #: scripts/extensions/datetimeField/src/extension.tsx:46
 msgid "Datetime"
 msgstr ""
@@ -3321,7 +3325,7 @@ msgid ""
 "                                    artcle header. A minimal value of 200 is required."
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:22
+#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:23
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:23
 msgid "Definition"
 msgstr ""
@@ -3758,6 +3762,7 @@ msgid "Download"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/index.ts:414
+#: scripts/apps/search/components/fields/state.tsx:13
 msgid "Draft"
 msgstr ""
 
@@ -3824,8 +3829,9 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:59
 #: ../superdesk-planning/client/constants/events.js:41
 #: ../superdesk-planning/client/constants/planning.js:35
-#: scripts/apps/archive/index.tsx:173
-#: scripts/apps/archive/index.tsx:197
+#: scripts/apps/archive/index.tsx:174
+#: scripts/apps/archive/index.tsx:198
+#: scripts/apps/archive/index.tsx:211
 #: scripts/apps/authoring/authoring/constants.ts:13
 #: scripts/apps/search/directives/MultiActionBar.ts:219
 #: scripts/apps/search/directives/MultiActionBar.ts:235
@@ -3844,7 +3850,7 @@ msgstr ""
 msgid "Duplicate In Place"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:177
+#: scripts/apps/archive/index.tsx:178
 #: scripts/apps/authoring/views/send-item.html:21
 #: scripts/apps/search/directives/MultiActionBar.ts:216
 msgid "Duplicate To"
@@ -3863,8 +3869,12 @@ msgstr ""
 msgid "Duplicate created by"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:156
+#: scripts/apps/archive/index.tsx:157
 msgid "Duplicate in place"
+msgstr ""
+
+#: scripts/apps/archive/index.tsx:202
+msgid "Duplicate to personal"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:92
@@ -3952,7 +3962,7 @@ msgstr ""
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:40
 #: scripts/core/editor3/components/comments/Comment.tsx:56
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:50
-#: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:30
+#: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:31
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:60
 msgid "Edit"
 msgstr ""
@@ -5258,6 +5268,10 @@ msgstr ""
 msgid "Fetch to"
 msgstr ""
 
+#: scripts/apps/search/components/fields/state.tsx:16
+msgid "Fetched"
+msgstr ""
+
 #: scripts/apps/authoring/versioning/history/views/history.html:76
 msgid "Fetched by"
 msgstr ""
@@ -5815,6 +5829,10 @@ msgstr ""
 msgid "Highcharts {{licenseType}} License"
 msgstr ""
 
+#: scripts/apps/packaging/views/sd-package-items-edit.html:21
+msgid "Highlight Preview"
+msgstr ""
+
 #: scripts/apps/highlights/views/highlights_config_modal.html:15
 msgid "Highlight with name"
 msgstr ""
@@ -5985,6 +6003,7 @@ msgstr ""
 #: ../superdesk-planning/client/constants/assignments.js:84
 #: ../superdesk-planning/client/utils/index.ts:463
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:10
+#: scripts/apps/search/components/fields/state.tsx:18
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:246
 msgid "In Progress"
 msgstr ""
@@ -6127,10 +6146,11 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:19
 #: ../superdesk-planning/client/utils/index.ts:424
+#: scripts/apps/search/components/fields/state.tsx:14
 msgid "Ingested"
 msgstr ""
 
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:17
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:18
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:20
 msgid "Initial time offset"
 msgstr ""
@@ -6300,7 +6320,7 @@ msgstr ""
 msgid "Item is already in this package."
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:21
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:22
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:71
 msgid "Item is locked and marked user can not be changed."
 msgstr ""
@@ -6376,7 +6396,7 @@ msgstr ""
 msgid "Items Created"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:19
+#: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:20
 #: scripts/extensions/markForUser/src/get-article-actions-bulk.tsx:25
 msgid "Items are marked for different users"
 msgstr ""
@@ -6451,6 +6471,7 @@ msgstr ""
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:32
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:84
 #: ../superdesk-planning/client/utils/index.ts:436
+#: scripts/apps/search/components/fields/state.tsx:23
 msgid "Killed"
 msgstr ""
 
@@ -6475,7 +6496,7 @@ msgstr ""
 #: scripts/apps/templates/views/template-editor-modal.html:110
 #: scripts/apps/users/views/edit-form.html:145
 #: scripts/apps/workspace/content/constants.ts:89
-#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:13
+#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:14
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:14
 msgid "Language"
 msgstr ""
@@ -6603,7 +6624,7 @@ msgstr ""
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:31
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:79
 #: scripts/apps/authoring/views/authoring-header.html:45
-#: scripts/apps/search/components/MediaInfo.tsx:56
+#: scripts/apps/search/components/MediaInfo.tsx:61
 #: scripts/apps/search/components/fields/flags.tsx:21
 #: scripts/apps/search/components/fields/flags.tsx:23
 #: scripts/apps/search/views/search-filters.html:123
@@ -6757,7 +6778,7 @@ msgstr ""
 msgid "Locked by"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:96
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:95
 msgid "Locked by this user"
 msgstr ""
 
@@ -6897,7 +6918,7 @@ msgstr ""
 msgid "Mark Event as Postponed"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:51
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:52
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:147
 msgid "Mark and send"
 msgstr ""
@@ -6921,15 +6942,15 @@ msgstr ""
 msgid "Mark for highlight"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/src/get-article-actions.js:28
+#: scripts/extensions/markForUser/dist/src/get-article-actions.js:29
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:32
 msgid "Mark for other user"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:22
-#: scripts/extensions/markForUser/dist/src/get-article-actions.js:12
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:18
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:39
+#: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:23
+#: scripts/extensions/markForUser/dist/src/get-article-actions.js:13
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:19
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:40
 #: scripts/extensions/markForUser/src/get-article-actions-bulk.tsx:29
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:14
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:126
@@ -6947,7 +6968,7 @@ msgid "Marked Desks"
 msgstr ""
 
 #: scripts/apps/archive/views/marked_item_title.html:13
-#: scripts/apps/search/components/HighlightsList.tsx:76
+#: scripts/apps/search/components/HighlightsList.tsx:83
 #: scripts/apps/search/components/MarkedDesksList.tsx:85
 msgid "Marked For"
 msgstr ""
@@ -6961,13 +6982,13 @@ msgid "Marked for desks"
 msgstr ""
 
 #: scripts/extensions/markForUser/dist/src/extension.js:55
-#: scripts/extensions/markForUser/dist/src/get-marked-for-me-component.js:89
+#: scripts/extensions/markForUser/dist/src/get-marked-for-me-component.js:90
 #: scripts/extensions/markForUser/src/extension.tsx:61
 #: scripts/extensions/markForUser/src/get-marked-for-me-component.tsx:138
 msgid "Marked for me"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:104
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:103
 msgid "Marked for this user"
 msgstr ""
 
@@ -7193,7 +7214,7 @@ msgstr ""
 msgid "Moved onto stage Rule:"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:140
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:144
 msgid "Moved to a working stage by this user"
 msgstr ""
 
@@ -7305,7 +7326,7 @@ msgstr ""
 #: scripts/apps/templates/views/create-template.html:11
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:6
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:39
-#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:7
+#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:8
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:8
 msgid "Name"
 msgstr ""
@@ -7454,7 +7475,7 @@ msgstr ""
 
 #: scripts/apps/desks/directives/MarkDesksDropdown.ts:25
 #: scripts/apps/desks/views/mark_desks_dropdown_directive.html:8
-#: scripts/apps/search/components/actions-menu/Item.tsx:137
+#: scripts/apps/search/components/actions-menu/Item.tsx:143
 msgid "No available desks"
 msgstr ""
 
@@ -7462,7 +7483,7 @@ msgstr ""
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:84
 #: scripts/apps/highlights/views/mark_highlights_dropdown_directive.html:8
 #: scripts/apps/highlights/views/package_highlights_dropdown_directive.html:13
-#: scripts/apps/search/components/actions-menu/Item.tsx:136
+#: scripts/apps/search/components/actions-menu/Item.tsx:142
 msgid "No available highlights"
 msgstr ""
 
@@ -7479,7 +7500,7 @@ msgid "No available selections"
 msgstr ""
 
 #: scripts/apps/desks/directives/MarkDesksDropdown.ts:26
-#: scripts/apps/search/components/actions-menu/Item.tsx:138
+#: scripts/apps/search/components/actions-menu/Item.tsx:144
 msgid "No available translations"
 msgstr ""
 
@@ -7568,7 +7589,7 @@ msgstr ""
 msgid "No label"
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:23
+#: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:24
 #: scripts/extensions/annotationsLibrary/src/AnnotationsSelect.tsx:50
 msgid "No matches found in the library."
 msgstr ""
@@ -7581,7 +7602,7 @@ msgstr ""
 msgid "No of calls"
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:350
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:356
 msgid "No preferred categories selected. Should you choose to proceed with your choice. A default set of categories will be selected for you."
 msgstr ""
 
@@ -7597,7 +7618,7 @@ msgstr ""
 msgid "No result"
 msgstr ""
 
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:349
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:352
 msgid "No results for this user"
 msgstr ""
 
@@ -7899,7 +7920,7 @@ msgstr ""
 msgid "Only one file can be uploaded"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:226
+#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:231
 msgid "Only the following content item types are allowed:"
 msgstr ""
 
@@ -8059,7 +8080,7 @@ msgstr ""
 msgid "Original ({{preview.item.update.update.renditions.original.width}} x {{preview.item.update.update.renditions.original.height}} px)"
 msgstr ""
 
-#: scripts/apps/search/components/fields/translations.tsx:72
+#: scripts/apps/search/components/fields/translations.tsx:71
 msgid "Original Article"
 msgstr ""
 
@@ -8700,8 +8721,8 @@ msgstr ""
 #: scripts/apps/content-api/services/ContentAPISearchService.ts:31
 #: scripts/apps/legal-archive/services/LegalArchiveService.ts:29
 #: scripts/apps/legal-archive/tests/legal.spec.ts:80
-#: scripts/apps/search/components/ItemPriority.tsx:26
-#: scripts/apps/search/components/ItemPriority.tsx:37
+#: scripts/apps/search/components/ItemPriority.tsx:23
+#: scripts/apps/search/components/ItemPriority.tsx:34
 #: scripts/apps/search/services/SearchService.ts:99
 #: scripts/apps/search/views/search-filters.html:106
 #: scripts/apps/workspace/content/constants.ts:93
@@ -8934,6 +8955,7 @@ msgstr ""
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:81
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:65
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:22
+#: scripts/apps/search/components/fields/state.tsx:20
 #: scripts/apps/search/views/item-repo.html:5
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:249
 msgid "Published"
@@ -9079,7 +9101,7 @@ msgstr ""
 msgid "RELATED"
 msgstr ""
 
-#: scripts/apps/search/components/HighlightsList.tsx:100
+#: scripts/apps/search/components/HighlightsList.tsx:107
 #: scripts/apps/search/components/MarkedDesksList.tsx:97
 msgid "REMOVE"
 msgstr ""
@@ -9148,6 +9170,10 @@ msgstr ""
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:146
 #: ../superdesk-planning/client/constants/assignments.js:45
 msgid "Reassign"
+msgstr ""
+
+#: scripts/apps/search/components/fields/state.tsx:24
+msgid "Recalled"
 msgstr ""
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:205
@@ -9255,6 +9281,10 @@ msgstr ""
 msgid "Related content"
 msgstr ""
 
+#: scripts/apps/relations/directives/RelatedItemsDirective.ts:248
+msgid "Related item is not available."
+msgstr ""
+
 #: scripts/apps/relations/directives/RelatedItemsDirective.ts:171
 msgid "Related item was not added, because the field reached the limit of related items allowed."
 msgstr ""
@@ -9293,7 +9323,7 @@ msgstr ""
 #: scripts/apps/templates/views/templates.html:37
 #: scripts/apps/workspace/content/views/profile-settings.html:32
 #: scripts/core/editor3/highlightsConfig.ts:33
-#: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:35
+#: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:36
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:70
 msgid "Remove"
 msgstr ""
@@ -9702,6 +9732,10 @@ msgstr ""
 msgid "Route incoming content to"
 msgstr ""
 
+#: scripts/apps/search/components/fields/state.tsx:15
+msgid "Routed"
+msgstr ""
+
 #: scripts/apps/dashboard/closed-desk/views/close-desk-widget.html:3
 msgid "Routed from"
 msgstr ""
@@ -10097,6 +10131,7 @@ msgstr ""
 #: ../superdesk-planning/client/constants/tooltips.js:11
 #: ../superdesk-planning/client/utils/index.ts:429
 #: ../superdesk-planning/client/utils/index.ts:430
+#: scripts/apps/search/components/fields/state.tsx:21
 msgid "Scheduled"
 msgstr ""
 
@@ -10129,7 +10164,7 @@ msgstr ""
 msgid "Scheduled by"
 msgstr ""
 
-#: scripts/apps/search/components/fields/state.tsx:21
+#: scripts/apps/search/components/fields/state.tsx:42
 msgid "Scheduled for {{date}}"
 msgstr ""
 
@@ -10383,7 +10418,7 @@ msgid "Select at most 1 file to upload."
 msgstr ""
 
 #: scripts/apps/archive/controllers/UploadController.ts:249
-#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:190
+#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:195
 msgid "Select at most {{maxUploads}} files to upload."
 msgstr ""
 
@@ -10583,12 +10618,16 @@ msgstr ""
 msgid "Set highlights"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:201
+#: scripts/apps/archive/index.tsx:216
 msgid "Set label in current package"
 msgstr ""
 
 #: scripts/apps/monitoring/views/aggregate-settings.html:129
 msgid "Set maximum items per stages and saved searches for view"
+msgstr ""
+
+#: scripts/apps/monitoring/aggregate-widget/aggregate.ts:17
+msgid "Set up different monitors to follow any topics from ingest or production, desk outputs or any part of the workflow. All you need is to give it a sensible name, select a saved search or desk or its workflow stages. Monitor anything, anywhere, anytime. You can have as many Monitor widgets as you wish."
 msgstr ""
 
 #: scripts/apps/settings/index.ts:19
@@ -10913,7 +10952,7 @@ msgstr ""
 msgid "Spike"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:126
+#: scripts/apps/archive/index.tsx:127
 msgid "Spike Item"
 msgstr ""
 
@@ -10956,6 +10995,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:32
 #: ../superdesk-planning/client/utils/index.ts:419
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:17
+#: scripts/apps/search/components/fields/state.tsx:19
 #: scripts/apps/search/constants.ts:14
 msgid "Spiked"
 msgstr ""
@@ -11178,6 +11218,7 @@ msgid "Submit"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/index.ts:469
+#: scripts/apps/search/components/fields/state.tsx:17
 msgid "Submitted"
 msgstr ""
 
@@ -11713,7 +11754,7 @@ msgid "The {{ itemType }} has been unposted"
 msgstr ""
 
 #: scripts/apps/contacts/components/ItemList.tsx:178
-#: scripts/apps/search/components/ItemList.tsx:539
+#: scripts/apps/search/components/ItemList.tsx:567
 msgid "There are currently no items"
 msgstr ""
 
@@ -12116,7 +12157,7 @@ msgstr ""
 msgid "Time Zone"
 msgstr ""
 
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:25
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:26
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:42
 msgid "Time increment steps"
 msgstr ""
@@ -12336,7 +12377,7 @@ msgstr ""
 
 #: scripts/apps/authoring/translations/index.ts:12
 #: scripts/apps/authoring/views/authoring-topbar.html:306
-#: scripts/apps/search/components/fields/translations.tsx:82
+#: scripts/apps/search/components/fields/translations.tsx:81
 msgid "Translations"
 msgstr ""
 
@@ -12520,12 +12561,12 @@ msgid "Unlock current item"
 msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:173
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:28
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:29
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:103
 msgid "Unmark"
 msgstr ""
 
-#: scripts/extensions/markForUser/dist/src/get-article-actions.js:20
+#: scripts/extensions/markForUser/dist/src/get-article-actions.js:21
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:23
 msgid "Unmark user"
 msgstr ""
@@ -12558,6 +12599,10 @@ msgstr ""
 msgid "Unpublish related items:"
 msgstr ""
 
+#: scripts/apps/search/components/fields/state.tsx:25
+msgid "Unpublished"
+msgstr ""
+
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:209
 msgid "Unpublished by"
 msgstr ""
@@ -12577,7 +12622,7 @@ msgstr ""
 msgid "Unspike"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:140
+#: scripts/apps/archive/index.tsx:141
 msgid "Unspike Item"
 msgstr ""
 
@@ -12773,7 +12818,7 @@ msgstr ""
 msgid "Upload from computer"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:101
+#: scripts/apps/archive/index.tsx:102
 #: scripts/apps/search/views/multi-image-edit.html:12
 msgid "Upload media"
 msgstr ""
@@ -12793,8 +12838,8 @@ msgstr ""
 #: scripts/apps/content-api/services/ContentAPISearchService.ts:30
 #: scripts/apps/legal-archive/services/LegalArchiveService.ts:26
 #: scripts/apps/legal-archive/tests/legal.spec.ts:77
-#: scripts/apps/search/components/ItemUrgency.tsx:17
-#: scripts/apps/search/components/ItemUrgency.tsx:29
+#: scripts/apps/search/components/ItemUrgency.tsx:18
+#: scripts/apps/search/components/ItemUrgency.tsx:30
 #: scripts/apps/search/services/SearchService.ts:96
 #: scripts/apps/search/tests/search.spec.ts:437
 #: scripts/apps/search/views/search-filters.html:93
@@ -12833,7 +12878,7 @@ msgstr ""
 msgid "Use the article GUID for testing."
 msgstr ""
 
-#: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
+#: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:14
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:36
 msgid "Use this"
 msgstr ""
@@ -12853,7 +12898,7 @@ msgid "User"
 msgstr ""
 
 #: ../superdesk-analytics/client/user_activity_report/index.js:46
-#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:407
+#: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:400
 #: scripts/apps/dashboard/user-activity/user-activity.ts:37
 msgid "User Activity"
 msgstr ""
@@ -12880,11 +12925,11 @@ msgstr ""
 msgid "User not found."
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:97
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:100
 msgid "User preferences could not be saved..."
 msgstr ""
 
-#: scripts/apps/users/directives/UserPreferencesDirective.ts:93
+#: scripts/apps/users/directives/UserPreferencesDirective.ts:96
 msgid "User preferences saved"
 msgstr ""
 
@@ -13165,6 +13210,10 @@ msgstr ""
 msgid "White"
 msgstr ""
 
+#: scripts/apps/dashboard/views/widget.html:4
+msgid "Widget settings"
+msgstr ""
+
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:8
 msgid "Widget settings <span translate>for \"{{currentDesk.name}}\" Desk</span>"
 msgstr ""
@@ -13220,7 +13269,7 @@ msgstr ""
 msgid "Working Stage"
 msgstr ""
 
-#: scripts/apps/archive/index.tsx:89
+#: scripts/apps/archive/index.tsx:90
 #: scripts/apps/dashboard/index.ts:51
 #: scripts/apps/dashboard/views/workspace.html:24
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:376
@@ -13749,8 +13798,8 @@ msgstr ""
 
 #: scripts/apps/archive/views/item-preview.html:19
 #: scripts/apps/archive/views/preview.html:104
-#: scripts/apps/search/components/MediaInfo.tsx:32
-#: scripts/apps/search/components/fields/expiry.tsx:13
+#: scripts/apps/search/components/MediaInfo.tsx:37
+#: scripts/apps/search/components/fields/expiry.tsx:14
 msgid "expires"
 msgstr ""
 
@@ -13789,7 +13838,7 @@ msgid "fetched"
 msgstr ""
 
 #: scripts/apps/archive/views/fetched-desks.html:2
-#: scripts/apps/search/components/FetchedDesksInfo.tsx:63
+#: scripts/apps/search/components/FetchedDesksInfo.tsx:68
 msgid "fetched in"
 msgstr ""
 
@@ -14080,8 +14129,8 @@ msgstr ""
 msgid "min"
 msgstr ""
 
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:23
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:44
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:24
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:45
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:37
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:82
 msgid "minutes"
@@ -14400,6 +14449,10 @@ msgstr ""
 msgid "selected"
 msgstr ""
 
+#: scripts/apps/search/components/SelectBox.tsx:39
+msgid "selection not allowed"
+msgstr ""
+
 #: scripts/apps/authoring/views/send-item.html:227
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "send"
@@ -14445,7 +14498,7 @@ msgstr ""
 msgid "sorry, this username is already taken."
 msgstr ""
 
-#: scripts/apps/search/components/MediaInfo.tsx:21
+#: scripts/apps/search/components/MediaInfo.tsx:26
 msgid "source"
 msgstr ""
 
@@ -14522,7 +14575,7 @@ msgstr ""
 msgid "to coverage assignment by"
 msgstr ""
 
-#: scripts/apps/search/components/fields/translations.tsx:36
+#: scripts/apps/search/components/fields/translations.tsx:35
 msgid "translation"
 msgstr ""
 
@@ -14561,7 +14614,7 @@ msgstr ""
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:188
 #: ../superdesk-planning/client/components/Agendas/AgendaItem.jsx:15
 #: ../superdesk-planning/client/components/EventsPlanningFilters/FilterItem.jsx:24
-#: scripts/apps/search/components/MediaInfo.tsx:27
+#: scripts/apps/search/components/MediaInfo.tsx:32
 msgid "updated"
 msgstr ""
 
@@ -14903,7 +14956,7 @@ msgstr ""
 msgid "{{weeks}} weeks"
 msgstr ""
 
-#: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:73
+#: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:74
 #: scripts/extensions/datetimeField/src/getDateTimeField.tsx:128
 msgid "{{x}} min"
 msgstr ""
