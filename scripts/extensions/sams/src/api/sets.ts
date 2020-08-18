@@ -19,7 +19,6 @@ export function getAllSets(superdesk: ISuperdesk): Promise<Array<ISetItem>> {
         })
         .catch((error: any) => {
             notify.error(gettext('Failed to load all sets'));
-            console.error(error);
 
             return Promise.reject(error);
         });
@@ -37,7 +36,6 @@ export function createSet(superdesk: ISuperdesk, item: Partial<ISetItem>): Promi
         })
         .catch((error: any) => {
             notify.error(gettext('Failed to create the Set'));
-            console.error(error);
 
             return Promise.reject(error);
         });
@@ -55,7 +53,6 @@ export function updateSet(superdesk: ISuperdesk, original: ISetItem, updates: Pa
         })
         .catch((error: any) => {
             notify.error(gettext('Failed to update the Set'));
-            console.error(error);
 
             return Promise.reject(error);
         });
@@ -71,7 +68,6 @@ export function deleteSet(superdesk: ISuperdesk, item: ISetItem): Promise<void> 
         })
         .catch((error: any) => {
             notify.error(gettext('Failed to delete the Set'));
-            console.error(error);
 
             return Promise.reject(error);
         });

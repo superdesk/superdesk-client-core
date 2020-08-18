@@ -101,8 +101,8 @@ export const dataApiByEntity = {
     },
 };
 
-export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: T): Partial<T> {
-    const patch: Partial<T> = generate(item1, item2);
+export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: Partial<T>): Partial<T> {
+    const patch = (generate(item1, item2) ?? {}) as Partial<T>;
 
     // due to the use of "projections"(partial entities) item2 is sometimes missing fields which item1 has
     // which is triggering patching algorithm to think we want to set those missing fields to null

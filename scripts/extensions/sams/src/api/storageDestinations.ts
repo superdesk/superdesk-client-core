@@ -25,7 +25,6 @@ export function getAllStorageDestinations(superdesk: ISuperdesk): Promise<Array<
         })
         .catch((error: any) => {
             notify.error(gettext('Failed to load all storage destinations'));
-            console.log(error);
 
             return Promise.reject(error);
         });
