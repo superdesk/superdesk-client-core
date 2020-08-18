@@ -18,6 +18,17 @@ import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
+export function getErrorMessage(message, notify) {
+    return getLabelNameResolver().then((getLabelForFieldId) => {
+        const field = message.split(' ')[0];
+        const fieldLabel = getLabelForFieldId(field.toLocaleLowerCase());
+        const text = message.substr(message.indexOf(' ') + 1);
+
+        notify.error(gettext(`{{field}} ${text}`, {field: fieldLabel.toLocaleUpperCase()}));
+        return field;
+    });
+}
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.authoring
@@ -480,10 +491,10 @@ export function AuthoringDirective(
                                 modifiedErrors.forEach((error) => {
                                     const message = _.trim(error, '\' ');
                                     // the message format is 'Field error text' (contains ')
-                                    const field = message.split(' ')[0];
 
-                                    $scope.error[field.toLocaleLowerCase()] = true;
-                                    notify.error(message);
+                                    getErrorMessage(message, notify).then((field) => {
+                                        $scope.error[field.toLocaleLowerCase()] = true;
+                                    });
                                 });
 
                                 if (issues.fields) {

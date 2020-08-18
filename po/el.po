@@ -75,6 +75,18 @@ msgstr "'Το ΘΕΜΑ είναι υποχρεωτικό πεδίο'"
 msgid "'URGENCY is a required field'"
 msgstr " 'Το ΕΠΕΙΓΟΝ είναι υποχρεωτικό πεδίο' "
 
+#: scripts/core/lang/missing-translations-strings.ts:48
+msgid "{{field}} is a required field"
+msgstr "{{field}} είναι υποχρεωτικό πεδίο"
+
+#: scripts/core/lang/missing-translations-strings.ts:47
+msgid "{{field}} empty values not allowed"
+msgstr "{{field}} δεν επιτρέπονται κενές τιμές"
+
+#: scripts/core/lang/missing-translations-strings.ts:48
+msgid "{{field}} is too short"
+msgstr "{{field}} είναι πολύ σύντομο"
+
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "'must be of list type'\""
 msgstr "'πρέπει να είναι τύπος λίστας'\""

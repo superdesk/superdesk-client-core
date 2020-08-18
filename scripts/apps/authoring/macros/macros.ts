@@ -10,6 +10,7 @@
 
 import {gettext} from 'core/utils';
 import _ from 'lodash';
+import {getErrorMessage} from '../authoring/directives/AuthoringDirective';
 
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {
@@ -81,7 +82,11 @@ function MacrosService(api, notify) {
             commit: !!commit,
         }).then((res) => res, (err) => {
             if (angular.isDefined(err.data._message)) {
-                notify.error(gettext('Error: {{message}}', {message: err.data._message}));
+                const error_messages = JSON.parse(err.data._message.replace(/'/g, '"'));
+
+                error_messages.forEach((error_message) => {
+                    getErrorMessage(error_message, notify);
+                });
             }
         });
     }
