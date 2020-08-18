@@ -60,6 +60,7 @@ describe('content', () => {
             authoringWorkspace: AuthoringWorkspaceService,
             config,
             metadata,
+            notify,
         ) => {
             const extensionDelay = 200;
 
@@ -99,6 +100,8 @@ describe('content', () => {
                 authoringWorkspace,
                 config,
                 metadata,
+                {item: () => false},
+                notify,
             ).then(() => {
                 activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});
 
