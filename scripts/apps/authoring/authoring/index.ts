@@ -353,19 +353,6 @@ angular.module('superdesk.apps.authoring', [
                 templateUrl: 'scripts/apps/authoring/views/change-image.html',
                 filters: [{action: 'edit', type: 'crop'}],
             })
-            .activity('preview', {
-                href: '/preview/:_id',
-                when: '/preview/:_id',
-                template: '<div sd-full-preview data-items="[item]"></div>',
-                controller: ['$scope', 'item', function($scope, item) {
-                    $scope.item = item;
-                }],
-                resolve: {
-                    item: ['$route', 'api', function($route, api) {
-                        return api.find('archive', $route.current.params._id);
-                    }],
-                },
-            })
             .activity('unpublish', {
                 label: gettext('Unpublish'),
                 priority: 50,
