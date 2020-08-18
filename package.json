@@ -121,7 +121,7 @@
     "superdesk-ui-framework": "github:marklark86/superdesk-ui-framework#sams",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
-    "typescript": "3.7.2",
+    "typescript": "3.9.7",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },
@@ -153,6 +153,7 @@
     "moment": "2.20.1"
   },
   "scripts": {
+    "gettext-extract": "grunt gettext:extract",
     "setup-extensions": "node ./tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js",
     "compile-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
     "watch-css-from-extensions": "node tasks/namespace-css-from-extensions.js --watch",

@@ -4,59 +4,6 @@ export default angular.module('superdesk.core.upload.imagecrop', [
     'superdesk.core.translate',
 ])
 
-    .directive('sdImageCropView', [function() {
-        return {
-            scope: {
-                src: '=',
-                cropData: '=',
-                original: '=',
-            },
-            template: '<img ng-src="{{ src }}"/><div class="crop-box"></div>',
-            link: function(scope, elem) {
-                var img;
-                var $cropBox = elem.find('.crop-box');
-                var $img = elem.find('img');
-
-                elem.css({
-                    position: 'relative',
-                });
-                scope.$watch('src', () => {
-                    img = new Image();
-                    img.onload = function() {
-                        $img.css({
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            'z-index': 1000,
-                        });
-                        updateCropBox();
-                    };
-                    img.src = scope.src;
-                });
-                scope.$watch('cropData', updateCropBox);
-
-                function updateCropBox() {
-                    if ($img && scope.original && scope.cropData) {
-                        var ratio = $img.height() / scope.original.height;
-                        var cTop = scope.cropData.CropTop * ratio;
-                        var cLeft = scope.cropData.CropLeft * ratio;
-                        var cBottom = $img.height() - scope.cropData.CropBottom * ratio;
-                        var cRight = $img.width() - scope.cropData.CropRight * ratio;
-
-                        $cropBox.css({
-                            width: $img.width(),
-                            height: $img.height(),
-                            'border-top-width': cTop + 'px',
-                            'border-left-width': cLeft + 'px',
-                            'border-bottom-width': cBottom + 'px',
-                            'border-right-width': cRight + 'px',
-                        });
-                    }
-                }
-            },
-        };
-    }])
-
 /**
  * sd-image-crop based on Jcrop tool and provides Image crop functionality for
  * provided Aspect ratio and other attributes.

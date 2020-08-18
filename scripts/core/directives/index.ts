@@ -1,14 +1,10 @@
 import './AutofocusDirective';
-import './ThrottleDirective';
-import './DebounceDirective';
 import './SortDirective';
 import './PasswordStrengthDirective';
 import './SearchListDirective';
-import './SearchListSingleDirective';
 import './FiletypeIconDirective';
 import './CheckAllDirective';
 import './SwitchInvertedDirective';
-import './ConfirmDirective';
 import './SelectDirective';
 import './SelectPopupDirective';
 import './PermissionsDirective';
@@ -34,16 +30,12 @@ import {UserOrganisationAvatar} from 'apps/users/components/OrganisationAvatar';
  */
 export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.autofocus',
-    'superdesk.core.directives.debounce',
-    'superdesk.core.directives.throttle',
     'superdesk.core.directives.sort',
     'superdesk.core.directives.passwordStrength',
     'superdesk.core.directives.searchList',
-    'superdesk.core.directives.searchListSingle',
     'superdesk.core.directives.filetypeIcon',
     'superdesk.core.directives.checkAll',
     'superdesk.core.directives.switchInverted',
-    'superdesk.core.directives.confirm',
     'superdesk.core.directives.select',
     'superdesk.core.directives.selectPopup',
     'superdesk.core.directives.permissions',

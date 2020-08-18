@@ -5,17 +5,14 @@ import {IArticle} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    svc: {};
-    scope: {
-        singleLine: boolean;
-    };
+    singleLine: any;
 }
 
 export class ListPriority extends React.PureComponent<IProps> {
     render() {
         const css = {
             className: classNames('list-field urgency', {
-                'urgency-reduced-rowheight': this.props.scope.singleLine,
+                'urgency-reduced-rowheight': this.props.singleLine,
             }),
         };
 

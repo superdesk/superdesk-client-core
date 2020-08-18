@@ -1,18 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {getSpecStyle, getSpecTitle, getSpecValue} from '../helpers';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 
 interface IProps {
     priority: string;
-    svc: {
-        metadata: any;
-    };
 }
 
 export class ItemPriority extends React.PureComponent<IProps> {
     render() {
-        const {metadata} = this.props.svc;
+        const metadata = ng.get('metadata');
 
         const priority = this.props.priority || 3;
         const spec = metadata.priorityByValue(priority);

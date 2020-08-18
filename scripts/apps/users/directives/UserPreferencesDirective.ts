@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 /* tslint:disable:max-line-length */
 import {gettext} from 'core/utils';
-import {appConfig} from 'appConfig';
+import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {applyDefault} from 'core/helpers/typescript-helpers';
 
 /**
@@ -40,10 +40,13 @@ export function UserPreferencesDirective(
     return {
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
         link: function(scope, element, attrs) {
+            const userLang = getUserInterfaceLanguage().replace('_', '-');
+
             /*
              * Set this to true after adding all the preferences to the scope. If done before, then the
              * directives which depend on scope variables might fail to load properly.
              */
+
             scope.preferencesLoaded = false;
             var orig; // original preferences, before any changes
 
@@ -289,6 +292,9 @@ export function UserPreferencesDirective(
                         selectedCats = userPrefs['categories:preferred'].selected;
 
                     newObj.selected = !!selectedCats[cat.qcode];
+                    if (cat.translations?.name?.[userLang]) {
+                        newObj.name = cat.translations.name[userLang];
+                    }
                     scope.categories.push(newObj);
                 });
 

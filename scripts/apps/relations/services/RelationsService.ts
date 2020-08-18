@@ -21,7 +21,14 @@ export function RelationsService(api, $q) {
 
         return $q.all(relatedItemsKeys.map((key) => {
             if (isLink(associations[key])) {
-                return api.find('archive', associations[key]._id);
+                return api.find('archive', associations[key]._id)
+                    .catch((response) => {
+                        if (response?.status === 404) {
+                            return null;
+                        }
+
+                        return Promise.reject(response);
+                    });
             }
 
             return $q.when(associations[key]);

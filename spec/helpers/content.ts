@@ -1,6 +1,7 @@
 import {element, by, browser} from 'protractor';
 import {acceptConfirm, nav} from './utils';
 import {multiAction} from './actions';
+import {ECE} from 'end-to-end-testing-helpers';
 
 class Content {
     send: any;
@@ -139,7 +140,7 @@ class Content {
         var list = element(by.className('list-view'));
 
         this.getCount = function() {
-            waitFor(list);
+            browser.wait(ECE.presenceOf(list));
             return list.all(by.css('.media-box')).count();
         };
 

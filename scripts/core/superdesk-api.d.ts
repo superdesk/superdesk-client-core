@@ -93,7 +93,7 @@ declare module 'superdesk-api' {
             authoring?: {
                 /**
                  * Updates can be intercepted and modified. Return value will be used to compute a patch.
-                 * 
+                 *
                  * Example: onUpdateBefore = (current, next) => ({...next, priority: next.headline.includes('important') ? 10 : 1})
                 */
                 onUpdateBefore?(current: IArticle, next: IArticle): Promise<IArticle>;
@@ -102,7 +102,7 @@ declare module 'superdesk-api' {
                 onUpdateAfter?(previous: IArticle, current: IArticle): void;
             };
             monitoring?: {
-                getFilteringButtons?(): Promise<Array<IMonitoringFilter>>;
+                getFilteringButtons?(deskId: string): Promise<Array<IMonitoringFilter>>;
             };
         }
     }
@@ -140,6 +140,7 @@ declare module 'superdesk-api' {
         parent: string;
     }
 
+    // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
     export enum ITEM_STATE {
         /**
          * Item created in user workspace.
@@ -405,6 +406,7 @@ declare module 'superdesk-api' {
         actioning?: {
             archive?: boolean;
             externalsource: boolean;
+            archiveContent?: boolean;
         };
         _autosave?: any;
         _locked?: boolean;
@@ -1161,6 +1163,9 @@ declare module 'superdesk-api' {
         /** allow users who are not members of a desk to duplicate its content */
         workflow_allow_duplicate_non_members: boolean;
 
+        /** allow users to copy from desk to personal space */
+        workflow_allow_copy_to_personal: boolean;
+
         allow_updating_scheduled_items: boolean;
 
         // TANSA SERVER CONFIG
@@ -1265,6 +1270,12 @@ declare module 'superdesk-api' {
                 secondLine: Array<string>,
             };
         };
+        gridViewFields: Array<string>;
+        gridViewFooterFields: {
+            left: Array<string>;
+            right: Array<string>;
+        };
+        swimlaneViewFields: any;
         item_profile: {
             change_profile: any;
         };
