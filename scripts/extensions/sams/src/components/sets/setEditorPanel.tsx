@@ -42,7 +42,8 @@ interface IProps {
 
 interface IState {
     updates: Partial<ISetItem>;
-    isDirty?: boolean;
+    isDirty: boolean;
+    submitting: boolean;
 }
 
 export function getSetEditorPanel(superdesk: ISuperdesk) {
@@ -73,11 +74,13 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                         destination_name: this.props.destinations?.[0]?._id,
                     },
                     isDirty: true,
+                    submitting: false,
                 };
             } else {
                 this.state = {
                     updates: cloneDeep<ISetItem>(this.props.original),
                     isDirty: false,
+                    submitting: false,
                 };
             }
 
@@ -86,8 +89,8 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
             this.onCancel = this.onCancel.bind(this);
 
             this.onChange = {
-                name: (value: string) => this.onFieldChange('name', value),
-                description: (value: string) => this.onFieldChange('description', value),
+                name: (value: string) => this.onFieldChange('name', value.trim()),
+                description: (value: string) => this.onFieldChange('description', value.trim()),
                 destination_name: (value: string) => this.onFieldChange('destination_name', value),
                 state: (value: boolean) => this.onStateChange(value),
             };
@@ -126,11 +129,23 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
         }
 
         onSave() {
-            if (this.props.original != null) {
-                this.props.updateSet(this.props.original, this.state.updates);
-            } else {
+            this.setState({submitting: true});
+
+            const promise = this.props.original != null ?
+                this.props.updateSet(this.props.original, this.state.updates) :
                 this.props.createSet(this.state.updates);
-            }
+
+            promise
+                .then((set: ISetItem) => {
+                    // If the submission was completed successfully
+                    // then close the editor and open the preview
+                    this.props.previewSet(set);
+                })
+                .catch(() => {
+                    // If there was an error submitting the request
+                    // then re-enable the 'SAVE'|'CREATE' button
+                    this.setState({submitting: false});
+                });
         }
 
         onCancel() {
@@ -155,6 +170,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                                     text={gettext('Cancel')}
                                     style="hollow"
                                     onClick={this.onCancel}
+                                    disabled={this.state.submitting}
                                 />
                                 <Button
                                     text={this.props.original != null ?
@@ -162,7 +178,7 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                                         gettext('Create')
                                     }
                                     type="primary"
-                                    disabled={!this.state.isDirty}
+                                    disabled={!this.state.isDirty || this.state.submitting}
                                     onClick={this.onSave}
                                 />
                             </ButtonGroup>

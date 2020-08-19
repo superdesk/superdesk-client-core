@@ -7,12 +7,6 @@ interface IReceiveSetsAction {
     payload: Array<ISetItem>;
 }
 
-export const UPDATE_SET_IN_STORE = 'sets__update_set_in_store';
-interface IUpdateSetInStoreAction {
-    type: typeof UPDATE_SET_IN_STORE;
-    payload: ISetItem;
-}
-
 export const REMOVE_SET_IN_STORE = 'sets__remove_set_in_store';
 interface IRemoveSetInStoreAction {
     type: typeof REMOVE_SET_IN_STORE;
@@ -42,7 +36,6 @@ interface IManageSetsOnModalClosed {
 }
 
 export type ISetActionTypes = IReceiveSetsAction |
-    IUpdateSetInStoreAction |
     IRemoveSetInStoreAction |
     IEditSetAction |
     IPreviewSetAction |

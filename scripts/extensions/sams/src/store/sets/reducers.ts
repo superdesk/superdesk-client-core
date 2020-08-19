@@ -9,7 +9,6 @@ import {
     MANAGE_SETS_RESET,
     RECEIVE_SETS,
     REMOVE_SET_IN_STORE,
-    UPDATE_SET_IN_STORE,
 } from './types';
 
 const initialState: ISetState = {
@@ -28,8 +27,6 @@ export function setsReducer(
             ...state,
             sets: action.payload,
         };
-    case UPDATE_SET_IN_STORE:
-        return updateSetInStore(state, action.payload);
     case REMOVE_SET_IN_STORE:
         return removeSetFromStore(state, action.payload);
     case MANAGE_SETS_EDIT:
@@ -59,20 +56,6 @@ export function setsReducer(
     default:
         return state;
     }
-}
-
-function updateSetInStore(prevState: ISetState, updatedSet: ISetItem) {
-    const state: ISetState = Object.assign({}, prevState);
-
-    state.sets = state.sets.map(
-        (set: ISetItem) => {
-            return set._id === updatedSet._id ?
-                updatedSet :
-                set;
-        },
-    );
-
-    return state;
 }
 
 function removeSetFromStore(prevState: ISetState, setToDelete: ISetItem) {

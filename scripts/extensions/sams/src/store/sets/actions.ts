@@ -9,7 +9,6 @@ import {getSelectedSetId} from './selectors';
 import {
     ISetActionTypes,
     RECEIVE_SETS,
-    UPDATE_SET_IN_STORE,
     REMOVE_SET_IN_STORE,
     MANAGE_SETS_EDIT,
     MANAGE_SETS_PREVIEW,
@@ -21,13 +20,6 @@ export function receiveSets(sets: Array<ISetItem>): ISetActionTypes {
     return {
         type: RECEIVE_SETS,
         payload: sets,
-    };
-}
-
-export function updatedSetInStore(set: ISetItem): ISetActionTypes {
-    return {
-        type: UPDATE_SET_IN_STORE,
-        payload: set,
     };
 }
 
@@ -124,10 +116,9 @@ export function updateSet(original: ISetItem, updates: Partial<ISetItem>): IThun
     return (dispatch, _getState, {api}) => {
         return api.sets.update(original, updates)
             .then((updatedSet: ISetItem) => {
-                dispatch(updatedSetInStore(updatedSet));
-                dispatch(previewSet(updatedSet._id));
-
-                return updatedSet;
+                // Wait for the Sets to update before returning the updated Set
+                return dispatch(loadSets())
+                    .then(() => updatedSet);
             });
     };
 }
@@ -136,10 +127,9 @@ export function createSet(item: Partial<ISetItem>): IThunkAction<ISetItem> {
     return (dispatch, _getState, {api}) => {
         return api.sets.create(item)
             .then((newSet: ISetItem) => {
-                dispatch(loadSets());
-                dispatch(previewSet(newSet._id));
-
-                return newSet;
+                // Wait for the Sets to update before returning the new Set
+                return dispatch(loadSets())
+                    .then(() => newSet);
             });
     };
 }
