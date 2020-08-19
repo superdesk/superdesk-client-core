@@ -10,7 +10,11 @@ import {
     SET_STATE,
 } from '../../interfaces';
 
+// Redux Selectors
 import {getStorageDestinationsById} from '../storageDestinations/selectors';
+
+// Utils
+import {assertNever} from '../../utils/typescript';
 
 type ISetArrays = {
     draft: Array<ISetItem>;
@@ -90,9 +94,10 @@ export const getSetsGroupedByState = createSelector<IApplicationState, Array<ISe
                 groupedSets.disabled.push(set);
                 break;
             case SET_STATE.DRAFT:
-            default:
                 groupedSets.draft.push(set);
                 break;
+            default:
+                assertNever(set.state);
             }
         });
 
