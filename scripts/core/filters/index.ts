@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {stripHtmlTags} from '../utils';
+import {formatDatelineText} from 'apps/authoring/authoring/helpers';
 
 export function removeLodash(value) {
     var cleanedValue = value || '';
@@ -153,7 +154,7 @@ export default angular.module('superdesk.core.filters', [])
                     _month = momentizedTimestamp.format('MMM');
                 }
 
-                return $filter('formatDatelineText')(located, _month, momentizedTimestamp.format('D'), source);
+                return formatDatelineText(located, _month, momentizedTimestamp.format('D'), source);
             }
 
             return '';
@@ -173,20 +174,6 @@ export default angular.module('superdesk.core.filters', [])
 
         return {month: momentizedTimestamp.month().toString(), day: momentizedTimestamp.format('D')};
     }])
-    .filter('formatDatelineText', () => function(located, month, date, source = '') {
-        var dateline = located.city_code;
-        var datelineFields = located.dateline.split(',');
-
-        if (_.indexOf(datelineFields, 'state')) {
-            dateline.concat(', ', located.state_code);
-        }
-
-        if (_.indexOf(datelineFields, 'country')) {
-            dateline.concat(', ', located.country_code);
-        }
-
-        return dateline.toUpperCase().concat(', ', month, ' ', date, ' ', source, ' -');
-    })
     .filter('relativeUTCTimestamp', ['moment', (moment) => function(located, month, date) {
         var currentTSInLocated = located.tz === 'UTC' ? moment.utc() : moment().tz(located.tz);
 

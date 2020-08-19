@@ -7,6 +7,7 @@ import {isPublished} from 'apps/archive/utils';
 import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
+import {formatDatelineText} from '../helpers';
 
 interface IScope extends ng.IScope {
     readOnlyLabel: string;
@@ -228,11 +229,14 @@ export function ArticleEditDirective(
                                 parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
                         }
 
-                        currentItem.dateline.text = $filter('formatDatelineText')(currentItem.dateline.located,
+                        currentItem.dateline.text = formatDatelineText(
+                            currentItem.dateline.located,
                             $interpolate('{{ month | translate }}')({
                                 month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month),
                             }),
-                            scope.dateline.day, currentItem.source);
+                            scope.dateline.day,
+                            currentItem.source,
+                        );
                     }
                     scope.autosave(currentItem);
                 };
@@ -321,11 +325,14 @@ export function ArticleEditDirective(
                         scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
                             parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
 
-                        scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
+                        scope.item.dateline.text = formatDatelineText(
+                            scope.item.dateline.located,
                             $interpolate('{{ month | translate }}')({
                                 month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month),
                             }),
-                            scope.dateline.day, scope.item.dateline.source);
+                            scope.dateline.day,
+                            scope.item.dateline.source,
+                        );
 
                         mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
