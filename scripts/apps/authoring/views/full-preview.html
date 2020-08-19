@@ -12,10 +12,18 @@
 
         <div
             ng-repeat="item in items track by item._id"
-            sd-full-preview-item
-            data-item="item"
-            data-hide-media="hideMedia"
-        ></div>
+        >
+            <!-- always start a new article on a new page in print mode -->
+            <div
+                ng-if="$index !== 0"
+                style="page-break-after: always;"
+            ></div>
+
+            <div
+                sd-full-preview-item
+                data-item="item"
+                data-hide-media="hideMedia"></div>
+        </div>
 
     </div>
 </div>
