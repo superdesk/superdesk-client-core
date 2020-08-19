@@ -12,6 +12,14 @@ export function FullPreviewItemDirective(content, $sce) {
         link: function(scope, elem, attr, ctrl) {
             scope.checkRenditions = checkRenditions;
 
+            scope.hasValue = (v) => {
+                if (typeof v === 'string') {
+                    return v.length > 0;
+                } else {
+                    return v != null;
+                }
+            };
+
             if (scope.item.profile) {
                 content.getType(scope.item.profile)
                     .then((type) => {

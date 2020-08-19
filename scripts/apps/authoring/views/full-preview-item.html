@@ -136,15 +136,60 @@
                 </div>
             </div>
         </div>
-        <div order="{{editor.feature_media.order}}" ng-if="!editor.feature_media.hideOnPrint" class="association">
+
+        <div
+            ng-if="!editor.feature_media.hideOnPrint && hasValue(item.associations.featuremedia.description_text)"
+            order="{{editor.feature_media.order}}"
+            class="association"
+        >
             <img src="{{item.associations.featuremedia.renditions.viewImage.href}}" ng-if="!hideMedia">
             <p><i class="icon-picture" ng-if="hideMedia"></i>{{item.associations.featuremedia.description_text}}</p>
         </div>
-        <div class="abstract" order="{{editor.abstract.order}}" ng-if="!editor.abstract.hideOnPrint" sd-html-preview="item.abstract"></div>
-        <div class="byline" order="{{editor.byline.order}}" ng-if="!editor.byline.hideOnPrint">{{item.byline}}</div>
-        <div class="dateline preview-editor" order="{{editor.dateline.order}}" ng-if="!editor.dateline.hideOnPrint">{{item.dateline.located.city}}</div>
-        <div class="body preview-editor" order="{{editor.body_html.order}}" ng-if="!editor.body_html.hideOnPrint" sd-html-preview="item.body_html" item="item"></div>
-        <div class="body preview-editor" order="{{editor.body_footer.order}}" ng-if="!editor.body_footer.hideOnPrint" sd-html-preview="item.body_footer"></div>
-        <div class="body preview-editor" order="{{editor.sign_off.order}}" ng-if="!editor.sign_off.hideOnPrint">{{item.sign_off}}</div>
+
+        <div
+            ng-if="!editor.abstract.hideOnPrint && hasValue(item.abstract)"
+            order="{{editor.abstract.order}}"
+            class="abstract"
+            sd-html-preview="item.abstract"
+        ></div>
+
+        <div
+            ng-if="!editor.byline.hideOnPrint && hasValue(item.byline)"
+            order="{{editor.byline.order}}"
+            class="byline"
+        >
+            {{item.byline}}
+        </div>
+
+        <div
+            ng-if="!editor.dateline.hideOnPrint && hasValue(item.dateline.located.city)"
+            order="{{editor.dateline.order}}"
+            class="dateline preview-editor"
+        >
+            {{item.dateline.located.city}}
+        </div>
+
+        <div
+            ng-if="!editor.body_html.hideOnPrint && hasValue(item.body_html)"
+            order="{{editor.body_html.order}}"
+            class="body preview-editor"
+            sd-html-preview="item.body_html"
+            item="item"
+        ></div>
+
+        <div
+            ng-if="!editor.body_footer.hideOnPrint && hasValue(item.body_footer)"
+            order="{{editor.body_footer.order}}"
+            class="body preview-editor"
+            sd-html-preview="item.body_footer"
+        ></div>
+
+        <div
+            ng-if="!editor.sign_off.hideOnPrint && hasValue(item.sign_off)"
+            order="{{editor.sign_off.order}}"
+            class="body preview-editor"
+        >
+            {{item.sign_off}}
+        </div>
     </div>
 </div>
