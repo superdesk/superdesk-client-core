@@ -1,16 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import {LEFT_SIDEBAR_WIDTH} from 'core/ui/constants';
-import {gettext} from 'core/utils';
+import {gettext, IScopeApply} from 'core/utils';
+import ng from 'core/services/ng';
 
 import {closeActionsMenu} from '../../helpers';
 
-export default class Item extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
+interface IProps {
+    item: any;
+    activity: any;
+    onActioning: any;
+    scopeApply: IScopeApply;
+}
 
+interface IState {
+    open: boolean;
+    position?: string;
+}
+
+export default class MenuItem extends React.Component<IProps, IState> {
     closeTimeout: any;
+
+    activityService: any;
+    $timeout: any;
+    $injector: any;
 
     constructor(props) {
         super(props);
@@ -24,6 +37,10 @@ export default class Item extends React.Component<any, any> {
         this.closeMenu = this.closeMenu.bind(this);
         this.toggle = this.toggle.bind(this);
         this.updateActioningStatus = this.updateActioningStatus.bind(this);
+
+        this.activityService = ng.get('activityService');
+        this.$timeout = ng.get('$timeout');
+        this.$injector = ng.get('$injector');
     }
 
     updateActioningStatus(isActioning) {
@@ -33,16 +50,13 @@ export default class Item extends React.Component<any, any> {
     }
 
     run(event) {
-        const {scope} = this.props;
-        const {activityService} = this.props.svc;
-
         // Stop event propagation so that click on item action
         // won't select that item for preview/authoring.
         event.stopPropagation();
 
         this.updateActioningStatus(true);
-        scope.$apply(() => {
-            activityService.start(this.props.activity, {data: {item: this.props.item}})
+        this.props.scopeApply(() => {
+            this.activityService.start(this.props.activity, {data: {item: this.props.item}})
                 .finally(() => this.updateActioningStatus(false));
         });
 
@@ -50,9 +64,7 @@ export default class Item extends React.Component<any, any> {
     }
 
     open() {
-        const {$timeout} = this.props.svc;
-
-        $timeout.cancel(this.closeTimeout);
+        this.$timeout.cancel(this.closeTimeout);
         this.closeTimeout = null;
         if (!this.state.open) {
             this.setPosition();
@@ -73,10 +85,8 @@ export default class Item extends React.Component<any, any> {
     }
 
     close() {
-        const {$timeout} = this.props.svc;
-
         if (this.state.open && !this.closeTimeout) {
-            this.closeTimeout = $timeout(() => {
+            this.closeTimeout = this.$timeout(() => {
                 this.closeTimeout = null;
                 this.setState({open: false});
             }, 100, false);
@@ -99,15 +109,11 @@ export default class Item extends React.Component<any, any> {
     }
 
     componentWillUnmount() {
-        const {$timeout} = this.props.svc;
-
-        $timeout.cancel(this.closeTimeout);
+        this.$timeout.cancel(this.closeTimeout);
         this.closeTimeout = null;
     }
 
     render() {
-        const {$injector} = this.props.svc;
-
         const activity = this.props.activity;
 
         const invoke = typeof activity.dropdown === 'function' || typeof activity.dropdown === 'object';
@@ -130,7 +136,7 @@ export default class Item extends React.Component<any, any> {
                         }, '') : null,
                         gettext(activity.label),
                     ),
-                    this.state.open && invoke ? $injector.invoke(activity.dropdown, activity, {
+                    this.state.open && invoke ? this.$injector.invoke(activity.dropdown, activity, {
                         item: this.props.item,
                         className: 'dropdown__menu upward ' + this.state.position,
                         noHighlightsLabel: gettext('No available highlights'),
@@ -157,11 +163,3 @@ export default class Item extends React.Component<any, any> {
         );
     }
 }
-
-Item.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    item: PropTypes.any,
-    activity: PropTypes.any,
-    onActioning: PropTypes.func,
-};

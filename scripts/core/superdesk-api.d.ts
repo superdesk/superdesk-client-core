@@ -68,6 +68,7 @@ declare module 'superdesk-api' {
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
+            workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
                 [id: string]: (notification) => {
@@ -92,7 +93,7 @@ declare module 'superdesk-api' {
             authoring?: {
                 /**
                  * Updates can be intercepted and modified. Return value will be used to compute a patch.
-                 * 
+                 *
                  * Example: onUpdateBefore = (current, next) => ({...next, priority: next.headline.includes('important') ? 10 : 1})
                 */
                 onUpdateBefore?(current: IArticle, next: IArticle): Promise<IArticle>;
@@ -101,7 +102,7 @@ declare module 'superdesk-api' {
                 onUpdateAfter?(previous: IArticle, current: IArticle): void;
             };
             monitoring?: {
-                getFilteringButtons?(): Promise<Array<IMonitoringFilter>>;
+                getFilteringButtons?(deskId: string): Promise<Array<IMonitoringFilter>>;
             };
         }
     }
@@ -139,6 +140,7 @@ declare module 'superdesk-api' {
         parent: string;
     }
 
+    // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
     export enum ITEM_STATE {
         /**
          * Item created in user workspace.
@@ -404,6 +406,7 @@ declare module 'superdesk-api' {
         actioning?: {
             archive?: boolean;
             externalsource: boolean;
+            archiveContent?: boolean;
         };
         _autosave?: any;
         _locked?: boolean;
@@ -581,7 +584,22 @@ declare module 'superdesk-api' {
     export type IPage = DeepReadonly<{
         title: string;
         url: string;
-        component: React.ComponentClass;
+        component: React.ComponentType;
+        priority?: number;
+
+        showTopMenu?: boolean;
+        showSideMenu?: boolean;
+
+        addToMainMenu?: boolean; // defaults to true
+    }>;
+
+    export type IWorkspaceMenuItem = DeepReadonly<{
+        href: string;
+        icon: string;
+        label: string;
+        order?: number;
+        shortcut?: string;
+        privileges?: Array<string>;
     }>;
 
 
@@ -909,7 +927,7 @@ declare module 'superdesk-api' {
 
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
-        create<T>(endpoint: string, item: T): Promise<T>;
+        create<T>(endpoint: string, item: Partial<T>): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
             page: number,
@@ -918,7 +936,7 @@ declare module 'superdesk-api' {
             max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
-        patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
+        patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
     }
@@ -950,6 +968,12 @@ declare module 'superdesk-api' {
         'content:update': IWebsocketMessage<IArticleUpdateEvent>;
     }
 
+    export interface INotifyMessageOptions {
+        button?: {
+            onClick(): void;
+            label: string;
+        }
+    }
 
 
     // APPLICATION API
@@ -981,8 +1005,14 @@ declare module 'superdesk-api' {
                 save(): void;
             };
             alert(message: string): Promise<void>;
-            confirm(message: string): Promise<boolean>;
+            confirm(message: string, title?: string): Promise<boolean>;
             showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
+            notify: {
+                info(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                success(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                warning(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                error(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+            },
         };
         entities: {
             article: {
@@ -1133,6 +1163,9 @@ declare module 'superdesk-api' {
         /** allow users who are not members of a desk to duplicate its content */
         workflow_allow_duplicate_non_members: boolean;
 
+        /** allow users to copy from desk to personal space */
+        workflow_allow_copy_to_personal: boolean;
+
         allow_updating_scheduled_items: boolean;
 
         // TANSA SERVER CONFIG
@@ -1237,6 +1270,12 @@ declare module 'superdesk-api' {
                 secondLine: Array<string>,
             };
         };
+        gridViewFields: Array<string>;
+        gridViewFooterFields: {
+            left: Array<string>;
+            right: Array<string>;
+        };
+        swimlaneViewFields: any;
         item_profile: {
             change_profile: any;
         };

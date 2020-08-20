@@ -73,6 +73,8 @@ module.exports = function makeConfig(grunt) {
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
                 // ensure that react is loaded only once (3rd party apps can load more...)
                 react: path.resolve('./node_modules/react'),
+                'react-dom': path.resolve('./node_modules/react-dom'),
+                'jquery': path.resolve('./node_modules/jquery'),
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },

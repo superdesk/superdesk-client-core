@@ -4,10 +4,17 @@ import _ from 'lodash';
 import {PhotoDeskFields} from './PhotoDeskFields';
 
 import {DEFAULT_GRID_VIEW_FOOTER_CONFIG} from 'apps/search/constants';
+import {appConfig} from 'appConfig';
+import {IArticle} from 'superdesk-api';
 
-export const PhotoDeskFooter: React.StatelessComponent<any> = (props) => {
-    const {item, svc} = props;
-    const gridViewFooterFieldsConfig = _.get(svc.config, 'gridViewFooterFields', DEFAULT_GRID_VIEW_FOOTER_CONFIG);
+interface IProps {
+    item: IArticle;
+    getActionsMenu?: any;
+}
+
+export const PhotoDeskFooter: React.StatelessComponent<IProps> = (props) => {
+    const {item} = props;
+    const gridViewFooterFieldsConfig = appConfig.gridViewFooterFields ?? DEFAULT_GRID_VIEW_FOOTER_CONFIG;
 
     const fieldsLeft = gridViewFooterFieldsConfig.left;
     const fieldsRight = gridViewFooterFieldsConfig.right;
@@ -20,7 +27,6 @@ export const PhotoDeskFooter: React.StatelessComponent<any> = (props) => {
                         <PhotoDeskFields
                             fieldsConfig={fieldsLeft}
                             item={item}
-                            svc={svc}
                             labelMode="never-with-custom-renderer"
                             itemClassName=""
                         />
@@ -33,7 +39,6 @@ export const PhotoDeskFooter: React.StatelessComponent<any> = (props) => {
                         <PhotoDeskFields
                             fieldsConfig={fieldsRight}
                             item={item}
-                            svc={svc}
                             labelMode="never-with-custom-renderer"
                             itemClassName=""
                         />
@@ -48,7 +53,6 @@ export const PhotoDeskFooter: React.StatelessComponent<any> = (props) => {
 };
 
 PhotoDeskFooter.propTypes = {
-    svc: PropTypes.object.isRequired,
     item: PropTypes.any,
     getActionsMenu: PropTypes.func,
 };

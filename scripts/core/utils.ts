@@ -1,6 +1,8 @@
 import gettextjs from 'gettext.js';
 import {debugInfo} from 'appConfig';
 
+export type IScopeApply = (fn: () => void) => void;
+
 export const i18n = gettextjs();
 
 export function stripHtmlTags(value) {

@@ -106,6 +106,7 @@ export function getSuperdeskApiImplementation(
     authoringWorkspace: AuthoringWorkspaceService,
     config,
     metadata,
+    notify,
 ): ISuperdesk {
     const isLocked = (article: IArticle) => article['lock_session'] != null;
     const isLockedInCurrentSession = (article: IArticle) => lock.isLockedInCurrentSession(article);
@@ -205,12 +206,22 @@ export function getSuperdeskApiImplementation(
                 },
             },
             alert: (message: string) => modal.alert({bodyText: message}),
-            confirm: (message: string) => new Promise((resolve) => {
-                modal.confirm(message, gettext('Cancel'))
+            confirm: (message: string, title?: string) => new Promise((resolve) => {
+                modal.confirm(message, title ?? gettext('Cancel'))
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
             showModal,
+            notify: {
+                info: (text: string, displayDuration?: number, options?: any) =>
+                    notify.info(text, displayDuration, options),
+                success: (text: string, displayDuration?: number, options?: any) =>
+                    notify.success(text, displayDuration, options),
+                warning: (text: string, displayDuration?: number, options?: any) =>
+                    notify.warning(text, displayDuration, options),
+                error: (text: string, displayDuration?: number, options?: any) =>
+                    notify.error(text, displayDuration, options),
+            },
         },
         components: {
             UserHtmlSingleLine,

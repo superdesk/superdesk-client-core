@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 interface IProps {
     block: ContentBlock;
     readOnly?: boolean; // connected
+    children: React.ReactNode;
 }
 
 class DragableEditor3BlockComponent extends React.PureComponent<IProps> {

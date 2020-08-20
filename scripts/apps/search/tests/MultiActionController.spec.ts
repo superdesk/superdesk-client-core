@@ -80,6 +80,7 @@ describe('Multi Action Bar', () => {
             session,
             authoringWorkspace: AuthoringWorkspaceService,
             metadata,
+            notify,
         ) => {
             const testConfig: Partial<ISuperdeskGlobalConfig> = {
                 confirm_spike: true,
@@ -122,6 +123,8 @@ describe('Multi Action Bar', () => {
                 authoringWorkspace,
                 appConfig,
                 metadata,
+                {item: () => false},
+                notify,
             ).then(() => {
                 const ctrl = $controller(MultiActionBarController, {});
 
