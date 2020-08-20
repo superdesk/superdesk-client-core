@@ -146,9 +146,7 @@ export default angular.module('superdesk.core.filters', [])
 
                 var currentMonth = momentizedTimestamp.month() + 1;
 
-                if (currentMonth === 9) {
-                    _month = 'Sept ';
-                } else if (currentMonth >= 3 && currentMonth <= 7) {
+                if (currentMonth >= 3 && currentMonth <= 7) {
                     _month = momentizedTimestamp.format('MMMM');
                 } else {
                     _month = momentizedTimestamp.format('MMM');
