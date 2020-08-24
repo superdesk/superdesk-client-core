@@ -3,6 +3,12 @@ import * as React from 'react';
 import {IArticle, ISuperdesk} from 'superdesk-api';
 import {getTagsListComponent} from './tag-list';
 
+enum ITagGroup {
+    organisation = 'organization',
+    place = 'place',
+    subject = 'subject',
+}
+
 export interface ITag {
     uuid: string;
     title: string;
@@ -10,12 +16,12 @@ export interface ITag {
     media_topic: Array<any>;
 }
 
+type IAnalysisFields = {
+    [key in ITagGroup]?: Array<ITag>;
+};
+
 interface IAutoTaggingResponse {
-    analysis: {
-        organisation?: Array<ITag>;
-        place?: Array<ITag>;
-        subject?: Array<ITag>;
-    };
+    analysis: IAnalysisFields;
 }
 
 interface IProps {
@@ -24,14 +30,28 @@ interface IProps {
 
 interface IState {
     data: 'not-initialized' | 'loading' | {original: IAutoTaggingResponse; changes: IAutoTaggingResponse};
+    newItem: Partial<ITag> | null;
 }
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {httpRequestJsonLocal} = superdesk;
     const {gettext} = superdesk.localization;
     const {memoize, generatePatch} = superdesk.utilities;
+    const {assertNever, notNullOrUndefined} = superdesk.helpers;
 
     const TagListComponent = getTagsListComponent(superdesk);
+
+    function getGroupLabel(group: ITagGroup): string {
+        if (group === ITagGroup.organisation) {
+            return gettext('Organisation');
+        } else if (group === ITagGroup.place) {
+            return gettext('Place');
+        } else if (group === ITagGroup.subject) {
+            return gettext('Subject');
+        } else {
+            return assertNever(group);
+        }
+    }
 
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
@@ -41,6 +61,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.state = {
                 data: 'not-initialized',
+                newItem: null,
             };
 
             this.runAnalysis = this.runAnalysis.bind(this);
@@ -63,7 +84,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 });
             });
         }
-        updateTags(tags: Partial<IAutoTaggingResponse['analysis']>) {
+        updateTags(tags: Partial<IAnalysisFields>) {
             const {data} = this.state;
 
             if (data === 'loading' || data === 'not-initialized') {
@@ -115,6 +136,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         } else {
                             const dirty = this.isDirty(data.original, data.changes);
                             const analysis = data.changes.analysis;
+                            const groups = Object.values(ITagGroup)
+                                .map((group) => {
+                                    var items = analysis[group];
+
+                                    if (items == null) {
+                                        return null;
+                                    } else {
+                                        return {group, items: items};
+                                    }
+                                })
+                                .filter(notNullOrUndefined);
 
                             return (
                                 <div>
@@ -139,48 +171,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     }
 
                                     {
-                                        analysis.subject == null ? null : (
-                                            <div>
-                                                <h4>{gettext('Organisation')}</h4>
+                                        groups.map(({group, items}) => (
+                                            <div key={group}>
+                                                <h4>{getGroupLabel(group)}</h4>
 
                                                 <TagListComponent
-                                                    tags={analysis.subject}
+                                                    tags={items}
                                                     onChange={(tags) => {
-                                                        this.updateTags({subject: tags});
+                                                        this.updateTags({[group]: tags});
                                                     }}
                                                 />
                                             </div>
-                                        )
-                                    }
-
-                                    {
-                                        analysis.place == null ? null : (
-                                            <div>
-                                                <h4>{gettext('Place')}</h4>
-
-                                                <TagListComponent
-                                                    tags={analysis.place}
-                                                    onChange={(tags) => {
-                                                        this.updateTags({place: tags});
-                                                    }}
-                                                />
-                                            </div>
-                                        )
-                                    }
-
-                                    {
-                                        analysis.subject == null ? null : (
-                                            <div>
-                                                <h4>{gettext('Subject')}</h4>
-
-                                                <TagListComponent
-                                                    tags={analysis.subject}
-                                                    onChange={(tags) => {
-                                                        this.updateTags({subject: tags});
-                                                    }}
-                                                />
-                                            </div>
-                                        )
+                                        ))
                                     }
                                 </div>
                             );
