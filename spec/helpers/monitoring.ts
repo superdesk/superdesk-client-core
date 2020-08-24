@@ -331,11 +331,11 @@ class Monitoring {
         this.previewAction = function(groupIndex, itemIndex) {
             const item = this.getItem(groupIndex, itemIndex);
 
-            browser.wait(ECE.elementToBeClickable(item));
+            browser.wait(ECE.elementToBeClickable(item), 5000);
             item.click();
             var preview = element(by.id('item-preview'));
 
-            waitFor(preview);
+            waitFor(preview, 5000);
         };
 
         this.closePreview = function() {
