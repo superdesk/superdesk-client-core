@@ -10,9 +10,9 @@ interface ITag {
 
 interface IAutoTaggingResponse {
     analysis: {
-        topic: Array<ITag>;
-        category: Array<ITag>;
-        place: Array<ITag>;
+        organisation?: Array<ITag>;
+        place?: Array<ITag>;
+        subject?: Array<ITag>;
     };
 }
 
@@ -71,35 +71,53 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             ? (<div>{gettext('loading...')}</div>)
                             : (
                                 <div>
-                                    <h4>Topic</h4>
+                                    {
+                                        response.analysis.subject == null ? null : (
+                                            <div>
+                                                <h4>{gettext('Organisation')}</h4>
 
-                                    <ul>
-                                        {
-                                            (response.analysis.topic).map((item: ITag) => {
-                                                return (<li key={item.uuid}>{item.title}</li>);
-                                            })
-                                        }
-                                    </ul>
+                                                <ul>
+                                                    {
+                                                        (response.analysis.subject).map((item: ITag) => {
+                                                            return (<li key={item.uuid}>{item.title}</li>);
+                                                        })
+                                                    }
+                                                </ul>
+                                            </div>
+                                        )
+                                    }
 
-                                    <h4>Category</h4>
+                                    {
+                                        response.analysis.place == null ? null : (
+                                            <div>
+                                                <h4>{gettext('Place')}</h4>
 
-                                    <ul>
-                                        {
-                                            (response.analysis.category).map((item: ITag) => {
-                                                return (<li key={item.uuid}>{item.title}</li>);
-                                            })
-                                        }
-                                    </ul>
+                                                <ul>
+                                                    {
+                                                        (response.analysis.place).map((item: ITag) => {
+                                                            return (<li key={item.uuid}>{item.title}</li>);
+                                                        })
+                                                    }
+                                                </ul>
+                                            </div>
+                                        )
+                                    }
 
-                                    <h4>Place</h4>
+                                    {
+                                        response.analysis.subject == null ? null : (
+                                            <div>
+                                                <h4>{gettext('Subject')}</h4>
 
-                                    <ul>
-                                        {
-                                            (response.analysis.place).map((item: ITag) => {
-                                                return (<li key={item.uuid}>{item.title}</li>);
-                                            })
-                                        }
-                                    </ul>
+                                                <ul>
+                                                    {
+                                                        (response.analysis.subject).map((item: ITag) => {
+                                                            return (<li key={item.uuid}>{item.title}</li>);
+                                                        })
+                                                    }
+                                                </ul>
+                                            </div>
+                                        )
+                                    }
                                 </div>
                             )
                     }
