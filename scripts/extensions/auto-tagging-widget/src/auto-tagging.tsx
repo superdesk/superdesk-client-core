@@ -21,7 +21,7 @@ interface IProps {
 }
 
 interface IState {
-    response: IAutoTaggingResponse | null;
+    response: IAutoTaggingResponse | 'not-initialized' | 'loading';
 }
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
@@ -33,20 +33,24 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             super(props);
 
             this.state = {
-                response: null,
+                response: 'not-initialized',
             };
+
+            this.runAnalysis = this.runAnalysis.bind(this);
         }
-        componentDidMount() {
-            httpRequestJsonLocal<IAutoTaggingResponse>({
-                method: 'POST',
-                path: '/ai/',
-                payload: {
-                    service: 'imatrics',
-                    item_id: this.props.article._id,
-                },
-            }).then((response) => {
-                this.setState({
-                    response,
+        runAnalysis() {
+            this.setState({response: 'loading'}, () => {
+                httpRequestJsonLocal<IAutoTaggingResponse>({
+                    method: 'POST',
+                    path: '/ai/',
+                    payload: {
+                        service: 'imatrics',
+                        item_id: this.props.article._id,
+                    },
+                }).then((response) => {
+                    this.setState({
+                        response,
+                    });
                 });
             });
         }
@@ -66,10 +70,19 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         </button>
                     </div>
 
-                    {
-                        response == null
-                            ? (<div>{gettext('loading...')}</div>)
-                            : (
+                    {(() => {
+                        if (response === 'loading') {
+                            return (
+                                <div>{gettext('loading...')}</div>
+                            );
+                        } else if (response === 'not-initialized') {
+                            return (
+                                <button onClick={() => this.runAnalysis()}>
+                                    {gettext('Run')}
+                                </button>
+                            );
+                        } else {
+                            return (
                                 <div>
                                     {
                                         response.analysis.subject == null ? null : (
@@ -119,8 +132,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         )
                                     }
                                 </div>
-                            )
-                    }
+                            );
+                        }
+                    })()}
                 </div>
             );
         }
