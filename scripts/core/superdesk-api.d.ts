@@ -18,6 +18,7 @@ declare module 'superdesk-api' {
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
+    export type ICallable = (...args: Array<any>) => any;
 
 
     // EXTENSIONS
@@ -1116,6 +1117,8 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
+            memoize<T extends ICallable>(func: T, maxCacheEntryCount = 1): T;
+            generatePatch<T>(a: Partial<T>, b: Partial<T>): Partial<T>;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

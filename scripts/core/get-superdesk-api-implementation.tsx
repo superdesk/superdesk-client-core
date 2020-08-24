@@ -53,6 +53,8 @@ import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
 import {httpRequestJsonLocal} from './helpers/network';
+import {memoize as memoizeLocal} from './memoize';
+import {generatePatch} from './patch';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -283,6 +285,8 @@ export function getSuperdeskApiImplementation(
             dateToServerString: (date: Date) => {
                 return date.toISOString().slice(0, 19) + '+0000';
             },
+            memoize: memoizeLocal,
+            generatePatch,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(
