@@ -21,7 +21,7 @@ import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
-import {assertNever, Writeable} from './helpers/typescript-helpers';
+import {assertNever, Writeable, notNullOrUndefined} from './helpers/typescript-helpers';
 import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -120,6 +120,7 @@ export function getSuperdeskApiImplementation(
         httpRequestJsonLocal,
         helpers: {
             assertNever,
+            notNullOrUndefined,
         },
         entities: {
             article: {

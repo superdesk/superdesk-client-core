@@ -1043,6 +1043,7 @@ declare module 'superdesk-api' {
         };
         helpers: {
             assertNever(x: never): never;
+            notNullOrUndefined<T>(x: null | undefined | T): x is T;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
