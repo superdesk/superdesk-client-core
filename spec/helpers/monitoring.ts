@@ -331,7 +331,7 @@ class Monitoring {
         this.previewAction = function(groupIndex, itemIndex) {
             const item = this.getItem(groupIndex, itemIndex);
 
-            browser.wait(ECE.elementToBeClickable(item), 5000);
+            browser.wait(ECE.elementToBeClickable(item));
             item.click();
             var preview = element(by.id('item-preview'));
 
