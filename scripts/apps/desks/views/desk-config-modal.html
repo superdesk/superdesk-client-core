@@ -179,7 +179,6 @@
                 </fieldset>
                 <span ng-show="message">{{ message}}</span>
                 <span class="alert-danger" ng-show="_errorLimits" translate>Character limit exceeded, desk can not be created/updated.</span>
-                <span class="alert-danger" ng-show="_error">{{ _errorMessage}}</span>
             </form>
             <div class="modal__footer" ng-if="step.current === 'general'">
                 <button
@@ -413,7 +412,6 @@
                         </ul>
                     </div>
                 </div>
-                <span class="alert-danger" ng-show="_errorMessage">{{ _errorMessage}}</span>
             </div>
             <div class="modal__footer" ng-if="step.current === 'people'">
                 <button id="next-people"
