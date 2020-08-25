@@ -1363,15 +1363,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             // is an array when called from global search filters.
             const language = typeof item.language === 'string' ? item.language : getUserInterfaceLanguage();
 
-            if (
-                term.translations != null
-                && language != null
-                && term.translations.name[language] != null
-            ) {
-                return term.translations.name[language];
-            }
-
-            return term.name;
+            return term.translations?.name?.[language] ?? term.name;
         },
     };
 
