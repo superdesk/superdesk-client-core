@@ -2,8 +2,9 @@ import * as React from 'react';
 
 import {IArticle, ISuperdesk} from 'superdesk-api';
 import {getTagsListComponent} from './tag-list';
+import {getNewItemComponent} from './new-item';
 
-enum ITagGroup {
+export enum ITagGroup {
     organisation = 'organization',
     place = 'place',
     subject = 'subject',
@@ -14,6 +15,11 @@ export interface ITag {
     title: string;
     weight: number;
     media_topic: Array<any>;
+}
+
+export interface INewItem {
+    title: string;
+    group: ITagGroup;
 }
 
 type IAnalysisFields = {
@@ -30,28 +36,32 @@ interface IProps {
 
 interface IState {
     data: 'not-initialized' | 'loading' | {original: IAutoTaggingResponse; changes: IAutoTaggingResponse};
-    newItem: Partial<ITag> | null;
+    newItem: Partial<INewItem> | null;
+}
+
+export function getGroupLabel(group: ITagGroup, superdesk: ISuperdesk): string {
+    const {gettext} = superdesk.localization;
+    const {assertNever} = superdesk.helpers;
+
+    if (group === ITagGroup.organisation) {
+        return gettext('Organisation');
+    } else if (group === ITagGroup.place) {
+        return gettext('Place');
+    } else if (group === ITagGroup.subject) {
+        return gettext('Subject');
+    } else {
+        return assertNever(group);
+    }
 }
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {httpRequestJsonLocal} = superdesk;
     const {gettext} = superdesk.localization;
     const {memoize, generatePatch} = superdesk.utilities;
-    const {assertNever, notNullOrUndefined} = superdesk.helpers;
+    const {notNullOrUndefined} = superdesk.helpers;
 
     const TagListComponent = getTagsListComponent(superdesk);
-
-    function getGroupLabel(group: ITagGroup): string {
-        if (group === ITagGroup.organisation) {
-            return gettext('Organisation');
-        } else if (group === ITagGroup.place) {
-            return gettext('Place');
-        } else if (group === ITagGroup.subject) {
-            return gettext('Subject');
-        } else {
-            return assertNever(group);
-        }
-    }
+    const NewItemComponent = getNewItemComponent(superdesk);
 
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
@@ -66,6 +76,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.runAnalysis = this.runAnalysis.bind(this);
             this.updateTags = this.updateTags.bind(this);
+            this.createNewTag = this.createNewTag.bind(this);
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
         runAnalysis() {
@@ -105,6 +116,20 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     },
                 },
             });
+        }
+        createNewTag(newItem: INewItem, changes: IAutoTaggingResponse) {
+            const tag: ITag = {
+                uuid: Math.random().toString(),
+                title: newItem.title,
+                weight: 1,
+                media_topic: [],
+            }
+
+            this.updateTags({
+                [newItem.group]: (changes.analysis[newItem.group] ?? []).concat(tag),
+            });
+
+            this.setState({newItem: null});
         }
         render() {
             const {data} = this.state;
@@ -171,9 +196,36 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     }
 
                                     {
+                                        this.state.newItem == null
+                                            ? (
+                                                <button
+                                                    onClick={() => {
+                                                        this.setState({newItem: {}});
+                                                    }}
+                                                >
+                                                    {gettext('Create new item')}
+                                                </button>
+                                            )
+                                            : (
+                                                <NewItemComponent
+                                                    item={this.state.newItem}
+                                                    onChange={(newItem) => {
+                                                        this.setState({newItem});
+                                                    }}
+                                                    save={(newItem: INewItem) => {
+                                                        this.createNewTag(newItem, data.changes);
+                                                    }}
+                                                    cancel={() => {
+                                                        this.setState({newItem: null});
+                                                    }}
+                                                />
+                                            )
+                                    }
+
+                                    {
                                         groups.map(({group, items}) => (
                                             <div key={group}>
-                                                <h4>{getGroupLabel(group)}</h4>
+                                                <h4>{getGroupLabel(group, superdesk)}</h4>
 
                                                 <TagListComponent
                                                     tags={items}
