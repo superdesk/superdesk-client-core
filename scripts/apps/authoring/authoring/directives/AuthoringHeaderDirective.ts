@@ -179,6 +179,8 @@ export function AuthoringHeaderDirective(
                 if (scope.vocabulariesCollection == null) {
                     return vocabularies.getVocabularies().then(((vocabulariesCollection) => {
                         scope.vocabulariesCollection = vocabulariesCollection;
+
+                        scope.categoriesVocabulary = vocabulariesCollection.find(({_id}) => _id === 'categories');
                     }));
                 }
 
