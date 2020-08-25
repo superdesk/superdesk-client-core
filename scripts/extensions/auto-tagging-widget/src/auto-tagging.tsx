@@ -138,13 +138,19 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 <div>
                     <div>
                         <span>{label}</span>
-                        <button
-                            onClick={() => {
-                                console.log('test');
-                            }}
-                        >
-                            +
-                        </button>
+
+                        {
+                            data === 'loading' || data === 'not-initialized' ? null : (
+                                <button
+                                    onClick={() => {
+                                        this.setState({newItem: {}});
+                                    }}
+                                    aria-label={gettext('Add tag')}
+                                >
+                                    +
+                                </button>
+                            )
+                        }
                     </div>
 
                     {(() => {
@@ -165,7 +171,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 .map((group) => {
                                     var items = analysis[group];
 
-                                    if (items == null) {
+                                    if (items == null || items.length < 1) {
                                         return null;
                                     } else {
                                         return {group, items: items};
@@ -196,30 +202,20 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     }
 
                                     {
-                                        this.state.newItem == null
-                                            ? (
-                                                <button
-                                                    onClick={() => {
-                                                        this.setState({newItem: {}});
-                                                    }}
-                                                >
-                                                    {gettext('Create new item')}
-                                                </button>
-                                            )
-                                            : (
-                                                <NewItemComponent
-                                                    item={this.state.newItem}
-                                                    onChange={(newItem) => {
-                                                        this.setState({newItem});
-                                                    }}
-                                                    save={(newItem: INewItem) => {
-                                                        this.createNewTag(newItem, data.changes);
-                                                    }}
-                                                    cancel={() => {
-                                                        this.setState({newItem: null});
-                                                    }}
-                                                />
-                                            )
+                                        this.state.newItem == null ? null : (
+                                            <NewItemComponent
+                                                item={this.state.newItem}
+                                                onChange={(newItem) => {
+                                                    this.setState({newItem});
+                                                }}
+                                                save={(newItem: INewItem) => {
+                                                    this.createNewTag(newItem, data.changes);
+                                                }}
+                                                cancel={() => {
+                                                    this.setState({newItem: null});
+                                                }}
+                                            />
+                                        )
                                     }
 
                                     {
