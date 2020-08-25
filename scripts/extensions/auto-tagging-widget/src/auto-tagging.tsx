@@ -123,7 +123,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 title: newItem.title,
                 weight: 1,
                 media_topic: [],
-            }
+            };
 
             this.updateTags({
                 [newItem.group]: (changes.analysis[newItem.group] ?? []).concat(tag),
