@@ -5,7 +5,7 @@ import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 
 export enum ITagGroup {
-    organisation = 'organization',
+    organisation = 'organisation',
     place = 'place',
     subject = 'subject',
 }
