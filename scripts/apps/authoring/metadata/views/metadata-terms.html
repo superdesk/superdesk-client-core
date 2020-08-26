@@ -21,7 +21,7 @@
                             style="display: flex;"
                             ng-click="selectTerm(t, $event)"
                         >
-                            <sd-user-avatar data-user="t.user"></sd-user-avatar>
+                            <sd-user-avatar ng-if="t.user != null" data-user="t.user"></sd-user-avatar>
                             <span>{{getLocaleName(t, item)}}</span>
                         </button>
                     </li>
