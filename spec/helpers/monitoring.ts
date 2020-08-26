@@ -335,7 +335,7 @@ class Monitoring {
             item.click();
             var preview = element(by.id('item-preview'));
 
-            waitFor(preview);
+            waitFor(preview, 5000);
         };
 
         this.closePreview = function() {

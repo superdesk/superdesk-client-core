@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
+import {getLabelForStage} from 'apps/workspace/content/constants';
 
 /**
  * @ngdoc controller
@@ -148,7 +149,7 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
             groupLabel = activeWorkspace === 'workspace' ?
                 group.header + ' ' + group.subheader : group.subheader;
         } else {
-            groupLabel = group.header + ' ' + $filter('splitText')(group.type);
+            groupLabel = getLabelForStage(group);
         }
 
         return groupLabel;

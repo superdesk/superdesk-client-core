@@ -144,7 +144,7 @@ export function getLabelForStage(stage: IStage | ICard): string {
     }
 
     if (isCard(stage)) {
-        return getLabelForStageType(stage.type) ?? SplitFilter()(stage.type);
+        return getLabelForStageType(stage.type) ?? stage.type;
     }
 }
 

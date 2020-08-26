@@ -241,7 +241,6 @@
         <div ng-show="!editor.dateline.hideDate" class="dateline-date">
             <select class="field__select" id="datelineMonth"
                     tabindex="{{editor.dateline.order}}"
-                    ng-options="monthName | translate for (monthName, monthValue) in monthNames"
                     ng-disabled="!item.dateline.located || !_editable || schema.dateline.readonly === true"
                     ng-change="resetNumberOfDays(true, dateline.month)"
                     placeholder="Choose month"
@@ -251,6 +250,7 @@
                     data-append-class="active"
                     tabindex="{{editor.dateline.order}}">
                 <option value=""></option>
+                <option ng-repeat="monthName in monthNames track by monthName.id" value="{{monthName.id}}">{{monthName.label}}</option>
             </select>
 
             <select class="field__select" id="datelineDay"
