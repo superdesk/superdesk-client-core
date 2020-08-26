@@ -1,4 +1,4 @@
-import {debounce} from 'lodash';
+import {debounce, noop} from 'lodash';
 import {appConfig} from 'appConfig';
 import {KEYS} from 'core/keyboard/keyboard';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -42,9 +42,12 @@ export const sdStaticAutocompleteDirective = () => ({
                     scope.available = response._items.map((_item) => _item.value);
                     scope.suggestions = [];
                 });
-            }
+            } else {
+                scope.available = [];
+                scope.suggestions = [];
 
-            return Promise.reject();
+                return Promise.resolve();
+            }
         };
 
         const filterSuggestions = () => {

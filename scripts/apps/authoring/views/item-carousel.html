@@ -136,17 +136,20 @@
                     tansa-scope-sync
                     ></sd-line-input>
 
-                <sd-line-input
+                <div
                     ng-if="carouselItem[carouselItem.fieldId]"
-                    ng-model="carouselItem[carouselItem.fieldId].description_text"
-                    class="sd-media-carousel__media-caption"
-                    data-onchange="onchange()"
-                    data-placeholder="Add caption"
-                    data-disabled="!editable"
-                    data-textarea="true"
-                    data-sync="true"
-                    tansa-scope-sync
-                    ></sd-line-input>
+                    class="sd-line-input sd-media-carousel__media-caption"
+                >
+                    <sd-plain-text-editor
+                        on-change="handleInputChange"
+                        on-change-data="{association: carouselItem.fieldId, field: 'description_text'}"
+                        value="carouselItem[carouselItem.fieldId].description_text"
+                        classes="'sd-line-input__input'"
+                        spellcheck="true"
+                        language="item.language"
+                        placeholder="'Add caption'"
+                    />
+                </div>
 
                 <div sd-item-crops
                      data-item="item.associations[fieldVersion.fieldId]"
@@ -164,7 +167,7 @@
                 class="btn btn--small btn--hollow btn--primary"
                 translate
             >
-                Upload an image
+                Upload new
             </button>
         </div>
 

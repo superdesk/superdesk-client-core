@@ -74,6 +74,7 @@
     text-align: center;
     background: $archive-sidebar-bg;
     flex-shrink: 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
     @include transition(all ease 0.1s);
     overflow: hidden;
     i {
@@ -242,7 +243,6 @@
         line-height: 1.8rem;
         margin: 2px 1px 2px 0;
         span {
-            text-transform: capitalize;
             opacity: 0.75;
             margin-right: 0.5rem
         }
@@ -351,7 +351,8 @@
 
 .sortbar {
     .label-total {
-        margin-right: 5px;
+        margin: 0 $sd-base-increment / 2;
+        background-color: $grayText;
     }
 }
 
@@ -404,9 +405,6 @@
     }
 
     .dropdown__menu {
-        .label-group {
-            text-transform: capitalize;
-        }
         &-divider {
             clear: both;
         }

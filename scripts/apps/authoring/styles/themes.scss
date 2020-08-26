@@ -238,9 +238,7 @@ body, html {
             display: flex;
             flex-direction: row;
             align-items: flex-end;
-            input {
-                text-transform: uppercase;
-            }
+
             input, select, option {
                 color: inherit;
                 font-size: 14px;
@@ -360,8 +358,14 @@ body, html {
     }
     .text-editor:hover, .headline:hover, .abstract:hover, .field__select:hover {
         border-bottom-color: rgba(123, 123, 123, 0.60) !important;
-        cursor: text;
     }
+
+    .text-editor, .headline, .abstract {
+        &:not([disabled]) {
+            cursor: text;
+        }
+    }
+
     .field__select:hover {
         -moz-appearance: menulist-button;
         -webkit-appearance: menulist-button;

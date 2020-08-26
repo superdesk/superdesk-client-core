@@ -8,6 +8,9 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {VideoComponent} from './components/video';
+import {TextAreaInput} from './components/Form';
+import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
+import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
 
 /**
  * Gives top shadow for scroll elements
@@ -62,20 +65,6 @@ function CreateButtonDirective() {
     return {
         restrict: 'C',
         template: '<i class="icon-plus-large"></i><span class="circle"></span>',
-    };
-}
-
-AutofocusDirective.$inject = [];
-function AutofocusDirective() {
-    return {
-        link: function(scope, element) {
-            _.defer(() => {
-                var value = element.val();
-
-                element.val('').focus();
-                element.val(value);
-            });
-        },
     };
 }
 
@@ -619,6 +608,7 @@ function TimezoneDirective(tzdata, $timeout) {
         link: function(scope, el) {
             scope.timeZones = []; // all time zones to choose from
             scope.tzSearchTerm = ''; // the current time zone search term
+            scope.getTimezoneLabel = getTimezoneLabel;
 
             // filtered time zone list containing only those that match
             // user-provided search term
@@ -652,7 +642,11 @@ function TimezoneDirective(tzdata, $timeout) {
                 termLower = searchTerm.toLowerCase();
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
-                    (item) => item.toLowerCase().indexOf(termLower) >= 0,
+                    (item) =>
+                        item.toLowerCase().indexOf(termLower) >= 0 ||
+                           scope.getTimezoneLabel(item)
+                               .toLowerCase()
+                               .indexOf(termLower) >= 0,
                 );
             };
 
@@ -1214,7 +1208,6 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdShadow', ShadowDirective)
     .filter('nl2el', NewlineToElement)
     .directive('sdCreateBtn', CreateButtonDirective)
-    .directive('sdAutofocus', AutofocusDirective)
     .directive('sdAutoexpand', AutoexpandDirective)
     .directive('sdTimezone', TimezoneDirective)
     .directive('sdDatepickerInner', DatepickerInnerDirective)
@@ -1241,6 +1234,31 @@ export default angular.module('superdesk.core.ui', [
         reactToAngular1(
             VideoComponent,
             ['item'],
+        ),
+    )
+    .component('sdPlainTextEditor',
+        reactToAngular1(
+            PlainTextEditor,
+            ['value', 'onChange', 'classes', 'onChangeData', 'placeholder', 'spellcheck', 'language', 'onFocus'],
+        ))
+    .component('sdTextAreaInput',
+        reactToAngular1(
+            TextAreaInput,
+            [
+                'field',
+                'value',
+                'label',
+                'onChange',
+                'autoHeight',
+                'autoHeightTimeout',
+                'nativeOnChange',
+                'placeholder',
+                'readOnly',
+                'maxLength',
+                'onFocus',
+                'boxed',
+                'required',
+            ],
         ),
     )
 ;

@@ -197,10 +197,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     spellcheck() {
-        if (this.props.spellchecking.enabled !== true) {
-            return;
-        }
-
         this.spellcheckCancelFn();
 
         this.spellcheckCancelFn = (() => {
@@ -471,7 +467,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 setProperty('--preCharacterLimit', appConfig.features.showCharacterLimit + 'ch');
         }
 
-        this.spellcheck();
+        if (this.props.spellchecking.enabled) {
+            this.spellcheck();
+        }
     }
 
     handleRefs(editor) {
@@ -492,7 +490,10 @@ export class Editor3Component extends React.Component<IProps, IState> {
             window.instgrm.Embeds.process();
         }
 
-        if (prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()) {
+        if (
+            this.props.spellchecking.enabled &&
+            prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()
+        ) {
             this.spellcheck();
         }
     }

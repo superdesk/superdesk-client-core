@@ -29,6 +29,7 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.core.editor3'));
     beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.extension-points'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($window) => {
         $window.onbeforeunload = angular.noop;
@@ -48,6 +49,10 @@ describe('authoring', () => {
     beforeEach(inject((session) => {
         session.start({_id: 'sess'}, {_id: USER});
         expect(session.identity._id).toBe(USER);
+    }));
+
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
 
     it('can open an item',
@@ -101,35 +106,6 @@ describe('authoring', () => {
             expect($location.path(), '/authoring/' + $scope.item._id);
         }));
 
-    it('can autosave and save an item', (done) => inject((api, $q, $timeout, $rootScope) => {
-        var $scope = startAuthoring({guid: GUID, _id: GUID, task: 'desk:1', _locked: true, _editable: true},
-                'edit'),
-            headline = 'test headline';
-
-        expect($scope.dirty).toBe(false);
-        expect($scope.item.guid).toBe(GUID);
-        spyOn(api, 'save').and.returnValue($q.when({headline: 'foo'}));
-
-        $scope.item.headline = headline;
-        $scope.autosave($scope.item)
-            .then(() => {
-                expect($scope.dirty).toBe(true);
-
-                $timeout.flush(3001);
-                expect(api.save).toHaveBeenCalled();
-                expect($scope.item.headline).toBe(headline);
-
-                $scope.save();
-                $rootScope.$digest();
-                expect($scope.dirty).toBe(false);
-                expect(api.save).toHaveBeenCalled();
-            })
-            .finally(done);
-
-        // it must flush timeout only when the applyMiddleware promise is resolved
-        setTimeout(() => $timeout.flush(5000), 10);
-    }));
-
     it('can use a previously created autosave', inject(() => {
         var $scope = startAuthoring({_autosave: {headline: 'test'}}, 'edit');
 
@@ -137,19 +113,24 @@ describe('authoring', () => {
         expect($scope.item.headline).toBe('test');
     }));
 
-    it('can save while item is being autosaved', inject(($rootScope, $timeout, $q, api) => {
+    it('can save while item is being autosaved', (done) => inject(($rootScope, $timeout, $q, api) => {
         var $scope = startAuthoring({headline: 'test', task: 'desk:1'}, 'edit');
 
         $scope.item.body_html = 'test';
         $rootScope.$digest();
         $timeout.flush(1000);
 
-        spyOn(api, 'save').and.returnValue($q.when({}));
+        spyOn(api, 'save').and.returnValue(Promise.resolve({}));
         $scope.save();
         $rootScope.$digest();
 
         $timeout.flush(5000);
-        expect($scope.item._autosave).toBeNull();
+
+        setTimeout(() => { // save uses async middleware. HTTP request will be started asynchronously
+            expect($scope.item._autosave).toBeNull();
+
+            done();
+        });
     }));
 
     it('can close item after save work confirm', inject(($rootScope, $q, $location, authoring, reloadService) => {
@@ -293,7 +274,7 @@ describe('authoring', () => {
 
             spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-            spyOn(authoring, 'autosave').and.returnValue(item);
+            spyOn(authoring, 'autosave').and.returnValue(Promise.resolve(item));
             spyOn(authoring, 'publish').and.returnValue(item);
             let scope = startAuthoring(item, 'edit');
 
@@ -627,7 +608,7 @@ describe('authoring', () => {
         }));
 
         it('updates orig item on save',
-            inject((authoring, $rootScope, $httpBackend, api, $q, urls) => {
+            (done) => inject((authoring, $rootScope, $httpBackend, $q, urls) => {
                 var item = {headline: 'foo'};
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
@@ -636,9 +617,14 @@ describe('authoring', () => {
                     .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();
-                $httpBackend.flush();
-                expect(orig._etag).toBe('new');
-                expect(orig._current_version).toBe(2);
+
+                setTimeout(() => { // save uses async middleware. HTTP request will be started asynchronously
+                    $httpBackend.flush();
+                    expect(orig._etag).toBe('new');
+                    expect(orig._current_version).toBe(2);
+
+                    done();
+                });
             }));
     });
 
@@ -734,6 +720,10 @@ describe('autosave', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
+
     it('can fetch an autosave for item locked by user and is editable',
         inject((autosave, api, $q, $rootScope) => {
             spyOn(api, 'find').and.returnValue($q.when({}));
@@ -758,39 +748,30 @@ describe('autosave', () => {
             expect(api.find).not.toHaveBeenCalled();
         }));
 
-    it('can create an autosave', inject((autosave, api, $q, $timeout, $rootScope) => {
+    it('can create an autosave', (done) => inject((autosave, api, $timeout, $rootScope) => {
         var orig: any = {_id: 1, _etag: 'x', _locked: true, _editable: true};
         var item = Object.create(orig);
 
         item.headline = 'test';
-        spyOn(api, 'save').and.returnValue($q.when({_id: 2}));
-        autosave.save(item, orig);
-        $rootScope.$digest();
+        spyOn(api, 'save').and.returnValue(Promise.resolve({_id: 2}));
+
+        autosave.save(
+            item,
+            orig,
+            0,
+            () => {
+                expect(api.save).toHaveBeenCalledWith('archive_autosave', {}, {_id: 1, headline: 'test'});
+                expect(orig._autosave._id).toBe(2);
+                expect(item.headline).toBe('test');
+                expect(orig.headline).not.toBe('test');
+
+                done();
+            },
+        );
+
         expect(api.save).not.toHaveBeenCalled();
+        $rootScope.$digest();
         $timeout.flush(5000);
-        expect(api.save).toHaveBeenCalledWith('archive_autosave', {}, {_id: 1, headline: 'test'});
-        expect(orig._autosave._id).toBe(2);
-        expect(item.headline).toBe('test');
-        expect(orig.headline).not.toBe('test');
-    }));
-
-    it('can save multiple items', inject((autosave, api, $q, $timeout, $rootScope) => {
-        var item1 = {_id: 1, _etag: '1', _locked: true, _editable: true},
-            item2 = {_id: 2, _etag: '2', _locked: true, _editable: true};
-
-        spyOn(api, 'save').and.returnValue($q.when({}));
-
-        autosave.save(_.create(item1), item1);
-        $timeout.flush(1500);
-
-        autosave.save(_.create(item2), item2);
-        $timeout.flush(2500);
-
-        expect(api.save).toHaveBeenCalled();
-        expect(api.save.calls.count()).toBe(1);
-
-        $timeout.flush(5000);
-        expect(api.save.calls.count()).toBe(2);
     }));
 });
 
@@ -799,6 +780,7 @@ describe('lock service', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     var user = {_id: 'user'};
     var sess = {_id: 'sess'};
@@ -806,6 +788,10 @@ describe('lock service', () => {
 
     beforeEach(inject((session) => {
         session.start(sess, user);
+    }));
+
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
 
     it('can test if item is locked', inject((lock) => {
@@ -877,6 +863,7 @@ describe('authoring actions', () => {
     beforeEach(window.module('superdesk.apps.desks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((desks, $q) => {
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));

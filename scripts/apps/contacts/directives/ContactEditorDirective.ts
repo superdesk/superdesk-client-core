@@ -52,6 +52,7 @@ export function ContactEditorDirective(
                     svc: services,
                     contact: scope.origContact,
                     onCancel: scope.onCancel,
+                    formClass: 'side-panel side-panel--shadow-right side-panel--bg-00',
                 }),
             );
 

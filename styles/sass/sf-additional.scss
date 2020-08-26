@@ -1174,7 +1174,7 @@
         margin-right: 10px;
     }
     .dropdown__toggle {
-        color: #808080;
+        color: $sd-gray-text;
         min-width: auto !important;
     }
     .direction {
@@ -2007,4 +2007,7 @@ sd-multi-image-edit {
         background-color: $white;
         border: 1px solid rgba(94, 169, 200, 0.6);
     }
+}
+.sd-empty {
+    display: contents !important;
 }

@@ -12,7 +12,7 @@
 
                         <!-- Filter content using content profile -->
                         <div data-test-id="content-profile-dropdown" class="dropdown sd-flex-no-shrink" dropdown >
-                            <button class="filter-trigger dropdown__toggle navbtn navbtn--text-only" dropdown-toggle title="{{ 'Filters' | translate }}">
+                            <button class="filter-trigger dropdown__toggle navbtn navbtn--left" dropdown-toggle title="{{ 'Filters' | translate }}">
                                 <i class="icon-filter-large"></i>
                             </button>
                             <ul class="dropdown__menu dropdown__menu--scrollable">
@@ -115,10 +115,14 @@
                                 <i class="icon-settings"></i>
                             </button>
 
-                            <div style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;">
+                            <div
+                                ng-if="type === 'monitoring'"
+                                style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;"
+                            >
                                 <sd-monitoring-filtering-buttons
                                     desk-id="activeDeskId"
                                     toggle-filter="aggregate.toggleCustomFilter"
+                                    set-filter="aggregate.setCustomFilter"
                                     is-filter-active="aggregate.isCustomFilterActive"
                                     active-filters="aggregate.activeFilters.customFilters"
                                     add-resource-updated-event-listener="addResourceUpdatedEventListener"

@@ -3,22 +3,23 @@
     ng-repeat="field in fields track by field.field"
     data-test-id="media-metadata-editor"
 >
-    <sd-line-input
+
+    <div
         ng-if="(!field.type && !field.cv) || (field.type === 'string' && !field.cv)"
-        ng-model="item[field.field]"
-        data-sync="true"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-label="{{ field.label }}"
-        data-required="field.required"
-        data-disabled="isDisabled(field)"
-        data-onchange="onChange({key: field.field})"
-        data-onblur="onBlur()"
-        data-maxlength="field.maxlength"
-        data-placeholder="{{ placeholder[field.field] }}"
-        data-textarea="field.textarea"
+        class="sd-line-input sd-line-input--boxed"
+        ng-class="{'sd-line-input--required': field.required}"
         data-test-id="{{'field--' + field.field}}"
-    />
+    >
+        <label class="sd-line-input__label">{{field.label}}</label>
+        <sd-plain-text-editor
+            on-change="handleInputChange"
+            on-change-data="{field: field.field}"
+            value="item[field.field]"
+            classes="'sd-line-input__input'"
+            spellcheck="true"
+            language="item.language"
+        />
+    </div>
 
     <sd-line-input
         ng-if="field.cv && field.cv.field_type === 'text'"
@@ -77,7 +78,7 @@
             ng-if="!(field.field === 'place' && features.places_autocomplete) && field.field !== 'keywords' && field.cv.selection_type !== 'multi selection'"
             class="data sd-terms--boxed"
             data-item="item"
-            data-field="{{ field.cv.schema_field || 'subject'}}"
+            data-field="{{ field.field }}"
             data-unique="qcode"
             data-list="field.cv.items"
             data-cv="field.cv"

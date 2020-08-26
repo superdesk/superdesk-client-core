@@ -17,6 +17,24 @@ import {authoring} from './helpers/authoring';
 
 import {el, ECE, els, hover, selectFilesForUpload} from 'end-to-end-testing-helpers';
 
+function uploadMedia(imageName) {
+    el(['media-gallery--upload-placeholder']).click();
+
+    browser.wait(ECE.presenceOf(el(['image-upload-input'])));
+    selectFilesForUpload(el(['image-upload-input']), [imageName]);
+
+    el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]'))
+        .sendKeys('image headline');
+    el(['media-metadata-editor', 'field--alt_text'], by.tagName('[contenteditable]'))
+        .sendKeys('image alt text');
+    el(['media-metadata-editor', 'field--description_text'], by.tagName('[contenteditable]'))
+        .sendKeys('image description');
+
+    el(['multi-image-edit--start-upload']).click();
+
+    el(['change-image', 'done']).click();
+}
+
 describe('authoring', () => {
     beforeEach(() => {
         monitoring.openMonitoring();
@@ -695,18 +713,7 @@ describe('authoring', () => {
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
 
-        el(['media-gallery--upload-placeholder']).click();
-
-        browser.wait(ECE.presenceOf(el(['image-upload-input'])));
-        selectFilesForUpload(el(['image-upload-input']), ['image-big.jpg']);
-
-        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
-        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
-        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
-
-        el(['multi-image-edit--start-upload']).click();
-
-        el(['change-image', 'done']).click();
+        uploadMedia('image-big.jpg');
 
         assertToastMsg('success', 'Item updated.');
         waitForToastMsgDissapear('success', 'Item updated.');
@@ -728,18 +735,7 @@ describe('authoring', () => {
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
 
-        el(['media-gallery--upload-placeholder']).click();
-
-        browser.wait(ECE.presenceOf(el(['image-upload-input'])));
-        selectFilesForUpload(el(['image-upload-input']), ['image-big.jpg']);
-
-        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
-        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
-        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
-
-        el(['multi-image-edit--start-upload']).click();
-
-        el(['change-image', 'done']).click();
+        uploadMedia('image-big.jpg');
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
     });
@@ -753,18 +749,7 @@ describe('authoring', () => {
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
 
-        el(['media-gallery--upload-placeholder']).click();
-
-        browser.wait(ECE.presenceOf(el(['image-upload-input'])));
-        selectFilesForUpload(el(['image-upload-input']), ['image-red.jpg']);
-
-        el(['media-metadata-editor', 'field--headline'], by.tagName('input')).sendKeys('image headline');
-        el(['media-metadata-editor', 'field--alt_text'], by.tagName('input')).sendKeys('image alt text');
-        el(['media-metadata-editor', 'field--description_text'], by.tagName('textarea')).sendKeys('image description');
-
-        el(['multi-image-edit--start-upload']).click();
-
-        el(['change-image', 'done']).click();
+        uploadMedia('image-red.jpg');
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
 

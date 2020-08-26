@@ -73,8 +73,11 @@
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
           <i class="filetype-icon-large-composite"></i>
           <p class="title preview-headline"
-             ng-if="selected.preview.headline"
-             ng-class="{condensed: !lock}" sd-html-preview="selected.preview.headline"></p>
+            ng-if="selected.preview.headline"
+            ng-class="{condensed: !lock}"
+            sd-html-preview="selected.preview.headline"
+            data-test-id="field--headline"
+          ></p>
         </div>
 
         <div ng-hide="hideActions()" class="action-menu">
@@ -87,8 +90,11 @@
             class="open-item"><i class="icon-external"></i></a></div>
 
         <p class="title preview-headline"
-           ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
-           ng-class="{condensed: !lock}" sd-html-preview="selected.preview.headline"></p>
+          ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
+          ng-class="{condensed: !lock}"
+          sd-html-preview="selected.preview.headline"
+          data-test-id="field--headline"
+        ></p>
 
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 

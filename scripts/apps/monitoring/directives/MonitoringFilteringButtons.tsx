@@ -11,6 +11,7 @@ interface IProps {
     deskId: IDesk['_id'];
     isFilterActive(button: IMonitoringFilter): boolean;
     toggleFilter(button: IMonitoringFilter): void;
+    setFilter(button: IMonitoringFilter): void;
     addResourceUpdatedEventListener: any;
 
     // `activeFilters` isn't meant to be read
@@ -77,6 +78,18 @@ class FilterButton extends React.PureComponent<IPropsFilterButton, IState> {
                 this.fetchItems();
             }
         });
+
+        const {button} = this.props;
+        const active = this.props.isFilterActive(button);
+
+        if (active) {
+            // Filters depend on a selected desk.
+            // Run filters again to ensure that the latest filtering data is being applied.
+
+            // After switching a desk, this component is reloaded, but the variable holding
+            // custom filters doesn't refresh automatically.
+            this.props.setFilter(button);
+        }
     }
     render() {
         if (this.state.matchingItemsCount == null) {
@@ -98,13 +111,7 @@ class FilterButton extends React.PureComponent<IPropsFilterButton, IState> {
                     style={active ? 'filled' : 'hollow'}
                     size="small"
                     onClick={() => {
-                        this.props.toggleFilter({
-                            ...button,
-                            query: {
-                                ...button.query,
-                                'task.desk': [this.props.deskId],
-                            },
-                        });
+                        this.props.toggleFilter(button);
                     }}
                     data-test-id="toggle-button"
                 />
@@ -124,7 +131,7 @@ class MonitoringFilteringButtonsComponent extends React.PureComponent<IProps, {b
             Object.values(extensions)
                 .map(
                     (extension) =>
-                        extension.activationResult?.contributions?.monitoring?.getFilteringButtons?.(),
+                        extension.activationResult?.contributions?.monitoring?.getFilteringButtons?.(this.props.deskId),
                 )
                 .filter((p) => p != null),
         ).then((res) => {

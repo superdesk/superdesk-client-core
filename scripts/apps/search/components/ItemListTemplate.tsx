@@ -23,11 +23,7 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                 />
                 {
                     item.priority || item.urgency
-                        ? <ListPriority
-                            item={item}
-                            svc={this.props.svc}
-                            scope={this.props.scope}
-                        />
+                        ? <ListPriority item={item} singleLine={this.props.singleLine} />
                         : null
                 }
                 <ListItemInfo
@@ -41,11 +37,12 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                     swimlane={this.props.swimlane}
                     versioncreator={this.props.versioncreator}
                     narrow={this.props.narrow}
-                    svc={this.props.svc}
-                    scope={this.props.scope}
                     isNested={this.props.isNested}
                     showNested={this.props.showNested}
                     toggleNested={this.props.toggleNested}
+                    singleLine={this.props.singleLine}
+                    customRender={this.props.customRender}
+                    viewType={this.props.viewType}
                 />
                 {this.props.getActionsMenu()}
             </div>

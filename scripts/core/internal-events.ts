@@ -5,6 +5,7 @@ interface IInternalEvents {
         field: string;
         image: IArticle;
     };
+    saveArticleInEditMode: void;
     dangerouslyOverwriteAuthoringData: Partial<IArticle>;
 }
 

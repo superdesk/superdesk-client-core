@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {forEach} from 'lodash';
+import ng from 'core/services/ng';
 
 import {HighlightsList} from './index';
 
@@ -16,6 +17,10 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
+    $filter: any;
+    highlightsService: any;
+    $location: any;
+
     constructor(props) {
         super(props);
 
@@ -23,6 +28,10 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
         this.getHighlightStatuses = this.getHighlightStatuses.bind(this);
         this.getHighlights = this.getHighlights.bind(this);
         this.renderDropdown = this.renderDropdown.bind(this);
+
+        this.$filter = ng.get('$filter');
+        this.highlightsService = ng.get('highlightsService');
+        this.$location = ng.get('$location');
     }
 
     toggle(event) {
@@ -43,15 +52,13 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
      * @return {Object}
      */
     getHighlightStatuses(highlights, item) {
-        const {$filter, highlightsService} = this.props.svc;
-
         const highlightStatuses = {};
         const highlightsById = this.props.highlightsById;
 
         forEach(highlights, (highlight) => {
-            const hours = $filter('hoursFromNow')(item.versioncreated);
+            const hours = this.$filter('hoursFromNow')(item.versioncreated);
 
-            highlightStatuses[highlight] = highlightsService.isInDateRange(
+            highlightStatuses[highlight] = this.highlightsService.isInDateRange(
                 highlightsById[highlight], hours,
             );
         });
@@ -75,51 +82,48 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
     }
 
     render() {
-        const {$location} = this.props.svc;
         const highlights = this.getHighlights();
 
         const hasActiveHighlight = function() {
             const statuses = this.getHighlightStatuses(highlights, this.props.item);
 
-            if ($location.path() === '/workspace/highlights') {
-                return statuses[$location.search().highlight];
+            if (this.$location.path() === '/workspace/highlights') {
+                return statuses[this.$location.search().highlight];
             }
 
             return highlights.some((h) => statuses[h]);
         }.call(this);
 
-        return React.createElement(
-            'div',
-            {
-                className: 'highlights-box',
-                onClick: this.toggle,
-            },
-            highlights.length ? React.createElement(
-                'div',
-                {className: 'highlights-list dropdown'},
-                React.createElement(
-                    'button',
-                    {className: 'dropdown__toggle'},
-                    React.createElement('i', {
-                        className: classNames({
-                            'icon-star': highlights.length === 1,
-                            'icon-multi-star': highlights.length > 1,
-                            'red': hasActiveHighlight,
-                        }),
-                    }),
-                ),
-            ) : null,
+        return (
+            <div className="highlights-box" onClick={this.toggle}>
+                {
+                    highlights.length
+                        ? (
+                            <div className="highlights-list dropdown">
+                                <button className="dropdown__toggle" data-test-id="highlights-indicator">
+                                    <i className={classNames({
+                                        'icon-star': highlights.length === 1,
+                                        'icon-multi-star': highlights.length > 1,
+                                        'red': hasActiveHighlight,
+                                    })} />
+                                </button>
+                            </div>
+                        )
+                        : null
+                }
+            </div>
         );
     }
 
     renderDropdown() {
-        const elem = React.createElement(HighlightsList, {
-            item: this.props.item,
-            highlights: this.getHighlights(),
-            highlightsById: this.props.highlightsById,
-            svc: this.props.svc,
-            scope: this.props.scope,
-        });
+        const elem = (
+            <HighlightsList
+                item={this.props.item}
+                highlights={this.getHighlights()}
+                highlightsById={this.props.highlightsById}
+                viewType={this.props.viewType}
+            />
+        );
 
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
 
@@ -131,8 +135,6 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
 }
 
 HighlightsInfo.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
     item: PropTypes.any,
     highlightsById: PropTypes.any,
 };

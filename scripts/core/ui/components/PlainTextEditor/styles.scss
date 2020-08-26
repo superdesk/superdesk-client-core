@@ -1,0 +1,55 @@
+[class^="--dark-ui"], [class*="--dark-ui"], .dark-ui {
+    .sd-line-input.sd-line-input--boxed {
+        .sd-line-input__input.plain-text-editor {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 6px 10px 0 10px;
+            min-height: 32px;
+            border-radius: 2px;
+            font-size: 14px;
+            line-height: 18px;
+            transition: background-color 0.2s, border-bottom-color 0.2s;
+
+            &.focus {
+                box-shadow: 0 1px 0 0 #5ea9c8;
+                border-color: #5ea9c8;
+            }
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                border-bottom-color: rgba(255, 255, 255, 0.23);
+            }
+        }
+    }
+}
+
+.sd-line-input.sd-media-carousel__media-caption {
+    .sd-line-input__input.plain-text-editor {
+        padding-top: 3px;
+        border-bottom: 1px solid var(--color-input-border);
+        transition: border linear 0.2s;
+        width: 100%;
+    }
+}
+
+.sd-line-input {
+    .plain-text-editor {
+        .spelling-error {
+            border-bottom-width: 1px;
+            border-bottom-style: dotted;
+            border-bottom-color: red;
+            position: relative;
+        }
+    }
+
+    *:not([disabled]) {
+        .plain-text-editor {
+            cursor: auto;
+        }
+    }
+}
+
+.plain-text-editor.disabled {
+    cursor: not-allowed;
+}

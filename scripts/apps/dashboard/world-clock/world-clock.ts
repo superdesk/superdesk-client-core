@@ -2,19 +2,11 @@ import _ from 'lodash';
 import './world-clock.scss';
 import d3 from 'd3';
 import {gettext} from 'core/utils';
+import {getTimezoneLabel} from './timezones-all-labels';
 
 angular.module('superdesk.apps.dashboard.world-clock', [
     'superdesk.apps.dashboard', 'superdesk.core.datetime',
 ])
-    .directive('sdWorldclock', [function() {
-        return {
-            templateUrl: 'scripts/apps/dashboard/world-clock/worldClock.html',
-            replace: true,
-            restrict: 'A',
-            controller: 'WorldClockController',
-        };
-    }])
-
     /**
      * @ngdoc controller
      * @module superdesk.apps.dashboard
@@ -25,10 +17,25 @@ angular.module('superdesk.apps.dashboard.world-clock', [
     .controller('WorldClockConfigController', ['$scope', 'notify', 'tzdata',
         function($scope, notify, tzdata) {
             $scope.availableZones = [];
+            $scope.getTimezoneLabel = getTimezoneLabel;
 
             tzdata.$promise.then(() => {
                 $scope.availableZones = tzdata.getTzNames();
             });
+
+            $scope.searchZones = function(searchString) {
+                if (searchString) {
+                    $scope.availableZones = tzdata
+                        .getTzNames()
+                        .filter((tz) =>
+                            getTimezoneLabel(tz)
+                                .toLowerCase()
+                                .includes(searchString.toLowerCase()),
+                        );
+                } else {
+                    $scope.availableZones = tzdata.getTzNames();
+                }
+            };
 
             $scope.notify = function(action, zone) {
                 if (action === 'add') {
@@ -52,7 +59,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
      * @module superdesk.apps.dashboard
      * @name WorldClockController
      * @description
-     *   Controller for the sdWorldclock directive - the one that creates
+     *   Controller for the directive - the one that creates
      *   a dashboard widget for displaying the current time in different
      *   time zones around the world.
      */

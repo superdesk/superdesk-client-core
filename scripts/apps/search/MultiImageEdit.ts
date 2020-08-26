@@ -4,6 +4,7 @@ import {uniq, pickBy, isEmpty, forEach} from 'lodash';
 import {validateMediaFieldsThrows} from 'apps/authoring/authoring/controllers/ChangeImageController';
 import {logger} from 'core/services/logger';
 import {gettext} from 'core/utils';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 interface IScope extends ng.IScope {
     validator: any;
@@ -32,6 +33,8 @@ MultiImageEditController.$inject = [
     'modal',
     'notify',
     'lock',
+    'session',
+    'content',
 ];
 
 export function MultiImageEditController(
@@ -39,6 +42,8 @@ export function MultiImageEditController(
     modal,
     notify,
     lock,
+    session,
+    content,
 ) {
     const saveHandler = $scope.saveHandler;
     let unsavedChangesExist = false;
@@ -118,10 +123,16 @@ export function MultiImageEditController(
 
         $scope.images.forEach((item) => {
             if (item.selected) {
-                item[field] = $scope.metadata[field] || '';
+                item[field] = $scope.metadata[field];
             }
         });
     };
+
+    let getLabelForFieldId = (id) => id;
+
+    getLabelNameResolver().then((_getLabelForFieldId) => {
+        getLabelForFieldId = _getLabelForFieldId;
+    });
 
     $scope.save = (close) => {
         const imagesForSaving = angular.copy($scope.images);
@@ -132,7 +143,11 @@ export function MultiImageEditController(
 
         try {
             imagesForSaving.forEach((metadata) => {
-                validateMediaFieldsThrows($scope.validator, metadata);
+                validateMediaFieldsThrows(
+                    $scope.validator,
+                    metadata,
+                    content.schema({}, 'picture'),
+                    getLabelForFieldId);
             });
         } catch (e) {
             notify.error(e);
@@ -170,6 +185,10 @@ export function MultiImageEditController(
 
     $scope.$on('item:lock', (_e, data) => {
         const {imagesOriginal} = $scope;
+
+        if (data.lock_session === session.sessionId) {
+            return; // ignore locking in the session (from this modal)
+        }
 
         // while editing metadata if any selected item is unlocked by another user remove that item from selected items
         if (Array.isArray(imagesOriginal) && data != null && data.item != null) {
@@ -250,8 +269,7 @@ export function MultiImageEditController(
             if (item.extra != null) {
                 for (const field in item.extra) {
                     if (!values.hasOwnProperty(field)) {
-                        values[field] = getUniqueValues('extra.' + field);
-                        extra[field] = getMetaValue(field, values[field]);
+                        setExtra(field, values, extra);
                     }
                 }
             }
@@ -260,13 +278,21 @@ export function MultiImageEditController(
         return extra;
     }
 
+    function setExtra(field, values, extra) {
+        values[field] = getUniqueValues('extra.' + field);
+
+        if (values[field].length === 1) {
+            extra[field] = getMetaValue(field, values[field], null);
+        } else {
+            $scope.placeholder[field] = gettext('(multiple values)');
+        }
+    }
+
     function getMetaValue(field: string, uniqueValues: Array<string>, defaultValue = null) {
         $scope.placeholder[field] = '';
 
         if (uniqueValues.length === 1) {
             return JSON.parse(uniqueValues[0]);
-        } else if (uniqueValues.length > 1) {
-            $scope.placeholder[field] = gettext('(multiple values)');
         }
 
         return defaultValue || '';
@@ -276,7 +302,11 @@ export function MultiImageEditController(
         const uniqueValues = getUniqueValues(fieldName);
         const defaultValues = {subject: []};
 
-        return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
+        if (uniqueValues.length === 1 || defaultValues) {
+            return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
+        } else {
+            $scope.placeholder[fieldName] = gettext('(multiple values)');
+        }
     }
 }
 

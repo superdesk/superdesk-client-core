@@ -10,6 +10,7 @@
                     ng-click="activate(widget)"
                     ng-disabled="isWidgetLocked(widget)"
                     id="{{ :: widget._id }}"
+                    title="{{widget.label}}"
                     sd-hotkey="{{generateHotkey($index+1)}}"
                     sd-hotkey-options="{global: true}">
                     <span id="unread-count" class="sd-sidetab-menu__info-label badge badge--primary" ng-show="widget._id == 'comments' && comments.length">{{ comments.length }}</span>
