@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import {IArticle} from 'superdesk-api';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
@@ -7,6 +8,7 @@ import {isPublished} from 'apps/archive/utils';
 import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
+import {formatDatelineText} from '../helpers';
 
 interface IScope extends ng.IScope {
     readOnlyLabel: string;
@@ -24,7 +26,7 @@ interface IScope extends ng.IScope {
     label: any;
     FIELD_KEY_SEPARATOR: any;
     mediaTypes: any;
-    monthNames: any;
+    monthNames: Array<{id: string; label: string}>;
     dateline: any;
     preview: any;
     _editable: any;
@@ -132,8 +134,7 @@ export function ArticleEditDirective(
 
                 /* Start: Dateline related properties */
 
-                scope.monthNames = {Jan: '0', Feb: '1', Mar: '2', Apr: '3', May: '4', Jun: '5',
-                    Jul: '6', Aug: '7', Sep: '8', Oct: '9', Nov: '10', Dec: '11'};
+                scope.monthNames = moment.monthsShort().map((label, i) => ({id: i.toString(), label: label}));
 
                 scope.dateline = {
                     month: '',
@@ -228,11 +229,12 @@ export function ArticleEditDirective(
                                 parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
                         }
 
-                        currentItem.dateline.text = $filter('formatDatelineText')(currentItem.dateline.located,
-                            $interpolate('{{ month | translate }}')({
-                                month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month),
-                            }),
-                            scope.dateline.day, currentItem.source);
+                        currentItem.dateline.text = formatDatelineText(
+                            currentItem.dateline.located,
+                            scope.monthNames.find(({id}) => id === scope.dateline.month).label,
+                            scope.dateline.day,
+                            currentItem.source,
+                        );
                     }
                     scope.autosave(currentItem);
                 };
@@ -321,11 +323,12 @@ export function ArticleEditDirective(
                         scope.item.dateline.date = $filter('relativeUTCTimestamp')(scope.item.dateline.located,
                             parseInt(scope.dateline.month, 10), parseInt(scope.dateline.day, 10));
 
-                        scope.item.dateline.text = $filter('formatDatelineText')(scope.item.dateline.located,
-                            $interpolate('{{ month | translate }}')({
-                                month: _.findKey(scope.monthNames, (m) => m === scope.dateline.month),
-                            }),
-                            scope.dateline.day, scope.item.dateline.source);
+                        scope.item.dateline.text = formatDatelineText(
+                            scope.item.dateline.located,
+                            scope.monthNames.find(({id}) => id === scope.dateline.month).label,
+                            scope.dateline.day,
+                            scope.item.dateline.source,
+                        );
 
                         mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);

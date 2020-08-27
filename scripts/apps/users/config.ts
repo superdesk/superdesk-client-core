@@ -35,7 +35,7 @@ Activities.$inject = ['superdeskProvider', 'assetProvider'];
 export function Activities(superdesk, asset) {
     superdesk
         .activity('/users/', {
-            label: gettext('User management'),
+            label: gettext('User Management'),
             description: gettext('Find your colleagues'),
             controller: UserListController,
             templateUrl: asset.templateUrl('apps/users/views/list.html'),

@@ -141,7 +141,7 @@ interface IItemProps {
 }
 
 export function renderArea(
-    area: string,
+    area: 'firstLine' | 'secondLine' | 'singleLine' | 'priority',
     itemProps: IItemProps,
     props?: { className?: string },
     customRender: any = {},

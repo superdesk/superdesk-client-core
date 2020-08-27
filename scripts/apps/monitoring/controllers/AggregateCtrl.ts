@@ -135,38 +135,31 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     function deskWorkspaceMonitoringConfig(activeWorkspace) {
         // Read available groups from user preferences first
         return preferencesService.get(PREFERENCES_KEY).then((preference) => {
-            let groups = [];
             let desk = self.deskLookup[activeWorkspace.id];
-            let monitoringSettings = desk ? desk.monitoring_settings || [] : [];
+            let monitoringSettings = desk?.monitoring_settings;
             let activePrefGroups = preference[activeWorkspace.id] ? preference[activeWorkspace.id].groups || [] : [];
 
-            if (activePrefGroups.length) {
-                if (monitoringSettings.length) {
-                    // compare and determine if set of groups in desk monitoring settings &
-                    // user preferences are same or changed now, due to stages activated
-                    // or deactivated in desk's monitoring settings.
-                    let diff = _.xorBy(monitoringSettings, activePrefGroups, '_id');
-
-                    if (diff.length) {
-                        // if different, that means available stages/groups are changed now in desk monitoring settings
-                        // so simply return recent desk monitoring settings.
-                        groups = monitoringSettings;
-                    } else {
-                        // update groups in preferences with any changes in desk's monitoring settings groups.
-                        activePrefGroups.forEach((group) =>
-                            angular.extend(group, monitoringSettings.find((grp) => grp._id === group._id)));
-
-                        groups = activePrefGroups;
-                    }
-                } else {
-                    groups = activePrefGroups;
-                }
-            } else {
-                // when no user preferences found
-                groups = monitoringSettings;
+            if (monitoringSettings == null) {
+                return {type: 'desk', groups: []};
             }
 
-            return {type: 'desk', groups: groups};
+            const monitoringSettingsIds: Array<string> = monitoringSettings.map(({_id}) => _id);
+
+            // ensure correct order by first taking items from personal preferences
+            const groupsFromPersonalPreferences: Array<string> = activePrefGroups
+                .map(({_id}) => _id)
+                .filter((_id) => monitoringSettingsIds.includes(_id));
+
+            const remainingGroups = monitoringSettings
+                .map(({_id}) => _id)
+                .filter((_id) => groupsFromPersonalPreferences.includes(_id) === false);
+
+            const allItems = [
+                ...groupsFromPersonalPreferences,
+                ...remainingGroups,
+            ].map((id) => monitoringSettings.find((item) => item._id === id));
+
+            return {type: 'desk', groups: allItems};
         });
     }
 
@@ -395,6 +388,18 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         } else {
             this.activeFilters.customFilters[filter.label] = filter;
         }
+
+        updateFilterInStore();
+        updateFilteringCriteria();
+        $scope.$apply();
+    };
+
+    this.setCustomFilter = (filter: IMonitoringFilter) => {
+        if (typeof this.activeFilters.customFilters === 'undefined') {
+            this.activeFilters.customFilters = {};
+        }
+
+        this.activeFilters.customFilters[filter.label] = filter;
 
         updateFilterInStore();
         updateFilteringCriteria();
