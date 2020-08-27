@@ -1,5 +1,8 @@
 <div class="monitoring" ng-controller="AggregateCtrl as aggregate">
-    <section class="main-section" ng-class="monitoring.state">
+    <section class="main-section" ng-class="monitoring.state" aria-labelledby="monitoring-heading">
+        <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'monitoring'" translate>Monitoring</h2>
+        <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'highlights'" translate>Highlights</h2>
+        <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'spike'" translate>Spiked items</h2>
         <div class="preview-layout monitoring-preview-layout" sd-media-query min-width="700" element-class="narrowList">
             <div class="content-list monitoring__content" ng-if="!aggregate.loading">
                 <div class="monitoring__toolbar-container">
@@ -36,16 +39,13 @@
                             <ul class="dropdown__menu scrollable">
                                 <li><div class="dropdown__menu-label" translate>Stages</div></li>
                                 <li ng-repeat="card in aggregate.cards">
-                                    <button
-                                        class="label-group"
+                                    <button class="label-group"
                                         ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
-                                    >
-                                        {{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}
-                                    </button>
+                                        translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
                                 </li>
                             </ul>
                         </div>
-                        <h3 class="subnav__page-title sd-flex-no-grow sd-empty">
+                        <h2 class="subnav__page-title sd-flex-no-grow">
                             <span ng-if="type === 'spike'">
                                 <span translate>Spiked Items</span>
                                 <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems}}</span>
@@ -69,7 +69,7 @@
                                 {{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.singleViewType}}
                                 <span class="label-total">{{ monitoring.totalItems}}</span>
                             </span>
-                        </h3>
+                        </h2>
 
                         <!-- search not implemented for usage with custom data source -->
                         <div ng-if="customDataSource == null" class="flat-searchbar monitoring-flat-searchbar" ng-class="{extended: aggregate.monitoringSearch}">

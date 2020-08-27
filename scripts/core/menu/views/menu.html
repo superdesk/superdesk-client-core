@@ -2,16 +2,15 @@
   <div id="top-menu" ng-class="{'menu-open': flags.menu, 'test-environment': isTestEnvironment}" data-text="{{environmentName}}">
       <div class="pull-left">
         <span id="hamburger-menu">
-          <button class="collapse-nav pull-left hamburger hamburger--spin" ng-click="toggleMenu()" ng-class="{'is-active': flags.menu}" aria-controls="main-menu" aria-expanded="{{flags.menu ? true : false}}">
+          <button class="collapse-nav pull-left hamburger hamburger--spin" ng-click="toggleMenu()" ng-class="{'is-active': flags.menu}" aria-controls="main-menu" aria-expanded="{{flags.menu ? true : false}}" aria-label="{{ :: 'Toggle main menu' | translate }}">
             <span class="hamburger__box">
               <span class="hamburger__inner"></span>
             </span>
           </button>
         </span>
-        <p class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings'"
-          ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</p>
-        <p class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'"
-          ng-hide="currentRoute.topTemplateUrl">{{ "Settings" | translate}}</p>
+        <h1 class="sd-top-menu__header" ng-if="currentRoute.category !== 'superdesk.core.menu.settings' && !currentRoute.topTemplateUrl"
+          ng-hide="currentRoute.topTemplateUrl">{{ currentRoute.label | translate}}</h1>
+        <h1 class="sd-top-menu__header" ng-if="currentRoute.category === 'superdesk.core.menu.settings'">{{ "Settings" | translate}}</h1>
         <div class="top-nav pull-left" ng-include="currentRoute.topTemplateUrl"></div>
       </div>
       <div class="top-menu__content-block top-menu__content-block--right">
@@ -24,8 +23,8 @@
           <sd-global-menu-horizontal></sd-global-menu-horizontal>
         </div>
         <button class="current-user" ng-click="toggleNotifications()">
-            <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
-            <sd-user-avatar data-user="currentUser"></sd-user-avatar>
+          <span id="unread-count" class="badge badge--primary" ng-show="notifications.unread">{{ notifications.unread }}</span>
+          <sd-user-avatar data-user="currentUser"></sd-user-avatar>
         </button>
       </div>
   </div>
