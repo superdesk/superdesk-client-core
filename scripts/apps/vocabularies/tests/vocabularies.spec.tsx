@@ -167,7 +167,7 @@ describe('vocabularies', () => {
                     expect(metadata.initialize).toHaveBeenCalled();
                 }));
 
-            it('validates items according to schema fields', (done) => () => {
+            it('validates items according to schema fields', (done) => {
                 const items = [{name: '', qcode: ''}];
                 const schemaFields = [{key: 'name', required: true}, {key: 'qcode', required: true}];
                 const waitForDebouncing = 300;
