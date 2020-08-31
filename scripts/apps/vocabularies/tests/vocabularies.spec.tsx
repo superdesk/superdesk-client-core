@@ -36,8 +36,8 @@ describe('vocabularies', () => {
         expect(vocabularies.vocabularies).toBe(fixture);
     }));
 
-    it('convert values for qcode having integer type', inject(($compile) => {
-        const items = [{name: 'foo', qcode: '1'}];
+    it('convert values for qcode having integer type', () => {
+        const items = [{name: 'foo', qcode: '1', is_active: true}];
         const schemaFields = [{key: 'name', required: true}, {key: 'qcode', type: 'integer'}];
 
         const wrapper = mount(
@@ -52,6 +52,8 @@ describe('vocabularies', () => {
             ),
         );
 
+        wrapper.setState({languages: []});
+
         const instance = wrapper.instance() as VocabularyItemsViewEdit;
 
         wrapper.update();
@@ -60,7 +62,7 @@ describe('vocabularies', () => {
 
         wrapper.find('input[type="number"]').simulate('change', fakeEvent);
         expect(instance.getItemsForSaving()[0].qcode).toBe(2);
-    }));
+    });
 
     describe('config controller', () => {
         beforeEach(inject((session) => {
@@ -165,7 +167,7 @@ describe('vocabularies', () => {
                     expect(metadata.initialize).toHaveBeenCalled();
                 }));
 
-            it('validates items according to schema fields', (done) => inject(($compile) => {
+            it('validates items according to schema fields', (done) => {
                 const items = [{name: '', qcode: ''}];
                 const schemaFields = [{key: 'name', required: true}, {key: 'qcode', required: true}];
                 const waitForDebouncing = 300;
@@ -184,6 +186,8 @@ describe('vocabularies', () => {
                     ),
                 );
 
+                wrapper.setState({languages: []});
+
                 wrapper.update();
 
                 wrapper.find(s(['vocabulary-items-view-edit', 'field--name']))
@@ -201,9 +205,9 @@ describe('vocabularies', () => {
                         done();
                     }, waitForDebouncing);
                 }, waitForDebouncing);
-            }));
+            });
 
-            it('can remove an item', inject(($compile) => {
+            it('can remove an item', () => {
                 const wrapper = mount(
                     (
                         <VocabularyItemsViewEdit
@@ -219,6 +223,8 @@ describe('vocabularies', () => {
                     ),
                 );
 
+                wrapper.setState({languages: []});
+
                 const instance = wrapper.instance() as VocabularyItemsViewEdit;
 
                 expect(instance.getItemsForSaving().length).toBe(1);
@@ -227,7 +233,7 @@ describe('vocabularies', () => {
                     .simulate('click');
 
                 expect(instance.getItemsForSaving().length).toBe(0);
-            }));
+            });
         });
     });
 });
