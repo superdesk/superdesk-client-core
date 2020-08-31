@@ -105,6 +105,13 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
                 return firstLevelGroups;
             });
 
+            scope.getPackageLabel = (id: string) => {
+                switch (id) {
+                case 'main': return gettext('main');
+                default: return id;
+                }
+            };
+
             scope.remove = function(groupId, residRef) {
                 var group: any = _.find(scope.list, {id: groupId});
                 var item = _.find(group.items, {residRef: residRef});
