@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import moment from 'moment';
 import {IArticle} from 'superdesk-api';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
@@ -9,6 +8,7 @@ import {resetFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
 import {formatDatelineText} from '../helpers';
+import {getMonthNamesShort} from 'core/helpers/locale';
 
 interface IScope extends ng.IScope {
     readOnlyLabel: string;
@@ -132,10 +132,6 @@ export function ArticleEditDirective(
                 scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
                 scope.mediaTypes = getMediaTypes();
 
-                /* Start: Dateline related properties */
-
-                scope.monthNames = moment.monthsShort().map((label, i) => ({id: i.toString(), label: label}));
-
                 scope.dateline = {
                     month: '',
                     day: '',
@@ -150,8 +146,6 @@ export function ArticleEditDirective(
                         return false;
                     }
                 });
-
-                /* End: Dateline related properties */
 
                 // watch item and save every change in history in order to perform undo/redo later
                 // ONLY for editor2 (with blocks)
@@ -172,6 +166,11 @@ export function ArticleEditDirective(
                         });
                     }
                 }
+
+                scope.$watch('item.language', () => {
+                    scope.monthNames = getMonthNamesShort(scope.item.language ?? appConfig.default_language)
+                        .map((label, i) => ({id: i.toString(), label: label}));
+                });
 
                 scope.$watch('item', (item: IArticle) => {
                     if (item) {
