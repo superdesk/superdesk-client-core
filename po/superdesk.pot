@@ -5545,7 +5545,7 @@ msgid "Fri"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:1001
-#: scripts/core/datetime/datetime.ts:259
+#: scripts/core/datetime/datetime.ts:258
 msgid "Friday"
 msgstr ""
 
@@ -5877,7 +5877,7 @@ msgstr ""
 msgid "Highcharts {{licenseType}} License"
 msgstr ""
 
-#: scripts/apps/packaging/views/sd-package-items-edit.html:21
+#: scripts/apps/packaging/views/sd-package-items-edit.html:22
 msgid "Highlight Preview"
 msgstr ""
 
@@ -7190,7 +7190,7 @@ msgid "Mon"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:997
-#: scripts/core/datetime/datetime.ts:255
+#: scripts/core/datetime/datetime.ts:254
 msgid "Monday"
 msgstr ""
 
@@ -9924,7 +9924,7 @@ msgid "Saturation"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:1002
-#: scripts/core/datetime/datetime.ts:260
+#: scripts/core/datetime/datetime.ts:259
 msgid "Saturday"
 msgstr ""
 
@@ -11399,7 +11399,7 @@ msgid "Sun"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:1003
-#: scripts/core/datetime/datetime.ts:261
+#: scripts/core/datetime/datetime.ts:260
 msgid "Sunday"
 msgstr ""
 
@@ -12239,7 +12239,7 @@ msgid "Thumbnail for related item"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:1000
-#: scripts/core/datetime/datetime.ts:258
+#: scripts/core/datetime/datetime.ts:257
 msgid "Thursday"
 msgstr ""
 
@@ -12500,7 +12500,7 @@ msgid "Tue"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:998
-#: scripts/core/datetime/datetime.ts:256
+#: scripts/core/datetime/datetime.ts:255
 msgid "Tuesday"
 msgstr ""
 
@@ -13271,7 +13271,7 @@ msgid "Wed"
 msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:999
-#: scripts/core/datetime/datetime.ts:257
+#: scripts/core/datetime/datetime.ts:256
 msgid "Wednesday"
 msgstr ""
 
@@ -14202,10 +14202,6 @@ msgstr ""
 
 #: scripts/core/views/sdSlider.html:2
 msgid "low"
-msgstr ""
-
-#: scripts/apps/packaging/directives/PackageItemsEdit.ts:110
-msgid "main"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.jsx:256

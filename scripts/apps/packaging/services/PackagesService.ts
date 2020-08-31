@@ -1,5 +1,13 @@
 import _ from 'lodash';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {gettext} from 'core/utils';
+
+function getRefLabel(ref) {
+    switch (ref) {
+    case 'main': return gettext(ref);
+    default: return ref;
+    }
+}
 
 PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring',
     'authoringWorkspace', 'desks', '$rootScope'];
@@ -31,7 +39,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         };
         var groups = [{
             role: 'grpRole:NEP',
-            refs: [{idRef: idRef}],
+            refs: [{idRef: idRef, label: getRefLabel(idRef)}],
             id: 'root',
         },
         getGroupFor(null, idRef),
@@ -56,7 +64,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             groups: [
                 {
                     role: 'grpRole:NEP',
-                    refs: [{idRef: idRef}],
+                    refs: [{idRef: idRef, label: getRefLabel(idRef)}],
                     id: 'root',
                 },
                 getGroupFor(null, idRef),

@@ -77,6 +77,7 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
 
                 var firstLevelGroups = _.map(root.refs, (group) => ({
                     id: group.idRef,
+                    label: group.label,
                     items: [],
                 }));
 
@@ -104,13 +105,6 @@ export function PackageItemsEdit(packages, notify, $rootScope) {
 
                 return firstLevelGroups;
             });
-
-            scope.getPackageLabel = (id: string) => {
-                switch (id) {
-                case 'main': return gettext('main');
-                default: return id;
-                }
-            };
 
             scope.remove = function(groupId, residRef) {
                 var group: any = _.find(scope.list, {id: groupId});
