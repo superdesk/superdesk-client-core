@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2020-08-31 08:35+0000\n"
-"Last-Translator: Transifex Bot <>\n"
+"PO-Revision-Date: 2020-08-31 15:43+0000\n"
+"Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3535,7 +3535,7 @@ msgstr "Publication programmée du pupitre"
 
 #: scripts/apps/monitoring/directives/AggregateSettings.ts:62
 msgid "Desk Sent Output"
-msgstr ""
+msgstr "Envoyé à un autre pupitre"
 
 #: ../superdesk-planning/client/components/Assignments/SelectDeskTemplate.jsx:77
 #: scripts/apps/templates/views/sd-template-select.html:17
@@ -10691,7 +10691,7 @@ msgstr "Envoi en cours"
 
 #: scripts/apps/workspace/content/constants.ts:124
 msgid "Sent Desk Output"
-msgstr ""
+msgstr "Envoyé à un autre pupitre"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:450
 msgid "Sent From"
