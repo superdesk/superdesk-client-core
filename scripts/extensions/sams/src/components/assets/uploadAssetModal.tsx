@@ -135,7 +135,10 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
             this.setState((state: IState) => {
                 const assets: IState['assets'] = {...state.assets};
 
-                assets[id][field] = value;
+                assets[id] = {
+                    ...assets[id],
+                    [field]: value,
+                };
 
                 return {assets: assets};
             });
