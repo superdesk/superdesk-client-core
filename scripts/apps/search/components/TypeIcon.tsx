@@ -17,6 +17,6 @@ export class TypeIcon extends React.PureComponent<IProps> {
             return <i className={'filetype-icon-highlight-pack'} />;
         }
 
-        return <i className={'filetype-icon-' + type} title={gettext('Article Type: {{type}}', {type})} />;
+        return <i className={'filetype-icon-' + type} title={gettext('Article Type: {{type}}', {type})} aria-label={gettext('Article Type: {{type}}', {type})} />;
     }
 }

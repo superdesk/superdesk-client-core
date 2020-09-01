@@ -1,19 +1,22 @@
 <div class="sortbar" ng-show="canSort()">
     <span ng-show="total" translate>Total:</span>
     <span ng-show="total" class="label-total">{{total}}</span>    
-    <div class="dropdown dropdown--align-right dropdown--hover" dropdown>
-        <button id="order_button" class="dropdown__toggle" dropdown__toggle>
+    <div class="dropdown dropdown--align-right" dropdown>
+        <button id="order_button" class="dropdown__toggle" dropdown__toggle aria-label="{{ 'Sort items' | translate }}">
             {{ active.label | translate }}
             <span class="dropdown__caret"></span>
         </button>
         <ul class="dropdown__menu" id="order_selector">
+            <li>
+                <div class="dropdown__menu-label">{{ 'Sort by' | translate }}</div>
+            </li>
             <li ng-repeat="option in sortOptions" ng-class="{active: option === selected}">
                 <a href="" ng-click="sort(option.field)">{{ option.label | translate }}</a>
             </li>
         </ul>
     </div>
-    <button ng-click="toggleDir()" class="icn-btn direction" title="{{active.dir}}">
-        <i class="icon-ascending" ng-if="active.dir === 'asc'"></i>
-        <i class="icon-descending" ng-if="active.dir === 'desc'"></i>
+    <button ng-click="toggleDir()" class="icn-btn direction" title="{{active.dir}}" aria-label="{{ 'Sort order' | translate }}">
+        <i class="icon-ascending" ng-if="active.dir === 'asc'" aria-label="{{ 'Ascending' | translate }}"></i>
+        <i class="icon-descending" ng-if="active.dir === 'desc'" aria-label="{{ 'Descending' | translate }}"></i>
     </button>
 </div>
