@@ -73,7 +73,7 @@ msgstr ""
 msgid "'not scheduled yet'"
 msgstr ""
 
-#: scripts/apps/highlights/services/HighlightsService.ts:62
+#: scripts/apps/highlights/services/HighlightsService.ts:63
 msgid "(Global)"
 msgstr ""
 
@@ -412,14 +412,14 @@ msgid "Actions"
 msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:16
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:239
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:242
 #: scripts/apps/contacts/services/ContactsService.ts:60
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:18
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:122
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:23
 #: scripts/apps/publish/directives/SubscribersDirective.ts:59
 #: scripts/apps/users/controllers/UserListController.ts:152
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:442
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:441
 #: scripts/apps/workspace/content/views/profile-settings.html:108
 #: scripts/apps/workspace/content/views/profile-settings.html:41
 msgid "Active"
@@ -481,7 +481,7 @@ msgstr ""
 msgid "Add Ingest Sources"
 msgstr ""
 
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:411
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:410
 msgid "Add Item"
 msgstr ""
 
@@ -722,11 +722,11 @@ msgstr ""
 msgid "Address"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:475
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:510
 msgid "Address line 1"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:486
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:521
 msgid "Address line 2"
 msgstr ""
 
@@ -1541,6 +1541,10 @@ msgstr ""
 msgid "Associated/featuremedia path"
 msgstr ""
 
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:197
+msgid "At least one of [{{list}}] is required."
+msgstr ""
+
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:415
 #: scripts/apps/archive/index.tsx:116
 #: scripts/apps/authoring/attachments/attachments.html:23
@@ -1772,7 +1776,7 @@ msgstr ""
 msgid "Browse"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:479
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:514
 msgid "Building, Suite, Unit, Apartment, Floor, etc."
 msgstr ""
 
@@ -2179,7 +2183,7 @@ msgstr ""
 msgid "Choose highlight list"
 msgstr ""
 
-#: scripts/apps/contacts/constants.ts:74
+#: scripts/apps/contacts/constants.ts:75
 #: scripts/apps/contacts/views/search-panel.html:63
 msgid "City"
 msgstr ""
@@ -2449,8 +2453,8 @@ msgstr ""
 msgid "Connection string"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:216
-#: scripts/apps/contacts/constants.ts:71
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:219
+#: scripts/apps/contacts/constants.ts:72
 #: scripts/apps/contacts/views/search-panel.html:33
 msgid "Contact Type"
 msgstr ""
@@ -2749,8 +2753,8 @@ msgstr ""
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.jsx:143
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:233
 #: ../superdesk-planning/client/components/Locations/LocationsList.jsx:83
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:557
-#: scripts/apps/contacts/constants.ts:76
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:592
+#: scripts/apps/contacts/constants.ts:77
 #: scripts/apps/contacts/views/search-panel.html:77
 msgid "Country"
 msgstr ""
@@ -4236,7 +4240,7 @@ msgstr ""
 msgid "Editorial Note"
 msgstr ""
 
-#: scripts/apps/contacts/constants.ts:69
+#: scripts/apps/contacts/constants.ts:70
 #: scripts/apps/contacts/views/search-panel.html:49
 #: scripts/apps/users/views/list.html:36
 #: scripts/core/auth/reset-password.html:13
@@ -5110,7 +5114,7 @@ msgstr ""
 
 #: scripts/apps/contacts/directives/ContactsSearchResultsDirective.ts:80
 #: scripts/apps/content-api/directives/ContentAPISearchResultsDirective.ts:77
-#: scripts/apps/search/directives/SearchResults.ts:259
+#: scripts/apps/search/directives/SearchResults.ts:260
 msgid "Failed to run the query!"
 msgstr ""
 
@@ -5463,7 +5467,7 @@ msgstr ""
 msgid "First Event Starts"
 msgstr ""
 
-#: scripts/apps/contacts/constants.ts:67
+#: scripts/apps/contacts/constants.ts:68
 #: scripts/apps/contacts/views/search-panel.html:16
 #: scripts/core/directives/views/phone-home-modal-directive.html:19
 msgid "First Name"
@@ -5877,7 +5881,7 @@ msgstr ""
 msgid "Highcharts {{licenseType}} License"
 msgstr ""
 
-#: scripts/apps/packaging/views/sd-package-items-edit.html:22
+#: scripts/apps/packaging/views/sd-package-items-edit.html:21
 msgid "Highlight Preview"
 msgstr ""
 
@@ -6364,7 +6368,7 @@ msgstr ""
 msgid "Item history"
 msgstr ""
 
-#: scripts/apps/packaging/directives/PackageItemsEdit.ts:20
+#: scripts/apps/packaging/directives/PackageItemsEdit.ts:21
 msgid "Item is already in this package."
 msgstr ""
 
@@ -6474,7 +6478,7 @@ msgstr ""
 msgid "Jabber Identifier (JID)"
 msgstr ""
 
-#: scripts/apps/contacts/constants.ts:72
+#: scripts/apps/contacts/constants.ts:73
 #: scripts/apps/contacts/views/search-panel.html:41
 #: scripts/apps/users/views/edit-form.html:224
 msgid "Job Title"
@@ -6600,7 +6604,7 @@ msgstr ""
 msgid "Last Month"
 msgstr ""
 
-#: scripts/apps/contacts/constants.ts:68
+#: scripts/apps/contacts/constants.ts:69
 #: scripts/apps/contacts/views/search-panel.html:24
 #: scripts/core/directives/views/phone-home-modal-directive.html:24
 msgid "Last Name"
@@ -6869,7 +6873,7 @@ msgstr ""
 msgid "MO"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:384
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:398
 msgid "MORE"
 msgstr ""
 
@@ -8121,7 +8125,7 @@ msgstr ""
 msgid "Ordered list"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:323
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:326
 #: scripts/apps/contacts/directives/ContactsSearchPanelDirective.tsx:87
 #: scripts/apps/contacts/services/ContactsService.ts:38
 msgid "Organisation"
@@ -8622,8 +8626,8 @@ msgstr ""
 msgid "Please provide an article id"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:204
-msgid "Please specify 'first name, last name' or  'organisation' or both, and at least one of [mobile, phone, email, twitter, facebook, instagram] fields."
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:207
+msgid "Please specify 'first name, last name' or  'organisation' or both, and at least one of [{{list}}] fields."
 msgstr ""
 
 #: scripts/apps/templates/views/create-template.html:18
@@ -8641,7 +8645,7 @@ msgstr ""
 msgid "Please use less than 80 characters."
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:192
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:193
 msgid "Point of contact"
 msgstr ""
 
@@ -8668,7 +8672,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:225
 #: ../superdesk-planning/client/components/Locations/LocationsList.jsx:78
-#: scripts/apps/contacts/constants.ts:73
+#: scripts/apps/contacts/constants.ts:74
 #: scripts/apps/contacts/views/search-panel.html:56
 msgid "Post Code"
 msgstr ""
@@ -9764,7 +9768,7 @@ msgstr ""
 msgid "Rewritten link is removed"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:192
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:193
 #: scripts/apps/users/views/edit-form.html:155
 #: scripts/apps/users/views/list.html:35
 #: scripts/apps/users/views/user-privileges.html:17
@@ -10289,7 +10293,7 @@ msgstr ""
 #: scripts/apps/search/views/save-search.html:5
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:34
 #: scripts/apps/search/views/search-parameters.html:241
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:340
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:339
 #: scripts/core/itemList/views/relatedItem-list-widget.html:5
 #: scripts/core/itemList/views/relatedItem-list-widget.html:7
 #: scripts/core/lang/missing-translations-strings.ts:26
@@ -10470,7 +10474,7 @@ msgstr ""
 msgid "Select a desk first"
 msgstr ""
 
-#: scripts/core/ui/components/SelectUser.tsx:80
+#: scripts/core/ui/components/SelectUser.tsx:92
 msgid "Select a user"
 msgstr ""
 
@@ -11186,14 +11190,14 @@ msgstr ""
 #: ../superdesk-analytics/client/search/services/SearchReport.ts:123
 #: scripts/apps/archive/views/metadata-view.html:187
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:76
-#: scripts/apps/contacts/constants.ts:75
+#: scripts/apps/contacts/constants.ts:76
 #: scripts/apps/contacts/views/search-panel.html:70
 #: scripts/apps/content-filters/views/production-test-view.html:18
 msgid "State"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:526
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:536
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:561
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:571
 msgid "State/Province or Region"
 msgstr ""
 
@@ -11262,11 +11266,11 @@ msgstr ""
 msgid "Story is associated as update."
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:468
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:503
 msgid "Street Address"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:467
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:502
 msgid "Street Address, PO Box, Company Name"
 msgstr ""
 
@@ -11857,7 +11861,7 @@ msgid "The {{ itemType }} has been unposted"
 msgstr ""
 
 #: scripts/apps/contacts/components/ItemList.tsx:178
-#: scripts/apps/search/components/ItemList.tsx:567
+#: scripts/apps/search/components/ItemList.tsx:509
 msgid "There are currently no items"
 msgstr ""
 
@@ -12129,7 +12133,7 @@ msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:54
 #: scripts/apps/contacts/components/Form/MultiTextInput.tsx:34
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:194
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:195
 #: scripts/apps/users/views/edit-form.html:130
 #: scripts/apps/users/views/edit-form.html:69
 #: scripts/apps/users/views/edit-form.html:77
@@ -13429,11 +13433,11 @@ msgstr ""
 msgid "You are currently managing featured story in another session"
 msgstr ""
 
-#: scripts/apps/workspace/content/services/ContentService.ts:70
+#: scripts/apps/workspace/content/services/ContentService.ts:71
 msgid "You are not allowed to create an article there."
 msgstr ""
 
-#: scripts/apps/workspace/content/services/ContentService.ts:68
+#: scripts/apps/workspace/content/services/ContentService.ts:69
 msgid "You are not allowed to create article on readonly stage."
 msgstr ""
 
@@ -13676,7 +13680,7 @@ msgstr ""
 msgid "characters"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:513
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:548
 msgid "city"
 msgstr ""
 
@@ -13832,7 +13836,7 @@ msgstr ""
 msgid "duplicate id"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:425
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:444
 msgid "e.g. @cityofsydney"
 msgstr ""
 
@@ -13840,23 +13844,23 @@ msgstr ""
 msgid "e.g. @superdeskman"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:491
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:526
 msgid "e.g. Rhodes, CBD"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:440
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:465
 msgid "e.g. cityofsydney from https://www.facebook.com/cityofsydney"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:454
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:484
 msgid "e.g. cityofsydney from https://www.instagram.com/cityofsydney"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:413
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:432
 msgid "e.g. http://www.website.com"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:250
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:253
 msgid "e.g. professor, commissioner"
 msgstr ""
 
@@ -13868,7 +13872,7 @@ msgstr ""
 msgid "e.g. superdeskman from https://www.instagram.com/superdeskman"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:352
+#: scripts/apps/contacts/constants.ts:49
 #: scripts/apps/users/views/edit-form.html:123
 msgid "email"
 msgstr ""
@@ -13914,7 +13918,7 @@ msgstr ""
 msgid "expires:"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:441
+#: scripts/apps/contacts/constants.ts:51
 msgid "facebook"
 msgstr ""
 
@@ -13922,7 +13926,7 @@ msgstr ""
 msgid "failed"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:402
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:421
 msgid "fax"
 msgstr ""
 
@@ -13957,7 +13961,7 @@ msgstr ""
 msgid "first"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:269
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:272
 #: scripts/apps/users/views/edit-form.html:67
 msgid "first name"
 msgstr ""
@@ -14049,7 +14053,7 @@ msgstr ""
 msgid "highlights package"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:251
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:254
 msgid "honorific"
 msgstr ""
 
@@ -14126,7 +14130,7 @@ msgstr ""
 msgid "insert table"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:455
+#: scripts/apps/contacts/constants.ts:52
 msgid "instagram"
 msgstr ""
 
@@ -14150,7 +14154,7 @@ msgstr ""
 msgid "last"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:288
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:291
 #: scripts/apps/users/views/edit-form.html:75
 msgid "last name"
 msgstr ""
@@ -14192,7 +14196,7 @@ msgstr ""
 msgid "loading..."
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:492
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:527
 msgid "locality"
 msgstr ""
 
@@ -14202,6 +14206,11 @@ msgstr ""
 
 #: scripts/core/views/sdSlider.html:2
 msgid "low"
+msgstr ""
+
+#: scripts/apps/packaging/services/PackagesService.ts:24
+#: scripts/apps/packaging/services/PackagesService.ts:55
+msgid "main"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.jsx:256
@@ -14247,7 +14256,7 @@ msgstr ""
 msgid "miscellaneous"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:388
+#: scripts/apps/contacts/constants.ts:47
 msgid "mobile"
 msgstr ""
 
@@ -14266,7 +14275,7 @@ msgstr ""
 
 #: scripts/apps/archive/views/media-view.html:34
 #: scripts/apps/authoring/macros/views/macros-replace.html:8
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:419
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:418
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:491
 msgid "next"
 msgstr ""
@@ -14284,7 +14293,7 @@ msgstr ""
 msgid "none"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:571
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:606
 msgid "notes"
 msgstr ""
 
@@ -14342,12 +14351,12 @@ msgstr ""
 msgid "ordered list"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:307
-#: scripts/apps/contacts/constants.ts:70
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:310
+#: scripts/apps/contacts/constants.ts:71
 msgid "organisation"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:547
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:582
 msgid "other"
 msgstr ""
 
@@ -14376,7 +14385,7 @@ msgstr ""
 msgid "pending"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:372
+#: scripts/apps/contacts/constants.ts:48
 msgid "phone"
 msgstr ""
 
@@ -14410,7 +14419,7 @@ msgstr ""
 msgid "post"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:501
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:536
 msgid "postcode"
 msgstr ""
 
@@ -14423,7 +14432,7 @@ msgid "preformatted"
 msgstr ""
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:7
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:418
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:417
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:490
 msgid "prev"
 msgstr ""
@@ -14445,7 +14454,7 @@ msgid "profile"
 msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:78
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:229
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:232
 msgid "public"
 msgstr ""
 
@@ -14690,7 +14699,7 @@ msgstr ""
 msgid "translations"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:427
+#: scripts/apps/contacts/constants.ts:50
 msgid "twitter"
 msgstr ""
 
@@ -14817,7 +14826,7 @@ msgstr ""
 msgid "vocabulary has been updated. Please re-login to see updated vocabulary values"
 msgstr ""
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:414
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:433
 msgid "website"
 msgstr ""
 
