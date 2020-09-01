@@ -247,8 +247,6 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                 }
             }),
         });
-
-        this.setDirtyOnce();
     }
 
     private removeItem(item: any) {
@@ -303,6 +301,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         }
 
         if (this.state.items !== prevState.items) {
+            this.setDirtyOnce();
             this.setValidItemsDebounced();
         }
     }
