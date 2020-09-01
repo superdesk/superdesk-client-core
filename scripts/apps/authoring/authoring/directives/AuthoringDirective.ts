@@ -722,7 +722,7 @@ export function AuthoringDirective(
                 // returned promise used by superdesk-fi
                 return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
                     authoringWorkspace.close(true);
-                    $scope.$broadcast('item:close', $scope.origItem._id);
+                    $rootScope.$broadcast('item:close', $scope.origItem._id);
                 });
             };
 

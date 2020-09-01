@@ -75,7 +75,7 @@ export function RelatedItemsDirective(
                 });
             };
 
-            scope.$on('item:close', (evt, mainArticleId) => {
+            const deregisterItemClose = $rootScope.$on('item:close', (evt, mainArticleId) => {
                 const itemId = storage.getItem(`open-item-after-related-closed--${mainArticleId}`);
 
                 if (itemId != null) {
@@ -367,6 +367,9 @@ export function RelatedItemsDirective(
 
             scope.$on('$destroy', () => {
                 removeEventListeners.forEach((removeFn) => removeFn());
+                if (deregisterItemClose != null) {
+                    deregisterItemClose();
+                }
             });
         },
     };
