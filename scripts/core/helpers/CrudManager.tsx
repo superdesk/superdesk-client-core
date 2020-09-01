@@ -17,7 +17,7 @@ import {
     IArticleQuery,
     IArticle,
 } from 'superdesk-api';
-import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
+import {httpRequestJsonLocal, httpRequestVoidLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
 
 export function queryElastic(
@@ -205,6 +205,7 @@ export const dataApi: IDataApi = {
             'If-Match': item._etag,
         },
     }),
+    uploadFileWithProgress: uploadFileWithProgress,
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(

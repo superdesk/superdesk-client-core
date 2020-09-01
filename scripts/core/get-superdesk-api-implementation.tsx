@@ -6,6 +6,7 @@ import {
     IContentProfile,
     IEvents,
     IStage,
+    IFileUploadOptions,
 } from 'superdesk-api';
 import {gettext, gettextPlural} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';

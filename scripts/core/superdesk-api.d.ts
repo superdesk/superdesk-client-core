@@ -939,6 +939,7 @@ declare module 'superdesk-api' {
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
+        uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress: (event: ProgressEvent) => void): Promise<T>;
     }
 
 
