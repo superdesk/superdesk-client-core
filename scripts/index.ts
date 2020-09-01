@@ -43,7 +43,7 @@ export function loadTranslations() {
         if (language === 'en') {
             return Promise.resolve({'': {'language': 'en', 'plural-forms': 'nplurals=2; plural=(n != 1);'}});
         } else {
-            const filename = `/languages/${language}.json`;
+            const filename = `/languages/${language}.json?nocache=${Date.now()}`;
 
             return fetch(filename)
                 .then((response) => response.json())
