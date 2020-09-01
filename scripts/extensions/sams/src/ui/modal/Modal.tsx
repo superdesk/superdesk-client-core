@@ -1,11 +1,15 @@
 import * as React from 'react';
+import classNames from 'classnames';
 import {Portal} from '../Portal';
+
+export type IModalSize = 'large' | 'x-large' | 'fill' | 'fullscreen';
 
 interface IProps {
     id: string;
-    size?: 'large' | 'x-large' | 'fill' | 'full-screen';
+    size?: IModalSize;
     closeOnEsc?: boolean;
     closeModal?(): void;
+    darkUI?: boolean;
 }
 
 export class Modal extends React.PureComponent<IProps> {
@@ -35,9 +39,13 @@ export class Modal extends React.PureComponent<IProps> {
     }
 
     render() {
-        const modalClass = this.props.size != null ?
-            `modal modal--${this.props.size}` :
-            'modal';
+        const modalClass = classNames(
+            'modal',
+            {
+                [`modal--${this.props.size}`]: this.props.size,
+                'modal--dark-ui': this.props.darkUI,
+            },
+        );
 
         return (
             <Portal id={this.props.id}>
