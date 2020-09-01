@@ -26,6 +26,12 @@ export function getSets(state: IApplicationState): Array<ISetItem> {
     return state.sets.sets;
 }
 
+export function getActiveSets(state: IApplicationState): Array<ISetItem> {
+    return state.sets.sets.filter(
+        (set) => set.state === SET_STATE.USABLE,
+    );
+}
+
 export const getSetsById = createSelector<IApplicationState, Array<ISetItem>, Dictionary<string, ISetItem>>(
     [getSets],
     (sets: Array<ISetItem>) => {
