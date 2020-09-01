@@ -29,7 +29,7 @@ export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
             },
         },
         assets: {
-            upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<any> {
+            upload(data: FormData, onProgress: (event: ProgressEvent) => void): Promise<any> {
                 return uploadAsset(superdesk, data, onProgress);
             },
         },

@@ -11,7 +11,7 @@ import {IModalSize, Modal, ModalHeader} from '../ui/modal';
 import {GridList} from '../ui/grid/GridList';
 import {PageLayout} from './PageLayout';
 
-interface IUploadItem<T = any> {
+export interface IUploadItem {
     id: string;
     binary: File;
     uploadProgress: number;
@@ -22,12 +22,12 @@ interface IUploadItem<T = any> {
 export interface IUploadFileListItemProps<T = any> {
     item: IUploadItem;
     asset: T;
-    selectFile(index: number): void;
-    removeFile(index: number): void;
     selected: boolean;
+    selectFile(): void;
+    removeFile?(): void;
 }
 
-interface IContentPanelProps<T = any> {
+export interface IContentPanelProps {
     item: IUploadItem;
     submitting?: boolean;
 }
@@ -47,13 +47,13 @@ interface IProps<T> {
     assets: Dictionary<string, T>;
 
     ListItemComponent: React.ComponentType<IUploadFileListItemProps<T>>;
-    RightPanelComponent: React.ComponentType<IContentPanelProps<T>>;
+    RightPanelComponent: React.ComponentType<IContentPanelProps>;
 }
 
 interface IState {
-    selectedIndex?: number;
-    submitting?: boolean;
-    items?: Array<IUploadItem>;
+    selectedIndex: number;
+    submitting: boolean;
+    items: Array<IUploadItem>;
 }
 
 export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.ComponentType<IProps<T>> {
@@ -92,11 +92,10 @@ export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.Com
         }
 
         addFiles(event: React.ChangeEvent<HTMLInputElement>) {
-            const files = Array.from(event.target.files);
-            const newItems = [];
+            const newItems: Array<IUploadItem> = [];
 
-            files.forEach(
-                (file) => {
+            Array.from(event.target.files ?? []).forEach(
+                (file: File) => {
                     const id = Math.random().toString(36).substr(1);
 
                     this.props.onFileAdded(id, file);
@@ -126,7 +125,7 @@ export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.Com
             this.props.onFileRemoved(this.state.items[index].id);
 
             this.setState((state: IState) => {
-                const updates: IState = {items: [...state.items]};
+                const updates: IState = {...state};
 
                 updates.items.splice(index, 1);
 
@@ -146,20 +145,18 @@ export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.Com
 
         updateAssetState(index: number, updates: Partial<IUploadItem>) {
             this.setState((state: IState) => {
-                const items = [...state.items];
+                const items: IState['items'] = [...state.items];
 
-                Object.keys(updates)
-                    .forEach((field) => {
-                        items[index][field] = updates[field];
-                    });
+                items[index] = {
+                    ...items[index],
+                    ...updates,
+                };
 
                 return {items: items};
             });
         }
 
-        onSubmit(event) {
-            event.preventDefault();
-
+        onSubmit() {
             this.setState({submitting: true});
             let requestsCompleted = 0;
             let failed = false;

@@ -4,7 +4,7 @@ import classNames from 'classnames';
 interface IProps {
     children: React.ReactNode;
     uploading?: boolean;
-    remove?(): void;
+    remove?(event: React.MouseEvent<HTMLAnchorElement>): void;
     icon: string;
 }
 

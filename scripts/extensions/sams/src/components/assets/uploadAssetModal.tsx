@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {ISuperdesk} from 'superdesk-api';
 import {ISetItem, ASSET_STATE, IAssetItem} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {IUploadItem, IUploadFileListItemProps, IContentPanelProps} from '../../containers/FileUploadModal';
 
 // Redux Actions & Selectors
 import {getActiveSets} from '../../store/sets/selectors';
@@ -28,7 +29,7 @@ interface IProps {
 }
 
 interface IState {
-    assets?: Dictionary<string, Partial<IAssetItem>>;
+    assets: Dictionary<string, Partial<IAssetItem>>;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
@@ -51,6 +52,7 @@ export function getShowUploadAssetModalFunction(superdesk: ISuperdesk, props?: P
 
 export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
+    const {notify} = superdesk.ui;
 
     const AssetGridItem = getAssetGridItemComponent(superdesk);
     const AssetEditorPanel = getAssetEditorPanel(superdesk);
@@ -58,7 +60,7 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
     const FileUploadDialog = getFileUploadModalComponent<Partial<IAssetItem>>(superdesk);
 
     class UploadAssetModal extends React.Component<IProps, IState> {
-        onFieldChanged: Dictionary<string, (field: string, value: string) => void>;
+        onFieldChanged: Dictionary<string, (field: keyof IAssetItem, value: string) => void>;
 
         constructor(props: IProps) {
             super(props);
@@ -98,7 +100,7 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
 
         onFileRemoved(id: string) {
             this.setState((state: IState) => {
-                const assets = {...state.assets};
+                const assets: IState['assets'] = {...state.assets};
 
                 delete assets[id];
 
@@ -108,24 +110,30 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
             delete this.onFieldChanged[id];
         }
 
-        uploadFile(item, onProgress) {
+        uploadFile(item: IUploadItem, onProgress: (event: ProgressEvent) => void): Promise<Partial<IAssetItem>> {
             const data = new FormData();
-            const asset = this.state.assets[item.id];
+            const asset = this.state.assets?.[item.id];
+
+            if (asset == null) {
+                notify.error(gettext('Unable to find Asset associated with the file!'));
+                return Promise.reject();
+            }
 
             data.append('binary', item.binary, asset.filename);
-            Object.keys(asset)
-                .forEach((field) => {
-                    if (['_id', 'length'].includes(field) === false) {
-                        data.append(field, asset[field]);
-                    }
-                });
+            let field: keyof IAssetItem;
+
+            for (field in asset) {
+                if (['_id', 'length'].includes(field) === false) {
+                    data.append(field, asset[field] as string);
+                }
+            }
 
             return samsApi.assets.upload(data, onProgress);
         }
 
-        onChange(id, field, value) {
+        onChange(id: string, field: keyof IAssetItem, value: any) {
             this.setState((state: IState) => {
-                const assets = {...state.assets};
+                const assets: IState['assets'] = {...state.assets};
 
                 assets[id][field] = value;
 
@@ -133,7 +141,7 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
             });
         }
 
-        renderGridItem({item, asset, selected, selectFile, removeFile}) {
+        renderGridItem({item, asset, selected, selectFile, removeFile}: IUploadFileListItemProps<Partial<IAssetItem>>) {
             return (
                 <AssetGridItem
                     asset={asset}
@@ -146,7 +154,7 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
             );
         }
 
-        renderRightPanel({item, submitting}) {
+        renderRightPanel({item, submitting}: IContentPanelProps) {
             return (
                 <AssetEditorPanel
                     key={item.id}

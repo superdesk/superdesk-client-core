@@ -33,7 +33,7 @@ export function getHumanReadableFileSize(fileSize: number): string {
         return fileSize + 'bytes';
     } else if (fileSize < 1048576) {
         return (fileSize / 1024).toFixed(1) + 'KB';
-    } else if (fileSize >= 1048576) {
+    } else {
         return (fileSize / 1048576).toFixed(1) + 'MB';
     }
 }

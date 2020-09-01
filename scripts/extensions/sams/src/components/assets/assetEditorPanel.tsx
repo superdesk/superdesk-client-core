@@ -11,7 +11,7 @@ import {FormGroup, FormRow} from '../../ui';
 import {getHumanReadableFileSize} from '../../utils/ui';
 
 interface IProps {
-    asset: IAssetItem;
+    asset: Partial<IAssetItem>;
     disabled?: boolean;
     onChange(field: string, value: string): void;
     sets: Array<ISetItem>;
@@ -51,7 +51,9 @@ export function getAssetEditorPanel(superdesk: ISuperdesk) {
                         </FormRow>
                         <FormRow>
                             <FormLabel text={gettext('Size:')} />
-                            <span>{getHumanReadableFileSize(this.props.asset.length)}</span>
+                            <span>
+                                {this.props.asset.length && getHumanReadableFileSize(this.props.asset.length)}
+                            </span>
                         </FormRow>
                     </FormGroup>
 

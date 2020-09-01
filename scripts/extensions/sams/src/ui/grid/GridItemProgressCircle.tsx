@@ -42,10 +42,15 @@ export class GridItemProgressCircle extends React.Component<IProps, IState> {
             const boundingBox = this.svgNode.current.getBoundingClientRect();
             const circleNode = this.svgNode.current.querySelector('circle');
 
-            this.setState({
-                width: boundingBox.width,
-                strokeWidth: parseInt(window.getComputedStyle(circleNode).strokeWidth, 10),
-            });
+            if (circleNode != null) {
+                this.setState({
+                    width: boundingBox.width,
+                    strokeWidth: parseInt(
+                        window.getComputedStyle(circleNode).strokeWidth,
+                        10,
+                    ),
+                });
+            }
         } else {
             setTimeout(this.updateStateFromRefNode, 50);
         }

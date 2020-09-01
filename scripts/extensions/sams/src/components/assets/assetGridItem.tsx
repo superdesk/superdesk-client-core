@@ -13,7 +13,7 @@ import {GridItemProgressCircle} from '../../ui/grid/GridItemProgressCircle';
 import {getHumanReadableFileSize, getIconTypeFromMimetype} from '../../utils/ui';
 
 interface IProps {
-    asset: IAssetItem;
+    asset: Partial<IAssetItem>;
     onClick?(): void;
     remove?(): void;
     selected?: boolean;
@@ -31,10 +31,12 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
             this.onRemove = this.onRemove.bind(this);
         }
 
-        onRemove(event) {
-            event.stopPropagation();
+        onRemove(event: React.MouseEvent<HTMLAnchorElement>) {
+            if (this.props.remove != null) {
+                event.stopPropagation();
 
-            this.props.remove();
+                this.props.remove();
+            }
         }
 
         render() {
@@ -46,12 +48,12 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
                     <GridItemThumb
                         uploading={true}
                         remove={this.props.remove && this.onRemove}
-                        icon={getIconTypeFromMimetype(this.props.asset.mimetype)}
+                        icon={getIconTypeFromMimetype(this.props.asset?.mimetype ?? 'text')}
                     >
                         {this.props.uploadProgress && (
                             <GridItemProgressCircle
                                 value={this.props.uploadProgress ?? 0}
-                                error={this.props.error}
+                                error={this.props.error ?? false}
                                 counter={false}
                             />
                         )}
@@ -68,7 +70,7 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
                                 {gettext('Type:')}
                             </span>
                             <span className="sd-grid-item__text-strong">
-                                {this.props.asset.mimetype}
+                                {this.props.asset?.mimetype}
                             </span>
                         </div>
                         <div className="sd-grid-item__content-block">
@@ -76,7 +78,7 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
                                 {gettext('Size:')}
                             </span>
                             <span className="sd-grid-item__text-strong">
-                                {getHumanReadableFileSize(this.props.asset.length)}
+                                {this.props.asset.length && getHumanReadableFileSize(this.props.asset.length)}
                             </span>
                         </div>
                     </GridItemContent>
