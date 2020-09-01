@@ -1,8 +1,9 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IPackagesService} from 'types/Services/Packages';
 
 PackageItemsEdit.$inject = ['packages', 'notify', '$rootScope'];
-export function PackageItemsEdit(packages, notify, $rootScope) {
+export function PackageItemsEdit(packages: IPackagesService, notify, $rootScope) {
     return {
         scope: false,
         require: 'ngModel',

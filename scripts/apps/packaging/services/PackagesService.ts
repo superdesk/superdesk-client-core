@@ -2,13 +2,6 @@ import _ from 'lodash';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {gettext} from 'core/utils';
 
-function getRefLabel(ref) {
-    switch (ref) {
-    case 'main': return gettext(ref);
-    default: return ref;
-    }
-}
-
 PackagesService.$inject = ['api', '$q', 'archiveService', 'lock', 'autosave', 'authoring',
     'authoringWorkspace', 'desks', '$rootScope'];
 export function PackagesService(api, $q, archiveService, lock, autosave, authoring,
@@ -27,9 +20,10 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
     };
 
     this.createPackageFromItems = function(items, defaults) {
-        var idRef = 'main';
-        var item = items[0];
-        var newPackage: any = {
+        const idRef = 'main';
+        const label = gettext('main');
+        const item = items[0];
+        let newPackage: any = {
             headline: item.headline || item.description_text || '',
             slugline: item.slugline || '',
             description_text: item.description_text || '',
@@ -37,9 +31,9 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             type: 'composite',
             version: 0,
         };
-        var groups = [{
+        const groups = [{
             role: 'grpRole:NEP',
-            refs: [{idRef: idRef, label: getRefLabel(idRef)}],
+            refs: [{idRef, label}],
             id: 'root',
         },
         getGroupFor(null, idRef),
@@ -54,7 +48,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return api.save('archive', newPackage);
     };
 
-    this.createEmptyPackage = function(defaults, initializeAsUpdated: boolean, idRef = 'main') {
+    this.createEmptyPackage = function(defaults, initializeAsUpdated?: boolean, idRef = 'main', label = gettext('main')) {
         var newPackage: any = {
             headline: '',
             slugline: '',
@@ -64,7 +58,7 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
             groups: [
                 {
                     role: 'grpRole:NEP',
-                    refs: [{idRef: idRef, label: getRefLabel(idRef)}],
+                    refs: [{idRef, label}],
                     id: 'root',
                 },
                 getGroupFor(null, idRef),

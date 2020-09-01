@@ -1,3 +1,5 @@
+import {IPackagesService} from 'types/Services/Packages';
+
 describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
@@ -24,7 +26,7 @@ describe('superdesk.apps.workspace.content', () => {
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages', inject((api, packages, desks, session, $rootScope) => {
+        it('can create packages', inject((api, packages: IPackagesService, desks, session, $rootScope) => {
             session.identity = {_id: '1'};
             desks.userDesks = {_items: []};
             spyOn(desks, 'getCurrentDesk')
