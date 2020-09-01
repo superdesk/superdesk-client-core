@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {IPackagesService} from 'types/Services/Packages';
 
 ContentResults.$inject = ['$location', 'preferencesService', 'packages', 'tags', 'asset', 'search'];
 
@@ -7,7 +8,7 @@ ContentResults.$inject = ['$location', 'preferencesService', 'packages', 'tags',
  * This directive is only temporarly,
  * it will be deleted with content and ingest
  */
-export function ContentResults($location, preferencesService, packages, tags, asset, search) {
+export function ContentResults($location, preferencesService, packages: IPackagesService, tags, asset, search) {
     var update = {
         'archive:view': {
             allowed: [
