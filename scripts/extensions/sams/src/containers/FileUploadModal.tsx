@@ -57,7 +57,8 @@ interface IState {
 }
 
 export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.ComponentType<IProps<T>> {
-    const {gettext} = superdesk.localization;
+    const {gettext, gettextPlural} = superdesk.localization;
+    const {notify} = superdesk.ui;
 
     return class FileUploadModal extends React.Component<IProps<T>, IState> {
         fileInputNode: React.RefObject<HTMLInputElement>;
@@ -201,9 +202,18 @@ export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.Com
                         if (requestsCompleted === this.state.items.length) {
                             if (failed === false) {
                                 this.props.closeModal();
-                                // notify.sucess
+                                notify.success(
+                                    gettextPlural(
+                                        requestsCompleted,
+                                        'File uploaded successfully',
+                                        '{{count}} files uploaded successfully',
+                                        {count: requestsCompleted},
+                                    ),
+                                );
                             } else {
                                 this.setState({submitting: false});
+                                // TODO: Improve displaying error messages to the user
+                                notify.error(gettext('Failed to upload files'));
                             }
                         }
                     };
