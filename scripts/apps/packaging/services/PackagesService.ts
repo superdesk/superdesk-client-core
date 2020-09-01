@@ -48,7 +48,12 @@ export function PackagesService(api, $q, archiveService, lock, autosave, authori
         return api.save('archive', newPackage);
     };
 
-    this.createEmptyPackage = function(defaults, initializeAsUpdated?: boolean, idRef = 'main', label = gettext('main')) {
+    this.createEmptyPackage = function(
+        defaults,
+        initializeAsUpdated?: boolean,
+        idRef = 'main',
+        label = gettext('main'),
+    ) {
         var newPackage: any = {
             headline: '',
             slugline: '',

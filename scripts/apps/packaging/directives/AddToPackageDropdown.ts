@@ -4,7 +4,13 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {IPackagesService} from 'types/Services/Packages';
 
 AddToPackageDropdown.$inject = ['item', 'className', 'authoringWorkspace', 'packages', 'api'];
-export function AddToPackageDropdown(item, className, authoringWorkspace: AuthoringWorkspaceService, packages: IPackagesService, api) {
+export function AddToPackageDropdown(
+    item,
+    className,
+    authoringWorkspace: AuthoringWorkspaceService,
+    packages: IPackagesService,
+    api,
+) {
     return React.createElement(PackageGroupList, {
         item: item,
         package: authoringWorkspace.getItem(),
