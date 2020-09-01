@@ -5,6 +5,7 @@ import {ISamsAPI, ISetItem, IStorageDestinationItem} from '../interfaces';
 // APIs
 import {getAllSets, createSet, updateSet, deleteSet} from './sets';
 import {getAllStorageDestinations} from './storageDestinations';
+import {uploadAsset} from './assets';
 
 export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
     return {
@@ -25,6 +26,11 @@ export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
         storageDestinations: {
             getAll(): Promise<Array<IStorageDestinationItem>> {
                 return getAllStorageDestinations(superdesk);
+            },
+        },
+        assets: {
+            upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<any> {
+                return uploadAsset(superdesk, data, onProgress);
             },
         },
     };
