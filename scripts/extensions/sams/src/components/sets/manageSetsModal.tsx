@@ -14,16 +14,12 @@ import {getSetContentPanelState, getSelectedSetId} from '../../store/sets/select
 
 // UI
 import {Button, ButtonGroup, SubNav} from 'superdesk-ui-framework/react';
+import {PageLayout} from '../../containers/PageLayout';
 import {
-    HeaderPanel,
-    LayoutContainer,
-    MainPanel,
     Modal,
     ModalBody,
     ModalFooter,
     ModalHeader,
-    Panel,
-    RightPanel,
 } from '../../ui';
 import {getSetListPanel} from './setListPanel';
 import {getSetPreviewPanel} from './setPreviewPanel';
@@ -101,12 +97,13 @@ export function getManageSetsModalComponent(superdesk: ISuperdesk) {
                     closeModal={this.closeModal}
                     closeOnEsc={true}
                 >
-                    <ModalHeader onClose={this.closeModal}>
-                        {gettext('Manage Sets')}
-                    </ModalHeader>
+                    <ModalHeader
+                        text={gettext('Manage Sets')}
+                        onClose={this.closeModal}
+                    />
                     <ModalBody noPadding={true}>
-                        <LayoutContainer>
-                            <HeaderPanel>
+                        <PageLayout
+                            header={(
                                 <SubNav zIndex={2}>
                                     <ButtonGroup align="right">
                                         <Button
@@ -118,19 +115,16 @@ export function getManageSetsModalComponent(superdesk: ISuperdesk) {
                                         />
                                     </ButtonGroup>
                                 </SubNav>
-                            </HeaderPanel>
-                            <MainPanel className="sd-padding--2">
-                                <SetListPanel />
-                            </MainPanel>
-
-                            <RightPanel open={ContentPanel != null}>
-                                <Panel side="right">
-                                    {ContentPanel && (
-                                        <ContentPanel key={this.props.selectedSetId} />
-                                    )}
-                                </Panel>
-                            </RightPanel>
-                        </LayoutContainer>
+                            )}
+                            mainClassName="sd-padding--2"
+                            main={<SetListPanel />}
+                            rightPanelOpen={ContentPanel != null}
+                            rightPanel={ContentPanel == null ? (
+                                <div />
+                            ) : (
+                                <ContentPanel key={this.props.selectedSetId} />
+                            )}
+                        />
                     </ModalBody>
                     <ModalFooter>
                         <Button

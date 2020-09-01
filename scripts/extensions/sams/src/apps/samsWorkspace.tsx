@@ -5,14 +5,16 @@ import * as React from 'react';
 import {ISuperdesk} from 'superdesk-api';
 
 // UI
-import {Dropdown, ButtonGroup, SubNav} from 'superdesk-ui-framework/react';
+import {Dropdown, ButtonGroup, SubNav, Button} from 'superdesk-ui-framework/react';
 import {IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 import {HeaderPanel, LayoutContainer, MainPanel} from '../ui';
 import {getShowManageSetsModalFunction} from '../components/sets/manageSetsModal';
+import {getShowUploadAssetModalFunction} from '../components/assets/uploadAssetModal';
 
 export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
     const showManageSetsModal = getShowManageSetsModalFunction(superdesk);
+    const showUploadAssetModal = getShowUploadAssetModalFunction(superdesk);
 
     return class SamsWorkspace extends React.PureComponent<{}> {
         getSubNavMenuActions(): Array<IMenuGroup> {
@@ -47,15 +49,23 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                         <LayoutContainer>
                             <HeaderPanel>
                                 <SubNav zIndex={2}>
-                                    {subNavMenuActions.length === 0 ? null : (
-                                        <ButtonGroup align="right">
+                                    <ButtonGroup align="right">
+                                        {subNavMenuActions.length === 0 ? null : (
                                             <Dropdown items={subNavMenuActions}>
                                                 <button className="sd-navbtn">
                                                     <i className="icon-dots-vertical"/>
                                                 </button>
                                             </Dropdown>
-                                        </ButtonGroup>
-                                    )}
+                                        )}
+                                        <Button
+                                            type="primary"
+                                            icon="upload"
+                                            text="plus-large"
+                                            shape="round"
+                                            iconOnly={true}
+                                            onClick={showUploadAssetModal}
+                                        />
+                                    </ButtonGroup>
                                 </SubNav>
                                 <SubNav zIndex={1}/>
                             </HeaderPanel>
