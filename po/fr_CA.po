@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2020-08-31 15:43+0000\n"
-"Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
+"PO-Revision-Date: 2020-09-02 09:15+0000\n"
+"Last-Translator: Gideon Lehmann <gideon.lehmann@sourcefabric.org>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -91,7 +91,7 @@ msgstr "doit être en mode liste"
 msgid "'not scheduled yet'"
 msgstr "pas encore planifié"
 
-#: scripts/apps/highlights/services/HighlightsService.ts:62
+#: scripts/apps/highlights/services/HighlightsService.ts:63
 msgid "(Global)"
 msgstr " (Global) "
 
@@ -137,7 +137,7 @@ msgstr "*au moins un destinataire visible ou caché est nécessaire"
 msgid "1 day"
 msgstr "1 jour"
 
-#: ../superdesk-analytics/client/utils.js:201
+#: ../superdesk-analytics/client/utils.js:199
 msgid "1 hour"
 msgstr "1 heure"
 
@@ -145,7 +145,7 @@ msgstr "1 heure"
 msgid "1 item was not included in the export."
 msgstr "1 élément n'a pas été inclus dans l'exportation."
 
-#: ../superdesk-analytics/client/utils.js:209
+#: ../superdesk-analytics/client/utils.js:205
 msgid "1 minute"
 msgstr "1 minute"
 
@@ -153,7 +153,7 @@ msgstr "1 minute"
 msgid "1 month"
 msgstr "1 mois"
 
-#: ../superdesk-analytics/client/utils.js:216
+#: ../superdesk-analytics/client/utils.js:210
 msgid "1 second"
 msgstr "1 seconde"
 
@@ -177,7 +177,7 @@ msgstr "11e mise à jour"
 msgid "12 Hours"
 msgstr "12 heures"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:197
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:204
 msgid "12:00am"
 msgstr "0 h 00"
 
@@ -285,12 +285,12 @@ msgstr ": OFF"
 msgid ": ON"
 msgstr ": ON"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:199
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:206
 msgid ":00am"
 msgstr "h 00 AM"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:201
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:203
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:208
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:210
 msgid ":00pm"
 msgstr "h 00 PM"
 
@@ -304,7 +304,7 @@ msgstr "<p>Générer un rapport sur l'utilisation du module de planification.<br
 msgid "A content profile with this name already exists."
 msgstr "Il existe déjà un profil de contenu portant ce nom."
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:281
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:274
 msgid "A desk is required"
 msgstr "Un pupitre est requis"
 
@@ -318,7 +318,7 @@ msgstr "Un lien a été envoyé à l'adresse électronique spécifiée. Veuillez
 msgid "A location matching this one already exists"
 msgstr "Un endroit correspondant à celui-ci existe déjà"
 
-#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:233
+#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:226
 msgid "A user is required"
 msgstr "Un utilisateur est requis"
 
@@ -427,18 +427,19 @@ msgstr "Option"
 #: scripts/apps/templates/views/templates.html:34
 #: scripts/apps/workspace/content/views/profile-settings.html:29
 #: scripts/core/editor3/components/spellchecker/SpellcheckerContextMenu.tsx:88
+#: scripts/extensions/sams/dist/src/apps/samsWorkspace.js:57
 msgid "Actions"
 msgstr "Options"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:16
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:239
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:242
 #: scripts/apps/contacts/services/ContactsService.ts:60
 #: scripts/apps/dictionaries/views/dictionary-config-modal.html:18
-#: scripts/apps/ingest/directives/IngestSourcesContent.ts:83
+#: scripts/apps/ingest/directives/IngestSourcesContent.ts:122
 #: scripts/apps/internal-destinations/InternalDestinations.tsx:23
 #: scripts/apps/publish/directives/SubscribersDirective.ts:59
 #: scripts/apps/users/controllers/UserListController.ts:152
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:423
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:441
 #: scripts/apps/workspace/content/views/profile-settings.html:108
 #: scripts/apps/workspace/content/views/profile-settings.html:41
 msgid "Active"
@@ -484,7 +485,7 @@ msgstr "Ajouter le contact"
 msgid "Add Coverages"
 msgstr "Ajouter couvertures"
 
-#: ../superdesk-analytics/client/utils.js:174
+#: ../superdesk-analytics/client/utils.js:176
 msgid "Add Featuremedia"
 msgstr "Ajouter contenu multimédia"
 
@@ -500,7 +501,7 @@ msgstr ""
 msgid "Add Ingest Sources"
 msgstr "Ajouter des sources d'ingestion"
 
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:392
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:410
 msgid "Add Item"
 msgstr "Ajouter un élément"
 
@@ -523,6 +524,7 @@ msgstr "Ajouter un élément"
 #: scripts/apps/vocabularies/views/vocabulary-config.html:44
 #: scripts/apps/vocabularies/views/vocabulary-config.html:8
 #: scripts/apps/workspace/content/views/profile-settings.html:13
+#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:87
 msgid "Add New"
 msgstr "Ajouter un nouveau"
 
@@ -661,7 +663,6 @@ msgid "Add link"
 msgstr "Ajouter un lien"
 
 #: scripts/apps/dictionaries/views/settings.html:10
-#: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:13
 msgid "Add new"
 msgstr "Ajouter un nouveau"
 
@@ -673,14 +674,10 @@ msgstr "Ajouter un nouveau widget"
 msgid "Add rule"
 msgstr "Ajouter une règle"
 
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:45
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:46
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:90
 msgid "Add step"
 msgstr "Ajouter une étape"
-
-#: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:94
-msgid "Add tag"
-msgstr ""
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:66
 msgid "Add task description"
@@ -747,11 +744,11 @@ msgstr "Ajouté aux articles en vedette"
 msgid "Address"
 msgstr "Adresse"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:475
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:510
 msgid "Address line 1"
 msgstr "Adresse ligne 1"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:486
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:521
 msgid "Address line 2"
 msgstr "Adresse ligne 2"
 
@@ -867,7 +864,7 @@ msgstr "Agendas"
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:67
 #: scripts/apps/contacts/services/ContactsService.ts:54
 #: scripts/apps/contacts/services/ContactsService.ts:59
-#: scripts/apps/ingest/directives/IngestSourcesContent.ts:84
+#: scripts/apps/ingest/directives/IngestSourcesContent.ts:123
 #: scripts/apps/templates/constants.ts:8
 #: scripts/apps/users/controllers/UserListController.ts:157
 #: scripts/apps/workspace/content/views/profile-settings.html:9
@@ -1080,7 +1077,7 @@ msgid ""
 "update, find the latest version of the item."
 msgstr "Une mise à jour de cette version de l'élément existe déjà. Pour créer une nouvelle mise à jour, trouvez la version la plus récente de l'élément. "
 
-#: ../superdesk-analytics/client/index.js:80
+#: ../superdesk-analytics/client/index.js:94
 msgid "Analytics"
 msgstr "Analytique"
 
@@ -1106,12 +1103,12 @@ msgstr "Type d'annotation"
 msgid "Annotations"
 msgstr "Annotations"
 
+#: scripts/extensions/annotationsLibrary/dist/src/extension.js:71
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:102
 msgid "Annotations Library"
 msgstr ""
 
 #: scripts/extensions/annotationsLibrary/dist/src/extension.js:60
-#: scripts/extensions/annotationsLibrary/dist/src/extension.js:71
 #: scripts/extensions/annotationsLibrary/src/extension.tsx:90
 msgid "Annotations library"
 msgstr "Bibliothèque d'annotations"
@@ -1175,7 +1172,7 @@ msgstr "Êtes-vous certain?"
 msgid "Are you sure to remove this subscription?"
 msgstr "Êtes-vous certain de vouloir supprimer cet abonnement?"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.ts:265
+#: scripts/apps/ingest/directives/IngestSourcesContent.ts:304
 msgid "Are you sure you want to delete Ingest Source?"
 msgstr "Êtes-vous certain de vouloir supprimer la source ingérée?"
 
@@ -1211,11 +1208,15 @@ msgstr "Êtes-vous sur de vouloir supprimer l'ensemble de règles?"
 msgid "Are you sure you want to delete saved search?"
 msgstr "Êtes-vous certain de vouloir supprimer la recherche enregistrée?"
 
-#: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:123
+#: scripts/extensions/sams/dist/src/store/sets/actions.js:69
+msgid "Are you sure you want to delete the Set \"{{name}}\"?"
+msgstr ""
+
+#: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:122
 msgid "Are you sure you want to delete the saved report?"
 msgstr "Êtes-vous certain de vouloir supprimer le rapport enregistré?"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:205
+#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:204
 msgid "Are you sure you want to delete the scheduled report?"
 msgstr "Êtes-vous certain de vouloir supprimer le rapport programmé?"
 
@@ -1256,7 +1257,7 @@ msgstr "Êtes-vous certain de vouloir placer ces éléments dans la corbeille?"
 msgid "Are you sure you want to unpublish item \"{{headline}}\"?"
 msgstr "Êtes-vous certain de vouloir annuler la publication de l'élément \"{{headline}}\"? "
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:100
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:96
 msgid "Area"
 msgstr "Zone"
 
@@ -1527,7 +1528,7 @@ msgstr "Affectation supprimée"
 msgid "Assignment reverted."
 msgstr "Affectation retirée."
 
-#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:84
+#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:78
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.jsx:35
 #: ../superdesk-planning/client/controllers/AssignmentController.js:34
 #: ../superdesk-planning/client/index.js:56 ../superdesk-planning/index.js:21
@@ -1562,6 +1563,10 @@ msgstr "Un événement a été associé"
 
 #: scripts/apps/publish/views/ftp-config.html:36
 msgid "Associated/featuremedia path"
+msgstr ""
+
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:197
+msgid "At least one of [{{list}}] is required."
 msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:415
@@ -1618,6 +1623,8 @@ msgstr "Australie/Sydney"
 msgid "Authentication Token"
 msgstr "Jeton d'authentification"
 
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:646
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:120
 #: scripts/apps/users/views/edit-form.html:50
 msgid "Author"
 msgstr "Auteur"
@@ -1675,8 +1682,8 @@ msgstr "Disponible dans les préférences utilisateur/pupitre"
 msgid "Available selections"
 msgstr "Sélections disponibles"
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:287
-#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:29
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:279
+#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:30
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:24
 msgid "Average"
 msgstr "Moyenne"
@@ -1700,7 +1707,7 @@ msgstr "Retour / Annuler"
 msgid "Back to original view"
 msgstr "Retour à l'affichage original"
 
-#: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:12
+#: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:30
 msgid "Back to results"
 msgstr "Retour aux résultats"
@@ -1709,7 +1716,7 @@ msgstr "Retour aux résultats"
 msgid "Back to users list"
 msgstr "Retour à la liste des utilisateurs"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:91
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:87
 msgid "Bar"
 msgstr "Barre"
 
@@ -1731,7 +1738,7 @@ msgstr "Mieux"
 msgid "Biography"
 msgstr "Biographie"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:44
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:46
 msgid "Black"
 msgstr "Noir"
 
@@ -1752,7 +1759,7 @@ msgstr "Bloquer l'API"
 msgid "Blocking"
 msgstr ""
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:54
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:56
 msgid "Blue"
 msgstr "Bleu"
 
@@ -1798,7 +1805,7 @@ msgstr "Bulletin"
 msgid "Browse"
 msgstr "Parcourir"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:479
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:514
 msgid "Building, Suite, Unit, Apartment, Floor, etc."
 msgstr "Immeuble, suite, unité, appartement, étage, etc."
 
@@ -2014,14 +2021,11 @@ msgstr "Impossible d'ouvrir une prévisualisation en mode édition."
 #: scripts/core/ui/components/SubNav/SlidingToolBar.tsx:18
 #: scripts/core/ui/views/datepicker-wrapper.html:15
 #: scripts/core/ui/views/sd-timepicker-popup.html:33
-#: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:17
+#: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:18
 #: scripts/extensions/annotationsLibrary/src/AnnotationsSelect.tsx:38
-#: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:122
-#: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:34
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:23
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:24
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:25
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:89
-#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:9
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:144
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -2102,26 +2106,25 @@ msgid "Case Sensitive"
 msgstr "Sensible à la casse"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:121
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:411
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:412
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:404
 #: scripts/apps/workspace/content/constants.ts:72
 msgid "Categories"
 msgstr "Catégories"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:525
-#: ../superdesk-analytics/client/search/services/SearchReport.js:59
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:521
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:99
 #: scripts/apps/content-api/services/ContentAPISearchService.ts:33
 #: scripts/apps/legal-archive/services/LegalArchiveService.ts:27
 #: scripts/apps/legal-archive/tests/legal.spec.ts:78
 msgid "Category"
 msgstr "Catégorie"
 
-#: ../superdesk-analytics/client/utils.js:178
+#: ../superdesk-analytics/client/utils.js:180
 msgid "Change Image"
 msgstr "Changer la photo"
 
-#: ../superdesk-analytics/client/utils.js:175
-#: ../superdesk-analytics/client/utils.js:176
+#: ../superdesk-analytics/client/utils.js:177
+#: ../superdesk-analytics/client/utils.js:178
 msgid "Change POI"
 msgstr ""
 
@@ -2141,14 +2144,10 @@ msgstr "Changer le mot de passe"
 msgid "Change the search filters and try again!"
 msgstr "Changez les filtres de recherche et essayez de nouveau!"
 
-#: ../superdesk-analytics/client/featuremedia_updates_report/controllers/FeaturemediaUpdatesReportController.js:151
-#: ../superdesk-analytics/client/featuremedia_updates_report/directives/FeaturemediaUpdatesReportPreview.js:28
+#: ../superdesk-analytics/client/featuremedia_updates_report/controllers/FeaturemediaUpdatesReportController.js:143
+#: ../superdesk-analytics/client/featuremedia_updates_report/directives/FeaturemediaUpdatesReportPreview.js:21
 msgid "Changes to Featuremedia"
 msgstr "Changements au contenu multimédia"
-
-#: scripts/extensions/videoEditor/dist/src/VideoEditorTools.js:31
-msgid "Changing quality is only supported for 480p and higher quality videos."
-msgstr ""
 
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:38
 msgid "Channel has gone strangely quiet."
@@ -2218,7 +2217,7 @@ msgstr "Choisissez des étiquettes existantes ou créez-en de nouvelles en tapan
 msgid "Choose highlight list"
 msgstr "Choisir un budget"
 
-#: scripts/apps/contacts/constants.ts:74
+#: scripts/apps/contacts/constants.ts:75
 #: scripts/apps/contacts/views/search-panel.html:63
 msgid "City"
 msgstr "Ville"
@@ -2307,6 +2306,7 @@ msgstr "Cliquer pour remplacer la vignette"
 msgid "Clock type"
 msgstr "Type d'horloge"
 
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:102
 #: ../superdesk-planning/client/components/Agendas/ManageAgendasModal.jsx:118
 #: ../superdesk-planning/client/components/Events/ManageEventTemplatesModal.tsx:98
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorHeader.jsx:275
@@ -2327,6 +2327,8 @@ msgstr "Type d'horloge"
 #: scripts/apps/search/views/multi-image-edit.html:5
 #: scripts/apps/templates/views/sd-template-select.html:33
 #: scripts/core/menu/views/about.html:38 scripts/core/menu/views/about.html:5
+#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:93
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:69
 msgid "Close"
 msgstr "Fermer"
 
@@ -2346,7 +2348,7 @@ msgstr "Fermer l'élément actuel"
 msgid "Close desk widget"
 msgstr "Fermer le widget du pupitre"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.ts:85
+#: scripts/apps/ingest/directives/IngestSourcesContent.ts:124
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:9
 #: scripts/apps/search-providers/views/search-provider-config.html:14
 msgid "Closed"
@@ -2356,7 +2358,7 @@ msgstr "Fermé"
 msgid "Color"
 msgstr "Couleur"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:94
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:90
 msgid "Column"
 msgstr "Colonne"
 
@@ -2450,7 +2452,6 @@ msgstr "Configurer les thèmes de l'éditeur"
 #: scripts/core/ui/components/Form/TimeInput/TimeInputPopup.tsx:138
 #: scripts/core/ui/views/datepicker-wrapper.html:14
 #: scripts/core/ui/views/sd-timepicker-popup.html:32
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:38
 msgid "Confirm"
 msgstr "Confirmer"
 
@@ -2488,8 +2489,8 @@ msgstr "Connecté au serveur de notifications!"
 msgid "Connection string"
 msgstr "Chaîne de connexion"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:216
-#: scripts/apps/contacts/constants.ts:71
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:219
+#: scripts/apps/contacts/constants.ts:72
 #: scripts/apps/contacts/views/search-panel.html:33
 msgid "Contact Type"
 msgstr "Type de contact"
@@ -2567,12 +2568,11 @@ msgstr "Profil de contenu"
 msgid "Content Profiles"
 msgstr "Profils de contenu"
 
-#: ../superdesk-analytics/client/content_publishing_report/index.js:43
+#: ../superdesk-analytics/client/content_publishing_report/index.js:44
 msgid "Content Publishing"
 msgstr "Publication de contenu"
 
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:459
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:460
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:452
 msgid "Content State"
 msgstr "Contenu"
 
@@ -2731,7 +2731,7 @@ msgstr "Avis de droit d'auteur:"
 msgid "Copyright:"
 msgstr "Droit d'auteur:"
 
-#: ../superdesk-analytics/client/utils.js:157
+#: ../superdesk-analytics/client/utils.js:159
 #: scripts/apps/authoring/views/authoring-topbar.html:108
 #: scripts/apps/authoring/views/authoring-topbar.html:109
 msgid "Correct"
@@ -2742,7 +2742,7 @@ msgid "Correct item"
 msgstr "Corriger l'élément"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:38
-#: ../superdesk-analytics/client/search/services/SearchReport.js:32
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:87
 #: scripts/apps/search/components/fields/state.tsx:22
 msgid "Corrected"
 msgstr "Corrigé"
@@ -2755,7 +2755,7 @@ msgstr "Corrigé par"
 msgid "Correction"
 msgstr "Correction"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:579
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:575
 msgid "Corrections"
 msgstr "Corrections"
 
@@ -2789,8 +2789,8 @@ msgstr "Échec du déverrouillage de l'élément."
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.jsx:143
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:233
 #: ../superdesk-planning/client/components/Locations/LocationsList.jsx:83
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:557
-#: scripts/apps/contacts/constants.ts:76
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:592
+#: scripts/apps/contacts/constants.ts:77
 #: scripts/apps/contacts/views/search-panel.html:77
 msgid "Country"
 msgstr "Pays"
@@ -2893,15 +2893,15 @@ msgstr "Couverture réaffectée"
 msgid "Coverage removed"
 msgstr "Couverture retirée"
 
-#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:83
+#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:77
 #: ../superdesk-planning/client/components/Coverages/CoverageArrayInput.jsx:97
 #: ../superdesk-planning/client/components/Planning/PlanningMenuPanel/index.jsx:53
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:226
 msgid "Coverages"
 msgstr "Couvertures"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:440
-#: ../superdesk-analytics/client/utils.js:148
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:433
+#: ../superdesk-analytics/client/utils.js:150
 #: ../superdesk-planning/client/components/IgnoreCancelSaveModal.jsx:122
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:124
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:168
@@ -2911,6 +2911,7 @@ msgstr "Couvertures"
 #: scripts/apps/highlights/views/create_highlights_button_directive.html:2
 #: scripts/apps/templates/services/TemplatesService.ts:70
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:6
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:147
 msgid "Create"
 msgstr "Créer"
 
@@ -2922,7 +2923,7 @@ msgstr "Créer et publier"
 msgid "Create Broadcast"
 msgstr "Créer un bulletin"
 
-#: ../superdesk-analytics/client/utils.js:173
+#: ../superdesk-analytics/client/utils.js:175
 msgid "Create Highlight"
 msgstr "Créer un élément de budget"
 
@@ -3176,6 +3177,10 @@ msgstr "Champs d'intégration personnalisés"
 msgid "Custom text fields"
 msgstr "Champs de texte personnalisés"
 
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:75
+msgid "Customer Installation No.:"
+msgstr ""
+
 #: scripts/apps/dashboard/index.ts:52
 msgid "Customize your widgets and views"
 msgstr "Personnalisez vos widgets et vos affichages"
@@ -3192,39 +3197,39 @@ msgstr "PUPITRES"
 msgid "DONE"
 msgstr "TERMINÉ"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:137
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:223
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:130
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:216
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:25
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:11
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:33
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:34
 msgid "Daily"
 msgstr "Quotidiennement"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:66
-msgid "Daily at"
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:67
+msgid "Daily at {{hour}}"
 msgstr ""
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:56
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:58
 msgid "Dark Blue"
 msgstr "Bleu foncé"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:45
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:47
 msgid "Dark Gray"
 msgstr "Gris foncé"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:67
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:69
 msgid "Dark Magenta"
 msgstr "Magenta foncé"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:64
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:66
 msgid "Dark Orange"
 msgstr "Orange foncé"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:68
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:70
 msgid "Dark Violet"
 msgstr "Violet foncé"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:46
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:48
 msgid "Darker Gray"
 msgstr "Gris plus foncé"
 
@@ -3238,7 +3243,7 @@ msgstr "Tableau de bord"
 msgid "Dashboard is empty."
 msgstr "Le tableau de bord est vide."
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:426
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:419
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:16
 #: ../superdesk-analytics/client/search/views/date-filters.html:62
 #: ../superdesk-planning/client/components/Events/EventScheduleSummary/index.jsx:55
@@ -3263,7 +3268,7 @@ msgstr "Filtres de date"
 msgid "Date created"
 msgstr "Date de création"
 
-#: ../superdesk-analytics/client/search/directives/DateFilters.js:182
+#: ../superdesk-analytics/client/search/directives/DateFilters.js:183
 msgid "Date field is required"
 msgstr "Le champ de date est obligatoire"
 
@@ -3284,7 +3289,7 @@ msgstr "Date de publication"
 msgid "Date scheduled"
 msgstr "Date prévue"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:422
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:415
 msgid "Date/Time"
 msgstr "Date/heure"
 
@@ -3295,7 +3300,7 @@ msgstr "Date/heure"
 msgid "Dateline"
 msgstr "Origine et date"
 
-#: scripts/extensions/datetimeField/dist/src/extension.js:32
+#: scripts/extensions/datetimeField/dist/src/extension.js:33
 #: scripts/extensions/datetimeField/src/extension.tsx:46
 msgid "Datetime"
 msgstr ""
@@ -3308,7 +3313,7 @@ msgstr "Jour(s)"
 msgid "Days"
 msgstr "Jours"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:66
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:68
 msgid "Deep Pink"
 msgstr "Rose foncé"
 
@@ -3369,7 +3374,7 @@ msgid ""
 "                                    artcle header. A minimal value of 200 is required."
 msgstr "Définit la largeur de la fenêtre surgissante dans l'en-tête de l'article. Une valeur minimale de 200 est requise. "
 
-#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:22
+#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:23
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:23
 msgid "Definition"
 msgstr "Définition"
@@ -3379,6 +3384,7 @@ msgstr "Définition"
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:45
 #: scripts/core/editor3/components/comments/Comment.tsx:61
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:51
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:77
 msgid "Delete"
 msgstr "Supprimer"
 
@@ -3398,6 +3404,10 @@ msgstr "Supprimer la règle"
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:33
 msgid "Delete Saved Report"
 msgstr "Supprimer le rapport enregistré"
+
+#: scripts/extensions/sams/dist/src/store/sets/actions.js:69
+msgid "Delete Set?"
+msgstr ""
 
 #: scripts/core/editor3/highlightsConfig.ts:116
 msgid "Delete empty paragraphs"
@@ -3441,8 +3451,8 @@ msgstr "Descendant"
 msgid "Descending Order"
 msgstr "Ordre descendant"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:444
-#: ../superdesk-analytics/client/utils.js:154
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:437
+#: ../superdesk-analytics/client/utils.js:156
 #: scripts/apps/authoring/views/authoring-topbar.html:92
 msgid "Deschedule"
 msgstr "Déprogrammer"
@@ -3474,6 +3484,8 @@ msgstr "Déprogrammé par"
 #: scripts/apps/workspace/content/views/profile-settings.html:73
 #: scripts/core/editor2/views/block-embed.html:30
 #: scripts/core/editor3/components/embeds/EmbedBlock.tsx:185
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:160
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:92
 msgid "Description"
 msgstr "Description"
 
@@ -3482,10 +3494,10 @@ msgstr "Description"
 msgid "Deselect All"
 msgstr "Tout désélectionner"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:499
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:495
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:9
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:2
-#: ../superdesk-analytics/client/search/services/SearchReport.js:71
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:111
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.jsx:252
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/CoveragePreviewTopBar.jsx:44
 #: ../superdesk-planning/client/components/ExportAsArticleModal.jsx:178
@@ -3498,10 +3510,10 @@ msgstr "Tout désélectionner"
 msgid "Desk"
 msgstr "Pupitre"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:238
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:390
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:507
-#: ../superdesk-analytics/client/desk_activity_report/index.js:43
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:231
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:383
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:500
+#: ../superdesk-analytics/client/desk_activity_report/index.js:45
 msgid "Desk Activity"
 msgstr "Activité du pupitre"
 
@@ -3535,8 +3547,8 @@ msgstr "Envoyé à un autre pupitre"
 msgid "Desk Templates"
 msgstr "Gabarits du pupitre"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:374
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:378
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:367
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:371
 msgid "Desk Transitions"
 msgstr "Transitions du pupitre"
 
@@ -3597,8 +3609,7 @@ msgid "Desk:"
 msgstr "Pupitre:"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:109
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:381
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:382
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:374
 #: scripts/apps/desks/index.ts:68
 #: scripts/apps/monitoring/views/aggregate-settings.html:8
 #: scripts/apps/search/views/search-filters.html:31
@@ -3608,6 +3619,7 @@ msgstr "Pupitres"
 
 #: scripts/apps/authoring/views/send-item.html:38
 #: scripts/apps/publish/views/publish-queue.html:111
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:163
 msgid "Destination"
 msgstr "Destination"
 
@@ -3699,6 +3711,10 @@ msgstr "Désactiver l'utilisateur"
 #: scripts/apps/users/controllers/UserListController.ts:156
 msgid "Disabled"
 msgstr "Désactivé"
+
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:57
+msgid "Disabled Sets"
+msgstr ""
 
 #: scripts/core/notification/notification.ts:139
 msgid "Disconnected from Notification Server!"
@@ -3798,7 +3814,6 @@ msgstr "Vous n'avez pas de jeton? Obtenez-en un."
 #: scripts/apps/ingest/views/settings/ingest-routing-content.html:108
 #: scripts/apps/monitoring/views/aggregate-settings.html:155
 #: scripts/apps/users/views/change-avatar.html:73
-#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:10
 msgid "Done"
 msgstr "Terminé"
 
@@ -3812,6 +3827,10 @@ msgstr "Télécharger"
 #: scripts/apps/search/components/fields/state.tsx:13
 msgid "Draft"
 msgstr "Brouillon "
+
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:55
+msgid "Draft Sets"
+msgstr ""
 
 #: scripts/apps/archive/views/upload.html:36
 msgid "Drag Your Files Here"
@@ -3871,8 +3890,8 @@ msgstr "Échéance"
 msgid "Due:"
 msgstr "Dû:"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:442
-#: ../superdesk-analytics/client/utils.js:167
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:435
+#: ../superdesk-analytics/client/utils.js:169
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.jsx:235
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/index.jsx:59
 #: ../superdesk-planning/client/constants/events.js:41
@@ -3929,7 +3948,7 @@ msgstr ""
 msgid "Duplicated"
 msgstr "Dupliqué"
 
-#: ../superdesk-analytics/client/utils.js:150
+#: ../superdesk-analytics/client/utils.js:152
 msgid "Duplicated From"
 msgstr "Dupliqué à partir de"
 
@@ -4009,8 +4028,9 @@ msgstr "Note de la rédaction"
 #: scripts/core/editor3/components/annotations/AnnotationPopup.tsx:40
 #: scripts/core/editor3/components/comments/Comment.tsx:56
 #: scripts/core/editor3/components/links/LinkToolbar.tsx:50
-#: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:30
+#: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:31
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:60
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:64
 msgid "Edit"
 msgstr "Modifier"
 
@@ -4123,10 +4143,6 @@ msgstr "Modifier le gabarit"
 msgid "Edit Unique Name"
 msgstr "Modifier l'identifiant unique"
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:485
-msgid "Edit Video"
-msgstr ""
-
 #: scripts/apps/monitoring/index.ts:83
 msgid "Edit an item"
 msgstr "Modifier un élément"
@@ -4234,10 +4250,6 @@ msgstr "Modifier cet horaire"
 msgid "Edit user"
 msgstr "Modifier l'utilisateur"
 
-#: scripts/extensions/videoEditor/dist/src/extension.js:15
-msgid "Edit video"
-msgstr ""
-
 #: scripts/apps/vocabularies/views/vocabulary-config.html:77
 msgid "Edit vocabulary"
 msgstr "Modifier l'index"
@@ -4265,7 +4277,7 @@ msgstr "Éditeur3"
 msgid "Editorial Note"
 msgstr "Note de la rédaction"
 
-#: scripts/apps/contacts/constants.ts:69
+#: scripts/apps/contacts/constants.ts:70
 #: scripts/apps/contacts/views/search-panel.html:49
 #: scripts/apps/users/views/list.html:36
 #: scripts/core/auth/reset-password.html:13
@@ -4304,6 +4316,7 @@ msgid "Enable user"
 msgstr "Activer l'utilisateur"
 
 #: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:129
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:153
 msgid "Enabled"
 msgstr "Activé"
 
@@ -4311,7 +4324,7 @@ msgstr "Activé"
 msgid "End Time (exclusive)"
 msgstr "Heure de fin (exclusive)"
 
-#: ../superdesk-analytics/client/search/directives/DateFilters.js:176
+#: ../superdesk-analytics/client/search/directives/DateFilters.js:177
 msgid "End date cannot be greater than today"
 msgstr "La date de fin ne peut pas être postérieure à aujourd'hui"
 
@@ -4337,12 +4350,8 @@ msgid ""
 "maintainers."
 msgstr "Assurez-vous que le bon point de terminaison de prévisualisation est configuré ou contactez les mainteneurs des points de terminaison."
 
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:516
-msgid "Enter Actions"
-msgstr ""
-
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:163
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:515
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:508
 msgid "Enter Desk Actions"
 msgstr "Entrer les options du pupitre"
 
@@ -4404,27 +4413,27 @@ msgstr "Erreur. La recherche n'a pas pu être enregistrée."
 msgid "Error. Sessions could not be cleared."
 msgstr "Erreur. Les séances n'ont pas pu être fermées."
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:322
-#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:277
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:315
+#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:270
 msgid "Error. The Desk Activity report could not be generated!"
 msgstr "Erreur. Le rapport sur l'activité du pupitre n'a pas pu être généré!"
 
-#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:229
+#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:223
 msgid "Error. The Planning Usage Report could not be generated!"
 msgstr "Erreur. Le rapport sur l'utilisation de la planification n'a pas pu être généré!"
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:248
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:240
 msgid "Error. The Production Time report could not be generated!"
 msgstr "Erreur. Le rapport sur le temps de production n'a pas pu être généré!"
 
-#: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:270
-#: ../superdesk-analytics/client/featuremedia_updates_report/controllers/FeaturemediaUpdatesReportController.js:224
-#: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.js:270
-#: ../superdesk-analytics/client/update_time_report/controllers/UpdateTimeReportController.js:251
+#: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:265
+#: ../superdesk-analytics/client/featuremedia_updates_report/controllers/FeaturemediaUpdatesReportController.js:216
+#: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:275
+#: ../superdesk-analytics/client/update_time_report/controllers/UpdateTimeReportController.js:243
 msgid "Error. The Publishing Report could not be generated!"
 msgstr "Erreur. Le rapport de publication n'a pas pu être généré!"
 
-#: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/controller.js:251
+#: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/controller.js:246
 msgid "Error. The report could not be generated."
 msgstr "Erreur. Le rapport n'a pas pu être généré."
 
@@ -4551,7 +4560,7 @@ msgstr "Erreur: un abonné avec ce nom existe déjà."
 msgid "Error: The dictionary already exists."
 msgstr "Erreur: le dictionnaire existe déjà."
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.ts:276
+#: scripts/apps/ingest/directives/IngestSourcesContent.ts:315
 msgid "Error: Unable to delete Ingest Source"
 msgstr "Erreur: Échec de la suppression de la source d'ingestion"
 
@@ -4764,7 +4773,7 @@ msgstr "Événement retiré de la corbeille"
 msgid "Event will be changed to a multi-day event!"
 msgstr "L'événement va être modifié pour devenir un événement de plusieurs jours!"
 
-#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:81
+#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:75
 msgid "Events"
 msgstr "Événements"
 
@@ -4849,12 +4858,8 @@ msgstr "Endroits existants"
 msgid "Exit"
 msgstr "Sortir"
 
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:537
-msgid "Exit Actions"
-msgstr ""
-
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:173
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:536
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:529
 msgid "Exit Desk Actions"
 msgstr "Sortir des options du pupitre"
 
@@ -4873,6 +4878,10 @@ msgstr "Expiré"
 msgid "Expiry"
 msgstr "Expiration"
 
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:81
+msgid "Expiry Date:"
+msgstr ""
+
 #: ../superdesk-planning/client/components/ExportAsArticleModal.jsx:212
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:148
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:96
@@ -4889,7 +4898,7 @@ msgstr "Exporter"
 msgid "Export Chart As..."
 msgstr "Exporter le graphique en tant que..."
 
-#: ../superdesk-analytics/client/utils.js:172
+#: ../superdesk-analytics/client/utils.js:174
 msgid "Export Highlight"
 msgstr "Exporter l'élément de budget"
 
@@ -4977,15 +4986,23 @@ msgstr "Le mot de passe n'a pas pu être changé."
 msgid "Failed to create an archive item."
 msgstr "L'élément d'archive n'a pas pu être créé."
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:103
+#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:102
 msgid "Failed to create the Report Schedule!"
 msgstr "L'horaire de rapport n'a pas pu être créé!"
+
+#: scripts/extensions/sams/dist/src/api/sets.js:27
+msgid "Failed to create the Set"
+msgstr ""
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:196
 msgid "Failed to create/update Events and Planning view filter"
 msgstr "Le filtre d'événements et de planification n'a pas pu être créé ou mis à jour"
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:196
+#: scripts/extensions/sams/dist/src/api/sets.js:54
+msgid "Failed to delete the Set"
+msgstr ""
+
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:194
 msgid "Failed to delete the saved report"
 msgstr "Le rapport enregistré n'a pas pu être supprimé"
 
@@ -4993,8 +5010,8 @@ msgstr "Le rapport enregistré n'a pas pu être supprimé"
 msgid "Failed to duplicate the item"
 msgstr "L'élément n'a pas pu être dupliqué"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:65
-#: ../superdesk-analytics/client/charts/services/ChartManager.js:28
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:61
+#: ../superdesk-analytics/client/charts/services/ChartManager.js:30
 msgid "Failed to export the chart;"
 msgstr "Le graphique n'a pas pu être exporté"
 
@@ -5054,6 +5071,14 @@ msgstr "L'élément de la file d'attente n'a pas pu être obtenu"
 msgid "Failed to link to requested assignment!"
 msgstr "Le lien avec l'affectation demandée n'a pas pu être créé!"
 
+#: scripts/extensions/sams/dist/src/api/sets.js:13
+msgid "Failed to load all sets"
+msgstr ""
+
+#: scripts/extensions/sams/dist/src/api/storageDestinations.js:15
+msgid "Failed to load all storage destinations"
+msgstr ""
+
 #: ../superdesk-planning/client/actions/events/ui.js:349
 msgid "Failed to load duplicated Event."
 msgstr "L'événement dupliqué n'a pas pu être chargé."
@@ -5062,7 +5087,7 @@ msgstr "L'événement dupliqué n'a pas pu être chargé."
 msgid "Failed to load the item."
 msgstr "L'élément n'a pas pu être chargé."
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:243
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:241
 msgid "Failed to load the saved report!"
 msgstr "Le rapport enregistré n'a pas pu être chargé!"
 
@@ -5130,7 +5155,7 @@ msgstr "L'affectation n'a pas pu être retirée."
 
 #: scripts/apps/contacts/directives/ContactsSearchResultsDirective.ts:80
 #: scripts/apps/content-api/directives/ContentAPISearchResultsDirective.ts:77
-#: scripts/apps/search/directives/SearchResults.ts:259
+#: scripts/apps/search/directives/SearchResults.ts:260
 msgid "Failed to run the query!"
 msgstr "La requête n'a pas pu être exécutée!"
 
@@ -5150,11 +5175,11 @@ msgstr "L'élément d'enregistrement automatique n'a pas pu être enregistré."
 msgid "Failed to save featured story record!"
 msgstr "L'article en vedette n'a pas pu être enregistré!"
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:171
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:169
 msgid "Failed to save report"
 msgstr "Le rapport n'a pas pu être enregistré"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:104
+#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:103
 msgid "Failed to save the Report Schedule!"
 msgstr "L'horaire de rapport n'a pas pu être enregistré!"
 
@@ -5191,7 +5216,7 @@ msgstr "Échec de l'enregistrement, impossible de trouver l'élément {{itemType
 msgid "Failed to send and publish."
 msgstr "L'élément n'a pas pu être envoyé et publié."
 
-#: ../superdesk-analytics/client/email_report/services/EmailReportService.js:70
+#: ../superdesk-analytics/client/email_report/services/EmailReportService.js:69
 msgid "Failed to send report email!"
 msgstr "Le courriel n'a pas pu être envoyé!"
 
@@ -5227,6 +5252,10 @@ msgstr "Les répétitions d'événements n'ont pas pu être mises à jour"
 #: ../superdesk-planning/client/actions/events/ui.js:498
 msgid "Failed to update the Event time!"
 msgstr "L'heure de l'événement n'a pas pu être mise à jour!"
+
+#: scripts/extensions/sams/dist/src/api/sets.js:41
+msgid "Failed to update the Set"
+msgstr ""
 
 #: ../superdesk-planning/client/actions/locations.js:28
 msgid "Failed to updated location!"
@@ -5278,7 +5307,7 @@ msgstr "Les articles en vedette que vous gériez ont été déverrouillées par"
 msgid "Featuremedia History"
 msgstr "Historique du contenu multimédia"
 
-#: ../superdesk-analytics/client/featuremedia_updates_report/index.js:48
+#: ../superdesk-analytics/client/featuremedia_updates_report/index.js:50
 msgid "Featuremedia Updates"
 msgstr "Mises à jour du contenu multimédia"
 
@@ -5298,12 +5327,12 @@ msgstr "Commentaires/Suggestions"
 msgid "Feeding Service"
 msgstr "Service d'alimentation"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:62
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:64
 msgid "Fern Green"
 msgstr "Vert fougère"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:441
-#: ../superdesk-analytics/client/utils.js:149 scripts/apps/ingest/index.ts:114
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:434
+#: ../superdesk-analytics/client/utils.js:151 scripts/apps/ingest/index.ts:114
 #: scripts/apps/ingest/index.ts:147
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:4
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:25
@@ -5466,7 +5495,7 @@ msgstr "Trouver du contenu actif et archivé"
 msgid "Find your colleagues"
 msgstr "Trouvez vos collègues"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:65
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:67
 msgid "Fire Brick"
 msgstr ""
 
@@ -5478,7 +5507,7 @@ msgstr "Le premier événement se termine"
 msgid "First Event Starts"
 msgstr "Le premier événement débute"
 
-#: scripts/apps/contacts/constants.ts:67
+#: scripts/apps/contacts/constants.ts:68
 #: scripts/apps/contacts/views/search-panel.html:16
 #: scripts/core/directives/views/phone-home-modal-directive.html:19
 msgid "First Name"
@@ -5668,11 +5697,10 @@ msgstr "Générer un rapport montrant l'activité d'un utilisateur."
 msgid "Generate token"
 msgstr "Générer un jeton"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:538
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:534
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:127
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:423
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:424
-#: ../superdesk-analytics/client/search/services/SearchReport.js:62
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:416
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:102
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:78
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:362
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.jsx:154
@@ -5747,25 +5775,21 @@ msgstr "Aller à"
 msgid "Graphic"
 msgstr "Graphique"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:48
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:50
 msgid "Gray"
 msgstr "Gris"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:50
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:52
 msgid "Gray Text"
 msgstr "Texte gris"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:57
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:59
 msgid "Green"
 msgstr "Vert"
 
 #: scripts/apps/users/directives/UserPreferencesDirective.ts:25
 msgid "Grid View"
 msgstr "Grille"
-
-#: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:18
-msgid "Group"
-msgstr ""
 
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-preview.html:2
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:2
@@ -5827,7 +5851,7 @@ msgstr "Vous avez un mot de passe ? Connectez-vous."
 msgid "Header fields"
 msgstr "Champs d'en-tête"
 
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:70
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:67
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:37
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:520
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.jsx:119
@@ -5847,8 +5871,6 @@ msgstr "Titre"
 msgid "Headline:"
 msgstr "Titre:"
 
-#: scripts/extensions/auto-tagging-widget/dist/extension.js:6
-#: scripts/extensions/helloWorld/dist/extension.js:6
 #: scripts/extensions/helloWorld/dist/src/extension.js:7
 #: scripts/extensions/helloWorld/src/extension.ts:8
 msgid "Hello world"
@@ -5900,6 +5922,10 @@ msgstr "Cacher les éléments envoyés ou en file d'attente"
 msgid "High priority"
 msgstr "Priorité élevée"
 
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:35
+msgid "Highcharts {{licenseType}} License"
+msgstr ""
+
 #: scripts/apps/packaging/views/sd-package-items-edit.html:21
 msgid "Highlight Preview"
 msgstr "Aperçu du budget"
@@ -5940,12 +5966,12 @@ msgstr "Retenir"
 msgid "Host"
 msgstr "Hôte"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:134
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:220
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:127
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:213
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-parameters.html:24
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:10
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:30
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:61
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:31
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:62
 msgid "Hourly"
 msgstr "Horaire"
 
@@ -6127,8 +6153,8 @@ msgstr "Statistiques comprises"
 msgid "Included Stats"
 msgstr "Statistiques comprises"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:379
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:432
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:372
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:425
 msgid "Incoming"
 msgstr "Révision"
 
@@ -6150,7 +6176,7 @@ msgstr "Révision"
 msgid "Indefinite Usage"
 msgstr "Utilisation indéfinie"
 
-#: scripts/apps/authoring/metadata/metadata.ts:1411
+#: scripts/apps/authoring/metadata/metadata.ts:1415
 msgid "Info"
 msgstr "Information"
 
@@ -6185,10 +6211,9 @@ msgstr "Fournisseur d'ingestion"
 msgid "Ingest Provider:"
 msgstr "Fournisseur d'ingestion"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:600
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:596
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:151
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:473
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:474
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:466
 msgid "Ingest Providers"
 msgstr "Fournisseurs d'ingestion"
 
@@ -6200,7 +6225,7 @@ msgstr "Routage d'ingestion"
 msgid "Ingest Rule sets"
 msgstr "Ensembles de règles d'ingestion"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.ts:270
+#: scripts/apps/ingest/directives/IngestSourcesContent.ts:309
 msgid "Ingest Source deleted."
 msgstr "La source d'ingestion a été supprimée."
 
@@ -6223,7 +6248,7 @@ msgstr "Séquence de fournisseur d'ingestion"
 msgid "Ingested"
 msgstr "Ingéré"
 
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:17
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:18
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:20
 msgid "Initial time offset"
 msgstr ""
@@ -6244,6 +6269,10 @@ msgstr "Insérer une adresse URL"
 #: scripts/apps/users/views/edit-form.html:251
 msgid "Instagram"
 msgstr "Instagram"
+
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:86
+msgid "Installed Version:"
+msgstr ""
 
 #: scripts/apps/authoring/authoring/index.ts:407
 msgid "Instant Spellchecking, when automatic spellchecking turned off"
@@ -6340,7 +6369,7 @@ msgstr "Historique de l'élément"
 msgid "Item Translated"
 msgstr "Élément traduit"
 
-#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:79
+#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:73
 msgid "Item Type"
 msgstr "Type d'élément"
 
@@ -6387,12 +6416,11 @@ msgstr "L'élément a changé depuis son ouverture. S'il vous plaît fermer et r
 msgid "Item history"
 msgstr "Historique de l'élément"
 
-#: scripts/apps/packaging/directives/PackageItemsEdit.ts:20
+#: scripts/apps/packaging/directives/PackageItemsEdit.ts:21
 msgid "Item is already in this package."
 msgstr "L'élément est déjà dans cet assemblage."
 
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:20
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:21
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:22
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:71
 msgid "Item is locked and marked user can not be changed."
 msgstr "L'élément est verrouillé et l'utilisateur signalé ne peut pas être changé."
@@ -6405,7 +6433,7 @@ msgstr "L'élément est verrouillé. Impossible d'associer un élément multimé
 msgid "Item locked"
 msgstr "Élément verrouillé"
 
-#: ../superdesk-analytics/client/search/services/SearchReport.js:284
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:65
 msgid "Item not found!"
 msgstr "Élément introuvable!"
 
@@ -6464,12 +6492,11 @@ msgstr "Éléments"
 msgid "Items Count"
 msgstr "Nombre d'éléments"
 
-#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:247
+#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:241
 msgid "Items Created"
 msgstr "Éléments créés"
 
-#: scripts/extensions/markForUser/dist/get-article-actions-bulk.js:24
-#: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:19
+#: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:20
 #: scripts/extensions/markForUser/src/get-article-actions-bulk.tsx:25
 msgid "Items are marked for different users"
 msgstr "Les éléments sont signalés à différents utilisateurs"
@@ -6490,8 +6517,8 @@ msgstr "Éléments signalés à l'utilisateur"
 msgid "Items moved to a working stage by the user"
 msgstr "Éléments déplacés dans une étape 'en cours' par l'utilisateur"
 
-#: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:90
-#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:102
+#: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:91
+#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:101
 msgid "JPEG Image"
 msgstr "Image JPEG"
 
@@ -6499,7 +6526,7 @@ msgstr "Image JPEG"
 msgid "Jabber Identifier (JID)"
 msgstr "Identifiant Jabber (JID)"
 
-#: scripts/apps/contacts/constants.ts:72
+#: scripts/apps/contacts/constants.ts:73
 #: scripts/apps/contacts/views/search-panel.html:41
 #: scripts/apps/users/views/edit-form.html:224
 msgid "Job Title"
@@ -6530,7 +6557,7 @@ msgstr "Mot-clé"
 msgid "Keywords"
 msgstr "Mots-clés"
 
-#: ../superdesk-analytics/client/utils.js:160
+#: ../superdesk-analytics/client/utils.js:162
 #: scripts/apps/authoring/views/authoring-topbar.html:132
 #: scripts/apps/authoring/views/authoring-topbar.html:133
 #: scripts/apps/templates/services/TemplatesService.ts:69
@@ -6542,7 +6569,7 @@ msgid "Kill item"
 msgstr "Supprimer l'élément"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:32
-#: ../superdesk-analytics/client/search/services/SearchReport.js:29
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:84
 #: ../superdesk-planning/client/utils/index.ts:436
 #: scripts/apps/search/components/fields/state.tsx:23
 msgid "Killed"
@@ -6552,7 +6579,7 @@ msgstr "Supprimé"
 msgid "Killed by"
 msgstr "Supprimé par"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:578
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:574
 msgid "Kills"
 msgstr "Éléments supprimés"
 
@@ -6569,7 +6596,7 @@ msgstr "Étiquette"
 #: scripts/apps/templates/views/template-editor-modal.html:110
 #: scripts/apps/users/views/edit-form.html:145
 #: scripts/apps/workspace/content/constants.ts:89
-#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:13
+#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:14
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:14
 msgid "Language"
 msgstr "Langue"
@@ -6625,7 +6652,7 @@ msgstr "Dernière modification"
 msgid "Last Month"
 msgstr "Le mois dernier"
 
-#: scripts/apps/contacts/constants.ts:68
+#: scripts/apps/contacts/constants.ts:69
 #: scripts/apps/contacts/views/search-panel.html:24
 #: scripts/core/directives/views/phone-home-modal-directive.html:24
 msgid "Last Name"
@@ -6666,19 +6693,19 @@ msgstr "Dernier rapport envoyé le :"
 msgid "Last updated"
 msgstr "Dernière mise à jour"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:726
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:735
 msgid "Last {{days}} days"
 msgstr "Les {{days}} derniers jours"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:719
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:728
 msgid "Last {{hours}} hours"
 msgstr "Les {{hours}} dernières heures"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:771
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:780
 msgid "Last {{months}} months"
 msgstr "Les {{months}} derniers mois"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:742
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:751
 msgid "Last {{weeks}} weeks"
 msgstr "Les {{weeks}} dernières semaines"
 
@@ -6719,15 +6746,31 @@ msgstr "Archives juridiques"
 msgid "Length"
 msgstr "Longueur"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:51
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:69
+msgid "License ID:"
+msgstr ""
+
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:45
+msgid "License Type"
+msgstr ""
+
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:56
+msgid "Licensee Contact:"
+msgstr ""
+
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:50
+msgid "Licensee:"
+msgstr ""
+
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:53
 msgid "Light Gray"
 msgstr "Gris pâle"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:52
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:54
 msgid "Lighter Gray"
 msgstr "Gris plus pâle"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:103
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:99
 msgid "Line"
 msgstr "Ligne"
 
@@ -6735,7 +6778,7 @@ msgstr "Ligne"
 msgid "Line: {{cursor.line}}, Column: {{cursor.column}}"
 msgstr "Ligne: {{cursor.line}}, colonne: {{cursor.column}}"
 
-#: ../superdesk-analytics/client/utils.js:158
+#: ../superdesk-analytics/client/utils.js:160
 #: scripts/core/editor3/components/toolbar/index.tsx:174
 msgid "Link"
 msgstr "Lier"
@@ -6794,10 +6837,6 @@ msgstr "Chargement"
 msgid "Loading preview"
 msgstr "Chargement de la prévisualisation"
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:76
-msgid "Loading video..."
-msgstr ""
-
 #: scripts/apps/dashboard/views/workspace.html:55
 #: scripts/apps/users/views/user-list-item.html:35
 #: scripts/core/list/views/list-view.html:2
@@ -6835,7 +6874,7 @@ msgstr "Endroit"
 msgid "Locations"
 msgstr "Endroits"
 
-#: ../superdesk-analytics/client/utils.js:168
+#: ../superdesk-analytics/client/utils.js:170
 msgid "Lock"
 msgstr "Verrouiller"
 
@@ -6887,7 +6926,7 @@ msgstr "MAÎTRE"
 msgid "MO"
 msgstr "LUN"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:384
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:398
 msgid "MORE"
 msgstr "PLUS"
 
@@ -6949,6 +6988,11 @@ msgstr "Gestion des endroits"
 msgid "Manage Search Providers"
 msgstr "Gestion des fournisseurs de recherche"
 
+#: scripts/extensions/sams/dist/src/apps/samsWorkspace.js:48
+#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:81
+msgid "Manage Sets"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:16
 msgid "Manage agendas"
 msgstr "Gestion des agendas"
@@ -6975,7 +7019,7 @@ msgstr "Gestion des utilisateurs"
 msgid "Manage:"
 msgstr "Gestion:"
 
-#: ../superdesk-analytics/client/utils.js:170
+#: ../superdesk-analytics/client/utils.js:172
 msgid "Mark"
 msgstr "Signaler"
 
@@ -6983,7 +7027,7 @@ msgstr "Signaler"
 msgid "Mark Event as Postponed"
 msgstr "Signaler l'événement comme reporté"
 
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:51
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:52
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:147
 msgid "Mark and send"
 msgstr "Signaler et envoyer"
@@ -7005,19 +7049,15 @@ msgstr "Signaler au pupitre"
 msgid "Mark for highlight"
 msgstr "Signaler pour le budget"
 
-#: scripts/extensions/markForUser/dist/get-article-actions.js:32
-#: scripts/extensions/markForUser/dist/src/get-article-actions.js:28
+#: scripts/extensions/markForUser/dist/src/get-article-actions.js:29
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:32
 msgid "Mark for other user"
 msgstr "Signaler à un autre utilisateur"
 
-#: scripts/extensions/markForUser/dist/get-article-actions-bulk.js:27
-#: scripts/extensions/markForUser/dist/get-article-actions.js:16
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:17
-#: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:22
-#: scripts/extensions/markForUser/dist/src/get-article-actions.js:12
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:18
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:39
+#: scripts/extensions/markForUser/dist/src/get-article-actions-bulk.js:23
+#: scripts/extensions/markForUser/dist/src/get-article-actions.js:13
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:19
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:40
 #: scripts/extensions/markForUser/src/get-article-actions-bulk.tsx:29
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:14
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:126
@@ -7048,9 +7088,8 @@ msgstr "Signalé par"
 msgid "Marked for desks"
 msgstr "Signaler aux pupitres"
 
-#: scripts/extensions/markForUser/dist/get-marked-for-me-component.js:87
 #: scripts/extensions/markForUser/dist/src/extension.js:55
-#: scripts/extensions/markForUser/dist/src/get-marked-for-me-component.js:89
+#: scripts/extensions/markForUser/dist/src/get-marked-for-me-component.js:90
 #: scripts/extensions/markForUser/src/extension.tsx:61
 #: scripts/extensions/markForUser/src/get-marked-for-me-component.tsx:138
 msgid "Marked for me"
@@ -7080,8 +7119,8 @@ msgstr "La longueur maximale doit être supérieure à 0 ou vide."
 msgid "Max. number of items"
 msgstr "Nombre maximum d'éléments"
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:288
-#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:30
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:280
+#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:31
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:28
 #: scripts/apps/publish/views/subscribers.html:157
 msgid "Maximum"
@@ -7113,11 +7152,11 @@ msgstr "Type d'élément multimédia"
 msgid "Media gallery"
 msgstr "Multimédia"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:55
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:57
 msgid "Medium Blue"
 msgstr "Bleu moyen"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:47
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:49
 msgid "Medium Gray"
 msgstr "Gris moyen"
 
@@ -7159,8 +7198,8 @@ msgstr "Minimiser"
 msgid "Minimize"
 msgstr "Minimiser"
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:285
-#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:27
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:277
+#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:28
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:20
 #: scripts/apps/publish/views/subscribers.html:148
 msgid "Minimum"
@@ -7229,12 +7268,12 @@ msgstr "Paramètres de suivi"
 msgid "Month(s)"
 msgstr "Mois"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:39
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:40
 msgid "Monthly"
 msgstr "Mensuellement"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:74
-msgid "Monthly on the"
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:78
+msgid "Monthly on the {{day}} day at {{hour}}"
 msgstr ""
 
 #: scripts/apps/authoring/views/authoring-topbar.html:224
@@ -7245,7 +7284,7 @@ msgstr "Plus d'options"
 msgid "More templates..."
 msgstr "Autres gabarits..."
 
-#: ../superdesk-analytics/client/utils.js:164
+#: ../superdesk-analytics/client/utils.js:166
 msgid "Move"
 msgstr "Déplacer"
 
@@ -7253,11 +7292,11 @@ msgstr "Déplacer"
 msgid "Move Content to another desk"
 msgstr "Déplacer le contenu vers un autre pupitre"
 
-#: ../superdesk-analytics/client/utils.js:165
+#: ../superdesk-analytics/client/utils.js:167
 msgid "Move From"
 msgstr "Déplacer depuis"
 
-#: ../superdesk-analytics/client/utils.js:166
+#: ../superdesk-analytics/client/utils.js:168
 msgid "Move To"
 msgstr "Déplacer vers"
 
@@ -7322,7 +7361,7 @@ msgstr "Doit contenir au moins {{MIN_LENGTH}} caractères et au moins {{MIN_STRE
 msgid "Must contain at least one character"
 msgstr "Doit contenir au moins un caractère"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:158
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:165
 msgid "Must select at least one day"
 msgstr "Au moins un jour doit être sélectionné"
 
@@ -7395,10 +7434,16 @@ msgstr "Macro de devise NTB"
 #: scripts/apps/templates/views/create-template.html:11
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:6
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:39
-#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:7
+#: scripts/extensions/annotationsLibrary/dist/src/GetFields.js:8
 #: scripts/extensions/annotationsLibrary/src/GetFields.ts:8
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:157
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:90
 msgid "Name"
 msgstr "Nom"
+
+#: scripts/apps/vocabularies/ManageVocabularyItemTranslations.tsx:28
+msgid "Name ({{language}})"
+msgstr ""
 
 #: scripts/apps/vocabularies/controllers/VocabularyEditController.tsx:132
 msgid ""
@@ -7421,7 +7466,7 @@ msgstr "Nom de la dimension à joindre au courriel"
 msgid "Navigate through the newsroom"
 msgstr "Naviguer dans la salle de presse"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:69
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:71
 msgid "Navy"
 msgstr "Bleu marin"
 
@@ -7438,11 +7483,11 @@ msgstr "Bleu marin"
 msgid "Negate"
 msgstr "Nier"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:49
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:51
 msgid "Neutral Gray"
 msgstr "Gris neutre"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:573
 msgid "New"
 msgstr "Nouveau"
 
@@ -7607,6 +7652,14 @@ msgstr "Aucun pupitre sélectionné"
 msgid "No dictionary available for spell checking."
 msgstr "Aucun dictionnaire disponible pour la vérification orthographique."
 
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:57
+msgid "No disabled sets configured"
+msgstr ""
+
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:55
+msgid "No draft sets configured"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/EventPreview.jsx:142
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:204
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.jsx:201
@@ -7661,7 +7714,7 @@ msgstr "Aucun élément avec ce statut"
 msgid "No label"
 msgstr "Aucune étiquette"
 
-#: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:23
+#: scripts/extensions/annotationsLibrary/dist/src/AnnotationsSelect.js:24
 #: scripts/extensions/annotationsLibrary/src/AnnotationsSelect.tsx:50
 msgid "No matches found in the library."
 msgstr "Aucun résultat trouvé dans la bibliothèque."
@@ -7728,8 +7781,8 @@ msgstr "Aucune réponse du serveur pour l'instant. <br>Laissez-moi réessayer."
 msgid "No suggestions have been resolved"
 msgstr "Aucune suggestion n'a été résolue"
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:251
-msgid "No thumbnail"
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:56
+msgid "No usable sets configured"
 msgstr ""
 
 #: scripts/apps/users/views/list.html:28
@@ -7912,6 +7965,10 @@ msgstr "Nombre"
 msgid "Number of items"
 msgstr "Nombre d'éléments"
 
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:27
+msgid "OEM"
+msgstr ""
+
 #: ../superdesk-planning/client/components/Assignments/AssignmentPopup/index.jsx:72
 #: ../superdesk-planning/client/components/Assignments/EditCoverageAssignmentModal.jsx:106
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:131
@@ -7953,7 +8010,7 @@ msgstr "Hors ligne"
 msgid "Ok"
 msgstr "OK"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:63
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:65
 msgid "Old Gold"
 msgstr "Vieil or"
 
@@ -8090,7 +8147,7 @@ msgstr "Ouvert"
 msgid "Opened by"
 msgstr "Ouvert par"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:641
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:637
 msgid "Operation"
 msgstr "Opération"
 
@@ -8104,7 +8161,7 @@ msgstr "Opérations:"
 msgid "Operator"
 msgstr "Opérateur"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:60
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:62
 msgid "Orange"
 msgstr "Orange"
 
@@ -8124,10 +8181,9 @@ msgstr "Classer les données en: "
 msgid "Ordered list"
 msgstr "Liste classée"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:323
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:326
 #: scripts/apps/contacts/directives/ContactsSearchPanelDirective.tsx:87
 #: scripts/apps/contacts/services/ContactsService.ts:38
-#: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:16
 msgid "Organisation"
 msgstr "Organisation"
 
@@ -8199,8 +8255,8 @@ msgstr "Autre"
 msgid "Other fields"
 msgstr "Autres champs"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:380
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:433
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:373
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:426
 msgid "Outgoing"
 msgstr "Sortant"
 
@@ -8245,8 +8301,8 @@ msgstr "P"
 msgid "P & C"
 msgstr "P & C"
 
-#: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:94
-#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:106
+#: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:95
+#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:105
 msgid "PDF File"
 msgstr "Fichier PDF"
 
@@ -8254,8 +8310,8 @@ msgstr "Fichier PDF"
 msgid "PLANNING DATE cannot be in the past"
 msgstr "La DATE DE PLANIFICATION ne peut pas être dans le passé"
 
-#: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:91
-#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:103
+#: ../superdesk-analytics/client/email_report/directives/EmailReportModal.js:92
+#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsList.js:102
 msgid "PNG Image"
 msgstr "Image PNG"
 
@@ -8454,7 +8510,7 @@ msgstr "Choisir une tâche"
 msgid "Picture"
 msgstr "Photo"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:106
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:102
 msgid "Pie"
 msgstr "Tarte"
 
@@ -8467,7 +8523,6 @@ msgstr "Tarte"
 #: scripts/apps/archive/views/metadata-view.html:61
 #: scripts/apps/authoring/views/full-preview.html:64
 #: scripts/apps/workspace/content/constants.ts:92
-#: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:19
 msgid "Place"
 msgstr "Endroit"
 
@@ -8481,7 +8536,7 @@ msgstr "Endroits"
 msgid "Plain text"
 msgstr "Texte seul"
 
-#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:82
+#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:76
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.jsx:144
 #: ../superdesk-planning/client/components/ItemIcon.jsx:30
 #: ../superdesk-planning/client/components/ItemIcon.jsx:37
@@ -8530,16 +8585,16 @@ msgstr "Éléments de planification"
 msgid "Planning Management"
 msgstr "Gestion de la planification"
 
-#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:156
+#: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:150
 msgid "Planning Module (Items created per user)"
 msgstr "Module de planification (Éléments créés par utilisateur)"
 
-#: ../superdesk-analytics/client/planning_usage_report/directives/PlanningUsageReportPreview.js:20
-#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:20
+#: ../superdesk-analytics/client/planning_usage_report/directives/PlanningUsageReportPreview.js:21
+#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:21
 msgid "Planning Module Usage"
 msgstr "Utilisation du module de planification"
 
-#: ../superdesk-analytics/client/planning_usage_report/index.js:43
+#: ../superdesk-analytics/client/planning_usage_report/index.js:45
 msgid "Planning Usage"
 msgstr "Utilisation de la planification"
 
@@ -8633,11 +8688,11 @@ msgstr "Veuillez fournir un GUID d'article"
 msgid "Please provide an article id"
 msgstr "Veuillez fournir un identifiant d'article"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:204
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:207
 msgid ""
 "Please specify 'first name, last name' or  'organisation' or both, and at "
-"least one of [mobile, phone, email, twitter, facebook, instagram] fields."
-msgstr "Veuillez remplir les champs 'prénom, nom' ou 'organisation', ou les deux, et au moins un des champs suivants: 'cellulaire', 'téléphone', 'courriel', 'twitter', 'facebook', 'instagram'."
+"least one of [{{list}}] fields."
+msgstr ""
 
 #: scripts/apps/templates/views/create-template.html:18
 #: scripts/apps/templates/views/template-editor-modal.html:22
@@ -8654,7 +8709,7 @@ msgstr "Veuillez utiliser moins de 80 caractères"
 msgid "Please use less than 80 characters."
 msgstr "Veuillez utiliser moins de 80 caractères."
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:192
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:193
 msgid "Point of contact"
 msgstr "Point de contact"
 
@@ -8681,7 +8736,7 @@ msgstr "Message"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:225
 #: ../superdesk-planning/client/components/Locations/LocationsList.jsx:78
-#: scripts/apps/contacts/constants.ts:73
+#: scripts/apps/contacts/constants.ts:74
 #: scripts/apps/contacts/views/search-panel.html:56
 msgid "Post Code"
 msgstr "Code postal"
@@ -8896,16 +8951,16 @@ msgstr "Nom du produit"
 msgid "Production"
 msgstr "Production"
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:284
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:276
 msgid "Production Stats"
 msgstr "Statistiques de production"
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:301
-#: ../superdesk-analytics/client/production_time_report/index.js:43
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:293
+#: ../superdesk-analytics/client/production_time_report/index.js:45
 msgid "Production Time"
 msgstr "Heure de production"
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:181
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:173
 msgid "Production Times"
 msgstr "Heures de production"
 
@@ -8959,7 +9014,7 @@ msgstr "Nom du fournisseur"
 msgid "Provider Type"
 msgstr "Type de fournisseur"
 
-#: scripts/apps/ingest/directives/IngestSourcesContent.ts:463
+#: scripts/apps/ingest/directives/IngestSourcesContent.ts:502
 msgid "Provider saved!"
 msgstr "Fournisseur enregistré!"
 
@@ -8990,8 +9045,8 @@ msgstr "Statut de publication"
 msgid "Public"
 msgstr "Public"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:448
-#: ../superdesk-analytics/client/utils.js:152
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:441
+#: ../superdesk-analytics/client/utils.js:154
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:73
 #: scripts/apps/authoring/views/authoring-topbar.html:72
 #: scripts/apps/authoring/views/authoring-topbar.html:73
@@ -9006,12 +9061,12 @@ msgstr "Publier"
 msgid "Publish & Continue"
 msgstr "Publier et continuer"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:452
-#: ../superdesk-analytics/client/utils.js:155
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:445
+#: ../superdesk-analytics/client/utils.js:157
 msgid "Publish Embargo"
 msgstr "Publication sous embargo"
 
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:557
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:550
 msgid "Publish Pars"
 msgstr "Publier les paragraphes"
 
@@ -9025,8 +9080,8 @@ msgstr "File d'attente de publication"
 msgid "Publish Schedule"
 msgstr "Horaire de publication"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:451
-#: ../superdesk-analytics/client/utils.js:153
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:444
+#: ../superdesk-analytics/client/utils.js:155
 msgid "Publish Scheduled"
 msgstr "Publication programmée"
 
@@ -9039,8 +9094,8 @@ msgid "Publish and Continue"
 msgstr "Publier et continuer"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:26
-#: ../superdesk-analytics/client/search/services/SearchReport.js:26
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:68
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:81
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:65
 #: scripts/apps/dashboard/workspace-tasks/views/desk-stages.html:22
 #: scripts/apps/search/components/fields/state.tsx:20
 #: scripts/apps/search/views/item-repo.html:5
@@ -9056,21 +9111,21 @@ msgstr "Contenu publié"
 msgid "Published From"
 msgstr "Publié depuis"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:238
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:234
 msgid "Published Stories"
 msgstr "Articles publiés"
 
-#: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.js:372
-msgid "Published Stories for {{ group }}: {{ data }}"
+#: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:378
+msgid "Published Stories for {{group}}: {{data}}"
 msgstr ""
 
-#: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:367
-#: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.js:377
-msgid "Published Stories per {{ group }}"
+#: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:358
+#: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:384
+msgid "Published Stories per {{group}}"
 msgstr ""
 
-#: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:360
-msgid "Published Stories per {{ group }} with {{ subgroup }} breakdown"
+#: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:352
+msgid "Published Stories per {{group}} with {{subgroup}} breakdown"
 msgstr ""
 
 #: scripts/apps/legal-archive/views/legal_archive.html:84
@@ -9107,8 +9162,8 @@ msgstr "Options de publication"
 msgid "Publishing Actions Widget"
 msgstr "Widget d'options de publication"
 
-#: ../superdesk-analytics/client/publishing_performance_report/index.js:46
-#: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/controller.js:86
+#: ../superdesk-analytics/client/publishing_performance_report/index.js:48
+#: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/controller.js:81
 msgid "Publishing Performance"
 msgstr "Performance de publication"
 
@@ -9124,7 +9179,7 @@ msgstr "Options de publication"
 msgid "Pubstatus"
 msgstr "Statut de publication"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:61
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:63
 msgid "Purple"
 msgstr "Pourpre"
 
@@ -9139,10 +9194,6 @@ msgstr "Imposer la dimension originale de la photo"
 #: scripts/apps/vocabularies/services/SchemaFactory.ts:7
 msgid "QCode"
 msgstr "Code Q"
-
-#: scripts/extensions/videoEditor/dist/src/VideoEditorTools.js:29
-msgid "Quality:"
-msgstr ""
 
 #: scripts/apps/workspace/content/views/schema-editor.html:61
 msgid "Quarter"
@@ -9201,7 +9252,7 @@ msgstr "RETIRER"
 msgid "Range"
 msgstr "Période précise"
 
-#: ../superdesk-analytics/client/search/directives/DateFilters.js:169
+#: ../superdesk-analytics/client/search/directives/DateFilters.js:168
 msgid "Range cannot be greater than {{max}} days"
 msgstr "La période ne peut pas compter plus de {{max}} jours"
 
@@ -9263,8 +9314,6 @@ msgstr "Raison de la reprogrammation de cet événement:"
 msgid "Reassign"
 msgstr "Réaffecter"
 
-#: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:50
-#: ../superdesk-analytics/client/search/services/SearchReport.js:35
 #: scripts/apps/search/components/fields/state.tsx:24
 msgid "Recalled"
 msgstr ""
@@ -9272,10 +9321,6 @@ msgstr ""
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:205
 msgid "Recalled by"
 msgstr "Rappelé par"
-
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:581
-msgid "Recalls"
-msgstr ""
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:24
 msgid "Recent templates"
@@ -9310,7 +9355,7 @@ msgstr "Événement récurrent"
 msgid "Recurring Event(s)"
 msgstr "Événement(s) récurrent(s)"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:58
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:60
 msgid "Red"
 msgstr "Rouge"
 
@@ -9408,7 +9453,7 @@ msgstr "Derniers mois"
 msgid "Relative Weeks"
 msgstr "Dernières semaines"
 
-#: ../superdesk-analytics/client/search/directives/DateFilters.js:180
+#: ../superdesk-analytics/client/search/directives/DateFilters.js:181
 msgid "Relative value is required"
 msgstr "Une valeur pour les dernières périodes est requise"
 
@@ -9421,10 +9466,8 @@ msgstr "Une valeur pour les dernières périodes est requise"
 #: scripts/apps/templates/views/templates.html:37
 #: scripts/apps/workspace/content/views/profile-settings.html:32
 #: scripts/core/editor3/highlightsConfig.ts:33
-#: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:35
+#: scripts/extensions/annotationsLibrary/dist/src/annotations-library-page.js:36
 #: scripts/extensions/annotationsLibrary/src/annotations-library-page.tsx:70
-#: scripts/extensions/auto-tagging-widget/dist/src/tag-list copy.js:14
-#: scripts/extensions/auto-tagging-widget/dist/src/tag-list.js:14
 msgid "Remove"
 msgstr "Retirer"
 
@@ -9440,7 +9483,7 @@ msgstr "Retirer le contact"
 msgid "Remove Content Filter"
 msgstr "Retirer le filtre de contenu"
 
-#: ../superdesk-analytics/client/utils.js:177
+#: ../superdesk-analytics/client/utils.js:179
 msgid "Remove Featuremedia"
 msgstr ""
 
@@ -9618,11 +9661,11 @@ msgstr "Remplacer:"
 msgid "Reply"
 msgstr "Répondre"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:95
+#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:94
 msgid "Report Schedule created!"
 msgstr "Horaire de rapport créé!"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:96
+#: ../superdesk-analytics/client/scheduled_reports/directives/ScheduledReportsModal.js:95
 msgid "Report Schedule saved!"
 msgstr "Horaire de rapport enregistré!"
 
@@ -9631,15 +9674,15 @@ msgstr "Horaire de rapport enregistré!"
 msgid "Report Type"
 msgstr "Type de rapport"
 
-#: ../superdesk-analytics/client/email_report/services/EmailReportService.js:67
+#: ../superdesk-analytics/client/email_report/services/EmailReportService.js:66
 msgid "Report chart emailed!"
 msgstr "Le graphique de rapport a été envoyé par courriel!"
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:187
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:185
 msgid "Report deleted!"
 msgstr "Rapport supprimé!"
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:153
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:151
 msgid "Report saved!"
 msgstr "Rapport enregistré!"
 
@@ -9719,10 +9762,6 @@ msgstr "Réinitialiser"
 msgid "Reset Filters"
 msgstr "Réinitialiser les filtres"
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:247
-msgid "Reset change"
-msgstr ""
-
 #: scripts/core/auth/reset-password.html:60
 msgid "Reset password"
 msgstr "Réinitialiser le mot de passe"
@@ -9768,7 +9807,7 @@ msgstr "Retirer la disponibilité"
 msgid "Revoke"
 msgstr "Révoquer"
 
-#: ../superdesk-analytics/client/utils.js:156
+#: ../superdesk-analytics/client/utils.js:158
 msgid "Rewrite"
 msgstr "Réécrire"
 
@@ -9797,7 +9836,7 @@ msgstr "Réecrit par"
 msgid "Rewritten link is removed"
 msgstr "Le lien réécrit est retiré"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:192
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:193
 #: scripts/apps/users/views/edit-form.html:155
 #: scripts/apps/users/views/list.html:35
 #: scripts/apps/users/views/user-privileges.html:17
@@ -9885,10 +9924,6 @@ msgstr "Ensemble de règles enregistré."
 msgid "Ruleset"
 msgstr "Ensemble de règles"
 
-#: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:100
-msgid "Run"
-msgstr ""
-
 #: ../superdesk-analytics/client/saved_reports/views/save-generate-report.html:18
 msgid "Run Report"
 msgstr "Produire le rapport"
@@ -9900,6 +9935,11 @@ msgstr "Ouvrir automatiquement"
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:115
 msgid "SA"
 msgstr "SAM"
+
+#: scripts/extensions/sams/dist/src/extension.js:13
+#: scripts/extensions/sams/dist/src/extension.js:21
+msgid "SAMS"
+msgstr ""
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.jsx:472
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.jsx:190
@@ -9963,7 +10003,7 @@ msgstr "Samedi"
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:61
 #: ../superdesk-analytics/client/saved_reports/views/save-report-form.html:40
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:211
-#: ../superdesk-analytics/client/utils.js:151
+#: ../superdesk-analytics/client/utils.js:153
 #: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:108
 #: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:69
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.jsx:265
@@ -10011,9 +10051,7 @@ msgstr "Samedi"
 #: scripts/apps/workspace/views/edit-workspace-modal.html:20
 #: scripts/core/editor2/views/block-embed.html:4
 #: scripts/core/ui/components/ListPage/generic-list-page-item-view-edit.tsx:162
-#: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:119
-#: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:33
-#: scripts/extensions/videoEditor/dist/src/VideoEditorHeader.js:10
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:146
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -10086,10 +10124,6 @@ msgstr "Enregistrer et envoyer"
 #: scripts/apps/templates/views/create-template.html:4
 msgid "Save as template"
 msgstr "Enregistrer en tant que gabarit"
-
-#: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:245
-msgid "Save change"
-msgstr ""
 
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:129
 msgid "Save changes"
@@ -10185,7 +10219,7 @@ msgstr ""
 msgid "Saved Report"
 msgstr "Rapport enregistré"
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:168
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:166
 msgid ""
 "Saved Report has changed since it was opened. Please re-select the Saved "
 "Report to continue. Regrettably, your changes cannot be saved."
@@ -10195,17 +10229,13 @@ msgstr "Le rapport enregistré a été modifié depuis son ouverture. Veuillez s
 msgid "Saved Searches"
 msgstr "Recherches enregistrées"
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:240
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:238
 msgid "Saved report not found!"
 msgstr "Rapport enregistré introuvable!"
 
 #: scripts/apps/search/directives/SavedSearches.ts:116
 msgid "Saved search removed"
 msgstr "Recherche enregistrée retirée"
-
-#: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:117
-msgid "Saving capture thumbnail..."
-msgstr ""
 
 #: scripts/apps/contacts/components/Form/ContactFormContainer.tsx:131
 #: scripts/apps/desks/directives/DeskeditBasic.ts:31
@@ -10220,7 +10250,7 @@ msgstr "Enregistrement..."
 msgid "Scanpix ID(s)"
 msgstr ""
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:109
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:105
 msgid "Scatter"
 msgstr ""
 
@@ -10309,17 +10339,6 @@ msgstr "Nom du schéma"
 msgid "Scheme rules"
 msgstr "Règles du schéma"
 
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:382
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:394
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:412
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:424
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:436
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:448
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:460
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:474
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:489
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:516
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:537
 #: ../superdesk-planning/client/components/Locations/LocationsSubNav.jsx:36
 #: ../superdesk-planning/client/components/Main/SearchPanel.jsx:117
 #: ../superdesk-planning/client/components/UI/SearchBar/index.jsx:84
@@ -10343,7 +10362,7 @@ msgstr "Règles du schéma"
 #: scripts/apps/search/views/save-search.html:5
 #: scripts/apps/search/views/saved-search-manage-subscribers.html:34
 #: scripts/apps/search/views/search-parameters.html:241
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:321
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:339
 #: scripts/core/itemList/views/relatedItem-list-widget.html:5
 #: scripts/core/itemList/views/relatedItem-list-widget.html:7
 #: scripts/core/lang/missing-translations-strings.ts:26
@@ -10352,6 +10371,34 @@ msgstr "Règles du schéma"
 #: scripts/core/views/sdSearchList.html:43
 msgid "Search"
 msgstr "Rechercher"
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:405
+msgid "Search Categories"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:453
+msgid "Search Content State"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:375
+msgid "Search Desks"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:509
+msgid "Search Enter Desk Actions"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:530
+msgid "Search Exit Desk Actions"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:417
+msgid "Search Genre"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:467
+msgid "Search Ingest Providers"
+msgstr ""
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.jsx:133
 msgid "Search OpenStreetMap"
@@ -10370,6 +10417,19 @@ msgstr "Fournisseur de recherche enregistré."
 msgid "Search Providers"
 msgstr "Rechercher des fournisseurs"
 
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:429
+msgid "Search Source"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:482
+msgid "Search Stages"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:441
+msgid "Search Urgency"
+msgstr ""
+
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:387
 #: ../superdesk-analytics/client/search/views/user-select.html:17
 msgid "Search Users"
 msgstr "Rechercher des utilisateurs"
@@ -10483,7 +10543,7 @@ msgstr "Sélectionner un pupitre"
 msgid "Select a desk first"
 msgstr "Sélectionner d'abord un pupitre"
 
-#: scripts/core/ui/components/SelectUser.tsx:80
+#: scripts/core/ui/components/SelectUser.tsx:92
 msgid "Select a user"
 msgstr "Sélectionner un utilisateur"
 
@@ -10656,7 +10716,7 @@ msgstr "Envoi en cours"
 msgid "Sent Desk Output"
 msgstr "Envoyé à un autre pupitre"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:450
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:443
 msgid "Sent From"
 msgstr "Envoyé depuis"
 
@@ -10664,7 +10724,7 @@ msgstr "Envoyé depuis"
 msgid "Sent Items"
 msgstr "Éléments envoyés"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:443
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:436
 msgid "Sent To"
 msgstr "Envoyé vers"
 
@@ -10700,9 +10760,21 @@ msgstr "Services"
 msgid "Sessions cleared"
 msgstr "Séances fermées"
 
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:85
+msgid "Set Details"
+msgstr ""
+
 #: scripts/apps/users/views/settings-roles.html:49
 msgid "Set as default"
 msgstr "Définir par défault"
+
+#: scripts/extensions/sams/dist/src/api/sets.js:23
+msgid "Set created successfully"
+msgstr ""
+
+#: scripts/extensions/sams/dist/src/api/sets.js:51
+msgid "Set deleted successfully"
+msgstr ""
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:80
 msgid "Set highlights"
@@ -10724,6 +10796,10 @@ msgid ""
 " anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
 msgstr "Configurez différents moniteurs pour suivre un sujet depuis son ingestion ou sa production, sa publication dans un pupitre, ou n'importe quelle étape du flux de travail. Il suffit de lui donner un nom approprié, puis de sélectionner une recherche enregistrée, un pupitre ou une étape du flux de travail. Il est possible de suivre n'importe quoi, n'importe où à n'importe quel moment. Il n'y a pas de limite quant au nombre de moniteurs."
+
+#: scripts/extensions/sams/dist/src/api/sets.js:37
+msgid "Set updated successfully"
+msgstr ""
 
 #: scripts/apps/settings/index.ts:19 scripts/apps/settings/settings.tsx:32
 #: scripts/core/menu/views/menu.html:12
@@ -10864,8 +10940,8 @@ msgid "Slack Channel Name"
 msgstr "Nom du canal Slack"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:18
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:69
-#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:436
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:66
+#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:429
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:152
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:57
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:30
@@ -10998,10 +11074,9 @@ msgstr "Tri"
 msgid "Sorting:"
 msgstr "Tri:"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:590
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:435
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:436
-#: ../superdesk-analytics/client/search/services/SearchReport.js:65
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:586
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:428
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:105
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:204
 #: scripts/apps/archive/views/metadata-associateditem-view.html:23
 #: scripts/apps/archive/views/metadata-view.html:36
@@ -11037,8 +11112,8 @@ msgstr "Sources"
 msgid "Spell Checker"
 msgstr "Correcteur orthographique"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:449
-#: ../superdesk-analytics/client/utils.js:162
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:442
+#: ../superdesk-analytics/client/utils.js:164
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:136
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:71
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:104
@@ -11118,7 +11193,7 @@ msgstr "Seulement la corbeille"
 msgid "Spiked only content"
 msgstr "Seulement le contenu dans la corbeille"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:112
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:108
 msgid "Spline"
 msgstr ""
 
@@ -11152,10 +11227,9 @@ msgstr "Le niveau a été modifié ailleurs. Veuillez rafraîchir les pupitres"
 msgid "Stage with name"
 msgstr "Étape avec nom"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:628
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:624
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:157
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:488
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:489
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:481
 #: scripts/apps/desks/views/desk-config-modal.html:204
 #: scripts/apps/desks/views/settings.html:68
 #: scripts/apps/monitoring/views/monitoring-view.html:37
@@ -11171,7 +11245,7 @@ msgstr "Heure de début (inclusive)"
 msgid "Start Working"
 msgstr "Commencer le travail"
 
-#: ../superdesk-analytics/client/search/directives/DateFilters.js:173
+#: ../superdesk-analytics/client/search/directives/DateFilters.js:174
 msgid "Start date cannot be greater than today"
 msgstr "La date de début ne peut pas être postérieure à aujourd'hui"
 
@@ -11187,17 +11261,18 @@ msgstr "Date de début requise"
 msgid "Start routing"
 msgstr "Commencer le routage"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:575
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:571
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:123
 #: scripts/apps/archive/views/metadata-view.html:187
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:76
-#: scripts/apps/contacts/constants.ts:75
+#: scripts/apps/contacts/constants.ts:76
 #: scripts/apps/contacts/views/search-panel.html:70
 #: scripts/apps/content-filters/views/production-test-view.html:18
 msgid "State"
 msgstr "État"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:526
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:536
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:561
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:571
 msgid "State/Province or Region"
 msgstr "État/province ou région"
 
@@ -11238,6 +11313,16 @@ msgstr "Statut: {{filter}}"
 msgid "Stop routing"
 msgstr "Arrêter le routage"
 
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:167
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:94
+msgid "Storage Destination"
+msgstr ""
+
+#: scripts/extensions/sams/dist/src/components/sets/setEditorPanel.js:169
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:96
+msgid "Storage Provider"
+msgstr ""
+
 #: scripts/apps/publish/views/odbc-config.html:11
 #: scripts/apps/publish/views/odbc-config.html:9
 msgid "Stored Procedure"
@@ -11256,11 +11341,11 @@ msgstr "Texte de l'article"
 msgid "Story is associated as update."
 msgstr "L'article est associé à la mise à jour."
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:468
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:503
 msgid "Street Address"
 msgstr "Adresse postale"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:467
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:502
 msgid "Street Address, PO Box, Company Name"
 msgstr "Adresse postale, case postal, nom de l'entreprise"
 
@@ -11285,8 +11370,8 @@ msgstr "Faire un sous-groupe par"
 msgid "Subgroup By:"
 msgstr "Faire un sous-groupe par:"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:551
-#: ../superdesk-analytics/client/search/services/SearchReport.js:77
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:547
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:117
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:193
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/AssignmentPreview.jsx:73
 #: ../superdesk-planning/client/components/Events/EventEditor/index.jsx:374
@@ -11296,7 +11381,6 @@ msgstr "Faire un sous-groupe par:"
 #: scripts/apps/authoring/views/full-preview.html:54
 #: scripts/apps/search/constants.ts:15
 #: scripts/apps/workspace/content/constants.ts:102
-#: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:22
 msgid "Subject"
 msgstr "Sujet"
 
@@ -11383,8 +11467,8 @@ msgid ""
 "Suggestions will appear here once the article's body starts changing..."
 msgstr "Des suggestions apparaîtront ici lorsque le corps de l'article commencera à être modifié..."
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:286
-#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:28
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:278
+#: ../superdesk-analytics/client/production_time_report/directives/ProductionTimeReportPreview.js:29
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:32
 msgid "Sum"
 msgstr "Somme"
@@ -11466,7 +11550,7 @@ msgstr "FUSEAU HORAIRE est un champ obligatoire"
 msgid "TU"
 msgstr "MAR"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:97
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:93
 #: scripts/core/editor3/components/toolbar/index.tsx:194
 msgid "Table"
 msgstr "Tableau"
@@ -11496,7 +11580,7 @@ msgstr "Lead"
 msgid "Take link is removed"
 msgstr "Le lien du lead a été retiré"
 
-#: ../superdesk-analytics/client/utils.js:161
+#: ../superdesk-analytics/client/utils.js:163
 #: scripts/apps/authoring/views/authoring-topbar.html:116
 #: scripts/apps/authoring/views/authoring-topbar.html:117
 msgid "Takedown"
@@ -11504,6 +11588,15 @@ msgstr ""
 
 #: scripts/apps/authoring/authoring/index.ts:267
 msgid "Takedown item"
+msgstr ""
+
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
+msgid "Takedowns"
+msgstr ""
+
+#: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:50
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:90
+msgid "Taken Down"
 msgstr ""
 
 #: scripts/core/itemList/views/relatedItem-list-widget.html:31
@@ -11677,11 +11770,11 @@ msgid ""
 "The Product ID can be copied and used as Superdesk Newshub product query."
 msgstr ""
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:280
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:278
 msgid "The Saved Report you are using was deleted!"
 msgstr "Le rapport enregistré que vous utilisez a été supprimé!"
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:272
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:270
 msgid ""
 "The Saved Report you are using was updated! Please re-select the Saved "
 "Report"
@@ -11823,6 +11916,12 @@ msgstr "La réponse sera supprimée. Êtes-vous certain?"
 msgid "The size of {{filename}} is {{width}}x{{height}}"
 msgstr "La taille de {{filename}} est {{width}}x{{height}}"
 
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:39
+msgid ""
+"The use of Highcharts is provided under a license with the following "
+"details:"
+msgstr ""
+
 #: scripts/apps/dashboard/user-activity/user-activity.ts:14
 msgid ""
 "The user activity widget provides information about user activity. Using the"
@@ -11851,7 +11950,7 @@ msgid "The {{ itemType }} has been unposted"
 msgstr "L'affichage de {{itemType}} a été annulé"
 
 #: scripts/apps/contacts/components/ItemList.tsx:178
-#: scripts/apps/search/components/ItemList.tsx:567
+#: scripts/apps/search/components/ItemList.tsx:509
 msgid "There are currently no items"
 msgstr "Il n'y a actuellement aucun élément"
 
@@ -12132,7 +12231,7 @@ msgstr "Ce champ est obligatoire"
 
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:54
 #: scripts/apps/contacts/components/Form/MultiTextInput.tsx:34
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:194
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:195
 #: scripts/apps/users/views/edit-form.html:130
 #: scripts/apps/users/views/edit-form.html:69
 #: scripts/apps/users/views/edit-form.html:77
@@ -12270,7 +12369,7 @@ msgstr "Temps limité"
 msgid "Time Zone"
 msgstr "Fuseau horaire"
 
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:25
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:26
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:42
 msgid "Time increment steps"
 msgstr ""
@@ -12279,11 +12378,11 @@ msgstr ""
 msgid "Time per call"
 msgstr "Temps par appel"
 
-#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:331
+#: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:315
 msgid "Time spent producing content"
 msgstr "Temps passé à produire du contenu"
 
-#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:566
+#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:559
 msgid "Timeline"
 msgstr "Ligne du temps"
 
@@ -12312,7 +12411,6 @@ msgstr "Fuseau horaire"
 #: scripts/core/editor3/components/media/MediaBlock.tsx:127
 #: scripts/core/editor3/components/media/MediaBlock.tsx:201
 #: scripts/core/editor3/components/media/MediaBlock.tsx:240
-#: scripts/extensions/auto-tagging-widget/dist/src/new-item.js:14
 msgid "Title"
 msgstr "Titre"
 
@@ -12454,8 +12552,8 @@ msgstr "Trop de {{ name }}"
 msgid "Too short"
 msgstr "Trop court"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:439
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:447
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:432
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:440
 msgid "Total"
 msgstr "Total"
 
@@ -12642,7 +12740,7 @@ msgid ""
 "Unknown error occured. Try publishing the item from the article edit view."
 msgstr "Une erreur inconnue est survenue. Tentez de publier l'élément depuis l'affichage d'édition d'article. "
 
-#: ../superdesk-analytics/client/utils.js:159
+#: ../superdesk-analytics/client/utils.js:161
 msgid "Unlink"
 msgstr "Délier"
 
@@ -12658,7 +12756,7 @@ msgstr "Délier la mise à jour"
 msgid "Unlinked by"
 msgstr "Délié par"
 
-#: ../superdesk-analytics/client/utils.js:169
+#: ../superdesk-analytics/client/utils.js:171
 #: ../superdesk-planning/client/components/LockContainer/LockContainerPopup.jsx:42
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.jsx:59
 #: scripts/apps/archive/views/item-lock.html:13
@@ -12675,15 +12773,13 @@ msgstr "Déverrouiller le contenu"
 msgid "Unlock current item"
 msgstr "Déverrouiller l'élément actuel"
 
-#: ../superdesk-analytics/client/utils.js:171
-#: scripts/extensions/markForUser/dist/get-mark-for-user-modal.js:27
-#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:28
+#: ../superdesk-analytics/client/utils.js:173
+#: scripts/extensions/markForUser/dist/src/get-mark-for-user-modal.js:29
 #: scripts/extensions/markForUser/src/get-mark-for-user-modal.tsx:103
 msgid "Unmark"
 msgstr "Annuler le signalement"
 
-#: scripts/extensions/markForUser/dist/get-article-actions.js:24
-#: scripts/extensions/markForUser/dist/src/get-article-actions.js:20
+#: scripts/extensions/markForUser/dist/src/get-article-actions.js:21
 #: scripts/extensions/markForUser/src/get-article-actions.tsx:23
 msgid "Unmark user"
 msgstr "Annuler le signalement à l'utilisateur"
@@ -12728,8 +12824,8 @@ msgstr "Publication annulée par "
 msgid "Unresolved"
 msgstr "Résolution annulée"
 
-#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:445
-#: ../superdesk-analytics/client/utils.js:163
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:438
+#: ../superdesk-analytics/client/utils.js:165
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:141
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:77
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:114
@@ -12834,9 +12930,9 @@ msgstr "Mise à jour des répétitions"
 msgid "Update Repetitions of the Series"
 msgstr "Mise à jour des répétitions des séries"
 
-#: ../superdesk-analytics/client/update_time_report/controllers/UpdateTimeReportController.js:170
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeReportPreview.js:28
-#: ../superdesk-analytics/client/update_time_report/index.js:48
+#: ../superdesk-analytics/client/update_time_report/controllers/UpdateTimeReportController.js:162
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeReportPreview.js:21
+#: ../superdesk-analytics/client/update_time_report/index.js:50
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:90
 msgid "Update Time"
 msgstr "Mise à jour de l'heure"
@@ -12894,7 +12990,7 @@ msgstr "Mis à jour"
 msgid "Updated Fields:"
 msgstr "Champs mis à jour:"
 
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:71
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:68
 msgid "Updated In"
 msgstr "Mis à jour dans"
 
@@ -12906,7 +13002,7 @@ msgstr "Mis à jour par"
 msgid "Updated:"
 msgstr "Mis à jour:"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:580
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:576
 msgid "Updates"
 msgstr "Mises à jour"
 
@@ -12933,10 +13029,6 @@ msgstr "Téléverser un contenu multimédia"
 msgid "Upload from computer"
 msgstr "Téléverser depuis l'ordinateur"
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:243
-msgid "Upload image"
-msgstr ""
-
 #: scripts/apps/archive/index.tsx:102
 #: scripts/apps/search/views/multi-image-edit.html:12
 msgid "Upload media"
@@ -12946,11 +13038,10 @@ msgstr "Téléverser un contenu multimédia"
 msgid "Upload new"
 msgstr ""
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:564
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:560
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:139
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:447
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:448
-#: ../superdesk-analytics/client/search/services/SearchReport.js:68
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:440
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:108
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:215
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/PlanningPreview.jsx:67
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.jsx:644
@@ -12975,6 +13066,10 @@ msgstr "Priorité"
 msgid "Urgency stats"
 msgstr "Statistiques de priorités"
 
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:56
+msgid "Usable Sets"
+msgstr ""
+
 #: scripts/apps/workspace/content/constants.ts:105
 msgid "Usage Terms"
 msgstr "Conditions d'utilisation"
@@ -12994,10 +13089,6 @@ msgstr "Utiliser un contenu mulmédia"
 msgid "Use a Web URL"
 msgstr "Utiliser une adresse web URL "
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:238
-msgid "Use current frame"
-msgstr ""
-
 #: scripts/apps/publish/views/subscribers.html:174
 msgid "Use priority queue for transmission."
 msgstr "Utiliser la priorité de la file d'attente pour la transmission."
@@ -13006,7 +13097,7 @@ msgstr "Utiliser la priorité de la file d'attente pour la transmission."
 msgid "Use the article GUID for testing."
 msgstr "Utilisez le GUID de l'article pour le test."
 
-#: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
+#: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:14
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:36
 msgid "Use this"
 msgstr "Utilisez ceci"
@@ -13016,25 +13107,23 @@ msgstr "Utilisez ceci"
 msgid "Used"
 msgstr "Utilisé"
 
-#: ../superdesk-analytics/client/charts/services/ChartConfig.js:512
-#: ../superdesk-analytics/client/search/services/SearchReport.js:74
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:508
+#: ../superdesk-analytics/client/search/services/SearchReport.ts:114
 #: ../superdesk-analytics/client/search/views/user-select.html:5
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.jsx:301
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:46
 #: scripts/apps/users/views/user-privileges.html:16
-#: scripts/extensions/markForUser/dist/get-authoring-actions.js:8
-#: scripts/extensions/markForUser/dist/src/get-authoring-actions.js:8
 msgid "User"
 msgstr "Utilisateur"
 
-#: ../superdesk-analytics/client/user_activity_report/index.js:44
+#: ../superdesk-analytics/client/user_activity_report/index.js:46
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:400
 #: scripts/apps/dashboard/user-activity/user-activity.ts:37
 msgid "User Activity"
 msgstr "Activité de l'utilisateur"
 
-#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:192
-msgid "User Activity -"
+#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:185
+msgid "User Activity - {{username}}"
 msgstr ""
 
 #: scripts/apps/users/config.ts:38
@@ -13097,9 +13186,8 @@ msgid "Username"
 msgstr "Nom d'utilisateur"
 
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:115
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:393
-#: ../superdesk-analytics/client/search/directives/SourceFilters.js:394
-#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:571
+#: ../superdesk-analytics/client/search/directives/SourceFilters.js:386
+#: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:564
 #: scripts/apps/users/views/list.html:2
 msgid "Users"
 msgstr "Utilisateurs"
@@ -13165,20 +13253,11 @@ msgstr "Versions"
 msgid "Video"
 msgstr "Vidéo"
 
-#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:305
-#: scripts/extensions/videoEditor/dist/src/VideoEditor.js:78
-msgid "Video is editing, please wait..."
-msgstr ""
-
-#: scripts/extensions/videoEditor/dist/src/VideoEditorThumbnail.js:235
-msgid "Video thumbnail"
-msgstr ""
-
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:28
 msgid "View Latest Item Version"
 msgstr "Voir la version la plus récente de cet élément"
 
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:124
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:120
 msgid "View Original"
 msgstr "Voir l'original"
 
@@ -13186,7 +13265,7 @@ msgstr "Voir l'original"
 msgid "View Original Image"
 msgstr "Voir la photo originale"
 
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:135
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:131
 msgid "View Update"
 msgstr "Voir la mise à jour"
 
@@ -13194,7 +13273,7 @@ msgstr "Voir la mise à jour"
 msgid "View an item"
 msgstr "Afficher un élément"
 
-#: ../superdesk-analytics/client/index.js:81
+#: ../superdesk-analytics/client/index.js:95
 msgid "View analytics reports"
 msgstr "Afficher les rapports analytiques"
 
@@ -13314,12 +13393,12 @@ msgstr "Mercredi"
 msgid "Week(s)"
 msgstr "Semaine(s)"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:36
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:37
 msgid "Weekly"
 msgstr "Chaque semaine"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:70
-msgid "Weekly on"
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:71
+msgid "Weekly on {{days}} at {{hour}}"
 msgstr ""
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:4
@@ -13350,7 +13429,7 @@ msgstr "Lors de la création d'un budget"
 msgid "When enabled it can send multiple items at the same time."
 msgstr "Lorsqu'activé, permet d'envoyer plusieurs éléments en même temps."
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:53
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:55
 msgid "White"
 msgstr "Blanc"
 
@@ -13446,7 +13525,7 @@ msgstr "Widget d'horloge mondiale"
 msgid "Year(s)"
 msgstr "Année(s)"
 
-#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:59
+#: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:61
 msgid "Yellow"
 msgstr "Jaune"
 
@@ -13464,11 +13543,11 @@ msgstr "Hier"
 msgid "You are currently managing featured story in another session"
 msgstr "Vous gérez actuellement l'article en vedette dans une autre session."
 
-#: scripts/apps/workspace/content/services/ContentService.ts:70
+#: scripts/apps/workspace/content/services/ContentService.ts:71
 msgid "You are not allowed to create an article there."
 msgstr "Vous n'êtes pas autorisé à créer un article ici."
 
-#: scripts/apps/workspace/content/services/ContentService.ts:68
+#: scripts/apps/workspace/content/services/ContentService.ts:69
 msgid "You are not allowed to create article on readonly stage."
 msgstr "Vous n'êtes pas autorisé à créer un article dans une étape en lecture seule."
 
@@ -13643,7 +13722,6 @@ msgstr "archivé"
 msgid "as rewrite of"
 msgstr ""
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:70
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:45
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:17
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:22
@@ -13717,7 +13795,7 @@ msgstr "l'élément original suivant a été modifié. Veuillez vous assurer de 
 msgid "characters"
 msgstr "caractères"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:513
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:548
 msgid "city"
 msgstr "ville"
 
@@ -13811,10 +13889,6 @@ msgstr "date"
 msgid "day"
 msgstr "jour"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:74
-msgid "day at"
-msgstr ""
-
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:11
 #: scripts/apps/desks/views/content-expiry.html:32
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:139
@@ -13877,7 +13951,7 @@ msgstr "dupliquer et ouvrir"
 msgid "duplicate id"
 msgstr "dupliquer l'identifiant"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:425
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:444
 msgid "e.g. @cityofsydney"
 msgstr "p. ex. @cityofsydney"
 
@@ -13885,23 +13959,23 @@ msgstr "p. ex. @cityofsydney"
 msgid "e.g. @superdeskman"
 msgstr "p. ex. @superdeskman"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:491
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:526
 msgid "e.g. Rhodes, CBD"
 msgstr "par exemple. Rhodes, CDB"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:440
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:465
 msgid "e.g. cityofsydney from https://www.facebook.com/cityofsydney"
 msgstr "par exemple. cityofsydney à partir de https://www.facebook.com/cityofsydney"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:454
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:484
 msgid "e.g. cityofsydney from https://www.instagram.com/cityofsydney"
 msgstr "par exemple. cityofsydney à partir de https://www.instagram.com/cityofsydney"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:413
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:432
 msgid "e.g. http://www.website.com"
 msgstr "p. ex. http://www.website.com"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:250
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:253
 msgid "e.g. professor, commissioner"
 msgstr "p. ex. professeur, commissaire"
 
@@ -13913,7 +13987,7 @@ msgstr "p. ex. superdeskman depuis https://www.facebook.com/superdeskman"
 msgid "e.g. superdeskman from https://www.instagram.com/superdeskman"
 msgstr "p. ex. superdeskman depuis https://www.instagram.com/superdeskman"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:352
+#: scripts/apps/contacts/constants.ts:49
 #: scripts/apps/users/views/edit-form.html:123
 msgid "email"
 msgstr "courriel"
@@ -13959,7 +14033,7 @@ msgstr "expire"
 msgid "expires:"
 msgstr "expire:"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:441
+#: scripts/apps/contacts/constants.ts:51
 msgid "facebook"
 msgstr "facebook"
 
@@ -13967,7 +14041,7 @@ msgstr "facebook"
 msgid "failed"
 msgstr "échec"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:402
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:421
 msgid "fax"
 msgstr "télécopieur"
 
@@ -13998,11 +14072,11 @@ msgstr "extrait dans"
 msgid "filter: \"{{filter}}\""
 msgstr "filtre: \"{{filter}}\""
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:223
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:230
 msgid "first"
 msgstr "premier"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:269
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:272
 #: scripts/apps/users/views/edit-form.html:67
 msgid "first name"
 msgstr "prénom"
@@ -14094,7 +14168,7 @@ msgstr "éléments de budget"
 msgid "highlights package"
 msgstr "budget"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:251
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:254
 msgid "honorific"
 msgstr "honorifique"
 
@@ -14111,10 +14185,6 @@ msgstr "h"
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:162
 msgid "hrs"
 msgstr "h"
-
-#: scripts/extensions/auto-tagging-widget/dist/src/extension.js:8
-msgid "iMatrics tagging"
-msgstr ""
 
 #: scripts/apps/archive/controllers/UploadController.ts:336
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:195
@@ -14175,7 +14245,7 @@ msgstr "ingéré"
 msgid "insert table"
 msgstr "insérer un tableau"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:455
+#: scripts/apps/contacts/constants.ts:52
 msgid "instagram"
 msgstr "Instagram"
 
@@ -14195,11 +14265,11 @@ msgstr "supprimé"
 msgid "label: <b>{{label.name}}</b>"
 msgstr "étiquette: <b>{{label.name}}</b>"
 
-#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:225
+#: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:232
 msgid "last"
 msgstr "dernier"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:288
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:291
 #: scripts/apps/users/views/edit-form.html:75
 msgid "last name"
 msgstr "nom"
@@ -14238,11 +14308,10 @@ msgstr "chargement de plus d'éléments..."
 
 #: scripts/apps/desks/directives/DeskeditPeople.ts:13
 #: scripts/apps/desks/directives/DeskeditStages.ts:40
-#: scripts/extensions/auto-tagging-widget/dist/src/auto-tagging.js:97
 msgid "loading..."
 msgstr "chargement"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:492
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:527
 msgid "locality"
 msgstr "localité"
 
@@ -14253,6 +14322,11 @@ msgstr "emplacement:"
 #: scripts/core/views/sdSlider.html:2
 msgid "low"
 msgstr ""
+
+#: scripts/apps/packaging/services/PackagesService.ts:24
+#: scripts/apps/packaging/services/PackagesService.ts:55
+msgid "main"
+msgstr "Texte principal"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.jsx:256
 msgid "make this mode the default"
@@ -14286,8 +14360,8 @@ msgstr ""
 msgid "min"
 msgstr "min."
 
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:23
-#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:44
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:24
+#: scripts/extensions/datetimeField/dist/src/getConfigComponent.js:45
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:37
 #: scripts/extensions/datetimeField/src/getConfigComponent.tsx:82
 msgid "minutes"
@@ -14297,7 +14371,7 @@ msgstr "minutes"
 msgid "miscellaneous"
 msgstr "divers"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:388
+#: scripts/apps/contacts/constants.ts:47
 msgid "mobile"
 msgstr "mobile"
 
@@ -14316,7 +14390,7 @@ msgstr "nouveau"
 
 #: scripts/apps/archive/views/media-view.html:34
 #: scripts/apps/authoring/macros/views/macros-replace.html:8
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:400
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:418
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:491
 msgid "next"
 msgstr "suivant"
@@ -14334,7 +14408,7 @@ msgstr "aucun résultat trouvé"
 msgid "none"
 msgstr "aucun"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:571
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:606
 msgid "notes"
 msgstr "notes"
 
@@ -14392,12 +14466,12 @@ msgstr "ou sélectionner depuis l'ordinateur"
 msgid "ordered list"
 msgstr "liste ordonnée"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:307
-#: scripts/apps/contacts/constants.ts:70
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:310
+#: scripts/apps/contacts/constants.ts:71
 msgid "organisation"
 msgstr "organisation"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:547
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:582
 msgid "other"
 msgstr "autre"
 
@@ -14426,7 +14500,7 @@ msgstr "coller un bloc"
 msgid "pending"
 msgstr "en attente"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:372
+#: scripts/apps/contacts/constants.ts:48
 msgid "phone"
 msgstr "téléphone"
 
@@ -14462,7 +14536,7 @@ msgstr "Veuillez utiliser uniquement des lettres (a-z), des chiffres (0-9), des 
 msgid "post"
 msgstr "message"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:501
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:536
 msgid "postcode"
 msgstr "code postal"
 
@@ -14475,7 +14549,7 @@ msgid "preformatted"
 msgstr "préformaté"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:7
-#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:399
+#: scripts/apps/vocabularies/components/VocabularyItemsViewEdit.tsx:417
 #: scripts/core/ui/components/ListPage/generic-list-page.tsx:490
 msgid "prev"
 msgstr "précédent"
@@ -14497,7 +14571,7 @@ msgid "profile"
 msgstr "profil"
 
 #: scripts/apps/contacts/components/Form/ContactNumberInput.tsx:78
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:229
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:232
 msgid "public"
 msgstr "public"
 
@@ -14742,7 +14816,7 @@ msgstr "traduction"
 msgid "translations"
 msgstr "traductions"
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:427
+#: scripts/apps/contacts/constants.ts:50
 msgid "twitter"
 msgstr "Twitter"
 
@@ -14871,7 +14945,7 @@ msgid ""
 "values"
 msgstr "l'index a été mis à jour. Veuillez vous reconnecter pour voir les valeurs mises à jour de l'index."
 
-#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:414
+#: scripts/apps/contacts/components/Form/ProfileDetail.tsx:433
 msgid "website"
 msgstr "site web"
 
@@ -14995,7 +15069,7 @@ msgid "{{action}} {{type}}"
 msgstr "{{action}} {{type}}"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:123
-#: ../superdesk-analytics/client/utils.js:197
+#: ../superdesk-analytics/client/utils.js:196
 msgid "{{days}} days"
 msgstr "{{days}} jours"
 
@@ -15018,7 +15092,7 @@ msgstr "{{errorMessage|translate}}"
 msgid "{{field.display_name}}"
 msgstr "{{field.display_name}}"
 
-#: scripts/apps/ingest/views/settings/service-config.html:37
+#: scripts/apps/ingest/views/settings/service-config.html:47
 msgid "{{field.label | translate}}"
 msgstr "{{field.label | translate}}"
 
@@ -15039,11 +15113,11 @@ msgid "{{field}} time is required!"
 msgstr "{{field}} heure requise!"
 
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:118
-#: ../superdesk-analytics/client/utils.js:205
+#: ../superdesk-analytics/client/utils.js:202
 msgid "{{hours}} hours"
 msgstr "{{hours}} heures"
 
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:103
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:99
 msgid "{{hours}} hours, {{minutes}} minutes"
 msgstr "{{hours}} heures, {{minutes}} minutes"
 
@@ -15059,8 +15133,8 @@ msgstr "{{label | translate}}"
 msgid "{{labels.saml}}"
 msgstr "{{labels.saml}}"
 
-#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:108
-#: ../superdesk-analytics/client/utils.js:213
+#: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:105
+#: ../superdesk-analytics/client/utils.js:208
 msgid "{{minutes}} minutes"
 msgstr "{{minutes}} minutes"
 
@@ -15078,7 +15152,7 @@ msgstr[1] "{{multiSelectCount}} Éléments sélectionnés"
 msgid "{{numWords}} words"
 msgstr "{{numWords}} mots"
 
-#: ../superdesk-analytics/client/utils.js:220
+#: ../superdesk-analytics/client/utils.js:213
 msgid "{{seconds}} seconds"
 msgstr "{{seconds}} secondes"
 
@@ -15112,7 +15186,7 @@ msgstr "{{update.date}} - {{update.operation}} par {{update.user}}"
 msgid "{{weeks}} weeks"
 msgstr "{{weeks}} semaines"
 
-#: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:73
+#: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:74
 #: scripts/extensions/datetimeField/src/getDateTimeField.tsx:128
 msgid "{{x}} min"
 msgstr "{{x}} min"
