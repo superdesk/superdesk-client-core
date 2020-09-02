@@ -65,7 +65,7 @@ class HTMLParser {
 
     manageEmbeds(__html: string): string {
         let html = __html;
-        const embedCount = html.match(/<!-- EMBED START.*-->/g).length;
+        const embedCount = html.match(/<!-- EMBED START.*-->/g)?.length ?? 0;
 
         for (let i = 0; i < embedCount; i++) {
             const startTag = html.match(/<!-- EMBED START.*-->/);
@@ -103,9 +103,9 @@ class HTMLParser {
 
                 const el = wrapper.firstElementChild;
 
-                this.figures[nextIndex] = el.tagName === 'FIGURE'
+                this.figures[nextIndex] = el.tagName === 'FIGURE' && wrapper.childElementCount === 1
                     ? el.innerHTML // drop <figure> wrapper
-                    : el.outerHTML;
+                    : wrapper.innerHTML;
             }
         }
 
