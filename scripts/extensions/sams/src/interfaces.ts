@@ -7,6 +7,12 @@ export enum SET_STATE {
     DISABLED = 'disabled',
 }
 
+export enum ASSET_STATE {
+    DRAFT = 'draft',
+    INTERNAL = 'internal',
+    PUBLIC = 'public',
+}
+
 export enum CONTENT_PANEL_STATE {
     CLOSED = 'closed',
     PREVIEW = 'preview',
@@ -27,6 +33,22 @@ export interface IStorageDestinationItem extends IBaseRestApiResponse {
     provider?: string;
 }
 
+export interface IAssetItem extends IBaseRestApiResponse {
+    set_id: string;
+    parent_id: string;
+    state: ASSET_STATE;
+    filename: string;
+    length: number;
+    mimetype: string;
+    name: string;
+    description: string;
+    tags: Array<{
+        code: string;
+        name: string;
+    }>;
+    extra: Dictionary<string, any>;
+}
+
 export interface ISamsAPI {
     sets: {
         getAll(): Promise<Array<ISetItem>>;
@@ -36,6 +58,9 @@ export interface ISamsAPI {
     };
     storageDestinations: {
         getAll(): Promise<Array<IStorageDestinationItem>>;
+    };
+    assets: {
+        upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<any>;
     };
 }
 
