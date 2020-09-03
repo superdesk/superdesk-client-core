@@ -40,7 +40,6 @@ import {LinesCount} from './linesCount';
 
 interface IFieldProps extends Partial<IPropsItemListInfo> {
     item: IPropsItemListInfo['item']; // this one not nullable
-    svc: IPropsItemListInfo['svc']; // this one not nullable
 }
 
 export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {

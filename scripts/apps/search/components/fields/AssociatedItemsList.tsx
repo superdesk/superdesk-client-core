@@ -1,5 +1,6 @@
 import React from 'react';
 import {IArticle, IRelatedArticle} from 'superdesk-api';
+import ng from 'core/services/ng';
 
 const TYPES_TO_ICONS = {
     picture: 'icon-photo',
@@ -10,7 +11,6 @@ const TYPES_TO_ICONS = {
 };
 
 interface IProps {
-    svc: any;
     item: IArticle;
 }
 
@@ -29,7 +29,7 @@ export class AssociatedItemsList extends React.Component<IProps, IState> {
     }
 
     getAssociations() {
-        const {content} = this.props.svc;
+        const content = ng.get('content');
         const associations = this.props.item.associations || {};
         const related = Object.values(associations)
             .filter((_related) => _related != null);

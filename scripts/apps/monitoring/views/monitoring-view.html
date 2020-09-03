@@ -36,9 +36,12 @@
                             <ul class="dropdown__menu scrollable">
                                 <li><div class="dropdown__menu-label" translate>Stages</div></li>
                                 <li ng-repeat="card in aggregate.cards">
-                                    <button class="label-group"
+                                    <button
+                                        class="label-group"
                                         ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
-                                    translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
+                                    >
+                                        {{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}
+                                    </button>
                                 </li>
                             </ul>
                         </div>
@@ -85,14 +88,16 @@
                             <span class="stage-group__desk">{{ monitoring.singleGroup.header }}</span>
                             <span class="stage-group__split">/</span>
                             <div class="dropdown" dropdown>
-                                <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type | splitText | translate }}<span class="dropdown__caret"></span></button>
+                                <button class="dropdown__toggle navbtn navbtn--text-only navbtn--padding-s" dropdown-toggle>{{monitoring.getGroupLabel(monitoring.singleGroup, monitoring.singleGroup.type)}}<span class="dropdown__caret"></span></button>
                                 <ul class="dropdown__menu scrollable">
                                     <li><div class="dropdown__menu-label" translate>Stages</div></li>
                                     <li ng-repeat="card in aggregate.cards" ng-class="{active: monitoring.singleGroup}">
                                         <button class="label-group"
-                                                ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
-                                                ng-disabled="monitoring.singleGroup._id === card._id"
-                                                translate>{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}</button>
+                                            ng-click="monitoring.viewSingleGroup(card, card.type === 'stage' ? card.type : 'single-stage')"
+                                            ng-disabled="monitoring.singleGroup._id === card._id"
+                                        >
+                                            {{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}
+                                        </button>
                                     </li>
                                 </ul>
                             </div>
@@ -122,6 +127,7 @@
                                 <sd-monitoring-filtering-buttons
                                     desk-id="activeDeskId"
                                     toggle-filter="aggregate.toggleCustomFilter"
+                                    set-filter="aggregate.setCustomFilter"
                                     is-filter-active="aggregate.isCustomFilterActive"
                                     active-filters="aggregate.activeFilters.customFilters"
                                     add-resource-updated-event-listener="addResourceUpdatedEventListener"

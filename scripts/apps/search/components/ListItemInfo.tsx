@@ -20,11 +20,9 @@ export interface IPropsItemListInfo {
     isNested: boolean;
     showNested: boolean;
     toggleNested: (event) => void;
-    svc: any;
-    scope: {
-        singleLine: boolean;
-        customRender: any;
-    };
+    singleLine: boolean;
+    customRender: any;
+    viewType: any;
 }
 
 export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
@@ -41,29 +39,29 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                     : [],
         );
 
-        if (this.props.scope.singleLine) {
+        if (this.props.singleLine) {
             className = 'item-info item-info-reduced-rowheight';
             listItems = React.createElement(
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('singleLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
+                    viewType: this.props.viewType, // for highlights list
+                    singleLine: this.props.singleLine,
                 }, this.props), {className: 'line article-list-fields'}),
             );
         } else {
-            className = classNames('item-info', {'item-info-reduced-rowheight': this.props.scope.singleLine});
+            className = classNames('item-info', {'item-info-reduced-rowheight': this.props.singleLine});
             listItems = React.createElement(
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('firstLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                }, this.props), {className: 'line'}, this.props.scope.customRender),
+                    viewType: this.props.viewType, // for highlights list
+                    singleLine: this.props.singleLine,
+                }, this.props), {className: 'line'}, this.props.customRender),
                 renderArea('secondLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                }, this.props), {className: 'line'}, this.props.scope.customRender),
+                    viewType: this.props.viewType, // for highlights list
+                    singleLine: this.props.singleLine,
+                }, this.props), {className: 'line'}, this.props.customRender),
             );
         }
 

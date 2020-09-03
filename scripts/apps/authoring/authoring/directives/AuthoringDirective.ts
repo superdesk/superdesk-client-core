@@ -1129,7 +1129,7 @@ export function AuthoringDirective(
                     var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
                     var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
 
-                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length < maxItems) {
+                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length <= maxItems) {
                         addMediaFieldVersion(fieldId, $scope.getNewMediaFieldId(fieldId));
                     }
                     _.forEach(mediaFields[fieldId], (version) => {

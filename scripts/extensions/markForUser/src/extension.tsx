@@ -55,12 +55,13 @@ const extension: IExtension = {
                     },
                 },
                 monitoring: {
-                    getFilteringButtons: () => superdesk.session.getCurrentUser().then((user) => {
+                    getFilteringButtons: (deskId: string) => superdesk.session.getCurrentUser().then((user) => {
                         const items: Array<IMonitoringFilter> = [
                             {
                                 label: gettext('Marked for me'),
                                 query: {
                                     marked_for_user: [user._id],
+                                    'task.desk': [deskId],
                                 },
                                 displayOptions: {
                                     ignoreMatchesInSavedSearchMonitoringGroups: true,

@@ -22,7 +22,6 @@ interface IGroup {
 }
 
 interface IState {
-    searchOpen: boolean;
     userSearchField: string;
     user?: IUser;
     groups: Array<IGroup> | null;
@@ -118,15 +117,20 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
                 const markedQuery = extensions['markForUser']
                     ?.extension
                     .exposes
-                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId) || {};
+                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId);
+
+                const mustQuery = [
+                    {...getQueryCreatedByUser(userId)},
+                    {...getQueryNotLockedOrLockedByMe(userId)},
+                ];
+
+                if (markedQuery != null) {
+                    mustQuery.push({...markedQuery});
+                }
 
                 return fetchFn('archive', {
                     bool: {
-                        must: [
-                            {...getQueryCreatedByUser(userId)},
-                            {...getQueryNotLockedOrLockedByMe(userId)},
-                            {...markedQuery},
-                        ],
+                        must: mustQuery,
                     },
                 }).then((res) => {
                     res._items = res._items.filter(filterOutItemsInIncomingStage(services));
@@ -211,7 +215,6 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
 
         this.state = {
             userSearchField: '',
-            searchOpen: true,
             groups: null,
             groupsData: null,
             loading: false,
@@ -393,24 +396,12 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             <div className="widget-container">
                 <div className="main-list" style={{top: 0}}>
                     <div className="widget-header">
-                        <button
-                            className="widget-header__search-button"
-                            onClick={() =>
-                                this.setState({
-                                    searchOpen: !this.state.searchOpen,
-                                })
-                            }
-                        >
-                            <i className="icon-search" />
-                        </button>
                         <div className="widget-title">
                             {gettext('User Activity')}
                         </div>
                     </div>
                     <div
-                        className={`search-box search-box--no-shadow search-box--fluid-height ${
-                            this.state.searchOpen ? '' : 'search-box--hidden'
-                        }`}
+                        className="search-box search-box--no-shadow search-box--fluid-height"
                     >
                         <form className="search-box__content">
                             <SelectUser

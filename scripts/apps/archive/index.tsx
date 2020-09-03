@@ -20,6 +20,7 @@ import {extensions} from 'appConfig';
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {showSpikeDialog} from './show-spike-dialog';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
+import * as actions from './actions';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -44,7 +45,6 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdItemRendition', directive.ItemRendition)
     .directive('sdRatioCalc', directive.RatioCalc)
     .directive('sdHtmlPreview', directive.HtmlPreview)
-    .directive('sdProviderMenu', directive.ProviderMenu)
     .directive('sdContentResults', directive.ContentResults)
     .directive('sdArchivedItemKill', directive.ArchivedItemKill)
     .directive('sdResendItem', directive.ResendItem)
@@ -198,6 +198,20 @@ angular.module('superdesk.apps.archive', [
                 groupLabel: gettext('Duplicate'),
                 groupIcon: 'copy',
             })
+            .activity('duplicateToPersonal', {
+                label: gettext('Duplicate to personal'),
+                icon: 'copy',
+                monitor: true,
+                controller: ['api', 'data', '$rootScope', (api, data, $rootScope) =>
+                    actions.copy(data.item, api, $rootScope)],
+                filters: [{action: 'list', type: 'archive'}],
+                condition: (item: IArticle) => item.lock_user == null && item.task?.desk != null,
+                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).copy],
+                group: 'duplicate',
+                groupLabel: gettext('Duplicate'),
+                groupIcon: 'copy',
+                priority: -10,
+            })
             .activity('label', {
                 label: gettext('Set label in current package'),
                 priority: 30,
@@ -251,25 +265,10 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Copy'),
                 icon: 'copy',
                 monitor: true,
-                controller: ['api', 'data', '$rootScope', function(api, data, $rootScope) {
-                    return api.save('copy', {}, {}, data.item)
-                        .then((archiveItem) => {
-                            data.item.task_id = archiveItem.task_id;
-                            data.item.created = archiveItem._created;
-                            $rootScope.$broadcast('item:copy');
-                        }, (response) => {
-                            data.item.error = response;
-                        })
-                        .finally(() => {
-                            if (data.item.actioning) {
-                                data.item.actioning.archiveContent = false;
-                            }
-                        });
-                }],
+                controller: ['api', 'data', '$rootScope', (api, data, $rootScope) =>
+                    actions.copy(data.item, api, $rootScope)],
                 filters: [{action: 'list', type: 'archive'}],
-                condition: function(item) {
-                    return item.lock_user === null || angular.isUndefined(item.lock_user);
-                },
+                condition: (item: IArticle) => item.lock_user == null && item.task?.desk == null,
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
                     return authoring.itemActions(item).copy;
                 }],

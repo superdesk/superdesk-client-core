@@ -17,7 +17,7 @@ interface IScope extends IDirectiveScope<void> {
     item: IArticle;
     loading: boolean;
     reorder: (start: {index: number}, end: {index: number}) => void;
-    relatedItems: Array<IArticle>;
+    relatedItems: {[key: string]: IArticle};
     onchange: () => void;
     addRelatedItem: (item: IArticle) => void;
     isEmptyRelatedItems: (fieldId: string) => void;
@@ -239,7 +239,16 @@ export function RelatedItemsDirective(
                 scope.loading = true;
                 relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                     .then((items) => {
-                        scope.relatedItems = items;
+                        scope.relatedItems = {};
+                        Object.keys(items).forEach((key) => {
+                            if (items[key] != null) {
+                                scope.relatedItems[key] = items[key];
+                            } else {
+                                scope.removeRelatedItem(key);
+                                notify.warning(gettext('Related item is not available.'));
+                            }
+                        });
+                    }).finally(() => {
                         scope.loading = false;
                     });
             };

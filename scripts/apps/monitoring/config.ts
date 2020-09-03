@@ -51,7 +51,7 @@ Personal.$inject = ['superdeskProvider', 'workspaceMenuProvider'];
 export function Personal(superdesk, workspaceMenuProvider) {
     superdesk
         .activity('/workspace/personal', {
-            label: gettext('Personal space'),
+            label: gettext('Personal Space'),
             priority: 100,
             adminTools: false,
             category: superdesk.MENU_MAIN,

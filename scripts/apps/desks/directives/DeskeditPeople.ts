@@ -2,8 +2,8 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {calculateDiff} from '../controllers/DeskConfigController';
 
-DeskeditPeople.$inject = ['WizardHandler', 'desks'];
-export function DeskeditPeople(WizardHandler, desks) {
+DeskeditPeople.$inject = ['WizardHandler', 'desks', 'notify'];
+export function DeskeditPeople(WizardHandler, desks, notify) {
     return {
         link: function(scope) {
             scope.$watch('step.current', (step, previous) => {
@@ -63,7 +63,7 @@ export function DeskeditPeople(WizardHandler, desks) {
                     if (angular.isDefined(response.data._message)) {
                         scope.message = gettext('Error: ' + response.data._message);
                     } else {
-                        scope._errorMessage = gettext('There was a problem, members not saved. Refresh Desks.');
+                        notify.error(gettext('There was a problem, members not saved. Refresh Desks.'));
                     }
                 })
                     .finally(() => {

@@ -1,143 +1,31 @@
 /* eslint-disable react/no-render-return-value */
-// TODO(*): Fix above?
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
-import {ItemList as ItemListComponent} from 'apps/search/components';
-import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {appConfig} from 'appConfig';
+import {closeActionsMenu} from '../helpers';
+import {ItemListAngularWrapper} from '../components/ItemListAngularWrapper';
 
 ItemList.$inject = [
-    '$location',
     '$timeout',
-    '$injector',
-    '$filter',
     'search',
-    'datetime',
-    'superdesk',
-    'workflowService',
-    'archiveService',
-    'activityService',
-    'multi',
-    'desks',
-    'familyService',
-    'Keys',
-    'dragitem',
-    'highlightsService',
-    'TranslationService',
     'monitoringState',
-    'authoringWorkspace',
     '$rootScope',
-    '$interpolate',
-    'metadata',
-    'storage',
-    'keyboardManager',
-    'session',
-    'content',
 ];
 
 /**
- * @ngdoc directive
- * @module superdesk.apps.ItemList
- * @name sdItemList
- *
- * @requires $location
- * @requires $timeout
- * @requires $injector
- * @requires $filter
- * @requires search
- * @requires datetime
- * @requires superdesk
- * @requires workflowService
- * @requires archiveService
- * @requires activityService
- * @requires multi
- * @requires desks
- * @requires familyService
- * @requires Keys
- * @requires dragitem
- * @requires highlightsService
- * @requires TranslationService
- * @requires monitoringState
- * @requires authoringWorkspace
- * @requires $rootScope
- * @requires config
- * @requires $interpolate
- * @requires metadata
- * @requires storage
- * @requires keyboardManager
- * @requires session
- *
- * @description Handles the functionality displaying list of items from repos (archive, ingest, publish,
- * external, content api, archived)
- */
-
+ * Handles the functionality displaying list of items from repos
+ * (archive, ingest, publish, external, content api, archived)
+*/
 export function ItemList(
-    $location,
     $timeout,
-    $injector,
-    $filter,
     search,
-    datetime,
-    superdesk,
-    workflowService,
-    archiveService,
-    activityService,
-    multi,
-    desks,
-    familyService,
-    Keys,
-    dragitem,
-    highlightsService,
-    TranslationService,
     monitoringState,
-    authoringWorkspace: AuthoringWorkspaceService,
     $rootScope,
-    $interpolate,
-    metadata,
-    storage,
-    keyboardManager,
-    session,
-    content,
 ) {
-    // contains all the injected services to be passed down to child
-    // components via props
-    const services = {
-        $location,
-        $timeout,
-        $injector,
-        $filter,
-        search,
-        datetime,
-        superdesk,
-        workflowService,
-        archiveService,
-        activityService,
-        multi,
-        desks,
-        familyService,
-        Keys,
-        dragitem,
-        highlightsService,
-        TranslationService,
-        monitoringState,
-        authoringWorkspace,
-        $rootScope,
-        config: appConfig,
-        $interpolate,
-        metadata,
-        storage,
-        keyboardManager,
-        session,
-        content,
-    };
-
     return {
         link: function(scope, elem) {
-            elem.attr('tabindex', 0);
-
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
 
@@ -146,24 +34,22 @@ export function ItemList(
                 activeGroup: monitoringState.state.activeGroup || groupId,
             });
 
-            scope.$watch(() => monitoringState.state.activeGroup, (activeGroup) => {
-                if (activeGroup === groupId) {
-                    elem.focus();
-                }
-            });
-
             monitoringState.init().then(() => {
-                var itemList = React.createElement(ItemListComponent,
-                    angular.extend({
-                        svc: services,
-                        scope: scope,
-                        hideActionsForMonitoringItems: scope.hideActionsForMonitoringItems,
-                        onMonitoringItemSelect: scope.onMonitoringItemSelect,
-                        onMonitoringItemDoubleClick: scope.onMonitoringItemDoubleClick,
-                        disableMonitoringMultiSelect: scope.disableMonitoringMultiSelect,
-                    }, monitoringState.state));
+                var listComponent = ReactDOM.render(
+                    (
+                        <ItemListAngularWrapper
+                            scope={scope}
+                            monitoringState={monitoringState}
+                        />
+                    ),
+                    elem[0],
+                ) as unknown as ItemListAngularWrapper;
 
-                var listComponent = ReactDOM.render(itemList, elem[0]);
+                scope.$watch(() => monitoringState.state.activeGroup, (activeGroup) => {
+                    if (activeGroup === groupId) {
+                        listComponent.focus();
+                    }
+                });
 
                 /**
                  * Test if item a equals to item b
@@ -318,7 +204,6 @@ export function ItemList(
 
                 scope.$on('item:unselect', () => {
                     listComponent.setState({selected: null});
-                    listComponent.unbindActionKeyShortcuts();
                 });
 
                 scope.$on('item:expired', (_e, data) => {
@@ -422,7 +307,7 @@ export function ItemList(
                     // only scroll the list, not its parent
                     $event.stopPropagation();
 
-                    listComponent.closeActionsMenu();
+                    closeActionsMenu();
                     $timeout.cancel(updateTimeout);
 
                     if (!scope.noScroll) {
@@ -454,14 +339,11 @@ export function ItemList(
                     return element.scrollTop + element.offsetHeight + 200 >= element.scrollHeight;
                 }
 
-                elem.on('keydown', listComponent.handleKey);
-
                 elem.on('scroll', handleScroll);
 
                 // remove react elem on destroy
                 scope.$on('$destroy', () => {
                     elem.off();
-                    listComponent.unbindActionKeyShortcuts();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });
 
