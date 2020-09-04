@@ -81,9 +81,6 @@
             "-6 Chicago C%sT 1967 -6",
             "-6 US C%sT"
         ],
-        "America/Edmonton": [
-            "-5:48:52 - LMT 1921_3 -5:48:52"
-        ],
         "America/Edmonton": [],
         "America/Guatemala": ["-6:2:4 - LMT 1918_9_5 -6:2:4", "-6 Guat C%sT"],
         "America/Halifax": [
