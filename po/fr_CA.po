@@ -79,18 +79,6 @@ msgstr "SUJET est obligatoire"
 msgid "'URGENCY is a required field'"
 msgstr "'URGENCY est un champ obligatoire'"
 
-#: scripts/core/lang/missing-translations-strings.ts:48
-msgid "{{field}} is a required field"
-msgstr "{{field}} est un champ obligatoire"
-
-#: scripts/core/lang/missing-translations-strings.ts:47
-msgid "{{field}} empty values not allowed"
-msgstr "{{field}} valeurs vides non autorisées"
-
-#: scripts/core/lang/missing-translations-strings.ts:48
-msgid "{{field}} is too short"
-msgstr "{{field}} est trop court"
-
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "'must be of list type'\""
 msgstr "'doit être de type liste'"

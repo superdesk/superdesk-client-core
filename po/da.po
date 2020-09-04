@@ -74,18 +74,6 @@ msgstr "'EMNE er et obligatorisk felt'"
 msgid "'URGENCY is a required field'"
 msgstr "'PRIORITET er obligatorisk'"
 
-#: scripts/core/lang/missing-translations-strings.ts:48
-msgid "{{field}} is a required field"
-msgstr "{{field}} er et obligatorisk felt"
-
-#: scripts/core/lang/missing-translations-strings.ts:47
-msgid "{{field}} empty values not allowed"
-msgstr "{{field}} tomme værdier er ikke tilladt"
-
-#: scripts/core/lang/missing-translations-strings.ts:48
-msgid "{{field}} is too short"
-msgstr "{{field}} er for kort"
-
 #: scripts/core/lang/missing-translations-strings.js:29
 msgid "'must be of list type'\""
 msgstr "'skal være listetype'\""

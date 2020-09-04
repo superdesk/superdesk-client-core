@@ -85,7 +85,7 @@ function MacrosService(api, notify) {
                 const error_messages = JSON.parse(err.data._message.replace(/'/g, '"'));
 
                 error_messages.forEach((error_message) => {
-                    getErrorMessage(error_message, notify);
+                    notify.error(error_message);
                 });
             }
         });
