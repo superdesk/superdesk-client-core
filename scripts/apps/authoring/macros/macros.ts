@@ -10,7 +10,6 @@
 
 import {gettext} from 'core/utils';
 import _ from 'lodash';
-import {getErrorMessage} from '../authoring/directives/AuthoringDirective';
 
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {
