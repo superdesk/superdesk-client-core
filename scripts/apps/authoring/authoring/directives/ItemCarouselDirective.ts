@@ -343,7 +343,7 @@ export function ItemCarouselDirective(notify) {
 
             scope.$watch('currentIndex', () => {
                 if (scope.currentIndex != null) {
-                    carousel.trigger('to.owl.carousel', [scope.currentIndex]);
+                    carousel?.trigger('to.owl.carousel', [scope.currentIndex]);
                 }
             });
 
