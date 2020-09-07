@@ -16,6 +16,17 @@ function escapeRegExp(string) {
     return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 
+function regexMatchAll(regex, string) {
+    const matches = [];
+    let match;
+
+    while ((match = regex.exec(string)) !== null) {
+        matches.push(match);
+    }
+
+    return matches;
+}
+
 /*
 
 It iterates all user supplied translations and removes placeholders found in the original string.
@@ -39,7 +50,7 @@ function removeInvalidTranslations(grunt, jsonFilePath, filename) {
             return true;
         }
 
-        const placeHolders = [...key.matchAll(KEY_REGEX)];
+        const placeHolders = regexMatchAll(KEY_REGEX, key);
 
         return (Array.isArray(translations[key]) ? translations[key] : [translations[key]]).every(
             (translatedString) => {
