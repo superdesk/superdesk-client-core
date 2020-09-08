@@ -27,6 +27,7 @@ export interface ISetItem extends IBaseRestApiResponse {
     destination_name?: string;
     destination_config?: Dictionary<string, any>;
     destination?: IStorageDestinationItem;
+    count?: number;
 }
 
 export interface IStorageDestinationItem extends IBaseRestApiResponse {
@@ -61,6 +62,7 @@ export interface ISamsAPI {
     };
     assets: {
         upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<any>;
+        getCount(set_ids: string[]): Promise<object>;
     };
 }
 

@@ -60,9 +60,19 @@ export function loadSets(): IThunkAction<Array<ISetItem>> {
     return (dispatch, _getState, {api}) => {
         return api.sets.getAll()
             .then((sets: Array<ISetItem>) => {
-                dispatch(receiveSets(sets));
-
-                return Promise.resolve(sets);
+                let set_ids: string[] = sets.map((set) => {
+                    return set._id
+                })
+                return api.assets.getCount(set_ids)
+                    .then((count: any) => {
+                    sets = sets.map((set) => {
+                        let assetCount: number = count[set._id] || 0
+                            set.count = assetCount;
+                            return set;
+                    });
+                    dispatch(receiveSets(sets));
+                    return Promise.resolve(sets);
+                })
             });
     };
 }
