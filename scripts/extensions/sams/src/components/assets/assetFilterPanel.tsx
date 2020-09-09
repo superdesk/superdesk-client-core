@@ -62,10 +62,10 @@ export function getAssetFilterPanel(superdesk: ISuperdesk) {
                 filename: (value: string) => this.setLocalAssetSearchParams({filename: value}),
                 description: (value: string) => this.setLocalAssetSearchParams({description: value}),
                 state: (value: ASSET_STATE) => this.setLocalAssetSearchParams({state: value}),
-                size_from: (value: string) => this.setLocalAssetSearchParams({size_from: stringToNumber(value)}),
-                size_to: (value: string) => this.setLocalAssetSearchParams({size_to: stringToNumber(value)}),
-                date_from: (value: Date) => this.setLocalAssetSearchParams({date_from: value}),
-                date_to: (value: Date) => this.setLocalAssetSearchParams({date_to: value}),
+                sizeFrom: (value: string) => this.setLocalAssetSearchParams({sizeFrom: stringToNumber(value)}),
+                sizeTo: (value: string) => this.setLocalAssetSearchParams({sizeTo: stringToNumber(value)}),
+                dateFrom: (value: Date) => this.setLocalAssetSearchParams({dateFrom: value}),
+                dateTo: (value: Date) => this.setLocalAssetSearchParams({dateTo: value}),
             };
         }
 
@@ -84,10 +84,10 @@ export function getAssetFilterPanel(superdesk: ISuperdesk) {
                 filename: undefined,
                 description: undefined,
                 state: undefined,
-                size_from: undefined,
-                size_to: undefined,
-                date_from: undefined,
-                date_to: undefined,
+                sizeFrom: undefined,
+                sizeTo: undefined,
+                dateFrom: undefined,
+                dateTo: undefined,
             };
 
             this.setState({
@@ -195,8 +195,8 @@ export function getAssetFilterPanel(superdesk: ISuperdesk) {
                                     <FormItem>
                                         <Select
                                             label={gettext('Size From:')}
-                                            value={numberToString(this.state.localSearchParams.size_from)}
-                                            onChange={this.onChange.size_from}
+                                            value={numberToString(this.state.localSearchParams.sizeFrom)}
+                                            onChange={this.onChange.sizeFrom}
                                         >
                                             {sizeOptions}
                                         </Select>
@@ -204,8 +204,8 @@ export function getAssetFilterPanel(superdesk: ISuperdesk) {
                                     <FormItem>
                                         <Select
                                             label={gettext('Size To:')}
-                                            value={numberToString(this.state.localSearchParams.size_to)}
-                                            onChange={this.onChange.size_to}
+                                            value={numberToString(this.state.localSearchParams.sizeTo)}
+                                            onChange={this.onChange.sizeTo}
                                         >
                                             {sizeOptions}
                                         </Select>
@@ -215,16 +215,16 @@ export function getAssetFilterPanel(superdesk: ISuperdesk) {
                                     <FormItem>
                                         <FormLabel text={gettext('Uploaded From:')} />
                                         <DatePicker
-                                            value={this.state.localSearchParams.date_from ?? null}
-                                            onChange={this.onChange.date_from}
+                                            value={this.state.localSearchParams.dateFrom ?? null}
+                                            onChange={this.onChange.dateFrom}
                                             dateFormat={config.view.dateformat}
                                         />
                                     </FormItem>
                                     <FormItem>
                                         <FormLabel text={gettext('Uploaded To:')} />
                                         <DatePicker
-                                            value={this.state.localSearchParams.date_to ?? null}
-                                            onChange={this.onChange.date_to}
+                                            value={this.state.localSearchParams.dateTo ?? null}
+                                            onChange={this.onChange.dateTo}
                                             dateFormat={config.view.dateformat}
                                         />
                                     </FormItem>

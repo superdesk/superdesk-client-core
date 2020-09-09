@@ -145,19 +145,19 @@ export function getWorkspaceSubnavComponent(superdesk: ISuperdesk) {
         }
 
         toggleSortOrder() {
-            const sortOrder = this.props.searchParams.sort_order === SORT_ORDER.ASCENDING ?
+            const sortOrder = this.props.searchParams.sortOrder === SORT_ORDER.ASCENDING ?
                 SORT_ORDER.DESCENDING :
                 SORT_ORDER.ASCENDING;
 
             this.props.updateAssetSearchParamsAndListItems(
-                {sort_order: sortOrder},
+                {sortOrder: sortOrder},
                 LIST_ACTION.REPLACE,
             );
         }
 
         setSortField(field: ASSET_SORT_FIELD) {
             this.props.updateAssetSearchParamsAndListItems(
-                {sort_field: field},
+                {sortField: field},
                 LIST_ACTION.REPLACE,
             );
         }
@@ -171,7 +171,7 @@ export function getWorkspaceSubnavComponent(superdesk: ISuperdesk) {
 
         setSearchParamText(searchText?: string) {
             this.props.updateAssetSearchParamsAndListItems(
-                {query_string: searchText},
+                {textSearch: searchText},
                 LIST_ACTION.REPLACE,
             );
         }
@@ -182,7 +182,7 @@ export function getWorkspaceSubnavComponent(superdesk: ISuperdesk) {
             const buttonIcon = this.props.currentSet?.state === SET_STATE.DISABLED ? 'lock' : undefined;
             const sortFieldText = getAssetListSortFieldText(
                 superdesk,
-                this.props.searchParams.sort_field,
+                this.props.searchParams.sortField,
             );
 
             return (
@@ -202,7 +202,7 @@ export function getWorkspaceSubnavComponent(superdesk: ISuperdesk) {
                             type="expanded"
                             focused={true}
                             onSubmit={this.setSearchParamText}
-                            initialValue={this.props.searchParams.query_string}
+                            initialValue={this.props.searchParams.textSearch}
                         />
                         <ButtonGroup align="right">
                             {this.subNavMenuActions.length === 0 ?
@@ -250,9 +250,9 @@ export function getWorkspaceSubnavComponent(superdesk: ISuperdesk) {
                                     {sortFieldText}
                                 </Dropdown>
                                 <IconButton
-                                    ariaValue={this.props.searchParams.sort_order}
+                                    ariaValue={this.props.searchParams.sortOrder}
                                     onClick={this.toggleSortOrder}
-                                    icon={this.props.searchParams.sort_order}
+                                    icon={this.props.searchParams.sortOrder}
                                 />
                             </ContentBar>
                             <NavButton

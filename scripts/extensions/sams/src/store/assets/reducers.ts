@@ -22,8 +22,8 @@ const initialState: IAssetState = {
     searchParams: {
         page: 1,
         mimetypes: ASSET_TYPE_FILTER.ALL,
-        sort_field: ASSET_SORT_FIELD.NAME,
-        sort_order: SORT_ORDER.ASCENDING,
+        sortField: ASSET_SORT_FIELD.NAME,
+        sortOrder: SORT_ORDER.ASCENDING,
     },
     listItemIds: [],
     searchResultTotal: 0,
@@ -96,8 +96,8 @@ function updateSearchParams(prevState: IAssetState, params: Partial<IAssetSearch
         ...params,
         page: params.page ?? prevState.searchParams.page ?? 1,
         mimetypes: params.mimetypes ?? prevState.searchParams.mimetypes ?? ASSET_TYPE_FILTER.ALL,
-        sort_field: params.sort_field ?? prevState.searchParams.sort_field ?? ASSET_SORT_FIELD.NAME,
-        sort_order: params.sort_order ?? prevState.searchParams.sort_order ?? SORT_ORDER.ASCENDING,
+        sortField: params.sortField ?? prevState.searchParams.sortField ?? ASSET_SORT_FIELD.NAME,
+        sortOrder: params.sortOrder ?? prevState.searchParams.sortOrder ?? SORT_ORDER.ASCENDING,
     };
 
     return newState;

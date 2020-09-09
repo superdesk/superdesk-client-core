@@ -85,7 +85,7 @@ export interface IAssetItem extends IBaseRestApiResponse {
 }
 
 export interface IAssetSearchParams {
-    query_string?: string;
+    textSearch?: string;
     setId?: string;
     name?: string;
     description?: string;
@@ -93,12 +93,12 @@ export interface IAssetSearchParams {
     filename?: string;
     page: number;
     mimetypes: ASSET_TYPE_FILTER;
-    date_from?: Date;
-    date_to?: Date;
-    size_from?: number;
-    size_to?: number;
-    sort_field: ASSET_SORT_FIELD;
-    sort_order: SORT_ORDER;
+    dateFrom?: Date;
+    dateTo?: Date;
+    sizeFrom?: number;
+    sizeTo?: number;
+    sortField: ASSET_SORT_FIELD;
+    sortOrder: SORT_ORDER;
 }
 
 export interface ISamsAPI {

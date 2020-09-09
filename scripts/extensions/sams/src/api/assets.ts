@@ -32,10 +32,10 @@ const GRID_PAGE_SIZE = 25;
 const LIST_PAGE_SIZE = 50;
 
 function querySearchString(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
-    if (params.query_string != null && params.query_string.length > 0) {
+    if (params.textSearch != null && params.textSearch.length > 0) {
         source.query.bool.must.push(
             superdesk.elasticsearch.queryString({
-                query: params.query_string,
+                query: params.textSearch,
                 lenient: true,
                 default_operator: 'OR',
             }),
@@ -138,15 +138,15 @@ function queryMimetypes(superdesk: ISuperdesk, source: IRootElasticQuery, params
 }
 
 function queryDateRange(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
-    if (params.date_from != null || params.date_to != null) {
+    if (params.dateFrom != null || params.dateTo != null) {
         const args: IElasticRangeQueryParams = {field: '_updated'};
 
-        if (params.date_from != null) {
-            args.gte = params.date_from.toISOString();
+        if (params.dateFrom != null) {
+            args.gte = params.dateFrom.toISOString();
         }
 
-        if (params.date_to != null) {
-            args.lte = params.date_to.toISOString();
+        if (params.dateTo != null) {
+            args.lte = params.dateTo.toISOString();
         }
 
         source.query.bool.must.push(
@@ -156,15 +156,15 @@ function queryDateRange(superdesk: ISuperdesk, source: IRootElasticQuery, params
 }
 
 function querySizeRange(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
-    if (params.size_from != null || params.size_to != null) {
+    if (params.sizeFrom != null || params.sizeTo != null) {
         const args: IElasticRangeQueryParams = {field: 'length'};
 
-        if (params.size_from != null) {
-            args.gte = params.size_from * 1048576; // MB -> bytes
+        if (params.sizeFrom != null) {
+            args.gte = params.sizeFrom * 1048576; // MB -> bytes
         }
 
-        if (params.size_to != null) {
-            args.lte = params.size_to * 1048576; // MB -> bytes
+        if (params.sizeTo != null) {
+            args.lte = params.sizeTo * 1048576; // MB -> bytes
         }
 
         source.query.bool.must.push(
@@ -219,8 +219,8 @@ export function queryAssets(
         delete source.query;
     }
 
-    const sortOrder = params.sort_order === SORT_ORDER.ASCENDING ? 1 : 0;
-    const sort = `[("${params.sort_field}",${sortOrder})]`;
+    const sortOrder = params.sortOrder === SORT_ORDER.ASCENDING ? 1 : 0;
+    const sort = `[("${params.sortField}",${sortOrder})]`;
 
     return superdesk.dataApi.queryRaw<IAssetItem>(
         RESOURCE,
@@ -241,36 +241,36 @@ export function getAssetSearchUrlParams(superdesk: ISuperdesk): Partial<IAssetSe
     const {filterUndefined} = superdesk.helpers;
 
     return filterUndefined<IAssetSearchParams>({
-        query_string: urlParams.getString('query_string'),
-        setId: urlParams.getString('set_id'),
+        textSearch: urlParams.getString('textSearch'),
+        setId: urlParams.getString('setId'),
         name: urlParams.getString('name'),
         description: urlParams.getString('description'),
         state: urlParams.getString('state') as ASSET_STATE,
         filename: urlParams.getString('filename'),
         mimetypes: urlParams.getString('mimetypes', ASSET_TYPE_FILTER.ALL) as ASSET_TYPE_FILTER,
-        date_from: urlParams.getDate('date_from'),
-        date_to: urlParams.getDate('date_to'),
-        size_from: urlParams.getNumber('size_from'),
-        size_to: urlParams.getNumber('size_to'),
-        sort_field: urlParams.getString('sort_field', ASSET_SORT_FIELD.NAME) as ASSET_SORT_FIELD,
-        sort_order: urlParams.getString('sort_order', SORT_ORDER.ASCENDING) as SORT_ORDER,
+        dateFrom: urlParams.getDate('dateFrom'),
+        dateTo: urlParams.getDate('dateTo'),
+        sizeFrom: urlParams.getNumber('sizeFrom'),
+        sizeTo: urlParams.getNumber('sizeTo'),
+        sortField: urlParams.getString('sortField', ASSET_SORT_FIELD.NAME) as ASSET_SORT_FIELD,
+        sortOrder: urlParams.getString('sortOrder', SORT_ORDER.ASCENDING) as SORT_ORDER,
     });
 }
 
 export function setAssetSearchUrlParams(superdesk: ISuperdesk, params: Partial<IAssetSearchParams>) {
     const {urlParams} = superdesk.browser.location;
 
-    urlParams.setString('query_string', params.query_string);
-    urlParams.setString('set_id', params.setId);
+    urlParams.setString('textSearch', params.textSearch);
+    urlParams.setString('setId', params.setId);
     urlParams.setString('name', params.name);
     urlParams.setString('description', params.description);
     urlParams.setString('state', params.state);
     urlParams.setString('filename', params.filename);
     urlParams.setString('mimetypes', params.mimetypes);
-    urlParams.setDate('date_from', params.date_from);
-    urlParams.setDate('date_to', params.date_to);
-    urlParams.setNumber('size_from', params.size_from);
-    urlParams.setNumber('size_to', params.size_to);
-    urlParams.setString('sort_field', params.sort_field);
-    urlParams.setString('sort_order', params.sort_order);
+    urlParams.setDate('dateFrom', params.dateFrom);
+    urlParams.setDate('dateTo', params.dateTo);
+    urlParams.setNumber('sizeFrom', params.sizeFrom);
+    urlParams.setNumber('sizeTo', params.sizeTo);
+    urlParams.setString('sortField', params.sortField);
+    urlParams.setString('sortOrder', params.sortOrder);
 }
