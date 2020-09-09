@@ -32,6 +32,12 @@ export function getActiveSets(state: IApplicationState): Array<ISetItem> {
     );
 }
 
+export function getDisabledSets(state: IApplicationState): Array<ISetItem> {
+    return state.sets.sets.filter(
+        (set) => set.state === SET_STATE.DISABLED,
+    );
+}
+
 export const getSetsById = createSelector<IApplicationState, Array<ISetItem>, Dictionary<string, ISetItem>>(
     [getSets],
     (sets: Array<ISetItem>) => {

@@ -7,19 +7,23 @@ import {createLogger} from 'redux-logger';
 import {IExtraArguments} from './types';
 import {ISetState} from './sets/types';
 import {IStorageDestinationState} from './storageDestinations/types';
+import {IAssetState} from './assets/types';
 
 // Redux Reducers
 import {setsReducer} from './sets/reducers';
 import {storageDestinationReducer} from './storageDestinations/reducers';
+import {assetsReducer} from './assets/reducers';
 
 export const rootReducer = combineReducers({
     sets: setsReducer,
     storageDestinations: storageDestinationReducer,
+    assets: assetsReducer,
 });
 
 export type IApplicationState = {
     sets: ISetState;
     storageDestinations: IStorageDestinationState;
+    assets: IAssetState;
 };
 
 /**
