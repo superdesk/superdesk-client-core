@@ -42,42 +42,6 @@ describe('publishing', () => {
         expect(publishQueue.getItemCount()).toBe(1);
     });
 
-    it('stops publishing if there are validation errors', () => {
-        workspace.selectDesk('Sports Desk');
-
-        const thirdStage = els(['monitoring-group']).get(2);
-        const output = els(['monitoring-group']).get(5);
-
-        expect(ECE.hasElementCount(
-            els(['article-item'], null, output),
-            0,
-        )()).toBe(true);
-
-        expect(ECE.hasElementCount(
-            els(['article-item'], null, thirdStage),
-            1,
-        )()).toBe(true);
-
-        executeContextMenuAction(els(['article-item'], null, thirdStage).get(0), 'Edit');
-
-        el(['authoring', 'open-send-publish-pane']).click();
-        el(['authoring', 'send-publish-pane', 'tab--publish']).click();
-        el(['authoring', 'send-publish-pane', 'publish']).click();
-
-        assertToastMsg('error', 'SUBJECT is a required field');
-        assertToastMsg('error', 'BODY_HTML is a required field');
-
-        expect(ECE.hasElementCount(
-            els(['article-item'], null, output),
-            0,
-        )()).toBe(true);
-
-        expect(ECE.hasElementCount(
-            els(['article-item'], null, thirdStage),
-            1,
-        )()).toBe(true);
-    });
-
     it('can send and publish', () => {
         workspace.selectDesk('Politic Desk');
 

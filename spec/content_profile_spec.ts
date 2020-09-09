@@ -43,42 +43,6 @@ describe('Content profiles', () => {
         templates.cancel();
     });
 
-    it('displays defined fields in authoring', () => {
-        // create a new content profile
-        contentProfiles.openContentProfileSettings();
-        contentProfiles.addNew('Simple');
-        contentProfiles.toggleEnable();
-        element(by.buttonText('Content fields')).click();
-        contentProfiles.disableField('Abstract');
-        element(by.buttonText('Header fields')).click();
-        contentProfiles.setRequired('Ed. Note');
-        contentProfiles.update();
-        templates.openTemplatesSettings();
-        expect(templates.getListCount()).toBeGreaterThan(2);
-        templates.edit('Simple');
-        templates.selectDesk('Politic Desk');
-        templates.selectDesk('Sports Desk');
-        templates.save();
-        monitoring.openMonitoring();
-        workspace.selectDesk('Sports Desk');
-        authoring.createTextItemFromTemplate('simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(0);
-
-        // publish of the required field will fail
-        authoring.setHeaderSluglineText('Story1 slugline');
-        authoring.getSubjectMetadataDropdownOpened();
-        browser.sleep(100);
-        browser.actions().sendKeys('archaeology')
-            .perform();
-        browser.actions().sendKeys(protractor.Key.DOWN)
-            .perform();
-        browser.actions().sendKeys(protractor.Key.ENTER)
-            .perform();
-        authoring.save();
-        authoring.publish(true);
-        assertToastMsg('error', 'EDNOTE is a required field');
-    });
-
     it('displays custom text fields', () => {
         const FIELD_LABEL = 'A custom text field';
 
