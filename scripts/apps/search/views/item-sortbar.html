@@ -1,9 +1,10 @@
 <div class="sortbar" ng-show="canSort()">
     <span ng-show="total" translate>Total:</span>
-    <span ng-show="total" class="label-total">{{total}}</span>    
+    <span ng-show="total" class="label-total">{{total}}</span>
     <div class="dropdown dropdown--align-right" dropdown>
-        <button id="order_button" class="dropdown__toggle" dropdown__toggle aria-label="{{ 'Sort items' | translate }}">
-            {{ active.label | translate }}
+        <button id="order_button" class="dropdown__toggle" dropdown__toggle>
+            <span class="sd-opacity--75">{{'Sort by' | translate }}:</span> 
+            <span class="sd-text__strong-s">{{ active.label | translate }}</span>
             <span class="dropdown__caret"></span>
         </button>
         <ul class="dropdown__menu" id="order_selector">

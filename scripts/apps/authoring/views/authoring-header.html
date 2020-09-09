@@ -113,11 +113,11 @@
                  sd-width="{{editor.keywords.sdWidth}}"
                  ng-attr-title="{{schema.keywords.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.keywords.order}}">
-                <label class="authoring-header__item-label" for="keywords">{{getLabelForFieldId('keywords')}}</label>
+                <label class="authoring-header__item-label" for="a11y-keywords">{{getLabelForFieldId('keywords')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-words-list
                         class="data terms-box"
-                        id="keywords"
+                        id="a11y-keywords"
                         data-item="item"
                         data-field="keywords"
                         data-change="autosave(item)"
@@ -138,11 +138,11 @@
                  sd-width="{{editor.genre.sdWidth}}"
                  ng-attr-title="{{schema.genre.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.genre.order}}">
-                <label class="authoring-header__item-label" for="genre">{{getLabelForFieldId('genre')}}</label>
+                <label class="authoring-header__item-label" for="a11y-genre">{{getLabelForFieldId('genre')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          class="data"
-                         id="genre"
+                         id="a11y-genre"
                          data-tabindex="editor.genre.order"
                          data-item="item"
                          data-field="genre"
@@ -183,11 +183,11 @@
                  sd-width="{{editor.place.sdWidth}}"
                  ng-attr-title="{{schema.place.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.place.order}}">
-                <label class="authoring-header__item-label" for="place">{{getLabelForFieldId('place')}}</label>
+                <label class="authoring-header__item-label" for="a11y-place">{{getLabelForFieldId('place')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms ng-if="!features.places_autocomplete && !single_value.locators"
                          class="data"
-                         id="place"
+                         id="a11y-place"
                          data-tabindex="editor.place.order"
                          data-item="item"
                          data-field="place"
@@ -200,7 +200,7 @@
 
                     <div sd-meta-dropdown ng-if="!features.places_autocomplete && single_value.locators"
                          class="data"
-                         id="place"
+                         id="a11y-place"
                          data-tabindex="editor.place.order"
                          data-item="item"
                          data-field="place"
@@ -213,7 +213,7 @@
 
                     <div sd-meta-place ng-if="features.places_autocomplete"
                         class="data"
-                        id="place"
+                        id="a11y-place"
                         data-tabindex="editor.place.order"
                         data-item="item"
                         data-field="place"
@@ -233,11 +233,11 @@
                  ng-attr-title="{{schema.language.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.language.order}}">
 
-                <label class="authoring-header__item-label" for="language">{{getLabelForFieldId('language')}}</label>
+                <label class="authoring-header__item-label" for="a11y-language">{{getLabelForFieldId('language')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          class="data"
-                         id="language"
+                         id="a11y-language"
                          data-tabindex="editor.language.order"
                          data-item="item"
                          data-field="language"
@@ -257,11 +257,11 @@
                  sd-width="{{editor.priority.sdWidth}}"
                  ng-attr-title="{{schema.priority.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.priority.order}}">
-                <label class="authoring-header__item-label" for="priority">{{getLabelForFieldId('priority')}}</label>
+                <label class="authoring-header__item-label" for="a11y-priority">{{getLabelForFieldId('priority')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          data-item="item"
-                         id="priority"
+                         id="a11y-priority"
                          data-tabindex="editor.priority.order"
                          data-field="priority"
                          data-list="metadata.priority"
@@ -282,11 +282,11 @@
                  sd-width="{{editor.urgency.sdWidth}}"
                  ng-attr-title="{{schema.urgency.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.urgency.order}}">
-                <label class="authoring-header__item-label" for="urgency">{{getLabelForFieldId('urgency')}}</label>
+                <label class="authoring-header__item-label" for="a11y-urgency">{{getLabelForFieldId('urgency')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
                          data-item="item"
-                         id="urgency"
+                         id="a11y-urgency"
                          data-tabindex="editor.urgency.order"
                          data-field="urgency"
                          data-list="metadata.urgency"
@@ -354,12 +354,12 @@
                  sd-width="{{editor.subject.sdWidth}}"
                  ng-attr-title="{{schema.subject.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.subject.order}}">
-                <label class="authoring-header__item-label" for="subject">{{getLabelForFieldId('subject')}}</label>
+                <label class="authoring-header__item-label" for="a11y-subject">{{getLabelForFieldId('subject')}}</label>
                 <div class="authoring-header__input-holder">
                     <div id="subjects"
                         sd-meta-terms
                         class="data"
-                        id="subject"
+                        id="a11y-subject"
                         data-tabindex="editor.subject.order"
                         data-item="item"
                         data-field="subject"

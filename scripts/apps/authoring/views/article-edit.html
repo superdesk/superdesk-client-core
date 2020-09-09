@@ -530,7 +530,7 @@
         class="icn-btn btn-signOff"
         ng-click="changeSignOffEdit()"
         tabindex="{{editor.sign_off.order}}"
-        title="Toggle Sign-Off lock"
+        title="{{ 'Toggle Sign-Off lock' | translate}}"
         aria-label="{{ 'Toggle Sign-Off lock' | translate}}"
         ng-if="_editable && schema.sign_off.readonly !== true"
     >
