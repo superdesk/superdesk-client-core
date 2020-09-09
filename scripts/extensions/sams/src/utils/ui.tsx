@@ -4,9 +4,13 @@ import {Provider} from 'react-redux';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
+import {ASSET_SORT_FIELD, ASSET_STATE} from '../interfaces';
 
 // Redux Actions & Selectors
 import {getStore} from '../store';
+
+// UI
+import {Label} from 'superdesk-ui-framework/react';
 
 export function showModalConnectedToStore<T = any>(
     superdesk: ISuperdesk,
@@ -48,4 +52,56 @@ export function getIconTypeFromMimetype(mimetype: string) {
     } else {
         return 'text';
     }
+}
+
+export function getAssetStateLabel(superdesk: ISuperdesk, assetState: ASSET_STATE) {
+    const {gettext} = superdesk.localization;
+
+    switch (assetState) {
+    case ASSET_STATE.INTERNAL:
+        return (
+            <Label
+                text={gettext('Internal')}
+                style="hollow"
+                color="red--800"
+            />
+        );
+    case ASSET_STATE.DRAFT:
+        return (
+            <Label
+                text={gettext('Draft')}
+                style="hollow"
+                type="warning"
+            />
+        );
+    case ASSET_STATE.PUBLIC:
+        return (
+            <Label
+                text={gettext('Public')}
+                style="hollow"
+                type="success"
+            />
+        );
+    }
+
+    superdesk.helpers.assertNever(assetState);
+}
+
+export function getAssetListSortFieldText(superdesk: ISuperdesk, field: ASSET_SORT_FIELD): string {
+    const {gettext} = superdesk.localization;
+
+    switch (field) {
+    case ASSET_SORT_FIELD.NAME:
+        return gettext('Name');
+    case ASSET_SORT_FIELD.FILENAME:
+        return gettext('Filename');
+    case ASSET_SORT_FIELD.SIZE:
+        return gettext('Size');
+    case ASSET_SORT_FIELD.CREATED:
+        return gettext('Created');
+    case ASSET_SORT_FIELD.UPDATED:
+        return gettext('Updated');
+    }
+
+    superdesk.helpers.assertNever(field);
 }
