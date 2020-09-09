@@ -1,11 +1,11 @@
 // Types
-import {ISuperdesk} from 'superdesk-api';
-import {ISamsAPI, ISetItem, IStorageDestinationItem} from '../interfaces';
+import {IRestApiResponse, ISuperdesk} from 'superdesk-api';
+import {IAssetItem, IAssetSearchParams, ISamsAPI, ISetItem, IStorageDestinationItem} from '../interfaces';
 
 // APIs
 import {getAllSets, createSet, updateSet, deleteSet} from './sets';
 import {getAllStorageDestinations} from './storageDestinations';
-import {uploadAsset} from './assets';
+import {uploadAsset, queryAssets, getAssetSearchUrlParams, setAssetSearchUrlParams} from './assets';
 
 export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
     return {
@@ -31,6 +31,15 @@ export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
         assets: {
             upload(data: FormData, onProgress: (event: ProgressEvent) => void): Promise<any> {
                 return uploadAsset(superdesk, data, onProgress);
+            },
+            query(params, listStyle): Promise<IRestApiResponse<IAssetItem>> {
+                return queryAssets(superdesk, params, listStyle);
+            },
+            getSearchUrlParams(): Partial<IAssetSearchParams> {
+                return getAssetSearchUrlParams(superdesk);
+            },
+            setSearchUrlParams(params: Partial<IAssetSearchParams>): void {
+                return setAssetSearchUrlParams(superdesk, params);
             },
         },
     };
