@@ -3,7 +3,7 @@ import {ISuperdesk, IExtension} from 'superdesk-api';
 
 // Apps
 import {getSamsApp} from './apps/samsApp';
-import {getSamsWorkspaceComponent} from './apps/samsWorkspace';
+import {getSamsWorkspaceComponent, onStoreInit} from './apps/samsWorkspace';
 
 const extension: IExtension = {
     id: 'sams',
@@ -15,7 +15,7 @@ const extension: IExtension = {
                 pages: [{
                     title: gettext('SAMS'),
                     url: '/workspace/sams',
-                    component: getSamsApp(superdesk, getSamsWorkspaceComponent),
+                    component: getSamsApp(superdesk, getSamsWorkspaceComponent, onStoreInit),
                     showTopMenu: true,
                     showSideMenu: true,
                     addToMainMenu: false,
