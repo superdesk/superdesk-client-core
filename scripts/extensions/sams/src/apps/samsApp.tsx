@@ -1,15 +1,12 @@
 // External Modules
 import * as React from 'react';
 import {Provider} from 'react-redux';
+import {Store} from 'redux';
 
 // Types
 import {ISuperdesk} from 'superdesk-api';
 import {IConnectComponentToSuperdesk} from '../interfaces';
 import {createReduxStore, rootReducer, getStore, unsetStore} from '../store';
-
-// Redux Actions
-import {loadStorageDestinations} from '../store/storageDestinations/actions';
-import {loadSets} from '../store/sets/actions';
 
 // APIs
 import {getSamsAPIs} from '../api';
@@ -18,7 +15,11 @@ interface IState {
     ready: boolean;
 }
 
-export function getSamsApp(superdesk: ISuperdesk, getApp: IConnectComponentToSuperdesk) {
+export function getSamsApp(
+    superdesk: ISuperdesk,
+    getApp: IConnectComponentToSuperdesk,
+    onStoreInit?: (store: Store) => Promise<void>,
+) {
     const App = getApp(superdesk);
     const api = getSamsAPIs(superdesk);
 
@@ -36,10 +37,7 @@ export function getSamsApp(superdesk: ISuperdesk, getApp: IConnectComponentToSup
                 rootReducer,
             );
 
-            Promise.all([
-                store.dispatch<any>(loadStorageDestinations()),
-                store.dispatch<any>(loadSets()),
-            ])
+            (onStoreInit == null ? Promise.resolve() : onStoreInit(store))
                 .then(() => {
                     this.setState({ready: true});
                 });
