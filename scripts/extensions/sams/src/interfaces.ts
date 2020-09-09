@@ -1,5 +1,9 @@
 // Types
-import {IBaseRestApiResponse, ISuperdesk} from 'superdesk-api';
+import {
+    IBaseRestApiResponse,
+    IRestApiResponse,
+    ISuperdesk,
+} from 'superdesk-api';
 
 export enum SET_STATE {
     DRAFT = 'draft',
@@ -18,6 +22,37 @@ export enum CONTENT_PANEL_STATE {
     PREVIEW = 'preview',
     EDIT = 'edit',
     CREATE = 'create',
+}
+
+export enum ASSET_TYPE_FILTER {
+    ALL = 'all',
+    IMAGES = 'images',
+    VIDEOS = 'videos',
+    AUDIO = 'audio',
+    DOCUMENTS = 'documents',
+}
+
+export enum ASSET_LIST_STYLE {
+    GRID = 'grid',
+    LIST = 'list',
+}
+
+export enum ASSET_SORT_FIELD {
+    NAME = 'name.keyword',
+    FILENAME = 'filename',
+    CREATED = '_created',
+    UPDATED = '_updated',
+    SIZE = 'length',
+}
+
+export enum SORT_ORDER {
+    ASCENDING = 'ascending',
+    DESCENDING = 'descending',
+}
+
+export enum LIST_ACTION {
+    APPEND = 'append',
+    REPLACE = 'replace',
 }
 
 export interface ISetItem extends IBaseRestApiResponse {
@@ -49,6 +84,23 @@ export interface IAssetItem extends IBaseRestApiResponse {
     extra: Dictionary<string, any>;
 }
 
+export interface IAssetSearchParams {
+    query_string?: string;
+    setId?: string;
+    name?: string;
+    description?: string;
+    state?: ASSET_STATE;
+    filename?: string;
+    page: number;
+    mimetypes: ASSET_TYPE_FILTER;
+    date_from?: Date;
+    date_to?: Date;
+    size_from?: number;
+    size_to?: number;
+    sort_field: ASSET_SORT_FIELD;
+    sort_order: SORT_ORDER;
+}
+
 export interface ISamsAPI {
     sets: {
         getAll(): Promise<Array<ISetItem>>;
@@ -61,7 +113,10 @@ export interface ISamsAPI {
     };
     assets: {
         upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<any>;
+        query(params: IAssetSearchParams, listStyle: ASSET_LIST_STYLE): Promise<IRestApiResponse<IAssetItem>>;
+        getSearchUrlParams(): Partial<IAssetSearchParams>;
+        setSearchUrlParams(params: Partial<IAssetSearchParams>): void;
     };
 }
 
-export type IConnectComponentToSuperdesk = (superdesk: ISuperdesk) => React.ComponentType;
+export type IConnectComponentToSuperdesk = (superdesk: ISuperdesk) => React.ComponentType<any>;
