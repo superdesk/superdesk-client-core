@@ -2,10 +2,11 @@ import React from 'react';
 import {extensions} from 'appConfig';
 import {logger} from './services/logger';
 import {flatMap} from 'lodash';
+import {getUrlPage} from './helpers/url';
 
 export class ExtensionPage extends React.Component {
     render() {
-        const currentUrl = window.location.hash.slice(1);
+        const currentUrl = getUrlPage();
 
         const pages = flatMap(
             Object.values(extensions),

@@ -936,6 +936,7 @@ declare module 'superdesk-api' {
             max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
+        queryRaw<T extends IBaseRestApiResponse>(endpoint, params: Dictionary<string, any>): Promise<IRestApiResponse<T>>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
@@ -976,6 +977,159 @@ declare module 'superdesk-api' {
         }
     }
 
+    export interface IElasticExistsQueryParams {
+        field: string;
+    }
+
+    export interface IElasticExistsQuery {
+        exists: IElasticExistsQueryParams;
+    }
+
+    export interface IElasticTermQueryParams {
+        field: string;
+        value: string;
+        boost?: number; // Defaults to 1.0
+    }
+
+    export interface IElasticTermQuery {
+        term: {[field: string]: Omit<IElasticTermQueryParams, 'field'>};
+    }
+
+    export interface IElasticTermsQueryParams {
+        field: string;
+        value: Array<string>;
+        boost?: number; // Defaults to 1.0
+    }
+
+    export interface IElasticTermsQuery {
+        terms: {
+            [field: string]: IElasticTermsQuery['value'];
+            boost?: IElasticTermsQuery['boost'];
+        };
+    }
+
+    export interface IElasticMatchPhraseQueryParams {
+        field: string;
+        query: string;
+        analyzer?: string; // Defaults to the default analyzer
+    }
+
+    export interface IElasticMatchPhraseQuery {
+        match_phrase: {
+            [field: string]: Omit<IElasticMatchPhraseQueryParams, 'field'>;
+        }
+    }
+
+    export interface IElasticMatchQueryParams {
+        field: string;
+        query: string;
+        analyzer?: string; // Defaults to default analyzer
+        auto_generate_synonyms_phrase_query?: boolean; // Defaults to true
+        fuzziness?: string;
+        max_expansions?: number; // Defaults to 50
+        prefix_length?: number; // Defaults to 0
+        fuzzy_transpositions?: boolean; // Defaults to true
+        fuzzy_rewrite?: string;
+        lenient?: boolean; // Defaults to false
+        operator?: 'OR' | 'AND'; // Defaults to `OR`
+        minimum_should_match?: number | string;
+        zero_terms_query?: 'none' | 'all'; // Defaults to `none`
+    }
+
+    export interface IElasticMatchQuery {
+        match: {
+            [field: string]: Omit<IElasticMatchQueryParams, 'field'>;
+        };
+    }
+
+    export interface IElasticRangeQueryParams {
+        field: string;
+        gt?: string | number;
+        gte?: string | number;
+        lt?: string | number;
+        lte?: string | number;
+        format?: string;
+        relation?: 'INTERSECTS' | 'CONTAINS' | 'WITHIN'; // Defaults to `INTERSECTS`
+        time_zone?: string;
+        boost?: number; // Defaults to 1.0
+    }
+
+    export interface IElasticRangeQuery {
+        range: {
+            [field: string]: Omit<IElasticRangeQueryParams, 'field'>;
+        }
+    }
+
+    export interface IElasticQueryStringParams {
+        query: string;
+        default_field?: string;
+        allow_leading_wildcard?: boolean; // Defaults to true
+        analyze_wildcard?: boolean; // Defaults to false
+        analyzer?: string; // Defaults to default analyzer
+        auto_generate_synonyms_phrase_query?: boolean; // Defaults to true
+        boost?: number; // Defaults to 1.0
+        default_operator?: 'OR' | 'AND'; // Defaults to 'OR'
+        enable_position_increments?: boolean; // Defaults to true
+        fields?: Array<string>;
+        fuzziness?: string;
+        fuzzy_max_expansions?: number; // Defaults to 50
+        fuzzy_prefix_length?: number; // Defaults to 0
+        fuzzy_transpositions?: boolean; // Defaults to true
+        lenient?: boolean; // Defaults to false
+        max_determinized_states?: number; // Defaults to 10000
+        minimum_should_match?: string;
+        quote_analyzer?: string;
+        phrase_slop?: number; // Defaults to 0
+        quote_field_suffix?: string;
+        rewrite?: string;
+        time_zone?: string;
+    }
+
+    export interface IElasticQueryStringQuery {
+        query_string: IElasticQueryStringParams;
+    }
+
+    export type IElasticQuery = IElasticExistsQuery |
+        IElasticTermQuery |
+        IElasticTermsQuery |
+        IElasticMatchPhraseQuery |
+        IElasticMatchQuery |
+        IElasticRangeQuery |
+        IElasticQueryStringQuery;
+
+
+    export interface IElasticBoolQueryParams {
+        must: Array<IElasticQuery>;
+        must_not: Array<IElasticQuery>;
+        filter?: Array<IElasticQuery>;
+        should?: Array<IElasticQuery>;
+        minimum_should_match?: string;
+        boost?: number; // Defaults to 1.0
+    }
+
+    export interface IElasticBoolQuery {
+        bool: IElasticBoolQueryParams;
+    }
+
+    export interface IRootElasticQuery {
+        query: {
+            bool: IElasticBoolQueryParams;
+        };
+        size?: number;
+        from?: number;
+    }
+
+    export interface IElasticSearchApi {
+        exists(params: IElasticExistsQueryParams): IElasticExistsQuery;
+        term(params: IElasticTermQueryParams): IElasticTermQuery;
+        terms(params: IElasticTermsQueryParams): IElasticTermsQuery;
+        matchPhrase(params: IElasticMatchPhraseQueryParams): IElasticMatchPhraseQuery;
+        match(params: IElasticMatchQueryParams): IElasticMatchQuery;
+        range(params: IElasticRangeQueryParams): IElasticRangeQuery;
+        queryString(params: IElasticQueryStringParams): IElasticQueryStringQuery;
+        bool(params: IElasticBoolQueryParams): IElasticBoolQuery;
+    }
+
 
     // APPLICATION API
 
@@ -986,6 +1140,7 @@ declare module 'superdesk-api' {
                 query(parameters: IArticleQuery): Promise<IArticleQueryResult>;
             };
         };
+        elasticsearch: IElasticSearchApi;
         state: {
             articleInEditMode?: IArticle['_id'];
         };
@@ -1044,6 +1199,9 @@ declare module 'superdesk-api' {
         };
         helpers: {
             assertNever(x: never): never;
+            filterUndefined<T>(values: Partial<T>): Partial<T>;
+            stringToNumber(value?: string, radix?: number): number | undefined;
+            numberToString(value?: number): string | undefined;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -1099,6 +1257,7 @@ declare module 'superdesk-api' {
             gettextPlural(count: number, singular: string, plural: string, params?: {[key: string]: string | number}): string;
             formatDate(date: Date): string;
             formatDateTime(date: Date): string;
+            longFormatDateTime(date: Date | string): string;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
@@ -1107,6 +1266,33 @@ declare module 'superdesk-api' {
         session: {
             getToken(): string;
             getCurrentUser(): Promise<IUser>;
+        };
+        browser: {
+            location: {
+                getPage(): string;
+                setPage(page: string): Promise<void>;
+                urlParams: {
+                    // Strings
+                    getString(field: string, defaultValue?: string): string | undefined;
+                    setString(field: string, value?: string);
+
+                    // Numbers
+                    getNumber(field: string, defaultValue?: number): number | undefined;
+                    setNumber(field: string, value?: number);
+
+                    // Booleans
+                    getBoolean(field: string, defaultValue?: boolean): boolean | undefined;
+                    setBoolean(field: string, value?: boolean);
+
+                    // Dates
+                    getDate(field: string, defaultValue?: Date): Date | undefined;
+                    setDate(field: string, value?: Date);
+
+                    // JSON
+                    getJson<T = any>(field: string, defaultValue?: T): T | undefined;
+                    setJson<T>(field: string, value?: T);
+                };
+            };
         };
         utilities: {
             CSS: {

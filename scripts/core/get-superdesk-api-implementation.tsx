@@ -20,8 +20,16 @@ import {
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
+import {elasticsearchApi} from './helpers/elasticsearch';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
-import {assertNever, Writeable} from './helpers/typescript-helpers';
+import {
+    assertNever,
+    Writeable,
+    filterUndefined,
+    stringToNumber,
+    numberToString,
+} from './helpers/typescript-helpers';
+import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -115,8 +123,12 @@ export function getSuperdeskApiImplementation(
     return {
         dataApi: dataApi,
         dataApiByEntity,
+        elasticsearch: elasticsearchApi,
         helpers: {
             assertNever,
+            filterUndefined,
+            stringToNumber,
+            numberToString,
         },
         entities: {
             article: {
@@ -193,8 +205,7 @@ export function getSuperdeskApiImplementation(
         ui: {
             article: {
                 view: (id: string) => {
-                    ng.getService('$location').then(($location) => {
-                        $location.url('/workspace/monitoring');
+                    setUrlPage('/workspace/monitoring').then(() => {
                         authoringWorkspace.edit({_id: id}, 'view');
                     });
                 },
@@ -274,6 +285,11 @@ export function getSuperdeskApiImplementation(
                     .tz(appConfig.defaultTimezone)
                     .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
             },
+            longFormatDateTime: (date: Date | string) => {
+                return moment(date)
+                    .tz(appConfig.defaultTimezone)
+                    .format(appConfig.longDateFormat || 'LLL');
+            },
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
@@ -282,6 +298,13 @@ export function getSuperdeskApiImplementation(
         session: {
             getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
+        },
+        browser: {
+            location: {
+                getPage: getUrlPage,
+                setPage: setUrlPage,
+                urlParams: urlParams,
+            },
         },
         utilities: {
             logger,
