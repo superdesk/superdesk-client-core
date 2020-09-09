@@ -31,11 +31,7 @@ export function setup(params) {
                         .then(clearStorage)
                         .then(openBaseUrl)
                         .then(waitForSuperdesk)
-                        .then(() => {
-                            browser.executeScript('window.superdesk_e2e_tests_running = true;');
-
-                            done();
-                        });
+                        .then(done);
                 });
             });
     });
