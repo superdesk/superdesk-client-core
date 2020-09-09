@@ -131,7 +131,6 @@ export function AuthoringDirective(
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.fullPreview = false;
-            $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
