@@ -4,7 +4,7 @@ import {IArticle, ISuperdesk} from 'superdesk-api';
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 
-import {Switch, Button} from 'superdesk-ui-framework/react';
+import {Switch, Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 
 export enum ITagGroup {
@@ -146,49 +146,49 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                         {
                             data === 'loading' || data === 'not-initialized' ? null : (
-                                <React.Fragment>
-                                    <div className="widget-actions">
-                                        <Button
-                                            type="primary"
-                                            icon="plus-large"
-                                            size="small"
-                                            shape="round"
-                                            onClick={() => this.setState({newItem: {}})} />
-                                    </div>
-                                    {
-                                        dirty === true ?
-                                            (<div className="widget__sliding-toolbar widget__sliding-toolbar--right">
-                                                <button className="btn btn--primary">{gettext('Save')}</button>
-                                                <button className="btn"
-                                                    onClick={() => this.setState({
-                                                        data: {
-                                                            ...data,
-                                                            changes: data.original,
-                                                        },
-                                                    })}>
-                                                    {gettext('Cancel')}
-                                                </button>
-                                            </div>)
-                                            : null
-                                    }
-                                </React.Fragment>
+                                dirty === true ?
+                                    (<div className="widget__sliding-toolbar widget__sliding-toolbar--right">
+                                        <button className="btn btn--primary">{gettext('Save')}</button>
+                                        <button className="btn"
+                                            onClick={() => this.setState({
+                                                data: {
+                                                    ...data,
+                                                    changes: data.original,
+                                                },
+                                            })}>
+                                            {gettext('Cancel')}
+                                        </button>
+                                    </div>)
+                                    : null
                             )
                         }
                     </div>
 
                     <div className="widget-content sd-padding-all--2">
+                        {
+                            <div className="form__row form__row--flex">
+                                <ButtonGroup align="left">
+                                    <Switch value={false} onChange={() => this.runAnalysis()} />
+                                    <label>{gettext('Run automatically')}</label>
+                                </ButtonGroup>
+                                <ButtonGroup align="right">
+                                    <Button
+                                        type="primary"
+                                        icon="plus-large"
+                                        size="small"
+                                        shape="round"
+                                        onClick={() => this.setState({newItem: {}})} />
+                                </ButtonGroup>
+                            </div>
+                        }
+
                         {(() => {
                             if (data === 'loading') {
                                 return (
                                     <div className="spinner-big" />
                                 );
                             } else if (data === 'not-initialized') {
-                                return (
-                                    <div className="form__row">
-                                        <Switch value={false} onChange={() => this.runAnalysis()} />
-                                        <label>{gettext('Run automatically')}</label>
-                                    </div>
-                                );
+                                return;
                             } else {
                                 const analysis = data.changes.analysis;
                                 const groups = Object.values(ITagGroup)
@@ -207,37 +207,40 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     <React.Fragment>
                                         {
                                             this.state.newItem == null ? null : (
-                                                <div style={{position: 'relative'}}>
-                                                    <NewItemComponent
-                                                        item={this.state.newItem}
-                                                        onChange={(newItem) => {
-                                                            this.setState({newItem});
-                                                        }}
-                                                        save={(newItem: INewItem) => {
-                                                            this.createNewTag(newItem, data.changes);
-                                                        }}
-                                                        cancel={() => {
-                                                            this.setState({newItem: null});
-                                                        }}
-                                                    />
-                                                </div>
+                                                <NewItemComponent
+                                                    item={this.state.newItem}
+                                                    onChange={(newItem) => {
+                                                        this.setState({newItem});
+                                                    }}
+                                                    save={(newItem: INewItem) => {
+                                                        this.createNewTag(newItem, data.changes);
+                                                    }}
+                                                    cancel={() => {
+                                                        this.setState({newItem: null});
+                                                    }}
+                                                />
                                             )
                                         }
+                                        <div className="widget-content__main">
+                                            {
+                                                groups.map(({group, items}) => (
+                                                    <ToggleBoxNext key={group}
+                                                        title={getGroupLabel(group, superdesk)}
+                                                        style="circle" isOpen={true}>
+                                                        <TagListComponent
+                                                            tags={items}
+                                                            onChange={(tags) => {
+                                                                this.updateTags({[group]: tags});
+                                                            }}
+                                                        />
+                                                    </ToggleBoxNext>
+                                                ))
+                                            }
+                                        </div>
 
-                                        {
-                                            groups.map(({group, items}) => (
-                                                <ToggleBoxNext key={group}
-                                                    title={getGroupLabel(group, superdesk)}
-                                                    style="circle" isOpen={true}>
-                                                    <TagListComponent
-                                                        tags={items}
-                                                        onChange={(tags) => {
-                                                            this.updateTags({[group]: tags});
-                                                        }}
-                                                    />
-                                                </ToggleBoxNext>
-                                            ))
-                                        }
+                                        <div className="widget-content__footer">
+                                            <Button type="primary" text="Refresh" expand={true} onClick={() => {}} />
+                                        </div>
                                     </React.Fragment>
                                 );
                             }

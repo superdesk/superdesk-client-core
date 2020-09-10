@@ -26,7 +26,7 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                     </div>
                     <div className="sd-card__content">
                         <div className="form__row">
-                            <Input label={gettext('Title')}
+                            <Input label={gettext('Name')}
                                 value={item.title ?? ''}
                                 onChange={(event) => {
                                     onChange({
@@ -57,7 +57,10 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                         </div>
                     </div>
                     <div className="sd-card__footer">
-                        <button className="btn btn--primary"
+                        <button className="btn sd-flex-grow" onClick={() => cancel()}>
+                            {gettext('Cancel')}
+                        </button>
+                        <button className="btn btn--primary sd-flex-grow"
                             disabled={savingDisabled}
                             onClick={() => {
                                 const title = item.title;
@@ -68,10 +71,6 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                 }
                             }}>
                             {gettext('Add')}
-                        </button>
-
-                        <button className="btn" onClick={() => cancel()}>
-                            {gettext('Cancel')}
                         </button>
                     </div>
                 </div>
