@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-import { IArticle, ISuperdesk } from 'superdesk-api';
-import { getTagsListComponent } from './tag-list';
-import { getNewItemComponent } from './new-item';
+import {IArticle, ISuperdesk} from 'superdesk-api';
+import {getTagsListComponent} from './tag-list';
+import {getNewItemComponent} from './new-item';
 
-import { Switch, Button } from 'superdesk-ui-framework/react';
-import { ToggleBoxNext } from 'superdesk-ui-framework';
+import {Switch, Button} from 'superdesk-ui-framework/react';
+import {ToggleBoxNext} from 'superdesk-ui-framework';
 
 export enum ITagGroup {
     organisation = 'organisation',
@@ -43,8 +43,8 @@ interface IState {
 }
 
 export function getGroupLabel(group: ITagGroup, superdesk: ISuperdesk): string {
-    const { gettext } = superdesk.localization;
-    const { assertNever } = superdesk.helpers;
+    const {gettext} = superdesk.localization;
+    const {assertNever} = superdesk.helpers;
 
     if (group === ITagGroup.organisation) {
         return gettext('Organisation');
@@ -58,10 +58,10 @@ export function getGroupLabel(group: ITagGroup, superdesk: ISuperdesk): string {
 }
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
-    const { httpRequestJsonLocal } = superdesk;
-    const { gettext } = superdesk.localization;
-    const { memoize, generatePatch } = superdesk.utilities;
-    const { notNullOrUndefined } = superdesk.helpers;
+    const {httpRequestJsonLocal} = superdesk;
+    const {gettext} = superdesk.localization;
+    const {memoize, generatePatch} = superdesk.utilities;
+    const {notNullOrUndefined} = superdesk.helpers;
 
     const TagListComponent = getTagsListComponent(superdesk);
     const NewItemComponent = getNewItemComponent(superdesk);
@@ -83,7 +83,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
         runAnalysis() {
-            this.setState({ data: 'loading' }, () => {
+            this.setState({data: 'loading'}, () => {
                 httpRequestJsonLocal<IAutoTaggingResponse>({
                     method: 'POST',
                     path: '/ai/',
@@ -93,19 +93,19 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     },
                 }).then((res) => {
                     this.setState({
-                        data: { original: res, changes: res },
+                        data: {original: res, changes: res},
                     });
                 });
             });
         }
         updateTags(tags: Partial<IAnalysisFields>) {
-            const { data } = this.state;
+            const {data} = this.state;
 
             if (data === 'loading' || data === 'not-initialized') {
                 return;
             }
 
-            const { changes } = data;
+            const {changes} = data;
 
             this.setState({
                 data: {
@@ -132,10 +132,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 [newItem.group]: (changes.analysis[newItem.group] ?? []).concat(tag),
             });
 
-            this.setState({ newItem: null });
+            this.setState({newItem: null});
         }
         render() {
-            const { data } = this.state;
+            const {data} = this.state;
             const dirty = data === 'loading' || data === 'not-initialized' ? false :
                 this.isDirty(data.original, data.changes);
 
@@ -153,7 +153,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             icon="plus-large"
                                             size="small"
                                             shape="round"
-                                            onClick={() => this.setState({ newItem: {} })} />
+                                            onClick={() => this.setState({newItem: {}})} />
                                     </div>
                                     {
                                         dirty === true ?
@@ -180,7 +180,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         {(() => {
                             if (data === 'loading') {
                                 return (
-                                    <div className="spinner-big"></div>
+                                    <div className="spinner-big" />
                                 );
                             } else if (data === 'not-initialized') {
                                 return (
@@ -198,7 +198,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         if (items == null || items.length < 1) {
                                             return null;
                                         } else {
-                                            return { group, items: items };
+                                            return {group, items: items};
                                         }
                                     })
                                     .filter(notNullOrUndefined);
@@ -207,17 +207,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     <React.Fragment>
                                         {
                                             this.state.newItem == null ? null : (
-                                                <div style={{ position: 'relative' }}>
+                                                <div style={{position: 'relative'}}>
                                                     <NewItemComponent
                                                         item={this.state.newItem}
                                                         onChange={(newItem) => {
-                                                            this.setState({ newItem });
+                                                            this.setState({newItem});
                                                         }}
                                                         save={(newItem: INewItem) => {
                                                             this.createNewTag(newItem, data.changes);
                                                         }}
                                                         cancel={() => {
-                                                            this.setState({ newItem: null });
+                                                            this.setState({newItem: null});
                                                         }}
                                                     />
                                                 </div>
@@ -225,14 +225,14 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         }
 
                                         {
-                                            groups.map(({ group, items }) => (
+                                            groups.map(({group, items}) => (
                                                 <ToggleBoxNext key={group}
                                                     title={getGroupLabel(group, superdesk)}
-                                                    style='circle' isOpen={true}>
+                                                    style="circle" isOpen={true}>
                                                     <TagListComponent
                                                         tags={items}
                                                         onChange={(tags) => {
-                                                            this.updateTags({ [group]: tags });
+                                                            this.updateTags({[group]: tags});
                                                         }}
                                                     />
                                                 </ToggleBoxNext>
