@@ -82,12 +82,17 @@ export class SelectFieldPopup extends React.Component<any, any> {
                 noPadding={true}
             >
                 <div className="field-search__popup">
-                    <ul className="field-search__popup-list"
-                        ref={(ref) => this.dom.itemList = ref}>
+                    <ul
+                        className="field-search__popup-list"
+                        ref={(ref) => this.dom.itemList = ref}
+                    >
                         {dataList && dataList.length > 0 && dataList.map((fieldItem, index) => (
-                            <li key={index} className={
-                                classNames('field-search__popup-item',
-                                    {'field-search__popup-item--active': index === this.state.activeIndex})}>
+                            <li
+                                key={index}
+                                className={classNames('field-search__popup-item',
+                                    {'field-search__popup-item--active': index === this.state.activeIndex},
+                                )}
+                            >
                                 <button type="button" onClick={this.handleOnChange.bind(null, fieldItem)}>
                                     <div className="field-search__popup-item-label">{fieldItem}</div>
                                 </button>

@@ -324,7 +324,7 @@ export class SelectFieldPopup extends React.Component<any, any> {
                     <div className="Select__popup__search">
                         { this.state.currentParent && (
                             <div className="search-handler">
-                                <i className="backlink" onClick={this.popParent}/>
+                                <i className="backlink" onClick={this.popParent} />
                                 <button
                                     type="button"
                                     className={classNames(

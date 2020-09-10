@@ -177,9 +177,11 @@ export function renderArea(
     }).filter(Boolean);
 
     if (components.length > 0) {
-        return <div {...elemProps}>
-            {components}
-        </div>;
+        return (
+            <div {...elemProps}>
+                {components}
+            </div>
+        );
     }
 
     return null;

@@ -67,15 +67,19 @@ export class BlockStyleButtonsComponent extends React.Component<any, any> {
 
         return (
             <span>
-                {blockStyleKeys.filter((type) => editorFormat.indexOf(type) > -1).map((type) =>
-                    <StyleButton
-                        key={type}
-                        active={blockStyles[type] === blockType}
-                        label={type}
-                        onToggle={this.onToggle}
-                        style={blockStyles[type]}
-                    />,
-                )}
+                {
+                    blockStyleKeys
+                        .filter((type) => editorFormat.indexOf(type) > -1)
+                        .map((type) => (
+                            <StyleButton
+                                key={type}
+                                active={blockStyles[type] === blockType}
+                                label={type}
+                                onToggle={this.onToggle}
+                                style={blockStyles[type]}
+                            />
+                        ))
+                }
             </span>
         );
     }

@@ -100,7 +100,8 @@ class NotifyComponent extends React.Component<any, IState> {
                                     <div className="pull-right">
                                         <button
                                             className="btn btn--hollow btn--small"
-                                            onClick={msg.options.button.onClick}>
+                                            onClick={msg.options.button.onClick}
+                                        >
                                             {msg.options.button.label}
                                         </button>
                                     </div>

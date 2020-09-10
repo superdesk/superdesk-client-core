@@ -27,7 +27,9 @@ export default class ObjectEditor extends React.Component<any, any> {
         const lines = this.state.value.split('\n').length;
 
         return (
-            <textarea rows={lines} cols={30}
+            <textarea
+                rows={lines}
+                cols={30}
                 value={this.state.value}
                 disabled={this.props.disabled}
                 onChange={this.onChange}

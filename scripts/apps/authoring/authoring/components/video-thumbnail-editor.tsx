@@ -85,10 +85,15 @@ export class VideoThumbnailEditor extends React.Component<IProps> {
             >
                 {showFigure && (
                     <figure className="item-association item-association--preview" style={{height: 'auto'}}>
-                        <a className="item-association__remove-item" onClick={(event) => {
-                            event.stopPropagation();
-                            this.removeThumbnail();
-                        }}><i className="icon-close-small" /></a>
+                        <a
+                            className="item-association__remove-item"
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                this.removeThumbnail();
+                            }}
+                        >
+                            <i className="icon-close-small" />
+                        </a>
                         <img src={thumbnail.href} title={gettext('Click to replace thumbnail')} />
                         <figcaption>{gettext('Thumbnail')}</figcaption>
                     </figure>

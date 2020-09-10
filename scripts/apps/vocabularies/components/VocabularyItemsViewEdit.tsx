@@ -99,7 +99,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
         switch (field.type) {
         case 'bool':
             return (
-                <input type="checkbox"
+                <input
+                    type="checkbox"
                     checked={!!value}
                     disabled={disabled}
                     onChange={() => this.props.update(item, field.key, !value)}
@@ -108,7 +109,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
 
         case 'color':
             return (
-                <input type="color"
+                <input
+                    type="color"
                     value={value}
                     disabled={disabled}
                     onChange={(event) => this.props.update(item, field.key, event.target.value)}
@@ -117,7 +119,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
 
         case 'short':
             return (
-                <input type="text"
+                <input
+                    type="text"
                     value={value}
                     disabled={disabled}
                     onChange={(event) => {
@@ -139,7 +142,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
         case 'integer':
             return (
                 <div className={className}>
-                    <input type="number"
+                    <input
+                        type="number"
                         value={value}
                         disabled={disabled}
                         className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
@@ -153,7 +157,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
         default:
             return (
                 <div className={className}>
-                    <input type="text"
+                    <input
+                        type="text"
                         className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
                         value={value}
                         disabled={disabled}
@@ -335,10 +340,14 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             >
                                 <i className="icon-search" />
                             </label>
-                            <input type="text" value={this.state.searchTerm}
-                                placeholder={gettext('Search')} onChange={(event) => {
+                            <input
+                                type="text"
+                                value={this.state.searchTerm}
+                                placeholder={gettext('Search')}
+                                onChange={(event) => {
                                     this.setState({searchTerm: event.target.value, page: 1});
-                                }} />
+                                }}
+                            />
                             <button className="search-close"><i className="icon-close-small" /></button>
                         </div>
                     </div>
@@ -348,8 +357,10 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             <Dropdown
                                 isOpen={this.state.sortDropdownOpen}
                             >
-                                <button className="dropdown__toggle"
-                                    onClick={() => this.setState({sortDropdownOpen: !this.state.sortDropdownOpen})}>
+                                <button
+                                    className="dropdown__toggle"
+                                    onClick={() => this.setState({sortDropdownOpen: !this.state.sortDropdownOpen})}
+                                >
                                     {this.state.sort.field}
                                     <span className="dropdown__caret" />
                                 </button>
@@ -359,12 +370,14 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                     {this.sortFields.map((field) => {
                                         return (
                                             <li key={field}>
-                                                <button onClick={() => {
-                                                    this.setState({
-                                                        sort: {...this.state.sort, field},
-                                                        sortDropdownOpen: false,
-                                                    });
-                                                }}>
+                                                <button
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            sort: {...this.state.sort, field},
+                                                            sortDropdownOpen: false,
+                                                        });
+                                                    }}
+                                                >
                                                     {field}
                                                 </button>
                                             </li>
@@ -375,18 +388,21 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                         )}
 
                         {this.state.sort == null ? null : (
-                            <button className="icn-btn direction" onClick={() => {
-                                const nextSortOption: ISortOption = {
-                                    ...this.state.sort,
-                                    direction: this.state.sort.direction === 'ascending'
-                                        ? 'descending'
-                                        : 'ascending',
-                                };
+                            <button
+                                className="icn-btn direction"
+                                onClick={() => {
+                                    const nextSortOption: ISortOption = {
+                                        ...this.state.sort,
+                                        direction: this.state.sort.direction === 'ascending'
+                                            ? 'descending'
+                                            : 'ascending',
+                                    };
 
-                                this.setState({
-                                    sort: nextSortOption,
-                                });
-                            }}>
+                                    this.setState({
+                                        sort: nextSortOption,
+                                    });
+                                }}
+                            >
                                 {this.state.sort.direction === 'ascending'
                                     ? <i className="icon-descending" />
                                     : <i className="icon-ascending" />
@@ -394,18 +410,21 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             </button>
                         )}
 
-                        <button className="btn btn--primary" onClick={() => {
+                        <button
+                            className="btn btn--primary"
+                            onClick={() => {
                             // clearing search before adding an item so it doesn't get filtered
-                            this.setState({searchTerm: ''}, () => {
-                                this.addItem();
+                                this.setState({searchTerm: ''}, () => {
+                                    this.addItem();
 
-                                // using a timeout to wait for this.state.items to update after adding an item
-                                // in case adding an item causes page count to increase
-                                setTimeout(() => {
-                                    this.setState({page: 1});
+                                    // using a timeout to wait for this.state.items to update after adding an item
+                                    // in case adding an item causes page count to increase
+                                    setTimeout(() => {
+                                        this.setState({page: 1});
+                                    });
                                 });
-                            });
-                        }}>
+                            }}
+                        >
                             <i className="icon-plus-sign" />
                             <span>{gettext('Add Item')}</span>
                         </button>
@@ -462,7 +481,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                             })}
                                             <td>
                                                 <span className="vocabularyStatus">
-                                                    <input type="checkbox"
+                                                    <input
+                                                        type="checkbox"
                                                         checked={!!item.is_active}
                                                         onChange={
                                                             () => this.updateItem(item, 'is_active', !item.is_active)
@@ -471,7 +491,8 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                                 </span>
                                             </td>
                                             <td>
-                                                <button className="icn-btn"
+                                                <button
+                                                    className="icn-btn"
                                                     onClick={() => {
                                                         this.removeItem(item);
                                                     }}

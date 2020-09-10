@@ -3,14 +3,16 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const Footer: React.StatelessComponent<any> = ({children, className, noBorder, noPadding}) => (
-    <div className={classNames(
-        'popup__menu-footer',
-        {
-            'popup__menu-footer--no-border': noBorder,
-            'popup__menu-footer--no-padding': noPadding,
-        },
-        className,
-    )}>
+    <div
+        className={classNames(
+            'popup__menu-footer',
+            {
+                'popup__menu-footer--no-border': noBorder,
+                'popup__menu-footer--no-padding': noPadding,
+            },
+            className,
+        )}
+    >
         {children}
     </div>
 );

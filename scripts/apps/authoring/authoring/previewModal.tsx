@@ -68,12 +68,15 @@ export class PreviewModal extends React.Component<any, any> {
                                     <ul>
                                         {
                                             subscriber.destinations.map((destination, j) => (
-                                                <li key={j} style={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'space-between',
-                                                    margin: '4px 0',
-                                                }}>
+                                                <li
+                                                    key={j}
+                                                    style={{
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent: 'space-between',
+                                                        margin: '4px 0',
+                                                    }}
+                                                >
                                                     <span>{destination.name}</span>
                                                     <button
                                                         className="btn btn--primary btn--small"

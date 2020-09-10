@@ -8,16 +8,18 @@ import classNames from 'classnames';
  * @description Column Component of a list item
  */
 export const Column: React.StatelessComponent<any> = ({children, grow, border, noPadding, hasCheck, checked}) => (
-    <div className={classNames(
-        'sd-list-item__column',
-        {
-            'sd-list-item__column--grow': grow,
-            'sd-list-item__column--no-border': !border,
-            'sd-list-item__column--no-padding': noPadding,
-            'sd-list-item__column--has-check': hasCheck,
-            'sd-list-item__column--checked': checked,
-        },
-    )}>
+    <div
+        className={classNames(
+            'sd-list-item__column',
+            {
+                'sd-list-item__column--grow': grow,
+                'sd-list-item__column--no-border': !border,
+                'sd-list-item__column--no-padding': noPadding,
+                'sd-list-item__column--has-check': hasCheck,
+                'sd-list-item__column--checked': checked,
+            },
+        )}
+    >
         {children}
     </div>
 );

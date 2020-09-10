@@ -121,12 +121,18 @@ export class HighlightsPopupPositioner extends React.Component<IProps> {
     }
     render() {
         return (
-            <div className={'editor-popup editor-popup--open '} ref={ (el) => {
-                this.highlightsPopupRootElement = el;
-            }}>
-                <div className="editor-popup__main editor-popup__main--floating" ref={(el) => {
-                    this.highlightsPopupMainFlexElement = el;
-                }}>
+            <div
+                className={'editor-popup editor-popup--open '}
+                ref={(el) => {
+                    this.highlightsPopupRootElement = el;
+                }}
+            >
+                <div
+                    className="editor-popup__main editor-popup__main--floating"
+                    ref={(el) => {
+                        this.highlightsPopupMainFlexElement = el;
+                    }}
+                >
                     {this.props.children}
                 </div>
             </div>

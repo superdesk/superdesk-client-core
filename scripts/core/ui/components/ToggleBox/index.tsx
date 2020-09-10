@@ -100,10 +100,10 @@ export class ToggleBox extends React.Component<any, any> {
                     onKeyDown={this.handleKeyDown}
                 >
                     <div className="toggle-box__chevron">
-                        <i className="icon-chevron-right-thin"/>
+                        <i className="icon-chevron-right-thin" />
                     </div>
                     <div className="toggle-box__label">{gettext(title)}</div>
-                    <div className="toggle-box__line"/>
+                    <div className="toggle-box__line" />
                 </a>
                 <div className="toggle-box__content-wraper">
                     {this.state.isOpen && !hideUsingCSS && (
@@ -113,10 +113,12 @@ export class ToggleBox extends React.Component<any, any> {
                     )}
 
                     {hideUsingCSS && (
-                        <div className={classNames(
-                            'toggle-box__content',
-                            {'toggle-box__content--hidden': !this.state.isOpen},
-                        )}>
+                        <div
+                            className={classNames(
+                                'toggle-box__content',
+                                {'toggle-box__content--hidden': !this.state.isOpen},
+                            )}
+                        >
                             {children}
                         </div>
                     )}
