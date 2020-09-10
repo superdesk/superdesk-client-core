@@ -59,6 +59,10 @@ export function waitForSuperdesk() {
     });
 }
 
+export function refresh() {
+    browser.refresh().then(() => waitForSuperdesk());
+}
+
 /**
  * Navigate to given location.
  *
