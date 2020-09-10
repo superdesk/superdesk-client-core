@@ -65,7 +65,7 @@ describe('publishing', () => {
         el(['authoring', 'send-publish-pane', 'publish']).click();
 
         assertToastMsg('error', 'SUBJECT is a required field');
-        assertToastMsg('error', 'BODY_HTML is a required field');
+        assertToastMsg('error', 'BODY HTML is a required field');
 
         expect(ECE.hasElementCount(
             els(['article-item'], null, output),
