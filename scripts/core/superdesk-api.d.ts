@@ -1212,6 +1212,7 @@ declare module 'superdesk-api' {
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
             sendToPersonal?: boolean;
+            publishFromPersonal?: boolean;
         };
         auth: {
             google: boolean
