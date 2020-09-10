@@ -21,7 +21,7 @@ const extension: IExtension = {
                     },
                 ],
             },
-        }
+        };
 
         return Promise.resolve(result);
     },

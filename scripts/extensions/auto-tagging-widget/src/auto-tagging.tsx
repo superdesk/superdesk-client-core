@@ -156,18 +156,20 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             onClick={() => this.setState({ newItem: {} })} />
                                     </div>
                                     {
-                                        dirty === true ? (<div className="widget__sliding-toolbar widget__sliding-toolbar--right">
-                                            <button className="btn btn--primary">{gettext('Save')}</button>
-                                            <button className="btn"
-                                                onClick={() => this.setState({
-                                                    data: {
-                                                        ...data,
-                                                        changes: data.original,
-                                                    },
-                                                })}>
-                                                {gettext('Cancel')}
-                                            </button>
-                                        </div>) : null
+                                        dirty === true ?
+                                            (<div className="widget__sliding-toolbar widget__sliding-toolbar--right">
+                                                <button className="btn btn--primary">{gettext('Save')}</button>
+                                                <button className="btn"
+                                                    onClick={() => this.setState({
+                                                        data: {
+                                                            ...data,
+                                                            changes: data.original,
+                                                        },
+                                                    })}>
+                                                    {gettext('Cancel')}
+                                                </button>
+                                            </div>)
+                                            : null
                                     }
                                 </React.Fragment>
                             )
