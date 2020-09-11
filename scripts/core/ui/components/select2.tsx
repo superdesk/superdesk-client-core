@@ -54,7 +54,7 @@ const menuStyleDefault: React.CSSProperties = {
     overflow: 'auto',
 };
 
-const menuStyle = {
+const menuStyle: React.CSSProperties = {
     ...menuStyleDefault,
     zIndex: 3, // without z-index, items that have opacity set, appear on top of the menu
 };
@@ -167,7 +167,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     items={Object.values(this.props.items)}
                     wrapperStyle={{width: '100%'}}
                     wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
-                    renderMenu={(items, value, style) => {
+                    renderMenu={(items, value, style: React.CSSProperties) => {
                         const hideOptions =
                             this.state.justInitialized
                             && typeof this.props.autoFocus === 'object'
