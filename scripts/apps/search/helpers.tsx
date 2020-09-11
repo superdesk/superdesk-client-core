@@ -133,9 +133,21 @@ export function positionPopup(target, zIndex = 1000) {
     menuHolderElem().style.zIndex = zIndex.toString();
 }
 
-export function renderArea(area: string, itemProps, props?: { className?: string }, customRender: any = {}) {
+interface IItemProps {
+    item: any;
+    listConfig?: any;
+    singleLine?: any;
+    narrow?: any;
+}
+
+export function renderArea(
+    area: 'firstLine' | 'secondLine' | 'singleLine' | 'priority',
+    itemProps: IItemProps,
+    props?: { className?: string },
+    customRender: any = {},
+) {
     // If singleline preference is set, don't show second line
-    if (itemProps.scope?.singleLine && area === 'secondLine') {
+    if (itemProps.singleLine && area === 'secondLine') {
         return;
     }
 
@@ -145,7 +157,7 @@ export function renderArea(area: string, itemProps, props?: { className?: string
     let specs = listConfig[area] || [];
 
     // If narrowView configuration is available and also singleline are active
-    if (itemProps.scope?.singleLine && itemProps.narrow && listConfig.narrowView) {
+    if (itemProps.singleLine && itemProps.narrow && listConfig.narrowView) {
         specs = listConfig.narrowView;
     }
 

@@ -6,7 +6,6 @@ import {IArticle} from 'superdesk-api';
 import {getViewImage} from 'core/helpers/item';
 
 interface IProps {
-    svc: any;
     item: IArticle;
     onMultiSelect: () => void;
 }
@@ -28,14 +27,16 @@ export const PhotoDeskPreview: React.StatelessComponent<IProps> = (props) => {
     return (
         <div className="sd-grid-item__thumb">
             {preview}
-            <SelectBox item={item} classes={`sd-grid-item__checkbox ${CHECKBOX_PARENT_CLASS}`}
-                onMultiSelect={props.onMultiSelect} svc={props.svc}/>
+            <SelectBox
+                item={item}
+                classes={`sd-grid-item__checkbox ${CHECKBOX_PARENT_CLASS}`}
+                onMultiSelect={props.onMultiSelect}
+            />
         </div>
     );
 };
 
 PhotoDeskPreview.propTypes = {
-    svc: PropTypes.object.isRequired,
     onMultiSelect: PropTypes.func,
     item: PropTypes.any,
 };

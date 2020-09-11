@@ -9,7 +9,9 @@ import {ISortOption, IVocabularyItem} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {Dropdown} from 'core/ui/components/Dropdown/Dropdown';
 import {Menu} from 'core/ui/components/Dropdown/Menu';
-import {Checkbox} from 'superdesk-ui-framework/react';
+import {dataApi} from 'core/helpers/CrudManager';
+import {ILanguage} from 'superdesk-interfaces/Language';
+import {ManageVocabularyItemTranslations} from '../ManageVocabularyItemTranslations';
 
 interface ISchemaField {
     key: string;
@@ -182,6 +184,7 @@ interface IState {
     sortDropdownOpen: boolean;
     sort: ISortOption | null;
     errorMessage: string | null;
+    languages: Array<ILanguage> | null;
 }
 
 export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
@@ -216,6 +219,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
             sortDropdownOpen: false,
             sort: initialSortOption,
             errorMessage: null,
+            languages: null,
         };
 
         this.updateItem = this.updateItem.bind(this);
@@ -243,8 +247,6 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                 }
             }),
         });
-
-        this.setDirtyOnce();
     }
 
     private removeItem(item: any) {
@@ -277,6 +279,15 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
     componentDidMount() {
         this.setValidItemsDebounced();
+
+        dataApi.query<ILanguage>(
+            'languages',
+            1,
+            {field: 'language', direction: 'ascending'},
+            {},
+        ).then((res) => {
+            this.setState({languages: res._items});
+        });
     }
 
     componentDidUpdate(prevProps: IProps, prevState: IState) {
@@ -290,11 +301,18 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         }
 
         if (this.state.items !== prevState.items) {
+            this.setDirtyOnce();
             this.setValidItemsDebounced();
         }
     }
 
     render() {
+        const {languages} = this.state;
+
+        if (languages == null) {
+            return null;
+        }
+
         const takeFrom = (this.state.page - 1) * pageSize;
         const takeTo = this.state.page * pageSize;
         const filteredItems = this.state.searchTerm.length < 1
@@ -428,40 +446,53 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                         <tbody>
                             {filteredItems.slice(takeFrom, takeTo).map((item) => {
                                 return (
-                                    <tr key={item.id}>
-                                        {this.props.schemaFields.map((field) => {
-                                            return (
-                                                <td key={field.key}>
-                                                    <InputField
-                                                        field={field}
-                                                        item={item}
-                                                        required={field.required}
-                                                        update={this.updateItem}
+                                    <React.Fragment key={item.id}>
+                                        <tr className="no-bottom-border add-border-top">
+                                            {this.props.schemaFields.map((field) => {
+                                                return (
+                                                    <td key={field.key}>
+                                                        <InputField
+                                                            field={field}
+                                                            item={item}
+                                                            required={field.required}
+                                                            update={this.updateItem}
+                                                        />
+                                                    </td>
+                                                );
+                                            })}
+                                            <td>
+                                                <span className="vocabularyStatus">
+                                                    <input type="checkbox"
+                                                        checked={!!item.is_active}
+                                                        onChange={
+                                                            () => this.updateItem(item, 'is_active', !item.is_active)
+                                                        }
                                                     />
-                                                </td>
-                                            );
-                                        })}
-                                        <td>
-                                            <span className="vocabularyStatus">
-                                                <input type="checkbox"
-                                                    checked={!!item.is_active}
-                                                    onChange={
-                                                        () => this.updateItem(item, 'is_active', !item.is_active)
-                                                    }
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button className="icn-btn"
+                                                    onClick={() => {
+                                                        this.removeItem(item);
+                                                    }}
+                                                    data-test-id="remove"
+                                                >
+                                                    <i className="icon-close-small" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr className="no-bottom-border">
+                                            <td>
+                                                <ManageVocabularyItemTranslations
+                                                    item={item}
+                                                    update={(field, value) => {
+                                                        this.updateItem(item, field, value);
+                                                    }}
+                                                    languages={languages}
                                                 />
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button className="icn-btn"
-                                                onClick={() => {
-                                                    this.removeItem(item);
-                                                }}
-                                                data-test-id="remove"
-                                            >
-                                                <i className="icon-close-small" />
-                                            </button>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
                                 );
                             })}
                         </tbody>

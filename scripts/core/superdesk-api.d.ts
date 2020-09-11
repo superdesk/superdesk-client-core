@@ -103,7 +103,7 @@ declare module 'superdesk-api' {
             authoring?: {
                 /**
                  * Updates can be intercepted and modified. Return value will be used to compute a patch.
-                 * 
+                 *
                  * Example: onUpdateBefore = (current, next) => ({...next, priority: next.headline.includes('important') ? 10 : 1})
                 */
                 onUpdateBefore?(current: IArticle, next: IArticle): Promise<IArticle>;
@@ -150,6 +150,7 @@ declare module 'superdesk-api' {
         parent: string;
     }
 
+    // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
     export enum ITEM_STATE {
         /**
          * Item created in user workspace.
@@ -415,6 +416,7 @@ declare module 'superdesk-api' {
         actioning?: {
             archive?: boolean;
             externalsource: boolean;
+            archiveContent?: boolean;
         };
         _autosave?: any;
         _locked?: boolean;
@@ -523,6 +525,11 @@ declare module 'superdesk-api' {
         name?: string;
         qcode?: string;
         is_active?: boolean;
+        translations?: {
+            name?: {
+                [key: string]: string;
+            }
+        };
     }
 
     export interface IVocabulary extends IBaseRestApiResponse {
@@ -1146,6 +1153,7 @@ declare module 'superdesk-api' {
         override_ednote_for_corrections: any;
         override_ednote_template: any;
         default_genre: any;
+        default_language: string;
         japanese_characters_per_minute: any;
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
@@ -1165,6 +1173,9 @@ declare module 'superdesk-api' {
 
         /** allow users who are not members of a desk to duplicate its content */
         workflow_allow_duplicate_non_members: boolean;
+
+        /** allow users to copy from desk to personal space */
+        workflow_allow_copy_to_personal: boolean;
 
         allow_updating_scheduled_items: boolean;
 
@@ -1270,6 +1281,12 @@ declare module 'superdesk-api' {
                 secondLine: Array<string>,
             };
         };
+        gridViewFields: Array<string>;
+        gridViewFooterFields: {
+            left: Array<string>;
+            right: Array<string>;
+        };
+        swimlaneViewFields: any;
         item_profile: {
             change_profile: any;
         };

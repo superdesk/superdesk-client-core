@@ -1,7 +1,7 @@
 <div class="sd-widget {{ widget._id }} gs_w" ng-class="{'remove-header': widget.removeHeader}">
     <div class="widget-line"></div>
     <div class="widget-settings" ng-if="widget.configurationTemplate && configurable">
-        <a class="single-btn icn-btn" sd-tooltip="Widget settings" flow="left" ng-click="openConfiguration()"><i class="icon-settings"></i></a>
+        <a class="single-btn icn-btn" sd-tooltip="{{'Widget settings' | translate}}" flow="left" ng-click="openConfiguration()"><i class="icon-settings"></i></a>
     </div>
     <div class="widget-header" ng-if="!widget.removeHeader">
         <div class="widget-title">{{ widget.configuration.label || widget.label | translate}}</div>
