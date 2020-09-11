@@ -203,12 +203,10 @@ export function startApp(
         });
 }
 
-import autoTaggingExtension from 'extensions/auto-tagging-widget/dist/src/extension';
-
 // the application should be started by importing and calling `startApp` from a customer repository
 // this is a fallback for e2e tests.
 setTimeout(() => {
     if (started !== true) {
-        startApp([autoTaggingExtension], {});
+        startApp([], {});
     }
 }, 500);
