@@ -54,6 +54,10 @@ export function waitForSuperdesk() {
     '"window.superdeskIsReady" is not here');
 }
 
+export function refresh() {
+    browser.refresh().then(() => waitForSuperdesk());
+}
+
 /**
  * Navigate to given location.
  *
