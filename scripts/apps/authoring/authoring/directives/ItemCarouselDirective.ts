@@ -2,7 +2,6 @@ import 'owl.carousel';
 import _ from 'lodash';
 import * as ctrl from '../controllers';
 import {waitForMediaToLoad} from 'core/helpers/waitForMediaToBeReady';
-import {getSuperdeskType} from 'core/utils';
 import {gettext, gettextPlural} from 'core/utils';
 import {addInternalEventListener} from 'core/internal-events';
 import {isAllowedMediaType, getAllowedTypeNames} from './ItemAssociationDirective';
@@ -15,7 +14,7 @@ interface IScope extends ng.IScope {
     allowPicture: any;
     allowVideo: any;
     carouselItems: any;
-    currentIndex: number;
+    currentIndex: number; // starts with zero
     editable: any;
     field: any;
     handleInputChange: (text: string, onChangeData: any) => void;
@@ -213,7 +212,6 @@ export function ItemCarouselDirective(notify) {
                     if (!scope.editable) {
                         return;
                     }
-                    const type = getSuperdeskType(event);
 
                     event.preventDefault();
                     event.stopPropagation();
@@ -222,9 +220,15 @@ export function ItemCarouselDirective(notify) {
                         const uploadsCount = Object.values(event.originalEvent.dataTransfer.files || []).length;
 
                         if (canUploadItems(uploadsCount)) {
-                            // add a new item at the last position in the carousel
-                            scope.currentIndex = scope.carouselItems != null ? scope.carouselItems.length : 0;
-                            controller.initializeUploadOnDrop(scope, event);
+                            controller.initializeUploadOnDrop(scope, event).then((res: boolean) => {
+                                if (res === true) {
+                                    // add a new item at the last position in the carousel
+
+                                    scope.currentIndex = scope.carouselItems != null
+                                        ? scope.carouselItems.length - 1
+                                        : 0;
+                                }
+                            });
                         }
                     } else {
                         const allowedTypeNames = getAllowedTypeNames(scope);
@@ -255,7 +259,7 @@ export function ItemCarouselDirective(notify) {
              * @param {Object} item Item object
              */
             scope.remove = function(item) {
-                controller.updateItemAssociation(scope, null, item.fieldId).then(reorderMediaItems);
+                controller.updateItemAssociation(scope, null, item.fieldId).then(() => reorderMediaItems());
                 // if we deleted the last item from the carousel then reduce the currentIndex by one so that
                 // gallery does not disappear
                 if (scope.currentIndex && scope.currentIndex === scope.carouselItems.length - 1) {
@@ -327,10 +331,6 @@ export function ItemCarouselDirective(notify) {
                         updated = true;
                     },
                 });
-
-                if (scope.currentIndex) {
-                    carousel.trigger('to.owl.carousel', [scope.currentIndex]);
-                }
             }
 
             const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
@@ -338,6 +338,12 @@ export function ItemCarouselDirective(notify) {
 
                 if (scope.field._id === field) {
                     controller.addAssociation(scope, image);
+                }
+            });
+
+            scope.$watch('currentIndex', () => {
+                if (scope.currentIndex != null) {
+                    carousel?.trigger('to.owl.carousel', [scope.currentIndex]);
                 }
             });
 
