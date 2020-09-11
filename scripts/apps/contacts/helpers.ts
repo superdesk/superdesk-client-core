@@ -1,6 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
-import {DEFAULT_LIST_CONFIG, LOOKUP_FIELDS, FB_URL, IG_URL} from './constants';
+import {DEFAULT_LIST_CONFIG, FB_URL, IG_URL, getLookupFields} from './constants';
 import * as fields from './components/fields';
 import {IContact, IContactType} from './Contacts';
 
@@ -84,18 +84,28 @@ function contactHasEmailAddress(contact: IContact): boolean {
 }
 
 export function validateMinRequiredField(contact: IContact): boolean {
-    return _.some(LOOKUP_FIELDS, (field) => {
-        switch (field) {
+    return _.some(getLookupFields(), (field) => {
+        switch (field.name) {
         case 'contact_email':
             return contactHasEmailAddress(contact);
         case 'contact_phone':
         case 'mobile':
-            return _.get(contact, field, []).length > 0 &&
-                !_.some(_.map(contact[field], 'number'), (v) => _.isEmpty(v));
+            return _.get(contact, field.name, []).length > 0 &&
+                !_.some(_.map(contact[field.name], 'number'), (v) => _.isEmpty(v));
         default:
-            return !_.isEmpty(contact[field]);
+            return !_.isEmpty(contact[field.name]);
         }
     });
+}
+
+export function getMinRequiredFieldLabels() {
+    return getLookupFields().map((f) => f.label).join(', ');
+}
+
+export function getMinRequiredFieldLabel(field) {
+    const thisField = getLookupFields().find((f) => (f.name === field));
+
+    return _.get(thisField, 'label', '');
 }
 
 export function validateAssignableType(contact: IContact, contactTypes: Array<IContactType>): boolean {

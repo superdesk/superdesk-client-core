@@ -131,7 +131,6 @@ export function AuthoringDirective(
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.fullPreview = false;
-            $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
@@ -1124,7 +1123,7 @@ export function AuthoringDirective(
                     var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
                     var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
 
-                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length < maxItems) {
+                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length <= maxItems) {
                         addMediaFieldVersion(fieldId, $scope.getNewMediaFieldId(fieldId));
                     }
                     _.forEach(mediaFields[fieldId], (version) => {

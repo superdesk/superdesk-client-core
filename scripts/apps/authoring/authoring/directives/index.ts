@@ -14,7 +14,6 @@ export {AuthoringEmbeddedDirective} from './AuthoringEmbeddedDirective';
 export {AuthoringHeaderDirective} from './AuthoringHeaderDirective';
 export {ItemAssociationDirective} from './ItemAssociationDirective';
 export {ItemCarouselDirective} from './ItemCarouselDirective';
-export {FullPreviewDirective} from './FullPreviewDirective';
 export {RemoveTagsDirective} from './RemoveTagsDirective';
 export {TansaScopeSyncDirective} from './TansaScopeSyncDirective';
 export {ItemActionsByIntentDirective} from './ItemActionsByIntentDirective';

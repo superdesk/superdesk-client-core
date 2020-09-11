@@ -20,6 +20,7 @@ interface IScope {
     save: () => void;
     remove: (product: any) => void;
     test: () => void;
+    handleContentFilterChange: () => void;
     articleId: string;
     rawResults: string;
     filteredProducts: Array<any>;
@@ -136,7 +137,7 @@ export function ProductsConfigController($scope: IScope, notify, api, products, 
         $scope.modalTab = 'details';
         $scope.product = product;
         $scope.product.edit = _.create(product);
-        $scope.product.edit.content_filter = _.create(product.content_filter || {});
+        $scope.product.edit.content_filter = Object.assign({}, product.content_filter || {});
         $scope.modalActive = true;
     };
 
@@ -208,6 +209,15 @@ export function ProductsConfigController($scope: IScope, notify, api, products, 
             return remove;
         })
             .then($scope.cancel);
+    };
+
+    $scope.handleContentFilterChange = function() {
+        if ($scope.product.edit.content_filter.filter_id === '') {
+            $scope.product.edit.content_filter = null;
+        } else if ($scope.product.edit.content_filter.filter_type == null) {
+            // initialize default value
+            $scope.product.edit.content_filter.filter_type = 'permitting';
+        }
     };
 
     /**

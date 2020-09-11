@@ -1,4 +1,4 @@
-import _, {get} from 'lodash';
+import _ from 'lodash';
 import React from 'react';
 import classNames from 'classnames';
 import {Item} from './index';
@@ -12,8 +12,12 @@ import {CHECKBOX_PARENT_CLASS} from './constants';
 import ng from 'core/services/ng';
 
 interface IProps {
-    scopeApply: IScopeApply;
-    scopeApplyAsync: IScopeApply;
+    itemsList: Array<string>;
+    itemsById: any;
+    narrow: boolean;
+    view: 'compact' | 'mgrid' | 'photogrid';
+    selected: string;
+    swimlane: any;
     profilesById: any;
     highlightsById: any;
     markedDesksById: any;
@@ -32,19 +36,17 @@ interface IProps {
     groupId: any;
     viewColumn: any;
     loading: any;
+    scopeApply: IScopeApply;
+    scopeApplyAsync: IScopeApply;
     edit(item: IArticle): void;
     preview(item: IArticle): void;
     hideActionsForMonitoringItems(): void;
+    multiSelect(items: Array<IArticle>, selected: boolean): void;
+    setSelectedItem(itemId: string): void;
 }
 
 interface IState {
-    narrow: boolean;
-    view: 'compact' | 'mgrid' | 'photogrid';
-    itemsList: Array<string>;
-    itemsById: any;
-    selected: string;
     bindedShortcuts: Array<any>;
-    swimlane: any;
     actioning: {};
 }
 
@@ -52,7 +54,6 @@ interface IState {
  * Item list component
  */
 export class ItemList extends React.Component<IProps, IState> {
-    closeActionsMenu: any;
     updateTimeout: any;
     selectedCom: any;
     angularservices: {
@@ -71,37 +72,27 @@ export class ItemList extends React.Component<IProps, IState> {
         workflowService: any;
     };
 
+    focusableElement: HTMLUListElement | null;
+
     constructor(props) {
         super(props);
 
         this.state = {
-            itemsList: [],
-            itemsById: {},
-            selected: null,
-            view: 'compact',
-            narrow: false,
             bindedShortcuts: [],
-            swimlane: null,
             actioning: {},
         };
 
-        this.multiSelect = this.multiSelect.bind(this);
         this.select = this.select.bind(this);
         this.selectItem = this.selectItem.bind(this);
         this.selectMultipleItems = this.selectMultipleItems.bind(this);
         this.dbClick = this.dbClick.bind(this);
         this.edit = this.edit.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
-        this.updateAllItems = this.updateAllItems.bind(this);
-        this.findItemByPrefix = this.findItemByPrefix.bind(this);
         this.setSelectedItem = this.setSelectedItem.bind(this);
         this.getSelectedItem = this.getSelectedItem.bind(this);
-        this.updateItem = this.updateItem.bind(this);
         this.handleKey = this.handleKey.bind(this);
-        this.closeActionsMenu = closeActionsMenu.bind(this);
         this.setSelectedComponent = this.setSelectedComponent.bind(this);
         this.modifiedUserName = this.modifiedUserName.bind(this);
-        this.setNarrowView = this.setNarrowView.bind(this);
         this.multiSelectCurrentItem = this.multiSelectCurrentItem.bind(this);
         this.bindActionKeyShortcuts = this.bindActionKeyShortcuts.bind(this);
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
@@ -123,40 +114,13 @@ export class ItemList extends React.Component<IProps, IState> {
         };
     }
 
-    multiSelect(items: Array<IArticle>, selected: boolean) {
-        const {search, multi} = this.angularservices;
-        let {selected: selectedId} = this.state;
-
-        const itemsById = angular.extend({}, this.state.itemsById);
-
-        items.forEach((item, i) => {
-            const itemId = search.generateTrackByIdentifier(item);
-
-            if (selected && i === items.length - 1) {
-                // Mark last item as selected
-                selectedId = itemId;
-            }
-            itemsById[itemId] = angular.extend({}, item, {selected: selected});
-            this.props.scopeApplyAsync(() => {
-                multi.toggle(itemsById[itemId]);
-            });
-        });
-
-        this.setState({itemsById, selected: selectedId});
-    }
-
     // Method to check the selectBox of the selected item
     multiSelectCurrentItem() {
         const selectedItem = this.getSelectedItem();
 
         if (selectedItem) {
-            this.multiSelect([selectedItem], !selectedItem.selected);
+            this.props.multiSelect([selectedItem], !selectedItem.selected);
         }
-    }
-
-    // Function to make narrowView active/inactive
-    setNarrowView(setNarrow) {
-        this.setState({narrow: setNarrow});
     }
 
     select(item, event) {
@@ -246,7 +210,7 @@ export class ItemList extends React.Component<IProps, IState> {
         if (isCheckAllowed(item)) {
             const selected = !item.selected;
 
-            this.multiSelect([item], selected);
+            this.props.multiSelect([item], selected);
         }
     }
 
@@ -254,25 +218,25 @@ export class ItemList extends React.Component<IProps, IState> {
         const {search} = this.angularservices;
         const itemId = search.generateTrackByIdentifier(lastItem);
         let positionStart = 0;
-        const positionEnd = _.indexOf(this.state.itemsList, itemId);
+        const positionEnd = _.indexOf(this.props.itemsList, itemId);
         const selectedItems = [];
 
-        if (this.state.selected) {
-            positionStart = _.indexOf(this.state.itemsList, this.state.selected);
+        if (this.props.selected) {
+            positionStart = _.indexOf(this.props.itemsList, this.props.selected);
         }
 
         const start = Math.min(positionStart, positionEnd);
         const end = Math.max(positionStart, positionEnd);
 
         for (let i = start; i <= end; i++) {
-            const item = this.state.itemsById[this.state.itemsList[i]];
+            const item = this.props.itemsById[this.props.itemsList[i]];
 
             if (isCheckAllowed(item)) {
                 selectedItems.push(item);
             }
         }
 
-        this.multiSelect(selectedItems, true);
+        this.props.multiSelect(selectedItems, true);
     }
 
     setActioning(item: IArticle, isActioning: boolean) {
@@ -356,35 +320,11 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     deselectAll() {
-        this.setState({selected: null});
+        this.props.setSelectedItem(null);
         this.unbindActionKeyShortcuts();
     }
 
-    updateAllItems(itemId, changes) {
-        const itemsById = angular.extend({}, this.state.itemsById);
-
-        _.forOwn(itemsById, (value, key) => {
-            if (_.startsWith(key, itemId)) {
-                itemsById[key] = angular.extend({}, value, changes);
-            }
-        });
-
-        this.setState({itemsById: itemsById});
-    }
-
-    findItemByPrefix(prefix) {
-        let item;
-
-        _.forOwn(this.state.itemsById, (val, key) => {
-            if (_.startsWith(key, prefix)) {
-                item = val;
-            }
-        });
-
-        return item;
-    }
-
-    setSelectedItem(item) {
+    setSelectedItem(item: IArticle) {
         const {monitoringState, $rootScope, search} = this.angularservices;
 
         if (monitoringState.state.activeGroup !== this.props.groupId) {
@@ -393,24 +333,13 @@ export class ItemList extends React.Component<IProps, IState> {
             monitoringState.setState({activeGroup: this.props.groupId});
         }
 
-        this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
+        this.props.setSelectedItem(item ? search.generateTrackByIdentifier(item) : null);
     }
 
     getSelectedItem() {
-        const selected = this.state.selected;
+        const selected = this.props.selected;
 
-        return this.state.itemsById[selected];
-    }
-
-    updateItem(itemId, changes) {
-        const item = this.state.itemsById[itemId] || null;
-
-        if (item) {
-            const itemsById = angular.extend({}, this.state.itemsById);
-
-            itemsById[itemId] = angular.extend({}, item, changes);
-            this.setState({itemsById: itemsById});
-        }
+        return this.props.itemsById[selected];
     }
 
     handleKey(event) {
@@ -427,18 +356,20 @@ export class ItemList extends React.Component<IProps, IState> {
 
         let diff;
 
-        const moveActiveGroup = () => {
-            event.preventDefault();
-            event.stopPropagation();
+        const moveActiveGroup = (_event) => {
+            _event.preventDefault();
+            _event.stopPropagation();
             this.deselectAll(); // deselect active item
 
+            const keyCode = _event.keyCode;
+
             this.props.scopeApplyAsync(() => {
-                monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
+                monitoringState.moveActiveGroup(keyCode === Keys.pageup ? -1 : 1);
             });
         };
 
         const openItem = () => {
-            if (this.state.selected) {
+            if (this.props.selected) {
                 this.edit(this.getSelectedItem());
             }
 
@@ -455,38 +386,38 @@ export class ItemList extends React.Component<IProps, IState> {
         case Keys.right:
         case Keys.down:
             diff = 1;
-            this.closeActionsMenu();
+            closeActionsMenu();
             break;
 
         case Keys.left:
         case Keys.up:
             diff = -1;
-            this.closeActionsMenu();
+            closeActionsMenu();
             break;
 
         case Keys.enter:
             openItem();
-            this.closeActionsMenu();
+            closeActionsMenu();
             break;
 
         case Keys.pageup:
         case Keys.pagedown:
-            moveActiveGroup();
-            this.closeActionsMenu();
+            moveActiveGroup(event);
+            closeActionsMenu();
             break;
 
         case KEY_CODES.X:
             performMultiSelect();
-            this.closeActionsMenu();
+            closeActionsMenu();
             break;
         }
 
         const highlightSelected = (_event) => {
-            for (let i = 0; i < this.state.itemsList.length; i++) {
-                if (this.state.itemsList[i] === this.state.selected) {
-                    const next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
+            for (let i = 0; i < this.props.itemsList.length; i++) {
+                if (this.props.itemsList[i] === this.props.selected) {
+                    const next = Math.min(this.props.itemsList.length - 1, Math.max(0, i + diff));
 
-                    this.select(this.state.itemsById[this.state.itemsList[next]], _event);
+                    this.select(this.props.itemsById[this.props.itemsList[next]], _event);
                     return;
                 }
             }
@@ -496,10 +427,10 @@ export class ItemList extends React.Component<IProps, IState> {
             event.preventDefault();
             event.stopPropagation();
 
-            if (this.state.selected) {
+            if (this.props.selected) {
                 highlightSelected(_event);
             } else {
-                this.select(this.state.itemsById[this.state.itemsList[0]], _event);
+                this.select(this.props.itemsById[this.props.itemsList[0]], _event);
             }
         };
 
@@ -532,7 +463,7 @@ export class ItemList extends React.Component<IProps, IState> {
 
     componentWillUnmount() {
         this.unbindActionKeyShortcuts();
-        this.closeActionsMenu();
+        closeActionsMenu();
     }
 
     setSelectedComponent(com) {
@@ -544,31 +475,42 @@ export class ItemList extends React.Component<IProps, IState> {
             this.props.usersById[versionCreator].display_name : null;
     }
 
+    focus() {
+        this.focusableElement?.focus();
+    }
+
     render() {
         const {storage} = this.angularservices;
 
-        const isEmpty = !this.state.itemsList.length;
+        const isEmpty = !this.props.itemsList.length;
         const displayEmptyList = isEmpty && !this.props.loading;
 
         return (
             <ul
                 className={classNames(
-                    this.state.view === 'photogrid' ?
+                    this.props.view === 'photogrid' ?
                         'sd-grid-list sd-grid-list--no-margin' :
-                        (this.state.view || 'compact') + '-view list-view',
+                        (this.props.view || 'compact') + '-view list-view',
                     {'list-without-items': displayEmptyList},
                 )}
-                onClick={this.closeActionsMenu}
+                onClick={closeActionsMenu}
+                onKeyDown={(event) => {
+                    this.handleKey(event);
+                }}
+                tabIndex={0}
+                ref={(el) => {
+                    this.focusableElement = el;
+                }}
             >
                 {
                     displayEmptyList
                         ? (
-                            <li onClick={this.closeActionsMenu}>
+                            <li onClick={closeActionsMenu}>
                                 {gettext('There are currently no items')}
                             </li>
                         )
-                        : this.state.itemsList.map((itemId) => {
-                            const item = this.state.itemsById[itemId];
+                        : this.props.itemsList.map((itemId) => {
+                            const item = this.props.itemsById[itemId];
                             const task = item.task || {desk: null};
 
                             return (
@@ -576,20 +518,20 @@ export class ItemList extends React.Component<IProps, IState> {
                                     key={itemId}
                                     isNested={false}
                                     item={item}
-                                    view={this.state.view}
-                                    swimlane={this.state.swimlane || storage.getItem('displaySwimlane')}
-                                    flags={{selected: this.state.selected === itemId}}
+                                    view={this.props.view}
+                                    swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
+                                    flags={{selected: this.props.selected === itemId}}
                                     onEdit={this.edit}
                                     onDbClick={this.dbClick}
                                     onSelect={this.select}
-                                    onMultiSelect={this.multiSelect}
+                                    onMultiSelect={this.props.multiSelect}
                                     ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
                                     desk={this.props.desksById[task.desk] || null}
                                     highlightsById={this.props.highlightsById}
                                     markedDesksById={this.props.markedDesksById}
                                     profilesById={this.props.profilesById}
                                     versioncreator={this.modifiedUserName(item.version_creator)}
-                                    narrow={this.state.narrow}
+                                    narrow={this.props.narrow}
                                     hideActions={
                                         this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
                                     }
