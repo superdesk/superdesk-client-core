@@ -10,7 +10,7 @@ import {IApplicationState} from '../../store';
 
 // Redux Actions & Selectors
 import {confirmBeforeDeletingSet, editSet, previewSet} from '../../store/sets/actions';
-import {getSetsGroupedByState, getSelectedSetId} from '../../store/sets/selectors';
+import {getSetsGroupedByState, getSelectedSetId, getAssetsCountForSets} from '../../store/sets/selectors';
 import {getStorageDestinationsById} from '../../store/storageDestinations/selectors';
 
 // UI
@@ -25,6 +25,7 @@ interface IProps {
 
     currentSetId?: string;
     sets: ISetArrays;
+    counts: Dictionary<string, number>;
 }
 
 type ISetArrays = {
@@ -40,6 +41,7 @@ export function getSetListPanel(superdesk: ISuperdesk) {
         sets: getSetsGroupedByState(state),
         storageDestinations: getStorageDestinationsById(state),
         currentSetId: getSelectedSetId(state),
+        counts: getAssetsCountForSets(state),
     });
 
     const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -60,6 +62,7 @@ export function getSetListPanel(superdesk: ISuperdesk) {
                         title={gettext('Draft Sets')}
                         noItemTitle={gettext('No draft sets configured')}
                         sets={this.props.sets.draft ?? []}
+                        counts={this.props.counts}
                         storageDestinations={this.props.storageDestinations}
                         previewSet={this.props.previewSet}
                         deleteSet={this.props.deleteSet}
@@ -71,6 +74,7 @@ export function getSetListPanel(superdesk: ISuperdesk) {
                         noItemTitle={gettext('No usable sets configured')}
                         marginTop={true}
                         sets={this.props.sets.usable ?? []}
+                        counts={this.props.counts}
                         storageDestinations={this.props.storageDestinations}
                         previewSet={this.props.previewSet}
                         editSet={this.props.editSet}
@@ -81,6 +85,7 @@ export function getSetListPanel(superdesk: ISuperdesk) {
                         noItemTitle={gettext('No disabled sets configured')}
                         marginTop={true}
                         sets={this.props.sets.disabled ?? []}
+                        counts={this.props.counts}
                         storageDestinations={this.props.storageDestinations}
                         previewSet={this.props.previewSet}
                         editSet={this.props.editSet}

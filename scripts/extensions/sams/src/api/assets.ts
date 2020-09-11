@@ -17,7 +17,7 @@ export function uploadAsset(
     );
 }
 
-export function getAssetsCount(superdesk: ISuperdesk, set_ids: string[]): Promise<object> {
+export function getAssetsCount(superdesk: ISuperdesk, set_ids: string[]): Promise<Dictionary<string, number>> {
     const {gettext} = superdesk.localization;
     const {notify} = superdesk.ui;
 
@@ -27,7 +27,7 @@ export function getAssetsCount(superdesk: ISuperdesk, set_ids: string[]): Promis
         {field: 'name', direction: 'ascending'},
         {}
     )
-        .then((response: object) => {
+        .then((response: any) => {
             return response;
         })
         .catch((error: any) => {

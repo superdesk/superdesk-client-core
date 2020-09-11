@@ -10,6 +10,7 @@ import {ListItem, ListItemActionMenu, ListItemBorder, ListItemColumn, ListItemRo
 
 interface IProps {
     set: ISetItem;
+    count: number;
     storageDestination?: IStorageDestinationItem;
     selected?: boolean;
     onClick(set: ISetItem): void;
@@ -48,7 +49,7 @@ export class SetListItem extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {set, storageDestination} = this.props;
+        const {set, count, storageDestination} = this.props;
         const storageDestinationText = storageDestination == null ?
             '' :
             `${storageDestination._id} / ${storageDestination.provider}`;
@@ -58,7 +59,7 @@ export class SetListItem extends React.PureComponent<IProps> {
                 <ListItemBorder />
                 {set.state === SET_STATE.DRAFT ? null : (
                     <ListItemColumn>
-                        <Badge text = {set.count?.toString()} type="success" />
+                        <Badge  text = {count.toString()} type="success" />
                     </ListItemColumn>
                 )}
                 <ListItemColumn grow={true} noBorder={true}>

@@ -32,7 +32,7 @@ export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
             upload(data: FormData, onProgress: (event: ProgressEvent) => void): Promise<any> {
                 return uploadAsset(superdesk, data, onProgress);
             },
-            getCount(set_ids: string[]): Promise<object> {
+            getCount(set_ids: string[]): Promise<Dictionary<string, number>> {
                 return getAssetsCount(superdesk, set_ids);
             }
         },
