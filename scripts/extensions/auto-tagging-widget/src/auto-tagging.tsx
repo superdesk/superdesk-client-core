@@ -188,7 +188,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     <div className="spinner-big" />
                                 );
                             } else if (data === 'not-initialized') {
-                                return;
+                                return null;
                             } else {
                                 const analysis = data.changes.analysis;
                                 const groups = Object.values(ITagGroup)
@@ -239,7 +239,14 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         </div>
 
                                         <div className="widget-content__footer">
-                                            <Button type="primary" text="Refresh" expand={true} onClick={() => {}} />
+                                            <Button
+                                                type="primary"
+                                                text={gettext('Refresh')}
+                                                expand={true}
+                                                onClick={() => {
+                                                    // not implemented
+                                                }}
+                                            />
                                         </div>
                                     </React.Fragment>
                                 );
