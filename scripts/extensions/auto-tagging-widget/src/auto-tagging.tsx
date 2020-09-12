@@ -171,14 +171,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     <Switch value={false} onChange={() => this.runAnalysis()} />
                                     <label>{gettext('Run automatically')}</label>
                                 </ButtonGroup>
-                                <ButtonGroup align="right">
-                                    <Button
-                                        type="primary"
-                                        icon="plus-large"
-                                        size="small"
-                                        shape="round"
-                                        onClick={() => this.setState({newItem: {}})} />
-                                </ButtonGroup>
+                                {
+                                    data === 'loading' || data === 'not-initialized' ? null : (
+                                        <ButtonGroup align="right">
+                                            <Button
+                                                type="primary"
+                                                icon="plus-large"
+                                                size="small"
+                                                shape="round"
+                                                onClick={() => this.setState({newItem: {}})} />
+                                        </ButtonGroup>
+                                    )
+                                }
                             </div>
                         }
 
@@ -237,23 +241,42 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 ))
                                             }
                                         </div>
-
-                                        <div className="widget-content__footer">
-                                            <Button
-                                                type="primary"
-                                                text={gettext('Refresh')}
-                                                expand={true}
-                                                onClick={() => {
-                                                    // not implemented
-                                                }}
-                                            />
-                                        </div>
                                     </React.Fragment>
                                 );
                             }
                         })()}
+
+                        <div className="widget-content__footer">
+                            {(() => {
+                                if (data === 'loading') {
+                                    return null;
+                                } else if (data === 'not-initialized') {
+                                    return (
+                                        <Button
+                                            type="primary"
+                                            text={gettext('Run')}
+                                            expand={true}
+                                            onClick={() => {
+                                                this.runAnalysis();
+                                            }}
+                                        />
+                                    );
+                                } else {
+                                    return (
+                                        <Button
+                                            type="primary"
+                                            text={gettext('Refresh')}
+                                            expand={true}
+                                            onClick={() => {
+                                                // not implemented
+                                            }}
+                                        />
+                                    );
+                                }
+                            })()}
+                        </div>
                     </div>
-                </React.Fragment >
+                </React.Fragment>
             );
         }
     };
