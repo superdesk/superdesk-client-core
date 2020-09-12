@@ -109,6 +109,7 @@ export function getSuperdeskApiImplementation(
     authoringWorkspace: AuthoringWorkspaceService,
     config,
     metadata,
+    preferencesService,
 ): ISuperdesk {
     const isLocked = (article: IArticle) => article['lock_session'] != null;
     const isLockedInCurrentSession = (article: IArticle) => lock.isLockedInCurrentSession(article);
@@ -272,6 +273,26 @@ export function getSuperdeskApiImplementation(
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
             hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
+        },
+        preferences: {
+            get: (key) => {
+                return preferencesService.get().then((res: Dictionary<string, any>) => {
+                    return res?.extensions?.[requestingExtensionId]?.[key] ?? null;
+                });
+            },
+            set: (key, value) => {
+                return preferencesService.get().then((res: Dictionary<string, any>) => {
+                    const extensionsPreferences = res.extensions ?? {};
+
+                    if (extensionsPreferences[requestingExtensionId] == null) {
+                        extensionsPreferences[requestingExtensionId] = {};
+                    }
+
+                    extensionsPreferences[requestingExtensionId][key] = value;
+
+                    return preferencesService.update({extensions: extensionsPreferences});
+                });
+            },
         },
         session: {
             getToken: () => session.token,

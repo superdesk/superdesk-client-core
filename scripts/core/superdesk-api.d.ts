@@ -1111,6 +1111,13 @@ declare module 'superdesk-api' {
             getOwnPrivileges(): Promise<any>;
             hasPrivilege(privilege: string): boolean;
         };
+        preferences: {
+            get(key: string): Promise<any | null>;
+            set(
+                key: string,
+                value: any,
+            ): Promise<void>;
+        };
         session: {
             getToken(): string;
             getCurrentUser(): Promise<IUser>;
