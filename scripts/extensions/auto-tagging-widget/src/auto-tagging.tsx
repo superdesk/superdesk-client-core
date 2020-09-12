@@ -38,9 +38,12 @@ interface IProps {
 }
 
 interface IState {
+    runAutomaticallyPreference: boolean | 'loading';
     data: 'not-initialized' | 'loading' | { original: IAutoTaggingResponse; changes: IAutoTaggingResponse };
     newItem: Partial<INewItem> | null;
 }
+
+const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
 
 export function getGroupLabel(group: ITagGroup, superdesk: ISuperdesk): string {
     const {gettext} = superdesk.localization;
@@ -58,7 +61,7 @@ export function getGroupLabel(group: ITagGroup, superdesk: ISuperdesk): string {
 }
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
-    const {httpRequestJsonLocal} = superdesk;
+    const {httpRequestJsonLocal, preferences} = superdesk;
     const {gettext} = superdesk.localization;
     const {memoize, generatePatch} = superdesk.utilities;
     const {notNullOrUndefined} = superdesk.helpers;
@@ -75,6 +78,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.state = {
                 data: 'not-initialized',
                 newItem: null,
+                runAutomaticallyPreference: 'loading',
             };
 
             this.runAnalysis = this.runAnalysis.bind(this);
@@ -134,7 +138,24 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.setState({newItem: null});
         }
+        componentDidMount() {
+            preferences.get(RUN_AUTOMATICALLY_PREFERENCE).then((res: boolean | null) => {
+                const value = res ?? false;
+
+                this.setState({runAutomaticallyPreference: value});
+
+                if (value === true) {
+                    this.runAnalysis();
+                }
+            });
+        }
         render() {
+            const {runAutomaticallyPreference} = this.state;
+
+            if (runAutomaticallyPreference === 'loading') {
+                return null;
+            }
+
             const {data} = this.state;
             const dirty = data === 'loading' || data === 'not-initialized' ? false :
                 this.isDirty(data.original, data.changes);
@@ -168,7 +189,16 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         {
                             <div className="form__row form__row--flex">
                                 <ButtonGroup align="left">
-                                    <Switch value={false} onChange={() => this.runAnalysis()} />
+                                    <Switch
+                                        value={runAutomaticallyPreference}
+                                        onChange={() => {
+                                            const newValue = !runAutomaticallyPreference;
+
+                                            this.setState({runAutomaticallyPreference: newValue});
+
+                                            superdesk.preferences.set(RUN_AUTOMATICALLY_PREFERENCE, newValue);
+                                        }}
+                                    />
                                     <label>{gettext('Run automatically')}</label>
                                 </ButtonGroup>
                                 {
