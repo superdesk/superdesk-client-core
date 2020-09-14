@@ -13,7 +13,9 @@ describe('editor3.components.media-block', () => {
                 changeCaption={() => ({})}
                 setLocked={() => ({})}
                 block={block}
-                contentState={contentState} />);
+                contentState={contentState}
+            />,
+        );
 
         expect(wrapper.find('img').props().src).toBe('image_href');
         expect(wrapper.find('img').props().alt).toBe('image_alt_text');
@@ -29,7 +31,9 @@ describe('editor3.components.media-block', () => {
                 changeCaption={() => ({})}
                 setLocked={() => ({})}
                 block={block}
-                contentState={contentState} />);
+                contentState={contentState}
+            />,
+        );
 
         wrapper.find('.image-block__image-action').first()
             .simulate('click');

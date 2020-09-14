@@ -45,7 +45,9 @@ class SearchBox extends React.Component<any, any> {
         return (
             <div className="sd-searchbar sd-searchbar--focused">
                 <label htmlFor="search-input" className="sd-searchbar__icon" />
-                <input type="text" id="search-input"
+                <input
+                    type="text"
+                    id="search-input"
                     autoComplete="off"
                     className="sd-searchbar__input"
                     placeholder={gettext(this.props.label)}
@@ -53,8 +55,10 @@ class SearchBox extends React.Component<any, any> {
                     onChange={this.onChangeHandler}
                     onKeyPress={this.onKeyPressHandler}
                 />
-                <button className="sd-searchbar__search-btn"
-                    onClick={() => this.props.search(this.state.inputValue)}>
+                <button
+                    className="sd-searchbar__search-btn"
+                    onClick={() => this.props.search(this.state.inputValue)}
+                >
                     <i className="big-icon--chevron-right" />
                 </button>
             </div>

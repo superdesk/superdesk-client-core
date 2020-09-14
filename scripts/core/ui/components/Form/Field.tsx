@@ -70,24 +70,26 @@ export class Field extends React.Component<any, any> {
         const currentValue = value || get(diff, field);
 
         const Component = component;
-        const child = <Component
-            field={field}
-            profileField={profileField}
-            value={currentValue || defaultValue}
-            diff={diff}
-            onChange={onChange}
-            maxLength={schema.validate_on_post ? 0 : schema.maxlength}
-            required={schema.validate_on_post ? false : schema.required}
-            message={currentError}
-            invalid={!!currentError}
-            errors={errors}
-            showErrors={showErrors}
-            dirty={this.state.dirty}
-            formProfile={formProfile}
-            row={row}
-            onFocus={onFocus}
-            {...props}
-        />;
+        const child = (
+            <Component
+                field={field}
+                profileField={profileField}
+                value={currentValue || defaultValue}
+                diff={diff}
+                onChange={onChange}
+                maxLength={schema.validate_on_post ? 0 : schema.maxlength}
+                required={schema.validate_on_post ? false : schema.required}
+                message={currentError}
+                invalid={!!currentError}
+                errors={errors}
+                showErrors={showErrors}
+                dirty={this.state.dirty}
+                formProfile={formProfile}
+                row={row}
+                onFocus={onFocus}
+                {...props}
+            />
+        );
 
         return row ? <Row>{child}</Row> : child;
     }

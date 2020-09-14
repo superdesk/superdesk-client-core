@@ -122,7 +122,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                     )
                 }
                 <div className="image-block__wrapper">
-                    {showTitle ?
+                    {showTitle ? (
                         <Textarea
                             placeholder={gettext('Title')}
                             onFocus={setLocked}
@@ -131,9 +131,10 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             value={data.headline}
                             onChange={({target}) => this.onChange(target.value, 'headline')}
                             disabled={readOnly}
-                        /> : null }
+                        />
+                    ) : null }
 
-                    {mediaType === 'picture' &&
+                    {mediaType === 'picture' && (
                         <div className="image-block__image">
                             <div className="image-block__image-overlay">
                                 <div className="image-block__metadata image-block__metadata--top-overlay">
@@ -145,21 +146,35 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                 {
                                     editable && (
                                         <div className="image-block__icons-block">
-                                            <a className="image-block__image-action"
+                                            <a
+                                                className="image-block__image-action"
                                                 data-sd-tooltip={gettext('Edit metadata')}
                                                 onClick={() => {
                                                     this.onClick('view');
-                                                }}><i className="icon-pencil"/></a>
-                                            <a className="image-block__image-action"
+                                                }}
+                                            >
+                                                <i className="icon-pencil" />
+                                            </a>
+
+                                            <a
+                                                className="image-block__image-action"
                                                 data-sd-tooltip={gettext('Edit image')}
                                                 onClick={() => {
                                                     this.onClick('image-edit');
-                                                }}><i className="icon-switches"/></a>
-                                            <a className="image-block__image-action"
+                                                }}
+                                            >
+                                                <i className="icon-switches" />
+                                            </a>
+
+                                            <a
+                                                className="image-block__image-action"
                                                 data-sd-tooltip={gettext('Edit crops')}
                                                 onClick={() => {
                                                     this.onClick('crop');
-                                                }}><i className="icon-crop"/></a>
+                                                }}
+                                            >
+                                                <i className="icon-crop" />
+                                            </a>
                                         </div>
                                     )
                                 }
@@ -192,8 +207,8 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             </div>
                             <img src={rendition.href} alt={alt} />
                         </div>
-                    }
-                    {mediaType === 'video' &&
+                    )}
+                    {mediaType === 'video' && (
                         <div>
                             {
                                 showTitle === true ? null : (
@@ -231,8 +246,8 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                 </span>
                             </div>
                         </div>
-                    }
-                    {mediaType === 'audio' &&
+                    )}
+                    {mediaType === 'audio' && (
                         <div>
                             {
                                 showTitle === true ? null : (
@@ -272,8 +287,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                             </div>
 
                         </div>
-
-                    }
+                    )}
 
                     <PlainTextEditor
                         classes="image-block__description"
@@ -285,7 +299,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                         disabled={readOnly}
                     />
 
-                    {editable && (mediaType === 'audio' || mediaType === 'video') &&
+                    {editable && (mediaType === 'audio' || mediaType === 'video') && (
                         <div className="image-block__action-bar">
                             <a
                                 className="btn btn--hollow btn--small"
@@ -296,7 +310,7 @@ export class MediaBlockComponent extends React.Component<any, any> {
                                 <span>{gettext('Edit metadata')}</span>
                             </a>
                         </div>
-                    }
+                    )}
                 </div>
             </div>
         );

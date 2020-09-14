@@ -21,21 +21,21 @@ const IconMix: React.StatelessComponent<any> = ({icon, subIcon, big, doubleSize,
                 <span className={classNames('icn-mix', className)}>
                     <Icon className="icn-mix__sub-icn" icon={subIcon} big={true} color={color} />
                     <span className="double-size-icn double-size-icn--light">
-                        <Icon icon={icon} color={color}/>
+                        <Icon icon={icon} color={color} />
                     </span>
                 </span>
             );
         } else if (doubleSize) {
             iconElement = (
                 <span className={classNames('icn-mix', 'icn-mix--2x', className)}>
-                    <Icon icon={subIcon} className="icn-mix__sub-icn" color={color}/>
+                    <Icon icon={subIcon} className="icn-mix__sub-icn" color={color} />
                     <Icon icon={icon} doubleSize={doubleSize} big={big} color={color} />
                 </span>
             );
         } else {
             iconElement = (
                 <span className={classNames('icn-mix', className)}>
-                    <Icon icon={subIcon} className="icn-mix__sub-icn" color={color}/>
+                    <Icon icon={subIcon} className="icn-mix__sub-icn" color={color} />
                     <Icon icon={icon} doubleSize={doubleSize} big={big} color={color} />
                 </span>
             );
@@ -43,7 +43,7 @@ const IconMix: React.StatelessComponent<any> = ({icon, subIcon, big, doubleSize,
     } else if (big) {
         iconElement = (
             <div className={classNames('double-size-icn', 'double-size-icn--light', className)}>
-                <Icon icon={icon} color={color}/>
+                <Icon icon={icon} color={color} />
             </div>
         );
     } else {
@@ -57,14 +57,17 @@ const IconMix: React.StatelessComponent<any> = ({icon, subIcon, big, doubleSize,
         );
     }
 
-    return tooltip ? (
-        <OverlayTrigger overlay={
-            <Tooltip id="icon_list_item">{tooltip}</Tooltip>
-        }>
-            {iconElement}
-        </OverlayTrigger>
-    ) :
-        iconElement;
+    return tooltip
+        ? (
+            <OverlayTrigger
+                overlay={
+                    <Tooltip id="icon_list_item">{tooltip}</Tooltip>
+                }
+            >
+                {iconElement}
+            </OverlayTrigger>
+        )
+        : iconElement;
 };
 
 IconMix.propTypes = {
