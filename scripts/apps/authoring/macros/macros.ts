@@ -355,6 +355,7 @@ function MacrosReplaceDirective(editorResolver) {
             // There may be multiple instances of editors. Try waiting for all.
             const initializeMacros = debounce(once(() => {
                 init(scope.diff);
+                scope.$apply();
             }), 500);
 
             window.addEventListener('editorInitialized', initializeMacros);
