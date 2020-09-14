@@ -205,9 +205,8 @@ export function getSuperdeskApiImplementation(
         ui: {
             article: {
                 view: (id: string) => {
-                    setUrlPage('/workspace/monitoring').then(() => {
-                        authoringWorkspace.edit({_id: id}, 'view');
-                    });
+                    setUrlPage('/workspace/monitoring');
+                    authoringWorkspace.edit({_id: id}, 'view');
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});

@@ -1270,7 +1270,7 @@ declare module 'superdesk-api' {
         browser: {
             location: {
                 getPage(): string;
-                setPage(page: string): Promise<void>;
+                setPage(page: string);
                 urlParams: {
                     // Strings
                     getString(field: string, defaultValue?: string): string | undefined;

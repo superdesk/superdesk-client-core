@@ -10,10 +10,10 @@ export function getUrlPage(): string {
         hash.slice(1, index);
 }
 
-export function setUrlPage(page: string): Promise<void> {
-    return ng.getService('$location').then(($location) => {
-        $location.url(page);
-    });
+export function setUrlPage(page: string) {
+    const $location = ng.get('$location');
+
+    $location.url(page);
 }
 
 function getAllUrlParameters(): URLSearchParams {
@@ -32,12 +32,14 @@ function getUrlParameter<T>(field: string, converter: (value: string) => T, defa
 }
 
 function setUrlParameter(field: string, value?: string | number | boolean) {
-    ng.getServices(['$location', '$timeout'])
-        .then(([$location, $timeout]) => {
-            $timeout(() => {
-                $location.search(field, value);
-            });
-        });
+    const $location = ng.get('$location');
+    const $timeout = ng.get('$timeout');
+
+    // Use Angularjs timeout to perform a digest cycle
+    // Otherwise the url params don't actually update
+    $timeout(() => {
+        $location.search(field, value);
+    });
 }
 
 export const urlParams: ISuperdesk['browser']['location']['urlParams'] = {
