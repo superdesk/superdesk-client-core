@@ -80,7 +80,14 @@ export function updateAssetSearchParamsAndListItems(
     listAction?: LIST_ACTION,
 ): IThunkAction<void> {
     return (dispatch, getState, {api}) => {
-        dispatch(setAssetSearchParams(params));
+        if (listAction === LIST_ACTION.REPLACE) {
+            dispatch(setAssetSearchParams({
+                ...params,
+                page: 1,
+            }));
+        } else {
+            dispatch(setAssetSearchParams(params));
+        }
 
         api.assets.setSearchUrlParams(getAssetSearchParams(getState()));
 
