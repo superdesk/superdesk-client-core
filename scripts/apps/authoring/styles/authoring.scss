@@ -38,7 +38,7 @@
     .page-content-container {
         left:0;
         right:50px;
-        top: 38px;
+        top: 0;
     }
 
     .widget-wrapper {
@@ -132,7 +132,8 @@
     bottom: 0;
     left: $tablist-width + $article-tabpane-padding;
     right: $tablist-width + $article-tabpane-padding;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .workqueue .page-content-container {
@@ -456,52 +457,59 @@ $bottom-bar-item-border-color-active: transparent;
     }
 }
 
+$authoring-toolbar-spacing: 10px;
+
 // Authoring Header
 // -------------------------------------------------
 
 // ---- Sticky header ----
 .authoring-sticky {
-    position: absolute;
     @include box-sizing(border-box);
-    left: 0; right: 58px;
     max-width: 900px;
     margin: 0 auto;
-    padding: 10px 20px;
-    border: 1px solid #cacaca;
-    border-top: 0;
-    border-bottom: 0;
+    padding: 4px 20px;
     background-color: $white;
     z-index: 3;
     @include transition(all .5s);
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 3;
 
     .authoring-sticky__detailed {
         display: inline-block;
-        > div {
+
+        dl, dt, dd, .authoring-sticky__from-extensions {
             display: inline-block;
-            margin-left: 15px;
-            padding-left: 10px;
-            border-left: 1px solid #DADADA;
-        }
-        label, time, b {
-            display: inline-block;
-            vertical-align: top;
-            font-size: 12px;
-            color: $sd-text-label;
-            padding-right: .3em;
+            vertical-align: bottom;
+            padding: 0;
             margin: 0;
         }
-        b {
-            max-width: 45%;
-            color: #575656;
-            font-weight: 400;
+
+        > dl + dl, .authoring-sticky__from-extensions {
+            margin-left: $authoring-toolbar-spacing;
+            padding-left: $authoring-toolbar-spacing;
+            border-left: 1px solid #DADADA;
+        }
+        dt {
+            font-size: 12px;
+            color: $sd-gray-text;
+        }
+        dd {
+            color: $sd-text;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
         }
-    }
-    &.authoring-sticky--fixed {
-        z-index: 3;
-        @include box-shadow(0px 2px 4px -1px rgba(0,0,0,0.2));
+
+        // display `|` separators correctly over multiple lines
+
+        overflow: hidden;
+
+        .authoring-sticky__detailed-wrapper {
+            margin-left: -$authoring-toolbar-spacing * 2;
+        }
     }
 }
 
@@ -510,7 +518,7 @@ $bottom-bar-item-border-color-active: transparent;
     position: relative;
     max-width: 900px;
     margin: 0 auto;
-    padding: 5px 10px 12px 10px;
+    padding: 12px 10px;
     border: 1px solid #cacaca;
     border-top: 0;
     border-bottom: 0;

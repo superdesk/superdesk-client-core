@@ -67,6 +67,7 @@ declare module 'superdesk-api' {
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
@@ -280,6 +281,7 @@ declare module 'superdesk-api' {
         rewrite_of?: IArticle['_id'];
         profile: string;
         word_count?: number;
+        lines_count?: number;
         version_creator: string;
         state: ITEM_STATE;
         embargo?: any;
@@ -747,6 +749,10 @@ declare module 'superdesk-api' {
         UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
     }
 
+    export interface IConfigurableAlgorithms {
+        countLines?(plainText: string, lineLength: number): number;
+    }
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
@@ -1060,6 +1066,8 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
+            stripHtmlTags(htmlString: string): string;
+            getLinesCount(plainText: string): number | null;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -1191,6 +1199,7 @@ declare module 'superdesk-api' {
         previewSubjectFilterKey: any;
         authoring?: {
             timeToRead?: any;
+            lineLength?: number;
         };
         ui: {
             publishEmbargo?: any;
@@ -1199,6 +1208,11 @@ declare module 'superdesk-api' {
             sendPublishSchedule?: boolean;
             sendEmbargo?: boolean;
             sendDefaultStage?: 'working' | 'incoming';
+            authoring?: {
+                firstLine?: {
+                    wordCount?: boolean;
+                };
+            };
         };
         list: {
             narrowView: any;
