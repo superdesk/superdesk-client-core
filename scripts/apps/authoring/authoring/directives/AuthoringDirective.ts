@@ -881,6 +881,11 @@ export function AuthoringDirective(
                 $scope.autosave(item);
             };
 
+            $scope.firstLineConfig = appConfig?.ui?.authoring?.firstLine ?? {};
+
+            // default to true
+            $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
+
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
