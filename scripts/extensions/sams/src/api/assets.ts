@@ -105,7 +105,7 @@ function queryMimetypes(superdesk: ISuperdesk, source: IRootElasticQuery, params
     if (params.mimetypes === ASSET_TYPE_FILTER.DOCUMENTS) {
         source.query.bool.must_not.push(
             superdesk.elasticsearch.queryString({
-                query: 'mimetype:(\\^image) OR mimetype:(\\^video) OR mimetype:(\\^audio)',
+                query: 'mimetype:(image\\/*) OR mimetype:(video\\/*) OR mimetype:(audio\\/*)',
                 lenient: true,
                 default_operator: 'OR',
             }),
@@ -128,7 +128,7 @@ function queryMimetypes(superdesk: ISuperdesk, source: IRootElasticQuery, params
         if (typeString != null) {
             source.query.bool.must.push(
                 superdesk.elasticsearch.queryString({
-                    query: `mimetype:(\\^${typeString})`,
+                    query: `mimetype:(${typeString}\\/*)`,
                     lenient: true,
                     default_operator: 'OR',
                 }),
