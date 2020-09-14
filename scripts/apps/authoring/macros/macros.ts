@@ -81,7 +81,11 @@ function MacrosService(api, notify) {
             commit: !!commit,
         }).then((res) => res, (err) => {
             if (angular.isDefined(err.data._message)) {
-                notify.error(gettext('Error: {{message}}', {message: err.data._message}));
+                const error_messages = JSON.parse(err.data._message);
+
+                error_messages.forEach((error_message) => {
+                    notify.error(error_message);
+                });
             }
         });
     }

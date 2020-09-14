@@ -227,23 +227,6 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
         transclude: true,
         link: function(scope, elem) {
             scope.userLookup = desks.userLookup;
-            var editor = elem.find('.page-content-container'),
-                stickyHeader = elem.find('.authoring-sticky');
-
-            var scrollHandler = debounce(clipHeader, 100);
-
-            editor.on('scroll', scrollHandler);
-            scope.$on('$destroy', () => {
-                editor.off('scroll', scrollHandler);
-            });
-
-            function clipHeader() {
-                if (editor.scrollTop() > 5) {
-                    stickyHeader.addClass('authoring-sticky--fixed');
-                } else {
-                    stickyHeader.removeClass('authoring-sticky--fixed');
-                }
-            }
 
             function reload() {
                 if (scope.item) {

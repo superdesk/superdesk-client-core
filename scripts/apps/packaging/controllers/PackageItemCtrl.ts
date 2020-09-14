@@ -1,8 +1,14 @@
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {IPackagesService} from 'types/Services/Packages';
 
 PackageItemCtrl.$inject = ['data', 'packages', 'authoringWorkspace', 'notify'];
-export function PackageItemCtrl(data, packages, authoringWorkspace: AuthoringWorkspaceService, notify) {
+export function PackageItemCtrl(
+    data,
+    packages: IPackagesService,
+    authoringWorkspace: AuthoringWorkspaceService,
+    notify,
+) {
     packages.createPackageFromItems([data.item])
         .then((newPackage) => {
             authoringWorkspace.edit(newPackage);
