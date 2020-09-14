@@ -16,7 +16,7 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
 
             return (tags.map((item: ITag) => {
                 return (
-                    <li key={item.uuid} className="tag-label">
+                    <div key={item.uuid} className="tag-label">
                         {item.title}
                         <button className="tag-label__remove"
                             onClick={() => {
@@ -27,7 +27,7 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                             aria-label={gettext('Remove')}>
                             <i className="icon-close-small" />
                         </button>
-                    </li>
+                    </div>
                 );
             })
             );
