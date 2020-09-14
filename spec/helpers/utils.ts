@@ -48,10 +48,15 @@ export function printLogs(prefix) {
 }
 
 export function waitForSuperdesk() {
-    return browser.driver.wait(() =>
-        browser.driver.executeScript('return window.superdeskIsReady || false'),
-    5000,
-    '"window.superdeskIsReady" is not here');
+    return browser.driver.wait(
+        () => browser.driver.executeScript('return window.superdeskIsReady || false'),
+        5000,
+        '"window.superdeskIsReady" is not here',
+    ).then((res) => {
+        browser.executeScript('window.superdesk_e2e_tests_running = true;');
+
+        return res;
+    });
 }
 
 export function refresh() {
