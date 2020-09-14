@@ -195,7 +195,8 @@ export function MultiActionBarController(
         return multi.getItems().every((item) => {
             if (item.state !== 'draft') {
                 if (personalLocationPath) {
-                    return appConfig.features.hasOwnProperty('publishFromPersonal')
+                    return appConfig.features
+                    && appConfig.features.publishFromPersonal != null
                     && appConfig.features.publishFromPersonal;
                 }
                 return true;
@@ -280,6 +281,7 @@ export function MultiActionBarController(
                     var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
 
                     item.task = {
+                        ...(item.task ?? {}),
                         desk: currentDeskId,
                     };
                 }
