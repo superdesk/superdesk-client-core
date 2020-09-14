@@ -2,7 +2,7 @@
     <ul class="package-edit" sd-sort-package-items>
         <li ng-repeat="group in list">
             <div class="group-info">
-                <h6>{{ group.id }}</h6>
+                <h6>{{ group.label }}</h6>
             </div>
             <ul id="{{ group.id | uppercase}}" class="package-edit-items clearfix" data-group="{{group.id}}">
                 <li class="sort-item clearfix" ng-repeat="item in group.items">
@@ -18,7 +18,7 @@
       <ul class="package-edit package-highlight-preview" ng-if="highlight">
         <li>
             <div class="group-info">
-                <h6>Highlight Preview</h6>
+                <h6 translate>Highlight Preview</h6>
             </div>
             <ul id="highlight-preview" class="package-edit-items clearfix">
                 <li class="sort-item clearfix">

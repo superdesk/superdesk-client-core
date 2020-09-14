@@ -1,11 +1,12 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IPackagesService} from 'types/Services/Packages';
 
 /**
  * Service for highlights with caching.
  */
 HighlightsService.$inject = ['api', '$q', '$cacheFactory', 'packages', 'privileges'];
-export function HighlightsService(api, $q, $cacheFactory, packages, privileges) {
+export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesService, privileges) {
     var service: any = {};
     var promise = {};
     var cache = $cacheFactory('highlightList');
@@ -115,7 +116,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
             pkgDefaults.task = highlight.task;
         }
 
-        return packages.createEmptyPackage(pkgDefaults, false, group);
+        return packages.createEmptyPackage(pkgDefaults, null, group, null);
     };
 
     /**

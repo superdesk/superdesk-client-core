@@ -76,7 +76,7 @@ describe('Content profiles', () => {
             .perform();
         authoring.save();
         authoring.publish(true);
-        assertToastMsg('error', 'EDNOTE is a required field');
+        assertToastMsg('error', 'ED. NOTE is a required field');
     });
 
     it('displays custom text fields', () => {

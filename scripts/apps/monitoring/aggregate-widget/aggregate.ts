@@ -14,10 +14,12 @@ angular.module('superdesk.apps.aggregate.widgets', ['superdesk.apps.aggregate', 
             thumbnail: 'scripts/apps/monitoring/aggregate-widget/thumbnail.svg',
             template: 'scripts/apps/monitoring/aggregate-widget/aggregate-widget.html',
             configurationTemplate: 'scripts/apps/monitoring/aggregate-widget/configuration.html',
-            description: 'Set up different monitors to follow any topics from ingest or production, desk outputs or ' +
-                    'any part of the workflow. All you need is to give it a sensible name, select a saved search or ' +
-                    'desk or its workflow stages. Monitor anything, anywhere, anytime. You can have as many Monitor ' +
-                    'widgets as you wish.',
+            description: gettext(
+                'Set up different monitors to follow any topics from ingest or production, desk outputs or ' +
+                'any part of the workflow. All you need is to give it a sensible name, select a saved search or ' +
+                'desk or its workflow stages. Monitor anything, anywhere, anytime. You can have as many Monitor ' +
+                'widgets as you wish.',
+            ),
             custom: true,
             removeHeader: true,
         });

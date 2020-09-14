@@ -8,12 +8,10 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-import {browser} from 'protractor';
-
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
-import {assertToastMsg} from './helpers/utils';
+import {assertToastMsg, refresh} from './helpers/utils';
 import {desks} from './helpers/desks';
 
 describe('desks', () => {
@@ -192,7 +190,7 @@ describe('desks', () => {
 
         // confirm story is created on working stage
         monitoring.openMonitoring();
-        browser.refresh();
+        refresh();
         workspace.selectDesk('Test Desk');
         authoring.createTextItem();
         authoring.writeTextToHeadline('new item');
@@ -201,7 +199,9 @@ describe('desks', () => {
 
         // confirm incoming rule kicks in
         authoring.sendTo('Test Desk', 'Test Stage A');
-        assertToastMsg('error', 'BODY_HTML is a required field');
+        // FIXME: Improve error messages
+        assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
+            + ' in incoming rule:Validate for Publish for stage:Test Stage A');
         expect(monitoring.getGroupItems(2).count()).toBe(0);
 
         authoring.closeSendAndPublish();
@@ -210,7 +210,9 @@ describe('desks', () => {
         // confirm onstage rule kicks in
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.sendTo('Test Desk', 'Test Stage C');
-        assertToastMsg('error', 'BODY_HTML is a required field');
+        // FIXME: Improve error messages
+        assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
+            + ' in onstage rule:Validate for Publish for stage:Test Stage C');
         expect(monitoring.getGroupItems(4).count()).toBe(1);
 
         authoring.closeSendAndPublish();
@@ -221,7 +223,9 @@ describe('desks', () => {
         authoring.sendTo('Test Desk', 'Test Stage B');
         monitoring.actionOnItem('Edit', 3, 0);
         authoring.sendTo('Test Desk', 'Test Stage A');
-        assertToastMsg('error', 'BODY_HTML is a required field');
+        // FIXME: Improve error messages
+        assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
+            + ' in outgoing rule:Validate for Publish for stage:Test Stage B');
         expect(monitoring.getGroupItems(3).count()).toBe(1);
         expect(monitoring.getGroupItems(2).count()).toBe(0);
     });

@@ -100,7 +100,6 @@ class TranslationsWidgetComponent extends React.Component<IProps, IState> {
                                     </div>
                                     <div>
                                         <State
-                                            svc={{datetime}}
                                             item={translation}
                                         />
                                     </div>

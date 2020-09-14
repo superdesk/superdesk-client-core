@@ -19,7 +19,7 @@
                     </select>
                 </div>
             </div>
-            <div ng-if="item.type === 'text'">
+            <div ng-if="item.type === 'text' && firstLineConfig.wordCount">
                 <span class="authoring-header__value">
                     <strong sd-word-count data-item="item.body_html" data-html="true" data-count-only="true"></strong>
                 </span>
@@ -296,13 +296,14 @@
             <div class="authoring-header__item" id="category-setting"
                  sd-validation-error="error.anpa_category"
                  data-required="schema.anpa_category.required"
-                 ng-if="metadata.categories && schema.anpa_category"
+                 ng-if="metadata.categories && schema.anpa_category && categoriesVocabulary != null"
                  sd-width="{{editor.anpa_category.sdWidth}}"
                  ng-attr-title="{{schema.anpa_category.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.anpa_category.order}}">
                 <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('anpa_category')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
+                        ng-if="categoriesVocabulary.selection_type === 'multi selection'"
                         class="data"
                         data-tabindex="editor.anpa_category.order"
                         ng-disabled="!_editable || schema.anpa_category.readonly === true"
@@ -313,10 +314,26 @@
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
-                        data-cv="{popup_width: popup_width.categories}"
+                        data-cv="categoriesVocabulary"
                         data-set-language="true"
                         tabindex="{{editor.anpa_category.order}}">
                     </div>
+
+                    <div sd-meta-dropdown
+                        ng-if="categoriesVocabulary.selection_type !== 'multi selection'"
+                        data-tabindex="editor.anpa_category.order"
+                        data-item="item"
+                        data-field="anpa_category"
+                        data-list="availableCategories"
+                        data-cv="categoriesVocabulary"
+                        ng-disabled="!_editable || schema.anpa_category.readonly === true"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        tabindex="{{editor.anpa_category.order}}"
+                        data-key="qcode"
+                        >
+                   </div>
+
                     <div class="authoring-header__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
                 </div>
             </div>

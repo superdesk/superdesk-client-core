@@ -1,95 +1,117 @@
-import _, {get} from 'lodash';
+import _ from 'lodash';
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {isMediaEditable} from 'core/config';
-import {gettext} from 'core/utils';
-import {IArticle, IMonitoringFilter} from 'superdesk-api';
+import {gettext, IScopeApply} from 'core/utils';
+import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {CHECKBOX_PARENT_CLASS} from './constants';
+import ng from 'core/services/ng';
 
-interface IState {
-    narrow: boolean;
-    view: 'compact' | 'mgrid' | 'photogrid';
+interface IProps {
     itemsList: Array<string>;
     itemsById: any;
+    narrow: boolean;
+    view: 'compact' | 'mgrid' | 'photogrid';
     selected: string;
-    bindedShortcuts: Array<any>;
     swimlane: any;
+    profilesById: any;
+    highlightsById: any;
+    markedDesksById: any;
+    desksById: any;
+    ingestProvidersById: any;
+    usersById: any;
+    onMonitoringItemSelect: any;
+    onMonitoringItemDoubleClick: any;
+    disableMonitoringMultiSelect: boolean;
+    singleLine: any;
+    customRender: any;
+    viewType: any;
+    flags: {
+        hideActions: any;
+    };
+    groupId: any;
+    viewColumn: any;
+    loading: any;
+    scopeApply: IScopeApply;
+    scopeApplyAsync: IScopeApply;
+    edit(item: IArticle): void;
+    preview(item: IArticle): void;
+    hideActionsForMonitoringItems(): void;
+    multiSelect(items: Array<IArticle>, selected: boolean): void;
+    setSelectedItem(itemId: string): void;
+}
+
+interface IState {
+    bindedShortcuts: Array<any>;
     actioning: {};
 }
 
 /**
  * Item list component
  */
-export class ItemList extends React.Component<any, IState> {
-    static propTypes: any;
-    static defaultProps: any;
-
-    closeActionsMenu: any;
+export class ItemList extends React.Component<IProps, IState> {
     updateTimeout: any;
     selectedCom: any;
+    angularservices: {
+        $rootScope: any;
+        $timeout: any;
+        activityService: any;
+        archiveService: any;
+        authoringWorkspace: AuthoringWorkspaceService;
+        keyboardManager: any;
+        Keys: any;
+        monitoringState: any;
+        multi: any;
+        search: any;
+        storage: any;
+        superdesk: any;
+        workflowService: any;
+    };
+
+    focusableElement: HTMLUListElement | null;
 
     constructor(props) {
         super(props);
 
         this.state = {
-            itemsList: [],
-            itemsById: {},
-            selected: null,
-            view: 'compact',
-            narrow: false,
             bindedShortcuts: [],
-            swimlane: null,
             actioning: {},
         };
 
-        this.multiSelect = this.multiSelect.bind(this);
         this.select = this.select.bind(this);
         this.selectItem = this.selectItem.bind(this);
         this.selectMultipleItems = this.selectMultipleItems.bind(this);
         this.dbClick = this.dbClick.bind(this);
         this.edit = this.edit.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
-        this.updateAllItems = this.updateAllItems.bind(this);
-        this.findItemByPrefix = this.findItemByPrefix.bind(this);
         this.setSelectedItem = this.setSelectedItem.bind(this);
         this.getSelectedItem = this.getSelectedItem.bind(this);
-        this.updateItem = this.updateItem.bind(this);
         this.handleKey = this.handleKey.bind(this);
-        this.closeActionsMenu = closeActionsMenu.bind(this);
         this.setSelectedComponent = this.setSelectedComponent.bind(this);
         this.modifiedUserName = this.modifiedUserName.bind(this);
-        this.setNarrowView = this.setNarrowView.bind(this);
         this.multiSelectCurrentItem = this.multiSelectCurrentItem.bind(this);
         this.bindActionKeyShortcuts = this.bindActionKeyShortcuts.bind(this);
         this.unbindActionKeyShortcuts = this.unbindActionKeyShortcuts.bind(this);
-    }
 
-    multiSelect(items: Array<IArticle>, selected: boolean) {
-        const {search, multi} = this.props.svc;
-        const {scope} = this.props;
-        let {selected: selectedId} = this.state;
-
-        const itemsById = angular.extend({}, this.state.itemsById);
-
-        items.forEach((item, i) => {
-            const itemId = search.generateTrackByIdentifier(item);
-
-            if (selected && i === items.length - 1) {
-                // Mark last item as selected
-                selectedId = itemId;
-            }
-            itemsById[itemId] = angular.extend({}, item, {selected: selected});
-            scope.$applyAsync(() => {
-                multi.toggle(itemsById[itemId]);
-            });
-        });
-
-        this.setState({itemsById, selected: selectedId});
+        this.angularservices = {
+            $rootScope: ng.get('$rootScope'),
+            $timeout: ng.get('$timeout'),
+            activityService: ng.get('activityService'),
+            archiveService: ng.get('archiveService'),
+            authoringWorkspace: ng.get('authoringWorkspace'),
+            keyboardManager: ng.get('keyboardManager'),
+            Keys: ng.get('Keys'),
+            monitoringState: ng.get('monitoringState'),
+            multi: ng.get('multi'),
+            search: ng.get('search'),
+            storage: ng.get('storage'),
+            superdesk: ng.get('superdesk'),
+            workflowService: ng.get('workflowService'),
+        };
     }
 
     // Method to check the selectBox of the selected item
@@ -97,13 +119,8 @@ export class ItemList extends React.Component<any, IState> {
         const selectedItem = this.getSelectedItem();
 
         if (selectedItem) {
-            this.multiSelect([selectedItem], !selectedItem.selected);
+            this.props.multiSelect([selectedItem], !selectedItem.selected);
         }
-    }
-
-    // Function to make narrowView active/inactive
-    setNarrowView(setNarrow) {
-        this.setState({narrow: setNarrow});
     }
 
     select(item, event) {
@@ -112,8 +129,7 @@ export class ItemList extends React.Component<any, IState> {
             return;
         }
 
-        const {$timeout} = this.props.svc;
-        const {scope} = this.props;
+        const {$timeout} = this.angularservices;
 
         if (event && event.shiftKey) {
             return this.selectMultipleItems(item);
@@ -131,10 +147,10 @@ export class ItemList extends React.Component<any, IState> {
             (querySelectorParent(event.target, '.' + CHECKBOX_PARENT_CLASS) == null &&
             event.target.classList.contains(CHECKBOX_PARENT_CLASS) === false);
 
-        if (item && scope.preview) {
-            scope.$apply(() => {
+        if (item && this.props.preview != null) {
+            this.props.scopeApply(() => {
                 if (showPreview) {
-                    scope.preview(item);
+                    this.props.preview(item);
                 }
                 this.bindActionKeyShortcuts(item);
             });
@@ -145,7 +161,7 @@ export class ItemList extends React.Component<any, IState> {
      * Unbind all item actions
      */
     unbindActionKeyShortcuts() {
-        const {keyboardManager} = this.props.svc;
+        const {keyboardManager} = this.angularservices;
 
         this.state.bindedShortcuts.forEach((shortcut) => {
             keyboardManager.unbind(shortcut);
@@ -160,7 +176,13 @@ export class ItemList extends React.Component<any, IState> {
      * @param {Object} item
      */
     bindActionKeyShortcuts(selectedItem) {
-        const {superdesk, workflowService, activityService, keyboardManager, archiveService} = this.props.svc;
+        const {
+            activityService,
+            archiveService,
+            keyboardManager,
+            superdesk,
+            workflowService,
+        } = this.angularservices;
 
         // First unbind all binded shortcuts
         if (this.state.bindedShortcuts.length) {
@@ -188,37 +210,37 @@ export class ItemList extends React.Component<any, IState> {
         if (isCheckAllowed(item)) {
             const selected = !item.selected;
 
-            this.multiSelect([item], selected);
+            this.props.multiSelect([item], selected);
         }
     }
 
     selectMultipleItems(lastItem) {
-        const {search} = this.props.svc;
+        const {search} = this.angularservices;
         const itemId = search.generateTrackByIdentifier(lastItem);
         let positionStart = 0;
-        const positionEnd = _.indexOf(this.state.itemsList, itemId);
+        const positionEnd = _.indexOf(this.props.itemsList, itemId);
         const selectedItems = [];
 
-        if (this.state.selected) {
-            positionStart = _.indexOf(this.state.itemsList, this.state.selected);
+        if (this.props.selected) {
+            positionStart = _.indexOf(this.props.itemsList, this.props.selected);
         }
 
         const start = Math.min(positionStart, positionEnd);
         const end = Math.max(positionStart, positionEnd);
 
         for (let i = start; i <= end; i++) {
-            const item = this.state.itemsById[this.state.itemsList[i]];
+            const item = this.props.itemsById[this.props.itemsList[i]];
 
             if (isCheckAllowed(item)) {
                 selectedItems.push(item);
             }
         }
 
-        this.multiSelect(selectedItems, true);
+        this.props.multiSelect(selectedItems, true);
     }
 
     setActioning(item: IArticle, isActioning: boolean) {
-        const {search} = this.props.svc;
+        const {search} = this.angularservices;
         const actioning = Object.assign({}, this.state.actioning);
         const itemId = search.generateTrackByIdentifier(item);
 
@@ -232,9 +254,8 @@ export class ItemList extends React.Component<any, IState> {
             return;
         }
 
-        const {superdesk, $timeout} = this.props.svc;
-        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
-        const {scope} = this.props;
+        const {superdesk, $timeout} = this.angularservices;
+        const {authoringWorkspace} = this.angularservices;
 
         const activities = superdesk.findActivities({action: 'list', type: item._type}, item);
         const canEdit = _.reduce(activities, (result, value) => result || value._id === 'edit.item', false);
@@ -242,7 +263,7 @@ export class ItemList extends React.Component<any, IState> {
         this.setSelectedItem(item);
         $timeout.cancel(this.updateTimeout);
 
-        if (_.get(scope, 'flags.hideActions')) {
+        if (this.props.flags?.hideActions) {
             return;
         }
 
@@ -254,104 +275,71 @@ export class ItemList extends React.Component<any, IState> {
             superdesk.intent('list', 'externalsource', {item: item}, 'fetch-externalsource')
                 .then((archiveItem) => {
                     archiveItem.guid = archiveItem._id; // fix item guid to match new item _id
-                    scope.$applyAsync(() => {
-                        scope.edit ? scope.edit(archiveItem) : authoringWorkspace.open(archiveItem);
+                    this.props.scopeApplyAsync(() => {
+                        if (this.props.edit != null) {
+                            this.props.edit(archiveItem);
+                        } else {
+                            authoringWorkspace.open(archiveItem);
+                        }
                     });
                 })
                 .finally(() => {
                     this.setActioning(item, false);
                 });
-        } else if (canEdit && scope.edit) {
-            scope.$apply(() => {
-                scope.edit(item);
+        } else if (canEdit && this.props.edit != null) {
+            this.props.scopeApply(() => {
+                this.props.edit(item);
             });
         } else {
-            scope.$apply(() => {
+            this.props.scopeApply(() => {
                 authoringWorkspace.open(item);
             });
         }
     }
 
     edit(item) {
-        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
-        const {$timeout} = this.props.svc;
-        const {scope} = this.props;
+        const {authoringWorkspace} = this.angularservices;
+        const {$timeout} = this.angularservices;
 
         this.setSelectedItem(item);
         $timeout.cancel(this.updateTimeout);
 
-        if (_.get(scope, 'flags.hideActions')) {
+        if (this.props.flags?.hideActions || item == null) {
             return;
         }
 
-        if (item && scope.edit) {
-            scope.$apply(() => {
-                scope.edit(item);
+        if (this.props.edit != null) {
+            this.props.scopeApply(() => {
+                this.props.edit(item);
             });
-        } else if (item) {
-            scope.$apply(() => {
+        } else {
+            this.props.scopeApply(() => {
                 authoringWorkspace.open(item);
             });
         }
     }
 
     deselectAll() {
-        this.setState({selected: null});
+        this.props.setSelectedItem(null);
         this.unbindActionKeyShortcuts();
     }
 
-    updateAllItems(itemId, changes) {
-        const itemsById = angular.extend({}, this.state.itemsById);
+    setSelectedItem(item: IArticle) {
+        const {monitoringState, $rootScope, search} = this.angularservices;
 
-        _.forOwn(itemsById, (value, key) => {
-            if (_.startsWith(key, itemId)) {
-                itemsById[key] = angular.extend({}, value, changes);
-            }
-        });
-
-        this.setState({itemsById: itemsById});
-    }
-
-    findItemByPrefix(prefix) {
-        let item;
-
-        _.forOwn(this.state.itemsById, (val, key) => {
-            if (_.startsWith(key, prefix)) {
-                item = val;
-            }
-        });
-
-        return item;
-    }
-
-    setSelectedItem(item) {
-        const {monitoringState, $rootScope, search} = this.props.svc;
-        const {scope} = this.props;
-
-        if (monitoringState.state.activeGroup !== scope.$id) {
+        if (monitoringState.state.activeGroup !== this.props.groupId) {
             // If selected item is from another group, deselect all
             $rootScope.$broadcast('item:unselect');
-            monitoringState.setState({activeGroup: scope.$id});
+            monitoringState.setState({activeGroup: this.props.groupId});
         }
 
-        this.setState({selected: item ? search.generateTrackByIdentifier(item) : null});
+        this.props.setSelectedItem(item ? search.generateTrackByIdentifier(item) : null);
     }
 
     getSelectedItem() {
-        const selected = this.state.selected;
+        const selected = this.props.selected;
 
-        return this.state.itemsById[selected];
-    }
-
-    updateItem(itemId, changes) {
-        const item = this.state.itemsById[itemId] || null;
-
-        if (item) {
-            const itemsById = angular.extend({}, this.state.itemsById);
-
-            itemsById[itemId] = angular.extend({}, item, changes);
-            this.setState({itemsById: itemsById});
-        }
+        return this.props.itemsById[selected];
     }
 
     handleKey(event) {
@@ -361,26 +349,27 @@ export class ItemList extends React.Component<any, IState> {
             return;
         }
 
-        const {scope} = this.props;
-        const {Keys, monitoringState} = this.props.svc;
+        const {Keys, monitoringState} = this.angularservices;
         const KEY_CODES = Object.freeze({
             X: 'X'.charCodeAt(0),
         });
 
         let diff;
 
-        const moveActiveGroup = () => {
-            event.preventDefault();
-            event.stopPropagation();
+        const moveActiveGroup = (_event) => {
+            _event.preventDefault();
+            _event.stopPropagation();
             this.deselectAll(); // deselect active item
 
-            scope.$applyAsync(() => {
-                monitoringState.moveActiveGroup(event.keyCode === Keys.pageup ? -1 : 1);
+            const keyCode = _event.keyCode;
+
+            this.props.scopeApplyAsync(() => {
+                monitoringState.moveActiveGroup(keyCode === Keys.pageup ? -1 : 1);
             });
         };
 
         const openItem = () => {
-            if (this.state.selected) {
+            if (this.props.selected) {
                 this.edit(this.getSelectedItem());
             }
 
@@ -397,38 +386,38 @@ export class ItemList extends React.Component<any, IState> {
         case Keys.right:
         case Keys.down:
             diff = 1;
-            this.closeActionsMenu();
+            closeActionsMenu();
             break;
 
         case Keys.left:
         case Keys.up:
             diff = -1;
-            this.closeActionsMenu();
+            closeActionsMenu();
             break;
 
         case Keys.enter:
             openItem();
-            this.closeActionsMenu();
+            closeActionsMenu();
             break;
 
         case Keys.pageup:
         case Keys.pagedown:
-            moveActiveGroup();
-            this.closeActionsMenu();
+            moveActiveGroup(event);
+            closeActionsMenu();
             break;
 
         case KEY_CODES.X:
             performMultiSelect();
-            this.closeActionsMenu();
+            closeActionsMenu();
             break;
         }
 
         const highlightSelected = (_event) => {
-            for (let i = 0; i < this.state.itemsList.length; i++) {
-                if (this.state.itemsList[i] === this.state.selected) {
-                    const next = Math.min(this.state.itemsList.length - 1, Math.max(0, i + diff));
+            for (let i = 0; i < this.props.itemsList.length; i++) {
+                if (this.props.itemsList[i] === this.props.selected) {
+                    const next = Math.min(this.props.itemsList.length - 1, Math.max(0, i + diff));
 
-                    this.select(this.state.itemsById[this.state.itemsList[next]], _event);
+                    this.select(this.props.itemsById[this.props.itemsList[next]], _event);
                     return;
                 }
             }
@@ -438,16 +427,16 @@ export class ItemList extends React.Component<any, IState> {
             event.preventDefault();
             event.stopPropagation();
 
-            if (this.state.selected) {
+            if (this.props.selected) {
                 highlightSelected(_event);
             } else {
-                this.select(this.state.itemsById[this.state.itemsList[0]], _event);
+                this.select(this.props.itemsById[this.props.itemsList[0]], _event);
             }
         };
 
         // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        const scrollSelectedItemIfRequired = (_event, _scope) => {
-            const container = _scope.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
+        const scrollSelectedItemIfRequired = (_event) => {
+            const container = this.props.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
 
             const selectedItemElem = $(_event.currentTarget.firstChild).children('.list-item-view.active');
 
@@ -468,13 +457,13 @@ export class ItemList extends React.Component<any, IState> {
 
         if (!_.isNil(diff)) {
             checkRemaining(event);
-            scrollSelectedItemIfRequired(event, scope);
+            scrollSelectedItemIfRequired(event);
         }
     }
 
     componentWillUnmount() {
         this.unbindActionKeyShortcuts();
-        this.closeActionsMenu();
+        closeActionsMenu();
     }
 
     setSelectedComponent(com) {
@@ -486,75 +475,77 @@ export class ItemList extends React.Component<any, IState> {
             this.props.usersById[versionCreator].display_name : null;
     }
 
+    focus() {
+        this.focusableElement?.focus();
+    }
+
     render() {
-        const {storage} = this.props.svc;
-        const {scope} = this.props;
+        const {storage} = this.angularservices;
 
-        const createItem = (itemId) => {
-            const item = this.state.itemsById[itemId];
-            const task = item.task || {desk: null};
-
-            return React.createElement(Item, {
-                key: itemId,
-                item: item,
-                view: this.state.view,
-                swimlane: this.state.swimlane || storage.getItem('displaySwimlane'),
-                flags: {selected: this.state.selected === itemId},
-                onEdit: this.edit,
-                onDbClick: this.dbClick,
-                onSelect: this.select,
-                onMultiSelect: this.multiSelect,
-                ingestProvider: this.props.ingestProvidersById[item.ingest_provider] || null,
-                desk: this.props.desksById[task.desk] || null,
-                highlightsById: this.props.highlightsById,
-                markedDesksById: this.props.markedDesksById,
-                profilesById: this.props.profilesById,
-                setSelectedComponent: this.setSelectedComponent,
-                versioncreator: this.modifiedUserName(item.version_creator),
-                narrow: this.state.narrow,
-                svc: this.props.svc,
-                hideActions: scope.hideActionsForMonitoringItems || get(scope, 'flags.hideActions'),
-                multiSelectDisabled: scope.disableMonitoringMultiSelect,
-                scope: scope,
-                actioning: !!this.state.actioning[itemId],
-            });
-        };
-        const isEmpty = !this.state.itemsList.length;
-        const displayEmptyList = isEmpty && !scope.loading;
+        const isEmpty = !this.props.itemsList.length;
+        const displayEmptyList = isEmpty && !this.props.loading;
 
         return (
             <ul
                 className={classNames(
-                    this.state.view === 'photogrid' ?
+                    this.props.view === 'photogrid' ?
                         'sd-grid-list sd-grid-list--no-margin' :
-                        (this.state.view || 'compact') + '-view list-view',
+                        (this.props.view || 'compact') + '-view list-view',
                     {'list-without-items': displayEmptyList},
                 )}
-                onClick={this.closeActionsMenu}
+                onClick={closeActionsMenu}
+                onKeyDown={(event) => {
+                    this.handleKey(event);
+                }}
+                tabIndex={0}
+                ref={(el) => {
+                    this.focusableElement = el;
+                }}
             >
                 {
                     displayEmptyList
                         ? (
-                            <li onClick={this.closeActionsMenu}>
+                            <li onClick={closeActionsMenu}>
                                 {gettext('There are currently no items')}
                             </li>
                         )
-                        : this.state.itemsList.map(createItem)
+                        : this.props.itemsList.map((itemId) => {
+                            const item = this.props.itemsById[itemId];
+                            const task = item.task || {desk: null};
+
+                            return (
+                                <Item
+                                    key={itemId}
+                                    isNested={false}
+                                    item={item}
+                                    view={this.props.view}
+                                    swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
+                                    flags={{selected: this.props.selected === itemId}}
+                                    onEdit={this.edit}
+                                    onDbClick={this.dbClick}
+                                    onSelect={this.select}
+                                    onMultiSelect={this.props.multiSelect}
+                                    ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
+                                    desk={this.props.desksById[task.desk] || null}
+                                    highlightsById={this.props.highlightsById}
+                                    markedDesksById={this.props.markedDesksById}
+                                    profilesById={this.props.profilesById}
+                                    versioncreator={this.modifiedUserName(item.version_creator)}
+                                    narrow={this.props.narrow}
+                                    hideActions={
+                                        this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
+                                    }
+                                    multiSelectDisabled={this.props.disableMonitoringMultiSelect}
+                                    actioning={!!this.state.actioning[itemId]}
+                                    singleLine={this.props.singleLine}
+                                    customRender={this.props.customRender}
+                                    viewType={this.props.viewType}
+                                    scopeApply={this.props.scopeApply}
+                                />
+                            );
+                        })
                 }
             </ul>
         );
     }
 }
-
-ItemList.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    profilesById: PropTypes.any,
-    highlightsById: PropTypes.any,
-    markedDesksById: PropTypes.any,
-    desksById: PropTypes.any,
-    ingestProvidersById: PropTypes.any,
-    usersById: PropTypes.any,
-    onMonitoringItemSelect: PropTypes.func,
-    onMonitoringItemDoubleClick: PropTypes.func,
-};

@@ -178,3 +178,11 @@ ul.list-view.list-without-items {
 }
 
 // SPACER END
+
+@media print
+{    
+    .no-print
+    {
+        display: none!important;
+    }
+}
