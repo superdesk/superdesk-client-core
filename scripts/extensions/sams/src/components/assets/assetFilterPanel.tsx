@@ -41,7 +41,7 @@ interface IState {
 export function getAssetFilterPanel(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
     const {config} = superdesk.instance;
-    const {stringToNumber, numberToString} = superdesk.helpers;
+    const {stringToNumber, numberToString, filterKeys} = superdesk.helpers;
 
     return class AssetFilterPanel extends React.PureComponent<IProps, IState> {
         onChange: Dictionary<string, (value: any) => void>;
@@ -50,7 +50,16 @@ export function getAssetFilterPanel(superdesk: ISuperdesk) {
             super(props);
 
             this.state = {
-                localSearchParams: {...this.props.searchParams},
+                localSearchParams: filterKeys(this.props.searchParams, [
+                    'name',
+                    'filename',
+                    'description',
+                    'state',
+                    'sizeFrom',
+                    'sizeTo',
+                    'dateFrom',
+                    'dateTo',
+                ]),
                 formId: Math.random().toString(36).substr(1),
             };
 

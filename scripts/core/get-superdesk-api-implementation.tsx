@@ -26,6 +26,7 @@ import {
     assertNever,
     Writeable,
     filterUndefined,
+    filterKeys,
     stringToNumber,
     numberToString,
 } from './helpers/typescript-helpers';
@@ -127,6 +128,7 @@ export function getSuperdeskApiImplementation(
         helpers: {
             assertNever,
             filterUndefined,
+            filterKeys,
             stringToNumber,
             numberToString,
         },

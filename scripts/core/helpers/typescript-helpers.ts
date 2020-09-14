@@ -30,6 +30,16 @@ export function filterUndefined<T>(values: Partial<T>): Partial<T> {
     return filteredValue;
 }
 
+export function filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T> {
+    const filteredValue = {} as Partial<T>;
+
+    for (let key in keys) {
+        filteredValue[key] = original[key];
+    }
+
+    return filteredValue;
+}
+
 export function stringToNumber(value?: string, radix?: number): number | undefined {
     return value?.length > 0 ?
         parseInt(value, radix ?? 10) :

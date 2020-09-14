@@ -1200,6 +1200,7 @@ declare module 'superdesk-api' {
         helpers: {
             assertNever(x: never): never;
             filterUndefined<T>(values: Partial<T>): Partial<T>;
+            filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T>;
             stringToNumber(value?: string, radix?: number): number | undefined;
             numberToString(value?: number): string | undefined;
         },
