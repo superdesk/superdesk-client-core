@@ -246,7 +246,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      */
     this.editor = function(profile, contentType) {
         const editor = get(profile, 'editor',
-            get(appConfig.editor, contentType, constant.DEFAULT_EDITOR));
+            get(appConfig.editor, contentType, constant.GET_DEFAULT_EDITOR()));
 
         return angular.extend({}, editor);
     };
@@ -285,7 +285,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
     };
 
     this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);
-    this.contentProfileEditor = angular.extend({}, constant.DEFAULT_EDITOR, constant.EXTRA_EDITOR_FIELDS);
+    this.contentProfileEditor = angular.extend({}, constant.GET_DEFAULT_EDITOR(), constant.EXTRA_EDITOR_FIELDS);
 
     $rootScope.$on('vocabularies:updated', resetFields);
 

@@ -7,7 +7,7 @@ import {
     IEvents,
     IStage,
 } from 'superdesk-api';
-import {gettext, gettextPlural} from 'core/utils';
+import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -55,6 +55,7 @@ import {appConfig} from 'appConfig';
 import {httpRequestJsonLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
+import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -309,6 +310,8 @@ export function getSuperdeskApiImplementation(
             },
             memoize: memoizeLocal,
             generatePatch,
+            stripHtmlTags,
+            getLinesCount,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(
