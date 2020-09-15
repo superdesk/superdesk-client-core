@@ -210,7 +210,7 @@ export function getWorkspaceSubnavComponent(superdesk: ISuperdesk) {
                                 (
                                     <Dropdown items={this.subNavMenuActions}>
                                         <button className="sd-navbtn">
-                                            <i className="icon-dots-vertical"/>
+                                            <i className="icon-dots-vertical" />
                                         </button>
                                     </Dropdown>
                                 )
@@ -238,7 +238,7 @@ export function getWorkspaceSubnavComponent(superdesk: ISuperdesk) {
                         </ButtonGroup>
                         <AssetTypeFilterButtons />
                         <ButtonGroup align="right">
-                            <SubNavSpacer noMargin={true}/>
+                            <SubNavSpacer noMargin={true} />
                             <ContentBar>
                                 <span className="sd-margin-r--1">
                                     <span className="sd-margin-r--1">

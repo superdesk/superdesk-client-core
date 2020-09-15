@@ -159,13 +159,15 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                         )}
                         leftPanelOpen={this.state.filterPanelOpen}
                         leftPanel={(
-                            this.state.filterPanelOpen === false ?
-                                <div /> :
+                            this.state.filterPanelOpen === false ? (
+                                <div />
+                            ) : (
                                 <AssetFilterPanel
                                     searchParams={this.props.searchParams}
                                     closeFilterPanel={this.toggleFilterPanel}
                                     updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
                                 />
+                            )
                         )}
                         mainClassName="sd-padding--2"
                         mainProps={{onScroll: this.onScroll}}
