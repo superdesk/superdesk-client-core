@@ -257,7 +257,8 @@ export function SendItem($q,
 
                 // save these here, it might get changed on scope while middlewares run
                 const deskId = scope.selectedDesk._id;
-                const stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
+                const stageId = deskId !== 'Personal Space'
+                    ? scope.selectedStage._id || scope.selectedDesk.incoming_stage : null;
                 const selectedDesk = scope.selectedDesk;
 
                 return middlewares.reduce(
@@ -705,14 +706,21 @@ export function SendItem($q,
                                 scope.task._etag = result._etag;
                             }
 
-                            return api.save('move', {},
-                                {
+                            if (deskId === 'Personal Space') {
+                                return api.save('move', {}, {}, scope.item);
+                            } else {
+                                return api.save('move', {}, {
                                     task: {desk: deskId, stage: stageId},
                                     allPackageItems: sendAllPackageItems,
                                 }, scope.item);
+                            }
                         })
                         .then((value) => {
-                            notify.success(gettext('Item sent.'));
+                            if (deskId === 'Personal Space') {
+                                notify.success(gettext('Item sent to personal space.'));
+                            } else {
+                                notify.success(gettext('Item sent.'));
+                            }
 
                             if (scope.currentUserAction === ctrl.userActions.send_to) {
                             // Remember last destination desk and stage for send_to.
@@ -747,7 +755,8 @@ export function SendItem($q,
             function updateLastDestination() {
                 var updates = {};
                 var deskId = scope.selectedDesk._id;
-                var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
+                var stageId = deskId !== 'Personal Space'
+                    ? scope.selectedStage._id || scope.selectedDesk.incoming_stage : null;
 
                 updates[PREFERENCE_KEY] = {desk: deskId, stage: stageId};
                 preferencesService.update(updates, PREFERENCE_KEY);
