@@ -220,7 +220,9 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             }, true);
 
             scope.$watch('item.profile', (profile) => {
-                content.setupAuthoring(profile, scope, scope.item);
+                if (profile != null) {
+                    content.setupAuthoring(profile, scope, scope.item);
+                }
             });
 
             scope.save = function(item) {
