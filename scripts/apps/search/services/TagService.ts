@@ -170,7 +170,10 @@ export function TagService($location, desks, userList, metadata, search,
             userList.getUser(index).then((user) => {
                 tags.selectedParameters.push(tag(value + ':' + user.display_name));
             }, (error) => {
-                tags.selectedParameters.push(tag(value + ':Unknown'));
+                const tagLabel = `${value}:${gettext('Unknown')}`;
+                const tagValue = value + ':Unknown';
+
+                tags.selectedParameters.push(tag(tagLabel, tagValue));
             });
         },
         from_desk: processFromToDesk,

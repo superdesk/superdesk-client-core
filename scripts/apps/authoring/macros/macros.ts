@@ -9,7 +9,7 @@
  */
 
 import {gettext} from 'core/utils';
-import _ from 'lodash';
+import _, {debounce, once} from 'lodash';
 
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {
@@ -348,7 +348,17 @@ function MacrosReplaceDirective(editorResolver) {
                 return scope.diff[from] || null;
             }
 
-            init(scope.diff);
+            // There may be multiple instances of editors. Try waiting for all.
+            const initializeMacros = debounce(once(() => {
+                init(scope.diff);
+                scope.$apply();
+            }), 500);
+
+            window.addEventListener('editorInitialized', initializeMacros);
+
+            scope.$on('$destroy', () => {
+                window.removeEventListener('editorInitialized', initializeMacros);
+            });
         },
     };
 }
