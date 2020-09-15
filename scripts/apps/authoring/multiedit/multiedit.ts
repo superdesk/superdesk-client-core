@@ -12,6 +12,7 @@ import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import _ from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
+import {generatePatchIArticle} from 'core/helpers/CrudManager';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -189,7 +190,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             function openItem() {
                 authoring.open(scope.article).then((item) => {
                     scope.origItem = item;
-                    scope.item = _.create(item);
+                    scope.item = JSON.parse(JSON.stringify(item));
                     scope._editable = authoring.isEditable(item);
                     scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type);
 
@@ -205,8 +206,10 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             openItem();
 
             scope.autosave = function(item) {
+                const patch = generatePatchIArticle(scope.origItem, item);
+
                 scope.dirty = true;
-                authoring.autosave(item, scope.origItem);
+                authoring.autosave(patch, scope.origItem);
             };
 
             scope.$watch('item.flags', (newValue, oldValue) => {
@@ -221,7 +224,9 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             });
 
             scope.save = function(item) {
-                return authoring.save(scope.origItem, item).then((res) => {
+                const patch = generatePatchIArticle(scope.origItem, item);
+
+                return authoring.save(scope.origItem, patch).then((res) => {
                     scope.dirty = false;
 
                     return res;
