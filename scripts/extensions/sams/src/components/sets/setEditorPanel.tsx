@@ -239,10 +239,16 @@ export function getSetEditorPanel(superdesk: ISuperdesk) {
                                     </FormGroup>
                                 ) : (
                                     <React.Fragment>
-                                        <FormLabel text={gettext('Storage Destination')} style="light"/>
+                                        <FormLabel
+                                            text={gettext('Storage Destination')}
+                                            style="light"
+                                        />
                                         <Text>{currentDestination?._id}</Text>
 
-                                        <FormLabel text={gettext('Storage Provider')} style="light"/>
+                                        <FormLabel
+                                            text={gettext('Storage Provider')}
+                                            style="light"
+                                        />
                                         <Text>{currentDestination?.provider}</Text>
                                     </React.Fragment>
                                 )}

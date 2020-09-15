@@ -53,7 +53,7 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                                         {subNavMenuActions.length === 0 ? null : (
                                             <Dropdown items={subNavMenuActions}>
                                                 <button className="sd-navbtn">
-                                                    <i className="icon-dots-vertical"/>
+                                                    <i className="icon-dots-vertical" />
                                                 </button>
                                             </Dropdown>
                                         )}
@@ -67,10 +67,10 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                                         />
                                     </ButtonGroup>
                                 </SubNav>
-                                <SubNav zIndex={1}/>
+                                <SubNav zIndex={1} />
                             </HeaderPanel>
                             <MainPanel className="sd-padding--2">
-                                <div className="sd-margin--1"/>
+                                <div className="sd-margin--1" />
                             </MainPanel>
                         </LayoutContainer>
                     </div>

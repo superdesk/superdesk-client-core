@@ -10,7 +10,8 @@ export class SearchBar extends React.PureComponent<IProps> {
         return (
             <div className="sd-searchbar">
                 <label className="sd-searchbar__icon" />
-                <input id="search-input"
+                <input
+                    id="search-input"
                     className="sd-searchbar__input"
                     type="text"
                     placeholder={this.props.placeholder}
