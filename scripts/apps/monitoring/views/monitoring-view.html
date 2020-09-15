@@ -184,7 +184,7 @@
                         <div sd-item-sortbar class="sortbar-container"></div>
 
                         <div class="dropdown dropdown--align-right" dropdown ng-if="type === 'monitoring'">
-                            <button area-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? gettext('List View') : view === 'photogrid' ? gettext('Photo Grid') : monitoring.viewColumn ? gettext('Kanban View') : ''}}" 
+                            <button area-label="{{!monitoring.viewColumn && (!view || view === 'compact') ? ('List View' | translate) : view === 'photogrid' ? ('Photo Grid View' | translate) : monitoring.viewColumn ? ('Swimlane View' | translate) : ''}}" 
                                     dropdown__toggle 
                                     class="navbtn dropdown__toggle">
                                 <i ng-class="{'icon-list-view': !monitoring.viewColumn && (!view || view === 'compact'), 'icon-grid-view': view === 'photogrid', 'icon-kanban-view': monitoring.viewColumn}"></i>
