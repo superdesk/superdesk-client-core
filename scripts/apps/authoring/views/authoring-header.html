@@ -19,7 +19,7 @@
                     </select>
                 </div>
             </div>
-            <div ng-if="item.type === 'text'">
+            <div ng-if="item.type === 'text' && firstLineConfig.wordCount">
                 <span class="authoring-header__value">
                     <strong sd-word-count data-item="item.body_html" data-html="true" data-count-only="true"></strong>
                 </span>

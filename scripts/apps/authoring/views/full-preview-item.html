@@ -1,0 +1,195 @@
+<div class="preview-content" ng-class="{'hide-images': hideMedia}">
+    <div class="metadata metadata--top">
+        <div ng-if="item.versioncreated">
+            <div>
+                <label class="preview-label" translate>Last Modified</label>
+            </div>
+            <div class="preview-data">
+                <div sd-reldate-complex datetime="item.versioncreated"></div>
+            </div>
+        </div>
+        <div ng-if="item.slugline && !editor.slugline.hideOnPrint" order="{{editor.slugline.order}}">
+            <div>
+                <label class="preview-label" translate>Slugline</label>
+            </div>
+            <div class="preview-data">
+                <span>{{item.slugline}}</span>
+            </div>
+        </div>
+        <div ng-if="item.anpa_category.length && !editor.anpa_category.hideOnPrint" order="{{editor.anpa_category.order}}">
+            <div>
+                <label class="preview-label" translate>Service</label>
+            </div>
+            <div class="preview-data">
+                <span ng-repeat="service in item.anpa_category">
+                    {{getLocaleName(service)}}
+                </span>
+            </div>
+        </div>
+
+        <div ng-if="item.genre.length && !editor.genre.hideOnPrint && editor.genre" order="{{editor.genre.order}}">
+            <div class="preview-label">
+                <label translate>Genre</label>
+            </div>
+            <div class="preview-data">
+                <span ng-repeat="genre in item.genre">
+                    {{getLocaleName(genre)}}
+                </span>
+            </div>
+        </div>
+        <div ng-if="(item.subject | filter:{'scheme': field._id}).length && editor.subject && !editor.subject.hideOnPrint"
+            order="{{editor.subject.order}}">
+            <div>
+                <label class="preview-label" translate>Subject</label>
+            </div>
+            <div class="preview-data">
+                <span ng-repeat="subject in item.subject | filter:{'scheme': field._id}">
+                    {{getLocaleName(subject)}}
+                </span>
+            </div>
+        </div>
+        <div ng-if="item.place.length && editor.place && !editor.place.hideOnPrint" order="{{editor.place.order}}">
+            <div>
+                <label class="preview-label" translate>Place</label>
+            </div>
+            <div class="preview-data">
+                <span ng-repeat="place in item.place">
+                    {{getLocaleName(place)}}
+                </span>
+            </div>
+        </div>
+        <div ng-if="item.ednote && !editor.ednote.hideOnPrint" order="{{editor.ednote.order}}">
+            <div>
+                <label class="preview-label" translate>Ed. Note</label>
+            </div>
+            <div class="preview-data">
+                <span>{{item.ednote}}</span>
+            </div>
+        </div>
+        <!-- custom dropdown fields saved on own field-->
+        <div ng-repeat="field in fields track by field._id"
+            ng-if="(item[field.schema_field] | filter:{'scheme': field._id}).length && isCustomList(field) && field.schema_field && !editor[field._id].hideOnPrint"
+            order="{{editor[field._id].order}}">
+            <div>
+                <label class="preview-label" translate>{{field.display_name}}</label>
+            </div>
+            <div class="preview-data">
+                <span ng-repeat="value in item[field.schema_field] | filter:{'scheme': field._id}">
+                    {{getLocaleName(value)}}
+                </span>
+            </div>
+        </div>
+        <!-- custom dropdown fields saved on subject-->
+        <div ng-repeat="field in fields track by field._id"
+            ng-if="(item.subject | filter:{'scheme': field._id}).length && isCustomList(field) && !field.schema_field &&  !editor[field._id].hideOnPrint"
+            order="{{editor[field._id].order}}">
+            <div>
+                <label class="preview-label" translate>{{field.display_name}}</label>
+            </div>
+            <div class="preview-data">
+                <span ng-repeat="value in item.subject | filter:{'scheme': field._id}">
+                    {{getLocaleName(value)}}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="metadata">
+        <!-- custom date and text fields -->
+        <div ng-repeat="field in fields track by field._id"
+            ng-if="item.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date') && !editor[field._id].hideOnPrint"
+            order="{{editor[field._id].order}}">
+            <div>
+                <label class="preview-label" translate>{{field.display_name}}</label>
+            </div>
+            <div class="preview-data" sd-short-date ng-if="field.field_type === 'date'" data-date="item.extra[field._id]"></div>
+            <div class="preview-data preview-editor" ng-if="field.field_type === 'text'" ng-bind-html="getHtml(item.extra[field._id])"></div>
+        </div>
+        <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
+        <!-- custom media and embed fields -->
+        <div ng-repeat="field in fields track by field._id"
+            ng-if="(field.field_type === 'media' || field.field_type === 'related_content' && associationExists(item.associations, field._id)
+            || field.field_type === 'embed' && item.extra[field._id]) && !editor[field._id].hideOnPrint"
+            order="{{editor[field._id].order}}"
+            class="body preview-editor">
+            <div>
+                <label class="preview-label" translate>{{field.display_name}}</label>
+            </div>
+            <div ng-if="field.field_type === 'embed' && !hideMedia" ng-bind-html="getHtml(item.extra[field._id].embed)">
+            </div>
+            <div ng-if="field.field_type === 'media' && !hideMedia" class="association">
+                <div ng-repeat="(mediaId, media) in getAssociationItems(item.associations, field._id) track by mediaId">
+                    <img src="{{media.renditions.viewImage.href}}" ng-if="!hideMedia && media.type === 'picture'">
+                    <sd-video ng-if="media.type === 'video'" item="media"></sd-video>
+                    <audio controls="controls" ng-if="media.type === 'audio'">
+                        <source vsrc="{{rendition.href}}"
+                                ng-repeat="(key, rendition) in media.renditions"
+                                ng-if="checkRenditions.isAudio(rendition)" html5vfix>
+                    </audio>
+                    <p><i class="icon-picture" ng-if="hideMedia"></i>{{media.description_text}}</p>
+                </div>
+            </div>
+            <div ng-if="field.field_type === 'related_content'">
+                <div sd-related-items-preview
+                    data-item="item"
+                    data-field="field"
+                    data-preview="true">
+                </div>
+            </div>
+        </div>
+
+        <div
+            ng-if="!editor.feature_media.hideOnPrint && hasValue(item.associations.featuremedia.description_text)"
+            order="{{editor.feature_media.order}}"
+            class="association"
+        >
+            <img src="{{item.associations.featuremedia.renditions.viewImage.href}}" ng-if="!hideMedia">
+            <p><i class="icon-picture" ng-if="hideMedia"></i>{{item.associations.featuremedia.description_text}}</p>
+        </div>
+
+        <div
+            ng-if="!editor.abstract.hideOnPrint && hasValue(item.abstract)"
+            order="{{editor.abstract.order}}"
+            class="abstract"
+            sd-html-preview="item.abstract"
+        ></div>
+
+        <div
+            ng-if="!editor.byline.hideOnPrint && hasValue(item.byline)"
+            order="{{editor.byline.order}}"
+            class="byline"
+        >
+            {{item.byline}}
+        </div>
+
+        <div
+            ng-if="!editor.dateline.hideOnPrint && hasValue(item.dateline.located.city)"
+            order="{{editor.dateline.order}}"
+            class="dateline preview-editor"
+        >
+            {{item.dateline.located.city}}
+        </div>
+
+        <div
+            ng-if="!editor.body_html.hideOnPrint && hasValue(item.body_html)"
+            order="{{editor.body_html.order}}"
+            class="body preview-editor"
+            sd-html-preview="item.body_html"
+            item="item"
+        ></div>
+
+        <div
+            ng-if="!editor.body_footer.hideOnPrint && hasValue(item.body_footer)"
+            order="{{editor.body_footer.order}}"
+            class="body preview-editor"
+            sd-html-preview="item.body_footer"
+        ></div>
+
+        <div
+            ng-if="!editor.sign_off.hideOnPrint && hasValue(item.sign_off)"
+            order="{{editor.sign_off.order}}"
+            class="body preview-editor"
+        >
+            {{item.sign_off}}
+        </div>
+    </div>
+</div>

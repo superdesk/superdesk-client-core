@@ -9,7 +9,7 @@ import classNames from 'classnames';
  */
 
 export const Menu: React.StatelessComponent<any> = ({children, className, isOpen, alignRight, scrollable}) => (
-    !isOpen ? null :
+    !isOpen ? null : (
         <ul
             className={classNames(
                 'dropdown__menu',
@@ -22,6 +22,7 @@ export const Menu: React.StatelessComponent<any> = ({children, className, isOpen
         >
             {children}
         </ul>
+    )
 );
 
 Menu.propTypes = {

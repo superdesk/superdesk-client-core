@@ -263,3 +263,18 @@ export function cutoffPreviousRenditions(update, origItem) {
         }
     });
 }
+
+export function formatDatelineText(located, month, date, source = '') {
+    var dateline = located.city_code;
+    var datelineFields = located.dateline.split(',');
+
+    if (_.indexOf(datelineFields, 'state')) {
+        dateline.concat(', ', located.state_code);
+    }
+
+    if (_.indexOf(datelineFields, 'country')) {
+        dateline.concat(', ', located.country_code);
+    }
+
+    return dateline.toUpperCase().concat(', ', month, ' ', date, ' ', source, ' -');
+}

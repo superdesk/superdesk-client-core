@@ -67,6 +67,7 @@ declare module 'superdesk-api' {
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
@@ -290,6 +291,7 @@ declare module 'superdesk-api' {
         rewrite_of?: IArticle['_id'];
         profile: string;
         word_count?: number;
+        lines_count?: number;
         version_creator: string;
         state: ITEM_STATE;
         embargo?: any;
@@ -515,6 +517,11 @@ declare module 'superdesk-api' {
         name?: string;
         qcode?: string;
         is_active?: boolean;
+        translations?: {
+            name?: {
+                [key: string]: string;
+            }
+        };
     }
 
     export interface IVocabulary extends IBaseRestApiResponse {
@@ -778,6 +785,10 @@ declare module 'superdesk-api' {
 
     export interface IConfigurableUiComponents {
         UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
+    }
+
+    export interface IConfigurableAlgorithms {
+        countLines?(plainText: string, lineLength: number): number;
     }
 
     export interface IListItemProps {
@@ -1305,6 +1316,8 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
+            stripHtmlTags(htmlString: string): string;
+            getLinesCount(plainText: string): number | null;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -1331,6 +1344,7 @@ declare module 'superdesk-api' {
         override_ednote_for_corrections: any;
         override_ednote_template: any;
         default_genre: any;
+        default_language: string;
         japanese_characters_per_minute: any;
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
@@ -1437,6 +1451,7 @@ declare module 'superdesk-api' {
         previewSubjectFilterKey: any;
         authoring?: {
             timeToRead?: any;
+            lineLength?: number;
         };
         ui: {
             publishEmbargo?: any;
@@ -1445,6 +1460,11 @@ declare module 'superdesk-api' {
             sendPublishSchedule?: boolean;
             sendEmbargo?: boolean;
             sendDefaultStage?: 'working' | 'incoming';
+            authoring?: {
+                firstLine?: {
+                    wordCount?: boolean;
+                };
+            };
         };
         list: {
             narrowView: any;

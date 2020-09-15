@@ -30,9 +30,13 @@ export const Toggle: React.StatelessComponent<any> = ({value, onChange, readOnly
     );
 
     return (
-        <span tabIndex={0} onKeyDown={handleKeyDown}
-            className={classes} onClick={!readOnly && onChange ? onClick : null}>
-            <span className="inner"/>
+        <span
+            tabIndex={0}
+            onKeyDown={handleKeyDown}
+            className={classes}
+            onClick={!readOnly && onChange ? onClick : null}
+        >
+            <span className="inner" />
         </span>
     );
 };

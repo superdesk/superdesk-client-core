@@ -69,10 +69,15 @@ export function getUnpublishConfirmModal(
                         <Button color="default" onClick={this.props.closeModal}>
                             {gettext('Cancel')}
                         </Button>
-                        <Button color="primary" onClick={() => {
-                            unpublish(this.state.related);
-                            this.props.closeModal();
-                        }}>{gettext('Confirm')}</Button>
+                        <Button
+                            color="primary"
+                            onClick={() => {
+                                unpublish(this.state.related);
+                                this.props.closeModal();
+                            }}
+                        >
+                            {gettext('Confirm')}
+                        </Button>
                     </ModalFooter>
                 </Modal>
             );

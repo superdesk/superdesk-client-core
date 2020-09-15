@@ -6,6 +6,7 @@ import {chunk} from 'lodash';
 import {Button} from '../../';
 
 import './style.scss';
+import {getMonthNames} from 'core/helpers/locale';
 
 /**
  * @ngdoc react
@@ -13,8 +14,7 @@ import './style.scss';
  * @description Component to Pick months of DatePicker
  */
 export const MonthPicker: React.StatelessComponent<any> = ({selectedDate, onChange}) => {
-    const monthNames = ['JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE', 'JULY',
-        'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'];
+    const monthNames = getMonthNames(moment.locale());
     const rows = chunk(monthNames, 3);
 
     return (
