@@ -74,21 +74,21 @@ export function getSetPreviewPanel(superdesk: ISuperdesk) {
             return (
                 <React.Fragment>
                     <PanelHeader borderB={true} title={gettext('Set Details')}>
-                        <PanelTools tools={topTools}/>
+                        <PanelTools tools={topTools} />
                     </PanelHeader>
                     <PanelContent>
                         <PanelContentBlock flex={true}>
                             <PanelContentBlockInner grow={true}>
-                                <FormLabel text={gettext('Name')} style="light"/>
+                                <FormLabel text={gettext('Name')} style="light" />
                                 <Text>{set.name}</Text>
 
-                                <FormLabel text={gettext('Description')} style="light"/>
+                                <FormLabel text={gettext('Description')} style="light" />
                                 <Text>{set.description}</Text>
 
-                                <FormLabel text={gettext('Storage Destination')} style="light"/>
+                                <FormLabel text={gettext('Storage Destination')} style="light" />
                                 <Text>{storageDestination?._id}</Text>
 
-                                <FormLabel text={gettext('Storage Provider')} style="light"/>
+                                <FormLabel text={gettext('Storage Provider')} style="light" />
                                 <Text>{storageDestination?.provider}</Text>
                             </PanelContentBlockInner>
                         </PanelContentBlock>
