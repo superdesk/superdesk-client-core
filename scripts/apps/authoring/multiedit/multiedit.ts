@@ -213,7 +213,6 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                 if (newValue !== oldValue) {
                     scope.item.flags = newValue;
                     scope.origItem.flags = oldValue;
-                    scope.dirty = true;
                 }
             }, true);
 
@@ -221,11 +220,9 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                 content.setupAuthoring(profile, scope, scope.item);
             });
 
-            scope.save = function(item, form) {
+            scope.save = function(item) {
                 return authoring.save(scope.origItem, item).then((res) => {
-                    if (form) {
-                        form.$setPristine();
-                    }
+                    scope.dirty = false;
 
                     return res;
                 });
