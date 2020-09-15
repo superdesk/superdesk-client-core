@@ -840,6 +840,8 @@ angular.module('superdesk.apps.editor2', [
                 var controller = controllers[0];
                 var ngModel = controllers[1];
 
+                window.dispatchEvent(new CustomEvent('editorInitialized'));
+
                 function init() {
                     scope.$applyAsync(() => {
                         if (controller.config.multiBlockEdition) {
