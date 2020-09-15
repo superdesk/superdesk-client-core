@@ -48,7 +48,7 @@ export class SetListGroup extends React.PureComponent<IProps> {
                             <SetListItem
                                 key={set._id}
                                 set={set}
-                                count={this.props.counts[set._id] == undefined ?
+                                count={this.props.counts[set._id] === undefined ?
                                     0 :
                                     this.props.counts[set._id]
                                 }

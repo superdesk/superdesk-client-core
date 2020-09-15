@@ -59,7 +59,7 @@ export class SetListItem extends React.PureComponent<IProps> {
                 <ListItemBorder />
                 {set.state === SET_STATE.DRAFT ? null : (
                     <ListItemColumn>
-                        <Badge  text = {count.toString()} type="success" />
+                        <Badge text={count.toString()} type="success" />
                     </ListItemColumn>
                 )}
                 <ListItemColumn grow={true} noBorder={true}>
