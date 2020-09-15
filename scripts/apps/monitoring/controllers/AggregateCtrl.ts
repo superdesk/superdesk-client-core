@@ -18,6 +18,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.selected = null;
     this.groups = [];
     this.spikeGroups = [];
+    this.personalGroup = {};
     this.modalActive = false;
     this.displayOnlyCurrentStep = false;
     this.columnsLimit = null;
@@ -46,6 +47,14 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         customFilters: $scope.type === 'monitoring' ? storage.getItem('customFilters') || {} : {},
     };
     this.activeFilterTags = {};
+
+    function initPersonalGroup() {
+        self.personalGroup = {type: 'personal', header: gettext('Personal')};
+    }
+
+    this.togglePersonalShowSent = () => {
+        self.personalGroup.sent = !self.personalGroup.sent;
+    };
 
     desks.initialize()
         .then(angular.bind(this, function() {
@@ -267,6 +276,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             }
         }
         initSpikeGroups(settings.type === 'desk');
+        initPersonalGroup();
         updateFilteringCriteria();
         self.search(self.searchQuery);
     }
@@ -371,6 +381,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             _.each(self.spikeGroups, (item) => {
                 item[filterType] = value;
             });
+
+            self.personalGroup[filterType] = value;
         });
     }
 
@@ -565,6 +577,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         _.each(this.spikeGroups, (item) => {
             item.query = query;
         });
+        self.personalGroup.query = query;
     };
 
     this.state = storage.getItem('agg:state') || {};
