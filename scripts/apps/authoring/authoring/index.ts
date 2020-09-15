@@ -23,6 +23,9 @@ import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {AuthoringWorkspaceService} from './services';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
+import {FullPreviewDirective} from './directives/FullPreviewDirective';
+import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
+import {AuthoringTopbar2React} from './authoring-topbar2-react';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -99,6 +102,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
     .component('sdAuthoringTopbarReact', reactToAngular1(AuthoringTopbarReact, ['article', 'action', 'onChange']))
+    .component('sdAuthoringTopbar2React', reactToAngular1(AuthoringTopbar2React, ['article', 'action', 'onChange']))
     .component('sdVideoThumbnailEditor', reactToAngular1(VideoThumbnailEditor, ['item', 'onChange']))
     .directive('sdPreviewFormatted', directive.PreviewFormattedDirective)
     .directive('sdAuthoringContainer', directive.AuthoringContainerDirective)
@@ -106,7 +110,8 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdAuthoringHeader', directive.AuthoringHeaderDirective)
     .directive('sdItemAssociation', directive.ItemAssociationDirective)
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
-    .directive('sdFullPreview', directive.FullPreviewDirective)
+    .directive('sdFullPreview', FullPreviewDirective)
+    .directive('sdFullPreviewItem', FullPreviewItemDirective)
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
@@ -349,19 +354,6 @@ angular.module('superdesk.apps.authoring', [
                 controller: ctrl.ChangeImageController,
                 templateUrl: 'scripts/apps/authoring/views/change-image.html',
                 filters: [{action: 'edit', type: 'crop'}],
-            })
-            .activity('preview', {
-                href: '/preview/:_id',
-                when: '/preview/:_id',
-                template: '<div sd-full-preview data-item="item"></div>',
-                controller: ['$scope', 'item', function($scope, item) {
-                    $scope.item = item;
-                }],
-                resolve: {
-                    item: ['$route', 'api', function($route, api) {
-                        return api.find('archive', $route.current.params._id);
-                    }],
-                },
             })
             .activity('unpublish', {
                 label: gettext('Unpublish'),

@@ -18,7 +18,8 @@ class NestedLink extends React.PureComponent<IPropsItemListInfo> {
 
         return (
             <div key="nestedlink" className="element-with-badge">
-                <a className="text-link"
+                <a
+                    className="text-link"
                     onClick={toggleNested}
                     onDoubleClick={(event) => event.stopPropagation()}
                 >

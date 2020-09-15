@@ -78,7 +78,7 @@
             ng-if="!(field.field === 'place' && features.places_autocomplete) && field.field !== 'keywords' && field.cv.selection_type !== 'multi selection'"
             class="data sd-terms--boxed"
             data-item="item"
-            data-field="{{ field.field }}"
+            data-field="{{ field.cv.schema_field || 'subject'}}"
             data-unique="qcode"
             data-list="field.cv.items"
             data-cv="field.cv"

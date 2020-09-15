@@ -49,16 +49,19 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
                         <div className="description">{file.description}</div>
                     </Row>
                     {
-                        file.internal === true &&
-                        <Row>
-                            <span className="label label--orange2">internal</span>
-                        </Row>
+                        file.internal === true && (
+                            <Row>
+                                <span className="label label--orange2">internal</span>
+                            </Row>
+                        )
                     }
                 </Column>
                 <ActionMenu row={true}>
-                    <button className="dropdown__toggle"
+                    <button
+                        className="dropdown__toggle"
                         onClick={() => _download(file)}
-                        title={gettext('Download')}>
+                        title={gettext('Download')}
+                    >
                         <i className="icon-download" />
                     </button>
 
@@ -67,7 +70,8 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
                             <button
                                 className="dropdown__toggle"
                                 onClick={() => _editFile(file)}
-                                title={gettext('Edit')}>
+                                title={gettext('Edit')}
+                            >
                                 <i className="icon-pencil" />
                             </button>
                         )
@@ -75,9 +79,11 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
 
                     {
                         readOnly === true ? null : (
-                            <button className="dropdown__toggle"
+                            <button
+                                className="dropdown__toggle"
                                 onClick={() => _removeFile(file)}
-                                title={gettext('Remove')}>
+                                title={gettext('Remove')}
+                            >
                                 <i className="icon-trash" />
                             </button>
                         )
@@ -92,11 +98,11 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
 
         return (
             <div className="attachments-list">
-                {!!files.length &&
+                {!!files.length && (
                     <ul>
                         {files.map(this.renderFile)}
                     </ul>
-                }
+                )}
             </div>
         );
     }

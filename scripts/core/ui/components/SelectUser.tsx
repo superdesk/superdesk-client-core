@@ -14,6 +14,8 @@ interface IState {
 }
 
 export class SelectUser extends React.Component<IPropsSelectUser, IState> {
+    _mounted: boolean;
+
     constructor(props: IPropsSelectUser) {
         super(props);
 
@@ -22,6 +24,8 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
         };
 
         this.queryUsers = this.queryUsers.bind(this);
+
+        this._mounted = false;
     }
 
     queryUsers(_searchString: string = '') {
@@ -56,15 +60,23 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
             50,
         )
             .then((res) => {
-                this.setState({
-                    fetchedUsers: res._items,
-                    loading: false,
-                });
+                if (this._mounted === true) {
+                    this.setState({
+                        fetchedUsers: res._items,
+                        loading: false,
+                    });
+                }
             });
     }
 
     componentDidMount() {
+        this._mounted = true;
+
         this.queryUsers();
+    }
+
+    componentWillUnmount() {
+        this._mounted = false;
     }
 
     render() {
@@ -74,13 +86,13 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
             <Select2
                 autoFocus={this.props.autoFocus ?? true}
                 disabled={this.props.disabled}
-                placeholder={
+                placeholder={(
                     <ListItem fullWidth noBackground noShadow>
                         <ListItemColumn ellipsisAndGrow>
                             <ListItemRow>{gettext('Select a user')}</ListItemRow>
                         </ListItemColumn>
                     </ListItem>
-                }
+                )}
                 value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
                 items={keyedUsers}
                 getItemValue={(user) => user._id}

@@ -139,9 +139,8 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             return (
                 <div data-test-id="multi-actions-inline">
                     {
-                        groupNames.map((group, i) => (
-                            group === 'undefined') ?
-                            groups[group].map((action, key) => (
+                        groupNames.map((group, i) => group === 'undefined'
+                            ? groups[group].map((action, key) => (
                                 <button
                                     onClick={() => {
                                         this.onTrigger(action);
@@ -153,51 +152,53 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                 >
                                     <Icon className={action.icon} size={22} />
                                 </button>
-                            )) :
-                            <DropdownTree
-                                getToggleElement={(isOpen, onClick) => (
-                                    <button
-                                        onClick={onClick}
-                                        className="navbtn"
-                                        title={groups[group][0].group.label}
-                                        data-test-id="dropdown-toggle"
-                                    >
-                                        <Icon className={groups[group][0].group.icon} size={22} />
-                                    </button>
-                                )}
-                                inline={true}
-                                key={i}
-                                groups={[{render: () => null, items: groups[group]}]}
-                                renderItem={(key, item, closeDropdown) => (
-                                    <button
-                                        key={key}
-                                        style={{
-                                            display: 'block',
-                                            width: '100%',
-                                            padding: 0,
-                                            textAlign: 'left',
-                                            whiteSpace: 'nowrap',
-                                        }}
-                                        onClick={() => {
-                                            closeDropdown();
-                                            this.onTrigger(item);
-                                        }}
-                                        data-test-id={item.label}
-                                    >
-                                        <span
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'flex-start',
-                                                alignItems: 'center',
-                                                padding: '10px',
-                                            }}
+                            ))
+                            : (
+                                <DropdownTree
+                                    getToggleElement={(isOpen, onClick) => (
+                                        <button
+                                            onClick={onClick}
+                                            className="navbtn"
+                                            title={groups[group][0].group.label}
+                                            data-test-id="dropdown-toggle"
                                         >
-                                            <i className={item.icon} style={{marginRight: 10}} />
-                                            <span>{item.label}</span>
-                                        </span>
-                                    </button>
-                                )}
-                            />,
+                                            <Icon className={groups[group][0].group.icon} size={22} />
+                                        </button>
+                                    )}
+                                    inline={true}
+                                    key={i}
+                                    groups={[{render: () => null, items: groups[group]}]}
+                                    renderItem={(key, item, closeDropdown) => (
+                                        <button
+                                            key={key}
+                                            style={{
+                                                display: 'block',
+                                                width: '100%',
+                                                padding: 0,
+                                                textAlign: 'left',
+                                                whiteSpace: 'nowrap',
+                                            }}
+                                            onClick={() => {
+                                                closeDropdown();
+                                                this.onTrigger(item);
+                                            }}
+                                            data-test-id={item.label}
+                                        >
+                                            <span
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'flex-start',
+                                                    alignItems: 'center',
+                                                    padding: '10px',
+                                                }}
+                                            >
+                                                <i className={item.icon} style={{marginRight: 10}} />
+                                                <span>{item.label}</span>
+                                            </span>
+                                        </button>
+                                    )}
+                                />
+                            ),
                         )
                     }
                 </div>

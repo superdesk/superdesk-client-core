@@ -11,7 +11,7 @@
         vertical-align: middle;
     }
     tbody tr {
-        td:last-child {
+        td:not(:first-child):last-child {
             text-align: right;
         }
         td:first-child {
@@ -30,7 +30,13 @@
             }
         }
     }
+    tr.no-bottom-border td {
+        border-bottom: none;
+    }
 
+    tr:not(:first-child).add-border-top td {
+        border-top: 1px solid rgba(0, 0, 0, 0.15);
+    }
 }
 
 .vocabularyField {

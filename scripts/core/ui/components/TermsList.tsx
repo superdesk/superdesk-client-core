@@ -9,14 +9,16 @@ import {get} from 'lodash';
  * @description Displays a list of terms: subject, categories
  */
 const TermsList: React.StatelessComponent<any> = ({terms, displayField, onClick, readOnly}) => (
-    <div className={classNames(
-        'terms-list',
-        {'terms-list--disabled': readOnly},
-    )}>
+    <div
+        className={classNames(
+            'terms-list',
+            {'terms-list--disabled': readOnly},
+        )}
+    >
         <ul>
             {terms.map((term, index) => (
                 <li key={index} onClick={(!readOnly && onClick) ? onClick.bind(null, index) : null}>
-                    {(!readOnly && onClick) && <i className="icon-close-small"/>}
+                    {(!readOnly && onClick) && <i className="icon-close-small" />}
                     {get(term, displayField) || term}
                 </li>
             ))}

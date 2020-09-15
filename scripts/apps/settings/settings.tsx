@@ -89,8 +89,10 @@ class SettingsComponent extends React.Component<IProps, IState> {
             );
 
             let blockGroupHeading = (
-                <div key={++reactKey}
-                    className="sd-card__header sd-card__header--with-thumb sd-card__header--gradient-1">
+                <div
+                    key={++reactKey}
+                    className="sd-card__header sd-card__header--with-thumb sd-card__header--gradient-1"
+                >
                     <div className="sd-card__thumbnail sd-card__thumbnail--size-s">
                         <h4 className="sd-card__thumbnail-heading">{groupLabel}</h4>
                     </div>
@@ -113,8 +115,15 @@ class SettingsComponent extends React.Component<IProps, IState> {
                     ),
                 );
 
-                blockListItems.push(<a key={++reactKey}
-                    href={'#' + item.href} className="text-link">{gettext(item.label)}</a>);
+                blockListItems.push(
+                    <a
+                        key={++reactKey}
+                        href={'#' + item.href}
+                        className="text-link"
+                    >
+                        {gettext(item.label)}
+                    </a>,
+                );
             });
 
             blockToRender.push(<div className="sd-card" key={++reactKey}>

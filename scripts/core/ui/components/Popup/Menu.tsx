@@ -8,10 +8,12 @@ import classNames from 'classnames';
  * @description Menu Component in a popup
  */
 const Menu: React.StatelessComponent<any> = ({children, noPadding}) => (
-    <div className={classNames(
-        'popup__menu',
-        {'popup__menu--no-padding': noPadding},
-    )}>
+    <div
+        className={classNames(
+            'popup__menu',
+            {'popup__menu--no-padding': noPadding},
+        )}
+    >
         {children}
     </div>
 );

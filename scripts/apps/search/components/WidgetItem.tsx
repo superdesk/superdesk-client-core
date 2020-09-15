@@ -82,25 +82,33 @@ export class WidgetItem extends React.Component<IProps, any> {
                 <div className="content-item__date">
                     <time>{this.props.svc.datetime.shortFormat(this.item.versioncreated)}</time>
                 </div>
-                { this.props.canEdit && !this.item.gone ?
+                {this.props.canEdit && !this.item.gone ? (
                     <div className="content-item__action">
-                        { this.item.type !== 'composite' ?
-                            <button className="icn-btn" onClick={this.preview}
-                                title={gettext('Preview')}>
-                                <i className="icon-external"/>
-                            </button>
-                            :
-                            ''
+                        {this.item.type !== 'composite'
+                            ? (
+                                <button
+                                    className="icn-btn"
+                                    onClick={this.preview}
+                                    title={gettext('Preview')}
+                                >
+                                    <i className="icon-external" />
+                                </button>
+                            )
+                            : ''
                         }
                         { this.props.customMonitoringWidget ?
                             ''
-                            :
-                            <button className="icn-btn" onClick={this.edit}
-                                title={gettext('Edit')}>
-                                <i className="icon-pencil"/>
-                            </button>
-                        }
+                            : (
+                                <button
+                                    className="icn-btn"
+                                    onClick={this.edit}
+                                    title={gettext('Edit')}
+                                >
+                                    <i className="icon-pencil" />
+                                </button>
+                            )}
                     </div>
+                )
                     :
                     ''
                 }

@@ -1363,7 +1363,11 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             // is an array when called from global search filters.
             const language = typeof item.language === 'string' ? item.language : getUserInterfaceLanguage();
 
-            return term.translations?.name?.[language] ?? term.name;
+            // FIXME: Remove replacing _/- when language codes are normalized on the server.
+
+            return term.translations?.name?.[language]
+                ?? term.translations?.name?.[language.replace('_', '-')]
+                ?? term.name;
         },
     };
 
