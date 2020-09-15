@@ -173,7 +173,7 @@
                 </div>
                 <div ng-if="field.field_type === 'media'" class="association">
                     <div ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId">
-                        <img src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
+                        <img ng-src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
                         <sd-video ng-if="media.type === 'video'" item="media"></sd-video>
                         <audio controls="controls" ng-if="media.type === 'audio'">
                             <source vsrc="{{rendition.href}}"
