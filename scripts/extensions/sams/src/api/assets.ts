@@ -14,6 +14,9 @@ import {
     SORT_ORDER,
 } from '../interfaces';
 
+// Utils
+import {isSamsApiError, getApiErrorMessage} from '../utils/api';
+
 const RESOURCE = 'sams/assets';
 
 export function uploadAsset(
@@ -230,7 +233,11 @@ export function queryAssets(
         },
     )
         .catch((error: any) => {
-            notify.error(gettext('Failed to query Assets'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(superdesk, error));
+            } else {
+                notify.error(gettext('Failed to query Assets'));
+            }
 
             return Promise.reject(error);
         });

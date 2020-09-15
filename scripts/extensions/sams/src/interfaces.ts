@@ -101,6 +101,13 @@ export interface IAssetSearchParams {
     sortOrder: SORT_ORDER;
 }
 
+export interface IAPIError {
+    error: string;
+    name: string;
+    description: string;
+    errors?: {[field: string]: Array<string>};
+}
+
 export interface ISamsAPI {
     sets: {
         getAll(): Promise<Array<ISetItem>>;

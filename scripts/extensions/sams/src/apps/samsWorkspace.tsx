@@ -36,7 +36,12 @@ export function onStoreInit(store: Store): Promise<any> {
     return Promise.all([
         store.dispatch<any>(loadStorageDestinations()),
         store.dispatch<any>(loadSets()),
-        store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE)),
+        store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
+            .catch(() => {
+                // Catch errors here so `Promise.all` still returns on fetching error
+                // This can happen when invalid search params are stored in the URL
+                return Promise.resolve();
+            }),
     ]);
 }
 
