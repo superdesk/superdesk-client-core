@@ -8,11 +8,13 @@ import classNames from 'classnames';
  * @description Component to hold contents of a popup
  */
 const Content: React.StatelessComponent<any> = ({children, className, noPadding}) => (
-    <div className={classNames(
-        'popup__menu-content',
-        {'popup__menu-content--no-padding': noPadding},
-        className,
-    )}>
+    <div
+        className={classNames(
+            'popup__menu-content',
+            {'popup__menu-content--no-padding': noPadding},
+            className,
+        )}
+    >
         {children}
     </div>
 );

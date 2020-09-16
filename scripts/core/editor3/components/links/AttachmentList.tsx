@@ -77,12 +77,14 @@ export class AttachmentList extends React.Component<IProps, IState> {
         const publicAttachments = this.state.attachments.filter(({internal}) => !internal);
 
         const attachments = publicAttachments
-            .map((attachement) =>
+            .map((attachement) => (
                 <AttachmentItem
                     key={`attachment-${attachement._id}`}
                     attachment={attachement}
                     selected={attachement._id === this.props.selected}
-                    onClick={this.props.onClick} />);
+                    onClick={this.props.onClick}
+                />
+            ));
 
         if (attachments.length) {
             return <div>{attachments}</div>;

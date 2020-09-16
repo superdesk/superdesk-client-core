@@ -38,7 +38,8 @@ export const Input: React.StatelessComponent<any> = ({
             disabled={readOnly}
             required={required}
             ref={refNode}
-            autoFocus={autoFocus} />
+            autoFocus={autoFocus}
+        />
     );
 };
 

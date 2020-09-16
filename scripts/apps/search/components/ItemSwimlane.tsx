@@ -15,7 +15,8 @@ const renderGroup = (groups, item: IArticle) => groups.map((group, groupIndex) =
             'sd-list-item__column': true,
             'sd-list-item__column--grow': group.ellipsis === true,
             'sd-list-item__column--no-border': groupIndex === groups.length - 1,
-        })}>
+        })}
+    >
         <span className="sd-list-item__row">
             <span className={classNames({'sd-overflow-ellipsis': group.ellipsis === true})}>
                 {
@@ -53,7 +54,8 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                         minWidth: '4px',
                         maxWidth: '4px',
                         background: isLocked ? '#e51c23' : 'transparent',
-                    }} />
+                    }}
+                />
                 <span className="sd-list-item__column">
                     <ListTypeIcon
                         item={item}
@@ -69,7 +71,8 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                             <button
                                 className="icn-btn"
                                 onClick={toggle}
-                                onDoubleClick={stopEvent}>
+                                onDoubleClick={stopEvent}
+                            >
                                 <i className="icon-dots-vertical" />
                             </button>
                         </div>

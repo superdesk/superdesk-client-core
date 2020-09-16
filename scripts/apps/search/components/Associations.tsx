@@ -34,7 +34,8 @@ export class Associations extends React.Component<IProps, any> {
     render() {
         if (this.props.item.associations?.featuremedia?._id) {
             return (
-                <div className="type-icon associations"
+                <div
+                    className="type-icon associations"
                     onClick={this.openItem}
                     title={gettext('Associated ') + this.props.item.associations.featuremedia.type}
                 >

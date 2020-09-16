@@ -41,9 +41,12 @@ export class MultiTextInput extends React.Component<any, any> {
 
         return (
             <Row>
-                <LineInput {...props} readOnly={readOnly}
+                <LineInput
+                    {...props}
+                    readOnly={readOnly}
                     invalid={this.isFieldInvalid(field, value, errors)}
-                    message={this.errorMessage}>
+                    message={this.errorMessage}
+                >
                     {label && <label className="sd-line-input__label">{label}</label>}
                     <Input
                         field={field}
@@ -51,20 +54,27 @@ export class MultiTextInput extends React.Component<any, any> {
                         onChange={onChange}
                         onBlur={this.onBlur}
                         type={props.type}
-                        readOnly={readOnly} />
+                        readOnly={readOnly}
+                    />
 
                     {!readOnly &&
-                            (<div>
-                                <a tabIndex={0} className="icn-btn sd-line-input__icon-right" onClick={remove}
-                                    onKeyDown={(event) => {
-                                        if (event && event.keyCode === KEYCODES.ENTER) {
-                                            event.preventDefault();
-                                            remove();
-                                        }
-                                    }}>
-                                    <i className="icon-trash" />
-                                </a>
-                            </div>)
+                            (
+                                <div>
+                                    <a
+                                        tabIndex={0}
+                                        className="icn-btn sd-line-input__icon-right"
+                                        onClick={remove}
+                                        onKeyDown={(event) => {
+                                            if (event && event.keyCode === KEYCODES.ENTER) {
+                                                event.preventDefault();
+                                                remove();
+                                            }
+                                        }}
+                                    >
+                                        <i className="icon-trash" />
+                                    </a>
+                                </div>
+                            )
                     }
                 </LineInput>
             </Row>

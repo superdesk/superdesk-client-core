@@ -21,9 +21,15 @@ export class MarkDesksDropdown extends React.Component<any, any> {
 
         return (
             <ul className={this.props.className}>
-                {items.length ?
-                    items.map((d) => <MarkedDeskItem key={d._id}
-                        desk={d} item={this.props.item} desks={this.props.desks}/>)
+                {items.length
+                    ? items.map((d) => (
+                        <MarkedDeskItem
+                            key={d._id}
+                            desk={d}
+                            item={this.props.item}
+                            desks={this.props.desks}
+                        />
+                    ))
                     : <li><button disabled>{this.props.noDesksLabel}</button></li>}
             </ul>
         );
