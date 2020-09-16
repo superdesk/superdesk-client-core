@@ -25,7 +25,7 @@
                                 ></div>
          
                                 <button class="preview-toggle icn-btn"
-                                    ng-if="item.type === 'text'"
+                                    ng-if="canPrintPreview(item)"
                                     title="{{:: 'Preview' | translate}}"
                                     ng-click="openFullPreview($event)"
                                 >
