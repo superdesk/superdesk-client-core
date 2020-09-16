@@ -226,17 +226,21 @@ export class DateInputPopup extends React.Component<any, any> {
                         { this.state.mode === 'day' && (
                             <DayPicker
                                 selectedDate={this.state.selectedDate}
-                                onChange={this.handleSelectChange} />
+                                onChange={this.handleSelectChange}
+                            />
                         )}
                         { this.state.mode === 'month' && (
                             <MonthPicker
                                 selectedDate={this.state.selectedDate}
-                                onChange={this.handleSelectChange} />
+                                onChange={this.handleSelectChange}
+                            />
                         )}
                         { this.state.mode === 'year' && (
                             <YearPicker
                                 startingYear={this.getStartingYearForYearPicker(this.state.selectedDate)}
-                                selectedDate={this.state.selectedDate} onChange={this.handleSelectChange} />
+                                selectedDate={this.state.selectedDate}
+                                onChange={this.handleSelectChange}
+                            />
                         )}
                     </div>
                 </Content>

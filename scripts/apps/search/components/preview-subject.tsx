@@ -19,7 +19,8 @@ export class PreviewSubject extends React.PureComponent<IProps> {
                 .filter((subj) => subj.scheme === field._id && subj.name)
                 .forEach((subj) => {
                     subjects.push(
-                        <span key={subj.scheme + ':' + subj.qcode}
+                        <span
+                            key={subj.scheme + ':' + subj.qcode}
                             className="tag-label"
                             title={subj.name} // longer names might not fit the area
                         >{subj.name}</span>,

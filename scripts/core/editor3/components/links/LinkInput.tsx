@@ -162,9 +162,12 @@ export class LinkInputComponent extends React.Component<any, any> {
                 onSubmit={() => {
                     this.onSubmit(linkTypes.href);
                 }}
-                className="link-input" onKeyUp={this.onKeyUp}>
+                className="link-input"
+                onKeyUp={this.onKeyUp}
+            >
                 <div style={{padding: '3.4rem 2rem'}}>
-                    <input type="url"
+                    <input
+                        type="url"
                         ref={(el) => {
                             this.inputElement = el;
                         }}
@@ -177,8 +180,12 @@ export class LinkInputComponent extends React.Component<any, any> {
                     />
                 </div>
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
-                    <button className="btn btn--cancel"
-                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
+                    <button
+                        className="btn btn--cancel"
+                        onClick={this.props.hidePopups}
+                    >
+                        {gettext('Cancel')}
+                    </button>
                     <button className="btn btn--primary" type="submit" disabled={this.state.url.length < 1}>
                         {gettext('Insert')}
                     </button>
@@ -198,14 +205,19 @@ export class LinkInputComponent extends React.Component<any, any> {
                     />
                 </div>
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
-                    <button className="btn btn--cancel"
-                        onClick={this.props.hidePopups}>{gettext('Cancel')}</button>
+                    <button
+                        className="btn btn--cancel"
+                        onClick={this.props.hidePopups}
+                    >
+                        {gettext('Cancel')}
+                    </button>
                     <button
                         className="btn btn--primary"
                         disabled={this.state.selected == null}
                         onClick={() => {
                             this.onSubmit(linkTypes.attachement);
-                        }}>
+                        }}
+                    >
                         {gettext('Insert')}
                     </button>
                 </div>

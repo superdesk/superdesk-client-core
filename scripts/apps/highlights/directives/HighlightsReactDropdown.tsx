@@ -21,10 +21,11 @@ HighlightsReactDropdown.$inject = ['item', 'className', 'highlightsService', 'de
 export function HighlightsReactDropdown(item, className, highlightsService, desks, noHighlightsLabel) {
     var highlights = highlightsService.getSync(desks.getCurrentDeskId()) || {_items: []};
 
-    const noHighlights =
+    const noHighlights = (
         <li>
             <button disabled={true}>{noHighlightsLabel}</button>
-        </li>;
+        </li>
+    );
 
     /*
      * Creates list with highlights
@@ -32,13 +33,15 @@ export function HighlightsReactDropdown(item, className, highlightsService, desk
      */
     return (
         <ul className={className}>
-            {highlights._items.length ? highlights._items.map((h) =>
+            {highlights._items.length ? highlights._items.map((h) => (
                 <li key={`highlight-${h._id}`}>
                     <HighlightBtn
                         item={item}
                         highlight={h}
-                        service={highlightsService} />
-                </li>,
+                        service={highlightsService}
+                    />
+                </li>
+            ),
             ) : noHighlights}
         </ul>
     );

@@ -10,19 +10,21 @@ import './style.scss';
  * @description Component to encapsulate a component in Form row style
  */
 export const Row: React.StatelessComponent<any> = ({children, flex, noPadding, halfWidth, className, enabled}) => (
-    !enabled ?
-        null :
-        <div className={classNames(
-            'form__row',
-            {
-                'form__row--flex': flex,
-                'no-padding': noPadding,
-                'form__row--half-width': halfWidth,
-            },
-            className,
-        )}>
+    !enabled ? null : (
+        <div
+            className={classNames(
+                'form__row',
+                {
+                    'form__row--flex': flex,
+                    'no-padding': noPadding,
+                    'form__row--half-width': halfWidth,
+                },
+                className,
+            )}
+        >
             {children}
         </div>
+    )
 );
 
 Row.propTypes = {

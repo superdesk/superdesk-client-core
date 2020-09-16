@@ -22,12 +22,14 @@ export class SearchPanelWidgets extends React.PureComponent<IProps> {
 
         return (
             <React.Fragment>
-                {widgets.map((Widget, index) =>
-                    <Widget key={index}
+                {widgets.map((Widget, index) => (
+                    <Widget
+                        key={index}
                         provider={this.props.provider}
                         params={this.props.params}
                         setParams={(updates) => this.props.setParams(updates)}
-                    />,
+                    />
+                ),
                 )}
             </React.Fragment>
         );

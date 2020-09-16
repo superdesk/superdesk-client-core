@@ -8,10 +8,11 @@ export const State: React.StatelessComponent<any> = ({item}) => {
     return (
         <div key="state" className={cssClass}>
             {
-                item.contact_state !== undefined && item.contact_state !== null &&
-                <span title={item.contact_state}>
-                    {gettext(item.contact_state)}
-                </span>
+                item.contact_state !== undefined && item.contact_state !== null && (
+                    <span title={item.contact_state}>
+                        {gettext(item.contact_state)}
+                    </span>
+                )
             }
         </div>
     );

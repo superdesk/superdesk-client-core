@@ -7,7 +7,8 @@ export const ListTypeIcon: React.StatelessComponent<any> = ({item}) => {
     const typeTooltip = item.first_name ? gettext('Person Contact') : gettext('Organisation Contact');
 
     return (
-        <div key="type-icon"
+        <div
+            key="type-icon"
             className="list-field type-icon"
             data-sd-tooltip={item.public ? typeTooltip : typeTooltip + ' ' + gettext('(Private)')}
             data-flow="right"
