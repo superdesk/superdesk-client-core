@@ -75,17 +75,6 @@ export function RelatedItemsDirective(
                 });
             };
 
-            const deregisterItemClose = $rootScope.$on('item:close', (evt, mainArticleId) => {
-                const itemId = storage.getItem(`open-item-after-related-closed--${mainArticleId}`);
-
-                if (itemId != null) {
-                    autosave.get({_id: itemId}).then((result) => {
-                        authoringWorkspace.open(result);
-                        storage.removeItem(`open-item-after-related-closed--${mainArticleId}`);
-                    });
-                }
-            });
-
             scope.gettext = gettext;
 
             scope.isLocked = (item) => {
@@ -350,6 +339,16 @@ export function RelatedItemsDirective(
                 case 'item:unlock':
                     shouldUpdateItems = relatedItemsIds.some((id) => payload.item === id);
                     break;
+                case 'item:close':
+                    const itemId = storage.getItem(`open-item-after-related-closed--${payload}`);
+
+                    if (itemId != null) {
+                        autosave.get({_id: itemId}).then((result) => {
+                            authoringWorkspace.open(result);
+                            storage.removeItem(`open-item-after-related-closed--${payload}`);
+                        });
+                    }
+                    break;
                 }
 
                 if (shouldUpdateItems) {
@@ -361,15 +360,13 @@ export function RelatedItemsDirective(
                 'item:lock',
                 'item:unlock',
                 'content:update',
-            ].map((eventName) =>
-                $rootScope.$on(eventName, onItemEvent),
-            );
+                'item:close',
+            ].map((eventName) => {
+                $rootScope.$on(eventName, onItemEvent);
+            });
 
             scope.$on('$destroy', () => {
                 removeEventListeners.forEach((removeFn) => removeFn());
-                if (deregisterItemClose != null) {
-                    deregisterItemClose();
-                }
             });
         },
     };
