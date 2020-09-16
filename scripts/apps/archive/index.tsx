@@ -4,7 +4,8 @@
 import './styles/related-item.scss';
 import './styles/assignment.scss';
 import './styles/html-preview.scss';
-import {get, includes, flatMap} from 'lodash';
+import {includes, flatMap} from 'lodash';
+import {reactToAngular1} from 'superdesk-ui-framework';
 
 // scripts
 import './related-item-widget/relatedItem';
@@ -21,6 +22,7 @@ import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {showSpikeDialog} from './show-spike-dialog';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 import * as actions from './actions';
+import {RelatedView} from './views/related-view';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -36,7 +38,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdItemPreviewContainer', directive.ItemPreviewContainer)
     .directive('sdMediaView', directive.MediaView)
     .directive('sdMediaMetadata', directive.MediaMetadata)
-    .directive('sdMediaRelated', directive.MediaRelated)
+    .component('sdRelatedView', reactToAngular1(RelatedView, ['relatedItems'], []))
     .directive('sdFetchedDesks', directive.FetchedDesks)
     .directive('sdMetaIngest', directive.MetaIngest)
     .directive('sdSingleItem', directive.SingleItem)

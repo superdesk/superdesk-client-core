@@ -5,7 +5,6 @@ export {MediaPreview, MediaPreviewWidget} from './MediaPreview';
 export {ItemPreviewContainer} from './ItemPreviewContainer';
 export {MediaView} from './MediaView';
 export {MediaMetadata} from './MediaMetadata';
-export {MediaRelated} from './MediaRelated';
 export {FetchedDesks} from './FetchedDesks';
 export {MetaIngest} from './MetaIngest';
 export {SingleItem} from './SingleItem';
