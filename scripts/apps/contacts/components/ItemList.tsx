@@ -156,13 +156,15 @@ export class ItemList extends React.Component<IProps, IState> {
             const flags = {selected: this.state.selected === itemId};
 
             return (
-                <Item key={itemId}
+                <Item
+                    key={itemId}
                     item={item}
                     view={this.state.view}
                     flags={flags}
                     onSelect={this.select}
                     svc={svc}
-                    scope={scope}/>
+                    scope={scope}
+                />
             );
         }.bind(this);
         const isEmpty = !this.state.itemsList.length;

@@ -7,10 +7,11 @@ import PropTypes from 'prop-types';
  * @name IconButton
  * @description IconButton displays a button with an icon on the toolbar.
  */
-export const IconButton: React.StatelessComponent<any> = ({onClick, iconName, tooltip}) =>
+export const IconButton: React.StatelessComponent<any> = ({onClick, iconName, tooltip}) => (
     <div data-flow={'down'} data-sd-tooltip={tooltip} className="Editor3-styleButton">
         <span onClick={onClick}><i className={`icon-${iconName}`} /></span>
-    </div>;
+    </div>
+);
 
 IconButton.propTypes = {
     onClick: PropTypes.func.isRequired,

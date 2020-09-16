@@ -50,45 +50,51 @@ export const InputArray: React.StatelessComponent<any> = ({
     const showAddButton = (maxCount ? value.length < maxCount : true) && !readOnly;
     const isIndexReadOnly = (index) => (addOnly && index === originalCount) ? false : readOnly;
     const customButton = addButtonComponent ? React.createElement(addButtonComponent, {onAdd: add}) : false;
-    const addButton = row ? (customButton || <Button onClick={add} text={addButtonText} />) :
-        (customButton || <Button onClick={add} text={addButtonText} tabIndex={0} enterKeyIsClick/>);
+    const addButton = row
+        ? (customButton || <Button onClick={add} text={addButtonText} />)
+        : (customButton || <Button onClick={add} text={addButtonText} tabIndex={0} enterKeyIsClick />);
 
-    const labelComponent = label ?
+    const labelComponent = label ? (
         <div>
             <div className={classNames('InputArray__label', labelClassName)}>{label}</div>
             {buttonWithLabel && showAddButton && addButton}
-        </div> : null;
+        </div>
+    ) : null;
 
     const getComponent = (val, index, _row) => {
         const indexReadOnly = isIndexReadOnly(index);
 
         return _row ?
-            (<Component
-                key={index}
-                index={index}
-                field={`${field}[${index}]`}
-                onChange={onChange}
-                value={val}
-                remove={remove.bind(null, index)}
-                readOnly={indexReadOnly}
-                message={get(message, `[${index}]`)}
-                invalid={!!get(message, `[${index}]`)}
-                openComponent={addOnly && !indexReadOnly}
-                {...props}
-            />) :
-            (<Component
-                key={index}
-                index={index}
-                field={`${field}[${index}]`}
-                onChange={onChange}
-                value={val}
-                remove={remove.bind(null, index)}
-                readOnly={indexReadOnly}
-                message={get(message, `[${index}]`)}
-                invalid={!!get(message, `[${index}]`)}
-                openComponent={addOnly && !indexReadOnly}
-                {...props}
-            />);
+            (
+                <Component
+                    key={index}
+                    index={index}
+                    field={`${field}[${index}]`}
+                    onChange={onChange}
+                    value={val}
+                    remove={remove.bind(null, index)}
+                    readOnly={indexReadOnly}
+                    message={get(message, `[${index}]`)}
+                    invalid={!!get(message, `[${index}]`)}
+                    openComponent={addOnly && !indexReadOnly}
+                    {...props}
+                />
+            ) :
+            (
+                <Component
+                    key={index}
+                    index={index}
+                    field={`${field}[${index}]`}
+                    onChange={onChange}
+                    value={val}
+                    remove={remove.bind(null, index)}
+                    readOnly={indexReadOnly}
+                    message={get(message, `[${index}]`)}
+                    invalid={!!get(message, `[${index}]`)}
+                    openComponent={addOnly && !indexReadOnly}
+                    {...props}
+                />
+            );
     };
 
     return (

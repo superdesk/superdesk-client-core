@@ -10,16 +10,17 @@ import classNames from 'classnames';
 export const Item: React.StatelessComponent<any> = (
     {children, noBg, noHover, shadow, activated, className, onClick, margin},
 ) => (
-    <div className={classNames(
-        className,
-        'sd-list-item',
-        {'sd-list-item--no-bg': noBg},
-        {'sd-list-item--no-hover': noHover},
-        {'sd-list-item--margin': margin},
-        shadow ? `sd-shadow--z${shadow}` : null,
-        {'sd-list-item--activated': activated},
-    )}
-    onClick={onClick}
+    <div
+        className={classNames(
+            className,
+            'sd-list-item',
+            {'sd-list-item--no-bg': noBg},
+            {'sd-list-item--no-hover': noHover},
+            {'sd-list-item--margin': margin},
+            shadow ? `sd-shadow--z${shadow}` : null,
+            {'sd-list-item--activated': activated},
+        )}
+        onClick={onClick}
     >
         {children}
     </div>

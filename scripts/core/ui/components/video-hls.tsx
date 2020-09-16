@@ -41,7 +41,8 @@ export class HLSVideoComponent extends React.PureComponent<IProps> {
 
     render() {
         return (
-            <video controls
+            <video
+                controls
                 preload="metadata"
                 ref={(el) => this.videoElement = el}
                 poster={this.props.poster}

@@ -129,10 +129,11 @@ export class CollapseBox extends React.Component<any, any> {
                                     onKeyDown={this.props.tabEnabled ? this.handleKeyDown : null}
                                 />
                             </div>
-                            {this.props.openItemTopBar &&
-                            <div className="sd-collapse-box__content-block sd-collapse-box__content-block--top">
-                                {this.props.openItemTopBar}
-                            </div>}
+                            {this.props.openItemTopBar && (
+                                <div className="sd-collapse-box__content-block sd-collapse-box__content-block--top">
+                                    {this.props.openItemTopBar}
+                                </div>
+                            )}
                             {this.props.openItem}
                         </div>
                     </div>

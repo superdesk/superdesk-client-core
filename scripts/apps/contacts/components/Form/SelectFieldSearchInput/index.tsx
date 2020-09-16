@@ -89,25 +89,29 @@ export class SelectFieldSearchInput extends React.Component<any, any> {
                         <Label text={label} />
                     </LineInput>
                 </Row>
-                {!readOnly && <Row noPadding={true}>
-                    <LineInput isSelect={false} noLabel={!!value}>
-                        <DebounceInput
-                            value={inputValue}
-                            className="sd-line-input__input"
-                            minLength={1}
-                            debounceTimeout={500}
-                            onChange={this.filterDataList}
-                            placeholder="Search" />
+                {!readOnly && (
+                    <Row noPadding={true}>
+                        <LineInput isSelect={false} noLabel={!!value}>
+                            <DebounceInput
+                                value={inputValue}
+                                className="sd-line-input__input"
+                                minLength={1}
+                                debounceTimeout={500}
+                                onChange={this.filterDataList}
+                                placeholder="Search"
+                            />
 
-                        {this.state.openFilterList && (
-                            <SelectFieldPopup
-                                onClose={this.closePopup}
-                                target="sd-line-input__input"
-                                dataList={listData}
-                                onChange={this.onItemChange} />
-                        )}
-                    </LineInput>
-                </Row>}
+                            {this.state.openFilterList && (
+                                <SelectFieldPopup
+                                    onClose={this.closePopup}
+                                    target="sd-line-input__input"
+                                    dataList={listData}
+                                    onChange={this.onItemChange}
+                                />
+                            )}
+                        </LineInput>
+                    </Row>
+                )}
             </div>
         );
     }

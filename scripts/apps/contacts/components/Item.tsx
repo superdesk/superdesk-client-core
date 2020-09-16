@@ -87,10 +87,14 @@ export class Item extends React.Component<any, any> {
         );
 
         return (
-            <li id={item._id} key={item._id} className={cssClass}
+            <li
+                id={item._id}
+                key={item._id}
+                className={cssClass}
                 onMouseEnter={this.setHoverState}
                 onMouseLeave={this.unsetHoverState}
-                onClick={this.select}>
+                onClick={this.select}
+            >
                 {renderContents(contents)}
             </li>
         );

@@ -10,13 +10,15 @@ import classNames from 'classnames';
 export const SidePanel: React.StatelessComponent<any> = (
     {children, shadowRight, shadowLeft, transparent, className},
 ) => (
-    <div className={classNames(
-        'side-panel',
-        {'side-panel--shadow-right': shadowRight},
-        {'side-panel--transparent': transparent},
-        {'side-panel--shadow-left': shadowLeft},
-        className,
-    )}>
+    <div
+        className={classNames(
+            'side-panel',
+            {'side-panel--shadow-right': shadowRight},
+            {'side-panel--transparent': transparent},
+            {'side-panel--shadow-left': shadowLeft},
+            className,
+        )}
+    >
         {children}
     </div>
 );

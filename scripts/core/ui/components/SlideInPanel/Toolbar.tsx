@@ -10,11 +10,13 @@ import './style.scss';
  * @description Top toolbar of a slide-in panel
  */
 export const Toolbar: React.StatelessComponent<any> = ({children, className, invalid}) => (
-    <div className={classNames(
-        'sd-slide-in-panel__header',
-        {'sd-slide-in-panel__header--invalid': invalid},
-        className,
-    )}>
+    <div
+        className={classNames(
+            'sd-slide-in-panel__header',
+            {'sd-slide-in-panel__header--invalid': invalid},
+            className,
+        )}
+    >
         <div className="subnav__sliding-toolbar">
             <div className="sliding-toolbar__inner" />
             {children}
