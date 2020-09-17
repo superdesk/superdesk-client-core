@@ -195,9 +195,7 @@ export function MultiActionBarController(
         return multi.getItems().every((item) => {
             if (item.state !== 'draft') {
                 if (personalLocationPath) {
-                    return appConfig.features
-                    && appConfig.features.publishFromPersonal != null
-                    && appConfig.features.publishFromPersonal;
+                    return appConfig?.features?.publishFromPersonal === true;
                 }
                 return true;
             }
@@ -283,6 +281,7 @@ export function MultiActionBarController(
                     item.task = {
                         ...(item.task ?? {}),
                         desk: currentDeskId,
+                        stage: desks.getCurrentStageId(),
                     };
                 }
                 authoring.publish(item, item)
