@@ -8,11 +8,12 @@ import classNames from 'classnames';
  * @description Component to have two items nested
  */
 export const NestedItem: React.StatelessComponent<any> = ({collapsed, expanded, parentItem, nestedChildren}) => (
-    <div className={classNames(
-        'sd-list-item-nested',
-        {'sd-list-item-nested--collapsed': collapsed},
-        {'sd-list-item-nested--expanded': expanded},
-    )}
+    <div
+        className={classNames(
+            'sd-list-item-nested',
+            {'sd-list-item-nested--collapsed': collapsed},
+            {'sd-list-item-nested--expanded': expanded},
+        )}
     >
         {parentItem}
         <div className="sd-list-item-nested__childs sd-shadow--z1">

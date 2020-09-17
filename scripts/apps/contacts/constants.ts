@@ -15,6 +15,7 @@ export const DEFAULT_LIST_CONFIG = {
         'OrgName',
         'ContactLocation',
         'SocialInfo',
+
     ],
     singleLine: [
         'ContactName',
@@ -42,13 +43,13 @@ export const KEYCODES = {
 /**
  * Lookup fields for at least one of them should be provided
  */
-export const LOOKUP_FIELDS = [
-    'mobile',
-    'contact_phone',
-    'contact_email',
-    'twitter',
-    'facebook',
-    'instagram',
+export const getLookupFields = () => [
+    {name: 'mobile', label: gettext('mobile')},
+    {name: 'contact_phone', label: gettext('phone')},
+    {name: 'contact_email', label: gettext('email')},
+    {name: 'twitter', label: gettext('twitter')},
+    {name: 'facebook', label: gettext('facebook')},
+    {name: 'instagram', label: gettext('instagram')},
 ];
 
 export const FB_URL = 'https://www.facebook.com/';

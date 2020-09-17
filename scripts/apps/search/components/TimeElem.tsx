@@ -6,18 +6,13 @@ interface IProps {
 }
 
 export class TimeElem extends React.Component<IProps> {
-    datetime: any;
-
-    constructor(props: IProps) {
-        super(props);
-
-        this.datetime = ng.get('datetime');
-    }
     render() {
         const {date} = this.props;
 
+        const datetime = ng.get('datetime');
+
         return (
-            <time title={this.datetime.longFormat(date)}>{this.datetime.shortFormat(date)}</time>
+            <time title={datetime.longFormat(date)}>{datetime.shortFormat(date)}</time>
         );
     }
 }

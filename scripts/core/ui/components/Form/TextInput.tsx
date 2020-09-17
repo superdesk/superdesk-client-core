@@ -25,7 +25,7 @@ export const TextInput: React.StatelessComponent<any> = ({
     ...props
 }) => (
     <LineInput {...props} invalid={invalid} readOnly={readOnly}>
-        <Label text={label}/>
+        <Label text={label} />
         <Input
             field={field}
             value={value}

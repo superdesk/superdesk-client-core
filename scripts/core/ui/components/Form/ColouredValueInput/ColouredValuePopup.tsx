@@ -95,47 +95,54 @@ export class ColouredValuePopup extends React.PureComponent<any, any> {
             popupContainer,
         } = this.props;
 
-        return (<Popup
-            target={target}
-            close={onCancel}
-            className="select-coloured-value__popup"
-            popupContainer={popupContainer}
-            onKeyDown={this.onKeyDown}
-        >
-            {title && (
-                <Header noPadding={true}>
-                    <Label text={title} centerText={true} />
-                </Header>
-            )}
+        return (
+            <Popup
+                target={target}
+                close={onCancel}
+                className="select-coloured-value__popup"
+                popupContainer={popupContainer}
+                onKeyDown={this.onKeyDown}
+            >
+                {title && (
+                    <Header noPadding={true}>
+                        <Label text={title} centerText={true} />
+                    </Header>
+                )}
 
-            <Content noPadding={true}>
-                <ul>
-                    {clearable && (
-                        <li>
-                            <button type="button"
-                                onClick={onChange.bind(null, {
-                                    [labelKey]: 'None',
-                                    [valueKey]: null,
-                                })} >
-                                <span>{gettext('None')}</span>
-                            </button>
-                        </li>
-                    )}
+                <Content noPadding={true}>
+                    <ul>
+                        {clearable && (
+                            <li>
+                                <button
+                                    type="button"
+                                    onClick={onChange.bind(null, {
+                                        [labelKey]: 'None',
+                                        [valueKey]: null,
+                                    })}
+                                >
+                                    <span>{gettext('None')}</span>
+                                </button>
+                            </li>
+                        )}
 
-                    {options.map((opt, index) => (
-                        <li key={index}>
-                            <button type="button" onClick={onChange.bind(null, opt)}
-                                className={classNames({
-                                    'select-coloured-value__popup--activeElement': this.state.activeIndex === index,
-                                })} >
-                                <span className={getClassNamesForOption(opt)}>{get(opt, valueKey, '')}</span>
+                        {options.map((opt, index) => (
+                            <li key={index}>
+                                <button
+                                    type="button"
+                                    onClick={onChange.bind(null, opt)}
+                                    className={classNames({
+                                        'select-coloured-value__popup--activeElement': this.state.activeIndex === index,
+                                    })}
+                                >
+                                    <span className={getClassNamesForOption(opt)}>{get(opt, valueKey, '')}</span>
                                     &nbsp;&nbsp;{get(opt, labelKey, '')}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </Content>
-        </Popup>);
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </Content>
+            </Popup>
+        );
     }
 }
 

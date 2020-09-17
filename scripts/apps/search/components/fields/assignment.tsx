@@ -8,9 +8,11 @@ export const assignment: React.StatelessComponent<IPropsItemListInfo> = ({item})
     }
 
     return (
-        <span key="assignment"
+        <span
+            key="assignment"
             className="assignment-icon"
-            title={gettext('Coverage')}>
+            title={gettext('Coverage')}
+        >
             <i className="icon-calendar" />
         </span>
     );

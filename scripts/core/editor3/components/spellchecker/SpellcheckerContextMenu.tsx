@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import * as actions from '../../actions';
 import {StickElementsWithTracking} from 'core/helpers/dom/stickElementsWithTracking';
@@ -51,23 +51,24 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
             (suggestion) => suggestion.text.trim().length === 0).length > 0;
 
         return (
-            <div className={'dropdown open suggestions-dropdown'}
+            <div
+                className={'dropdown open suggestions-dropdown'}
                 ref={(el) => this.dropdownElement = el}
                 style={{zIndex: 999, border: 'solid transparent', borderWidth: '6px 0'}}
                 data-test-id="spellchecker-menu"
             >
                 <ul className={'dropdown__menu'} style={{position: 'static'}}>
-                    {messageExists && !whitespaceSuggestionExists &&
-                        <Fragment>
+                    {messageExists && !whitespaceSuggestionExists && (
+                        <React.Fragment>
                             <li style={{margin: '0 16px'}}>{message}</li>
-                            <li className="dropdown__menu-divider"/>
-                        </Fragment>
-                    }
+                            <li className="dropdown__menu-divider" />
+                        </React.Fragment>
+                    )}
                     <div className="form-label" style={{margin: '0 16px'}}>{gettext('Suggestions')}</div>
                     {
                         suggestions.length === 0
                             ? <li><button>{gettext('SORRY, NO SUGGESTIONS.')}</button></li>
-                            : suggestions.map((suggestion, index) =>
+                            : suggestions.map((suggestion, index) => (
                                 <li key={index}>
                                     <button
                                         onMouseDown={() =>
@@ -78,13 +79,14 @@ export class SpellcheckerContextMenuComponent extends React.Component<IProps> {
                                         {suggestion.text.trim().length === 0 && messageExists
                                             ? message : suggestion.text}
                                     </button>
-                                </li>,
+                                </li>
+                            ),
                             )
                     }
                     {
                         Object.keys(spellchecker.actions).length < 1 ? null : (
                             <div>
-                                <li className="divider"/>
+                                <li className="divider" />
                                 <div className="form-label" style={{margin: '0 16px'}}>{gettext('Actions')}</div>
                                 {
                                     Object.keys(spellchecker.actions).map((key, i) => {

@@ -9,17 +9,28 @@ import classNames from 'classnames';
  * @description Tabs Component for a NavBar
  */
 export const Tabs: React.StatelessComponent<any> = ({tabs, active, setActive, className, darkUi}) => (
-    <ul className={classNames(
-        'nav-tabs',
-        {'nav-tabs--ui-dark': darkUi},
-        className,
-    )}>
+    <ul
+        className={classNames(
+            'nav-tabs',
+            {'nav-tabs--ui-dark': darkUi},
+            className,
+        )}
+    >
         {tabs.map((tab, index) => (
             !get(tab, 'enabled', true) ?
-                null :
-                <li key={tab.label} className={'nav-tabs__tab' + (active === index ? ' nav-tabs__tab--active' : '')}>
-                    <button className="nav-tabs__link" onClick={() => setActive(index)}>{tab.label}</button>
-                </li>
+                null : (
+                    <li
+                        key={tab.label}
+                        className={'nav-tabs__tab' + (active === index ? ' nav-tabs__tab--active' : '')}
+                    >
+                        <button
+                            className="nav-tabs__link"
+                            onClick={() => setActive(index)}
+                        >
+                            {tab.label}
+                        </button>
+                    </li>
+                )
         ))}
     </ul>
 );

@@ -91,7 +91,8 @@ export class ColouredValueInput extends React.Component<any, any> {
                         </span>
                     </LineInput>
                 ) : (
-                    <button type="button"
+                    <button
+                        type="button"
                         className="dropdown__toggle select-coloured-value__input line-input"
                         onClick={this.togglePopup}
                         onFocus={onFocus}

@@ -137,9 +137,7 @@ export function TagService($location, desks, userList, metadata, search,
                 const vocabularyItem = codeList.find(({qcode}) => qcode === selecteditem);
 
                 if (vocabularyItem?.name) {
-                    const language = getUserInterfaceLanguage();
-                    const vocabularyNameTranslated =
-                        vocabularyItem?.translations?.name?.[language] ?? vocabularyItem.name;
+                    const vocabularyNameTranslated = metadata.getLocaleName(vocabularyItem, {});
                     const tagLabel = `${value}:(${vocabularyNameTranslated})`;
                     const tagValue = `${value}:(${vocabularyItem.name})`;
 
@@ -192,9 +190,10 @@ export function TagService($location, desks, userList, metadata, search,
 
                 tags.selectedParameters.push(tag(tagValue, tagValue));
             }, (error) => {
+                const tagLabel = `${value}:${gettext('Unknown')}`;
                 const tagValue = value + ':Unknown';
 
-                tags.selectedParameters.push(tag(tagValue, tagValue));
+                tags.selectedParameters.push(tag(tagLabel, tagValue));
             });
         },
         from_desk: processFromToDesk,

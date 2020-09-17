@@ -46,15 +46,15 @@ export class InlineStyleButtonsComponent extends React.Component<any, any> {
 
         return (
             <span>
-                {editorFormat.filter((type) => type in inlineStyles).map((type) =>
+                {editorFormat.filter((type) => type in inlineStyles).map((type) => (
                     <StyleButton
                         key={type}
                         active={currentStyle.has(inlineStyles[type])}
                         label={type}
                         onToggle={this.onToggle}
                         style={inlineStyles[type]}
-                    />,
-                )}
+                    />
+                ))}
             </span>
         );
     }

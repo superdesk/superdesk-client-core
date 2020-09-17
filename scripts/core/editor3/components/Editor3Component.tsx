@@ -577,7 +577,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
                     onChange={this.props.onChange}
                 />
                 <div className="focus-screen" onMouseDown={this.focus}>
-                    <Editor editorState={editorState}
+                    <Editor
+                        editorState={editorState}
                         handleDrop={this.handleDropOnEditor}
                         handleKeyCommand={this.handleKeyCommand}
                         keyBindingFn={this.keyBindingFn}

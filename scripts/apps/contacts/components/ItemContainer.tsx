@@ -119,8 +119,15 @@ export class ItemContainer extends React.Component<any, any> {
             _class = _link;
             break;
         case 'location':
-            value = contactAddress ? (<a href={`${MAP_URL}${contactAddress}`} target="_blank" rel="noopener noreferrer">
-                {contactAddress}</a>) : null;
+            value = contactAddress ? (
+                <a
+                    href={`${MAP_URL}${contactAddress}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    {contactAddress}
+                </a>
+            ) : null;
             title = value && contactAddress;
             _class = _link;
             break;

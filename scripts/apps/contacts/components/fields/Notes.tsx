@@ -8,11 +8,11 @@ export const Notes: React.StatelessComponent<any> = ({item}) => {
 
     return (
         <div key="notes">
-            {notes &&
+            {notes && (
                 <span title={notes}>
                     {displayNotes}
                 </span>
-            }
+            )}
         </div>
     );
 };

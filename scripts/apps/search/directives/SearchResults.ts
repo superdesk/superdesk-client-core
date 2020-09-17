@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {ISearchOptions} from '../services/SearchService';
+import {IPackagesService} from 'types/Services/Packages';
 
 SearchResults.$inject = [
     '$location',
@@ -43,7 +44,7 @@ function isObjectId(value) {
 export function SearchResults(
     $location,
     preferencesService,
-    packages,
+    packages: IPackagesService,
     asset,
     $timeout,
     api,

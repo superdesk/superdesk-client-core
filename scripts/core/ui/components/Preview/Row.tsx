@@ -10,22 +10,24 @@ import classNames from 'classnames';
 export const Row: React.StatelessComponent<any> = (
     {label, value, className, children, noPadding, enabled, flex, rowItem},
 ) => (
-    enabled ?
-        <div
-            className={classNames(
-                {
-                    'form__row': !rowItem,
-                    'form__row-item': rowItem,
-                    'no-padding': noPadding,
-                    'form__row--flex': flex,
-                },
-            )}
-        >
-            {label && <label className="form-label form-label--light">{label}</label>}
-            {value && <p className={'sd-text__' + className}>{value}</p>}
-            {children}
-        </div> :
-        null
+    enabled
+        ? (
+            <div
+                className={classNames(
+                    {
+                        'form__row': !rowItem,
+                        'form__row-item': rowItem,
+                        'no-padding': noPadding,
+                        'form__row--flex': flex,
+                    },
+                )}
+            >
+                {label && <label className="form-label form-label--light">{label}</label>}
+                {value && <p className={'sd-text__' + className}>{value}</p>}
+                {children}
+            </div>
+        )
+        : null
 );
 
 Row.propTypes = {
