@@ -205,10 +205,10 @@ export function SendService(
                     notify.error(gettext('Failed to get item.'));
                     return item;
                 });
-        } else if (data.desk === 'Personal Space') {
+        } else if (data.desk === 'PERSONAL_SPACE') {
             return api.save('move', {}, {}, item)
                 .then((_item) => {
-                    notify.success(gettext('Item send to perosnal space.'));
+                    notify.success(gettext('Item sent to personal space.'));
                     $rootScope.$broadcast('item:update', {item: _item});
                     return _item;
                 });

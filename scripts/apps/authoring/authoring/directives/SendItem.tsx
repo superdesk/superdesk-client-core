@@ -94,6 +94,7 @@ export function SendItem($q,
             scope.subscribersWithPreviewConfigured = [];
             scope.sendPublishSchedule = appConfig?.ui?.sendPublishSchedule ?? true;
             scope.sendEmbargo = appConfig?.ui?.sendEmbargo ?? true;
+            scope.PERSONAL_SPACE = {label: gettext('Personal Space'), value: 'PERSONAL_SPACE'};
 
             // if authoring:publish extension point is not defined
             // then publish pane is single column
@@ -256,8 +257,8 @@ export function SendItem($q,
                 }
 
                 // save these here, it might get changed on scope while middlewares run
-                const deskId = scope.selectedDesk._id;
-                const stageId = deskId !== 'Personal Space'
+                const deskId = scope.selectedDesk._id || scope.selectedDesk.value;
+                const stageId = deskId !== scope.PERSONAL_SPACE.value
                     ? scope.selectedStage._id || scope.selectedDesk.incoming_stage : null;
                 const selectedDesk = scope.selectedDesk;
 
@@ -582,7 +583,7 @@ export function SendItem($q,
              * @return {Object} promise
              */
             const runSendAndPublish = () => {
-                var deskId = scope.selectedDesk._id;
+                var deskId = scope.selectedDesk._id || scope.selectedDesk.value;
                 var stageId = scope.selectedStage._id || scope.selectedDesk.incoming_stage;
 
                 // send releases lock, increment version.
@@ -706,7 +707,7 @@ export function SendItem($q,
                                 scope.task._etag = result._etag;
                             }
 
-                            if (deskId === 'Personal Space') {
+                            if (deskId === scope.PERSONAL_SPACE.value) {
                                 return api.save('move', {}, {}, scope.item);
                             } else {
                                 return api.save('move', {}, {
@@ -716,7 +717,7 @@ export function SendItem($q,
                             }
                         })
                         .then((value) => {
-                            if (deskId === 'Personal Space') {
+                            if (deskId === scope.PERSONAL_SPACE.value) {
                                 notify.success(gettext('Item sent to personal space.'));
                             } else {
                                 notify.success(gettext('Item sent.'));
@@ -754,8 +755,8 @@ export function SendItem($q,
              */
             function updateLastDestination() {
                 var updates = {};
-                var deskId = scope.selectedDesk._id;
-                var stageId = deskId !== 'Personal Space'
+                var deskId = scope.selectedDesk._id || scope.selectedDesk.value;
+                var stageId = deskId !== scope.PERSONAL_SPACE.value
                     ? scope.selectedStage._id || scope.selectedDesk.incoming_stage : null;
 
                 updates[PREFERENCE_KEY] = {desk: deskId, stage: stageId};

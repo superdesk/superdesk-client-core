@@ -31,7 +31,8 @@ export function DeskSelect(Keys, _, preferencesService, privileges) {
             selectedDesk: '=',
             defaultDesk: '=',
             onChange: '&',
-            action: '=',
+            allowPersonalSpace: '=?',
+            personalSpace: '=?',
         },
         controller: DeskSelectController,
         controllerAs: 'ctrl',
@@ -44,9 +45,8 @@ export function DeskSelect(Keys, _, preferencesService, privileges) {
                 scope.preferredDesks = result;
             });
 
-            scope.sendToPersonal = appConfig.features
-                && appConfig.features.sendToPersonal != null && appConfig.features.sendToPersonal
-                && scope.action === 'send_to'
+            scope.sendToPersonal = appConfig?.features?.sendToPersonal === true
+                && scope.allowPersonalSpace
                 && privileges.userHasPrivileges({send_to_personal: 1});
 
             /**
