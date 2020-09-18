@@ -266,6 +266,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                                 scope.dirty = JSON.stringify(user) !== JSON.stringify(scope.origUser);
                             } else {
                                 userWatchInitialized = true;
+                                scope.userImmutable = {...scope.user};
                             }
                         });
 
