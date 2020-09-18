@@ -39,6 +39,6 @@ services:
             - PUBLICAPI_MONGO_URI=mongodb://mongo/publicapi_e2e
             - CONTENTAPI_MONGO_URI=mongodb://mongo/contentapi_e2e
             - WEB_WORKERS=2
-            - WEB_TIMEOUT=10
+            - WEB_TIMEOUT=30
             - WEB_LOG_LEVEL=info
             - SENTRY_DSN
