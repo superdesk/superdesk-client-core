@@ -216,7 +216,9 @@ export function SendItem($q,
             };
 
             scope.selectDesk = function(desk) {
-                scope.selectedDesk = _.cloneDeep(desk);
+                scope.selectedDesk = desk ? _.cloneDeep(desk)
+                    : appConfig?.features?.sendToPersonal && privileges.userHasPrivileges({send_to_personal: 1})
+                        ? scope.PERSONAL_SPACE : desk;
                 scope.selectedStage = null;
                 fetchStages();
                 fetchMacros();
