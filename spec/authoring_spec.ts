@@ -499,7 +499,7 @@ describe('authoring', () => {
         ctrlKey('x');
         authoring.save();
         authoring.publish(true);
-        assertToastMsg('error', 'BODY_HTML empty values not allowed');
+        assertToastMsg('error', 'BODY HTML empty values not allowed');
     });
 
     it('keyboard navigation operations on subject dropdown', () => {
