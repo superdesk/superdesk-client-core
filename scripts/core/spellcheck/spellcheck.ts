@@ -1,5 +1,6 @@
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {gettext} from 'core/utils';
+import {debounce, once} from 'lodash';
 
 /**
  * Spellcheck module
@@ -570,7 +571,15 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
             }
         });
     }
-    setupSpellchecker();
+
+    // There may be multiple instances of editors so we are trying to wait for all
+    const initializeSpellchecker = debounce(once(setupSpellchecker), 500);
+
+    window.addEventListener('editorInitialized', initializeSpellchecker);
+
+    $scope.$on('$destroy', () => {
+        window.removeEventListener('editorInitialized', initializeSpellchecker);
+    });
 }
 
 angular.module('superdesk.apps.spellcheck', ['superdesk.apps.dictionaries'])
