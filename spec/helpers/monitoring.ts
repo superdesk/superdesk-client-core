@@ -368,7 +368,10 @@ class Monitoring {
         };
 
         this.tabAction = function(tab) {
-            element.all(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]')).click();
+            const btn = element.all(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]')).first();
+
+            browser.wait(ECE.elementToBeClickable(btn), 2000);
+            btn.click();
         };
 
         this.openRelatedItem = function(index) {
