@@ -96,6 +96,12 @@
           data-test-id="field--headline"
         ></p>
 
+        <div ng-repeat="field in fields track by field._id"
+          ng-if="selected.preview.extra[field._id] && (field.field_type === 'text') && titleFields.includes(field._id)">
+
+          <p class="text" ng-if="field.field_type === 'text'" sd-html-preview="selected.preview.extra[field._id]"></p>
+
+        </div>
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 
         <div class="core-content">
@@ -151,7 +157,7 @@
 
               <div class="text body-text" sd-short-date ng-if="field.field_type === 'date'" data-date="selected.preview.extra[field._id]"></div>
 
-              <div class="text body-text" ng-if="field.field_type === 'text'" sd-html-preview="selected.preview.extra[field._id]"></div>
+              <div class="text body-text" ng-if="field.field_type === 'text' && !titleFields.includes(field._id)" sd-html-preview="selected.preview.extra[field._id]"></div>
 
               <sd-preview-custom-field ng-if="field.field_type === 'custom'" item="selected.preview" field="field"></sd-preview-custom-field>
               
