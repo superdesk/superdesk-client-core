@@ -159,7 +159,7 @@ export function altKey(key) {
 }
 
 export function assertToastMsg(type: 'info' | 'success' | 'error', msg: string) {
-    browser.wait(ECE.visibilityOf(element(s([`notification--${type}`], msg))));
+    browser.wait(ECE.visibilityOf(element(s([`notification--${type}`], msg))), 2000);
 }
 
 // Don't expect message to appear
@@ -170,7 +170,7 @@ export function assertToastMsgNotDisplayed(type, msg) {
 export function waitForToastMsgDissapear(type, msg) {
     browser.wait(protractor.ExpectedConditions.invisibilityOf(
         element(by.cssContainingText(`[data-test-id="notification--${type}"]`, msg)),
-    ));
+    ), 3000);
 }
 
 /**
