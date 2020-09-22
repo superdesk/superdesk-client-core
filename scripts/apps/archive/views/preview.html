@@ -73,6 +73,7 @@
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
           <i class="filetype-icon-large-composite"></i>
           <p class="title preview-headline"
+            order="{{editor['headline'].order}}"
             ng-if="selected.preview.headline"
             ng-class="{condensed: !lock}"
             sd-html-preview="selected.preview.headline"
@@ -89,16 +90,18 @@
         <div class="rewrite" ng-if="selected.preview.rewrite_id">{{ :: 'This story has been rewritten by: ' | translate }}<a ng-click="previewRewriteStory()"
             class="open-item"><i class="icon-external"></i></a></div>
 
-        <p class="title preview-headline"
-          ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
-          ng-class="{condensed: !lock}"
-          sd-html-preview="selected.preview.headline"
-          data-test-id="field--headline"
-        ></p>
 
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 
         <div class="core-content">
+
+            <p class="title preview-headline"
+              order="{{editor['headline'].order}}"
+              ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
+              ng-class="{condensed: !lock}"
+              sd-html-preview="selected.preview.headline"
+              data-test-id="field--headline"
+            ></p>
 
             <p ng-if="selected.preview.is_spiked" class="alert alert-warning expires">
                 <span translate>expires</span> <time sd-datetime data-date="selected.preview.expiry"></time>
@@ -117,7 +120,7 @@
                 </div>
             </div>
 
-            <div ng-if="selected.preview.associations.featuremedia">
+            <div ng-if="selected.preview.associations.featuremedia" order="{{editor['feature_media'].order}}">
                 <div sd-item-rendition
                     data-item="selected.preview.associations.featuremedia"
                     data-rendition="viewImage"></div>
@@ -132,18 +135,18 @@
                 <sd-video item="selected.preview"></sd-video>
             </div>
 
-            <div class="text abstract" ng-show="selected.preview.abstract && (selected.preview.type !== 'picture' || !selected.preview.description_text)"
+            <div class="text abstract" order="{{editor['abstract'].order}}" ng-show="selected.preview.abstract && (selected.preview.type !== 'picture' || !selected.preview.description_text)"
               sd-html-preview="selected.preview.abstract"></div>
 
-            <div class="text byline" ng-show="selected.preview.byline" sd-html-preview="selected.preview.byline"></div>
+            <div class="text byline" order="{{editor['byline'].order}}" ng-show="selected.preview.byline" sd-html-preview="selected.preview.byline"></div>
 
-            <div class="text dateline" ng-show="selected.preview.dateline" sd-html-preview="selected.preview.dateline.text"></div>
+            <div class="text dateline" order="{{editor['dateline'].order}}" ng-show="selected.preview.dateline" sd-html-preview="selected.preview.dateline.text"></div>
 
-            <div class="text body-text" ng-show="selected.preview.body_html" sd-html-preview="selected.preview.body_html" item="selected.preview"></div>
+            <div class="text body-text" order="{{editor['body_html'].order}}" ng-show="selected.preview.body_html" sd-html-preview="selected.preview.body_html" item="selected.preview"></div>
 
-            <div class="text body-footer" ng-show="selected.preview.body_footer" sd-html-preview="selected.preview.body_footer" item="selected.preview"></div>
+            <div class="text body-footer" order="{{editor['body_footer'].order}}" ng-show="selected.preview.body_footer" sd-html-preview="selected.preview.body_footer" item="selected.preview"></div>
 
-            <div class="text sign-off" ng-show="selected.preview.sign_off" sd-html-preview="selected.preview.sign_off"></div>
+            <div class="text sign-off" order="{{editor['sign_off'].order}}" ng-show="selected.preview.sign_off" sd-html-preview="selected.preview.sign_off"></div>
 
             <!-- custom date, text and url fields -->
             <div ng-repeat="field in fields track by field._id" order="{{editor[field._id].order}}"
@@ -156,7 +159,7 @@
               <sd-preview-custom-field ng-if="field.field_type === 'custom'" item="selected.preview" field="field"></sd-preview-custom-field>
               
               <ul class="text body-text" ng-if="field.field_type === 'urls'">
-                <li ng-repeat="item in selected.preview.extra[field._id] track by $index">{{item.url}}<br>
+                <li ng-repeat="item in selected.preview.extra[field._id] track by $index" order="{{editor[field._id].order}}">{{item.url}}<br>
                   <p class="nav-space description-text">{{item.description}}</p>
                 </li>
               </ul>
