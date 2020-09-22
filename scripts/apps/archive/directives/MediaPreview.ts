@@ -26,8 +26,6 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
         link: function(scope, elem) {
             const PREVIEW_HEADER_STATE = 'item_preview:header_state';
 
-            scope.titleFields = ['shorttitle', 'subtitle'];
-
             const setSubjectPreviewFields = () => {
                 scope.subjectPreviewFields = content.previewFields(scope.editor, scope.fields)
                     .filter((field: IArticleField) => field.field_type == null);
