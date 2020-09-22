@@ -1,5 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import {Icon} from 'superdesk-ui-framework/react';
 
 interface IProps {
     children?: React.ReactNode;
@@ -7,6 +8,7 @@ interface IProps {
     borderBottom?: boolean;
     darkBlueGrey?: boolean;
     borderB?: boolean;
+    onClose?(): void;
 }
 
 export class PanelHeader extends React.PureComponent<IProps> {
@@ -22,6 +24,11 @@ export class PanelHeader extends React.PureComponent<IProps> {
 
         return (
             <div className={classes}>
+                {this.props.onClose && (
+                    <a className="icn-btn side-panel__close" onClick={this.props.onClose}>
+                        <Icon name="close-small" />
+                    </a>
+                )}
                 {!this.props.title ? null : (
                     <h3 className="side-panel__heading">{this.props.title}</h3>
                 )}

@@ -6,11 +6,20 @@ import {ISuperdesk} from 'superdesk-api';
 import {IAssetItem} from '../../interfaces';
 
 // UI
+import {Icon} from 'superdesk-ui-framework/react';
 import {GridItem} from '../../ui/grid/GridItem';
+import {GridItemFooter} from '../../ui/grid/GridItemFooter';
+import {GridItemFooterBlock} from '../../ui/grid/GridItemFooterBlock';
 import {GridItemThumb} from '../../ui/grid/GritItemThumb';
 import {GridItemContent} from '../../ui/grid/GridItemContent';
 import {GridItemProgressCircle} from '../../ui/grid/GridItemProgressCircle';
-import {getHumanReadableFileSize, getIconTypeFromMimetype} from '../../utils/ui';
+
+// Utils
+import {
+    getHumanReadableFileSize,
+    getIconTypeFromMimetype,
+    getAssetStateLabel,
+} from '../../utils/ui';
 
 interface IProps {
     asset: Partial<IAssetItem>;
@@ -22,7 +31,7 @@ interface IProps {
 }
 
 export function getAssetGridItemComponent(superdesk: ISuperdesk) {
-    const {gettext} = superdesk.localization;
+    const {gettext, longFormatDateTime} = superdesk.localization;
 
     return class AssetGridItem extends React.PureComponent<IProps> {
         constructor(props: IProps) {
@@ -40,6 +49,10 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
         }
 
         render() {
+            const typeIcon = getIconTypeFromMimetype(
+                this.props.asset?.mimetype ?? 'text',
+            );
+
             return (
                 <GridItem
                     onClick={this.props.onClick}
@@ -48,7 +61,7 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
                     <GridItemThumb
                         uploading={true}
                         remove={this.props.remove && this.onRemove}
-                        icon={getIconTypeFromMimetype(this.props.asset?.mimetype ?? 'text')}
+                        icon={typeIcon}
                     >
                         {this.props.uploadProgress && (
                             <GridItemProgressCircle
@@ -59,6 +72,9 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
                         )}
                     </GridItemThumb>
                     <GridItemContent>
+                        {this.props.asset._updated && (
+                            <time>{longFormatDateTime(this.props.asset._updated)}</time>
+                        )}
                         <p className="sd-grid-item__title">
                             {this.props.asset.name}
                         </p>
@@ -82,6 +98,17 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
                             </span>
                         </div>
                     </GridItemContent>
+                    <GridItemFooter>
+                        {this.props.asset.state && (
+                            <GridItemFooterBlock multiL={true}>
+                                <Icon
+                                    name={typeIcon}
+                                    className="sd-grid-item__type-icn sd-grid-item__footer-block-item"
+                                />
+                                {getAssetStateLabel(superdesk, this.props.asset.state)}
+                            </GridItemFooterBlock>
+                        )}
+                    </GridItemFooter>
                 </GridItem>
             );
         }
