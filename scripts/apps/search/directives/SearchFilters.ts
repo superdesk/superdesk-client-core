@@ -40,6 +40,7 @@ class LinkFunction {
         // fetch available languages
         metadata.initialize()
             .then(() => {
+                scope.category = metadata?.cvs?.find((cv) => cv._id === 'categories');
                 if (metadata.values.languages) {
                     scope.languageLabel = {};
                     metadata.values.languages.forEach((language) => {
