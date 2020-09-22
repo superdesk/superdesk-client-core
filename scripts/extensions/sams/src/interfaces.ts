@@ -61,6 +61,7 @@ export interface ISamsAPI {
     };
     assets: {
         upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<any>;
+        getCount(set_ids: Array<string>): Promise<Dictionary<string, number>>;
     };
 }
 

@@ -9,12 +9,14 @@ import {
     MANAGE_SETS_RESET,
     RECEIVE_SETS,
     REMOVE_SET_IN_STORE,
+    RECEIVE_ASSETS_COUNT,
 } from './types';
 
 const initialState: ISetState = {
     sets: [],
     contentPanelState: CONTENT_PANEL_STATE.CLOSED,
     selectedSetId: undefined,
+    counts: {},
 };
 
 export function setsReducer(
@@ -52,6 +54,11 @@ export function setsReducer(
             ...state,
             contentPanelState: CONTENT_PANEL_STATE.CLOSED,
             selectedSetId: undefined,
+        };
+    case RECEIVE_ASSETS_COUNT:
+        return {
+            ...state,
+            counts: action.payload,
         };
     default:
         return state;
