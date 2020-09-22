@@ -18,6 +18,7 @@ import {
 import {isSamsApiError, getApiErrorMessage} from '../utils/api';
 
 const RESOURCE = 'sams/assets';
+const COUNT_RESOURCE = `${RESOURCE}/counts`;
 
 export function uploadAsset(
     superdesk: ISuperdesk,
@@ -280,4 +281,23 @@ export function setAssetSearchUrlParams(superdesk: ISuperdesk, params: Partial<I
     urlParams.setNumber('sizeTo', params.sizeTo);
     urlParams.setString('sortField', params.sortField);
     urlParams.setString('sortOrder', params.sortOrder);
+}
+
+export function getAssetsCount(superdesk: ISuperdesk, set_ids: Array<string>): Promise<Dictionary<string, number>> {
+    const {gettext} = superdesk.localization;
+    const {notify} = superdesk.ui;
+
+    return superdesk.dataApi.query<any>(
+        COUNT_RESOURCE + JSON.stringify(set_ids),
+        1,
+        {field: 'name', direction: 'ascending'},
+        {},
+    )
+        .then((response) => {
+            return response as Promise<Dictionary<string, number>>;
+        })
+        .catch((error: any) => {
+            notify.error(gettext('Failed to get assets counts for sets'));
+            return Promise.reject(error);
+        });
 }

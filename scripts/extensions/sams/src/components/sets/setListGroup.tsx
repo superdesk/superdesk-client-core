@@ -19,6 +19,7 @@ interface IProps {
     noItemTitle: string;
     marginTop?: boolean;
     sets: Array<ISetItem>;
+    counts: Dictionary<string, number>;
     storageDestinations: Dictionary<string, IStorageDestinationItem>;
     previewSet(set: ISetItem): void;
     editSet(set: ISetItem): void;
@@ -47,6 +48,10 @@ export class SetListGroup extends React.PureComponent<IProps> {
                             <SetListItem
                                 key={set._id}
                                 set={set}
+                                count={this.props.counts[set._id] === undefined ?
+                                    0 :
+                                    this.props.counts[set._id]
+                                }
                                 storageDestination={set?.destination_name == null ?
                                     undefined :
                                     this.props.storageDestinations[set.destination_name]

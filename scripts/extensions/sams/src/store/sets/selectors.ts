@@ -116,3 +116,7 @@ export const getSetsGroupedByState = createSelector<IApplicationState, Array<ISe
         return groupedSets;
     },
 );
+
+export function getAssetsCountForSets(state: IApplicationState): Dictionary<string, number> {
+    return state.sets.counts;
+}

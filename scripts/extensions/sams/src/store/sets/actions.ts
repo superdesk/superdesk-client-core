@@ -14,6 +14,7 @@ import {
     MANAGE_SETS_PREVIEW,
     MANAGE_SETS_CLOSE_CONTENT_PANEL,
     MANAGE_SETS_RESET,
+    RECEIVE_ASSETS_COUNT,
 } from './types';
 
 export function receiveSets(sets: Array<ISetItem>): ISetActionTypes {
@@ -56,13 +57,34 @@ export function onManageSetsModalClosed(): ISetActionTypes {
     };
 }
 
+export function receiveAssetsCount(counts: Dictionary<string, number>): ISetActionTypes {
+    return {
+        type: RECEIVE_ASSETS_COUNT,
+        payload: counts,
+    };
+}
+
 export function loadSets(): IThunkAction<Array<ISetItem>> {
     return (dispatch, _getState, {api}) => {
         return api.sets.getAll()
             .then((sets: Array<ISetItem>) => {
-                dispatch(receiveSets(sets));
+                const setIds: Array<string> = sets.map((set) => {
+                    return set._id;
+                });
 
-                return Promise.resolve(sets);
+                dispatch(receiveSets(sets));
+                return dispatch(loadAssetsCount(setIds))
+                    .then(() => sets);
+            });
+    };
+}
+
+export function loadAssetsCount(setIds: Array<string>): IThunkAction<Dictionary<string, number>> {
+    return (dispatch, _getState, {api}) => {
+        return api.assets.getCount(setIds)
+            .then((counts: Dictionary<string, number>) => {
+                dispatch(receiveAssetsCount(counts));
+                return Promise.resolve(counts);
             });
     };
 }

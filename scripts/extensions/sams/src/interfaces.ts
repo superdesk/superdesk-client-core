@@ -123,6 +123,7 @@ export interface ISamsAPI {
         query(params: IAssetSearchParams, listStyle: ASSET_LIST_STYLE): Promise<IRestApiResponse<IAssetItem>>;
         getSearchUrlParams(): Partial<IAssetSearchParams>;
         setSearchUrlParams(params: Partial<IAssetSearchParams>): void;
+        getCount(set_ids: Array<string>): Promise<Dictionary<string, number>>;
     };
 }
 

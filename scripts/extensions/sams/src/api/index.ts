@@ -5,7 +5,7 @@ import {IAssetItem, IAssetSearchParams, ISamsAPI, ISetItem, IStorageDestinationI
 // APIs
 import {getAllSets, createSet, updateSet, deleteSet} from './sets';
 import {getAllStorageDestinations} from './storageDestinations';
-import {uploadAsset, queryAssets, getAssetSearchUrlParams, setAssetSearchUrlParams} from './assets';
+import {uploadAsset, getAssetsCount, queryAssets, getAssetSearchUrlParams, setAssetSearchUrlParams} from './assets';
 
 export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
     return {
@@ -40,6 +40,9 @@ export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
             },
             setSearchUrlParams(params: Partial<IAssetSearchParams>): void {
                 return setAssetSearchUrlParams(superdesk, params);
+            },
+            getCount(set_ids: Array<string>): Promise<Dictionary<string, number>> {
+                return getAssetsCount(superdesk, set_ids);
             },
         },
     };

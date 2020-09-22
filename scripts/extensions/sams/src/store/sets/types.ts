@@ -35,15 +35,23 @@ interface IManageSetsOnModalClosed {
     type: typeof MANAGE_SETS_RESET;
 }
 
+export const RECEIVE_ASSETS_COUNT = 'assets_count_receive';
+interface IReceiveAssetsCountAction {
+    type: typeof RECEIVE_ASSETS_COUNT;
+    payload: Dictionary<string, number>;
+}
+
 export type ISetActionTypes = IReceiveSetsAction |
     IRemoveSetInStoreAction |
     IEditSetAction |
     IPreviewSetAction |
     ICloseSetAction |
-    IManageSetsOnModalClosed;
+    IManageSetsOnModalClosed |
+    IReceiveAssetsCountAction;
 
 export interface ISetState {
     sets: Array<ISetItem>;
     contentPanelState: CONTENT_PANEL_STATE;
     selectedSetId?: string;
+    counts: Dictionary<string, number>;
 }
