@@ -176,7 +176,7 @@ export const dataApi: IDataApi = {
             path: '/' + endpoint + queryString,
         });
     },
-    queryRaw: (endpoint, params: Dictionary<string, any>) => {
+    queryRaw: (endpoint, params?: Dictionary<string, any>) => {
         return httpRequestJsonLocal({
             method: 'GET',
             path: '/' + endpoint,
