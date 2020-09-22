@@ -947,6 +947,12 @@ declare module 'superdesk-api' {
         stages: {[itemId: string]: 1};
     }
 
+    export interface IResourceUpdateEvent {
+        fields: {[key: string]: 1};
+        resource: string;
+        _id: string;
+    }
+
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
@@ -961,6 +967,7 @@ declare module 'superdesk-api' {
 
     export interface IPublicWebsocketMessages {
         'content:update': IWebsocketMessage<IArticleUpdateEvent>;
+        'resource:updated': IWebsocketMessage<IResourceUpdateEvent>;
     }
 
 

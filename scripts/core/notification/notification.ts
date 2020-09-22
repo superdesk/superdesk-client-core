@@ -18,6 +18,7 @@ export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-web
 // implementing interface to be able to get keys at runtime
 const publicWebsocketMessageNames: IPublicWebsocketMessages = {
     'content:update': undefined,
+    'resource:updated': undefined,
 };
 
 export const getWebsocketMessageEventName = (
@@ -28,6 +29,18 @@ export const getWebsocketMessageEventName = (
 // can also be private, meaning it could only be accessed in extension the event is addressed to.
 export function isWebsocketEventPublic(eventName: string) {
     return Object.keys(publicWebsocketMessageNames).includes(eventName);
+}
+
+export function addWebsocketEventListener<T extends keyof IPublicWebsocketMessages>(
+    event: T,
+    handler: (message: IPublicWebsocketMessages[T]) => void,
+): () => void {
+    const eventName = getWebsocketMessageEventName(event);
+    const _handler = (e: CustomEvent) => handler(e.detail);
+
+    window.addEventListener(eventName, _handler);
+
+    return () => window.removeEventListener(eventName, _handler);
 }
 
 WebSocketProxy.$inject = ['$rootScope', '$interval', 'session', 'SESSION_EVENTS'];
