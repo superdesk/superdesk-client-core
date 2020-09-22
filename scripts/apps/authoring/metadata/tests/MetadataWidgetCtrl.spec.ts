@@ -80,7 +80,7 @@ describe('MetadataWidgetCtrl controller', () => {
         scope.$digest();
 
         expect(scope.availableCategories).toEqual(
-            [{qcode: 'a'}, {qcode: 'c'}],
+            [{qcode: 'a'}, {qcode: 'c'}, {qcode: 'd'}],
         );
     });
 

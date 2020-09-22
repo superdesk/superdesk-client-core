@@ -19,6 +19,9 @@ ContentCreateDirective.$inject = [
     'keyboardManager',
     '$location',
     'packages',
+    '$rootScope',
+    'storage',
+    'autosave',
 ];
 
 interface IScope extends ng.IScope {
@@ -46,6 +49,9 @@ export function ContentCreateDirective(
     keyboardManager,
     $location,
     packages,
+    $rootScope,
+    storage,
+    autosave,
 ) {
     return {
         scope: {
@@ -92,6 +98,17 @@ export function ContentCreateDirective(
                     }
                 });
             };
+
+            scope.$on('item:close', (evt, mainArticleId) => {
+                const itemId = storage.getItem(`open-item-after-related-closed--${mainArticleId}`);
+
+                if (itemId != null) {
+                    return autosave.get({_id: itemId}).then((resulted) => {
+                        authoringWorkspace.open(resulted);
+                        storage.removeItem(`open-item-after-related-closed--${mainArticleId}`);
+                    });
+                }
+            });
 
             scope.createFromTemplate = function(template: IContentTemplate) {
                 return scope.create({kind: 'from-template', template});
