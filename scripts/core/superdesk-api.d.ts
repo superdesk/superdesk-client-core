@@ -1412,6 +1412,7 @@ declare module 'superdesk-api' {
             nestedItemsInOutputStage?: boolean;
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
+            sendToPersonal?: boolean;
         };
         auth: {
             google: boolean
