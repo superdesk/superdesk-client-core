@@ -908,6 +908,7 @@ declare module 'superdesk-api' {
         marginRight?: number;
         marginBottom?: number;
         padding?: number;
+        paddingTop?: number;
         paddingRight?: number;
         paddingBottom?: number;
     }

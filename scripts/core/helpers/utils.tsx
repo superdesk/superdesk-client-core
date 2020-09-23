@@ -71,12 +71,10 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
         'marginTop',
         'marginRight',
         'marginBottom',
-        'marginTop',
         'padding',
         'paddingTop',
         'paddingRight',
         'paddingBottom',
-        'paddingTop',
     );
 
     const propertiesShallowCopy = {...properties};
