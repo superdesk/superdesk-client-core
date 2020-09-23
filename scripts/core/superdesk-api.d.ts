@@ -105,6 +105,7 @@ declare module 'superdesk-api' {
             monitoring?: {
                 getFilteringButtons?(deskId: string): Promise<Array<IMonitoringFilter>>;
             };
+            configurableUiComponents?: IConfigurableUiComponents;
         }
     }
 
@@ -583,6 +584,24 @@ declare module 'superdesk-api' {
         updated_by: string;
     }
 
+    export interface IMedia {
+        _id: string;
+        md5: string;
+        name: string;
+        filename: string;
+        content_type: string;
+        length: number;
+    }
+
+    export interface IAttachment {
+        _id: string;
+        title: string;
+        mimetype: string;
+        filename: string;
+        description: string;
+        media: IMedia;
+        internal: boolean;
+    }
 
 
 
@@ -785,6 +804,7 @@ declare module 'superdesk-api' {
 
     export interface IConfigurableUiComponents {
         UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
+        AuthoringAttachmentsWidget?: React.ComponentType<IAttachmentsWidgetProps>;
     }
 
     export interface IConfigurableAlgorithms {
@@ -828,7 +848,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IDropZoneComponentProps {
-        label: string;
+        label?: string;
         className?: string;
         onDrop: (event: DragEvent) => void;
         canDrop: (event: DragEvent) => boolean;
@@ -887,12 +907,9 @@ declare module 'superdesk-api' {
         marginTop?: number;
         marginRight?: number;
         marginBottom?: number;
-        marginTop?: number;
         padding?: number;
-        paddingTop?: number;
         paddingRight?: number;
         paddingBottom?: number;
-        paddingTop?: number;
     }
 
     interface IPropsBadge extends ISpacingProps {
@@ -910,6 +927,23 @@ declare module 'superdesk-api' {
         spacing: 'medium';
         align?: 'start' | 'end' | 'center' | 'stretch';
         children: Array<React.ReactNode>;
+    }
+
+    export interface IAttachmentsWidgetProps {
+        readOnly?: boolean;
+        isWidget: boolean;
+        files: Array<IAttachment>;
+        edit: any;
+        maxSize: number;
+        maxFiles: number;
+        editable: boolean;
+        isLocked: boolean;
+        isLockedByMe: boolean;
+        editFile(file: IAttachment): void;
+        download(file: IAttachment): void;
+        removeFile(file: IAttachment): void;
+        selectFiles(files: Array<File>): void;
+        saveFile(file: IAttachment, updates: Partial<IAttachment>): void;
     }
 
 

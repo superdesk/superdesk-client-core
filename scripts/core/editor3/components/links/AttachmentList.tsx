@@ -6,8 +6,7 @@ import classNames from 'classnames';
 import ng from 'core/services/ng';
 import {FileiconFilter, FilesizeFilter} from 'core/ui/ui';
 import {gettext} from 'core/utils';
-import {IAttachment} from 'apps/authoring/attachments';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IAttachment} from 'superdesk-api';
 
 interface IAttachmentItemProps {
     attachment: IAttachment;
