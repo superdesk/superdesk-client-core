@@ -3,39 +3,14 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import './attachments.scss';
 import {gettext} from 'core/utils';
 import AttachmentsEditorDirective from './AttachmentsEditorDirective';
-
-import {
-    closeEdit,
-    selectFiles,
-} from './actions';
-
-import {IAttachment} from '.';
-import {AttachmentsList} from './AttachmentsList';
-import {AttachmentsEditorModal} from './AttachmentsEditorModal';
+import {AttachmentsWidget} from './AttachmentsWidget';
 
 function getFilesLength(state) {
     return state.attachments.files.length;
 }
 
 class AttachmentsController {
-    closeEdit: () => void;
-    selectFiles: (files: Array<File>) => void;
-
-    edit: IAttachment;
-    files: Array<IAttachment>;
-    maxSize: number;
-    maxFiles: number;
-    editable: boolean;
-    isLocked: boolean;
-    isLockedByMe: boolean;
-
     constructor($scope) {
-        const {dispatch} = $scope.store;
-
-        // map dispatch
-        this.selectFiles = (files) => dispatch(selectFiles(files));
-        this.closeEdit = () => dispatch(closeEdit());
-
         let state = $scope.store.getState();
 
         // re-render on state change
@@ -49,26 +24,11 @@ class AttachmentsController {
                         $scope.item.attachments = state.attachments.files.map((f) => ({attachment: f._id}));
                         $scope.autosave();
                     }
-
-                    this.mapState($scope.store.getState());
                 });
             }
         });
 
         $scope.$on('$destroy', unsubscribe);
-
-        // init
-        this.mapState($scope.store.getState());
-    }
-
-    mapState(state) {
-        this.edit = state.attachments.edit;
-        this.files = state.attachments.files;
-        this.maxSize = state.attachments.maxSize;
-        this.maxFiles = state.attachments.maxFiles;
-        this.editable = state.editor.editable;
-        this.isLocked = state.editor.isLocked;
-        this.isLockedByMe = state.editor.isLockedByMe;
     }
 }
 
@@ -170,6 +130,10 @@ angular.module('superdesk.apps.authoring.attachments', [
     .controller('AttachmentsCtrl', AttachmentsController)
     .config(['authoringWidgetsProvider', config])
     .directive('sdAttachmentsEditor', AttachmentsEditorDirective)
-    .component('sdAttachmentsEditorModal', reactToAngular1(AttachmentsEditorModal, ['store']))
-    .component('sdAttachmentsList', reactToAngular1(AttachmentsList, ['store', 'readOnly']))
+    .component('sdAttachmentsWidget', reactToAngular1(
+        AttachmentsWidget,
+        ['store', 'readOnly', 'isWidget'],
+        [],
+        'display:contents'),
+    )
 ;
