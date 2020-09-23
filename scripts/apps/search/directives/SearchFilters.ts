@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import {getDateFilters} from './DateFilters';
+import {gettext} from 'core/utils';
 
 class LinkFunction {
     scope: any;
@@ -40,7 +41,10 @@ class LinkFunction {
         // fetch available languages
         metadata.initialize()
             .then(() => {
-                scope.category = metadata?.cvs?.find((cv) => cv._id === 'categories');
+                this.scope.filterLabels = {};
+                metadata?.cvs?.forEach((cv) => {
+                    this.scope.filterLabels[cv._id] = gettext(cv.display_name);
+                });
                 if (metadata.values.languages) {
                     scope.languageLabel = {};
                     metadata.values.languages.forEach((language) => {
