@@ -934,13 +934,11 @@ declare module 'superdesk-api' {
         readOnly?: boolean;
         isWidget: boolean;
         files: Array<IAttachment>;
-        edit: any;
         maxSize: number;
         maxFiles: number;
         editable: boolean;
         isLocked: boolean;
         isLockedByMe: boolean;
-        editFile(file: IAttachment): void;
         download(file: IAttachment): void;
         removeFile(file: IAttachment): void;
         selectFiles(files: Array<File>): void;

@@ -9,7 +9,6 @@ import {AttachmentsEditorModal} from './AttachmentsEditorModal';
 import {showModal} from 'core/services/modalService';
 
 import {
-    editFile,
     download,
     removeFile,
     selectFiles,
@@ -145,7 +144,6 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
 const mapStateToProps = (state, ownProps) => ({
     files: state.attachments.files,
     readOnly: state.editor.isLocked || ownProps.readOnly === true,
-    edit: state.attachments.edit,
     maxSize: state.attachments.maxSize,
     maxFiles: state.attachments.maxFiles,
     editable: state.editor.editable,
@@ -154,7 +152,6 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = {
-    editFile,
     download,
     removeFile,
     selectFiles,
