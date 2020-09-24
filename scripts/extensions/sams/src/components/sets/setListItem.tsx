@@ -78,7 +78,7 @@ export class SetListItem extends React.PureComponent<IProps> {
                     </ListItemRow>
                 </ListItemColumn>
                 <ListItemActionMenu row={true}>
-                    {this.props.deleteSet == null ? null : (
+                    {this.props.deleteSet == null || set.state === SET_STATE.DISABLED && count ? null : (
                         <IconButton icon="trash" ariaValue="delete" onClick={this.onDelete} />
                     )}
                     <IconButton icon="pencil" ariaValue="edit" onClick={this.onEdit} />
