@@ -10,15 +10,21 @@ describe('<MarkDesksDropdown />', () => {
     const item = {};
 
     it('check default values for dropdown', () => {
-        const wrapper = mount(<MarkDesksDropdown desks={allDesks}
-            className="abc" item={item} noDesksLabel="No desk"/>);
+        const wrapper = mount(
+            <MarkDesksDropdown
+                desks={allDesks}
+                className="abc"
+                item={item}
+                noDesksLabel="No desk"
+            />,
+        );
 
         expect(wrapper.find('MarkedDeskItem').length).toBe(2);
         expect(wrapper.find('MarkBtn').length).toBe(2);
     });
 
     it('check default values for dropdowns', () => {
-        const wrapper = mount(<MarkedDeskItem desks={allDesks} desk={desk1} item={item}/>);
+        const wrapper = mount(<MarkedDeskItem desks={allDesks} desk={desk1} item={item} />);
 
         expect(wrapper.find('MarkBtn').length).toBe(1);
     });

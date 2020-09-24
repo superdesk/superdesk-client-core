@@ -39,6 +39,9 @@ interface ILocated {
 
     /** code for place in the scheme */
     code: string;
+
+    /** geonames place data */
+    place?: IGeoname;
 }
 
 /**
@@ -78,6 +81,7 @@ export default function PlacesServiceFactory(api, features, metadata) {
         country: data.country,
         code: data.code,
         scheme: data.scheme,
+        place: data,
     });
 
     class PlacesService implements IPlacesService {

@@ -38,7 +38,7 @@ export function fileUploadErrorModal(
                             }
                         </ModalHeader>
                         <ModalBody>
-                            {invalidFiles.some((file) => file.type.startsWith('image')) &&
+                            {invalidFiles.some((file) => file.type.startsWith('image')) && (
                                 <h4>
                                     {
                                         gettext(
@@ -50,7 +50,7 @@ export function fileUploadErrorModal(
                                         )
                                     }
                                 </h4>
-                            }
+                            )}
                             <ol>
                                 {
                                     invalidFiles.map((file, index) => {

@@ -22,6 +22,16 @@
         <div sd-ingest-config-errors></div>
     </div>
 
+    <div class="form__row" ng-if="field.type === 'url_request'" ng-show="isConfigFieldVisible(field)">
+        <button
+            type="button"
+            class="btn btn--primary"
+            ng-click="doUrlRequest(provider, field)">
+            {{field.label}}
+        </button>
+    </div>
+
+
     <div class="sd-line-input sd-line-input--is-select" ng-if="field.type === 'choices'" ng-show="isConfigFieldVisible(field)">
         <label class="sd-line-input__label" for="{{getConfigFieldId(field.id)}}">{{field.label | translate}}</label>
         <select id="{{getConfigFieldId(field.id)}}"

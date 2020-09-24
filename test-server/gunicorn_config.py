@@ -5,7 +5,7 @@ reload = bool(os.environ.get('WEB_RELOAD'))
 bind = '0.0.0.0:%s' % os.environ.get('PORT', '5000')
 
 workers = int(os.environ.get('WEB_WORKERS', 2))
-timeout = int(os.environ.get('WEB_TIMEOUT', 10))
+timeout = int(os.environ.get('WEB_TIMEOUT', 30))
 
 loglevel = os.environ.get('WEB_LOG_LEVEL', 'warning')
 

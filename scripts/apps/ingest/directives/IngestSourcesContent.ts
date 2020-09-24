@@ -3,6 +3,45 @@ import {cloneDeep} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
+interface IFeedingServiceField {
+    id?: string;
+    type: string;
+    label: string;
+    readonly?: boolean;
+    placeholder?: string;
+    default_value?: string;
+    errors?: { [key: number]: any };
+    url?: string;
+}
+
+interface IProvider {
+    name: string;
+    source: string;
+    feeding_service: string;
+    feed_parser?: string;
+    content_types?: Array<any>;
+    allow_remove_ingested?: boolean;
+    content_expiry?: number;
+    config?: {};
+    private?: {};
+    ingested_count?: number;
+    accepted_count?: number;
+    token?: {};
+    is_closed?: boolean;
+    update_schedule?: {};
+    idle_time?: {};
+    last_updated?: string;
+    last_ingested_id?: string;
+    last_item_update?: string;
+    rule_set?: any;
+    routing_scheme?: any;
+    notifications?: {};
+    last_closed?: {};
+    last_opened?: {};
+    critical_errors?: {};
+    skip_config_test?: boolean;
+}
+
 IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
     'modal', '$filter', 'privileges'];
 
@@ -578,6 +617,17 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     var feedingService: any = getCurrentService();
 
                     return feedingService ? feedingService.templateUrl : '';
+                };
+
+                /**
+                 * Do URL request specified in url_request field
+                 * @param provider ingest provider metadata
+                 * @param field url_request field metadata
+                 */
+                $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
+                    let provider_name = encodeURIComponent(provider.name);
+
+                    window.open(field.url.replace('{PROVIDER_NAME}', provider_name));
                 };
 
                 function getCurrentService() {

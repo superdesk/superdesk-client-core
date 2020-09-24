@@ -54,7 +54,7 @@ const menuStyleDefault: React.CSSProperties = {
     overflow: 'auto',
 };
 
-const menuStyle = {
+const menuStyle: React.CSSProperties = {
     ...menuStyleDefault,
     zIndex: 3, // without z-index, items that have opacity set, appear on top of the menu
 };
@@ -167,7 +167,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     items={Object.values(this.props.items)}
                     wrapperStyle={{width: '100%'}}
                     wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
-                    renderMenu={(items, value, style) => {
+                    renderMenu={(items, value, style: React.CSSProperties) => {
                         const hideOptions =
                             this.state.justInitialized
                             && typeof this.props.autoFocus === 'object'
@@ -243,28 +243,34 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                         {
                                             this.props.value === undefined || selectedItem == null
                                                 ? (
-                                                    <div style={
-                                                        this.props.horizontalSpacing === true
-                                                            ? {}
-                                                            : {marginLeft: -8}
-                                                    }>
+                                                    <div
+                                                        style={
+                                                            this.props.horizontalSpacing === true
+                                                                ? {}
+                                                                : {marginLeft: -8}
+                                                        }
+                                                    >
                                                         {this.props.placeholder}
                                                     </div>
                                                 )
                                                 : (
-                                                    <div style={
-                                                        this.props.horizontalSpacing === true
-                                                            ? {}
-                                                            : {marginLeft: -8}
-                                                    }>
+                                                    <div
+                                                        style={
+                                                            this.props.horizontalSpacing === true
+                                                                ? {}
+                                                                : {marginLeft: -8}
+                                                        }
+                                                    >
                                                         {this.props.renderItem(selectedItem)}
                                                     </div>
                                                 )
                                         }
-                                        <div style={{
-                                            ...arrowDownStyles,
-                                            ...(this.props.horizontalSpacing === true ? {} : {marginRight: 0}),
-                                        }} />
+                                        <div
+                                            style={{
+                                                ...arrowDownStyles,
+                                                ...(this.props.horizontalSpacing === true ? {} : {marginRight: 0}),
+                                            }}
+                                        />
                                     </button>
                                 </div>
 

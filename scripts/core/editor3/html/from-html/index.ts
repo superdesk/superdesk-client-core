@@ -63,6 +63,55 @@ class HTMLParser {
         this.pruneNodes();
     }
 
+    manageEmbeds(__html: string): string {
+        let html = __html;
+        const embedCount = html.match(/<!-- EMBED START.*-->/g)?.length ?? 0;
+
+        for (let i = 0; i < embedCount; i++) {
+            const startTag = html.match(/<!-- EMBED START.*-->/);
+            const endTag = html.match(/<!-- EMBED END.*-->/);
+
+            if (startTag == null || endTag == null) {
+                continue;
+            }
+
+            const matchedEmbedText = html.slice(startTag.index, endTag.index + endTag[0].length);
+            const associationId = html.match(/<!-- EMBED START (?:Image|Video) {id: "([a-z0-9]*?)"} -->/)?.[1];
+
+            if (associationId != null) {
+                const nextIndex = Object.keys(this.media).length;
+
+                html = html.replace(
+                    matchedEmbedText,
+                    `<figure>BLOCK_MEDIA_${nextIndex}</figure>`,
+                );
+
+                this.media[nextIndex] = {
+                    media: this.associations[associationId],
+                };
+            } else {
+                const nextIndex = Object.keys(this.figures).length;
+
+                html = html.replace(
+                    matchedEmbedText,
+                    `<figure>BLOCK_FIGURE_${nextIndex}</figure>`,
+                );
+
+                const wrapper = document.createElement('div');
+
+                wrapper.innerHTML = matchedEmbedText.replace(startTag[0], '').replace(endTag[0], '');
+
+                const el = wrapper.firstElementChild;
+
+                this.figures[nextIndex] = el.tagName === 'FIGURE' && wrapper.childElementCount === 1
+                    ? el.innerHTML // drop <figure> wrapper
+                    : wrapper.innerHTML;
+            }
+        }
+
+        return html;
+    }
+
     /**
      * @name HTMLParser#pruneNodes
      * @description Replaces the nodes that need to be converted to atomic blocks
@@ -71,6 +120,8 @@ class HTMLParser {
      * about the HTML that was extracted.
      */
     pruneNodes() {
+        this.tree.html(this.manageEmbeds(this.tree.html()));
+
         this.tree.find('iframe').each((i, node) => {
             this.iframes[i] = node.outerHTML;
             $(node).replaceWith(`<figure>BLOCK_IFRAME_${i}</figure>`);
@@ -83,31 +134,8 @@ class HTMLParser {
 
         this.tree.find('figure').each((i, node) => {
             if (node.innerText.startsWith('BLOCK_')) {
-                // iframe or script
+                // already handled
                 return;
-            }
-
-            if (node.querySelector('img, video') != null) {
-                try {
-                    // editor2 media support
-
-                    const lineAfterFigureClosingTag = node.parentElement.innerHTML.slice(
-                        node.parentElement.innerHTML.indexOf(node.outerHTML) + node.outerHTML.length + 1,
-                    ).match(/.+\n/)[0];
-
-                    const embedId = lineAfterFigureClosingTag
-                        .match(/<!-- EMBED END (?:Image|Video) {id: "([a-z0-9]*?)"} -->/)[1];
-
-                    $(node).replaceWith(`<figure>BLOCK_MEDIA_${i}</figure>`);
-
-                    this.media[i] = {
-                        media: this.associations[embedId],
-                    };
-
-                    return;
-                } catch (e) {
-                    // continue
-                }
             }
 
             // assume embed

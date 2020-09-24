@@ -7,7 +7,8 @@ import {gettext} from 'core/utils';
 
 import {InputArray, MultiTextInput, Input, Toggle, ToggleBox,
     ContactNumberInput, Label, SelectFieldSearchInput} from './index';
-import {validateMinRequiredField, getContactTypeObject} from '../../../contacts/helpers';
+import {validateMinRequiredField, getContactTypeObject,
+    getMinRequiredFieldLabels, getMinRequiredFieldLabel} from '../../../contacts/helpers';
 import {IContact, IContactsService, IContactType} from '../../Contacts';
 
 import {
@@ -193,20 +194,22 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
         const isRequired = get(this.state, 'requiredField', false);
         const MSG_REQUIRED = gettext('This field is required.');
         const isAssignable = this.state.contactType && this.state.contactType.assignable;
+        const minFieldMessage = gettext('At least one of [{{list}}] is required.', {list: getMinRequiredFieldLabels()});
+        const showMinFieldsWarning = !validateMinRequiredField(contact) && !readOnly;
 
         return (
             <div className="details-info">
 
-                {!readOnly &&
+                {!readOnly && (
                     <div className="sd-alert__container">
                         <div className="sd-alert sd-alert--hollow">
                             <span className="alert-info-msg">
                                 {gettext('Please specify \'first name, last name\' or  \'organisation\' or both, ' +
-                                    'and at least one of [mobile, phone, email, twitter, facebook, instagram] fields.')}
+                                    'and at least one of [{{list}}] fields.', {list: getMinRequiredFieldLabels()})}
                             </span>
                         </div>
                     </div>
-                }
+                )}
 
                 <Row flex={true}>
                     {get(this.state, 'contactTypes.length', 0) > 0 && (
@@ -255,7 +258,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             onChange={onChange}
                             type="text"
                             readOnly={readOnly}
-                            autoFocus={true} />
+                            autoFocus={true}
+                        />
                     </LineInput>
                 </Row>
 
@@ -265,7 +269,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         invalid={contactType === 'person' && this.isFieldInvalid('first_name')}
                         message={contactType === 'person' && this.isFieldInvalid('first_name') ?
                             MSG_REQUIRED : ''}
-                        readOnly={readOnly}>
+                        readOnly={readOnly}
+                    >
                         <Label text={gettext('first name')} />
                         <Input
                             field="first_name"
@@ -274,7 +279,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             onBlur={this.onBlur}
                             type="text"
                             readOnly={readOnly}
-                            required={true} />
+                            required={true}
+                        />
                     </LineInput>
                 </Row>
 
@@ -284,7 +290,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                         required={contactType === 'person'}
                         invalid={contactType === 'person' && this.isFieldInvalid('last_name')}
                         message={contactType === 'person' && this.isFieldInvalid('last_name') ?
-                            MSG_REQUIRED : ''}>
+                            MSG_REQUIRED : ''}
+                    >
                         <Label text={gettext('last name')} />
                         <Input
                             field="last_name"
@@ -292,18 +299,23 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             onChange={onChange}
                             onBlur={this.onBlur}
                             type="text"
-                            readOnly={readOnly} />
+                            readOnly={readOnly}
+                        />
                     </LineInput>
                 </Row>
 
-                {contactType === 'organisation' &&
+                {contactType === 'organisation' && (
                     <Row>
                         <LineInput
                             readOnly={readOnly}
                             required={contactType === 'organisation'}
                             invalid={contactType === 'organisation' && this.isFieldInvalid('organisation')}
-                            message={(contactType === 'organisation' && this.isFieldInvalid('organisation')) ?
-                                MSG_REQUIRED : ''}>
+                            message={
+                                (contactType === 'organisation' && this.isFieldInvalid('organisation'))
+                                    ? MSG_REQUIRED
+                                    : ''
+                            }
+                        >
                             <Label text={gettext('organisation')} />
                             <Input
                                 field="organisation"
@@ -311,12 +323,13 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 onChange={onChange}
                                 onBlur={this.onBlur}
                                 type="text"
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
                     </Row>
-                }
+                )}
 
-                {contactType === 'person' &&
+                {contactType === 'person' && (
                     <Row>
                         <SelectFieldSearchInput
                             field="organisation"
@@ -326,9 +339,10 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             querySearch={true}
                             onQuerySearch={((text) => this.getSearchResult('organisation', text))}
                             dataList={this.state.organisations}
-                            readOnly={readOnly} />
+                            readOnly={readOnly}
+                        />
                     </Row>
-                }
+                )}
 
                 <Row>
                     <LineInput readOnly={readOnly}>
@@ -339,7 +353,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             value={get(contact, 'job_title', '')}
                             onBlur={this.onBlur}
                             type="text"
-                            readOnly={readOnly}/>
+                            readOnly={readOnly}
+                        />
                     </LineInput>
                 </Row>
 
@@ -347,12 +362,17 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                     <LineInput
                         readOnly={readOnly}
                         required={isRequired || isAssignable}
-                        invalid={!!get(errors, 'contact_email')}
+                        invalid={!!get(errors, 'contact_email') || showMinFieldsWarning}
                     >
-                        <Label text={gettext('email')} />
+                        <Label text={getMinRequiredFieldLabel('contact_email')} />
                         {get(errors, 'contact_email') && (
                             <div className="sd-line-input__message">
                                 {get(errors, 'contact_email')}
+                            </div>
+                        )}
+                        {showMinFieldsWarning && !get(errors, 'contact_email') && (
+                            <div className="sd-line-input__message">
+                                {minFieldMessage}
                             </div>
                         )}
                         <InputArray
@@ -363,13 +383,19 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             component={MultiTextInput}
                             defaultValue=""
                             errors={errors}
-                            readOnly={readOnly} />
+                            readOnly={readOnly}
+                        />
                     </LineInput>
                 </Row>
 
                 <Row>
-                    <LineInput readOnly={readOnly} required={isRequired}>
-                        <Label text={gettext('phone')} />
+                    <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}>
+                        <Label text={getMinRequiredFieldLabel('contact_phone')} />
+                        {showMinFieldsWarning && (
+                            <div className="sd-line-input__message">
+                                {minFieldMessage}
+                            </div>
+                        )}
                         <InputArray
                             field="contact_phone"
                             value={get(contact, 'contact_phone', [])}
@@ -377,15 +403,21 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             component={ContactNumberInput}
                             usages={get(this.state, 'phoneUsages', [])}
                             defaultValue={{number: '', usage: '', public: true}}
-                            readOnly={readOnly} />
+                            readOnly={readOnly}
+                        />
                     </LineInput>
                 </Row>
 
                 <ToggleBox title={gettext('MORE')} isOpen={false} style="toggle-box--circle" scrollInView={true}>
 
                     <Row>
-                        <LineInput readOnly={readOnly} required={isRequired}>
-                            <Label text={gettext('mobile')} />
+                        <LineInput readOnly={readOnly} required={isRequired} invalid={showMinFieldsWarning}>
+                            <Label text={getMinRequiredFieldLabel('mobile')} />
+                            {showMinFieldsWarning && (
+                                <div className="sd-line-input__message">
+                                    {minFieldMessage}
+                                </div>
+                            )}
                             <InputArray
                                 field="mobile"
                                 value={get(contact, 'mobile', [])}
@@ -393,7 +425,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 component={ContactNumberInput}
                                 usages={get(this.state, 'mobileUsages', [])}
                                 defaultValue={{number: '', usage: '', public: true}}
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
                     </Row>
 
@@ -405,7 +438,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 value={get(contact, 'fax', '')}
                                 onChange={onChange}
                                 type="text"
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
                     </Row>
 
@@ -417,49 +451,81 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 value={get(contact, 'website', '')}
                                 onChange={onChange}
                                 type="text"
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
                     </Row>
 
                     <Row>
-                        <LineInput readOnly={readOnly} required={isRequired} hint={gettext('e.g. @cityofsydney')}
-                            invalid={!isEmpty(errors.twitter)} message={get(errors, 'twitter', '')}>
-                            <Label text={gettext('twitter')} />
+                        <LineInput
+                            readOnly={readOnly}
+                            required={isRequired}
+                            hint={gettext('e.g. @cityofsydney')}
+                            invalid={!isEmpty(errors.twitter) || showMinFieldsWarning}
+                            message={get(errors, 'twitter', '')}
+                        >
+                            <Label text={getMinRequiredFieldLabel('twitter')} />
+                            {showMinFieldsWarning && isEmpty(errors.twitter) && (
+                                <div className="sd-line-input__message">
+                                    {minFieldMessage}
+                                </div>
+                            )}
                             <Input
                                 field="twitter"
                                 value={get(contact, 'twitter', '')}
                                 onChange={onChange}
                                 type="text"
                                 readOnly={readOnly}
-                                placeholder="@username" />
+                                placeholder="@username"
+                            />
                         </LineInput>
                     </Row>
 
                     <Row>
-                        <LineInput readOnly={readOnly} required={isRequired}
-                            hint={gettext('e.g. cityofsydney from https://www.facebook.com/cityofsydney')}>
-                            <Label text={gettext('facebook')} />
+                        <LineInput
+                            readOnly={readOnly}
+                            required={isRequired}
+                            invalid={showMinFieldsWarning}
+                            hint={gettext('e.g. cityofsydney from https://www.facebook.com/cityofsydney')}
+                        >
+                            <Label text={getMinRequiredFieldLabel('facebook')} />
+                            {showMinFieldsWarning && (
+                                <div className="sd-line-input__message">
+                                    {minFieldMessage}
+                                </div>
+                            )}
                             <Input
                                 field="facebook"
                                 value={get(contact, 'facebook', '')}
                                 onChange={onChange}
                                 type="text"
                                 readOnly={readOnly}
-                                placeholder="username" />
+                                placeholder="username"
+                            />
                         </LineInput>
                     </Row>
 
                     <Row>
-                        <LineInput readOnly={readOnly} required={isRequired}
-                            hint={gettext('e.g. cityofsydney from https://www.instagram.com/cityofsydney')}>
-                            <Label text={gettext('instagram')} />
+                        <LineInput
+                            readOnly={readOnly}
+                            required={isRequired}
+                            invalid={showMinFieldsWarning}
+                            hint={gettext('e.g. cityofsydney from https://www.instagram.com/cityofsydney')}
+                        >
+                            <Label text={getMinRequiredFieldLabel('instagram')} />
+                            {showMinFieldsWarning && (
+                                <div className="sd-line-input__message">
+                                    {minFieldMessage}
+                                </div>
+                            )}
                             <Input
                                 field="instagram"
                                 value={get(contact, 'instagram', '')}
                                 onChange={onChange}
                                 type="text"
                                 readOnly={readOnly}
-                                placeholder="username" />
+                                placeholder="username"
+                            />
                         </LineInput>
                     </Row>
 
@@ -472,7 +538,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 onChange={onChange}
                                 type="text"
                                 readOnly={readOnly}
-                                placeholder={gettext('Address line 1')} />
+                                placeholder={gettext('Address line 1')}
+                            />
                         </LineInput>
                     </Row>
                     <Row>
@@ -483,7 +550,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 onChange={onChange}
                                 type="text"
                                 readOnly={readOnly}
-                                placeholder={gettext('Address line 2')} />
+                                placeholder={gettext('Address line 2')}
+                            />
                         </LineInput>
                     </Row>
 
@@ -495,7 +563,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 value={get(contact, 'locality', '')}
                                 onChange={onChange}
                                 type="text"
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
                         <LineInput>
                             <Label text={gettext('postcode')} />
@@ -504,7 +573,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 value={get(contact, 'postcode', '')}
                                 onChange={onChange}
                                 type="text"
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
                     </Row>
 
@@ -516,39 +586,47 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 value={get(contact, 'city', '')}
                                 onChange={onChange}
                                 type="text"
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
                     </Row>
 
                     <Row flex={true}>
-                        {!this.state.displayOtherStateField && <SelectInput
-                            field="contact_state"
-                            label={gettext('State/Province or Region')}
-                            value={get(contact, 'contact_state', {})}
-                            onChange={onChange}
-                            options={get(this.state, 'stateNames', [])}
-                            labelField="name"
-                            keyField="qcode"
-                            clearable={true} />
+                        {!this.state.displayOtherStateField && (
+                            <SelectInput
+                                field="contact_state"
+                                label={gettext('State/Province or Region')}
+                                value={get(contact, 'contact_state', {})}
+                                onChange={onChange}
+                                options={get(this.state, 'stateNames', [])}
+                                labelField="name"
+                                keyField="qcode"
+                                clearable={true}
+                            />
+                        )
                         }
 
-                        {this.state.displayOtherStateField && <LineInput readOnly={readOnly}>
-                            <Label text={gettext('State/Province or Region')} />
-                            <Input
-                                field="contact_state"
-                                value={get(contact, 'contact_state', '')}
-                                onChange={onChange}
-                                type="text"
-                                placeholder="State/Province or Region"
-                                readOnly={readOnly} />
-                        </LineInput>}
+                        {this.state.displayOtherStateField && (
+                            <LineInput readOnly={readOnly}>
+                                <Label text={gettext('State/Province or Region')} />
+                                <Input
+                                    field="contact_state"
+                                    value={get(contact, 'contact_state', '')}
+                                    onChange={onChange}
+                                    type="text"
+                                    placeholder="State/Province or Region"
+                                    readOnly={readOnly}
+                                />
+                            </LineInput>
+                        )}
 
                         <LineInput readOnly={readOnly}>
                             <Label text={gettext('other')} />
                             <input
                                 checked={get(this.state, 'displayOtherStateField', false)}
                                 onChange={this.changeOtherStateField}
-                                type="checkbox" />
+                                type="checkbox"
+                            />
                         </LineInput>
                     </Row>
 
@@ -563,7 +641,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                             options={get(this.state, 'countries')}
                             keyField="qcode"
                             labelField="name"
-                            clearable />
+                            clearable
+                        />
                     </Row>
 
                     <Row>
@@ -577,7 +656,8 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 name="notes"
                                 value={get(contact, 'notes', '')}
                                 onChange={(e) => onChange('notes', e.target.value)}
-                                readOnly={readOnly} />
+                                readOnly={readOnly}
+                            />
                         </LineInput>
                     </Row>
 

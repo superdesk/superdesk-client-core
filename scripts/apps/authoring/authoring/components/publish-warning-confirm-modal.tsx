@@ -35,11 +35,15 @@ export function getPublishWarningConfirmModal(
                             <Button color="default" onClick={this.props.closeModal}>
                                 {gettext('Cancel')}
                             </Button>
-                            <Button color="primary"
+                            <Button
+                                color="primary"
                                 onClick={() => {
                                     publishingAction().then(resolve, reject);
                                     this.props.closeModal();
-                                }}>{gettext('Confirm')}</Button>
+                                }}
+                            >
+                                {gettext('Confirm')}
+                            </Button>
                         </ModalFooter>
                     </Modal>
                 );

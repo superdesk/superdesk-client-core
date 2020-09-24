@@ -184,6 +184,8 @@ class Editor3Directive {
 
         const store = createEditorStore(this, ng.get('spellcheck'));
 
+        window.dispatchEvent(new CustomEvent('editorInitialized'));
+
         // bind the directive value attribute bi-directionally between Angular and Redux.
         if (this.bindToValue) {
             $scope.$watch('vm.value', (newValue, oldValue) => {

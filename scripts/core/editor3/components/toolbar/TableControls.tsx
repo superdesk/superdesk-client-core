@@ -35,27 +35,52 @@ const TableControlsComponent: React.StatelessComponent<any> = ({
     const cellEditorState = getCell(data, i, j, currentStyle, selection);
     const currentInlineStyle = cellEditorState.getCurrentInlineStyle();
 
-    return <div className={'table-controls ' + className}>
-        <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
-        <span className="Editor3-styleButton Editor3-styleButton--short"
-            onClick={removeRow}><i className="icon-minus-sign" /></span>
-        <span className="Editor3-styleButton"
-            onClick={addRowAfter}><i className="icon-plus-sign" /> row</span>
-        <span className="Editor3-styleButton Editor3-styleButton--short"
-            onClick={removeCol}><i className="icon-minus-sign" /></span>
-        <span className="Editor3-styleButton" onClick={addColAfter}><i className="icon-plus-sign" /> col</span>
-        {editorFormat.filter((type) => type in inlineStyles)
-            .map((type) =>
-                <StyleButton
-                    key={type}
-                    active={currentInlineStyle.has(inlineStyles[type])}
-                    label={type}
-                    onToggle={toggleTableStyle}
-                    style={inlineStyles[type]}
-                />,
-            )
-        }
-    </div>;
+    return (
+        <div className={'table-controls ' + className}>
+            <StyleButton active={withHeader} label={'TH'} onToggle={toggleTableHead} />
+
+            <span
+                className="Editor3-styleButton Editor3-styleButton--short"
+                onClick={removeRow}
+            >
+                <i className="icon-minus-sign" />
+            </span>
+
+            <span
+                className="Editor3-styleButton"
+                onClick={addRowAfter}
+            >
+                <i className="icon-plus-sign" />
+                {' '}row
+            </span>
+
+            <span
+                className="Editor3-styleButton Editor3-styleButton--short"
+                onClick={removeCol}
+            >
+                <i className="icon-minus-sign" />
+            </span>
+
+            <span className="Editor3-styleButton" onClick={addColAfter}>
+                <i className="icon-plus-sign" />
+                {' '}col
+            </span>
+
+            {
+                editorFormat
+                    .filter((type) => type in inlineStyles)
+                    .map((type) => (
+                        <StyleButton
+                            key={type}
+                            active={currentInlineStyle.has(inlineStyles[type])}
+                            label={type}
+                            onToggle={toggleTableStyle}
+                            style={inlineStyles[type]}
+                        />
+                    ))
+            }
+        </div>
+    );
 };
 
 TableControlsComponent.propTypes = {

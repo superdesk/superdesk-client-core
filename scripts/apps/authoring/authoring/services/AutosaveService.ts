@@ -73,7 +73,11 @@ export class AutosaveService {
                 });
         }, timeout, false);
 
-        return this.timeouts[id];
+        return this.timeouts[id].catch((e) => {
+            if (e !== 'canceled') {
+                throw e;
+            }
+        });
     }
 
     /**
