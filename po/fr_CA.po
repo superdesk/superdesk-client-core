@@ -12,8 +12,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2020-09-02 09:15+0000\n"
-"Last-Translator: Gideon Lehmann <gideon.lehmann@sourcefabric.org>\n"
+"PO-Revision-Date: 2020-09-22 13:21+0000\n"
+"Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -704,10 +704,6 @@ msgstr "Ajouter à l'assemblage actuel"
 msgid "Add to Feature Stories"
 msgstr "Ajouter aux articles en vedette"
 
-#: ../superdesk-planning/index.js:40
-msgid "Add to Planning"
-msgstr "Ajouter à la planification"
-
 #: scripts/apps/packaging/index.ts:73
 msgid "Add to current"
 msgstr "Ajouter à l'élément en cours"
@@ -778,7 +774,7 @@ msgstr "Avancé"
 
 #: scripts/apps/search/views/search-panel.html:7
 msgid "Advanced Search"
-msgstr "Recherche avancée"
+msgstr "Recherche"
 
 #: ../superdesk-planning/client/components/Main/SearchPanel.jsx:103
 #: ../superdesk-planning/client/components/Main/ToggleFiltersButton.jsx:14
@@ -972,74 +968,78 @@ msgid "America/Chicago"
 msgstr "Amériques/Chicago"
 
 #: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:26
+msgid "America/Edmonton"
+msgstr "Amériques/Edmonton"
+
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:27
 msgid "America/Guatemala"
 msgstr "Amériques/Guatémala"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:27
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:28
 msgid "America/Halifax"
 msgstr "Amériques/Halifax"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:28
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:29
 msgid "America/Havana"
 msgstr "Amériques/La Havane"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:29
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:30
 msgid "America/La Paz"
 msgstr "Amériques/La Paz"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:30
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:31
 msgid "America/Lima"
 msgstr "Amériques/Lima"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:31
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:32
 msgid "America/Los Angeles"
 msgstr "Amériques/Los Angeles"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:32
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:33
 msgid "America/Manaus"
 msgstr "Amériques/Manaus"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:33
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:34
 msgid "America/Mexico City"
 msgstr "Amériques/Mexico"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:34
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:35
 msgid "America/Montevideo"
 msgstr "Amériques/Montevideo"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:35
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:36
 msgid "America/New York"
 msgstr "Amériques/New York"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:36
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:37
 msgid "America/Phoenix"
 msgstr "Amériques/Phoenix"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:37
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:38
 msgid "America/Santiago"
 msgstr "Amériques/Santiago"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:38
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:39
 msgid "America/Sao Paulo"
 msgstr "Amériques/Sao Paulo"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:39
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:40
 msgid "America/Tegucigalpa"
 msgstr "Amériques/Tegucigalpa"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:40
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:41
 msgid "America/Tijuana"
 msgstr "Amériques/Tijuana"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:41
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:42
 msgid "America/Toronto"
 msgstr "Amériques/Toronto"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:42
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:43
 msgid "America/Vancouver"
 msgstr "Amériques/Vancouver"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:43
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:44
 msgid "America/Winnipeg"
 msgstr "Amériques/Winnipeg"
 
@@ -1297,123 +1297,123 @@ msgstr "Ascendant"
 msgid "Ascending Order"
 msgstr "Ordre ascendant"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:44
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:45
 msgid "Asia/Almaty"
 msgstr "Asie/Almaty"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:45
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:46
 msgid "Asia/Baghdad"
 msgstr "Asie/Bagdad"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:46
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:47
 msgid "Asia/Baku"
 msgstr "Asie/Bakou"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:47
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:48
 msgid "Asia/Bangkok"
 msgstr "Asie/Bangkok"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:48
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:49
 msgid "Asia/Beirut"
 msgstr "Asie/Beyrouth"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:49
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:50
 msgid "Asia/Colombo"
 msgstr "Asie/Colombo"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:50
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:51
 msgid "Asia/Dhaka"
 msgstr "Asie/Dacca"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:51
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:52
 msgid "Asia/Dili"
 msgstr "Asie/Dili"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:52
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:53
 msgid "Asia/Dubai"
 msgstr "Asie/Dubaï"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:53
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:54
 msgid "Asia/Irkutsk"
 msgstr "Asie/Irkoutsk"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:54
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:55
 msgid "Asia/Jakarta"
 msgstr "Asie/Jakarta"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:55
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:56
 msgid "Asia/Jerusalem"
 msgstr "Asie/Jérusalem"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:56
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:57
 msgid "Asia/Kabul"
 msgstr "Asie/Kaboul"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:57
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:58
 msgid "Asia/Karachi"
 msgstr "Asie/Karachi"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:58
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:59
 msgid "Asia/Kathmandu"
 msgstr "Asie/Katmandou"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:59
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:60
 msgid "Asia/Krasnoyarsk"
 msgstr "Asie/Krasnoïarsk"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:60
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:61
 msgid "Asia/Kuala Lumpur"
 msgstr "Asie/Kuala Lumpur"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:61
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:62
 msgid "Asia/Manila"
 msgstr "Asie/Manille"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:62
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:63
 msgid "Asia/Novosibirsk"
 msgstr "Asie/Novossibirsk "
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:63
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:64
 msgid "Asia/Pyongyang"
 msgstr "Asie/Pyongyang"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:64
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:65
 msgid "Asia/Rangoon"
 msgstr "Asie/Rangoon"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:65
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:66
 msgid "Asia/Riyadh"
 msgstr "Asie/Riyad"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:66
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:67
 msgid "Asia/Seoul"
 msgstr "Asie/Séoul"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:67
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:68
 msgid "Asia/Singapore"
 msgstr "Asie/Singapour"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:68
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:69
 msgid "Asia/Tashkent"
 msgstr "Asie/Tachkent"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:69
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:70
 msgid "Asia/Tehran"
 msgstr "Asie/Téhéran"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:70
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:71
 msgid "Asia/Tokyo"
 msgstr "Asie/Tokyo"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:71
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:72
 msgid "Asia/Vladivostok"
 msgstr "Asie/Vladivostok"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:72
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:73
 msgid "Asia/Yakutsk"
 msgstr "Asie/Iakoutsk "
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:73
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:74
 msgid "Asia/Yekaterinburg"
 msgstr "Asie/Iekaterinbourg "
 
@@ -1531,7 +1531,7 @@ msgstr "Affectation retirée."
 #: ../superdesk-analytics/client/planning_usage_report/controllers/PlanningUsageReportController.js:78
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.jsx:35
 #: ../superdesk-planning/client/controllers/AssignmentController.js:34
-#: ../superdesk-planning/client/index.js:56 ../superdesk-planning/index.js:21
+#: ../superdesk-planning/client/index.js:56
 msgid "Assignments"
 msgstr "Affectations"
 
@@ -1603,19 +1603,19 @@ msgstr "Pièces jointes"
 msgid "Audio"
 msgstr "Audio"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:74
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:75
 msgid "Australia/Adelaide"
 msgstr "Australie/Adélaïde"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:75
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:76
 msgid "Australia/Melbourne"
 msgstr "Australie/Melbourne"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:76
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:77
 msgid "Australia/Perth"
 msgstr "Australie/Perth"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:77
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:78
 msgid "Australia/Sydney"
 msgstr "Australie/Sydney"
 
@@ -2405,12 +2405,12 @@ msgstr "Comparer les versions"
 msgid "Compare versions"
 msgstr "Comparer les versions"
 
-#: ../superdesk-planning/client/constants/assignments.js:49
+#: ../superdesk-planning/client/constants/assignments.js:50
 msgid "Complete Assignment"
 msgstr "Compléter l'affectation"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:64
-#: ../superdesk-planning/client/constants/assignments.js:90
+#: ../superdesk-planning/client/constants/assignments.js:91
 #: ../superdesk-planning/client/utils/index.ts:475
 msgid "Completed"
 msgstr "Terminé"
@@ -2455,7 +2455,7 @@ msgstr "Configurer les thèmes de l'éditeur"
 msgid "Confirm"
 msgstr "Confirmer"
 
-#: ../superdesk-planning/client/constants/assignments.js:66
+#: ../superdesk-planning/client/constants/assignments.js:67
 msgid "Confirm Availability"
 msgstr "Confirmer la disponibilité"
 
@@ -2622,7 +2622,7 @@ msgstr "Flux de contenu"
 
 #: ../superdesk-planning/client/actions/assignments/api.ts:516
 msgid "Content items not found!"
-msgstr ""
+msgstr "Les éléments de contenu n'ont pas été trouvés!"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:73
 msgid "Content linked"
@@ -3038,7 +3038,7 @@ msgstr "Créé"
 
 #: scripts/core/lang/missing-translations-strings.ts:39
 msgid "Created Ingest Channel {{name}}"
-msgstr "Chaîne d'ingestion {{name}} créée"
+msgstr "Canal d'ingestion {{name}} créé"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:6
 msgid "Created by"
@@ -3129,7 +3129,7 @@ msgstr "Durée cumulée"
 msgid "Cumulative time per call"
 msgstr "Durée cumulée par appel"
 
-#: ../superdesk-planning/client/constants/assignments.js:96
+#: ../superdesk-planning/client/constants/assignments.js:97
 msgid "Current Assignments"
 msgstr "Affectations actuelles"
 
@@ -3207,7 +3207,7 @@ msgstr "Quotidiennement"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:67
 msgid "Daily at {{hour}}"
-msgstr ""
+msgstr "Quotidiennement à {{hour}}"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:58
 msgid "Dark Blue"
@@ -3436,7 +3436,7 @@ msgstr "Supprimer l'espace de travail"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "Deleted Ingest Channel {{name}}"
-msgstr "Chaîne d'ingestion {{name}} supprimée "
+msgstr "Canal d'ingestion {{name}} supprimé"
 
 #: scripts/apps/publish/views/destination.html:22
 msgid "Delivery type"
@@ -3914,7 +3914,7 @@ msgstr "Dupliquer le contenu dans un pupitre"
 
 #: scripts/apps/search/directives/MultiActionBar.ts:232
 msgid "Duplicate In Place"
-msgstr "Dupliquer dans l'étape"
+msgstr "Dupliquer dans l'étape 'En cours'"
 
 #: scripts/apps/archive/index.tsx:178
 #: scripts/apps/authoring/views/send-item.html:21
@@ -3937,11 +3937,11 @@ msgstr "Doublon créé par"
 
 #: scripts/apps/archive/index.tsx:157
 msgid "Duplicate in place"
-msgstr "Dupliquer dans l'étape"
+msgstr "Dupliquer dans l'étape 'En cours'"
 
 #: scripts/apps/archive/index.tsx:202
 msgid "Duplicate to personal"
-msgstr ""
+msgstr "Dupliquer dans l'espace sécurisé"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:92
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:69
@@ -4101,7 +4101,7 @@ msgstr "Modifier l'endroit"
 msgid "Edit Media Metadata"
 msgstr "Modifier les métadonnées de l'élément multimédia"
 
-#: ../superdesk-planning/client/constants/assignments.js:53
+#: ../superdesk-planning/client/constants/assignments.js:54
 msgid "Edit Priority"
 msgstr "Modifier la priorité"
 
@@ -4582,79 +4582,79 @@ msgstr "Erreur: {{error}}"
 msgid "Error: {{message}}"
 msgstr "Erreur: {{message}}"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:78
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:79
 msgid "Europe/Athens"
 msgstr "Europe/Athènes"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:79
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:80
 msgid "Europe/Belgrade"
 msgstr "Europe/Belgrade"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:80
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:81
 msgid "Europe/Berlin"
 msgstr "Europe/Berlin"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:81
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:82
 msgid "Europe/Brussels"
 msgstr "Europe/Bruxelles"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:82
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:83
 msgid "Europe/Bucharest"
 msgstr "Europe/Bucarest"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:83
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:84
 msgid "Europe/Dublin"
 msgstr "Europe/Dublin"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:84
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:85
 msgid "Europe/Helsinki"
 msgstr "Europe/Helsinki"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:85
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:86
 msgid "Europe/Istanbul"
 msgstr "Europe/Istanbul"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:86
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:87
 msgid "Europe/Kiev"
 msgstr "Europe/Kiev"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:87
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:88
 msgid "Europe/Lisbon"
 msgstr "Europe/Lisbonne"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:88
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:89
 msgid "Europe/London"
 msgstr "Europe/Londres"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:89
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:90
 msgid "Europe/Madrid"
 msgstr "Europe/Madrid"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:90
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:91
 msgid "Europe/Minsk"
 msgstr "Europe/Minsk"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:91
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:92
 msgid "Europe/Moscow"
 msgstr "Europe/Moscou"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:92
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:93
 msgid "Europe/Paris"
 msgstr "Europe/Paris"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:93
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:94
 msgid "Europe/Prague"
 msgstr "Europe/Prague"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:94
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:95
 msgid "Europe/Rome"
 msgstr "Europe/Rome"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:95
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:96
 msgid "Europe/Sofia"
 msgstr "Europe/Sofia"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:96
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:97
 msgid "Europe/Stockholm"
 msgstr "Europe/Stockholm"
 
@@ -4880,7 +4880,7 @@ msgstr "Expiration"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:81
 msgid "Expiry Date:"
-msgstr ""
+msgstr "Date d'expiration:"
 
 #: ../superdesk-planning/client/components/ExportAsArticleModal.jsx:212
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:148
@@ -5624,7 +5624,6 @@ msgid "From:"
 msgstr "De:"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.jsx:123
-#: ../superdesk-planning/index.js:69
 msgid "Fulfil Assignment"
 msgstr "Compléter l'affectation"
 
@@ -5644,7 +5643,7 @@ msgstr "Nom complet"
 msgid "Function"
 msgstr "Fonction"
 
-#: ../superdesk-planning/client/constants/assignments.js:110
+#: ../superdesk-planning/client/constants/assignments.js:111
 msgid "Future Assignments"
 msgstr "Affectations futures"
 
@@ -6110,7 +6109,7 @@ msgstr "Dans 2 jours"
 msgid "In 3 days"
 msgstr "Dans 3 jours"
 
-#: ../superdesk-planning/client/constants/assignments.js:84
+#: ../superdesk-planning/client/constants/assignments.js:85
 #: ../superdesk-planning/client/utils/index.ts:463
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:10
 #: scripts/apps/search/components/fields/state.tsx:18
@@ -6285,7 +6284,7 @@ msgstr "Instagram"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:86
 msgid "Installed Version:"
-msgstr ""
+msgstr "Version installée:"
 
 #: scripts/apps/authoring/authoring/index.ts:407
 msgid "Instant Spellchecking, when automatic spellchecking turned off"
@@ -6761,19 +6760,19 @@ msgstr "Longueur"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:69
 msgid "License ID:"
-msgstr ""
+msgstr "Identifiant de licence:"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:45
 msgid "License Type"
-msgstr ""
+msgstr "Type de licence"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:56
 msgid "Licensee Contact:"
-msgstr ""
+msgstr "Contact du titulaire de licence:"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:50
 msgid "Licensee:"
-msgstr ""
+msgstr "Titulaire de licence:"
 
 #: ../superdesk-analytics/client/charts/directives/ChartColourPicker.js:53
 msgid "Light Gray"
@@ -6992,10 +6991,6 @@ msgstr "Gestion des filtres d'événements et de planification"
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Manage Global Saved Searches"
 msgstr "Gestion des recherches enregistrées globales"
-
-#: ../superdesk-planning/index.js:28 ../superdesk-planning/index.js:29
-msgid "Manage Locations"
-msgstr "Gestion des endroits"
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Manage Search Providers"
@@ -7287,7 +7282,7 @@ msgstr "Mensuellement"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:78
 msgid "Monthly on the {{day}} day at {{hour}}"
-msgstr ""
+msgstr "Mensuellement le {{day}} à {{hour}}"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:224
 msgid "More actions"
@@ -7327,11 +7322,11 @@ msgstr "Déplacé par"
 
 #: scripts/apps/desks/views/desk-config-modal.html:367
 msgid "Moved onto stage Rule"
-msgstr ""
+msgstr "Règle de transfert vers l'étape"
 
 #: scripts/apps/desks/views/desk-config-modal.html:308
 msgid "Moved onto stage Rule:"
-msgstr ""
+msgstr "Règle de transfert vers l'étape"
 
 #: scripts/apps/dashboard/user-activity/components/UserActivityWidget.tsx:144
 msgid "Moved to a working stage by this user"
@@ -8101,13 +8096,13 @@ msgstr "Oops! Il n'y a aucun élement."
 msgid "Open"
 msgstr "Ouvrir"
 
-#: ../superdesk-planning/client/constants/assignments.js:62
+#: ../superdesk-planning/client/constants/assignments.js:63
 msgid "Open Coverage"
 msgstr "Couverture ouverte"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:47
 msgid "Open advanced search panel by default"
-msgstr "Ouvrir le panneau de recherche avancée par défaut"
+msgstr "Ouvrir le panneau de recherche par défaut"
 
 #: scripts/apps/desks/views/desk-tasks.html:3
 #: scripts/apps/desks/views/desk.html:3
@@ -8134,7 +8129,7 @@ msgstr "Suivi ouvert"
 
 #: scripts/apps/workspace/index.ts:37
 msgid "Open personal"
-msgstr ""
+msgstr "Ouvrir l'espace sécurisé"
 
 #: scripts/apps/workspace/index.ts:38
 msgid "Open search"
@@ -8338,19 +8333,19 @@ msgstr "Image PNG"
 msgid "PROFILE"
 msgstr "PROFIL"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:97
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:98
 msgid "Pacific/Auckland"
 msgstr "Pacifique/Auckland"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:98
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:99
 msgid "Pacific/Honolulu"
 msgstr "Pacifique/Honolulu"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:99
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:100
 msgid "Pacific/Noumea"
 msgstr "Pacifique/Nouméa"
 
-#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:100
+#: scripts/apps/dashboard/world-clock/timezones-all-labels.ts:101
 msgid "Pacific/Port Moresby"
 msgstr "Pacifique/Port Moresby "
 
@@ -8562,7 +8557,6 @@ msgstr "Texte seul"
 #: ../superdesk-planning/client/controllers/PlanningController.js:38
 #: ../superdesk-planning/client/index.js:65
 #: ../superdesk-planning/client/utils/history.js:75
-#: ../superdesk-planning/index.js:13 ../superdesk-planning/index.js:14
 #: scripts/apps/users/views/user-preferences.html:152
 msgid "Planning"
 msgstr "Planification"
@@ -8967,7 +8961,7 @@ msgstr "Nom du produit"
 
 #: scripts/apps/search/views/item-repo.html:4
 msgid "Production"
-msgstr "Production"
+msgstr "En cours"
 
 #: ../superdesk-analytics/client/production_time_report/controllers/ProductionTimeReportController.js:276
 msgid "Production Stats"
@@ -9135,16 +9129,16 @@ msgstr "Articles publiés"
 
 #: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:378
 msgid "Published Stories for {{group}}: {{data}}"
-msgstr ""
+msgstr "Articles publiés pour {{group}}: {{data}}"
 
 #: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:358
 #: ../superdesk-analytics/client/publishing_performance_report/controllers/PublishingPerformanceReportController.ts:384
 msgid "Published Stories per {{group}}"
-msgstr ""
+msgstr "Articles publiés par {{group}}"
 
 #: ../superdesk-analytics/client/content_publishing_report/controllers/ContentPublishingReportController.js:352
 msgid "Published Stories per {{group}} with {{subgroup}} breakdown"
-msgstr ""
+msgstr "Articles publiés par {{group}} avec ventilation par {{subgroup}}"
 
 #: scripts/apps/legal-archive/views/legal_archive.html:84
 msgid "Published Until"
@@ -9328,7 +9322,7 @@ msgid "Reason for rescheduling this event:"
 msgstr "Raison de la reprogrammation de cet événement:"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageFormHeader.jsx:146
-#: ../superdesk-planning/client/constants/assignments.js:45
+#: ../superdesk-planning/client/constants/assignments.js:46
 msgid "Reassign"
 msgstr "Réaffecter"
 
@@ -9493,7 +9487,7 @@ msgstr "Une valeur pour les dernières périodes est requise"
 msgid "Remove"
 msgstr "Retirer"
 
-#: ../superdesk-planning/client/constants/assignments.js:57
+#: ../superdesk-planning/client/constants/assignments.js:58
 msgid "Remove Assignment"
 msgstr "Retirer l'affectation"
 
@@ -9829,7 +9823,7 @@ msgstr "Restaurer"
 msgid "Result Type"
 msgstr "Type de résultat"
 
-#: ../superdesk-planning/client/constants/assignments.js:70
+#: ../superdesk-planning/client/constants/assignments.js:71
 msgid "Revert Availability"
 msgstr "Retirer la disponibilité"
 
@@ -10404,7 +10398,7 @@ msgstr "Rechercher"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:405
 msgid "Search Categories"
-msgstr ""
+msgstr "Rechercher des catégories"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:453
 msgid "Search Content State"
@@ -10412,7 +10406,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:375
 msgid "Search Desks"
-msgstr ""
+msgstr "Rechercher des pupitres"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:509
 msgid "Search Enter Desk Actions"
@@ -10424,11 +10418,11 @@ msgstr ""
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:417
 msgid "Search Genre"
-msgstr ""
+msgstr "Rechercher version"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:467
 msgid "Search Ingest Providers"
-msgstr ""
+msgstr "Rechercher des fournisseurs d'ingestion"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.jsx:133
 msgid "Search OpenStreetMap"
@@ -10449,15 +10443,15 @@ msgstr "Rechercher des fournisseurs"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:429
 msgid "Search Source"
-msgstr ""
+msgstr "Rechercher une source"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:482
 msgid "Search Stages"
-msgstr ""
+msgstr "Rechercher des étapes"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:441
 msgid "Search Urgency"
-msgstr ""
+msgstr "Rechercher des priorités"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:387
 #: ../superdesk-analytics/client/search/views/user-select.html:17
@@ -11271,7 +11265,7 @@ msgstr "Étapes"
 msgid "Start Time (inclusive)"
 msgstr "Heure de début (inclusive)"
 
-#: ../superdesk-planning/client/constants/assignments.js:41
+#: ../superdesk-planning/client/constants/assignments.js:42
 msgid "Start Working"
 msgstr "Commencer le travail"
 
@@ -11802,7 +11796,7 @@ msgstr "L'élément de planification a été sorti de la corbeille"
 #: scripts/apps/products/views/products-config-modal.html:28
 msgid ""
 "The Product ID can be copied and used as Superdesk Newshub product query."
-msgstr ""
+msgstr "L'identifiant de produit peut être copié et utilisé comme requête pour le produit Superdesk Newshub."
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:278
 msgid "The Saved Report you are using was deleted!"
@@ -12006,23 +12000,23 @@ msgstr "Certains éléments sont verrouillés ou non publiés. Voulez-vous conti
 msgid "There are no actions available."
 msgstr "Il n'y a pas d'option disponible."
 
-#: ../superdesk-planning/client/constants/assignments.js:92
+#: ../superdesk-planning/client/constants/assignments.js:93
 msgid "There are no assignments completed"
 msgstr "Il n'y a pas d'affectation complétée"
 
-#: ../superdesk-planning/client/constants/assignments.js:105
+#: ../superdesk-planning/client/constants/assignments.js:106
 msgid "There are no assignments for today"
 msgstr "Il n'y a pas d'affectation pour aujourd'hui"
 
-#: ../superdesk-planning/client/constants/assignments.js:86
+#: ../superdesk-planning/client/constants/assignments.js:87
 msgid "There are no assignments in progress"
 msgstr "Il n'y a pas d'affectation en cours"
 
-#: ../superdesk-planning/client/constants/assignments.js:80
+#: ../superdesk-planning/client/constants/assignments.js:81
 msgid "There are no assignments to do"
 msgstr "Il n'y a pas d'affectation à faire"
 
-#: ../superdesk-planning/client/constants/assignments.js:98
+#: ../superdesk-planning/client/constants/assignments.js:99
 msgid "There are no current assignments"
 msgstr "Il n'y a pas d'affectation actuelle"
 
@@ -12030,7 +12024,7 @@ msgstr "Il n'y a pas d'affectation actuelle"
 msgid "There are no events and planing view filters."
 msgstr "Il n'y a pas de filtre de visualisation d'événements et de planification."
 
-#: ../superdesk-planning/client/constants/assignments.js:112
+#: ../superdesk-planning/client/constants/assignments.js:113
 msgid "There are no future assignments"
 msgstr "Il n'y a pas d'affectation à venir"
 
@@ -12482,7 +12476,7 @@ msgstr "À confirmer"
 msgid "To Desk"
 msgstr "Au pupitre"
 
-#: ../superdesk-planning/client/constants/assignments.js:78
+#: ../superdesk-planning/client/constants/assignments.js:79
 #: scripts/apps/dashboard/workspace-tasks/tasks.ts:9
 msgid "To Do"
 msgstr "À faire"
@@ -12510,7 +12504,7 @@ msgstr "À: "
 msgid "Today"
 msgstr "Aujourd'hui"
 
-#: ../superdesk-planning/client/constants/assignments.js:103
+#: ../superdesk-planning/client/constants/assignments.js:104
 msgid "Todays Assignments"
 msgstr "Affectations du jour"
 
@@ -12788,10 +12782,6 @@ msgstr "Une erreur inconnue est survenue. Tentez de publier l'élément depuis l
 msgid "Unlink"
 msgstr "Délier"
 
-#: ../superdesk-planning/index.js:95
-msgid "Unlink as Coverage"
-msgstr "Délier en tant que couverture"
-
 #: scripts/apps/archive/index.tsx:307
 msgid "Unlink update"
 msgstr "Délier la mise à jour"
@@ -12858,7 +12848,7 @@ msgstr "Annuler la publication des éléments associés:"
 
 #: scripts/apps/search/components/fields/state.tsx:25
 msgid "Unpublished"
-msgstr "Dépublié"
+msgstr "Publication annulée"
 
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:209
 msgid "Unpublished by"
@@ -13168,7 +13158,7 @@ msgstr "Activité de l'utilisateur"
 
 #: ../superdesk-analytics/client/user_activity_report/controllers/UserActivityReportController.js:185
 msgid "User Activity - {{username}}"
-msgstr ""
+msgstr "Activité de l'utilisateur - {{username}}"
 
 #: scripts/apps/users/config.ts:38
 #: scripts/core/lang/missing-translations-strings.ts:21
@@ -13447,7 +13437,7 @@ msgstr "Chaque semaine"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:71
 msgid "Weekly on {{days}} at {{hour}}"
-msgstr ""
+msgstr "Chaque semaine les {{days}} à {{hour}}"
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:4
 msgid "Welcome to Superdesk"
