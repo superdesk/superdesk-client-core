@@ -147,7 +147,7 @@
         </div>
 
         <div ng-if="!hideMedia && item.type === 'picture' && item.renditions.original.href" style="margin-bottom: 20px">
-            <img ng-src="{{item.renditions.original.href}}" />
+            <img ng-src="{{item.renditions.baseImage.href}}" />
         </div>
 
         <div
