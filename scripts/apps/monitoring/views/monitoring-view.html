@@ -261,6 +261,12 @@
                                 </div>
                             </div>
                             <div ng-if="type === 'spike'" class="list">
+                                <sd-articles-list-react
+                                    get-query="getSpikedItemsQuery"
+                                    active-desk-id="activeDeskId"
+                                    monitoring-controller="monitoring"
+                                ></sd-articles-list-react>
+
                                 <div ng-repeat="group in aggregate.spikeGroups track by group._id | orderBy: name"
                                         sd-monitoring-group
                                         ng-class="{'single-group': aggregate.spikeGroups.length === 1}"

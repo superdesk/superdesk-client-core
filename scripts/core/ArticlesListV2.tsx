@@ -19,7 +19,7 @@ interface IProps {
     loadItems(start: number, end: number): Promise<Array<IArticle>>;
     shouldReloadTheList?(fieldsChanged: Set<string>): boolean;
 
-    onItemSelect(item: IArticle): void;
+    onItemClick(item: IArticle): void;
     onItemDoubleClick?(item: IArticle): void;
 }
 
@@ -120,7 +120,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             desksById={this.monitoringState.state.desksById}
                             ingestProvidersById={this.monitoringState.state.ingestProvidersById}
                             usersById={this.monitoringState.state.usersById}
-                            onMonitoringItemSelect={this.props.onItemSelect}
+                            onMonitoringItemSelect={this.props.onItemClick}
                             onMonitoringItemDoubleClick={this.props.onItemDoubleClick ?? noop}
                             hideActionsForMonitoringItems={false}
                             disableMonitoringMultiSelect={true}

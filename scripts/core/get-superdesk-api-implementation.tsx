@@ -62,7 +62,11 @@ export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise
     const authoringWorkspace = ng.get('authoringWorkspace');
 
     return ng.getService('$location').then(($location) => {
-        $location.url('/workspace/monitoring');
+        if (document.querySelector('[sd-monitoring-view]') == null) {
+            // redirect if outside monitoring view
+            $location.url('/workspace/monitoring');
+        }
+
         authoringWorkspace.edit({_id: id}, mode);
     });
 }

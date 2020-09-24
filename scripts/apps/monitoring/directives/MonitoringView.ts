@@ -1,7 +1,8 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IDesk} from 'superdesk-api';
+import {IDesk, IUser} from 'superdesk-api';
+import {ISuperdeskQuery} from 'core/query-formatting';
 
 interface IScope extends ng.IScope {
     monitoringItemsLoading: boolean;
@@ -25,6 +26,7 @@ interface IScope extends ng.IScope {
     toggleFilter: () => void;
     addResourceUpdatedEventListener: (callback: any) => void;
     openUpload: (files: Array<File>) => void;
+    getSpikedItemsQuery: (userId: string, deskId: string) => ISuperdeskQuery;
 }
 
 /**
@@ -71,6 +73,26 @@ export function MonitoringView(
             let containerElem = elem.find('.sd-column-box__main-column');
 
             scope.gettext = gettext;
+
+            scope.getSpikedItemsQuery = (userId: IUser['_id'], deskId: IDesk['_id']) => {
+                return {
+                    filter: {$and: [
+                        {'state': {$eq: 'spiked'}},
+                        {$or: [
+                            {$and: [
+                                {'state': {$eq: 'draft'}},
+                                {'original_creator': {$eq: userId}},
+                            ]},
+                            {'state': {$ne: 'draft'}},
+                        ]},
+                        {'package_type': {$ne: 'takes'}},
+                        {'task.desk': {$eq: deskId}},
+                    ]},
+                    sort: [{'versioncreated': 'desc'}],
+                    page: 1,
+                    max_results: 20,
+                };
+            };
 
             scope.$watch(() => desks.active.desk, (activeDeskId) => {
                 scope.activeDeskId = activeDeskId;

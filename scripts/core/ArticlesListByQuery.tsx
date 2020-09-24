@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import {ArticlesListV2} from './ArticlesListV2';
 import {IRestApiResponse, IArticle} from 'superdesk-api';
@@ -8,7 +10,8 @@ import {ISuperdeskQuery, toElasticQuery, getQueryFieldsRecursive} from './query-
 
 interface IProps {
     query: ISuperdeskQuery;
-    onItemSelect(item: IArticle): void;
+    onItemClick(item: IArticle): void;
+    onItemDoubleClick(item: IArticle): void;
 }
 
 interface IState {
@@ -16,7 +19,7 @@ interface IState {
     itemCount: number;
 }
 
-export class ArticlesListByQuery extends React.Component<IProps, IState> {
+class ArticlesListByQueryComponent extends React.PureComponent<IProps, IState> {
     articlesListRef: ArticlesListV2;
 
     constructor(props: IProps) {
@@ -93,7 +96,22 @@ export class ArticlesListByQuery extends React.Component<IProps, IState> {
 
                     return Array.from(changedFields).some((changedField) => queryFields.has(changedField));
                 }}
-                onItemSelect={this.props.onItemSelect}
+                onItemClick={this.props.onItemClick}
+                onItemDoubleClick={this.props.onItemDoubleClick}
+            />
+        );
+    }
+}
+
+export class ArticlesListByQuery extends React.PureComponent<IProps> {
+    render() {
+        // re-mount the component when the query changes
+        const key = JSON.stringify(this.props.query);
+
+        return (
+            <ArticlesListByQueryComponent
+                key={key}
+                {...this.props}
             />
         );
     }

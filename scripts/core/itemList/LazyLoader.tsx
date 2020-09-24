@@ -142,10 +142,21 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                     }}
                 >
                     {this.getLoadedItemsCount() === 0 ? null : this.props.children(items)}
-                    {this.allItemsLoaded()
-                        ? <div style={messageStyles}>{gettext('All items have been loaded.')}</div>
-                        : null
-                    }
+                    {(() => {
+                        if (this.allItemsLoaded()) {
+                            if (this.getLoadedItemsCount() === 0) {
+                                return (
+                                    <div style={messageStyles}>{gettext('There are currently no items.')}</div>
+                                );
+                            } else {
+                                return (
+                                    <div style={messageStyles}>{gettext('All items have been loaded.')}</div>
+                                );
+                            }
+                        } else {
+                            return null;
+                        }
+                    })()}
                 </div>
                 {loading ? <div style={messageStyles}>{gettext('Loading...')}</div> : null}
             </div>

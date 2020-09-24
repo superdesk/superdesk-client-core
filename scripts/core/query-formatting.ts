@@ -6,10 +6,10 @@ type IComparisonOptions =
     | {$lt: any}
     | {$lte: any};
 
-type IComparison = {[field: string]: IComparisonOptions};
-type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
-type IOrOperator = {$or: Array<IComparison | ILogicalOperator>};
-type ILogicalOperator = IAndOperator | IOrOperator;
+export type IComparison = {[field: string]: IComparisonOptions};
+export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
+export type IOrOperator = {$or: Array<IComparison | ILogicalOperator>};
+export type ILogicalOperator = IAndOperator | IOrOperator;
 
 function isLogicalOperator(x: ILogicalOperator | IComparison): x is ILogicalOperator {
     return x['$and'] != null || x['$or'] != null;
@@ -17,6 +17,7 @@ function isLogicalOperator(x: ILogicalOperator | IComparison): x is ILogicalOper
 
 export interface ISuperdeskQuery {
     filter: ILogicalOperator;
+    fullTextSearch?: string;
     sort: Array<{[field: string]: 'asc' | 'desc'}>;
     page: number;
     max_results: number;
@@ -87,14 +88,26 @@ export function getQueryFieldsRecursive(q: ILogicalOperator | IComparison): Set<
 }
 
 export function toElasticQuery(q: ISuperdeskQuery) {
-    return {
-        query: {
-            filtered: {
-                filter: toElasticFilter(q.filter),
+    const filtered = {filter: toElasticFilter(q.filter)};
+
+    if (q.fullTextSearch != null) {
+        filtered['query'] = {
+            query_string: {
+                query: q.fullTextSearch,
+                lenient: true,
+                default_operator: 'AND',
             },
+        };
+    }
+
+    const query = {
+        query: {
+            filtered: filtered,
         },
         sort: q.sort,
         size: q.max_results,
         from: q.page * q.max_results,
     };
+
+    return query;
 }
