@@ -220,3 +220,11 @@ export function bindMarkItemShortcut(label) {
 export function isIPublishedArticle(item: IArticle | IPublishedArticle): item is IPublishedArticle {
     return item._type === 'published';
 }
+
+export function canPrintPreview(item: IArticle) {
+    if (item.type === 'text' || item.type === 'picture') {
+        return true;
+    } else {
+        return false; // not implemented
+    }
+}

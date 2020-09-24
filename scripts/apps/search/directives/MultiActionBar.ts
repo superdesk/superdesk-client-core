@@ -6,6 +6,7 @@ import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {dataApi} from 'core/helpers/CrudManager';
+import {canPrintPreview} from '../helpers';
 
 interface IScope extends ng.IScope {
     multi: any;
@@ -291,23 +292,25 @@ export function MultiActionBar(
                     });
                 }
 
-                actions.push({
-                    label: gettext('Print'),
-                    icon: 'icon-print',
-                    onTrigger: () => {
-                        const ids: Array<string> = multi.getIds();
+                if (articles.every((item) => canPrintPreview(item))) {
+                    actions.push({
+                        label: gettext('Print'),
+                        icon: 'icon-print',
+                        onTrigger: () => {
+                            const ids: Array<string> = multi.getIds();
 
-                        scope.hideMultiActionBar();
+                            scope.hideMultiActionBar();
 
-                        Promise.all(
-                            ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
-                        ).then((res: Array<IArticle>) => {
-                            scope.printPreview = res;
-                            scope.$apply();
-                        });
-                    },
-                    canAutocloseMultiActionBar: false,
-                });
+                            Promise.all(
+                                ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
+                            ).then((res: Array<IArticle>) => {
+                                scope.printPreview = res;
+                                scope.$apply();
+                            });
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
 
                 return actions;
             };
