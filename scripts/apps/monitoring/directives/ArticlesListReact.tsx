@@ -9,6 +9,7 @@ import {IArticle, IDesk, IUser} from 'superdesk-api';
 import {ArticlesListByQueryWithFilters} from 'core/ArticlesListByQueryWithFilters';
 
 interface IProps {
+    heading: string;
     getQuery(userId: string, deskId: string): ISuperdeskQuery;
     activeDeskId: IDesk['_id'];
     monitoringController: any;
@@ -43,6 +44,7 @@ export class ArticlesList extends React.PureComponent<IProps, IState> {
         return (
             <div>
                 <ArticlesListByQueryWithFilters
+                    heading={this.props.heading}
                     query={getQuery(currentUser._id, activeDeskId)}
                     onItemClick={(item) => {
                         // item does not have all the fields because of projections used for list items

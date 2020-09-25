@@ -12,6 +12,7 @@ interface IProps {
     query: ISuperdeskQuery;
     onItemClick(item: IArticle): void;
     onItemDoubleClick(item: IArticle): void;
+    header?(itemCount: number): JSX.Element;
 }
 
 interface IState {
@@ -78,27 +79,32 @@ class ArticlesListByQueryComponent extends React.PureComponent<IProps, IState> {
         const {itemCount} = this.state;
 
         return (
-            <ArticlesListV2
-                itemCount={itemCount}
-                loadItems={(from, to) => this.loadItems(from, to).then(({_items}) => _items)}
-                shouldReloadTheList={(changedFields) => {
-                    /** TODO: Have websockets transmit the diff.
-                     * The component should not update when field value changes do not affect the query -
-                     * for example, if the query is {desk: 'X'} and an update is about an item moved from desk Y to Z.
-                     */
+            <div>
+                {this.props.header == null ? null : this.props.header(itemCount)}
 
-                    const queryFields = getQueryFieldsRecursive(this.props.query.filter);
+                <ArticlesListV2
+                    itemCount={itemCount}
+                    loadItems={(from, to) => this.loadItems(from, to).then(({_items}) => _items)}
+                    shouldReloadTheList={(changedFields) => {
+                        /** TODO: Have websockets transmit the diff.
+                         * The component should not update when field value changes do not affect the query -
+                         * for example, if the query is {desk: 'X'} and an update is about an item moved
+                         * from desk Y to Z.
+                         */
 
-                    // add sorting fields
-                    flatMap(this.props.query.sort, (option) => Object.keys(option)).forEach((sortField) => {
-                        queryFields.add(sortField);
-                    });
+                        const queryFields = getQueryFieldsRecursive(this.props.query.filter);
 
-                    return Array.from(changedFields).some((changedField) => queryFields.has(changedField));
-                }}
-                onItemClick={this.props.onItemClick}
-                onItemDoubleClick={this.props.onItemDoubleClick}
-            />
+                        // add sorting fields
+                        flatMap(this.props.query.sort, (option) => Object.keys(option)).forEach((sortField) => {
+                            queryFields.add(sortField);
+                        });
+
+                        return Array.from(changedFields).some((changedField) => queryFields.has(changedField));
+                    }}
+                    onItemClick={this.props.onItemClick}
+                    onItemDoubleClick={this.props.onItemDoubleClick}
+                />
+            </div>
         );
     }
 }

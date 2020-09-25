@@ -1,16 +1,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {DebounceInput} from 'react-debounce-input';
-import {isNil, uniqueId} from 'lodash';
+import {uniqueId} from 'lodash';
 import './style.scss';
 import {gettext} from 'core/utils';
 
-/**
- * @ngdoc react
- * @name SearchBar
- * @description Component to search by debounced input to fetch results from backend
- */
-export default class SearchBar extends React.Component<any, any> {
+interface IProps {
+    value: string;
+    onSearch(queryString: string): void;
+    extendOnOpen?: boolean;
+    allowCollapsed?: boolean;
+    timeout?: number;
+    minLength?: number;
+}
+
+interface IState {
+    searchBarExtended: boolean;
+    searchInputValue: string;
+    uniqueId: string;
+}
+
+export default class SearchBar extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
@@ -20,7 +30,7 @@ export default class SearchBar extends React.Component<any, any> {
         super(props);
         this.state = {
             // initialize state from props
-            searchBarExtended: !isNil(this.props.value),
+            searchBarExtended: (this.props.value?.length ?? 0) > 0,
             searchInputValue: this.props.value || '',
             uniqueId: uniqueId('SearchBar'),
         };
@@ -55,7 +65,7 @@ export default class SearchBar extends React.Component<any, any> {
             searchBarExtended: false,
             searchInputValue: '',
         });
-        this.props.onSearch();
+        this.props.onSearch('');
     }
 
     resetSearchValue() {
@@ -115,15 +125,6 @@ export default class SearchBar extends React.Component<any, any> {
         );
     }
 }
-
-SearchBar.propTypes = {
-    onSearch: PropTypes.func.isRequired,
-    value: PropTypes.string,
-    minLength: PropTypes.number,
-    extendOnOpen: PropTypes.bool,
-    timeout: PropTypes.number,
-    allowCollapsed: PropTypes.bool,
-};
 
 SearchBar.defaultProps = {
     timeout: 800,

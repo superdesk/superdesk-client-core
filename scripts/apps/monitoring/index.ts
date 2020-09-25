@@ -47,6 +47,7 @@ angular.module('superdesk.apps.monitoring', [
         reactToAngular1(
             ArticlesList,
             [
+                'heading',
                 'getQuery',
                 'activeDeskId',
                 'monitoringController',
