@@ -1,8 +1,7 @@
-<div ng-controller="AttachmentsCtrl as ctrl" class="sd-wrap-helper">
-    <sd-attachments-widget
-        store="store"
-        read-only="readOnly"
-        is-widget="widget != null"
-        class="sd-wrap-helper"
-    ></sd-attachments-widget>
-</div>
+<sd-attachments-widget
+    class="sd-wrap-helper"
+    read-only="readOnly"
+    is-widget="widget != null"
+    item="item"
+    update-item="updateItem"
+></sd-attachments-widget>

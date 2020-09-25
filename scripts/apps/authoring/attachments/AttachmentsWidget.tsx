@@ -1,183 +1,109 @@
-/* eslint-disable react/no-multi-comp */
-
 import * as React from 'react';
-import {Provider, connect} from 'react-redux';
-
-import {AttachmentsList} from './AttachmentsList';
-import {AttachmentsEditorModal} from './AttachmentsEditorModal';
-
-import {showModal} from 'core/services/modalService';
-
-import {
-    download,
-    removeFile,
-    selectFiles,
-    saveFile,
-} from './actions';
-
-import {gettext} from 'core/utils';
-import {IAttachment, IAttachmentsWidgetProps} from 'superdesk-api';
-
+import {IArticle, IAttachment, IAttachmentsWidgetProps, IAttachmentsWrapperProps} from 'superdesk-api';
+import {isLocked, isLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
+import {appConfig} from 'appConfig';
+import {notify} from 'core/notify/notify';
+import {gettext, gettextCatalog} from 'core/utils';
+import {filesize} from 'core/ui/ui';
 import {CC} from 'core/ui/configurable-ui-components';
+import {AttachmentsWidgetComponent} from './AttachmentsWidgetComponent';
+import {withAttachments} from './AttachmentsWrapper';
+import {dispatchCustomEvent} from 'core/notification/notification';
 
-export class AttachmentsWidgetComponent extends React.PureComponent<IAttachmentsWidgetProps> {
-    fileInputNode: React.RefObject<HTMLInputElement>;
-
-    constructor(props: IAttachmentsWidgetProps) {
-        super(props);
-
-        this.fileInputNode = React.createRef<HTMLInputElement>();
-
-        this.showFileUploadModal = this.showFileUploadModal.bind(this);
-        this.onAddFiles = this.onAddFiles.bind(this);
-        this.onDragFiles = this.onDragFiles.bind(this);
-        this.onDropFiles = this.onDropFiles.bind(this);
-        this.editFile = this.editFile.bind(this);
-    }
-
-    showFileUploadModal() {
-        if (this.fileInputNode.current != null) {
-            this.fileInputNode.current.click();
-        }
-    }
-
-    onAddFiles(event: React.ChangeEvent<HTMLInputElement>) {
-        event.preventDefault();
-        this.props.selectFiles(Array.from(event.target.files ?? []));
-    }
-
-    onDragFiles(event: React.DragEvent<HTMLDivElement>) {
-        // Prevents Browser default action, such as open in new tab
-        event.preventDefault();
-    }
-
-    onDropFiles(event: React.DragEvent<HTMLDivElement>) {
-        event.preventDefault();
-        this.props.selectFiles(Array.from(event.dataTransfer.files));
-    }
-
-    editFile(file: IAttachment) {
-        showModal(({closeModal}) => (
-            <AttachmentsEditorModal
-                closeEdit={closeModal}
-                file={file}
-                saveFile={(original, updates) => {
-                    this.props.saveFile(original, updates);
-                    closeModal();
-                }}
-            />
-        ));
-    }
-
-    render() {
-        if (CC.AuthoringAttachmentsWidget != null) {
-            return (
-                <CC.AuthoringAttachmentsWidget {...this.props} />
-            );
-        }
-
-        const showUpload = this.props.files.length < this.props.maxFiles &&
-            this.props.isLockedByMe &&
-            !this.props.readOnly;
-
-        return (
-            <div
-                className="attachments-pane"
-                onDragOver={this.onDragFiles}
-                onDrop={this.onDropFiles}
-            >
-                <AttachmentsList
-                    files={this.props.files}
-                    readOnly={this.props.readOnly}
-                    editFile={this.editFile}
-                    download={this.props.download}
-                    removeFile={this.props.removeFile}
-                />
-
-                {!(showUpload && this.props.isWidget === true) ? null : (
-                    <div className="attach-indicator">
-                        <div className="round-box">
-                            <i className="big-icon--upload-alt icon" />
-                        </div>
-
-                        <div className="subtext">
-                            {gettext('Drag one or more files here to upload them, or just click the button below.')}
-                        </div>
-
-                        <button
-                            className="btn btn--hollow"
-                            disabled={this.props.readOnly || this.props.editable === false}
-                            onClick={this.showFileUploadModal}
-                        >
-                            {gettext('Attach files')}
-                        </button>
-                    </div>
-                )}
-
-                {!(showUpload && this.props.isWidget === false) ? null : (
-                    <button
-                        className="item-association"
-                        disabled={this.props.readOnly || this.props.editable === false}
-                        onClick={this.showFileUploadModal}
-                    >
-                        <div className="subtext">
-                            <i className="icon-attachment-large" />
-                            <span>
-                                {gettext('Drag one or more files here to upload them, or just click here.')}
-                            </span>
-                        </div>
-                    </button>
-                )}
-
-                <input
-                    type="file"
-                    ref={this.fileInputNode}
-                    onChange={this.onAddFiles}
-                    multiple={true}
-                    style={{visibility: 'hidden'}}
-                />
-            </div>
-        );
-    }
-}
-
-const mapStateToProps = (state, ownProps) => ({
-    files: state.attachments.files,
-    readOnly: state.editor.isLocked || ownProps.readOnly === true,
-    maxSize: state.attachments.maxSize,
-    maxFiles: state.attachments.maxFiles,
-    editable: state.editor.editable,
-    isLocked: state.editor.isLocked,
-    isLockedByMe: state.editor.isLockedByMe,
-});
-
-const mapDispatchToProps = {
-    download,
-    removeFile,
-    selectFiles,
-    saveFile,
-};
-
-const AttachmentsWidgetConnected = connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(AttachmentsWidgetComponent);
-
-interface IProps {
-    store: any;
+interface IProps extends IAttachmentsWrapperProps {
+    updateItem(updates: Partial<IArticle>): void;
     readOnly: boolean;
     isWidget: boolean;
 }
 
-export class AttachmentsWidget extends React.PureComponent<IProps> {
+class AttachmentsWidgetWrapper extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.addAttachments = this.addAttachments.bind(this);
+        this.removeAttachment = this.removeAttachment.bind(this);
+        this.updateAttachment = this.updateAttachment.bind(this);
+        this.isUploadValid = this.isUploadValid.bind(this);
+    }
+
+    addAttachments(newAttachments: Array<IAttachment>) {
+        const attachments = this.props.attachments.concat(newAttachments);
+
+        if (this.props.updateItem != null) {
+            this.props.updateItem({
+                attachments: attachments.map((attachment) => ({attachment: attachment._id})),
+            });
+        }
+
+        dispatchCustomEvent('attachmentsAdded', newAttachments);
+    }
+
+    removeAttachment(attachment: IAttachment) {
+        const attachments = this.props.attachments.filter(
+            (_attachment) => _attachment._id !== attachment._id,
+        );
+
+        if (this.props.updateItem != null) {
+            this.props.updateItem({
+                attachments: attachments.map((_attachment) => ({attachment: _attachment._id})),
+            });
+        }
+
+        dispatchCustomEvent('attachmentRemoved', attachment);
+    }
+
+    updateAttachment(attachment: IAttachment) {
+        dispatchCustomEvent('attachmentUpdated', attachment);
+    }
+
+    isUploadValid(files: Array<File>) {
+        if (files.length === 0 || !isLocked(this.props.item)) {
+            return false;
+        } else if (files.length + this.props.attachments.length > appConfig.attachments_max_files) {
+            notify.error(gettextCatalog.getPlural(
+                appConfig.attachments_max_files,
+                'Too many files selected. Only 1 file is allowed',
+                'Too many files selected. Only {{count}} files are allowed',
+                {count: appConfig.attachments_max_files},
+            ));
+            return false;
+        }
+
+        const filenames = files.filter((file) => file.size > appConfig.attachments_max_size)
+            .map((file) => file.name);
+
+        if (filenames.length > 0) {
+            notify.error(gettext(
+                'Sorry, but some files "{{filenames}}" are bigger than limit ({{limit}})',
+                {
+                    filenames: filenames.join(', '),
+                    limit: filesize(appConfig.attachments_max_size),
+                },
+            ));
+            return false;
+        }
+
+        return true;
+    }
+
     render() {
+        const Widget = CC.AuthoringAttachmentsWidget != null ?
+            CC.AuthoringAttachmentsWidget :
+            AttachmentsWidgetComponent;
+
         return (
-            <Provider store={this.props.store}>
-                <AttachmentsWidgetConnected
-                    readOnly={this.props.readOnly}
-                    isWidget={this.props.isWidget}
-                />
-            </Provider>
+            <Widget
+                {...this.props}
+                editable={!!this.props.item._editable}
+                isLocked={isLocked(this.props.item)}
+                isLockedByMe={isLockedInCurrentSession(this.props.item)}
+                isUploadValid={this.isUploadValid}
+                addAttachments={this.addAttachments}
+                removeAttachment={this.removeAttachment}
+                updateAttachment={this.updateAttachment}
+            />
         );
     }
 }
+
+export const AttachmentsWidget = withAttachments(AttachmentsWidgetWrapper);
