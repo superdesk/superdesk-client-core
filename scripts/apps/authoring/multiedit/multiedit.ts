@@ -199,6 +199,8 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                         }, 0, false);
                     }
                     scope.isLocked = lock.isLocked(item);
+
+                    content.setupAuthoring(scope.item.profile, scope, scope.item);
                 });
             }
 
@@ -215,12 +217,6 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     scope.origItem.flags = oldValue;
                 }
             }, true);
-
-            scope.$watch('item.profile', (profile) => {
-                if (profile != null) {
-                    content.setupAuthoring(profile, scope, scope.item);
-                }
-            });
 
             scope.save = function(item) {
                 return authoring.save(scope.origItem, cloneDeep(item)).then((res) => {
