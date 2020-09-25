@@ -13,6 +13,8 @@ import {IAssetState} from './assets/types';
 import {setsReducer} from './sets/reducers';
 import {storageDestinationReducer} from './storageDestinations/reducers';
 import {assetsReducer} from './assets/reducers';
+import {ISuperdesk} from 'superdesk-api';
+import {getSamsAPIs} from '../api';
 
 export const rootReducer = combineReducers({
     sets: setsReducer,
@@ -46,6 +48,7 @@ function crashReporter() {
 }
 
 let store: Store | undefined;
+let storeReferenceCount: number = 0;
 
 export function createReduxStore(
     extraArguments: IExtraArguments,
@@ -72,10 +75,32 @@ export function createReduxStore(
     return store;
 }
 
+export function getStoreSingleton(superdesk: ISuperdesk): Store {
+    if (store === undefined) {
+        createReduxStore(
+            {
+                superdesk: superdesk,
+                api: getSamsAPIs(superdesk),
+            },
+            {},
+            rootReducer,
+        );
+    }
+
+    storeReferenceCount += 1;
+
+    return store;
+}
+
 export function getStore(): Store | undefined {
     return store;
 }
 
 export function unsetStore() {
-    store = undefined;
+    storeReferenceCount -= 1;
+
+    if (storeReferenceCount === 0) {
+        console.log('freeing the SAMS.store');
+        store = undefined;
+    }
 }

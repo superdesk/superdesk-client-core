@@ -67,20 +67,6 @@ export function registerExtensions(
         workspaceMenuProvider.item(entry);
     }
 
-    function registerConfigurableUiComponents(activationResult: IExtensionActivationResult) {
-        if (Object.keys(activationResult.contributions?.configurableUiComponents ?? {}).length === 0) {
-            return;
-        }
-
-        for (const key in activationResult.contributions.configurableUiComponents) {
-            if (CC[key] != null) {
-                throw new Error(`ConfigurableUiComponent "${key}" is already defined`);
-            }
-
-            CC[key] = activationResult.contributions.configurableUiComponents[key];
-        }
-    }
-
     return Promise.all(
         Object.keys(extensionsWithActivationResult).map((extensionId) => {
             const extensionObject = extensionsWithActivationResult[extensionId];
@@ -115,7 +101,5 @@ export function registerExtensions(
             (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
         )
             .forEach(registerWorkspaceMenu);
-
-        activationResults.forEach(registerConfigurableUiComponents);
     });
 }

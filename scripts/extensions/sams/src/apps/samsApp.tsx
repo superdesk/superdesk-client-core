@@ -6,24 +6,20 @@ import {Store} from 'redux';
 // Types
 import {ISuperdesk} from 'superdesk-api';
 import {IConnectComponentToSuperdesk} from '../interfaces';
-import {createReduxStore, rootReducer, getStore, unsetStore} from '../store';
-
-// APIs
-import {getSamsAPIs} from '../api';
+import {getStoreSingleton, getStore, unsetStore} from '../store';
 
 interface IState {
     ready: boolean;
 }
 
-export function getSamsApp(
+export function getSamsApp<T = any>(
     superdesk: ISuperdesk,
-    getApp: IConnectComponentToSuperdesk,
-    onStoreInit?: (store: Store) => Promise<void>,
-) {
+    getApp: IConnectComponentToSuperdesk<T>,
+    onStoreInit?: (store: Store) => Promise<any>,
+): React.ComponentType<T> {
     const App = getApp(superdesk);
-    const api = getSamsAPIs(superdesk);
 
-    return class SamsApp extends React.Component<{}, IState> {
+    return class SamsApp extends React.Component<any, IState> {
         constructor(props: {}) {
             super(props);
 
@@ -31,13 +27,10 @@ export function getSamsApp(
         }
 
         componentDidMount() {
-            const store = createReduxStore(
-                {superdesk, api},
-                {},
-                rootReducer,
-            );
+            const storeExists = getStore() !== undefined;
+            const store = getStoreSingleton(superdesk);
 
-            (onStoreInit == null ? Promise.resolve() : onStoreInit(store))
+            ((onStoreInit == null || storeExists) ? Promise.resolve() : onStoreInit(store))
                 .then(() => {
                     this.setState({ready: true});
                 });
@@ -56,7 +49,7 @@ export function getSamsApp(
 
             return (
                 <Provider store={store}>
-                    <App />
+                    <App {...this.props} />
                 </Provider>
             );
         }

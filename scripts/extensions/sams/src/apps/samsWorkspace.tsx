@@ -32,7 +32,7 @@ import {getWorkspaceSubnavComponent} from '../components/workspaceSubnav';
 import {IApplicationState} from '../store';
 import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 
-export function onStoreInit(store: Store): Promise<any> {
+export function onWorkspaceInit(store: Store): Promise<any> {
     return Promise.all([
         store.dispatch<any>(loadStorageDestinations()),
         store.dispatch<any>(loadSets()),

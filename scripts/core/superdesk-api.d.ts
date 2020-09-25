@@ -105,7 +105,6 @@ declare module 'superdesk-api' {
             monitoring?: {
                 getFilteringButtons?(deskId: string): Promise<Array<IMonitoringFilter>>;
             };
-            configurableUiComponents?: IConfigurableUiComponents;
         }
     }
 

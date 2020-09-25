@@ -21,11 +21,16 @@ import {getAssetGridItemComponent} from './assetGridItem';
 import {getAssetEditorPanel} from './assetEditorPanel';
 import {getFileUploadModalComponent} from '../../containers/FileUploadModal';
 
-interface IProps {
+export interface IUploadAssetModalProps {
     closeModal(): void;
     sets: Array<ISetItem>;
     dark?: boolean;
     modalSize?: IModalSize;
+    initialFiles?: Array<{
+        id: string;
+        file: File;
+    }>;
+    onAssetUploaded?(asset: IAssetItem): void;
 }
 
 interface IState {
@@ -36,10 +41,10 @@ const mapStateToProps = (state: IApplicationState) => ({
     sets: getActiveSets(state),
 });
 
-export function getShowUploadAssetModalFunction(superdesk: ISuperdesk, props?: Partial<IProps>) {
+export function getShowUploadAssetModalFunction(superdesk: ISuperdesk, props?: Partial<IUploadAssetModalProps>) {
     const UploadAssetModal = getShowUploadAssetModalComponent(superdesk);
 
-    return () => showModalConnectedToStore<Partial<IProps>>(
+    return () => showModalConnectedToStore<Partial<IUploadAssetModalProps>>(
         superdesk,
         UploadAssetModal,
         {
@@ -59,14 +64,15 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
     const samsApi = getSamsAPIs(superdesk);
     const FileUploadDialog = getFileUploadModalComponent<Partial<IAssetItem>>(superdesk);
 
-    class UploadAssetModal extends React.Component<IProps, IState> {
+    class UploadAssetModal extends React.Component<IUploadAssetModalProps, IState> {
         onFieldChanged: Dictionary<string, (field: keyof IAssetItem, value: string) => void>;
 
-        constructor(props: IProps) {
+        constructor(props: IUploadAssetModalProps) {
             super(props);
 
+            this.onFieldChanged = {};
             this.state = {
-                assets: {},
+                assets: this.getInitialAssets(),
             };
 
             this.onFileAdded = this.onFileAdded.bind(this);
@@ -74,8 +80,30 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
             this.uploadFile = this.uploadFile.bind(this);
             this.renderGridItem = this.renderGridItem.bind(this);
             this.renderRightPanel = this.renderRightPanel.bind(this);
+        }
 
-            this.onFieldChanged = {};
+        getInitialAssets() {
+            const assets = {};
+
+            if (this.props.initialFiles?.length > 0) {
+                this.props.initialFiles.forEach(
+                    (item) => {
+                        assets[item.id] = {
+                            _id: item.id,
+                            state: ASSET_STATE.DRAFT,
+                            filename: item.file.name,
+                            length: item.file.size,
+                            mimetype: item.file.type,
+                            name: item.file.name,
+                            description: '',
+                            set_id: this.props.sets[0]._id,
+                        };
+                        this.onFieldChanged[item.id] = this.onChange.bind(this, item.id);
+                    },
+                );
+            }
+
+            return assets;
         }
 
         onFileAdded(id: string, file: File) {
@@ -128,7 +156,12 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
                 }
             }
 
-            return samsApi.assets.upload(data, onProgress);
+            return samsApi.assets.upload(data, onProgress)
+                .then((newAsset) => {
+                    if (this.props.onAssetUploaded != null) {
+                        this.props.onAssetUploaded(newAsset);
+                    }
+                });
         }
 
         onChange(id: string, field: keyof IAssetItem, value: any) {
@@ -174,6 +207,7 @@ export function getShowUploadAssetModalComponent(superdesk: ISuperdesk) {
                 <FileUploadDialog
                     dark={true}
                     modalSize="fill"
+                    initialFiles={this.props.initialFiles}
                     multiple={true}
                     closeModal={this.props.closeModal}
                     title={gettext('Upload New Asset(s)')}

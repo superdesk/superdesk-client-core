@@ -119,7 +119,7 @@ export interface ISamsAPI {
         getAll(): Promise<Array<IStorageDestinationItem>>;
     };
     assets: {
-        upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<any>;
+        upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<IAssetItem>;
         query(params: IAssetSearchParams, listStyle: ASSET_LIST_STYLE): Promise<IRestApiResponse<IAssetItem>>;
         getSearchUrlParams(): Partial<IAssetSearchParams>;
         setSearchUrlParams(params: Partial<IAssetSearchParams>): void;
@@ -127,4 +127,4 @@ export interface ISamsAPI {
     };
 }
 
-export type IConnectComponentToSuperdesk = (superdesk: ISuperdesk) => React.ComponentType<any>;
+export type IConnectComponentToSuperdesk<T> = (superdesk: ISuperdesk) => React.ComponentType<T>;

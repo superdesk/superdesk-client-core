@@ -37,6 +37,10 @@ interface IProps<T> {
     modalSize?: IModalSize;
     multiple?: boolean;
     accept?: Array<string>;
+    initialFiles?: Array<{
+        id: string;
+        file: File;
+    }>;
 
     closeModal(): void;
     title: string;
@@ -69,7 +73,7 @@ export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.Com
             this.state = {
                 selectedIndex: 0,
                 submitting: false,
-                items: [],
+                items: this.getInitialItems(),
             };
 
             this.showFileUploadDialog = this.showFileUploadDialog.bind(this);
@@ -82,13 +86,35 @@ export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.Com
         }
 
         componentDidMount() {
-            this.showFileUploadDialog();
+            if (this.state.items.length === 0) {
+                this.showFileUploadDialog();
+            }
         }
 
         showFileUploadDialog() {
             if (this.fileInputNode.current != null) {
                 this.fileInputNode.current.click();
             }
+        }
+
+        getInitialItems() {
+            const items = [];
+
+            if (this.props.initialFiles?.length > 0) {
+                this.props.initialFiles.forEach(
+                    (item) => {
+                        items.push({
+                            id: item.id,
+                            binary: item.file,
+                            uploadProgress: 0,
+                            error: false,
+                            completed: false,
+                        });
+                    },
+                );
+            }
+
+            return items;
         }
 
         addFiles(event: React.ChangeEvent<HTMLInputElement>) {
@@ -115,6 +141,8 @@ export function getFileUploadModalComponent<T>(superdesk: ISuperdesk): React.Com
                     ...newItems,
                 ],
             }));
+
+            event.target.value = null; // reset to allow selecting same file again
         }
 
         getItemIndexById(id: string) {
