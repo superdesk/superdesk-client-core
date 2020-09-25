@@ -62,6 +62,8 @@ import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
+import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
+import {notify} from './notify/notify';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -76,7 +78,7 @@ const isPublished = (article) => article.item_id != null;
 // so the original event listener can be removed later
 const customEventMap = new Map();
 
-const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
+export const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
     const handlerWrapper = (customEvent: CustomEvent) => callback(customEvent.detail);
 
     customEventMap.set(callback, handlerWrapper);
@@ -84,7 +86,7 @@ const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg:
     window.addEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
 };
 
-const removeEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
+export const removeEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
     const handlerWrapper = customEventMap.get(callback);
 
     if (handlerWrapper != null) {
@@ -105,6 +107,18 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
+export function isLocked(article: IArticle): boolean {
+    return article.lock_session != null;
+}
+
+export function isLockedInCurrentSession(article: IArticle): boolean {
+    return ng.get('lock').isLockedInCurrentSession(article);
+}
+
+export function isLockedInOtherSession(article: IArticle): boolean {
+    return isLocked(article) && !isLockedInCurrentSession(article);
+}
+
 // imported from planning
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -116,12 +130,7 @@ export function getSuperdeskApiImplementation(
     authoringWorkspace: AuthoringWorkspaceService,
     config,
     metadata,
-    notify,
 ): ISuperdesk {
-    const isLocked = (article: IArticle) => article['lock_session'] != null;
-    const isLockedInCurrentSession = (article: IArticle) => lock.isLockedInCurrentSession(article);
-    const isLockedInOtherSession = (article: IArticle) => isLocked(article) && !isLockedInCurrentSession(article);
-
     return {
         dataApi: dataApi,
         dataApiByEntity,
@@ -200,6 +209,7 @@ export function getSuperdeskApiImplementation(
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
                 getVocabulary: (id: string) => metadata.initialize().then(() => metadata.values[id]),
             },
+            attachment: attachmentsApi,
         },
         state: applicationState,
         instance: {
@@ -225,16 +235,7 @@ export function getSuperdeskApiImplementation(
                     .catch(() => resolve(false));
             }),
             showModal,
-            notify: {
-                info: (text: string, displayDuration?: number, options?: any) =>
-                    notify.info(text, displayDuration, options),
-                success: (text: string, displayDuration?: number, options?: any) =>
-                    notify.success(text, displayDuration, options),
-                warning: (text: string, displayDuration?: number, options?: any) =>
-                    notify.warning(text, displayDuration, options),
-                error: (text: string, displayDuration?: number, options?: any) =>
-                    notify.error(text, displayDuration, options),
-            },
+            notify: notify,
         },
         components: {
             UserHtmlSingleLine,

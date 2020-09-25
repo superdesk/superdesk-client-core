@@ -16,7 +16,6 @@ export function registerExtensions(
     config,
     metadata,
     workspaceMenuProvider,
-    notify,
 ): Promise<void> {
     extensions.forEach((extension) => {
         extensionsWithActivationResult[extension.id] = {
@@ -96,7 +95,6 @@ export function registerExtensions(
                 authoringWorkspace,
                 config,
                 metadata,
-                notify,
             );
 
             return extensionObject.extension.activate(superdeskApi).then((activationResult) => {
