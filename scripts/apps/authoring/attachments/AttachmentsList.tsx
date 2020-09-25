@@ -7,24 +7,24 @@ import {filesize, fileicon} from 'core/ui/ui';
 import {Item, Column, Row, ActionMenu} from 'core/ui/components/List';
 
 import {IAttachment} from 'superdesk-api';
+import {attachmentsApi} from './attachmentsService';
 
 interface IProps {
-    files: Array<IAttachment>;
+    attachments: Array<IAttachment>;
     readOnly: boolean;
 
-    editFile: (file: IAttachment) => void;
-    download: (file: IAttachment) => void;
-    removeFile: (file: IAttachment) => void;
+    editAttachment: (attachment: IAttachment) => void;
+    removeAttachment: (attachment: IAttachment) => void;
 }
 
 export class AttachmentsList extends React.PureComponent<IProps> {
     constructor(props) {
         super(props);
-        this.renderFile = this.renderFile.bind(this);
+        this.renderAttachment = this.renderAttachment.bind(this);
     }
 
-    renderFile(file: IAttachment) {
-        const {readOnly, download, editFile, removeFile} = this.props;
+    renderAttachment(file: IAttachment) {
+        const {readOnly, editAttachment, removeAttachment} = this.props;
 
         return (
             <Item key={file._id} shadow={1}>
@@ -52,7 +52,7 @@ export class AttachmentsList extends React.PureComponent<IProps> {
                 <ActionMenu row={true}>
                     <button
                         className="dropdown__toggle"
-                        onClick={() => download(file)}
+                        onClick={() => attachmentsApi.download(file)}
                         title={gettext('Download')}
                     >
                         <i className="icon-download" />
@@ -62,7 +62,7 @@ export class AttachmentsList extends React.PureComponent<IProps> {
                         readOnly === true ? null : (
                             <button
                                 className="dropdown__toggle"
-                                onClick={() => editFile(file)}
+                                onClick={() => editAttachment(file)}
                                 title={gettext('Edit')}
                             >
                                 <i className="icon-pencil" />
@@ -74,7 +74,7 @@ export class AttachmentsList extends React.PureComponent<IProps> {
                         readOnly === true ? null : (
                             <button
                                 className="dropdown__toggle"
-                                onClick={() => removeFile(file)}
+                                onClick={() => removeAttachment(file)}
                                 title={gettext('Remove')}
                             >
                                 <i className="icon-trash" />
@@ -87,13 +87,13 @@ export class AttachmentsList extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {files} = this.props;
+        const {attachments} = this.props;
 
         return (
             <div className="attachments-list">
-                {!!files.length && (
+                {!!attachments.length && (
                     <ul>
-                        {files.map(this.renderFile)}
+                        {attachments.map(this.renderAttachment)}
                     </ul>
                 )}
             </div>
