@@ -331,6 +331,10 @@ export function ItemCarouselDirective(notify) {
                         updated = true;
                     },
                 });
+
+                if (scope.currentIndex != null) {
+                    carousel?.trigger('to.owl.carousel', [scope.currentIndex]);
+                }
             }
 
             const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
@@ -338,12 +342,6 @@ export function ItemCarouselDirective(notify) {
 
                 if (scope.field._id === field) {
                     controller.addAssociation(scope, image);
-                }
-            });
-
-            scope.$watch('currentIndex', () => {
-                if (scope.currentIndex != null) {
-                    carousel?.trigger('to.owl.carousel', [scope.currentIndex]);
                 }
             });
 
