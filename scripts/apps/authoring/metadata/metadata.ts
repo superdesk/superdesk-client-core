@@ -52,9 +52,7 @@ function MetadataCtrl(
     */
     function setAvailableCategories(prefs) {
         var all, // all available categories
-            assigned = {}, // category codes already assigned to the article
             filtered,
-            itemCategories, // existing categories assigned to the article
 
             // user's category preference settings , i.e. a map
             // object (<category_code> --> true/false)
@@ -62,16 +60,7 @@ function MetadataCtrl(
 
         all = metadata.values.categories || [];
         userPrefs = prefs['categories:preferred'].selected;
-
-        // gather article's existing category codes
-        itemCategories = $scope.item.anpa_category || [];
-
-        itemCategories.forEach((cat) => {
-            assigned[cat.qcode] = true;
-        });
-
-        filtered = _.filter(all, (cat) => !assigned[cat.qcode] && (_.isEmpty(userPrefs) || userPrefs[cat.qcode]));
-
+        filtered = _.filter(all, (cat) => _.isEmpty(userPrefs) || userPrefs[cat.qcode]);
         $scope.availableCategories = _.sortBy(filtered, 'name');
     }
 
