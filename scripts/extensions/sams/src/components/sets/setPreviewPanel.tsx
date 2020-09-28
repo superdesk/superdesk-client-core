@@ -61,7 +61,7 @@ export function getSetPreviewPanel(superdesk: ISuperdesk) {
                 ariaValue: 'close',
             }];
 
-            if (set.state === SET_STATE.DRAFT || set.state === SET_STATE.DISABLED && !count) {
+            if (set.state === SET_STATE.DRAFT || (set.state === SET_STATE.DISABLED && !count)) {
                 topTools = [
                     {
                         title: gettext('Delete'),
