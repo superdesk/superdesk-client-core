@@ -122,11 +122,12 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         const {loading, items} = this.state;
 
         return (
-            <div>
+            <div style={{display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'relative'}}>
                 <div
                     style={{
-                        maxHeight: 400,
+                        maxHeight: '100%',
                         overflow: 'auto',
+                        flexGrow: 1,
                     }}
                     onScroll={(event) => {
                         if (loading || this.allItemsLoaded()) {
@@ -143,7 +144,21 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                 >
                     {this.getLoadedItemsCount() === 0 ? null : this.props.children(items)}
                     {(() => {
-                        if (this.allItemsLoaded()) {
+                        if (loading === true) {
+                            return (
+                                <div
+                                    style={{
+                                        ...messageStyles,
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        left: 0,
+                                        width: '100%',
+                                    }}
+                                >
+                                    {gettext('Loading...')}
+                                </div>
+                            );
+                        } else if (this.allItemsLoaded()) {
                             if (this.getLoadedItemsCount() === 0) {
                                 return (
                                     <div style={messageStyles}>{gettext('There are currently no items.')}</div>
@@ -158,7 +173,6 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                         }
                     })()}
                 </div>
-                {loading ? <div style={messageStyles}>{gettext('Loading...')}</div> : null}
             </div>
         );
     }

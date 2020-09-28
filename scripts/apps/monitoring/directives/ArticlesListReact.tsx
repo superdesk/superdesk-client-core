@@ -42,21 +42,19 @@ export class ArticlesList extends React.PureComponent<IProps, IState> {
         const {activeDeskId, getQuery} = this.props;
 
         return (
-            <div>
-                <ArticlesListByQueryWithFilters
-                    heading={this.props.heading}
-                    query={getQuery(currentUser._id, activeDeskId)}
-                    onItemClick={(item) => {
-                        // item does not have all the fields because of projections used for list items
-                        dataApi.findOne<IArticle>('search', item._id).then((itemWithAllFields) => {
-                            this.props.monitoringController.preview(itemWithAllFields, true);
-                        });
-                    }}
-                    onItemDoubleClick={(item) => {
-                        openArticle(item._id, 'edit');
-                    }}
-                />
-            </div>
+            <ArticlesListByQueryWithFilters
+                heading={this.props.heading}
+                query={getQuery(currentUser._id, activeDeskId)}
+                onItemClick={(item) => {
+                    // item does not have all the fields because of projections used for list items
+                    dataApi.findOne<IArticle>('search', item._id).then((itemWithAllFields) => {
+                        this.props.monitoringController.preview(itemWithAllFields, true);
+                    });
+                }}
+                onItemDoubleClick={(item) => {
+                    openArticle(item._id, 'edit');
+                }}
+            />
         );
     }
 }

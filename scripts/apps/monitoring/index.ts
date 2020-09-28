@@ -52,6 +52,8 @@ angular.module('superdesk.apps.monitoring', [
                 'activeDeskId',
                 'monitoringController',
             ],
+            [],
+            'height: 100%',
         ),
     )
     .component('sdMonitoringFilteringButtons',
