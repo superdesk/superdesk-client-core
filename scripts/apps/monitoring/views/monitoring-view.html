@@ -236,7 +236,7 @@
 
                 <div class="monitoring__main-content">
                     <div class="sd-column-box--3">
-                        <div style="padding: 0 20px 20px;" class="sd-column-box__main-column">
+                        <div ng-style="{{contentStyle}}" class="sd-column-box__main-column">
                             <!-- list view -->
                             <div ng-if="!monitoring.viewColumn && type === 'monitoring'" class="list">
                                 <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">

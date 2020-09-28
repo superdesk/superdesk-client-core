@@ -14,6 +14,7 @@ interface IProps {
     onItemClick(item: IArticle): void;
     onItemDoubleClick(item: IArticle): void;
     header?(itemCount: number): JSX.Element;
+    padding?: string;
 }
 
 interface IPropsInner extends IProps {
@@ -124,6 +125,7 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
                         }}
                         onItemClick={this.props.onItemClick}
                         onItemDoubleClick={this.props.onItemDoubleClick}
+                        padding={this.props.padding}
                     />
                 </div>
             </div>

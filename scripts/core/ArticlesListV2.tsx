@@ -17,6 +17,7 @@ interface IState {
 interface IProps {
     itemCount: number;
     pageSize: number;
+    padding?: string;
     loadItems(start: number, end: number): Promise<Array<IArticle>>;
     shouldReloadTheList?(fieldsChanged: Set<string>): boolean;
 
@@ -109,6 +110,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                         );
                     }
                 }}
+                padding={this.props.padding}
             >
                 {(items) => {
                     return (

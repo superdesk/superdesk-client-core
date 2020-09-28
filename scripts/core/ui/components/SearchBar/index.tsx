@@ -30,7 +30,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             // initialize state from props
-            searchBarExtended: (this.props.value?.length ?? 0) > 0,
+            searchBarExtended: (this.props.value?.length ?? 0) > 0 || !this.props.allowCollapsed,
             searchInputValue: this.props.value || '',
             uniqueId: uniqueId('SearchBar'),
         };
@@ -86,7 +86,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {timeout, allowCollapsed} = this.props;
+        const {timeout} = this.props;
         const {searchBarExtended} = this.state;
         const _uniqueId = this.state.uniqueId;
         const minLength = this.props.minLength ? this.props.minLength : 2;
@@ -111,7 +111,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
                         placeholder={gettext('Search')}
                         type="text"
                     />
-                    {allowCollapsed && (
+                    {searchBarExtended && this.props.value.trim().length > 0 && (
                         <button
                             type="button"
                             className="search-close visible"

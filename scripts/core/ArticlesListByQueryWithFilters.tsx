@@ -145,20 +145,22 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         }
     }
     render() {
+        const padding = 20;
+
         const header = (itemsCount: number): JSX.Element => {
             return (
                 <div>
-                    <div style={{display: 'flex', alignItems: 'center'}}>
+                    <div style={{display: 'flex', alignItems: 'center', paddingLeft: padding, paddingRight: padding}}>
                         <div className="space-between">
                             <h3 className="subnav__page-title sd-flex-no-grow" style={{padding: 0, marginRight: 10}}>
                                 {this.props.heading}
                             </h3>
                             <Badge type="default">{itemsCount}</Badge>
                         </div>
-                        <div style={{borderLeft: '1px solid #d5d5d5', marginLeft: 10, flexGrow: 1}}>
+                        <div style={{marginLeft: 10, flexGrow: 1}}>
                             <SearchBar
                                 value={this.state.fullTextSearch}
-                                allowCollapsed={true}
+                                allowCollapsed={false}
                                 extendOnOpen={false}
                                 onSearch={(fullTextSearch) => {
                                     this.setState({fullTextSearch});
@@ -175,7 +177,8 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                             borderBottom: '1px solid #d5d5d5',
                             paddingTop: 8,
                             paddingBottom: 8,
-                            marginBottom: 10,
+                            paddingLeft: padding,
+                            paddingRight: padding,
                         }}
                     >
                         <div>
@@ -231,6 +234,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                 onItemClick={this.props.onItemClick}
                 onItemDoubleClick={this.props.onItemDoubleClick}
                 header={header}
+                padding={`${3 / 4 * padding}px ${padding}px`}
             />
         );
     }

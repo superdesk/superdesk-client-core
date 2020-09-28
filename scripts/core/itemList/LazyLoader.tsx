@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 interface IProps<T> {
     pageSize: number;
     itemCount: number;
+    padding?: string;
     getId(item: T): string;
     getItemsByIds(ids: Array<string>): Promise<Array<T>>;
     loadMoreItems(from: number, to: number): Promise<Dictionary<string, T>>;
@@ -139,6 +140,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                         maxHeight: '100%',
                         overflow: 'auto',
                         flexGrow: 1,
+                        padding: this.props.padding ?? '0',
                     }}
                     onScroll={(event) => {
                         if (loading || this.allItemsLoaded()) {

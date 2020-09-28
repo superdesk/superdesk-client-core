@@ -5,6 +5,7 @@ import {IDesk, IUser} from 'superdesk-api';
 import {ISuperdeskQuery} from 'core/query-formatting';
 
 interface IScope extends ng.IScope {
+    contentStyle: {};
     monitoringItemsLoading: boolean;
     activeDeskId: IDesk['_id'] | null;
     swimlane: any;
@@ -68,9 +69,12 @@ export function MonitoringView(
             disableMonitoringCreateItem: '=?',
             hideMonitoringToolbar1: '=?',
             hideMonitoringToolbar2: '=?',
+            contentStyle: '=?',
         },
         link: function(scope: IScope, elem) {
             let containerElem = elem.find('.sd-column-box__main-column');
+
+            scope.contentStyle = scope.contentStyle ?? {padding: '0 20px 20px'};
 
             scope.gettext = gettext;
 
