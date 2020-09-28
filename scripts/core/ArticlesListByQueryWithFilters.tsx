@@ -113,11 +113,20 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
             return;
         }
 
-        this.setState({
-            activeFilters: value == null
-                ? activeFilters.remove(key)
-                : activeFilters.set(key, filter.remove(value)),
-        });
+        if (
+            value == null
+            || filter.size === 1 // don't leave a key without filters
+        ) {
+            this.setState({
+                activeFilters: activeFilters.remove(key),
+            });
+        } else {
+            this.setState({
+                activeFilters: value == null
+                    ? activeFilters.remove(key)
+                    : activeFilters.set(key, filter.remove(value)),
+            });
+        }
     }
     toggleFilter(key: string, value: IFilterValue) {
         if (this.hasFilter(key, value)) {
