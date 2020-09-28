@@ -333,7 +333,7 @@ export function ItemCarouselDirective(notify) {
                 });
 
                 if (scope.currentIndex != null) {
-                    carousel?.trigger('to.owl.carousel', [scope.currentIndex]);
+                    carousel.trigger('to.owl.carousel', [scope.currentIndex]);
                 }
             }
 
