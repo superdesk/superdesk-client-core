@@ -30,12 +30,26 @@ interface IAssetSetListStyleAction {
 
 export type IAssetActionTypes = IReceiveAssetsAction |
     ISetAssetSearchParamsAction |
-    IAssetSetListStyleAction;
+    IAssetSetListStyleAction |
+    IManageAssetsOnPanelClosed |
+    IPreviewAssetAction;
 
 export interface IAssetState {
     assets: Dictionary<string, IAssetItem>;
     searchParams: IAssetSearchParams;
+    selectedAssetId?: string;
     listItemIds: Array<string>;
     searchResultTotal: number;
     listStyle: ASSET_LIST_STYLE;
+}
+
+export const MANAGE_ASSETS_PREVIEW = 'manage_assets__preview';
+interface IPreviewAssetAction {
+    type: typeof MANAGE_ASSETS_PREVIEW;
+    payload: string;
+}
+
+export const MANAGE_SELECTED_ASSET_RESET = 'manage_selected_asset__reset';
+interface IManageAssetsOnPanelClosed {
+    type: typeof MANAGE_SELECTED_ASSET_RESET;
 }

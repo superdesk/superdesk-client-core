@@ -6,7 +6,7 @@ import {ISuperdesk} from 'superdesk-api';
 import {IAssetItem} from '../../interfaces';
 
 // UI
-import {Icon} from 'superdesk-ui-framework/react';
+import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
 import {
     ListItem,
     ListItemBorder,
@@ -19,15 +19,34 @@ import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} f
 
 interface IProps {
     asset: IAssetItem;
+    onClick(asset: IAssetItem): void;
+    selected: boolean;
 }
 
 export function getAssetListItemComponent(superdesk: ISuperdesk) {
     const {gettext, longFormatDateTime} = superdesk.localization;
 
     return class AssetListItem extends React.PureComponent<IProps> {
+        constructor(props: IProps) {
+            super(props);
+            this.onItemClick = this.onItemClick.bind(this);
+            this.onPreviewSelect = this.onPreviewSelect.bind(this);
+        }
+
+        onItemClick(event: React.MouseEvent<HTMLDivElement>) {
+            if (this.props.onClick) {
+                event.stopPropagation();
+                this.props.onClick(this.props.asset);
+            }
+        }
+
+        onPreviewSelect() {
+            this.props.onClick(this.props.asset);
+        }
+
         render() {
             return (
-                <ListItem shadow={1}>
+                <ListItem onClick={this.onItemClick} selected={this.props.selected} shadow={1}>
                     <ListItemBorder />
                     <ListItemColumn>
                         <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
@@ -60,6 +79,28 @@ export function getAssetListItemComponent(superdesk: ISuperdesk) {
                             </span>
                         </ListItemRow>
                     </ListItemColumn>
+                    <div className="sd-list-item__action-menu">
+                        <Dropdown
+                            align = "right"
+                            append = {true}
+                            items={[
+                                {
+                                    type: 'group', label: 'Actions', items: [
+                                        'divider',
+                                        {
+                                            label: 'Preview',
+                                            icon: 'pencil',
+                                            onSelect: () => this.onPreviewSelect,
+                                        },
+                                    ],
+                                }]}>
+                            <IconButton
+                                ariaValue="dropdown-more-options"
+                                icon="dots-vertical"
+                                onClick={() => false}
+                            />
+                        </Dropdown>
+                    </div>
                 </ListItem>
             );
         }

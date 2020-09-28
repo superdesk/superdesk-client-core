@@ -6,7 +6,7 @@ import {ISuperdesk} from 'superdesk-api';
 import {IAssetItem} from '../../interfaces';
 
 // UI
-import {Icon} from 'superdesk-ui-framework/react';
+import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
 import {GridItem} from '../../ui/grid/GridItem';
 import {GridItemFooter} from '../../ui/grid/GridItemFooter';
 import {GridItemFooterBlock} from '../../ui/grid/GridItemFooterBlock';
@@ -23,7 +23,7 @@ import {
 
 interface IProps {
     asset: Partial<IAssetItem>;
-    onClick?(): void;
+    onClick(asset: Partial<IAssetItem>): void;
     remove?(): void;
     selected?: boolean;
     uploadProgress?: number;
@@ -38,6 +38,8 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
             super(props);
 
             this.onRemove = this.onRemove.bind(this);
+            this.onItemClick = this.onItemClick.bind(this);
+            this.onSelectPreview = this.onSelectPreview.bind(this);
         }
 
         onRemove(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -48,6 +50,14 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
             }
         }
 
+        onItemClick() {
+            this.props.onClick(this.props.asset);
+        }
+
+        onSelectPreview() {
+            this.props.onClick(this.props.asset);
+        }
+
         render() {
             const typeIcon = getIconTypeFromMimetype(
                 this.props.asset?.mimetype ?? 'text',
@@ -55,7 +65,7 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
 
             return (
                 <GridItem
-                    onClick={this.props.onClick}
+                    onClick={this.onItemClick}
                     selected={this.props.selected}
                 >
                     <GridItemThumb
@@ -108,6 +118,30 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
                                 {getAssetStateLabel(superdesk, this.props.asset.state)}
                             </GridItemFooterBlock>
                         )}
+                        <div className="sd-grid-item__footer-block sd-grid-item__footer-block--single-r">
+                            <div className="sd-grid-item__actions">
+                                <Dropdown
+                                    align = "right"
+                                    append = {true}
+                                    items={[
+                                        {
+                                            type: 'group', label: 'Actions', items: [
+                                                'divider',
+                                                {
+                                                    label: 'Preview',
+                                                    icon: 'pencil',
+                                                    onSelect: () => this.onSelectPreview,
+                                                },
+                                            ],
+                                        }]}>
+                                    <IconButton
+                                        ariaValue="dropdown-more-options"
+                                        icon="dots-vertical"
+                                        onClick={() => false}
+                                    />
+                                </Dropdown>
+                            </div>
+                        </div>
                     </GridItemFooter>
                 </GridItem>
             );
