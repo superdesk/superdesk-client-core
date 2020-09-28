@@ -16,6 +16,7 @@ interface IState {
 
 interface IProps {
     itemCount: number;
+    pageSize: number;
     loadItems(start: number, end: number): Promise<Array<IArticle>>;
     shouldReloadTheList?(fieldsChanged: Set<string>): boolean;
 
@@ -71,13 +72,13 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
             return null;
         }
 
-        const {itemCount} = this.props;
+        const {itemCount, pageSize} = this.props;
 
         return (
             <LazyLoader
                 itemCount={itemCount}
                 loadMoreItems={this.loadMore}
-                pageSize={10}
+                pageSize={pageSize}
                 getId={(item) => item._id}
                 getItemsByIds={(ids) => {
                     return Promise.all(

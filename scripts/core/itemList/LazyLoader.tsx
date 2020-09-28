@@ -22,8 +22,13 @@ const messageStyles: React.CSSProperties = {
     borderTop: '1px solid #ebebeb',
 };
 
+function hasScrollbar(element: Element) {
+    return element.clientHeight < element.scrollHeight;
+}
+
 export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
     indexesById: Dictionary<string, string>; // id, index
+    containerRef: any;
 
     constructor(props: IProps<T>) {
         super(props);
@@ -115,6 +120,12 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
                 this.indexesById[getId(item)] = key;
             }
+
+            // Ensure there are enough items for the scrollbar to appear.
+            // Lazy loading wouldn't work otherwise because it depends on "scroll" event firing.
+            if (hasScrollbar(this.containerRef) !== true && this.allItemsLoaded() !== true) {
+                this.loadMore();
+            }
         }
     }
 
@@ -140,6 +151,9 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                         if (reachedBottom) {
                             this.loadMore();
                         }
+                    }}
+                    ref={(el) => {
+                        this.containerRef = el;
                     }}
                 >
                     {this.getLoadedItemsCount() === 0 ? null : this.props.children(items)}

@@ -21,8 +21,6 @@ interface IState {
 }
 
 class ArticlesListByQueryComponent extends React.PureComponent<IProps, IState> {
-    articlesListRef: ArticlesListV2;
-
     constructor(props: IProps) {
         super(props);
 
@@ -91,6 +89,7 @@ class ArticlesListByQueryComponent extends React.PureComponent<IProps, IState> {
                 <div style={{flexGrow: 1, overflow: 'hidden'}}>
                     <ArticlesListV2
                         itemCount={itemCount}
+                        pageSize={this.props.query.max_results}
                         loadItems={(from, to) => this.loadItems(from, to).then(({_items}) => _items)}
                         shouldReloadTheList={(changedFields) => {
                             /** TODO: Have websockets transmit the diff.
