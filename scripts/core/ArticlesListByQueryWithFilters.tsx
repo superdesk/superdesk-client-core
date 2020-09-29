@@ -159,7 +159,6 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                         </div>
                         <div style={{marginLeft: 10, flexGrow: 1}}>
                             <SearchBar
-                                value={this.state.fullTextSearch}
                                 allowCollapsed={false}
                                 extendOnOpen={false}
                                 onSearch={(fullTextSearch) => {

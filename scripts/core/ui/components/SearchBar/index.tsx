@@ -6,7 +6,6 @@ import './style.scss';
 import {gettext} from 'core/utils';
 
 interface IProps {
-    value: string;
     onSearch(queryString: string): void;
     extendOnOpen?: boolean;
     allowCollapsed?: boolean;
@@ -26,12 +25,12 @@ export default class SearchBar extends React.Component<IProps, IState> {
 
     dom: any;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             // initialize state from props
-            searchBarExtended: (this.props.value?.length ?? 0) > 0 || !this.props.allowCollapsed,
-            searchInputValue: this.props.value || '',
+            searchBarExtended: !props.allowCollapsed,
+            searchInputValue: '',
             uniqueId: uniqueId('SearchBar'),
         };
 
@@ -70,7 +69,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
 
     resetSearchValue() {
         this.setState({
-            searchInputValue: this.props.value,
+            searchInputValue: '',
         });
     }
 
@@ -111,7 +110,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
                         placeholder={gettext('Search')}
                         type="text"
                     />
-                    {searchBarExtended && this.props.value.trim().length > 0 && (
+                    {searchBarExtended && this.state.searchInputValue.trim().length > 0 && (
                         <button
                             type="button"
                             className="search-close visible"
