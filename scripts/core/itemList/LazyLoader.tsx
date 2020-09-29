@@ -160,18 +160,21 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                 >
                     {this.getLoadedItemsCount() === 0 ? null : this.props.children(items)}
                     {(() => {
+                        const loaderPosition: React.CSSProperties = this.getLoadedItemsCount() > 0
+                            ? {
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 0,
+                                width: '100%',
+                            }
+                            : {};
+
                         if (loading === true) {
                             return (
-                                <div
-                                    style={{
-                                        ...messageStyles,
-                                        position: 'absolute',
-                                        bottom: 0,
-                                        left: 0,
-                                        width: '100%',
-                                    }}
-                                >
-                                    {gettext('Loading...')}
+                                <div style={{position: 'relative', width: '100%'}}>
+                                    <div style={loaderPosition}>
+                                        <div style={messageStyles}>{gettext('Loading...')}</div>
+                                    </div>
                                 </div>
                             );
                         } else if (this.allItemsLoaded()) {
