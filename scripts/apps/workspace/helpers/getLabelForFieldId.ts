@@ -1,9 +1,8 @@
 import {GET_LABEL_MAP} from '../content/constants';
 import ng from 'core/services/ng';
 
-const labelMap = GET_LABEL_MAP();
-
 export const getLabelForFieldId = (fieldId, vocabularies) => {
+    const labelMap = GET_LABEL_MAP();
     const field = vocabularies.find((obj) => obj._id === fieldId);
 
     if (
