@@ -104,7 +104,7 @@
                         <div class="subnav__button-stack--square-buttons sd-margin-l--auto">
                             <div class="refresh-box pull-right">
                                 <button ng-if="monitoring.showRefresh &&
-                                                        (monitoring.singleGroup || type === 'spike' || type === 'highlights' || monitoring.viewColumn)"
+                                                        (monitoring.singleGroup || type === 'highlights' || monitoring.viewColumn)"
                                         ng-click="refreshGroup(monitoring.singleGroup)"
                                         class="btn btn--primary btn--icon-only-circle btn--small"
                                         sd-tooltip="{{ 'Refresh' | translate }}" flow="left" class="navbtn">
@@ -130,7 +130,7 @@
                                 ></sd-monitoring-filtering-buttons>
                             </div>
 
-                            <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ 'Create new item' | translate }}" flow="left" dropdown>
+                            <div ng-if="disableMonitoringCreateItem == null && (!state.opened && type !== 'highlights')" class="dropdown dropdown--align-right strict" sd-tooltip="{{ 'Create new item' | translate }}" flow="left" dropdown>
                                 <div ngf-drop="openUpload($files)" ngf-multiple="true">
                                     <button
                                         class="navbtn dropdown__toggle sd-create-btn"
@@ -191,7 +191,7 @@
                                     </button>
                                 </li>
                                 <li>
-                                    <button ng-if="type !== 'spike'" ng-click="switchView('photogrid')">
+                                    <button ng-click="switchView('photogrid')">
                                         <i class="icon-grid-view"></i>{{ 'Photo Grid View' | translate }}
                                     </button>
                                 </li>
