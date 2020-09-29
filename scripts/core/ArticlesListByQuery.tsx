@@ -148,7 +148,8 @@ export class ArticlesListByQuery extends React.PureComponent<IProps, {lastHtml: 
         this.handleInitialized = this.handleInitialized.bind(this);
 
         this.state = {
-            lastHtml: null,
+            // Display loading indicator on first load too.
+            lastHtml: '<div></div>',
         };
     }
 
