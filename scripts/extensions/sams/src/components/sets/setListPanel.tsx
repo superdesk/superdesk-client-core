@@ -88,6 +88,7 @@ export function getSetListPanel(superdesk: ISuperdesk) {
                         counts={this.props.counts}
                         storageDestinations={this.props.storageDestinations}
                         previewSet={this.props.previewSet}
+                        deleteSet={this.props.deleteSet}
                         editSet={this.props.editSet}
                         currentSetId={this.props.currentSetId}
                     />
