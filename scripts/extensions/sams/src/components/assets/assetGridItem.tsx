@@ -129,11 +129,12 @@ export function getAssetGridItemComponent(superdesk: ISuperdesk) {
                                                 'divider',
                                                 {
                                                     label: 'Preview',
-                                                    icon: 'pencil',
+                                                    icon: 'eye-open',
                                                     onSelect: () => this.onSelectPreview,
                                                 },
                                             ],
-                                        }]}>
+                                        }]}
+                                >
                                     <IconButton
                                         ariaValue="dropdown-more-options"
                                         icon="dots-vertical"

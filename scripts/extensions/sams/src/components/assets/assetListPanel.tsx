@@ -72,7 +72,7 @@ export function getAssetListPanel(superdesk: ISuperdesk) {
                 return (
                     <PageLayout
                         mainClassName="sd-padding--2"
-                        main={
+                        main={(
                             <GridList className="sd-margin--1">
                                 {this.props.assets.map((asset) => (
                                     <AssetGridItem
@@ -83,22 +83,22 @@ export function getAssetListPanel(superdesk: ISuperdesk) {
                                     />
                                 ))}
                             </GridList>
-                        }
+                        )}
                         rightPanelOpen={this.props.selectedAssetId !== undefined}
-                        rightPanel={
+                        rightPanel={(
                             <ShowAssetPreview
                                 asset={this.props.asset}
                                 setName={this.props.setName}
                                 onPanelClosed={this.props.onPanelClosed}
                             />
-                        }
+                        )}
                     />
                 );
             } else if (this.props.listStyle === ASSET_LIST_STYLE.LIST) {
                 return (
                     <PageLayout
                         mainClassName="sd-padding--2"
-                        main={
+                        main={(
                             <ListItemGroup>
                                 {this.props.assets.map((asset) => (
                                     <AssetListItem
@@ -109,15 +109,15 @@ export function getAssetListPanel(superdesk: ISuperdesk) {
                                     />
                                 ))}
                             </ListItemGroup>
-                        }
+                        )}
                         rightPanelOpen={this.props.selectedAssetId !== undefined}
-                        rightPanel={
+                        rightPanel={(
                             <ShowAssetPreview
                                 asset={this.props.asset}
                                 setName={this.props.setName}
                                 onPanelClosed={this.props.onPanelClosed}
                             />
-                        }
+                        )}
                     />
                 );
             }

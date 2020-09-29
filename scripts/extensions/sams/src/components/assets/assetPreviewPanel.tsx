@@ -28,7 +28,7 @@ export function getShowAssetPreviewPanelComponent(superdesk: ISuperdesk) {
 
             return (
                 <React.Fragment>
-                    <PanelHeader onClose={this.props.onPanelClosed} borderB={true} title={'Asset Preview'}/>
+                    <PanelHeader onClose={this.props.onPanelClosed} borderB={true} title={gettext('Asset Preview')} />
                     <PanelContent>
                         <PanelContentBlock flex={true}>
                             <PanelContentBlockInner grow={true}>
