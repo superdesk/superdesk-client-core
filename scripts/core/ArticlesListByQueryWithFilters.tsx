@@ -14,7 +14,7 @@ type IFilterValue = string | number;
 
 interface IProps {
     heading: string;
-    query: ISuperdeskQuery; // TODO: Omit page, max_results?
+    query: ISuperdeskQuery;
     onItemClick(item: IArticle): void;
     onItemDoubleClick(item: IArticle): void;
 }

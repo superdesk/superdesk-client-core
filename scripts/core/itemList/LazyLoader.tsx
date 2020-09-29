@@ -66,7 +66,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
     public reset() {
         this.setState({
-            items: {}, // TODO: display current items while loading
+            items: {},
             loading: true,
         }, () => {
             this.loadMore();
