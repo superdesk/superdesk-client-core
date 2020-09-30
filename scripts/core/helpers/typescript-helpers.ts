@@ -33,9 +33,9 @@ export function filterUndefined<T>(values: Partial<T>): Partial<T> {
 export function filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T> {
     const filteredValue = {} as Partial<T>;
 
-    for (let key in keys) {
+    keys.forEach((key) => {
         filteredValue[key] = original[key];
-    }
+    });
 
     return filteredValue;
 }
