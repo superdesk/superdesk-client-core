@@ -1,26 +1,26 @@
 // Types
-import {ISuperdesk, IExtension, IAttachmentsWidgetProps} from 'superdesk-api';
+import {ISuperdesk, IExtension} from 'superdesk-api';
 
 // Apps
-import {getSamsApp} from './apps/samsApp';
-import {getSamsWorkspaceComponent, onWorkspaceInit} from './apps/samsWorkspace';
-import {getSamsAttachmentsWidget, onAttachmentsWidgetInit} from './apps/samsAttachmentsWidget';
+import {SamsWorkspaceApp} from './apps/samsWorkspace';
+import {getSamsAPIs} from './api';
+
+import {superdeskApi, samsApi} from './apis';
 
 const extension: IExtension = {
     id: 'sams',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
+        Object.assign(superdeskApi, superdesk);
+        Object.assign(samsApi, getSamsAPIs(superdesk));
+
         return Promise.resolve({
             contributions: {
                 pages: [{
                     title: gettext('SAMS'),
                     url: '/workspace/sams',
-                    component: getSamsApp(
-                        superdesk,
-                        getSamsWorkspaceComponent,
-                        onWorkspaceInit,
-                    ),
+                    component: SamsWorkspaceApp,
                     showTopMenu: true,
                     showSideMenu: true,
                     addToMainMenu: false,
@@ -33,13 +33,6 @@ const extension: IExtension = {
                     order: 1000,
                     privileges: ['sams'],
                 }],
-                configurableUiComponents: {
-                    AuthoringAttachmentsWidget: getSamsApp<IAttachmentsWidgetProps>(
-                        superdesk,
-                        getSamsAttachmentsWidget,
-                        onAttachmentsWidgetInit,
-                    ),
-                },
             },
         });
     },

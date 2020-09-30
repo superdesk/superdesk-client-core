@@ -1,140 +1,250 @@
+/* eslint-disable react/no-multi-comp */
+
 import * as React from 'react';
-import {Store} from 'redux';
+import {Dispatch, Store} from 'redux';
 import classNames from 'classnames';
 
-import {IAttachmentsWidgetProps, ISuperdesk} from 'superdesk-api';
-import {ASSET_STATE, IAssetItem} from '../interfaces';
+import {IAttachment, IAttachmentsWidgetProps} from 'superdesk-api';
+import {ASSET_STATE, IAssetItem, IAssetSearchParams, ISetItem} from '../interfaces';
 
 import {SamsAttachmentsList} from '../components/authoring/attachments/samsAttahcmentsList';
-import {getShowUploadAssetModalFunction, IUploadAssetModalProps} from '../components/assets/uploadAssetModal';
+import {IUploadAssetModalProps, showUploadAssetModal} from '../components/assets/uploadAssetModal';
+import {showEditAttachmentModal} from '../components/attachments/editAttachmentModal';
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
+import {SamsApp} from './samsApp';
+import {superdeskApi} from '../apis';
+import {Button} from 'superdesk-ui-framework/react';
+import {showSelectAssetModal} from '../components/assets/selectAssetModal';
+import {connect} from 'react-redux';
+import {setAssetSearchParams} from '../store/assets/actions';
+import {getActiveSets} from '../store/sets/selectors';
+import {IApplicationState} from '../store';
 
-export function onAttachmentsWidgetInit(store: Store): Promise<any> {
-    return Promise.all([
-        store.dispatch<any>(loadStorageDestinations()),
-        store.dispatch<any>(loadSets()),
-    ]);
-}
-
-export function getSamsAttachmentsWidget(superdesk: ISuperdesk): React.ComponentType<IAttachmentsWidgetProps> {
-    const {gettext} = superdesk.localization;
-    const {download} = superdesk.entities.attachment;
-
-    function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>) {
-        return getShowUploadAssetModalFunction(superdesk, props)();
+export class SamsAttachmentsWidget<T extends IAttachmentsWidgetProps> extends React.PureComponent<T> {
+    onStoreInit(store: Store) {
+        return Promise.all([
+            store.dispatch<any>(loadStorageDestinations()),
+            store.dispatch<any>(loadSets()),
+        ]);
     }
 
-    return class SamsAttachmentsWidget extends React.PureComponent<IAttachmentsWidgetProps> {
-        fileInputNode: React.RefObject<HTMLInputElement>;
+    render() {
+        return (
+            <SamsApp onStoreInit={this.onStoreInit}>
+                <SamsAttachmentsWidgetComponentConnected {...this.props} />
+            </SamsApp>
+        );
+    }
+}
 
-        constructor(props: IAttachmentsWidgetProps) {
-            super(props);
+interface IProps extends IAttachmentsWidgetProps {
+    setAssetSearchParams(params: Partial<IAssetSearchParams>): void;
+    activeSets: Array<ISetItem>;
+}
 
-            this.fileInputNode = React.createRef<HTMLInputElement>();
+const mapStateToProps = (state: IApplicationState) => ({
+    activeSets: getActiveSets(state),
+});
 
-            this.onAddFiles = this.onAddFiles.bind(this);
-            this.onDragFiles = this.onDragFiles.bind(this);
-            this.onDropFiles = this.onDropFiles.bind(this);
-        }
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    setAssetSearchParams: (params: Partial<IAssetSearchParams>) => dispatch(setAssetSearchParams(params)),
+});
 
-        onAddFiles(event: React.ChangeEvent<HTMLInputElement>) {
-            event.preventDefault();
-        }
+class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
+    fileInputNode: React.RefObject<HTMLInputElement>;
 
-        onDragFiles(event: React.DragEvent<HTMLDivElement>) {
-            // Prevents Browser default action, such as open in new tab
-            event.preventDefault();
-        }
+    constructor(props: IProps) {
+        super(props);
 
-        onDropFiles(event: React.DragEvent<HTMLDivElement>) {
-            event.preventDefault();
+        this.fileInputNode = React.createRef<HTMLInputElement>();
 
-            if (!this.props.isUploadValid(Array.from(event.dataTransfer.files))) {
-                return;
-            }
+        this.onAddFiles = this.onAddFiles.bind(this);
+        this.onDragFiles = this.onDragFiles.bind(this);
+        this.onDropFiles = this.onDropFiles.bind(this);
+        this.onStoreInit = this.onStoreInit.bind(this);
 
-            showUploadAssetModal({
-                initialFiles: Array.from(event.dataTransfer.files)
-                    .map((file) => ({
-                        id: Math.random().toString(36).substr(1),
-                        file: file,
-                    })),
+        this.showUploadAssetModal = this.showUploadAssetModal.bind(this);
+        this.showEditAssetModal = this.showEditAssetModal.bind(this);
+        this.showSelectAssetModal = this.showSelectAssetModal.bind(this);
+    }
+
+    onStoreInit(store: Store) {
+        return Promise.all([
+            store.dispatch<any>(loadStorageDestinations()),
+            store.dispatch<any>(loadSets()),
+        ]);
+    }
+
+    onAddFiles(event: React.ChangeEvent<HTMLInputElement>) {
+        event.preventDefault();
+    }
+
+    onDragFiles(event: React.DragEvent<HTMLDivElement>) {
+        // Prevents Browser default action, such as open in new tab
+        event.preventDefault();
+    }
+
+    showUploadAssetModal(props: Partial<IUploadAssetModalProps> = {}) {
+        return showUploadAssetModal(
+            {
                 onAssetUploaded: (asset: IAssetItem) => {
-                    this.props.addAttachments([{
-                        _id: asset._id,
+                    return superdeskApi.entities.attachment.create({
+                        media: asset._id,
                         title: asset.name,
                         description: asset.description,
-                        filename: asset.filename,
-                        mimetype: asset.mimetype,
                         internal: asset.state !== ASSET_STATE.PUBLIC,
-                        media: {
-                            _id: asset._id,
-                            md5: asset._etag,
-                            name: asset.name,
-                            filename: asset.filename,
-                            content_type: asset.mimetype,
-                            length: asset.length,
-                        },
-                    }]);
+                    })
+                        .then((attachment) => {
+                            this.props.addAttachments([attachment]);
+                        });
                 },
+                ...props,
+            },
+        );
+    }
+
+    showEditAssetModal(attachment: IAttachment) {
+        showEditAttachmentModal(attachment)
+            .then(([updatedAttachment, _updatedAsset]) => {
+                this.props.updateAttachment(updatedAttachment);
             });
+    }
+
+    showSelectAssetModal() {
+        this.props.setAssetSearchParams({
+            sizeTo: superdeskApi.instance.config.attachments_max_size / 1048576, // bytes -> MB
+            states: [ASSET_STATE.PUBLIC, ASSET_STATE.INTERNAL],
+            setIds: this.props.activeSets.map((set) => set._id),
+        });
+
+        showSelectAssetModal()
+            .then((selectedAssets: Dictionary<string, IAssetItem>) => {
+                Promise.all(Object.keys(selectedAssets).map((assetId) => {
+                    const asset = selectedAssets[assetId];
+
+                    return superdeskApi.entities.attachment.create({
+                        media: asset._id,
+                        title: asset.name,
+                        description: asset.description,
+                        internal: asset.state !== ASSET_STATE.PUBLIC,
+                    });
+                }))
+                    .then((attachments: Array<IAttachment>) => {
+                        this.props.addAttachments(attachments);
+                    });
+            });
+    }
+
+    onDropFiles(event: React.DragEvent<HTMLDivElement>) {
+        event.preventDefault();
+
+        if (!this.props.isUploadValid(Array.from(event.dataTransfer.files))) {
+            return;
         }
 
-        render() {
-            const containerClasses = classNames({
-                'widget-content__main': this.props.isWidget === true,
-                'sd-padding--2': this.props.isWidget === true,
-            });
+        this.showUploadAssetModal({
+            initialFiles: Array.from(event.dataTransfer.files)
+                .map((file) => ({
+                    id: Math.random().toString(36).substr(1),
+                    file: file,
+                })),
+        });
+    }
 
-            return (
-                <React.Fragment>
-                    <div
-                        className={containerClasses}
-                        onDragOver={this.onDragFiles}
-                        onDragEnter={this.onDragFiles}
-                        onDrop={this.onDropFiles}
-                    >
-                        <SamsAttachmentsList
-                            files={this.props.attachments}
-                            readOnly={this.props.readOnly}
-                            editFile={() => false}
-                            download={download}
-                            removeFile={this.props.removeAttachment}
-                        />
-                    </div>
-                    <div
-                        className="widget-content__footer"
-                        onDragOver={this.onDragFiles}
-                        onDrop={this.onDropFiles}
-                    >
-                        <div className="attach-indicator">
-                            <div className="round-box">
-                                <i className="big-icon--upload-alt icon" />
+    render() {
+        const {gettext} = superdeskApi.localization;
+        const {download} = superdeskApi.entities.attachment;
+
+        const containerClasses = classNames({
+            'widget-content__main': this.props.isWidget === true,
+            'sd-padding--2': this.props.isWidget === true,
+        });
+
+        return (
+            <SamsApp onStoreInit={this.onStoreInit}>
+                <div
+                    className={containerClasses}
+                    onDragOver={this.onDragFiles}
+                    onDragEnter={this.onDragFiles}
+                    onDrop={this.onDropFiles}
+                >
+                    <SamsAttachmentsList
+                        files={this.props.attachments}
+                        readOnly={this.props.readOnly ?? false}
+                        editFile={this.showEditAssetModal}
+                        download={download}
+                        removeFile={this.props.removeAttachment}
+                    />
+                </div>
+                <div
+                    className="widget-content__footer"
+                    onDragOver={this.onDragFiles}
+                    onDrop={this.onDropFiles}
+                >
+                    {this.props.isWidget === true ? (
+                        <div className="form__row">
+                            <div className="basic-drag-block">
+                                <i className="big-icon--upload-alt" />
+                                {(this.props.readOnly || this.props.editable === false) ? null : (
+                                    <React.Fragment>
+                                        <span className="basic-drag-block__text">
+                                            {gettext('Drag files here or')}
+                                        </span>
+                                        <a className="text-link link" onClick={() => this.showUploadAssetModal()}>
+                                            &nbsp;{gettext('browse')}
+                                        </a>
+                                        <div>
+                                            <Button
+                                                text={gettext('Or select an existing asset')}
+                                                onClick={this.showSelectAssetModal}
+                                                style="hollow"
+                                            />
+                                        </div>
+                                    </React.Fragment>
+                                )}
                             </div>
-
-                            <div className="subtext">
-                                {gettext('Drag one or more files here to upload them, or just click the button below.')}
-                            </div>
-
-                            <button
-                                className="btn btn--hollow"
-                                disabled={this.props.readOnly || this.props.editable === false}
-                                onClick={showUploadAssetModal}
-                            >
-                                {gettext('Attach files')}
-                            </button>
                         </div>
-                        <input
-                            type="file"
-                            ref={this.fileInputNode}
-                            onChange={this.onAddFiles}
-                            multiple={true}
-                            style={{visibility: 'hidden'}}
-                        />
-                    </div>
-                </React.Fragment>
-            );
-        }
-    };
+                    ) : (
+                        <div className="form__row">
+                            <div className="basic-drag-block">
+                                <i className="big-icon--upload-alt" />
+                                {(this.props.readOnly || this.props.editable === false) ? null : (
+                                    <React.Fragment>
+                                        <div>
+                                            <span className="basic-drag-block__text">
+                                                {gettext('Drag files here or')}
+                                            </span>
+                                            <a className="text-link link" onClick={() => this.showUploadAssetModal()}>
+                                            &nbsp;{gettext('browse')}
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <Button
+                                                text={gettext('Or select an existing asset')}
+                                                onClick={this.showSelectAssetModal}
+                                                style="hollow"
+                                            />
+                                        </div>
+                                    </React.Fragment>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    <input
+                        type="file"
+                        ref={this.fileInputNode}
+                        onChange={this.onAddFiles}
+                        multiple={true}
+                        style={{visibility: 'hidden'}}
+                    />
+                </div>
+            </SamsApp>
+        );
+    }
 }
+
+const SamsAttachmentsWidgetComponentConnected = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SamsAttachmentsWidgetComponent);

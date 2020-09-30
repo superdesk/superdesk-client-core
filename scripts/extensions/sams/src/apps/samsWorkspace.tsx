@@ -1,18 +1,18 @@
+/* eslint-disable react/no-multi-comp */
+
 // External Modules
 import * as React from 'react';
 import {Dispatch, Store} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ISuperdesk} from 'superdesk-api';
-import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, ISetItem, LIST_ACTION} from '../interfaces';
+import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION} from '../interfaces';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
 import {
     loadNextAssetsPage,
-    queryAssetsFromCurrentSearch,
     setAssetListStyle,
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
@@ -21,49 +21,35 @@ import {
     getAssetListStyle,
     getAssetListTotal,
     getAssetSearchParams,
-    getAssetSearchResults, getAssetSetFilter,
+    getAssetSearchResults,
 } from '../store/assets/selectors';
 
 // UI
 import {PageLayout} from '../containers/PageLayout';
-import {getAssetListPanel} from '../components/assets/assetListPanel';
-import {getAssetFilterPanel} from '../components/assets/assetFilterPanel';
-import {getWorkspaceSubnavComponent} from '../components/workspaceSubnav';
+import {AssetListPanel} from '../components/assets/assetListPanel';
+import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
+import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {IApplicationState} from '../store';
-import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
-
-export function onWorkspaceInit(store: Store): Promise<any> {
-    return Promise.all([
-        store.dispatch<any>(loadStorageDestinations()),
-        store.dispatch<any>(loadSets()),
-        store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
-            .catch(() => {
-                // Catch errors here so `Promise.all` still returns on fetching error
-                // This can happen when invalid search params are stored in the URL
-                return Promise.resolve();
-            }),
-    ]);
-}
+import {toggleFilterPanelState} from '../store/workspace/actions';
+import {isFilterPanelOpen} from '../store/workspace/selectors';
+import {SamsApp} from './samsApp';
 
 interface IProps {
     assets: Array<IAssetItem>;
     totalAssets: number;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
-    activeSets: Array<ISetItem>;
-    disabledSets: Array<ISetItem>;
-    currentSet?: ISetItem;
     loadNextPage(): Promise<void>;
     setListStyle(style: ASSET_LIST_STYLE): void;
-    queryAssetsFromCurrentSearch(): void;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
     ): void;
+    toggleFilterPanel(): void;
+    filterPanelOpen: boolean;
 }
 
 interface IState {
-    filterPanelOpen: boolean;
     nextPageLoading: boolean;
 }
 
@@ -72,15 +58,12 @@ const mapStateToProps = (state: IApplicationState) => ({
     totalAssets: getAssetListTotal(state),
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
-    activeSets: getActiveSets(state),
-    disabledSets: getDisabledSets(state),
-    currentSet: getAssetSetFilter(state),
+    filterPanelOpen: isFilterPanelOpen(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     loadNextPage: () => dispatch<any>(loadNextAssetsPage()),
     setListStyle: (style: ASSET_LIST_STYLE) => dispatch(setAssetListStyle(style)),
-    queryAssetsFromCurrentSearch: () => dispatch<any>(queryAssetsFromCurrentSearch()),
     updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>, listAction: LIST_ACTION) =>
         dispatch<any>(
             updateAssetSearchParamsAndListItems(
@@ -88,103 +71,92 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
                 listAction,
             ),
         ),
+    toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
 });
 
-export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
-    const AssetListPanel = getAssetListPanel(superdesk);
-    const AssetFilterPanel = getAssetFilterPanel(superdesk);
-    const WorkspaceSubnav = getWorkspaceSubnavComponent(superdesk);
+export class SamsWorkspaceApp extends React.PureComponent {
+    onStoreInit(store: Store) {
+        return Promise.all([
+            store.dispatch<any>(loadStorageDestinations()),
+            store.dispatch<any>(loadSets()),
+            store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
+                .catch(() => {
+                    // Catch errors here so `Promise.all` still returns on fetching error
+                    // This can happen when invalid search params are stored in the URL
+                    return Promise.resolve();
+                }),
+        ]);
+    }
 
-    class SamsWorkspaceComponent extends React.Component<IProps, IState> {
-        constructor(props: IProps) {
-            super(props);
+    render() {
+        return (
+            <SamsApp onStoreInit={this.onStoreInit}>
+                <SamsWorkspace />
+            </SamsApp>
+        );
+    }
+}
 
-            this.state = {
-                filterPanelOpen: false,
-                nextPageLoading: false,
-            };
+class SamsWorkspaceComponent extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
 
-            this.toggleFilterPanel = this.toggleFilterPanel.bind(this);
-            this.onScroll = this.onScroll.bind(this);
-            this.toggleListStyle = this.toggleListStyle.bind(this);
-        }
+        this.state = {
+            nextPageLoading: false,
+        };
 
-        toggleFilterPanel() {
-            this.setState(
-                (state) => ({filterPanelOpen: !state.filterPanelOpen}),
-            );
-        }
+        this.onScroll = this.onScroll.bind(this);
+    }
 
-        onScroll(event: React.UIEvent<HTMLDivElement>) {
-            const node = event.currentTarget;
+    onScroll(event: React.UIEvent<HTMLDivElement>) {
+        const node = event.currentTarget;
 
-            if (node != null &&
-                this.state.nextPageLoading === false &&
-                this.props.totalAssets > this.props.assets.length &&
-                node.scrollTop + node.offsetHeight + 200 >= node.scrollHeight
-            ) {
-                this.setState({nextPageLoading: true});
-                this.props.loadNextPage().finally(() => {
-                    this.setState({nextPageLoading: false});
-                });
-            }
-        }
-
-        toggleListStyle() {
-            this.props.setListStyle(
-                this.props.listStyle === ASSET_LIST_STYLE.GRID ?
-                    ASSET_LIST_STYLE.LIST :
-                    ASSET_LIST_STYLE.GRID,
-            );
-            this.props.queryAssetsFromCurrentSearch();
-        }
-
-        render() {
-            return (
-                <div className="sd-page">
-                    <PageLayout
-                        header={(
-                            <WorkspaceSubnav
-                                filterPanelOpen={this.state.filterPanelOpen}
-                                totalAssets={this.props.totalAssets}
-                                listStyle={this.props.listStyle}
-                                searchParams={this.props.searchParams}
-                                activeSets={this.props.activeSets}
-                                disabledSets={this.props.disabledSets}
-                                currentSet={this.props.currentSet}
-                                toggleFilterPanel={this.toggleFilterPanel}
-                                toggleListStyle={this.toggleListStyle}
-                                updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
-                            />
-                        )}
-                        leftPanelOpen={this.state.filterPanelOpen}
-                        leftPanel={(
-                            this.state.filterPanelOpen === false ? (
-                                <div />
-                            ) : (
-                                <AssetFilterPanel
-                                    searchParams={this.props.searchParams}
-                                    closeFilterPanel={this.toggleFilterPanel}
-                                    updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
-                                />
-                            )
-                        )}
-                        mainClassName="sd-padding--2"
-                        mainProps={{onScroll: this.onScroll}}
-                        main={(
-                            <AssetListPanel
-                                assets={this.props.assets}
-                                listStyle={this.props.listStyle}
-                            />
-                        )}
-                    />
-                </div>
-            );
+        if (node != null &&
+            this.state.nextPageLoading === false &&
+            this.props.totalAssets > this.props.assets.length &&
+            node.scrollTop + node.offsetHeight + 200 >= node.scrollHeight
+        ) {
+            this.setState({nextPageLoading: true});
+            this.props.loadNextPage().finally(() => {
+                this.setState({nextPageLoading: false});
+            });
         }
     }
 
-    return connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    )(SamsWorkspaceComponent);
+    render() {
+        return (
+            <div className="sd-page">
+                <PageLayout
+                    header={(
+                        <WorkspaceSubnav />
+                    )}
+                    leftPanelOpen={this.props.filterPanelOpen}
+                    leftPanel={(
+                        this.props.filterPanelOpen === false ? (
+                            <div />
+                        ) : (
+                            <AssetFilterPanel
+                                searchParams={this.props.searchParams}
+                                closeFilterPanel={this.props.toggleFilterPanel}
+                                updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
+                            />
+                        )
+                    )}
+                    mainClassName="sd-padding--2"
+                    mainProps={{onScroll: this.onScroll}}
+                    main={(
+                        <AssetListPanel
+                            assets={this.props.assets}
+                            listStyle={this.props.listStyle}
+                        />
+                    )}
+                />
+            </div>
+        );
+    }
 }
+
+export const SamsWorkspace = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SamsWorkspaceComponent);

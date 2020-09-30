@@ -3,7 +3,6 @@ import * as React from 'react';
 import {Provider} from 'react-redux';
 
 // Types
-import {ISuperdesk} from 'superdesk-api';
 import {ASSET_SORT_FIELD, ASSET_STATE} from '../interfaces';
 
 // Redux Actions & Selectors
@@ -11,10 +10,10 @@ import {getStore} from '../store';
 
 // UI
 import {Label} from 'superdesk-ui-framework/react';
+import {superdeskApi} from '../apis';
 
 export function showModalConnectedToStore<T = any>(
-    superdesk: ISuperdesk,
-    Component: React.ComponentType<{closeModal(): void}>,
+    Component: React.ComponentType<{closeModal(): void} & any>,
     props?: T,
 ): Promise<void> {
     const store = getStore();
@@ -23,7 +22,7 @@ export function showModalConnectedToStore<T = any>(
         return Promise.reject('SAMS store has not been initialised');
     }
 
-    return superdesk.ui.showModal(
+    return superdeskApi.ui.showModal(
         ({closeModal}) => (
             <Provider store={store}>
                 <Component closeModal={closeModal} {...props ?? {}} />
@@ -54,8 +53,8 @@ export function getIconTypeFromMimetype(mimetype: string) {
     }
 }
 
-export function getAssetStateLabel(superdesk: ISuperdesk, assetState: ASSET_STATE) {
-    const {gettext} = superdesk.localization;
+export function getAssetStateLabel(assetState: ASSET_STATE) {
+    const {gettext} = superdeskApi.localization;
 
     switch (assetState) {
     case ASSET_STATE.INTERNAL:
@@ -84,11 +83,11 @@ export function getAssetStateLabel(superdesk: ISuperdesk, assetState: ASSET_STAT
         );
     }
 
-    superdesk.helpers.assertNever(assetState);
+    superdeskApi.helpers.assertNever(assetState);
 }
 
-export function getAssetListSortFieldText(superdesk: ISuperdesk, field: ASSET_SORT_FIELD): string {
-    const {gettext} = superdesk.localization;
+export function getAssetListSortFieldText(field: ASSET_SORT_FIELD): string {
+    const {gettext} = superdeskApi.localization;
 
     switch (field) {
     case ASSET_SORT_FIELD.NAME:
@@ -103,5 +102,5 @@ export function getAssetListSortFieldText(superdesk: ISuperdesk, field: ASSET_SO
         return gettext('Updated');
     }
 
-    superdesk.helpers.assertNever(field);
+    superdeskApi.helpers.assertNever(field);
 }
