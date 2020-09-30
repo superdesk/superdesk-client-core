@@ -601,7 +601,7 @@ declare module 'superdesk-api' {
         mimetype: string;
         filename: string;
         description: string;
-        media: IMedia;
+        media: string | IMedia;
         internal: boolean;
     }
 
@@ -977,7 +977,7 @@ declare module 'superdesk-api' {
 
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
-        create<T>(endpoint: string, item: Partial<T>): Promise<T>;
+        create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
             page: number,
@@ -1191,10 +1191,12 @@ declare module 'superdesk-api' {
     export interface IAttachmentsApi {
         byArticle(article: IArticle): Promise<Array<IAttachment>>;
         byId(id: IAttachment['_id']): Promise<IAttachment>;
+        create(attachment: Partial<IAttachment>): Promise<IAttachment>;
         save(original: IAttachment, updates: Partial<IAttachment>): Promise<IAttachment>;
         delete(attachment: IAttachment): Promise<void>;
         upload(attachment: Partial<IAttachment>, file: File, onProgress?: (event: ProgressEvent) => void): Promise<IAttachment>;
         download(attachment: IAttachment): void;
+        getMediaId(attachment: IAttachment): IMedia['_id'];
     }
 
     export type ISuperdesk = DeepReadonly<{

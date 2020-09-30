@@ -46,6 +46,14 @@ export const attachmentsApi: IAttachmentsApi = {
             });
     },
 
+    create(attachment: Partial<IAttachment>) {
+        const mediaId = attachment.media;
+
+        delete attachment.media;
+
+        return dataApi.create<IAttachment>(RESOURCE, attachment, {media: mediaId});
+    },
+
     save(original: IAttachment, updates: Partial<IAttachment>) {
         clearCache(original);
         return dataApi.patch<IAttachment>(RESOURCE, original, updates);
@@ -78,5 +86,13 @@ export const attachmentsApi: IAttachmentsApi = {
         const urls = ng.get('urls');
 
         window.open(urls.media(attachment.media, 'attachments'), '_blank');
+    },
+
+    getMediaId(attachment: IAttachment) {
+        if (typeof attachment.media !== 'string') {
+            return attachment.media._id;
+        }
+
+        return attachment.media;
     },
 };
