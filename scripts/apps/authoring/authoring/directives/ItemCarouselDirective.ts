@@ -338,6 +338,12 @@ export function ItemCarouselDirective(notify) {
                 }
             });
 
+            scope.$watch('currentIndex', () => {
+                if (scope.currentIndex != null) {
+                    carousel?.trigger('to.owl.carousel', [scope.currentIndex]);
+                }
+            });
+
             scope.$on('$destroy', () => {
                 elem.off('drop dragdrop dragover');
                 removeAddImageEventListener();
