@@ -7,7 +7,9 @@ interface IState {
     attachments: Array<IAttachment>;
 }
 
-export function withAttachments<T extends IAttachmentsWrapperProps>(WrappedComponent: React.ComponentType<T>) {
+export function withAttachments<T extends IAttachmentsWrapperProps>(
+    WrappedComponent: React.ComponentType<T>,
+): React.ComponentClass<Omit<T, 'attachments'>> {
     return class AttachmentsWrapper extends React.Component<Omit<T, 'attachments'>, IState> {
         constructor(props: Omit<T, 'attachments'>) {
             super(props);
@@ -72,8 +74,7 @@ export function withAttachments<T extends IAttachmentsWrapperProps>(WrappedCompo
         render() {
             return (
                 <WrappedComponent
-                    {...this.props}
-                    item={this.props.item}
+                    {...this.props as T}
                     attachments={this.state.attachments}
                 />
             );

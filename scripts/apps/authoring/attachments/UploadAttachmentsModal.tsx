@@ -111,6 +111,8 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
     }
 
     render() {
+        const ulClass = 'upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4';
+
         return (
             <Modal size="fill">
                 <ModalHeader onClose={this.state.saving ? null : this.props.closeModal}>
@@ -119,7 +121,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                 <ModalBody>
                     <form className="attachmentsForm upload-media">
                         <div className="upload-edit">
-                            <ul className="upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4">
+                            <ul className={ulClass}>
                                 {this.state.items.map((item, index) => (
                                     <li className="flex-grid__item sd-shadow--z3 sd-card" key={item.file.name}>
                                         <div className="thumb sd-card__thumbnail">
@@ -215,4 +217,3 @@ export function showUploadAttachmentsModal(props: Omit<IProps, 'closeModal'>) {
         />
     ));
 }
-
