@@ -11,10 +11,10 @@ import {
     ListItemColumn,
     ListItemRow,
     ListItemActionMenu,
-} from '../../../ui/list';
+} from '../../ui/list';
 
 // Utils
-import {getIconTypeFromMimetype, getHumanReadableFileSize} from '../../../utils/ui';
+import {getIconTypeFromMimetype, getHumanReadableFileSize} from '../../utils/ui';
 
 interface IProps {
     files: Array<IAttachment>;

@@ -21,7 +21,7 @@ import {getActiveSets} from '../store/sets/selectors';
 // UI
 import {Button} from 'superdesk-ui-framework/react';
 import {SamsApp} from './samsApp';
-import {SamsAttachmentsList} from '../components/authoring/attachments/samsAttahcmentsList';
+import {SamsAttachmentsList} from '../components/attachments/samsAttachmentsList';
 import {showEditAttachmentModal} from '../components/attachments/editAttachmentModal';
 import {IUploadAssetModalProps, showUploadAssetModal} from '../components/assets/uploadAssetModal';
 import {showSelectAssetModal} from '../components/assets/selectAssetModal';
