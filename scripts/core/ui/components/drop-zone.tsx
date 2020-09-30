@@ -75,18 +75,23 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
         ) + (this.state.hover ? ' dragover' : '');
 
         return (
-            <button className={className} ref={this.elem} onClick={() => {
-                if (this.input.current != null) {
-                    this.input.current.click();
-                }
-            }}>
+            <button
+                className={className}
+                ref={this.elem}
+                onClick={() => {
+                    if (this.input.current != null) {
+                        this.input.current.click();
+                    }
+                }}
+            >
                 {this.props.children ? this.props.children : (
                     <span className="item-association__text-label">
                         {this.props.label}
                     </span>
                 )}
                 {this.props.onFileSelect != null && (
-                    <input type="file"
+                    <input
+                        type="file"
                         style={{display: 'none'}}
                         ref={this.input}
                         onChange={(event) => {

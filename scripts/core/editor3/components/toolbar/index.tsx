@@ -160,42 +160,42 @@ class ToolbarComponent extends React.Component<any, IState> {
             disabled: disabled && activeCell === null,
         });
 
-        return activeCell !== null ? <TableControls className={cx} /> :
+        return activeCell !== null ? <TableControls className={cx} /> : (
             <div className={cx} style={{width: this.state.width}} ref={this.toolbarNode}>
                 {/* Styles */}
                 <BlockStyleButtons />
                 <InlineStyleButtons />
 
                 {/* Formatting options */}
-                {has('link') &&
+                {has('link') && (
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Link)}
                         iconName="link"
                         tooltip={gettext('Link')}
                     />
-                }
-                {has('embed') &&
+                )}
+                {has('embed') && (
                     <IconButton
                         onClick={showPopup(PopupTypes.Embed)}
                         iconName="code"
                         tooltip="Embed"
                     />
-                }
-                {has('media') &&
+                )}
+                {has('media') && (
                     <IconButton
                         onClick={insertMedia}
                         tooltip={gettext('Media')}
                         iconName="picture"
                     />
-                }
-                {has('table') &&
+                )}
+                {has('table') && (
                     <IconButton
                         onClick={addTable}
                         tooltip={gettext('Table')}
                         iconName="table"
                     />
-                }
-                {has('remove format') &&
+                )}
+                {has('remove format') && (
                     <SelectionButton
                         onClick={removeFormat}
                         precondition={!suggestingMode}
@@ -203,8 +203,8 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="clear-format"
                         tooltip={gettext('Remove format')}
                     />
-                }
-                {has('comments') &&
+                )}
+                {has('comments') && (
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
                         precondition={
@@ -214,8 +214,8 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="comment"
                         tooltip={gettext('Comment')}
                     />
-                }
-                {has('annotation') &&
+                )}
+                {has('annotation') && (
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Annotation)}
                         precondition={
@@ -225,27 +225,27 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="edit-line"
                         tooltip={gettext('Annotation')}
                     />
-                }
+                )}
 
-                {has('suggestions') &&
+                {has('suggestions') && (
                     <StyleButton
                         active={suggestingMode}
                         label={'suggestions'}
                         style={'suggestions'}
                         onToggle={toggleSuggestingMode}
                     />
-                }
+                )}
 
-                {has('formatting marks') &&
+                {has('formatting marks') && (
                     <StyleButton
                         active={invisibles}
                         label={'invisibles'}
                         style={'invisibles'}
                         onToggle={toggleInvisibles}
                     />
-                }
+                )}
 
-                {has('uppercase') &&
+                {has('uppercase') && (
                     <SelectionButton
                         onClick={({selection}) => dispatch(changeCase('uppercase', selection))}
                         precondition={!suggestingMode}
@@ -253,9 +253,9 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="to-uppercase"
                         tooltip={gettext('Convert text to uppercase')}
                     />
-                }
+                )}
 
-                {has('lowercase') &&
+                {has('lowercase') && (
                     <SelectionButton
                         onClick={({selection}) => dispatch(changeCase('lowercase', selection))}
                         precondition={!suggestingMode}
@@ -263,9 +263,9 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="to-lowercase"
                         tooltip={gettext('Convert text to lowercase')}
                     />
-                }
+                )}
 
-                {has('undo') &&
+                {has('undo') && (
                     <IconButton
                         onClick={() => {
                             this.props.dispatch(undo());
@@ -273,9 +273,9 @@ class ToolbarComponent extends React.Component<any, IState> {
                         tooltip={gettext('Undo') + ' (ctrl + z)'}
                         iconName="undo"
                     />
-                }
+                )}
 
-                {has('redo') &&
+                {has('redo') && (
                     <IconButton
                         onClick={() => {
                             this.props.dispatch(redo());
@@ -283,7 +283,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                         tooltip={gettext('Redo') + ' (ctrl + y)'}
                         iconName="redo"
                     />
-                }
+                )}
 
                 <ToolbarPopup
                     type={popup.type}
@@ -294,7 +294,8 @@ class ToolbarComponent extends React.Component<any, IState> {
 
                 {/* LinkToolbar must be the last node. */}
                 <LinkToolbar onEdit={showPopup(PopupTypes.Link)} />
-            </div>;
+            </div>
+        );
     }
 }
 

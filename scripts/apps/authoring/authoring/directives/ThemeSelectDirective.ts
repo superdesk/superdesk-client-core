@@ -37,8 +37,7 @@ export function ThemeSelectDirective(authThemes) {
                     themeClasses += ' sd-editor--' + _key + '-' + value;
                 });
 
-                angular.element('.page-content-container')
-                    .children('.theme-container')
+                angular.element('.page-content-container .theme-container')
                     .attr('class', DEFAULT_CLASS)
                     .addClass(themeClasses);
             };

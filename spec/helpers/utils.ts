@@ -48,10 +48,19 @@ export function printLogs(prefix) {
 }
 
 export function waitForSuperdesk() {
-    return browser.driver.wait(() =>
-        browser.driver.executeScript('return window.superdeskIsReady || false'),
-    5000,
-    '"window.superdeskIsReady" is not here');
+    return browser.driver.wait(
+        () => browser.driver.executeScript('return window.superdeskIsReady || false'),
+        5000,
+        '"window.superdeskIsReady" is not here',
+    ).then((res) => {
+        browser.executeScript('window.superdesk_e2e_tests_running = true;');
+
+        return res;
+    });
+}
+
+export function refresh() {
+    browser.refresh().then(() => waitForSuperdesk());
 }
 
 /**
@@ -154,7 +163,7 @@ export function altKey(key) {
 }
 
 export function assertToastMsg(type: 'info' | 'success' | 'error', msg: string) {
-    browser.wait(ECE.visibilityOf(element(s([`notification--${type}`], msg))));
+    browser.wait(ECE.visibilityOf(element(s([`notification--${type}`], msg))), 2000);
 }
 
 // Don't expect message to appear
@@ -165,7 +174,7 @@ export function assertToastMsgNotDisplayed(type, msg) {
 export function waitForToastMsgDissapear(type, msg) {
     browser.wait(protractor.ExpectedConditions.invisibilityOf(
         element(by.cssContainingText(`[data-test-id="notification--${type}"]`, msg)),
-    ));
+    ), 3000);
 }
 
 /**

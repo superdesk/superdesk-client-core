@@ -1,5 +1,5 @@
 <article class="main-article" tabindex="0" ng-class="{locked: isLocked}">
-    <form name="articleEdit" class="main-article__form">
+    <div class="main-article__form">
         <div class="main-article__editbar">
             <button class="btn btn--hollow main-article__editbar-button"
                 type="button"
@@ -8,13 +8,14 @@
             <button class="btn btn--primary main-article__editbar-button"
                 type="button"
                 ng-hide="isPublished(item)"
-                ng-click="save(item, articleEdit)"
-                ng-disabled="articleEdit.$pristine && !item._autosave"
+                ng-click="save(item)"
+                ng-disabled="!dirty"
                 translate>Save</button>
         </div>
-        <div class="main-article__content">
+
+        <div class="main-article__content" ng-if="item != null">
             <div class="state-label state-{{item.state}} sd-margin-b--1">{{item.state}}</div>
             <fieldset ng-disabled="isPublished(item)" sd-article-edit></fieldset>
         </div>
-    </form>
+    </div>
 </article>

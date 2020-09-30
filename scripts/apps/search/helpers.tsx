@@ -177,9 +177,11 @@ export function renderArea(
     }).filter(Boolean);
 
     if (components.length > 0) {
-        return <div {...elemProps}>
-            {components}
-        </div>;
+        return (
+            <div {...elemProps}>
+                {components}
+            </div>
+        );
     }
 
     return null;
@@ -231,4 +233,12 @@ export function bindMarkItemShortcut(label) {
 
 export function isIPublishedArticle(item: IArticle | IPublishedArticle): item is IPublishedArticle {
     return item._type === 'published';
+}
+
+export function canPrintPreview(item: IArticle) {
+    if (item.type === 'text' || item.type === 'picture') {
+        return true;
+    } else {
+        return false; // not implemented
+    }
 }

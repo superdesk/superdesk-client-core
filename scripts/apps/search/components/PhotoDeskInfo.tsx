@@ -30,8 +30,10 @@ export const PhotoDeskInfo: React.StatelessComponent<IProps> = (props) => {
     return (
         <div className="sd-grid-item__content">
             <time>{datetime.longFormat(item.versioncreated)}</time>
-            <span className="sd-grid-item__title sd-grid-item--element-grow"
-                dangerouslySetInnerHTML={{__html: item.headline || item.slugline || item.type}} />
+            <span
+                className="sd-grid-item__title sd-grid-item--element-grow"
+                dangerouslySetInnerHTML={{__html: item.headline || item.slugline || item.type}}
+            />
             <PhotoDeskFields
                 fieldsConfig={gridViewFieldsConfig}
                 item={item}

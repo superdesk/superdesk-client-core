@@ -12,6 +12,21 @@ function isDirectory(path) {
     }
 }
 
+function escapeRegExp(string) {
+    return string.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+
+function regexMatchAll(regex, string) {
+    const matches = [];
+    let match;
+
+    while ((match = regex.exec(string)) !== null) {
+        matches.push(match);
+    }
+
+    return matches;
+}
+
 /*
 
 It iterates all user supplied translations and removes placeholders found in the original string.
@@ -28,17 +43,21 @@ the translation is considered invalid and will not be outputted to JSON.
 function removeInvalidTranslations(grunt, jsonFilePath, filename) {
     var translations = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
 
+    const KEY_REGEX = /{{ ?(.+?) ?}}/g;
+
     const validTranslations = Object.keys(translations).filter((key) => {
         if (key === '') { // metadata object added by gettext.js
             return true;
         }
 
-        const placeHolders = key.match(/{{.+?}}/g);
+        const placeHolders = regexMatchAll(KEY_REGEX, key);
 
         return (Array.isArray(translations[key]) ? translations[key] : [translations[key]]).every(
             (translatedString) => {
-                const translatedStringWithoutPlaceholders = (placeHolders || []).reduce((acc, item) => {
-                    return acc.replace(item, '');
+                const translatedStringWithoutPlaceholders = placeHolders.reduce((acc, item) => {
+                    const regex = RegExp(`{{ ?${escapeRegExp(item[1])} ?}}`);
+
+                    return acc.replace(regex, '');
                 }, translatedString);
 
                 const valid = translatedStringWithoutPlaceholders.match(/{{.+?}}/) == null;
@@ -47,6 +66,7 @@ function removeInvalidTranslations(grunt, jsonFilePath, filename) {
                     grunt.log.error(
                         `Invalid translation string encountered in "${filename}"`
                         + ` and will be ommited from JSON: "${translatedString}"`
+                        + ` for key: "${key}"`
                     );
                 }
 

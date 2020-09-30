@@ -13,7 +13,8 @@ describe('editor3.components.link-toolbar', () => {
             <LinkToolbar
                 editorState={editorState}
                 removeLink={() => { /* no-op */ }}
-                onEdit={() => { /* no-op */ }} />);
+                onEdit={() => { /* no-op */ }}
+            />);
 
         expect(wrapper.find('div.link-toolbar').exists()).toBe(true);
         expect(wrapper.find('a').length).toBe(0);
@@ -25,7 +26,8 @@ describe('editor3.components.link-toolbar', () => {
             <LinkToolbar
                 editorState={editorState}
                 removeLink={() => { /* no-op */ }}
-                onEdit={() => { /* no-op */ }} />);
+                onEdit={() => { /* no-op */ }}
+            />);
 
         expect(wrapper.find('div.link-toolbar').exists()).toBe(true);
         expect(wrapper.find('div.link-toolbar').hasClass('is-link')).toBe(false);
@@ -38,7 +40,8 @@ describe('editor3.components.link-toolbar', () => {
             <LinkToolbar
                 editorState={editorState}
                 removeLink={() => { /* no-op */ }}
-                onEdit={() => { /* no-op */ }} />);
+                onEdit={() => { /* no-op */ }}
+            />);
 
         expect(wrapper.find('div.link-toolbar').exists()).toBe(true);
         expect(wrapper.find('a').length).toBe(3);
@@ -50,7 +53,8 @@ describe('editor3.components.link-toolbar', () => {
             <LinkToolbar
                 editorState={editorState}
                 removeLink={() => { /* no-op */ }}
-                onEdit={() => { /* no-op */ }} />);
+                onEdit={() => { /* no-op */ }}
+            />);
 
         expect(wrapper.find('a[href="entity-url"]').exists()).toBe(true);
     });
@@ -62,7 +66,8 @@ describe('editor3.components.link-toolbar', () => {
             <LinkToolbar
                 editorState={editorState}
                 removeLink={() => { /* no-op */ }}
-                onEdit={onEdit} />);
+                onEdit={onEdit}
+            />);
 
         wrapper.find('a').at(1)
             .simulate('click');
@@ -77,7 +82,8 @@ describe('editor3.components.link-toolbar', () => {
             <LinkToolbar
                 editorState={editorState}
                 removeLink={onRemove}
-                onEdit={() => { /* no-op */ }} />);
+                onEdit={() => { /* no-op */ }}
+            />);
 
         wrapper.find('a').at(2)
             .simulate('click');
@@ -97,7 +103,8 @@ describe('editor3.components.link-input', () => {
                 editorState={stateWithLink()}
                 data={value}
                 onSubmit={() => ({})}
-                hidePopups={() => ({})} />);
+                hidePopups={() => ({})}
+            />);
 
         expect(wrapper.find('input').props().value).toBe(value.href);
     });
@@ -110,7 +117,8 @@ describe('editor3.components.link-input', () => {
                 editorState={stateWithLink()}
                 data={value}
                 onSubmit={() => ({})}
-                hidePopups={onCancel} />);
+                hidePopups={onCancel}
+            />);
 
         wrapper.find('.btn--cancel').simulate('click');
 
@@ -125,7 +133,8 @@ describe('editor3.components.link-input', () => {
                 editorState={stateWithLink()}
                 data={value}
                 onSubmit={() => ({})}
-                hidePopups={onCancel} />);
+                hidePopups={onCancel}
+            />);
 
         wrapper.simulate('keyup', {key: 'A'});
 
@@ -140,7 +149,8 @@ describe('editor3.components.link-input', () => {
                 editorState={stateWithLink()}
                 data={value}
                 onSubmit={() => ({})}
-                hidePopups={onCancel} />);
+                hidePopups={onCancel}
+            />);
 
         wrapper.find('form').simulate('keyup', {key: 'Escape'});
 
@@ -156,7 +166,8 @@ describe('editor3.components.link-input', () => {
                 editorState={stateWithLink()}
                 data={value}
                 hidePopups={onCancel}
-                applyLink={onSubmit} />);
+                applyLink={onSubmit}
+            />);
 
         wrapper.find('form').simulate('submit');
 

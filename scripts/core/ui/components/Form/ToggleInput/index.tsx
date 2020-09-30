@@ -16,7 +16,7 @@ export const ToggleInput: React.StatelessComponent<any> = (
     {field, label, value, onChange, readOnly, className, labelLeftAuto, onFocus, ...props},
 ) => (
     <LineInput {...props} readOnly={readOnly} labelLeftAuto={labelLeftAuto} className="sd-line-input__toggle">
-        <Label text={label}/>
+        <Label text={label} />
         <Toggle
             value={value}
             onChange={(e) => onChange(field, e.target.value)}

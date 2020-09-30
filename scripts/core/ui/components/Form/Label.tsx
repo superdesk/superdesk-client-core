@@ -11,12 +11,14 @@ import './style.scss';
  */
 export const Label: React.StatelessComponent<any> = ({text, row, light, invalid}) => (
     !text ? null : (
-        <label className={classNames({
-            'sd-line-input__label': !row,
-            'form-label': row,
-            'form-label--light': row && light,
-            'form-label--invalid': row && invalid,
-        })}>
+        <label
+            className={classNames({
+                'sd-line-input__label': !row,
+                'form-label': row,
+                'form-label--light': row && light,
+                'form-label--invalid': row && invalid,
+            })}
+        >
             {text}
         </label>
     )
