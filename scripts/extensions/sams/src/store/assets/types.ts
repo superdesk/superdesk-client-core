@@ -31,7 +31,7 @@ interface IAssetSetListStyleAction {
 export type IAssetActionTypes = IReceiveAssetsAction |
     ISetAssetSearchParamsAction |
     IAssetSetListStyleAction |
-    IManageAssetsOnPanelClosed |
+    ICloseAssetPreviewPanelAction |
     IPreviewAssetAction;
 
 export interface IAssetState {
@@ -49,7 +49,7 @@ interface IPreviewAssetAction {
     payload: string;
 }
 
-export const MANAGE_SELECTED_ASSET_RESET = 'manage_selected_asset__reset';
-interface IManageAssetsOnPanelClosed {
-    type: typeof MANAGE_SELECTED_ASSET_RESET;
+export const MANAGE_ASSETS_CLOSE_PREVIEW_PANEL = 'manage_assets__close_preview_panel';
+interface ICloseAssetPreviewPanelAction {
+    type: typeof MANAGE_ASSETS_CLOSE_PREVIEW_PANEL;
 }

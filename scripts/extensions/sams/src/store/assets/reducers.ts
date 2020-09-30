@@ -16,7 +16,7 @@ import {
     RECEIVE_ASSETS,
     SET_ASSET_SEARCH_PARAMS,
     MANAGE_ASSETS_PREVIEW,
-    MANAGE_SELECTED_ASSET_RESET,
+    MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
 } from './types';
 
 const initialState: IAssetState = {
@@ -47,7 +47,7 @@ export function assetsReducer(
             ...state,
             selectedAssetId: action.payload,
         };
-    case MANAGE_SELECTED_ASSET_RESET:
+    case MANAGE_ASSETS_CLOSE_PREVIEW_PANEL:
         return {
             ...state,
             selectedAssetId: undefined,

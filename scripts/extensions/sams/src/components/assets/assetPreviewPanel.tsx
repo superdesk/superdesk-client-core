@@ -9,6 +9,11 @@ import {IAssetItem} from '../../interfaces';
 import {PanelContent, PanelContentBlock, PanelContentBlockInner, PanelHeader, Text} from '../../ui';
 import {FormLabel} from 'superdesk-ui-framework/react';
 
+// Utils
+import {
+    getHumanReadableFileSize,
+} from '../../utils/ui';
+
 interface IProps {
     asset?: IAssetItem;
     setName?: string;
@@ -42,7 +47,7 @@ export function getShowAssetPreviewPanelComponent(superdesk: ISuperdesk) {
                                 <Text>{asset.filename}</Text>
 
                                 <FormLabel text={gettext('FileLength')} style="light" />
-                                <Text>{asset.length}</Text>
+                                <Text>{getHumanReadableFileSize(asset.length)}</Text>
 
                                 <FormLabel text={gettext('Mimetype')} style="light" />
                                 <Text>{asset.mimetype}</Text>
