@@ -1,11 +1,19 @@
 // Types
-import {IRestApiResponse, ISuperdesk} from 'superdesk-api';
+import {IAttachment, IRestApiResponse, ISuperdesk} from 'superdesk-api';
 import {IAssetItem, IAssetSearchParams, ISamsAPI, ISetItem, IStorageDestinationItem} from '../interfaces';
 
 // APIs
 import {getAllSets, createSet, updateSet, deleteSet} from './sets';
 import {getAllStorageDestinations} from './storageDestinations';
-import {uploadAsset, getAssetsCount, queryAssets, getAssetSearchUrlParams, setAssetSearchUrlParams} from './assets';
+import {
+    uploadAsset,
+    getAssetsCount,
+    queryAssets,
+    getAssetSearchUrlParams,
+    setAssetSearchUrlParams,
+    getAssetById,
+    updateAssetMetadata,
+} from './assets';
 
 export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
     return {
@@ -43,6 +51,16 @@ export function getSamsAPIs(superdesk: ISuperdesk): ISamsAPI {
             },
             getCount(set_ids: Array<string>): Promise<Dictionary<string, number>> {
                 return getAssetsCount(superdesk, set_ids);
+            },
+            getById: (assetId: string): Promise<IAssetItem> => {
+                return getAssetById(superdesk, assetId);
+            },
+            updateMetadata: (
+                originalAsset: IAssetItem,
+                originalAttachment: IAttachment,
+                updates: Partial<[IAttachment, IAssetItem]>,
+            ) => {
+                return updateAssetMetadata(originalAsset, originalAttachment, updates);
             },
         },
     };
