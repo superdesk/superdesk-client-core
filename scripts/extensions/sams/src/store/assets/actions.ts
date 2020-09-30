@@ -1,18 +1,8 @@
 // Types
 import {IRestApiResponse} from 'superdesk-api';
-import {
-    ASSET_LIST_STYLE,
-    IAssetItem,
-    IAssetSearchParams,
-    LIST_ACTION,
-} from '../../interfaces';
+import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
 import {IThunkAction} from '../types';
-import {
-    ASSET_SET_LIST_STYLE,
-    IAssetActionTypes,
-    RECEIVE_ASSETS,
-    SET_ASSET_SEARCH_PARAMS,
-} from './types';
+import {ASSET_SET_LIST_STYLE, IAssetActionTypes, RECEIVE_ASSETS, SET_ASSET_SEARCH_PARAMS} from './types';
 
 // Redux Selectors
 import {getAssetListStyle, getAssetSearchParams} from './selectors';
@@ -41,6 +31,18 @@ export function setAssetListStyle(style: ASSET_LIST_STYLE): IAssetActionTypes {
     return {
         type: ASSET_SET_LIST_STYLE,
         payload: style,
+    };
+}
+
+export function toggleAssetListStyle(): IThunkAction<void> {
+    return (dispatch, getState) => {
+        dispatch(setAssetListStyle(
+            getAssetListStyle(getState()) === ASSET_LIST_STYLE.GRID ?
+                ASSET_LIST_STYLE.LIST :
+                ASSET_LIST_STYLE.GRID,
+        ));
+
+        return dispatch<any>(queryAssetsFromCurrentSearch());
     };
 }
 
