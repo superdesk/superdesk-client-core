@@ -1,62 +1,76 @@
 // External modules
 import * as React from 'react';
+import {connect} from 'react-redux';
 
 // Types
-import {ISuperdesk} from 'superdesk-api';
 import {ASSET_STATE, IAssetItem, ISetItem} from '../../interfaces';
 
 // UI
 import {FormLabel, Input, Option, Select} from 'superdesk-ui-framework/react';
 import {FormGroup, FormRow} from '../../ui';
 import {getHumanReadableFileSize} from '../../utils/ui';
+import {getActiveSets} from '../../store/sets/selectors';
+import {superdeskApi} from '../../apis';
+import {IApplicationState} from '../../store';
 
 interface IProps {
     asset: Partial<IAssetItem>;
     disabled?: boolean;
     onChange(field: string, value: string): void;
     sets: Array<ISetItem>;
+    fields?: Array<keyof IAssetItem>;
 }
 
-export function getAssetEditorPanel(superdesk: ISuperdesk) {
-    const {gettext} = superdesk.localization;
+const mapStateToProps = (state: IApplicationState) => ({
+    sets: getActiveSets(state),
+});
 
-    return class AssetEditorPanel extends React.PureComponent<IProps> {
-        onChange: Dictionary<string, (value: string) => void>;
+class AssetEditorPanelComponent extends React.PureComponent<IProps> {
+    onChange: Dictionary<string, (value: string) => void>;
 
-        constructor(props: IProps) {
-            super(props);
+    constructor(props: IProps) {
+        super(props);
 
-            this.onChange = {
-                name: (value: string) => this.props.onChange('name', value.trim()),
-                description: (value: string) => this.props.onChange('description', value.trim()),
-                filename: (value: string) => this.props.onChange('filename', value.trim()),
-                state: (value: string) => this.props.onChange('state', value),
-                set_id: (value: string) => this.props.onChange('set_id', value),
-            };
-        }
+        this.onChange = {
+            name: (value: string) => this.props.onChange('name', value.trim()),
+            description: (value: string) => this.props.onChange('description', value.trim()),
+            filename: (value: string) => this.props.onChange('filename', value.trim()),
+            state: (value: string) => this.props.onChange('state', value),
+            set_id: (value: string) => this.props.onChange('set_id', value),
+        };
+    }
 
-        render() {
-            return (
-                <React.Fragment>
-                    <FormGroup>
-                        <FormRow>
-                            <FormLabel text={gettext('Filename:')} />
-                            <span>{this.props.asset.filename}</span>
-                        </FormRow>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormRow>
-                            <FormLabel text={gettext('Type:')} />
-                            <span>{this.props.asset.mimetype}</span>
-                        </FormRow>
-                        <FormRow>
-                            <FormLabel text={gettext('Size:')} />
-                            <span>
-                                {this.props.asset.length && getHumanReadableFileSize(this.props.asset.length)}
-                            </span>
-                        </FormRow>
-                    </FormGroup>
+    fieldEnabled(field: keyof IAssetItem) {
+        return (this.props.fields == null || this.props.fields.includes(field)) ?
+            true :
+            null;
+    }
 
+    render() {
+        const {gettext} = superdeskApi.localization;
+
+        return (
+            <React.Fragment>
+                <FormGroup>
+                    <FormRow>
+                        <FormLabel text={gettext('Filename:')} />
+                        <span>{this.props.asset.filename}</span>
+                    </FormRow>
+                </FormGroup>
+                <FormGroup>
+                    <FormRow>
+                        <FormLabel text={gettext('Type:')} />
+                        <span>{this.props.asset.mimetype}</span>
+                    </FormRow>
+                    <FormRow>
+                        <FormLabel text={gettext('Size:')} />
+                        <span>
+                            {this.props.asset.length && getHumanReadableFileSize(this.props.asset.length)}
+                        </span>
+                    </FormRow>
+                </FormGroup>
+
+                {this.fieldEnabled('name') && (
                     <FormGroup>
                         <FormRow>
                             <Input
@@ -67,6 +81,8 @@ export function getAssetEditorPanel(superdesk: ISuperdesk) {
                             />
                         </FormRow>
                     </FormGroup>
+                )}
+                {this.fieldEnabled('description') && (
                     <FormGroup>
                         <FormRow>
                             <Input
@@ -77,6 +93,8 @@ export function getAssetEditorPanel(superdesk: ISuperdesk) {
                             />
                         </FormRow>
                     </FormGroup>
+                )}
+                {this.fieldEnabled('state') && (
                     <FormGroup>
                         <FormRow>
                             <Select
@@ -98,6 +116,8 @@ export function getAssetEditorPanel(superdesk: ISuperdesk) {
                             </Select>
                         </FormRow>
                     </FormGroup>
+                )}
+                {this.fieldEnabled('set_id') && (
                     <FormGroup>
                         <FormRow>
                             <Select
@@ -115,8 +135,10 @@ export function getAssetEditorPanel(superdesk: ISuperdesk) {
                             </Select>
                         </FormRow>
                     </FormGroup>
-                </React.Fragment>
-            );
-        }
-    };
+                )}
+            </React.Fragment>
+        );
+    }
 }
+
+export const AssetEditorPanel = connect(mapStateToProps)(AssetEditorPanelComponent);
