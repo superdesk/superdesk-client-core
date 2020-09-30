@@ -10,7 +10,7 @@ import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {editSet, confirmBeforeDeletingSet, closeSetContentPanel} from '../../store/sets/actions';
-import {getSelectedSet, getSelectedSetStorageDestination} from '../../store/sets/selectors';
+import {getSelectedSet, getSelectedSetStorageDestination, getSelectedSetCount} from '../../store/sets/selectors';
 
 // UI
 import {FormLabel} from 'superdesk-ui-framework/react';
@@ -20,6 +20,7 @@ import {IPanelTools} from '../../ui/PanelTools';
 interface IProps {
     set?: ISetItem;
     storageDestination?: IStorageDestinationItem;
+    count?: number;
     onEdit(set: ISetItem): void;
     onDelete(set: ISetItem): void;
     onClose(): void;
@@ -28,6 +29,7 @@ interface IProps {
 const mapStateToProps = (state: IApplicationState) => ({
     set: getSelectedSet(state),
     storageDestination: getSelectedSetStorageDestination(state),
+    count: getSelectedSetCount(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -39,7 +41,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 class SetPreviewPanelComponent extends React.PureComponent<IProps> {
     render() {
         const {gettext} = superdeskApi.localization;
-        const {set, storageDestination} = this.props;
+        const {set, storageDestination, count} = this.props;
 
         if (set?._id == null) {
             return null;
@@ -57,7 +59,7 @@ class SetPreviewPanelComponent extends React.PureComponent<IProps> {
             ariaValue: 'close',
         }];
 
-        if (set.state === SET_STATE.DRAFT) {
+        if (set.state === SET_STATE.DRAFT || (set.state === SET_STATE.DISABLED && !count)) {
             topTools = [
                 {
                     title: gettext('Delete'),

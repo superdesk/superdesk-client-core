@@ -120,3 +120,17 @@ export const getSetsGroupedByState = createSelector<IApplicationState, Array<ISe
 export function getAssetsCountForSets(state: IApplicationState): Dictionary<string, number> {
     return state.sets.counts;
 }
+
+export const getSelectedSetCount = createSelector<
+    IApplicationState,
+    Dictionary<string, number>,
+    string | undefined,
+    number | undefined
+>(
+    [getAssetsCountForSets, getSelectedSetId],
+    (counts: Dictionary<string, number>, setId?: string) => (
+        setId != null ?
+            counts?.[setId] :
+            undefined
+    ),
+);
