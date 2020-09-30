@@ -139,12 +139,14 @@ export const notify = {
         ng.get('notify').info(text, displayDuration, options);
     },
     success: (text: string, displayDuration?: number, options?: any) => {
+        // eslint-disable-next-line angular/no-http-callback
         ng.get('notify').success(text, displayDuration, options);
     },
     warning: (text: string, displayDuration?: number, options?: any) => {
         ng.get('notify').warning(text, displayDuration, options);
     },
     error: (text: string, displayDuration?: number, options?: any) => {
+        // eslint-disable-next-line angular/no-http-callback
         ng.get('notify').error(text, displayDuration, options);
     },
 };
