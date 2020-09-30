@@ -25,6 +25,6 @@
 
 <ul class="terms-list" ng-if="selectedItems.length">
     <li class="pull-left" ng-repeat="item in selectedItems" ng-click="removeItem(item)">
-        {{ :: item}} <i class="icon-close-small"></i>
+        {{ :: item}} <i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i>
     </li>
 </ul>

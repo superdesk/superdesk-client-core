@@ -901,14 +901,23 @@ $bottom-bar-item-border-color-active: transparent;
         max-height: 275px;
         padding: 0;
         .input-term {
-            padding: 5px 0 5px 25px;
-            background: url(~images/search-icon.png) left 10px center no-repeat white;
-            border-bottom: 1px solid $grayLighter;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
             input {
                 box-shadow: none!important;
                 border: 0!important;
+                flex-grow: 1;
             }
         }
+        .input-term__icon {
+            flex-grow: 0;
+            opacity: 0.5;
+            pointer-events: none;
+            margin: 0 4px;
+        }
+
         .main-list {
             background-color: $white;
             max-height: 215px;
@@ -929,15 +938,22 @@ $bottom-bar-item-border-color-active: transparent;
         }
         .levelup {
             display: flex;
-            padding: 4.5px;
-            margin-bottom: -1px;
-            border-bottom: 1px solid $grayLighter;
+            align-items: center;
+            padding: 5px;
+            margin-bottom: 1px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            
+            
             background-color: $white;
             i.backlink {
                 flex-grow: 0;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
                 cursor: pointer;
-                height: 27px;
-                margin-top: 0;
+                height: 28px;
+                margin: 0 4px;
             }
             button {
                 flex-grow: 1;
@@ -955,6 +971,9 @@ $bottom-bar-item-border-color-active: transparent;
             }
         }
         .item-list { position: static; max-height: 215px; }
+        .nested-indicator {
+            margin-right: -10px !important;
+        }
     }
 }
 
@@ -964,35 +983,52 @@ $bottom-bar-item-border-color-active: transparent;
     vertical-align: top;
     text-align: left;
     li {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         position: relative;
         font-size: 12px;
         color: inherit;
         background-color: rgba(123,123,123,0.2);
         margin-right: 3px;
         margin-bottom: 3px;
-        padding: 3px 12px;
+        padding: 0 12px;
+        height: 24px;
         border-radius: 12px;
         @include transition(color .2s);
         i {
-            position: absolute;
-            margin-left: -7px;
+            display: block;
+            height: 18px;
+            width: 18px;
+            padding: 1px;
+            margin-left: 4px;
+            margin-right: -8px;
             color: $sd-text;
-            left: 50%;
-            top: 5px;
-            @include opacity(0);
+            opacity: 0.25;
+            background-color: rgba(255, 255, 255, 0.75);
+            border-radius: 50%;
             @include transition(opacity .2s);
         }
         &:not([disabled]):not([data-disabled]) {
             cursor: pointer;
 
             &:hover {
-                text-align: center;
                 background-color: rgba(123,123,123,0.3);
-                color: rgba(123,123,123,0.5);
                 i {
-                    @include opacity(85);
+                    opacity: 1;
                 }
+            }
+            &:active {
+                background-color: rgba(94, 169, 200, 0.35);
+                i {
+                    color: $sd-blue;
+                }
+            }
+        }
+        &[disabled], &[data-disabled], &:disabled {
+            background-color: rgba(123,123,123,0.2);
+            pointer-events: none;
+            i {
+                display: none !important;
             }
         }
         
