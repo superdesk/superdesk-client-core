@@ -4,6 +4,7 @@ import thunkMiddleware from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 
 // Types
+import {ISuperdesk} from 'superdesk-api';
 import {IExtraArguments} from './types';
 import {ISetState} from './sets/types';
 import {IStorageDestinationState} from './storageDestinations/types';
@@ -16,7 +17,6 @@ import {storageDestinationReducer} from './storageDestinations/reducers';
 import {assetsReducer} from './assets/reducers';
 import {workspaceReducer} from './workspace/reducers';
 
-import {ISuperdesk} from 'superdesk-api';
 import {getSamsAPIs} from '../api';
 
 export const rootReducer = combineReducers({

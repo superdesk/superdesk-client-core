@@ -1,11 +1,18 @@
+// External Modules
 import * as React from 'react';
+
+// Types
 import {IAttachment} from 'superdesk-api';
 import {IAssetItem} from '../../interfaces';
-import {Modal, ModalBody, ModalFooter, ModalHeader} from '../../ui/modal';
-import {Button} from 'superdesk-ui-framework/react';
 import {superdeskApi, samsApi} from '../../apis';
+
+// UI
+import {Button} from 'superdesk-ui-framework/react';
+import {Modal, ModalBody, ModalFooter, ModalHeader} from '../../ui/modal';
 import {PageLayout} from '../../containers/PageLayout';
 import {AssetEditorPanel} from '../assets/assetEditorPanel';
+
+// Utils
 import {showModalConnectedToStore} from '../../utils/ui';
 
 interface IProps {

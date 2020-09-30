@@ -6,6 +6,7 @@ import {Dispatch} from 'redux';
 // Types
 import {CONTENT_PANEL_STATE} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {editSet, onManageSetsModalClosed} from '../../store/sets/actions';
@@ -23,8 +24,9 @@ import {
 import {SetListPanel} from './setListPanel';
 import {SetPreviewPanel} from './setPreviewPanel';
 import {SetEditorPanel} from './setEditorPanel';
+
+// Utils
 import {showModalConnectedToStore} from '../../utils/ui';
-import {superdeskApi} from '../../apis';
 
 interface IProps {
     closeModal(): void;

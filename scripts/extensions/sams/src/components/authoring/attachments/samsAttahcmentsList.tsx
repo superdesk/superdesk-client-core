@@ -1,7 +1,11 @@
+// External Modules
 import * as React from 'react';
 
+// Types
 import {IAttachment} from 'superdesk-api';
 
+// UI
+import {Icon, Label, IconButton} from 'superdesk-ui-framework/react';
 import {
     ListItem,
     ListItemColumn,
@@ -9,8 +13,7 @@ import {
     ListItemActionMenu,
 } from '../../../ui/list';
 
-import {Icon, Label, IconButton} from 'superdesk-ui-framework/react';
-
+// Utils
 import {getIconTypeFromMimetype, getHumanReadableFileSize} from '../../../utils/ui';
 
 interface IProps {

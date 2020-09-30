@@ -4,13 +4,13 @@ import {Provider} from 'react-redux';
 
 // Types
 import {ASSET_SORT_FIELD, ASSET_STATE} from '../interfaces';
+import {superdeskApi} from '../apis';
 
 // Redux Actions & Selectors
 import {getStore} from '../store';
 
 // UI
 import {Label} from 'superdesk-ui-framework/react';
-import {superdeskApi} from '../apis';
 
 export function showModalConnectedToStore<T = any>(
     Component: React.ComponentType<{closeModal(): void} & any>,

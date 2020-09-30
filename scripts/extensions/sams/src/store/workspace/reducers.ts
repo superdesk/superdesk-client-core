@@ -1,3 +1,4 @@
+// Types
 import {
     IWorkspaceActionTypes,
     IWorkspaceState,

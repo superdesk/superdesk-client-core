@@ -1,28 +1,28 @@
 // External modules
 import * as React from 'react';
 import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
 
 // Types
 import {ASSET_STATE, IAssetItem, ISetItem, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {samsApi, superdeskApi} from '../../apis';
+
+// Redux Actions & Selectors
+import {getActiveSets} from '../../store/sets/selectors';
+import {queryAssetsFromCurrentSearch} from '../../store/assets/actions';
+
+// UI
 import {
     FileUploadModal,
     IContentPanelProps,
     IUploadFileListItemProps,
     IUploadItem,
 } from '../../containers/FileUploadModal';
-
-// Redux Actions & Selectors
-import {getActiveSets} from '../../store/sets/selectors';
-
-// UI
 import {IModalSize} from '../../ui/modal';
 import {showModalConnectedToStore} from '../../utils/ui';
 import {AssetGridItem} from './assetGridItem';
 import {AssetEditorPanel} from './assetEditorPanel';
-import {samsApi, superdeskApi} from '../../apis';
-import {queryAssetsFromCurrentSearch} from '../../store/assets/actions';
-import {Dispatch} from 'redux';
 
 export interface IUploadAssetModalProps {
     closeModal(): void;

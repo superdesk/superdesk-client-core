@@ -1,5 +1,7 @@
 // External Modules
 import * as React from 'react';
+import {Dispatch} from 'redux';
+import {connect} from 'react-redux';
 
 // Types
 import {
@@ -11,6 +13,15 @@ import {
     SET_STATE,
     SORT_ORDER,
 } from '../interfaces';
+import {superdeskApi} from '../apis';
+import {IApplicationState} from '../store';
+
+// Redux Actions & Selectors
+import {isFilterPanelOpen} from '../store/workspace/selectors';
+import {getAssetListStyle, getAssetListTotal, getAssetSearchParams, getAssetSetFilter} from '../store/assets/selectors';
+import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
+import {toggleFilterPanelState} from '../store/workspace/actions';
+import {toggleAssetListStyle, updateAssetSearchParamsAndListItems} from '../store/assets/actions';
 
 // UI
 import {
@@ -30,15 +41,6 @@ import {AssetTypeFilterButtons} from './assets/assetTypeFilterButtons';
 
 // Utils
 import {getAssetListSortFieldText} from '../utils/ui';
-import {superdeskApi} from '../apis';
-import {IApplicationState} from '../store';
-import {Dispatch} from 'redux';
-import {isFilterPanelOpen} from '../store/workspace/selectors';
-import {getAssetListStyle, getAssetListTotal, getAssetSearchParams, getAssetSetFilter} from '../store/assets/selectors';
-import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
-import {toggleFilterPanelState} from '../store/workspace/actions';
-import {toggleAssetListStyle, updateAssetSearchParamsAndListItems} from '../store/assets/actions';
-import {connect} from 'react-redux';
 
 interface IProps {
     filterPanelOpen: boolean;

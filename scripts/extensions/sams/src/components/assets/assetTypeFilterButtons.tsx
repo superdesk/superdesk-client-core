@@ -6,6 +6,7 @@ import {Dispatch} from 'redux';
 // Types
 import {ASSET_TYPE_FILTER, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {updateAssetSearchParamsAndListItems} from '../../store/assets/actions';
@@ -13,7 +14,6 @@ import {getAssetSearchParams} from '../../store/assets/selectors';
 
 // UI
 import {CheckButtonGroup, RadioButton} from 'superdesk-ui-framework/react';
-import {superdeskApi} from '../../apis';
 
 interface IProps {
     searchParams: IAssetSearchParams;

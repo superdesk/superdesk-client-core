@@ -3,13 +3,13 @@ import * as React from 'react';
 
 // Types
 import {IAssetItem, ASSET_LIST_STYLE} from '../../interfaces';
+import {superdeskApi} from '../../apis';
 
 // UI
 import {PanelInfo, ListItemGroup} from '../../ui';
 import {GridList} from '../../ui/grid/GridList';
 import {AssetGridItem} from './assetGridItem';
 import {AssetListItem} from './assetListItem';
-import {superdeskApi} from '../../apis';
 
 interface IProps {
     assets: Array<IAssetItem>;

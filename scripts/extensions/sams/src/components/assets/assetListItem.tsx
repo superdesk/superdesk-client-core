@@ -3,6 +3,7 @@ import * as React from 'react';
 
 // Types
 import {IAssetItem} from '../../interfaces';
+import {superdeskApi} from '../../apis';
 
 // UI
 import {Icon} from 'superdesk-ui-framework/react';
@@ -15,7 +16,6 @@ import {
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
-import {superdeskApi} from '../../apis';
 
 interface IProps {
     asset: IAssetItem;

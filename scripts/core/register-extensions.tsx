@@ -3,7 +3,6 @@ import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation'
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
-import {CC} from 'core/ui/configurable-ui-components';
 
 export function registerExtensions(
     extensions: Array<IExtension>,

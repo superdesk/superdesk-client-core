@@ -1,25 +1,30 @@
 /* eslint-disable react/no-multi-comp */
 
+// External Modules
 import * as React from 'react';
 import {Dispatch, Store} from 'redux';
 import classNames from 'classnames';
+import {connect} from 'react-redux';
 
+// Types
 import {IAttachment, IAttachmentsWidgetProps} from 'superdesk-api';
 import {ASSET_STATE, IAssetItem, IAssetSearchParams, ISetItem} from '../interfaces';
+import {IApplicationState} from '../store';
+import {superdeskApi} from '../apis';
 
-import {SamsAttachmentsList} from '../components/authoring/attachments/samsAttahcmentsList';
-import {IUploadAssetModalProps, showUploadAssetModal} from '../components/assets/uploadAssetModal';
-import {showEditAttachmentModal} from '../components/attachments/editAttachmentModal';
+// Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
-import {SamsApp} from './samsApp';
-import {superdeskApi} from '../apis';
-import {Button} from 'superdesk-ui-framework/react';
-import {showSelectAssetModal} from '../components/assets/selectAssetModal';
-import {connect} from 'react-redux';
 import {setAssetSearchParams} from '../store/assets/actions';
 import {getActiveSets} from '../store/sets/selectors';
-import {IApplicationState} from '../store';
+
+// UI
+import {Button} from 'superdesk-ui-framework/react';
+import {SamsApp} from './samsApp';
+import {SamsAttachmentsList} from '../components/authoring/attachments/samsAttahcmentsList';
+import {showEditAttachmentModal} from '../components/attachments/editAttachmentModal';
+import {IUploadAssetModalProps, showUploadAssetModal} from '../components/assets/uploadAssetModal';
+import {showSelectAssetModal} from '../components/assets/selectAssetModal';
 
 export class SamsAttachmentsWidget<T extends IAttachmentsWidgetProps> extends React.PureComponent<T> {
     onStoreInit(store: Store) {

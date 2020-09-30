@@ -6,6 +6,7 @@ import {Dispatch} from 'redux';
 // Types
 import {ISetItem, IStorageDestinationItem} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {confirmBeforeDeletingSet, editSet, previewSet} from '../../store/sets/actions';
@@ -14,7 +15,6 @@ import {getStorageDestinationsById} from '../../store/storageDestinations/select
 
 // UI
 import {SetListGroup} from './setListGroup';
-import {superdeskApi} from '../../apis';
 
 interface IProps {
     storageDestinations: Dictionary<string, IStorageDestinationItem>;

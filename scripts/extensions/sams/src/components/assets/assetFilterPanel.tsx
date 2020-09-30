@@ -3,6 +3,7 @@ import * as React from 'react';
 
 // Types
 import {ASSET_STATE, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
+import {superdeskApi} from '../../apis';
 
 // UI
 import {
@@ -22,7 +23,6 @@ import {
     PanelFooter,
     PanelHeader,
 } from '../../ui';
-import {superdeskApi} from '../../apis';
 
 interface IProps {
     searchParams: IAssetSearchParams;

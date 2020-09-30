@@ -1,8 +1,14 @@
+// External Modules
 import * as React from 'react';
-import {Modal, ModalBody, ModalHeader} from '../../ui/modal';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
+
+// Types
+import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
+import {IApplicationState} from '../../store';
 import {superdeskApi} from '../../apis';
-import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
-import {PageLayout} from '../../containers/PageLayout';
+
+// Redux Actions & Selectors
 import {
     getAssetListStyle,
     getAssetListTotal,
@@ -10,8 +16,6 @@ import {
     getAssetSearchResults,
     getAssetSetFilter,
 } from '../../store/assets/selectors';
-import {connect} from 'react-redux';
-import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
 import {
     loadNextAssetsPage,
     queryAssetsFromCurrentSearch,
@@ -19,12 +23,17 @@ import {
 } from '../../store/assets/actions';
 import {isFilterPanelOpen} from '../../store/workspace/selectors';
 import {toggleFilterPanelState} from '../../store/workspace/actions';
+
+// UI
+import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Modal, ModalBody, ModalHeader} from '../../ui/modal';
+import {PageLayout} from '../../containers/PageLayout';
 import {WorkspaceSubnav} from '../workspaceSubnav';
 import {AssetFilterPanel} from './assetFilterPanel';
 import {AssetListPanel} from './assetListPanel';
+
+// Utils
 import {showModalConnectedToStore} from '../../utils/ui';
-import {Dispatch} from 'redux';
-import {IApplicationState} from '../../store';
 
 interface IProps {
     closeModal(): void;

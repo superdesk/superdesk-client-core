@@ -6,6 +6,7 @@ import {Dispatch} from 'redux';
 // Types
 import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {editSet, confirmBeforeDeletingSet, closeSetContentPanel} from '../../store/sets/actions';
@@ -15,7 +16,6 @@ import {getSelectedSet, getSelectedSetStorageDestination} from '../../store/sets
 import {FormLabel} from 'superdesk-ui-framework/react';
 import {PanelContent, PanelContentBlock, PanelContentBlockInner, PanelHeader, PanelTools, Text} from '../../ui';
 import {IPanelTools} from '../../ui/PanelTools';
-import {superdeskApi} from '../../apis';
 
 interface IProps {
     set?: ISetItem;

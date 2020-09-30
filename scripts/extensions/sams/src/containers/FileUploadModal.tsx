@@ -1,13 +1,15 @@
 // External modules
 import * as React from 'react';
 
+// Types
+import {superdeskApi} from '../apis';
+
 // UI
 import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {PanelContent, PanelContentBlock, PanelContentBlockInner} from '../ui';
 import {IModalSize, Modal, ModalHeader} from '../ui/modal';
 import {GridList} from '../ui/grid/GridList';
 import {PageLayout} from './PageLayout';
-import {superdeskApi} from '../apis';
 
 export interface IUploadItem {
     id: string;

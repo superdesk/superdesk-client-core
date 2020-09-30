@@ -7,6 +7,7 @@ import {cloneDeep} from 'lodash';
 // Types
 import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {createSet, previewSet, updateSet, closeSetContentPanel} from '../../store/sets/actions';
@@ -28,7 +29,6 @@ import {
 
 // Utils
 import {hasItemChanged} from '../../utils/api';
-import {superdeskApi} from '../../apis';
 
 interface IProps {
     original?: ISetItem;

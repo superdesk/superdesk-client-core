@@ -5,7 +5,6 @@ import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
-// import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {getArticleSchemaMiddleware} from '..';
 import {isPublished} from 'apps/archive/utils';
@@ -1247,8 +1246,6 @@ export function AuthoringDirective(
                 notify: notify,
                 superdesk: superdesk,
             })));
-
-            // $scope.store.dispatch(initAttachments($scope.item));
 
             $scope.$watch('item.profile', (profile) => {
                 content.setupAuthoring(profile, $scope, $scope.item)

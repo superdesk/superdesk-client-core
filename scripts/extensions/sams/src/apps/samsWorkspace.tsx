@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 
 // Types
 import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION} from '../interfaces';
+import {IApplicationState} from '../store';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -23,16 +24,15 @@ import {
     getAssetSearchParams,
     getAssetSearchResults,
 } from '../store/assets/selectors';
+import {toggleFilterPanelState} from '../store/workspace/actions';
+import {isFilterPanelOpen} from '../store/workspace/selectors';
 
 // UI
+import {SamsApp} from './samsApp';
 import {PageLayout} from '../containers/PageLayout';
 import {AssetListPanel} from '../components/assets/assetListPanel';
 import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
-import {IApplicationState} from '../store';
-import {toggleFilterPanelState} from '../store/workspace/actions';
-import {isFilterPanelOpen} from '../store/workspace/selectors';
-import {SamsApp} from './samsApp';
 
 interface IProps {
     assets: Array<IAssetItem>;

@@ -3,7 +3,6 @@ import {
     IAttachment,
     IBaseRestApiResponse,
     IRestApiResponse,
-    ISuperdesk,
 } from 'superdesk-api';
 
 export enum SET_STATE {
@@ -135,5 +134,3 @@ export interface ISamsAPI {
         ): Promise<[IAttachment, IAssetItem]>;
     };
 }
-
-export type IConnectComponentToSuperdesk<T> = (superdesk: ISuperdesk) => React.ComponentType<T>;

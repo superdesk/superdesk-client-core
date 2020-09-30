@@ -4,14 +4,18 @@ import {connect} from 'react-redux';
 
 // Types
 import {ASSET_STATE, IAssetItem, ISetItem} from '../../interfaces';
+import {IApplicationState} from '../../store';
+import {superdeskApi} from '../../apis';
+
+// Redux Actions & Selectors
+import {getActiveSets} from '../../store/sets/selectors';
 
 // UI
 import {FormLabel, Input, Option, Select} from 'superdesk-ui-framework/react';
 import {FormGroup, FormRow} from '../../ui';
+
+// Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
-import {getActiveSets} from '../../store/sets/selectors';
-import {superdeskApi} from '../../apis';
-import {IApplicationState} from '../../store';
 
 interface IProps {
     asset: Partial<IAssetItem>;
