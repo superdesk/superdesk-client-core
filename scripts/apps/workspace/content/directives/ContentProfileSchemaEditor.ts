@@ -93,6 +93,7 @@ const EDITOR3_RICH_FORMATTING_OPTIONS = [
     'table',
     'formatting marks',
     'remove format',
+    'remove all format',
     'annotation',
     'comments',
     'suggestions',
