@@ -64,8 +64,6 @@ const FORMATTING_OPTIONS = [
     'italic',
     'bold',
     'table',
-    'tab',
-    'tab as spaces',
 ];
 
 const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS = [
