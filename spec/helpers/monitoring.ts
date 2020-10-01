@@ -367,9 +367,10 @@ class Monitoring {
         };
 
         this.tabAction = function(tab) {
-            const btn = element.all(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]')).first();
+            const btn = element(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]'));
 
             browser.wait(ECE.elementToBeClickable(btn), 2000);
+
             btn.click();
         };
 
