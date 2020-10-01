@@ -882,6 +882,18 @@ $authoring-toolbar-spacing: 10px;
 // -------------------------------------------------
 // END Authoring Header
 
+.input-term {
+    display: flex;
+    align-items: center;
+    .input-term__icon {
+        flex-grow: 0;
+        opacity: 0.5;
+        pointer-events: none;
+        margin: 0 4px;
+        display: none;
+    }
+}
+
 .dropdown-terms {
     width: auto !important;
     .dropdown__toggle {
@@ -910,8 +922,6 @@ $authoring-toolbar-spacing: 10px;
         padding: 0;
         .input-term {
             padding: 8px;
-            display: flex;
-            align-items: center;
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
             input {
                 box-shadow: none!important;
@@ -920,10 +930,7 @@ $authoring-toolbar-spacing: 10px;
             }
         }
         .input-term__icon {
-            flex-grow: 0;
-            opacity: 0.5;
-            pointer-events: none;
-            margin: 0 4px;
+            display: block;
         }
 
         .main-list {
