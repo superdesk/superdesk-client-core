@@ -10,17 +10,24 @@ import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, ISetItem, LIST_ACTION}
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
+import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
+
 import {
     loadNextAssetsPage,
     queryAssetsFromCurrentSearch,
     setAssetListStyle,
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
+    previewAsset,
+    closeAssetPreviewPanel,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
     getAssetListTotal,
     getAssetSearchParams,
+    getSelectedAssetId,
+    getSelectedAsset,
+    getSetNameForSelectedAsset,
     getAssetSearchResults, getAssetSetFilter,
 } from '../store/assets/selectors';
 
@@ -29,8 +36,8 @@ import {PageLayout} from '../containers/PageLayout';
 import {getAssetListPanel} from '../components/assets/assetListPanel';
 import {getAssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {getWorkspaceSubnavComponent} from '../components/workspaceSubnav';
+import {getShowAssetPreviewPanelComponent} from '../components/assets/assetPreviewPanel';
 import {IApplicationState} from '../store';
-import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 
 export function onStoreInit(store: Store): Promise<any> {
     return Promise.all([
@@ -53,7 +60,12 @@ interface IProps {
     activeSets: Array<ISetItem>;
     disabledSets: Array<ISetItem>;
     currentSet?: ISetItem;
+    asset?: IAssetItem;
+    setName?: string;
+    selectedAssetId: string | undefined;
     loadNextPage(): Promise<void>;
+    previewAsset(asset: IAssetItem): void;
+    onPanelClosed(): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(): void;
     updateAssetSearchParamsAndListItems(
@@ -75,6 +87,9 @@ const mapStateToProps = (state: IApplicationState) => ({
     activeSets: getActiveSets(state),
     disabledSets: getDisabledSets(state),
     currentSet: getAssetSetFilter(state),
+    selectedAssetId: getSelectedAssetId(state),
+    asset: getSelectedAsset(state),
+    setName: getSetNameForSelectedAsset(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -88,12 +103,15 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
                 listAction,
             ),
         ),
+    previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
+    onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
 
 export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
     const AssetListPanel = getAssetListPanel(superdesk);
     const AssetFilterPanel = getAssetFilterPanel(superdesk);
     const WorkspaceSubnav = getWorkspaceSubnavComponent(superdesk);
+    const ShowAssetPreview = getShowAssetPreviewPanelComponent(superdesk);
 
     class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         constructor(props: IProps) {
@@ -169,12 +187,22 @@ export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
                                 />
                             )
                         )}
+                        rightPanelOpen={this.props.selectedAssetId !== undefined}
+                        rightPanel={(
+                            <ShowAssetPreview
+                                asset={this.props.asset}
+                                setName={this.props.setName}
+                                onPanelClosed={this.props.onPanelClosed}
+                            />
+                        )}
                         mainClassName="sd-padding--2"
                         mainProps={{onScroll: this.onScroll}}
                         main={(
                             <AssetListPanel
                                 assets={this.props.assets}
                                 listStyle={this.props.listStyle}
+                                previewAsset={this.props.previewAsset}
+                                selectedAssetId={this.props.selectedAssetId}
                             />
                         )}
                     />

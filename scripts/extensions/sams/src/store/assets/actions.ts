@@ -12,6 +12,8 @@ import {
     IAssetActionTypes,
     RECEIVE_ASSETS,
     SET_ASSET_SEARCH_PARAMS,
+    MANAGE_ASSETS_PREVIEW,
+    MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
 } from './types';
 
 // Redux Selectors
@@ -41,6 +43,19 @@ export function setAssetListStyle(style: ASSET_LIST_STYLE): IAssetActionTypes {
     return {
         type: ASSET_SET_LIST_STYLE,
         payload: style,
+    };
+}
+
+export function previewAsset(asset: string): IAssetActionTypes {
+    return {
+        type: MANAGE_ASSETS_PREVIEW,
+        payload: asset,
+    };
+}
+
+export function closeAssetPreviewPanel(): IAssetActionTypes {
+    return {
+        type: MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
     };
 }
 

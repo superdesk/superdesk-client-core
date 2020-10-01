@@ -14,6 +14,8 @@ import {getAssetListItemComponent} from './assetListItem';
 interface IProps {
     assets: Array<IAssetItem>;
     listStyle: ASSET_LIST_STYLE;
+    previewAsset(asset: IAssetItem): void;
+    selectedAssetId: string | undefined;
 }
 
 export function getAssetListPanel(superdesk: ISuperdesk) {
@@ -24,6 +26,15 @@ export function getAssetListPanel(superdesk: ISuperdesk) {
     const AssetListItem = getAssetListItemComponent(superdesk);
 
     return class AssetListPanelComponent extends React.PureComponent<IProps> {
+        constructor(props: IProps) {
+            super(props);
+            this.onItemClick = this.onItemClick.bind(this);
+        }
+
+        onItemClick(asset: IAssetItem) {
+            this.props.previewAsset(asset);
+        }
+
         render() {
             if (this.props.assets.length === 0) {
                 return (
@@ -37,7 +48,12 @@ export function getAssetListPanel(superdesk: ISuperdesk) {
                 return (
                     <GridList className="sd-margin--1">
                         {this.props.assets.map((asset) => (
-                            <AssetGridItem key={asset._id} asset={asset} />
+                            <AssetGridItem
+                                key={asset._id}
+                                asset={asset}
+                                onClick={this.onItemClick}
+                                selected={asset._id === this.props.selectedAssetId}
+                            />
                         ))}
                     </GridList>
                 );
@@ -45,7 +61,12 @@ export function getAssetListPanel(superdesk: ISuperdesk) {
                 return (
                     <ListItemGroup>
                         {this.props.assets.map((asset) => (
-                            <AssetListItem key={asset._id} asset={asset} />
+                            <AssetListItem
+                                key={asset._id}
+                                asset={asset}
+                                onClick={this.onItemClick}
+                                selected={asset._id === this.props.selectedAssetId}
+                            />
                         ))}
                     </ListItemGroup>
                 );

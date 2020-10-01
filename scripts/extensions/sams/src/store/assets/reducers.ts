@@ -15,6 +15,8 @@ import {
     IAssetState,
     RECEIVE_ASSETS,
     SET_ASSET_SEARCH_PARAMS,
+    MANAGE_ASSETS_PREVIEW,
+    MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
 } from './types';
 
 const initialState: IAssetState = {
@@ -28,6 +30,7 @@ const initialState: IAssetState = {
     listItemIds: [],
     searchResultTotal: 0,
     listStyle: ASSET_LIST_STYLE.GRID,
+    selectedAssetId: undefined,
 };
 
 export function assetsReducer(
@@ -39,6 +42,16 @@ export function assetsReducer(
         return receiveAssets(state, action.payload);
     case SET_ASSET_SEARCH_PARAMS:
         return updateSearchParams(state, action.payload);
+    case MANAGE_ASSETS_PREVIEW:
+        return {
+            ...state,
+            selectedAssetId: action.payload,
+        };
+    case MANAGE_ASSETS_CLOSE_PREVIEW_PANEL:
+        return {
+            ...state,
+            selectedAssetId: undefined,
+        };
     case ASSET_SET_LIST_STYLE:
         return {
             ...state,
