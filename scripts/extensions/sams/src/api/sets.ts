@@ -1,14 +1,15 @@
 // Types
-import {ISuperdesk, IRestApiResponse} from 'superdesk-api';
+import {IRestApiResponse} from 'superdesk-api';
 import {ISetItem} from '../interfaces';
+import {superdeskApi} from '../apis';
 
 const RESOURCE = 'sams/sets';
 
-export function getAllSets(superdesk: ISuperdesk): Promise<Array<ISetItem>> {
-    const {gettext} = superdesk.localization;
-    const {notify} = superdesk.ui;
+export function getAllSets(): Promise<Array<ISetItem>> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
 
-    return superdesk.dataApi.query<ISetItem>(
+    return superdeskApi.dataApi.query<ISetItem>(
         RESOURCE,
         1,
         {field: 'name', direction: 'ascending'},
@@ -24,11 +25,11 @@ export function getAllSets(superdesk: ISuperdesk): Promise<Array<ISetItem>> {
         });
 }
 
-export function createSet(superdesk: ISuperdesk, item: Partial<ISetItem>): Promise<ISetItem> {
-    const {gettext} = superdesk.localization;
-    const {notify} = superdesk.ui;
+export function createSet(item: Partial<ISetItem>): Promise<ISetItem> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
 
-    return superdesk.dataApi.create<ISetItem>(RESOURCE, item)
+    return superdeskApi.dataApi.create<ISetItem>(RESOURCE, item)
         .then((set: ISetItem) => {
             notify.success(gettext('Set created successfully'));
 
@@ -41,11 +42,11 @@ export function createSet(superdesk: ISuperdesk, item: Partial<ISetItem>): Promi
         });
 }
 
-export function updateSet(superdesk: ISuperdesk, original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem> {
-    const {gettext} = superdesk.localization;
-    const {notify} = superdesk.ui;
+export function updateSet(original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
 
-    return superdesk.dataApi.patch<ISetItem>(RESOURCE, original, updates)
+    return superdeskApi.dataApi.patch<ISetItem>(RESOURCE, original, updates)
         .then((set: ISetItem) => {
             notify.success(gettext('Set updated successfully'));
 
@@ -58,11 +59,11 @@ export function updateSet(superdesk: ISuperdesk, original: ISetItem, updates: Pa
         });
 }
 
-export function deleteSet(superdesk: ISuperdesk, item: ISetItem): Promise<void> {
-    const {gettext} = superdesk.localization;
-    const {notify} = superdesk.ui;
+export function deleteSet(item: ISetItem): Promise<void> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
 
-    return superdesk.dataApi.delete<ISetItem>(RESOURCE, item)
+    return superdeskApi.dataApi.delete<ISetItem>(RESOURCE, item)
         .then(() => {
             notify.success(gettext('Set deleted successfully'));
         })

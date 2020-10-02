@@ -59,7 +59,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     createSet: (set: ISetItem) => dispatch<any>(createSet(set)),
 });
 
-class SetEditorPanelComponent extends React.Component<IProps, IState> {
+export class SetEditorPanelComponent extends React.Component<IProps, IState> {
     onChange: Dictionary<string, (value: any) => void>;
 
     constructor(props: IProps) {

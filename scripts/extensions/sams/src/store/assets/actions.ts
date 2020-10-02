@@ -2,7 +2,15 @@
 import {IRestApiResponse} from 'superdesk-api';
 import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
 import {IThunkAction} from '../types';
-import {ASSET_SET_LIST_STYLE, IAssetActionTypes, RECEIVE_ASSETS, SET_ASSET_SEARCH_PARAMS} from './types';
+import {
+    ASSET_SET_LIST_STYLE,
+    IAssetActionTypes,
+    RECEIVE_ASSETS,
+    SET_ASSET_SEARCH_PARAMS,
+    MANAGE_ASSETS_PREVIEW,
+    MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
+} from './types';
+import {samsApi} from '../../apis';
 
 // Redux Selectors
 import {getAssetListStyle, getAssetSearchParams} from './selectors';
@@ -46,9 +54,22 @@ export function toggleAssetListStyle(): IThunkAction<void> {
     };
 }
 
+export function previewAsset(asset: string): IAssetActionTypes {
+    return {
+        type: MANAGE_ASSETS_PREVIEW,
+        payload: asset,
+    };
+}
+
+export function closeAssetPreviewPanel(): IAssetActionTypes {
+    return {
+        type: MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
+    };
+}
+
 export function queryAssets(params: IAssetSearchParams, listAction?: LIST_ACTION): IThunkAction<void> {
-    return (dispatch, getState, {api}) => {
-        return api.assets.query(params, getAssetListStyle(getState()))
+    return (dispatch, getState) => {
+        return samsApi.assets.query(params, getAssetListStyle(getState()))
             .then((response) => {
                 dispatch(
                     receiveAssets(
@@ -81,7 +102,7 @@ export function updateAssetSearchParamsAndListItems(
     params: Partial<IAssetSearchParams>,
     listAction?: LIST_ACTION,
 ): IThunkAction<void> {
-    return (dispatch, getState, {api}) => {
+    return (dispatch, getState) => {
         if (listAction === LIST_ACTION.REPLACE) {
             dispatch(setAssetSearchParams({
                 ...params,
@@ -91,15 +112,15 @@ export function updateAssetSearchParamsAndListItems(
             dispatch(setAssetSearchParams(params));
         }
 
-        api.assets.setSearchUrlParams(getAssetSearchParams(getState()));
+        samsApi.assets.setSearchUrlParams(getAssetSearchParams(getState()));
 
         return dispatch(queryAssetsFromCurrentSearch(listAction));
     };
 }
 
 export function updateAssetSearchParamsAndListItemsFromURL(listAction?: LIST_ACTION): IThunkAction<void> {
-    return (dispatch, _getState, {api}) => {
-        const searchParams = api.assets.getSearchUrlParams();
+    return (dispatch, _getState) => {
+        const searchParams = samsApi.assets.getSearchUrlParams();
 
         if (Object.keys(searchParams).length > 0) {
             dispatch(setAssetSearchParams(searchParams));

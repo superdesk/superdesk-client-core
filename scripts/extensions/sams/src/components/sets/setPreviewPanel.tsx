@@ -38,7 +38,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     onClose: () => dispatch(closeSetContentPanel()),
 });
 
-class SetPreviewPanelComponent extends React.PureComponent<IProps> {
+export class SetPreviewPanelComponent extends React.PureComponent<IProps> {
+
     render() {
         const {gettext} = superdeskApi.localization;
         const {set, storageDestination, count} = this.props;

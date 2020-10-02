@@ -3,9 +3,7 @@ import {ISuperdesk, IExtension} from 'superdesk-api';
 
 // Apps
 import {SamsWorkspaceApp} from './apps/samsWorkspace';
-import {getSamsAPIs} from './api';
-
-import {superdeskApi, samsApi} from './apis';
+import {superdeskApi} from './apis';
 
 const extension: IExtension = {
     id: 'sams',
@@ -13,7 +11,6 @@ const extension: IExtension = {
         const {gettext} = superdesk.localization;
 
         Object.assign(superdeskApi, superdesk);
-        Object.assign(samsApi, getSamsAPIs(superdesk));
 
         return Promise.resolve({
             contributions: {

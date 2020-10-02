@@ -3,18 +3,15 @@ import * as React from 'react';
 import {Provider} from 'react-redux';
 import {Store} from 'redux';
 
-// Types
-import {superdeskApi} from '../apis';
-
 // Utils
 import {getStoreSingleton, getStore, unsetStore} from '../store';
 
-interface IState {
-    ready: boolean;
-}
-
 interface IProps {
     onStoreInit?(store: Store): Promise<any>;
+}
+
+interface IState {
+    ready: boolean;
 }
 
 export class SamsApp extends React.Component<IProps, IState> {
@@ -28,7 +25,7 @@ export class SamsApp extends React.Component<IProps, IState> {
 
     componentDidMount() {
         const storeExists = getStore() !== undefined;
-        const store = getStoreSingleton(superdeskApi);
+        const store = getStoreSingleton();
 
         ((this.props.onStoreInit == null || storeExists) ?
             Promise.resolve() :

@@ -2,11 +2,11 @@
 import * as React from 'react';
 
 // Types
-import {IAssetItem} from '../../interfaces';
+import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Icon} from 'superdesk-ui-framework/react';
+import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
 import {
     ListItem,
     ListItemBorder,
@@ -16,19 +16,43 @@ import {
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
+import {getDropdownItemsForActions} from '../../utils/assets';
 
 interface IProps {
     asset: IAssetItem;
     selected: boolean;
-    onClick?(): void;
+    onClick(asset: IAssetItem): void;
+    actions?: Array<IAssetCallback>;
 }
 
 export class AssetListItem extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
+        this.onItemClick = this.onItemClick.bind(this);
+        this.onPreviewSelect = this.onPreviewSelect.bind(this);
+    }
+
+    onItemClick(event: React.MouseEvent<HTMLDivElement>) {
+        if (this.props.onClick) {
+            event.stopPropagation();
+            this.props.onClick(this.props.asset);
+        }
+    }
+
+    onPreviewSelect() {
+        this.props.onClick(this.props.asset);
+    }
+
+    stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
+    }
+
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
+        const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
 
         return (
-            <ListItem shadow={1} selected={this.props.selected} onClick={this.props.onClick}>
+            <ListItem onClick={this.onItemClick} selected={this.props.selected} shadow={1}>
                 <ListItemBorder />
                 <ListItemColumn>
                     <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
@@ -61,6 +85,28 @@ export class AssetListItem extends React.PureComponent<IProps> {
                         </span>
                     </ListItemRow>
                 </ListItemColumn>
+                {actions.length === 0 ? null : (
+                    <div className="sd-list-item__action-menu" onClick={this.stopClickPropagation}>
+                        <Dropdown
+                            align = "right"
+                            append = {true}
+                            items={[{
+                                type: 'group',
+                                label: gettext('Actions'),
+                                items: [
+                                    'divider',
+                                    ...actions,
+                                ],
+                            }]}
+                        >
+                            <IconButton
+                                ariaValue="dropdown-more-options"
+                                icon="dots-vertical"
+                                onClick={() => false}
+                            />
+                        </Dropdown>
+                    </div>
+                )}
             </ListItem>
         );
     }

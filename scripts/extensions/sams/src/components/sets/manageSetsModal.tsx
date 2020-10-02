@@ -50,7 +50,7 @@ export function showManageSetsModal() {
     return showModalConnectedToStore(ManageSetsModal);
 }
 
-class ManageSetsModalComponent extends React.PureComponent<IProps> {
+export class ManageSetsModalComponent extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
 

@@ -2,16 +2,17 @@
 import {sortBy} from 'lodash';
 
 // Types
-import {ISuperdesk, IRestApiResponse} from 'superdesk-api';
+import {IRestApiResponse} from 'superdesk-api';
 import {IStorageDestinationItem} from '../interfaces';
+import {superdeskApi} from '../apis';
 
 const RESOURCE = 'sams/destinations';
 
-export function getAllStorageDestinations(superdesk: ISuperdesk): Promise<Array<IStorageDestinationItem>> {
-    const {gettext} = superdesk.localization;
-    const {notify} = superdesk.ui;
+export function getAllStorageDestinations(): Promise<Array<IStorageDestinationItem>> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
 
-    return superdesk.dataApi.query(
+    return superdeskApi.dataApi.query(
         RESOURCE,
         1,
         {field: 'name', direction: 'ascending'},

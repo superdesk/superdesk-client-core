@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     deleteSet: (set: ISetItem) => dispatch<any>(confirmBeforeDeletingSet(set)),
 });
 
-class SetListPanelComponent extends React.PureComponent<IProps> {
+export class SetListPanelComponent extends React.PureComponent<IProps> {
     render() {
         const {gettext} = superdeskApi.localization;
 

@@ -2,11 +2,11 @@
 import * as React from 'react';
 
 // Types
-import {IAssetItem} from '../../interfaces';
+import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Icon} from 'superdesk-ui-framework/react';
+import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
 import {GridItem} from '../../ui/grid/GridItem';
 import {GridItemFooter} from '../../ui/grid/GridItemFooter';
 import {GridItemFooterBlock} from '../../ui/grid/GridItemFooterBlock';
@@ -20,15 +20,17 @@ import {
     getIconTypeFromMimetype,
     getAssetStateLabel,
 } from '../../utils/ui';
+import {getDropdownItemsForActions} from '../../utils/assets';
 
 interface IProps {
     asset: Partial<IAssetItem>;
-    onClick?(): void;
+    onClick(asset: Partial<IAssetItem>): void;
     remove?(): void;
     selected?: boolean;
     uploadProgress?: number;
     error?: boolean;
     toggleSelected?(): void;
+    actions?: Array<IAssetCallback>;
 }
 
 export class AssetGridItem extends React.PureComponent<IProps> {
@@ -36,6 +38,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         super(props);
 
         this.onRemove = this.onRemove.bind(this);
+        this.onItemClick = this.onItemClick.bind(this);
     }
 
     onRemove(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -46,15 +49,24 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         }
     }
 
+    onItemClick() {
+        this.props.onClick(this.props.asset);
+    }
+
+    stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
+    }
+
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
         const typeIcon = getIconTypeFromMimetype(
             this.props.asset?.mimetype ?? 'text',
         );
+        const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
 
         return (
             <GridItem
-                onClick={this.props.onClick}
+                onClick={this.onItemClick}
                 selected={this.props.selected}
             >
                 <GridItemThumb
@@ -107,6 +119,30 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                                 className="sd-grid-item__type-icn sd-grid-item__footer-block-item"
                             />
                             {getAssetStateLabel(this.props.asset.state)}
+                        </GridItemFooterBlock>
+                    )}
+                    {actions.length === 0 ? null : (
+                        <GridItemFooterBlock singleR={true}>
+                            <div className="sd-grid-item__actions" onClick={this.stopClickPropagation}>
+                                <Dropdown
+                                    align = "right"
+                                    append = {true}
+                                    items={[{
+                                        type: 'group',
+                                        label: gettext('Actions'),
+                                        items: [
+                                            'divider',
+                                            ...actions,
+                                        ],
+                                    }]}
+                                >
+                                    <IconButton
+                                        ariaValue="dropdown-more-options"
+                                        icon="dots-vertical"
+                                        onClick={() => false}
+                                    />
+                                </Dropdown>
+                            </div>
                         </GridItemFooterBlock>
                     )}
                 </GridItemFooter>

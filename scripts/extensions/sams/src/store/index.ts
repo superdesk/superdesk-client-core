@@ -1,11 +1,10 @@
 // External Modules
-import {createStore, applyMiddleware, compose, Reducer, Store, combineReducers} from 'redux';
+import {createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 
 // Types
-import {ISuperdesk} from 'superdesk-api';
-import {IExtraArguments} from './types';
+import {Reducer, Store, Middleware} from 'redux';
 import {ISetState} from './sets/types';
 import {IStorageDestinationState} from './storageDestinations/types';
 import {IAssetState} from './assets/types';
@@ -56,13 +55,12 @@ let store: Store | undefined;
 let storeReferenceCount: number = 0;
 
 export function createReduxStore(
-    extraArguments: IExtraArguments,
     initialState: {},
     reducer: Reducer,
 ): Store {
-    const middlewares = [
+    const middlewares: Array<Middleware> = [
         crashReporter,
-        thunkMiddleware.withExtraArgument(extraArguments),
+        thunkMiddleware,
     ];
 
     if (process.env.NODE_ENV !== 'production') {
@@ -80,16 +78,9 @@ export function createReduxStore(
     return store;
 }
 
-export function getStoreSingleton(superdesk: ISuperdesk): Store {
+export function getStoreSingleton(): Store {
     if (store === undefined) {
-        store = createReduxStore(
-            {
-                superdesk: superdesk,
-                api: getSamsAPIs(superdesk),
-            },
-            {},
-            rootReducer,
-        );
+        store = createReduxStore({}, rootReducer);
     }
 
     storeReferenceCount += 1;

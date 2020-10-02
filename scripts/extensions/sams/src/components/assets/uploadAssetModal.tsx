@@ -61,7 +61,7 @@ export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>) {
     );
 }
 
-class UploadAssetModalComponent extends React.Component<IUploadAssetModalProps, IState> {
+export class UploadAssetModalComponent extends React.Component<IUploadAssetModalProps, IState> {
     onFieldChanged: Dictionary<string, (field: keyof IAssetItem, value: string) => void>;
 
     constructor(props: IUploadAssetModalProps) {

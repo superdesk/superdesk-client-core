@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 // Types
-import {IAssetItem, ASSET_LIST_STYLE} from '../../interfaces';
+import {IAssetItem, ASSET_LIST_STYLE, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
@@ -15,10 +15,20 @@ interface IProps {
     assets: Array<IAssetItem>;
     listStyle: ASSET_LIST_STYLE;
     selectedItems?: Array<string>;
-    toggleAssetSelected?(asset: IAssetItem): void;
+    actions?: Array<IAssetCallback>;
+    onItemClicked(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
+        this.onItemClick = this.onItemClick.bind(this);
+    }
+
+    onItemClick(asset: IAssetItem) {
+        this.props.onItemClicked(asset);
+    }
+
     render() {
         const {gettext} = superdeskApi.localization;
         const {assertNever} = superdeskApi.helpers;
@@ -39,14 +49,12 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             key={asset._id}
                             asset={asset}
                             selected={this.props.selectedItems?.includes(asset._id) ?? false}
-                            toggleSelected={this.props.toggleAssetSelected == null ?
+                            toggleSelected={this.props.onItemClicked == null ?
                                 undefined :
-                                () => this.props.toggleAssetSelected && this.props.toggleAssetSelected(asset)
+                                this.onItemClick
                             }
-                            onClick={this.props.toggleAssetSelected == null ?
-                                undefined :
-                                () => this.props.toggleAssetSelected && this.props.toggleAssetSelected(asset)
-                            }
+                            onClick={this.onItemClick}
+                            actions={this.props.actions}
                         />
                     ))}
                 </GridList>
@@ -59,10 +67,8 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             key={asset._id}
                             asset={asset}
                             selected={this.props.selectedItems?.includes(asset._id) ?? false}
-                            onClick={this.props.toggleAssetSelected == null ?
-                                undefined :
-                                () => this.props.toggleAssetSelected && this.props.toggleAssetSelected(asset)
-                            }
+                            onClick={this.onItemClick}
+                            actions={this.props.actions}
                         />
                     ))}
                 </ListItemGroup>

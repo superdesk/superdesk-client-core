@@ -143,7 +143,6 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
         const {gettext} = superdeskApi.localization;
         const {config} = superdeskApi.instance;
         const {numberToString} = superdeskApi.helpers;
-
         const sizeOptions = this.getSizeOptions();
         const sizeValues = [1, 5, 10, 25, 50, 100, 250, 500, 1024];
 

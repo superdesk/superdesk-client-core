@@ -226,7 +226,6 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                     if (requestsCompleted === this.state.items.length) {
                         if (failed === false) {
                             setTimeout(this.props.closeModal, 500);
-                            // this.props.closeModal();
                             notify.success(
                                 gettextPlural(
                                     requestsCompleted,

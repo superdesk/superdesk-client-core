@@ -33,6 +33,10 @@ export function getAssetListTotal(state: IApplicationState): number {
     return state.assets.searchResultTotal;
 }
 
+export function getSelectedAssetId(state: IApplicationState): string | undefined {
+    return state.assets.selectedAssetId;
+}
+
 export const getAssetSetFilter = createSelector<
     IApplicationState,
     Dictionary<string, ISetItem>,
@@ -58,5 +62,33 @@ export const getAssetSearchResults = createSelector<
         assetIds.map(
             (assetId) => assets[assetId],
         )
+    ),
+);
+
+export const getSelectedAsset = createSelector<
+    IApplicationState,
+    Dictionary<string, IAssetItem>,
+    string | undefined,
+    IAssetItem | undefined
+>(
+    [getAssets, getSelectedAssetId],
+    (assets: Dictionary<string, IAssetItem>, assetId?: string) => (
+        assetId != null ?
+            assets?.[assetId] :
+            undefined
+    ),
+);
+
+export const getSetNameForSelectedAsset = createSelector<
+    IApplicationState,
+    Dictionary<string, ISetItem>,
+    IAssetItem | undefined,
+    string | undefined
+>(
+    [getSetsById, getSelectedAsset],
+    (sets: Dictionary<string, ISetItem>, asset?: IAssetItem) => (
+        asset != null ?
+            sets?.[asset.set_id].name :
+            undefined
     ),
 );

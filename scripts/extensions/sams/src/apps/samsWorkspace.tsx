@@ -6,14 +6,19 @@ import {Dispatch, Store} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION} from '../interfaces';
+import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION, ISetItem, ASSET_ACTIONS} from '../interfaces';
 import {IApplicationState} from '../store';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
+import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
+
 import {
+    closeAssetPreviewPanel,
     loadNextAssetsPage,
+    previewAsset,
+    queryAssetsFromCurrentSearch,
     setAssetListStyle,
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
@@ -23,6 +28,10 @@ import {
     getAssetListTotal,
     getAssetSearchParams,
     getAssetSearchResults,
+    getAssetSetFilter,
+    getSelectedAsset,
+    getSelectedAssetId,
+    getSetNameForSelectedAsset,
 } from '../store/assets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
 import {isFilterPanelOpen} from '../store/workspace/selectors';
@@ -33,13 +42,23 @@ import {PageLayout} from '../containers/PageLayout';
 import {AssetListPanel} from '../components/assets/assetListPanel';
 import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
+import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
+
 
 interface IProps {
     assets: Array<IAssetItem>;
     totalAssets: number;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
+    activeSets: Array<ISetItem>;
+    disabledSets: Array<ISetItem>;
+    currentSet?: ISetItem;
+    asset?: IAssetItem;
+    setName?: string;
+    selectedAssetId: string | undefined;
     loadNextPage(): Promise<void>;
+    previewAsset(asset: IAssetItem): void;
+    onPanelClosed(): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
@@ -59,6 +78,12 @@ const mapStateToProps = (state: IApplicationState) => ({
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
     filterPanelOpen: isFilterPanelOpen(state),
+    activeSets: getActiveSets(state),
+    disabledSets: getDisabledSets(state),
+    currentSet: getAssetSetFilter(state),
+    selectedAssetId: getSelectedAssetId(state),
+    asset: getSelectedAsset(state),
+    setName: getSetNameForSelectedAsset(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -72,6 +97,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
             ),
         ),
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
+    previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
+    onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
 
 export class SamsWorkspaceApp extends React.PureComponent {
@@ -97,7 +124,7 @@ export class SamsWorkspaceApp extends React.PureComponent {
     }
 }
 
-class SamsWorkspaceComponent extends React.Component<IProps, IState> {
+export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -106,6 +133,7 @@ class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         };
 
         this.onScroll = this.onScroll.bind(this);
+        this.toggleListStyle = this.toggleListStyle.bind(this);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -121,6 +149,15 @@ class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                 this.setState({nextPageLoading: false});
             });
         }
+    }
+
+    toggleListStyle() {
+        this.props.setListStyle(
+            this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                ASSET_LIST_STYLE.LIST :
+                ASSET_LIST_STYLE.GRID,
+        );
+        this.props.queryAssetsFromCurrentSearch();
     }
 
     render() {
@@ -142,12 +179,26 @@ class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             />
                         )
                     )}
+                    rightPanelOpen={this.props.selectedAssetId !== undefined}
+                    rightPanel={(
+                        <AssetPreviewPanel
+                            asset={this.props.asset}
+                            setName={this.props.setName}
+                            onPanelClosed={this.props.onPanelClosed}
+                        />
+                    )}
                     mainClassName="sd-padding--2"
                     mainProps={{onScroll: this.onScroll}}
                     main={(
                         <AssetListPanel
                             assets={this.props.assets}
                             listStyle={this.props.listStyle}
+                            selectedAssetId={this.props.selectedAssetId}
+                            onItemClicked={this.props.previewAsset}
+                            actions={[{
+                                action: ASSET_ACTIONS.PREVIEW,
+                                onSelect: this.props.previewAsset,
+                            }]}
                         />
                     )}
                 />

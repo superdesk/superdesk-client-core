@@ -4,7 +4,6 @@ import {
     IElasticRangeQueryParams,
     IRestApiResponse,
     IRootElasticQuery,
-    ISuperdesk,
 } from 'superdesk-api';
 import {
     ASSET_LIST_STYLE,
@@ -15,20 +14,19 @@ import {
     IAssetSearchParams,
     SORT_ORDER,
 } from '../interfaces';
+import {superdeskApi} from '../apis';
 
 // Utils
 import {getApiErrorMessage, isSamsApiError} from '../utils/api';
-import {superdeskApi} from '../apis';
 
 const RESOURCE = 'sams/assets';
 const COUNT_RESOURCE = `${RESOURCE}/counts/`;
 
 export function uploadAsset(
-    superdesk: ISuperdesk,
     data: FormData,
     onProgress: (event: ProgressEvent) => void,
 ): Promise<IAssetItem> {
-    return superdesk.dataApi.uploadFileWithProgress(
+    return superdeskApi.dataApi.uploadFileWithProgress(
         '/' + RESOURCE,
         data,
         onProgress,
@@ -38,10 +36,10 @@ export function uploadAsset(
 const GRID_PAGE_SIZE = 25;
 const LIST_PAGE_SIZE = 50;
 
-function querySearchString(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function querySearchString(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.textSearch != null && params.textSearch.length > 0) {
         source.query.bool.must.push(
-            superdesk.elasticsearch.queryString({
+            superdeskApi.elasticsearch.queryString({
                 query: params.textSearch,
                 lenient: true,
                 default_operator: 'OR',
@@ -50,10 +48,10 @@ function querySearchString(superdesk: ISuperdesk, source: IRootElasticQuery, par
     }
 }
 
-function querySetId(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function querySetId(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.setId != null && params.setId.length > 0) {
         source.query.bool.must.push(
-            superdesk.elasticsearch.term({
+            superdeskApi.elasticsearch.term({
                 field: 'set_id',
                 value: params.setId,
             }),
@@ -61,10 +59,10 @@ function querySetId(superdesk: ISuperdesk, source: IRootElasticQuery, params: IA
     }
 }
 
-function querySetIds(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function querySetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.setIds != null && params.setIds.length > 0) {
         source.query.bool.must.push(
-            superdesk.elasticsearch.terms({
+            superdeskApi.elasticsearch.terms({
                 field: 'set_id',
                 value: params.setIds,
             }),
@@ -72,10 +70,10 @@ function querySetIds(superdesk: ISuperdesk, source: IRootElasticQuery, params: I
     }
 }
 
-function queryState(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function queryState(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.state != null) {
         source.query.bool.must.push(
-            superdesk.elasticsearch.term({
+            superdeskApi.elasticsearch.term({
                 field: 'state',
                 value: params.state,
             }),
@@ -83,10 +81,10 @@ function queryState(superdesk: ISuperdesk, source: IRootElasticQuery, params: IA
     }
 }
 
-function queryStates(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function queryStates(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.states != null && params.states.length > 0) {
         source.query.bool.must.push(
-            superdesk.elasticsearch.terms({
+            superdeskApi.elasticsearch.terms({
                 field: 'state',
                 value: params.states,
             }),
@@ -94,10 +92,10 @@ function queryStates(superdesk: ISuperdesk, source: IRootElasticQuery, params: I
     }
 }
 
-function queryName(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function queryName(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.name != null && params.name.length > 0) {
         source.query.bool.must.push(
-            superdesk.elasticsearch.queryString({
+            superdeskApi.elasticsearch.queryString({
                 query: `name:(${params.name})`,
                 lenient: false,
                 default_operator: 'OR',
@@ -106,10 +104,10 @@ function queryName(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAs
     }
 }
 
-function queryFilename(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function queryFilename(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.filename != null && params.filename.length > 0) {
         source.query.bool.must.push(
-            superdesk.elasticsearch.queryString({
+            superdeskApi.elasticsearch.queryString({
                 query: `filename:(${params.filename})`,
                 lenient: false,
                 default_operator: 'OR',
@@ -118,10 +116,10 @@ function queryFilename(superdesk: ISuperdesk, source: IRootElasticQuery, params:
     }
 }
 
-function queryDescription(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function queryDescription(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.description != null && params.description.length > 0) {
         source.query.bool.must.push(
-            superdesk.elasticsearch.queryString({
+            superdeskApi.elasticsearch.queryString({
                 query: `description:(${params.description})`,
                 lenient: false,
                 default_operator: 'OR',
@@ -130,10 +128,10 @@ function queryDescription(superdesk: ISuperdesk, source: IRootElasticQuery, para
     }
 }
 
-function queryMimetypes(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function queryMimetypes(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.mimetypes === ASSET_TYPE_FILTER.DOCUMENTS) {
         source.query.bool.must_not.push(
-            superdesk.elasticsearch.queryString({
+            superdeskApi.elasticsearch.queryString({
                 query: 'mimetype:(image\\/*) OR mimetype:(video\\/*) OR mimetype:(audio\\/*)',
                 lenient: true,
                 default_operator: 'OR',
@@ -156,7 +154,7 @@ function queryMimetypes(superdesk: ISuperdesk, source: IRootElasticQuery, params
 
         if (typeString != null) {
             source.query.bool.must.push(
-                superdesk.elasticsearch.queryString({
+                superdeskApi.elasticsearch.queryString({
                     query: `mimetype:(${typeString}\\/*)`,
                     lenient: true,
                     default_operator: 'OR',
@@ -166,7 +164,7 @@ function queryMimetypes(superdesk: ISuperdesk, source: IRootElasticQuery, params
     }
 }
 
-function queryDateRange(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function queryDateRange(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.dateFrom != null || params.dateTo != null) {
         const args: IElasticRangeQueryParams = {field: '_updated'};
 
@@ -179,12 +177,12 @@ function queryDateRange(superdesk: ISuperdesk, source: IRootElasticQuery, params
         }
 
         source.query.bool.must.push(
-            superdesk.elasticsearch.range(args),
+            superdeskApi.elasticsearch.range(args),
         );
     }
 }
 
-function querySizeRange(superdesk: ISuperdesk, source: IRootElasticQuery, params: IAssetSearchParams) {
+function querySizeRange(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.sizeFrom != null || params.sizeTo != null) {
         const args: IElasticRangeQueryParams = {field: 'length'};
 
@@ -197,18 +195,17 @@ function querySizeRange(superdesk: ISuperdesk, source: IRootElasticQuery, params
         }
 
         source.query.bool.must.push(
-            superdesk.elasticsearch.range(args),
+            superdeskApi.elasticsearch.range(args),
         );
     }
 }
 
 export function queryAssets(
-    superdesk: ISuperdesk,
     params: IAssetSearchParams,
     listStyle: ASSET_LIST_STYLE,
 ): Promise<IRestApiResponse<IAssetItem>> {
-    const {gettext} = superdesk.localization;
-    const {notify} = superdesk.ui;
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
     const pageSize = listStyle === ASSET_LIST_STYLE.GRID ?
         GRID_PAGE_SIZE :
         LIST_PAGE_SIZE;
@@ -236,7 +233,7 @@ export function queryAssets(
         queryStates,
         queryDateRange,
         querySizeRange,
-    ].forEach((func) => func(superdesk, source, params));
+    ].forEach((func) => func(source, params));
 
     if (source.query.bool.must.length === 0) {
         delete source.query.bool.must;
@@ -253,7 +250,7 @@ export function queryAssets(
     const sortOrder = params.sortOrder === SORT_ORDER.ASCENDING ? 1 : 0;
     const sort = `[("${params.sortField}",${sortOrder})]`;
 
-    return superdesk.dataApi.queryRaw<IRestApiResponse<IAssetItem>>(
+    return superdeskApi.dataApi.queryRaw<IRestApiResponse<IAssetItem>>(
         RESOURCE,
         {
             source: JSON.stringify(source),
@@ -262,7 +259,7 @@ export function queryAssets(
     )
         .catch((error: any) => {
             if (isSamsApiError(error)) {
-                notify.error(getApiErrorMessage(superdesk, error));
+                notify.error(getApiErrorMessage(error));
             } else {
                 notify.error(gettext('Failed to query Assets'));
             }
@@ -271,9 +268,9 @@ export function queryAssets(
         });
 }
 
-export function getAssetSearchUrlParams(superdesk: ISuperdesk): Partial<IAssetSearchParams> {
-    const {urlParams} = superdesk.browser.location;
-    const {filterUndefined} = superdesk.helpers;
+export function getAssetSearchUrlParams(): Partial<IAssetSearchParams> {
+    const {urlParams} = superdeskApi.browser.location;
+    const {filterUndefined} = superdeskApi.helpers;
 
     return filterUndefined<IAssetSearchParams>({
         textSearch: urlParams.getString('textSearch'),
@@ -292,8 +289,8 @@ export function getAssetSearchUrlParams(superdesk: ISuperdesk): Partial<IAssetSe
     });
 }
 
-export function setAssetSearchUrlParams(superdesk: ISuperdesk, params: Partial<IAssetSearchParams>) {
-    const {urlParams} = superdesk.browser.location;
+export function setAssetSearchUrlParams(params: Partial<IAssetSearchParams>) {
+    const {urlParams} = superdeskApi.browser.location;
 
     urlParams.setString('textSearch', params.textSearch);
     urlParams.setString('setId', params.setId);
@@ -310,11 +307,11 @@ export function setAssetSearchUrlParams(superdesk: ISuperdesk, params: Partial<I
     urlParams.setString('sortOrder', params.sortOrder);
 }
 
-export function getAssetsCount(superdesk: ISuperdesk, set_ids: Array<string>): Promise<Dictionary<string, number>> {
-    const {gettext} = superdesk.localization;
-    const {notify} = superdesk.ui;
+export function getAssetsCount(set_ids: Array<string>): Promise<Dictionary<string, number>> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
 
-    return superdesk.dataApi.queryRaw<Dictionary<string, number>>(
+    return superdeskApi.dataApi.queryRaw<Dictionary<string, number>>(
         COUNT_RESOURCE + JSON.stringify(set_ids),
     )
         .catch((error: any) => {
@@ -323,11 +320,11 @@ export function getAssetsCount(superdesk: ISuperdesk, set_ids: Array<string>): P
         });
 }
 
-export function getAssetById(superdesk: ISuperdesk, assetId: string): Promise<IAssetItem> {
-    const {gettext} = superdesk.localization;
-    const {notify} = superdesk.ui;
+export function getAssetById(assetId: string): Promise<IAssetItem> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
 
-    return superdesk.dataApi.findOne<IAssetItem>(RESOURCE, assetId)
+    return superdeskApi.dataApi.findOne<IAssetItem>(RESOURCE, assetId)
         .catch((error: any) => {
             notify.error(gettext(`Failed to get asset "${assetId}"`));
             return Promise.reject(error);

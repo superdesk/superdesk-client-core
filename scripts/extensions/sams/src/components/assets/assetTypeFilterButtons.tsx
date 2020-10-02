@@ -33,7 +33,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     ),
 });
 
-class AssetTypeFilterButtonsComponent extends React.PureComponent<IProps> {
+export class AssetTypeFilterButtonsComponent extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
 
