@@ -11,6 +11,7 @@ import {getContentStateFromHtml} from './html/from-html';
 import {changeEditorState, setReadOnly} from './actions';
 
 import ng from 'core/services/ng';
+import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 /**
  * @ngdoc directive
  * @module superdesk.core.editor3
@@ -43,7 +44,7 @@ class Editor3Directive {
     pathToValue: any;
     scrollContainer: any;
     refreshTrigger: any;
-    editorFormat?: Array<string>;
+    editorFormat?: RICH_FORMATTING_OPTION[];
     cleanPastedHtml?: boolean;
 
     constructor() {

@@ -24,6 +24,7 @@ import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links';
 import {getSpellcheckingDecorator, ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
+import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
@@ -39,7 +40,7 @@ interface IProps {
     singleLine?: any;
     tabindex?: any;
     showTitle?: any;
-    editorFormat?: any;
+    editorFormat?: RICH_FORMATTING_OPTION[];
     item?: any;
     svc?: any;
     trim?: any;
@@ -57,7 +58,7 @@ export interface IEditorStore {
     tabindex: any;
     showTitle: any;
     activeCell: any;
-    editorFormat: any;
+    editorFormat: RICH_FORMATTING_OPTION[];
     onChangeValue: any;
     item: any;
     spellchecking: {

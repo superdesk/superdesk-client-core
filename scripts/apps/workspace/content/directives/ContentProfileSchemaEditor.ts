@@ -38,7 +38,34 @@ const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
     body_footer: true,
 });
 
-const FORMATTING_OPTIONS = [
+export type FORMATTING_OPTION =
+    'h1' |
+    'h2' |
+    'h3' |
+    'h4' |
+    'h5' |
+    'h6' |
+    'justifyLeft' |
+    'justifyCenter' |
+    'justifyRight' |
+    'justifyFull' |
+    'outdent' |
+    'indent' |
+    'unordered list' |
+    'ordered list' |
+    'pre' |
+    'quote' |
+    'media' |
+    'link' |
+    'superscript' |
+    'subscript' |
+    'strikethrough' |
+    'underline' |
+    'italic' |
+    'bold' |
+    'table'
+
+const FORMATTING_OPTIONS: FORMATTING_OPTION[] = [
     'h1',
     'h2',
     'h3',
@@ -66,12 +93,47 @@ const FORMATTING_OPTIONS = [
     'table',
 ];
 
-const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS = [
+export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase'
+
+const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS: PLAINTEXT_FORMATTING_OPTION[] = [
     'uppercase',
     'lowercase',
 ];
 
-const EDITOR3_RICH_FORMATTING_OPTIONS = [
+export type RICH_FORMATTING_OPTION =
+    PLAINTEXT_FORMATTING_OPTION |
+    'h1' |
+    'h2' |
+    'h3' |
+    'h4' |
+    'h5' |
+    'h6' |
+    'ordered list' |
+    'unordered list' |
+    'quote' |
+    'media' |
+    'link' |
+    'embed' |
+    'underline' |
+    'italic' |
+    'bold' |
+    'table' |
+    'formatting marks' |
+    'remove format' |
+    'remove all format' |
+    'annotation' |
+    'comments' |
+    'suggestions' |
+    'pre' |
+    'superscript' |
+    'subscript' |
+    'strikethrough' |
+    'tab' |
+    'tab as spaces' |
+    'undo' |
+    'redo'
+
+const EDITOR3_RICH_FORMATTING_OPTIONS: RICH_FORMATTING_OPTION[] = [
     ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
     'h1',
     'h2',

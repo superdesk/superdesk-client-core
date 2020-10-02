@@ -202,7 +202,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                         precondition={!suggestingMode}
                         key="remove-format-button"
                         iconName="clear-format"
-                        tooltip={gettext('Remove format')}
+                        tooltip={gettext('Remove formatting')}
                     />
                 )}
                 {has('remove all format') && (
@@ -211,7 +211,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                         precondition={!suggestingMode}
                         key="remove-all-format-button"
                         iconName="clear-all"
-                        tooltip={gettext('Remove all format')}
+                        tooltip={gettext('Remove all formatting')}
                     />
                 )}
                 {has('comments') && (
