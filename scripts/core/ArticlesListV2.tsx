@@ -9,6 +9,7 @@ import {LazyLoader} from './itemList/LazyLoader';
 import {ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
 import {dataApi} from './helpers/CrudManager';
+import {IScope} from 'angular';
 
 interface IState {
     initialized: boolean;
@@ -142,8 +143,16 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             view={undefined}
                             selected={undefined}
                             swimlane={false}
-                            scopeApply={(fn) => fn()}
-                            scopeApplyAsync={(fn) => fn()}
+                            scopeApply={(fn) => {
+                                const $rootScope: IScope = ng.get('$rootScope');
+
+                                $rootScope.$apply(fn);
+                            }}
+                            scopeApplyAsync={(fn) => {
+                                const $rootScope: IScope = ng.get('$rootScope');
+
+                                $rootScope.$applyAsync(fn);
+                            }}
                         />
                     );
                 }}
