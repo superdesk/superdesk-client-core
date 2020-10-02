@@ -164,6 +164,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                 onSearch={(fullTextSearch) => {
                                     this.setState({fullTextSearch});
                                 }}
+                                initialValue={this.state.fullTextSearch}
                             />
                         </div>
                     </div>

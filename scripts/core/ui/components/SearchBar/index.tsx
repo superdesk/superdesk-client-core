@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {DebounceInput} from 'react-debounce-input';
 import {uniqueId} from 'lodash';
 import './style.scss';
@@ -11,6 +10,7 @@ interface IProps {
     allowCollapsed?: boolean;
     timeout?: number;
     minLength?: number;
+    initialValue?: string;
 }
 
 interface IState {
@@ -30,7 +30,7 @@ export default class SearchBar extends React.Component<IProps, IState> {
         this.state = {
             // initialize state from props
             searchBarExtended: !props.allowCollapsed,
-            searchInputValue: '',
+            searchInputValue: props.initialValue ?? '',
             uniqueId: uniqueId('SearchBar'),
         };
 
