@@ -55,6 +55,23 @@ export enum LIST_ACTION {
     REPLACE = 'replace',
 }
 
+export enum ASSET_ACTIONS {
+    PREVIEW = 'preview',
+}
+
+export interface IAssetAction {
+    id: string;
+    label: string;
+    icon: string;
+    onSelect(asset: Partial<IAssetItem>): void;
+    isAllowed(asset: Partial<IAssetItem>): boolean;
+}
+
+export interface IAssetCallback {
+    action: ASSET_ACTIONS;
+    onSelect(asset: Partial<IAssetItem>): void;
+}
+
 export interface ISetItem extends IBaseRestApiResponse {
     name: string;
     state: SET_STATE;

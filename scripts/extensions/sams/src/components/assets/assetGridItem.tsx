@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 // Types
-import {IAssetItem} from '../../interfaces';
+import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
@@ -20,6 +20,7 @@ import {
     getIconTypeFromMimetype,
     getAssetStateLabel,
 } from '../../utils/ui';
+import {getDropdownItemsForActions} from '../../utils/assets';
 
 interface IProps {
     asset: Partial<IAssetItem>;
@@ -28,6 +29,7 @@ interface IProps {
     selected?: boolean;
     uploadProgress?: number;
     error?: boolean;
+    actions?: Array<IAssetCallback>;
 }
 
 export class AssetGridItem extends React.PureComponent<IProps> {
@@ -36,7 +38,6 @@ export class AssetGridItem extends React.PureComponent<IProps> {
 
         this.onRemove = this.onRemove.bind(this);
         this.onItemClick = this.onItemClick.bind(this);
-        this.onSelectPreview = this.onSelectPreview.bind(this);
     }
 
     onRemove(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -51,8 +52,8 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         this.props.onClick(this.props.asset);
     }
 
-    onSelectPreview() {
-        this.props.onClick(this.props.asset);
+    stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
     }
 
     render() {
@@ -60,6 +61,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         const typeIcon = getIconTypeFromMimetype(
             this.props.asset?.mimetype ?? 'text',
         );
+        const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
 
         return (
             <GridItem
@@ -116,31 +118,30 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                             {getAssetStateLabel(this.props.asset.state)}
                         </GridItemFooterBlock>
                     )}
-                    <div className="sd-grid-item__footer-block sd-grid-item__footer-block--single-r">
-                        <div className="sd-grid-item__actions">
-                            <Dropdown
-                                align = "right"
-                                append = {true}
-                                items={[
-                                    {
-                                        type: 'group', label: 'Actions', items: [
+                    {actions.length === 0 ? null : (
+                        <GridItemFooterBlock singleR={true}>
+                            <div className="sd-grid-item__actions" onClick={this.stopClickPropagation}>
+                                <Dropdown
+                                    align = "right"
+                                    append = {true}
+                                    items={[{
+                                        type: 'group',
+                                        label: gettext('Actions'),
+                                        items: [
                                             'divider',
-                                            {
-                                                label: 'Preview',
-                                                icon: 'eye-open',
-                                                onSelect: () => this.onSelectPreview,
-                                            },
+                                            ...actions,
                                         ],
                                     }]}
-                            >
-                                <IconButton
-                                    ariaValue="dropdown-more-options"
-                                    icon="dots-vertical"
-                                    onClick={() => false}
-                                />
-                            </Dropdown>
-                        </div>
-                    </div>
+                                >
+                                    <IconButton
+                                        ariaValue="dropdown-more-options"
+                                        icon="dots-vertical"
+                                        onClick={() => false}
+                                    />
+                                </Dropdown>
+                            </div>
+                        </GridItemFooterBlock>
+                    )}
                 </GridItemFooter>
             </GridItem>
         );

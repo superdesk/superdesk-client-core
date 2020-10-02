@@ -3,10 +3,9 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 
 // Types
-import {ISetItem, ASSET_STATE, IAssetItem} from '../../interfaces';
+import {ASSET_STATE, IAssetItem, ISetItem} from '../../interfaces';
 import {IApplicationState} from '../../store';
-import {IUploadItem, IUploadFileListItemProps, IContentPanelProps} from '../../containers/FileUploadModal';
-import {superdeskApi, samsApi} from '../../apis';
+import {samsApi, superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {getActiveSets} from '../../store/sets/selectors';
@@ -16,7 +15,12 @@ import {IModalSize} from '../../ui/modal';
 import {showModalConnectedToStore} from '../../utils/ui';
 import {AssetGridItem} from './assetGridItem';
 import {AssetEditorPanel} from './assetEditorPanel';
-import {FileUploadModal} from '../../containers/FileUploadModal';
+import {
+    FileUploadModal,
+    IContentPanelProps,
+    IUploadFileListItemProps,
+    IUploadItem,
+} from '../../containers/FileUploadModal';
 
 interface IProps {
     closeModal(): void;

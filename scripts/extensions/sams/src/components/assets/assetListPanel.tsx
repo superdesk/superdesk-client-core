@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 // Types
-import {IAssetItem, ASSET_LIST_STYLE} from '../../interfaces';
+import {IAssetItem, ASSET_LIST_STYLE, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
@@ -14,8 +14,9 @@ import {AssetListItem} from './assetListItem';
 interface IProps {
     assets: Array<IAssetItem>;
     listStyle: ASSET_LIST_STYLE;
-    previewAsset(asset: IAssetItem): void;
     selectedAssetId: string | undefined;
+    actions?: Array<IAssetCallback>;
+    onItemClicked(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
@@ -25,7 +26,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
     }
 
     onItemClick(asset: IAssetItem) {
-        this.props.previewAsset(asset);
+        this.props.onItemClicked(asset);
     }
 
     render() {
@@ -49,6 +50,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             asset={asset}
                             onClick={this.onItemClick}
                             selected={asset._id === this.props.selectedAssetId}
+                            actions={this.props.actions}
                         />
                     ))}
                 </GridList>
@@ -62,6 +64,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             asset={asset}
                             onClick={this.onItemClick}
                             selected={asset._id === this.props.selectedAssetId}
+                            actions={this.props.actions}
                         />
                     ))}
                 </ListItemGroup>

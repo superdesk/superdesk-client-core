@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 // Types
-import {IAssetItem} from '../../interfaces';
+import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
@@ -16,11 +16,13 @@ import {
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
+import {getDropdownItemsForActions} from '../../utils/assets';
 
 interface IProps {
     asset: IAssetItem;
     onClick(asset: IAssetItem): void;
     selected: boolean;
+    actions?: Array<IAssetCallback>;
 }
 
 export class AssetListItem extends React.PureComponent<IProps> {
@@ -41,8 +43,13 @@ export class AssetListItem extends React.PureComponent<IProps> {
         this.props.onClick(this.props.asset);
     }
 
+    stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
+    }
+
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
+        const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
 
         return (
             <ListItem onClick={this.onItemClick} selected={this.props.selected} shadow={1}>
@@ -78,29 +85,28 @@ export class AssetListItem extends React.PureComponent<IProps> {
                         </span>
                     </ListItemRow>
                 </ListItemColumn>
-                <div className="sd-list-item__action-menu">
-                    <Dropdown
-                        align = "right"
-                        append = {true}
-                        items={[
-                            {
-                                type: 'group', label: 'Actions', items: [
+                {actions.length === 0 ? null : (
+                    <div className="sd-list-item__action-menu" onClick={this.stopClickPropagation}>
+                        <Dropdown
+                            align = "right"
+                            append = {true}
+                            items={[{
+                                type: 'group',
+                                label: gettext('Actions'),
+                                items: [
                                     'divider',
-                                    {
-                                        label: 'Preview',
-                                        icon: 'eye-open',
-                                        onSelect: () => this.onPreviewSelect,
-                                    },
+                                    ...actions,
                                 ],
                             }]}
-                    >
-                        <IconButton
-                            ariaValue="dropdown-more-options"
-                            icon="dots-vertical"
-                            onClick={() => false}
-                        />
-                    </Dropdown>
-                </div>
+                        >
+                            <IconButton
+                                ariaValue="dropdown-more-options"
+                                icon="dots-vertical"
+                                onClick={() => false}
+                            />
+                        </Dropdown>
+                    </div>
+                )}
             </ListItem>
         );
     }

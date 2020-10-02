@@ -6,7 +6,7 @@ import {Dispatch, Store} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, ISetItem, LIST_ACTION} from '../interfaces';
+import {ASSET_ACTIONS, ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, ISetItem, LIST_ACTION} from '../interfaces';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -208,8 +208,12 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                         <AssetListPanel
                             assets={this.props.assets}
                             listStyle={this.props.listStyle}
-                            previewAsset={this.props.previewAsset}
                             selectedAssetId={this.props.selectedAssetId}
+                            onItemClicked={this.props.previewAsset}
+                            actions={[{
+                                action: ASSET_ACTIONS.PREVIEW,
+                                onSelect: this.props.previewAsset,
+                            }]}
                         />
                     )}
                 />
