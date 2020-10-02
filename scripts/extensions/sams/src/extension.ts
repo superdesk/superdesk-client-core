@@ -2,20 +2,23 @@
 import {ISuperdesk, IExtension} from 'superdesk-api';
 
 // Apps
-import {getSamsApp} from './apps/samsApp';
-import {getSamsWorkspaceComponent, onStoreInit} from './apps/samsWorkspace';
+import {SamsWorkspaceApp} from './apps/samsWorkspace';
+
+import {superdeskApi} from './apis';
 
 const extension: IExtension = {
     id: 'sams',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
+        Object.assign(superdeskApi, superdesk);
+
         return Promise.resolve({
             contributions: {
                 pages: [{
                     title: gettext('SAMS'),
                     url: '/workspace/sams',
-                    component: getSamsApp(superdesk, getSamsWorkspaceComponent, onStoreInit),
+                    component: SamsWorkspaceApp,
                     showTopMenu: true,
                     showSideMenu: true,
                     addToMainMenu: false,

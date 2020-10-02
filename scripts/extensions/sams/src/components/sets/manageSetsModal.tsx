@@ -4,9 +4,9 @@ import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
 
 // Types
-import {ISuperdesk} from 'superdesk-api';
 import {CONTENT_PANEL_STATE} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {editSet, onManageSetsModalClosed} from '../../store/sets/actions';
@@ -21,9 +21,9 @@ import {
     ModalFooter,
     ModalHeader,
 } from '../../ui';
-import {getSetListPanel} from './setListPanel';
-import {getSetPreviewPanel} from './setPreviewPanel';
-import {getSetEditorPanel} from './setEditorPanel';
+import {SetListPanel} from './setListPanel';
+import {SetPreviewPanel} from './setPreviewPanel';
+import {SetEditorPanel} from './setEditorPanel';
 import {showModalConnectedToStore} from '../../utils/ui';
 
 interface IProps {
@@ -44,101 +44,89 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     onModalClosed: () => dispatch(onManageSetsModalClosed()),
 });
 
-export function getShowManageSetsModalFunction(superdesk: ISuperdesk) {
-    const ManageSetsModal = getManageSetsModalComponent(superdesk);
-
-    return () => showModalConnectedToStore(
-        superdesk,
-        ManageSetsModal,
-    );
+export function showManageSetsModal() {
+    showModalConnectedToStore(ManageSetsModal);
 }
 
-export function getManageSetsModalComponent(superdesk: ISuperdesk) {
-    const {gettext} = superdesk.localization;
+export class ManageSetsModalComponent extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
 
-    const SetListPanel = getSetListPanel(superdesk);
-    const SetPreviewPanel = getSetPreviewPanel(superdesk);
-    const SetEditorPanel = getSetEditorPanel(superdesk);
-
-    class ManageSetsModalComponent extends React.PureComponent<IProps> {
-        constructor(props: IProps) {
-            super(props);
-
-            this.closeModal = this.closeModal.bind(this);
-        }
-
-        closeModal() {
-            this.props.onModalClosed();
-            this.props.closeModal();
-        }
-
-        getContentPanelComponent(): React.ComponentType<any> | null {
-            if (this.props.contentPanelState === CONTENT_PANEL_STATE.PREVIEW) {
-                return SetPreviewPanel;
-            } else if (
-                this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
-                this.props.contentPanelState === CONTENT_PANEL_STATE.EDIT
-            ) {
-                return SetEditorPanel;
-            }
-
-            return null;
-        }
-
-        render() {
-            const ContentPanel = this.getContentPanelComponent();
-            const addButtonDisabled = this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
-                this.props.contentPanelState === CONTENT_PANEL_STATE.EDIT;
-
-            return (
-                <Modal
-                    id="ManageSetsModal"
-                    size="x-large"
-                    closeModal={this.closeModal}
-                    closeOnEsc={true}
-                >
-                    <ModalHeader
-                        text={gettext('Manage Sets')}
-                        onClose={this.closeModal}
-                    />
-                    <ModalBody noPadding={true}>
-                        <PageLayout
-                            header={(
-                                <SubNav zIndex={2}>
-                                    <ButtonGroup align="right">
-                                        <Button
-                                            type="primary"
-                                            text={gettext('Add New')}
-                                            icon="plus-sign"
-                                            disabled={addButtonDisabled}
-                                            onClick={this.props.createSet}
-                                        />
-                                    </ButtonGroup>
-                                </SubNav>
-                            )}
-                            mainClassName="sd-padding--2"
-                            main={<SetListPanel />}
-                            rightPanelOpen={ContentPanel != null}
-                            rightPanel={ContentPanel == null ? (
-                                <div />
-                            ) : (
-                                <ContentPanel key={this.props.selectedSetId} />
-                            )}
-                        />
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button
-                            text={gettext('Close')}
-                            onClick={this.closeModal}
-                        />
-                    </ModalFooter>
-                </Modal>
-            );
-        }
+        this.closeModal = this.closeModal.bind(this);
     }
 
-    return connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    )(ManageSetsModalComponent);
+    closeModal() {
+        this.props.onModalClosed();
+        this.props.closeModal();
+    }
+
+    getContentPanelComponent(): React.ComponentType<any> | null {
+        if (this.props.contentPanelState === CONTENT_PANEL_STATE.PREVIEW) {
+            return SetPreviewPanel;
+        } else if (
+            this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
+            this.props.contentPanelState === CONTENT_PANEL_STATE.EDIT
+        ) {
+            return SetEditorPanel;
+        }
+
+        return null;
+    }
+
+    render() {
+        const {gettext} = superdeskApi.localization;
+        const ContentPanel = this.getContentPanelComponent();
+        const addButtonDisabled = this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
+            this.props.contentPanelState === CONTENT_PANEL_STATE.EDIT;
+
+        return (
+            <Modal
+                id="ManageSetsModal"
+                size="x-large"
+                closeModal={this.closeModal}
+                closeOnEsc={true}
+            >
+                <ModalHeader
+                    text={gettext('Manage Sets')}
+                    onClose={this.closeModal}
+                />
+                <ModalBody noPadding={true}>
+                    <PageLayout
+                        header={(
+                            <SubNav zIndex={2}>
+                                <ButtonGroup align="right">
+                                    <Button
+                                        type="primary"
+                                        text={gettext('Add New')}
+                                        icon="plus-sign"
+                                        disabled={addButtonDisabled}
+                                        onClick={this.props.createSet}
+                                    />
+                                </ButtonGroup>
+                            </SubNav>
+                        )}
+                        mainClassName="sd-padding--2"
+                        main={<SetListPanel />}
+                        rightPanelOpen={ContentPanel != null}
+                        rightPanel={ContentPanel == null ? (
+                            <div />
+                        ) : (
+                            <ContentPanel key={this.props.selectedSetId} />
+                        )}
+                    />
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        text={gettext('Close')}
+                        onClick={this.closeModal}
+                    />
+                </ModalFooter>
+            </Modal>
+        );
+    }
 }
+
+export const ManageSetsModal = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(ManageSetsModalComponent);

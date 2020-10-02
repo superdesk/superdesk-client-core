@@ -1,9 +1,9 @@
 // External Modules
 import * as React from 'react';
-import {ISuperdesk} from 'superdesk-api';
 
 // Types
-import {IAssetItem} from '../../interfaces';
+import {IAssetItem, IAssetCallback} from '../../interfaces';
+import {superdeskApi} from '../../apis';
 
 // UI
 import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
@@ -16,84 +16,88 @@ import {
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
+import {getDropdownItemsForActions} from '../../utils/assets';
 
 interface IProps {
     asset: IAssetItem;
     onClick(asset: IAssetItem): void;
     selected: boolean;
+    actions?: Array<IAssetCallback>;
 }
 
-export function getAssetListItemComponent(superdesk: ISuperdesk) {
-    const {gettext, longFormatDateTime} = superdesk.localization;
+export class AssetListItem extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
+        this.onItemClick = this.onItemClick.bind(this);
+        this.onPreviewSelect = this.onPreviewSelect.bind(this);
+    }
 
-    return class AssetListItem extends React.PureComponent<IProps> {
-        constructor(props: IProps) {
-            super(props);
-            this.onItemClick = this.onItemClick.bind(this);
-            this.onPreviewSelect = this.onPreviewSelect.bind(this);
-        }
-
-        onItemClick(event: React.MouseEvent<HTMLDivElement>) {
-            if (this.props.onClick) {
-                event.stopPropagation();
-                this.props.onClick(this.props.asset);
-            }
-        }
-
-        onPreviewSelect() {
+    onItemClick(event: React.MouseEvent<HTMLDivElement>) {
+        if (this.props.onClick) {
+            event.stopPropagation();
             this.props.onClick(this.props.asset);
         }
+    }
 
-        render() {
-            return (
-                <ListItem onClick={this.onItemClick} selected={this.props.selected} shadow={1}>
-                    <ListItemBorder />
-                    <ListItemColumn>
-                        <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
-                    </ListItemColumn>
-                    <ListItemColumn grow={true}>
-                        <ListItemRow>
-                            <span className="sd-overflow-ellipsis sd-list-item--element-grow">
-                                <span className="sd-list-item__slugline">
-                                    {this.props.asset.name}
-                                </span>
-                                {this.props.asset.description}
+    onPreviewSelect() {
+        this.props.onClick(this.props.asset);
+    }
+
+    stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
+        e.stopPropagation();
+    }
+
+    render() {
+        const {gettext, longFormatDateTime} = superdeskApi.localization;
+        const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
+
+        return (
+            <ListItem onClick={this.onItemClick} selected={this.props.selected} shadow={1}>
+                <ListItemBorder />
+                <ListItemColumn>
+                    <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
+                </ListItemColumn>
+                <ListItemColumn grow={true}>
+                    <ListItemRow>
+                        <span className="sd-overflow-ellipsis sd-list-item--element-grow">
+                            <span className="sd-list-item__slugline">
+                                {this.props.asset.name}
                             </span>
-                            <time>{longFormatDateTime(this.props.asset._updated)}</time>
-                        </ListItemRow>
-                        <ListItemRow>
-                            {getAssetStateLabel(superdesk, this.props.asset.state)}
-                            <span className="sd-overflow-ellipsis">
-                                <span className="sd-list-item__text-label">
-                                    {gettext('Type:')}
-                                </span>
-                                <span className="sd-list-item__inline-text">
-                                    {this.props.asset.mimetype}
-                                </span>
-                                <span className="sd-list-item__text-label">
-                                    {gettext('Size:')}
-                                </span>
-                                <span className="sd-list-item__inline-text">
-                                    {getHumanReadableFileSize(this.props.asset.length)}
-                                </span>
+                            {this.props.asset.description}
+                        </span>
+                        <time>{longFormatDateTime(this.props.asset._updated)}</time>
+                    </ListItemRow>
+                    <ListItemRow>
+                        {getAssetStateLabel(this.props.asset.state)}
+                        <span className="sd-overflow-ellipsis">
+                            <span className="sd-list-item__text-label">
+                                {gettext('Type:')}
                             </span>
-                        </ListItemRow>
-                    </ListItemColumn>
-                    <div className="sd-list-item__action-menu">
+                            <span className="sd-list-item__inline-text">
+                                {this.props.asset.mimetype}
+                            </span>
+                            <span className="sd-list-item__text-label">
+                                {gettext('Size:')}
+                            </span>
+                            <span className="sd-list-item__inline-text">
+                                {getHumanReadableFileSize(this.props.asset.length)}
+                            </span>
+                        </span>
+                    </ListItemRow>
+                </ListItemColumn>
+                {actions.length === 0 ? null : (
+                    <div className="sd-list-item__action-menu" onClick={this.stopClickPropagation}>
                         <Dropdown
                             align = "right"
                             append = {true}
-                            items={[
-                                {
-                                    type: 'group', label: 'Actions', items: [
-                                        'divider',
-                                        {
-                                            label: 'Preview',
-                                            icon: 'eye-open',
-                                            onSelect: () => this.onPreviewSelect,
-                                        },
-                                    ],
-                                }]}
+                            items={[{
+                                type: 'group',
+                                label: gettext('Actions'),
+                                items: [
+                                    'divider',
+                                    ...actions,
+                                ],
+                            }]}
                         >
                             <IconButton
                                 ariaValue="dropdown-more-options"
@@ -102,8 +106,8 @@ export function getAssetListItemComponent(superdesk: ISuperdesk) {
                             />
                         </Dropdown>
                     </div>
-                </ListItem>
-            );
-        }
-    };
+                )}
+            </ListItem>
+        );
+    }
 }
