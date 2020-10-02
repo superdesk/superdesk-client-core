@@ -181,7 +181,11 @@ class GlobalSearch {
          * @return {promise} list of elements
          */
         this.getRelatedItems = function() {
-            return els(['article-item'], null, el(['related-items-view']));
+            const related = els(['article-item'], null, el(['related-items-view']));
+
+            browser.wait(ECE.visibilityOf(related.first()), 1000);
+
+            return related;
         };
 
         /**

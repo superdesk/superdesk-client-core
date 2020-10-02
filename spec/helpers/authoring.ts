@@ -1001,6 +1001,8 @@ class Authoring {
         this.getDuplicatedItemState = function(index) {
             var duplicatedItem = els(['article-item'], null, el(['related-items-view'])).get(index);
 
+            browser.wait(ECE.presenceOf(duplicatedItem), 500);
+
             return duplicatedItem.element(by.className('state-label')).getText();
         };
 
