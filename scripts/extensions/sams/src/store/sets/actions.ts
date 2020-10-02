@@ -1,7 +1,7 @@
 // Types
-import {ISuperdesk} from 'superdesk-api';
 import {ISetItem} from '../../interfaces';
 import {IThunkAction} from '../types';
+import {superdeskApi, samsApi} from '../../apis';
 
 // Redux Selectors
 import {getSelectedSetId} from './selectors';
@@ -65,8 +65,8 @@ export function receiveAssetsCount(counts: Dictionary<string, number>): ISetActi
 }
 
 export function loadSets(): IThunkAction<Array<ISetItem>> {
-    return (dispatch, _getState, {api}) => {
-        return api.sets.getAll()
+    return (dispatch) => {
+        return samsApi.sets.getAll()
             .then((sets: Array<ISetItem>) => {
                 const setIds: Array<string> = sets.map((set) => {
                     return set._id;
@@ -80,8 +80,8 @@ export function loadSets(): IThunkAction<Array<ISetItem>> {
 }
 
 export function loadAssetsCount(setIds: Array<string>): IThunkAction<Dictionary<string, number>> {
-    return (dispatch, _getState, {api}) => {
-        return api.assets.getCount(setIds)
+    return (dispatch) => {
+        return samsApi.assets.getCount(setIds)
             .then((counts: Dictionary<string, number>) => {
                 dispatch(receiveAssetsCount(counts));
                 return Promise.resolve(counts);
@@ -89,9 +89,9 @@ export function loadAssetsCount(setIds: Array<string>): IThunkAction<Dictionary<
     };
 }
 
-function openDeleteConfirmationModal(superdesk: ISuperdesk, set: ISetItem): Promise<boolean> {
-    const {gettext} = superdesk.localization;
-    const {confirm} = superdesk.ui;
+function openDeleteConfirmationModal(set: ISetItem): Promise<boolean> {
+    const {gettext} = superdeskApi.localization;
+    const {confirm} = superdeskApi.ui;
 
     const el = document.createElement('div');
 
@@ -99,7 +99,7 @@ function openDeleteConfirmationModal(superdesk: ISuperdesk, set: ISetItem): Prom
     // This is required because the ui-framework calculates z-index
     // based on the number of active modals, where as we're using
     // a mixture of the ui-framework and pure React modals
-    // (superdesk.ui.showModal vs superdesk.ui.confirm)
+    // (superdeskApi.ui.showModal vs superdeskApi.ui.confirm)
     el.classList.add('modal__backdrop', 'fade', 'in');
     el.style.zIndex = '1050';
     document.body.append(el);
@@ -115,11 +115,11 @@ function openDeleteConfirmationModal(superdesk: ISuperdesk, set: ISetItem): Prom
 }
 
 export function confirmBeforeDeletingSet(set: ISetItem): IThunkAction<void> {
-    return (dispatch, getState, {superdesk, api}) => {
-        return openDeleteConfirmationModal(superdesk, set)
+    return (dispatch, getState) => {
+        return openDeleteConfirmationModal(set)
             .then((response: boolean) => {
                 if (response === true) {
-                    return api.sets.delete(set)
+                    return samsApi.sets.delete(set)
                         .then(() => {
                             dispatch(removeSetInStore(set));
 
@@ -135,8 +135,8 @@ export function confirmBeforeDeletingSet(set: ISetItem): IThunkAction<void> {
 }
 
 export function updateSet(original: ISetItem, updates: Partial<ISetItem>): IThunkAction<ISetItem> {
-    return (dispatch, _getState, {api}) => {
-        return api.sets.update(original, updates)
+    return (dispatch) => {
+        return samsApi.sets.update(original, updates)
             .then((updatedSet: ISetItem) => {
                 // Wait for the Sets to update before returning the updated Set
                 return dispatch(loadSets())
@@ -146,8 +146,8 @@ export function updateSet(original: ISetItem, updates: Partial<ISetItem>): IThun
 }
 
 export function createSet(item: Partial<ISetItem>): IThunkAction<ISetItem> {
-    return (dispatch, _getState, {api}) => {
-        return api.sets.create(item)
+    return (dispatch) => {
+        return samsApi.sets.create(item)
             .then((newSet: ISetItem) => {
                 // Wait for the Sets to update before returning the new Set
                 return dispatch(loadSets())

@@ -4,7 +4,6 @@ import thunkMiddleware from 'redux-thunk';
 import {createLogger} from 'redux-logger';
 
 // Types
-import {IExtraArguments} from './types';
 import {ISetState} from './sets/types';
 import {IStorageDestinationState} from './storageDestinations/types';
 import {IAssetState} from './assets/types';
@@ -48,13 +47,12 @@ function crashReporter() {
 let store: Store | undefined;
 
 export function createReduxStore(
-    extraArguments: IExtraArguments,
     initialState: {},
     reducer: Reducer,
 ): Store {
     const middlewares = [
         crashReporter,
-        thunkMiddleware.withExtraArgument(extraArguments),
+        thunkMiddleware,
     ];
 
     if (process.env.NODE_ENV !== 'production') {

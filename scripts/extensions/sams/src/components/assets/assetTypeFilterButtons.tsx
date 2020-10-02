@@ -4,9 +4,9 @@ import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
 
 // Types
-import {ISuperdesk} from 'superdesk-api';
 import {ASSET_TYPE_FILTER, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
+import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {updateAssetSearchParamsAndListItems} from '../../store/assets/actions';
@@ -33,41 +33,39 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     ),
 });
 
-export function getAssetTypeFilterButtons(superdesk: ISuperdesk) {
-    const {gettext} = superdesk.localization;
+export class AssetTypeFilterButtonsComponent extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
 
-    class AssetTypeFilterButtons extends React.PureComponent<IProps> {
-        constructor(props: IProps) {
-            super(props);
-
-            this.changeFilter = this.changeFilter.bind(this);
-        }
-
-        changeFilter(typeFilter: ASSET_TYPE_FILTER) {
-            this.props.updateAssetSearchParamsAndListItems({mimetypes: typeFilter});
-        }
-
-        render() {
-            return (
-                <CheckButtonGroup padded={true}>
-                    <RadioButton
-                        value={this.props.searchParams.mimetypes}
-                        onChange={this.changeFilter}
-                        options={[
-                            {value: ASSET_TYPE_FILTER.ALL, label: gettext('All item types')},
-                            {value: ASSET_TYPE_FILTER.IMAGES, label: gettext('Images only')},
-                            {value: ASSET_TYPE_FILTER.VIDEOS, label: gettext('Videos only')},
-                            {value: ASSET_TYPE_FILTER.AUDIO, label: gettext('Audio only')},
-                            {value: ASSET_TYPE_FILTER.DOCUMENTS, label: gettext('Documents only')},
-                        ]}
-                    />
-                </CheckButtonGroup>
-            );
-        }
+        this.changeFilter = this.changeFilter.bind(this);
     }
 
-    return connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    )(AssetTypeFilterButtons);
+    changeFilter(typeFilter: ASSET_TYPE_FILTER) {
+        this.props.updateAssetSearchParamsAndListItems({mimetypes: typeFilter});
+    }
+
+    render() {
+        const {gettext} = superdeskApi.localization;
+
+        return (
+            <CheckButtonGroup padded={true}>
+                <RadioButton
+                    value={this.props.searchParams.mimetypes}
+                    onChange={this.changeFilter}
+                    options={[
+                        {value: ASSET_TYPE_FILTER.ALL, label: gettext('All item types')},
+                        {value: ASSET_TYPE_FILTER.IMAGES, label: gettext('Images only')},
+                        {value: ASSET_TYPE_FILTER.VIDEOS, label: gettext('Videos only')},
+                        {value: ASSET_TYPE_FILTER.AUDIO, label: gettext('Audio only')},
+                        {value: ASSET_TYPE_FILTER.DOCUMENTS, label: gettext('Documents only')},
+                    ]}
+                />
+            </CheckButtonGroup>
+        );
+    }
 }
+
+export const AssetTypeFilterButtons = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(AssetTypeFilterButtonsComponent);

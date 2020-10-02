@@ -4,25 +4,16 @@ import {Provider} from 'react-redux';
 import {Store} from 'redux';
 
 // Types
-import {ISuperdesk} from 'superdesk-api';
-import {IConnectComponentToSuperdesk} from '../interfaces';
 import {createReduxStore, rootReducer, getStore, unsetStore} from '../store';
-
-// APIs
-import {getSamsAPIs} from '../api';
 
 interface IState {
     ready: boolean;
 }
 
 export function getSamsApp(
-    superdesk: ISuperdesk,
-    getApp: IConnectComponentToSuperdesk,
+    AppComponent: React.ComponentClass,
     onStoreInit?: (store: Store) => Promise<void>,
 ) {
-    const App = getApp(superdesk);
-    const api = getSamsAPIs(superdesk);
-
     return class SamsApp extends React.Component<{}, IState> {
         constructor(props: {}) {
             super(props);
@@ -32,7 +23,6 @@ export function getSamsApp(
 
         componentDidMount() {
             const store = createReduxStore(
-                {superdesk, api},
                 {},
                 rootReducer,
             );
@@ -56,7 +46,7 @@ export function getSamsApp(
 
             return (
                 <Provider store={store}>
-                    <App />
+                    <AppComponent />
                 </Provider>
             );
         }

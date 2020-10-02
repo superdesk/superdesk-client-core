@@ -4,7 +4,6 @@ import {Dispatch, Store} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ISuperdesk} from 'superdesk-api';
 import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, ISetItem, LIST_ACTION} from '../interfaces';
 
 // Redux Actions & Selectors
@@ -33,10 +32,10 @@ import {
 
 // UI
 import {PageLayout} from '../containers/PageLayout';
-import {getAssetListPanel} from '../components/assets/assetListPanel';
-import {getAssetFilterPanel} from '../components/assets/assetFilterPanel';
-import {getWorkspaceSubnavComponent} from '../components/workspaceSubnav';
-import {getShowAssetPreviewPanelComponent} from '../components/assets/assetPreviewPanel';
+import {AssetListPanel} from '../components/assets/assetListPanel';
+import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
+import {WorkspaceSubnav} from '../components/workspaceSubnav';
+import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
 import {IApplicationState} from '../store';
 
 export function onStoreInit(store: Store): Promise<any> {
@@ -107,112 +106,105 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
 
-export function getSamsWorkspaceComponent(superdesk: ISuperdesk) {
-    const AssetListPanel = getAssetListPanel(superdesk);
-    const AssetFilterPanel = getAssetFilterPanel(superdesk);
-    const WorkspaceSubnav = getWorkspaceSubnavComponent(superdesk);
-    const ShowAssetPreview = getShowAssetPreviewPanelComponent(superdesk);
+export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
 
-    class SamsWorkspaceComponent extends React.Component<IProps, IState> {
-        constructor(props: IProps) {
-            super(props);
+        this.state = {
+            filterPanelOpen: false,
+            nextPageLoading: false,
+        };
 
-            this.state = {
-                filterPanelOpen: false,
-                nextPageLoading: false,
-            };
+        this.toggleFilterPanel = this.toggleFilterPanel.bind(this);
+        this.onScroll = this.onScroll.bind(this);
+        this.toggleListStyle = this.toggleListStyle.bind(this);
+    }
 
-            this.toggleFilterPanel = this.toggleFilterPanel.bind(this);
-            this.onScroll = this.onScroll.bind(this);
-            this.toggleListStyle = this.toggleListStyle.bind(this);
-        }
+    toggleFilterPanel() {
+        this.setState(
+            (state) => ({filterPanelOpen: !state.filterPanelOpen}),
+        );
+    }
 
-        toggleFilterPanel() {
-            this.setState(
-                (state) => ({filterPanelOpen: !state.filterPanelOpen}),
-            );
-        }
+    onScroll(event: React.UIEvent<HTMLDivElement>) {
+        const node = event.currentTarget;
 
-        onScroll(event: React.UIEvent<HTMLDivElement>) {
-            const node = event.currentTarget;
-
-            if (node != null &&
-                this.state.nextPageLoading === false &&
-                this.props.totalAssets > this.props.assets.length &&
-                node.scrollTop + node.offsetHeight + 200 >= node.scrollHeight
-            ) {
-                this.setState({nextPageLoading: true});
-                this.props.loadNextPage().finally(() => {
-                    this.setState({nextPageLoading: false});
-                });
-            }
-        }
-
-        toggleListStyle() {
-            this.props.setListStyle(
-                this.props.listStyle === ASSET_LIST_STYLE.GRID ?
-                    ASSET_LIST_STYLE.LIST :
-                    ASSET_LIST_STYLE.GRID,
-            );
-            this.props.queryAssetsFromCurrentSearch();
-        }
-
-        render() {
-            return (
-                <div className="sd-page">
-                    <PageLayout
-                        header={(
-                            <WorkspaceSubnav
-                                filterPanelOpen={this.state.filterPanelOpen}
-                                totalAssets={this.props.totalAssets}
-                                listStyle={this.props.listStyle}
-                                searchParams={this.props.searchParams}
-                                activeSets={this.props.activeSets}
-                                disabledSets={this.props.disabledSets}
-                                currentSet={this.props.currentSet}
-                                toggleFilterPanel={this.toggleFilterPanel}
-                                toggleListStyle={this.toggleListStyle}
-                                updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
-                            />
-                        )}
-                        leftPanelOpen={this.state.filterPanelOpen}
-                        leftPanel={(
-                            this.state.filterPanelOpen === false ? (
-                                <div />
-                            ) : (
-                                <AssetFilterPanel
-                                    searchParams={this.props.searchParams}
-                                    closeFilterPanel={this.toggleFilterPanel}
-                                    updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
-                                />
-                            )
-                        )}
-                        rightPanelOpen={this.props.selectedAssetId !== undefined}
-                        rightPanel={(
-                            <ShowAssetPreview
-                                asset={this.props.asset}
-                                setName={this.props.setName}
-                                onPanelClosed={this.props.onPanelClosed}
-                            />
-                        )}
-                        mainClassName="sd-padding--2"
-                        mainProps={{onScroll: this.onScroll}}
-                        main={(
-                            <AssetListPanel
-                                assets={this.props.assets}
-                                listStyle={this.props.listStyle}
-                                previewAsset={this.props.previewAsset}
-                                selectedAssetId={this.props.selectedAssetId}
-                            />
-                        )}
-                    />
-                </div>
-            );
+        if (node != null &&
+            this.state.nextPageLoading === false &&
+            this.props.totalAssets > this.props.assets.length &&
+            node.scrollTop + node.offsetHeight + 200 >= node.scrollHeight
+        ) {
+            this.setState({nextPageLoading: true});
+            this.props.loadNextPage().finally(() => {
+                this.setState({nextPageLoading: false});
+            });
         }
     }
 
-    return connect(
-        mapStateToProps,
-        mapDispatchToProps,
-    )(SamsWorkspaceComponent);
+    toggleListStyle() {
+        this.props.setListStyle(
+            this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                ASSET_LIST_STYLE.LIST :
+                ASSET_LIST_STYLE.GRID,
+        );
+        this.props.queryAssetsFromCurrentSearch();
+    }
+
+    render() {
+        return (
+            <div className="sd-page">
+                <PageLayout
+                    header={(
+                        <WorkspaceSubnav
+                            filterPanelOpen={this.state.filterPanelOpen}
+                            totalAssets={this.props.totalAssets}
+                            listStyle={this.props.listStyle}
+                            searchParams={this.props.searchParams}
+                            activeSets={this.props.activeSets}
+                            disabledSets={this.props.disabledSets}
+                            currentSet={this.props.currentSet}
+                            toggleFilterPanel={this.toggleFilterPanel}
+                            toggleListStyle={this.toggleListStyle}
+                            updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
+                        />
+                    )}
+                    leftPanelOpen={this.state.filterPanelOpen}
+                    leftPanel={(
+                        this.state.filterPanelOpen === false ? (
+                            <div />
+                        ) : (
+                            <AssetFilterPanel
+                                searchParams={this.props.searchParams}
+                                closeFilterPanel={this.toggleFilterPanel}
+                                updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
+                            />
+                        )
+                    )}
+                    rightPanelOpen={this.props.selectedAssetId !== undefined}
+                    rightPanel={(
+                        <AssetPreviewPanel
+                            asset={this.props.asset}
+                            setName={this.props.setName}
+                            onPanelClosed={this.props.onPanelClosed}
+                        />
+                    )}
+                    mainClassName="sd-padding--2"
+                    mainProps={{onScroll: this.onScroll}}
+                    main={(
+                        <AssetListPanel
+                            assets={this.props.assets}
+                            listStyle={this.props.listStyle}
+                            previewAsset={this.props.previewAsset}
+                            selectedAssetId={this.props.selectedAssetId}
+                        />
+                    )}
+                />
+            </div>
+        );
+    }
 }
+
+export const SamsWorkspace = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SamsWorkspaceComponent);
