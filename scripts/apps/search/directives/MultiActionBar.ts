@@ -6,6 +6,7 @@ import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {dataApi} from 'core/helpers/CrudManager';
+import {canPrintPreview} from '../helpers';
 
 interface IScope extends ng.IScope {
     multi: any;
@@ -49,8 +50,15 @@ interface IScope extends ng.IScope {
 }
 
 MultiActionBar.$inject = [
-    'asset', 'multi', 'authoringWorkspace', 'superdesk',
-    'keyboardManager', 'desks', 'api', 'archiveService',
+    'asset',
+    'multi',
+    'authoringWorkspace',
+    'superdesk',
+    'keyboardManager',
+    'desks',
+    'api',
+    'archiveService',
+    'authoring',
 ];
 export function MultiActionBar(
     asset,
@@ -61,6 +69,7 @@ export function MultiActionBar(
     desks,
     api,
     archiveService,
+    authoring,
 ) {
     return {
         controller: 'MultiActionBar',
@@ -165,7 +174,8 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.activity['edit.item']) {
+
+                    if (articles.every((item) => authoring.itemActions(item).edit === true)) {
                         actions.push({
                             label: gettext('Multiedit'),
                             icon: 'icon-multiedit',
@@ -291,23 +301,25 @@ export function MultiActionBar(
                     });
                 }
 
-                actions.push({
-                    label: gettext('Print'),
-                    icon: 'icon-print',
-                    onTrigger: () => {
-                        const ids: Array<string> = multi.getIds();
+                if (articles.every((item) => canPrintPreview(item))) {
+                    actions.push({
+                        label: gettext('Print'),
+                        icon: 'icon-print',
+                        onTrigger: () => {
+                            const ids: Array<string> = multi.getIds();
 
-                        scope.hideMultiActionBar();
+                            scope.hideMultiActionBar();
 
-                        Promise.all(
-                            ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
-                        ).then((res: Array<IArticle>) => {
-                            scope.printPreview = res;
-                            scope.$apply();
-                        });
-                    },
-                    canAutocloseMultiActionBar: false,
-                });
+                            Promise.all(
+                                ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
+                            ).then((res: Array<IArticle>) => {
+                                scope.printPreview = res;
+                                scope.$apply();
+                            });
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
 
                 return actions;
             };

@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import ng from 'core/services/ng';
 import {ItemList} from 'apps/search/components/ItemList';
@@ -15,7 +17,7 @@ interface IState {
 }
 
 // DOES NOT SUPPORT item actions, pagination, multiselect
-export class ItemsListLimited extends React.Component<IProps, IState> {
+class ItemsListLimitedComponent extends React.Component<IProps, IState> {
     monitoringState: any;
 
     constructor(props: any) {
@@ -85,6 +87,21 @@ export class ItemsListLimited extends React.Component<IProps, IState> {
                 swimlane={false}
                 scopeApply={(fn) => fn()}
                 scopeApplyAsync={(fn) => fn()}
+            />
+        );
+    }
+}
+
+export class ItemsListLimited extends React.Component<IProps> {
+    render() {
+        const {ids, onItemClick} = this.props;
+        const key = JSON.stringify(ids); // re-mount when ids change
+
+        return (
+            <ItemsListLimitedComponent
+                key={key}
+                ids={ids}
+                onItemClick={onItemClick}
             />
         );
     }

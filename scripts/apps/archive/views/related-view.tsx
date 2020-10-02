@@ -12,12 +12,14 @@ export class RelatedView extends React.PureComponent<IProps> {
         const ids = this.props.relatedItems._items.map(({_id}) => _id);
 
         return (
-            <ItemsListLimited
-                ids={ids}
-                onItemClick={(item) => {
-                    openArticle(item._id, 'edit');
-                }}
-            />
+            <div data-test-id="related-items-view">
+                <ItemsListLimited
+                    ids={ids}
+                    onItemClick={(item) => {
+                        openArticle(item._id, 'edit');
+                    }}
+                />
+            </div>
         );
     }
 }

@@ -13,7 +13,6 @@ interface IScope extends ng.IScope {
     numberOfColumns: number;
     desks: any;
     workspaces: any;
-    personalShowSent: boolean;
     view: string;
     workspace: any;
     shouldRefresh: boolean;
@@ -22,7 +21,6 @@ interface IScope extends ng.IScope {
     refreshGroup(group?: any);
     isActiveGroup: (group: any) => boolean;
     switchView: (value: any, swimlane?: any) => void;
-    togglePersonalShowSent: () => boolean;
     gettext: (text: any, params?: any) => any;
     toggleFilter: () => void;
     addResourceUpdatedEventListener: (callback: any) => void;
@@ -128,9 +126,6 @@ export function MonitoringView(
 
             scope.shouldRefresh = true;
             scope.view = 'compact'; // default view
-
-            scope.personalShowSent = false;
-            scope.togglePersonalShowSent = () => scope.personalShowSent = !scope.personalShowSent;
 
             scope.workspaces = workspaces;
             scope.$watch('workspaces.active', (workspace) => {
