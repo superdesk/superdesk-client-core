@@ -3,52 +3,54 @@ import * as React from 'react';
 import {Provider} from 'react-redux';
 import {Store} from 'redux';
 
-// Types
-import {createReduxStore, rootReducer, getStore, unsetStore} from '../store';
+// Utils
+import {getStoreSingleton, getStore, unsetStore} from '../store';
+
+interface IProps {
+    onStoreInit?(store: Store): Promise<any>;
+}
 
 interface IState {
     ready: boolean;
 }
 
-export function getSamsApp(
-    AppComponent: React.ComponentClass,
-    onStoreInit?: (store: Store) => Promise<void>,
-) {
-    return class SamsApp extends React.Component<{}, IState> {
-        constructor(props: {}) {
-            super(props);
+export class SamsApp extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
 
-            this.state = {ready: false};
+        this.state = {
+            ready: false,
+        };
+    }
+
+    componentDidMount() {
+        const storeExists = getStore() !== undefined;
+        const store = getStoreSingleton();
+
+        ((this.props.onStoreInit == null || storeExists) ?
+            Promise.resolve() :
+            this.props.onStoreInit(store)
+        )
+            .then(() => {
+                this.setState({ready: true});
+            });
+    }
+
+    componentWillUnmount() {
+        unsetStore();
+    }
+
+    render() {
+        const store = getStore();
+
+        if (this.state.ready === false || store == null) {
+            return null;
         }
 
-        componentDidMount() {
-            const store = createReduxStore(
-                {},
-                rootReducer,
-            );
-
-            (onStoreInit == null ? Promise.resolve() : onStoreInit(store))
-                .then(() => {
-                    this.setState({ready: true});
-                });
-        }
-
-        componentWillUnmount() {
-            unsetStore();
-        }
-
-        render() {
-            const store = getStore();
-
-            if (this.state.ready === false || store == null) {
-                return null;
-            }
-
-            return (
-                <Provider store={store}>
-                    <AppComponent />
-                </Provider>
-            );
-        }
-    };
+        return (
+            <Provider store={store}>
+                {this.props.children}
+            </Provider>
+        );
+    }
 }

@@ -45,6 +45,7 @@ function crashReporter() {
 }
 
 let store: Store | undefined;
+let storeReferenceCount: number = 0;
 
 export function createReduxStore(
     initialState: {},
@@ -70,10 +71,23 @@ export function createReduxStore(
     return store;
 }
 
+export function getStoreSingleton(): Store {
+    if (store === undefined) {
+        store = createReduxStore({}, rootReducer);
+    }
+
+    storeReferenceCount += 1;
+    return store;
+}
+
 export function getStore(): Store | undefined {
     return store;
 }
 
 export function unsetStore() {
-    store = undefined;
+    storeReferenceCount -= 1;
+
+    if (storeReferenceCount === 0) {
+        store = undefined;
+    }
 }

@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 // External Modules
 import * as React from 'react';
 import {Dispatch, Store} from 'redux';
@@ -12,44 +14,33 @@ import {loadSets} from '../store/sets/actions';
 import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 
 import {
+    closeAssetPreviewPanel,
     loadNextAssetsPage,
+    previewAsset,
     queryAssetsFromCurrentSearch,
     setAssetListStyle,
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
-    previewAsset,
-    closeAssetPreviewPanel,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
     getAssetListTotal,
     getAssetSearchParams,
-    getSelectedAssetId,
+    getAssetSearchResults,
+    getAssetSetFilter,
     getSelectedAsset,
+    getSelectedAssetId,
     getSetNameForSelectedAsset,
-    getAssetSearchResults, getAssetSetFilter,
 } from '../store/assets/selectors';
 
 // UI
+import {SamsApp} from './samsApp';
 import {PageLayout} from '../containers/PageLayout';
 import {AssetListPanel} from '../components/assets/assetListPanel';
 import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
 import {IApplicationState} from '../store';
-
-export function onStoreInit(store: Store): Promise<any> {
-    return Promise.all([
-        store.dispatch<any>(loadStorageDestinations()),
-        store.dispatch<any>(loadSets()),
-        store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
-            .catch(() => {
-                // Catch errors here so `Promise.all` still returns on fetching error
-                // This can happen when invalid search params are stored in the URL
-                return Promise.resolve();
-            }),
-    ]);
-}
 
 interface IProps {
     assets: Array<IAssetItem>;
@@ -105,6 +96,29 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
+
+export class SamsWorkspaceApp extends React.PureComponent {
+    onStoreInit(store: Store) {
+        return Promise.all([
+            store.dispatch<any>(loadStorageDestinations()),
+            store.dispatch<any>(loadSets()),
+            store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
+                .catch(() => {
+                    // Catch errors here so `Promise.all` still returns on fetching error
+                    // This can happen when invalid search params are stored in the URL
+                    return Promise.resolve();
+                }),
+        ]);
+    }
+
+    render() {
+        return (
+            <SamsApp onStoreInit={this.onStoreInit}>
+                <SamsWorkspace />
+            </SamsApp>
+        );
+    }
+}
 
 export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     constructor(props: IProps) {
