@@ -331,6 +331,10 @@ export function ItemCarouselDirective(notify) {
                         updated = true;
                     },
                 });
+
+                if (scope.currentIndex != null) {
+                    carousel.trigger('to.owl.carousel', [scope.currentIndex]);
+                }
             }
 
             const removeAddImageEventListener = addInternalEventListener('addImage', (event) => {
