@@ -9,6 +9,46 @@ import {getArticleSortOptions} from 'apps/search/services/SearchService';
 import {SearchBar} from './ui/components';
 import {SortBar} from './ui/components/SortBar';
 import {Badge} from './ui/components/Badge';
+import {IMultiSelectOptions, MultiSelectHoc} from './MultiSelectHoc';
+import {SelectBoxWithoutMutation} from 'apps/search/components/SelectBox';
+import {TypeIcon} from 'apps/search/components';
+
+class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelectOptions}> {
+    render() {
+        const {item, options} = this.props;
+
+        const checkbox = (
+            <SelectBoxWithoutMutation
+                item={item}
+                onSelect={(id) => {
+                    options.toggle(item._id);
+                }}
+                selected={options.selected.has(item._id)}
+                className="hover-AB--B"
+            />
+        );
+
+        return (
+            <div className="list-field type-icon">
+                {
+                    options.selected.has(item._id)
+                        ? checkbox
+                        : (
+                            <div className="hover-AB">
+                                <div className="hover-AB--A" style={{display: 'flex'}}>
+                                    <TypeIcon
+                                        type={item.type}
+                                        highlight={item.highlight}
+                                    />
+                                </div>
+                                {checkbox}
+                            </div>
+                        )
+                }
+            </div>
+        );
+    }
+}
 
 type IFilterValue = string | number;
 
@@ -147,95 +187,116 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
     render() {
         const padding = 20;
 
-        const header = (itemsCount: number): JSX.Element => {
-            return (
-                <div>
-                    <div style={{display: 'flex', alignItems: 'center', paddingLeft: padding, paddingRight: padding}}>
-                        <div className="space-between">
-                            <h3 className="subnav__page-title sd-flex-no-grow" style={{padding: 0, marginRight: 10}}>
-                                {this.props.heading}
-                            </h3>
-                            <Badge type="default">{itemsCount}</Badge>
-                        </div>
-                        <div style={{marginLeft: 10, flexGrow: 1}}>
-                            <SearchBar
-                                allowCollapsed={false}
-                                extendOnOpen={false}
-                                onSearch={(fullTextSearch) => {
-                                    this.setState({fullTextSearch});
-                                }}
-                                initialValue={this.state.fullTextSearch}
-                            />
-                        </div>
-                    </div>
-                    <div
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            borderTop: '1px solid #d5d5d5',
-                            borderBottom: '1px solid #d5d5d5',
-                            paddingTop: 8,
-                            paddingBottom: 8,
-                            paddingLeft: padding,
-                            paddingRight: padding,
-                        }}
-                    >
-                        <div>
-                            <div className="button-list">
-                                <button
-                                    className={classNames(
-                                        'toggle-button',
-                                        {'toggle-button--active': this.hasFilter('type') === false},
-                                    )}
-                                    onClick={() => {
-                                        this.removeFilter('type');
+        return (
+            <MultiSelectHoc>
+                {(multiSelectOptions) => {
+                    const header = (itemsCount: number): JSX.Element => {
+                        return (
+                            <div>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        paddingLeft: padding,
+                                        paddingRight: padding,
                                     }}
                                 >
-                                    {gettext('All')}
-                                </button>
-                                {getItemTypes().map(({type, label}) => (
-                                    <button
-                                        key={type}
-                                        className={classNames(
-                                            'toggle-button',
-                                            {'toggle-button--active': this.hasFilter('type', type)},
-                                        )}
-                                        onClick={() => {
-                                            this.toggleFilter('type', type);
+                                    <div className="space-between">
+                                        <h3
+                                            className="subnav__page-title sd-flex-no-grow"
+                                            style={{padding: 0, marginRight: 10}}
+                                        >
+                                            {this.props.heading}
+                                        </h3>
+                                        <Badge type="default">{itemsCount}</Badge>
+                                    </div>
+                                    <div style={{marginLeft: 10, flexGrow: 1}}>
+                                        <SearchBar
+                                            allowCollapsed={false}
+                                            extendOnOpen={false}
+                                            onSearch={(fullTextSearch) => {
+                                                this.setState({fullTextSearch});
+                                            }}
+                                            initialValue={this.state.fullTextSearch}
+                                        />
+                                    </div>
+                                </div>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        borderTop: '1px solid #d5d5d5',
+                                        borderBottom: '1px solid #d5d5d5',
+                                        paddingTop: 8,
+                                        paddingBottom: 8,
+                                        paddingLeft: padding,
+                                        paddingRight: padding,
+                                    }}
+                                >
+                                    <div>
+                                        <div className="button-list">
+                                            <button
+                                                className={classNames(
+                                                    'toggle-button',
+                                                    {'toggle-button--active': this.hasFilter('type') === false},
+                                                )}
+                                                onClick={() => {
+                                                    this.removeFilter('type');
+                                                }}
+                                            >
+                                                {gettext('All')}
+                                            </button>
+                                            {getItemTypes().map(({type, label}) => (
+                                                <button
+                                                    key={type}
+                                                    className={classNames(
+                                                        'toggle-button',
+                                                        {'toggle-button--active': this.hasFilter('type', type)},
+                                                    )}
+                                                    onClick={() => {
+                                                        this.toggleFilter('type', type);
+                                                    }}
+                                                    aria-label={label}
+                                                >
+                                                    <i className={`toggle-button__icon filetype-icon-${type}`} />
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <SortBar
+                                        sortOptions={getArticleSortOptions()}
+                                        selected={this.state.sortOption}
+                                        onSortOptionChange={(sortOption) => {
+                                            this.setState({sortOption});
                                         }}
-                                        aria-label={label}
-                                    >
-                                        <i className={`toggle-button__icon filetype-icon-${type}`} />
-                                    </button>
-                                ))}
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <SortBar
-                            sortOptions={getArticleSortOptions()}
-                            selected={this.state.sortOption}
-                            onSortOptionChange={(sortOption) => {
-                                this.setState({sortOption});
+                        );
+                    };
+
+                    return (
+                        <ArticlesListByQuery
+                            query={getQueryWithFilters(
+                                this.props.query,
+                                this.state.activeFilters,
+                                this.state.fullTextSearch,
+                                this.state.sortOption,
+                            )}
+                            onItemClick={this.props.onItemClick}
+                            onItemDoubleClick={this.props.onItemDoubleClick}
+                            header={header}
+                            padding={`${3 / 4 * padding}px ${padding}px`}
+                            multiSelect={{
+                                kind: 'new',
+                                options: multiSelectOptions,
+                                MultiSelectComponent: MultiSelect,
                             }}
                         />
-                    </div>
-                </div>
-            );
-        };
-
-        return (
-            <ArticlesListByQuery
-                query={getQueryWithFilters(
-                    this.props.query,
-                    this.state.activeFilters,
-                    this.state.fullTextSearch,
-                    this.state.sortOption,
-                )}
-                onItemClick={this.props.onItemClick}
-                onItemDoubleClick={this.props.onItemDoubleClick}
-                header={header}
-                padding={`${3 / 4 * padding}px ${padding}px`}
-            />
+                    );
+                }}
+            </MultiSelectHoc>
         );
     }
 }

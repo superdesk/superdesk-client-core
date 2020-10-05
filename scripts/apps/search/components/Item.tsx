@@ -19,6 +19,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
 import {IScopeApply} from 'core/utils';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 
 function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -53,7 +54,7 @@ interface IProps {
     markedDesksById: any;
     ingestProvider: any;
     versioncreator: any;
-    onMultiSelect: any;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
     desk: IDesk;
     flags: any;
     view: any;
@@ -152,12 +153,13 @@ export class Item extends React.Component<IProps, IState> {
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: IProps, nextState) {
         return nextProps.swimlane !== this.props.swimlane || nextProps.item !== this.props.item ||
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
             nextProps.narrow !== this.props.narrow ||
             nextProps.actioning !== this.props.actioning ||
+            nextProps.multiSelect !== this.props.multiSelect ||
             nextState !== this.state;
     }
 
@@ -292,7 +294,7 @@ export class Item extends React.Component<IProps, IState> {
                         item={item}
                         isLocked={isLocked}
                         getActionsMenu={getActionsMenu}
-                        onMultiSelect={this.props.onMultiSelect}
+                        multiSelect={this.props.multiSelect}
                     />
                 );
             case 'mgrid':
@@ -302,9 +304,9 @@ export class Item extends React.Component<IProps, IState> {
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
                         ingestProvider={this.props.ingestProvider}
-                        onMultiSelect={this.props.onMultiSelect}
                         broadcast={broadcast}
                         getActionsMenu={getActionsMenu}
+                        multiSelect={this.props.multiSelect}
                     />
                 );
             case 'photogrid':
@@ -313,7 +315,7 @@ export class Item extends React.Component<IProps, IState> {
                         item={item}
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
-                        onMultiSelect={this.props.onMultiSelect}
+                        multiSelect={this.props.multiSelect}
                         getActionsMenu={getActionsMenu}
                     />
                 );
@@ -330,7 +332,7 @@ export class Item extends React.Component<IProps, IState> {
                         swimlane={this.props.swimlane}
                         versioncreator={this.props.versioncreator}
                         narrow={this.props.narrow}
-                        onMultiSelect={this.props.onMultiSelect}
+                        multiSelect={this.props.multiSelect}
                         getActionsMenu={getActionsMenu}
                         selectingDisabled={this.props.multiSelectDisabled}
                         isNested={this.props.isNested}
@@ -377,7 +379,7 @@ export class Item extends React.Component<IProps, IState> {
                                 versioncreator={this.props.versioncreator}
                                 onEdit={this.props.onEdit}
                                 onDbClick={this.props.onDbClick}
-                                onMultiSelect={this.props.onMultiSelect}
+                                multiSelect={this.props.multiSelect}
                                 actioning={false}
                                 singleLine={this.props.singleLine}
                                 customRender={this.props.customRender}

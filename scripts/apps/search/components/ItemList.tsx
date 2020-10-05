@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, {noop} from 'lodash';
 import React from 'react';
 import classNames from 'classnames';
 import {Item} from './index';
@@ -10,6 +10,7 @@ import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {CHECKBOX_PARENT_CLASS} from './constants';
 import ng from 'core/services/ng';
+import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 
 interface IProps {
     itemsList: Array<string>;
@@ -26,7 +27,6 @@ interface IProps {
     usersById: any;
     onMonitoringItemSelect: any;
     onMonitoringItemDoubleClick: any;
-    disableMonitoringMultiSelect: boolean;
     singleLine: any;
     customRender: any;
     viewType: any;
@@ -41,8 +41,19 @@ interface IProps {
     scopeApplyAsync: IScopeApply;
     edit(item: IArticle): void;
     preview(item: IArticle): void;
+    multiSelect?: IMultiSelectNew | ILegacyMultiSelect;
+}
+
+export interface ILegacyMultiSelect {
+    kind: 'legacy';
     multiSelect(items: Array<IArticle>, selected: boolean): void;
     setSelectedItem(itemId: string): void;
+}
+
+export interface IMultiSelectNew {
+    kind: 'new';
+    options: IMultiSelectOptions;
+    MultiSelectComponent: React.ComponentType<{item: IArticle; options: IMultiSelectOptions}>;
 }
 
 interface IState {
@@ -116,10 +127,14 @@ export class ItemList extends React.Component<IProps, IState> {
 
     // Method to check the selectBox of the selected item
     multiSelectCurrentItem() {
+        if (this.props.multiSelect.kind !== 'legacy') {
+            throw new Error('Legacy multiselect API expected.');
+        }
+
         const selectedItem = this.getSelectedItem();
 
         if (selectedItem) {
-            this.props.multiSelect([selectedItem], !selectedItem.selected);
+            this.props.multiSelect.multiSelect([selectedItem], !selectedItem.selected);
         }
     }
 
@@ -207,14 +222,22 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     selectItem(item) {
+        if (this.props.multiSelect.kind !== 'legacy') {
+            throw new Error('Legacy multiselect API expected.');
+        }
+
         if (isCheckAllowed(item)) {
             const selected = !item.selected;
 
-            this.props.multiSelect([item], selected);
+            this.props.multiSelect.multiSelect([item], selected);
         }
     }
 
     selectMultipleItems(lastItem) {
+        if (this.props.multiSelect.kind !== 'legacy') {
+            throw new Error('Legacy multiselect API expected.');
+        }
+
         const {search} = this.angularservices;
         const itemId = search.generateTrackByIdentifier(lastItem);
         let positionStart = 0;
@@ -236,7 +259,7 @@ export class ItemList extends React.Component<IProps, IState> {
             }
         }
 
-        this.props.multiSelect(selectedItems, true);
+        this.props.multiSelect.multiSelect(selectedItems, true);
     }
 
     setActioning(item: IArticle, isActioning: boolean) {
@@ -320,11 +343,19 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     deselectAll() {
-        this.props.setSelectedItem(null);
+        if (this.props.multiSelect.kind !== 'legacy') {
+            throw new Error('Legacy multiselect API expected.');
+        }
+
+        this.props.multiSelect.setSelectedItem(null);
         this.unbindActionKeyShortcuts();
     }
 
     setSelectedItem(item: IArticle) {
+        if (this.props.multiSelect.kind !== 'legacy') {
+            throw new Error('Legacy multiselect API expected.');
+        }
+
         const {monitoringState, $rootScope, search} = this.angularservices;
 
         if (monitoringState.state.activeGroup !== this.props.groupId) {
@@ -333,7 +364,7 @@ export class ItemList extends React.Component<IProps, IState> {
             monitoringState.setState({activeGroup: this.props.groupId});
         }
 
-        this.props.setSelectedItem(item ? search.generateTrackByIdentifier(item) : null);
+        this.props.multiSelect.setSelectedItem(item ? search.generateTrackByIdentifier(item) : null);
     }
 
     getSelectedItem() {
@@ -524,7 +555,6 @@ export class ItemList extends React.Component<IProps, IState> {
                                     onEdit={this.edit}
                                     onDbClick={this.dbClick}
                                     onSelect={this.select}
-                                    onMultiSelect={this.props.multiSelect}
                                     ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
                                     desk={this.props.desksById[task.desk] || null}
                                     highlightsById={this.props.highlightsById}
@@ -535,12 +565,17 @@ export class ItemList extends React.Component<IProps, IState> {
                                     hideActions={
                                         this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
                                     }
-                                    multiSelectDisabled={this.props.disableMonitoringMultiSelect}
+                                    multiSelectDisabled={this.props.multiSelect == null}
                                     actioning={!!this.state.actioning[itemId]}
                                     singleLine={this.props.singleLine}
                                     customRender={this.props.customRender}
                                     viewType={this.props.viewType}
                                     scopeApply={this.props.scopeApply}
+                                    multiSelect={this.props.multiSelect ?? {
+                                        kind: 'legacy',
+                                        multiSelect: noop,
+                                        setSelectedItem: noop,
+                                    }}
                                 />
                             );
                         })

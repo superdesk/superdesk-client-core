@@ -6,7 +6,7 @@ import {IArticle} from 'superdesk-api';
 
 import {noop} from 'lodash';
 import {LazyLoader} from './itemList/LazyLoader';
-import {ItemList} from 'apps/search/components/ItemList';
+import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
 import {dataApi} from './helpers/CrudManager';
 import {IScope} from 'angular';
@@ -24,6 +24,7 @@ interface IProps {
 
     onItemClick(item: IArticle): void;
     onItemDoubleClick?(item: IArticle): void;
+    multiSelect?: IMultiSelectNew;
 }
 
 export class ArticlesListV2 extends React.Component<IProps, IState> {
@@ -127,7 +128,6 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             onMonitoringItemSelect={this.props.onItemClick}
                             onMonitoringItemDoubleClick={this.props.onItemDoubleClick ?? noop}
                             hideActionsForMonitoringItems={false}
-                            disableMonitoringMultiSelect={true}
                             singleLine={false}
                             customRender={undefined}
                             viewType={undefined}
@@ -137,8 +137,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             groupId={undefined}
                             edit={noop}
                             preview={noop}
-                            multiSelect={noop}
-                            setSelectedItem={noop}
+                            multiSelect={this.props.multiSelect}
                             narrow={false}
                             view={undefined}
                             selected={undefined}

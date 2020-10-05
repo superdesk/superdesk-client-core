@@ -3,10 +3,11 @@ import classNames from 'classnames';
 
 import {IArticle} from 'superdesk-api';
 
-import {ListTypeIcon} from './ListTypeIcon';
 import {SwimlaneField} from './SwimlaneField';
 import {DEFAULT_SWIMLANE_FIELDS_CONFIG} from '../constants';
 import {appConfig} from 'appConfig';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {MultiSelectCheckbox} from './MultiSelectCheckbox';
 
 const renderGroup = (groups, item: IArticle) => groups.map((group, groupIndex) => (
     <span
@@ -38,12 +39,12 @@ interface IProps {
     item: IArticle;
     isLocked: boolean;
     getActionsMenu: (fn) => ReactElement<any>;
-    onMultiSelect: () => void;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
 export class ItemSwimlane extends React.Component<IProps, any> {
     render() {
-        const {item, isLocked, getActionsMenu} = this.props;
+        const {item, isLocked, getActionsMenu, multiSelect} = this.props;
 
         const swimlaneViewFieldsConfig = appConfig.swimlaneViewFields ?? DEFAULT_SWIMLANE_FIELDS_CONFIG;
 
@@ -57,9 +58,9 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                     }}
                 />
                 <span className="sd-list-item__column">
-                    <ListTypeIcon
+                    <MultiSelectCheckbox
                         item={item}
-                        onMultiSelect={this.props.onMultiSelect}
+                        multiSelect={multiSelect}
                     />
                 </span>
                 {renderGroup(swimlaneViewFieldsConfig.left, item)}

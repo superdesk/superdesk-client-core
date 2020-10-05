@@ -8,6 +8,7 @@ import {flatMap, once} from 'lodash';
 import ng from 'core/services/ng';
 import {ISuperdeskQuery, toElasticQuery, getQueryFieldsRecursive} from './query-formatting';
 import {Loader} from 'superdesk-ui-framework/react/components/Loader';
+import {IMultiSelectNew} from 'apps/search/components/ItemList';
 
 interface IProps {
     query: ISuperdeskQuery;
@@ -15,6 +16,7 @@ interface IProps {
     onItemDoubleClick(item: IArticle): void;
     header?(itemCount: number): JSX.Element;
     padding?: string;
+    multiSelect?: IMultiSelectNew;
 }
 
 interface IPropsInner extends IProps {
@@ -126,6 +128,7 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
                         onItemClick={this.props.onItemClick}
                         onItemDoubleClick={this.props.onItemDoubleClick}
                         padding={this.props.padding}
+                        multiSelect={this.props.multiSelect}
                     />
                 </div>
             </div>

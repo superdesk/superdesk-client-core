@@ -1,25 +1,25 @@
 import React from 'react';
-import {ListTypeIcon} from './ListTypeIcon';
 import {ListPriority} from './ListPriority';
 import {ListItemInfo, IPropsItemListInfo} from './ListItemInfo';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {MultiSelectCheckbox} from './MultiSelectCheckbox';
 
 interface IPropsItemsListTemplate extends IPropsItemListInfo {
     selectingDisabled: boolean;
     getActionsMenu: () => any;
-    onMultiSelect: () => any;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
 export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
     render() {
-        const {item} = this.props;
+        const {item, multiSelect} = this.props;
 
         return (
             <div>
                 <span className="state-border" />
-                <ListTypeIcon
+                <MultiSelectCheckbox
                     item={item}
-                    onMultiSelect={this.props.onMultiSelect}
-                    selectingDisabled={this.props.selectingDisabled}
+                    multiSelect={multiSelect}
                 />
                 {
                     item.priority || item.urgency
