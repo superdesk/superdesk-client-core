@@ -195,7 +195,8 @@ export class TableCell extends React.Component<IProps, IState> {
                     handleKeyCommand={this.handleKeyCommand}
                     readOnly={readOnly}
                     onChange={this.onChange}
-                    keyBindingFn={this.keyBindingFn} />
+                    keyBindingFn={this.keyBindingFn}
+                />
             </td>
         );
     }

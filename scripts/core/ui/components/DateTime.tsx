@@ -17,12 +17,14 @@ const DateTime: React.StatelessComponent<any> = (
         withTime ? timeFormat : null,
     ].filter((d) => d).join('\u00a0'); // &nbsp;
 
-    return <time
-        className={!padLeft ? 'Datetime' : null}
-        title={date.toString()}
-    >
-        {moment(date).format(dateTimeFormat)}
-    </time>;
+    return (
+        <time
+            className={!padLeft ? 'Datetime' : null}
+            title={date.toString()}
+        >
+            {moment(date).format(dateTimeFormat)}
+        </time>
+    );
 };
 
 DateTime.defaultProps = {

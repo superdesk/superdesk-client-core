@@ -8,9 +8,12 @@ import {IPropsItemListInfo} from '../ListItemInfo';
 export const usageterms: React.StatelessComponent<IPropsItemListInfo> = ({item}) => {
     if (item.usageterms) {
         return (
-            <small key="usageterms"
+            <small
+                key="usageterms"
                 className="usageterms container"
-            >{item.usageterms}</small>
+            >
+                {item.usageterms}
+            </small>
         );
     }
 

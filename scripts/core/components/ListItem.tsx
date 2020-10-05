@@ -87,10 +87,13 @@ export class ListItemRow extends React.Component<{justifyContent?: string}> {
         const {justifyContent} = this.props;
 
         return (
-            <div className="sd-list-item__row" style={{
-                width: '100%',
-                justifyContent: justifyContent == null ? undefined : justifyContent,
-            }}>
+            <div
+                className="sd-list-item__row"
+                style={{
+                    width: '100%',
+                    justifyContent: justifyContent == null ? undefined : justifyContent,
+                }}
+            >
                 {this.props.children}
             </div>
         );

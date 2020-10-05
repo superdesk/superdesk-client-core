@@ -18,7 +18,7 @@ export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promis
     return coreApplyMiddleware(onChangeMiddleware, {item: item, original: orig}, 'item')
         .then(() => {
             const onUpdateFromExtensions = Object.values(extensions).map(
-                (extension) => extension.activationResult?.contributions?.authoring?.onUpdate,
+                (extension) => extension.activationResult?.contributions?.authoring?.onUpdateBefore,
             ).filter((updateFn) => updateFn != null);
 
             return (
@@ -34,6 +34,16 @@ export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promis
                         .then((nextItem) => angular.extend(item, nextItem))
             );
         });
+}
+
+export function runAfterUpdateEvent(previous: IArticle, current: IArticle) {
+    const onUpdateAfterFromExtensions = Object.values(extensions).map(
+        (extension) => extension.activationResult?.contributions?.authoring?.onUpdateAfter,
+    ).filter((fn) => fn != null);
+
+    onUpdateAfterFromExtensions.forEach((fn) => {
+        fn(previous, current);
+    });
 }
 
 function isReadOnly(item: IArticle) {
@@ -488,6 +498,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             if (_.size(diff) > 0) {
                 return api.save('archive', origItem, diff).then((__item) => {
+                    runAfterUpdateEvent(origItem, __item);
+
                     if (origItem.type === 'picture') {
                         item._etag = __item._etag;
                     }
@@ -755,6 +767,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 if (appConfig.workflow_allow_duplicate_non_members) {
                     action.duplicateTo = duplicateTo;
                 }
+            }
+
+            if (appConfig.workflow_allow_copy_to_personal) {
+                action.copy = true;
             }
         } else {
             // personal

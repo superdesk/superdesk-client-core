@@ -32,11 +32,15 @@ export const DateTimeInput: React.StatelessComponent<any> = ({
     onFocus,
     ...props
 }) => (
-    <Row flex={true} noPadding={!!invalid} className={{
-        'date-time-input__row': true,
-        'date-time-input__row--required': required,
-        'date-time-input__row--invalid': invalid,
-    }}>
+    <Row
+        flex={true}
+        noPadding={!!invalid}
+        className={{
+            'date-time-input__row': true,
+            'date-time-input__row--required': required,
+            'date-time-input__row--invalid': invalid,
+        }}
+    >
         <Field
             row={false}
             component={DateInput}
@@ -72,14 +76,16 @@ export const DateTimeInput: React.StatelessComponent<any> = ({
             popupContainer={popupContainer}
             onFocus={onFocus}
         />
-        {canClear && <Button
-            onClick={() => onChange(field, null)}
-            icon="icon-close-small"
-            size="small"
-            iconOnly={true}
-            title={gettext('Clear date and time')}
-            className="btn--icon-only-circle"
-        />}
+        {canClear && (
+            <Button
+                onClick={() => onChange(field, null)}
+                icon="icon-close-small"
+                size="small"
+                iconOnly={true}
+                title={gettext('Clear date and time')}
+                className="btn--icon-only-circle"
+            />
+        )}
     </Row>
 );
 

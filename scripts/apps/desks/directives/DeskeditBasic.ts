@@ -4,8 +4,8 @@ import {gettext} from 'core/utils';
 import {calculateDiff} from '../controllers/DeskConfigController';
 import {appConfig} from 'appConfig';
 
-DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', '$filter'];
-export function DeskeditBasic(desks, WizardHandler, metadata, $filter) {
+DeskeditBasic.$inject = ['desks', 'WizardHandler', 'metadata', '$filter', 'notify'];
+export function DeskeditBasic(desks, WizardHandler, metadata, $filter, notify) {
     return {
         link: function(scope) {
             scope.limits = limits;
@@ -57,21 +57,23 @@ export function DeskeditBasic(desks, WizardHandler, metadata, $filter) {
 
             function errorMessage(response) {
                 scope._error = true;
-                scope._errorMessage = gettext('There was a problem, desk not created/updated.');
+
+                let message = gettext('There was a problem, desk not created/updated.');
 
                 if (response.data && response.data._issues) {
                     if (response.data._issues.name && response.data._issues.name.unique) {
-                        scope._errorMessage = gettext(
+                        message = gettext(
                             'Desk with name {{name}} already exists.', {name: scope.desk.edit.name});
                     } else if (response.data._issues['validator exception']) {
-                        scope._errorMessage = gettext(response.data._issues['validator exception']);
+                        message = response.data._issues['validator exception'];
                     }
                 }
+
+                notify.error(message);
             }
 
             function clearErrorMessages() {
                 if (scope._error || scope._errorLimits) {
-                    scope._errorMessage = '';
                     scope._error = null;
                     scope._errorLimits = null;
                     scope.message = null;

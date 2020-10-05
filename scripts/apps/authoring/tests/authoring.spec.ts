@@ -274,7 +274,7 @@ describe('authoring', () => {
 
             spyOn(api, 'find').and.returnValue($q.when(rewriteOf));
             spyOn(confirm, 'confirmFeatureMedia').and.returnValue(defered.promise);
-            spyOn(authoring, 'autosave').and.returnValue(item);
+            spyOn(authoring, 'autosave').and.returnValue(Promise.resolve(item));
             spyOn(authoring, 'publish').and.returnValue(item);
             let scope = startAuthoring(item, 'edit');
 
@@ -780,6 +780,7 @@ describe('lock service', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     var user = {_id: 'user'};
     var sess = {_id: 'sess'};
@@ -787,6 +788,10 @@ describe('lock service', () => {
 
     beforeEach(inject((session) => {
         session.start(sess, user);
+    }));
+
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
 
     it('can test if item is locked', inject((lock) => {

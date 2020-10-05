@@ -1,6 +1,6 @@
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {IArticle} from 'superdesk-api';
-import {runBeforeUpdateMiddlware} from './AuthoringService';
+import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from './AuthoringService';
 
 const RESOURCE = 'archive_autosave';
 const AUTOSAVE_TIMEOUT = 3000;
@@ -59,7 +59,9 @@ export class AutosaveService {
 
                     helpers.filterDefaultValues(diff, orig);
 
-                    return api.save(RESOURCE, {}, diff).then((_autosave) => {
+                    return api.save(RESOURCE, {}, diff).then((_autosave: IArticle) => {
+                        runAfterUpdateEvent(orig, _autosave);
+
                         orig._autosave = _autosave;
 
                         if (typeof callback === 'function') {
@@ -71,7 +73,11 @@ export class AutosaveService {
                 });
         }, timeout, false);
 
-        return this.timeouts[id];
+        return this.timeouts[id].catch((e) => {
+            if (e !== 'canceled') {
+                throw e;
+            }
+        });
     }
 
     /**

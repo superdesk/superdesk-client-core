@@ -68,20 +68,6 @@ function CreateButtonDirective() {
     };
 }
 
-AutofocusDirective.$inject = [];
-function AutofocusDirective() {
-    return {
-        link: function(scope, element) {
-            _.defer(() => {
-                var value = element.val();
-
-                element.val('').focus();
-                element.val(value);
-            });
-        },
-    };
-}
-
 AutoexpandDirective.$inject = [];
 function AutoexpandDirective() {
     return {
@@ -1222,7 +1208,6 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdShadow', ShadowDirective)
     .filter('nl2el', NewlineToElement)
     .directive('sdCreateBtn', CreateButtonDirective)
-    .directive('sdAutofocus', AutofocusDirective)
     .directive('sdAutoexpand', AutoexpandDirective)
     .directive('sdTimezone', TimezoneDirective)
     .directive('sdDatepickerInner', DatepickerInnerDirective)
@@ -1254,7 +1239,7 @@ export default angular.module('superdesk.core.ui', [
     .component('sdPlainTextEditor',
         reactToAngular1(
             PlainTextEditor,
-            ['value', 'onChange', 'classes', 'onChangeData', 'placeholder', 'spellcheck', 'language'],
+            ['value', 'onChange', 'classes', 'onChangeData', 'placeholder', 'spellcheck', 'language', 'onFocus'],
         ))
     .component('sdTextAreaInput',
         reactToAngular1(

@@ -48,10 +48,15 @@ export class ContactNumberInput extends React.Component<any, any> {
 
         return (
             <Row flex={true}>
-                <LineInput readOnly={readOnly}
+                <LineInput
+                    readOnly={readOnly}
                     invalid={this.isFieldInvalid(`${field}.number`, value.number)}
-                    message={this.isFieldInvalid(`${field}.number`, value.number) ?
-                        gettext('This field is required.') : ''}>
+                    message={
+                        this.isFieldInvalid(`${field}.number`, value.number)
+                            ? gettext('This field is required.')
+                            : ''
+                    }
+                >
                     <Label text={gettext('Number')} />
                     <Input
                         field={`${field}.number`}
@@ -59,7 +64,8 @@ export class ContactNumberInput extends React.Component<any, any> {
                         onChange={onChange}
                         onBlur={this.onBlur}
                         type="text"
-                        readOnly={readOnly} />
+                        readOnly={readOnly}
+                    />
                 </LineInput>
                 <LineInput readOnly={readOnly} className="sd-line-input__usage">
                     <Label text={gettext('usage')} />
@@ -71,7 +77,8 @@ export class ContactNumberInput extends React.Component<any, any> {
                         options={usages}
                         labelField="qcode"
                         keyField="qcode"
-                        clearable={true} />
+                        clearable={true}
+                    />
 
                 </LineInput>
                 <LineInput readOnly={readOnly} className="sd-line-input__usage-flag">
@@ -79,20 +86,26 @@ export class ContactNumberInput extends React.Component<any, any> {
                     <Toggle
                         value={get(value, 'public', true)}
                         onChange={(e) => onChange(`${field}.public`, e.target.value)}
-                        readOnly={readOnly || this.state.preventSwitch} />
+                        readOnly={readOnly || this.state.preventSwitch}
+                    />
                 </LineInput>
                 <LineInput readOnly={readOnly}>
                     {!readOnly &&
-                        (<a tabIndex={0} className="icn-btn sd-line-input__icon" onClick={remove}
-                            onKeyDown={(event) => {
-                                if (event && event.keyCode === KEYCODES.ENTER) {
-                                    event.preventDefault();
-                                    remove();
-                                }
-                            }}
-                        >
-                            <i className="icon-trash" />
-                        </a>)
+                        (
+                            <a
+                                tabIndex={0}
+                                className="icn-btn sd-line-input__icon"
+                                onClick={remove}
+                                onKeyDown={(event) => {
+                                    if (event && event.keyCode === KEYCODES.ENTER) {
+                                        event.preventDefault();
+                                        remove();
+                                    }
+                                }}
+                            >
+                                <i className="icon-trash" />
+                            </a>
+                        )
                     }
                 </LineInput>
 

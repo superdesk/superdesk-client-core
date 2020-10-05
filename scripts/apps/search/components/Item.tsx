@@ -6,7 +6,7 @@ import {get} from 'lodash';
 
 import {broadcast} from './fields/broadcast';
 
-import {ActionsMenu} from './index';
+import {ActionsMenu} from './actions-menu/ActionsMenu';
 import {closeActionsMenu, isIPublishedArticle} from '../helpers';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
@@ -16,6 +16,9 @@ import {IArticle, IDesk, IPublishedArticle} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {appConfig} from 'appConfig';
+import ng from 'core/services/ng';
+import {IScopeApply} from 'core/utils';
 
 function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -43,8 +46,6 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
 );
 
 interface IProps {
-    svc: any;
-    scope: any;
     swimlane: any;
     item: IArticle | IPublishedArticle;
     profilesById: any;
@@ -64,6 +65,10 @@ interface IProps {
     multiSelectDisabled: boolean;
     isNested: boolean;
     actioning: boolean;
+    singleLine: any;
+    customRender: any;
+    viewType: any;
+    scopeApply: IScopeApply;
 }
 
 interface IState {
@@ -76,9 +81,6 @@ interface IState {
 }
 
 export class Item extends React.Component<IProps, IState> {
-    static propTypes: any;
-    static defaultProps: any;
-
     clickTimeout: number;
 
     constructor(props) {
@@ -105,7 +107,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     componentWillMount() {
-        if (get(this.props, 'svc.config.apps', []).includes('superdesk-planning')) {
+        if (appConfig?.apps?.includes('superdesk-planning')) {
             this.loadPlanningModals();
         }
     }
@@ -121,7 +123,9 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     loadPlanningModals() {
-        const {session, superdesk, activityService} = this.props.svc;
+        const session = ng.get('session');
+        const superdesk = ng.get('superdesk');
+        const activityService = ng.get('activityService');
 
         if (!['add_to_planning', 'fulfil_assignment'].includes(get(this.props, 'item.lock_action')) ||
                 get(this.props, 'item.lock_user') !== session.identity._id ||
@@ -176,7 +180,7 @@ export class Item extends React.Component<IProps, IState> {
      * @param {string} itemId Id of the document
      */
     openAuthoringView(itemId) {
-        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
+        const authoringWorkspace: AuthoringWorkspaceService = ng.get('authoringWorkspace');
 
         authoringWorkspace.edit({_id: itemId}, 'view');
     }
@@ -211,7 +215,9 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     setHoverState() {
-        this.setState({hover: true});
+        if (this.state.hover !== true) {
+            this.setState({hover: true});
+        }
     }
 
     unsetHoverState() {
@@ -219,9 +225,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     onDragStart(event) {
-        const {dragitem} = this.props.svc;
-
-        dragitem.start(event, this.props.item);
+        ng.get('dragitem').start(event, this.props.item);
     }
 
     toggleNested(event) {
@@ -258,27 +262,27 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {item, scope} = this.props;
+        const {item} = this.props;
         let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
         // Customize item class from its props
-        if (scope.customRender && typeof scope.customRender.getItemClass === 'function') {
-            classes = `${classes} ${scope.customRender.getItemClass(item)}`;
+        if (this.props.customRender && typeof this.props.customRender.getItemClass === 'function') {
+            classes = `${classes} ${this.props.customRender.getItemClass(item)}`;
         }
 
         const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
-            this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
-                ActionsMenu, {
-                    item: item,
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                    onActioning: this.setActioningState,
-                    template: template,
-                }) : null;
+            this.props.hideActions !== true && this.state.hover && !item.gone ? (
+                <ActionsMenu
+                    item={item}
+                    onActioning={this.setActioningState}
+                    template={template}
+                    scopeApply={this.props.scopeApply}
+                />
+            ) : null;
 
         const getTemplate = () => {
             switch (this.props.view) {
@@ -289,7 +293,6 @@ export class Item extends React.Component<IProps, IState> {
                         isLocked={isLocked}
                         getActionsMenu={getActionsMenu}
                         onMultiSelect={this.props.onMultiSelect}
-                        svc={this.props.svc}
                     />
                 );
             case 'mgrid':
@@ -298,7 +301,6 @@ export class Item extends React.Component<IProps, IState> {
                         item={item}
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
-                        svc={this.props.svc}
                         ingestProvider={this.props.ingestProvider}
                         onMultiSelect={this.props.onMultiSelect}
                         broadcast={broadcast}
@@ -310,8 +312,6 @@ export class Item extends React.Component<IProps, IState> {
                     <ItemPhotoGrid
                         item={item}
                         desk={this.props.desk}
-                        ingestProvider={this.props.ingestProvider}
-                        svc={this.props.svc}
                         swimlane={this.props.swimlane}
                         onMultiSelect={this.props.onMultiSelect}
                         getActionsMenu={getActionsMenu}
@@ -322,7 +322,6 @@ export class Item extends React.Component<IProps, IState> {
                     <ListItemTemplate
                         item={item}
                         desk={this.props.desk}
-                        svc={this.props.svc}
                         openAuthoringView={this.openAuthoringView}
                         ingestProvider={this.props.ingestProvider}
                         highlightsById={this.props.highlightsById}
@@ -333,11 +332,13 @@ export class Item extends React.Component<IProps, IState> {
                         narrow={this.props.narrow}
                         onMultiSelect={this.props.onMultiSelect}
                         getActionsMenu={getActionsMenu}
-                        scope={this.props.scope}
                         selectingDisabled={this.props.multiSelectDisabled}
                         isNested={this.props.isNested}
                         showNested={this.state.showNested}
                         toggleNested={this.toggleNested}
+                        singleLine={this.props.singleLine}
+                        customRender={this.props.customRender}
+                        viewType={this.props.viewType}
                     />
                 );
             }
@@ -360,8 +361,6 @@ export class Item extends React.Component<IProps, IState> {
                             <Item
                                 item={childItem}
                                 key={childItem._id + childItem._current_version}
-                                svc={this.props.svc}
-                                scope={this.props.scope}
                                 flags={{}}
                                 profilesById={this.props.profilesById}
                                 isNested={true}
@@ -380,6 +379,10 @@ export class Item extends React.Component<IProps, IState> {
                                 onDbClick={this.props.onDbClick}
                                 onMultiSelect={this.props.onMultiSelect}
                                 actioning={false}
+                                singleLine={this.props.singleLine}
+                                customRender={this.props.customRender}
+                                viewType={this.props.viewType}
+                                scopeApply={this.props.scopeApply}
                             />
                         ))}
                     </div>
@@ -406,7 +409,7 @@ export class Item extends React.Component<IProps, IState> {
                         'sd-list-item-nested--collapsed': this.state.nested.length && this.state.showNested === false,
                     },
                 ),
-                onMouseEnter: getCallback(this.setHoverState),
+                onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
                 onClick: getCallback(this.select),

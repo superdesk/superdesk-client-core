@@ -45,7 +45,14 @@ angular.module('superdesk.apps.monitoring', [
     .component('sdMonitoringFilteringButtons',
         reactToAngular1(
             MonitoringFilteringButtons,
-            ['deskId', 'toggleFilter', 'isFilterActive', 'activeFilters', 'addResourceUpdatedEventListener'],
+            [
+                'deskId',
+                'toggleFilter',
+                'setFilter',
+                'isFilterActive',
+                'activeFilters',
+                'addResourceUpdatedEventListener',
+            ],
         ),
     )
     .directive('sdMonitoringGroup', directive.MonitoringGroup)

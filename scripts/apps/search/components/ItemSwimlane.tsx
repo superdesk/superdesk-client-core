@@ -1,5 +1,4 @@
 import React, {ReactElement} from 'react';
-import {get} from 'lodash';
 import classNames from 'classnames';
 
 import {IArticle} from 'superdesk-api';
@@ -7,15 +6,17 @@ import {IArticle} from 'superdesk-api';
 import {ListTypeIcon} from './ListTypeIcon';
 import {SwimlaneField} from './SwimlaneField';
 import {DEFAULT_SWIMLANE_FIELDS_CONFIG} from '../constants';
+import {appConfig} from 'appConfig';
 
-const renderGroup = (groups, item: IArticle, svc) => groups.map((group, groupIndex) => (
+const renderGroup = (groups, item: IArticle) => groups.map((group, groupIndex) => (
     <span
         key={groupIndex}
         className={classNames({
             'sd-list-item__column': true,
             'sd-list-item__column--grow': group.ellipsis === true,
             'sd-list-item__column--no-border': groupIndex === groups.length - 1,
-        })}>
+        })}
+    >
         <span className="sd-list-item__row">
             <span className={classNames({'sd-overflow-ellipsis': group.ellipsis === true})}>
                 {
@@ -25,7 +26,6 @@ const renderGroup = (groups, item: IArticle, svc) => groups.map((group, groupInd
                                 key={fieldIndex}
                                 fieldId={field}
                                 item={item}
-                                svc={svc}
                             />
                         ))
                 }
@@ -39,17 +39,13 @@ interface IProps {
     isLocked: boolean;
     getActionsMenu: (fn) => ReactElement<any>;
     onMultiSelect: () => void;
-    svc: any;
 }
 
 export class ItemSwimlane extends React.Component<IProps, any> {
     render() {
-        const {item, isLocked, getActionsMenu, svc} = this.props;
+        const {item, isLocked, getActionsMenu} = this.props;
 
-        const swimlaneViewFieldsConfig = get(
-            this.props.svc.config, 'swimlaneViewFields',
-            DEFAULT_SWIMLANE_FIELDS_CONFIG,
-        );
+        const swimlaneViewFieldsConfig = appConfig.swimlaneViewFields ?? DEFAULT_SWIMLANE_FIELDS_CONFIG;
 
         return (
             <div className="sd-list-item" style={{borderBottom: '1px solid #e7e7e7'}}>
@@ -58,23 +54,25 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                         minWidth: '4px',
                         maxWidth: '4px',
                         background: isLocked ? '#e51c23' : 'transparent',
-                    }} />
+                    }}
+                />
                 <span className="sd-list-item__column">
                     <ListTypeIcon
                         item={item}
                         onMultiSelect={this.props.onMultiSelect}
                     />
                 </span>
-                {renderGroup(swimlaneViewFieldsConfig.left, item, svc)}
+                {renderGroup(swimlaneViewFieldsConfig.left, item)}
                 <span className="sd-list-item--element-grow" />
-                {renderGroup(swimlaneViewFieldsConfig.right, item, svc)}
+                {renderGroup(swimlaneViewFieldsConfig.right, item)}
                 {
                     getActionsMenu((toggle, stopEvent) => (
                         <div className="sd-list-item__action-menu">
                             <button
                                 className="icn-btn"
                                 onClick={toggle}
-                                onDoubleClick={stopEvent}>
+                                onDoubleClick={stopEvent}
+                            >
                                 <i className="icon-dots-vertical" />
                             </button>
                         </div>

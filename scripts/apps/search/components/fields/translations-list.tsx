@@ -37,8 +37,10 @@ export class TranslationsList extends React.PureComponent<IProps, IState> {
                     <li key={item._id} className="simple-list__item">
                         <b className="label label--hollow">{item.language}</b>
                         &nbsp;
-                        <a className="sd-overflow-ellipsis"
-                            onClick={() => this.props.onClick(item)}>
+                        <a
+                            className="sd-overflow-ellipsis"
+                            onClick={() => this.props.onClick(item)}
+                        >
                             {item.headline || item.slugline}
                         </a>
                     </li>

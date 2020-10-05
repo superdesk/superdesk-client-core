@@ -154,6 +154,14 @@ export function removeBlock(blockKey) {
     };
 }
 
+export function undo() {
+    return {type: 'UNDO'};
+}
+
+export function redo() {
+    return {type: 'REDO'};
+}
+
 /**
  * @ngdoc method
  * @name toggleInvisibles

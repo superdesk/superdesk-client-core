@@ -16,9 +16,12 @@ export const ItemType: React.StatelessComponent<any> = ({hasCheck, checked, onCh
     <Column hasCheck={hasCheck} checked={checked} >
         {hasCheck && (
             <div className="sd-list-item__checkbox-container">
-                <Checkbox value={checked} onChange={(field, value) => {
-                    onCheckToggle(value);
-                }}/>
+                <Checkbox
+                    value={checked}
+                    onChange={(field, value) => {
+                        onCheckToggle(value);
+                    }}
+                />
             </div>
         )}
     </Column>

@@ -131,7 +131,6 @@ export function AuthoringDirective(
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.fullPreview = false;
-            $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
@@ -722,7 +721,7 @@ export function AuthoringDirective(
                 // returned promise used by superdesk-fi
                 return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
                     authoringWorkspace.close(true);
-                    $scope.$broadcast('item:close', $scope.origItem._id);
+                    $rootScope.$broadcast('item:close', $scope.origItem._id);
                 });
             };
 
@@ -882,14 +881,20 @@ export function AuthoringDirective(
                 $scope.autosave(item);
             };
 
+            $scope.firstLineConfig = appConfig?.ui?.authoring?.firstLine ?? {};
+
+            // default to true
+            $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
+
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
 
-                authoring.autosave(
+                return authoring.autosave(
                     $scope.item,
                     $scope.origItem,
                     timeout,
+                ).then(
                     () => {
                         $scope.$applyAsync(() => {
                             authoringWorkspace.addAutosave();
@@ -1123,7 +1128,7 @@ export function AuthoringDirective(
                     var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
                     var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
 
-                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length < maxItems) {
+                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length <= maxItems) {
                         addMediaFieldVersion(fieldId, $scope.getNewMediaFieldId(fieldId));
                     }
                     _.forEach(mediaFields[fieldId], (version) => {

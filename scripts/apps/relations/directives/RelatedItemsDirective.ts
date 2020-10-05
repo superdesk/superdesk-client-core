@@ -17,7 +17,7 @@ interface IScope extends IDirectiveScope<void> {
     item: IArticle;
     loading: boolean;
     reorder: (start: {index: number}, end: {index: number}) => void;
-    relatedItems: Array<IArticle>;
+    relatedItems: {[key: string]: IArticle};
     onchange: () => void;
     addRelatedItem: (item: IArticle) => void;
     isEmptyRelatedItems: (fieldId: string) => void;
@@ -47,7 +47,6 @@ RelatedItemsDirective.$inject = [
     '$rootScope',
     'content',
     'storage',
-    'autosave',
 ];
 export function RelatedItemsDirective(
     authoringWorkspace: AuthoringWorkspaceService,
@@ -57,7 +56,6 @@ export function RelatedItemsDirective(
     $rootScope,
     content,
     storage,
-    autosave,
 ) {
     return {
         scope: {
@@ -74,17 +72,6 @@ export function RelatedItemsDirective(
                     storage.setItem(`open-item-after-related-closed--${item._id}`, scope.item._id);
                 });
             };
-
-            scope.$on('item:close', (evt, mainArticleId) => {
-                const itemId = storage.getItem(`open-item-after-related-closed--${mainArticleId}`);
-
-                if (itemId != null) {
-                    autosave.get({_id: itemId}).then((result) => {
-                        authoringWorkspace.open(result);
-                        storage.removeItem(`open-item-after-related-closed--${mainArticleId}`);
-                    });
-                }
-            });
 
             scope.gettext = gettext;
 
@@ -239,7 +226,16 @@ export function RelatedItemsDirective(
                 scope.loading = true;
                 relationsService.getRelatedItemsForField(scope.item, scope.field._id)
                     .then((items) => {
-                        scope.relatedItems = items;
+                        scope.relatedItems = {};
+                        Object.keys(items).forEach((key) => {
+                            if (items[key] != null) {
+                                scope.relatedItems[key] = items[key];
+                            } else {
+                                scope.removeRelatedItem(key);
+                                notify.warning(gettext('Related item is not available.'));
+                            }
+                        });
+                    }).finally(() => {
                         scope.loading = false;
                     });
             };

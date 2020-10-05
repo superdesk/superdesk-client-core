@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {s, ECE, el} from 'end-to-end-testing-helpers';
+import {s, ECE, el, els} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {
@@ -105,7 +105,6 @@ class Monitoring {
     closeHighlightsPopup: () => void;
     checkMarkedForDesk: (desk: any, group: any, item: any) => void;
     closeMarkedForDeskPopup: () => void;
-    checkMarkedForMultiHighlight: (highlight: any, group: any, item: any) => void;
     removeFromFirstHighlight: (group: any, item: any) => void;
     removeFromFirstDesk: (group: any, item: any) => void;
     selectDesk: (desk: any) => void;
@@ -336,7 +335,7 @@ class Monitoring {
             item.click();
             var preview = element(by.id('item-preview'));
 
-            waitFor(preview);
+            waitFor(preview, 5000);
         };
 
         this.closePreview = function() {
@@ -368,13 +367,16 @@ class Monitoring {
         };
 
         this.tabAction = function(tab) {
-            element.all(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]')).click();
+            const btn = element(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]'));
+
+            browser.wait(ECE.elementToBeClickable(btn), 2000);
+
+            btn.click();
         };
 
         this.openRelatedItem = function(index) {
-            var relatedItem = element.all(by.repeater('relatedItem in relatedItems._items')).get(index);
-
-            relatedItem.all(by.className('related-item')).get(index).click();
+            els(['article-item'], null, el(['related-items-view'])).get(index).click();
+            browser.wait(ECE.presenceOf(el(['authoring'])));
         };
 
         /**
@@ -736,10 +738,12 @@ class Monitoring {
         this.checkMarkedForHighlight = function(highlight, group, item) {
             var crtItem = this.getItem(group, item);
 
-            crtItem.element(by.className('icon-star')).click();
-            var highlightList = element(by.className('highlights-list-menu'));
+            el(['highlights-indicator'], null, crtItem).click();
 
-            waitFor(highlightList);
+            var highlightList = el(['highlights-list']);
+
+            browser.wait(ECE.presenceOf(highlightList));
+
             expect(highlightList.getText()).toContain(highlight);
         };
 
@@ -775,24 +779,6 @@ class Monitoring {
             element(by.className('highlights-list-menu'))
                 .element(by.className('icon-close-small'))
                 .click();
-        };
-
-        /**
-         * Check if on monitoring view an item from group is marked for highlight
-         * @param {string} highlight
-         * @param {number} group
-         * @param {number} item
-         */
-        this.checkMarkedForMultiHighlight = function(highlight, group, item) {
-            var crtItem = this.getItem(group, item);
-            var star = crtItem.element(by.className('icon-multi-star'));
-
-            expect(star.isPresent()).toBe(true);
-            star.click();
-            var highlightList = element(by.className('highlights-list-menu'));
-
-            waitFor(highlightList);
-            expect(highlightList.getText()).toContain(highlight);
         };
 
         /**

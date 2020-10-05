@@ -27,35 +27,42 @@ export const DEFAULT_SCHEMA = Object.freeze({
     body_footer: {type: 'string'},
 });
 
-export const DEFAULT_EDITOR = Object.freeze({
-    slugline: {order: 1, sdWidth: 'full', enabled: true},
-    genre: {order: 2, sdWidth: 'half', enabled: true},
-    anpa_take_key: {order: 3, sdWidth: 'half', enabled: true},
-    place: {order: 4, sdWidth: 'half', enabled: true},
-    priority: {order: 5, sdWidth: 'quarter', enabled: true},
-    urgency: {order: 6, sdWidth: 'quarter', enabled: true},
-    anpa_category: {order: 7, sdWidth: 'full', enabled: true},
-    subject: {order: 8, sdWidth: 'full', enabled: true},
-    company_codes: {order: 9, sdWidth: 'full', enabled: true},
-    ednote: {order: 10, sdWidth: 'full', enabled: true},
-    headline: {order: 11, formatOptions: ['underline', 'link', 'bold'], enabled: true},
-    sms: {order: 12, enabled: true},
-    abstract: {
-        order: 13,
-        formatOptions: ['bold', 'italic', 'underline', 'link'],
-        enabled: true,
-    },
-    byline: {order: 14, enabled: true},
-    dateline: {order: 15, enabled: true},
-    body_html: {
-        order: 16,
-        formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'link', 'embed', 'media'],
-        enabled: true,
-    },
-    footer: {order: 17, enabled: true},
-    body_footer: {order: 18, enabled: true},
-    sign_off: {order: 19, enabled: true},
-});
+export function GET_DEFAULT_EDITOR() {
+    // editor2 is being deprecated, but many tests depend on it.
+    const editor3enabled = window['superdesk_e2e_tests_running'] !== true;
+
+    return Object.freeze({
+        slugline: {order: 1, sdWidth: 'full', enabled: true},
+        genre: {order: 2, sdWidth: 'half', enabled: true},
+        anpa_take_key: {order: 3, sdWidth: 'half', enabled: true},
+        place: {order: 4, sdWidth: 'half', enabled: true},
+        priority: {order: 5, sdWidth: 'quarter', enabled: true},
+        urgency: {order: 6, sdWidth: 'quarter', enabled: true},
+        anpa_category: {order: 7, sdWidth: 'full', enabled: true},
+        subject: {order: 8, sdWidth: 'full', enabled: true},
+        company_codes: {order: 9, sdWidth: 'full', enabled: true},
+        ednote: {order: 10, sdWidth: 'full', enabled: true},
+        headline: {order: 11, formatOptions: ['underline', 'link', 'bold'], editor3: editor3enabled, enabled: true},
+        sms: {order: 12, enabled: true},
+        abstract: {
+            order: 13,
+            formatOptions: ['bold', 'italic', 'underline', 'link'],
+            enabled: true,
+            editor3: editor3enabled,
+        },
+        byline: {order: 14, enabled: true},
+        dateline: {order: 15, enabled: true},
+        body_html: {
+            order: 16,
+            formatOptions: ['h2', 'bold', 'italic', 'underline', 'quote', 'link', 'embed', 'media'],
+            enabled: true,
+            editor3: editor3enabled,
+        },
+        footer: {order: 17, enabled: true},
+        body_footer: {order: 18, enabled: true},
+        sign_off: {order: 19, enabled: true},
+    });
+}
 
 // labelMap maps schema entry keys to their display names.
 export const GET_LABEL_MAP = () => ({
@@ -65,6 +72,7 @@ export const GET_LABEL_MAP = () => ({
     anpa_take_key: gettext('Take Key'),
     archive_description: gettext('Archive description'),
     attachments: gettext('Attachments'),
+    authors: gettext('Authors'),
     body_footer: gettext('Body footer'),
     body_html: gettext('Body HTML'),
     byline: gettext('Byline'),
@@ -143,7 +151,7 @@ export function getLabelForStage(stage: IStage | ICard): string {
     }
 
     if (isCard(stage)) {
-        return getLabelForStageType(stage.type) ?? SplitFilter()(stage.type);
+        return getLabelForStageType(stage.type) ?? stage.type;
     }
 }
 

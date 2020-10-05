@@ -210,14 +210,16 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
 
         return (
             <div id={contact._id} key={contact._id} className="contact-form">
-                <form name="contactForm"
+                <form
+                    name="contactForm"
                     className={formClass}
                     onSubmit={(e) => e.preventDefault()}
                 >
                     {!hideActionBar && (
                         <div className="subnav subnav--darker">
                             <StretchBar>
-                                <div className="contact__type-icon"
+                                <div
+                                    className="contact__type-icon"
                                     data-sd-tooltip={gettext('Organisation Contact')}
                                     data-flow="right"
                                 >

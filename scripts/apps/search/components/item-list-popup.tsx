@@ -39,9 +39,11 @@ export class ItemListPopup extends React.PureComponent<IProps> {
 
     render() {
         return createPortal(
-            <ul className="highlights-list-menu"
+            <ul
+                className="highlights-list-menu"
                 onClick={stopEvent}
-                onDoubleClick={stopEvent}>
+                onDoubleClick={stopEvent}
+            >
                 <li>
                     <div className="dropdown__menu-label">{this.props.label}</div>
                     <button className="dropdown__menu-close" onClick={this.close}>

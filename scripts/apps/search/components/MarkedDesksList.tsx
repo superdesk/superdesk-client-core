@@ -1,23 +1,30 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {closeActionsMenu} from '../helpers';
 import {isString, map} from 'lodash';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
+import {IArticle} from 'superdesk-api';
+
+interface IProps {
+    item: IArticle;
+    markedDesksById: any;
+}
 
 /**
  * @ngdoc React
  * @module superdesk.apps.search
  * @name MarkedDesksList
- * @param {Object} svc the services nedded: desks and $timeout
  * @param {Object} item story to be marked
  * @param {Object} markedDesksById the dict of deskId and desk object
  * @description Creates a list of desks that is used for marking a story for a desk
  */
-export class MarkedDesksList extends React.Component<any, any> {
+export class MarkedDesksList extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
     timeout: any;
+    $timeout: any;
+    desks: any;
 
     constructor(props) {
         super(props);
@@ -26,10 +33,13 @@ export class MarkedDesksList extends React.Component<any, any> {
         this.stopTimeout = this.stopTimeout.bind(this);
         this.close = this.close.bind(this);
         this.closeMenu = this.closeMenu.bind(this);
+
+        this.$timeout = ng.get('$timeout');
+        this.desks = ng.get('desks');
     }
 
     removeMarkedDesk(desk) {
-        const {desks} = this.props.svc;
+        const {desks} = this;
 
         return function(event) {
             event.stopPropagation();
@@ -51,26 +61,29 @@ export class MarkedDesksList extends React.Component<any, any> {
     }
 
     stopTimeout() {
-        const {$timeout} = this.props.svc;
+        const {$timeout} = this;
 
         this.timeout = $timeout.cancel(this.timeout);
     }
 
     close() {
-        const {$timeout} = this.props.svc;
+        const {$timeout} = this;
 
         this.timeout = $timeout(this.closeMenu, 2000, false);
     }
 
     render() {
-        const {desks} = this.props.svc;
+        const {desks} = this;
         const markedDesks = isString(this.props.item.marked_desks[0]) ?
             this.props.item.marked_desks : map(this.props.item.marked_desks, 'desk_id');
         const markedDesksById = this.props.markedDesksById || {};
 
         return (
-            <ul className="dropdown dropdown__menu highlights-list-menu open"
-                onMouseEnter={this.stopTimeout} onMouseLeave={this.close}>
+            <ul
+                className="dropdown dropdown__menu highlights-list-menu open"
+                onMouseEnter={this.stopTimeout}
+                onMouseLeave={this.close}
+            >
                 <li key="item-marked-label">
                     <div className="dropdown__menu-label">{gettext('Marked For')}
                         <button className="dropdown__menu-close" onClick={this.closeMenu}>
@@ -79,26 +92,25 @@ export class MarkedDesksList extends React.Component<any, any> {
                     </div>
                 </li>
                 {
-                    markedDesks.map((d) => <li key={'item-marked-' + markedDesksById[d]._id}>
-                        {markedDesksById[d].name}
-                        {desks.hasMarkItemPrivilege() ?
-                            <button className="btn btn--small btn--hollow btn--primary btn--ui-dark"
-                                onClick={this.removeMarkedDesk(markedDesksById[d])}>
-                                {gettext('REMOVE')}</button> : null}
-                    </li>)
+                    markedDesks.map((d) => (
+                        <li key={'item-marked-' + markedDesksById[d]._id}>
+                            {markedDesksById[d].name}
+                            {
+                                desks.hasMarkItemPrivilege()
+                                    ? (
+                                        <button
+                                            className="btn btn--small btn--hollow btn--primary btn--ui-dark"
+                                            onClick={this.removeMarkedDesk(markedDesksById[d])}
+                                        >
+                                            {gettext('REMOVE')}
+                                        </button>
+                                    )
+                                    : null
+                            }
+                        </li>
+                    ))
                 }
             </ul>
         );
     }
 }
-
-/**
- * svc: contains $timeout and desks and is required
- * item: is the story to be marked
- * markedDesksById: dict of desks by desk id
- */
-MarkedDesksList.propTypes = {
-    svc: PropTypes.object.isRequired,
-    item: PropTypes.any,
-    markedDesksById: PropTypes.any,
-};

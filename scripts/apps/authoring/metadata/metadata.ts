@@ -4,7 +4,7 @@ import MetaPlaceDirective from './MetaPlaceDirective';
 import {getVocabularySelectionTypes} from '../../vocabularies/constants';
 import {gettext} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
-import {appConfig} from 'appConfig';
+import {appConfig, getUserInterfaceLanguage} from 'appConfig';
 import {ISubject} from 'superdesk-api';
 
 MetadataCtrl.$inject = [
@@ -52,9 +52,7 @@ function MetadataCtrl(
     */
     function setAvailableCategories(prefs) {
         var all, // all available categories
-            assigned = {}, // category codes already assigned to the article
             filtered,
-            itemCategories, // existing categories assigned to the article
 
             // user's category preference settings , i.e. a map
             // object (<category_code> --> true/false)
@@ -62,16 +60,7 @@ function MetadataCtrl(
 
         all = metadata.values.categories || [];
         userPrefs = prefs['categories:preferred'].selected;
-
-        // gather article's existing category codes
-        itemCategories = $scope.item.anpa_category || [];
-
-        itemCategories.forEach((cat) => {
-            assigned[cat.qcode] = true;
-        });
-
-        filtered = _.filter(all, (cat) => !assigned[cat.qcode] && (_.isEmpty(userPrefs) || userPrefs[cat.qcode]));
-
+        filtered = _.filter(all, (cat) => _.isEmpty(userPrefs) || userPrefs[cat.qcode]);
         $scope.availableCategories = _.sortBy(filtered, 'name');
     }
 
@@ -1352,16 +1341,22 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
         },
-        getLocaleName: function(term, item) {
+        getLocaleName: function(term, item: any) {
             if (!term) {
                 return 'None';
             }
-            if (term.translations && item.language
-                && term.translations.name[item.language]) {
-                return term.translations.name[item.language];
-            }
 
-            return term.name;
+            // Item can be anything here. It might be an article object or search filters object
+            // depending where the function is called from.
+            // It's checked if language is a string in order not to confuse it when language
+            // is an array when called from global search filters.
+            const language = typeof item.language === 'string' ? item.language : getUserInterfaceLanguage();
+
+            // FIXME: Remove replacing _/- when language codes are normalized on the server.
+
+            return term.translations?.name?.[language]
+                ?? term.translations?.name?.[language.replace('_', '-')]
+                ?? term.name;
         },
     };
 

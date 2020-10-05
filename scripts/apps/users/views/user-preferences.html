@@ -7,13 +7,13 @@
 
     <div class="preferences form-flat inner-content" ng-init="val = true">
         <ul class="simple-list simple-list--comfortable simple-list--dotted simple-list--no-border-b simple-list--no-border-t sd-padding--2">
-            
-            <li class="simple-list__item" 
+
+            <li class="simple-list__item"
                 ng-repeat="(id, p) in preferences track by id"
                 ng-if="showCategory(p)">
-                <div class="user-preferences__heading">{{ p.category | translate }}</div>
+                <div class="user-preferences__heading">{{ p.category_label }}</div>
                 <div sd-info-item>
-                    
+
                     <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview' || id === 'singleline:view'">
                         <span sd-switch ng-hide="p.allowed" ng-model="p.enabled"></span>
                         <label class="form-label">{{ :: p.label | translate }}</label>
@@ -22,11 +22,11 @@
                     <span ng-show="p.allowed">
                         <label class="form-label">{{ :: p.label | translate }}</label>
                         <div class="sd-check__group">
-                            <sd-check ng-repeat="i in p.allowed" 
+                            <sd-check ng-repeat="i in p.allowed"
                                 ng-model="p.view"
                                 label-position="inside"
                                 type="radio"
-                                data-icon="{{getIcon(i)}}" 
+                                data-icon="{{getIcon(i)}}"
                                 ng-value="{{i}}">{{ valueLabel(i) }}</sd-check>
                         </div>
                     </span>
@@ -55,7 +55,7 @@
 
                 <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.located === false">
                     <div class="form__row">
-                        <span sd-meta-locators 
+                        <span sd-meta-locators
                             data-item="preferences['dateline:located']"
                             data-field="located"
                             data-postprocessing="changeDatelinePreview(item, city)"
@@ -65,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-    
+
                 <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.place === false">
                     <label class="form-label">{{ :: preferences['article:default:place'].label | translate}}</label>
                     <div class="form__row form__row--s-padding">
@@ -80,7 +80,7 @@
 
             <li class="simple-list__item" ng-hide="profileConfig.category === false">
                 <div class="user-preferences__heading">
-                    {{ :: preferences['categories:preferred'].category | translate }}
+                    {{ preferences['categories:preferred'].category_label }}
                 </div>
 
                 <div sd-info-item>
@@ -103,8 +103,8 @@
                            class="preferences__action-link"
                            title="{{:: 'Clear all selected' | translate}}"
                            translate>none</a>
-                           
-                        <span class="preferences__action-spacer"></span>  
+
+                        <span class="preferences__action-spacer"></span>
 
                         <a ng-click="checkDefault()"
                            class="preferences__action-link"
@@ -117,7 +117,7 @@
                                 label-position="inside"
                                 id="cat_{{::cat.qcode}}"
                                 ng-value="{{cat.qcode}}">
-                                {{:: cat.name | translate}}
+                                {{:: cat.name }}
                             </sd-check>
                         </span>
                     </div>
@@ -126,7 +126,7 @@
 
             <li class="simple-list__item" ng-hide="profileConfig.desks === false">
                 <div class="user-preferences__heading">
-                    {{ :: preferences['desks:preferred'].category | translate }}
+                    {{ :: preferences['desks:preferred'].category_label }}
                 </div>
                 <div sd-info-item>
                     <label>

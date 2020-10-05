@@ -10,7 +10,6 @@ interface IProps {
     item: IArticle;
     desk: IDesk;
     swimlane: any;
-    svc: any;
     ingestProvider: any;
     onMultiSelect(): any;
     broadcast(obj: any): any;
@@ -27,18 +26,15 @@ export class ItemMgridTemplate extends React.Component<IProps, never> {
                     item={item}
                     desk={this.props.desk}
                     onMultiSelect={this.props.onMultiSelect}
-                    swimlane={this.props.swimlane}
-                    svc={this.props.svc}
                 />
                 <MediaInfo
                     item={item}
                     ingestProvider={this.props.ingestProvider}
-                    svc={this.props.svc}
                 />
                 <div className="media-box__footer">
-                    <GridTypeIcon item={item} svc={this.props.svc} />
-                    {item.priority ? <ItemPriority {...angular.extend({svc: this.props.svc}, item)} /> : null}
-                    {item.urgency ? <ItemUrgency {...angular.extend({svc: this.props.svc}, item)} /> : null}
+                    <GridTypeIcon item={item} />
+                    {item.priority ? <ItemPriority priority={item.priority} /> : null}
+                    {item.urgency ? <ItemUrgency urgency={item.urgency} /> : null}
                     {this.props.broadcast({item: item})}
                     {this.props.getActionsMenu()}
                 </div>

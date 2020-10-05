@@ -9,7 +9,9 @@ import {ISortOption, IVocabularyItem} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {Dropdown} from 'core/ui/components/Dropdown/Dropdown';
 import {Menu} from 'core/ui/components/Dropdown/Menu';
-import {Checkbox} from 'superdesk-ui-framework/react';
+import {dataApi} from 'core/helpers/CrudManager';
+import {ILanguage} from 'superdesk-interfaces/Language';
+import {ManageVocabularyItemTranslations} from '../ManageVocabularyItemTranslations';
 
 interface ISchemaField {
     key: string;
@@ -97,7 +99,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
         switch (field.type) {
         case 'bool':
             return (
-                <input type="checkbox"
+                <input
+                    type="checkbox"
                     checked={!!value}
                     disabled={disabled}
                     onChange={() => this.props.update(item, field.key, !value)}
@@ -106,7 +109,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
 
         case 'color':
             return (
-                <input type="color"
+                <input
+                    type="color"
                     value={value}
                     disabled={disabled}
                     onChange={(event) => this.props.update(item, field.key, event.target.value)}
@@ -115,7 +119,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
 
         case 'short':
             return (
-                <input type="text"
+                <input
+                    type="text"
                     value={value}
                     disabled={disabled}
                     onChange={(event) => {
@@ -137,7 +142,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
         case 'integer':
             return (
                 <div className={className}>
-                    <input type="number"
+                    <input
+                        type="number"
                         value={value}
                         disabled={disabled}
                         className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
@@ -151,7 +157,8 @@ class InputField extends React.PureComponent<IPropsInputField> {
         default:
             return (
                 <div className={className}>
-                    <input type="text"
+                    <input
+                        type="text"
                         className={field.key === 'name' ? 'long-name sd-line-input__input' : 'sd-line-input__input'}
                         value={value}
                         disabled={disabled}
@@ -182,6 +189,7 @@ interface IState {
     sortDropdownOpen: boolean;
     sort: ISortOption | null;
     errorMessage: string | null;
+    languages: Array<ILanguage> | null;
 }
 
 export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
@@ -216,6 +224,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
             sortDropdownOpen: false,
             sort: initialSortOption,
             errorMessage: null,
+            languages: null,
         };
 
         this.updateItem = this.updateItem.bind(this);
@@ -243,8 +252,6 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                 }
             }),
         });
-
-        this.setDirtyOnce();
     }
 
     private removeItem(item: any) {
@@ -277,6 +284,15 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
 
     componentDidMount() {
         this.setValidItemsDebounced();
+
+        dataApi.query<ILanguage>(
+            'languages',
+            1,
+            {field: 'language', direction: 'ascending'},
+            {},
+        ).then((res) => {
+            this.setState({languages: res._items});
+        });
     }
 
     componentDidUpdate(prevProps: IProps, prevState: IState) {
@@ -290,11 +306,18 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
         }
 
         if (this.state.items !== prevState.items) {
+            this.setDirtyOnce();
             this.setValidItemsDebounced();
         }
     }
 
     render() {
+        const {languages} = this.state;
+
+        if (languages == null) {
+            return null;
+        }
+
         const takeFrom = (this.state.page - 1) * pageSize;
         const takeTo = this.state.page * pageSize;
         const filteredItems = this.state.searchTerm.length < 1
@@ -317,10 +340,14 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             >
                                 <i className="icon-search" />
                             </label>
-                            <input type="text" value={this.state.searchTerm}
-                                placeholder={gettext('Search')} onChange={(event) => {
+                            <input
+                                type="text"
+                                value={this.state.searchTerm}
+                                placeholder={gettext('Search')}
+                                onChange={(event) => {
                                     this.setState({searchTerm: event.target.value, page: 1});
-                                }} />
+                                }}
+                            />
                             <button className="search-close"><i className="icon-close-small" /></button>
                         </div>
                     </div>
@@ -330,8 +357,10 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             <Dropdown
                                 isOpen={this.state.sortDropdownOpen}
                             >
-                                <button className="dropdown__toggle"
-                                    onClick={() => this.setState({sortDropdownOpen: !this.state.sortDropdownOpen})}>
+                                <button
+                                    className="dropdown__toggle"
+                                    onClick={() => this.setState({sortDropdownOpen: !this.state.sortDropdownOpen})}
+                                >
                                     {this.state.sort.field}
                                     <span className="dropdown__caret" />
                                 </button>
@@ -341,12 +370,14 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                     {this.sortFields.map((field) => {
                                         return (
                                             <li key={field}>
-                                                <button onClick={() => {
-                                                    this.setState({
-                                                        sort: {...this.state.sort, field},
-                                                        sortDropdownOpen: false,
-                                                    });
-                                                }}>
+                                                <button
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            sort: {...this.state.sort, field},
+                                                            sortDropdownOpen: false,
+                                                        });
+                                                    }}
+                                                >
                                                     {field}
                                                 </button>
                                             </li>
@@ -357,18 +388,21 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                         )}
 
                         {this.state.sort == null ? null : (
-                            <button className="icn-btn direction" onClick={() => {
-                                const nextSortOption: ISortOption = {
-                                    ...this.state.sort,
-                                    direction: this.state.sort.direction === 'ascending'
-                                        ? 'descending'
-                                        : 'ascending',
-                                };
+                            <button
+                                className="icn-btn direction"
+                                onClick={() => {
+                                    const nextSortOption: ISortOption = {
+                                        ...this.state.sort,
+                                        direction: this.state.sort.direction === 'ascending'
+                                            ? 'descending'
+                                            : 'ascending',
+                                    };
 
-                                this.setState({
-                                    sort: nextSortOption,
-                                });
-                            }}>
+                                    this.setState({
+                                        sort: nextSortOption,
+                                    });
+                                }}
+                            >
                                 {this.state.sort.direction === 'ascending'
                                     ? <i className="icon-descending" />
                                     : <i className="icon-ascending" />
@@ -376,18 +410,21 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             </button>
                         )}
 
-                        <button className="btn btn--primary" onClick={() => {
+                        <button
+                            className="btn btn--primary"
+                            onClick={() => {
                             // clearing search before adding an item so it doesn't get filtered
-                            this.setState({searchTerm: ''}, () => {
-                                this.addItem();
+                                this.setState({searchTerm: ''}, () => {
+                                    this.addItem();
 
-                                // using a timeout to wait for this.state.items to update after adding an item
-                                // in case adding an item causes page count to increase
-                                setTimeout(() => {
-                                    this.setState({page: 1});
+                                    // using a timeout to wait for this.state.items to update after adding an item
+                                    // in case adding an item causes page count to increase
+                                    setTimeout(() => {
+                                        this.setState({page: 1});
+                                    });
                                 });
-                            });
-                        }}>
+                            }}
+                        >
                             <i className="icon-plus-sign" />
                             <span>{gettext('Add Item')}</span>
                         </button>
@@ -428,40 +465,55 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                         <tbody>
                             {filteredItems.slice(takeFrom, takeTo).map((item) => {
                                 return (
-                                    <tr key={item.id}>
-                                        {this.props.schemaFields.map((field) => {
-                                            return (
-                                                <td key={field.key}>
-                                                    <InputField
-                                                        field={field}
-                                                        item={item}
-                                                        required={field.required}
-                                                        update={this.updateItem}
+                                    <React.Fragment key={item.id}>
+                                        <tr className="no-bottom-border add-border-top">
+                                            {this.props.schemaFields.map((field) => {
+                                                return (
+                                                    <td key={field.key}>
+                                                        <InputField
+                                                            field={field}
+                                                            item={item}
+                                                            required={field.required}
+                                                            update={this.updateItem}
+                                                        />
+                                                    </td>
+                                                );
+                                            })}
+                                            <td>
+                                                <span className="vocabularyStatus">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={!!item.is_active}
+                                                        onChange={
+                                                            () => this.updateItem(item, 'is_active', !item.is_active)
+                                                        }
                                                     />
-                                                </td>
-                                            );
-                                        })}
-                                        <td>
-                                            <span className="vocabularyStatus">
-                                                <input type="checkbox"
-                                                    checked={!!item.is_active}
-                                                    onChange={
-                                                        () => this.updateItem(item, 'is_active', !item.is_active)
-                                                    }
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button
+                                                    className="icn-btn"
+                                                    onClick={() => {
+                                                        this.removeItem(item);
+                                                    }}
+                                                    data-test-id="remove"
+                                                >
+                                                    <i className="icon-close-small" />
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr className="no-bottom-border">
+                                            <td>
+                                                <ManageVocabularyItemTranslations
+                                                    item={item}
+                                                    update={(field, value) => {
+                                                        this.updateItem(item, field, value);
+                                                    }}
+                                                    languages={languages}
                                                 />
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button className="icn-btn"
-                                                onClick={() => {
-                                                    this.removeItem(item);
-                                                }}
-                                                data-test-id="remove"
-                                            >
-                                                <i className="icon-close-small" />
-                                            </button>
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
                                 );
                             })}
                         </tbody>

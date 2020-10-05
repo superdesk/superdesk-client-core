@@ -9,6 +9,7 @@ import {getAllCustomDataFromEditor, setAllCustomDataForEditor} from '../helpers/
 import {getCurrentAuthor} from '../helpers/author';
 import {htmlComesFromDraftjsEditor} from '../helpers/htmlComesFromDraftjsEditor';
 import {EDITOR_GLOBAL_REFS} from 'core/editor3/components/Editor3Component';
+import {escape as escapeHtml} from 'lodash';
 
 function removeMediaFromHtml(htmlString): string {
     const element = document.createElement('div');
@@ -62,7 +63,7 @@ function pasteContentFromOpenEditor(
 // preserve line breaks when pasting or forcing plain text
 // \r are important for draft convertFromHTML to preserve initial spaces on each line
 export const createHtmlFromText = (text: string): string =>
-    text.split('\n').map((line) => `<p>${line}</p>`).join('');
+    escapeHtml(text).split('\n').map((line) => `<p>${line}</p>`).join('');
 
 /**
  * @ngdoc method

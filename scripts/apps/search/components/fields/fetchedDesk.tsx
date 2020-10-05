@@ -8,7 +8,6 @@ export const fetchedDesk: React.StatelessComponent<IPropsItemListInfo> = (props)
         return React.createElement(FetchedDesksInfo, {
             item: props.item,
             key: 'desk',
-            svc: props.svc,
         });
     } else {
         return null;
@@ -16,6 +15,5 @@ export const fetchedDesk: React.StatelessComponent<IPropsItemListInfo> = (props)
 };
 
 fetchedDesk.propTypes = {
-    svc: PropTypes.object.isRequired,
     item: PropTypes.any,
 };

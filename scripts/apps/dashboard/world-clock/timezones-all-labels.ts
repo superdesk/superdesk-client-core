@@ -23,6 +23,7 @@ const getTimezoneLabels = () => ({
     'America/Bogota': gettext('America/Bogota'),
     'America/Caracas': gettext('America/Caracas'),
     'America/Chicago': gettext('America/Chicago'),
+    'America/Edmonton': gettext('America/Edmonton'),
     'America/Guatemala': gettext('America/Guatemala'),
     'America/Halifax': gettext('America/Halifax'),
     'America/Havana': gettext('America/Havana'),
