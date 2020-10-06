@@ -8,6 +8,12 @@ import {gettext} from 'core/utils';
 import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework/react';
 import LazyLoad, {forceVisible} from 'react-lazyload';
 
+export enum AvatarSize {
+    small = 24,
+    medium = 30,
+    large = 48,
+}
+
 class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
         const {user} = this.props;
@@ -62,6 +68,7 @@ const LazyOrNot = ({children, ...rest}) => {
                 once
                 overflow
                 scrollContainer={props.scrollContainer}
+                height={props.size ? AvatarSize[props.size] : AvatarSize.medium}
             >
                 {children}
             </LazyLoad>
