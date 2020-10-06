@@ -168,7 +168,8 @@ export class CommentPopup extends React.Component<any, any> {
                     inlineActions={resolutionInfo === null && (
                         <button
                             className="btn btn--hollow btn--small"
-                            onClick={() => this.resolveComment()}>
+                            onClick={() => this.resolveComment()}
+                        >
                             {gettext('Resolve')}
                         </button>
                     )}
@@ -187,9 +188,11 @@ export class CommentPopup extends React.Component<any, any> {
                         </div>
                     )}
                     stickyFooter={(
-                        <div ref={(el) => {
-                            this.addReplyEl = el;
-                        }}>
+                        <div
+                            ref={(el) => {
+                                this.addReplyEl = el;
+                            }}
+                        >
                             <CommentTextArea
                                 className="comment-box__input"
                                 value={this.state.reply}
@@ -206,9 +209,12 @@ export class CommentPopup extends React.Component<any, any> {
                                     <div
                                         className="comment-box__reply-toolbar comment-box__reply-toolbar--active"
                                     >
-                                        <button onClick={() => {
-                                            this.postReply(comment, this.state.reply);
-                                        }} className="btn btn--primary">
+                                        <button
+                                            onClick={() => {
+                                                this.postReply(comment, this.state.reply);
+                                            }}
+                                            className="btn btn--primary"
+                                        >
                                             {gettext('Reply')}
                                         </button>
                                         <button onClick={() => this.resetReply()} className="btn">

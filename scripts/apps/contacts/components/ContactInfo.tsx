@@ -24,10 +24,14 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, labelInactive}
             </h3>
             <div key="contact-org">
                 <span className="item-info">{contactOrg}</span>
-                {!item.is_active && labelInactive &&
-                <span title="inactive"
-                    className="label label--draft label--hollow pull-right">
-                    {gettext('Inactive')}</span>}
+                {!item.is_active && labelInactive && (
+                    <span
+                        title="inactive"
+                        className="label label--draft label--hollow pull-right"
+                    >
+                        {gettext('Inactive')}
+                    </span>
+                )}
             </div>
         </div>,
     );
@@ -85,7 +89,7 @@ export const ContactInfo: React.StatelessComponent<any> = ({item, labelInactive}
         <ul className="simple-list simple-list--dotted simple-list--no-border-b simple-list--no-padding-b" key="dl">
             {meta}
             <li className="simple-list__item simple-list__item--with-icon" key="l-6">
-                <i key="12.1" className="icon-info-sign"/>
+                <i key="12.1" className="icon-info-sign" />
                 <span key="12.2">
                     {item.notes && (<Notes item={item} />)}
                 </span>

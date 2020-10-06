@@ -76,8 +76,8 @@ describe('item association directive', () => {
 
         event.preventDefault = jasmine.createSpy('preventDefault');
         event.stopPropagation = jasmine.createSpy('stopPropagation');
-        scope.onChange = jasmine.createSpy('onchange');
-        scope.save = jasmine.createSpy('save');
+        scope.onChange = jasmine.createSpy('onchange').and.returnValue(Promise.resolve(true));
+        scope.save = jasmine.createSpy('save').and.returnValue(Promise.resolve(true));
         elem.triggerHandler(event);
         $rootScope.$digest();
         expect(renditions.ingest).toHaveBeenCalled();
@@ -100,8 +100,9 @@ describe('item association directive', () => {
 
         event.preventDefault = jasmine.createSpy('preventDefault');
         event.stopPropagation = jasmine.createSpy('stopPropagation');
-        scope.onChange = jasmine.createSpy('onchange');
-        scope.save = jasmine.createSpy('save');
+        scope.onChange = jasmine.createSpy('onchange').and.returnValue(Promise.resolve(true));
+        scope.save = jasmine.createSpy('save').and.returnValue(Promise.resolve(true));
+
         elem.triggerHandler(event);
         $rootScope.$digest();
         expect(renditions.ingest).toHaveBeenCalled();
@@ -134,8 +135,8 @@ describe('item association directive', () => {
 
             event.preventDefault = jasmine.createSpy('preventDefault');
             event.stopPropagation = jasmine.createSpy('stopPropagation');
-            scope.onChange = jasmine.createSpy('onchange');
-            scope.save = jasmine.createSpy('save');
+            scope.onChange = jasmine.createSpy('onchange').and.returnValue(Promise.resolve(true));
+            scope.save = jasmine.createSpy('save').and.returnValue(Promise.resolve(true));
             elem.triggerHandler(event);
             $rootScope.$digest();
             expect(renditions.ingest).not.toHaveBeenCalled();

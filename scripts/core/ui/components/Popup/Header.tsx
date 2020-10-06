@@ -12,14 +12,16 @@ import Label from './Label';
 const Header: React.StatelessComponent<any> = (
     {text, onClose, children, className, noBorder, noPadding, centerText},
 ): any => (
-    <div className={classNames(
-        'popup__menu-header',
-        {
-            'popup__menu-header--no-border': noBorder,
-            'popup__menu-header--no-padding': noPadding,
-        },
-        className,
-    )}>
+    <div
+        className={classNames(
+            'popup__menu-header',
+            {
+                'popup__menu-header--no-border': noBorder,
+                'popup__menu-header--no-padding': noPadding,
+            },
+            className,
+        )}
+    >
         {text && (
             <Label text={text} centerText={centerText}>
                 {onClose && (

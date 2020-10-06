@@ -36,13 +36,15 @@ export class VideoComponent extends React.PureComponent<IProps> {
                 continue;
             } else if (rend.mimetype.toLowerCase() === 'application/x-mpegurl') {
                 // HLSVideoComponent can handle only one stream url
-                return <HLSVideoComponent
-                    poster={poster}
-                    streamUrl={rend.href}
-                    key={rend.href}
-                    width={this.props.width}
-                    height={this.props.height}
-                />;
+                return (
+                    <HLSVideoComponent
+                        poster={poster}
+                        streamUrl={rend.href}
+                        key={rend.href}
+                        width={this.props.width}
+                        height={this.props.height}
+                    />
+                );
             } else if (rend.mimetype.startsWith('video')) {
                 videoRenditions.push(rend);
             }
@@ -50,7 +52,8 @@ export class VideoComponent extends React.PureComponent<IProps> {
 
         return (
             // using key to force reload video on selecting different item for preview
-            <video key={item.guid}
+            <video
+                key={item.guid}
                 controls
                 preload="metadata"
                 poster={poster}
@@ -61,7 +64,7 @@ export class VideoComponent extends React.PureComponent<IProps> {
                 }}
             >
                 {videoRenditions.map((rendition) => (
-                    <source key={rendition.href} src={rendition.href} type={rendition.mimetype}/>
+                    <source key={rendition.href} src={rendition.href} type={rendition.mimetype} />
                 ))}
             </video>
         );

@@ -5,6 +5,7 @@ import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
+import {IPackagesService} from 'types/Services/Packages';
 
 /**
  * @ngdoc service
@@ -42,7 +43,7 @@ ContentService.$inject = [
     'renditions',
     'modal',
 ];
-export function ContentService(api, templates, desks, packages, archiveService, notify,
+export function ContentService(api, templates, desks, packages: IPackagesService, archiveService, notify,
     $filter, $q, $rootScope, session, send, renditions, modal) {
     const TEXT_TYPE = 'text';
 
@@ -245,7 +246,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      */
     this.editor = function(profile, contentType) {
         const editor = get(profile, 'editor',
-            get(appConfig.editor, contentType, constant.DEFAULT_EDITOR));
+            get(appConfig.editor, contentType, constant.GET_DEFAULT_EDITOR()));
 
         return angular.extend({}, editor);
     };
@@ -284,7 +285,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
     };
 
     this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);
-    this.contentProfileEditor = angular.extend({}, constant.DEFAULT_EDITOR, constant.EXTRA_EDITOR_FIELDS);
+    this.contentProfileEditor = angular.extend({}, constant.GET_DEFAULT_EDITOR(), constant.EXTRA_EDITOR_FIELDS);
 
     $rootScope.$on('vocabularies:updated', resetFields);
 

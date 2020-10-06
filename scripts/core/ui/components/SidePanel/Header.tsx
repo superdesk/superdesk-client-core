@@ -8,14 +8,16 @@ import classNames from 'classnames';
  * @description Header Component of a side panel
  */
 export const Header: React.StatelessComponent<any> = ({children, className, darkBlue, darker}) => (
-    <div className={classNames(
-        'side-panel__header',
-        {
-            'subnav--dark-blue-grey': darkBlue,
-            'subnav--darker': darker,
-        },
-        className,
-    )}>
+    <div
+        className={classNames(
+            'side-panel__header',
+            {
+                'subnav--dark-blue-grey': darkBlue,
+                'subnav--darker': darker,
+            },
+            className,
+        )}
+    >
         {children}
     </div>
 );

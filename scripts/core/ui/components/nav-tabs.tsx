@@ -38,8 +38,12 @@ export class NavTabs extends React.Component<ITabsProps, ITabsState> {
 
             return (
                 <li key={tab.label} className={className}>
-                    <button onClick={(event) => this.selectTab(i)}
-                        className="nav-tabs__link">{tab.label}</button>
+                    <button
+                        onClick={(event) => this.selectTab(i)}
+                        className="nav-tabs__link"
+                    >
+                        {tab.label}
+                    </button>
                 </li>
             );
         });

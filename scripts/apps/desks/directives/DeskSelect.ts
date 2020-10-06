@@ -1,3 +1,5 @@
+import {appConfig} from 'appConfig';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.desks
@@ -5,8 +7,8 @@
  * @requires preferencesService
  * @description Directive to handle desk selection functionality in drop-downs/menus
  */
-DeskSelect.$inject = ['Keys', 'lodash', 'preferencesService'];
-export function DeskSelect(Keys, _, preferencesService) {
+DeskSelect.$inject = ['Keys', 'lodash', 'preferencesService', 'privileges'];
+export function DeskSelect(Keys, _, preferencesService, privileges) {
     const UP = -1;
     const DOWN = 1;
 
@@ -29,6 +31,8 @@ export function DeskSelect(Keys, _, preferencesService) {
             selectedDesk: '=',
             defaultDesk: '=',
             onChange: '&',
+            allowPersonalSpace: '=?',
+            personalSpace: '=?',
         },
         controller: DeskSelectController,
         controllerAs: 'ctrl',
@@ -40,6 +44,10 @@ export function DeskSelect(Keys, _, preferencesService) {
             preferencesService.get('desks:preferred').then((result) => {
                 scope.preferredDesks = result;
             });
+
+            scope.sendToPersonal = appConfig?.features?.sendToPersonal === true
+                && scope.allowPersonalSpace
+                && privileges.userHasPrivileges({send_to_personal: 1});
 
             /**
              * @ngdoc property
