@@ -68,7 +68,7 @@ const LazyOrNot = ({children, ...rest}) => {
         );
     }
 
-    return <>{children}</>;
+    return children;
 };
 
 export class UserAvatar extends React.PureComponent<IProps> {
