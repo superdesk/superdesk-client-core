@@ -1,6 +1,7 @@
 import {gettext} from 'core/utils';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {getMultiActions} from '../controllers/get-multi-actions';
 
 describe('search service', () => {
     beforeEach(window.module('superdesk.templates-cache'));
@@ -244,7 +245,9 @@ describe('search service', () => {
         beforeEach(window.module('superdesk.apps.packaging'));
         beforeEach(window.module('superdesk.apps.authoring.multiedit'));
 
-        beforeEach(inject(($rootScope, $compile) => {
+        beforeEach(inject(($rootScope, $compile, $httpBackend) => {
+            $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+
             var elem = $compile('<div sd-multi-action-bar></div>')($rootScope.$new());
 
             scope = elem.scope();
@@ -265,10 +268,15 @@ describe('search service', () => {
             spyOn(multiEdit, 'create');
             spyOn(multiEdit, 'open');
 
+            const actions = getMultiActions(
+                () => scope.multi.getItems(),
+                () => scope.multi.reset(),
+            );
+
             scope.multi.toggle({_id: 'foo', selected: true});
             scope.multi.toggle({_id: 'bar', selected: true});
 
-            scope.action.multiedit();
+            actions.multiedit();
             expect(multiEdit.create).toHaveBeenCalledWith(['foo', 'bar']);
             expect(multiEdit.open).toHaveBeenCalled();
         }));

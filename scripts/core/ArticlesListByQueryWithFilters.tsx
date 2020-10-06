@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import {IArticle, ISortOption} from 'superdesk-api';
 import {ISuperdeskQuery, IOrOperator, IAndOperator} from './query-formatting';

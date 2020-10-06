@@ -65,12 +65,12 @@ export function getMultiActions(
             send.allAs(getSelectedItems(), 'externalsourceTo') :
             send.all(getSelectedItems())
         )
-        .then(() => {
-            unselectAll();
-        })
-        .finally(() => {
-            setActioning(false, items);
-        });
+            .then(() => {
+                unselectAll();
+            })
+            .finally(() => {
+                setActioning(false, items);
+            });
     };
 
     const setActioning = (actioning: boolean, items) => {
@@ -108,7 +108,7 @@ export function getMultiActions(
         Promise.all(getSelectedItems().map((item) => lock.lock(item, true, 'edit')))
             .then((selectedImages) => {
                 multiImageEdit.edit(selectedImages, (editedImages: Array<IArticle>) => Promise.all(
-                        editedImages.map((image: IArticle) => authoring.save(
+                    editedImages.map((image: IArticle) => authoring.save(
                         _.find(selectedImages, (_item: IArticle) => _item._id === image._id),
                         image,
                     )),
@@ -170,7 +170,7 @@ export function getMultiActions(
             onSpikeMultipleMiddlewares,
             items,
         );
-    };
+    }
 
     /**
      * Multiple item unspike
