@@ -97,7 +97,10 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                         this.removeContentUpdateListener = addWebsocketEventListener(
                             'resource:updated',
                             ({extra}) => {
-                                if (extra.resource === 'archive') {
+                                if (
+                                    extra.resource === 'archive'
+                                    || extra.resource === 'archive_unspike'
+                                ) {
                                     const reloadTheList = this.props?.shouldReloadTheList(
                                         new Set(Array.from(Object.keys(extra.fields))),
                                     ) ?? false;

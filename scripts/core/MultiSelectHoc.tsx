@@ -1,12 +1,13 @@
 import React from 'react';
-import {Set} from 'immutable';
+import {Map} from 'immutable';
+import {IArticle} from 'superdesk-api';
 
 export interface IMultiSelectOptions {
-    selected: Set<string>;
-    select(id: string): void;
+    selected: Map<string, IArticle>;
+    select(item: IArticle): void;
     unselect(id: string): void;
     unselectAll(): void;
-    toggle(id: string): void;
+    toggle(item: IArticle): void;
 }
 
 interface IProps {
@@ -14,7 +15,7 @@ interface IProps {
 }
 
 interface Istate {
-    selected: Set<string>;
+    selected: Map<string, IArticle>;
 }
 
 export class MultiSelectHoc extends React.PureComponent<IProps, Istate> {
@@ -22,7 +23,7 @@ export class MultiSelectHoc extends React.PureComponent<IProps, Istate> {
         super(props);
 
         this.state = {
-            selected: Set<string>(),
+            selected: Map<string, IArticle>(),
         };
 
         this.select = this.select.bind(this);
@@ -30,21 +31,21 @@ export class MultiSelectHoc extends React.PureComponent<IProps, Istate> {
         this.toggle = this.toggle.bind(this);
         this.unselectAll = this.unselectAll.bind(this);
     }
-    select(id: string) {
-        this.setState({selected: this.state.selected.add(id)});
+    select(item: IArticle) {
+        this.setState({selected: this.state.selected.set(item._id, item)});
     }
     unselect(id: string) {
         this.setState({selected: this.state.selected.remove(id)});
     }
-    toggle(id: string) {
-        if (this.state.selected.has(id)) {
-            this.unselect(id);
+    toggle(item: IArticle) {
+        if (this.state.selected.has(item._id)) {
+            this.unselect(item._id);
         } else {
-            this.select(id);
+            this.select(item);
         }
     }
     unselectAll() {
-        this.setState({selected: Set()});
+        this.setState({selected: Map<string, IArticle>()});
     }
     render() {
         return this.props.children({
