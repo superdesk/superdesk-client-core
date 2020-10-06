@@ -30,7 +30,7 @@
         </li>
 
         <li class="levelup" ng-if="activeTerm && !preferredView">
-            <i class="backlink" ng-click="openParent(activeTerm, $event)"></i>
+            <i role="button" aria-label="{{'Back'| translate }}" class="backlink" ng-click="openParent(activeTerm, $event)"></i>
             <button ng-click="selectTerm(activeTerm, $event)" ng-if="allowEntireCat" data-test-id="choose-entire-category">
                 <b class="category">{{getLocaleName(activeTerm, item)}}</b>
                 <b class="category-hover">{{ :: "Choose entire category" | translate }}</b>
@@ -81,7 +81,7 @@
                             <sd-user-avatar data-user="term.user"></sd-user-avatar>
                         </span>
                         <span>{{getLocaleName(term, item)}}</span>
-                        <i class="icon-chevron-right-thin"></i></button>
+                        <i class="icon-chevron-right-thin sd-margin-l--auto nested-indicator"></i></button>
                     <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term, $event)" title="{{getLocaleName(term, item)}}" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
                         {{getLocaleName(term, item)}}
                     </button>
@@ -95,10 +95,10 @@
     <ul>
         <li ng-if="!disabled && !t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)">{{getLocaleName(t, item)}}<i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)">{{getLocaleName(t, item)}}<i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
         <li ng-if="!disabled && t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)"><label>{{getLocaleName(t, item)}}:</label>{{t.sub_label}}<i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)"><label>{{getLocaleName(t, item)}}:</label>{{t.sub_label}}<i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
         <li class="pull-left" ng-if="disabled && t.sub_label"
             ng-repeat="t in selectedItems track by t[uniqueField]">
             <label>{{getLocaleName(t, item)}}:</label>{{t.sub_label}}</li>
