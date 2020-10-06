@@ -60,8 +60,8 @@ const LazyOrNot = ({children, ...rest}) => {
         return (
             <LazyLoad
                 once
-                overflow={Boolean(props.scrollContainer)}
-                scrollContainer={props.scrollContainer ? props.scrollContainer : undefined}
+                overflow
+                scrollContainer={props.scrollContainer}
             >
                 {children}
             </LazyLoad>
