@@ -61,7 +61,8 @@
                                     ng-click="aggregate.togglePersonalShowSent()"
                                     translate>Sent Items</button>
                             </span>
-                            <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight" data-total="monitoring.totalItems"></span>
+                            <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight"
+                                data-total="monitoring.totalItems" data-test-id="highlightTitle"></span>
                             <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
                                 {{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}
                                 <span class="label-total">{{ monitoring.totalItems}}</span>
