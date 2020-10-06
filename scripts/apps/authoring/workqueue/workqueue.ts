@@ -86,7 +86,7 @@ WorkqueueCtrl.$inject = [
     'referrer',
     'notify',
     '$timeout',
-    'superdeskFlags'
+    'superdeskFlags',
 ];
 function WorkqueueCtrl(
     $scope,
@@ -104,7 +104,7 @@ function WorkqueueCtrl(
     referrer,
     notify,
     $timeout,
-    superdeskFlags
+    superdeskFlags,
 ) {
     $scope.articleInEditMode = null;
     $scope.workqueue = workqueue;
