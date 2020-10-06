@@ -256,17 +256,20 @@ declare module 'superdesk-api' {
         abstract?: string;
         byline: string;
         dateline?: {
-            day?: any;
-            date?: any;
-            source?: any;
+            day?: string;
+            date?: string;
+            source?: string;
             located?: {
-                dateline?: any;
-                city?: any;
-                city_code?: any;
-                state_code?: any;
-                country_code?: any;
+                dateline?: string;
+                city?: string;
+                city_code?: string;
+                state_code?: string;
+                country?: string;
+                country_code?: string;
+                tz?: string;
+                state?: string;
             };
-            text?: any;
+            text?: string;
         };
         body_html?: string;
         footer?: string;
