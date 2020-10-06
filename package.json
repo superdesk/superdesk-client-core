@@ -107,6 +107,7 @@
     "react-bootstrap": "0.32.1",
     "react-debounce-input": "3.2.0",
     "react-dom": "16.9.0",
+    "react-lazyload": "^3.0.0",
     "react-mentions": "1.2.2",
     "react-paginate": "6.3.0",
     "react-portal": "4.1.3",

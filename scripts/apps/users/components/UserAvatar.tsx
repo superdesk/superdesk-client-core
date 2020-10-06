@@ -6,6 +6,7 @@ import {CC} from 'core/ui/configurable-ui-components';
 import {isUserLoggedIn} from '../services/UsersService';
 import {gettext} from 'core/utils';
 import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework/react';
+import LazyLoad, {forceVisible} from 'react-lazyload';
 
 class DefaultAvatarDisplay extends React.PureComponent<{user: Partial<IUser>}> {
     render() {
@@ -47,35 +48,58 @@ interface IProps {
     displayStatus?: boolean;
 
     displayAdministratorIndicator?: boolean;
+
+    // if it's being rendered inside a container with overflow
+    scrollContainer?: string; // css selector string
 }
+
+const LazyOrNot = ({children, ...rest}) => {
+    let props = rest as IProps;
+
+    if (props.scrollContainer) {
+        return (
+            <LazyLoad
+                once
+                overflow={Boolean(props.scrollContainer)}
+                scrollContainer={props.scrollContainer ? props.scrollContainer : undefined}
+            >
+                {children}
+            </LazyLoad>
+        );
+    }
+
+    return <>{children}</>;
+};
 
 export class UserAvatar extends React.PureComponent<IProps> {
     render() {
         const {user, displayStatus, displayAdministratorIndicator} = this.props;
 
         return (
-            <AvatarWrapper
-                size={this.props.size}
-                administratorIndicator={
-                    displayAdministratorIndicator && user.user_type === 'administrator'
-                        ? {enabled: true, tooltipText: gettext('Administrator')}
-                        : undefined
-                }
-                statusIndicator={
-                    !displayStatus
-                        ? undefined
-                        : isUserLoggedIn(user)
-                            ? {status: 'online', tooltipText: gettext('Online')}
-                            : {status: 'offline', tooltipText: gettext('Offline')}
-                }
-                data-test-id="user-avatar"
-            >
-                {
-                    CC.UserAvatar != null
-                        ? <CC.UserAvatar user={user} />
-                        : <DefaultAvatarDisplay user={user} />
-                }
-            </AvatarWrapper>
+            <LazyOrNot {...this.props}>
+                <AvatarWrapper
+                    size={this.props.size}
+                    administratorIndicator={
+                        displayAdministratorIndicator && user.user_type === 'administrator'
+                            ? {enabled: true, tooltipText: gettext('Administrator')}
+                            : undefined
+                    }
+                    statusIndicator={
+                        !displayStatus
+                            ? undefined
+                            : isUserLoggedIn(user)
+                                ? {status: 'online', tooltipText: gettext('Online')}
+                                : {status: 'offline', tooltipText: gettext('Offline')}
+                    }
+                    data-test-id="user-avatar"
+                >
+                    {
+                        CC.UserAvatar != null
+                            ? <CC.UserAvatar user={user} />
+                            : <DefaultAvatarDisplay user={user} />
+                    }
+                </AvatarWrapper>
+            </LazyOrNot>
         );
     }
 }
