@@ -50,8 +50,15 @@ interface IScope extends ng.IScope {
 }
 
 MultiActionBar.$inject = [
-    'asset', 'multi', 'authoringWorkspace', 'superdesk',
-    'keyboardManager', 'desks', 'api', 'archiveService',
+    'asset',
+    'multi',
+    'authoringWorkspace',
+    'superdesk',
+    'keyboardManager',
+    'desks',
+    'api',
+    'archiveService',
+    'authoring',
 ];
 export function MultiActionBar(
     asset,
@@ -62,6 +69,7 @@ export function MultiActionBar(
     desks,
     api,
     archiveService,
+    authoring,
 ) {
     return {
         controller: 'MultiActionBar',
@@ -166,7 +174,8 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.activity['edit.item']) {
+
+                    if (articles.every((item) => authoring.itemActions(item).edit === true)) {
                         actions.push({
                             label: gettext('Multiedit'),
                             icon: 'icon-multiedit',

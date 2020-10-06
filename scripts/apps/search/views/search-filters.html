@@ -63,7 +63,7 @@
         </ul>
     </div>
 
-    <div sd-toggle-box data-style="circle" data-title="{{:: 'Services' | translate }}" ng-hide="isEmpty('category')" data-open="true">
+    <div sd-toggle-box data-style="circle"  data-title="{{:: filterLabels.categories }}" ng-hide="isEmpty('category')" data-open="true">
         <ul class="filter-box">
             <li class="filter-box__item" ng-repeat="(key,value) in aggregations.category" ng-click="toggleFilter('category', key)">
                 <span class="filter-box__check sd-checkbox" ng-checked="hasFilter('category',key)"></span>
@@ -76,8 +76,7 @@
         </ul>
     </div>
 
-
-    <div sd-toggle-box data-style="circle" data-title="{{:: 'Genres' | translate }}" ng-hide="isEmpty('genre')" data-open="true">
+    <div sd-toggle-box data-style="circle" data-title="{{:: filterLabels.genre }}" ng-hide="isEmpty('genre')" data-open="true">
         <ul class="filter-box">
             <li class="filter-box__item" ng-repeat="(key,value) in aggregations.genre" ng-click="toggleFilter('genre', key)">
                 <span class="filter-box__check sd-checkbox" ng-checked="hasFilter('genre',key)"></span>
@@ -90,7 +89,7 @@
         </ul>
     </div>
 
-    <div sd-toggle-box data-style="circle" data-title="{{:: 'Urgency' | translate }}" ng-hide="isEmpty('urgency')" data-open="true">
+    <div sd-toggle-box data-style="circle" data-title="{{:: filterLabels.urgency }}" ng-hide="isEmpty('urgency')" data-open="true">
         <ul class="filter-box">
             <li class="filter-box__item" ng-repeat="(key,value) in aggregations.urgency" ng-click="toggleFilter('urgency', key)">
                 <span class="filter-box__check sd-checkbox" ng-checked="hasFilter('urgency',key)"></span>
@@ -103,7 +102,7 @@
         </ul>
     </div>
 
-    <div sd-toggle-box data-style="circle" data-title="{{:: 'Priority' | translate }}" ng-hide="isEmpty('priority')" data-open="true">
+    <div sd-toggle-box data-style="circle" data-title="{{:: filterLabels.priority }}" ng-hide="isEmpty('priority')" data-open="true">
         <ul class="filter-box">
             <li class="filter-box__item" ng-repeat="(key,value) in aggregations.priority" ng-click="toggleFilter('priority', key)">
                 <span class="filter-box__check sd-checkbox" ng-checked="hasFilter('priority',key)"></span>

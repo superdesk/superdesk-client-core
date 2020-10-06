@@ -251,30 +251,6 @@ describe('content', () => {
         }));
     });
 
-    describe('media-related directive', () => {
-        it('can view item', inject((familyService, $rootScope, $compile, superdesk, $q) => {
-            var scope = $rootScope.$new();
-
-            scope.item = {_id: 1, family_id: 1};
-            scope.relatedItems = {_items: [{_id: 2, family_id: 1}]};
-
-            let html = '<div sd-media-related data-item="item" data-related-items="relatedItems"></div>';
-            var elem = $compile(html)(scope);
-
-            scope.$digest();
-
-            var iscope = elem.isolateScope();
-
-            expect(iscope.item).toBe(scope.item);
-
-            spyOn(superdesk, 'intent').and.returnValue($q.when());
-            iscope.open(scope.relatedItems._items[0]);
-            scope.$apply();
-
-            expect(superdesk.intent).toHaveBeenCalledWith('view', 'item', scope.relatedItems._items[0]);
-        }));
-    });
-
     describe('item preview container', () => {
         it('can handle preview:item intent', inject(($rootScope, $compile, superdesk) => {
             var scope = $rootScope.$new();

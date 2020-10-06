@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {s, ECE, el} from 'end-to-end-testing-helpers';
+import {s, ECE, el, els} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {
@@ -367,16 +367,16 @@ class Monitoring {
         };
 
         this.tabAction = function(tab) {
-            const btn = element.all(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]')).first();
+            const btn = element(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]'));
 
             browser.wait(ECE.elementToBeClickable(btn), 2000);
+
             btn.click();
         };
 
         this.openRelatedItem = function(index) {
-            var relatedItem = element.all(by.repeater('relatedItem in relatedItems._items')).get(index);
-
-            relatedItem.all(by.className('related-item')).get(index).click();
+            els(['article-item'], null, el(['related-items-view'])).get(index).click();
+            browser.wait(ECE.presenceOf(el(['authoring'])));
         };
 
         /**

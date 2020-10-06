@@ -2,7 +2,7 @@
 
 import {element, by, browser} from 'protractor';
 import {nav, waitFor, scrollToView, scrollRelative} from './utils';
-import {el, ECE} from 'end-to-end-testing-helpers';
+import {el, ECE, els} from 'end-to-end-testing-helpers';
 
 class GlobalSearch {
     ingestRepo: any;
@@ -181,7 +181,11 @@ class GlobalSearch {
          * @return {promise} list of elements
          */
         this.getRelatedItems = function() {
-            return element.all(by.repeater('relatedItem in relatedItems._items'));
+            const related = els(['article-item'], null, el(['related-items-view']));
+
+            browser.wait(ECE.visibilityOf(related.first()), 1000);
+
+            return related;
         };
 
         /**

@@ -1357,3 +1357,11 @@ figure.preview-overlay-on {
         letter-spacing: 0.08em;
     }
 }
+
+.preview-tab--enable-scrolling {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 1px; // take border of the parent into account
+}
