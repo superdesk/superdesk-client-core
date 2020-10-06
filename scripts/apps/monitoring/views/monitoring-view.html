@@ -46,7 +46,7 @@
                             </ul>
                         </div>
 
-                        <h2 class="subnav__page-title sd-flex-no-grow" ng-hide="type === 'monitoring'">
+                        <h2 class="subnav__page-title sd-flex-no-grow" ng-hide="monitoring.singleGroup.singleViewType !== 'desk' && type === 'monitoring'">
                             <span ng-if="type === 'spike'">
                                 <span translate>Spiked Items</span>
                                 <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems}}</span>
