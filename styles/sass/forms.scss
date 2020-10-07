@@ -602,22 +602,6 @@ form, ng-form {
                 margin-right: -10px;
             }
         }
-        // label {
-        //     font-size: 11px;
-        //     @include text-semibold();
-        //     color: $grayLight;
-        //     text-transform: uppercase;
-        //     height: 18px;
-        //     &.inline-label {
-        //         color: #333;
-        //         text-transform: none;
-        //         font-size: 13px;
-        //         line-height: 18px;
-        //         display: inline-block;
-        //         margin-right: 20px;
-        //         font-weight: 400;
-        //     }
-        // }
         .multiple {
             display: flex;
             .field, .flex-field {

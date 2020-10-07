@@ -166,7 +166,7 @@ export default angular.module('superdesk.core.filters', [])
     .filter('parseDateline', ['moment', (moment) => function(dateToFormat, located) {
         var momentizedTimestamp = dateToFormat ? moment.utc(dateToFormat) : moment.utc();
 
-        if (angular.isDefined(located) && located.tz !== 'UTC') {
+        if (located?.tz != null && located.tz !== 'UTC') {
             momentizedTimestamp = momentizedTimestamp.tz(located.tz);
         }
 
