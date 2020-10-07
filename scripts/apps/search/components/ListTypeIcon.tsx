@@ -46,6 +46,7 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
                 onMouseEnter={selectingDisabled ? null : this.setHover}
                 onMouseLeave={selectingDisabled ? null : this.unsetHover}
                 style={{lineHeight: 0}}
+                data-test-id="multi-select-checkbox"
             >
                 {
                     showSelect
