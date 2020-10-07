@@ -69,7 +69,7 @@
                 </li>
             </ul>
             <ul ng-if="!preferredView">
-                <li ng-repeat="term in activeTree track by term[uniqueField]">
+                <li ng-repeat="term in activeTree track by term[uniqueField]" data-test-id="dropdown__item">
                     <button
                         ng-if="tree[term[uniqueField]]"
                         class="nested-toggle flex-row sibling-spacer-10"
