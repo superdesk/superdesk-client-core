@@ -74,6 +74,8 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
         });
     }
     componentDidMount() {
+        // Making a request for getting the item count.
+        // Item count is required for virtual scrolling in order to compute the height of the scroll-box.
         this.loadItems(0, 1).then((res) => {
             this.setState({
                 itemCount: res._meta.total,
