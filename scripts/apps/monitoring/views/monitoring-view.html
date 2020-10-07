@@ -264,11 +264,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if="type === 'spike' && activeDeskId != null" style="height: 100%">
+                            <div ng-if="type === 'spike' && spikedItemsQuery != null" style="height: 100%">
                                 <sd-articles-list-react
                                     heading="'Spiked Items' | translate"
-                                    get-query="getSpikedItemsQuery"
-                                    active-desk-id="activeDeskId"
+                                    query="spikedItemsQuery"
                                     monitoring-controller="monitoring"
                                     style="height: 100%"
                                 ></sd-articles-list-react>
