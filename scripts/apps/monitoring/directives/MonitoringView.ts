@@ -96,10 +96,6 @@ export function MonitoringView(
                 };
             };
 
-            scope.$watch(() => desks.active.desk, (activeDeskId) => {
-                scope.activeDeskId = activeDeskId;
-            });
-
             scope.addResourceUpdatedEventListener = (callback) => {
                 scope.$on('resource:updated', (_event, data) => {
                     callback(data);
@@ -134,7 +130,9 @@ export function MonitoringView(
             workspaces.getActive();
 
             scope.desks = desks;
-            scope.$watch(desks.getCurrentDesk.bind(desks), (currentDesk: any) => {
+            scope.$watch(desks.getCurrentDesk.bind(desks), (currentDesk: IDesk | null) => {
+                scope.activeDeskId = currentDesk?._id ?? null;
+
                 if (currentDesk && currentDesk.monitoring_default_view) {
                     switch (currentDesk.monitoring_default_view) {
                     case 'list':

@@ -254,7 +254,12 @@ class Monitoring {
         };
 
         this.getSpikedItems = function() {
-            return this.getAllItems();
+            const items = els(['article-item']);
+            const first = items.get(0);
+
+            browser.wait(ECE.presenceOf(first));
+
+            return items;
         };
 
         this.getAllItems = function() {

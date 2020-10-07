@@ -119,7 +119,7 @@
                             </button>
 
                             <div
-                                ng-if="type === 'monitoring'"
+                                ng-if="type === 'monitoring' && activeDeskId != null"
                                 style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;"
                             >
                                 <sd-monitoring-filtering-buttons
@@ -264,7 +264,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if="type === 'spike'" style="height: 100%">
+                            <div ng-if="type === 'spike' && activeDeskId != null" style="height: 100%">
                                 <sd-articles-list-react
                                     heading="'Spiked Items' | translate"
                                     get-query="getSpikedItemsQuery"

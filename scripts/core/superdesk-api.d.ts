@@ -467,6 +467,7 @@ declare module 'superdesk-api' {
         name: string;
         desk_type: 'authoring' | 'production';
         working_stage: IStage['_id'];
+        monitoring_default_view?: any;
     }
 
     export interface IStage extends IBaseRestApiResponse {
