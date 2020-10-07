@@ -2,9 +2,9 @@
 
 import React from 'react';
 import ng from 'core/services/ng';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IResourceUpdateEvent, IWebsocketMessage} from 'superdesk-api';
 
-import {noop} from 'lodash';
+import {noop, throttle} from 'lodash';
 import {LazyLoader} from './itemList/LazyLoader';
 import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
@@ -31,6 +31,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
     monitoringState: any;
     lazyLoaderRef: LazyLoader<IArticle>;
     removeContentUpdateListener: () => void;
+    handleContentUpdateThrottled: (event: IWebsocketMessage<IResourceUpdateEvent>) => void;
 
     constructor(props: any) {
         super(props);
@@ -42,6 +43,29 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         this.monitoringState = ng.get('monitoringState');
 
         this.loadMore = this.loadMore.bind(this);
+
+        // Multiple items can be updated at once.
+        this.handleContentUpdateThrottled = throttle(
+            (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                const {extra} = event;
+
+                if (
+                    extra.resource === 'archive'
+                    || extra.resource === 'archive_unspike'
+                ) {
+                    const reloadTheList = this.props?.shouldReloadTheList(
+                        new Set(Array.from(Object.keys(extra.fields))),
+                    ) ?? false;
+
+                    if (reloadTheList) {
+                        this.lazyLoaderRef.reset();
+                    } else {
+                        this.lazyLoaderRef.updateItems(new Set([extra._id]));
+                    }
+                }
+            },
+            500,
+        );
     }
 
     loadMore(from: number, to: number) {
@@ -96,22 +120,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                         // and LazyLoader wouldn't be mounted at that point yet.
                         this.removeContentUpdateListener = addWebsocketEventListener(
                             'resource:updated',
-                            ({extra}) => {
-                                if (
-                                    extra.resource === 'archive'
-                                    || extra.resource === 'archive_unspike'
-                                ) {
-                                    const reloadTheList = this.props?.shouldReloadTheList(
-                                        new Set(Array.from(Object.keys(extra.fields))),
-                                    ) ?? false;
-
-                                    if (reloadTheList) {
-                                        this.lazyLoaderRef.reset();
-                                    } else {
-                                        this.lazyLoaderRef.updateItems(new Set([extra._id]));
-                                    }
-                                }
-                            },
+                            this.handleContentUpdateThrottled,
                         );
                     }
                 }}
