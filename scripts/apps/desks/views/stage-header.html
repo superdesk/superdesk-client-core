@@ -5,7 +5,7 @@
             ng-click="agg.switchExpandedState(group._id)">
         <i class="icon-chevron-down-thin"></i>
     </button>
-    <span class="stage-header__name">
+    <h3 class="stage-header__name">
         <a class="stage-header__name-part" href="" ng-show="agg.state.solo._id !== group._id" ng-click="agg.setSoloGroup(group)">
             <span>{{ :: group.header }} </span> <span>/</span> <span ng-show="group.subheader">{{ :: group.subheader }}</span><span>{{ :: group.type | translate }}</span>
         </a>
@@ -13,7 +13,7 @@
             <a ng-click="agg.setSoloGroup()" class="backlink"></a>
             <span>{{ :: group.header }} </span> <span>/</span> <span ng-show="group.subheader">{{ :: group.subheader }}</span><span>{{ :: group.type | translate }}</span>
         </span>
-    </span>
+    </h3>
     <div class="stage-header__line" ng-if="agg.state.solo._id !== group._id"></div>
     <span class="label-total stage-header__number">{{ total}}</span>
 </div>
