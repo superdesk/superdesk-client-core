@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [2.0.1] 2020-10-07
+
+### Fixed
+
+- Fix accessibility issues.
+
 ## [2.0] 2020-10-05
 
 [Changes](https://github.com/superdesk/superdesk-client-core/milestone/77?closed=1)
