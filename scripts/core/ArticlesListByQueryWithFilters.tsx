@@ -35,7 +35,10 @@ class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelect
         );
 
         return (
-            <div className="list-field type-icon">
+            <div
+                className="list-field type-icon"
+                data-test-id="multi-select-checkbox"
+            >
                 {
                     options.selected.has(item._id)
                         ? checkbox
