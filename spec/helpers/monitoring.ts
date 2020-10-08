@@ -139,6 +139,8 @@ class Monitoring {
 
         this.showSpiked = function() {
             element(by.className('big-icon--spike')).click();
+
+            browser.wait(ECE.presenceOf(els(['article-item']).get(0)));
         };
 
         /**

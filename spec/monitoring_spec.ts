@@ -502,7 +502,6 @@ describe('monitoring', () => {
         browser.sleep(100);
 
         monitoring.showSpiked();
-        browser.sleep(100);
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
 
         monitoring.unspikeItem(0);
