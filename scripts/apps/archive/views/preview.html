@@ -67,6 +67,7 @@
                 class="preview-header__toggle"
                 ng-class="{active: previewState.toggleHeader}"
                 ng-click="togglePreviewHeader()"
+                aria-label="{{:: 'Toggle header info' | translate}}"
                 tabindex="-1"><i class="icon-chevron-down-thin"></i></button>
       </header>
 
@@ -89,7 +90,6 @@
 
         <div class="rewrite" ng-if="selected.preview.rewrite_id">{{ :: 'This story has been rewritten by: ' | translate }}<a ng-click="previewRewriteStory()"
             class="open-item"><i class="icon-external"></i></a></div>
-
 
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 

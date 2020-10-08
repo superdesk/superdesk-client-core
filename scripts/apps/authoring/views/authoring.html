@@ -1,6 +1,7 @@
-<div sd-authoring class="auth-screen" ng-if="origItem" data-test-id="authoring">
+<section sd-authoring class="auth-screen" ng-if="origItem" data-test-id="authoring" aria-labelledby="authoring-heading">
+    <h2 id="authoring-heading"  class="a11y-only" translate>Authoring</h2>
     <div sd-authoring-topbar></div>
-    <section class="main-section" ng-class="{'auth-sendto': views.send, 'packaging-screen': item.type === 'composite'}">
+    <div class="main-section" ng-class="{'auth-sendto': views.send, 'packaging-screen': item.type === 'composite'}">
         <div sd-authoring-widgets data-item="item">
             <div class="page-content-container" ng-click="views.send = false">
                 <div>
@@ -63,7 +64,7 @@
 
         <div sd-macros-replace></div>
 
-    </section>
+    </div>
 
     <div sd-send-item
         id="send-item-container"
@@ -79,4 +80,4 @@
         data-mode="authoring"
         data-test-id="send-publish-pane"
     ></div>
-</div>
+</section>

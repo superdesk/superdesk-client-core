@@ -1,5 +1,5 @@
 <div class="dropdown dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position>
-    <button class="dropdown__toggle" dropdown__toggle tabindex="{{ tabindex }}" ng-disabled="disabled" ng-if="!disabled">
+    <button class="dropdown__toggle" dropdown__toggle tabindex="{{ tabindex }}" ng-disabled="disabled" ng-if="!disabled" aria-label="{{ 'Add new' | translate }}">
         <i class="icon--white icon-plus-large"></i>
     </button>
     <div class="dropdown__menu nested-menu pull-right" sd-loading="loading">
@@ -30,7 +30,7 @@
     <ul>
         <li ng-if="!disabled" class="pull-left"
             ng-repeat="t in item[field]"
-            ng-click="removeTerm(t)">{{ t.name }} ({{ t.country_code }}) <i class="icon-close-small"></i></li>
+            ng-click="removeTerm(t)">{{ t.name }} ({{ t.country_code }}) <i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
         <li ng-if="disabled" class="pull-left disabled"
             ng-repeat="t in item[field]">{{ t.name }}</li>
     </ul>
