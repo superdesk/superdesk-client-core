@@ -1,8 +1,8 @@
 import * as React from 'react';
-import {ITagGroup, getGroupLabel, INewItem} from './auto-tagging';
-import {ISuperdesk} from 'superdesk-api';
+import { ITagGroup, getGroupLabel, INewItem } from './auto-tagging';
+import { ISuperdesk } from 'superdesk-api';
 
-import {Input, Select, Option} from 'superdesk-ui-framework/react';
+import { Autocomplete, Select, Option } from 'superdesk-ui-framework/react';
 
 interface IProps {
     item: Partial<INewItem>;
@@ -12,11 +12,11 @@ interface IProps {
 }
 
 export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<IProps> {
-    const {gettext} = superdesk.localization;
+    const { gettext } = superdesk.localization;
 
     return class NewItem extends React.PureComponent<IProps> {
         render() {
-            const {item, onChange, save, cancel} = this.props;
+            const { item, onChange, save, cancel } = this.props;
             const savingDisabled = (item.title?.trim().length ?? 0) < 1 || item?.group == null;
 
             return (
@@ -25,17 +25,17 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                         <div className="sd-card__heading">{gettext('Add keyword')}</div>
                     </div>
                     <div className="sd-card__content">
-                        <div className="form__row">
-                            <Input label={gettext('Name')}
-                                value={item.title ?? ''}
+                    <div className="form__row">
+                            <Autocomplete
+                                label={gettext('Name')}
+                                items={['item 1', 'item 2', 'item 3']}
                                 onChange={(event) => {
                                     onChange({
                                         ...item,
                                         title: event,
                                     });
-                                }} />
+                                }}  />
                         </div>
-
                         <div className="form__row">
                             <Select label={gettext('Type')} value={item.group ?? ''}
                                 onChange={(event) => {
