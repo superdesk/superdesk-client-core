@@ -20,18 +20,22 @@ class Editor3Toolbar {
 
     clickIcon(icon) {
         this.controls.element(by.className('icon-' + icon)).click();
+        browser.sleep(200);
     }
 
     bold() {
         this.clickIcon('bold');
+        browser.sleep(200);
     }
 
     link() {
         this.clickIcon('link');
+        browser.sleep(200);
     }
 
     table() {
         this.clickIcon('table');
+        browser.sleep(200);
     }
 }
 
