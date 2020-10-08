@@ -5,7 +5,8 @@ import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 
 import {Switch, Button, ButtonGroup} from 'superdesk-ui-framework/react';
-import {ToggleBoxNext} from 'superdesk-ui-framework';
+import {ToggleBoxNext} from 'superdesk-ui-framework'
+import {flatMap} from 'lodash';
 
 export enum ITagGroup {
     organisation = 'organisation',
@@ -21,8 +22,8 @@ export interface ITag {
 }
 
 export interface INewItem {
-    title: string;
-    group: ITagGroup;
+    group?: ITagGroup;
+    tag: Partial<ITag>;
 }
 
 type IAnalysisFields = {
@@ -40,7 +41,7 @@ interface IProps {
 interface IState {
     runAutomaticallyPreference: boolean | 'loading';
     data: 'not-initialized' | 'loading' | { original: IAutoTaggingResponse; changes: IAutoTaggingResponse };
-    newItem: Partial<INewItem> | null;
+    newItem: INewItem | null;
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
@@ -84,6 +85,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.runAnalysis = this.runAnalysis.bind(this);
             this.updateTags = this.updateTags.bind(this);
             this.createNewTag = this.createNewTag.bind(this);
+            this.insertTagFromSearch = this.insertTagFromSearch.bind(this);
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
         runAnalysis() {
@@ -125,9 +127,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             });
         }
         createNewTag(newItem: INewItem, changes: IAutoTaggingResponse) {
+            const _title = newItem.tag.title;
+
+            if (_title == null || newItem.group == null) {
+                return;
+            }
+
             const tag: ITag = {
                 uuid: Math.random().toString(),
-                title: newItem.title,
+                title: _title,
                 weight: 1,
                 media_topic: [],
             };
@@ -137,6 +145,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             });
 
             this.setState({newItem: null});
+        }
+        insertTagFromSearch(group: ITagGroup, tag: ITag, changes: IAutoTaggingResponse) {
+            this.updateTags({
+                [group]: (changes.analysis[group] ?? []).concat(tag),
+            });
         }
         componentDidMount() {
             preferences.get(RUN_AUTOMATICALLY_PREFERENCE).then((res: boolean | null) => {
@@ -209,7 +222,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 icon="plus-large"
                                                 size="small"
                                                 shape="round"
-                                                onClick={() => this.setState({newItem: {}})} />
+                                                onClick={() => {
+                                                    this.setState({newItem: {group: ITagGroup.organisation, tag: {}}});
+                                                }} />
                                         </ButtonGroup>
                                     )
                                 }
@@ -251,6 +266,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     }}
                                                     cancel={() => {
                                                         this.setState({newItem: null});
+                                                    }}
+                                                    tagAlreadyExists={(uuid) => {
+                                                        return flatMap(
+                                                            Object.values(data.changes.analysis)
+                                                                .filter(notNullOrUndefined),
+                                                        ).some((tag) => tag.uuid === uuid);
+                                                    }}
+                                                    insertTagFromSearch={(group, tag) => {
+                                                        this.insertTagFromSearch(group, tag, data.changes);
                                                     }}
                                                 />
                                             )

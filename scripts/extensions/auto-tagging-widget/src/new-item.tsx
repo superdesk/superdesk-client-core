@@ -1,23 +1,48 @@
 import * as React from 'react';
-import {ITagGroup, getGroupLabel, INewItem} from './auto-tagging';
+import {ITagGroup, getGroupLabel, INewItem, ITag} from './auto-tagging';
 import {ISuperdesk} from 'superdesk-api';
 
-import {Input, Select, Option} from 'superdesk-ui-framework/react';
+import {Select, Option} from 'superdesk-ui-framework/react';
+import {Autocomplete} from './autocomplete';
+
+interface ISearchTag extends ITag {
+    type: ITagGroup;
+    source?: string;
+}
+
+interface IAutoTaggingSearchResult {
+    result: {
+        tags: Array<ISearchTag>;
+    };
+}
 
 interface IProps {
-    item: Partial<INewItem>;
-    onChange(item: Partial<INewItem>): void;
+    item: INewItem;
+    onChange(item: INewItem | null): void;
     save(item: INewItem): void;
     cancel(): void;
+    tagAlreadyExists(uuid: ITag['uuid']): boolean;
+    insertTagFromSearch(group: ITagGroup, tag: ITag): void;
+}
+
+function convertToTag(searchTag: ISearchTag): ITag {
+    const {uuid, title, weight, media_topic} = searchTag;
+    const tag: ITag = {uuid, title, weight, media_topic};
+
+    return tag;
 }
 
 export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<IProps> {
     const {gettext} = superdesk.localization;
+    const {httpRequestJsonLocal} = superdesk;
 
     return class NewItem extends React.PureComponent<IProps> {
         render() {
-            const {item, onChange, save, cancel} = this.props;
-            const savingDisabled = (item.title?.trim().length ?? 0) < 1 || item?.group == null;
+            const {onChange, save, cancel, insertTagFromSearch, tagAlreadyExists} = this.props;
+            const item = this.props.item;
+            const {tag} = item;
+
+            const savingDisabled = (tag.title?.trim().length ?? 0) < 1 || item?.group == null;
 
             return (
                 <div className="sd-card auto-tagging-widget__card-absolute">
@@ -26,14 +51,49 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                     </div>
                     <div className="sd-card__content">
                         <div className="form__row">
-                            <Input label={gettext('Name')}
-                                value={item.title ?? ''}
-                                onChange={(event) => {
+                            <Autocomplete
+                                value={tag.title ?? ''}
+                                onChange={(value) => {
                                     onChange({
                                         ...item,
-                                        title: event,
+                                        tag: {
+                                            ...item.tag,
+                                            title: value,
+                                        },
                                     });
-                                }} />
+                                }}
+                                getSuggestions={(searchString) => {
+                                    return httpRequestJsonLocal<IAutoTaggingSearchResult>({
+                                        method: 'POST',
+                                        path: '/ai_data_op/',
+                                        payload: {
+                                            service: 'imatrics',
+                                            operation: 'search',
+                                            data: {term: searchString},
+                                        },
+                                    })
+                                        .then((res) => {
+                                            return res.result.tags.filter(
+                                                (searchTag) => tagAlreadyExists(searchTag.uuid) !== true,
+                                            );
+                                        });
+                                }}
+                                getKey={(searchTag: ISearchTag) => searchTag.uuid}
+                                onSuggestionSelect={(suggestion) => {
+                                    insertTagFromSearch(
+                                        suggestion.type,
+                                        convertToTag(suggestion),
+                                    );
+                                    this.props.onChange(null); // closing new item view
+                                }}
+                                RenderSuggestion={({suggestion, onClick}) => (
+                                    <div>
+                                        <button onClick={onClick}>
+                                            {suggestion.title}
+                                        </button>
+                                    </div>
+                                )}
+                            />
                         </div>
 
                         <div className="form__row">
@@ -63,11 +123,16 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                         <button className="btn btn--primary sd-flex-grow"
                             disabled={savingDisabled}
                             onClick={() => {
-                                const title = item.title;
+                                const title = item.tag.title;
                                 const group = item.group;
 
                                 if (title != null && group != null) {
-                                    save({title: title, group: group});
+                                    save({
+                                        group: group,
+                                        tag: {
+                                            title: title,
+                                        },
+                                    });
                                 }
                             }}>
                             {gettext('Add')}
