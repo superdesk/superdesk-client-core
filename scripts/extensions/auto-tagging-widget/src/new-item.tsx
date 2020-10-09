@@ -95,7 +95,6 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                 )}
                             />
                         </div>
-
                         <div className="form__row">
                             <Select label={gettext('Type')} value={item.group ?? ''}
                                 onChange={(event) => {

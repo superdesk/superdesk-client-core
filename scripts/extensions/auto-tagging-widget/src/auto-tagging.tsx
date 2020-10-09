@@ -222,6 +222,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 icon="plus-large"
                                                 size="small"
                                                 shape="round"
+                                                text={gettext('Add')}
                                                 onClick={() => {
                                                     this.setState({newItem: {group: ITagGroup.organisation, tag: {}}});
                                                 }} />
