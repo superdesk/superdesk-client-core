@@ -54,14 +54,18 @@ export default angular.module('superdesk.core.directives', [
     'superdesk.core.directives.slider',
     'superdesk.core.directives.withParams',
 ])
-
     .directive('sdPhoneHomeModal', PhoneHomeModalDirective)
     .component(
         'sdUserAvatar',
-        reactToAngular1(UserAvatar, ['user', 'size', 'displayStatus', 'displayAdministratorIndicator']),
+        reactToAngular1(UserAvatar, [
+            'user',
+            'size',
+            'displayStatus',
+            'displayAdministratorIndicator',
+            'scrollContainer',
+        ]),
     )
     .component(
         'sdOrganisationAvatar',
         reactToAngular1(UserOrganisationAvatar, ['size']),
-    )
-;
+    );

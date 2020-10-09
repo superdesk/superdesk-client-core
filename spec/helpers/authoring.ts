@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor} from './utils';
-import {ECE} from 'end-to-end-testing-helpers';
+import {ECE, el} from 'end-to-end-testing-helpers';
 
 class Authoring {
     lock: any;
@@ -217,7 +217,7 @@ class Authoring {
             .element(by.tagName('button'));
 
         this.getCategoryListItems = element(by.id('category-setting'))
-            .all(by.repeater('term in $vs_collection track by term[uniqueField]'));
+            .all(el(['dropdown__item']).locator());
 
         this.sendItemContainer = element(by.id('send-item-container'));
         this.linkToMasterButton = element(by.id('preview-master'));

@@ -11,7 +11,7 @@
     <button class="dropdown__toggle" dropdown__toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled">
         <i class="icon--white icon-plus-large"></i>
     </button>
-    <ul class="dropdown__menu nested-menu pull-right" style="{{ cv.popup_width ? 'min-width: 0; width: ' + cv.popup_width + 'px' : ''}}">
+    <ul class="dropdown__menu nested-menu pull-right" style="{{ cv.popup_width ? 'min-width: 0; width: ' + cv.popup_width + 'px' : ''}}" id="metadata-terms-dropdown-users">
         <li ng-show="!activeTerm && header">
             <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="allowEntireCat && selectTerm(item, $event)" always-visible="header" data-disabled="disabled || allSelected">
                 <ul class="item-list" vs-repeat ng-if="!activeTree.length || activeList">
@@ -22,7 +22,7 @@
                             ng-click="!allowEntireCat && openTree(t, $event)"
                             title="{{getLocaleName(t)}}"
                         >
-                            <sd-user-avatar data-user="t.user"></sd-user-avatar>
+                            <sd-user-avatar ng-if="t.user != null" data-user="t.user" scroll-container="'#metadata-terms-dropdown-users'"></sd-user-avatar>
                             <span>{{getLocaleName(t)}}</span>
                         </button>
                     </li>
@@ -66,8 +66,8 @@
                     </button>
                 </li>
             </ul>
-            <ul vs-repeat ng-if="!preferredView">
-                <li ng-repeat="term in activeTree track by term[uniqueField]">
+            <ul ng-if="!preferredView">
+                <li ng-repeat="term in activeTree track by term[uniqueField]" data-test-id="dropdown__item">
                     <button
                         ng-if="tree[term[uniqueField]]"
                         class="nested-toggle flex-row sibling-spacer-10"
@@ -76,7 +76,7 @@
                         title="{{getLocaleName(term)}}"
                     >
                         <span ng-if="term.user">
-                            <sd-user-avatar data-user="term.user"></sd-user-avatar>
+                            <sd-user-avatar data-user="term.user" scroll-container="'#metadata-terms-dropdown-users'"></sd-user-avatar>
                         </span>
                         <span>{{getLocaleName(term)}}</span>
                         <i class="icon-chevron-right-thin"></i></button>
