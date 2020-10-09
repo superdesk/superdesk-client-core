@@ -4,6 +4,7 @@ import {ISuperdesk} from 'superdesk-api';
 
 import {Select, Option} from 'superdesk-ui-framework/react';
 import {Autocomplete} from './autocomplete';
+import {uniqBy} from 'lodash';
 
 interface ISearchTag extends ITag {
     type: ITagGroup;
@@ -52,6 +53,7 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                     <div className="sd-card__content">
                         <div className="form__row">
                             <Autocomplete
+                                fieldLabel={gettext('Title')}
                                 value={tag.title ?? ''}
                                 onChange={(value) => {
                                     onChange({
@@ -62,8 +64,10 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                         },
                                     });
                                 }}
-                                getSuggestions={(searchString) => {
-                                    return httpRequestJsonLocal<IAutoTaggingSearchResult>({
+                                getSuggestions={(searchString, callback) => {
+                                    let cancelled = false;
+
+                                    httpRequestJsonLocal<IAutoTaggingSearchResult>({
                                         method: 'POST',
                                         path: '/ai_data_op/',
                                         payload: {
@@ -73,26 +77,38 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                         },
                                     })
                                         .then((res) => {
-                                            return res.result.tags.filter(
-                                                (searchTag) => tagAlreadyExists(searchTag.uuid) !== true,
-                                            );
+                                            if (cancelled !== true) {
+                                                const withoutExistingTags = res.result.tags.filter(
+                                                    (searchTag) => tagAlreadyExists(searchTag.uuid) !== true,
+                                                );
+
+                                                // TODO: remove filtering - API should return items without duplicates
+                                                const withLabel = withoutExistingTags.map(
+                                                    (_item) => ({label: _item.title, item: _item}),
+                                                );
+                                                const withoutUndefinedOrNull = withLabel.filter(
+                                                    ({label}) => label != null,
+                                                );
+                                                const unique = uniqBy(withoutUndefinedOrNull, (_item) => _item.label);
+
+                                                callback(unique.map((itemWithLabel) => itemWithLabel.item));
+                                            }
                                         });
+
+                                    return {
+                                        cancel: () => {
+                                            cancelled = true;
+                                        },
+                                    };
                                 }}
-                                getKey={(searchTag: ISearchTag) => searchTag.uuid}
-                                onSuggestionSelect={(suggestion) => {
+                                getLabel={({title}: ISearchTag) => title}
+                                onSuggestionSelect={(suggestion: ISearchTag) => {
                                     insertTagFromSearch(
                                         suggestion.type,
                                         convertToTag(suggestion),
                                     );
                                     this.props.onChange(null); // closing new item view
                                 }}
-                                RenderSuggestion={({suggestion, onClick}) => (
-                                    <div>
-                                        <button onClick={onClick}>
-                                            {suggestion.title}
-                                        </button>
-                                    </div>
-                                )}
                             />
                         </div>
                         <div className="form__row">

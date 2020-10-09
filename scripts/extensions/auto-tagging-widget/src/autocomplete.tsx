@@ -1,14 +1,15 @@
 import * as React from 'react';
-import {throttle} from 'lodash';
+import {Autocomplete as AutoCompleteUI} from 'superdesk-ui-framework/react';
 
 interface IProps<T> {
+    fieldLabel: string;
+
     value: string;
     onChange(value: string): void;
 
-    getSuggestions(searhString: string): Promise<Array<T>>;
-    getKey(suggestion: T): React.Key;
+    getSuggestions(searhString: string, callback: (result: Array<T>) => void): {cancel: () => void};
     onSuggestionSelect(suggestion: T): void;
-    RenderSuggestion: React.ComponentType<{suggestion: T; onClick(): void}>;
+    getLabel(suggestion: T): string;
 }
 
 interface IState<T> {
@@ -16,7 +17,7 @@ interface IState<T> {
 }
 
 export class Autocomplete<T> extends React.PureComponent<IProps<T>, IState<T>> {
-    getSuggestionsThrottled: (searchString: string) => Promise<Array<T>>;
+    latestCall?: {cancel: () => void};
 
     constructor(props: IProps<T>) {
         super(props);
@@ -24,51 +25,32 @@ export class Autocomplete<T> extends React.PureComponent<IProps<T>, IState<T>> {
         this.state = {};
 
         this.search = this.search.bind(this);
-        this.getSuggestionsThrottled = throttle((term: string) => {
-            return this.props.getSuggestions(term);
-        }, 500);
     }
-    search(term: string) { // TODO: avoid race conditions
+    search(term: string) {
         this.setState({suggestions: null});
         this.props.onChange(term);
 
-        this.getSuggestionsThrottled(term)?.then((results) => {
+        this.latestCall?.cancel();
+
+        this.latestCall = this.props.getSuggestions(term, (results) => {
             this.setState({suggestions: results});
         });
     }
     render() {
-        const {value, RenderSuggestion, onSuggestionSelect} = this.props;
+        const {getLabel} = this.props;
         const {suggestions} = this.state;
+        const suggestionStrings = suggestions == null ? [] : suggestions.map((suggestion) => getLabel(suggestion));
 
         return (
             <div>
-                <input
-                    type="text"
-                    value={value}
-                    onChange={(event) => {
-                        this.search(event.target.value);
+                <div>test: {JSON.stringify(suggestionStrings)}</div>
+                <AutoCompleteUI
+                    label={this.props.fieldLabel}
+                    items={suggestionStrings}
+                    onChange={(term) => {
+                        this.search(term);
                     }}
                 />
-
-                {
-                    suggestions == null ? null : (
-                        <ul>
-                            {
-                                suggestions.map((suggestion) => {
-                                    return (
-                                        <RenderSuggestion
-                                            key={Math.random().toString()}
-                                            suggestion={suggestion}
-                                            onClick={() => {
-                                                onSuggestionSelect(suggestion);
-                                            }}
-                                        />
-                                    );
-                                })
-                            }
-                        </ul>
-                    )
-                }
             </div>
         );
     }

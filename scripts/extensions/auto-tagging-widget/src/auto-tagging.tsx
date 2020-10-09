@@ -5,7 +5,7 @@ import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 
 import {Switch, Button, ButtonGroup} from 'superdesk-ui-framework/react';
-import {ToggleBoxNext} from 'superdesk-ui-framework'
+import {ToggleBoxNext} from 'superdesk-ui-framework';
 import {flatMap} from 'lodash';
 
 export enum ITagGroup {
@@ -14,6 +14,11 @@ export enum ITagGroup {
     subject = 'subject',
 }
 
+/**
+ * The interface isn't 100% accurate. If ITagGroup === 'person', it doesn't have title,
+ * and has `firstname`, `lastname` instead. I'm not changing it yet because we are planning to
+ * review interfaces.
+ */
 export interface ITag {
     uuid: string;
     title: string;
