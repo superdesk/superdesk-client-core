@@ -365,6 +365,10 @@
     .sd-checkbox {
         font-size: 1.4rem;
     }
+    &:empty {
+        display: contents !important;
+        padding: 0 !important;
+    }
 }
 .subnav__desk-stage {
     flex-grow: 1;

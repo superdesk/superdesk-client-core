@@ -7,6 +7,7 @@
             ng-click="stopEvent($event)"
             ng-dblclick="stopEvent($event)"
             ng-show="active || open"
+            aria-label="{{ :: 'More actions' | translate }}"
             dropdown__toggle><i class="icon-dots-vertical"></i></button>
 
     <ul class="dropdown dropdown--align-right dropdown__menu more-activity-menu" ng-class="{open: open}">
