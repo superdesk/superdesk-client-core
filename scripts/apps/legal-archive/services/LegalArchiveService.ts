@@ -38,8 +38,8 @@ export function LegalArchiveService(api, $location, moment, sortService) {
                 max_results: Number(params.max_results) || DEFAULT_PER_PAGE,
             };
 
-        if (params.q) {
-            criteria.where = params.q;
+        if (params.where) {
+            criteria.where = params.where;
         }
 
         if (params.page) {
@@ -52,6 +52,10 @@ export function LegalArchiveService(api, $location, moment, sortService) {
             criteria.sort = sortService.formatSort(sort[0], sort[1]);
         } else {
             criteria.sort = sortService.formatSort('versioncreated', 'desc');
+        }
+
+        if (params.q) {
+            criteria.query = params.q;
         }
 
         return criteria;
@@ -100,7 +104,7 @@ export function LegalArchiveService(api, $location, moment, sortService) {
             });
         }
 
-        $location.search('q', whereClause);
+        $location.search('where', whereClause);
         return whereClause;
     };
 
