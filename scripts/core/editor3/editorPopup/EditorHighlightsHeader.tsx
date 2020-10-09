@@ -45,7 +45,8 @@ export class EditorHighlightsHeader extends React.Component<IProps, IState> {
                             <div className="dropdown dropdown--align-right">
                                 <button
                                     className="icn-btn dropdown__toggle"
-                                    onClick={() => this.toggleActionsDropdown()}>
+                                    onClick={() => this.toggleActionsDropdown()}
+                                >
                                     <i className="icon-dots-vertical" />
                                 </button>
 
@@ -53,10 +54,12 @@ export class EditorHighlightsHeader extends React.Component<IProps, IState> {
                                     {
                                         availableActions.map((action, i) => (
                                             <li key={i}>
-                                                <button onClick={() => {
-                                                    this.toggleActionsDropdown();
-                                                    action.onClick();
-                                                }}>
+                                                <button
+                                                    onClick={() => {
+                                                        this.toggleActionsDropdown();
+                                                        action.onClick();
+                                                    }}
+                                                >
                                                     <i className={action.icon} />{action.text}
                                                 </button>
                                             </li>

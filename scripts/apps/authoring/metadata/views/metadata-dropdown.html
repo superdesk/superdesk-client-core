@@ -23,7 +23,7 @@
         <li ng-if="label"><div class="dropdown__menu-label">{{ label }}</div></li>
         <li ng-click="select()"><button ng-disabled="disabled" translate>None</button></li>
 
-        <li ng-repeat="term in list" ng-click="select(term)" ng-if="field !== 'place'">
+        <li ng-repeat="term in list" ng-click="select(term)" ng-if="field !== 'place'" data-test-id="dropdown__item">
             <button ng-disabled="disabled">
                 <span ng-if="icon"
                     class="{{icon}}-{{term.name}}"

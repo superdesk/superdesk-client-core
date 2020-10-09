@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+
 import {SelectFieldPopup} from './SelectFieldPopup';
 import {differenceBy, get, cloneDeep} from 'lodash';
+
+import {gettext} from 'core/utils';
 
 import {LineInput, Label} from '../';
 import {TermsList} from '../../';
@@ -97,6 +100,7 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
                         )}
                         onClick={options.length > 0 ? this.toggleOpenSelectPopup : null}
                         onFocus={onFocus}
+                        aria-label={gettext('Add new')}
                         ref={(ref) => {
                             this.addBtn = ref;
                         }}
@@ -116,7 +120,7 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
                     )}
                 </div>
 
-                { this.state.openSelectPopup &&
+                {this.state.openSelectPopup && (
                     <SelectFieldPopup
                         value={value}
                         multiLevel={this.state.multiLevel}
@@ -132,7 +136,7 @@ export class SelectMetaTermsInput extends React.Component<any, any> {
                         searchKey={searchKey}
                         popupContainer={popupContainer}
                     />
-                }
+                )}
             </LineInput>
         );
     }

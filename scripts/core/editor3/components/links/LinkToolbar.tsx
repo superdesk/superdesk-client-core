@@ -38,19 +38,22 @@ export class LinkToolbarComponent extends React.Component<any, any> {
             'is-link': isLink,
         });
 
-        return <div className={cx}>
-            {!isLink ? <span>&nbsp;</span> :
-                <span>
-                    {gettext('Link controls:')}
-                    {
-                        link && link.href
-                            ? <a href={link.href} target="_blank" rel="noopener noreferrer">{gettext('Open')}</a>
-                            : null
-                    }
-                    <a onClick={() => onEdit(link)}>{gettext('Edit')}</a>
-                    <a onClick={this.onRemove}>{gettext('Delete')}</a>
-                </span>}
-        </div>;
+        return (
+            <div className={cx}>
+                {!isLink ? <span>&nbsp;</span> : (
+                    <span>
+                        {gettext('Link controls:')}
+                        {
+                            link && link.href
+                                ? <a href={link.href} target="_blank" rel="noopener noreferrer">{gettext('Open')}</a>
+                                : null
+                        }
+                        <a onClick={() => onEdit(link)}>{gettext('Edit')}</a>
+                        <a onClick={this.onRemove}>{gettext('Delete')}</a>
+                    </span>
+                )}
+            </div>
+        );
     }
 }
 

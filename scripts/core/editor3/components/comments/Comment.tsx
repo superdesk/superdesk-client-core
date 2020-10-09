@@ -113,16 +113,23 @@ export class Comment extends React.Component<any, any> {
                                             'comment-box__button-toolbar'
                                             + ' comment-box__button-toolbar--right'
                                             + ' comment-box__button-toolbar--small'
-                                        }>
-                                        <button onClick={(event) => {
-                                            this.cancelEditing(event);
-                                        }} className="btn btn--icon-only btn--hollow">
+                                        }
+                                    >
+                                        <button
+                                            onClick={(event) => {
+                                                this.cancelEditing(event);
+                                            }}
+                                            className="btn btn--icon-only btn--hollow"
+                                        >
                                             <i className="icon-close-small" />
                                         </button>
-                                        <button onClick={() => {
-                                            this.props.updateComment(this.state.editModeValue);
-                                            this.cancelEditing();
-                                        }} className="btn btn--primary btn--icon-only">
+                                        <button
+                                            onClick={() => {
+                                                this.props.updateComment(this.state.editModeValue);
+                                                this.cancelEditing();
+                                            }}
+                                            className="btn btn--primary btn--icon-only"
+                                        >
                                             <i className="icon-ok" />
                                         </button>
                                     </div>

@@ -266,7 +266,22 @@ declare module 'superdesk-api' {
         sms?: string;
         abstract?: string;
         byline: string;
-        dateline?: any;
+        dateline?: {
+            day?: string;
+            date?: string;
+            source?: string;
+            located?: {
+                dateline?: string;
+                city?: string;
+                city_code?: string;
+                state_code?: string;
+                country?: string;
+                country_code?: string;
+                tz?: string;
+                state?: string;
+            };
+            text?: string;
+        };
         body_html?: string;
         footer?: string;
         firstcreated: any;
@@ -1012,7 +1027,7 @@ declare module 'superdesk-api' {
         };
         ui: {
             article: {
-                view(id: string): void;
+                view(id: IArticle['_id']): void;
 
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
@@ -1236,6 +1251,7 @@ declare module 'superdesk-api' {
             nestedItemsInOutputStage?: boolean;
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
+            sendToPersonal?: boolean;
         };
         auth: {
             google: boolean

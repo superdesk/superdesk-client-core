@@ -6,7 +6,8 @@ export const copyright: React.StatelessComponent<IPropsItemListInfo> = ({item}) 
         const title = item.usageterms || item.copyrightnotice || '';
 
         return (
-            <small key="copyright"
+            <small
+                key="copyright"
                 className="copyright container"
                 title={title}
             >&copy; {item.copyrightholder}</small>

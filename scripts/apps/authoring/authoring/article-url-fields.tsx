@@ -88,7 +88,8 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
                             className="sd-editor__default-input"
                             placeholder={gettext('Description')}
                             value={item.description}
-                            onChange={this.handleChange.bind(this, i, 'description')} />
+                            onChange={this.handleChange.bind(this, i, 'description')}
+                        />
                     </div>
                 ))}
 
@@ -97,7 +98,10 @@ export class ArticleUrlFields extends React.Component<IProps, IState> {
                         disabled={!editable}
                         className="btn btn--primary"
                         onClick={() => this.addUrl()}
-                        style={{marginTop: 10}}>{gettext('Add URL')}</button>
+                        style={{marginTop: 10}}
+                    >
+                        {gettext('Add URL')}
+                    </button>
                 </div>
 
                 {

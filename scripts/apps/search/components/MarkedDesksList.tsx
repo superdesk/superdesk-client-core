@@ -79,8 +79,11 @@ export class MarkedDesksList extends React.Component<IProps> {
         const markedDesksById = this.props.markedDesksById || {};
 
         return (
-            <ul className="dropdown dropdown__menu highlights-list-menu open"
-                onMouseEnter={this.stopTimeout} onMouseLeave={this.close}>
+            <ul
+                className="dropdown dropdown__menu highlights-list-menu open"
+                onMouseEnter={this.stopTimeout}
+                onMouseLeave={this.close}
+            >
                 <li key="item-marked-label">
                     <div className="dropdown__menu-label">{gettext('Marked For')}
                         <button className="dropdown__menu-close" onClick={this.closeMenu}>
@@ -89,13 +92,23 @@ export class MarkedDesksList extends React.Component<IProps> {
                     </div>
                 </li>
                 {
-                    markedDesks.map((d) => <li key={'item-marked-' + markedDesksById[d]._id}>
-                        {markedDesksById[d].name}
-                        {desks.hasMarkItemPrivilege() ?
-                            <button className="btn btn--small btn--hollow btn--primary btn--ui-dark"
-                                onClick={this.removeMarkedDesk(markedDesksById[d])}>
-                                {gettext('REMOVE')}</button> : null}
-                    </li>)
+                    markedDesks.map((d) => (
+                        <li key={'item-marked-' + markedDesksById[d]._id}>
+                            {markedDesksById[d].name}
+                            {
+                                desks.hasMarkItemPrivilege()
+                                    ? (
+                                        <button
+                                            className="btn btn--small btn--hollow btn--primary btn--ui-dark"
+                                            onClick={this.removeMarkedDesk(markedDesksById[d])}
+                                        >
+                                            {gettext('REMOVE')}
+                                        </button>
+                                    )
+                                    : null
+                            }
+                        </li>
+                    ))
                 }
             </ul>
         );
