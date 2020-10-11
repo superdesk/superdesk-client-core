@@ -586,6 +586,37 @@ export function AuthoringDirective(
                         window.tansa.settings.profileId = profiles[$scope.item.language];
                     }
 
+                    (function workAroundTansaSpellcheckerSelectionBug() {
+                        /**
+                         * The issue was that Tansa spell-checker would only check a single field, even if no input
+                         * field was focused at the time of initializing the spell-checker.
+                         *
+                         * If spell-checking was cancelled, that field would receive focus.
+                         *
+                         * If the page was reloaded, or an article reopened - all fields were spell-checked as expected.
+                         *
+                         * The issue was only happening if an expanded text selection was made in input[type="text"]
+                         * field at **any point** prior to initializing the spell-checker.
+                         * Such a selection is made every time when focusing a
+                         * non-empty input[type="text"] field using a tab key.
+                         * Even if other text fields received focus after that,
+                         * it would only spell-check the single field,
+                         * that last had an expanded text selection performed on it.
+                         *
+                         * I assume Tansa spell-checker has a feature to only spell-check a selected part of the text
+                         * and their JavaScript code has a bug where it can't differentiate between text that
+                         * was intentionally selected for spell-checking from text that was selected long before
+                         * initializing the spell-checker, even after multiple other input fields received focus.
+                         */
+
+                        Array.from(document.querySelectorAll('input[type="text"]')).forEach((el: HTMLInputElement) => {
+                            // Making sure there are no expanded selections.
+                            if (el !== document.activeElement) {
+                                el.setSelectionRange(0, 0);
+                            }
+                        });
+                    })();
+
                     window.RunTansaProofing();
                 } else {
                     notify.error(gettext('Tansa is not responding. You can continue editing or publish the story.'));

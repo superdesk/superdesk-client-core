@@ -33,6 +33,7 @@ interface IProps {
     flags: {
         hideActions: any;
     };
+    hideActionsForMonitoringItems: boolean;
     groupId: any;
     viewColumn: any;
     loading: any;
@@ -40,7 +41,6 @@ interface IProps {
     scopeApplyAsync: IScopeApply;
     edit(item: IArticle): void;
     preview(item: IArticle): void;
-    hideActionsForMonitoringItems(): void;
     multiSelect(items: Array<IArticle>, selected: boolean): void;
     setSelectedItem(itemId: string): void;
 }

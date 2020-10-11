@@ -1,5 +1,6 @@
 <a class="sd-sidebar-menu__btn"
     title="{{ :: item.label | translate }}"
+    aria-label="{{ :: item.label | translate }}"
     ng-href="#{{ :: item.href }}"
     ng-click="hideMonitoring(currentRoute.href === item.href, $event)"
     sd-hotkey="{{ item.shortcut }}" sd-hotkey-options="{global: true}"

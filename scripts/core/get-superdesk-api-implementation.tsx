@@ -69,6 +69,15 @@ function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
 }
 
+export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise<void> {
+    const authoringWorkspace = ng.get('authoringWorkspace');
+
+    setUrlPage('/workspace/monitoring');
+    authoringWorkspace.edit({_id: id}, mode);
+
+    return Promise.resolve();
+}
+
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
 
@@ -217,9 +226,8 @@ export function getSuperdeskApiImplementation(
         },
         ui: {
             article: {
-                view: (id: string) => {
-                    setUrlPage('/workspace/monitoring');
-                    authoringWorkspace.edit({_id: id}, 'view');
+                view: (id: IArticle['_id']) => {
+                    openArticle(id, 'view');
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
