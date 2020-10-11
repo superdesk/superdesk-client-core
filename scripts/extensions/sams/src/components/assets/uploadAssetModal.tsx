@@ -144,6 +144,8 @@ export class UploadAssetModalComponent extends React.Component<IProps, IState> {
                 remove={removeFile}
                 uploadProgress={item.uploadProgress}
                 error={item.error}
+                selectCheckboxAsset={selectFile}
+                itemSelected={false}
             />
         );
     }

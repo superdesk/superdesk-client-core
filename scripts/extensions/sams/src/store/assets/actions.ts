@@ -14,6 +14,9 @@ import {
     SET_ASSET_SEARCH_PARAMS,
     MANAGE_ASSETS_PREVIEW,
     MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
+    MANAGE_MULTIACTIONBAR_SELECT_ASSET,
+    MANAGE_MULTIACTIONBAR_DESELECT_ASSET,
+    MANAGE_MULTIACTIONBAR_CLOSE,
 } from './types';
 import {samsApi} from '../../apis';
 
@@ -57,6 +60,26 @@ export function previewAsset(asset: string): IAssetActionTypes {
 export function closeAssetPreviewPanel(): IAssetActionTypes {
     return {
         type: MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
+    };
+}
+
+export function selectAssetMultiActionBar(asset_id: string): IAssetActionTypes {
+    return {
+        type: MANAGE_MULTIACTIONBAR_SELECT_ASSET,
+        payload: asset_id,
+    };
+}
+
+export function deSelectAssetMultiActionBar(asset_id: string): IAssetActionTypes {
+    return {
+        type: MANAGE_MULTIACTIONBAR_DESELECT_ASSET,
+        payload: asset_id,
+    };
+}
+
+export function closeMultiActionBar(): IAssetActionTypes {
+    return {
+        type: MANAGE_MULTIACTIONBAR_CLOSE,
     };
 }
 

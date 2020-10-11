@@ -32,12 +32,16 @@ export type IAssetActionTypes = IReceiveAssetsAction |
     ISetAssetSearchParamsAction |
     IAssetSetListStyleAction |
     ICloseAssetPreviewPanelAction |
-    IPreviewAssetAction;
+    IPreviewAssetAction |
+    ISelectAssetForMultiActionBar |
+    IDeselectAssetForMultiActionBar |
+    ICloseMultiActionBar;
 
 export interface IAssetState {
     assets: Dictionary<string, IAssetItem>;
     searchParams: IAssetSearchParams;
     selectedAssetId?: string;
+    selectedAssetIds: Array<string>;
     listItemIds: Array<string>;
     searchResultTotal: number;
     listStyle: ASSET_LIST_STYLE;
@@ -47,6 +51,23 @@ export const MANAGE_ASSETS_PREVIEW = 'manage_assets__preview';
 interface IPreviewAssetAction {
     type: typeof MANAGE_ASSETS_PREVIEW;
     payload: string;
+}
+
+export const MANAGE_MULTIACTIONBAR_SELECT_ASSET = 'manage_multi_action_bar__select_asset';
+interface ISelectAssetForMultiActionBar {
+    type: typeof MANAGE_MULTIACTIONBAR_SELECT_ASSET;
+    payload: string;
+}
+
+export const MANAGE_MULTIACTIONBAR_DESELECT_ASSET = 'manage_multi_action_bar__deselect_asset';
+interface IDeselectAssetForMultiActionBar {
+    type: typeof MANAGE_MULTIACTIONBAR_DESELECT_ASSET;
+    payload: string;
+}
+
+export const MANAGE_MULTIACTIONBAR_CLOSE = 'manage_multi_action_bar__close';
+interface ICloseMultiActionBar {
+    type: typeof MANAGE_MULTIACTIONBAR_CLOSE;
 }
 
 export const MANAGE_ASSETS_CLOSE_PREVIEW_PANEL = 'manage_assets__close_preview_panel';

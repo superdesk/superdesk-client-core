@@ -103,6 +103,39 @@ export function httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): 
         });
 }
 
+export function httpRequestZipLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<void> {
+    const saveByteArray = (function () {
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        return function (data) {
+            const blob = new Blob([data], {type: "application/zip"}),
+            url = window.URL.createObjectURL(blob);
+            a.href = url;
+            a.download = 'example';
+            a.click();
+            window.URL.revokeObjectURL(url);
+        };
+    }());
+    return ng.getService('session')
+        .then((session) => {
+            return httpRequestBase({
+                ...options,
+                url: appConfig.server.url + options.path,
+                headers: {
+                    ...(options.headers || {}),
+                    'Authorization': session.token,
+                },
+            }).then((res) => res.arrayBuffer().then((blob: any) => {
+                if (res.ok) {
+                    saveByteArray(blob);
+                    return Promise.resolve();
+                } else {
+                    return Promise.reject();
+                }
+            }));
+        });
+}
+
 export function uploadFileWithProgress<T>(
     endpoint: string,
     data: FormData,

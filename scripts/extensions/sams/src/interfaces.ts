@@ -57,6 +57,7 @@ export enum LIST_ACTION {
 
 export enum ASSET_ACTIONS {
     PREVIEW = 'preview',
+    DOWNLOAD = 'download',
 }
 
 export interface IAssetAction {
@@ -141,6 +142,7 @@ export interface ISamsAPI {
         getSearchUrlParams(): Partial<IAssetSearchParams>;
         setSearchUrlParams(params: Partial<IAssetSearchParams>): void;
         getCount(set_ids: Array<string>): Promise<Dictionary<string, number>>;
+        getCompressedBinary(asset_ids: Array<string>): void;
     };
 }
 

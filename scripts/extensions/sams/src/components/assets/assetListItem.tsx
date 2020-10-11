@@ -13,6 +13,7 @@ import {
     ListItemColumn,
     ListItemRow,
 } from '../../ui/list';
+import {Checkbox} from '../../ui/grid/Checkbox';
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
@@ -23,6 +24,8 @@ interface IProps {
     onClick(asset: IAssetItem): void;
     selected: boolean;
     actions?: Array<IAssetCallback>;
+    itemSelected: boolean;
+    selectCheckboxAsset(asset: Partial<IAssetItem>): void;
 }
 
 export class AssetListItem extends React.PureComponent<IProps> {
@@ -30,6 +33,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
         this.onPreviewSelect = this.onPreviewSelect.bind(this);
+        this.onCheckboxClickFunctions = this.onCheckboxClickFunctions.bind(this);
     }
 
     onItemClick(event: React.MouseEvent<HTMLDivElement>) {
@@ -46,16 +50,24 @@ export class AssetListItem extends React.PureComponent<IProps> {
     stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
         e.stopPropagation();
     }
+    onCheckboxClickFunctions(e: React.MouseEvent<HTMLDivElement>) {
+        this.stopClickPropagation(e);
+        this.props.selectCheckboxAsset(this.props.asset)
+    }
 
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
         const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
 
         return (
-            <ListItem onClick={this.onItemClick} selected={this.props.selected} shadow={1}>
+            <ListItem onClick={this.onItemClick} selected={this.props.selected || this.props.itemSelected} shadow={1}>
                 <ListItemBorder />
                 <ListItemColumn>
                     <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
+                    <div className="sd-grid-item__checkbox" onClick={this.onCheckboxClickFunctions}>
+                    <Checkbox checked={this.props.itemSelected}
+                                onChange={() => this.onCheckboxClickFunctions} />
+                    </div>
                 </ListItemColumn>
                 <ListItemColumn grow={true}>
                     <ListItemRow>

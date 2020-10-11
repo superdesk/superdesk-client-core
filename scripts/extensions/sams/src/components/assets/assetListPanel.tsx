@@ -16,17 +16,24 @@ interface IProps {
     listStyle: ASSET_LIST_STYLE;
     selectedAssetId: string | undefined;
     actions?: Array<IAssetCallback>;
+    selectedAssetIds: Array<string> | undefined;
     onItemClicked(asset: IAssetItem): void;
+    addAssetToSelectedList(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
+        this.onAddAssetToSelectedList = this.onAddAssetToSelectedList.bind(this);
     }
 
     onItemClick(asset: IAssetItem) {
         this.props.onItemClicked(asset);
+    }
+
+    onAddAssetToSelectedList(asset: IAssetItem) {
+        this.props.addAssetToSelectedList(asset)
     }
 
     render() {
@@ -51,6 +58,8 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             onClick={this.onItemClick}
                             selected={asset._id === this.props.selectedAssetId}
                             actions={this.props.actions}
+                            itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
+                            selectCheckboxAsset={this.onAddAssetToSelectedList}
                         />
                     ))}
                 </GridList>
@@ -65,6 +74,8 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             onClick={this.onItemClick}
                             selected={asset._id === this.props.selectedAssetId}
                             actions={this.props.actions}
+                            itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
+                            selectCheckboxAsset={this.onAddAssetToSelectedList}
                         />
                     ))}
                 </ListItemGroup>

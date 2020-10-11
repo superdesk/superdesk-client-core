@@ -13,6 +13,7 @@ import {GridItemFooterBlock} from '../../ui/grid/GridItemFooterBlock';
 import {GridItemThumb} from '../../ui/grid/GritItemThumb';
 import {GridItemContent} from '../../ui/grid/GridItemContent';
 import {GridItemProgressCircle} from '../../ui/grid/GridItemProgressCircle';
+import {Checkbox} from '../../ui/grid/Checkbox';
 
 // Utils
 import {
@@ -30,6 +31,8 @@ interface IProps {
     uploadProgress?: number;
     error?: boolean;
     actions?: Array<IAssetCallback>;
+    itemSelected: boolean;
+    selectCheckboxAsset(asset: Partial<IAssetItem>): void;
 }
 
 export class AssetGridItem extends React.PureComponent<IProps> {
@@ -38,6 +41,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
 
         this.onRemove = this.onRemove.bind(this);
         this.onItemClick = this.onItemClick.bind(this);
+        this.onCheckboxClickFunctions = this.onCheckboxClickFunctions.bind(this);
     }
 
     onRemove(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -55,6 +59,10 @@ export class AssetGridItem extends React.PureComponent<IProps> {
     stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
         e.stopPropagation();
     }
+    onCheckboxClickFunctions(e: React.MouseEvent<HTMLDivElement>) {
+        this.stopClickPropagation(e);
+        this.props.selectCheckboxAsset(this.props.asset);
+    }
 
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
@@ -66,13 +74,17 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         return (
             <GridItem
                 onClick={this.onItemClick}
-                selected={this.props.selected}
+                selected={this.props.selected || this.props.itemSelected}
             >
                 <GridItemThumb
                     uploading={true}
                     remove={this.props.remove && this.onRemove}
                     icon={typeIcon}
                 >
+                    <div className="sd-grid-item__checkbox" onClick={this.onCheckboxClickFunctions}>
+                    <Checkbox checked={this.props.itemSelected}
+                                onChange={() => this.onCheckboxClickFunctions} />
+                    </div>
                     {this.props.uploadProgress && (
                         <GridItemProgressCircle
                             value={this.props.uploadProgress ?? 0}

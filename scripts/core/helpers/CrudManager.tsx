@@ -17,7 +17,7 @@ import {
     IArticleQuery,
     IArticle,
 } from 'superdesk-api';
-import {httpRequestJsonLocal, httpRequestVoidLocal, uploadFileWithProgress} from './network';
+import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestZipLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
 
 export function queryElastic(
@@ -178,6 +178,13 @@ export const dataApi: IDataApi = {
     },
     queryRaw: (endpoint, params?: Dictionary<string, any>) => {
         return httpRequestJsonLocal({
+            method: 'GET',
+            path: '/' + endpoint,
+            urlParams: params,
+        });
+    },
+    queryZip: (endpoint, params?: Dictionary<string, any>) => {
+        return httpRequestZipLocal({
             method: 'GET',
             path: '/' + endpoint,
             urlParams: params,
