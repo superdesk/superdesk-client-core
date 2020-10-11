@@ -16,8 +16,6 @@ import {storageDestinationReducer} from './storageDestinations/reducers';
 import {assetsReducer} from './assets/reducers';
 import {workspaceReducer} from './workspace/reducers';
 
-import {getSamsAPIs} from '../api';
-
 export const rootReducer = combineReducers({
     sets: setsReducer,
     storageDestinations: storageDestinationReducer,

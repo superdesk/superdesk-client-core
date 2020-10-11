@@ -58,7 +58,6 @@ interface IProps {
     ): void;
 }
 
-
 const mapStateToProps = (state: IApplicationState) => ({
     filterPanelOpen: isFilterPanelOpen(state),
     totalAssets: getAssetListTotal(state),

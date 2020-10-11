@@ -29,7 +29,7 @@ interface IProps {
     selected?: boolean;
     uploadProgress?: number;
     error?: boolean;
-    toggleSelected?(): void;
+    toggleSelected?(asset: Partial<IAssetItem>): void;
     actions?: Array<IAssetCallback>;
 }
 
@@ -39,6 +39,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
 
         this.onRemove = this.onRemove.bind(this);
         this.onItemClick = this.onItemClick.bind(this);
+        this.toggleSelected = this.toggleSelected.bind(this);
     }
 
     onRemove(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -53,6 +54,12 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         this.props.onClick(this.props.asset);
     }
 
+    toggleSelected() {
+        if (this.props.toggleSelected != null) {
+            this.props.toggleSelected(this.props.asset);
+        }
+    }
+
     stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
         e.stopPropagation();
     }
@@ -60,7 +67,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
         const typeIcon = getIconTypeFromMimetype(
-            this.props.asset?.mimetype ?? 'text',
+            this.props.asset.mimetype ?? 'text',
         );
         const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
 
@@ -74,7 +81,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                     remove={this.props.remove && this.onRemove}
                     icon={typeIcon}
                     selected={this.props.selected}
-                    toggleSelected={this.props.toggleSelected}
+                    toggleSelected={this.props.toggleSelected && this.toggleSelected}
                 >
                     {this.props.uploadProgress && (
                         <GridItemProgressCircle
@@ -99,7 +106,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                             {gettext('Type:')}
                         </span>
                         <span className="sd-grid-item__text-strong">
-                            {this.props.asset?.mimetype}
+                            {this.props.asset.mimetype}
                         </span>
                     </div>
                     <div className="sd-grid-item__content-block">

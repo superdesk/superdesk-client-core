@@ -44,7 +44,6 @@ import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
 
-
 interface IProps {
     assets: Array<IAssetItem>;
     totalAssets: number;
@@ -60,6 +59,7 @@ interface IProps {
     previewAsset(asset: IAssetItem): void;
     onPanelClosed(): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
+    queryAssetsFromCurrentSearch(): void;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
@@ -89,6 +89,7 @@ const mapStateToProps = (state: IApplicationState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     loadNextPage: () => dispatch<any>(loadNextAssetsPage()),
     setListStyle: (style: ASSET_LIST_STYLE) => dispatch(setAssetListStyle(style)),
+    queryAssetsFromCurrentSearch: () => dispatch<any>(queryAssetsFromCurrentSearch()),
     updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>, listAction: LIST_ACTION) =>
         dispatch<any>(
             updateAssetSearchParamsAndListItems(
@@ -193,7 +194,10 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                         <AssetListPanel
                             assets={this.props.assets}
                             listStyle={this.props.listStyle}
-                            selectedAssetId={this.props.selectedAssetId}
+                            selectedItems={this.props.selectedAssetId == null ?
+                                [] :
+                                [this.props.selectedAssetId]
+                            }
                             onItemClicked={this.props.previewAsset}
                             actions={[{
                                 action: ASSET_ACTIONS.PREVIEW,

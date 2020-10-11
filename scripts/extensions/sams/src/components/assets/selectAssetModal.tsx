@@ -197,7 +197,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                                 assets={this.props.assets}
                                 listStyle={this.props.listStyle}
                                 selectedItems={Object.keys(this.state.selectedItems)}
-                                toggleAssetSelected={this.toggleItemSelected}
+                                onItemClicked={this.toggleItemSelected}
                             />
                         )}
                     />
