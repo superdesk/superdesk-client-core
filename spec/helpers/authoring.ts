@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor} from './utils';
-import {ECE} from 'end-to-end-testing-helpers';
+import {ECE, els, el} from 'end-to-end-testing-helpers';
 
 class Authoring {
     lock: any;
@@ -155,7 +155,7 @@ class Authoring {
     setHeaderSluglineText: (text: any) => any;
     setHeaderEdNoteText: (text: any) => any;
     getHeaderEdNoteText: (text: any) => any;
-    getDuplicatedItemState: (item: any) => any;
+    getDuplicatedItemState: (index: number) => any;
     getItemState: () => any;
     isPublishedState: () => any;
     getSubjectMetadataDropdownOpened: () => any;
@@ -216,7 +216,7 @@ class Authoring {
             .element(by.tagName('button'));
 
         this.getCategoryListItems = element(by.id('category-setting'))
-            .all(by.repeater('term in $vs_collection track by term[uniqueField]'));
+            .all(el(['dropdown__item']).locator());
 
         this.sendItemContainer = element(by.id('send-item-container'));
         this.linkToMasterButton = element(by.id('preview-master'));
@@ -998,8 +998,10 @@ class Authoring {
             return headerDetails.all(by.model('item.ednote')).get(0).getAttribute('value');
         };
 
-        this.getDuplicatedItemState = function(item) {
-            var duplicatedItem = element.all(by.repeater('relatedItem in relatedItems._items')).get(item);
+        this.getDuplicatedItemState = function(index) {
+            var duplicatedItem = els(['article-item'], null, el(['related-items-view'])).get(index);
+
+            browser.wait(ECE.presenceOf(duplicatedItem), 500);
 
             return duplicatedItem.element(by.className('state-label')).getText();
         };

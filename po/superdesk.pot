@@ -3257,6 +3257,10 @@ msgstr ""
 msgid "Date/Time"
 msgstr ""
 
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:415
+msgid "Date/Time"
+msgstr ""
+
 #: scripts/apps/archive/views/metadata-view.html:69
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:151
 #: scripts/apps/users/views/user-preferences.html:54
@@ -9246,6 +9250,10 @@ msgstr ""
 msgid "Recalled by"
 msgstr ""
 
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
+msgid "Recalls"
+msgstr ""
+
 #: scripts/apps/workspace/content/views/sd-content-create.html:24
 msgid "Recent templates"
 msgstr ""
@@ -12186,7 +12194,7 @@ msgstr ""
 msgid "This will also postpone the following planning items"
 msgstr ""
 
-#: ../superdesk-planning/client/actions/assignments/ui.js:839
+#: ../superdesk-planning/client/actions/assignments/ui.js:842
 msgid "This will also remove other linked assignments (if any, for story updates). Are you sure?"
 msgstr ""
 
@@ -12992,6 +13000,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.jsx:301
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:46
 #: scripts/apps/users/views/user-privileges.html:16
+#: scripts/extensions/markForUser/dist/get-authoring-actions.js:8
 msgid "User"
 msgstr ""
 

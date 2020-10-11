@@ -2,6 +2,7 @@ import _ from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {canPrintPreview} from 'apps/search/helpers';
 
 AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter'];
 export function AuthoringEmbeddedDirective(api, notify, $filter) {
@@ -12,6 +13,8 @@ export function AuthoringEmbeddedDirective(api, notify, $filter) {
             action: '=',
         },
         link: function(scope) {
+            scope.canPrintPreview = canPrintPreview;
+
             function overrideEdnote(template) {
                 /* Override Editor note with given template or default one
                  *

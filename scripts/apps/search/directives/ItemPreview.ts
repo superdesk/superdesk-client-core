@@ -131,8 +131,6 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
             /**
              * Fetch related items to the current scope.item
              * This is then used to calculate if we show the 'Duplicates' tab,
-             * as well as passed to the sd-media-related directive so we don't
-             * double up with this api call
              */
             function fetchRelatedItems() {
                 if (scope.item && ['archive', 'archived', 'published'].includes(scope.item._type)

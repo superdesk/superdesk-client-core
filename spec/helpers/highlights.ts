@@ -97,7 +97,7 @@ class Highlights {
         };
 
         this.getHighlightTitle = function() {
-            return element.all(by.css('[ng-if="type === \'highlights\'"]')).get(0).getText();
+            return element.all(by.css('[data-test-id="highlightTitle"')).get(0).getText();
         };
 
         this.getDesk = function(name) {
