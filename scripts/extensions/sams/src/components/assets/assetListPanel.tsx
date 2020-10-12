@@ -18,22 +18,22 @@ interface IProps {
     actions?: Array<IAssetCallback>;
     selectedAssetIds: Array<string> | undefined;
     onItemClicked(asset: IAssetItem): void;
-    addAssetToSelectedList(asset: IAssetItem): void;
+    updateSelectedAssetIds(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
-        this.onAddAssetToSelectedList = this.onAddAssetToSelectedList.bind(this);
+        this.onUpdateSelectedAssetIds = this.onUpdateSelectedAssetIds.bind(this);
     }
 
     onItemClick(asset: IAssetItem) {
         this.props.onItemClicked(asset);
     }
 
-    onAddAssetToSelectedList(asset: IAssetItem) {
-        this.props.addAssetToSelectedList(asset)
+    onUpdateSelectedAssetIds(asset: IAssetItem) {
+        this.props.updateSelectedAssetIds(asset);
     }
 
     render() {
@@ -59,7 +59,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             selected={asset._id === this.props.selectedAssetId}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
-                            selectCheckboxAsset={this.onAddAssetToSelectedList}
+                            updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
                         />
                     ))}
                 </GridList>
@@ -75,7 +75,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             selected={asset._id === this.props.selectedAssetId}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
-                            selectCheckboxAsset={this.onAddAssetToSelectedList}
+                            updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
                         />
                     ))}
                 </ListItemGroup>

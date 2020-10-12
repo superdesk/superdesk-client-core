@@ -33,8 +33,7 @@ export type IAssetActionTypes = IReceiveAssetsAction |
     IAssetSetListStyleAction |
     ICloseAssetPreviewPanelAction |
     IPreviewAssetAction |
-    ISelectAssetForMultiActionBar |
-    IDeselectAssetForMultiActionBar |
+    IUpdateSelectedAssetIds |
     ICloseMultiActionBar;
 
 export interface IAssetState {
@@ -53,15 +52,9 @@ interface IPreviewAssetAction {
     payload: string;
 }
 
-export const MANAGE_MULTIACTIONBAR_SELECT_ASSET = 'manage_multi_action_bar__select_asset';
-interface ISelectAssetForMultiActionBar {
-    type: typeof MANAGE_MULTIACTIONBAR_SELECT_ASSET;
-    payload: string;
-}
-
-export const MANAGE_MULTIACTIONBAR_DESELECT_ASSET = 'manage_multi_action_bar__deselect_asset';
-interface IDeselectAssetForMultiActionBar {
-    type: typeof MANAGE_MULTIACTIONBAR_DESELECT_ASSET;
+export const UPDATE_SELECTED_ASSET_IDS = 'update__selected_asset_ids';
+interface IUpdateSelectedAssetIds {
+    type: typeof UPDATE_SELECTED_ASSET_IDS;
     payload: string;
 }
 

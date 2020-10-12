@@ -7,9 +7,7 @@ import {superdeskApi} from '../../apis';
 
 // UI
 import {PanelContent, PanelContentBlock, PanelContentBlockInner, PanelHeader, Text} from '../../ui';
-import {FormLabel} from 'superdesk-ui-framework/react';
-import {Dropdown} from '../../ui/Dropdown';
-import {IconButton} from '../../ui/IconButton';
+import {Dropdown, FormLabel, IconButton} from 'superdesk-ui-framework/react';
 
 // Utils
 import {
@@ -36,24 +34,34 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
             <React.Fragment>
                 <PanelHeader onClose={this.props.onPanelClosed} borderB={true} title={gettext('Asset Preview')} />
                 <PanelContent>
-                <div className="side-panel__content-block side-panel__content-block--flex">
-                <div className="side-panel__content-block-inner side-panel__content-block-inner--grow">
-                </div>
-                <div className="side-panel__content-block-inner side-panel__content-block-inner--right">
-                    <Dropdown
-                        align = 'right'
-                        append = {true}
-                        items={[
-                            {
-                                type: 'group', label: 'Actions', items: [
-                                    'divider',
-                                    { label: 'Download', icon: 'download', onSelect: () => this.props.downloadAsset(asset)},
-                                ]
-                            }]}>
-                        <IconButton ariaValue='dropdown-more-options' icon='dots-vertical' onClick={() => false} />
-                        </Dropdown>
-                </div>
-                </div>
+                    <div className="side-panel__content-block side-panel__content-block--flex">
+                        <div className="side-panel__content-block-inner side-panel__content-block-inner--grow" />
+                        <div className="side-panel__content-block-inner side-panel__content-block-inner--right">
+                            <Dropdown
+                                align = "right"
+                                append = {true}
+                                items={[
+                                    {
+                                        type: 'group',
+                                        label: 'Actions',
+                                        items: [
+                                            'divider',
+                                            {
+                                                label: 'Download', icon: 'download',
+                                                onSelect: () => this.props.downloadAsset(asset),
+                                            },
+                                        ],
+                                    },
+                                ]}
+                            >
+                                <IconButton
+                                    ariaValue="dropdown-more-options"
+                                    icon="dots-vertical"
+                                    onClick={() => false}
+                                />
+                            </Dropdown>
+                        </div>
+                    </div>
                     <PanelContentBlock flex={true}>
                         <PanelContentBlockInner grow={true}>
                             <FormLabel text={gettext('Name')} style="light" />

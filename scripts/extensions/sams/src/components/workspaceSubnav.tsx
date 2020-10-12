@@ -175,9 +175,10 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
     }
 
     selectedAssets(): boolean {
-        var selectedAssets = false
-        this.props.selectedAssetIds?.length!==0 ? selectedAssets = true : selectedAssets = false
-        return selectedAssets
+        let selectedAssets = false;
+
+        this.props.selectedAssetIds?.length !== 0 ? selectedAssets = true : selectedAssets = false;
+        return selectedAssets;
     }
 
     render() {
@@ -188,15 +189,16 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
         const buttonIcon = this.props.currentSet?.state === SET_STATE.DISABLED ? 'lock' : undefined;
         const sortFieldText = getAssetListSortFieldText(this.props.searchParams.sortField);
 
-        if (this.selectedAssets()) { 
-        return (
-            <React.Fragment>
+        if (this.selectedAssets()) {
+            return (
+                <React.Fragment>
                     <SubNav zIndex={2}>
                         <div className="multi-action-bar">
-                            <button className="toggle" onClick={this.props.closeMultiActionBar}><i className="icon-chevron-up-thin"></i></button>
+                            <button className="toggle" onClick={this.props.closeMultiActionBar}>
+                                <i className="icon-chevron-up-thin" />
+                            </button>
                             <button className="btn" onClick={this.props.closeMultiActionBar}>cancel</button>
                             <span id="multi-select-count">{this.props.selectedAssetIds?.length} Item selected</span>
-
                             <div className="pull-right">
                                 <NavButton
                                     icon="download"
@@ -205,9 +207,90 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
                             </div>
                         </div>
                     </SubNav>
-
                     <SubNav zIndex={1}>
-                    <ButtonGroup align="inline">
+                        <ButtonGroup align="inline">
+                            <NavButton
+                                icon="filter-large"
+                                onClick={this.props.toggleFilterPanel}
+                                type={this.props.filterPanelOpen === true ?
+                                    'primary' :
+                                    'default'
+                                }
+                            />
+                        </ButtonGroup>
+                        <AssetTypeFilterButtons />
+                        <ButtonGroup align="right">
+                            <SubNavSpacer noMargin={true} />
+                            <ContentBar>
+                                <span className="sd-margin-r--1">
+                                    <span className="sd-margin-r--1">
+                                        {gettext('Total:')}
+                                    </span>
+                                    <Badge text={numberToString(this.props.totalAssets)} />
+                                </span>
+                                <Dropdown items={this.sortFieldOptions}>
+                                    {sortFieldText}
+                                </Dropdown>
+                                <IconButton
+                                    ariaValue={this.props.searchParams.sortOrder}
+                                    onClick={this.toggleSortOrder}
+                                    icon={this.props.searchParams.sortOrder}
+                                />
+                            </ContentBar>
+                            <NavButton
+                                icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                                    'list-view' :
+                                    'grid-view'
+                                }
+                                onClick={this.props.toggleListStyle}
+                            />
+                        </ButtonGroup>
+                    </SubNav>
+                </React.Fragment>
+            );
+        } else {
+            return (
+                <React.Fragment>
+                    <SubNav zIndex={2}>
+                        <ButtonGroup align="inline">
+                            <Dropdown items={items}>
+                                <NavButton
+                                    text={buttonLabel}
+                                    onClick={() => false}
+                                    icon={buttonIcon}
+                                />
+                            </Dropdown>
+                        </ButtonGroup>
+                        <SearchBar
+                            placeholder={gettext('Search Assets')}
+                            type="expanded"
+                            focused={true}
+                            onSubmit={this.setSearchParamText}
+                            initialValue={this.props.searchParams.textSearch}
+                        />
+                        <ButtonGroup align="right">
+                            {this.subNavMenuActions.length === 0 ?
+                                null :
+                                (
+                                    <Dropdown items={this.subNavMenuActions}>
+                                        <button className="sd-navbtn">
+                                            <i className="icon-dots-vertical" />
+                                        </button>
+                                    </Dropdown>
+                                )
+                            }
+                            <Button
+                                type="primary"
+                                icon="upload"
+                                text="plus-large"
+                                shape="round"
+                                iconOnly={true}
+                                onClick={showUploadAssetModal}
+                            />
+                        </ButtonGroup>
+                    </SubNav>
+                    <SubNav zIndex={1}>
+                        <ButtonGroup align="inline">
                             <NavButton
                                 icon="filter-large"
                                 onClick={this.props.toggleFilterPanel}
@@ -248,88 +331,5 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
                 </React.Fragment>
             );
         }
-        else {
-            return (
-                <React.Fragment>
-                    <SubNav zIndex={2}>
-                        <ButtonGroup align="inline">
-                        <Dropdown items={items}>
-                            <NavButton
-                                text={buttonLabel}
-                                onClick={() => false}
-                                icon={buttonIcon}
-                            />
-                        </Dropdown>
-                    </ButtonGroup>
-                    <SearchBar
-                        placeholder={gettext('Search Assets')}
-                        type="expanded"
-                        focused={true}
-                        onSubmit={this.setSearchParamText}
-                        initialValue={this.props.searchParams.textSearch}
-                    />
-                    <ButtonGroup align="right">
-                        {this.subNavMenuActions.length === 0 ?
-                            null :
-                            (
-                                <Dropdown items={this.subNavMenuActions}>
-                                    <button className="sd-navbtn">
-                                        <i className="icon-dots-vertical" />
-                                    </button>
-                                </Dropdown>
-                            )
-                        }
-                        <Button
-                            type="primary"
-                            icon="upload"
-                            text="plus-large"
-                            shape="round"
-                            iconOnly={true}
-                            onClick={showUploadAssetModal}
-                        />
-                    </ButtonGroup>
-                </SubNav>
-                <SubNav zIndex={1}>
-                    <ButtonGroup align="inline">
-                        <NavButton
-                            icon="filter-large"
-                            onClick={this.props.toggleFilterPanel}
-                            type={this.props.filterPanelOpen === true ?
-                                'primary' :
-                                'default'
-                            }
-                        />
-                    </ButtonGroup>
-                    <AssetTypeFilterButtons />
-                    <ButtonGroup align="right">
-                        <SubNavSpacer noMargin={true} />
-                        <ContentBar>
-                            <span className="sd-margin-r--1">
-                                <span className="sd-margin-r--1">
-                                    {gettext('Total:')}
-                                </span>
-                                <Badge text={numberToString(this.props.totalAssets)} />
-                            </span>
-                            <Dropdown items={this.sortFieldOptions}>
-                                {sortFieldText}
-                            </Dropdown>
-                            <IconButton
-                                ariaValue={this.props.searchParams.sortOrder}
-                                onClick={this.toggleSortOrder}
-                                icon={this.props.searchParams.sortOrder}
-                            />
-                        </ContentBar>
-                        <NavButton
-                            icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
-                                'list-view' :
-                                'grid-view'
-                            }
-                            onClick={this.props.toggleListStyle}
-                        />
-                    </ButtonGroup>
-                </SubNav>
-            </React.Fragment>
-        );
     }
-}
 }

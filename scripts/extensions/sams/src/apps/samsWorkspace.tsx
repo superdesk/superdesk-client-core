@@ -22,7 +22,7 @@ import {
     setAssetListStyle,
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
-    selectAssetMultiActionBar,
+    updateSelectedAssetIds,
     closeMultiActionBar,
 } from '../store/assets/actions';
 import {
@@ -57,11 +57,11 @@ interface IProps {
     asset?: IAssetItem;
     setName?: string;
     selectedAssetId: string | undefined;
-    selectedAssetIds: Array<string> | undefined;
+    selectedAssetIds: Array<string> | [];
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
     onPanelClosed(): void;
-    multiActionBar(asset: IAssetItem): void;
+    updateSelectedAssetIds(asset: IAssetItem): void;
     closeMultiActionBar(): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(): void;
@@ -102,14 +102,14 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
             ),
         ),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
-    multiActionBar: (asset: IAssetItem) => dispatch(selectAssetMultiActionBar(asset._id)),
+    updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
     closeMultiActionBar: () => dispatch(closeMultiActionBar()),
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
 
-export function downloadCompressedBinary(asset_ids: Array<string> | undefined): void {
-    samsApi.assets.getCompressedBinary(asset_ids!);
-};
+export function downloadCompressedBinary(asset_ids: Array<string> | []): void {
+    samsApi.assets.getCompressedBinary(asset_ids);
+}
 
 export class SamsWorkspaceApp extends React.PureComponent {
     onStoreInit(store: Store) {
@@ -146,14 +146,14 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.toggleFilterPanel = this.toggleFilterPanel.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.toggleListStyle = this.toggleListStyle.bind(this);
-        this.onDownloadAsset = this.onDownloadAsset.bind(this);
+        this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onMultiActionBar = this.onMultiActionBar.bind(this);
         this.onCloseMultiActionBar = this.onCloseMultiActionBar.bind(this);
         this.onDownloadMultipleAssetsCompressedBinary = this.onDownloadMultipleAssetsCompressedBinary.bind(this);
     }
 
     onDownloadMultipleAssetsCompressedBinary(): void {
-        downloadCompressedBinary(this.props.selectedAssetIds)
+        downloadCompressedBinary(this.props.selectedAssetIds);
     }
 
     toggleFilterPanel() {
@@ -162,12 +162,12 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         );
     }
 
-    onDownloadAsset(asset: IAssetItem): void {
-        downloadCompressedBinary([asset._id])
+    onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
+        downloadCompressedBinary([asset._id]);
     }
 
     onMultiActionBar(asset: IAssetItem) {
-        this.props.multiActionBar(asset);
+        this.props.updateSelectedAssetIds(asset);
     }
 
     onCloseMultiActionBar() {
@@ -237,7 +237,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             asset={this.props.asset}
                             setName={this.props.setName}
                             onPanelClosed={this.props.onPanelClosed}
-                            downloadAsset={this.onDownloadAsset}
+                            downloadAsset={this.onDownloadSingleAssetCompressedBinary}
                         />
                     )}
                     mainClassName="sd-padding--2"
@@ -249,14 +249,14 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             selectedAssetId={this.props.selectedAssetId}
                             onItemClicked={this.props.previewAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
-                            addAssetToSelectedList={this.onMultiActionBar}
+                            updateSelectedAssetIds={this.onMultiActionBar}
                             actions={[{
                                 action: ASSET_ACTIONS.PREVIEW,
                                 onSelect: this.props.previewAsset,
                             },
                             {
                                 action: ASSET_ACTIONS.DOWNLOAD,
-                                onSelect: this.onDownloadAsset,
+                                onSelect: this.onDownloadSingleAssetCompressedBinary,
                             }]}
                         />
                     )}

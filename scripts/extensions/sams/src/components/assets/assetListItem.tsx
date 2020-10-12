@@ -6,14 +6,13 @@ import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
+import {Checkbox, Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
 import {
     ListItem,
     ListItemBorder,
     ListItemColumn,
     ListItemRow,
 } from '../../ui/list';
-import {Checkbox} from '../../ui/grid/Checkbox';
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
@@ -25,7 +24,7 @@ interface IProps {
     selected: boolean;
     actions?: Array<IAssetCallback>;
     itemSelected: boolean;
-    selectCheckboxAsset(asset: Partial<IAssetItem>): void;
+    updateSelectedAssetIds(asset: Partial<IAssetItem>): void;
 }
 
 export class AssetListItem extends React.PureComponent<IProps> {
@@ -33,7 +32,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
         this.onPreviewSelect = this.onPreviewSelect.bind(this);
-        this.onCheckboxClickFunctions = this.onCheckboxClickFunctions.bind(this);
+        this.onCheckboxClick = this.onCheckboxClick.bind(this);
     }
 
     onItemClick(event: React.MouseEvent<HTMLDivElement>) {
@@ -50,9 +49,9 @@ export class AssetListItem extends React.PureComponent<IProps> {
     stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
         e.stopPropagation();
     }
-    onCheckboxClickFunctions(e: React.MouseEvent<HTMLDivElement>) {
+    onCheckboxClick(e: React.MouseEvent<HTMLDivElement>) {
         this.stopClickPropagation(e);
-        this.props.selectCheckboxAsset(this.props.asset)
+        this.props.updateSelectedAssetIds(this.props.asset);
     }
 
     render() {
@@ -64,9 +63,11 @@ export class AssetListItem extends React.PureComponent<IProps> {
                 <ListItemBorder />
                 <ListItemColumn>
                     <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
-                    <div className="sd-grid-item__checkbox" onClick={this.onCheckboxClickFunctions}>
-                    <Checkbox checked={this.props.itemSelected}
-                                onChange={() => this.onCheckboxClickFunctions} />
+                    <div className="sd-grid-item__checkbox" onClick={this.onCheckboxClick}>
+                        <Checkbox
+                            checked={this.props.itemSelected}
+                            onChange={() => this.onCheckboxClick}
+                        />
                     </div>
                 </ListItemColumn>
                 <ListItemColumn grow={true}>

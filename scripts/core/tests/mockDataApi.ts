@@ -57,7 +57,7 @@ export function mockDataApi() {
     spyOn(dataApi, 'create').and.callFake(dataApiForTesting.create);
     spyOn(dataApi, 'query').and.callFake(dataApiForTesting.query);
     spyOn(dataApi, 'queryRaw').and.callFake(dataApiForTesting.queryRaw);
-    spyOn(dataApi, 'queryZip').and.callFake(dataApiForTesting.queryRaw);
+    spyOn(dataApi, 'queryZip').and.callFake(dataApiForTesting.queryZip);
     spyOn(dataApi, 'patch').and.callFake(dataApiForTesting.patch);
     spyOn(dataApi, 'patchRaw').and.callFake(dataApiForTesting.patchRaw);
     spyOn(dataApi, 'delete').and.callFake(dataApiForTesting.delete);

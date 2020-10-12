@@ -295,12 +295,12 @@ export function getAssetsCount(set_ids: Array<string>): Promise<Dictionary<strin
         });
 }
 
-export function getAssetsCompressedBinary(asset_ids: Array<string>): Promise<void>{
+export function getAssetsCompressedBinary(asset_ids: Array<string>): Promise<void> {
     const {gettext} = superdeskApi.localization;
-    const { notify } = superdeskApi.ui;
+    const {notify} = superdeskApi.ui;
 
     return superdeskApi.dataApi.queryZip<void>(
-        COMPRESSED_BINARY_RESOURCE + JSON.stringify(asset_ids)
+        COMPRESSED_BINARY_RESOURCE + JSON.stringify(asset_ids),
     )
         .catch((error: any) => {
             notify.error(gettext('Failed to get compressed binaries for assets'));

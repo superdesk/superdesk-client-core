@@ -19,6 +19,10 @@ interface IHttpRequestJsonOptionsLocal extends IHttpRequestOptionsLocal {
     method: 'GET' | 'POST' | 'PATCH' | 'PUT';
 }
 
+interface IHttpRequestZipOptionsLocal extends IHttpRequestOptionsLocal {
+    method: 'GET';
+}
+
 interface IHttpLocalApiErrorResponse {
     _error: {
         code: number;
@@ -103,19 +107,20 @@ export function httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): 
         });
 }
 
-export function httpRequestZipLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<void> {
-    const saveByteArray = (function () {
-        const a = document.createElement("a");
+export function httpRequestZipLocal<T>(options: IHttpRequestZipOptionsLocal): Promise<void> {
+    const saveByteArray = (data) => {
+        const a = document.createElement('a');
+
         document.body.appendChild(a);
-        return function (data) {
-            const blob = new Blob([data], {type: "application/zip"}),
+        const blob = new Blob([data], {type: 'application/zip'}),
             url = window.URL.createObjectURL(blob);
-            a.href = url;
-            a.download = 'example';
-            a.click();
-            window.URL.revokeObjectURL(url);
-        };
-    }());
+
+        a.href = url;
+        a.download = 'download';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+
     return ng.getService('session')
         .then((session) => {
             return httpRequestBase({

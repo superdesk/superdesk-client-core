@@ -17,7 +17,7 @@ import {
     SET_ASSET_SEARCH_PARAMS,
     MANAGE_ASSETS_PREVIEW,
     MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
-    MANAGE_MULTIACTIONBAR_SELECT_ASSET,
+    UPDATE_SELECTED_ASSET_IDS,
     MANAGE_MULTIACTIONBAR_CLOSE,
 } from './types';
 
@@ -55,8 +55,8 @@ export function assetsReducer(
             ...state,
             selectedAssetId: undefined,
         };
-    case MANAGE_MULTIACTIONBAR_SELECT_ASSET:
-        return manageAssetsInSelectedAssetsArray(state, action.payload);    
+    case UPDATE_SELECTED_ASSET_IDS:
+        return manageAssetsInSelectedAssetsArray(state, action.payload);
     case MANAGE_MULTIACTIONBAR_CLOSE:
         return {
             ...state,
@@ -126,17 +126,16 @@ function updateSearchParams(prevState: IAssetState, params: Partial<IAssetSearch
     return newState;
 }
 
-function manageAssetsInSelectedAssetsArray(prevState: IAssetState, payload: string): IAssetState{
-    const newState = { ...prevState };
-    const selectedAssetId = payload
-    const selectedAssetIdsArray = [...prevState.selectedAssetIds]
-    
-    if (selectedAssetIdsArray.indexOf(selectedAssetId) == -1) {
-        newState.selectedAssetIds =  selectedAssetIdsArray.concat([selectedAssetId])
-    }
-    else {
+function manageAssetsInSelectedAssetsArray(prevState: IAssetState, payload: string): IAssetState {
+    const newState = {...prevState};
+    const selectedAssetId = payload;
+    const selectedAssetIdsArray = [...prevState.selectedAssetIds];
+
+    if (selectedAssetIdsArray.indexOf(selectedAssetId) === -1) {
+        newState.selectedAssetIds = selectedAssetIdsArray.concat([selectedAssetId]);
+    } else {
         selectedAssetIdsArray.splice(selectedAssetIdsArray.indexOf(selectedAssetId), 1);
-        newState.selectedAssetIds = selectedAssetIdsArray
+        newState.selectedAssetIds = selectedAssetIdsArray;
     }
     return newState;
 }
