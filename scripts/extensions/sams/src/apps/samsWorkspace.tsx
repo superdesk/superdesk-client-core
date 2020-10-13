@@ -57,7 +57,7 @@ interface IProps {
     asset?: IAssetItem;
     setName?: string;
     selectedAssetId: string | undefined;
-    selectedAssetIds: Array<string> | [];
+    selectedAssetIds: Array<string>;
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
     onPanelClosed(): void;
@@ -107,7 +107,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
 
-export function downloadCompressedBinary(asset_ids: Array<string> | []): void {
+export function downloadCompressedBinary(asset_ids: Array<string>): void {
     samsApi.assets.getCompressedBinary(asset_ids);
 }
 
