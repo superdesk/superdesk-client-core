@@ -10,7 +10,7 @@ import {blockInsideSelection} from '../helpers/selection';
  * @param {Array<string>} styles Styles to remove.
  * @returns {ContentState}
  */
-export function removeInlineStyles(content, styles) {
+export function removeInlineStyles(content: ContentState, styles): ContentState {
     let contentState = content;
     let filterFn = (c) => styles.some((s) => c.hasStyle(s));
 
@@ -86,7 +86,7 @@ export function removeBlockStyles(editorState, content, selection, keepTypes) {
  * @description Set all blocks in selection to unstyled except atomic blocks
  * @return {Object} EditorState
  */
-export function removeFormatFromState(editorState) {
+export function removeFormatFromState(editorState): EditorState {
     const selection = editorState.getSelection();
     const contentWithoutInlineStyles = removeInlineStylesForSelection(
         editorState.getCurrentContent(),
@@ -105,4 +105,19 @@ export function removeFormatFromState(editorState) {
         contentWithoutBlockStyles,
         'change-block-type',
     );
+}
+
+/*
+ * Removes all styles and formatting. It basically returns the whole state as plain text,
+ * so it also removes paragraphs.
+ */
+export function removeAllFormatAndStyles(editorState: EditorState): EditorState {
+    const contentState = editorState.getCurrentContent();
+    let plainText = contentState.getPlainText();
+
+    plainText = plainText.replace(/\n+/g, ' ');
+
+    const newContentState = ContentState.createFromText(plainText);
+
+    return EditorState.createWithContent(newContentState);
 }

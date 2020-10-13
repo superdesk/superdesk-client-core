@@ -1,7 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import {connect} from 'react-redux';
+import {EditorState, SelectionState} from 'draft-js';
+
+interface IProps {
+    iconName: string;
+    editorState: EditorState;
+    tooltip: string;
+    precondition?: boolean;
+    onClick: (args: {selection: SelectionState}) => void;
+}
 
 /**
  * @ngdoc React
@@ -13,11 +21,11 @@ import {connect} from 'react-redux';
  * that are bound exclusively to having text selected in the editor, such as: links, comments,
  * annotations, etc. Note that a precondition prop may be supplied which precedes any other condition.
  */
-const SelectionButtonComponent: React.StatelessComponent<any> = (
-    {editorState, onClick, tooltip, iconName, precondition},
+const SelectionButtonComponent: React.StatelessComponent<IProps> = (
+    {editorState, onClick, tooltip, iconName, precondition = true},
 ) => {
     const isCollapsed = editorState.getSelection().isCollapsed();
-    const inactive = !precondition || isCollapsed;
+    const inactive = precondition === false || isCollapsed;
     const cx = classNames({inactive});
 
     const clickHandler = () => {
@@ -37,21 +45,8 @@ const SelectionButtonComponent: React.StatelessComponent<any> = (
     );
 };
 
-SelectionButtonComponent.propTypes = {
-    iconName: PropTypes.string.isRequired,
-    editorState: PropTypes.object.isRequired,
-    tooltip: PropTypes.string,
-    precondition: PropTypes.bool,
-    onClick: PropTypes.func.isRequired,
-};
-
-SelectionButtonComponent.defaultProps = {
-    precondition: true,
-};
-
 const mapStateToProps = (state) => ({
     editorState: state.editorState,
-    options: state.editorFormat,
 });
 
 export const SelectionButton = connect(mapStateToProps, null)(SelectionButtonComponent);
