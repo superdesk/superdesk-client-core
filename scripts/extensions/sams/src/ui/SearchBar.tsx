@@ -45,6 +45,7 @@ export class SearchBar extends React.Component<IProps, IState> {
 
     clearValue() {
         this.setValue('');
+        this.props.onSubmit('');
     }
 
     setValue(value: string) {
