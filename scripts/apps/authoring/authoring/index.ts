@@ -27,6 +27,7 @@ import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
 import {FullPreviewDirective} from './directives/FullPreviewDirective';
 import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
+import {appConfig} from 'appConfig';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -245,6 +246,19 @@ angular.module('superdesk.apps.authoring', [
                 additionalCondition: ['authoring', 'item', (authoring, item) =>
                     authoring.itemActions(item).send && item.type !== 'composite',
                 ],
+            })
+            .activity('move.item.personal_space', {
+                label: gettext('Send to Personal Space'),
+                icon: 'share-alt',
+                controller: ['data', 'send', (data, send) => {
+                    send.oneAs([data.item][0], '', 'send_to_personal');
+                }],
+                filters: [{action: 'list', type: 'archive'}],
+                additionalCondition: ['authoring', 'item', (authoring, item) =>
+                    authoring.itemActions(item).send && item.type !== 'composite'
+                    && appConfig?.features?.sendToPersonal,
+                ],
+                privileges: {send_to_personal: 1},
             })
             .activity('kill.text', {
                 label: gettext('Kill item'),

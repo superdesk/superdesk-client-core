@@ -259,7 +259,22 @@ declare module 'superdesk-api' {
         sms?: string;
         abstract?: string;
         byline: string;
-        dateline?: any;
+        dateline?: {
+            day?: string;
+            date?: string;
+            source?: string;
+            located?: {
+                dateline?: string;
+                city?: string;
+                city_code?: string;
+                state_code?: string;
+                country?: string;
+                country_code?: string;
+                tz?: string;
+                state?: string;
+            };
+            text?: string;
+        };
         body_html?: string;
         footer?: string;
         firstcreated: any;
