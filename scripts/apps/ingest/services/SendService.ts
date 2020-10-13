@@ -205,7 +205,7 @@ export function SendService(
                     notify.error(gettext('Failed to get item.'));
                     return item;
                 });
-        } else if (data.desk === 'PERSONAL_SPACE') {
+        } else if (data.desk === 'PERSONAL_SPACE' || action === 'send_to_personal') {
             return api.save('move', {}, {}, item)
                 .then((_item) => {
                     notify.success(gettext('Item sent to personal space.'));

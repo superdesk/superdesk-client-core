@@ -10,9 +10,8 @@
 
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
-import _ from 'lodash';
+import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
-import {generatePatchIArticle} from 'core/helpers/CrudManager';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -200,16 +199,16 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                         }, 0, false);
                     }
                     scope.isLocked = lock.isLocked(item);
+
+                    content.setupAuthoring(scope.item.profile, scope, scope.item);
                 });
             }
 
             openItem();
 
             scope.autosave = function(item) {
-                const patch = generatePatchIArticle(scope.origItem, item);
-
                 scope.dirty = true;
-                authoring.autosave(patch, scope.origItem);
+                authoring.autosave(cloneDeep(item), scope.origItem);
             };
 
             scope.$watch('item.flags', (newValue, oldValue) => {
@@ -219,16 +218,8 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                 }
             }, true);
 
-            scope.$watch('item.profile', (profile) => {
-                if (profile != null) {
-                    content.setupAuthoring(profile, scope, scope.item);
-                }
-            });
-
             scope.save = function(item) {
-                const patch = generatePatchIArticle(scope.origItem, item);
-
-                return authoring.save(scope.origItem, patch).then((res) => {
+                return authoring.save(scope.origItem, cloneDeep(item)).then((res) => {
                     scope.dirty = false;
 
                     return res;
