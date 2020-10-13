@@ -114,7 +114,7 @@ interface IProps {
     editorState?: EditorState;
     scrollContainer?: string;
     singleLine?: boolean;
-    editorFormat?: RICH_FORMATTING_OPTION[];
+    editorFormat?: Array<RICH_FORMATTING_OPTION>;
     tabindex?: number;
     suggestingMode?: boolean;
     svc?: any;

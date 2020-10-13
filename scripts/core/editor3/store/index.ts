@@ -40,7 +40,7 @@ interface IProps {
     singleLine?: any;
     tabindex?: any;
     showTitle?: any;
-    editorFormat?: RICH_FORMATTING_OPTION[];
+    editorFormat?: Array<RICH_FORMATTING_OPTION>;
     item?: any;
     svc?: any;
     trim?: any;
@@ -58,7 +58,7 @@ export interface IEditorStore {
     tabindex: any;
     showTitle: any;
     activeCell: any;
-    editorFormat: RICH_FORMATTING_OPTION[];
+    editorFormat: Array<RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;
     spellchecking: {

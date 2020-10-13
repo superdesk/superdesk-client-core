@@ -44,7 +44,7 @@ class Editor3Directive {
     pathToValue: any;
     scrollContainer: any;
     refreshTrigger: any;
-    editorFormat?: RICH_FORMATTING_OPTION[];
+    editorFormat?: Array<RICH_FORMATTING_OPTION>;
     cleanPastedHtml?: boolean;
 
     constructor() {

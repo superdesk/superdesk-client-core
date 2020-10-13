@@ -24,7 +24,7 @@ interface IProps {
 
     // Editor format options that are enabled and should be displayed
     // in the toolbar.
-    editorFormat: RICH_FORMATTING_OPTION[],
+    editorFormat: Array<RICH_FORMATTING_OPTION>;
 
     rawDraftContentState: RawDraftContentState;
 

@@ -7,7 +7,7 @@ interface IProps {
     iconName: string;
     editorState: EditorState;
     tooltip: string;
-    precondition: boolean;
+    precondition?: boolean;
     onClick: (args: {selection: SelectionState}) => void;
 }
 
@@ -22,10 +22,10 @@ interface IProps {
  * annotations, etc. Note that a precondition prop may be supplied which precedes any other condition.
  */
 const SelectionButtonComponent: React.StatelessComponent<IProps> = (
-    {editorState, onClick, tooltip, iconName, precondition},
+    {editorState, onClick, tooltip, iconName, precondition = true},
 ) => {
     const isCollapsed = editorState.getSelection().isCollapsed();
-    const inactive = !precondition || isCollapsed;
+    const inactive = precondition === false || isCollapsed;
     const cx = classNames({inactive});
 
     const clickHandler = () => {
@@ -43,10 +43,6 @@ const SelectionButtonComponent: React.StatelessComponent<IProps> = (
             </span>
         </div>
     );
-};
-
-SelectionButtonComponent.defaultProps = {
-    precondition: true,
 };
 
 const mapStateToProps = (state) => ({

@@ -63,9 +63,9 @@ export type FORMATTING_OPTION =
     'underline' |
     'italic' |
     'bold' |
-    'table'
+    'table';
 
-const FORMATTING_OPTIONS: FORMATTING_OPTION[] = [
+const FORMATTING_OPTIONS: Array<FORMATTING_OPTION> = [
     'h1',
     'h2',
     'h3',
@@ -93,9 +93,9 @@ const FORMATTING_OPTIONS: FORMATTING_OPTION[] = [
     'table',
 ];
 
-export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase'
+export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
 
-const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS: PLAINTEXT_FORMATTING_OPTION[] = [
+const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS: Array<PLAINTEXT_FORMATTING_OPTION> = [
     'uppercase',
     'lowercase',
 ];
@@ -131,9 +131,9 @@ export type RICH_FORMATTING_OPTION =
     'tab' |
     'tab as spaces' |
     'undo' |
-    'redo'
+    'redo';
 
-const EDITOR3_RICH_FORMATTING_OPTIONS: RICH_FORMATTING_OPTION[] = [
+const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
     ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
     'h1',
     'h2',

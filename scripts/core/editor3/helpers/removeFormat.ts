@@ -121,4 +121,3 @@ export function removeAllFormatAndStyles(editorState: EditorState): EditorState 
 
     return EditorState.createWithContent(newContentState);
 }
-
