@@ -16,7 +16,7 @@ describe('editor3.store', () => {
             {
                 editorState: convertToRaw(ContentState.createFromText('')),
                 language: 'en',
-                editorFormat: '123',
+                editorFormat: ['h1'],
                 readOnly: false,
                 trim: true,
                 onChange: () => { /* no-op */ },
@@ -32,6 +32,7 @@ describe('editor3.store', () => {
         expect(spellcheck.getDict).toHaveBeenCalled();
         expect(state.readOnly).toBe(false);
         expect(state.showToolbar).toBe(true);
-        expect(state.editorFormat).toBe('123');
+        expect(state.editorFormat.length).toBe(1);
+        expect(state.editorFormat[0]).toBe('h1');
     }));
 });

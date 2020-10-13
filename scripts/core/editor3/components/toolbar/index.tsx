@@ -148,6 +148,7 @@ class ToolbarComponent extends React.Component<any, IState> {
             invisibles,
             toggleInvisibles,
             removeFormat,
+            removeAllFormat,
             dispatch,
         } = this.props;
 
@@ -195,15 +196,24 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="table"
                     />
                 }
-                {has('remove format') &&
+                {has('remove format') && (
                     <SelectionButton
                         onClick={removeFormat}
                         precondition={!suggestingMode}
                         key="remove-format-button"
                         iconName="clear-format"
-                        tooltip={gettext('Remove format')}
+                        tooltip={gettext('Remove formatting')}
                     />
-                }
+                )}
+                {has('remove all format') && (
+                    <IconButton
+                        onClick={removeAllFormat}
+                        precondition={!suggestingMode}
+                        key="remove-all-format-button"
+                        iconName="clear-all"
+                        tooltip={gettext('Remove all formatting')}
+                    />
+                )}
                 {has('comments') &&
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
@@ -341,6 +351,7 @@ const mapDispatchToProps = (dispatch) => ({
     toggleSuggestingMode: () => dispatch(actions.toggleSuggestingMode()),
     toggleInvisibles: () => dispatch(actions.toggleInvisibles()),
     removeFormat: () => dispatch(actions.removeFormat()),
+    removeAllFormat: () => dispatch(actions.removeAllFormat()),
     dispatch: dispatch,
 });
 
