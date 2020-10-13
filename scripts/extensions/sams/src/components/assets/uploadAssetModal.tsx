@@ -3,7 +3,7 @@ import * as React from 'react';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_STATE, IAssetItem, ISetItem} from '../../interfaces';
+import {ASSET_STATE, IAssetItem, IUploadAssetModalProps} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {samsApi, superdeskApi} from '../../apis';
 
@@ -11,8 +11,6 @@ import {samsApi, superdeskApi} from '../../apis';
 import {getActiveSets} from '../../store/sets/selectors';
 
 // UI
-import {IModalSize} from '../../ui/modal';
-import {showModalConnectedToStore} from '../../utils/ui';
 import {AssetGridItem} from './assetGridItem';
 import {AssetEditorPanel} from './assetEditorPanel';
 import {
@@ -22,13 +20,6 @@ import {
     IUploadItem,
 } from '../../containers/FileUploadModal';
 
-interface IProps {
-    closeModal(): void;
-    sets: Array<ISetItem>;
-    dark?: boolean;
-    modalSize?: IModalSize;
-}
-
 interface IState {
     assets: Dictionary<string, Partial<IAssetItem>>;
 }
@@ -37,21 +28,10 @@ const mapStateToProps = (state: IApplicationState) => ({
     sets: getActiveSets(state),
 });
 
-export function showUploadAssetModal(props?: Partial<IProps>) {
-    showModalConnectedToStore<Partial<IProps>>(
-        UploadAssetModal,
-        {
-            dark: true,
-            modalSize: 'fill',
-            ...props ?? {},
-        },
-    );
-}
-
-export class UploadAssetModalComponent extends React.Component<IProps, IState> {
+export class UploadAssetModalComponent extends React.Component<IUploadAssetModalProps, IState> {
     onFieldChanged: Dictionary<string, (field: keyof IAssetItem, value: string) => void>;
 
-    constructor(props: IProps) {
+    constructor(props: IUploadAssetModalProps) {
         super(props);
 
         this.state = {

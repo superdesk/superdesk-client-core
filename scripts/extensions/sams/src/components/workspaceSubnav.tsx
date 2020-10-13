@@ -11,7 +11,7 @@ import {
     SET_STATE,
     SORT_ORDER,
 } from '../interfaces';
-import {superdeskApi} from '../apis';
+import {superdeskApi, samsApi} from '../apis';
 
 // UI
 import {
@@ -26,7 +26,6 @@ import {
 import {IMenuGroup, IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
 import {ContentBar, SearchBar, SubNavSpacer} from '../ui';
 import {showManageSetsModal} from './sets/manageSetsModal';
-import {showUploadAssetModal} from './assets/uploadAssetModal';
 import {AssetTypeFilterButtons} from './assets/assetTypeFilterButtons';
 
 // Utils
@@ -215,7 +214,7 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
                             text="plus-large"
                             shape="round"
                             iconOnly={true}
-                            onClick={showUploadAssetModal}
+                            onClick={() => samsApi.assets.showUploadModal()}
                         />
                     </ButtonGroup>
                 </SubNav>
