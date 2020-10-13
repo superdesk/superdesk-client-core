@@ -32,6 +32,7 @@ describe('editor3.store', () => {
         expect(spellcheck.getDict).toHaveBeenCalled();
         expect(state.readOnly).toBe(false);
         expect(state.showToolbar).toBe(true);
-        expect(state.editorFormat).toBe(['h1']);
+        expect(state.editorFormat.length).toBe(1);
+        expect(state.editorFormat[0]).toBe('h1');
     }));
 });
