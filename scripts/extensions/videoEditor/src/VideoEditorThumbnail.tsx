@@ -22,6 +22,12 @@ interface IState {
     scale: number;
 }
 
+interface IThumbnailCaptureParams {
+    position?: number;
+    crop?: string;
+    rotate?: number;
+}
+
 const initialState: IState = {type: null, value: 0, rotateDegree: 0, scale: 1};
 
 export class VideoEditorThumbnail extends React.Component<IProps, IState> {
@@ -135,7 +141,7 @@ export class VideoEditorThumbnail extends React.Component<IProps, IState> {
 
         if (this.state.type === 'capture' && typeof this.state.value === 'number') {
             const crop = this.props.getCropRotate(pick(this.props.crop, ['x', 'y', 'width', 'height']));
-            const body = {
+            const body: IThumbnailCaptureParams = {
                 // Captured thumbnail from server and from canvas have small difference in time (position)
                 position: this.state.value - 0.04,
                 crop: Object.values(crop).join(','),

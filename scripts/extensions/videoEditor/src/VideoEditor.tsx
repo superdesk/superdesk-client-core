@@ -41,6 +41,13 @@ interface IState {
     prevVideoHeight: number;
 }
 
+interface IVideoEditParams {
+    crop?: string;
+    rotate?: number;
+    trim?: string;
+    scale?: number;
+}
+
 const initTransformations: IState['transformations'] = {
     crop: {aspect: 16 / 9, unit: 'px', width: 0, height: 0, x: 0, y: 0},
     degree: 0,
@@ -370,7 +377,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const {gettext} = this.props.superdesk.localization;
         const {x, y, width, height} = this.state.transformations.crop;
         const crop = this.getCropRotate({x: x, y: y, width: width, height: height});
-        const body = {
+        const body: IVideoEditParams = {
             crop: Object.values(crop).join(','),
             rotate: this.state.transformations.degree,
             trim: Object.values(this.state.transformations.trim).join(','),
