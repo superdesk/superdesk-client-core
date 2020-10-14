@@ -1,5 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
+import {throttle} from 'lodash';
+import {throttleAndCombineSet} from './throttleAndCombine';
 
 interface IProps<T> {
     pageSize: number;
@@ -29,8 +31,11 @@ function hasScrollbar(element: Element) {
 }
 
 export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
-    indexesById: Dictionary<string, string>; // id, index
-    containerRef: any;
+    private indexesById: Dictionary<string, string>; // id, index
+    private containerRef: any;
+
+    public reset: () => void;
+    public updateItems: (items: Set<string>) => void;
 
     constructor(props: IProps<T>) {
         super(props);
@@ -43,9 +48,12 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         this.loadMore = this.loadMore.bind(this);
         this.allItemsLoaded = this.allItemsLoaded.bind(this);
         this.getLoadedItemsCount = this.getLoadedItemsCount.bind(this);
+
+        this.reset = () => throttle(this._reset, 500);
+        this.updateItems = throttleAndCombineSet(this._updateItems, 500);
     }
 
-    public updateItems(ids: Set<string>) {
+    private _updateItems(ids: Set<string>): void {
         const {getId} = this.props;
         const onlyLoadedIds = Object.keys(this.indexesById).filter((id) => ids.has(id));
 
@@ -65,7 +73,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         });
     }
 
-    public reset() {
+    private _reset() {
         this.setState({
             items: {},
             loading: true,
