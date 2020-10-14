@@ -18,7 +18,9 @@ export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-web
 // implementing interface to be able to get keys at runtime
 const publicWebsocketMessageNames: IPublicWebsocketMessages = {
     'content:update': undefined,
+    'resource:created': undefined,
     'resource:updated': undefined,
+    'resource:deleted': undefined,
 };
 
 export const getWebsocketMessageEventName = (
