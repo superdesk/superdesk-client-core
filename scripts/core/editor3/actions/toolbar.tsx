@@ -57,6 +57,10 @@ export function removeFormat() {
     return {type: 'TOOLBAR_REMOVE_FORMAT'};
 }
 
+export function removeAllFormat() {
+    return {type: 'TOOLBAR_REMOVE_ALL_FORMAT'};
+}
+
 /**
  * @ngdoc method
  * @name insertMedia
