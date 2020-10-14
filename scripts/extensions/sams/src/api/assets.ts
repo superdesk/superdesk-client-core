@@ -13,11 +13,22 @@ import {
     IAssetItem,
     IAssetSearchParams,
     SORT_ORDER,
+    IUploadAssetModalProps,
+    ISetItem,
+    SET_STATE,
 } from '../interfaces';
 import {superdeskApi} from '../apis';
 
+// Redux Actions & Selectors
+import {getStore} from '../store';
+import {loadSets} from '../store/sets/actions';
+
 // Utils
 import {getApiErrorMessage, isSamsApiError} from '../utils/api';
+
+// UI
+import {showModalConnectedToStore} from '../utils/ui';
+import {UploadAssetModal} from '../components/assets/uploadAssetModal';
 
 const RESOURCE = 'sams/assets';
 const COUNT_RESOURCE = `${RESOURCE}/counts/`;
@@ -345,4 +356,35 @@ export function updateAssetMetadata(
         }),
         superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, originalAsset, updates),
     ]);
+}
+
+export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): void {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+    const store = getStore();
+
+    if (store === undefined) {
+        throw new Error('SAMS store has not been initialised');
+    }
+
+    // (re)load all the Sets into the Redux store
+    store.dispatch<any>(loadSets())
+        .then((sets: Array<ISetItem>) => {
+            // Check if there are any usable Sets found
+            // Otherwise notify the user to enable one first
+            if (sets.filter((set) => set.state === SET_STATE.USABLE).length === 0) {
+                notify.error(gettext('No usable Sets found. Enable one first'));
+                return;
+            }
+
+            // Finally show the upload asset modal
+            showModalConnectedToStore<Partial<IUploadAssetModalProps>>(
+                UploadAssetModal,
+                {
+                    dark: true,
+                    modalSize: 'fill',
+                    ...props ?? {},
+                },
+            );
+        });
 }

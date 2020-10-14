@@ -8,9 +8,9 @@ import {connect} from 'react-redux';
 
 // Types
 import {IAttachment, IAttachmentsWidgetProps} from 'superdesk-api';
-import {ASSET_STATE, IAssetItem, IAssetSearchParams, ISetItem} from '../interfaces';
+import {ASSET_STATE, IAssetItem, IAssetSearchParams, ISetItem, IUploadAssetModalProps} from '../interfaces';
 import {IApplicationState} from '../store';
-import {superdeskApi} from '../apis';
+import {superdeskApi, samsApi} from '../apis';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -23,7 +23,6 @@ import {Button} from 'superdesk-ui-framework/react';
 import {SamsApp} from './samsApp';
 import {SamsAttachmentsList} from '../components/attachments/samsAttachmentsList';
 import {showEditAttachmentModal} from '../components/attachments/editAttachmentModal';
-import {IUploadAssetModalProps, showUploadAssetModal} from '../components/assets/uploadAssetModal';
 import {showSelectAssetModal} from '../components/assets/selectAssetModal';
 
 export class SamsAttachmentsWidget<T extends IAttachmentsWidgetProps> extends React.PureComponent<T> {
@@ -91,22 +90,20 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
     }
 
     showUploadAssetModal(props: Partial<IUploadAssetModalProps> = {}) {
-        return showUploadAssetModal(
-            {
-                onAssetUploaded: (asset: IAssetItem) => {
-                    return superdeskApi.entities.attachment.create({
-                        media: asset._id,
-                        title: asset.name,
-                        description: asset.description,
-                        internal: asset.state !== ASSET_STATE.PUBLIC,
-                    })
-                        .then((attachment) => {
-                            this.props.addAttachments([attachment]);
-                        });
-                },
-                ...props,
+        return samsApi.assets.showUploadModal({
+            onAssetUploaded: (asset: IAssetItem) => {
+                return superdeskApi.entities.attachment.create({
+                    media: asset._id,
+                    title: asset.name,
+                    description: asset.description,
+                    internal: asset.state !== ASSET_STATE.PUBLIC,
+                })
+                    .then((attachment) => {
+                        this.props.addAttachments([attachment]);
+                    });
             },
-        );
+            ...props,
+        });
     }
 
     showEditAssetModal(attachment: IAttachment) {

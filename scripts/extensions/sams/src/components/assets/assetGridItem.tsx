@@ -20,7 +20,7 @@ import {
     getIconTypeFromMimetype,
     getAssetStateLabel,
 } from '../../utils/ui';
-import {getDropdownItemsForActions} from '../../utils/assets';
+import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/assets';
 
 interface IProps {
     asset: Partial<IAssetItem>;
@@ -70,6 +70,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
             this.props.asset.mimetype ?? 'text',
         );
         const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
+        const mimetype = getMimetypeHumanReadable(this.props.asset.mimetype);
 
         return (
             <GridItem
@@ -106,7 +107,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                             {gettext('Type:')}
                         </span>
                         <span className="sd-grid-item__text-strong">
-                            {this.props.asset.mimetype}
+                            {mimetype}
                         </span>
                     </div>
                     <div className="sd-grid-item__content-block">

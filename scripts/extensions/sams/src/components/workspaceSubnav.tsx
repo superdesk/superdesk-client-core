@@ -13,7 +13,7 @@ import {
     SET_STATE,
     SORT_ORDER,
 } from '../interfaces';
-import {superdeskApi} from '../apis';
+import {superdeskApi, samsApi} from '../apis';
 import {IApplicationState} from '../store';
 
 // Redux Actions & Selectors
@@ -32,11 +32,11 @@ import {
     NavButton,
     SubNav,
     IconButton,
+    Tooltip,
 } from 'superdesk-ui-framework/react';
 import {IMenuGroup, IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
 import {ContentBar, SearchBar, SubNavSpacer} from '../ui';
 import {showManageSetsModal} from './sets/manageSetsModal';
-import {showUploadAssetModal} from './assets/uploadAssetModal';
 import {AssetTypeFilterButtons} from './assets/assetTypeFilterButtons';
 
 // Utils
@@ -248,14 +248,16 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                 </Dropdown>
                             )
                         }
-                        <Button
-                            type="primary"
-                            icon="upload"
-                            text="plus-large"
-                            shape="round"
-                            iconOnly={true}
-                            onClick={showUploadAssetModal}
-                        />
+                        <Tooltip text={gettext('Upload New Asset(s)')} flow="left">
+                            <Button
+                                type="primary"
+                                icon="upload"
+                                text="plus-large"
+                                shape="round"
+                                iconOnly={true}
+                                onClick={() => samsApi.assets.showUploadModal()}
+                            />
+                        </Tooltip>
                     </ButtonGroup>
                 </SubNav>
                 <SubNav zIndex={1}>

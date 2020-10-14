@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
 
 // Types
-import {ASSET_STATE, IAssetItem, ISetItem, LIST_ACTION} from '../../interfaces';
+import {ASSET_STATE, IAssetItem, IUploadAssetModalProps, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {samsApi, superdeskApi} from '../../apis';
 
@@ -19,24 +19,8 @@ import {
     IUploadFileListItemProps,
     IUploadItem,
 } from '../../containers/FileUploadModal';
-import {IModalSize} from '../../ui/modal';
-import {showModalConnectedToStore} from '../../utils/ui';
 import {AssetGridItem} from './assetGridItem';
 import {AssetEditorPanel} from './assetEditorPanel';
-
-export interface IUploadAssetModalProps {
-    closeModal(): void;
-    sets: Array<ISetItem>;
-    dark?: boolean;
-    modalSize?: IModalSize;
-    initialFiles?: Array<{
-        id: string;
-        file: File;
-    }>;
-    onAssetUploaded?(asset: IAssetItem): Promise<void>;
-    onModalClosed?(assets?: Dictionary<string, IAssetItem>): void;
-    queryAssetsFromCurrentSearch(listAction?: LIST_ACTION): void;
-}
 
 interface IState {
     assets: Dictionary<string, Partial<IAssetItem>>;
@@ -49,17 +33,6 @@ const mapStateToProps = (state: IApplicationState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
 });
-
-export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>) {
-    return showModalConnectedToStore<Partial<IUploadAssetModalProps>>(
-        UploadAssetModal,
-        {
-            dark: true,
-            modalSize: 'fill',
-            ...props ?? {},
-        },
-    );
-}
 
 export class UploadAssetModalComponent extends React.Component<IUploadAssetModalProps, IState> {
     onFieldChanged: Dictionary<string, (field: keyof IAssetItem, value: string) => void>;
