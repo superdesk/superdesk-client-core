@@ -300,11 +300,12 @@
                 </button>
             </div>
             <button type="submit"
-                    class="btn btn--large btn--highlight btn--expanded"
+                    class="btn btn--large btn--highlight btn--expanded loading-overlay-for-publish"
                     ng-show="canSendItem() && canPublishItem() && _editable"
                     ng-click="publish()"
-                    ng-disabled="canSendAndPublish()"
-                    data-test-id="publish">
+                    ng-disabled="canSendAndPublish() || loading"
+                    data-test-id="publish"
+                    ng-class="{active: loading}">
                     {{ getPublishLabel(_action) }}
             </button>
         </div>
