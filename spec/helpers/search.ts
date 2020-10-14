@@ -429,7 +429,7 @@ class GlobalSearch {
             scrollRelative(advancedSearchPanel, 'up', 60); // account for sticky tabs
 
             toggleButton.click();
-            markedDesks.all(by.repeater('term in $vs_collection track by term[uniqueField]')).get(index).click();
+            markedDesks.all(el(['dropdown__item']).locator()).get(index).click();
         };
 
         /**

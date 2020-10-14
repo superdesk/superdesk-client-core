@@ -46,6 +46,7 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                                 <Spacer type="horizontal" spacing="medium" align="center" key={i}>
                                     <IconButton
                                         icon="remove-sign"
+                                        ariaValue={gettext('Remove')}
                                         onClick={() => {
                                             onChange({
                                                 ...config,

@@ -34,6 +34,7 @@ import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
 import {EDITOR_BLOCK_TYPE} from '../constants';
+import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -113,7 +114,7 @@ interface IProps {
     editorState?: EditorState;
     scrollContainer?: string;
     singleLine?: boolean;
-    editorFormat?: Array<string>;
+    editorFormat?: Array<RICH_FORMATTING_OPTION>;
     tabindex?: number;
     suggestingMode?: boolean;
     svc?: any;
