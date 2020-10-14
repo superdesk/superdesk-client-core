@@ -51,7 +51,7 @@ export function getDropdownItemsForActions(
 export function getMimetypeHumanReadable(mimetype?: string): string {
     const {gettext} = superdeskApi.localization;
 
-    if ((mimetype?.length ?? 0) === 0) {
+    if (mimetype == null || mimetype.length === 0) {
         return '';
     } else if (mimetype.startsWith('image/')) {
         return gettext('Image');
