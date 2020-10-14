@@ -969,6 +969,16 @@ declare module 'superdesk-api' {
         _id: string;
     }
 
+    export interface IResourceCreatedEvent {
+        resource: string;
+        _id: string;
+    }
+
+    export interface IResourceDeletedEvent {
+        resource: string;
+        _id: string;
+    }
+
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
@@ -983,7 +993,9 @@ declare module 'superdesk-api' {
 
     export interface IPublicWebsocketMessages {
         'content:update': IWebsocketMessage<IArticleUpdateEvent>;
+        'resource:created': IWebsocketMessage<IResourceCreatedEvent>;
         'resource:updated': IWebsocketMessage<IResourceUpdateEvent>;
+        'resource:deleted': IWebsocketMessage<IResourceDeletedEvent>;
     }
 
 

@@ -2,9 +2,15 @@
 
 import React from 'react';
 import ng from 'core/services/ng';
-import {IArticle, IResourceUpdateEvent, IWebsocketMessage} from 'superdesk-api';
+import {
+    IArticle,
+    IResourceUpdateEvent,
+    IWebsocketMessage,
+    IResourceCreatedEvent,
+    IResourceDeletedEvent,
+} from 'superdesk-api';
 
-import {noop, throttle} from 'lodash';
+import {noop} from 'lodash';
 import {LazyLoader} from './itemList/LazyLoader';
 import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
@@ -30,8 +36,10 @@ interface IProps {
 export class ArticlesListV2 extends React.Component<IProps, IState> {
     monitoringState: any;
     lazyLoaderRef: LazyLoader<IArticle>;
+    handleContentChanges: (resource: string, itemId: string, fields?: {[key: string]: 1}) => void;
+    removeResourceCreatedListener: () => void;
     removeContentUpdateListener: () => void;
-    handleContentUpdateThrottled: (event: IWebsocketMessage<IResourceUpdateEvent>) => void;
+    removeResourceDeletedListener: () => void;
 
     constructor(props: any) {
         super(props);
@@ -44,28 +52,22 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
 
         this.loadMore = this.loadMore.bind(this);
 
-        // Multiple items can be updated at once.
-        this.handleContentUpdateThrottled = throttle(
-            (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                const {extra} = event;
+        this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
+            if (
+                resource === 'archive'
+                || resource === 'archive_unspike'
+            ) {
+                const reloadTheList = this.props?.shouldReloadTheList(
+                    new Set(Array.from(Object.keys(fields ?? {}))),
+                ) ?? false;
 
-                if (
-                    extra.resource === 'archive'
-                    || extra.resource === 'archive_unspike'
-                ) {
-                    const reloadTheList = this.props?.shouldReloadTheList(
-                        new Set(Array.from(Object.keys(extra.fields))),
-                    ) ?? false;
-
-                    if (reloadTheList) {
-                        this.lazyLoaderRef.reset();
-                    } else {
-                        this.lazyLoaderRef.updateItems(new Set([extra._id]));
-                    }
+                if (reloadTheList) {
+                    this.lazyLoaderRef.reset();
+                } else {
+                    this.lazyLoaderRef.updateItems(new Set([itemId]));
                 }
-            },
-            500,
-        );
+            }
+        };
     }
 
     loadMore(from: number, to: number) {
@@ -91,7 +93,9 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
     }
 
     componentWillUnmount() {
+        this.removeResourceCreatedListener();
         this.removeContentUpdateListener();
+        this.removeResourceDeletedListener();
     }
 
     render() {
@@ -118,13 +122,37 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                     if (this.lazyLoaderRef != null && this.removeContentUpdateListener == null) {
                         // wouldn't work in componentDidMount, because this.state.loading would be true
                         // and LazyLoader wouldn't be mounted at that point yet.
+
+                        this.removeResourceCreatedListener = addWebsocketEventListener(
+                            'resource:created',
+                            (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                                const {resource, _id} = event.extra;
+
+                                this.handleContentChanges(resource, _id);
+                            },
+                        );
+
                         this.removeContentUpdateListener = addWebsocketEventListener(
                             'resource:updated',
-                            this.handleContentUpdateThrottled,
+                            (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                                const {resource, _id, fields} = event.extra;
+
+                                this.handleContentChanges(resource, _id, fields);
+                            },
+                        );
+
+                        this.removeResourceDeletedListener = addWebsocketEventListener(
+                            'resource:deleted',
+                            (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                                const {resource, _id} = event.extra;
+
+                                this.handleContentChanges(resource, _id);
+                            },
                         );
                     }
                 }}
                 padding={this.props.padding}
+                data-test-id="articles-list"
             >
                 {(items) => {
                     return (

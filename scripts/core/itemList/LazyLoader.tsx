@@ -9,6 +9,7 @@ interface IProps<T> {
     getItemsByIds(ids: Array<string>): Promise<Array<T>>;
     loadMoreItems(from: number, to: number): Promise<Dictionary<string, T>>;
     children: (items: Dictionary<string, T>) => JSX.Element;
+    'data-test-id'?: string;
 }
 
 interface IState<T> {
@@ -134,7 +135,10 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         const {loading, items} = this.state;
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'relative'}}>
+            <div
+                style={{display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'relative'}}
+                data-test-id={this.props['data-test-id']}
+            >
                 <div
                     style={{
                         maxHeight: '100%',
@@ -173,7 +177,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                             return (
                                 <div style={{position: 'relative', width: '100%'}}>
                                     <div style={loaderPosition}>
-                                        <div style={messageStyles}>{gettext('Loading...')}</div>
+                                        <div style={messageStyles} data-test-id="loading">{gettext('Loading...')}</div>
                                     </div>
                                 </div>
                             );
