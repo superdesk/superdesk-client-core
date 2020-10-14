@@ -16,7 +16,7 @@ import {
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
-import {getDropdownItemsForActions} from '../../utils/assets';
+import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/assets';
 
 interface IProps {
     asset: IAssetItem;
@@ -50,6 +50,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
         const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
+        const mimetype = getMimetypeHumanReadable(this.props.asset.mimetype);
 
         return (
             <ListItem onClick={this.onItemClick} selected={this.props.selected} shadow={1}>
@@ -74,7 +75,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
                                 {gettext('Type:')}
                             </span>
                             <span className="sd-list-item__inline-text">
-                                {this.props.asset.mimetype}
+                                {mimetype}
                             </span>
                             <span className="sd-list-item__text-label">
                                 {gettext('Size:')}

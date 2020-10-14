@@ -22,6 +22,7 @@ import {
     NavButton,
     SubNav,
     IconButton,
+    Tooltip,
 } from 'superdesk-ui-framework/react';
 import {IMenuGroup, IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
 import {ContentBar, SearchBar, SubNavSpacer} from '../ui';
@@ -208,14 +209,16 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
                                 </Dropdown>
                             )
                         }
-                        <Button
-                            type="primary"
-                            icon="upload"
-                            text="plus-large"
-                            shape="round"
-                            iconOnly={true}
-                            onClick={() => samsApi.assets.showUploadModal()}
-                        />
+                        <Tooltip text={gettext('Upload New Asset(s)')} flow="left">
+                            <Button
+                                type="primary"
+                                icon="upload"
+                                text="plus-large"
+                                shape="round"
+                                iconOnly={true}
+                                onClick={() => samsApi.assets.showUploadModal()}
+                            />
+                        </Tooltip>
                     </ButtonGroup>
                 </SubNav>
                 <SubNav zIndex={1}>
