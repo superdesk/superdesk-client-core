@@ -53,7 +53,6 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                                                 increment_steps: config.increment_steps.filter((_, _i) => i !== _i),
                                             });
                                         }}
-                                        ariaValue={gettext('Remove')}
                                     />
 
                                     <Spacer type="horizontal" spacing="medium" align="end" key={i}>
