@@ -1,6 +1,6 @@
 <div class="dropdown dropdown--dropright dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position>
 
-    <button class="dropdown__toggle" dropdown__toggle ng-disabled="disabled" ng-if="!disabled">
+    <button class="dropdown__toggle" dropdown__toggle ng-disabled="disabled" ng-if="!disabled" aria-label="{{ 'Add new' | translate }}">
         <i class="icon--white icon-plus-large"></i>
     </button>
 
@@ -25,6 +25,6 @@
 
 <ul class="terms-list" ng-if="selectedItems.length">
     <li class="pull-left" ng-repeat="item in selectedItems" ng-click="removeItem(item)">
-        {{ :: item}} <i class="icon-close-small"></i>
+        {{ :: item}} <i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i>
     </li>
 </ul>

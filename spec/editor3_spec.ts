@@ -121,7 +121,7 @@ describe('editor3', () => {
 
         const body = getPreviewBody();
 
-        expect(body.element(by.tagName('table')).getText()).toBe('fobar');
+        expect(body.element(by.tagName('table')).getText()).toBe('barfo');
     });
 
     it('ctrl+z on tables mantains cursor position in the middle', () => {
@@ -151,7 +151,7 @@ describe('editor3', () => {
 
         const body = getPreviewBody();
 
-        expect(body.element(by.tagName('table')).getText()).toBe('foobar');
+        expect(body.element(by.tagName('table')).getText()).toBe('fobaro');
     });
 
     function getPreviewBody() {
