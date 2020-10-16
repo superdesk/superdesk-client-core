@@ -6,6 +6,9 @@ addons:
     packages:
         - google-chrome-stable
 
+before_script:
+    - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
 script:
     - npm run test
     - npm run build
