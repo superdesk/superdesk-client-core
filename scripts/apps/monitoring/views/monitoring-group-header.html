@@ -1,17 +1,17 @@
 <!-- list view -->
 <div class="header-container" ng-if="!viewColumn || viewType === 'spiked'">
     <div class="stage-header">
-        <div class="stage-header__name" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
+        <h3 class="stage-header__name" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
             <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
             <span class="stage-header__separator">/</span>
             <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }} {{ :: group.type | translate }}</a>
-        </div>
+        </h3>
         <!-- Desk output stages-->
-        <div class="stage-header__name" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
+        <h3 class="stage-header__name" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
             <span class="group-header">
                 <a href="" ng-click="viewSingleGroup(group, 'single-stage')">{{ :: group.header }} {{ :: labelForStage(group) }}</a>
             </span>
-        </div>
+        </h3>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__stretch-bar"></div>
         <!-- desk notification section -->
@@ -21,7 +21,7 @@
             </div>
         </div>
         <!-- refresh button -->
-        <button ng-if="showRefresh" class="btn btn--primary btn--icon-only-circle btn--small" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" tooltip-placement="left">
+        <button ng-if="showRefresh" class="btn btn--primary btn--icon-only-circle btn--small" ng-click="refreshGroup(group)" tooltip="{{:: 'Refresh' | translate}}" aria-label="{{:: 'Refresh' | translate}}" tooltip-placement="left">
             <i class="icon-repeat"></i>
         </button>
         <div class="sortbar sortbar-custom-sort-groups" ng-show="customSortOptions">
@@ -61,11 +61,11 @@
 <!-- swimlane view -->
 <div class="header-container sd-list-header" ng-if="viewColumn && viewType !== 'spiked'">
     <div class="stage-header" ng-if="group.header && group.subheader && viewType !== 'single_monitoring'">
-        <div class="stage-header__name">
+        <h3 class="stage-header__name">
             <a href="" ng-click="viewSingleGroup(group, 'desk')">{{ :: group.header }}</a>
             <span class="stage-header__separator">/</span>
             <a href="" ng-click="viewSingleGroup(group, 'stage')">{{ :: group.subheader }}</a>
-        </div>
+        </h3>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__notification">
             <div ng-if="group.type === 'stage'" class=""
@@ -75,9 +75,9 @@
     </div>
     <!-- Desk output stages-->
     <div class="stage-header" ng-if="group.header && !group.subheader && viewType !== 'single_monitoring'">
-        <div class="stage-header__name">
+        <h3 class="stage-header__name">
             <a href="" ng-click="viewSingleGroup(group, 'single-stage')">{{ :: group.header }} {{ :: group.type|splitText | translate }}</a>
-        </div>
+        </h3>
         <span class="stage-header__number label-total">{{ total || '0' }}</span>
         <div class="stage-header__notification">
             <div ng-if="group.type === 'stage'" class=""

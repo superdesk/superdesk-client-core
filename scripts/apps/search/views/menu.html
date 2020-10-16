@@ -1,6 +1,7 @@
 <div class="dropdown dropdown--dropright dropdown--hover highlights-dropdown" dropdown ng-controller="SearchMenuController as search">
     <a href="#/search" class="dropdown__toggle sd-sidebar-menu__btn"
         title="{{ :: 'Search' | translate }}"
+        aria-label="{{ :: 'Search' | translate }}"
         sd-hotkey="ctrl+alt+f" sd-hotkey-options="{global: true}"
         ng-click="hideMonitoring(currentRoute.href === '/search', $event)">
         <i class="sd-sidebar-menu__main-icon big-icon--global-search"></i>

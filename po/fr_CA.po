@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2020-09-22 13:21+0000\n"
+"PO-Revision-Date: 2020-09-24 16:44+0000\n"
 "Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10372,7 +10372,7 @@ msgstr "Rechercher des catégories"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:453
 msgid "Search Content State"
-msgstr ""
+msgstr "Chercher un état de contenu"
 
 #: ../superdesk-analytics/client/search/directives/SourceFilters.js:375
 msgid "Search Desks"
@@ -13710,7 +13710,7 @@ msgstr "archivé"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:140
 msgid "as rewrite of"
-msgstr ""
+msgstr "en tant que réécriture de "
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:45
 #: scripts/apps/authoring/versioning/history/views/publish_queue.html:17
@@ -14634,7 +14634,7 @@ msgstr "retourné"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:171
 msgid "rewrite id"
-msgstr ""
+msgstr "identifiant de réécriture"
 
 #: scripts/core/lang/missing-translations-strings.ts:41
 msgid "role {{role}} is granted new privileges: Please re-login."

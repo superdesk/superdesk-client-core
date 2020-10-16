@@ -295,7 +295,7 @@ function replaceText(
  * @return {Object} returns new state
  * @description Handle the editor tab key pressed event
  */
-const onTab = (state, e) => {
+const onTab = (state: IEditorStore, e) => {
     const {editorState, editorFormat = []} = state;
     const selection = editorState.getSelection() as SelectionState;
     const moreThanOneBlockSelected =

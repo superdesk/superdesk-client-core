@@ -4,7 +4,7 @@ import {onChange} from './editor3';
 import * as Links from '../helpers/links';
 import * as Blocks from '../helpers/blocks';
 import * as Highlights from '../helpers/highlights';
-import {removeFormatFromState} from '../helpers/removeFormat';
+import {removeFormatFromState, removeAllFormatAndStyles} from '../helpers/removeFormat';
 import {insertEntity} from '../helpers/draftInsertEntity';
 import {IEditorStore} from '../store';
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -26,6 +26,8 @@ const toolbar = (state: IEditorStore, action) => {
         return removeLink(state);
     case 'TOOLBAR_REMOVE_FORMAT':
         return removeFormat(state);
+    case 'TOOLBAR_REMOVE_ALL_FORMAT':
+        return removeAllFormat(state);
     case 'TOOLBAR_INSERT_MEDIA':
         return insertMedia(state, action.payload);
     case 'TOOLBAR_UPDATE_IMAGE':
@@ -123,6 +125,13 @@ const removeLink = (state) => {
 
     editorState = Links.removeLink(editorState);
     return onChange(state, editorState);
+};
+
+/*
+ * Converts the state in plain text
+ */
+const removeAllFormat = (state) => {
+    return onChange(state, removeAllFormatAndStyles(state.editorState));
 };
 
 /*
