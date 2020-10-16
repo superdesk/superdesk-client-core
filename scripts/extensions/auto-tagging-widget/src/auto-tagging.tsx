@@ -1,82 +1,48 @@
 import * as React from 'react';
-
-import {IArticle, ISuperdesk} from 'superdesk-api';
-import {getTagsListComponent} from './tag-list';
-import {getNewItemComponent} from './new-item';
-
+import {OrderedMap, OrderedSet} from 'immutable';
 import {Switch, Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
-import {flatMap} from 'lodash';
 
-export enum ITagGroup {
-    organisation = 'organisation',
-    place = 'place',
-    subject = 'subject',
-}
+import {IArticle, ISuperdesk} from 'superdesk-api';
 
-/**
- * The interface isn't 100% accurate. If ITagGroup === 'person', it doesn't have title,
- * and has `firstname`, `lastname` instead. I'm not changing it yet because we are planning to
- * review interfaces.
- */
-export interface ITag {
-    uuid: string;
-    title: string;
-    weight: number;
-    media_topic: Array<any>;
-}
+import {getTagsListComponent} from './tag-list';
+import {getNewItemComponent} from './new-item';
+import {ITagUi} from './types';
+import {toClientFormat, IServerResponse} from './adapter';
 
-export interface INewItem {
-    group?: ITagGroup;
-    tag: Partial<ITag>;
-}
+export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
-type IAnalysisFields = {
-    [key in ITagGroup]?: Array<ITag>;
-};
+export type INewItem = Partial<ITagUi>;
 
 interface IAutoTaggingResponse {
-    analysis: IAnalysisFields;
+    analysis: OrderedMap<string, ITagUi>;
 }
 
 interface IProps {
     article: IArticle;
 }
 
+type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingResponse};
+
 interface IState {
     runAutomaticallyPreference: boolean | 'loading';
-    data: 'not-initialized' | 'loading' | { original: IAutoTaggingResponse; changes: IAutoTaggingResponse };
+    data: 'not-initialized' | 'loading' | IEditableData;
     newItem: INewItem | null;
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
 
-export function getGroupLabel(group: ITagGroup, superdesk: ISuperdesk): string {
-    const {gettext} = superdesk.localization;
-    const {assertNever} = superdesk.helpers;
-
-    if (group === ITagGroup.organisation) {
-        return gettext('Organisation');
-    } else if (group === ITagGroup.place) {
-        return gettext('Place');
-    } else if (group === ITagGroup.subject) {
-        return gettext('Subject');
-    } else {
-        return assertNever(group);
-    }
-}
-
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
-    const {httpRequestJsonLocal, preferences} = superdesk;
+    const {preferences} = superdesk;
+    const {httpRequestJsonLocal} = superdesk;
     const {gettext} = superdesk.localization;
     const {memoize, generatePatch} = superdesk.utilities;
-    const {notNullOrUndefined} = superdesk.helpers;
 
     const TagListComponent = getTagsListComponent(superdesk);
     const NewItemComponent = getNewItemComponent(superdesk);
 
     return class AutoTagging extends React.PureComponent<IProps, IState> {
-        isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
+        private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
 
         constructor(props: IProps) {
             super(props);
@@ -95,27 +61,30 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         }
         runAnalysis() {
             this.setState({data: 'loading'}, () => {
-                httpRequestJsonLocal<IAutoTaggingResponse>({
+                const {guid, language, headline, body_html} = this.props.article;
+
+                httpRequestJsonLocal<{analysis: IServerResponse}>({
                     method: 'POST',
                     path: '/ai/',
                     payload: {
                         service: 'imatrics',
-                        item_id: this.props.article._id,
+                        item: {
+                            guid,
+                            language,
+                            headline,
+                            body_html,
+                        },
                     },
                 }).then((res) => {
+                    const resClient = toClientFormat(res.analysis);
+
                     this.setState({
-                        data: {original: res, changes: res},
+                        data: {original: {analysis: resClient}, changes: {analysis: resClient}},
                     });
                 });
             });
         }
-        updateTags(tags: Partial<IAnalysisFields>) {
-            const {data} = this.state;
-
-            if (data === 'loading' || data === 'not-initialized') {
-                return;
-            }
-
+        updateTags(tags: OrderedMap<string, ITagUi>, data: IEditableData) {
             const {changes} = data;
 
             this.setState({
@@ -123,38 +92,38 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     ...data,
                     changes: {
                         ...changes,
-                        analysis: {
-                            ...changes.analysis,
-                            ...tags,
-                        },
+                        analysis: tags,
                     },
                 },
             });
         }
-        createNewTag(newItem: INewItem, changes: IAutoTaggingResponse) {
-            const _title = newItem.tag.title;
+        createNewTag(newItem: INewItem, data: IEditableData) {
+            const _title = newItem.name;
 
             if (_title == null || newItem.group == null) {
                 return;
             }
 
-            const tag: ITag = {
-                uuid: Math.random().toString(),
-                title: _title,
-                weight: 1,
-                media_topic: [],
+            const tag: ITagUi = {
+                qcode: Math.random().toString(),
+                name: _title,
+                source: '',
+                altids: {},
+                group: newItem.group,
             };
 
-            this.updateTags({
-                [newItem.group]: (changes.analysis[newItem.group] ?? []).concat(tag),
-            });
+            this.updateTags(
+                data.changes.analysis.set(tag.qcode, tag),
+                data,
+            );
 
             this.setState({newItem: null});
         }
-        insertTagFromSearch(group: ITagGroup, tag: ITag, changes: IAutoTaggingResponse) {
-            this.updateTags({
-                [group]: (changes.analysis[group] ?? []).concat(tag),
-            });
+        insertTagFromSearch(tag: ITagUi, data: IEditableData) {
+            this.updateTags(
+                data.changes.analysis.set(tag.qcode, tag),
+                data,
+            );
         }
         componentDidMount() {
             preferences.get(RUN_AUTOMATICALLY_PREFERENCE).then((res: boolean | null) => {
@@ -184,21 +153,19 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         <div className="widget-title">{label}</div>
 
                         {
-                            data === 'loading' || data === 'not-initialized' ? null : (
-                                dirty === true ?
-                                    (<div className="widget__sliding-toolbar widget__sliding-toolbar--right">
-                                        <button className="btn btn--primary">{gettext('Save')}</button>
-                                        <button className="btn"
-                                            onClick={() => this.setState({
-                                                data: {
-                                                    ...data,
-                                                    changes: data.original,
-                                                },
-                                            })}>
-                                            {gettext('Cancel')}
-                                        </button>
-                                    </div>)
-                                    : null
+                            data === 'loading' || data === 'not-initialized' || !dirty ? null : (
+                                <div className="widget__sliding-toolbar widget__sliding-toolbar--right">
+                                    <button className="btn btn--primary">{gettext('Save')}</button>
+                                    <button className="btn"
+                                        onClick={() => this.setState({
+                                            data: {
+                                                ...data,
+                                                changes: data.original,
+                                            },
+                                        })}>
+                                        {gettext('Cancel')}
+                                    </button>
+                                </div>
                             )
                         }
                     </div>
@@ -229,7 +196,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 shape="round"
                                                 text={gettext('Add')}
                                                 onClick={() => {
-                                                    this.setState({newItem: {group: ITagGroup.organisation, tag: {}}});
+                                                    this.setState({
+                                                        newItem: {
+                                                            name: '',
+                                                        },
+                                                    });
                                                 }} />
                                         </ButtonGroup>
                                     )
@@ -245,18 +216,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             } else if (data === 'not-initialized') {
                                 return null;
                             } else {
-                                const analysis = data.changes.analysis;
-                                const groups = Object.values(ITagGroup)
-                                    .map((group) => {
-                                        var items = analysis[group];
+                                const items = data.changes.analysis;
 
-                                        if (items == null || items.length < 1) {
-                                            return null;
-                                        } else {
-                                            return {group, items: items};
-                                        }
-                                    })
-                                    .filter(notNullOrUndefined);
+                                const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
+
+                                const entities = items.filter((tag) => tag != null && isEntity(tag));
+                                const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
+
+                                const others = items.filter((tag) => tag != null && isEntity(tag) === false);
+                                const othersGrouped = others.groupBy((tag) => tag?.group.value);
 
                                 return (
                                     <React.Fragment>
@@ -268,37 +236,80 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         this.setState({newItem});
                                                     }}
                                                     save={(newItem: INewItem) => {
-                                                        this.createNewTag(newItem, data.changes);
+                                                        this.createNewTag(newItem, data);
                                                     }}
                                                     cancel={() => {
                                                         this.setState({newItem: null});
                                                     }}
-                                                    tagAlreadyExists={(uuid) => {
-                                                        return flatMap(
-                                                            Object.values(data.changes.analysis)
-                                                                .filter(notNullOrUndefined),
-                                                        ).some((tag) => tag.uuid === uuid);
+                                                    tagAlreadyExists={(qcode) => {
+                                                        return data.changes.analysis.has(qcode);
                                                     }}
-                                                    insertTagFromSearch={(group, tag) => {
-                                                        this.insertTagFromSearch(group, tag, data.changes);
+                                                    insertTagFromSearch={(tag: ITagUi) => {
+                                                        this.insertTagFromSearch(tag, data);
                                                     }}
                                                 />
                                             )
                                         }
+
                                         <div className="widget-content__main">
                                             {
-                                                groups.map(({group, items}) => (
-                                                    <ToggleBoxNext key={group}
-                                                        title={getGroupLabel(group, superdesk)}
-                                                        style="circle" isOpen={true}>
-                                                        <TagListComponent
-                                                            tags={items}
-                                                            onChange={(tags) => {
-                                                                this.updateTags({[group]: tags});
-                                                            }}
-                                                        />
+                                                othersGrouped.map((tags, key) => {
+                                                    if (tags == null) {
+                                                        throw new Error('Can not be nullish');
+                                                    }
+
+                                                    return (
+                                                        <ToggleBoxNext
+                                                            key={key}
+                                                            title={key}
+                                                            style="circle"
+                                                            isOpen={true}
+                                                        >
+                                                            <TagListComponent
+                                                                tags={tags.toMap()}
+                                                                onRemove={(id) => {
+                                                                    this.updateTags(
+                                                                        data.changes.analysis.remove(id),
+                                                                        data,
+                                                                    );
+                                                                }}
+                                                            />
+                                                        </ToggleBoxNext>
+                                                    );
+                                                }).toArray()
+                                            }
+
+                                            {
+                                                entitiesGrouped.size < 1 ? null : (
+                                                    <ToggleBoxNext
+                                                        title={gettext('Entities')}
+                                                        style="circle"
+                                                        isOpen={true}
+                                                    >
+                                                        {entitiesGrouped.map((tags, key) => {
+                                                            if (tags == null) {
+                                                                throw new Error('Can not be nullish');
+                                                            }
+
+                                                            const groupName = key;
+
+                                                            return (
+                                                                <div key={key}>
+                                                                    <div>{groupName}</div>
+                                                                    <TagListComponent
+                                                                        tags={tags.toMap()}
+                                                                        onRemove={(id) => {
+                                                                            this.updateTags(
+                                                                                data.changes.analysis.remove(id),
+                                                                                data,
+                                                                            );
+                                                                        }}
+                                                                    />
+                                                                </div>
+                                                            );
+                                                        }).toArray()}
                                                     </ToggleBoxNext>
-                                                ))
+                                                )
                                             }
                                         </div>
                                     </React.Fragment>

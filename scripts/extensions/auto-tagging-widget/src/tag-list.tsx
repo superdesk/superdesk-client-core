@@ -1,10 +1,11 @@
 import * as React from 'react';
-import {ITag} from './auto-tagging';
+import {OrderedMap} from 'immutable';
 import {ISuperdesk} from 'superdesk-api';
+import {ITagUi} from './types';
 
 interface IProps {
-    tags: Array<ITag>;
-    onChange(tags: Array<ITag>): void;
+    tags: OrderedMap<string, ITagUi>;
+    onRemove(id: string): void;
 }
 
 export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType<IProps> {
@@ -12,25 +13,28 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
 
     return class TagList extends React.PureComponent<IProps> {
         render() {
-            const {tags, onChange} = this.props;
+            const {tags, onRemove} = this.props;
 
-            return (tags.map((item: ITag) => {
+            return tags.map((item, id) => {
+                if (item == null || id == null) {
+                    throw new Error('Can not be nullish.');
+                }
+
                 return (
-                    <div key={item.uuid} className="tag-label">
-                        {item.title}
-                        <button className="tag-label__remove"
+                    <div key={item.qcode} className="tag-label">
+                        {item.name}
+                        <button
+                            className="tag-label__remove"
                             onClick={() => {
-                                onChange(
-                                    tags.filter(({uuid}) => uuid !== item.uuid),
-                                );
+                                onRemove(id);
                             }}
-                            aria-label={gettext('Remove')}>
+                            aria-label={gettext('Remove')}
+                        >
                             <i className="icon-close-small" />
                         </button>
                     </div>
                 );
-            })
-            );
+            }).toArray();
         }
     };
 }
