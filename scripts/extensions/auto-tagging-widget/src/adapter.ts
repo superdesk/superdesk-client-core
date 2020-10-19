@@ -1,5 +1,6 @@
 import {ITagUi} from './types';
 import {OrderedMap} from 'immutable';
+import {ISuperdesk} from 'superdesk-api';
 
 export interface ITagBase {
     name: string;
@@ -88,4 +89,56 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     });
 
     return tags;
+}
+
+export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISuperdesk): IServerResponse {
+    const {assertNever} = superdesk.helpers;
+    const result: IServerResponse = {};
+
+    items.forEach((item) => {
+        if (item == null) {
+            throw new Error('Can not be nulish.');
+        }
+
+        if (item.group.kind === 'scheme') {
+            if (result.subject == null) {
+                result.subject = [];
+            }
+
+            const {name, description, qcode, source, altids} = item;
+
+            const subjectTag: ISubjectTag = {
+                name,
+                description,
+                qcode,
+                source,
+                altids,
+                scheme: item.group.value,
+            };
+
+            result.subject.push(subjectTag);
+        } else if (item.group.kind === 'visual') {
+            const groupValue = item.group.value as keyof Omit<IServerResponse, 'subject'>;
+
+            if (result[groupValue] == null) {
+                result[groupValue] = [];
+            }
+
+            const {name, description, qcode, source, altids} = item;
+
+            const tagBase: ITagBase = {
+                name,
+                description,
+                qcode,
+                source,
+                altids,
+            };
+
+            result[groupValue]!.push(tagBase);
+        } else {
+            assertNever(item.group.kind);
+        }
+    });
+
+    return result;
 }

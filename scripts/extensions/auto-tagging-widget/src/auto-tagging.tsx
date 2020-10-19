@@ -8,7 +8,7 @@ import {IArticle, ISuperdesk} from 'superdesk-api';
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 import {ITagUi} from './types';
-import {toClientFormat, IServerResponse} from './adapter';
+import {toClientFormat, IServerResponse, toServerFormat} from './adapter';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -155,14 +155,26 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         {
                             data === 'loading' || data === 'not-initialized' || !dirty ? null : (
                                 <div className="widget__sliding-toolbar widget__sliding-toolbar--right">
-                                    <button className="btn btn--primary">{gettext('Save')}</button>
-                                    <button className="btn"
+                                    <button
+                                        className="btn btn--primary"
+                                        onClick={() => {
+                                            console.log(
+                                                toServerFormat(data.changes.analysis, superdesk),
+                                            );
+                                        }}
+                                    >
+                                        {gettext('Save')}
+                                    </button>
+
+                                    <button
+                                        className="btn"
                                         onClick={() => this.setState({
                                             data: {
                                                 ...data,
                                                 changes: data.original,
                                             },
-                                        })}>
+                                        })}
+                                    >
                                         {gettext('Cancel')}
                                     </button>
                                 </div>
