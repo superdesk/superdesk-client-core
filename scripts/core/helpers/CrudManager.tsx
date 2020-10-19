@@ -190,6 +190,9 @@ export const dataApi: IDataApi = {
             urlParams: params,
         });
     },
+    queryAssetBinary: (endpoint) => {
+        window.open(appConfig.server.url + '/' + endpoint);
+    },
     patch: (endpoint, item1, item2) => {
         const patch = generatePatch(item1, item2);
 

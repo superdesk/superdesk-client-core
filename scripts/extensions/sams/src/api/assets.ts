@@ -19,6 +19,7 @@ import {isSamsApiError, getApiErrorMessage} from '../utils/api';
 
 const RESOURCE = 'sams/assets';
 const COUNT_RESOURCE = `${RESOURCE}/counts/`;
+const BINARY_RESOURCE = `${RESOURCE}/binary/`;
 const COMPRESSED_BINARY_RESOURCE = `${RESOURCE}/compressed_binary/`;
 
 export function uploadAsset(
@@ -291,6 +292,19 @@ export function getAssetsCount(set_ids: Array<string>): Promise<Dictionary<strin
     )
         .catch((error: any) => {
             notify.error(gettext('Failed to get assets counts for sets'));
+            return Promise.reject(error);
+        });
+}
+
+export function getAssetsBinary(asset_id: string): Promise<void> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.queryAssetBinary<void>(
+        BINARY_RESOURCE + asset_id,
+    )
+        .catch((error: any) => {
+            notify.error(gettext('Failed to get binary for asset'));
             return Promise.reject(error);
         });
 }

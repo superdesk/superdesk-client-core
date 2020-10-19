@@ -40,7 +40,7 @@ interface IProps {
     activeSets: Array<ISetItem>;
     disabledSets: Array<ISetItem>;
     currentSet?: ISetItem;
-    selectedAssetIds: Array<string> | undefined;
+    selectedAssetIds: Array<string> | [];
     downloadMultipleAssets(): void;
     toggleFilterPanel(): void;
     toggleListStyle(): void;
@@ -182,7 +182,7 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {gettext} = superdeskApi.localization;
+        const {gettext, gettextPlural} = superdeskApi.localization;
         const {numberToString} = superdeskApi.helpers;
         const items = this.getMenuItems();
         const buttonLabel = this.props.currentSet?.name ?? gettext('All Sets');
@@ -197,8 +197,17 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
                             <button className="toggle" onClick={this.props.closeMultiActionBar}>
                                 <i className="icon-chevron-up-thin" />
                             </button>
-                            <button className="btn" onClick={this.props.closeMultiActionBar}>cancel</button>
-                            <span id="multi-select-count">{this.props.selectedAssetIds?.length} Item selected</span>
+                            <button
+                                className="btn"
+                                onClick={this.props.closeMultiActionBar}>{gettext('cancel')}
+                            </button>
+                            <span id="multi-select-count">
+                                {gettextPlural(
+                                    this.props.selectedAssetIds?.length,
+                                    '{{count}} item selected',
+                                    '{{count}} items selected',
+                                    {count: this.props.selectedAssetIds?.length},
+                                )}</span>
                             <div className="pull-right">
                                 <NavButton
                                     icon="download"

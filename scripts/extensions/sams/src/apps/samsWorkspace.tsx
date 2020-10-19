@@ -111,6 +111,10 @@ export function downloadCompressedBinary(asset_ids: Array<string>): void {
     samsApi.assets.getCompressedBinary(asset_ids);
 }
 
+export function downloadAssetBinary(asset_id: string): any {
+    samsApi.assets.getAssetBinary(asset_id);
+}
+
 export class SamsWorkspaceApp extends React.PureComponent {
     onStoreInit(store: Store) {
         return Promise.all([
@@ -163,7 +167,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
-        downloadCompressedBinary([asset._id]);
+        downloadAssetBinary(asset._id);
     }
 
     onMultiActionBar(asset: IAssetItem) {

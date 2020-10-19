@@ -143,6 +143,7 @@ export interface ISamsAPI {
         setSearchUrlParams(params: Partial<IAssetSearchParams>): void;
         getCount(set_ids: Array<string>): Promise<Dictionary<string, number>>;
         getCompressedBinary(asset_ids: Array<string>): void;
+        getAssetBinary(asset_id: string): Promise<void>;
     };
 }
 

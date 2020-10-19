@@ -43,11 +43,11 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
                                 items={[
                                     {
                                         type: 'group',
-                                        label: 'Actions',
+                                        label: gettext('Actions'),
                                         items: [
                                             'divider',
                                             {
-                                                label: 'Download', icon: 'download',
+                                                label: gettext('Download'), icon: 'download',
                                                 onSelect: () => this.props.downloadAsset(asset),
                                             },
                                         ],

@@ -46,6 +46,7 @@ const dataApiForTesting: IDataApi = {
     ) => Promise.resolve({} as T),
     queryRaw: <T>(endpoint, params) => Promise.resolve({} as T),
     queryZip: <T>(endpoint, params) => Promise.resolve(),
+    queryAssetBinary: <T>(endpoint) => Promise.resolve(),
     patch: <T>(endpoint, item1, item2) => Promise.resolve({} as T),
     patchRaw: <T>(endpoint, id, etag, patch) => Promise.resolve({} as T),
     delete: (endpoint, item) => Promise.resolve(),
