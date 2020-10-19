@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 
 
 export function SearchContainer() {
-    const FILTERS_PANEL_PREFERENCES_KEY = 'search:filters_panel';
+    const FILTERS_PANEL_PREFERENCES_KEY = 'search:filters_panel_open';
     var filtersPanelPreferences = {
         [FILTERS_PANEL_PREFERENCES_KEY]: {
             'type': 'bool',
@@ -21,7 +21,7 @@ export function SearchContainer() {
                 pageTitle.setUrl(gettext('Search'));
                 $scope.$watch('search.activeProvider', (activeProvider) => {
                     if (activeProvider) {
-                        if (activeProvider.advanced_search !== undefined) {
+                        if (activeProvider.advanced_search != null) {
                             this.flags.facets = !!activeProvider.advanced_search;
                         }
                         if (activeProvider.config?.default_list_view) {
@@ -37,16 +37,16 @@ export function SearchContainer() {
                     }
                 });
                 preferencesService.get().then((result) => {
-                    if (result !== undefined && FILTERS_PANEL_PREFERENCES_KEY in result) {
+                    if (result != null && FILTERS_PANEL_PREFERENCES_KEY in result) {
                         this.flags.facets = result[FILTERS_PANEL_PREFERENCES_KEY]['enabled'];
                     } else {
                         this.flags.facets = filtersPanelPreferences[FILTERS_PANEL_PREFERENCES_KEY]['default'];
                     }
                 });
                 $scope.toggleFiltersPane = () => {
-                    filtersPanelPreferences[FILTERS_PANEL_PREFERENCES_KEY]['enabled'] = !$scope.flags.facets;
-                    preferencesService.update(filtersPanelPreferences);
                     $scope.flags.facets = !$scope.flags.facets;
+                    filtersPanelPreferences[FILTERS_PANEL_PREFERENCES_KEY]['enabled'] = $scope.flags.facets;
+                    preferencesService.update(filtersPanelPreferences);
                 };
             }],
     };
