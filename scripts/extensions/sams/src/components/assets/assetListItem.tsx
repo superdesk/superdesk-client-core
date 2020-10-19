@@ -61,14 +61,16 @@ export class AssetListItem extends React.PureComponent<IProps> {
         return (
             <ListItem onClick={this.onItemClick} selected={this.props.selected || this.props.itemSelected} shadow={1}>
                 <ListItemBorder />
-                <ListItemColumn>
-                    <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
-                    <div className="sd-grid-item__checkbox" onClick={this.onCheckboxClick}>
+                <ListItemColumn hasCheck={true} checked={this.props.itemSelected}>
+                    <div className="sd-list-item__checkbox-container" onClick={this.onCheckboxClick}>
                         <Checkbox
                             checked={this.props.itemSelected}
                             onChange={() => this.onCheckboxClick}
                         />
                     </div>
+                    <span className="icn-mix sd-list-item__item-type">
+                        <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
+                    </span>
                 </ListItemColumn>
                 <ListItemColumn grow={true}>
                     <ListItemRow>
