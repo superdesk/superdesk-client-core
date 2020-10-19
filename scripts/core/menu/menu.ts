@@ -9,7 +9,9 @@ function SuperdeskFlagsService() {
         notifications: false,
     };
 
-    angular.extend(this.flags, appConfig.ui);
+    Object.keys(appConfig.ui).filter((key) => key !== 'authoring').forEach((key) => {
+        this.flags[key] = appConfig.ui[key];
+    });
 }
 
 /**
@@ -53,6 +55,8 @@ angular.module('superdesk.core.menu', [
                 this.currentRoute = route;
                 this.flags.workspace = !!route.sideTemplateUrl;
                 this.flags.workqueue = this.flags.workqueue || true;
+
+                console.info('flags', this.flags);
             });
 
             $scope.$watch(() => {
