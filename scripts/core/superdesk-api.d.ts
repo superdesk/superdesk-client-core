@@ -254,7 +254,13 @@ declare module 'superdesk-api' {
         slugline: string;
         genre: any;
         anpa_take_key?: any;
-        place: any;
+
+        place: Array<ISubject>;
+        object?: Array<ISubject>;
+        person?: Array<ISubject>;
+        organisation?: Array<ISubject>;
+        event?: Array<ISubject>;
+
         priority?: any;
         urgency: any;
         anpa_category?: any;
@@ -1461,8 +1467,11 @@ declare module 'superdesk-api' {
 
     export interface ISubject {
         name: string;
+        description?: string;
         qcode: string;
         scheme?: string;
+        source: string;
         translations?: {};
+        altids?: {[key: string]: string};
     }
 }

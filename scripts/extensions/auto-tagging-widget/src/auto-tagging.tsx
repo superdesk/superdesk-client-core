@@ -3,7 +3,7 @@ import {OrderedMap, OrderedSet} from 'immutable';
 import {Switch, Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 
-import {IArticle, ISuperdesk} from 'superdesk-api';
+import {IArticle, ISuperdesk, ISubject} from 'superdesk-api';
 
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
@@ -31,6 +31,41 @@ interface IState {
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
+
+function createTagsPatch(
+    article: IArticle,
+    tags: OrderedMap<string, ITagUi>,
+    superdesk: ISuperdesk,
+): Partial<IArticle> {
+    const serverFormat = toServerFormat(tags, superdesk);
+    const patch: Partial<IArticle> = {};
+
+    Object.entries(serverFormat).forEach((item) => {
+        const key = item[0] as keyof IServerResponse;
+        const newValues = serverFormat[key];
+
+        if (newValues != null) {
+            let oldValues = OrderedMap<string, ISubject>((article[key] || []).map((_item) => [_item.qcode, _item]));
+            let newValuesMap = OrderedMap<string, ISubject>();
+
+            newValues.forEach((tag) => {
+                newValuesMap.set(tag.qcode, tag);
+            });
+
+            const wasRemoved = (tag: ISubject) =>
+                tag.source === 'imatrics'
+                && oldValues.has(tag.qcode)
+                && !newValuesMap.has(tag.qcode);
+
+            patch[key] = oldValues
+                .merge(newValuesMap)
+                .filter((tag) => tag != null && wasRemoved(tag) !== true)
+                .toArray();
+        }
+    });
+
+    return patch;
+}
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
@@ -158,8 +193,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     <button
                                         className="btn btn--primary"
                                         onClick={() => {
-                                            console.log(
-                                                toServerFormat(data.changes.analysis, superdesk),
+                                            superdesk.entities.article.patch(
+                                                this.props.article,
+                                                createTagsPatch(this.props.article, data.changes.analysis, superdesk),
                                             );
                                         }}
                                     >
