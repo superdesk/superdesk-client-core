@@ -6,8 +6,16 @@ import {IAssetItem} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {PanelContent, PanelContentBlock, PanelContentBlockInner, PanelHeader, Text} from '../../ui';
 import {Dropdown, FormLabel, IconButton} from 'superdesk-ui-framework/react';
+import {
+    FormRow,
+    PanelContent,
+    PanelContentBlock,
+    PanelContentBlockInner,
+    PanelHeader,
+    Text,
+} from '../../ui';
+
 
 // Utils
 import {
@@ -64,26 +72,40 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
                     </div>
                     <PanelContentBlock flex={true}>
                         <PanelContentBlockInner grow={true}>
-                            <FormLabel text={gettext('Name')} style="light" />
-                            <Text>{asset.name}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Name')} style="light" />
+                                <Text>{asset.name}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('Description')} style="light" />
-                            <Text>{asset.description}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Description')} style="light" />
+                                <Text>{asset.description}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('Filename')} style="light" />
-                            <Text>{asset.filename}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Filename')} style="light" />
+                                <Text>{asset.filename}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('FileLength')} style="light" />
-                            <Text>{getHumanReadableFileSize(asset.length)}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('FileLength')} style="light" />
+                                <Text>{getHumanReadableFileSize(asset.length)}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('Mimetype')} style="light" />
-                            <Text>{asset.mimetype}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Mimetype')} style="light" />
+                                <Text>{asset.mimetype}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('Usage')} style="light" />
-                            <Text>{asset.state}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Usage')} style="light" />
+                                <Text>{asset.state}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('SetName')} style="light" />
-                            <Text>{setName}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('SetName')} style="light" />
+                                <Text>{setName}</Text>
+                            </FormRow>
                         </PanelContentBlockInner>
                     </PanelContentBlock>
                 </PanelContent>

@@ -55,3 +55,25 @@ export function getDropdownItemsForActions(
 
     return [];
 }
+
+export function getMimetypeHumanReadable(mimetype?: string): string {
+    const {gettext} = superdeskApi.localization;
+
+    if (mimetype == null || mimetype.length === 0) {
+        return '';
+    } else if (mimetype.startsWith('image/')) {
+        return gettext('Image');
+    } else if (mimetype.startsWith('video/')) {
+        return gettext('Video');
+    } else if (mimetype.startsWith('audio/')) {
+        return gettext('Audio');
+    } else if (mimetype === 'application/pdf') {
+        return gettext('PDF');
+    } else if (mimetype === 'text/plain') {
+        return gettext('Text');
+    } else if (mimetype.includes('document')) {
+        return gettext('Document');
+    } else {
+        return gettext('Other');
+    }
+}

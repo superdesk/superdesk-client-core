@@ -4,6 +4,7 @@ import {
     IRestApiResponse,
     ISuperdesk,
 } from 'superdesk-api';
+import {IModalSize} from './ui/modal';
 
 export enum SET_STATE {
     DRAFT = 'draft',
@@ -126,6 +127,13 @@ export interface IAPIError {
     errors?: {[field: string]: Array<string>};
 }
 
+export interface IUploadAssetModalProps {
+    closeModal(): void;
+    sets: Array<ISetItem>;
+    dark?: boolean;
+    modalSize?: IModalSize;
+}
+
 export interface ISamsAPI {
     sets: {
         getAll(): Promise<Array<ISetItem>>;
@@ -142,6 +150,7 @@ export interface ISamsAPI {
         getSearchUrlParams(): Partial<IAssetSearchParams>;
         setSearchUrlParams(params: Partial<IAssetSearchParams>): void;
         getCount(set_ids: Array<string>): Promise<Dictionary<string, number>>;
+        showUploadModal(props?: Partial<IUploadAssetModalProps>): void;
         getCompressedBinary(asset_ids: Array<string>): void;
         getAssetBinary(asset_id: string): Promise<void>;
     };

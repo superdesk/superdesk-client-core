@@ -14,7 +14,15 @@ import {getSelectedSet, getSelectedSetStorageDestination, getSelectedSetCount} f
 
 // UI
 import {FormLabel} from 'superdesk-ui-framework/react';
-import {PanelContent, PanelContentBlock, PanelContentBlockInner, PanelHeader, PanelTools, Text} from '../../ui';
+import {
+    FormRow,
+    PanelContent,
+    PanelContentBlock,
+    PanelContentBlockInner,
+    PanelHeader,
+    PanelTools,
+    Text,
+} from '../../ui';
 import {IPanelTools} from '../../ui/PanelTools';
 
 interface IProps {
@@ -79,17 +87,25 @@ export class SetPreviewPanelComponent extends React.PureComponent<IProps> {
                 <PanelContent>
                     <PanelContentBlock flex={true}>
                         <PanelContentBlockInner grow={true}>
-                            <FormLabel text={gettext('Name')} style="light" />
-                            <Text>{set.name}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Name')} style="light" />
+                                <Text>{set.name}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('Description')} style="light" />
-                            <Text>{set.description}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Description')} style="light" />
+                                <Text>{set.description}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('Storage Destination')} style="light" />
-                            <Text>{storageDestination?._id}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Storage Destination')} style="light" />
+                                <Text>{storageDestination?._id}</Text>
+                            </FormRow>
 
-                            <FormLabel text={gettext('Storage Provider')} style="light" />
-                            <Text>{storageDestination?.provider}</Text>
+                            <FormRow>
+                                <FormLabel text={gettext('Storage Provider')} style="light" />
+                                <Text>{storageDestination?.provider}</Text>
+                            </FormRow>
                         </PanelContentBlockInner>
                     </PanelContentBlock>
                 </PanelContent>
