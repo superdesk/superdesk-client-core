@@ -10,7 +10,7 @@ export interface ITagBase {
     altids: {[key: string]: string};
 }
 
-interface ISubjectTag extends ITagBase {
+export interface ISubjectTag extends ITagBase {
     scheme: string;
 }
 
@@ -21,6 +21,19 @@ export interface IServerResponse {
     event?: Array<ITagBase>;
     place?: Array<ITagBase>;
     object?: Array<ITagBase>;
+}
+
+export function getServerResponseKeys(): Array<keyof IServerResponse> {
+    var obj: Required<IServerResponse> = {
+        subject: [],
+        organisation: [],
+        person: [],
+        event: [],
+        place: [],
+        object: [],
+    };
+
+    return Object.keys(obj) as Array<keyof IServerResponse>;
 }
 
 export function toClientFormat(response: IServerResponse): OrderedMap<string, ITagUi> {

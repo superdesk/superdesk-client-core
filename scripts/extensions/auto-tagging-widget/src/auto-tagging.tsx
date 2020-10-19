@@ -8,7 +8,8 @@ import {IArticle, ISuperdesk, ISubject} from 'superdesk-api';
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 import {ITagUi} from './types';
-import {toClientFormat, IServerResponse, toServerFormat} from './adapter';
+import {toClientFormat, IServerResponse, toServerFormat, getServerResponseKeys, ISubjectTag, ITagBase} from './adapter';
+import {SOURCE_IMATRICS} from './constants';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -40,31 +41,91 @@ function createTagsPatch(
     const serverFormat = toServerFormat(tags, superdesk);
     const patch: Partial<IArticle> = {};
 
-    Object.entries(serverFormat).forEach((item) => {
-        const key = item[0] as keyof IServerResponse;
+    getServerResponseKeys().forEach((key) => {
+        let oldValues = OrderedMap<string, ISubject>((article[key] || []).map((_item) => [_item.qcode, _item]));
         const newValues = serverFormat[key];
+        let newValuesMap = OrderedMap<string, ISubject>();
 
-        if (newValues != null) {
-            let oldValues = OrderedMap<string, ISubject>((article[key] || []).map((_item) => [_item.qcode, _item]));
-            let newValuesMap = OrderedMap<string, ISubject>();
-
-            newValues.forEach((tag) => {
-                newValuesMap.set(tag.qcode, tag);
-            });
-
-            const wasRemoved = (tag: ISubject) =>
-                tag.source === 'imatrics'
+        const wasRemoved = (tag: ISubject) =>
+                tag.source === SOURCE_IMATRICS
                 && oldValues.has(tag.qcode)
                 && !newValuesMap.has(tag.qcode);
 
-            patch[key] = oldValues
-                .merge(newValuesMap)
-                .filter((tag) => tag != null && wasRemoved(tag) !== true)
-                .toArray();
-        }
+        newValues?.forEach((tag) => {
+            newValuesMap = newValuesMap.set(tag.qcode, tag);
+        });
+
+        // Has to be executed even if newValuesMap is empty in order
+        // for removed groups to be included in the patch.
+        patch[key] = oldValues
+            .merge(newValuesMap)
+            .filter((tag) => tag != null && wasRemoved(tag) !== true)
+            .toArray();
     });
 
     return patch;
+}
+
+function getExistingTags(article: IArticle): IServerResponse {
+    const result: IServerResponse = {};
+
+    getServerResponseKeys().forEach((key) => {
+        const values = (article[key] ?? []).filter((tag) => tag.source === SOURCE_IMATRICS);
+
+        if (key === 'subject') {
+            if (values.length > 0) {
+                result[key] = values.map((subjectItem) => {
+                    const {
+                        name,
+                        description,
+                        qcode,
+                        source,
+                        altids,
+                        scheme,
+                    } = subjectItem;
+
+                    if (scheme == null) {
+                        throw new Error('Scheme must be defined for all imatrics tags stored in subject field.');
+                    }
+
+                    const subjectTag: ISubjectTag = {
+                        name,
+                        description,
+                        qcode,
+                        source,
+                        altids: altids ?? {},
+                        scheme,
+                    };
+
+                    return subjectTag;
+                });
+            }
+        } else {
+            if (values.length > 0) {
+                result[key] = values.map((subjectItem) => {
+                    const {
+                        name,
+                        description,
+                        qcode,
+                        source,
+                        altids,
+                    } = subjectItem;
+
+                    const subjectTag: ITagBase = {
+                        name,
+                        description,
+                        qcode,
+                        source,
+                        altids: altids ?? {},
+                    };
+
+                    return subjectTag;
+                });
+            }
+        }
+    });
+
+    return result;
 }
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
@@ -95,29 +156,39 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
         runAnalysis() {
-            this.setState({data: 'loading'}, () => {
-                const {guid, language, headline, body_html} = this.props.article;
+            const existingTags = getExistingTags(this.props.article);
 
-                httpRequestJsonLocal<{analysis: IServerResponse}>({
-                    method: 'POST',
-                    path: '/ai/',
-                    payload: {
-                        service: 'imatrics',
-                        item: {
-                            guid,
-                            language,
-                            headline,
-                            body_html,
+            if (Object.keys(existingTags).length > 0) {
+                const resClient = toClientFormat(existingTags);
+
+                this.setState({
+                    data: {original: {analysis: resClient}, changes: {analysis: resClient}},
+                });
+            } else {
+                this.setState({data: 'loading'}, () => {
+                    const {guid, language, headline, body_html} = this.props.article;
+
+                    httpRequestJsonLocal<{analysis: IServerResponse}>({
+                        method: 'POST',
+                        path: '/ai/',
+                        payload: {
+                            service: 'imatrics',
+                            item: {
+                                guid,
+                                language,
+                                headline,
+                                body_html,
+                            },
                         },
-                    },
-                }).then((res) => {
-                    const resClient = toClientFormat(res.analysis);
+                    }).then((res) => {
+                        const resClient = toClientFormat(res.analysis);
 
-                    this.setState({
-                        data: {original: {analysis: resClient}, changes: {analysis: resClient}},
+                        this.setState({
+                            data: {original: {analysis: resClient}, changes: {analysis: resClient}},
+                        });
                     });
                 });
-            });
+            }
         }
         updateTags(tags: OrderedMap<string, ITagUi>, data: IEditableData) {
             const {changes} = data;
@@ -142,7 +213,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             const tag: ITagUi = {
                 qcode: Math.random().toString(),
                 name: _title,
-                source: '',
+                source: SOURCE_IMATRICS,
                 altids: {},
                 group: newItem.group,
             };
@@ -270,9 +341,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 const entities = items.filter((tag) => tag != null && isEntity(tag));
                                 const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
+                                const entitiesGroupedAndSorted = entitiesGrouped.sortBy(
+                                    (_, key) => key!.toString().toLocaleLowerCase(),
+                                    (a, b) => a.localeCompare(b),
+                                );
 
                                 const others = items.filter((tag) => tag != null && isEntity(tag) === false);
-                                const othersGrouped = others.groupBy((tag) => tag?.group.value);
+                                const othersGrouped = others.groupBy((tag) => tag != null && tag.group.value);
+                                const othersGroupedAndSorted = othersGrouped.sortBy(
+                                    (_, key) => key!.toString().toLocaleLowerCase(),
+                                    (a, b) => a.localeCompare(b),
+                                );
 
                                 return (
                                     <React.Fragment>
@@ -300,8 +379,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         }
 
                                         <div className="widget-content__main">
-                                            {
-                                                othersGrouped.map((tags, key) => {
+                                            {othersGroupedAndSorted.map((tags, key) => {
                                                     if (tags == null) {
                                                         throw new Error('Can not be nullish');
                                                     }
@@ -324,17 +402,16 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             />
                                                         </ToggleBoxNext>
                                                     );
-                                                }).toArray()
-                                            }
+                                                }).toArray()}
 
                                             {
-                                                entitiesGrouped.size < 1 ? null : (
+                                                entitiesGroupedAndSorted.size < 1 ? null : (
                                                     <ToggleBoxNext
                                                         title={gettext('Entities')}
                                                         style="circle"
                                                         isOpen={true}
                                                     >
-                                                        {entitiesGrouped.map((tags, key) => {
+                                                        {entitiesGroupedAndSorted.map((tags, key) => {
                                                             if (tags == null) {
                                                                 throw new Error('Can not be nullish');
                                                             }
