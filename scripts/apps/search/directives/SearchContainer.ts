@@ -1,15 +1,14 @@
 import {isEmpty, omit} from 'lodash';
 import {gettext} from 'core/utils';
 
-
 export function SearchContainer() {
     const FILTERS_PANEL_PREFERENCES_KEY = 'search:filters_panel_open';
     var filtersPanelPreferences = {
         [FILTERS_PANEL_PREFERENCES_KEY]: {
             'type': 'bool',
-            'default': true
-        }
-    }
+            'default': true,
+        },
+    };
 
     return {
         controller: ['$scope', '$location', 'pageTitle', 'preferencesService',
