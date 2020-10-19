@@ -193,11 +193,10 @@ export function MultiActionBarController(
 
     this.canPublishItem = function() {
         return multi.getItems().every((item) => {
-            if (item.state !== 'draft') {
-                if (personalLocationPath) {
-                    return appConfig?.features?.publishFromPersonal === true;
-                }
-                return true;
+            if (item.state !== 'draft' && $location.path() !== '/workspace/personal') {
+                return item.state !== 'draft' && $location.path() !== '/workspace/personal';
+            } else if (item.state !== 'draft' && $location.path() === '/workspace/personal') {
+                return appConfig?.features?.publishFromPersonal;
             }
             return false;
         });
