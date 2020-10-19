@@ -276,6 +276,7 @@ export function MultiActionBarController(
             multi.getItems().map((item) => new Promise((resolve) => {
                 if (appConfig.features.publishFromPersonal && personalLocationPath) {
                     var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
+
                     item.task = {
                         ...(item.task ?? {}),
                         desk: currentDeskId,
