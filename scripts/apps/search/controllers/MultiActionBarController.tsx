@@ -194,7 +194,7 @@ export function MultiActionBarController(
     this.canPublishItem = function() {
         return multi.getItems().every((item) => {
             if (item.state !== 'draft' && $location.path() !== '/workspace/personal') {
-                return item.state !== 'draft' && $location.path() !== '/workspace/personal';
+                return true;
             } else if (item.state !== 'draft' && $location.path() === '/workspace/personal') {
                 return appConfig?.features?.publishFromPersonal;
             }
@@ -276,11 +276,9 @@ export function MultiActionBarController(
             multi.getItems().map((item) => new Promise((resolve) => {
                 if (appConfig.features.publishFromPersonal && personalLocationPath) {
                     var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
-
                     item.task = {
                         ...(item.task ?? {}),
                         desk: currentDeskId,
-                        stage: desks.getCurrentStageId(),
                     };
                 }
                 authoring.publish(item, item)
