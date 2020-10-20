@@ -150,44 +150,60 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             };
 
             this.runAnalysis = this.runAnalysis.bind(this);
+            this.initializeData = this.initializeData.bind(this);
             this.updateTags = this.updateTags.bind(this);
             this.createNewTag = this.createNewTag.bind(this);
             this.insertTagFromSearch = this.insertTagFromSearch.bind(this);
+            this.reload = this.reload.bind(this);
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
         runAnalysis() {
+            const dataBeforeLoading = this.state.data;
+
+            this.setState({data: 'loading'}, () => {
+                const {guid, language, headline, body_html} = this.props.article;
+
+                httpRequestJsonLocal<{analysis: IServerResponse}>({
+                    method: 'POST',
+                    path: '/ai/',
+                    payload: {
+                        service: 'imatrics',
+                        item: {
+                            guid,
+                            language,
+                            headline,
+                            body_html,
+                        },
+                    },
+                }).then((res) => {
+                    const resClient = toClientFormat(res.analysis, false);
+
+                    if (dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized') {
+                        this.setState({
+                            data: {original: {analysis: OrderedMap<string, ITagUi>()}, changes: {analysis: resClient}},
+                        });
+                    } else {
+                        this.setState({
+                            data: {
+                                ...dataBeforeLoading,
+                                changes: {analysis: resClient.merge(dataBeforeLoading.changes.analysis)},
+                            },
+                        });
+                    }
+                });
+            });
+        }
+        initializeData(preload: boolean) {
             const existingTags = getExistingTags(this.props.article);
 
             if (Object.keys(existingTags).length > 0) {
-                const resClient = toClientFormat(existingTags);
+                const resClient = toClientFormat(existingTags, true);
 
                 this.setState({
                     data: {original: {analysis: resClient}, changes: {analysis: resClient}},
                 });
-            } else {
-                this.setState({data: 'loading'}, () => {
-                    const {guid, language, headline, body_html} = this.props.article;
-
-                    httpRequestJsonLocal<{analysis: IServerResponse}>({
-                        method: 'POST',
-                        path: '/ai/',
-                        payload: {
-                            service: 'imatrics',
-                            item: {
-                                guid,
-                                language,
-                                headline,
-                                body_html,
-                            },
-                        },
-                    }).then((res) => {
-                        const resClient = toClientFormat(res.analysis);
-
-                        this.setState({
-                            data: {original: {analysis: resClient}, changes: {analysis: resClient}},
-                        });
-                    });
-                });
+            } else if (preload) {
+                this.runAnalysis();
             }
         }
         updateTags(tags: OrderedMap<string, ITagUi>, data: IEditableData) {
@@ -216,6 +232,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 source: SOURCE_IMATRICS,
                 altids: {},
                 group: newItem.group,
+                saved: false,
             };
 
             this.updateTags(
@@ -231,15 +248,16 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 data,
             );
         }
+        reload() {
+            this.initializeData(false);
+        }
         componentDidMount() {
             preferences.get(RUN_AUTOMATICALLY_PREFERENCE).then((res: boolean | null) => {
                 const value = res ?? false;
 
                 this.setState({runAutomaticallyPreference: value});
 
-                if (value === true) {
-                    this.runAnalysis();
-                }
+                this.initializeData(value);
             });
         }
         render() {
@@ -267,7 +285,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             superdesk.entities.article.patch(
                                                 this.props.article,
                                                 createTagsPatch(this.props.article, data.changes.analysis, superdesk),
-                                            );
+                                            ).then(() => {
+                                                this.reload();
+                                            });
                                         }}
                                     >
                                         {gettext('Save')}
@@ -275,12 +295,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                     <button
                                         className="btn"
-                                        onClick={() => this.setState({
-                                            data: {
-                                                ...data,
-                                                changes: data.original,
-                                            },
-                                        })}
+                                        onClick={() => {
+                                            this.reload();
+                                        }}
                                     >
                                         {gettext('Cancel')}
                                     </button>
@@ -464,7 +481,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             text={gettext('Refresh')}
                                             expand={true}
                                             onClick={() => {
-                                                // not implemented
+                                                this.runAnalysis();
                                             }}
                                         />
                                     );

@@ -144,7 +144,7 @@ export function getSuperdeskApiImplementation(
                         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
                         .filter((middleware) => middleware != null);
 
-                    onPatchBeforeMiddlewares.reduce(
+                    return onPatchBeforeMiddlewares.reduce(
                         (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
                         Promise.resolve(patch),
                     ).then((patchFinal) => {

@@ -91,7 +91,7 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                     })
                                         .then((res) => {
                                             if (cancelled !== true) {
-                                                const result = toClientFormat(res.result.tags).toArray();
+                                                const result = toClientFormat(res.result.tags, false).toArray();
 
                                                 const withoutExistingTags = result.filter(
                                                     (searchTag) => tagAlreadyExists(searchTag.qcode) !== true,

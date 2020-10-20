@@ -1059,7 +1059,7 @@ declare module 'superdesk-api' {
                     article: IArticle,
                     patch: Partial<IArticle>,
                     dangerousOptions?: IDangerousArticlePatchingOptions,
-                ): void;
+                ): Promise<void>;
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
