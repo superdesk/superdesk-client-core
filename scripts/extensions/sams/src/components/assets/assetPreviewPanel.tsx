@@ -16,7 +16,6 @@ import {
     Text,
 } from '../../ui';
 
-
 // Utils
 import {
     getHumanReadableFileSize,

@@ -335,7 +335,7 @@ export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): v
                     ...props ?? {},
                 },
             );
-    });
+        });
 }
 
 export function getAssetsBinary(asset_id: string): Promise<void> {

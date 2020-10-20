@@ -289,15 +289,15 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
                                 )
                             }
                             <Tooltip text={gettext('Upload New Asset(s)')} flow="left">
-                            <Button
-                                type="primary"
-                                icon="upload"
-                                text="plus-large"
-                                shape="round"
-                                iconOnly={true}
-                                onClick={() => samsApi.assets.showUploadModal()}
-                            />
-                        </Tooltip>
+                                <Button
+                                    type="primary"
+                                    icon="upload"
+                                    text="plus-large"
+                                    shape="round"
+                                    iconOnly={true}
+                                    onClick={() => samsApi.assets.showUploadModal()}
+                                />
+                            </Tooltip>
                         </ButtonGroup>
                     </SubNav>
                     <SubNav zIndex={1}>
