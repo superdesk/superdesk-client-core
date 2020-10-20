@@ -139,8 +139,7 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                         return (
                                             <Option key={id} value={id}>{g.singular}</Option>
                                         );
-                                    })
-                                    .toArray()
+                                    }).toArray()
                                 }
                             </Select>
 
@@ -165,8 +164,7 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                                 return (
                                                     <Option key={id} value={id}>{g.singular}</Option>
                                                 );
-                                            })
-                                            .toArray()
+                                            }).toArray()
                                         }
                                     </Select>
                                 )

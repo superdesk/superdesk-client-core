@@ -47,9 +47,9 @@ function createTagsPatch(
         let newValuesMap = OrderedMap<string, ISubject>();
 
         const wasRemoved = (tag: ISubject) =>
-                tag.source === SOURCE_IMATRICS
-                && oldValues.has(tag.qcode)
-                && !newValuesMap.has(tag.qcode);
+            tag.source === SOURCE_IMATRICS
+            && oldValues.has(tag.qcode)
+            && !newValuesMap.has(tag.qcode);
 
         newValues?.forEach((tag) => {
             newValuesMap = newValuesMap.set(tag.qcode, tag);
@@ -100,28 +100,26 @@ function getExistingTags(article: IArticle): IServerResponse {
                     return subjectTag;
                 });
             }
-        } else {
-            if (values.length > 0) {
-                result[key] = values.map((subjectItem) => {
-                    const {
-                        name,
-                        description,
-                        qcode,
-                        source,
-                        altids,
-                    } = subjectItem;
+        } else if (values.length > 0) {
+            result[key] = values.map((subjectItem) => {
+                const {
+                    name,
+                    description,
+                    qcode,
+                    source,
+                    altids,
+                } = subjectItem;
 
-                    const subjectTag: ITagBase = {
-                        name,
-                        description,
-                        qcode,
-                        source,
-                        altids: altids ?? {},
-                    };
+                const subjectTag: ITagBase = {
+                    name,
+                    description,
+                    qcode,
+                    source,
+                    altids: altids ?? {},
+                };
 
-                    return subjectTag;
-                });
-            }
+                return subjectTag;
+            });
         }
     });
 
@@ -397,29 +395,29 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                         <div className="widget-content__main">
                                             {othersGroupedAndSorted.map((tags, key) => {
-                                                    if (tags == null) {
-                                                        throw new Error('Can not be nullish');
-                                                    }
+                                                if (tags == null) {
+                                                    throw new Error('Can not be nullish');
+                                                }
 
-                                                    return (
-                                                        <ToggleBoxNext
-                                                            key={key}
-                                                            title={key}
-                                                            style="circle"
-                                                            isOpen={true}
-                                                        >
-                                                            <TagListComponent
-                                                                tags={tags.toMap()}
-                                                                onRemove={(id) => {
-                                                                    this.updateTags(
-                                                                        data.changes.analysis.remove(id),
-                                                                        data,
-                                                                    );
-                                                                }}
-                                                            />
-                                                        </ToggleBoxNext>
-                                                    );
-                                                }).toArray()}
+                                                return (
+                                                    <ToggleBoxNext
+                                                        key={key}
+                                                        title={key}
+                                                        style="circle"
+                                                        isOpen={true}
+                                                    >
+                                                        <TagListComponent
+                                                            tags={tags.toMap()}
+                                                            onRemove={(id) => {
+                                                                this.updateTags(
+                                                                    data.changes.analysis.remove(id),
+                                                                    data,
+                                                                );
+                                                            }}
+                                                        />
+                                                    </ToggleBoxNext>
+                                                );
+                                            }).toArray()}
 
                                             {
                                                 entitiesGroupedAndSorted.size < 1 ? null : (
