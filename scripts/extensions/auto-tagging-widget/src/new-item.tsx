@@ -107,7 +107,6 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                         },
                                     };
                                 }}
-                                getKey={(tag) => tag.qcode}
                                 getLabel={(tag: ITagUi) => {
                                     let desc = (tag.description?.trim().length ?? 0) > 0
                                         ? ` | ${tag.description?.trim()}`

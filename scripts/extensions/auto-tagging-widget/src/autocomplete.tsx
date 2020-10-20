@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Autocomplete as AutoCompleteUI} from 'superdesk-ui-framework/react';
+// import {Autocomplete as AutoCompleteUI} from 'superdesk-ui-framework/react';
 
 interface IProps<T> {
     fieldLabel: string;
@@ -37,20 +37,27 @@ export class Autocomplete<T> extends React.PureComponent<IProps<T>, IState<T>> {
         });
     }
     render() {
-        const {getLabel} = this.props;
-        const {suggestions} = this.state;
-        const suggestionStrings = suggestions == null ? [] : suggestions.map((suggestion) => getLabel(suggestion));
+        const {value, onChange} = this.props;
+        // const {suggestions} = this.state;
+        // const suggestionStrings = suggestions == null ? [] : suggestions.map((suggestion) => getLabel(suggestion));
 
         return (
             <div>
-                <div>test: {JSON.stringify(suggestionStrings)}</div>
-                <AutoCompleteUI
+                <label className="sd-input__label">{this.props.fieldLabel}</label>
+                <input
+                    type="text"
+                    value={value}
+                    onChange={(event) => {
+                        onChange(event.target.value);
+                    }}
+                />
+                {/* <AutoCompleteUI
                     label={this.props.fieldLabel}
                     items={suggestionStrings}
                     onChange={(term) => {
                         this.search(term);
                     }}
-                />
+                /> */}
             </div>
         );
     }
