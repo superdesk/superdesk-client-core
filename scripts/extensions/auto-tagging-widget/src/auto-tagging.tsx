@@ -247,6 +247,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             );
         }
         reload() {
+            this.setState({data: 'not-initialized'});
+
             this.initializeData(false);
         }
         componentDidMount() {
