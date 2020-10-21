@@ -10,7 +10,6 @@ while [ ! -f $(dirname "$0")/../dist/index.html ]; do
 done
 
 # run tests
-./node_modules/protractor/bin/webdriver-manager update
 ./node_modules/protractor/bin/protractor protractor.conf.js --baseUrl 'http://localhost:9000'
 TEST_STATUS=$?
 

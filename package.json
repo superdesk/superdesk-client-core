@@ -124,6 +124,7 @@
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.9.7",
+    "webdriver-manager": "12.1.7",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },
@@ -157,9 +158,10 @@
   "scripts": {
     "gettext-extract": "grunt gettext:extract",
     "setup-extensions": "node ./tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js",
-    "compile-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
+    "e2e-compile": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
+    "e2e-compile-watch": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
+    "protractor": "node run-end-to-end-tests.js",
     "watch-css-from-extensions": "node tasks/namespace-css-from-extensions.js --watch",
-    "watch-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
     "postinstall": "npm run setup-extensions && node ./tasks/compile-e2e-tests.js",
     "test": "grunt ci:travis && npm run lint",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
@@ -171,8 +173,6 @@
     "stop-test-server": "cd test-server && docker-compose stop",
     "start-client-server": "http-server dist -p 9000 -s &",
     "stop-client-server": "fuser -k 9000/tcp",
-    "protractor": "protractor protractor.conf.js",
-    "webdriver-manager": "webdriver-manager update --gecko false --standalone false --versions.chrome=86.0.4240.75",
     "server": "grunt server",
     "dev": "npm run server"
   }
