@@ -365,9 +365,11 @@ class Monitoring {
         };
 
         this.openRelatedItem = function(index) {
-            var relatedItem = element.all(by.repeater('relatedItem in relatedItems._items')).get(index);
+            const relatedItemsContainer = el(['related-items-view']);
 
-            relatedItem.all(by.className('related-item')).get(index).click();
+            browser.wait(ECE.visibilityOf(relatedItemsContainer));
+            els(['article-item'], null, relatedItemsContainer).get(index).click();
+            browser.wait(ECE.presenceOf(el(['authoring'])));
         };
 
         /**

@@ -878,7 +878,8 @@ describe('authoring actions', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
-    beforeEach(inject((desks, $q) => {
+    beforeEach(inject((desks, $q, $httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
     }));
 

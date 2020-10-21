@@ -100,8 +100,11 @@ export function getListOption(dropdown, n) {
 export function ctrlKey(key) {
     var Key = protractor.Key;
 
-    browser.actions().sendKeys(Key.chord(Key.CONTROL, key))
+    browser.actions()
+        .sendKeys(Key.chord(Key.CONTROL, key))
         .perform();
+
+    browser.sleep(1000);
 }
 
 /**
