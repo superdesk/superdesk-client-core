@@ -1428,6 +1428,9 @@ declare module 'superdesk-api' {
         saml_auth: any;
         google_auth: any;
         saml_label: any;
+        oidc_auth: any;
+        keycloak_config: any;
+
         archive_autocomplete: boolean;
 
         /** allow updates for items which aren't published yet */
@@ -1484,6 +1487,7 @@ declare module 'superdesk-api' {
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
             sendToPersonal?: boolean;
+            publishFromPersonal?: boolean;
         };
         auth: {
             google: boolean

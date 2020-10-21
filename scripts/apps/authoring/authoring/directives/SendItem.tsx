@@ -502,6 +502,7 @@ export function SendItem($q,
              * Send the current item to different desk or stage and publish the item from new location.
              */
             scope.sendAndPublish = function() {
+                scope.loading = true;
                 return runSendAndPublish();
             };
 
