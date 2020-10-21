@@ -5,7 +5,7 @@ function ensurePackageInstalled() {
         try {
             require.resolve('webdriver-manager');
             resolve();
-        } catch(_) {
+        } catch (_) {
             reject('Package "webdriver-manager" was not found. Run `yarn install` to install all packages.');
         }
     });
@@ -16,25 +16,21 @@ function installWebdriverDriver() {
         try {
             require.resolve('webdriver-manager/selenium/update-config.json');
             resolve();
-        } catch(_) {
+        } catch (_) {
             // driver not installed, installing:
 
             let version = null;
 
             try {
-                version = execSync(
-                    `chromium-browser --product-version`,
-                ).toString();
-            } catch(_) {
+                version = execSync('chromium-browser --product-version').toString();
+            } catch (_) {
                 // Chromium not installed
             }
 
             if (version == null) {
                 try {
-                    version = execSync(
-                        `google-chrome --product-version --product-version`,
-                    ).toString();
-                } catch(_) {
+                    version = execSync('google-chrome --product-version --product-version').toString();
+                } catch (_) {
                     // Google Chrome not installed
                 }
             }
@@ -43,7 +39,7 @@ function installWebdriverDriver() {
                 return reject('To launch the test server either Chromium or Google Chrome has to be installed.');
             }
 
-            console.log('Installing webdriver...');
+            console.info('Installing webdriver...');
             execSync(`npx webdriver-manager update --gecko false --standalone false --versions.chrome=${version}`);
 
             resolve();
@@ -54,7 +50,10 @@ function installWebdriverDriver() {
 ensurePackageInstalled()
     .then(installWebdriverDriver)
     .then(() => {
-        const argumentsToForward = process.argv.reduce((acc, item, index) => index < 2 ? acc : acc.concat(item), []).join(' ');
+        const argumentsToForward = process.argv.reduce(
+            (acc, item, index) => index < 2 ? acc : acc.concat(item),
+            []
+        ).join(' ');
 
         execSync(`npx protractor protractor.conf.js ${argumentsToForward}`, {stdio: 'inherit'});
     })
