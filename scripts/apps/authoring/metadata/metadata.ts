@@ -767,15 +767,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
                 } else {
-                    let searchList;
-
-                    if (!scope.allowEntireCat) {
-                        searchList = scope.list.filter(
-                            (item) => !scope.tree.hasOwnProperty(item[scope.uniqueField]),
-                        );
-                    } else {
-                        searchList = reloadList ? scope.list : scope.combinedList;
-                    }
+                    const searchList = reloadList ? scope.list : scope.combinedList;
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
@@ -864,7 +856,10 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             }
 
             scope.selectTerm = function(term, $event) {
-                if (term) {
+                // while searching, allow to search for categories but don't select them
+                if (scope.tree?.[term[scope.uniqueField]] && !scope.allowEntireCat) {
+                    scope.openTree(term, $event);
+                } else if (term) {
                     addTerm(term);
 
                     if (includeParent) {
