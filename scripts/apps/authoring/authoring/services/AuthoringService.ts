@@ -355,7 +355,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     ) {
         let extDiff = helpers.extendItem({}, diff);
 
-        if (extDiff['task'] && $location.path() !== '/workspace/personal'){
+        if (extDiff['task'] && $location.path() !== '/workspace/personal') {
             delete extDiff['task'];
         }
 
