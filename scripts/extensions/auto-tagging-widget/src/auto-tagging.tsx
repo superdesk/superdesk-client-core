@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {OrderedMap, OrderedSet} from 'immutable';
-import {Switch, Button, ButtonGroup} from 'superdesk-ui-framework/react';
+import {Switch, Button, ButtonGroup, EmptyState} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 
 import {IArticle, ISuperdesk, ISubject} from 'superdesk-api';
@@ -354,7 +354,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     <div className="spinner-big" />
                                 );
                             } else if (data === 'not-initialized') {
-                                return null;
+                                return (
+                                    <EmptyState
+                                        title={gettext('No tags yet')}
+                                        description={gettext('Click "Run" to generate')}
+                                    />
+                                );
                             } else {
                                 const items = data.changes.analysis;
 
