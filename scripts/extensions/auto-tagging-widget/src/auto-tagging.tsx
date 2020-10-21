@@ -318,6 +318,10 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             this.setState({runAutomaticallyPreference: newValue});
 
                                             superdesk.preferences.set(RUN_AUTOMATICALLY_PREFERENCE, newValue);
+
+                                            if (newValue && this.state.data === 'not-initialized') {
+                                                this.runAnalysis();
+                                            }
                                         }}
                                     />
                                     <label>{gettext('Run automatically')}</label>
