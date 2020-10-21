@@ -6,7 +6,8 @@ import {Dispatch, Store} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_ACTIONS, ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, ISetItem, LIST_ACTION} from '../interfaces';
+import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION, ISetItem, ASSET_ACTIONS} from '../interfaces';
+import {IApplicationState} from '../store';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -32,6 +33,8 @@ import {
     getSelectedAssetId,
     getSetNameForSelectedAsset,
 } from '../store/assets/selectors';
+import {toggleFilterPanelState} from '../store/workspace/actions';
+import {isFilterPanelOpen} from '../store/workspace/selectors';
 
 // UI
 import {SamsApp} from './samsApp';
@@ -40,7 +43,6 @@ import {AssetListPanel} from '../components/assets/assetListPanel';
 import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
-import {IApplicationState} from '../store';
 
 interface IProps {
     assets: Array<IAssetItem>;
@@ -62,10 +64,11 @@ interface IProps {
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
     ): void;
+    toggleFilterPanel(): void;
+    filterPanelOpen: boolean;
 }
 
 interface IState {
-    filterPanelOpen: boolean;
     nextPageLoading: boolean;
 }
 
@@ -74,6 +77,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     totalAssets: getAssetListTotal(state),
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
+    filterPanelOpen: isFilterPanelOpen(state),
     activeSets: getActiveSets(state),
     disabledSets: getDisabledSets(state),
     currentSet: getAssetSetFilter(state),
@@ -93,6 +97,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
                 listAction,
             ),
         ),
+    toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
@@ -125,19 +130,11 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            filterPanelOpen: false,
             nextPageLoading: false,
         };
 
-        this.toggleFilterPanel = this.toggleFilterPanel.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.toggleListStyle = this.toggleListStyle.bind(this);
-    }
-
-    toggleFilterPanel() {
-        this.setState(
-            (state) => ({filterPanelOpen: !state.filterPanelOpen}),
-        );
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -169,27 +166,16 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
             <div className="sd-page">
                 <PageLayout
                     header={(
-                        <WorkspaceSubnav
-                            filterPanelOpen={this.state.filterPanelOpen}
-                            totalAssets={this.props.totalAssets}
-                            listStyle={this.props.listStyle}
-                            searchParams={this.props.searchParams}
-                            activeSets={this.props.activeSets}
-                            disabledSets={this.props.disabledSets}
-                            currentSet={this.props.currentSet}
-                            toggleFilterPanel={this.toggleFilterPanel}
-                            toggleListStyle={this.toggleListStyle}
-                            updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
-                        />
+                        <WorkspaceSubnav />
                     )}
-                    leftPanelOpen={this.state.filterPanelOpen}
+                    leftPanelOpen={this.props.filterPanelOpen}
                     leftPanel={(
-                        this.state.filterPanelOpen === false ? (
+                        this.props.filterPanelOpen === false ? (
                             <div />
                         ) : (
                             <AssetFilterPanel
                                 searchParams={this.props.searchParams}
-                                closeFilterPanel={this.toggleFilterPanel}
+                                closeFilterPanel={this.props.toggleFilterPanel}
                                 updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
                             />
                         )
@@ -208,7 +194,10 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                         <AssetListPanel
                             assets={this.props.assets}
                             listStyle={this.props.listStyle}
-                            selectedAssetId={this.props.selectedAssetId}
+                            selectedItems={this.props.selectedAssetId == null ?
+                                [] :
+                                [this.props.selectedAssetId]
+                            }
                             onItemClicked={this.props.previewAsset}
                             actions={[{
                                 action: ASSET_ACTIONS.PREVIEW,

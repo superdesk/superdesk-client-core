@@ -9,6 +9,8 @@ import {
     queryAssets,
     getAssetSearchUrlParams,
     setAssetSearchUrlParams,
+    getAssetById,
+    updateAssetMetadata,
     showUploadAssetModal,
 } from './api/assets';
 
@@ -33,6 +35,8 @@ export const samsApi: ISamsAPI = {
         getSearchUrlParams: getAssetSearchUrlParams,
         setSearchUrlParams: setAssetSearchUrlParams,
         getCount: getAssetsCount,
+        getById: getAssetById,
+        updateMetadata: updateAssetMetadata,
         showUploadModal: showUploadAssetModal,
     },
 };

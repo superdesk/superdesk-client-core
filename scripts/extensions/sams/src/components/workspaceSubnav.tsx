@@ -1,5 +1,7 @@
 // External Modules
 import * as React from 'react';
+import {Dispatch} from 'redux';
+import {connect} from 'react-redux';
 
 // Types
 import {
@@ -12,6 +14,14 @@ import {
     SORT_ORDER,
 } from '../interfaces';
 import {superdeskApi, samsApi} from '../apis';
+import {IApplicationState} from '../store';
+
+// Redux Actions & Selectors
+import {isFilterPanelOpen} from '../store/workspace/selectors';
+import {getAssetListStyle, getAssetListTotal, getAssetSearchParams, getAssetSetFilter} from '../store/assets/selectors';
+import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
+import {toggleFilterPanelState} from '../store/workspace/actions';
+import {toggleAssetListStyle, updateAssetSearchParamsAndListItems} from '../store/assets/actions';
 
 // UI
 import {
@@ -48,7 +58,34 @@ interface IProps {
     ): void;
 }
 
-export class WorkspaceSubnav extends React.PureComponent<IProps> {
+const mapStateToProps = (state: IApplicationState) => ({
+    filterPanelOpen: isFilterPanelOpen(state),
+    totalAssets: getAssetListTotal(state),
+    listStyle: getAssetListStyle(state),
+    searchParams: getAssetSearchParams(state),
+    activeSets: getActiveSets(state),
+    disabledSets: getDisabledSets(state),
+    currentSet: getAssetSetFilter(state),
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    toggleFilterPanel: () => {
+        dispatch<any>(toggleFilterPanelState());
+    },
+    toggleListStyle: () => {
+        dispatch<any>(toggleAssetListStyle());
+    },
+    updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>, listAction: LIST_ACTION) => {
+        dispatch<any>(
+            updateAssetSearchParamsAndListItems(
+                params,
+                listAction,
+            ),
+        );
+    },
+});
+
+export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
     subNavMenuActions: Array<IMenuGroup>;
     sortFieldOptions: Array<IMenuItem>;
 
@@ -109,6 +146,7 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
 
     getMenuItems(): Array<IMenuGroup> {
         const {gettext} = superdeskApi.localization;
+
         const activeSets = this.props.activeSets.map(
             (set) => ({
                 label: set.name,
@@ -174,6 +212,7 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
     render() {
         const {gettext} = superdeskApi.localization;
         const {numberToString} = superdeskApi.helpers;
+
         const items = this.getMenuItems();
         const buttonLabel = this.props.currentSet?.name ?? gettext('All Sets');
         const buttonIcon = this.props.currentSet?.state === SET_STATE.DISABLED ? 'lock' : undefined;
@@ -264,3 +303,8 @@ export class WorkspaceSubnav extends React.PureComponent<IProps> {
         );
     }
 }
+
+export const WorkspaceSubnav = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(WorkspaceSubnavComponent);

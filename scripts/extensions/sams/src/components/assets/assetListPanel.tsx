@@ -14,7 +14,7 @@ import {AssetListItem} from './assetListItem';
 interface IProps {
     assets: Array<IAssetItem>;
     listStyle: ASSET_LIST_STYLE;
-    selectedAssetId: string | undefined;
+    selectedItems?: Array<string>;
     actions?: Array<IAssetCallback>;
     onItemClicked(asset: IAssetItem): void;
 }
@@ -48,8 +48,12 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                         <AssetGridItem
                             key={asset._id}
                             asset={asset}
+                            selected={this.props.selectedItems?.includes(asset._id) ?? false}
+                            toggleSelected={this.props.onItemClicked == null ?
+                                undefined :
+                                this.onItemClick
+                            }
                             onClick={this.onItemClick}
-                            selected={asset._id === this.props.selectedAssetId}
                             actions={this.props.actions}
                         />
                     ))}
@@ -62,8 +66,8 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                         <AssetListItem
                             key={asset._id}
                             asset={asset}
+                            selected={this.props.selectedItems?.includes(asset._id) ?? false}
                             onClick={this.onItemClick}
-                            selected={asset._id === this.props.selectedAssetId}
                             actions={this.props.actions}
                         />
                     ))}

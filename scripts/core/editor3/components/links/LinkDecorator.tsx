@@ -1,6 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import PropTypes from 'prop-types';
-import ng from 'core/services/ng';
+
+import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
+import {addEventListener, removeEventListener} from 'core/get-superdesk-api-implementation';
+import {IAttachment} from 'superdesk-api';
 
 /**
  * @name LinkStrategy
@@ -35,6 +38,19 @@ class LinkComponent extends React.Component<any, any> {
         super(props);
         this.state = {title: ''};
         this.getLinksAndAttachments(props);
+        this.onAttachmentUpdated = this.onAttachmentUpdated.bind(this);
+    }
+
+    componentDidMount() {
+        addEventListener('attachmentUpdated', this.onAttachmentUpdated);
+    }
+
+    componentWillUnmount() {
+        removeEventListener('attachmentUpdated', this.onAttachmentUpdated);
+    }
+
+    onAttachmentUpdated(attachment: IAttachment) {
+        this.setState({title: attachment.title});
     }
 
     componentWillReceiveProps(nextProps) {
@@ -51,7 +67,7 @@ class LinkComponent extends React.Component<any, any> {
         }
 
         if (this.link.attachment) {
-            ng.get('attachments').byId(this.link.attachment)
+            attachmentsApi.byId(this.link.attachment)
                 .then((attachment) => {
                     this.setState({title: attachment.title});
                 });

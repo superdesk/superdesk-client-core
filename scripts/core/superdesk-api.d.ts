@@ -427,6 +427,10 @@ declare module 'superdesk-api' {
         };
         _autosave?: any;
         _locked?: boolean;
+
+        attachments?: Array<{
+            attachment: string;
+        }>;
     }
 
     export interface IDangerousArticlePatchingOptions {
@@ -598,6 +602,23 @@ declare module 'superdesk-api' {
         updated_by: string;
     }
 
+    export interface IMedia {
+        _id: string;
+        md5: string;
+        name: string;
+        filename: string;
+        content_type: string;
+        length: number;
+    }
+
+    export interface IAttachment extends IBaseRestApiResponse{
+        title: string;
+        mimetype: string;
+        filename: string;
+        description: string;
+        media: string | IMedia;
+        internal: boolean;
+    }
 
 
 
@@ -800,6 +821,7 @@ declare module 'superdesk-api' {
 
     export interface IConfigurableUiComponents {
         UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
+        AuthoringAttachmentsWidget?: React.ComponentType<IAttachmentsWidgetProps>;
     }
 
     export interface IConfigurableAlgorithms {
@@ -843,7 +865,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IDropZoneComponentProps {
-        label: string;
+        label?: string;
         className?: string;
         onDrop: (event: DragEvent) => void;
         canDrop: (event: DragEvent) => boolean;
@@ -902,12 +924,10 @@ declare module 'superdesk-api' {
         marginTop?: number;
         marginRight?: number;
         marginBottom?: number;
-        marginTop?: number;
         padding?: number;
         paddingTop?: number;
         paddingRight?: number;
         paddingBottom?: number;
-        paddingTop?: number;
     }
 
     interface IPropsBadge extends ISpacingProps {
@@ -927,6 +947,25 @@ declare module 'superdesk-api' {
         children: Array<React.ReactNode>;
     }
 
+    export interface IAttachmentsWrapperProps {
+        item: IArticle;
+        attachments: Array<IAttachment>;
+    }
+
+    export interface IAttachmentsWidgetProps extends IAttachmentsWrapperProps {
+        // These props are passed in from the `AuthoringDirective` scope
+        addAttachments(attachments: Array<IAttachment>): void;
+        removeAttachment(attachment: IAttachment): void;
+        updateAttachment(attachment: IAttachment): void;
+        updateItem?(updates: Partial<IArticle>): void;
+        readOnly?: boolean;
+        isWidget: boolean;
+
+        editable: boolean;
+        isLocked: boolean;
+        isLockedByMe: boolean;
+        isUploadValid(files: Array<File>): boolean;
+    }
 
 
     // EDITOR3
@@ -953,7 +992,7 @@ declare module 'superdesk-api' {
 
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
-        create<T>(endpoint: string, item: Partial<T>): Promise<T>;
+        create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
             page: number,
@@ -983,6 +1022,11 @@ declare module 'superdesk-api' {
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
+
+        // Attachments
+        attachmentsAdded: Array<IAttachment>;
+        attachmentRemoved: IAttachment;
+        attachmentUpdated: IAttachment;
     }
 
     export interface IWebsocketMessage<T> {
@@ -1159,6 +1203,17 @@ declare module 'superdesk-api' {
 
     // APPLICATION API
 
+    export interface IAttachmentsApi {
+        byArticle(article: IArticle): Promise<Array<IAttachment>>;
+        byId(id: IAttachment['_id']): Promise<IAttachment>;
+        create(attachment: Partial<IAttachment>): Promise<IAttachment>;
+        save(original: IAttachment, updates: Partial<IAttachment>): Promise<IAttachment>;
+        delete(attachment: IAttachment): Promise<void>;
+        upload(attachment: Partial<IAttachment>, file: File, onProgress?: (event: ProgressEvent) => void): Promise<IAttachment>;
+        download(attachment: IAttachment): void;
+        getMediaId(attachment: IAttachment): IMedia['_id'];
+    }
+
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {
@@ -1222,6 +1277,7 @@ declare module 'superdesk-api' {
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
             };
+            attachment: IAttachmentsApi;
         };
         helpers: {
             assertNever(x: never): never;

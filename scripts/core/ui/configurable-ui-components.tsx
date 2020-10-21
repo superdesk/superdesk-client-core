@@ -4,4 +4,5 @@ import {IConfigurableUiComponents} from 'superdesk-api';
 // components may be overwritten after application start
 export const CC: IConfigurableUiComponents = {
     UserAvatar: null,
+    AuthoringAttachmentsWidget: null,
 };
