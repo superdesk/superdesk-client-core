@@ -355,6 +355,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     ) {
         let extDiff = helpers.extendItem({}, diff);
 
+        if (extDiff['task'] && $location.path() !== '/workspace/personal'){
+            delete extDiff['task'];
+        }
+
         // if there were some changes on image, we should update etag
         if (diff && diff._etag) {
             orig._etag = diff._etag;
