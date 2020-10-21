@@ -50,10 +50,7 @@ function installWebdriverDriver() {
 ensurePackageInstalled()
     .then(installWebdriverDriver)
     .then(() => {
-        const argumentsToForward = process.argv.reduce(
-            (acc, item, index) => index < 2 ? acc : acc.concat(item),
-            []
-        ).join(' ');
+        const argumentsToForward = process.argv.slice(2).join(' ');
 
         execSync(`npx protractor protractor.conf.js ${argumentsToForward}`, {stdio: 'inherit'});
     })
