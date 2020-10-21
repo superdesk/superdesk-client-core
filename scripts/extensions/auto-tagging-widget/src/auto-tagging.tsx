@@ -10,6 +10,7 @@ import {getNewItemComponent} from './new-item';
 import {ITagUi} from './types';
 import {toClientFormat, IServerResponse, toServerFormat, getServerResponseKeys, ISubjectTag, ITagBase} from './adapter';
 import {SOURCE_IMATRICS} from './constants';
+import {getGroups} from './groups';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -131,6 +132,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {httpRequestJsonLocal} = superdesk;
     const {gettext} = superdesk.localization;
     const {memoize, generatePatch} = superdesk.utilities;
+    const groupLabels = getGroups(superdesk);
 
     const TagListComponent = getTagsListComponent(superdesk);
     const NewItemComponent = getNewItemComponent(superdesk);
@@ -438,15 +440,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         isOpen={true}
                                                     >
                                                         {entitiesGroupedAndSorted.map((tags, key) => {
-                                                            if (tags == null) {
+                                                            if (tags == null || key == null) {
                                                                 throw new Error('Can not be nullish');
                                                             }
 
-                                                            const groupName = key;
-
                                                             return (
                                                                 <div key={key}>
-                                                                    <div>{groupName}</div>
+                                                                    <div
+                                                                        className="form-label"
+                                                                        style={{display: 'block'}}
+                                                                    >
+                                                                        {groupLabels.get(key).plural}
+                                                                    </div>
                                                                     <TagListComponent
                                                                         tags={tags.toMap()}
                                                                         onRemove={(id) => {
