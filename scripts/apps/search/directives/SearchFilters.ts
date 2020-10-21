@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import {getDateFilters} from './DateFilters';
+import {gettext} from 'core/utils';
 
 class LinkFunction {
     scope: any;
@@ -10,6 +11,7 @@ class LinkFunction {
     desks: any;
     aggregationsMapper: any;
     session: any;
+    defaultFilterLabels: any;
 
     constructor(desks, tags, $location, scope, elem, metadata, session) {
         this.scope = scope;
