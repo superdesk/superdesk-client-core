@@ -14,22 +14,16 @@ export function getTagsListComponent(_: ISuperdesk): React.ComponentType<IProps>
         render() {
             const {tags, onRemove} = this.props;
 
-            return tags.map((item, id) => {
-                if (item == null || id == null) {
-                    throw new Error('Can not be nullish.');
-                }
-
-                return (
-                    <Tag
-                        key={item.qcode}
-                        text={item.name}
-                        shade={item.saved ? 'highlight1' : 'light'}
-                        onClick={() => {
-                            onRemove(id);
-                        }}
-                    />
-                );
-            }).toArray();
+            return tags.map((item, id) => (
+                <Tag
+                    key={item.qcode}
+                    text={item.name}
+                    shade={item.saved ? 'highlight1' : 'light'}
+                    onClick={() => {
+                        onRemove(id);
+                    }}
+                />
+            )).toArray();
         }
     };
 }

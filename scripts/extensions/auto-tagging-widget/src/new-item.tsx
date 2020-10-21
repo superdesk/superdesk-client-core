@@ -34,11 +34,11 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
     const {httpRequestJsonLocal} = superdesk;
 
     const groups = getGroups(superdesk)
-        .filter((_, id) => id != null && entityGroups.has(id) !== true)
+        .filter((_, id) => entityGroups.has(id) !== true)
         .toOrderedMap()
         .set('entity', {singular: gettext('Entity'), plural: 'Entities'});
 
-    const entityGroupsWithLabels = getGroups(superdesk).filter((_, id) => id != null && entityGroups.has(id));
+    const entityGroupsWithLabels = getGroups(superdesk).filter((_, id) => entityGroups.has(id));
 
     return class NewItem extends React.PureComponent<IProps, IState> {
         constructor(props: IProps) {
@@ -130,15 +130,9 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                             >
                                 <Option>{gettext('Select type')}</Option>
                                 {
-                                    groups.map((g, id) => {
-                                        if (g == null) {
-                                            throw new Error('Can not be nullish.');
-                                        }
-
-                                        return (
-                                            <Option key={id} value={id}>{g.singular}</Option>
-                                        );
-                                    }).toArray()
+                                    groups.map((g, id) => (
+                                        <Option key={id} value={id}>{g.singular}</Option>
+                                    )).toArray()
                                 }
                             </Select>
 
@@ -155,15 +149,9 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                     >
                                         <Option>{gettext('Select type')}</Option>
                                         {
-                                            entityGroupsWithLabels.map((g, id) => {
-                                                if (g == null) {
-                                                    throw new Error('Can not be nullish.');
-                                                }
-
-                                                return (
-                                                    <Option key={id} value={id}>{g.singular}</Option>
-                                                );
-                                            }).toArray()
+                                            entityGroupsWithLabels.map((g, id) => (
+                                                <Option key={id} value={id}>{g.singular}</Option>
+                                            )).toArray()
                                         }
                                     </Select>
                                 )

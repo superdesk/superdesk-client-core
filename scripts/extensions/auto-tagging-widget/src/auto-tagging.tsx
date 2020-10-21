@@ -60,7 +60,7 @@ function createTagsPatch(
         // for removed groups to be included in the patch.
         patch[key] = oldValues
             .merge(newValuesMap)
-            .filter((tag) => tag != null && wasRemoved(tag) !== true)
+            .filter((tag) => wasRemoved(tag) !== true)
             .toArray();
     });
 
@@ -367,15 +367,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
 
-                                const entities = items.filter((tag) => tag != null && isEntity(tag));
+                                const entities = items.filter((tag) => isEntity(tag));
                                 const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
                                 const entitiesGroupedAndSorted = entitiesGrouped.sortBy(
                                     (_, key) => key!.toString().toLocaleLowerCase(),
                                     (a, b) => a.localeCompare(b),
                                 );
 
-                                const others = items.filter((tag) => tag != null && isEntity(tag) === false);
-                                const othersGrouped = others.groupBy((tag) => tag != null && tag.group.value);
+                                const others = items.filter((tag) => isEntity(tag) === false);
+                                const othersGrouped = others.groupBy((tag) => tag.group.value);
                                 const othersGroupedAndSorted = othersGrouped.sortBy(
                                     (_, key) => key!.toString().toLocaleLowerCase(),
                                     (a, b) => a.localeCompare(b),
@@ -408,10 +408,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                         <div className="widget-content__main">
                                             {othersGroupedAndSorted.map((tags, key) => {
-                                                if (tags == null) {
-                                                    throw new Error('Can not be nullish');
-                                                }
-
                                                 return (
                                                     <ToggleBoxNext
                                                         key={key}
@@ -439,31 +435,25 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         style="circle"
                                                         isOpen={true}
                                                     >
-                                                        {entitiesGroupedAndSorted.map((tags, key) => {
-                                                            if (tags == null || key == null) {
-                                                                throw new Error('Can not be nullish');
-                                                            }
-
-                                                            return (
-                                                                <div key={key}>
-                                                                    <div
-                                                                        className="form-label"
-                                                                        style={{display: 'block'}}
-                                                                    >
-                                                                        {groupLabels.get(key).plural}
-                                                                    </div>
-                                                                    <TagListComponent
-                                                                        tags={tags.toMap()}
-                                                                        onRemove={(id) => {
-                                                                            this.updateTags(
-                                                                                data.changes.analysis.remove(id),
-                                                                                data,
-                                                                            );
-                                                                        }}
-                                                                    />
+                                                        {entitiesGroupedAndSorted.map((tags, key) => (
+                                                            <div key={key}>
+                                                                <div
+                                                                    className="form-label"
+                                                                    style={{display: 'block'}}
+                                                                >
+                                                                    {groupLabels.get(key).plural}
                                                                 </div>
-                                                            );
-                                                        }).toArray()}
+                                                                <TagListComponent
+                                                                    tags={tags.toMap()}
+                                                                    onRemove={(id) => {
+                                                                        this.updateTags(
+                                                                            data.changes.analysis.remove(id),
+                                                                            data,
+                                                                        );
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        )).toArray()}
                                                     </ToggleBoxNext>
                                                 )
                                             }
