@@ -199,17 +199,6 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.activity['edit.item'] && scope.action.canPublishItem()) {
-                        actions.push({
-                            label: gettext('Publish'),
-                            icon: 'icon-ok',
-                            onTrigger: () => {
-                                scope.action.publish();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
                 } else if (scope.type === 'spike') {
                     actions.push({
                         label: gettext('Unspike'),
@@ -307,6 +296,18 @@ export function MultiActionBar(
                                 scope.printPreview = res;
                                 scope.$apply();
                             });
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
+
+                if (scope.activity['edit.item'] && scope.action.canPublishItem()) {
+                    actions.push({
+                        label: gettext('Publish'),
+                        icon: 'icon-ok',
+                        onTrigger: () => {
+                            scope.action.publish();
+                            scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
                     });

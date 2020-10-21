@@ -116,7 +116,9 @@ export function getSuperdeskApiImplementation(
         },
         entities: {
             article: {
-                isPersonal: (article) => article.task == null || article.task.desk == null,
+                isPersonal: (article) => article.task == null
+                    || article.task.desk == null
+                    || article.task.stage == null,
                 isLocked: (article) => article['lock_session'] != null,
                 isLockedByCurrentUser: (article) => lock.isLockedInCurrentSession(article),
                 patch: (article, patch, dangerousOptions) => {
