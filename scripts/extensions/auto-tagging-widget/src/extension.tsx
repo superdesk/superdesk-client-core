@@ -14,7 +14,7 @@ const extension: IExtension = {
                     {
                         _id: 'imatrics-auto-tagging-widget',
                         label: label,
-                        icon: 'marked-star',
+                        icon: 'tag',
                         order: 1,
                         component: getAutoTaggingComponent(superdesk, label),
                         isAllowed: (item: IArticle) => item.type === 'text',
