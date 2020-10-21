@@ -96,6 +96,8 @@ describe('master_desk', () => {
     // need another way to detect active session
     xit('show user role view online users', () => {
         masterDesks.switchToTab('users');
+        browser.sleep(3000);
+
         masterDesks.toggleOnlineUsers();
         expect(masterDesks.getUser(0, 1, 0).element(by.className('content-item__text')).getText())
             .toContain('first name last name');
