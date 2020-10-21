@@ -39,10 +39,10 @@ class LinkFunction {
         this.scope.dateFilters = getDateFilters()
             .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] == null);
         this.defaultFilterLabels = {
-            categories: gettext('CATEGORY'),
-            genre: gettext('GENRE'),
-            priority: gettext('PRIORITY'),
-            urgency: gettext('URGENCY'),
+            categories: gettext('Category'),
+            genre: gettext('Genre'),
+            priority: gettext('Priority'),
+            urgency: gettext('Urgency'),
         };
         this.init();
 
@@ -55,6 +55,7 @@ class LinkFunction {
                 ?? term.translations?.display_name?.[language?.replace('_', '-')]
                 ?? term.display_name;
         }
+
         // fetch available languages
         metadata.initialize()
             .then(() => {
@@ -63,9 +64,9 @@ class LinkFunction {
                     this.scope.filterLabels[cv._id] = getLocaleName(cv, this.session.identity.language);
                 });
                 Object.keys(this.defaultFilterLabels).forEach((key) => {
-                    if (!Object.keys(this.scope.filterLabels).includes(key)
-                    || (Object.keys(this.scope.filterLabels).includes(key)
-                        && this.scope.filterLabels[key] == null)) {
+                    const hasKey = Object.keys(this.scope.filterLabels).includes(key);
+
+                    if (!hasKey || (hasKey && this.scope.filterLabels[key] == null)) {
                         this.scope.filterLabels[key] = this.defaultFilterLabels[key];
                     }
                 });
