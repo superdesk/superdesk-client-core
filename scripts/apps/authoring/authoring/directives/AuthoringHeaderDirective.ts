@@ -41,6 +41,12 @@ export function AuthoringHeaderDirective(
             scope.translationService = TranslationService;
             scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
 
+            // Allow some single-selection fields to display the multi-selection
+            // dropdown (useful for searching through terms)
+            scope.showDropdownAsMultiTerms = [
+                'countries',
+            ];
+
             scope.isCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault == null
                 ? false :
                 authoringWorkspace.displayAuthoringHeaderCollapedByDefault;

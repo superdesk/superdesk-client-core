@@ -129,7 +129,9 @@ export function getSuperdeskApiImplementation(
         },
         entities: {
             article: {
-                isPersonal: (article) => article.task == null || article.task.desk == null,
+                isPersonal: (article) => article.task == null
+                    || article.task.desk == null
+                    || article.task.stage == null,
                 isLocked: isLocked,
                 isLockedInCurrentSession,
                 isLockedInOtherSession,
