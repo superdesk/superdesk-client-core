@@ -3,14 +3,16 @@ import {OrderedMap, OrderedSet, Map} from 'immutable';
 import {Switch, Button, ButtonGroup, EmptyState} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 
-import {IArticle, ISuperdesk, ISubject, IVocabulary} from 'superdesk-api';
+import {IArticle, ISuperdesk} from 'superdesk-api';
 
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 import {ITagUi} from './types';
-import {toClientFormat, IServerResponse, toServerFormat, getServerResponseKeys, ISubjectTag, ITagBase} from './adapter';
+import {toClientFormat, IServerResponse} from './adapter';
 import {SOURCE_IMATRICS} from './constants';
 import {getGroups} from './groups';
+import {getAutoTaggingVocabularyLabels} from './common';
+import {getExistingTags, createTagsPatch} from './data-transformations';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -35,102 +37,9 @@ interface IState {
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
 
-function createTagsPatch(
-    article: IArticle,
-    tags: OrderedMap<string, ITagUi>,
-    superdesk: ISuperdesk,
-): Partial<IArticle> {
-    const serverFormat = toServerFormat(tags, superdesk);
-    const patch: Partial<IArticle> = {};
-
-    getServerResponseKeys().forEach((key) => {
-        let oldValues = OrderedMap<string, ISubject>((article[key] || []).map((_item) => [_item.qcode, _item]));
-        const newValues = serverFormat[key];
-        let newValuesMap = OrderedMap<string, ISubject>();
-
-        const wasRemoved = (tag: ISubject) =>
-            tag.source === SOURCE_IMATRICS
-            && oldValues.has(tag.qcode)
-            && !newValuesMap.has(tag.qcode);
-
-        newValues?.forEach((tag) => {
-            newValuesMap = newValuesMap.set(tag.qcode, tag);
-        });
-
-        // Has to be executed even if newValuesMap is empty in order
-        // for removed groups to be included in the patch.
-        patch[key] = oldValues
-            .merge(newValuesMap)
-            .filter((tag) => wasRemoved(tag) !== true)
-            .toArray();
-    });
-
-    return patch;
-}
-
-function getExistingTags(article: IArticle): IServerResponse {
-    const result: IServerResponse = {};
-
-    getServerResponseKeys().forEach((key) => {
-        const values = (article[key] ?? []).filter((tag) => tag.source === SOURCE_IMATRICS);
-
-        if (key === 'subject') {
-            if (values.length > 0) {
-                result[key] = values.map((subjectItem) => {
-                    const {
-                        name,
-                        description,
-                        qcode,
-                        source,
-                        altids,
-                        scheme,
-                    } = subjectItem;
-
-                    if (scheme == null) {
-                        throw new Error('Scheme must be defined for all imatrics tags stored in subject field.');
-                    }
-
-                    const subjectTag: ISubjectTag = {
-                        name,
-                        description,
-                        qcode,
-                        source,
-                        altids: altids ?? {},
-                        scheme,
-                    };
-
-                    return subjectTag;
-                });
-            }
-        } else if (values.length > 0) {
-            result[key] = values.map((subjectItem) => {
-                const {
-                    name,
-                    description,
-                    qcode,
-                    source,
-                    altids,
-                } = subjectItem;
-
-                const subjectTag: ITagBase = {
-                    name,
-                    description,
-                    qcode,
-                    source,
-                    altids: altids ?? {},
-                };
-
-                return subjectTag;
-            });
-        }
-    });
-
-    return result;
-}
-
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
-    const {httpRequestJsonLocal, dataApi} = superdesk;
+    const {httpRequestJsonLocal} = superdesk;
     const {gettext} = superdesk.localization;
     const {memoize, generatePatch} = superdesk.utilities;
     const groupLabels = getGroups(superdesk);
@@ -257,18 +166,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
         }
         componentDidMount() {
             Promise.all([
-                dataApi.query<IVocabulary>(
-                    'vocabularies',
-                    1,
-                    {field: 'name', direction: 'ascending'},
-                    {imatrics_enabled: true},
-                ),
+                getAutoTaggingVocabularyLabels(superdesk),
                 preferences.get(RUN_AUTOMATICALLY_PREFERENCE),
-            ]).then(([vocabularies, runAutomatically = false]) => {
+            ]).then(([vocabularyLabels, runAutomatically = false]) => {
                 this.setState({
-                    vocabularyLabels: Map(
-                        vocabularies._items.map((item: IVocabulary) => [item._id, item.display_name]),
-                    ),
+                    vocabularyLabels,
                     runAutomaticallyPreference: runAutomatically,
                 });
 

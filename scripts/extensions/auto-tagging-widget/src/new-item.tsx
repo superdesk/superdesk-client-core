@@ -7,6 +7,8 @@ import {Autocomplete} from './autocomplete';
 import {ITagUi} from './types';
 import {IServerResponse, toClientFormat} from './adapter';
 import {getGroups} from './groups';
+import {OrderedMap} from 'immutable';
+import {getAutoTaggingVocabularyLabels} from './common';
 
 interface IAutoTaggingSearchResult {
     result: {
@@ -27,16 +29,12 @@ interface IState {
     type: string | null;
     entityType: string | null;
     validationErrors: Array<string>;
+    groupAvailableForNewItem: OrderedMap<string, string> | 'loading'; // id, label
 }
 
 export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<IProps> {
     const {gettext} = superdesk.localization;
     const {httpRequestJsonLocal} = superdesk;
-
-    const groups = getGroups(superdesk)
-        .filter((_, id) => entityGroups.has(id) !== true)
-        .toOrderedMap()
-        .set('entity', {singular: gettext('Entity'), plural: 'Entities'});
 
     const entityGroupsWithLabels = getGroups(superdesk).filter((_, id) => entityGroups.has(id));
 
@@ -48,11 +46,29 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                 type: null,
                 entityType: null,
                 validationErrors: [],
+                groupAvailableForNewItem: 'loading',
             };
+        }
+        componentDidMount() {
+            getAutoTaggingVocabularyLabels(superdesk).then((vocabularyLabels) => {
+                this.setState({
+                    groupAvailableForNewItem: getGroups(superdesk)
+                        .filter((_, id) => entityGroups.has(id) !== true)
+                        .map((value) => value.singular)
+                        .toOrderedMap()
+                        .merge(vocabularyLabels)
+                        .set('entity', gettext('Entity')),
+                });
+            });
         }
         render() {
             const {onChange, save, cancel, insertTagFromSearch, tagAlreadyExists} = this.props;
             const item = this.props.item;
+            const {groupAvailableForNewItem} = this.state;
+
+            if (groupAvailableForNewItem === 'loading') {
+                return null;
+            }
 
             return (
                 <div className="sd-card auto-tagging-widget__card-absolute">
@@ -130,8 +146,8 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                             >
                                 <Option>{gettext('Select type')}</Option>
                                 {
-                                    groups.map((g, id) => (
-                                        <Option key={id} value={id}>{g.singular}</Option>
+                                    groupAvailableForNewItem.map((label, id) => (
+                                        <Option key={id} value={id}>{label}</Option>
                                     )).toArray()
                                 }
                             </Select>
