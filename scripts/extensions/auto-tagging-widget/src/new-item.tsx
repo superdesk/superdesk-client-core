@@ -207,7 +207,6 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                         ...item,
                                         group: {
                                             kind: 'visual',
-                                            label: groupValue,
                                             value: groupValue,
                                         },
                                     });

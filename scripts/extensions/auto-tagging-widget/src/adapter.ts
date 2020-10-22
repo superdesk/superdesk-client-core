@@ -50,7 +50,6 @@ export function toClientFormat(response: IServerResponse, saved: boolean): Order
             altids,
             group: {
                 kind: 'scheme',
-                label: item.scheme,
                 value: item.scheme,
             },
             saved: saved,
@@ -93,7 +92,6 @@ export function toClientFormat(response: IServerResponse, saved: boolean): Order
                 altids,
                 group: {
                     kind: 'visual',
-                    label: group,
                     value: group,
                 },
                 saved: true,

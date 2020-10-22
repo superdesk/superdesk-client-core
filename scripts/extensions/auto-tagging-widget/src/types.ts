@@ -4,6 +4,6 @@ export interface ITagUi {
     qcode: string;
     source: string;
     altids: {[key: string]: string};
-    group: {kind: 'scheme' | 'visual'; label: string; value: string};
+    group: {kind: 'scheme' | 'visual'; value: string};
     saved: boolean;
 }

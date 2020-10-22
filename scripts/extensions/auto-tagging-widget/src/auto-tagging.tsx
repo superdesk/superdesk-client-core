@@ -1,9 +1,9 @@
 import * as React from 'react';
-import {OrderedMap, OrderedSet} from 'immutable';
+import {OrderedMap, OrderedSet, Map} from 'immutable';
 import {Switch, Button, ButtonGroup, EmptyState} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 
-import {IArticle, ISuperdesk, ISubject} from 'superdesk-api';
+import {IArticle, ISuperdesk, ISubject, IVocabulary} from 'superdesk-api';
 
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
@@ -30,6 +30,7 @@ interface IState {
     runAutomaticallyPreference: boolean | 'loading';
     data: 'not-initialized' | 'loading' | IEditableData;
     newItem: INewItem | null;
+    vocabularyLabels: Map<string, string> | null;
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
@@ -129,7 +130,7 @@ function getExistingTags(article: IArticle): IServerResponse {
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
-    const {httpRequestJsonLocal} = superdesk;
+    const {httpRequestJsonLocal, dataApi} = superdesk;
     const {gettext} = superdesk.localization;
     const {memoize, generatePatch} = superdesk.utilities;
     const groupLabels = getGroups(superdesk);
@@ -147,6 +148,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 data: 'not-initialized',
                 newItem: null,
                 runAutomaticallyPreference: 'loading',
+                vocabularyLabels: null,
             };
 
             this.runAnalysis = this.runAnalysis.bind(this);
@@ -254,18 +256,27 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.initializeData(false);
         }
         componentDidMount() {
-            preferences.get(RUN_AUTOMATICALLY_PREFERENCE).then((res: boolean | null) => {
-                const value = res ?? false;
+            Promise.all([
+                dataApi.query<IVocabulary>(
+                    'vocabularies',
+                    1,
+                    {field: 'name', direction: 'ascending'},
+                    {imatrics_enabled: true},
+                ),
+                preferences.get(RUN_AUTOMATICALLY_PREFERENCE) as Promise<boolean | undefined>,
+            ]).then(([vocabularies, runAutomatically = false]) => {
+                this.setState({
+                    vocabularyLabels: Map(vocabularies._items.map(({_id, display_name}) => [_id, display_name])),
+                    runAutomaticallyPreference: runAutomatically,
+                });
 
-                this.setState({runAutomaticallyPreference: value});
-
-                this.initializeData(value);
+                this.initializeData(runAutomatically);
             });
         }
         render() {
-            const {runAutomaticallyPreference} = this.state;
+            const {runAutomaticallyPreference, vocabularyLabels} = this.state;
 
-            if (runAutomaticallyPreference === 'loading') {
+            if (runAutomaticallyPreference === 'loading' || vocabularyLabels == null) {
                 return null;
             }
 
@@ -407,11 +418,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         }
 
                                         <div className="widget-content__main">
-                                            {othersGroupedAndSorted.map((tags, key) => {
+                                            {othersGroupedAndSorted.map((tags, groupId) => {
                                                 return (
                                                     <ToggleBoxNext
-                                                        key={key}
-                                                        title={key}
+                                                        key={groupId}
+                                                        title={vocabularyLabels.get(groupId) ?? groupId}
                                                         style="circle"
                                                         isOpen={true}
                                                     >
