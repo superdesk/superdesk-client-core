@@ -7,7 +7,9 @@
      data-required="schema.headline.required">
 
     <label for="title" class="field__label">{{label('headline')}}</label>
-    <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <span ng-if="schema.headline.maxlength">
+        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
         item="item.headline"
@@ -31,7 +33,9 @@
      data-required="schema.headline.required">
 
     <label for="title" class="field__label">{{label('headline')}}</label>
-    <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <span ng-if="schema.headline.maxlength">
+        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
         item="item.headline"
@@ -69,7 +73,7 @@
     </div>
 
     <div ng-if="item.flags.marked_for_sms" style="margin-top: 27px;">
-        <span sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
+        <sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></sd-character-count>
         <label class="field__label">{{label('sms_message')}}</label>
         <textarea sd-remove-tags
             class="byline text-editor"
@@ -145,7 +149,7 @@
      data-required="schema.abstract.required">
 
     <label for="abstract" class="field__label">{{label('abstract')}}</label>
-    <span sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
+    <sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></sd-character-count>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-text-editor
@@ -168,7 +172,7 @@
      data-required="schema.abstract.required">
 
     <label for="abstract" class="field__label">{{label('abstract')}}</label>
-    <span sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
+    <sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></sd-character-count>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-editor3
@@ -279,7 +283,7 @@
      sd-width="{{editor.body_html.sdWidth|| 'full'}}">
     <label for="bodyhtml" class="field__label">{{label('body_html')}}</label>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
-    <span sd-character-count data-item="item.body_html" data-html="true"></span>
+    <sd-character-count data-item="item.body_html" data-html="true"></sd-character-count>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <sd-line-count data-html="item.body_html"></sd-line-count>
     <div id="bodyhtml"
@@ -308,8 +312,9 @@
      tansa-proofing="false">
 
     <label for="bodyhtml" class="field__label">{{label('body_html')}}</label>
+    <sd-character-count-config-button data-field="'body_html'"></sd-character-count-config-button>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
-    <span sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></span>
+    <sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></sd-character-count>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <sd-line-count data-html="item.body_html"></sd-line-count>
     <div id="bodyhtml"
@@ -404,7 +409,9 @@
      ng-attr-title="{{schema.media_description.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.media_description.required">
     <label for="title" class="field__label" translate>Caption</label>
-    <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
+    <span ng-if="validator.description_text.maxlength">
+        <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
+    </span>
     <div id="title" class="abstract"
          sd-text-editor
          data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order, paste: {cleanPastedHTML: editor.description_text.cleanPastedHTML}}"
@@ -425,7 +432,9 @@
      ng-attr-title="{{schema.media_description.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.media_description.required">
     <label for="title" class="field__label" translate>Caption</label>
-    <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
+    <span ng-if="validator.description_text.maxlength">
+        <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
+    </span>
     <div id="title" class="abstract"
          sd-editor3
          data-path-to-value="'description_text'"
@@ -589,8 +598,9 @@
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]">
 
     <label class="field__label">{{field.display_name}}</label>
-    <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
-        data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+    <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
+        <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema[field._id].validate_characters"
         class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
     <div sd-editor3
@@ -803,7 +813,9 @@
      ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
      order="{{editor.slugline.order}}">
     <label for="slugline" class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <span ng-if="schema.slugline.maxlength">
+        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema.slugline.validate_characters"
         class="disallowed-char-error"
         item="item.slugline"
@@ -825,7 +837,9 @@
      ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.slugline.required">
     <label for="title" class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <span ng-if="schema.slugline.maxlength">
+        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema.slugline.validate_characters"
         class="disallowed-char-error"
         item="item.slugline"

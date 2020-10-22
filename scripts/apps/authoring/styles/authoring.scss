@@ -219,7 +219,7 @@ $bottom-bar-item-border-color-active: transparent;
 .opened-articles-bar {
     position: fixed;
     height: $authoring-opened-articles;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     background: rgba(20, 20, 20, 0.95);
@@ -696,6 +696,11 @@ $authoring-toolbar-spacing: 10px;
     align-content:flex-start;
 }
 
+.char-count-config-button {
+    float: right;
+
+}
+
 .authoring-header__item {
     display: flex;
     align-items: center;
@@ -958,8 +963,8 @@ $authoring-toolbar-spacing: 10px;
             margin-bottom: 1px;
             box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
             z-index: 1;
-            
-            
+
+
             background-color: $white;
             i.backlink {
                 flex-grow: 0;
@@ -1046,7 +1051,7 @@ $authoring-toolbar-spacing: 10px;
                 display: none !important;
             }
         }
-        
+
         label {
             display: inline;
             min-width: auto;
