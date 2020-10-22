@@ -466,7 +466,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(diff, origItem);
 
         if (_.size(diff) > 0) {
-            return api.save('archive', origItem, diff).then((_item) => {
+            return api.save('archive', origItem, diff, {},
+                {publish_from_personal: appConfig?.features?.publishFromPersonal ?? false}).then((_item) => {
                 if (origItem.type === 'picture') {
                     item._etag = _item._etag;
                 }
@@ -684,18 +685,19 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this._updateGeneralActions = function(currentItem, action) {
         let isReadOnlyState = this._isReadOnly(currentItem);
         let userPrivileges = privileges.privileges;
+        let isPersonalSpace = $location.path() === '/workspace/personal';
 
         action.re_write = canRewrite(currentItem) === true;
         action.resend = currentItem.type === 'text' &&
             isPublished(currentItem, false);
 
         // mark item for highlights
-        action.mark_item_for_highlight = currentItem.task && currentItem.task.desk &&
-            !isReadOnlyState && currentItem.type === 'text' && userPrivileges.mark_for_highlights;
+        action.mark_item_for_highlight = currentItem.task && currentItem.task.desk && !isPersonalSpace
+            && !isReadOnlyState && currentItem.type === 'text' && userPrivileges.mark_for_highlights;
 
         // mark item for desks
-        action.mark_item_for_desks = currentItem.task && currentItem.task.desk &&
-            !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text';
+        action.mark_item_for_desks = currentItem.task && currentItem.task.desk && !isPersonalSpace
+            && !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text';
 
         // allow all stories to be packaged if it doesn't have Embargo
         action.package_item = !READONLY_STATES.includes(currentItem.state) &&

@@ -632,7 +632,7 @@ describe('authoring', () => {
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
                 spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
-                $httpBackend.expectPATCH(orig._links.self.href, item)
+                $httpBackend.expectPATCH(orig._links.self.href + '?publish_from_personal=false', item)
                     .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();
