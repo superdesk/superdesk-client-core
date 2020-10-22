@@ -167,7 +167,8 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     items={Object.values(this.props.items)}
                     wrapperStyle={{width: '100%'}}
                     wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
-                    renderMenu={(items, value, style: React.CSSProperties) => {
+                    renderMenu={ /* remove `any` when @types/react is fixed */
+                        (items, value, style: React.CSSProperties | any) => {
                         const hideOptions =
                             this.state.justInitialized
                             && typeof this.props.autoFocus === 'object'

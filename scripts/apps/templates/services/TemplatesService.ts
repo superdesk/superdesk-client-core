@@ -83,12 +83,6 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         };
 
         var criteria: any = {};
-        // in template management only see the templates that are create by the user
-        // unless the user is an admin
-
-        if (!self.isAdmin(true)) {
-            criteria.$or = [{user: session.identity._id}];
-        }
 
         if (type !== undefined) {
             criteria.template_type = type;
@@ -96,20 +90,6 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
 
         if (templateName) {
             criteria.template_name = {$regex: templateName, $options: '-i'};
-        }
-
-        // Not an admin but has management rights for templates
-        if (!self.isAdmin(true) && self.isAdmin()) {
-            var _criteria = criteria;
-
-            criteria = desks.fetchCurrentUserDesks().then((_desks) => {
-                _criteria.$or.push({
-                    is_public: true,
-                    template_desks: {$in: _desks.map((desk) => desk._id)},
-                });
-
-                return _criteria;
-            });
         }
 
         return $q.when(criteria)
@@ -130,15 +110,11 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
             max_results: 200,
         };
 
-        let deskCriteria: any = [
-            {is_public: true},
-        ];
+        let criteria = {template_type: CREATE_TYPE};
 
         if (desk) {
-            deskCriteria.push({template_desks: {$in: [desk]}});
+            criteria['$or'] = [{template_desks: {$in: [desk]}}];
         }
-
-        let criteria = {$or: deskCriteria, template_type: CREATE_TYPE};
 
         if (!_.isEmpty(criteria)) {
             params.where = JSON.stringify({
@@ -163,15 +139,15 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         }
 
         var deskCriteria: any = [
-            {template_desks: {$exists: false}, is_public: true},
-            {template_desks: [], is_public: true},
+            {template_desks: {$exists: false}},
+            {template_desks: []},
         ];
 
         if (desk) {
-            deskCriteria.push({template_desks: {$in: [desk]}, is_public: true});
+            deskCriteria.push({template_desks: {$in: [desk]}});
         }
 
-        criteria.$or = [{$or: deskCriteria}, {user: user, is_public: false}];
+        criteria.$or = [{$or: deskCriteria}, {user: user}];
 
         if (type !== undefined) {
             criteria.template_type = type;
@@ -218,22 +194,6 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
      */
     this.find = function(id) {
         return api.find('content_templates', id);
-    };
-
-    /**
-     * Test if user is admin
-     *
-     * @param {bool} strict - if true user must be `administrator`, otherwise it's enough to have privileges
-     * @return {bool}
-     */
-    this.isAdmin = function(strict) {
-        let admin = session.identity.user_type === 'administrator';
-
-        if (strict) {
-            return admin;
-        }
-
-        return admin || privileges.privileges.content_templates;
     };
 
     this.addRecentTemplate = function(deskId, templateId) {
