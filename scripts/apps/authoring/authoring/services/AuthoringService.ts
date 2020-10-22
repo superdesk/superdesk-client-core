@@ -497,7 +497,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             helpers.filterDefaultValues(diff, origItem);
 
             if (_.size(diff) > 0) {
-                return api.save('archive', origItem, diff).then((__item) => {
+                return api.save('archive', origItem, diff, {},
+                    {publish_from_personal: appConfig?.features?.publishFromPersonal}).then((__item) => {
                     runAfterUpdateEvent(origItem, __item);
 
                     if (origItem.type === 'picture') {
@@ -724,12 +725,12 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             isPublished(currentItem, false);
 
         // mark item for highlights
-        action.mark_item_for_highlight = currentItem.task && currentItem.task.desk &&
-            !isReadOnlyState && currentItem.type === 'text' && userPrivileges.mark_for_highlights;
+        action.mark_item_for_highlight = currentItem.task && currentItem.task.desk && currentItem.task.stage
+            && !isReadOnlyState && currentItem.type === 'text' && userPrivileges.mark_for_highlights;
 
         // mark item for desks
-        action.mark_item_for_desks = currentItem.task && currentItem.task.desk &&
-            !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text';
+        action.mark_item_for_desks = currentItem.task && currentItem.task.desk && currentItem.task.stage
+            && !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text';
 
         // allow all stories to be packaged if it doesn't have Embargo
         action.package_item = !READONLY_STATES.includes(currentItem.state) &&
