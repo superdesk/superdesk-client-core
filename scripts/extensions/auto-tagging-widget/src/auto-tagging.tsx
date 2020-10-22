@@ -263,10 +263,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     {field: 'name', direction: 'ascending'},
                     {imatrics_enabled: true},
                 ),
-                preferences.get(RUN_AUTOMATICALLY_PREFERENCE) as Promise<boolean | undefined>,
+                preferences.get(RUN_AUTOMATICALLY_PREFERENCE),
             ]).then(([vocabularies, runAutomatically = false]) => {
                 this.setState({
-                    vocabularyLabels: Map(vocabularies._items.map(({_id, display_name}) => [_id, display_name])),
+                    vocabularyLabels: Map(
+                        vocabularies._items.map((item: IVocabulary) => [item._id, item.display_name]),
+                    ),
                     runAutomaticallyPreference: runAutomatically,
                 });
 
