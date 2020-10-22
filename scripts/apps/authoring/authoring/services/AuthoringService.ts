@@ -502,7 +502,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             if (_.size(diff) > 0) {
                 return api.save('archive', origItem, diff, {},
-                    {publish_from_personal: appConfig?.features?.publishFromPersonal}).then((__item) => {
+                    {publish_from_personal: appConfig?.features?.publishFromPersonal ?? false}).then((__item) => {
                     runAfterUpdateEvent(origItem, __item);
 
                     if (origItem.type === 'picture') {
