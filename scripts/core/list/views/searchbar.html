@@ -2,6 +2,6 @@
     <div class="search-handler">
         <label for="search-input" class="trigger-icon" ng-click="flags.extended = !flags.extended"><i class="icon-search"></i></label>
         <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="q" ng-model-options="{debounce: 500}" ng-change="search()">
-        <button class="search-close" ng-click="close()" aria-label="{{ :: 'Clear search' | translate }} ng-class="{visible: q}"><i class="icon-close-small"></i></button>
+        <button class="search-close" ng-click="close()" aria-label="{{ :: 'Clear search' | translate }}" ng-class="{visible: q}"><i class="icon-close-small"></i></button>
     </div>
 </div>
