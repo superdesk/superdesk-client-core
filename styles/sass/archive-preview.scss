@@ -343,6 +343,18 @@
             .embed-block__description {
                 @include caption-text-style;
             }
+            .title {
+                font-size: 19px;
+                line-height: 120%;
+                @include text-semibold();
+                margin-top: 15px;
+                margin-bottom: 20px;
+                color: #333;
+
+                &.condensed {
+                    padding-right: 15px;
+                }
+            }
         }
     }
 
