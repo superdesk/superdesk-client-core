@@ -37,13 +37,13 @@
                 </span>
             </div>
         </div>
-        <div ng-if="(item.subject | filter:{'scheme': field._id}).length && editor.subject && !editor.subject.hideOnPrint"
+        <div ng-if="getSubjectFieldsWithoutScheme() && editor.subject && !editor.subject.hideOnPrint"
             order="{{editor.subject.order}}">
             <div>
                 <label class="preview-label" translate>Subject</label>
             </div>
             <div class="preview-data">
-                <span ng-repeat="subject in item.subject | filter:{'scheme': field._id}">
+                <span ng-repeat="subject in getSubjectFieldsWithoutScheme()">
                     {{getLocaleName(subject)}}
                 </span>
             </div>

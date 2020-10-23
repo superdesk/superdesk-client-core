@@ -20,15 +20,13 @@ export function FullPreviewItemDirective(content, $sce) {
                 }
             };
 
-            if (scope.item.profile) {
-                content.getType(scope.item.profile)
-                    .then((type) => {
-                        scope.editor = content.editor(type);
-                        scope.fields = content.fields(type);
-                    });
-            } else {
-                scope.editor = content.editor();
-            }
+            // Prevent external code from modifying this scope directly.
+            const fakeScope: any = {};
+
+            content.setupAuthoring(scope.item.profile, fakeScope, scope.item).then(() => {
+                scope.editor = fakeScope.editor;
+                scope.fields = fakeScope.fields;
+            });
 
             scope.getHtml = function(html) {
                 return $sce.trustAsHtml(html);
@@ -40,6 +38,10 @@ export function FullPreviewItemDirective(content, $sce) {
 
             scope.associationExists = function(associations, fieldId) {
                 return _.size(scope.getAssociationItems(associations, fieldId));
+            };
+
+            scope.getSubjectFieldsWithoutScheme = () => {
+                return scope.item.subject.filter((val) => val['scheme'] == null);
             };
 
             scope.getAssociationItems = getAssociationsByFieldId;
