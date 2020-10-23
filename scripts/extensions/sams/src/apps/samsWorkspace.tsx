@@ -33,6 +33,7 @@ import {
     getSelectedAssetId,
     getSelectedAssetIds,
     getSetNameForSelectedAsset,
+    getSelectedAssetItems,
 } from '../store/assets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
 import {isFilterPanelOpen} from '../store/workspace/selectors';
@@ -66,6 +67,7 @@ interface IProps {
         listAction: LIST_ACTION,
     ): void;
     toggleFilterPanel(): void;
+    selectedAssets: Array<IAssetItem>;
 }
 
 interface IState {
@@ -82,6 +84,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     selectedAssetIds: getSelectedAssetIds(state),
     asset: getSelectedAsset(state),
     setName: getSetNameForSelectedAsset(state),
+    selectedAssets: getSelectedAssetItems(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -101,8 +104,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
 
-export function downloadAssetBinary(asset: IAssetItem): any {
+export function downloadAssetBinary(asset: IAssetItem): void {
     samsApi.assets.getAssetBinary(asset);
+}
+
+export function deleteAsset(asset: IAssetItem): void {
+    samsApi.assets.deleteAsset(asset);
 }
 
 export class SamsWorkspaceApp extends React.PureComponent {
@@ -140,6 +147,11 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.toggleListStyle = this.toggleListStyle.bind(this);
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onMultiActionBar = this.onMultiActionBar.bind(this);
+        this.onDeleteAsset = this.onDeleteAsset.bind(this);
+    }
+
+    onDeleteAsset(asset: IAssetItem): void {
+        deleteAsset(asset);
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
@@ -200,6 +212,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             setName={this.props.setName}
                             onPanelClosed={this.props.onPanelClosed}
                             downloadAsset={this.onDownloadSingleAssetCompressedBinary}
+                            deletAsset={this.onDeleteAsset}
                         />
                     )}
                     mainClassName="sd-padding--2"
@@ -222,7 +235,12 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             {
                                 action: ASSET_ACTIONS.DOWNLOAD,
                                 onSelect: this.onDownloadSingleAssetCompressedBinary,
-                            }]}
+                            },
+                            {
+                                action: ASSET_ACTIONS.DELETE,
+                                onSelect: this.onDeleteAsset,
+                            },
+                            ]}
                         />
                     )}
                 />

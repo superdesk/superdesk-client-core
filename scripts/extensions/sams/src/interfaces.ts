@@ -59,6 +59,7 @@ export enum LIST_ACTION {
 export enum ASSET_ACTIONS {
     PREVIEW = 'preview',
     DOWNLOAD = 'download',
+    DELETE = 'delete',
 }
 
 export interface IAssetAction {
@@ -168,5 +169,6 @@ export interface ISamsAPI {
         showUploadModal(props?: Partial<IUploadAssetModalProps>): void;
         getCompressedBinary(asset_ids: Array<string>): void;
         getAssetBinary(asset: IAssetItem): Promise<void | Response>;
+        deleteAsset(asset: IAssetItem): Promise<void>;
     };
 }

@@ -12,6 +12,7 @@ import {
     LIST_ACTION,
     SET_STATE,
     SORT_ORDER,
+    IAssetItem,
 } from '../interfaces';
 import {superdeskApi, samsApi} from '../apis';
 import {IApplicationState} from '../store';
@@ -23,6 +24,7 @@ import {getAssetListStyle,
     getAssetSearchParams,
     getAssetSetFilter,
     getSelectedAssetIds,
+    getSelectedAssetItems,
 } from '../store/assets/selectors';
 import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
@@ -56,6 +58,7 @@ interface IProps {
     disabledSets: Array<ISetItem>;
     currentSet?: ISetItem;
     selectedAssetIds: Array<string> | [];
+    selectedAssets: Array<IAssetItem>;
     toggleFilterPanel(): void;
     toggleListStyle(): void;
     closeMultiActionBar(): void;
@@ -74,6 +77,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     disabledSets: getDisabledSets(state),
     currentSet: getAssetSetFilter(state),
     selectedAssetIds: getSelectedAssetIds(state),
+    selectedAssets: getSelectedAssetItems(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -98,6 +102,10 @@ export function downloadCompressedBinary(asset_ids: Array<string>): void {
     samsApi.assets.getCompressedBinary(asset_ids);
 }
 
+export function deleteAsset(asset: IAssetItem): void {
+    samsApi.assets.deleteAsset(asset);
+}
+
 export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
     subNavMenuActions: Array<IMenuGroup>;
     sortFieldOptions: Array<IMenuItem>;
@@ -112,6 +120,8 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         this.setSearchParamText = this.setSearchParamText.bind(this);
         this.onDownloadMultipleAssetsCompressedBinary = this.onDownloadMultipleAssetsCompressedBinary.bind(this);
         this.onCloseMultiActionBar = this.onCloseMultiActionBar.bind(this);
+        this.onDeleteMultipleAssets = this.onDeleteMultipleAssets.bind(this);
+
     }
 
     getSubNavMenuActions(): Array<IMenuGroup> {
@@ -230,8 +240,13 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         this.props.selectedAssetIds?.length !== 0 ? selectedAssets = true : selectedAssets = false;
         return selectedAssets;
     }
+    
     onDownloadMultipleAssetsCompressedBinary(): void {
         downloadCompressedBinary(this.props.selectedAssetIds);
+    }
+
+    onDeleteMultipleAssets(): void {
+        this.props.selectedAssets.map((selectedAsset) => deleteAsset(selectedAsset));
     }
 
     onCloseMultiActionBar() {
@@ -267,6 +282,10 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                     {count: this.props.selectedAssetIds?.length},
                                 )}</span>
                             <div className="pull-right">
+                                <NavButton
+                                    icon="trash"
+                                    onClick={this.onDeleteMultipleAssets}
+                                />
                                 <NavButton
                                     icon="download"
                                     onClick={this.onDownloadMultipleAssetsCompressedBinary}

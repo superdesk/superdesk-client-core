@@ -24,6 +24,14 @@ export function getAction(assetCallback: IAssetCallback): IAssetAction {
             onSelect: assetCallback.onSelect,
             isAllowed: (asset) => asset._created != null,
         };
+    case ASSET_ACTIONS.DELETE:
+        return {
+            id: ASSET_ACTIONS.DELETE,
+            label: gettext('Delete'),
+            icon: 'trash',
+            onSelect: assetCallback.onSelect,
+            isAllowed: (asset) => asset._created != null,
+        };
     }
 
     assertNever(assetCallback.action);
