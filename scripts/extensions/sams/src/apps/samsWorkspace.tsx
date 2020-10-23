@@ -101,7 +101,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
 
-export function downloadAssetBinary(asset: IAssetItem): any {
+export function downloadAssetBinary(asset: IAssetItem): void {
     samsApi.assets.getAssetBinary(asset);
 }
 
