@@ -18,10 +18,15 @@ import {IApplicationState} from '../store';
 
 // Redux Actions & Selectors
 import {isFilterPanelOpen} from '../store/workspace/selectors';
-import {getAssetListStyle, getAssetListTotal, getAssetSearchParams, getAssetSetFilter} from '../store/assets/selectors';
+import {getAssetListStyle,
+    getAssetListTotal,
+    getAssetSearchParams,
+    getAssetSetFilter,
+    getSelectedAssetIds,
+} from '../store/assets/selectors';
 import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
-import {toggleAssetListStyle, updateAssetSearchParamsAndListItems} from '../store/assets/actions';
+import {toggleAssetListStyle, updateAssetSearchParamsAndListItems, closeMultiActionBar} from '../store/assets/actions';
 
 // UI
 import {
@@ -51,7 +56,6 @@ interface IProps {
     disabledSets: Array<ISetItem>;
     currentSet?: ISetItem;
     selectedAssetIds: Array<string> | [];
-    downloadMultipleAssets(): void;
     toggleFilterPanel(): void;
     toggleListStyle(): void;
     closeMultiActionBar(): void;
@@ -69,6 +73,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     activeSets: getActiveSets(state),
     disabledSets: getDisabledSets(state),
     currentSet: getAssetSetFilter(state),
+    selectedAssetIds: getSelectedAssetIds(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -86,7 +91,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
             ),
         );
     },
+    closeMultiActionBar: () => dispatch(closeMultiActionBar()),
 });
+
+export function downloadCompressedBinary(asset_ids: Array<string>): void {
+    samsApi.assets.getCompressedBinary(asset_ids);
+}
 
 export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
     subNavMenuActions: Array<IMenuGroup>;
@@ -100,6 +110,8 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
 
         this.toggleSortOrder = this.toggleSortOrder.bind(this);
         this.setSearchParamText = this.setSearchParamText.bind(this);
+        this.onDownloadMultipleAssetsCompressedBinary = this.onDownloadMultipleAssetsCompressedBinary.bind(this);
+        this.onCloseMultiActionBar = this.onCloseMultiActionBar.bind(this);
     }
 
     getSubNavMenuActions(): Array<IMenuGroup> {
@@ -218,6 +230,13 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         this.props.selectedAssetIds?.length !== 0 ? selectedAssets = true : selectedAssets = false;
         return selectedAssets;
     }
+    onDownloadMultipleAssetsCompressedBinary(): void {
+        downloadCompressedBinary(this.props.selectedAssetIds);
+    }
+
+    onCloseMultiActionBar() {
+        this.props.closeMultiActionBar();
+    }
 
     render() {
         const {gettext, gettextPlural} = superdeskApi.localization;
@@ -250,7 +269,7 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                             <div className="pull-right">
                                 <NavButton
                                     icon="download"
-                                    onClick={this.props.downloadMultipleAssets}
+                                    onClick={this.onDownloadMultipleAssetsCompressedBinary}
                                 />
                             </div>
                         </div>

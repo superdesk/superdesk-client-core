@@ -1001,9 +1001,8 @@ declare module 'superdesk-api' {
             max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
-        queryRaw<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
-        queryZip<T>(endpoint, params?: Dictionary<string, any>): Promise<void>;
-        queryAssetBinary<T>(endpoint): any;
+        queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
+        queryRaw<T>(endpoint, params?: Dictionary<string, any>): Promise<Response>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
@@ -1391,6 +1390,7 @@ declare module 'superdesk-api' {
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
+            downloadBlob(data: BinaryType, mimetype: string, filename: string): void;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

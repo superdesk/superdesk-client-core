@@ -17,7 +17,7 @@ import {
     IArticleQuery,
     IArticle,
 } from 'superdesk-api';
-import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestZipLocal, uploadFileWithProgress} from './network';
+import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
 
 export function queryElastic(
@@ -177,22 +177,19 @@ export const dataApi: IDataApi = {
             path: '/' + endpoint + queryString,
         });
     },
-    queryRaw: (endpoint, params?: Dictionary<string, any>) => {
+    queryRawJson: (endpoint, params?: Dictionary<string, any>) => {
         return httpRequestJsonLocal({
             method: 'GET',
             path: '/' + endpoint,
             urlParams: params,
         });
     },
-    queryZip: (endpoint, params?: Dictionary<string, any>) => {
-        return httpRequestZipLocal({
+    queryRaw: (endpoint, params?: Dictionary<string, any>) => {
+        return httpRequestRawLocal({
             method: 'GET',
             path: '/' + endpoint,
             urlParams: params,
         });
-    },
-    queryAssetBinary: (endpoint) => {
-        window.open(appConfig.server.url + '/' + endpoint);
     },
     patch: (endpoint, item1, item2) => {
         const patch = generatePatch(item1, item2);

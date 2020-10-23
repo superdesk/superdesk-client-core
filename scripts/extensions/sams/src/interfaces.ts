@@ -167,6 +167,6 @@ export interface ISamsAPI {
         ): Promise<[IAttachment, IAssetItem]>;
         showUploadModal(props?: Partial<IUploadAssetModalProps>): void;
         getCompressedBinary(asset_ids: Array<string>): void;
-        getAssetBinary(asset_id: string): Promise<void>;
+        getAssetBinary(asset: IAssetItem): Promise<void | Response>;
     };
 }

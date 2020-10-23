@@ -12,7 +12,7 @@ import {
     getAssetById,
     updateAssetMetadata,
     showUploadAssetModal,
-    getAssetsBinary,
+    getAssetBinary,
     getAssetsCompressedBinary,
 } from './api/assets';
 
@@ -41,6 +41,6 @@ export const samsApi: ISamsAPI = {
         updateMetadata: updateAssetMetadata,
         showUploadModal: showUploadAssetModal,
         getCompressedBinary: getAssetsCompressedBinary,
-        getAssetBinary: getAssetsBinary,
+        getAssetBinary: getAssetBinary,
     },
 };

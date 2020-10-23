@@ -31,6 +31,7 @@ import {
     numberToString,
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
+import {downloadBlob} from './helpers/utils';
 import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -330,6 +331,7 @@ export function getSuperdeskApiImplementation(
             },
             stripHtmlTags,
             getLinesCount,
+            downloadBlob,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

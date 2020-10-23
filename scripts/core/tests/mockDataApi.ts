@@ -44,9 +44,8 @@ const dataApiForTesting: IDataApi = {
         max_results?: number,
         formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
     ) => Promise.resolve({} as T),
-    queryRaw: <T>(endpoint, params) => Promise.resolve({} as T),
-    queryZip: <T>(endpoint, params) => Promise.resolve(),
-    queryAssetBinary: <T>(endpoint) => Promise.resolve(),
+    queryRawJson: <T>(endpoint, params) => Promise.resolve({} as T),
+    queryRaw: <T>(endpoint, params) => Promise.resolve({} as Response),
     patch: <T>(endpoint, item1, item2) => Promise.resolve({} as T),
     patchRaw: <T>(endpoint, id, etag, patch) => Promise.resolve({} as T),
     delete: (endpoint, item) => Promise.resolve(),
@@ -57,8 +56,8 @@ export function mockDataApi() {
     spyOn(dataApi, 'findOne').and.callFake(dataApiForTesting.findOne);
     spyOn(dataApi, 'create').and.callFake(dataApiForTesting.create);
     spyOn(dataApi, 'query').and.callFake(dataApiForTesting.query);
+    spyOn(dataApi, 'queryRawJson').and.callFake(dataApiForTesting.queryRawJson);
     spyOn(dataApi, 'queryRaw').and.callFake(dataApiForTesting.queryRaw);
-    spyOn(dataApi, 'queryZip').and.callFake(dataApiForTesting.queryZip);
     spyOn(dataApi, 'patch').and.callFake(dataApiForTesting.patch);
     spyOn(dataApi, 'patchRaw').and.callFake(dataApiForTesting.patchRaw);
     spyOn(dataApi, 'delete').and.callFake(dataApiForTesting.delete);

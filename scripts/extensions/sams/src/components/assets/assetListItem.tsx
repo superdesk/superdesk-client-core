@@ -69,7 +69,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
                             onChange={() => this.onCheckboxClick}
                         />
                     </div>
-                    <span className="icn-mix sd-list-item__item-type">
+                    <span className="sd-list-item__item-type">
                         <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
                     </span>
                 </ListItemColumn>
