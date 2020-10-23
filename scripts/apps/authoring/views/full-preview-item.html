@@ -12,7 +12,7 @@
             <div>
                 <label class="preview-label" translate>Slugline</label>
             </div>
-            <div class="preview-data">
+            <div>
                 <span>{{item.slugline}}</span>
             </div>
         </div>
@@ -62,7 +62,7 @@
             <div>
                 <label class="preview-label" translate>Ed. Note</label>
             </div>
-            <div class="preview-data">
+            <div>
                 <span>{{item.ednote}}</span>
             </div>
         </div>
@@ -80,9 +80,11 @@
             </div>
         </div>
         <!-- custom dropdown fields saved on subject-->
-        <div ng-repeat="field in fields track by field._id"
+        <div
+            ng-repeat="field in fields track by field._id"
             ng-if="(item.subject | filter:{'scheme': field._id}).length && isCustomList(field) && !field.schema_field &&  !editor[field._id].hideOnPrint"
-            order="{{editor[field._id].order}}">
+            order="{{editor[field._id].order}}"
+        >
             <div>
                 <label class="preview-label" translate>{{field.display_name}}</label>
             </div>
@@ -92,18 +94,34 @@
                 </span>
             </div>
         </div>
-    </div>
-    <div class="metadata">
-        <!-- custom date and text fields -->
-        <div ng-repeat="field in fields track by field._id"
-            ng-if="item.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date') && !editor[field._id].hideOnPrint"
-            order="{{editor[field._id].order}}">
+
+        <div
+            ng-repeat="field in fields track by field._id"
+            ng-if="editor[field._id].section === 'header' && item.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date') && !editor[field._id].hideOnPrint"
+            order="{{editor[field._id].order}}"
+        >
             <div>
                 <label class="preview-label" translate>{{field.display_name}}</label>
             </div>
             <div class="preview-data" sd-short-date ng-if="field.field_type === 'date'" data-date="item.extra[field._id]"></div>
             <div class="preview-data preview-editor" ng-if="field.field_type === 'text'" ng-bind-html="getHtml(item.extra[field._id])"></div>
         </div>
+    </div>
+    <div class="metadata">
+        <!-- custom date and text fields -->
+        <div
+            ng-repeat="field in fields track by field._id"
+            ng-if="editor[field._id].section === 'content' && item.extra[field._id] && (field.field_type === 'text' || field.field_type === 'date') && !editor[field._id].hideOnPrint"
+            order="{{editor[field._id].order}}"
+            style="padding-bottom: 10px"
+        >
+            <div>
+                <label class="preview-label" translate>{{field.display_name}}</label>
+            </div>
+            <div class="preview-data" sd-short-date ng-if="field.field_type === 'date'" data-date="item.extra[field._id]"></div>
+            <div class="preview-data preview-editor" ng-if="field.field_type === 'text'" ng-bind-html="getHtml(item.extra[field._id])"></div>
+        </div>
+
         <div class="headline" order="{{editor.headline.order}}" ng-if="!editor.headline.hideOnPrint">{{item.headline}}</div>
         <!-- custom media and embed fields -->
         <div ng-repeat="field in fields track by field._id"
@@ -148,6 +166,17 @@
 
         <div ng-if="!hideMedia && item.type === 'picture' && item.renditions.baseImage.href" style="margin-bottom: 20px">
             <img ng-src="{{item.renditions.baseImage.href}}" />
+            <div
+                sd-media-metadata-view
+                class="media-container__metadata media-container__metadata--image"
+                data-item="item"
+                style="padding-left: 0; padding-right: 0"
+            ></div>
+
+            <div ng-if="item.description_text">
+                <label class="preview-label" translate>Description</label>
+                <div>{{item.description_text}}</div>
+            </div>
         </div>
 
         <div
@@ -162,6 +191,9 @@
             order="{{editor.byline.order}}"
             class="byline"
         >
+            <div>
+                <label class="preview-label" translate>Byline</label>
+            </div>
             {{item.byline}}
         </div>
 
@@ -191,9 +223,23 @@
         <div
             ng-if="!editor.sign_off.hideOnPrint && hasValue(item.sign_off)"
             order="{{editor.sign_off.order}}"
-            class="body preview-editor"
+            class="preview-editor"
         >
+            <div>
+                <label class="preview-label" translate>Sign-off</label>
+            </div>
             {{item.sign_off}}
+        </div>
+        
+        <div
+            ng-if="!editor.usageterms.hideOnPrint && hasValue(item.usageterms)"
+            order="{{editor.usageterms.order}}"
+            class="preview-editor"
+        >
+            <div>
+                <label class="preview-label" translate>Usage terms</label>
+            </div>
+            {{item.usageterms}}
         </div>
     </div>
 </div>
