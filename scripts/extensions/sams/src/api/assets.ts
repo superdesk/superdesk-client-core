@@ -1,11 +1,13 @@
 // Types
 import {
+    IAttachment,
     IElasticRangeQueryParams,
     IRestApiResponse,
     IRootElasticQuery,
 } from 'superdesk-api';
 import {
-    ASSET_LIST_STYLE, ASSET_SORT_FIELD,
+    ASSET_LIST_STYLE,
+    ASSET_SORT_FIELD,
     ASSET_STATE,
     ASSET_TYPE_FILTER,
     IAssetItem,
@@ -22,7 +24,7 @@ import {getStore} from '../store';
 import {loadSets} from '../store/sets/actions';
 
 // Utils
-import {isSamsApiError, getApiErrorMessage} from '../utils/api';
+import {getApiErrorMessage, isSamsApiError} from '../utils/api';
 
 // UI
 import {showModalConnectedToStore} from '../utils/ui';
@@ -70,12 +72,34 @@ function querySetId(source: IRootElasticQuery, params: IAssetSearchParams) {
     }
 }
 
+function querySetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
+    if (params.setIds != null && params.setIds.length > 0) {
+        source.query.bool.must.push(
+            superdeskApi.elasticsearch.terms({
+                field: 'set_id',
+                value: params.setIds,
+            }),
+        );
+    }
+}
+
 function queryState(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.state != null) {
         source.query.bool.must.push(
             superdeskApi.elasticsearch.term({
                 field: 'state',
                 value: params.state,
+            }),
+        );
+    }
+}
+
+function queryStates(source: IRootElasticQuery, params: IAssetSearchParams) {
+    if (params.states != null && params.states.length > 0) {
+        source.query.bool.must.push(
+            superdeskApi.elasticsearch.terms({
+                field: 'state',
+                value: params.states,
             }),
         );
     }
@@ -213,11 +237,13 @@ export function queryAssets(
     [
         querySearchString,
         querySetId,
+        querySetIds,
         queryName,
         queryDescription,
         queryFilename,
         queryMimetypes,
         queryState,
+        queryStates,
         queryDateRange,
         querySizeRange,
     ].forEach((func) => func(source, params));
@@ -305,6 +331,33 @@ export function getAssetsCount(set_ids: Array<string>): Promise<Dictionary<strin
             notify.error(gettext('Failed to get assets counts for sets'));
             return Promise.reject(error);
         });
+}
+
+export function getAssetById(assetId: string): Promise<IAssetItem> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.findOne<IAssetItem>(RESOURCE, assetId)
+        .catch((error: any) => {
+            notify.error(gettext(`Failed to get asset "${assetId}"`));
+            return Promise.reject(error);
+        });
+}
+
+export function updateAssetMetadata(
+    originalAsset: IAssetItem,
+    originalAttachment: IAttachment,
+    updates: Partial<IAssetItem>,
+): Promise<[IAttachment, IAssetItem]> {
+    return Promise.all([
+        superdeskApi.entities.attachment.save(originalAttachment, {
+            ...originalAttachment,
+            title: updates.name,
+            description: updates.description,
+            internal: updates.state !== ASSET_STATE.PUBLIC,
+        }),
+        superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, originalAsset, updates),
+    ]);
 }
 
 export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): void {

@@ -6,7 +6,7 @@ import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 import {IExtensionActivationResult} from 'superdesk-api';
-import {extensions} from 'appConfig';
+import {extensions, appConfig} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 
 /**
@@ -34,12 +34,16 @@ import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', 'lock',
     'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location', 'api', 'desks',
+    'session',
 ];
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, lock,
     packages, superdesk, notify, spike, authoring, $location, api, desks,
+    session,
 ) {
+    const personalLocationPath = $location.path() === '/workspace/personal';
+
     this.send = function() {
         send.all(multi.getItems());
     };
@@ -188,7 +192,14 @@ export function MultiActionBarController(
     };
 
     this.canPublishItem = function() {
-        return multi.getItems().every((item) => item.state !== 'draft' && $location.path() !== '/workspace/personal');
+        return multi.getItems().every((item) => {
+            if (item.state !== 'draft' && $location.path() !== '/workspace/personal') {
+                return true;
+            } else if (item.state !== 'draft' && $location.path() === '/workspace/personal') {
+                return appConfig?.features?.publishFromPersonal;
+            }
+            return false;
+        });
     };
 
     /**
@@ -263,6 +274,14 @@ export function MultiActionBarController(
 
         Promise.all(
             multi.getItems().map((item) => new Promise((resolve) => {
+                if (appConfig.features.publishFromPersonal && personalLocationPath) {
+                    var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
+
+                    item.task = {
+                        ...(item.task ?? {}),
+                        desk: currentDeskId,
+                    };
+                }
                 authoring.publish(item, item)
                     .then((response) => {
                         if (response.status >= 400) {

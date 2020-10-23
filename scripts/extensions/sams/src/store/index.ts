@@ -8,22 +8,26 @@ import {Reducer, Store, Middleware} from 'redux';
 import {ISetState} from './sets/types';
 import {IStorageDestinationState} from './storageDestinations/types';
 import {IAssetState} from './assets/types';
+import {IWorkspaceState} from './workspace/types';
 
 // Redux Reducers
 import {setsReducer} from './sets/reducers';
 import {storageDestinationReducer} from './storageDestinations/reducers';
 import {assetsReducer} from './assets/reducers';
+import {workspaceReducer} from './workspace/reducers';
 
 export const rootReducer = combineReducers({
     sets: setsReducer,
     storageDestinations: storageDestinationReducer,
     assets: assetsReducer,
+    workspace: workspaceReducer,
 });
 
 export type IApplicationState = {
     sets: ISetState;
     storageDestinations: IStorageDestinationState;
     assets: IAssetState;
+    workspace: IWorkspaceState;
 };
 
 /**
@@ -78,6 +82,7 @@ export function getStoreSingleton(): Store {
     }
 
     storeReferenceCount += 1;
+
     return store;
 }
 

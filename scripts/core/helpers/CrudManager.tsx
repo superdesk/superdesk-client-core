@@ -137,10 +137,11 @@ export const dataApi: IDataApi = {
         method: 'GET',
         path: '/' + endpoint + '/' + id,
     }),
-    create: (endpoint, item) => httpRequestJsonLocal({
+    create: (endpoint, item, urlParams) => httpRequestJsonLocal({
         'method': 'POST',
         path: '/' + endpoint,
         payload: item,
+        urlParams: urlParams ?? {},
     }),
     query: (
         endpoint: string,

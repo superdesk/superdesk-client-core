@@ -62,6 +62,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
         this.clearSearch = this.clearSearch.bind(this);
         this.submitSearch = this.submitSearch.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+
         this.onChange = {
             name: (value: string) => this.setLocalAssetSearchParams({name: value}),
             filename: (value: string) => this.setLocalAssetSearchParams({filename: value}),
@@ -143,6 +144,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
         const {config} = superdeskApi.instance;
         const {numberToString} = superdeskApi.helpers;
         const sizeOptions = this.getSizeOptions();
+        const sizeValues = [1, 5, 10, 25, 50, 100, 250, 500, 1024];
 
         return (
             <React.Fragment>
@@ -208,6 +210,11 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         value={numberToString(this.state.localSearchParams.sizeFrom)}
                                         onChange={this.onChange.sizeFrom}
                                     >
+                                        {sizeValues.includes(this.state.localSearchParams.sizeFrom ?? 1) ? null : (
+                                            <Option value={numberToString(this.state.localSearchParams.sizeFrom)}>
+                                                {numberToString(this.state.localSearchParams.sizeFrom)}
+                                            </Option>
+                                        )}
                                         {sizeOptions}
                                     </Select>
                                 </FormItem>
@@ -217,6 +224,11 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         value={numberToString(this.state.localSearchParams.sizeTo)}
                                         onChange={this.onChange.sizeTo}
                                     >
+                                        {sizeValues.includes(this.state.localSearchParams.sizeTo ?? 1) ? null : (
+                                            <Option value={numberToString(this.state.localSearchParams.sizeTo)}>
+                                                {numberToString(this.state.localSearchParams.sizeTo)}
+                                            </Option>
+                                        )}
                                         {sizeOptions}
                                     </Select>
                                 </FormItem>

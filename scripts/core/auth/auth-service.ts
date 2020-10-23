@@ -25,6 +25,19 @@ angular.module('superdesk.core.auth.auth', []).service('auth', ['api', 'session'
                     }),
                 );
         };
+        this.loginOIDC = function(authorization_code) {
+            return authAdapter.authenticateOIDC(authorization_code)
+                .then((sessionData) => api.users.getById(sessionData.user)
+                    .then((userData) => {
+                        session.start(sessionData, userData);
+                        return session.identity;
+                    }),
+                )
+                .catch((err) => {
+                    // eslint-disable-next-line no-console
+                    console.log(err.data._message);
+                });
+        };
 
         /**
          * @ngdoc method

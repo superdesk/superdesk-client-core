@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import moment from 'moment';
 import {getDateFilters} from './DateFilters';
+import {gettext} from 'core/utils';
 
 class LinkFunction {
     scope: any;
@@ -10,6 +11,7 @@ class LinkFunction {
     desks: any;
     aggregationsMapper: any;
     session: any;
+    defaultFilterLabels: any;
 
     constructor(desks, tags, $location, scope, elem, metadata, session) {
         this.scope = scope;
@@ -38,6 +40,12 @@ class LinkFunction {
         };
         this.scope.dateFilters = getDateFilters()
             .filter((dateFilter) => metadata.search_config?.[dateFilter.fieldname] == null);
+        this.defaultFilterLabels = {
+            categories: gettext('Category'),
+            genre: gettext('Genre'),
+            priority: gettext('Priority'),
+            urgency: gettext('Urgency'),
+        };
         this.init();
 
         function getLocaleName(term, language) {
@@ -49,12 +57,20 @@ class LinkFunction {
                 ?? term.translations?.display_name?.[language?.replace('_', '-')]
                 ?? term.display_name;
         }
+
         // fetch available languages
         metadata.initialize()
             .then(() => {
                 this.scope.filterLabels = {};
                 metadata?.cvs?.forEach((cv) => {
                     this.scope.filterLabels[cv._id] = getLocaleName(cv, this.session.identity.language);
+                });
+                Object.keys(this.defaultFilterLabels).forEach((key) => {
+                    const hasKey = Object.keys(this.scope.filterLabels).includes(key);
+
+                    if (!hasKey || (hasKey && this.scope.filterLabels[key] == null)) {
+                        this.scope.filterLabels[key] = this.defaultFilterLabels[key];
+                    }
                 });
                 if (metadata.values.languages) {
                     scope.languageLabel = {};

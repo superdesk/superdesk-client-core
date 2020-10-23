@@ -1,11 +1,14 @@
 import * as React from 'react';
 import classNames from 'classnames';
+import {Checkbox} from 'superdesk-ui-framework/react';
 
 interface IProps {
     children: React.ReactNode;
     uploading?: boolean;
     remove?(event: React.MouseEvent<HTMLAnchorElement>): void;
     icon: string;
+    selected?: boolean;
+    toggleSelected?(): void;
 }
 
 export class GridItemThumb extends React.PureComponent<IProps> {
@@ -27,6 +30,17 @@ export class GridItemThumb extends React.PureComponent<IProps> {
                         <i className="icon-close-small" />
                     </a>
                 )}
+                {this.props.toggleSelected == null ?
+                    null : (
+                        <div className="sd-grid-item__checkbox">
+                            <Checkbox
+                                checked={this.props.selected ?? false}
+                                label={{text: ''}}
+                                onChange={() => this.props.toggleSelected != null && this.props.toggleSelected()}
+                            />
+                        </div>
+                    )
+                }
                 {this.props.children}
             </div>
         );

@@ -20,8 +20,8 @@ import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/
 
 interface IProps {
     asset: IAssetItem;
-    onClick(asset: IAssetItem): void;
     selected: boolean;
+    onClick(asset: IAssetItem): void;
     actions?: Array<IAssetCallback>;
     itemSelected: boolean;
     updateSelectedAssetIds(asset: Partial<IAssetItem>): void;

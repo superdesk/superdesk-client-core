@@ -1,14 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 
-import React from 'react';
-import {Provider, connect} from 'react-redux';
+import * as React from 'react';
 import {gettext} from 'core/utils';
 
-import {
-    saveFile,
-    closeEdit,
-} from './actions';
-
+import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
@@ -16,21 +11,21 @@ import {Label} from 'core/ui/components/Form/Label';
 import {Input} from 'core/ui/components/Form/Input';
 import {TextArea} from 'core/ui/components/Form/TextArea';
 
-import {IAttachment} from '.';
+import {IAttachment} from 'superdesk-api';
 
 interface IProps {
-    file: IAttachment;
+    attachment: IAttachment;
 
-    saveFile: (file: IAttachment, updates: Partial<IAttachment>) => void;
+    saveAttachment: (original: IAttachment, updates: Partial<IAttachment>) => void;
     closeEdit: () => void;
 }
 
 type IState = Partial<IAttachment>;
 
-class AttachmentsEditorModalComponent extends React.Component<IProps, IState> {
+export class AttachmentsEditorModal extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
-        this.state = {title: props.file.title, description: props.file.description};
+        this.state = {title: props.attachment.title, description: props.attachment.description};
         this.update = this.update.bind(this);
     }
 
@@ -43,7 +38,7 @@ class AttachmentsEditorModalComponent extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <React.Fragment>
+            <Modal>
                 <ModalHeader onClose={this.props.closeEdit}>
                     {gettext('Edit Attachment')}
                 </ModalHeader>
@@ -72,7 +67,7 @@ class AttachmentsEditorModalComponent extends React.Component<IProps, IState> {
                 <ModalFooter>
                     <button
                         className="btn btn--primary pull-right"
-                        onClick={() => this.props.saveFile(this.props.file, this.state)}
+                        onClick={() => this.props.saveAttachment(this.props.attachment, this.state)}
                         disabled={!this.state.title}
                     >{gettext('Update')}</button>
                     <button
@@ -80,24 +75,7 @@ class AttachmentsEditorModalComponent extends React.Component<IProps, IState> {
                         onClick={this.props.closeEdit}
                     >{gettext('Cancel')}</button>
                 </ModalFooter>
-            </React.Fragment>
+            </Modal>
         );
     }
 }
-
-const mapStateToProps = (state) => ({
-    file: state.attachments.edit,
-});
-
-const mapDispatchToProps = {
-    saveFile,
-    closeEdit,
-};
-
-const AttachmentsEditorModalConnected = connect(mapStateToProps, mapDispatchToProps)(AttachmentsEditorModalComponent);
-
-export const AttachmentsEditorModal = (props: {store: any}) => (
-    <Provider store={props.store}>
-        <AttachmentsEditorModalConnected />
-    </Provider>
-);

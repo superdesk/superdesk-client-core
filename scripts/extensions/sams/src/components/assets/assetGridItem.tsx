@@ -6,7 +6,7 @@ import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Checkbox, Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
+import {/* Checkbox, */ Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
 import {GridItem} from '../../ui/grid/GridItem';
 import {GridItemFooter} from '../../ui/grid/GridItemFooter';
 import {GridItemFooterBlock} from '../../ui/grid/GridItemFooterBlock';
@@ -29,6 +29,7 @@ interface IProps {
     selected?: boolean;
     uploadProgress?: number;
     error?: boolean;
+    toggleSelected?(asset: Partial<IAssetItem>): void;
     actions?: Array<IAssetCallback>;
     itemSelected?: boolean;
     updateSelectedAssetIds?(asset: Partial<IAssetItem>): void;
@@ -41,6 +42,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         this.onRemove = this.onRemove.bind(this);
         this.onItemClick = this.onItemClick.bind(this);
         this.onCheckboxClick = this.onCheckboxClick.bind(this);
+        this.toggleSelected = this.toggleSelected.bind(this);
     }
 
     onRemove(event: React.MouseEvent<HTMLAnchorElement>) {
@@ -53,6 +55,12 @@ export class AssetGridItem extends React.PureComponent<IProps> {
 
     onItemClick() {
         this.props.onClick(this.props.asset);
+    }
+
+    toggleSelected() {
+        if (this.props.toggleSelected != null) {
+            this.props.toggleSelected(this.props.asset);
+        }
     }
 
     stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
@@ -69,7 +77,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
         const typeIcon = getIconTypeFromMimetype(
-            this.props.asset?.mimetype ?? 'text',
+            this.props.asset.mimetype ?? 'text',
         );
         const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
         const mimetype = getMimetypeHumanReadable(this.props.asset.mimetype);
@@ -83,13 +91,10 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                     uploading={true}
                     remove={this.props.remove && this.onRemove}
                     icon={typeIcon}
+                    selected={this.props.selected || this.props.itemSelected}
+                    toggleSelected={this.props.toggleSelected && this.toggleSelected}
+                    onCheckboxClick={this.onCheckboxClick}
                 >
-                    <div className="sd-grid-item__checkbox" onClick={this.onCheckboxClick}>
-                        <Checkbox
-                            checked={this.props.itemSelected ?? false}
-                            onChange={() => false}
-                        />
-                    </div>
                     {this.props.uploadProgress && (
                         <GridItemProgressCircle
                             value={this.props.uploadProgress ?? 0}

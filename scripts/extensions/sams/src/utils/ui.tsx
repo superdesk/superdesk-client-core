@@ -13,7 +13,7 @@ import {getStore} from '../store';
 import {Label} from 'superdesk-ui-framework/react';
 
 export function showModalConnectedToStore<T = any>(
-    Component: React.ComponentType<{closeModal(): void}>,
+    Component: React.ComponentType<{closeModal(): void} & any>,
     props?: T,
 ): Promise<void> {
     const store = getStore();

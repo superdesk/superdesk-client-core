@@ -37,6 +37,10 @@ interface IProps<T> {
     modalSize?: IModalSize;
     multiple?: boolean;
     accept?: Array<string>;
+    initialFiles?: Array<{
+        id: string;
+        file: File;
+    }>;
 
     closeModal(): void;
     title: string;
@@ -65,7 +69,7 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
         this.state = {
             selectedIndex: 0,
             submitting: false,
-            items: [],
+            items: this.getInitialItems(),
         };
 
         this.showFileUploadDialog = this.showFileUploadDialog.bind(this);
@@ -78,13 +82,35 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
     }
 
     componentDidMount() {
-        this.showFileUploadDialog();
+        if (this.state.items.length === 0) {
+            this.showFileUploadDialog();
+        }
     }
 
     showFileUploadDialog() {
         if (this.fileInputNode.current != null) {
             this.fileInputNode.current.click();
         }
+    }
+
+    getInitialItems(): Array<IUploadItem> {
+        const items: Array<IUploadItem> = [];
+
+        if (this.props.initialFiles != null && this.props.initialFiles?.length > 0) {
+            this.props.initialFiles.forEach(
+                (item) => {
+                    items.push({
+                        id: item.id,
+                        binary: item.file,
+                        uploadProgress: 0,
+                        error: false,
+                        completed: false,
+                    });
+                },
+            );
+        }
+
+        return items;
     }
 
     addFiles(event: React.ChangeEvent<HTMLInputElement>) {
@@ -111,6 +137,8 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                 ...newItems,
             ],
         }));
+
+        event.target.value = ''; // reset to allow selecting same file again
     }
 
     getItemIndexById(id: string) {
@@ -153,9 +181,6 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
     }
 
     onSubmit() {
-        const {gettext, gettextPlural} = superdeskApi.localization;
-        const {notify} = superdeskApi.ui;
-
         this.setState({submitting: true});
         let requestsCompleted = 0;
         let failed = false;
@@ -193,11 +218,14 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                 };
 
                 const onCompleted = () => {
+                    const {notify} = superdeskApi.ui;
+                    const {gettext, gettextPlural} = superdeskApi.localization;
+
                     requestsCompleted += 1;
 
                     if (requestsCompleted === this.state.items.length) {
                         if (failed === false) {
-                            this.props.closeModal();
+                            setTimeout(this.props.closeModal, 500);
                             notify.success(
                                 gettextPlural(
                                     requestsCompleted,

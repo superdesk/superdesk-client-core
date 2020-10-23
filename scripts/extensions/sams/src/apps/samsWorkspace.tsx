@@ -6,13 +6,13 @@ import {Dispatch, Store} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_ACTIONS, ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, ISetItem, LIST_ACTION} from '../interfaces';
+import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION, ASSET_ACTIONS} from '../interfaces';
+import {IApplicationState} from '../store';
 import {samsApi} from '../apis';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
-import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 
 import {
     closeAssetPreviewPanel,
@@ -23,19 +23,19 @@ import {
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
     updateSelectedAssetIds,
-    closeMultiActionBar,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
     getAssetListTotal,
     getAssetSearchParams,
     getAssetSearchResults,
-    getAssetSetFilter,
     getSelectedAsset,
     getSelectedAssetId,
     getSelectedAssetIds,
     getSetNameForSelectedAsset,
 } from '../store/assets/selectors';
+import {toggleFilterPanelState} from '../store/workspace/actions';
+import {isFilterPanelOpen} from '../store/workspace/selectors';
 
 // UI
 import {SamsApp} from './samsApp';
@@ -44,35 +44,31 @@ import {AssetListPanel} from '../components/assets/assetListPanel';
 import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
-import {IApplicationState} from '../store';
 
 interface IProps {
     assets: Array<IAssetItem>;
     totalAssets: number;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
-    activeSets: Array<ISetItem>;
-    disabledSets: Array<ISetItem>;
-    currentSet?: ISetItem;
     asset?: IAssetItem;
     setName?: string;
     selectedAssetId: string | undefined;
     selectedAssetIds: Array<string>;
+    filterPanelOpen: boolean;
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
     onPanelClosed(): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
-    closeMultiActionBar(): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(): void;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
     ): void;
+    toggleFilterPanel(): void;
 }
 
 interface IState {
-    filterPanelOpen: boolean;
     nextPageLoading: boolean;
 }
 
@@ -81,9 +77,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     totalAssets: getAssetListTotal(state),
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
-    activeSets: getActiveSets(state),
-    disabledSets: getDisabledSets(state),
-    currentSet: getAssetSetFilter(state),
+    filterPanelOpen: isFilterPanelOpen(state),
     selectedAssetId: getSelectedAssetId(state),
     selectedAssetIds: getSelectedAssetIds(state),
     asset: getSelectedAsset(state),
@@ -101,18 +95,14 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
                 listAction,
             ),
         ),
+    toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
-    closeMultiActionBar: () => dispatch(closeMultiActionBar()),
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
 
-export function downloadCompressedBinary(asset_ids: Array<string>): void {
-    samsApi.assets.getCompressedBinary(asset_ids);
-}
-
-export function downloadAssetBinary(asset_id: string): any {
-    samsApi.assets.getAssetBinary(asset_id);
+export function downloadAssetBinary(asset: IAssetItem): any {
+    samsApi.assets.getAssetBinary(asset);
 }
 
 export class SamsWorkspaceApp extends React.PureComponent {
@@ -143,39 +133,21 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            filterPanelOpen: false,
             nextPageLoading: false,
         };
 
-        this.toggleFilterPanel = this.toggleFilterPanel.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.toggleListStyle = this.toggleListStyle.bind(this);
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onMultiActionBar = this.onMultiActionBar.bind(this);
-        this.onCloseMultiActionBar = this.onCloseMultiActionBar.bind(this);
-        this.onDownloadMultipleAssetsCompressedBinary = this.onDownloadMultipleAssetsCompressedBinary.bind(this);
-    }
-
-    onDownloadMultipleAssetsCompressedBinary(): void {
-        downloadCompressedBinary(this.props.selectedAssetIds);
-    }
-
-    toggleFilterPanel() {
-        this.setState(
-            (state) => ({filterPanelOpen: !state.filterPanelOpen}),
-        );
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
-        downloadAssetBinary(asset._id);
+        downloadAssetBinary(asset);
     }
 
     onMultiActionBar(asset: IAssetItem) {
         this.props.updateSelectedAssetIds(asset);
-    }
-
-    onCloseMultiActionBar() {
-        this.props.closeMultiActionBar();
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -207,30 +179,16 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
             <div className="sd-page">
                 <PageLayout
                     header={(
-                        <WorkspaceSubnav
-                            filterPanelOpen={this.state.filterPanelOpen}
-                            totalAssets={this.props.totalAssets}
-                            listStyle={this.props.listStyle}
-                            searchParams={this.props.searchParams}
-                            activeSets={this.props.activeSets}
-                            disabledSets={this.props.disabledSets}
-                            currentSet={this.props.currentSet}
-                            downloadMultipleAssets={this.onDownloadMultipleAssetsCompressedBinary}
-                            toggleFilterPanel={this.toggleFilterPanel}
-                            toggleListStyle={this.toggleListStyle}
-                            updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
-                            selectedAssetIds={this.props.selectedAssetIds}
-                            closeMultiActionBar={this.onCloseMultiActionBar}
-                        />
+                        <WorkspaceSubnav />
                     )}
-                    leftPanelOpen={this.state.filterPanelOpen}
+                    leftPanelOpen={this.props.filterPanelOpen}
                     leftPanel={(
-                        this.state.filterPanelOpen === false ? (
+                        this.props.filterPanelOpen === false ? (
                             <div />
                         ) : (
                             <AssetFilterPanel
                                 searchParams={this.props.searchParams}
-                                closeFilterPanel={this.toggleFilterPanel}
+                                closeFilterPanel={this.props.toggleFilterPanel}
                                 updateAssetSearchParamsAndListItems={this.props.updateAssetSearchParamsAndListItems}
                             />
                         )
@@ -250,7 +208,10 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                         <AssetListPanel
                             assets={this.props.assets}
                             listStyle={this.props.listStyle}
-                            selectedAssetId={this.props.selectedAssetId}
+                            selectedItems={this.props.selectedAssetId == null ?
+                                [] :
+                                [this.props.selectedAssetId]
+                            }
                             onItemClicked={this.props.previewAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
                             updateSelectedAssetIds={this.onMultiActionBar}

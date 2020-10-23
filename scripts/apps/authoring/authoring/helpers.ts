@@ -53,6 +53,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     annotations: null,
     marked_for_user: null,
     [META_FIELD_NAME]: {},
+    task: {},
 });
 
 export const DEFAULT_ACTIONS = Object.freeze({

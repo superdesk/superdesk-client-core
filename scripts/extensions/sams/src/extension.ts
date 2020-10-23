@@ -3,7 +3,6 @@ import {ISuperdesk, IExtension} from 'superdesk-api';
 
 // Apps
 import {SamsWorkspaceApp} from './apps/samsWorkspace';
-
 import {superdeskApi} from './apis';
 
 const extension: IExtension = {

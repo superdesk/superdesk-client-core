@@ -3,7 +3,7 @@ import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/component
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
-import {IContentProfile} from 'superdesk-api';
+import {IArticle, IContentProfile} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
 function AuthoringWidgetsProvider() {
@@ -214,6 +214,13 @@ function WidgetsManagerCtrl($scope,
             $scope.activate(widget);
         }
     });
+
+    $scope.updateItem = (updates: Partial<IArticle>) => {
+        $scope.$applyAsync(() => {
+            angular.extend($scope.item, updates);
+            $scope.autosave();
+        });
+    };
 
     $scope.$on('$destroy', () => {
         unbindAllShortcuts();

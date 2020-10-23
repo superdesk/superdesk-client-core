@@ -1,8 +1,8 @@
 // Types
 import {
+    IAttachment,
     IBaseRestApiResponse,
     IRestApiResponse,
-    ISuperdesk,
 } from 'superdesk-api';
 import {IModalSize} from './ui/modal';
 
@@ -106,9 +106,11 @@ export interface IAssetItem extends IBaseRestApiResponse {
 export interface IAssetSearchParams {
     textSearch?: string;
     setId?: string;
+    setIds?: Array<string>;
     name?: string;
     description?: string;
     state?: ASSET_STATE;
+    states?: Array<ASSET_STATE>;
     filename?: string;
     page: number;
     mimetypes: ASSET_TYPE_FILTER;
@@ -132,6 +134,13 @@ export interface IUploadAssetModalProps {
     sets: Array<ISetItem>;
     dark?: boolean;
     modalSize?: IModalSize;
+    initialFiles?: Array<{
+        id: string;
+        file: File;
+    }>;
+    onAssetUploaded?(asset: IAssetItem): Promise<void>;
+    onModalClosed?(assets?: Dictionary<string, IAssetItem>): void;
+    queryAssetsFromCurrentSearch(listAction?: LIST_ACTION): void;
 }
 
 export interface ISamsAPI {
@@ -145,15 +154,19 @@ export interface ISamsAPI {
         getAll(): Promise<Array<IStorageDestinationItem>>;
     };
     assets: {
-        upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<any>;
+        upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<IAssetItem>;
         query(params: IAssetSearchParams, listStyle: ASSET_LIST_STYLE): Promise<IRestApiResponse<IAssetItem>>;
         getSearchUrlParams(): Partial<IAssetSearchParams>;
         setSearchUrlParams(params: Partial<IAssetSearchParams>): void;
         getCount(set_ids: Array<string>): Promise<Dictionary<string, number>>;
+        getById(assetId: string): Promise<IAssetItem>;
+        updateMetadata(
+            originalAsset: IAssetItem,
+            originalAttachment: IAttachment,
+            updates: Partial<IAssetItem>,
+        ): Promise<[IAttachment, IAssetItem]>;
         showUploadModal(props?: Partial<IUploadAssetModalProps>): void;
         getCompressedBinary(asset_ids: Array<string>): void;
         getAssetBinary(asset_id: string): Promise<void>;
     };
 }
-
-export type IConnectComponentToSuperdesk = (superdesk: ISuperdesk) => React.ComponentType<any>;

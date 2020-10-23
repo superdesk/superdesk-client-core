@@ -24,6 +24,8 @@ import {
 import {SetListPanel} from './setListPanel';
 import {SetPreviewPanel} from './setPreviewPanel';
 import {SetEditorPanel} from './setEditorPanel';
+
+// Utils
 import {showModalConnectedToStore} from '../../utils/ui';
 
 interface IProps {
@@ -45,7 +47,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 
 export function showManageSetsModal() {
-    showModalConnectedToStore(ManageSetsModal);
+    return showModalConnectedToStore(ManageSetsModal);
 }
 
 export class ManageSetsModalComponent extends React.PureComponent<IProps> {
@@ -75,6 +77,7 @@ export class ManageSetsModalComponent extends React.PureComponent<IProps> {
 
     render() {
         const {gettext} = superdeskApi.localization;
+
         const ContentPanel = this.getContentPanelComponent();
         const addButtonDisabled = this.props.contentPanelState === CONTENT_PANEL_STATE.CREATE ||
             this.props.contentPanelState === CONTENT_PANEL_STATE.EDIT;

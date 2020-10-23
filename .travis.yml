@@ -14,7 +14,6 @@ before_script:
     - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
     - |
       if [ "$SKIP_SERVER_INSTALL" != "true" ]; then
-        npm run webdriver-manager
         npm run start-test-server
       fi
 
