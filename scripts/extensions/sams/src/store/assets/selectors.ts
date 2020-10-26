@@ -37,6 +37,10 @@ export function getSelectedAssetId(state: IApplicationState): string | undefined
     return state.assets.selectedAssetId;
 }
 
+export function getSelectedAssetIds(state: IApplicationState): Array<string> {
+    return state.assets.selectedAssetIds;
+}
+
 export const getAssetSetFilter = createSelector<
     IApplicationState,
     Dictionary<string, ISetItem>,

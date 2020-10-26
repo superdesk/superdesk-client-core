@@ -16,17 +16,24 @@ interface IProps {
     listStyle: ASSET_LIST_STYLE;
     selectedItems?: Array<string>;
     actions?: Array<IAssetCallback>;
+    selectedAssetIds: Array<string> | undefined;
     onItemClicked(asset: IAssetItem): void;
+    updateSelectedAssetIds(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
+        this.onUpdateSelectedAssetIds = this.onUpdateSelectedAssetIds.bind(this);
     }
 
     onItemClick(asset: IAssetItem) {
         this.props.onItemClicked(asset);
+    }
+
+    onUpdateSelectedAssetIds(asset: IAssetItem) {
+        this.props.updateSelectedAssetIds(asset);
     }
 
     render() {
@@ -55,6 +62,8 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             }
                             onClick={this.onItemClick}
                             actions={this.props.actions}
+                            itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
+                            updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
                         />
                     ))}
                 </GridList>
@@ -69,6 +78,8 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             selected={this.props.selectedItems?.includes(asset._id) ?? false}
                             onClick={this.onItemClick}
                             actions={this.props.actions}
+                            itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
+                            updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
                         />
                     ))}
                 </ListItemGroup>

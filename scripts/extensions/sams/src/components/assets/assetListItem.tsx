@@ -6,7 +6,7 @@ import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
+import {Checkbox, Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
 import {
     ListItem,
     ListItemBorder,
@@ -23,6 +23,8 @@ interface IProps {
     selected: boolean;
     onClick(asset: IAssetItem): void;
     actions?: Array<IAssetCallback>;
+    itemSelected: boolean;
+    updateSelectedAssetIds(asset: Partial<IAssetItem>): void;
 }
 
 export class AssetListItem extends React.PureComponent<IProps> {
@@ -30,6 +32,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
         this.onPreviewSelect = this.onPreviewSelect.bind(this);
+        this.onCheckboxClick = this.onCheckboxClick.bind(this);
     }
 
     onItemClick(event: React.MouseEvent<HTMLDivElement>) {
@@ -46,6 +49,10 @@ export class AssetListItem extends React.PureComponent<IProps> {
     stopClickPropagation(e: React.MouseEvent<HTMLDivElement>) {
         e.stopPropagation();
     }
+    onCheckboxClick(e: React.MouseEvent<HTMLDivElement>) {
+        this.stopClickPropagation(e);
+        this.props.updateSelectedAssetIds(this.props.asset);
+    }
 
     render() {
         const {gettext, longFormatDateTime} = superdeskApi.localization;
@@ -53,10 +60,18 @@ export class AssetListItem extends React.PureComponent<IProps> {
         const mimetype = getMimetypeHumanReadable(this.props.asset.mimetype);
 
         return (
-            <ListItem onClick={this.onItemClick} selected={this.props.selected} shadow={1}>
+            <ListItem onClick={this.onItemClick} selected={this.props.selected || this.props.itemSelected} shadow={1}>
                 <ListItemBorder />
-                <ListItemColumn>
-                    <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
+                <ListItemColumn hasCheck={true} checked={this.props.itemSelected}>
+                    <div className="sd-list-item__checkbox-container" onClick={this.onCheckboxClick}>
+                        <Checkbox
+                            checked={this.props.itemSelected}
+                            onChange={() => this.onCheckboxClick}
+                        />
+                    </div>
+                    <span className="sd-list-item__item-type">
+                        <Icon name={getIconTypeFromMimetype(this.props.asset.mimetype)} />
+                    </span>
                 </ListItemColumn>
                 <ListItemColumn grow={true}>
                     <ListItemRow>

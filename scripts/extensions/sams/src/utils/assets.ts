@@ -16,6 +16,14 @@ export function getAction(assetCallback: IAssetCallback): IAssetAction {
             onSelect: assetCallback.onSelect,
             isAllowed: (asset) => asset._created != null,
         };
+    case ASSET_ACTIONS.DOWNLOAD:
+        return {
+            id: ASSET_ACTIONS.DOWNLOAD,
+            label: gettext('Download'),
+            icon: 'download',
+            onSelect: assetCallback.onSelect,
+            isAllowed: (asset) => asset._created != null,
+        };
     }
 
     assertNever(assetCallback.action);

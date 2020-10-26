@@ -15,11 +15,13 @@ import {
     getAssetSearchParams,
     getAssetSearchResults,
     getAssetSetFilter,
+    getSelectedAssetIds,
 } from '../../store/assets/selectors';
 import {
     loadNextAssetsPage,
     queryAssetsFromCurrentSearch,
     updateAssetSearchParamsAndListItems,
+    updateSelectedAssetIds,
 } from '../../store/assets/actions';
 import {isFilterPanelOpen} from '../../store/workspace/selectors';
 import {toggleFilterPanelState} from '../../store/workspace/actions';
@@ -44,12 +46,14 @@ interface IProps {
     filterPanelOpen: boolean;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
+    selectedAssetIds: Array<string>;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
     ): void;
     queryAssetsFromCurrentSearch(listAction?: LIST_ACTION): void;
     onAssetsSelected(assets: Dictionary<string, IAssetItem>): void;
+    updateSelectedAssetIds(asset: IAssetItem): void;
 }
 
 interface IState {
@@ -64,6 +68,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
     currentSet: getAssetSetFilter(state),
+    selectedAssetIds: getSelectedAssetIds(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -82,6 +87,8 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => {
         dispatch<any>(queryAssetsFromCurrentSearch(listAction));
     },
+    updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
+
 });
 
 export function showSelectAssetModal(): Promise<Dictionary<string, IAssetItem>> {
@@ -110,6 +117,10 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
 
     componentDidMount() {
         this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
+    }
+
+    onMultiActionBar(asset: IAssetItem) {
+        this.props.updateSelectedAssetIds(asset);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -198,6 +209,8 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                                 listStyle={this.props.listStyle}
                                 selectedItems={Object.keys(this.state.selectedItems)}
                                 onItemClicked={this.toggleItemSelected}
+                                selectedAssetIds={this.props.selectedAssetIds}
+                                updateSelectedAssetIds={this.onMultiActionBar}
                             />
                         )}
                     />

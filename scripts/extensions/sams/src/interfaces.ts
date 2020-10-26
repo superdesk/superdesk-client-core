@@ -58,6 +58,7 @@ export enum LIST_ACTION {
 
 export enum ASSET_ACTIONS {
     PREVIEW = 'preview',
+    DOWNLOAD = 'download',
 }
 
 export interface IAssetAction {
@@ -165,5 +166,7 @@ export interface ISamsAPI {
             updates: Partial<IAssetItem>,
         ): Promise<[IAttachment, IAssetItem]>;
         showUploadModal(props?: Partial<IUploadAssetModalProps>): void;
+        getCompressedBinary(asset_ids: Array<string>): void;
+        getAssetBinary(asset: IAssetItem): Promise<void | Response>;
     };
 }

@@ -12,6 +12,8 @@ import {
     getAssetById,
     updateAssetMetadata,
     showUploadAssetModal,
+    getAssetBinary,
+    getAssetsCompressedBinary,
 } from './api/assets';
 
 // will be set asynchronously on SAMS extension start
@@ -38,5 +40,7 @@ export const samsApi: ISamsAPI = {
         getById: getAssetById,
         updateMetadata: updateAssetMetadata,
         showUploadModal: showUploadAssetModal,
+        getCompressedBinary: getAssetsCompressedBinary,
+        getAssetBinary: getAssetBinary,
     },
 };

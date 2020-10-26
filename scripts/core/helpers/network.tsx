@@ -103,6 +103,26 @@ export function httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): 
         });
 }
 
+export function httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promise<Response> {
+    return ng.getService('session')
+        .then((session) => {
+            return httpRequestBase({
+                ...options,
+                url: appConfig.server.url + options.path,
+                headers: {
+                    ...(options.headers || {}),
+                    'Authorization': session.token,
+                },
+            }).then((res) => {
+                if (res.ok) {
+                    return res;
+                } else {
+                    return Promise.reject(res);
+                }
+            });
+        });
+}
+
 export function uploadFileWithProgress<T>(
     endpoint: string,
     data: FormData,

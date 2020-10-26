@@ -6,13 +6,13 @@ import {Dispatch, Store} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION, ISetItem, ASSET_ACTIONS} from '../interfaces';
+import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION, ASSET_ACTIONS} from '../interfaces';
 import {IApplicationState} from '../store';
+import {samsApi} from '../apis';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
-import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 
 import {
     closeAssetPreviewPanel,
@@ -22,15 +22,16 @@ import {
     setAssetListStyle,
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
+    updateSelectedAssetIds,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
     getAssetListTotal,
     getAssetSearchParams,
     getAssetSearchResults,
-    getAssetSetFilter,
     getSelectedAsset,
     getSelectedAssetId,
+    getSelectedAssetIds,
     getSetNameForSelectedAsset,
 } from '../store/assets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
@@ -49,15 +50,15 @@ interface IProps {
     totalAssets: number;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
-    activeSets: Array<ISetItem>;
-    disabledSets: Array<ISetItem>;
-    currentSet?: ISetItem;
     asset?: IAssetItem;
     setName?: string;
     selectedAssetId: string | undefined;
+    selectedAssetIds: Array<string>;
+    filterPanelOpen: boolean;
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
     onPanelClosed(): void;
+    updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(): void;
     updateAssetSearchParamsAndListItems(
@@ -65,7 +66,6 @@ interface IProps {
         listAction: LIST_ACTION,
     ): void;
     toggleFilterPanel(): void;
-    filterPanelOpen: boolean;
 }
 
 interface IState {
@@ -78,10 +78,8 @@ const mapStateToProps = (state: IApplicationState) => ({
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
     filterPanelOpen: isFilterPanelOpen(state),
-    activeSets: getActiveSets(state),
-    disabledSets: getDisabledSets(state),
-    currentSet: getAssetSetFilter(state),
     selectedAssetId: getSelectedAssetId(state),
+    selectedAssetIds: getSelectedAssetIds(state),
     asset: getSelectedAsset(state),
     setName: getSetNameForSelectedAsset(state),
 });
@@ -99,8 +97,13 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         ),
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
+    updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
     onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
 });
+
+export function downloadAssetBinary(asset: IAssetItem): void {
+    samsApi.assets.getAssetBinary(asset);
+}
 
 export class SamsWorkspaceApp extends React.PureComponent {
     onStoreInit(store: Store) {
@@ -135,6 +138,16 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
 
         this.onScroll = this.onScroll.bind(this);
         this.toggleListStyle = this.toggleListStyle.bind(this);
+        this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
+        this.onMultiActionBar = this.onMultiActionBar.bind(this);
+    }
+
+    onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
+        downloadAssetBinary(asset);
+    }
+
+    onMultiActionBar(asset: IAssetItem) {
+        this.props.updateSelectedAssetIds(asset);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -186,6 +199,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             asset={this.props.asset}
                             setName={this.props.setName}
                             onPanelClosed={this.props.onPanelClosed}
+                            downloadAsset={this.onDownloadSingleAssetCompressedBinary}
                         />
                     )}
                     mainClassName="sd-padding--2"
@@ -199,9 +213,15 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                                 [this.props.selectedAssetId]
                             }
                             onItemClicked={this.props.previewAsset}
+                            selectedAssetIds={this.props.selectedAssetIds}
+                            updateSelectedAssetIds={this.onMultiActionBar}
                             actions={[{
                                 action: ASSET_ACTIONS.PREVIEW,
                                 onSelect: this.props.previewAsset,
+                            },
+                            {
+                                action: ASSET_ACTIONS.DOWNLOAD,
+                                onSelect: this.onDownloadSingleAssetCompressedBinary,
                             }]}
                         />
                     )}

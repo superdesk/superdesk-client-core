@@ -9,9 +9,17 @@ interface IProps {
     icon: string;
     selected?: boolean;
     toggleSelected?(): void;
+    onCheckboxClick?(e: React.MouseEvent<HTMLDivElement>): void;
 }
 
 export class GridItemThumb extends React.PureComponent<IProps> {
+    onChange(e: React.MouseEvent<HTMLDivElement>) {
+        if (this.props.toggleSelected != null) {
+            e.stopPropagation();
+            this.props.toggleSelected();
+        }
+    }
+
     render() {
         const classes = classNames(
             'sd-grid-item__thumb',
@@ -32,11 +40,11 @@ export class GridItemThumb extends React.PureComponent<IProps> {
                 )}
                 {this.props.toggleSelected == null ?
                     null : (
-                        <div className="sd-grid-item__checkbox">
+                        <div className="sd-grid-item__checkbox" onClick={this.props.onCheckboxClick}>
                             <Checkbox
                                 checked={this.props.selected ?? false}
                                 label={{text: ''}}
-                                onChange={() => this.props.toggleSelected != null && this.props.toggleSelected()}
+                                onChange={() => this.onChange}
                             />
                         </div>
                     )

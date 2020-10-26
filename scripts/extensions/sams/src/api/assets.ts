@@ -32,6 +32,8 @@ import {UploadAssetModal} from '../components/assets/uploadAssetModal';
 
 const RESOURCE = 'sams/assets';
 const COUNT_RESOURCE = `${RESOURCE}/counts/`;
+const BINARY_RESOURCE = `${RESOURCE}/binary/`;
+const COMPRESSED_BINARY_RESOURCE = `${RESOURCE}/compressed_binary/`;
 
 export function uploadAsset(
     data: FormData,
@@ -261,7 +263,7 @@ export function queryAssets(
     const sortOrder = params.sortOrder === SORT_ORDER.ASCENDING ? 1 : 0;
     const sort = `[("${params.sortField}",${sortOrder})]`;
 
-    return superdeskApi.dataApi.queryRaw<IRestApiResponse<IAssetItem>>(
+    return superdeskApi.dataApi.queryRawJson<IRestApiResponse<IAssetItem>>(
         RESOURCE,
         {
             source: JSON.stringify(source),
@@ -322,7 +324,7 @@ export function getAssetsCount(set_ids: Array<string>): Promise<Dictionary<strin
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
-    return superdeskApi.dataApi.queryRaw<Dictionary<string, number>>(
+    return superdeskApi.dataApi.queryRawJson<Dictionary<string, number>>(
         COUNT_RESOURCE + JSON.stringify(set_ids),
     )
         .catch((error: any) => {
@@ -386,5 +388,41 @@ export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): v
                     ...props ?? {},
                 },
             );
+        });
+}
+
+export function getAssetBinary(asset: IAssetItem): Promise<void | Response> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+    const {downloadBlob} = superdeskApi.utilities;
+
+    return superdeskApi.dataApi.queryRaw<void | Response>(
+        BINARY_RESOURCE + asset._id,
+    )
+        .then((res) => res.arrayBuffer()
+            .then((blob: any) => {
+                downloadBlob(blob, res.headers.get('Content-type')!, asset.filename);
+            }))
+        .catch((error: any) => {
+            notify.error(gettext('Failed to get binary for asset'));
+            return Promise.reject(error);
+        });
+}
+
+export function getAssetsCompressedBinary(asset_ids: Array<string>): Promise<void | Response> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+    const {downloadBlob} = superdeskApi.utilities;
+
+    return superdeskApi.dataApi.queryRaw<void | Response>(
+        COMPRESSED_BINARY_RESOURCE + JSON.stringify(asset_ids),
+    )
+        .then((res) => res.arrayBuffer()
+            .then((blob: any) => {
+                downloadBlob(blob, 'application/zip', 'download');
+            }))
+        .catch((error: any) => {
+            notify.error(gettext('Failed to get compressed binaries for assets'));
+            return Promise.reject(error);
         });
 }

@@ -18,10 +18,15 @@ import {IApplicationState} from '../store';
 
 // Redux Actions & Selectors
 import {isFilterPanelOpen} from '../store/workspace/selectors';
-import {getAssetListStyle, getAssetListTotal, getAssetSearchParams, getAssetSetFilter} from '../store/assets/selectors';
+import {getAssetListStyle,
+    getAssetListTotal,
+    getAssetSearchParams,
+    getAssetSetFilter,
+    getSelectedAssetIds,
+} from '../store/assets/selectors';
 import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
-import {toggleAssetListStyle, updateAssetSearchParamsAndListItems} from '../store/assets/actions';
+import {toggleAssetListStyle, updateAssetSearchParamsAndListItems, closeMultiActionBar} from '../store/assets/actions';
 
 // UI
 import {
@@ -50,8 +55,10 @@ interface IProps {
     activeSets: Array<ISetItem>;
     disabledSets: Array<ISetItem>;
     currentSet?: ISetItem;
+    selectedAssetIds: Array<string> | [];
     toggleFilterPanel(): void;
     toggleListStyle(): void;
+    closeMultiActionBar(): void;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
@@ -66,6 +73,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     activeSets: getActiveSets(state),
     disabledSets: getDisabledSets(state),
     currentSet: getAssetSetFilter(state),
+    selectedAssetIds: getSelectedAssetIds(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -83,7 +91,12 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
             ),
         );
     },
+    closeMultiActionBar: () => dispatch(closeMultiActionBar()),
 });
+
+export function downloadCompressedBinary(asset_ids: Array<string>): void {
+    samsApi.assets.getCompressedBinary(asset_ids);
+}
 
 export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
     subNavMenuActions: Array<IMenuGroup>;
@@ -97,6 +110,8 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
 
         this.toggleSortOrder = this.toggleSortOrder.bind(this);
         this.setSearchParamText = this.setSearchParamText.bind(this);
+        this.onDownloadMultipleAssetsCompressedBinary = this.onDownloadMultipleAssetsCompressedBinary.bind(this);
+        this.onCloseMultiActionBar = this.onCloseMultiActionBar.bind(this);
     }
 
     getSubNavMenuActions(): Array<IMenuGroup> {
@@ -209,8 +224,22 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         );
     }
 
+    selectedAssets(): boolean {
+        let selectedAssets = false;
+
+        this.props.selectedAssetIds?.length !== 0 ? selectedAssets = true : selectedAssets = false;
+        return selectedAssets;
+    }
+    onDownloadMultipleAssetsCompressedBinary(): void {
+        downloadCompressedBinary(this.props.selectedAssetIds);
+    }
+
+    onCloseMultiActionBar() {
+        this.props.closeMultiActionBar();
+    }
+
     render() {
-        const {gettext} = superdeskApi.localization;
+        const {gettext, gettextPlural} = superdeskApi.localization;
         const {numberToString} = superdeskApi.helpers;
 
         const items = this.getMenuItems();
@@ -218,89 +247,159 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         const buttonIcon = this.props.currentSet?.state === SET_STATE.DISABLED ? 'lock' : undefined;
         const sortFieldText = getAssetListSortFieldText(this.props.searchParams.sortField);
 
-        return (
-            <React.Fragment>
-                <SubNav zIndex={2}>
-                    <ButtonGroup align="inline">
-                        <Dropdown items={items}>
+        if (this.selectedAssets()) {
+            return (
+                <React.Fragment>
+                    <SubNav zIndex={2}>
+                        <div className="multi-action-bar">
+                            <button className="toggle" onClick={this.props.closeMultiActionBar}>
+                                <i className="icon-chevron-up-thin" />
+                            </button>
+                            <button
+                                className="btn"
+                                onClick={this.props.closeMultiActionBar}>{gettext('cancel')}
+                            </button>
+                            <span id="multi-select-count">
+                                {gettextPlural(
+                                    this.props.selectedAssetIds?.length,
+                                    '{{count}} item selected',
+                                    '{{count}} items selected',
+                                    {count: this.props.selectedAssetIds?.length},
+                                )}</span>
+                            <div className="pull-right">
+                                <NavButton
+                                    icon="download"
+                                    onClick={this.onDownloadMultipleAssetsCompressedBinary}
+                                />
+                            </div>
+                        </div>
+                    </SubNav>
+                    <SubNav zIndex={1}>
+                        <ButtonGroup align="inline">
                             <NavButton
-                                text={buttonLabel}
-                                onClick={() => false}
-                                icon={buttonIcon}
+                                icon="filter-large"
+                                onClick={this.props.toggleFilterPanel}
+                                type={this.props.filterPanelOpen === true ?
+                                    'primary' :
+                                    'default'
+                                }
                             />
-                        </Dropdown>
-                    </ButtonGroup>
-                    <SearchBar
-                        placeholder={gettext('Search Assets')}
-                        type="expanded"
-                        focused={true}
-                        onSubmit={this.setSearchParamText}
-                        initialValue={this.props.searchParams.textSearch}
-                    />
-                    <ButtonGroup align="right">
-                        {this.subNavMenuActions.length === 0 ?
-                            null :
-                            (
-                                <Dropdown items={this.subNavMenuActions}>
-                                    <button className="sd-navbtn">
-                                        <i className="icon-dots-vertical" />
-                                    </button>
-                                </Dropdown>
-                            )
-                        }
-                        <Tooltip text={gettext('Upload New Asset(s)')} flow="left">
-                            <Button
-                                type="primary"
-                                icon="upload"
-                                text="plus-large"
-                                shape="round"
-                                iconOnly={true}
-                                onClick={() => samsApi.assets.showUploadModal()}
-                            />
-                        </Tooltip>
-                    </ButtonGroup>
-                </SubNav>
-                <SubNav zIndex={1}>
-                    <ButtonGroup align="inline">
-                        <NavButton
-                            icon="filter-large"
-                            onClick={this.props.toggleFilterPanel}
-                            type={this.props.filterPanelOpen === true ?
-                                'primary' :
-                                'default'
-                            }
-                        />
-                    </ButtonGroup>
-                    <AssetTypeFilterButtons />
-                    <ButtonGroup align="right">
-                        <SubNavSpacer noMargin={true} />
-                        <ContentBar>
-                            <span className="sd-margin-r--1">
+                        </ButtonGroup>
+                        <AssetTypeFilterButtons />
+                        <ButtonGroup align="right">
+                            <SubNavSpacer noMargin={true} />
+                            <ContentBar>
                                 <span className="sd-margin-r--1">
-                                    {gettext('Total:')}
+                                    <span className="sd-margin-r--1">
+                                        {gettext('Total:')}
+                                    </span>
+                                    <Badge text={numberToString(this.props.totalAssets)} />
                                 </span>
-                                <Badge text={numberToString(this.props.totalAssets)} />
-                            </span>
-                            <Dropdown items={this.sortFieldOptions}>
-                                {sortFieldText}
-                            </Dropdown>
-                            <IconButton
-                                ariaValue={this.props.searchParams.sortOrder}
-                                onClick={this.toggleSortOrder}
-                                icon={this.props.searchParams.sortOrder}
+                                <Dropdown items={this.sortFieldOptions}>
+                                    {sortFieldText}
+                                </Dropdown>
+                                <IconButton
+                                    ariaValue={this.props.searchParams.sortOrder}
+                                    onClick={this.toggleSortOrder}
+                                    icon={this.props.searchParams.sortOrder}
+                                />
+                            </ContentBar>
+                            <NavButton
+                                icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                                    'list-view' :
+                                    'grid-view'
+                                }
+                                onClick={this.props.toggleListStyle}
                             />
-                        </ContentBar>
-                        <NavButton
-                            icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
-                                'list-view' :
-                                'grid-view'
-                            }
-                            onClick={this.props.toggleListStyle}
+                        </ButtonGroup>
+                    </SubNav>
+                </React.Fragment>
+            );
+        } else {
+            return (
+                <React.Fragment>
+                    <SubNav zIndex={2}>
+                        <ButtonGroup align="inline">
+                            <Dropdown items={items}>
+                                <NavButton
+                                    text={buttonLabel}
+                                    onClick={() => false}
+                                    icon={buttonIcon}
+                                />
+                            </Dropdown>
+                        </ButtonGroup>
+                        <SearchBar
+                            placeholder={gettext('Search Assets')}
+                            type="expanded"
+                            focused={true}
+                            onSubmit={this.setSearchParamText}
+                            initialValue={this.props.searchParams.textSearch}
                         />
-                    </ButtonGroup>
-                </SubNav>
-            </React.Fragment>
-        );
+                        <ButtonGroup align="right">
+                            {this.subNavMenuActions.length === 0 ?
+                                null :
+                                (
+                                    <Dropdown items={this.subNavMenuActions}>
+                                        <button className="sd-navbtn">
+                                            <i className="icon-dots-vertical" />
+                                        </button>
+                                    </Dropdown>
+                                )
+                            }
+                            <Tooltip text={gettext('Upload New Asset(s)')} flow="left">
+                                <Button
+                                    type="primary"
+                                    icon="upload"
+                                    text="plus-large"
+                                    shape="round"
+                                    iconOnly={true}
+                                    onClick={() => samsApi.assets.showUploadModal()}
+                                />
+                            </Tooltip>
+                        </ButtonGroup>
+                    </SubNav>
+                    <SubNav zIndex={1}>
+                        <ButtonGroup align="inline">
+                            <NavButton
+                                icon="filter-large"
+                                onClick={this.props.toggleFilterPanel}
+                                type={this.props.filterPanelOpen === true ?
+                                    'primary' :
+                                    'default'
+                                }
+                            />
+                        </ButtonGroup>
+                        <AssetTypeFilterButtons />
+                        <ButtonGroup align="right">
+                            <SubNavSpacer noMargin={true} />
+                            <ContentBar>
+                                <span className="sd-margin-r--1">
+                                    <span className="sd-margin-r--1">
+                                        {gettext('Total:')}
+                                    </span>
+                                    <Badge text={numberToString(this.props.totalAssets)} />
+                                </span>
+                                <Dropdown items={this.sortFieldOptions}>
+                                    {sortFieldText}
+                                </Dropdown>
+                                <IconButton
+                                    ariaValue={this.props.searchParams.sortOrder}
+                                    onClick={this.toggleSortOrder}
+                                    icon={this.props.searchParams.sortOrder}
+                                />
+                            </ContentBar>
+                            <NavButton
+                                icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                                    'list-view' :
+                                    'grid-view'
+                                }
+                                onClick={this.props.toggleListStyle}
+                            />
+                        </ButtonGroup>
+                    </SubNav>
+                </React.Fragment>
+            );
+        }
     }
 }
 
