@@ -28,7 +28,11 @@ import {getAssetListStyle,
 } from '../store/assets/selectors';
 import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
-import {toggleAssetListStyle, updateAssetSearchParamsAndListItems, closeMultiActionBar} from '../store/assets/actions';
+import {toggleAssetListStyle,
+    updateAssetSearchParamsAndListItems,
+    closeMultiActionBar,
+    queryAssetsFromCurrentSearch,
+} from '../store/assets/actions';
 
 // UI
 import {
@@ -66,6 +70,8 @@ interface IProps {
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
     ): void;
+    queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
+
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
@@ -96,14 +102,15 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         );
     },
     closeMultiActionBar: () => dispatch(closeMultiActionBar()),
+    queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
 });
 
 export function downloadCompressedBinary(asset_ids: Array<string>): void {
     samsApi.assets.getCompressedBinary(asset_ids);
 }
 
-export function deleteAsset(asset: IAssetItem): void {
-    samsApi.assets.deleteAsset(asset);
+export function deleteAsset(asset: IAssetItem): Promise<string> {
+    return samsApi.assets.deleteAsset(asset);
 }
 
 export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
@@ -121,7 +128,6 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         this.onDownloadMultipleAssetsCompressedBinary = this.onDownloadMultipleAssetsCompressedBinary.bind(this);
         this.onCloseMultiActionBar = this.onCloseMultiActionBar.bind(this);
         this.onDeleteMultipleAssets = this.onDeleteMultipleAssets.bind(this);
-
     }
 
     getSubNavMenuActions(): Array<IMenuGroup> {
@@ -240,13 +246,20 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         this.props.selectedAssetIds?.length !== 0 ? selectedAssets = true : selectedAssets = false;
         return selectedAssets;
     }
-    
+
     onDownloadMultipleAssetsCompressedBinary(): void {
         downloadCompressedBinary(this.props.selectedAssetIds);
     }
 
     onDeleteMultipleAssets(): void {
-        this.props.selectedAssets.map((selectedAsset) => deleteAsset(selectedAsset));
+        this.props.selectedAssets.map((selectedAsset) =>
+            deleteAsset(selectedAsset)
+                .then((res) => {
+                    if (res === 'Success') {
+                        this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
+                    }
+                }),
+        );
     }
 
     onCloseMultiActionBar() {

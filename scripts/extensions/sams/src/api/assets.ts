@@ -427,13 +427,15 @@ export function getAssetsCompressedBinary(asset_ids: Array<string>): Promise<voi
         });
 }
 
-export function deleteAsset(item: IAssetItem): Promise<void> {
+export function deleteAsset(item: IAssetItem): Promise<string> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
     return superdeskApi.dataApi.delete<IAssetItem>(RESOURCE, item)
         .then(() => {
             notify.success(gettext('Asset deleted successfully'));
+
+            return Promise.resolve('Success');
         })
         .catch((error: any) => {
             notify.error(gettext('Failed to delete the Asset'));

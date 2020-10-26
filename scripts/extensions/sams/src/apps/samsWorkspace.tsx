@@ -61,7 +61,7 @@ interface IProps {
     onPanelClosed(): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
-    queryAssetsFromCurrentSearch(): void;
+    queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
@@ -90,7 +90,7 @@ const mapStateToProps = (state: IApplicationState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     loadNextPage: () => dispatch<any>(loadNextAssetsPage()),
     setListStyle: (style: ASSET_LIST_STYLE) => dispatch(setAssetListStyle(style)),
-    queryAssetsFromCurrentSearch: () => dispatch<any>(queryAssetsFromCurrentSearch()),
+    queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
     updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>, listAction: LIST_ACTION) =>
         dispatch<any>(
             updateAssetSearchParamsAndListItems(
@@ -108,8 +108,8 @@ export function downloadAssetBinary(asset: IAssetItem): void {
     samsApi.assets.getAssetBinary(asset);
 }
 
-export function deleteAsset(asset: IAssetItem): void {
-    samsApi.assets.deleteAsset(asset);
+export function deleteAsset(asset: IAssetItem): Promise<string> {
+    return samsApi.assets.deleteAsset(asset);
 }
 
 export class SamsWorkspaceApp extends React.PureComponent {
@@ -151,7 +151,12 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     }
 
     onDeleteAsset(asset: IAssetItem): void {
-        deleteAsset(asset);
+        deleteAsset(asset)
+            .then((res) => {
+                if (res === 'Success') {
+                    this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
+                }
+            });
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
@@ -183,7 +188,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                 ASSET_LIST_STYLE.LIST :
                 ASSET_LIST_STYLE.GRID,
         );
-        this.props.queryAssetsFromCurrentSearch();
+        this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
     }
 
     render() {
