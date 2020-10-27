@@ -109,7 +109,7 @@ export function downloadCompressedBinary(asset_ids: Array<string>): void {
     samsApi.assets.getCompressedBinary(asset_ids);
 }
 
-export function deleteAsset(asset: IAssetItem): Promise<string> {
+export function deleteAsset(asset: IAssetItem): Promise<void> {
     return samsApi.assets.deleteAsset(asset);
 }
 
@@ -254,10 +254,8 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
     onDeleteMultipleAssets(): void {
         this.props.selectedAssets.map((selectedAsset) =>
             deleteAsset(selectedAsset)
-                .then((res) => {
-                    if (res === 'Success') {
-                        this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
-                    }
+                .then(() => {
+                    this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
                 }),
         );
     }

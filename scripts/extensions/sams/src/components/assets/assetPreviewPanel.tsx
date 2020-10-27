@@ -59,7 +59,7 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
                                                 onSelect: () => this.props.downloadAsset(asset),
                                             },
                                             {
-                                                label: 'Delete', icon: 'trash',
+                                                label: gettext('Delete'), icon: 'trash',
                                                 onSelect: () => this.props.deletAsset(asset),
                                             },
                                         ],

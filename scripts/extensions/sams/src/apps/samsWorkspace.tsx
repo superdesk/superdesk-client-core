@@ -108,7 +108,7 @@ export function downloadAssetBinary(asset: IAssetItem): void {
     samsApi.assets.getAssetBinary(asset);
 }
 
-export function deleteAsset(asset: IAssetItem): Promise<string> {
+export function deleteAsset(asset: IAssetItem): Promise<void> {
     return samsApi.assets.deleteAsset(asset);
 }
 
@@ -152,10 +152,8 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
 
     onDeleteAsset(asset: IAssetItem): void {
         deleteAsset(asset)
-            .then((res) => {
-                if (res === 'Success') {
-                    this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
-                }
+            .then(() => {
+                this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
             });
     }
 
