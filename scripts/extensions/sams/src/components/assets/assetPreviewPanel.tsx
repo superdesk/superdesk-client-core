@@ -26,6 +26,7 @@ interface IProps {
     setName?: string;
     onPanelClosed(): void;
     downloadAsset(asset: Partial<IAssetItem>): void;
+    deletAsset(asset: Partial<IAssetItem>): void;
 }
 
 export class AssetPreviewPanel extends React.PureComponent<IProps> {
@@ -56,6 +57,10 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
                                             {
                                                 label: gettext('Download'), icon: 'download',
                                                 onSelect: () => this.props.downloadAsset(asset),
+                                            },
+                                            {
+                                                label: gettext('Delete'), icon: 'trash',
+                                                onSelect: () => this.props.deletAsset(asset),
                                             },
                                         ],
                                     },

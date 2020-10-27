@@ -96,3 +96,17 @@ export const getSetNameForSelectedAsset = createSelector<
             undefined
     ),
 );
+
+export const getSelectedAssetItems = createSelector<
+    IApplicationState,
+    Array<string>,
+    Dictionary<string, IAssetItem>,
+    Array<IAssetItem>
+>(
+    [getSelectedAssetIds, getAssets],
+    (assetIds, assets) => (
+        assetIds.map(
+            (assetId) => assets[assetId],
+        )
+    ),
+);

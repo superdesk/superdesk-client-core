@@ -33,6 +33,7 @@ import {
     getSelectedAssetId,
     getSelectedAssetIds,
     getSetNameForSelectedAsset,
+    getSelectedAssetItems,
 } from '../store/assets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
 import {isFilterPanelOpen} from '../store/workspace/selectors';
@@ -60,12 +61,13 @@ interface IProps {
     onPanelClosed(): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
-    queryAssetsFromCurrentSearch(): void;
+    queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
     ): void;
     toggleFilterPanel(): void;
+    selectedAssets: Array<IAssetItem>;
 }
 
 interface IState {
@@ -82,12 +84,13 @@ const mapStateToProps = (state: IApplicationState) => ({
     selectedAssetIds: getSelectedAssetIds(state),
     asset: getSelectedAsset(state),
     setName: getSetNameForSelectedAsset(state),
+    selectedAssets: getSelectedAssetItems(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     loadNextPage: () => dispatch<any>(loadNextAssetsPage()),
     setListStyle: (style: ASSET_LIST_STYLE) => dispatch(setAssetListStyle(style)),
-    queryAssetsFromCurrentSearch: () => dispatch<any>(queryAssetsFromCurrentSearch()),
+    queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
     updateAssetSearchParamsAndListItems: (params: Partial<IAssetSearchParams>, listAction: LIST_ACTION) =>
         dispatch<any>(
             updateAssetSearchParamsAndListItems(
@@ -103,6 +106,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 
 export function downloadAssetBinary(asset: IAssetItem): void {
     samsApi.assets.getAssetBinary(asset);
+}
+
+export function deleteAsset(asset: IAssetItem): Promise<void> {
+    return samsApi.assets.deleteAsset(asset);
 }
 
 export class SamsWorkspaceApp extends React.PureComponent {
@@ -140,6 +147,14 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.toggleListStyle = this.toggleListStyle.bind(this);
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onMultiActionBar = this.onMultiActionBar.bind(this);
+        this.onDeleteAsset = this.onDeleteAsset.bind(this);
+    }
+
+    onDeleteAsset(asset: IAssetItem): void {
+        deleteAsset(asset)
+            .then(() => {
+                this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
+            });
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
@@ -171,7 +186,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                 ASSET_LIST_STYLE.LIST :
                 ASSET_LIST_STYLE.GRID,
         );
-        this.props.queryAssetsFromCurrentSearch();
+        this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
     }
 
     render() {
@@ -200,6 +215,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             setName={this.props.setName}
                             onPanelClosed={this.props.onPanelClosed}
                             downloadAsset={this.onDownloadSingleAssetCompressedBinary}
+                            deletAsset={this.onDeleteAsset}
                         />
                     )}
                     mainClassName="sd-padding--2"
@@ -222,7 +238,12 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             {
                                 action: ASSET_ACTIONS.DOWNLOAD,
                                 onSelect: this.onDownloadSingleAssetCompressedBinary,
-                            }]}
+                            },
+                            {
+                                action: ASSET_ACTIONS.DELETE,
+                                onSelect: this.onDeleteAsset,
+                            },
+                            ]}
                         />
                     )}
                 />
