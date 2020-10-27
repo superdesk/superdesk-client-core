@@ -17,9 +17,8 @@ import {
 } from '../../ui';
 
 // Utils
-import {
-    getHumanReadableFileSize,
-} from '../../utils/ui';
+import {getHumanReadableFileSize} from '../../utils/ui';
+import {getMimetypeHumanReadable} from '../../utils/assets';
 
 interface IProps {
     asset?: IAssetItem;
@@ -83,7 +82,7 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
 
                             <FormRow>
                                 <FormLabel text={gettext('Description')} style="light" />
-                                <Text>{asset.description}</Text>
+                                <Text>{asset.description || '-'}</Text>
                             </FormRow>
 
                             <FormRow>
@@ -92,22 +91,22 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
                             </FormRow>
 
                             <FormRow>
-                                <FormLabel text={gettext('FileLength')} style="light" />
+                                <FormLabel text={gettext('Size')} style="light" />
                                 <Text>{getHumanReadableFileSize(asset.length)}</Text>
                             </FormRow>
 
                             <FormRow>
-                                <FormLabel text={gettext('Mimetype')} style="light" />
-                                <Text>{asset.mimetype}</Text>
+                                <FormLabel text={gettext('Type')} style="light" />
+                                <Text>{getMimetypeHumanReadable(asset.mimetype)} ({asset.mimetype})</Text>
                             </FormRow>
 
                             <FormRow>
-                                <FormLabel text={gettext('Usage')} style="light" />
+                                <FormLabel text={gettext('State')} style="light" />
                                 <Text>{asset.state}</Text>
                             </FormRow>
 
                             <FormRow>
-                                <FormLabel text={gettext('SetName')} style="light" />
+                                <FormLabel text={gettext('Set')} style="light" />
                                 <Text>{setName}</Text>
                             </FormRow>
                         </PanelContentBlockInner>
