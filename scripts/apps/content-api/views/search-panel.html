@@ -8,7 +8,7 @@
                 <button ng-click="tab = 'filters'" class="nav-tabs__link"><span translate>Filters</span></button>
             </li>
         </ul>
-       <div class="doopen" ng-click="flags.facets = !flags.facets"><i class="icon-close-small"></i></div>
+       <button aria-label="{{ :: 'Close panel' | translate }}" class="doopen" ng-click="flags.facets = !flags.facets"><i class="icon-close-small"></i></button>
     </div>
     <div class="nav-tabs__content content">
         <div ng-if="!tab || tab === 'parameters'" class="nav-tabs__pane">
