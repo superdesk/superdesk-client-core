@@ -96,7 +96,7 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
                             </FormRow>
 
                             <FormRow>
-                                <FormLabel text={gettext('Usage')} style="light" />
+                                <FormLabel text={gettext('State')} style="light" />
                                 <Text>{asset.state}</Text>
                             </FormRow>
 
