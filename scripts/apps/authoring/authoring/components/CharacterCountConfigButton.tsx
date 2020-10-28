@@ -14,21 +14,24 @@ export const CHARACTER_COUNT_UI_PREF = 'editor:char_count_ui';
 
 export type CharacterCountUiBehavior = 'highlight' | 'limit'; // highlight extra chars or limit the editor
 export interface ICharacterCountUiPref {
-    [schemaField: string]: CharacterCountUiBehavior
+    [schemaField: string]: CharacterCountUiBehavior;
 }
 
 const DEFAULT_UI: CharacterCountUiBehavior = 'highlight';
 
 interface IProps {
-    field: string
+    field: string;
 }
 
 interface IState {
-    preferences: any
+    preferences: any;
 }
 
-export class CharacterCountConfigButton extends React.Component<IProps, IState> {
-    preferencesService: any
+export class CharacterCountConfigButton extends React.Component<
+    IProps,
+    IState
+> {
+    preferencesService: any;
 
     constructor(props) {
         super(props);
@@ -75,7 +78,11 @@ export class CharacterCountConfigButton extends React.Component<IProps, IState> 
                     showModal((props) => (
                         <CharacterCountConfigModal
                             closeModal={props.closeModal}
-                            value={this.state.preferences[CHARACTER_COUNT_UI_PREF]?.[this.props.field] ?? DEFAULT_UI}
+                            value={
+                                this.state.preferences[
+                                    CHARACTER_COUNT_UI_PREF
+                                ]?.[this.props.field] ?? DEFAULT_UI
+                            }
                             onChange={this.onModalValueChange}
                         />
                     ));
@@ -88,7 +95,9 @@ export class CharacterCountConfigButton extends React.Component<IProps, IState> 
 }
 
 function CharacterCountConfigModal({closeModal, onChange, value}) {
-    const [radioValue, radioValueSet] = React.useState<CharacterCountUiBehavior>(value);
+    const [radioValue, radioValueSet] = React.useState<
+        CharacterCountUiBehavior
+    >(value);
 
     return (
         <Modal>

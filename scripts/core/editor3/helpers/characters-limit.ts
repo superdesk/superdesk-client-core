@@ -1,4 +1,10 @@
-import {EditorState, Modifier, SelectionState, DraftEditorCommand, RichUtils} from 'draft-js';
+import {
+    EditorState,
+    Modifier,
+    SelectionState,
+    DraftEditorCommand,
+    RichUtils,
+} from 'draft-js';
 
 export const LIMIT_CHARACTERS_OVERFLOW_STYLE = 'LIMIT_CHARACTERS_OVERFLOW';
 
@@ -59,10 +65,34 @@ function getLengthOfSelectedText(editorState: EditorState) {
     return length;
 }
 
-function insertOverflowInlineStyles(editorState: EditorState, overflow: number) {
-    const blockMap = editorState
-        .getCurrentContent()
-        .getBlockMap();
+function clearOverflowInlineStyles(editorState: EditorState) {
+    const blockMap = editorState.getCurrentContent().getBlockMap();
+
+    // clear inline style from all text
+    let newContentState = Modifier.removeInlineStyle(
+        editorState.getCurrentContent(),
+        new SelectionState({
+            anchorKey: blockMap.first().getKey(),
+            anchorOffset: 0,
+            focusKey: blockMap.last().getKey(),
+            focusOffset: blockMap.last().getLength(),
+        }),
+        LIMIT_CHARACTERS_OVERFLOW_STYLE,
+    );
+
+    let newEditorState = EditorState.push(
+        editorState,
+        newContentState,
+        'change-inline-style',
+    );
+
+    return newEditorState;
+}
+
+function insertOverflowInlineStyles(
+    editorState: EditorState,
+    overflow: number,
+) {
     const blocks = editorState
         .getCurrentContent()
         .getBlocksAsArray()
@@ -93,15 +123,17 @@ function insertOverflowInlineStyles(editorState: EditorState, overflow: number) 
             break;
         }
     }
+    const firstBlockToSelect = blocksToHighlight[blocksToHighlight.length - 1];
+    const lastBlockToSelect = blocksToHighlight[0];
 
-    // clear inline style from all text
-    let newContentState = Modifier.removeInlineStyle(
+    // apply inline style only to overflow text
+    let newContentState = Modifier.applyInlineStyle(
         editorState.getCurrentContent(),
         new SelectionState({
-            anchorKey: blockMap.first().getKey(),
-            anchorOffset: 0,
-            focusKey: blockMap.last().getKey(),
-            focusOffset: blockMap.last().getLength(),
+            anchorKey: firstBlockToSelect.block,
+            anchorOffset: firstBlockToSelect.start,
+            focusKey: lastBlockToSelect.block,
+            focusOffset: lastBlockToSelect.end,
         }),
         LIMIT_CHARACTERS_OVERFLOW_STYLE,
     );
@@ -112,43 +144,29 @@ function insertOverflowInlineStyles(editorState: EditorState, overflow: number) 
         'change-inline-style',
     );
 
-    const firstBlockToSelect = blocksToHighlight[blocksToHighlight.length - 1];
-    const lastBlockToSelect = blocksToHighlight[0];
-
-    // apply inline style only to overflow text
-    newContentState = Modifier.applyInlineStyle(
-        newEditorState.getCurrentContent(),
-        new SelectionState({
-            anchorKey: firstBlockToSelect.block,
-            anchorOffset: firstBlockToSelect.start,
-            focusKey: lastBlockToSelect.block,
-            focusOffset: lastBlockToSelect.end,
-        }),
-        LIMIT_CHARACTERS_OVERFLOW_STYLE,
-    );
-
-    newEditorState = EditorState.push(
-        newEditorState,
-        newContentState,
-        'change-inline-style',
-    );
-
     return newEditorState;
 }
 
-export function handleOverflowHighlights(onChange, editorState: EditorState, limit: number) : EditorState {
+export function handleOverflowHighlights(
+    editorState: EditorState,
+    limit: number,
+): EditorState {
+    const restoreSelection = editorState.getSelection();
     const length = editorState.getCurrentContent().getPlainText().length;
     const overflow = length - limit;
     const reachedLimit = overflow > 0;
 
-    if (!reachedLimit) {
-        return editorState;
-    }
-
     let newEditorState = EditorState.set(editorState, {allowUndo: false});
 
-    newEditorState = insertOverflowInlineStyles(newEditorState, overflow);
+    newEditorState = clearOverflowInlineStyles(newEditorState);
+    if (reachedLimit) {
+        newEditorState = insertOverflowInlineStyles(newEditorState, overflow);
+    }
+    newEditorState = EditorState.forceSelection(
+        newEditorState,
+        restoreSelection,
+    );
     newEditorState = EditorState.set(newEditorState, {allowUndo: true});
 
-    return editorState;
+    return newEditorState;
 }

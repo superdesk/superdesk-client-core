@@ -98,7 +98,9 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdDashboardCard', directive.DashboardCard)
     .directive('sdSendItem', directive.SendItem)
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
-    .component('sdCharacterCountConfigButton', reactToAngular1(CharacterCountConfigButton, ['field'], [], 'display: inline'))
+    .component('sdCharacterCountConfigButton', reactToAngular1(
+        CharacterCountConfigButton, ['field'], [], 'display: inline',
+    ))
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)
