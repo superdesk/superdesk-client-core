@@ -12,6 +12,8 @@ import {changeEditorState, setReadOnly} from './actions';
 
 import ng from 'core/services/ng';
 import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {addInternalEventListener} from 'core/internal-events';
+import {CHARACTER_COUNT_UI_PREF} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 /**
  * @ngdoc directive
  * @module superdesk.core.editor3
@@ -42,10 +44,13 @@ class Editor3Directive {
     $scope: any;
     svc: any;
     pathToValue: any;
+    limit?: number;
     scrollContainer: any;
     refreshTrigger: any;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
     cleanPastedHtml?: boolean;
+    userPreferences?: any;
+    removeEventListeners?: Array<() => void>;
 
     constructor() {
         this.scope = {};
@@ -161,6 +166,8 @@ class Editor3Directive {
             showTitle: '=?',
 
             cleanPastedHtml: '=?',
+
+            limit: '=?',
         };
     }
 
@@ -246,22 +253,53 @@ class Editor3Directive {
             $scope.$on('$destroy', editor3.unsetStore);
         }
 
+        const initListeners = () => {
+            // Subscribe to changes on user preferences
+            const userPreferencesListener = addInternalEventListener('changeUserPreferences', (event) => {
+                this.userPreferences = event.detail;
+                render();
+            });
+
+            this.removeEventListeners = [userPreferencesListener];
+        };
+
+        const removeListeners = () => {
+            this.removeEventListeners.forEach((fn) => fn());
+        };
+
+        const initUserPreferences = () => {
+            ng.get('preferencesService').get().then((preferences) => {
+                this.userPreferences = preferences;
+                render();
+            });
+        };
+
         // Expose the store in the editor3 spellchecker service
         const storeIndex = editor3.addSpellcheckerStore(store);
 
-        $scope.$on('$destroy', () => editor3.removeSpellcheckerStore(storeIndex));
+        initUserPreferences();
+        initListeners();
+
+        $scope.$on('$destroy', () => {
+            editor3.removeSpellcheckerStore(storeIndex);
+            removeListeners();
+        });
+
+        const render = () => {
+            ReactDOM.render(
+                <Provider store={store}>
+                    <Editor3
+                        scrollContainer={this.scrollContainer}
+                        singleLine={this.singleLine}
+                        cleanPastedHtml={this.cleanPastedHtml}
+                        limit={this.limit}
+                        limitBehavior={this.userPreferences?.[CHARACTER_COUNT_UI_PREF]?.[this.pathToValue]}
+                    />
+                </Provider>, $element.get(0),
+            );
+        };
 
         ng.waitForServicesToBeAvailable()
-            .then(() => {
-                ReactDOM.render(
-                    <Provider store={store}>
-                        <Editor3
-                            scrollContainer={this.scrollContainer}
-                            singleLine={this.singleLine}
-                            cleanPastedHtml={this.cleanPastedHtml}
-                        />
-                    </Provider>, $element.get(0),
-                );
-            });
+            .then(render);
     }
 }

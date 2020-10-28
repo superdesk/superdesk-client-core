@@ -75,7 +75,7 @@ export interface IEditorStore {
 }
 
 export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
-    const decorators: any = [
+    const decorators: Array<any> = [
         LinkDecorator,
     ];
 

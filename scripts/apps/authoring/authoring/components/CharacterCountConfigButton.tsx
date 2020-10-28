@@ -7,23 +7,24 @@ import {gettext} from 'core/utils';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Radio, CheckGroup} from 'superdesk-ui-framework';
-import {onChange} from 'core/editor3/store';
 import ng from 'core/services/ng';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 export const CHARACTER_COUNT_UI_PREF = 'editor:char_count_ui';
 
-export interface ICharaterCountUiPref {
-    [schemaField: string]: 'highlight' | 'limit'; // highlight extra chars or limit the editor
+export type CharacterCountUiBehavior = 'highlight' | 'limit'; // highlight extra chars or limit the editor
+export interface ICharacterCountUiPref {
+    [schemaField: string]: CharacterCountUiBehavior
 }
 
-const DEFAULT_UI: valueof<ICharaterCountUiPref> = 'highlight';
+const DEFAULT_UI: CharacterCountUiBehavior = 'highlight';
 
 interface IProps {
     field: string
 }
 
 interface IState {
-    uiPref: ICharaterCountUiPref
+    preferences: any
 }
 
 export class CharacterCountConfigButton extends React.Component<IProps, IState> {
@@ -33,7 +34,7 @@ export class CharacterCountConfigButton extends React.Component<IProps, IState> 
         super(props);
 
         this.state = {
-            uiPref: null,
+            preferences: null,
         };
 
         this.preferencesService = ng.get('preferencesService');
@@ -42,25 +43,28 @@ export class CharacterCountConfigButton extends React.Component<IProps, IState> 
 
     componentDidMount() {
         this.preferencesService.get().then((preferences) => {
-            if (CHARACTER_COUNT_UI_PREF in preferences) {
-                this.setState({
-                    uiPref: preferences[CHARACTER_COUNT_UI_PREF][this.props.field] ?? DEFAULT_UI,
-                });
-            }
+            this.setState({
+                preferences,
+            });
         });
     }
 
-    onModalValueChange(newValue: ICharaterCountUiPref) {
-        this.setState({uiPref: newValue});
-        this.preferencesService.update({
+    onModalValueChange(newValue: CharacterCountUiBehavior) {
+        const newPreferences = {
+            ...this.state.preferences,
             [CHARACTER_COUNT_UI_PREF]: {
+                ...this.state.preferences[CHARACTER_COUNT_UI_PREF],
                 [this.props.field]: newValue,
             },
-        });
+        };
+
+        this.setState({preferences: newPreferences});
+        this.preferencesService.update(newPreferences);
+        dispatchInternalEvent('changeUserPreferences', newPreferences);
     }
 
     render() {
-        if (this.state.uiPref == null) {
+        if (this.state.preferences == null) {
             return null;
         }
 
@@ -71,7 +75,7 @@ export class CharacterCountConfigButton extends React.Component<IProps, IState> 
                     showModal((props) => (
                         <CharacterCountConfigModal
                             closeModal={props.closeModal}
-                            value={this.state.uiPref}
+                            value={this.state.preferences[CHARACTER_COUNT_UI_PREF]?.[this.props.field] ?? DEFAULT_UI}
                             onChange={this.onModalValueChange}
                         />
                     ));
@@ -84,7 +88,7 @@ export class CharacterCountConfigButton extends React.Component<IProps, IState> 
 }
 
 function CharacterCountConfigModal({closeModal, onChange, value}) {
-    const [radioValue, radioValueSet] = React.useState<ICharaterCountUiPref>(value);
+    const [radioValue, radioValueSet] = React.useState<CharacterCountUiBehavior>(value);
 
     return (
         <Modal>
@@ -97,7 +101,7 @@ function CharacterCountConfigModal({closeModal, onChange, value}) {
                     )}
                 </p>
                 <CheckGroup orientation="vertical">
-                    <Radio
+                    <Radio<CharacterCountUiBehavior>
                         value={radioValue}
                         options={[
                             {
