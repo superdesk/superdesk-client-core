@@ -8,6 +8,7 @@ import {
     IAssetSearchParams,
     LIST_ACTION,
     SORT_ORDER,
+    ASSET_CONTENT_PANEL_STATE,
 } from '../../interfaces';
 import {
     ASSET_SET_LIST_STYLE,
@@ -16,9 +17,10 @@ import {
     RECEIVE_ASSETS,
     SET_ASSET_SEARCH_PARAMS,
     MANAGE_ASSETS_PREVIEW,
-    MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
+    MANAGE_ASSETS_CLOSE_CONTENT_PANEL,
     UPDATE_SELECTED_ASSET_IDS,
     MANAGE_MULTIACTIONBAR_CLOSE,
+    MANAGE_ASSETS_EDIT,
 } from './types';
 
 const initialState: IAssetState = {
@@ -31,6 +33,7 @@ const initialState: IAssetState = {
     },
     listItemIds: [],
     searchResultTotal: 0,
+    contentPanelState: ASSET_CONTENT_PANEL_STATE.CLOSED,
     listStyle: ASSET_LIST_STYLE.GRID,
     selectedAssetId: undefined,
     selectedAssetIds: [],
@@ -48,11 +51,13 @@ export function assetsReducer(
     case MANAGE_ASSETS_PREVIEW:
         return {
             ...state,
+            contentPanelState: ASSET_CONTENT_PANEL_STATE.PREVIEW,
             selectedAssetId: action.payload,
         };
-    case MANAGE_ASSETS_CLOSE_PREVIEW_PANEL:
+    case MANAGE_ASSETS_CLOSE_CONTENT_PANEL:
         return {
             ...state,
+            contentPanelState: ASSET_CONTENT_PANEL_STATE.CLOSED,
             selectedAssetId: undefined,
         };
     case UPDATE_SELECTED_ASSET_IDS:
@@ -66,6 +71,12 @@ export function assetsReducer(
         return {
             ...state,
             listStyle: action.payload,
+        };
+    case MANAGE_ASSETS_EDIT:
+        return {
+            ...state,
+            contentPanelState: ASSET_CONTENT_PANEL_STATE.EDIT,
+            selectedAssetId: action.payload,
         };
     default:
         return state;

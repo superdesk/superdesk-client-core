@@ -4,6 +4,7 @@ import classNames from 'classnames';
 interface IProps {
     children: React.ReactNode;
     onClick?(): void;
+    onDoubleClick?(): void;
     selected?: boolean;
 }
 
@@ -18,7 +19,7 @@ export class GridItem extends React.PureComponent<IProps> {
         );
 
         return (
-            <div className={classes} onClick={this.props.onClick}>
+            <div className={classes} onClick={this.props.onClick} onDoubleClick={this.props.onDoubleClick}>
                 {this.props.children}
             </div>
         );

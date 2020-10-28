@@ -169,6 +169,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
             <AssetGridItem
                 asset={asset}
                 onClick={selectFile}
+                onDoubleClick={selectFile}
                 selected={selected}
                 remove={removeFile}
                 uploadProgress={item.uploadProgress}
@@ -184,6 +185,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
                 asset={this.state.assets[item.id]}
                 disabled={submitting}
                 onChange={this.onFieldChanged[item.id]}
+                uploadFlag={true}
             />
         );
     }

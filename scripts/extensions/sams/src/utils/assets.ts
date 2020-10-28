@@ -32,6 +32,14 @@ export function getAction(assetCallback: IAssetCallback): IAssetAction {
             onSelect: assetCallback.onSelect,
             isAllowed: (asset) => asset._created != null,
         };
+    case ASSET_ACTIONS.EDIT:
+        return {
+            id: ASSET_ACTIONS.EDIT,
+            label: gettext('Edit'),
+            icon: 'pencil',
+            onSelect: assetCallback.onSelect,
+            isAllowed: (asset) => asset._created != null,
+        };
     }
 
     assertNever(assetCallback.action);

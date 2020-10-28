@@ -9,6 +9,7 @@ interface IProps {
     activated?: boolean;
     className?: string;
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+    onDoubleClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
     margin?: boolean;
     draggable?: boolean;
     selected?: boolean;
@@ -37,7 +38,7 @@ export class ListItem extends React.PureComponent<IProps> {
         );
 
         return (
-            <div onClick={this.props.onClick} className={classes}>
+            <div onClick={this.props.onClick} className={classes} onDoubleClick={this.props.onDoubleClick}>
                 {this.props.children}
             </div>
         );

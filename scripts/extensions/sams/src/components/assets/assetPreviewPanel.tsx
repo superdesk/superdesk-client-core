@@ -1,9 +1,16 @@
 // External modules
 import * as React from 'react';
+import {Dispatch} from 'redux';
+import {connect} from 'react-redux';
 
 // Types
-import {IAssetItem} from '../../interfaces';
-import {superdeskApi} from '../../apis';
+import {IAssetItem, LIST_ACTION} from '../../interfaces';
+import {IApplicationState} from '../../store';
+import {superdeskApi, samsApi} from '../../apis';
+
+// Redux Actions & Selectors
+import {closeAssetContentPanel, queryAssetsFromCurrentSearch, editAsset} from '../../store/assets/actions';
+import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 
 // UI
 import {Dropdown, FormLabel, IconButton} from 'superdesk-ui-framework/react';
@@ -23,17 +30,60 @@ import {getMimetypeHumanReadable} from '../../utils/assets';
 interface IProps {
     asset?: IAssetItem;
     setName?: string;
+    editAsset(asset: IAssetItem): void;
     onPanelClosed(): void;
     downloadAsset(asset: Partial<IAssetItem>): void;
-    deletAsset(asset: Partial<IAssetItem>): void;
+    queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
 }
 
-export class AssetPreviewPanel extends React.PureComponent<IProps> {
+const mapStateToProps = (state: IApplicationState) => ({
+    asset: getSelectedAsset(state),
+    setName: getSetNameForSelectedAsset(state),
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    editAsset: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
+    onPanelClosed: () => dispatch(closeAssetContentPanel()),
+    queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
+
+});
+
+export function downloadAssetBinary(asset: IAssetItem): void {
+    samsApi.assets.getAssetBinary(asset);
+}
+
+export function deleteAsset(asset: IAssetItem): Promise<void> {
+    return samsApi.assets.deleteAsset(asset);
+}
+
+export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.onEditAsset = this.onEditAsset.bind(this);
+        this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
+        this.onDeleteAsset = this.onDeleteAsset.bind(this);
+    }
+
+    onEditAsset(): void {
+        this.props.editAsset(this.props.asset!);
+    }
+
+    onDeleteAsset(): void {
+        deleteAsset(this.props.asset!)
+            .then(() => {
+                this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
+            });
+    }
+
+    onDownloadSingleAssetCompressedBinary(): void {
+        downloadAssetBinary(this.props.asset!);
+    }
+
     render() {
         const {gettext} = superdeskApi.localization;
-        const {asset, setName} = this.props;
 
-        if (asset?._id == null) {
+        if (this.props.asset?._id == null) {
             return null;
         }
 
@@ -54,12 +104,16 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
                                         items: [
                                             'divider',
                                             {
+                                                label: gettext('Edit'), icon: 'trash',
+                                                onSelect: this.onEditAsset,
+                                            },
+                                            {
                                                 label: gettext('Download'), icon: 'download',
-                                                onSelect: () => this.props.downloadAsset(asset),
+                                                onSelect: this.onDownloadSingleAssetCompressedBinary,
                                             },
                                             {
                                                 label: gettext('Delete'), icon: 'trash',
-                                                onSelect: () => this.props.deletAsset(asset),
+                                                onSelect: this.onDeleteAsset,
                                             },
                                         ],
                                     },
@@ -77,37 +131,40 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
                         <PanelContentBlockInner grow={true}>
                             <FormRow>
                                 <FormLabel text={gettext('Name')} style="light" />
-                                <Text>{asset.name}</Text>
+                                <Text>{this.props.asset?.name}</Text>
                             </FormRow>
 
                             <FormRow>
                                 <FormLabel text={gettext('Description')} style="light" />
-                                <Text>{asset.description || '-'}</Text>
+                                <Text>{this.props.asset?.description || '-'}</Text>
                             </FormRow>
 
                             <FormRow>
                                 <FormLabel text={gettext('Filename')} style="light" />
-                                <Text>{asset.filename}</Text>
+                                <Text>{this.props.asset?.filename}</Text>
                             </FormRow>
 
                             <FormRow>
                                 <FormLabel text={gettext('Size')} style="light" />
-                                <Text>{getHumanReadableFileSize(asset.length)}</Text>
+                                <Text>{getHumanReadableFileSize(this.props.asset?.length)}</Text>
                             </FormRow>
 
                             <FormRow>
                                 <FormLabel text={gettext('Type')} style="light" />
-                                <Text>{getMimetypeHumanReadable(asset.mimetype)} ({asset.mimetype})</Text>
+                                <Text>
+                                    {getMimetypeHumanReadable(this.props.asset?.mimetype)}
+                                    ({this.props.asset?.mimetype})
+                                </Text>
                             </FormRow>
 
                             <FormRow>
                                 <FormLabel text={gettext('State')} style="light" />
-                                <Text>{asset.state}</Text>
+                                <Text>{this.props.asset?.state}</Text>
                             </FormRow>
 
                             <FormRow>
                                 <FormLabel text={gettext('Set')} style="light" />
-                                <Text>{setName}</Text>
+                                <Text>{this.props.setName}</Text>
                             </FormRow>
                         </PanelContentBlockInner>
                     </PanelContentBlock>
@@ -116,3 +173,8 @@ export class AssetPreviewPanel extends React.PureComponent<IProps> {
         );
     }
 }
+
+export const AssetPreviewPanel = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(AssetPreviewPanelComponent);
