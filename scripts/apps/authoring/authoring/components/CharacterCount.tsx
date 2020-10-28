@@ -9,7 +9,7 @@ interface IProps {
     item: string;
 }
 
-function getEditorFieldCharactersCount(text: string, html?: boolean) {
+export function getEditorFieldCharactersCount(text: string, html?: boolean) {
     let input = text || '';
 
     input = html ? cleanHtml(input) : input;

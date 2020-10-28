@@ -5,6 +5,7 @@ import {
     DraftEditorCommand,
     RichUtils,
 } from 'draft-js';
+import {getEditorFieldCharactersCount} from 'apps/authoring/authoring/components/CharacterCount';
 
 export const LIMIT_CHARACTERS_OVERFLOW_STYLE = 'LIMIT_CHARACTERS_OVERFLOW';
 
@@ -14,7 +15,7 @@ export function preventInputWhenLimitIsPassed(
     limit: number,
 ) {
     const length =
-        editorState.getCurrentContent().getPlainText().length +
+        getEditorFieldCharactersCount(editorState.getCurrentContent().getPlainText(), false) +
         newChars.length -
         getLengthOfSelectedText(editorState);
     const overflow = length - limit;
@@ -152,7 +153,7 @@ export function handleOverflowHighlights(
     limit: number,
 ): EditorState {
     const restoreSelection = editorState.getSelection();
-    const length = editorState.getCurrentContent().getPlainText().length;
+    const length = getEditorFieldCharactersCount(editorState.getCurrentContent().getPlainText(), false);
     const overflow = length - limit;
     const reachedLimit = overflow > 0;
 
