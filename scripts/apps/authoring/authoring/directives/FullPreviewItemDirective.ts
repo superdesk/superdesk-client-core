@@ -32,10 +32,6 @@ export function FullPreviewItemDirective(content, $sce) {
                 return $sce.trustAsHtml(html);
             };
 
-            scope.isCustomList = function(field) {
-                return ['text', 'date', 'media', 'embed'].indexOf(field.field_type) === -1;
-            };
-
             scope.associationExists = function(associations, fieldId) {
                 return _.size(scope.getAssociationItems(associations, fieldId));
             };
