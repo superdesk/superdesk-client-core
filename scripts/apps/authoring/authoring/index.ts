@@ -23,6 +23,7 @@ import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {CharacterCount} from './components/CharacterCount';
 import {CharacterCountConfigButton} from './components/CharacterCountConfigButton';
 import {AuthoringWorkspaceService} from './services';
+import {AuthoringMediaActions} from './authoring-media-actions';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
 import {FullPreviewDirective} from './directives/FullPreviewDirective';
@@ -104,6 +105,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)
+    .component('sdAuthoringMediaActions', reactToAngular1(AuthoringMediaActions, ['article']))
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
