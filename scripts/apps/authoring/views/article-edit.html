@@ -316,7 +316,7 @@
      tansa-proofing="false">
 
     <label for="bodyhtml" class="field__label">{{label('body_html')}}</label>
-    <sd-character-count-config-button data-field="'body_html'"></sd-character-count-config-button>
+    <sd-character-count-config-button data-field="'body_html'" ng-if="schema.body_html.maxlength"></sd-character-count-config-button>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
     <sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></sd-character-count>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
