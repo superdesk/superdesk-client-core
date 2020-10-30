@@ -176,6 +176,7 @@ describe('templates', () => {
                 page: 1,
                 max_results: 10,
                 sort: 'template_name',
+                manage: true,
             });
         }));
 
@@ -193,6 +194,7 @@ describe('templates', () => {
                     page: 1,
                     max_results: 10,
                     sort: 'template_name',
+                    manage: true,
                 });
             }));
 
@@ -205,6 +207,7 @@ describe('templates', () => {
                     page: 1,
                     max_results: 50,
                     sort: 'template_name',
+                    manage: true,
                 });
             }));
 
@@ -218,6 +221,7 @@ describe('templates', () => {
                     max_results: 50,
                     sort: 'template_name',
                     where: '{"$and":[{"template_type":"create"}]}',
+                    manage: true,
                 });
             }));
 
@@ -230,6 +234,7 @@ describe('templates', () => {
                     max_results: 50,
                     sort: 'template_name',
                     where: '{"$and":[{"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}',
+                    manage: true,
                 });
             }));
     });
