@@ -10,8 +10,18 @@ import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {pick, get, debounce} from 'lodash';
-import {PopupTypes, forceUpdate, setAbbreviations, EditorLimit} from '../actions';
-import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
+import {
+    PopupTypes,
+    forceUpdate,
+    setAbbreviations,
+    EditorLimit,
+} from '../actions';
+import {
+    fieldsMetaKeys,
+    setFieldMetadata,
+    getFieldMetadata,
+    FIELD_KEY_SEPARATOR,
+} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
 import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
 import {
@@ -22,15 +32,19 @@ import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
 import {LinkDecorator} from '../components/links';
-import {getSpellcheckingDecorator, ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
+import {
+    getSpellcheckingDecorator,
+    ISpellcheckWarningsByBlock,
+} from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
 import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
-import {CharacterCountUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {
+    CharacterCountUiBehavior,
+    DEFAULT_UI_FOR_EDITOR_LIMIT,
+} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
-    annotations.map(
-        (annotation) => pick(annotation, ['id', 'type', 'body']),
-    );
+    annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
 
 interface IProps {
     editorState?: RawDraftContentState;
@@ -46,14 +60,14 @@ interface IProps {
     svc?: any;
     trim?: any;
     value?: any;
-    limitBehavior: CharacterCountUiBehavior;
-    limit: number
+    limitBehavior?: CharacterCountUiBehavior;
+    limit?: number;
 }
 
 export interface IEditorStore {
     editorState: EditorState;
-    searchTerm: {pattern: string, index: number, caseSensitive: boolean};
-    popup: {type: any};
+    searchTerm: { pattern: string; index: number; caseSensitive: boolean };
+    popup: { type: any };
     readOnly: any;
     locked: boolean;
     showToolbar: any;
@@ -75,16 +89,19 @@ export interface IEditorStore {
     svc: any;
     abbreviations: any;
     loading: boolean;
-    limitConfig: EditorLimit
+    limitConfig?: EditorLimit;
 }
 
-export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
-    const decorators: Array<any> = [
-        LinkDecorator,
-    ];
+export const getCustomDecorator = (
+    language?: string,
+    spellcheckWarnings: ISpellcheckWarningsByBlock = null,
+) => {
+    const decorators: Array<any> = [LinkDecorator];
 
     if (spellcheckWarnings != null && language != null) {
-        decorators.push(getSpellcheckingDecorator(language, spellcheckWarnings));
+        decorators.push(
+            getSpellcheckingDecorator(language, spellcheckWarnings),
+        );
     }
 
     return new CompositeDecorator(decorators);
@@ -97,12 +114,18 @@ export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpell
  * @param {Boolean=} isReact True if the store is created for a React component.
  * @returns {Object} Redux store.
  */
-export default function createEditorStore(props: IProps, spellcheck, isReact = false) {
-    const spellcheckerDisabledInConfig = get(appConfig, 'features.useTansaProofing') === true;
+export default function createEditorStore(
+    props: IProps,
+    spellcheck,
+    isReact = false,
+) {
+    const spellcheckerDisabledInConfig =
+        get(appConfig, 'features.useTansaProofing') === true;
     let disableSpellchecker = true;
 
     if (spellcheck != null) {
-        disableSpellchecker = spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
+        disableSpellchecker =
+            spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
 
         if (!spellcheckerDisabledInConfig) {
             spellcheck.setLanguage(props.language);
@@ -111,48 +134,65 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
 
     const content = getInitialContent(props);
 
-    const onChangeValue = isReact ? props.onChange : debounce(onChange.bind(props), props.debounce);
+    const onChangeValue = isReact
+        ? props.onChange
+        : debounce(onChange.bind(props), props.debounce);
 
     const middlewares = [thunk];
 
     const devtools = localStorage.getItem('devtools');
-    const reduxLoggerEnabled = devtools == null ? false : JSON.stringify(devtools).includes('redux-logger');
+    const reduxLoggerEnabled =
+        devtools == null
+            ? false
+            : JSON.stringify(devtools).includes('redux-logger');
 
     if (reduxLoggerEnabled) {
         // (this should always be the last middleware)
         middlewares.push(createLogger());
     }
 
-    const store = createStore<IEditorStore, any, any, any>(reducers, {
-        editorState: EditorState.createWithContent(content, getCustomDecorator()),
-        searchTerm: {pattern: '', index: -1, caseSensitive: false},
-        popup: {type: PopupTypes.Hidden},
-        readOnly: props.readOnly,
-        locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
-        showToolbar: (props.editorFormat || []).length > 0,
-        singleLine: props.singleLine,
-        tabindex: props.tabindex,
-        showTitle: props.showTitle,
-        activeCell: null, // currently focused table cell
-        editorFormat: props.editorFormat || [],
-        onChangeValue: onChangeValue,
-        item: props.item,
-        spellchecking: {
-            language: props.language,
-            enabled: !spellcheckerDisabledInConfig && spellcheck && spellcheck.isAutoSpellchecker,
-            inProgress: false,
-            warningsByBlock: {},
+    const store = createStore<IEditorStore, any, any, any>(
+        reducers,
+        {
+            editorState: EditorState.createWithContent(
+                content,
+                getCustomDecorator(),
+            ),
+            searchTerm: {pattern: '', index: -1, caseSensitive: false},
+            popup: {type: PopupTypes.Hidden},
+            readOnly: props.readOnly,
+            locked: false, // when true, main editor is disabled (ie. when editing sub-components like tables or images)
+            showToolbar: (props.editorFormat || []).length > 0,
+            singleLine: props.singleLine,
+            tabindex: props.tabindex,
+            showTitle: props.showTitle,
+            activeCell: null, // currently focused table cell
+            editorFormat: props.editorFormat || [],
+            onChangeValue: onChangeValue,
+            item: props.item,
+            spellchecking: {
+                language: props.language,
+                enabled:
+                    !spellcheckerDisabledInConfig &&
+                    spellcheck &&
+                    spellcheck.isAutoSpellchecker,
+                inProgress: false,
+                warningsByBlock: {},
+            },
+            suggestingMode: false,
+            invisibles: false,
+            svc: props.svc,
+            abbreviations: {},
+            loading: false,
+            limitConfig: !props.limit
+                ? null
+                : {
+                    ui: props.limitBehavior || DEFAULT_UI_FOR_EDITOR_LIMIT,
+                    chars: props.limit,
+                },
         },
-        suggestingMode: false,
-        invisibles: false,
-        svc: props.svc,
-        abbreviations: {},
-        loading: false,
-        limitConfig: {
-            ui: props.limitBehavior,
-            chars: props.limit,
-        },
-    }, applyMiddleware(...middlewares));
+        applyMiddleware(...middlewares),
+    );
 
     if (spellcheck != null) {
         // after we have the dictionary, force update the editor to highlight typos
@@ -193,7 +233,10 @@ export function onChange(contentState, {plainText = false} = {}) {
     }
 
     const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
-    const contentStateCleaned = removeInlineStyles(contentState, decorativeStyles);
+    const contentStateCleaned = removeInlineStyles(
+        contentState,
+        decorativeStyles,
+    );
     const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
         EditorState.createWithContent(contentStateCleaned),
     ).getCurrentContent();
@@ -213,22 +256,27 @@ export function onChange(contentState, {plainText = false} = {}) {
     // example: "extra.customField"
     const pathToValueArray = pathToValue.split(FIELD_KEY_SEPARATOR);
 
-    let objectToUpdate = pathToValueArray.length < 2 ?
-        this.item :
-        pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
-            if (obj[pathSegment] == null) {
-                obj[pathSegment] = {};
-            }
+    let objectToUpdate =
+        pathToValueArray.length < 2
+            ? this.item
+            : pathToValueArray.slice(0, -1).reduce((obj, pathSegment) => {
+                if (obj[pathSegment] == null) {
+                    obj[pathSegment] = {};
+                }
 
-            return obj[pathSegment];
-        }, this.item);
+                return obj[pathSegment];
+            }, this.item);
 
     const fieldName = pathToValueArray[pathToValueArray.length - 1];
 
     if (plainText) {
-        objectToUpdate[fieldName] = contentStateHighlightsReadyForExport.getPlainText();
+        objectToUpdate[
+            fieldName
+        ] = contentStateHighlightsReadyForExport.getPlainText();
     } else {
-        objectToUpdate[fieldName] = editor3StateToHtml(contentStateHighlightsReadyForExport);
+        objectToUpdate[fieldName] = editor3StateToHtml(
+            contentStateHighlightsReadyForExport,
+        );
         generateAnnotations(this.item);
     }
 
@@ -250,10 +298,14 @@ export function getInitialContent(props) {
     // support standalone instance of editor3 which is not connected to item field
     if (props.editorState != null) {
         var contentState = convertFromRaw(
-            (props.editorState instanceof Array) ? props.editorState[0] : props.editorState,
+            props.editorState instanceof Array
+                ? props.editorState[0]
+                : props.editorState,
         );
 
-        return initializeHighlights(EditorState.createWithContent(contentState)).getCurrentContent();
+        return initializeHighlights(
+            EditorState.createWithContent(contentState),
+        ).getCurrentContent();
     }
 
     const draftjsRawState = getFieldMetadata(
@@ -265,10 +317,14 @@ export function getInitialContent(props) {
     if (draftjsRawState != null) {
         let initialContent = convertFromRaw(draftjsRawState);
 
-        return initializeHighlights(EditorState.createWithContent(initialContent)).getCurrentContent();
+        return initializeHighlights(
+            EditorState.createWithContent(initialContent),
+        ).getCurrentContent();
     }
 
-    const value = props.value || get(props.item, props.pathToValue.replace(FIELD_KEY_SEPARATOR, '.'));
+    const value =
+        props.value ||
+        get(props.item, props.pathToValue.replace(FIELD_KEY_SEPARATOR, '.'));
 
     if (value != null && value !== '') {
         // we have only HTML (possibly legacy editor2 or ingested item)
@@ -294,7 +350,10 @@ function syncAssociations(item, rawState) {
     });
 
     Object.keys(rawState.entityMap).forEach((key) => {
-        associations['editor_' + key] = get(rawState.entityMap[key], 'data.media');
+        associations['editor_' + key] = get(
+            rawState.entityMap[key],
+            'data.media',
+        );
     });
 
     item.associations = associations;

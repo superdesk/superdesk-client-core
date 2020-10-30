@@ -36,8 +36,8 @@ const mapStateToProps = (state) => ({
     invisibles: state.invisibles,
     svc: state.svc,
     loading: state.loading,
-    limitBehavior: state.limitConfig.ui,
-    limit: state.limitConfig.chars,
+    limitBehavior: state.limitConfig?.ui,
+    limit: state.limitConfig?.chars,
 });
 
 const mapDispatchToProps = (dispatch) => ({

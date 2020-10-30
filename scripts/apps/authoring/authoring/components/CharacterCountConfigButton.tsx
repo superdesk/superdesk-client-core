@@ -17,7 +17,7 @@ export interface ICharacterCountUiPref {
     [schemaField: string]: CharacterCountUiBehavior;
 }
 
-const DEFAULT_UI: CharacterCountUiBehavior = 'highlight';
+export const DEFAULT_UI_FOR_EDITOR_LIMIT: CharacterCountUiBehavior = 'highlight';
 
 interface IProps {
     field: string;
@@ -81,7 +81,7 @@ export class CharacterCountConfigButton extends React.Component<
                             value={
                                 this.state.preferences[
                                     CHARACTER_COUNT_UI_PREF
-                                ]?.[this.props.field] ?? DEFAULT_UI
+                                ]?.[this.props.field] ?? DEFAULT_UI_FOR_EDITOR_LIMIT
                             }
                             onChange={this.onModalValueChange}
                         />

@@ -111,10 +111,10 @@ function editorStateChangeMiddlewares(state, editorState: EditorState, contentCh
         ...state, editorState,
     });
 
-    if (contentChanged && state.limitConfig.ui === 'highlight') {
+    if (contentChanged && state.limitConfig?.ui === 'highlight') {
         newState = {
             ...state,
-            editorState: handleOverflowHighlights(newState.editorState, state.limitConfig.chars),
+            editorState: handleOverflowHighlights(newState.editorState, state.limitConfig?.chars),
         };
     }
 
