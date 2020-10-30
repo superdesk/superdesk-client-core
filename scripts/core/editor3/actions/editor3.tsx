@@ -234,7 +234,7 @@ export function changeCase(changeTo: ITextCase, selection: SelectionState) {
     };
 }
 
-export type EditorLimit = { ui: CharacterCountUiBehavior, chars: number }
+export type EditorLimit = { ui: CharacterCountUiBehavior, chars: number };
 export function changeLimitConfig(payload: EditorLimit) {
     return {
         type: 'EDITOR_CHANGE_LIMIT_CONFIG',
