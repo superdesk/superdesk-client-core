@@ -1,6 +1,7 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {HLSVideoComponent} from './video-hls';
+import {isEqual} from 'lodash';
 
 interface IProps {
     item: IArticle;
@@ -17,16 +18,31 @@ interface IVideoRenditionItem {
  * VideoComponent is used to render a player for an item with type video.
  */
 export class VideoComponent extends React.PureComponent<IProps> {
-    render() {
-        const {item} = this.props;
-        const poster = item.renditions?.thumbnail?.href;
-        const videoRenditions: Array<IVideoRenditionItem> = [];
+    videoElement: HTMLVideoElement;
 
-        if (item.renditions == null) {
+    shouldComponentUpdate(nextProps: IProps) {
+        return !isEqual(
+            {renditions: this.props.item.renditions, guid: this.props.item.guid},
+            {renditions: nextProps.item.renditions, guid: nextProps.item.guid},
+        );
+    }
+
+    componentDidUpdate() {
+        this.videoElement?.load();
+    }
+
+    render() {
+        const renditions = this.props.item.renditions;
+        const guid = this.props.item.guid;
+
+        if (renditions == null) {
             return null;
         }
 
-        for (const rend of Object.values(item.renditions)) {
+        const poster = renditions?.thumbnail?.href;
+        const videoRenditions: Array<IVideoRenditionItem> = [];
+
+        for (const rend of Object.values(renditions)) {
             if (rend == null || rend.mimetype == null) {
                 continue;
             } else if (rend.mimetype.toLowerCase() === 'application/x-mpegurl') {
@@ -48,12 +64,15 @@ export class VideoComponent extends React.PureComponent<IProps> {
         return (
             // using key to force reload video on selecting different item for preview
             <video
-                key={item.guid}
+                key={guid}
                 controls
                 preload="metadata"
                 poster={poster}
                 width={this.props.width}
                 height={this.props.height}
+                ref={(el) => {
+                    this.videoElement = el;
+                }}
             >
                 {videoRenditions.map((rendition) => (
                     <source key={rendition.href} src={rendition.href} type={rendition.mimetype} />
