@@ -10,7 +10,7 @@ import {createStore, applyMiddleware} from 'redux';
 import {createLogger} from 'redux-logger';
 import thunk from 'redux-thunk';
 import {pick, get, debounce} from 'lodash';
-import {PopupTypes, forceUpdate, setAbbreviations} from '../actions';
+import {PopupTypes, forceUpdate, setAbbreviations, EditorLimit} from '../actions';
 import {fieldsMetaKeys, setFieldMetadata, getFieldMetadata, FIELD_KEY_SEPARATOR} from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
 import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
@@ -25,6 +25,7 @@ import {LinkDecorator} from '../components/links';
 import {getSpellcheckingDecorator, ISpellcheckWarningsByBlock} from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
 import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {CharacterCountUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map(
@@ -45,6 +46,8 @@ interface IProps {
     svc?: any;
     trim?: any;
     value?: any;
+    limitBehavior: CharacterCountUiBehavior;
+    limit: number
 }
 
 export interface IEditorStore {
@@ -72,6 +75,7 @@ export interface IEditorStore {
     svc: any;
     abbreviations: any;
     loading: boolean;
+    limitConfig: EditorLimit
 }
 
 export const getCustomDecorator = (language?: string, spellcheckWarnings: ISpellcheckWarningsByBlock = null) => {
@@ -144,6 +148,10 @@ export default function createEditorStore(props: IProps, spellcheck, isReact = f
         svc: props.svc,
         abbreviations: {},
         loading: false,
+        limitConfig: {
+            ui: props.limitBehavior,
+            chars: props.limit,
+        },
     }, applyMiddleware(...middlewares));
 
     if (spellcheck != null) {

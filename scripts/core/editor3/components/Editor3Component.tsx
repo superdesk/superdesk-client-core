@@ -34,9 +34,9 @@ import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
 import {EDITOR_BLOCK_TYPE} from '../constants';
 import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
-import {CharacterCountUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {preventInputWhenLimitIsPassed, handleOverflowHighlights} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
+import {CharacterCountUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -519,9 +519,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
             tabindex,
             scrollContainer,
             cleanPastedHtml,
+            editorState,
         } = this.props;
-
-        let {editorState} = this.props;
 
         const cx = classNames({
             'Editor3-root Editor3-editor': true,
@@ -549,10 +548,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 return 'showCharacterLimit';
             }
         };
-
-        if (this.props.limit && this.props.limitBehavior === 'highlight') {
-            editorState = handleOverflowHighlights(editorState, this.props.limit);
-        }
 
         return (
             <div

@@ -34,6 +34,7 @@
 
     <label for="title" class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength">
+        <sd-character-count-config-button data-field="'headline'"></sd-character-count-config-button>
         <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
@@ -56,6 +57,7 @@
          data-tabindex="editor.headline.order"
          data-clean-pasted-html="editor.headline.cleanPastedHTML"
          data-test-id="field--headline"
+         data-limit="schema.headline.maxlength"
     ></div>
 </div>
 
@@ -172,6 +174,7 @@
      data-required="schema.abstract.required">
 
     <label for="abstract" class="field__label">{{label('abstract')}}</label>
+    <sd-character-count-config-button data-field="'abstract'"></sd-character-count-config-button>
     <sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></sd-character-count>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
@@ -188,6 +191,7 @@
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.abstract.order"
          data-clean-pasted-html="editor.abstract.cleanPastedHTML"
+         data-limit="schema.abstract.maxlength"
     ></div>
 </div>
 
@@ -435,6 +439,7 @@
      data-required="schema.media_description.required">
     <label for="title" class="field__label" translate>Caption</label>
     <span ng-if="validator.description_text.maxlength">
+        <sd-character-count-config-button data-field="'description_text'"></sd-character-count-config-button>
         <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
     </span>
     <div id="title" class="abstract"
@@ -451,6 +456,7 @@
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.media_description.order"
          data-clean-pasted-html="editor.description_text.cleanPastedHTML"
+         data-limit="schema.description_text.maxlength"
     ></div>
 </div>
 
@@ -601,6 +607,7 @@
 
     <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
+        <sd-character-count-config-button data-field="field._id"></sd-character-count-config-button>
         <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema[field._id].validate_characters"
@@ -619,6 +626,7 @@
         data-refresh-trigger="refreshTrigger"
         data-tabindex="editor[field._id].order"
         data-clean-pasted-html="editor[field._id].cleanPastedHTML"
+        data-limit="schema[field._id].maxlength"
     ></div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
@@ -840,6 +848,7 @@
      data-required="schema.slugline.required">
     <label for="title" class="field__label">{{label('slugline')}}</label>
     <span ng-if="schema.slugline.maxlength">
+        <sd-character-count-config-button data-field="'slugline'"></sd-character-count-config-button>
         <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema.slugline.validate_characters"
@@ -858,6 +867,7 @@
          data-read-only="!_editable || schema.slugline.readonly === true"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
-         data-tabindex="editor.slugline.order">
-    </div>
+         data-tabindex="editor.slugline.order"
+         data-limit="schema.slugline.maxlength"
+    ></div>
 </div>

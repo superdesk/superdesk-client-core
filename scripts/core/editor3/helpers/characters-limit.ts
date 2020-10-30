@@ -152,8 +152,13 @@ export function handleOverflowHighlights(
     editorState: EditorState,
     limit: number,
 ): EditorState {
-    const restoreSelection = editorState.getSelection();
     const length = getEditorFieldCharactersCount(editorState.getCurrentContent().getPlainText(), false);
+
+    if (length < 1) {
+        return editorState;
+    }
+
+    const restoreSelection = editorState.getSelection();
     const overflow = length - limit;
     const reachedLimit = overflow > 0;
 
