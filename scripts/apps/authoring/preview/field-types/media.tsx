@@ -30,7 +30,7 @@ export class MediaPreview extends React.Component<IProps> {
                                     <audio controls>
                                         {
                                             Object.values(item.renditions).map(({href}) => (
-                                                <source key={href} src={href}></source>
+                                                <source key={href} src={href} />
                                             ))
                                         }
                                     </audio>

@@ -29,61 +29,61 @@ export class PreviewFieldType extends React.PureComponent<IProps> {
             <div>
                 {(() => {
                     switch (field.type) {
-                        case 'plain-text':
-                            return (
-                                <PlainTextPreview value={field.value} />
-                            );
-                        case 'html':
-                            return (
-                                <HtmlPreview value={field.value} />
-                            );
-                        case 'subjects':
-                            return (
-                                <SubjectsPreview subjects={field.value} />
-                            );
-                        case 'vocabulary-values':
-                            return (
-                                <VocabularyValuePreview
-                                    vocabularyId={field.value.vocabularyId}
-                                    qcodes={field.value.qcodes}
-                                    language={language}
-                                />
-                            );
-                        case 'urls':
-                            return (
-                                <UrlsPreview urls={field.value} />
-                            );
-                        case 'media-gallery':
-                            return (
-                                <MediaPreview mediaItems={field.value} />
-                            );
-                        case 'related-articles':
-                            return (
-                                <ItemsListLimited
-                                    ids={field.value.map(({_id}) => _id)}
-                                    onItemClick={noop}
-                                />
-                            );
-                        case 'embed':
-                            return (
-                                <EmbedPreview
-                                    embed={field.value.embed}
-                                    description={field.value.description}
-                                />
-                            );
-                        case 'attachments':
-                            return (
-                                <AttachmentsPreview attachmentsIds={field.value} />
-                            );
-                        case 'custom':
-                            return (
-                                <PreviewCustomField
-                                    item={field.value.item}
-                                    field={field.value.field}
-                                />
-                            );
-                        default:
-                            assertNever(field);
+                    case 'plain-text':
+                        return (
+                            <PlainTextPreview value={field.value} />
+                        );
+                    case 'html':
+                        return (
+                            <HtmlPreview value={field.value} />
+                        );
+                    case 'subjects':
+                        return (
+                            <SubjectsPreview subjects={field.value} />
+                        );
+                    case 'vocabulary-values':
+                        return (
+                            <VocabularyValuePreview
+                                vocabularyId={field.value.vocabularyId}
+                                qcodes={field.value.qcodes}
+                                language={language}
+                            />
+                        );
+                    case 'urls':
+                        return (
+                            <UrlsPreview urls={field.value} />
+                        );
+                    case 'media-gallery':
+                        return (
+                            <MediaPreview mediaItems={field.value} />
+                        );
+                    case 'related-articles':
+                        return (
+                            <ItemsListLimited
+                                ids={field.value.map(({_id}) => _id)}
+                                onItemClick={noop}
+                            />
+                        );
+                    case 'embed':
+                        return (
+                            <EmbedPreview
+                                embed={field.value.embed}
+                                description={field.value.description}
+                            />
+                        );
+                    case 'attachments':
+                        return (
+                            <AttachmentsPreview attachmentsIds={field.value} />
+                        );
+                    case 'custom':
+                        return (
+                            <PreviewCustomField
+                                item={field.value.item}
+                                field={field.value.field}
+                            />
+                        );
+                    default:
+                        assertNever(field);
                     }
                 })()}
             </div>

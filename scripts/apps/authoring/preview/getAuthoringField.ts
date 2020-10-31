@@ -34,13 +34,13 @@ export function getAuthoringField(
             id: fieldId,
             value: item['extra'][fieldId],
         };
-    }  else if (customField?.field_type === 'related_content') {
+    } else if (customField?.field_type === 'related_content') {
         return {
             type: 'related-articles',
             id: fieldId,
             value: getRelatedArticles(item.associations, customField._id),
         };
-    }  else if (customField?.field_type === 'media') {
+    } else if (customField?.field_type === 'media') {
         return {
             type: 'media-gallery',
             id: fieldId,
@@ -82,7 +82,7 @@ export function getAuthoringField(
             id: fieldId,
             value: item[fieldId]?.map(({_id, name}) => ({name, qcode: _id})),
         };
-    }  else if (fieldId === 'keywords') {
+    } else if (fieldId === 'keywords') {
         return {
             type: 'subjects',
             id: fieldId,

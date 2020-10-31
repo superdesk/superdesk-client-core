@@ -262,7 +262,7 @@ declare module 'superdesk-api' {
         headline: string;
         sms?: string;
         abstract?: string;
-        attachments: Array<{attachment: string}>;
+        attachments?: Array<{attachment: string}>;
         byline: string;
         dateline?: {
             day?: string;
@@ -417,7 +417,7 @@ declare module 'superdesk-api' {
         };
 
         // media fields
-        alt_text: any;
+        alt_text?: any;
 
         // planning extension
         assignment_id?: string;

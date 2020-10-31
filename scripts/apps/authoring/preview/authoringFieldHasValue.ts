@@ -11,27 +11,27 @@ function hasValueArray(arr: Array<unknown> | undefined | null): boolean {
 
 export function authoringFieldHasValue(field: IAuthoringField) {
     switch (field.type) {
-        case 'plain-text':
-            return hasValueString(field.value);
-        case 'html':
-            return hasValueString(field.value);
-        case 'subjects':
-            return hasValueArray(field.value);
-        case 'vocabulary-values':
-            return hasValueString(field.value.vocabularyId) && hasValueArray(field.value.qcodes);
-        case 'urls':
-            return hasValueArray(field.value);
-        case 'media-gallery':
-            return hasValueArray(field.value);
-        case 'related-articles':
-            return hasValueArray(field.value);
-        case 'embed':
-            return hasValueString(field.value.embed);
-        case 'attachments':
-            return hasValueArray(field.value);
-        case 'custom':
-            return field.value != null;
-        default:
-            assertNever(field);
+    case 'plain-text':
+        return hasValueString(field.value);
+    case 'html':
+        return hasValueString(field.value);
+    case 'subjects':
+        return hasValueArray(field.value);
+    case 'vocabulary-values':
+        return hasValueString(field.value.vocabularyId) && hasValueArray(field.value.qcodes);
+    case 'urls':
+        return hasValueArray(field.value);
+    case 'media-gallery':
+        return hasValueArray(field.value);
+    case 'related-articles':
+        return hasValueArray(field.value);
+    case 'embed':
+        return hasValueString(field.value.embed);
+    case 'attachments':
+        return hasValueArray(field.value);
+    case 'custom':
+        return field.value != null;
+    default:
+        assertNever(field);
     }
 }

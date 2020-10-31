@@ -21,11 +21,13 @@ export class AttachmentsPreview extends React.PureComponent<IProps, IState> {
         };
     }
     componentDidMount() {
-        Promise.all(this.props.attachmentsIds.map(({attachment}) =>
-            dataApi.findOne<IAttachment>('attachments', attachment)))
-                .then((attachments: Array<IAttachment>) => {
-                    this.setState({attachments});
-                });
+        Promise.all(
+            this.props.attachmentsIds.map(
+                ({attachment}) => dataApi.findOne<IAttachment>('attachments', attachment),
+            ),
+        ).then((attachments: Array<IAttachment>) => {
+            this.setState({attachments});
+        });
     }
     render() {
         const {attachments} = this.state;
