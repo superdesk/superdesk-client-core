@@ -14,25 +14,25 @@ export function getAuthoringField(
         return {
             type: 'html',
             id: fieldId,
-            value: item['extra'][fieldId],
+            value: item.extra?.[fieldId],
         };
     } else if (customField?.field_type === 'date') {
         return {
             type: 'plain-text',
             id: fieldId,
-            value: formatDate(new Date(item['extra'][fieldId])),
+            value: item.extra?.[fieldId] == null ? null : formatDate(new Date(item.extra[fieldId])),
         };
     } else if (customField?.field_type === 'embed') {
         return {
             type: 'embed',
             id: fieldId,
-            value: item['extra'][fieldId],
+            value: item.extra?.[fieldId],
         };
     } else if (customField?.field_type === 'urls') {
         return {
             type: 'urls',
             id: fieldId,
-            value: item['extra'][fieldId],
+            value: item.extra?.[fieldId],
         };
     } else if (customField?.field_type === 'related_content') {
         return {
@@ -125,19 +125,19 @@ export function getAuthoringField(
         return {
             type: 'plain-text',
             id: fieldId,
-            value: item['sms_message'],
+            value: item.sms_message,
         };
     } else if (fieldId === 'dateline') {
         return {
             type: 'plain-text',
             id: fieldId,
-            value: item['dateline']['text'],
+            value: item.dateline?.text,
         };
     } else if (fieldId === 'priority' || fieldId === 'urgency') {
         return {
             type: 'plain-text',
             id: fieldId,
-            value: item[fieldId].toString(),
+            value: item[fieldId]?.toString(),
         };
     } else if (fieldId === 'attachments') {
         return {
