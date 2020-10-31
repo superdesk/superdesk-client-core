@@ -416,6 +416,9 @@ declare module 'superdesk-api' {
             [key: string]: IRendition;
         };
 
+        // media fields
+        alt_text: any;
+
         // planning extension
         assignment_id?: string;
         event_id?: any;

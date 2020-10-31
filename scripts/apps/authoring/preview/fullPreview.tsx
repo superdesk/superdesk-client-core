@@ -10,6 +10,7 @@ import {authoringFieldHasValue} from './authoringFieldHasValue';
 import {isMediaField} from './isMediaField';
 import {gettext} from 'core/utils';
 import {formatDate} from 'core/get-superdesk-api-implementation';
+import {MediaMetadataView} from '../media/MediaMetadataView';
 
 interface IProps {
     item: IArticle;
@@ -132,6 +133,22 @@ export class FullPreview extends React.Component<IProps, IState> {
                     </div>
 
                     <br />
+
+                    {
+                        item.type === 'picture' && hideMedia !== true && item.renditions?.baseImage?.href != null
+                            ? (
+                                <div>
+                                    <img src={item.renditions.baseImage.href} />
+
+                                    <MediaMetadataView
+                                        item={item}
+                                        className="media-container__metadata media-container__metadata--image"
+                                    />
+                                </div>
+                            )
+                            : null
+                    }
+
                     <br />
 
                     {
