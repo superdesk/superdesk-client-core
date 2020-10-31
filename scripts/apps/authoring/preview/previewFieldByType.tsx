@@ -18,11 +18,12 @@ import {PreviewCustomField} from '../authoring/preview-custom-field';
 
 interface IProps {
     field: IAuthoringField;
+    language: string;
 }
 
 export class PreviewFieldType extends React.PureComponent<IProps> {
     render() {
-        const {field} = this.props;
+        const {field, language} = this.props;
 
         return (
             <div>
@@ -45,6 +46,7 @@ export class PreviewFieldType extends React.PureComponent<IProps> {
                                 <VocabularyValuePreview
                                     vocabularyId={field.value.vocabularyId}
                                     qcodes={field.value.qcodes}
+                                    language={language}
                                 />
                             );
                         case 'urls':

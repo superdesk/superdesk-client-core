@@ -124,7 +124,7 @@ export class FullPreview extends React.Component<IProps, IState> {
                                                 className="td"
                                                 style={{paddingLeft: 30, paddingBottom: rowSpacingVertical}}
                                             >
-                                                <PreviewFieldType field={field} />
+                                                <PreviewFieldType field={field} language={item.language} />
                                             </div>
                                         </div>
                                     );
@@ -158,12 +158,15 @@ export class FullPreview extends React.Component<IProps, IState> {
                                     <div key={field.id}>
                                         <h3 style={{marginTop: 20, marginBottom: 10}}>{this.getLabel(field.id)}</h3>
                                         <div>
-                                            <PreviewFieldType field={field} />
+                                            <PreviewFieldType field={field} language={item.language} />
                                         </div>
                                     </div>
                                 );
                             })
                     }
+
+                    <br />
+
                 </div>
             </div>
         );

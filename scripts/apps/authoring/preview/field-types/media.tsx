@@ -10,8 +10,12 @@ export class MediaPreview extends React.Component<IProps> {
     render() {
         return (
             <div>
-                {this.props.mediaItems.map((item) => (
+                {this.props.mediaItems.map((item, index) => (
                     <div key={item._id}>
+                        {
+                            index > 0 ? <br /> : null
+                        }
+
                         {(() => {
                             if (item.type === 'picture') {
                                 return (
@@ -35,7 +39,7 @@ export class MediaPreview extends React.Component<IProps> {
                         })()}
                         {
                             item.description_text?.trim().length < 1 ? null : (
-                                <div>{item.description_text}</div>
+                                <p style={{paddingTop: 10}}>{item.description_text}</p>
                             )
                         }
                     </div>

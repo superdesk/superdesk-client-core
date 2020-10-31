@@ -3,10 +3,12 @@ import {IVocabulary, IVocabularyItem} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
 import {Map} from 'immutable';
 import {SmallTags} from 'core/ui/components/SmallTags';
+import {getVocabularyItemNameTranslated} from 'core/utils';
 
 interface IProps {
     vocabularyId: string;
     qcodes: Array<string>;
+    language: string;
 }
 
 interface IState {
@@ -32,7 +34,7 @@ export class VocabularyValuePreview extends React.PureComponent<IProps, IState> 
     }
     render() {
         const {vocabularyItems} = this.state;
-        const {qcodes} = this.props;
+        const {qcodes, language} = this.props;
 
         if (vocabularyItems === 'loading') {
             return null;
@@ -41,10 +43,16 @@ export class VocabularyValuePreview extends React.PureComponent<IProps, IState> 
         return (
             <SmallTags
                 tags={
-                    qcodes.map((qcode) => ({
-                        id: qcode,
-                        label: vocabularyItems.get(qcode)?.name ?? qcode,
-                    }))
+                    qcodes.map((qcode) => {
+                        const vocabularyItem = vocabularyItems.get(qcode);
+
+                        return {
+                            id: qcode,
+                            label: vocabularyItem != null
+                                ? getVocabularyItemNameTranslated(vocabularyItem, language)
+                                : qcode,
+                        };
+                    })
                 }
             />
         );
