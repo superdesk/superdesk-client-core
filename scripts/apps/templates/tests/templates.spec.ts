@@ -10,10 +10,11 @@ describe('templates', () => {
     describe('templates widget', () => {
         var existingTemplate = {template_name: 'template1', template_desks: ['sports']};
 
-        beforeEach(inject((desks, api, $q) => {
+        beforeEach(inject((desks, api, $q, session) => {
             spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
             spyOn(api, 'save').and.returnValue($q.when({}));
             spyOn(api, 'find').and.returnValue($q.when(existingTemplate));
+            spyOn(session, 'getIdentity').and.returnValue($q.when({}));
         }));
 
         it('can create template', inject(($controller, api, $q, $rootScope) => {
@@ -38,17 +39,21 @@ describe('templates', () => {
             }, null);
         }));
 
-        it('can update template', inject(($controller, api, $rootScope) => {
+        it('can update template', (done) => inject(($controller, api, $rootScope) => {
             var item = _.create({slugline: 'FOO', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('content_templates', '123');
-            expect(ctrl.name).toBe(existingTemplate.template_name);
-            expect(ctrl.type).toBe('create');
-            expect(ctrl.desk).toBe('sports');
-            ctrl.save();
-            expect(api.save.calls.argsFor(0)[1]).toBe(existingTemplate);
+
+            setTimeout(() => {
+                expect(api.find).toHaveBeenCalledWith('content_templates', '123');
+                expect(ctrl.name).toBe(existingTemplate.template_name);
+                expect(ctrl.type).toBe('create');
+                expect(ctrl.desk).toBe('sports');
+                ctrl.save();
+                expect(api.save.calls.argsFor(0)[1]).toBe(existingTemplate);
+                done();
+            }, 1000);
         }));
 
         it('can create new using old template data', inject(($controller, api, $rootScope) => {
