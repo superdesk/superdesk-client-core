@@ -87,6 +87,7 @@ export function CreateTemplateController(
             if (self.canEdit() !== true) {
                 template.is_public = false;
                 template.user = session.identity._id;
+                template.template_desks = [];
             }
         }
 
