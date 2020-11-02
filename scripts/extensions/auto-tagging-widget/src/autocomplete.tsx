@@ -37,9 +37,8 @@ export class Autocomplete<T> extends React.PureComponent<IProps<T>, IState<T>> {
         });
     }
     render() {
-        const {value, onChange, getLabel} = this.props;
+        const {value, onChange, getLabel, onSuggestionSelect} = this.props;
         const {suggestions} = this.state;
-        const suggestionStrings = suggestions == null ? [] : suggestions.map((suggestion) => getLabel(suggestion));
 
         return (
             <div>
@@ -53,7 +52,17 @@ export class Autocomplete<T> extends React.PureComponent<IProps<T>, IState<T>> {
                     }}
                 />
 
-                <pre>{JSON.stringify(suggestionStrings)}</pre>
+                <div>
+                    {(suggestions ?? []).map((suggestion, i) => (
+                        <div key={i}>
+                            <button
+                                onClick={() => {
+                                    onSuggestionSelect(suggestion);
+                                }}
+                            >{getLabel(suggestion)}</button>
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
