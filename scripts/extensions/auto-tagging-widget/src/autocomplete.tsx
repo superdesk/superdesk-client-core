@@ -37,9 +37,9 @@ export class Autocomplete<T> extends React.PureComponent<IProps<T>, IState<T>> {
         });
     }
     render() {
-        const {value, onChange} = this.props;
-        // const {suggestions} = this.state;
-        // const suggestionStrings = suggestions == null ? [] : suggestions.map((suggestion) => getLabel(suggestion));
+        const {value, onChange, getLabel} = this.props;
+        const {suggestions} = this.state;
+        const suggestionStrings = suggestions == null ? [] : suggestions.map((suggestion) => getLabel(suggestion));
 
         return (
             <div>
@@ -49,15 +49,11 @@ export class Autocomplete<T> extends React.PureComponent<IProps<T>, IState<T>> {
                     value={value}
                     onChange={(event) => {
                         onChange(event.target.value);
+                        this.search(event.target.value);
                     }}
                 />
-                {/* <AutoCompleteUI
-                    label={this.props.fieldLabel}
-                    items={suggestionStrings}
-                    onChange={(term) => {
-                        this.search(term);
-                    }}
-                /> */}
+
+                <pre>{JSON.stringify(suggestionStrings)}</pre>
             </div>
         );
     }
