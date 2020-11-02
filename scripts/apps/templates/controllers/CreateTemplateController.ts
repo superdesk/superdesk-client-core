@@ -1,7 +1,27 @@
 import notifySaveError from '../helpers';
 
-CreateTemplateController.$inject = ['item', 'templates', 'api', 'desks', '$q', 'notify', 'lodash'];
-export function CreateTemplateController(item, templates, api, desks, $q, notify, _) {
+CreateTemplateController.$inject = [
+    'item',
+    'templates',
+    'api',
+    'desks',
+    '$q',
+    'notify',
+    'lodash',
+    'privileges',
+    'session',
+];
+export function CreateTemplateController(
+    item,
+    templates,
+    api,
+    desks,
+    $q,
+    notify,
+    _,
+    privileges,
+    session,
+) {
     var self = this;
 
     this.type = 'create';
@@ -30,6 +50,22 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         });
     }
 
+    self.canEdit = () => {
+        if (self.template?.is_public === true) {
+            return privileges.userHasPrivileges({content_templates: 1});
+        } else if (self.template?.user === session.identity._id) {
+            return true; // can always edit own templates
+        } else {
+            return privileges.userHasPrivileges({personal_template: 1}); // can edit templates of other users
+        }
+    };
+
+    self.wasRenamed = () => {
+        return self.template && self.name !== self.template.template_name;
+    };
+
+    self.willCreateNew = () => self.wasRenamed() || self.canEdit() !== true;
+
     function save() {
         var data = {
             template_name: self.name,
@@ -42,10 +78,16 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         var template = self.template ? self.template : data;
         var diff = self.template ? data : null;
 
-        // in case there is old template but user renames it - create a new one
-        if (self.template && self.name !== self.template.template_name) {
+        // in case there is old template but user renames it
+        // or user is not allowed to edit it - create a new one
+        if (self.willCreateNew()) {
             template = data;
             diff = null;
+
+            if (self.canEdit() !== true) {
+                template.is_public = false;
+                template.user = session.identity._id;
+            }
         }
 
         return api.save('content_templates', template, diff)

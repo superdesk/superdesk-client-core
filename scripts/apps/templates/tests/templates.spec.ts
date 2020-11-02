@@ -8,15 +8,16 @@ describe('templates', () => {
     }));
 
     describe('templates widget', () => {
-        var existingTemplate = {template_name: 'template1', template_desks: ['sports']};
+        var existingTemplate = {template_name: 'template1', template_desks: ['sports'], is_public: false, user: 'foo'};
 
-        beforeEach(inject((desks, api, $q) => {
+        beforeEach(inject((desks, api, $q, session) => {
             spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
             spyOn(api, 'save').and.returnValue($q.when({}));
             spyOn(api, 'find').and.returnValue($q.when(existingTemplate));
+            session.identity = {_id: 'foo', user_type: 'user'};
         }));
 
-        it('can create template', inject(($controller, api, $q, $rootScope) => {
+        it('can create template', inject(($controller, api) => {
             var item = _.create({slugline: 'FOO', headline: 'foo'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
@@ -31,6 +32,7 @@ describe('templates', () => {
                 template_type: 'create',
                 template_desks: null,
                 is_public: false,
+                user: 'foo',
                 data: {
                     headline: 'foo',
                     slugline: 'FOO',
@@ -38,11 +40,13 @@ describe('templates', () => {
             }, null);
         }));
 
-        it('can update template', inject(($controller, api, $rootScope) => {
+        it('can update template', inject(($controller, api, $rootScope, session) => {
             var item = _.create({slugline: 'FOO', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
             $rootScope.$digest();
+            session.identity = {_id: 'foo', user_type: 'user'};
+
             expect(api.find).toHaveBeenCalledWith('content_templates', '123');
             expect(ctrl.name).toBe(existingTemplate.template_name);
             expect(ctrl.type).toBe('create');
@@ -51,11 +55,13 @@ describe('templates', () => {
             expect(api.save.calls.argsFor(0)[1]).toBe(existingTemplate);
         }));
 
-        it('can create new using old template data', inject(($controller, api, $rootScope) => {
+        it('can create new using old template data', inject(($controller, api, $rootScope, session) => {
             var item = _.create({slugline: 'foo', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
             $rootScope.$digest();
+            session.identity = {_id: 'foo', user_type: 'user'};
+
             ctrl.name = 'rename it';
             ctrl.is_public = true;
             ctrl.save();

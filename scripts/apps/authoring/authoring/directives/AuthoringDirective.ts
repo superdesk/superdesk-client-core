@@ -272,11 +272,6 @@ export function AuthoringDirective(
                 }
             };
 
-            $scope.canSaveTemplate = function() {
-                return privileges.userHasPrivileges({content_templates: 1})
-                   || $scope.currentTemplate?.is_public === false;
-            };
-
             function _exportHighlight(_id) {
                 api.generate_highlights.save({}, {package: _id})
                     .then(authoringWorkspace.edit, (response) => {
