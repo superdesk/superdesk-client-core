@@ -4,6 +4,7 @@ import {merge, flatMap} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
+import {logger} from 'core/services/logger';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
@@ -165,7 +166,11 @@ export function AuthoringDirective(
              * Get the Current Template for the item.
             */
             function getCurrentTemplate() {
-                api('content_templates').getById($scope.item?.template)
+                if (typeof $scope.item?.template !== 'string') {
+                    logger.error(new Error('template must be present'));
+                    return;
+                }
+                api('content_templates').getById($scope.item.template)
                     .then((result) => {
                         $scope.currentTemplate = result;
                     });
