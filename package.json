@@ -97,7 +97,7 @@
     "moment": "2.20.1",
     "moment-timezone": "0.5.14",
     "ng-file-upload": "12.2.13",
-    "node-sass": "4.12.0",
+    "node-sass": "4.14.0",
     "owl.carousel": "2.2.0",
     "patch-package": "6.2.2",
     "postscribe": "2.0.8",
