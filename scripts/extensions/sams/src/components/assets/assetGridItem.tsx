@@ -91,7 +91,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                     uploading={true}
                     remove={this.props.remove && this.onRemove}
                     icon={typeIcon}
-                    selected={this.props.selected || this.props.itemSelected}
+                    selected={this.props.itemSelected}
                     toggleSelected={this.props.toggleSelected && this.toggleSelected}
                     onCheckboxClick={this.onCheckboxClick}
                 >
