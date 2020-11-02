@@ -96,7 +96,6 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                         <div className="side-panel__content-block-inner side-panel__content-block-inner--right">
                             <Dropdown
                                 align = "right"
-                                append = {true}
                                 items={[
                                     {
                                         type: 'group',

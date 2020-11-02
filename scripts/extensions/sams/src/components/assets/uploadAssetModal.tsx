@@ -20,7 +20,7 @@ import {
     IUploadItem,
 } from '../../containers/FileUploadModal';
 import {AssetGridItem} from './assetGridItem';
-import {AssetEditorPanel} from './assetEditorPanel';
+import {AssetEditor} from './assetEditor';
 
 interface IState {
     assets: Dictionary<string, Partial<IAssetItem>>;
@@ -180,12 +180,11 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
 
     renderRightPanel({item, submitting}: IContentPanelProps) {
         return (
-            <AssetEditorPanel
+            <AssetEditor
                 key={item.id}
                 asset={this.state.assets[item.id]}
                 disabled={submitting}
                 onChange={this.onFieldChanged[item.id]}
-                uploadFlag={true}
             />
         );
     }

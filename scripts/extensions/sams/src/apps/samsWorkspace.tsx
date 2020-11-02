@@ -39,10 +39,8 @@ import {
     getAssetListTotal,
     getAssetSearchParams,
     getAssetSearchResults,
-    getSelectedAsset,
     getSelectedAssetId,
     getSelectedAssetIds,
-    getSetNameForSelectedAsset,
     getSelectedAssetItems,
     getSetContentPanelState,
 } from '../store/assets/selectors';
@@ -64,7 +62,6 @@ interface IProps {
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
     asset?: IAssetItem;
-    setName?: string;
     selectedAssetId: string | undefined;
     selectedAssetIds: Array<string>;
     filterPanelOpen: boolean;
@@ -95,8 +92,6 @@ const mapStateToProps = (state: IApplicationState) => ({
     filterPanelOpen: isFilterPanelOpen(state),
     selectedAssetId: getSelectedAssetId(state),
     selectedAssetIds: getSelectedAssetIds(state),
-    asset: getSelectedAsset(state),
-    setName: getSetNameForSelectedAsset(state),
     selectedAssets: getSelectedAssetItems(state),
     contentPanelState: getSetContentPanelState(state),
 });
@@ -245,7 +240,6 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                                 <PanelContentBlockInner grow={true}>
                                     <ContentPanel
                                         key={this.props.selectedAssetId}
-                                        asset={this.props.asset!}
                                         fields={[
                                             'name',
                                             'description',
