@@ -1,7 +1,7 @@
 import notifySaveError from '../helpers';
 
-CreateTemplateController.$inject = ['item', 'templates', 'api', 'desks', '$q', 'notify', 'lodash'];
-export function CreateTemplateController(item, templates, api, desks, $q, notify, _) {
+CreateTemplateController.$inject = ['item', 'templates', 'api', 'desks', '$q', 'notify', 'lodash', 'session'];
+export function CreateTemplateController(item, templates, api, desks, $q, notify, _, session) {
     var self = this;
 
     this.type = 'create';
@@ -12,12 +12,18 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
     this.types = templates.types;
     this.createTypes = _.filter(templates.types, (element) => element._id !== 'kill');
     this.save = save;
+    let currentUser = null;
 
     activate();
 
     function activate() {
         if (item.template) {
-            api.find('content_templates', item.template).then((template) => {
+            $q.all([
+                api.find('content_templates', item.template),
+                session.getIdentity(),
+            ]).then(([template, user]) => {
+                currentUser = user;
+
                 self.name = template.template_name;
                 self.desk = !_.isNil(template.template_desks) ? template.template_desks[0] : null;
                 self.is_public = template.is_public !== false;
@@ -40,12 +46,17 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         };
 
         var template = self.template ? self.template : data;
-        var diff = self.template ? data : null;
+        var diff: any = self.template ? data : null;
 
         // in case there is old template but user renames it - create a new one
         if (self.template && self.name !== self.template.template_name) {
             template = data;
             diff = null;
+        }
+
+        // if template is made private, set current user as template owner
+        if (template.is_public === true && diff?.is_public === false) {
+            diff.user = currentUser._id;
         }
 
         return api.save('content_templates', template, diff)
