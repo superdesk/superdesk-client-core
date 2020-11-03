@@ -9,17 +9,12 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x]
-
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Node ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: '12.x'
     
     - name: Cache NPM
       uses: actions/cache@v2
@@ -41,16 +36,14 @@ jobs:
       fail-fast: false
       matrix:
         suite: [a, b]
-        node-version: [12.x]
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Node ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+    - uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
-    
+        node-version: '12.x'
+  
     - name: Cache NPM
       uses: actions/cache@v2
       with:
@@ -65,15 +58,14 @@ jobs:
 
     - name: Start e2e server
       run: |
-        pushd test-server
         docker-compose pull
         docker-compose build
         docker-compose up -d
-        popd
-    
+      working-directory: test-server
+
     - name: Build client
       run: npm run build && npm run start-client-server
-    
+
     - name: Protractor
       run: npm run protractor -- --suite=${{ matrix.suite }}
       env:
@@ -84,5 +76,5 @@ jobs:
       if: ${{ failure() }}
       uses: actions/upload-artifact@v2
       with:
-        name: screenshots-without-markdown
+        name: screenshots-e2e-${{ matrix.suite }}
         path: /tmp/*.png
