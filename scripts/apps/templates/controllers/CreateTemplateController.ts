@@ -51,7 +51,13 @@ export function CreateTemplateController(
     }
 
     self.canEdit = () => {
-        if (self.template?.is_public === true) {
+        if (self.template == null) {
+            return false; // no template exists yet
+        } else if (self.template?.is_public === true && self.is_public === false) {
+            // if template is changed from public to private, always create a copy of a template
+            // and don't modify the original one.
+            return false;
+        } else if (self.is_public === true) {
             return privileges.userHasPrivileges({content_templates: 1});
         } else if (self.template?.user === session.identity._id) {
             return true; // can always edit own templates
@@ -61,10 +67,13 @@ export function CreateTemplateController(
     };
 
     self.wasRenamed = () => {
-        return self.template && self.name !== self.template.template_name;
+        return self.template != null && self.name !== self.template.template_name;
     };
 
-    self.willCreateNew = () => self.wasRenamed() || self.canEdit() !== true;
+    self.willCreateNew = () =>
+        self.template == null // no template exists yet
+        || self.wasRenamed()
+        || self.canEdit() !== true;
 
     function save() {
         var data = {
@@ -87,7 +96,7 @@ export function CreateTemplateController(
             if (self.canEdit() !== true) {
                 template.is_public = false;
                 template.user = session.identity._id;
-                template.template_desks = [];
+                template.template_desks = null;
             }
         }
 

@@ -8,12 +8,13 @@ describe('templates', () => {
     }));
 
     describe('templates widget', () => {
-        var existingTemplate = {template_name: 'template1', template_desks: ['sports'], is_public: false, user: 'foo'};
+        var existingTemplate = {template_name: 'template1', template_desks: ['sports'], is_public: true, user: 'foo'};
 
-        beforeEach(inject((desks, api, $q, session) => {
+        beforeEach(inject((desks, api, $q, session, privileges) => {
             spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
             spyOn(api, 'save').and.returnValue($q.when({}));
             spyOn(api, 'find').and.returnValue($q.when(existingTemplate));
+            spyOn(privileges, 'userHasPrivileges').and.returnValue(true);
             session.identity = {_id: 'foo', user_type: 'user'};
         }));
 
