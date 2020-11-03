@@ -39,7 +39,7 @@ function installWebdriverDriver() {
                 return reject('To launch the test server either Chromium or Google Chrome has to be installed.');
             }
 
-            console.info('Installing webdriver...');
+            console.info('Installing webdriver...', version);
             execSync(`npx webdriver-manager update --gecko false --standalone false --versions.chrome=${version}`);
 
             resolve();
@@ -52,8 +52,9 @@ ensurePackageInstalled()
     .then(() => {
         const argumentsToForward = process.argv.slice(2).join(' ');
 
-        execSync(`npx protractor protractor.conf.js ${argumentsToForward}`, {stdio: 'inherit'});
+        return execSync(`npx protractor protractor.conf.js ${argumentsToForward}`, {stdio: 'inherit'});
     })
     .catch((e) => {
         console.error(e);
+        process.exitCode = 1;
     });

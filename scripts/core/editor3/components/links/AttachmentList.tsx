@@ -15,7 +15,7 @@ interface IAttachmentItemProps {
     onClick: (attachment: IAttachment) => void;
 }
 
-class AttachmentItem extends React.Component<IAttachmentItemProps> {
+export class AttachmentItem extends React.Component<IAttachmentItemProps> {
     render() {
         const {attachment} = this.props;
         const fileicon = 'big-icon--' + FileiconFilter()(attachment.mimetype);

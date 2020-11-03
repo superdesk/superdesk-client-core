@@ -177,6 +177,26 @@ ul.list-view.list-without-items {
     margin-top: 10px;
 }
 
+.css-table {
+    display: table;
+
+    > .tr {
+        display: table-row;
+
+        > .td {
+            display: table-cell;
+        }
+    }
+}
+
+.small-tag {
+    font-size: 12px;
+    color: #000;
+    background-color: #f5f5f5;
+    padding: 3px 6px;
+    border-radius: 2px;
+}
+
 // SPACER END
 
 @media print
