@@ -39,12 +39,11 @@ jobs:
     - run: npm run test
 
   e2e:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [12.x]
+        suite-version: [a, b]
 
     steps:
     - uses: actions/checkout@v2
@@ -78,6 +77,6 @@ jobs:
       run: npm run build && npm run start-client-server
     
     - name: Protractor
-      run: npm run protractor
+      run: npm run protractor -- --suite=${{ matrix.suite }}
       env:
         TRAVIS: ci
