@@ -226,6 +226,11 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                         ' * * ' + $scope.template.schedule.day_of_week.join(','));
                 });
                 if (validate($scope.origTemplate, $scope.template)) {
+                    // if template is made private, set current user as template owner
+                    if ($scope.origTemplate.is_public === true && $scope.template.is_public === false) {
+                        $scope.template.user = session.identity._id;
+                    }
+
                     templates.save($scope.origTemplate, $scope.template)
                         .then(
                             () => {

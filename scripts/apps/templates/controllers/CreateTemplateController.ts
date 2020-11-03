@@ -85,7 +85,7 @@ export function CreateTemplateController(
         };
 
         var template = self.template ? self.template : data;
-        var diff = self.template ? data : null;
+        var diff: any = self.template ? data : null;
 
         // in case there is old template but user renames it
         // or user is not allowed to edit it - create a new one
@@ -98,6 +98,11 @@ export function CreateTemplateController(
                 template.user = session.identity._id;
                 template.template_desks = null;
             }
+        }
+
+        // if template is made private, set current user as template owner
+        if (template.is_public === true && diff?.is_public === false) {
+            diff.user = session.identity._id;
         }
 
         return api.save('content_templates', template, diff)
