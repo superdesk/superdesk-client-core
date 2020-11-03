@@ -84,14 +84,14 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                         }
 
                         <div className="form__row">
-                            <Autocomplete 
+                            <Autocomplete
                                 label={gettext('Title')}
                                 value={item ?? ''}
-                                keyValue='name'
+                                keyValue="name"
                                 items={[]}
                                 search={(searchString, callback) => {
                                     let cancelled = false;
-                        
+
                                     httpRequestJsonLocal<IAutoTaggingSearchResult>({
                                         method: 'POST',
                                         path: '/ai_data_op/',
@@ -103,23 +103,30 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                     }).then((res) => {
                                         if (cancelled !== true) {
                                             const result = toClientFormat(res.result.tags, false).toArray();
-                    
+
                                             const withoutExistingTags = result.filter(
                                                 (searchTag) => tagAlreadyExists(searchTag.qcode) !== true,
                                             );
-                    
+
                                             callback(withoutExistingTags);
                                         }
                                     });
-                        
+
                                     return {
                                         cancel: () => {
                                             cancelled = true;
                                         },
                                     };
                                 }}
-                                onChange={() => {}}
-                                onSelect={(value: any) => {
+                                onChange={(name) => {
+                                    onChange({
+                                        ...item,
+                                        name,
+                                    });
+                                }}
+                                onSelect={(_value: any) => {
+                                    const value = _value as ITagUi;
+
                                     insertTagFromSearch(value);
                                     this.props.onChange(null); // closing new item view
                                 }}
