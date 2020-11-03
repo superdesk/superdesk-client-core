@@ -205,7 +205,7 @@ export function startApp(
                 'superdesk.apps',
                 'superdesk.register_extensions',
             ].concat(appConfig.apps || []), {strictDi: true});
-            
+
             window['superdeskIsReady'] = true;
 
             if (appConfig.features.useTansaProofing) {
@@ -216,11 +216,8 @@ export function startApp(
 
 // the application should be started by importing and calling `startApp` from a customer repository
 // this is a fallback for e2e tests.
-
-import AutoTaggingWidget from 'extensions/auto-tagging-widget/dist/src/extension';
-
 setTimeout(() => {
     if (started !== true) {
-        startApp([AutoTaggingWidget], {});
+        startApp([], {});
     }
 }, 500);
