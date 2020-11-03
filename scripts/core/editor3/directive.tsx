@@ -14,8 +14,8 @@ import ng from 'core/services/ng';
 import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 import {addInternalEventListener} from 'core/internal-events';
 import {
-    CHARACTER_COUNT_UI_PREF,
-    CharacterCountUiBehavior,
+    CHARACTER_LIMIT_UI_PREF,
+    CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 /**
  * @ngdoc directive
@@ -48,7 +48,7 @@ class Editor3Directive {
     svc: any;
     pathToValue: any;
     limit?: number;
-    limitBehavior?: CharacterCountUiBehavior;
+    limitBehavior?: CharacterLimitUiBehavior;
     scrollContainer: any;
     refreshTrigger: any;
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
@@ -205,7 +205,7 @@ class Editor3Directive {
                 this.$scope = $scope;
                 this.svc = {};
                 this.limitBehavior =
-                    userPreferences[CHARACTER_COUNT_UI_PREF]?.[
+                    userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
                         this.pathToValue
                     ];
 
@@ -302,7 +302,7 @@ class Editor3Directive {
                         'changeUserPreferences',
                         (event) => {
                             const limitBehavior =
-                                event.detail?.[CHARACTER_COUNT_UI_PREF]?.[
+                                event.detail?.[CHARACTER_LIMIT_UI_PREF]?.[
                                     this.pathToValue
                                 ];
 

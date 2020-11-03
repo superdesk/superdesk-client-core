@@ -39,7 +39,7 @@ import {
 import {appConfig} from 'appConfig';
 import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 import {
-    CharacterCountUiBehavior,
+    CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 
@@ -60,7 +60,7 @@ interface IProps {
     svc?: any;
     trim?: any;
     value?: any;
-    limitBehavior?: CharacterCountUiBehavior;
+    limitBehavior?: CharacterLimitUiBehavior;
     limit?: number;
 }
 

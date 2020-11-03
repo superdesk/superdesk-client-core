@@ -36,7 +36,7 @@ import {EDITOR_BLOCK_TYPE} from '../constants';
 import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 import {preventInputWhenLimitIsPassed, handleOverflowHighlights} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
-import {CharacterCountUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -126,7 +126,7 @@ interface IProps {
     spellchecking?: IEditorStore['spellchecking'];
     cleanPastedHtml?: boolean;
     limit?: number;
-    limitBehavior?: CharacterCountUiBehavior;
+    limitBehavior?: CharacterLimitUiBehavior;
     onCreateAddSuggestion?(chars): void;
     onCreateDeleteSuggestion?(type): void;
     onPasteFromSuggestingMode?(): void;

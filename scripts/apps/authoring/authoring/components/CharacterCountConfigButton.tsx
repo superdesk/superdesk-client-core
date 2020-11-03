@@ -10,14 +10,14 @@ import {Radio, CheckGroup} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {dispatchInternalEvent} from 'core/internal-events';
 
-export const CHARACTER_COUNT_UI_PREF = 'editor:char_count_ui';
+export const CHARACTER_LIMIT_UI_PREF = 'editor:char_limit_ui';
 
-export type CharacterCountUiBehavior = 'highlight' | 'limit'; // highlight extra chars or limit the editor
-export interface ICharacterCountUiPref {
-    [schemaField: string]: CharacterCountUiBehavior;
+export type CharacterLimitUiBehavior = 'highlight' | 'limit'; // highlight extra chars or limit the editor
+export interface ICharacterLimitUiBehavior {
+    [schemaField: string]: CharacterLimitUiBehavior;
 }
 
-export const DEFAULT_UI_FOR_EDITOR_LIMIT: CharacterCountUiBehavior = 'highlight';
+export const DEFAULT_UI_FOR_EDITOR_LIMIT: CharacterLimitUiBehavior = 'highlight';
 
 interface IProps {
     field: string;
@@ -52,11 +52,15 @@ export class CharacterCountConfigButton extends React.Component<
         });
     }
 
-    onModalValueChange(newValue: CharacterCountUiBehavior) {
+    onModalValueChange(newValue: CharacterLimitUiBehavior) {
+        if (!newValue) {
+            return;
+        }
+
         const newPreferences = {
             ...this.state.preferences,
-            [CHARACTER_COUNT_UI_PREF]: {
-                ...this.state.preferences[CHARACTER_COUNT_UI_PREF],
+            [CHARACTER_LIMIT_UI_PREF]: {
+                ...this.state.preferences[CHARACTER_LIMIT_UI_PREF],
                 [this.props.field]: newValue,
             },
         };
@@ -80,7 +84,7 @@ export class CharacterCountConfigButton extends React.Component<
                             closeModal={props.closeModal}
                             value={
                                 this.state.preferences[
-                                    CHARACTER_COUNT_UI_PREF
+                                    CHARACTER_LIMIT_UI_PREF
                                 ]?.[this.props.field] ?? DEFAULT_UI_FOR_EDITOR_LIMIT
                             }
                             onChange={this.onModalValueChange}
@@ -96,7 +100,7 @@ export class CharacterCountConfigButton extends React.Component<
 
 function CharacterCountConfigModal({closeModal, onChange, value}) {
     const [radioValue, radioValueSet] = React.useState<
-        CharacterCountUiBehavior
+        CharacterLimitUiBehavior
     >(value);
 
     return (
@@ -110,7 +114,7 @@ function CharacterCountConfigModal({closeModal, onChange, value}) {
                     )}
                 </p>
                 <CheckGroup orientation="vertical">
-                    <Radio<CharacterCountUiBehavior>
+                    <Radio<CharacterLimitUiBehavior>
                         value={radioValue}
                         options={[
                             {
