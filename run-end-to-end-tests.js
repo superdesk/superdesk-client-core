@@ -39,7 +39,7 @@ function installWebdriverDriver() {
                 return reject('To launch the test server either Chromium or Google Chrome has to be installed.');
             }
 
-            console.info('Installing webdriver...');
+            console.info('Installing webdriver...', version);
             execSync(`npx webdriver-manager update --gecko false --standalone false --versions.chrome=${version}`);
 
             resolve();
