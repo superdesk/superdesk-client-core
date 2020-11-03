@@ -18,7 +18,7 @@ import {IApplicationState} from '../store';
 import {samsApi} from '../apis';
 
 // UI
-import {PanelContent, PanelContentBlock, PanelContentBlockInner} from '../ui';
+import {PanelContent} from '../ui';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -236,18 +236,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                         <div />
                     ) : (
                         <PanelContent>
-                            <PanelContentBlock flex={true}>
-                                <PanelContentBlockInner grow={true}>
-                                    <ContentPanel
-                                        key={this.props.selectedAssetId}
-                                        fields={[
-                                            'name',
-                                            'description',
-                                            'state',
-                                        ]}
-                                    />
-                                </PanelContentBlockInner>
-                            </PanelContentBlock>
+                            <ContentPanel key={this.props.selectedAssetId}/>
                         </PanelContent>
                     )}
                     mainClassName="sd-padding--2"

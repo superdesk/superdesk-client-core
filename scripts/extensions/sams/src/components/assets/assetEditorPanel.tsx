@@ -5,36 +5,28 @@ import {Dispatch} from 'redux';
 import {cloneDeep} from 'lodash';
 
 // Types
-import {ASSET_STATE, IAssetItem, ISetItem} from '../../interfaces';
+import {IAssetItem} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {previewAsset, updateAsset} from '../../store/assets/actions';
 import {getSelectedAsset} from '../../store/assets/selectors';
-import {getActiveSets} from '../../store/sets/selectors';
 
 // UI
-import {Button, ButtonGroup, FormLabel, Input, Option, Select} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {
-    FormGroup,
-    FormRow,
     PanelHeader,
     PanelHeaderSlidingToolbar,
+    PanelContentBlock,
+    PanelContentBlockInner
 } from '../../ui';
-import {getHumanReadableFileSize} from '../../utils/ui';
-
-// Utils
-import {hasItemChanged} from '../../utils/api';
+import {AssetEditor} from './assetEditor';
 
 interface IProps {
     original?: IAssetItem;
-    disabled?: boolean;
     previewAsset(asset: IAssetItem): void;
-    onChange(field: string, value: string): void;
     updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): Promise<IAssetItem>;
-    sets?: Array<ISetItem>;
-    fields?: Array<keyof IAssetItem>;
 }
 
 interface IState {
@@ -45,7 +37,6 @@ interface IState {
 
 const mapStateToProps = (state: IApplicationState) => ({
     original: getSelectedAsset(state),
-    sets: getActiveSets(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -54,8 +45,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 });
 
 export class AssetEditorPanelComponent extends React.PureComponent<IProps, IState> {
-    onChange: Dictionary<string, (value: any) => void>;
-
     constructor(props: IProps) {
         super(props);
 
@@ -74,33 +63,20 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
             };
         }
 
-        this.onFieldChange = this.onFieldChange.bind(this);
+        this.onChange = this.onChange.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onCancel = this.onCancel.bind(this);
-
-        this.onChange = {
-            name: (value: string) => this.onFieldChange('name', value.trim()),
-            description: (value: string) => this.onFieldChange('description', value.trim()),
-            state: (value: string) => this.onFieldChange('state', value),
-            set_id: (value: string) => this.onFieldChange('set_id', value),
-        };
     }
 
-    onFieldChange(field: keyof IAssetItem, value: any): void {
-        const updates = this.state.updates;
-
-        let dirty = true;
-
-        (updates[field] as any) = value;
-
-        if (this.props.original != null) {
-            dirty = hasItemChanged(this.props.original, this.state.updates);
-        }
-
-        this.setState({
-            updates: updates,
-            isDirty: dirty,
-        });
+    onChange<K extends keyof IAssetItem>(field: K, value: IAssetItem[K]) {
+        
+        this.setState((prevState: IState) => ({
+            updates: {
+                ...prevState.updates,
+                [field]: value,
+            },
+            isDirty: true,
+        }));
     }
 
     onSave() {
@@ -129,12 +105,6 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
         }
     }
 
-    fieldEnabled(field: keyof IAssetItem) {
-        return (this.props.fields == null || this.props.fields.includes(field)) ?
-            true :
-            null;
-    }
-
     render() {
         const {gettext} = superdeskApi.localization;
 
@@ -158,90 +128,20 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
                         </ButtonGroup>
                     </PanelHeaderSlidingToolbar>
                 </PanelHeader>
-                <FormGroup>
-                    <FormRow>
-                        <FormLabel text={gettext('Filename:')} />
-                        <span>{this.props.original?.filename}</span>
-                    </FormRow>
-                </FormGroup>
-                <FormGroup>
-                    <FormRow>
-                        <FormLabel text={gettext('Type:')} />
-                        <span>{this.props.original?.mimetype}</span>
-                    </FormRow>
-                    <FormRow>
-                        <FormLabel text={gettext('Size:')} />
-                        <span>
-                            {this.props.original?.length && getHumanReadableFileSize(this.props.original?.length)}
-                        </span>
-                    </FormRow>
-                </FormGroup>
-                {this.fieldEnabled('name') && (
-                    <FormGroup>
-                        <FormRow>
-                            <Input
-                                label={gettext('Name')}
-                                value={this.props.original?.name}
-                                onChange={this.onChange.name}
-                                disabled={this.props.disabled === true}
-                            />
-                        </FormRow>
-                    </FormGroup>
-                )}
-                {this.fieldEnabled('description') && (
-                    <FormGroup>
-                        <FormRow>
-                            <Input
-                                label={gettext('Description')}
-                                value={this.props.original?.description}
-                                onChange={this.onChange.description}
-                                disabled={this.props.disabled === true}
-                            />
-                        </FormRow>
-                    </FormGroup>
-                )}
-                {this.fieldEnabled('state') && (
-                    <FormGroup>
-                        <FormRow>
-                            <Select
-                                label={gettext('State')}
-                                value={this.props.original?.state}
-                                required={true}
-                                onChange={this.onChange.state}
-                                disabled={this.props.disabled === true}
-                            >
-                                <Option value={ASSET_STATE.DRAFT}>
-                                    {gettext('Draft')}
-                                </Option>
-                                <Option value={ASSET_STATE.INTERNAL}>
-                                    {gettext('Internal')}
-                                </Option>
-                                <Option value={ASSET_STATE.PUBLIC}>
-                                    {gettext('Public')}
-                                </Option>
-                            </Select>
-                        </FormRow>
-                    </FormGroup>
-                )}
-                {this.fieldEnabled('set_id') && (
-                    <FormGroup>
-                        <FormRow>
-                            <Select
-                                label={gettext('Set')}
-                                value={this.props.original?.set_id}
-                                required={true}
-                                onChange={this.onChange.set_id}
-                                disabled={this.props.disabled === true}
-                            >
-                                {this.props.sets?.map((set) => (
-                                    <Option key={set._id} value={set._id}>
-                                        {set.name}
-                                    </Option>
-                                ))}
-                            </Select>
-                        </FormRow>
-                    </FormGroup>
-                )}
+                <PanelContentBlock flex={true}>
+                    <PanelContentBlockInner grow={true}>
+                        <AssetEditor
+                            key={this.props.original?._id}
+                            asset={this.props.original!}
+                            onChange={this.onChange}
+                            fields={[
+                                'name',
+                                'description',
+                                'state',
+                            ]}
+                        />
+                    </PanelContentBlockInner>
+                </PanelContentBlock>
             </React.Fragment>
         );
     }
