@@ -17,7 +17,7 @@ interface IVideoRenditionItem {
 /**
  * VideoComponent is used to render a player for an item with type video.
  */
-export class VideoComponent extends React.PureComponent<IProps> {
+export class VideoComponent extends React.Component<IProps> {
     videoElement: HTMLVideoElement;
 
     shouldComponentUpdate(nextProps: IProps) {

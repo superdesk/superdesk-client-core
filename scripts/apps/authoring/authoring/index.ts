@@ -28,6 +28,7 @@ import {FullPreviewDirective} from './directives/FullPreviewDirective';
 import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
+import {FullPreview} from '../preview/fullPreview';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -115,6 +116,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
     .directive('sdFullPreview', FullPreviewDirective)
     .directive('sdFullPreviewItem', FullPreviewItemDirective)
+    .component('sdFullPreviewReact', reactToAngular1(FullPreview, ['item', 'editor', 'fields', 'hideMedia']))
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)

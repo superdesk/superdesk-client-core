@@ -1,3 +1,19 @@
+<!--
+
+
+
+    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    !!! IMPORTANT:
+
+    If you add a new field here in authoring,
+    do not forget to also map it to field types
+    for preview in preview/getAuthoringField.ts
+    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+
+-->
+
 <div class="field"
      sd-width="{{editor.headline.sdWidth|| 'full'}}"
      ng-if="schema.headline && !(features.onlyEditor3 || editor.body_html.editor3)"
@@ -355,9 +371,11 @@
             </div>
 
             <span class="media-item__item-label" translate>Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)</span>
-            <div sd-media-metadata-view
-                 class="media-container__metadata media-container__metadata--image"
-                 data-item="item"></div>
+
+            <sd-media-metadata-view
+                item="item"
+                class-name="'media-container__metadata media-container__metadata--image'"
+            ></sd-media-metadata-view>
 
         </div>
         <div sd-item-crops data-item="item"></div>
@@ -366,9 +384,12 @@
     <div ng-if="item.type == 'audio'">
         <div class="media-container">
             <audio controls="controls" sd-sources data-renditions="item.renditions"></audio>
-            <div sd-media-metadata-view
-                 class="media-container__metadata"
-                 data-item="item"></div>
+
+            <sd-media-metadata-view
+                item="item"
+                class-name="'media-container__metadata'"
+            ></sd-media-metadata-view>
+
             <div class="media-container__action-bar" ng-if="_editable">
                 <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
             </div>
@@ -377,9 +398,12 @@
     <div ng-if="item.type == 'video'">
         <div class="media-container">
             <sd-video item="item"></sd-video>
-            <div sd-media-metadata-view
-                 class="media-container__metadata"
-                 data-item="item"></div>
+
+            <sd-media-metadata-view
+                item="item"
+                class-name="'media-container__metadata'"
+            ></sd-media-metadata-view>
+
             <div class="media-container__action-bar" ng-if="_editable">
                 <div class="flex-grid flex-grid--medium-3">
                     <div class="flex-grid__item sd-text__left" style="text-align: left;">
