@@ -1,11 +1,7 @@
 name: "CI"
 
 on:
-  push:
-    branches: [develop, master]
-  pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [develop]
+  [push, pull_request]
 
 jobs:
 
@@ -42,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         suite: [a, b]
         node-version: [12.x]
@@ -81,3 +78,11 @@ jobs:
       run: npm run protractor -- --suite=${{ matrix.suite }}
       env:
         TRAVIS: ci
+        SCREENSHOTS_DIR: /tmp
+    
+    - name: Upload screenshots
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: screenshots-without-markdown
+        path: /tmp/*.png
