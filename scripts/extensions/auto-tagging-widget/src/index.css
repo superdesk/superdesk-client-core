@@ -5,3 +5,25 @@
     left: 10px;
     right: 10px;
 }
+
+.autocomplete-item {
+    white-space: normal;
+    max-width: 265px;
+}
+
+.autocomplete-item b {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.autocomplete-item p {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 0;
+}
+
+.autocomplete-item span {
+    display: block;
+    font-size: 13px;
+    font-weight: 300;
+}
