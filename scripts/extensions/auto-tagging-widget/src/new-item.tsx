@@ -2,8 +2,8 @@ import * as React from 'react';
 import {INewItem, entityGroups} from './auto-tagging';
 import {ISuperdesk} from 'superdesk-api';
 
-import {Select, Option, Alert} from 'superdesk-ui-framework/react';
-import {Autocomplete} from './autocomplete';
+import {Autocomplete, Select, Option, Alert} from 'superdesk-ui-framework/react';
+
 import {ITagUi} from './types';
 import {IServerResponse, toClientFormat} from './adapter';
 import {getGroups} from './groups';
@@ -84,18 +84,14 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                         }
 
                         <div className="form__row">
-                            <Autocomplete
-                                fieldLabel={gettext('Title')}
-                                value={item.name ?? ''}
-                                onChange={(value) => {
-                                    onChange({
-                                        ...item,
-                                        name: value,
-                                    });
-                                }}
-                                getSuggestions={(searchString, callback) => {
+                            <Autocomplete 
+                                label={gettext('Title')}
+                                value={item ?? ''}
+                                keyValue='name'
+                                items={[]}
+                                search={(searchString, callback) => {
                                     let cancelled = false;
-
+                        
                                     httpRequestJsonLocal<IAutoTaggingSearchResult>({
                                         method: 'POST',
                                         path: '/ai_data_op/',
@@ -104,34 +100,27 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                             operation: 'search',
                                             data: {term: searchString},
                                         },
-                                    })
-                                        .then((res) => {
-                                            if (cancelled !== true) {
-                                                const result = toClientFormat(res.result.tags, false).toArray();
-
-                                                const withoutExistingTags = result.filter(
-                                                    (searchTag) => tagAlreadyExists(searchTag.qcode) !== true,
-                                                );
-
-                                                callback(withoutExistingTags);
-                                            }
-                                        });
-
+                                    }).then((res) => {
+                                        if (cancelled !== true) {
+                                            const result = toClientFormat(res.result.tags, false).toArray();
+                    
+                                            const withoutExistingTags = result.filter(
+                                                (searchTag) => tagAlreadyExists(searchTag.qcode) !== true,
+                                            );
+                    
+                                            callback(withoutExistingTags);
+                                        }
+                                    });
+                        
                                     return {
                                         cancel: () => {
                                             cancelled = true;
                                         },
                                     };
                                 }}
-                                getLabel={(tag: ITagUi) => {
-                                    let desc = (tag.description?.trim().length ?? 0) > 0
-                                        ? ` | ${tag.description?.trim()}`
-                                        : '';
-
-                                    return tag.name + desc;
-                                }}
-                                onSuggestionSelect={(suggestedTag: ITagUi) => {
-                                    insertTagFromSearch(suggestedTag);
+                                onChange={() => {}}
+                                onSelect={(value: any) => {
+                                    insertTagFromSearch(value);
                                     this.props.onChange(null); // closing new item view
                                 }}
                             />

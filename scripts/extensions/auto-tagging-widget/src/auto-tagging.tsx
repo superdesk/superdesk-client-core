@@ -252,6 +252,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 size="small"
                                                 shape="round"
                                                 text={gettext('Add')}
+                                                iconOnly={true}
                                                 onClick={() => {
                                                     this.setState({
                                                         newItem: {
