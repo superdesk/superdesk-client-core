@@ -76,7 +76,6 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                         <div className="sd-card__heading">{gettext('Add keyword')}</div>
                     </div>
                     <div className="sd-card__content">
-
                         {
                             this.state.validationErrors.map((error) => (
                                 <Alert key={error} type="alert" size="small">{error}</Alert>
@@ -121,8 +120,18 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                 listItemTemplate={(_item: any) => (
                                     <div className="auto-tagging-widget__autocomplete-item">
                                         <b>{_item.name}</b>
-                                        <p>{_item.group.value}</p>
-                                        <span>{_item.description}</span>
+
+                                        {
+                                            item?.group?.value == null ? null : (
+                                                <p>{_item.group.value}</p>
+                                            )
+                                        }
+
+                                        {
+                                            item?.description == null ? null : (
+                                                <p>{_item.description}</p>
+                                            )
+                                        }
                                     </div>
                                 )}
                                 onChange={(name) => {
