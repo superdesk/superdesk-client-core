@@ -3,14 +3,18 @@ describe('templates', () => {
     beforeEach(window.module('superdesk.apps.templates'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
 
     describe('templates widget', () => {
         var existingTemplate = {template_name: 'template1', template_desks: ['sports']};
 
-        beforeEach(inject((desks, api, $q) => {
+        beforeEach(inject((desks, api, $q, session) => {
             spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
             spyOn(api, 'save').and.returnValue($q.when({}));
             spyOn(api, 'find').and.returnValue($q.when(existingTemplate));
+            spyOn(session, 'getIdentity').and.returnValue($q.when({}));
         }));
 
         it('can create template', inject(($controller, api, $q, $rootScope) => {
@@ -35,17 +39,21 @@ describe('templates', () => {
             }, null);
         }));
 
-        it('can update template', inject(($controller, api, $rootScope) => {
+        it('can update template', (done) => inject(($controller, api, $rootScope) => {
             var item = _.create({slugline: 'FOO', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
             $rootScope.$digest();
-            expect(api.find).toHaveBeenCalledWith('content_templates', '123');
-            expect(ctrl.name).toBe(existingTemplate.template_name);
-            expect(ctrl.type).toBe('create');
-            expect(ctrl.desk).toBe('sports');
-            ctrl.save();
-            expect(api.save.calls.argsFor(0)[1]).toBe(existingTemplate);
+
+            setTimeout(() => {
+                expect(api.find).toHaveBeenCalledWith('content_templates', '123');
+                expect(ctrl.name).toBe(existingTemplate.template_name);
+                expect(ctrl.type).toBe('create');
+                expect(ctrl.desk).toBe('sports');
+                ctrl.save();
+                expect(api.save.calls.argsFor(0)[1]).toBe(existingTemplate);
+                done();
+            }, 1000);
         }));
 
         it('can create new using old template data', inject(($controller, api, $rootScope) => {
@@ -83,9 +91,9 @@ describe('templates', () => {
                 page: 2,
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[' +
-                '{"template_desks":{"$exists":false},"is_public":true},' +
-                '{"template_desks":[],"is_public":true}]},' +
-                '{"user":"foo","is_public":false}]}]}',
+                '{"template_desks":{"$exists":false}},' +
+                '{"template_desks":[]}]},' +
+                '{"user":"foo"}]}]}',
             });
         }));
         it('can fetch templates using type parameter', inject((api, templates) => {
@@ -94,9 +102,9 @@ describe('templates', () => {
                 max_results: 10,
                 page: 1,
                 sort: 'template_name',
-                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
-                       '{"template_desks":[],"is_public":true}]},' +
-                       '{"user":"foo","is_public":false}],"template_type":"create"}]}',
+                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false}},' +
+                       '{"template_desks":[]}]},' +
+                       '{"user":"foo"}],"template_type":"create"}]}',
             });
         }));
         it('can fetch templates using desk parameter', inject((api, templates) => {
@@ -105,10 +113,10 @@ describe('templates', () => {
                 max_results: 10,
                 page: 2,
                 sort: 'template_name',
-                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
-                '{"template_desks":[],"is_public":true},' +
-                '{"template_desks":{"$in":["desk1"]},"is_public":true}]},' +
-                '{"user":"foo","is_public":false}]}]}',
+                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false}},' +
+                '{"template_desks":[]},' +
+                '{"template_desks":{"$in":["desk1"]}}]},' +
+                '{"user":"foo"}]}]}',
             });
         }));
         it('can fetch templates using keyword parameter', inject((api, templates) => {
@@ -117,9 +125,9 @@ describe('templates', () => {
                 page: 1,
                 max_results: 10,
                 sort: 'template_name',
-                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false},"is_public":true},' +
-                '{"template_desks":[],"is_public":true}]},' +
-                '{"user":"foo","is_public":false}],' +
+                where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false}},' +
+                '{"template_desks":[]}]},' +
+                '{"user":"foo"}],' +
                 '"template_name":{"$regex":"keyword","$options":"-i"}}]}',
             });
         }));
@@ -173,7 +181,7 @@ describe('templates', () => {
                 page: 1,
                 max_results: 10,
                 sort: 'template_name',
-                where: '{"$and":[{"$or":[{"user":"foo"}]}]}',
+                manage: true,
             });
         }));
 
@@ -191,17 +199,7 @@ describe('templates', () => {
                     page: 1,
                     max_results: 10,
                     sort: 'template_name',
-                    where: angular.toJson({
-                        $and: [{
-                            $or: [
-                                {user: 'foo'},
-                                {
-                                    is_public: true,
-                                    template_desks: {$in: ['finance', 'sports']},
-                                },
-                            ],
-                        }],
-                    }),
+                    manage: true,
                 });
             }));
 
@@ -214,6 +212,7 @@ describe('templates', () => {
                     page: 1,
                     max_results: 50,
                     sort: 'template_name',
+                    manage: true,
                 });
             }));
 
@@ -227,6 +226,7 @@ describe('templates', () => {
                     max_results: 50,
                     sort: 'template_name',
                     where: '{"$and":[{"template_type":"create"}]}',
+                    manage: true,
                 });
             }));
 
@@ -238,8 +238,8 @@ describe('templates', () => {
                     page: 1,
                     max_results: 50,
                     sort: 'template_name',
-                    where: '{"$and":[{"$or":[{"user":"foo"}],' +
-                '"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}',
+                    where: '{"$and":[{"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}',
+                    manage: true,
                 });
             }));
     });

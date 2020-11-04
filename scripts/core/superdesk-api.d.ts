@@ -68,6 +68,7 @@ declare module 'superdesk-api' {
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
+            mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
@@ -136,8 +137,12 @@ declare module 'superdesk-api' {
     // ENTITIES
 
     export interface IAuthor {
-        role: string;
-        parent: string;
+        _id: string;
+        name: string;
+        scheme: any | null;
+        user: IUser;
+        role?: string;
+        parent?: string;
     }
 
     // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
@@ -225,6 +230,9 @@ declare module 'superdesk-api' {
         // picture and video only
         width?: number;
         height?: number;
+
+        // video id, set when item is stored in video server
+        video_editor_id?: string;
     };
 
     export interface IArticle extends IBaseRestApiResponse {
@@ -244,8 +252,8 @@ declare module 'superdesk-api' {
         genre: any;
         anpa_take_key?: any;
         place: any;
-        priority?: any;
-        urgency: any;
+        priority?: number;
+        urgency: number;
         anpa_category?: any;
         subject?: Array<ISubject>;
         company_codes?: Array<any>;
@@ -254,6 +262,7 @@ declare module 'superdesk-api' {
         headline: string;
         sms?: string;
         abstract?: string;
+        attachments?: Array<{attachment: string}>;
         byline: string;
         dateline?: {
             day?: string;
@@ -283,7 +292,14 @@ declare module 'superdesk-api' {
         sign_off: string;
         feature_media?: any;
         media_description?: string;
-        associations?: {[id: string]: IArticle | IRelatedArticle};
+        description_text?: string;
+
+        associations?: {
+            'featuremedia': IArticle;
+
+            // IArticle is used for media galleries and IRelatedArticle for linking articles.
+            [id: string]: IArticle | IRelatedArticle;
+        };
         type:
             | 'text'
             | 'picture'
@@ -329,7 +345,7 @@ declare module 'superdesk-api' {
 
         highlights?: Array<string>;
         highlight?: any;
-        sms_message?: any;
+        sms_message?: string;
 
         // storage for custom fields created by users
         extra?: {[key: string]: any};
@@ -400,6 +416,9 @@ declare module 'superdesk-api' {
             [key: string]: IRendition;
         };
 
+        // media fields
+        alt_text?: any;
+
         // planning extension
         assignment_id?: string;
         event_id?: any;
@@ -429,9 +448,9 @@ declare module 'superdesk-api' {
     }
 
     export interface IDangerousArticlePatchingOptions {
-        // when this option is set, an HTTP request will be sent and item patched immediately
-        // otherwise, the patch will get applied to authoring view
-        // and will get saved together with the rest of the article changes by the user
+        // When this option is set, an HTTP request will be sent immediately
+        // even if the article is locked and is being edited.
+        // Data received from the server will overwrite values edited by a user in case of a conflict.
         patchDirectlyAndOverwriteAuthoringValues?: boolean;
     }
 
@@ -558,6 +577,7 @@ declare module 'superdesk-api' {
             | 'media'
             | 'date'
             | 'embed'
+            | 'urls'
             | 'related_content'
             | 'custom';
         field_options?: { // Used for related content fields
@@ -1176,6 +1196,9 @@ declare module 'superdesk-api' {
         saml_auth: any;
         google_auth: any;
         saml_label: any;
+        oidc_auth: any;
+        keycloak_config: any;
+
         archive_autocomplete: boolean;
 
         /** allow updates for items which aren't published yet */
@@ -1232,6 +1255,7 @@ declare module 'superdesk-api' {
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
             sendToPersonal?: boolean;
+            publishFromPersonal?: boolean;
         };
         auth: {
             google: boolean

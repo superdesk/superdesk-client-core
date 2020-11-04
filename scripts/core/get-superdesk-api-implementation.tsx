@@ -109,6 +109,8 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
+export const formatDate = (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat);
+
 // imported from planning
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -133,7 +135,9 @@ export function getSuperdeskApiImplementation(
         },
         entities: {
             article: {
-                isPersonal: (article) => article.task == null || article.task.desk == null,
+                isPersonal: (article) => article.task == null
+                    || article.task.desk == null
+                    || article.task.stage == null,
                 isLocked: isLocked,
                 isLockedInCurrentSession,
                 isLockedInOtherSession,
@@ -268,7 +272,7 @@ export function getSuperdeskApiImplementation(
         localization: {
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
-            formatDate: (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat),
+            formatDate: formatDate,
             formatDateTime: (date: Date) => {
                 return moment(date)
                     .tz(appConfig.defaultTimezone)

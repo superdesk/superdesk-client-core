@@ -14,14 +14,13 @@ before_script:
     - echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
     - |
       if [ "$SKIP_SERVER_INSTALL" != "true" ]; then
-        npm run webdriver-manager
         npm run start-test-server
       fi
 
-after_failure:
-    - cd test-server && docker-compose logs superdesk | grep -i error
-
 jobs:
+    allow_failures:
+        - name: "audit"
+
     include:
         - script: npm run test
           name: "unit"
@@ -30,4 +29,6 @@ jobs:
           name: "e2e vol. 1"
         - script: npm run build && npm run start-client-server && npm run protractor -- --suite=b
           name: "e2e vol. 2"
+        - script: npm audit
+          name: "audit"
 

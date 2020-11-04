@@ -39,13 +39,6 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
             });
 
             /*
-             * Checks if the user is Admin or Not.
-             */
-            $scope.isAdmin = function() {
-                return templates.isAdmin();
-            };
-
-            /*
              * Returns true if desks selection should be displayed
              */
             $scope.showDesks = function() {
@@ -233,6 +226,11 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                         ' * * ' + $scope.template.schedule.day_of_week.join(','));
                 });
                 if (validate($scope.origTemplate, $scope.template)) {
+                    // if template is made private, set current user as template owner
+                    if ($scope.origTemplate.is_public === true && $scope.template.is_public === false) {
+                        $scope.template.user = session.identity._id;
+                    }
+
                     templates.save($scope.origTemplate, $scope.template)
                         .then(
                             () => {
@@ -283,12 +281,10 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                     $scope.template.template_desks[0] : '';
                 $scope.stages = $scope.template.schedule_desk ? desks.deskStages[$scope.template.schedule_desk] : null;
                 $scope.template.template_type = $scope.origTemplate.template_type;
-                if (!templates.isAdmin()) {
-                    // User with no admin privileges cannot create public templates.
-                    $scope.template.is_public = false;
-                } else {
-                    $scope.template.is_public = $scope.template.is_public !== false;
-                }
+
+                $scope.template.is_public = $scope.privileges.content_templates
+                    ? $scope.template.is_public !== false
+                    : false;
 
                 $scope.item = $scope.template.data || {};
                 $scope._editable = true;
@@ -365,9 +361,11 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 TEMPLATEFILTERS.All,
                 TEMPLATEFILTERS.Personal,
             ];
-            if (templates.isAdmin(true)) {
+
+            if ($scope.privileges.personal_template) {
                 $scope.filters.push(TEMPLATEFILTERS.Private);
             }
+
             $scope.filters.push(TEMPLATEFILTERS.NoDesk);
 
             // holds the index of the active filter.

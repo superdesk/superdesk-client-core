@@ -1,3 +1,19 @@
+<!--
+
+
+
+    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    !!! IMPORTANT:
+
+    If you add a new field here in authoring,
+    do not forget to also map it to field types
+    for preview in preview/getAuthoringField.ts
+    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+
+-->
+
 <div class="authoring-header" ng-class="{active: !isCollapsed}">
     <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
         <div class="authoring-header__general-info">
@@ -386,7 +402,7 @@
                 </label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
-                        ng-if="cv.selection_type === 'multi selection'"
+                        ng-if="cv.selection_type === 'multi selection' || showDropdownAsMultiTerms.includes(cv._id)"
                         class="data"
                         data-tabindex="editor[cv._id].order"
                         data-item="item"
@@ -403,7 +419,7 @@
                         tabindex="{{editor[cv._id].order}}">
                    </div>
                    <div sd-meta-dropdown
-                        ng-if="cv.selection_type !== 'multi selection'"
+                        ng-if="cv.selection_type !== 'multi selection' && !showDropdownAsMultiTerms.includes(cv._id)"
                         data-tabindex="editor[cv._id].order"
                         data-item="item"
                         data-field="{{cv.schema_field || 'subject'}}"

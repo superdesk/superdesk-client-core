@@ -87,6 +87,7 @@
     "json-loader": "~0.5.4",
     "json-merge-patch": "0.2.3",
     "json5": "0.5.1",
+    "keycloak-js": "10.0.2",
     "load-grunt-config": "0.19.2",
     "load-grunt-tasks": "3.5.2",
     "lodash": "4.17.5",
@@ -96,7 +97,7 @@
     "moment": "2.20.1",
     "moment-timezone": "0.5.14",
     "ng-file-upload": "12.2.13",
-    "node-sass": "4.12.0",
+    "node-sass": "4.14.0",
     "owl.carousel": "2.2.0",
     "postscribe": "2.0.8",
     "prop-types": "15.6.1",
@@ -122,7 +123,8 @@
     "superdesk-ui-framework": "2.2.6",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
-    "typescript": "4.0.3",
+    "typescript": "3.9.7",
+    "webdriver-manager": "12.1.7",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },
@@ -156,9 +158,10 @@
   "scripts": {
     "gettext-extract": "grunt gettext:extract",
     "setup-extensions": "node ./tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js",
-    "compile-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
+    "e2e-compile": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
+    "e2e-compile-watch": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
+    "protractor": "node run-end-to-end-tests.js",
     "watch-css-from-extensions": "node tasks/namespace-css-from-extensions.js --watch",
-    "watch-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
     "postinstall": "npm run setup-extensions && node ./tasks/compile-e2e-tests.js",
     "test": "grunt ci:travis && npm run lint",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
@@ -170,8 +173,6 @@
     "stop-test-server": "cd test-server && docker-compose stop",
     "start-client-server": "http-server dist -p 9000 -s &",
     "stop-client-server": "fuser -k 9000/tcp",
-    "protractor": "protractor protractor.conf.js",
-    "webdriver-manager": "webdriver-manager update --gecko false --standalone false --versions.chrome=86.0.4240.75",
     "server": "grunt server",
     "dev": "npm run server"
   }

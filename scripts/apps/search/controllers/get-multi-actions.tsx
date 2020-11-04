@@ -3,7 +3,7 @@ import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 import {IExtensionActivationResult} from 'superdesk-api';
-import {extensions} from 'appConfig';
+import {extensions, appConfig} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 import ng from 'core/services/ng';
 
@@ -45,8 +45,11 @@ export function getMultiActions(
     const packages = ng.get('packages');
     const remove = ng.get('remove');
     const send = ng.get('send');
+    const session = ng.get('session');
     const spike = ng.get('spike');
     const superdesk = ng.get('superdesk');
+
+    const personalLocationPath = $location.path() === '/workspace/personal';
 
     function sendFn() {
         send.all(getSelectedItems());
@@ -196,7 +199,15 @@ export function getMultiActions(
     }
 
     function canPublishItem() {
-        return getSelectedItems().every((item) => item.state !== 'draft' && $location.path() !== '/workspace/personal');
+        return getSelectedItems().every((item) => {
+            if (item.state !== 'draft' && $location.path() !== '/workspace/personal') {
+                return true;
+            } else if (item.state !== 'draft' && $location.path() === '/workspace/personal') {
+                return appConfig?.features?.publishFromPersonal;
+            } else {
+                return false;
+            }
+        });
     }
 
     /**
@@ -269,6 +280,15 @@ export function getMultiActions(
 
         Promise.all(
             getSelectedItems().map((item) => new Promise((resolve) => {
+                if (appConfig.features.publishFromPersonal && personalLocationPath) {
+                    var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
+
+                    item.task = {
+                        ...(item.task ?? {}),
+                        desk: currentDeskId,
+                    };
+                }
+
                 authoring.publish(item, item)
                     .then((response) => {
                         if (response.status >= 400) {

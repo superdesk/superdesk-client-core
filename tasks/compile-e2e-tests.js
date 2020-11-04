@@ -17,7 +17,7 @@ try {
 
 if (protractorInstalled) {
     execSync(
-        'npm run compile-end-to-end-tests',
+        'npm run e2e-compile',
         {stdio: 'inherit'}
     );
 
