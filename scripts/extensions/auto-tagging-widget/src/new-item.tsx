@@ -118,6 +118,13 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                         },
                                     };
                                 }}
+                                listItemTemplate={(item: any) => (
+                                    <div className="auto-tagging-widget__autocomplete-item">
+                                        <b>{item.name}</b>
+                                        <p>{item.group.value}</p>
+                                        <span>{item.description}</span>
+                                    </div>
+                                )}
                                 onChange={(name) => {
                                     onChange({
                                         ...item,
@@ -169,20 +176,21 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                 )
                             }
 
-                            <br />
-
-                            <div>{gettext('Description')}</div>
-
-                            <input
-                                type="text"
-                                value={item.description ?? ''}
-                                onChange={(event) => {
-                                    onChange({
-                                        ...item,
-                                        description: event.target.value,
-                                    });
-                                }}
-                            />
+                            <div className="sd-input">
+                                <label className="sd-input__label" htmlFor="at-description">{gettext('Description')}</label>
+                                <input
+                                    id="at-description"
+                                    className="sd-input__input"
+                                    type="text"
+                                    value={item.description ?? ''}
+                                    onChange={(event) => {
+                                        onChange({
+                                            ...item,
+                                            description: event.target.value,
+                                        });
+                                    }}
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className="sd-card__footer">
