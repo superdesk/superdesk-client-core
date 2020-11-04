@@ -226,6 +226,11 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                         ' * * ' + $scope.template.schedule.day_of_week.join(','));
                 });
                 if (validate($scope.origTemplate, $scope.template)) {
+                    // if template is made private, set current user as template owner
+                    if ($scope.origTemplate.is_public === true && $scope.template.is_public === false) {
+                        $scope.template.user = session.identity._id;
+                    }
+
                     templates.save($scope.origTemplate, $scope.template)
                         .then(
                             () => {
@@ -371,13 +376,16 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.activeFilter = idx;
             };
 
-            // fetch all desks for the current user and add them to
-            // the list of filters.
-            desks.fetchDesks().then((_desks) => {
-                $scope.filters = $scope.filters.concat(
-                    _desks._items.map((d) => ({label: d.name, value: d._id})),
-                );
-            });
+            if ($scope.privileges.content_templates) {
+                // fetch all desks for the current user and add them to
+                // the list of filters.
+
+                desks.fetchDesks().then((_desks) => {
+                    $scope.filters = $scope.filters.concat(
+                        _desks._items.map((d) => ({label: d.name, value: d._id})),
+                    );
+                });
+            }
 
             fetchTemplates();
         },

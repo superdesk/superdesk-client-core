@@ -2,14 +2,49 @@ import {forEach, get, startsWith, endsWith, some} from 'lodash';
 import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
-import {IArticle, IVocabulary} from 'superdesk-api';
+import {IArticle, IVocabulary, IRelatedArticle} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
+import {isLink} from 'apps/relations/services/RelationsService';
+
+function isRelatedArticle(x: IArticle | IRelatedArticle): x is IRelatedArticle {
+    return isLink(x);
+}
 
 export function getAssociationsByFieldId(associations: IArticle['associations'], fieldId: IVocabulary['_id']) {
     return Object.keys(associations ?? {})
         .filter((key) => key.startsWith(fieldId + '--') && associations[key] != null)
         .sort((key1, key2) => associations[key1].order - associations[key2].order)
         .map((key) => associations[key]);
+}
+
+export function getRelatedMedia(
+    associations: IArticle['associations'],
+    fieldId: IVocabulary['_id'],
+): Array<IArticle> {
+    const items: Array<IArticle> = [];
+
+    getAssociationsByFieldId(associations, fieldId).forEach((item) => {
+        if (!isRelatedArticle(item)) {
+            items.push(item);
+        }
+    });
+
+    return items;
+}
+
+export function getRelatedArticles(
+    associations: IArticle['associations'],
+    fieldId: IVocabulary['_id'],
+): Array<IRelatedArticle> {
+    const items: Array<IRelatedArticle> = [];
+
+    getAssociationsByFieldId(associations, fieldId).forEach((item) => {
+        if (isRelatedArticle(item)) {
+            items.push(item);
+        }
+    });
+
+    return items;
 }
 
 /**
