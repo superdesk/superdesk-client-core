@@ -351,9 +351,9 @@ declare module 'superdesk-api' {
         extra?: {[key: string]: any};
 
         task: {
-            desk: IDesk['_id'];
-            stage: IStage['_id'];
-            user: IUser['_id'];
+            desk?: IDesk['_id'];
+            stage?: IStage['_id'];
+            user?: IUser['_id'];
         };
 
         // might be only used for client-side state
