@@ -1,11 +1,9 @@
 <div class="subnav subnav--absolute">
     <header class="search-page-header">
-        <div class="filter-trigger" title="{{ :: 'Filters' | translate }}" ng-click="toggleFiltersPane()" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></div>
-
+        <button class="filter-trigger" aria-label="{{ :: 'Toggle filters' | translate }}" title="{{ :: 'Toggle filters' | translate }}" ng-click="flags.facets = !flags.facets" ng-class="{'filter-trigger--active': flags.facets}"><i class="icon-filter-large"></i></button>
         <div sd-repo-dropdown class="sortbar-flex-handler" style="white-space: nowrap;"></div>
         <div sd-item-searchbar data-context="context" class="searchbar-flex-handler"></div>
         <div sd-item-sortbar data-total="total_records" class="sortbar-flex-handler"></div>
-
         <div class="view-select">
             <button title="{{ :: 'Switch to grid view' | translate }}" ng-show="view !== 'photogrid'" ng-click="setview('photogrid')"><i class="icon-grid-view"></i></button>
             <button title="{{ :: 'Switch to list view' | translate }}" ng-show="view !== 'compact'" ng-click="setview('compact')"><i class="icon-list-view"></i></button>

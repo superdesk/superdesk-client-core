@@ -2093,3 +2093,15 @@ sd-multi-image-edit {
     height: 1px;
     overflow: hidden;
 }
+
+.panel__heading {
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+    margin: 0;
+    font-size: 1.5rem;
+    color: inherit;
+    opacity: 0.8;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 48px;
+}
