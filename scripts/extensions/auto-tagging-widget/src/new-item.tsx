@@ -118,11 +118,11 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                         },
                                     };
                                 }}
-                                listItemTemplate={(item: any) => (
+                                listItemTemplate={(_item: any) => (
                                     <div className="auto-tagging-widget__autocomplete-item">
-                                        <b>{item.name}</b>
-                                        <p>{item.group.value}</p>
-                                        <span>{item.description}</span>
+                                        <b>{_item.name}</b>
+                                        <p>{_item.group.value}</p>
+                                        <span>{_item.description}</span>
                                     </div>
                                 )}
                                 onChange={(name) => {
@@ -177,7 +177,13 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                             }
 
                             <div className="sd-input">
-                                <label className="sd-input__label" htmlFor="at-description">{gettext('Description')}</label>
+                                <label
+                                    className="sd-input__label"
+                                    htmlFor="at-description"
+                                >
+                                    {gettext('Description')}
+                                </label>
+
                                 <input
                                     id="at-description"
                                     className="sd-input__input"
