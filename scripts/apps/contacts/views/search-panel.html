@@ -1,11 +1,9 @@
 <div id="contacts-search-panel">
     <div class="header">
-        <ul>
-            <li translate>Search</li>
-        </ul>
-        <div class="doopen" ng-click="openAdvanceSearch = !openAdvanceSearch">
+        <h3 class="panel__heading" translate>Filter contacts</h3> 
+        <button aria-label="{{ :: 'Close panel' | translate }}" class="doopen" ng-click="openAdvanceSearch = !openAdvanceSearch">
             <i class="icon-close-small"></i>
-        </div>
+        </button>
     </div>
     <div class="nav-tabs__content content">
         <div class="nav-tabs__pane">
