@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {cleanHtml} from '../helpers';
 
 interface IProps {
-    limit: number;
+    limit?: number;
     html: boolean;
     item: string;
 }

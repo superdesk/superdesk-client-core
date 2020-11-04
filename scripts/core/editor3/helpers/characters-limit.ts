@@ -6,6 +6,7 @@ import {
     RichUtils,
 } from 'draft-js';
 import {getEditorFieldCharactersCount} from 'apps/authoring/authoring/components/CharacterCount';
+import getFragmentFromSelection from 'draft-js/lib/getFragmentFromSelection';
 
 export const LIMIT_CHARACTERS_OVERFLOW_STYLE = 'LIMIT_CHARACTERS_OVERFLOW';
 
@@ -31,39 +32,10 @@ function getLengthOfSelectedText(editorState: EditorState) {
         return 0;
     }
 
-    let length = 0;
-    const currentContent = editorState.getCurrentContent();
-    const startKey = currentSelection.getStartKey();
-    const endKey = currentSelection.getEndKey();
-    const startBlock = currentContent.getBlockForKey(startKey);
-    const blocksAreTheSame = startKey === endKey;
-    const startBlockTextLength = startBlock.getLength();
-    const startSelectedTextLength =
-        startBlockTextLength - currentSelection.getStartOffset();
-    const endSelectedTextLength = currentSelection.getEndOffset();
-    const keyAfterEnd = currentContent.getKeyAfter(endKey);
+    const selectedFragment = getFragmentFromSelection(editorState);
+    const selectedText = selectedFragment?.map((b) => b.getText()).join('') || '';
 
-    if (blocksAreTheSame) {
-        length +=
-            currentSelection.getEndOffset() - currentSelection.getStartOffset();
-    } else {
-        let currentKey = startKey;
-
-        while (currentKey && currentKey !== keyAfterEnd) {
-            if (currentKey === startKey) {
-                length += startSelectedTextLength + 1;
-            } else if (currentKey === endKey) {
-                length += endSelectedTextLength;
-            } else {
-                length +=
-                    currentContent.getBlockForKey(currentKey).getLength() + 1;
-            }
-
-            currentKey = currentContent.getKeyAfter(currentKey);
-        }
-    }
-
-    return length;
+    return selectedText.length;
 }
 
 function clearOverflowInlineStyles(editorState: EditorState) {
