@@ -19,7 +19,7 @@ import {
     PanelHeader,
     PanelHeaderSlidingToolbar,
     PanelContentBlock,
-    PanelContentBlockInner
+    PanelContentBlockInner,
 } from '../../ui';
 import {AssetEditor} from './assetEditor';
 
@@ -69,7 +69,6 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
     }
 
     onChange<K extends keyof IAssetItem>(field: K, value: IAssetItem[K]) {
-        
         this.setState((prevState: IState) => ({
             updates: {
                 ...prevState.updates,
