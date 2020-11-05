@@ -105,7 +105,7 @@ interface IModalProps {
 }
 
 interface IModalState {
-    radioValue: CharacterLimitUiBehavior
+    radioValue: CharacterLimitUiBehavior;
 }
 
 class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalState> {
