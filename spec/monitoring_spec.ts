@@ -659,7 +659,7 @@ describe('monitoring', () => {
         // Stage single view
         monitoring.actionOnStageSingleView();
         expect(monitoring.getSingleViewItemCount()).toBe(0);
-        expect(monitoring.getStageSingleViewTitle()).toBe('Working Stage');
+        expect(monitoring.getStageSingleViewTitle()).toBe('Politic Desk / Working Stage');
     });
 
     it('can remember multi selection even after scrolling and can reset multi-selection', () => {
