@@ -64,12 +64,6 @@ describe('Content API Search', () => {
         expect(criteria.filter).toEqual('[{"terms":{"service.name":["foo"]}}]');
     }));
 
-    it('can search using category', inject((contentApiSearch) => {
-        const criteria = contentApiSearch.getCriteria({category: '["foo"]'});
-
-        expect(criteria.filter).toEqual('[{"terms":{"service.name":["foo"]}}]');
-    }));
-
     it('can search source', inject((contentApiSearch) => {
         const criteria = contentApiSearch.getCriteria({source: '["foo"]'});
 

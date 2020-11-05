@@ -138,8 +138,12 @@ declare module 'superdesk-api' {
     // ENTITIES
 
     export interface IAuthor {
-        role: string;
-        parent: string;
+        _id: string;
+        name: string;
+        scheme: any | null;
+        user: IUser;
+        role?: string;
+        parent?: string;
     }
 
     // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
@@ -249,8 +253,8 @@ declare module 'superdesk-api' {
         genre: any;
         anpa_take_key?: any;
         place: any;
-        priority?: any;
-        urgency: any;
+        priority?: number;
+        urgency: number;
         anpa_category?: any;
         subject?: Array<ISubject>;
         company_codes?: Array<any>;
@@ -259,6 +263,7 @@ declare module 'superdesk-api' {
         headline: string;
         sms?: string;
         abstract?: string;
+        attachments?: Array<{attachment: string}>;
         byline: string;
         dateline?: {
             day?: string;
@@ -288,7 +293,14 @@ declare module 'superdesk-api' {
         sign_off: string;
         feature_media?: any;
         media_description?: string;
-        associations?: {[id: string]: IArticle | IRelatedArticle};
+        description_text?: string;
+
+        associations?: {
+            'featuremedia': IArticle;
+
+            // IArticle is used for media galleries and IRelatedArticle for linking articles.
+            [id: string]: IArticle | IRelatedArticle;
+        };
         type:
             | 'text'
             | 'picture'
@@ -334,7 +346,7 @@ declare module 'superdesk-api' {
 
         highlights?: Array<string>;
         highlight?: any;
-        sms_message?: any;
+        sms_message?: string;
 
         // storage for custom fields created by users
         extra?: {[key: string]: any};
@@ -404,6 +416,9 @@ declare module 'superdesk-api' {
             /** Other renditions, could be custom, video, audio etc. */
             [key: string]: IRendition;
         };
+
+        // media fields
+        alt_text?: any;
 
         // planning extension
         assignment_id?: string;
@@ -566,6 +581,7 @@ declare module 'superdesk-api' {
             | 'media'
             | 'date'
             | 'embed'
+            | 'urls'
             | 'related_content'
             | 'custom';
         field_options?: { // Used for related content fields
