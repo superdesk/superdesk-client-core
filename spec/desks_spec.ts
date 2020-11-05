@@ -215,7 +215,7 @@ describe('desks', () => {
         refresh();
         workspace.selectDesk('Test Desk');
         authoring.createTextItemFromTemplate('testing');
-        authoring.writeTextToHeadlineTemplate('new item');
+        authoring.writeTextToHeadlineFromRecentTemplate('new item');
         authoring.save();
         expect(monitoring.getGroupItems(0).count()).toBe(1);
 
