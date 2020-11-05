@@ -30,6 +30,8 @@ class Desks {
     deskSourceElement: any;
     getDeskType: any;
     setDeskType: (deskType: any) => void;
+    setDeskDefaultContentTemplate: (template: any) => void;
+    setDeskDefaultContentProfile: (profile: any) => void;
     actionSaveAndContinueOnGeneralTab: () => void;
     actionDoneOnGeneralTab: () => void;
     actionDoneOnStagesTab: () => void;
@@ -265,6 +267,24 @@ class Desks {
          **/
         this.setDeskType = function(deskType) {
             element(by.model('desk.edit.desk_type')).$('[value="' + deskType + '"]').click();
+        };
+
+        /**
+         * Set desk default content template
+         * @param {string} template name
+         **/
+        this.setDeskDefaultContentTemplate = function(template) {
+            element(by.model('desk.edit.default_content_template'))
+            .$('[data-test-id="template ' + template + '"]').click();
+        };
+
+         /**
+         * Set desk default content profile
+         * @param {string} profile name
+         **/
+        this.setDeskDefaultContentProfile = function(profile) {
+            element(by.model('desk.edit.default_content_profile'))
+            .$('[data-test-id="profile ' + profile + '"]').click();
         };
 
         /**

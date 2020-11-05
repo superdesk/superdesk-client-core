@@ -151,25 +151,50 @@
                         </div>
                     </div>
                     <div class="form__row">
-                        <div class="sd-line-input sd-line-input--is-select">
+                        <div class="sd-line-input sd-line-input--required">
                             <label class="sd-line-input__label" translate>Default Content Template</label>
-                            <select
-                                ng-model="desk.edit.default_content_template"
-                                ng-options="template._id as template.template_name for template in templates"
-                                class="sd-line-input__select"
-                                data-test-id="field--default-content-template"
-                            >
+                            <div class="sd-alert sd-alert--hollow sd-alert--small">
+                                <i class="icon-info-sign icon--blue icon--2x sd-alert__icon"></i>
+                               <span translate>
+                                   Select a default template for new articles. If you don't see any, first make sure that there is at least one content profile. Each time a profile is created, Superdesk creates a template with the same name.
+                                </span>
+                            </div>
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <select
+                                    ng-model="desk.edit.default_content_template"
+                                    class="sd-line-input__select"
+                                    required
+                                    data-test-id="field--default-content-template"
+                                >
                                 <option value=""></option>
-                            </select>
+                                <option ng-repeat="template in templates" value="{{template._id}}" data-test-id="template {{template.template_name}}" ng-selected="desk.edit.default_content_template === template._id">
+                                    {{ template.template_name | translate}}
+                                </option>
+
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="form__row" ng-show="profiles.length">
-                        <div class="sd-line-input sd-line-input--is-select">
+                        <div class="sd-line-input sd-line-input--required">
                             <label class="sd-line-input__label" translate>Default Content Profile</label>
-                            <select ng-model="desk.edit.default_content_profile"
-                                    ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'" class="sd-line-input__select">
-                                <option value=""></option>
-                            </select>
+                            <div class="sd-alert sd-alert--hollow sd-alert--small">
+                                <i class="icon-info-sign icon--blue icon--2x sd-alert__icon"></i>
+                               <span translate>
+                                    Select a default content profile which is used for articles fetched from ingest. If you don't see any, create one
+                                   <a href="#/settings/content-profiles">here</a>
+                                </span>
+                            </div>
+                            <div  class="sd-line-input sd-line-input--is-select">
+                                <select ng-model="desk.edit.default_content_profile"
+                                        class="sd-line-input__select"
+                                        required>
+                                    <option value=""></option>
+                                    <option ng-repeat="profile in profiles" value="{{profile._id}}" data-test-id="profile {{profile.label}}" ng-selected="desk.edit.default_content_profile === profile._id">
+                                        {{ profile.label | translate}}
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <fieldset class="form__row">
