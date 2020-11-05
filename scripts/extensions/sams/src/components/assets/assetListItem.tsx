@@ -22,6 +22,7 @@ interface IProps {
     asset: IAssetItem;
     selected: boolean;
     onClick(asset: IAssetItem): void;
+    onDoubleClick?(asset: IAssetItem): void;
     actions?: Array<IAssetCallback>;
     itemSelected: boolean;
     updateSelectedAssetIds(asset: Partial<IAssetItem>): void;
@@ -31,6 +32,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
+        this.onItemDoubleClick = this.onItemDoubleClick.bind(this);
         this.onPreviewSelect = this.onPreviewSelect.bind(this);
         this.onCheckboxClick = this.onCheckboxClick.bind(this);
     }
@@ -39,6 +41,13 @@ export class AssetListItem extends React.PureComponent<IProps> {
         if (this.props.onClick) {
             event.stopPropagation();
             this.props.onClick(this.props.asset);
+        }
+    }
+
+    onItemDoubleClick(event: React.MouseEvent<HTMLDivElement>) {
+        if (this.props.onDoubleClick) {
+            event.stopPropagation();
+            this.props.onDoubleClick(this.props.asset);
         }
     }
 
@@ -60,7 +69,10 @@ export class AssetListItem extends React.PureComponent<IProps> {
         const mimetype = getMimetypeHumanReadable(this.props.asset.mimetype);
 
         return (
-            <ListItem onClick={this.onItemClick} selected={this.props.selected || this.props.itemSelected} shadow={1}>
+            <ListItem
+                onClick={this.onItemClick}
+                onDoubleClick={this.onItemDoubleClick}
+                selected={this.props.selected || this.props.itemSelected} shadow={1}>
                 <ListItemBorder />
                 <ListItemColumn hasCheck={true} checked={this.props.itemSelected}>
                     <div className="sd-list-item__checkbox-container" onClick={this.onCheckboxClick}>

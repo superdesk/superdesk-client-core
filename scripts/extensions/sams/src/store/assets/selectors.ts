@@ -8,6 +8,7 @@ import {
     IAssetSearchParams,
     ISetItem,
     ASSET_LIST_STYLE,
+    ASSET_CONTENT_PANEL_STATE,
 } from '../../interfaces';
 
 // Redux Selectors
@@ -39,6 +40,10 @@ export function getSelectedAssetId(state: IApplicationState): string | undefined
 
 export function getSelectedAssetIds(state: IApplicationState): Array<string> {
     return state.assets.selectedAssetIds;
+}
+
+export function getSetContentPanelState(state: IApplicationState): ASSET_CONTENT_PANEL_STATE {
+    return state.assets.contentPanelState ?? ASSET_CONTENT_PANEL_STATE.CLOSED;
 }
 
 export const getAssetSetFilter = createSelector<

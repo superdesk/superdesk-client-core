@@ -20,7 +20,7 @@ import {
     IUploadItem,
 } from '../../containers/FileUploadModal';
 import {AssetGridItem} from './assetGridItem';
-import {AssetEditorPanel} from './assetEditorPanel';
+import {AssetEditor} from './assetEditor';
 
 interface IState {
     assets: Dictionary<string, Partial<IAssetItem>>;
@@ -169,6 +169,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
             <AssetGridItem
                 asset={asset}
                 onClick={selectFile}
+                onDoubleClick={selectFile}
                 selected={selected}
                 remove={removeFile}
                 uploadProgress={item.uploadProgress}
@@ -179,7 +180,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
 
     renderRightPanel({item, submitting}: IContentPanelProps) {
         return (
-            <AssetEditorPanel
+            <AssetEditor
                 key={item.id}
                 asset={this.state.assets[item.id]}
                 disabled={submitting}

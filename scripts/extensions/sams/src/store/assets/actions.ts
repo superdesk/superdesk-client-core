@@ -8,9 +8,10 @@ import {
     RECEIVE_ASSETS,
     SET_ASSET_SEARCH_PARAMS,
     MANAGE_ASSETS_PREVIEW,
-    MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
+    MANAGE_ASSETS_CLOSE_CONTENT_PANEL,
     UPDATE_SELECTED_ASSET_IDS,
     MANAGE_MULTIACTIONBAR_CLOSE,
+    MANAGE_ASSETS_EDIT,
 } from './types';
 import {samsApi} from '../../apis';
 
@@ -56,16 +57,16 @@ export function toggleAssetListStyle(): IThunkAction<void> {
     };
 }
 
-export function previewAsset(asset: string): IAssetActionTypes {
+export function previewAsset(asset_id: string): IAssetActionTypes {
     return {
         type: MANAGE_ASSETS_PREVIEW,
-        payload: asset,
+        payload: asset_id,
     };
 }
 
-export function closeAssetPreviewPanel(): IAssetActionTypes {
+export function closeAssetContentPanel(): IAssetActionTypes {
     return {
-        type: MANAGE_ASSETS_CLOSE_PREVIEW_PANEL,
+        type: MANAGE_ASSETS_CLOSE_CONTENT_PANEL,
     };
 }
 
@@ -142,5 +143,23 @@ export function updateAssetSearchParamsAndListItemsFromURL(listAction?: LIST_ACT
         }
 
         return dispatch(queryAssetsFromCurrentSearch(listAction));
+    };
+}
+
+export function editAsset(assetId?: string): IAssetActionTypes {
+    return {
+        type: MANAGE_ASSETS_EDIT,
+        payload: assetId,
+    };
+}
+
+export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): IThunkAction<IAssetItem> {
+    return (dispatch) => {
+        return samsApi.assets.update(original, updates)
+            .then((updatedAsset: IAssetItem) => {
+                // Wait for the Assets to update before returning the updated Asset
+                return dispatch(queryAssetsFromCurrentSearch())
+                    .then(() => updatedAsset);
+            });
     };
 }

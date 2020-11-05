@@ -25,6 +25,13 @@ export enum CONTENT_PANEL_STATE {
     CREATE = 'create',
 }
 
+export enum ASSET_CONTENT_PANEL_STATE {
+    CLOSED = 'closed',
+    PREVIEW = 'preview',
+    EDIT = 'edit',
+    CREATE = 'create',
+}
+
 export enum ASSET_TYPE_FILTER {
     ALL = 'all',
     IMAGES = 'images',
@@ -60,6 +67,7 @@ export enum ASSET_ACTIONS {
     PREVIEW = 'preview',
     DOWNLOAD = 'download',
     DELETE = 'delete',
+    EDIT = 'edit',
 }
 
 export interface IAssetAction {
@@ -156,6 +164,7 @@ export interface ISamsAPI {
     };
     assets: {
         upload(data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<IAssetItem>;
+        update(original: IAssetItem, updates: Partial<IAssetItem>): Promise<IAssetItem>;
         query(params: IAssetSearchParams, listStyle: ASSET_LIST_STYLE): Promise<IRestApiResponse<IAssetItem>>;
         getSearchUrlParams(): Partial<IAssetSearchParams>;
         setSearchUrlParams(params: Partial<IAssetSearchParams>): void;

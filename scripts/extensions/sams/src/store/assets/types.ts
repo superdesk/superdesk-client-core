@@ -5,6 +5,7 @@ import {
     IAssetSearchParams,
     ASSET_LIST_STYLE,
     LIST_ACTION,
+    ASSET_CONTENT_PANEL_STATE,
 } from '../../interfaces';
 
 export const RECEIVE_ASSETS = 'assets__receive';
@@ -31,10 +32,11 @@ interface IAssetSetListStyleAction {
 export type IAssetActionTypes = IReceiveAssetsAction |
     ISetAssetSearchParamsAction |
     IAssetSetListStyleAction |
-    ICloseAssetPreviewPanelAction |
+    ICloseAssetContentPanelAction |
     IPreviewAssetAction |
     IUpdateSelectedAssetIds |
-    ICloseMultiActionBar;
+    ICloseMultiActionBar |
+    IEditAssetAction;
 
 export interface IAssetState {
     assets: Dictionary<string, IAssetItem>;
@@ -44,6 +46,7 @@ export interface IAssetState {
     listItemIds: Array<string>;
     searchResultTotal: number;
     listStyle: ASSET_LIST_STYLE;
+    contentPanelState: ASSET_CONTENT_PANEL_STATE;
 }
 
 export const MANAGE_ASSETS_PREVIEW = 'manage_assets__preview';
@@ -63,7 +66,13 @@ interface ICloseMultiActionBar {
     type: typeof MANAGE_MULTIACTIONBAR_CLOSE;
 }
 
-export const MANAGE_ASSETS_CLOSE_PREVIEW_PANEL = 'manage_assets__close_preview_panel';
-interface ICloseAssetPreviewPanelAction {
-    type: typeof MANAGE_ASSETS_CLOSE_PREVIEW_PANEL;
+export const MANAGE_ASSETS_CLOSE_CONTENT_PANEL = 'manage_assets__close_content_panel';
+interface ICloseAssetContentPanelAction {
+    type: typeof MANAGE_ASSETS_CLOSE_CONTENT_PANEL;
+}
+
+export const MANAGE_ASSETS_EDIT = 'manage_assets__edit';
+interface IEditAssetAction {
+    type: typeof MANAGE_ASSETS_EDIT;
+    payload?: string;
 }

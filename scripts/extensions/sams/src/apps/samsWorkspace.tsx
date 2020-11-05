@@ -6,16 +6,25 @@ import {Dispatch, Store} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_LIST_STYLE, IAssetItem, IAssetSearchParams, LIST_ACTION, ASSET_ACTIONS} from '../interfaces';
+import {
+    ASSET_ACTIONS,
+    ASSET_LIST_STYLE,
+    IAssetItem,
+    IAssetSearchParams,
+    LIST_ACTION,
+    ASSET_CONTENT_PANEL_STATE,
+} from '../interfaces';
 import {IApplicationState} from '../store';
 import {samsApi} from '../apis';
+
+// UI
+import {PanelContent} from '../ui';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
 
 import {
-    closeAssetPreviewPanel,
     loadNextAssetsPage,
     previewAsset,
     queryAssetsFromCurrentSearch,
@@ -23,17 +32,17 @@ import {
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
     updateSelectedAssetIds,
+    editAsset,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
     getAssetListTotal,
     getAssetSearchParams,
     getAssetSearchResults,
-    getSelectedAsset,
     getSelectedAssetId,
     getSelectedAssetIds,
-    getSetNameForSelectedAsset,
     getSelectedAssetItems,
+    getSetContentPanelState,
 } from '../store/assets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
 import {isFilterPanelOpen} from '../store/workspace/selectors';
@@ -45,6 +54,7 @@ import {AssetListPanel} from '../components/assets/assetListPanel';
 import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
+import {AssetEditorPanel} from '../components/assets/assetEditorPanel';
 
 interface IProps {
     assets: Array<IAssetItem>;
@@ -52,13 +62,12 @@ interface IProps {
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
     asset?: IAssetItem;
-    setName?: string;
     selectedAssetId: string | undefined;
     selectedAssetIds: Array<string>;
     filterPanelOpen: boolean;
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
-    onPanelClosed(): void;
+    onEdit(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
@@ -68,6 +77,7 @@ interface IProps {
     ): void;
     toggleFilterPanel(): void;
     selectedAssets: Array<IAssetItem>;
+    contentPanelState: ASSET_CONTENT_PANEL_STATE;
 }
 
 interface IState {
@@ -82,9 +92,8 @@ const mapStateToProps = (state: IApplicationState) => ({
     filterPanelOpen: isFilterPanelOpen(state),
     selectedAssetId: getSelectedAssetId(state),
     selectedAssetIds: getSelectedAssetIds(state),
-    asset: getSelectedAsset(state),
-    setName: getSetNameForSelectedAsset(state),
     selectedAssets: getSelectedAssetItems(state),
+    contentPanelState: getSetContentPanelState(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -101,7 +110,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
-    onPanelClosed: () => dispatch(closeAssetPreviewPanel()),
+    onEdit: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
 });
 
 export function downloadAssetBinary(asset: IAssetItem): void {
@@ -189,7 +198,21 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
     }
 
+    getContentPanelComponent(): React.ComponentType<any> | null {
+        if (this.props.contentPanelState === ASSET_CONTENT_PANEL_STATE.PREVIEW) {
+            return AssetPreviewPanel;
+        } else if (
+            this.props.contentPanelState === ASSET_CONTENT_PANEL_STATE.CREATE ||
+            this.props.contentPanelState === ASSET_CONTENT_PANEL_STATE.EDIT) {
+            return AssetEditorPanel;
+        }
+
+        return null;
+    }
+
     render() {
+        const ContentPanel = this.getContentPanelComponent();
+
         return (
             <div className="sd-page">
                 <PageLayout
@@ -208,15 +231,13 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             />
                         )
                     )}
-                    rightPanelOpen={this.props.selectedAssetId !== undefined}
-                    rightPanel={(
-                        <AssetPreviewPanel
-                            asset={this.props.asset}
-                            setName={this.props.setName}
-                            onPanelClosed={this.props.onPanelClosed}
-                            downloadAsset={this.onDownloadSingleAssetCompressedBinary}
-                            deletAsset={this.onDeleteAsset}
-                        />
+                    rightPanelOpen={ContentPanel != null}
+                    rightPanel={ContentPanel == null ? (
+                        <div />
+                    ) : (
+                        <PanelContent>
+                            <ContentPanel key={this.props.selectedAssetId}/>
+                        </PanelContent>
                     )}
                     mainClassName="sd-padding--2"
                     mainProps={{onScroll: this.onScroll}}
@@ -229,9 +250,14 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                                 [this.props.selectedAssetId]
                             }
                             onItemClicked={this.props.previewAsset}
+                            onItemDoubleClicked={this.props.onEdit}
                             selectedAssetIds={this.props.selectedAssetIds}
                             updateSelectedAssetIds={this.onMultiActionBar}
                             actions={[{
+                                action: ASSET_ACTIONS.EDIT,
+                                onSelect: this.props.onEdit,
+                            },
+                            {
                                 action: ASSET_ACTIONS.PREVIEW,
                                 onSelect: this.props.previewAsset,
                             },

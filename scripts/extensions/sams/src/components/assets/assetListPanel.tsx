@@ -18,6 +18,7 @@ interface IProps {
     actions?: Array<IAssetCallback>;
     selectedAssetIds: Array<string> | undefined;
     onItemClicked(asset: IAssetItem): void;
+    onItemDoubleClicked?(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
 }
 
@@ -25,11 +26,18 @@ export class AssetListPanel extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
         this.onItemClick = this.onItemClick.bind(this);
+        this.onItemDoubleClick = this.onItemDoubleClick.bind(this);
         this.onUpdateSelectedAssetIds = this.onUpdateSelectedAssetIds.bind(this);
     }
 
     onItemClick(asset: IAssetItem) {
         this.props.onItemClicked(asset);
+    }
+
+    onItemDoubleClick(asset: IAssetItem) {
+        if (this.props.onItemDoubleClicked != null) {
+            this.props.onItemDoubleClicked(asset);
+        }
     }
 
     onUpdateSelectedAssetIds(asset: IAssetItem) {
@@ -61,6 +69,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                                 this.onItemClick
                             }
                             onClick={this.onItemClick}
+                            onDoubleClick={this.onItemDoubleClick}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
                             updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
@@ -77,6 +86,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             asset={asset}
                             selected={this.props.selectedItems?.includes(asset._id) ?? false}
                             onClick={this.onItemClick}
+                            onDoubleClick={this.onItemDoubleClick}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
                             updateSelectedAssetIds={this.onUpdateSelectedAssetIds}

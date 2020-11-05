@@ -9,6 +9,7 @@ interface IProps {
     activated?: boolean;
     className?: string;
     onClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
+    onDoubleClick?: (e: React.MouseEvent<HTMLDivElement>) => void;
     margin?: boolean;
     draggable?: boolean;
     selected?: boolean;
@@ -18,6 +19,30 @@ interface IProps {
 }
 
 export class ListItem extends React.PureComponent<IProps> {
+    clickCount: number = 0;
+    singleClickTimer: any;
+
+    constructor(props: IProps) {
+        super(props);
+
+        this.handleClicks = this.handleClicks.bind(this);
+    }
+
+    handleClicks(event: React.MouseEvent<HTMLDivElement>) {
+        this.clickCount++;
+        if (this.clickCount === 1) {
+            event.persist();
+            this.singleClickTimer = setTimeout(() => {
+                this.clickCount = 0;
+                this.props.onClick!(event);
+            }, 300);
+        } else if (this.clickCount === 2) {
+            clearTimeout(this.singleClickTimer);
+            this.clickCount = 0;
+            this.props.onDoubleClick!(event);
+        }
+    }
+
     render() {
         const classes = classNames(
             this.props.className,
@@ -37,7 +62,7 @@ export class ListItem extends React.PureComponent<IProps> {
         );
 
         return (
-            <div onClick={this.props.onClick} className={classes}>
+            <div className={classes} onClick={this.handleClicks}>
                 {this.props.children}
             </div>
         );

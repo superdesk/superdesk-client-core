@@ -10,7 +10,7 @@ import {superdeskApi, samsApi} from '../../apis';
 import {Button} from 'superdesk-ui-framework/react';
 import {Modal, ModalBody, ModalFooter, ModalHeader} from '../../ui/modal';
 import {PageLayout} from '../../containers/PageLayout';
-import {AssetEditorPanel} from '../assets/assetEditorPanel';
+import {AssetEditor} from '../assets/assetEditor';
 
 // Utils
 import {showModalConnectedToStore} from '../../utils/ui';
@@ -107,7 +107,7 @@ export class EditAttachmentModal extends React.Component<IProps, IState> {
                         main={(
                             this.state.original == null ?
                                 null : (
-                                    <AssetEditorPanel
+                                    <AssetEditor
                                         asset={this.state.updates}
                                         onChange={this.onChange}
                                         fields={[

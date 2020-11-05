@@ -5,6 +5,7 @@ import {getAllSets, createSet, updateSet, deleteSet} from './api/sets';
 import {getAllStorageDestinations} from './api/storageDestinations';
 import {
     uploadAsset,
+    updateAsset,
     getAssetsCount,
     queryAssets,
     getAssetSearchUrlParams,
@@ -34,6 +35,7 @@ export const samsApi: ISamsAPI = {
     },
     assets: {
         upload: uploadAsset,
+        update: updateAsset,
         query: queryAssets,
         getSearchUrlParams: getAssetSearchUrlParams,
         setSearchUrlParams: setAssetSearchUrlParams,

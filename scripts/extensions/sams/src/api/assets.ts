@@ -443,3 +443,20 @@ export function deleteAsset(item: IAssetItem): Promise<void> {
             return Promise.reject(error);
         });
 }
+
+export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): Promise<IAssetItem> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, original, updates)
+        .then((asset: IAssetItem) => {
+            notify.success(gettext('Asset updated successfully'));
+
+            return asset;
+        })
+        .catch((error: any) => {
+            notify.error(gettext('Failed to update the Asset'));
+
+            return Promise.reject(error);
+        });
+}

@@ -25,6 +25,7 @@ import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/
 interface IProps {
     asset: Partial<IAssetItem>;
     onClick(asset: Partial<IAssetItem>): void;
+    onDoubleClick?(asset: Partial<IAssetItem>): void;
     remove?(): void;
     selected?: boolean;
     uploadProgress?: number;
@@ -41,6 +42,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
 
         this.onRemove = this.onRemove.bind(this);
         this.onItemClick = this.onItemClick.bind(this);
+        this.onItemDoubleClick = this.onItemDoubleClick.bind(this);
         this.onCheckboxClick = this.onCheckboxClick.bind(this);
         this.toggleSelected = this.toggleSelected.bind(this);
     }
@@ -55,6 +57,12 @@ export class AssetGridItem extends React.PureComponent<IProps> {
 
     onItemClick() {
         this.props.onClick(this.props.asset);
+    }
+
+    onItemDoubleClick() {
+        if (this.props.onDoubleClick != null) {
+            this.props.onDoubleClick(this.props.asset);
+        }
     }
 
     toggleSelected() {
@@ -85,6 +93,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         return (
             <GridItem
                 onClick={this.onItemClick}
+                onDoubleClick={this.onItemDoubleClick}
                 selected={this.props.selected || this.props.itemSelected}
             >
                 <GridItemThumb
