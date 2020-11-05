@@ -627,7 +627,7 @@ describe('monitoring', () => {
         expect(authoring.save_button.isDisplayed()).toBe(true);
     });
 
-    fit('can display desk content in desk single view with their respective titles', () => {
+    it('can display desk content in desk single view with their respective titles', () => {
         monitoring.openMonitoring();
         expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
         expect(monitoring.getGroups().count()).toBe(6);
