@@ -274,8 +274,7 @@ class Desks {
          * @param {string} template name
          **/
         this.setDeskDefaultContentTemplate = function(template) {
-            element(by.model('desk.edit.default_content_template'))
-                .$('[data-test-id="template ' + template + '"]').click();
+            el(['field--default-content-template'], by.cssContainingText('option', template)).click();
         };
 
         /**
@@ -283,8 +282,7 @@ class Desks {
          * @param {string} profile name
          **/
         this.setDeskDefaultContentProfile = function(profile) {
-            element(by.model('desk.edit.default_content_profile'))
-                .$('[data-test-id="profile ' + profile + '"]').click();
+            el(['field--default-content-profile'], by.cssContainingText('option', profile)).click();
         };
 
         /**

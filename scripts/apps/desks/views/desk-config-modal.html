@@ -161,15 +161,13 @@
                             </div>
                             <div class="sd-line-input sd-line-input--is-select">
                                 <select
+                                    ng-options="template._id as template.template_name for template in templates"
                                     ng-model="desk.edit.default_content_template"
                                     class="sd-line-input__select"
                                     required
                                     data-test-id="field--default-content-template"
                                 >
                                 <option value=""></option>
-                                <option ng-repeat="template in templates" value="{{template._id}}" data-test-id="template {{template.template_name}}" ng-selected="desk.edit.default_content_template === template._id">
-                                    {{ template.template_name | translate}}
-                                </option>
 
                                 </select>
                             </div>
@@ -187,12 +185,11 @@
                             </div>
                             <div  class="sd-line-input sd-line-input--is-select">
                                 <select ng-model="desk.edit.default_content_profile"
+                                        ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'"
                                         class="sd-line-input__select"
-                                        required>
+                                        required
+                                        data-test-id="field--default-content-profile">
                                     <option value=""></option>
-                                    <option ng-repeat="profile in profiles" value="{{profile._id}}" data-test-id="profile {{profile.label}}" ng-selected="desk.edit.default_content_profile === profile._id">
-                                        {{ profile.label | translate}}
-                                    </option>
                                 </select>
                             </div>
                         </div>
