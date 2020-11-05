@@ -396,9 +396,9 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             <div className="widget-container">
                 <div className="main-list" style={{top: 0}}>
                     <div className="widget-header">
-                        <div className="widget-title">
+                        <h3 className="widget-title">
                             {gettext('User Activity')}
-                        </div>
+                        </h3>
                     </div>
                     <div
                         className="search-box search-box--no-shadow search-box--fluid-height"

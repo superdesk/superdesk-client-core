@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 
 interface IProps {
-    priority: string;
+    priority: number;
 }
 
 export class ItemPriority extends React.PureComponent<IProps> {

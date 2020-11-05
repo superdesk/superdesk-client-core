@@ -13,7 +13,7 @@ interface IAttachmentItemProps {
     onClick: (attachment: IAttachment) => void;
 }
 
-class AttachmentItem extends React.PureComponent<IAttachmentItemProps> {
+export class AttachmentItem extends React.PureComponent<IAttachmentItemProps> {
     render() {
         const {attachment} = this.props;
         const fileicon = 'big-icon--' + FileiconFilter()(attachment.mimetype);
