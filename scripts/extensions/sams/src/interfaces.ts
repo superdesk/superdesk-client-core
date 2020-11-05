@@ -87,6 +87,7 @@ export interface ISetItem extends IBaseRestApiResponse {
     name: string;
     state: SET_STATE;
     description?: string;
+    maximum_asset_size?: number;
     destination_name?: string;
     destination_config?: Dictionary<string, any>;
     destination?: IStorageDestinationItem;

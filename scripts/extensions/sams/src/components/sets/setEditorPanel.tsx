@@ -26,6 +26,7 @@ import {
     PanelHeaderSlidingToolbar,
     Text,
 } from '../../ui';
+import {getFileSizeFromHumanReadable} from '../../utils/ui';
 
 // Utils
 import {hasItemChanged} from '../../utils/api';
@@ -44,6 +45,7 @@ interface IState {
     updates: Partial<ISetItem>;
     isDirty: boolean;
     submitting: boolean;
+    storage_unit: string;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
@@ -72,23 +74,29 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                 },
                 isDirty: true,
                 submitting: false,
+                storage_unit: 'Bytes',
             };
         } else {
             this.state = {
                 updates: cloneDeep<ISetItem>(this.props.original),
                 isDirty: false,
                 submitting: false,
+                storage_unit: 'Bytes',
             };
         }
 
         this.onStateChange = this.onStateChange.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onCancel = this.onCancel.bind(this);
+        this.updateStorageUnit = this.updateStorageUnit.bind(this);
+        this.onMaxAssetSizeChange = this.onMaxAssetSizeChange.bind(this);
 
         this.onChange = {
             name: (value: string) => this.onFieldChange('name', value.trim()),
             description: (value: string) => this.onFieldChange('description', value.trim()),
             destination_name: (value: string) => this.onFieldChange('destination_name', value),
+            maximum_asset_size: (value: number) => this.onMaxAssetSizeChange(+value, this.state.storage_unit),
+            storage_unit: (value: string) => this.updateStorageUnit(value),
             state: (value: boolean) => this.onStateChange(value),
         };
     }
@@ -97,7 +105,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
         const updates = this.state.updates;
         let dirty = true;
 
-        updates[field] = value;
+        (updates[field] as any) = value;
 
         if (this.props.original != null) {
             dirty = hasItemChanged(this.props.original, this.state.updates);
@@ -107,6 +115,20 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
             updates: updates,
             isDirty: dirty,
         });
+    }
+
+    onMaxAssetSizeChange(assetSize: number, unit: string) {
+        let newFileSize: number;
+
+        newFileSize = getFileSizeFromHumanReadable(assetSize, unit);
+        this.onFieldChange('maximum_asset_size', newFileSize);
+    }
+
+    updateStorageUnit(value: string) {
+        this.setState({
+            storage_unit: value,
+        });
+        this.onMaxAssetSizeChange(this.state.updates.maximum_asset_size || 0, value);
     }
 
     onStateChange(value: boolean) {
@@ -215,6 +237,28 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                         onChange={this.onChange.description}
                                         disabled={false}
                                     />
+                                </FormRow>
+                            </FormGroup>
+                            <FormGroup>
+                                <FormRow>
+                                    <Input
+                                        label={gettext('Maximum Asset Size')}
+                                        value={(updates.maximum_asset_size || 0).toString()}
+                                        info={gettext('value of 0 will disable this restriction')}
+                                        onChange={this.onChange.maximum_asset_size}
+                                        disabled={false}
+                                    />
+                                </FormRow>
+                                <FormRow>
+                                    <Select
+                                        label={gettext('Stoeage Unit')}
+                                        onChange={this.onChange.storage_unit}
+                                    >
+                                        <Option>{gettext('Bytes')}</Option>
+                                        <Option>{gettext('KB')}</Option>
+                                        <Option>{gettext('MB')}</Option>
+                                        <Option>{gettext('GB')}</Option>
+                                    </Select>
                                 </FormRow>
                             </FormGroup>
                             {(this.props.original == null || updates.state === SET_STATE.DRAFT) ? (

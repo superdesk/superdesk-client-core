@@ -53,6 +53,18 @@ export function getIconTypeFromMimetype(mimetype: string) {
     }
 }
 
+export function getFileSizeFromHumanReadable(fileSize: number, dataUnit: string) {
+    if (dataUnit.startsWith('Bytes')) {
+        return fileSize;
+    } else if (dataUnit.startsWith('KB')) {
+        return fileSize * 1024;
+    } else if (dataUnit.startsWith('MB')) {
+        return fileSize * 1024 * 1024;
+    } else {
+        return fileSize * 1024 * 1024 * 1024;
+    }
+}
+
 export function getAssetStateLabel(assetState: ASSET_STATE) {
     const {gettext} = superdeskApi.localization;
 
