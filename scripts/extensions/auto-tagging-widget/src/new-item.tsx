@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import * as React from 'react';
 import {INewItem, entityGroups} from './auto-tagging';
 import {ISuperdesk} from 'superdesk-api';

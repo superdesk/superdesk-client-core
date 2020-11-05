@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import {IArticle, ISuperdesk, ISubject} from 'superdesk-api';
 import {OrderedMap} from 'immutable';
 import {ITagUi} from './types';
