@@ -98,53 +98,75 @@ export class CharacterCountConfigButton extends React.Component<
     }
 }
 
-function CharacterCountConfigModal({closeModal, onChange, value}) {
-    const [radioValue, radioValueSet] = React.useState<
-        CharacterLimitUiBehavior
-    >(value);
+interface IModalProps {
+    closeModal(): void;
+    onChange(newValue: CharacterLimitUiBehavior): void;
+    value: CharacterLimitUiBehavior;
+}
 
-    return (
-        <Modal>
-            <ModalHeader>{gettext('Character limit settings')}</ModalHeader>
-            <ModalBody>
-                <p>
-                    {gettext(
-                        'You can either completely block further writing after the character' +
+interface IModalState {
+    radioValue: CharacterLimitUiBehavior
+}
+
+class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalState> {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            radioValue: props.value,
+        };
+
+        this.onRadioValueChange = this.onRadioValueChange.bind(this);
+    }
+
+    onRadioValueChange(radioValue: CharacterLimitUiBehavior) {
+        this.setState({radioValue});
+    }
+
+    render() {
+        return (
+            <Modal>
+                <ModalHeader>{gettext('Character limit settings')}</ModalHeader>
+                <ModalBody>
+                    <p>
+                        {gettext(
+                            'You can either completely block further writing after the character' +
                             'limit is reached or highlight exceeding characters in red.',
-                    )}
-                </p>
-                <CheckGroup orientation="vertical">
-                    <Radio<CharacterLimitUiBehavior>
-                        value={radioValue}
-                        options={[
-                            {
-                                value: 'highlight',
-                                label: gettext('Highlight characters'),
-                            },
-                            {
-                                value: 'limit',
-                                label: gettext('Limit further typing'),
-                            },
-                        ]}
-                        onChange={radioValueSet}
-                    />
-                </CheckGroup>
-            </ModalBody>
-            <ModalFooter>
-                <button
-                    className="btn btn--primary pull-right"
-                    onClick={() => {
-                        onChange(radioValue);
-                        closeModal();
-                    }}
-                    disabled={false}
-                >
-                    {gettext('Save')}
-                </button>
-                <button className="btn pull-right" onClick={closeModal}>
-                    {gettext('Cancel')}
-                </button>
-            </ModalFooter>
-        </Modal>
-    );
+                        )}
+                    </p>
+                    <CheckGroup orientation="vertical">
+                        <Radio<CharacterLimitUiBehavior>
+                            value={this.state.radioValue}
+                            options={[
+                                {
+                                    value: 'highlight',
+                                    label: gettext('Highlight characters'),
+                                },
+                                {
+                                    value: 'limit',
+                                    label: gettext('Limit further typing'),
+                                },
+                            ]}
+                            onChange={this.onRadioValueChange}
+                        />
+                    </CheckGroup>
+                </ModalBody>
+                <ModalFooter>
+                    <button
+                        className="btn btn--primary pull-right"
+                        onClick={() => {
+                            this.props.onChange(this.state.radioValue);
+                            this.props.closeModal();
+                        }}
+                        disabled={false}
+                    >
+                        {gettext('Save')}
+                    </button>
+                    <button className="btn pull-right" onClick={this.props.closeModal}>
+                        {gettext('Cancel')}
+                    </button>
+                </ModalFooter>
+            </Modal>
+        );
+    }
 }
