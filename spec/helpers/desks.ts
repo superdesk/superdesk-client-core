@@ -275,16 +275,16 @@ class Desks {
          **/
         this.setDeskDefaultContentTemplate = function(template) {
             element(by.model('desk.edit.default_content_template'))
-            .$('[data-test-id="template ' + template + '"]').click();
+                .$('[data-test-id="template ' + template + '"]').click();
         };
 
-         /**
+        /**
          * Set desk default content profile
          * @param {string} profile name
          **/
         this.setDeskDefaultContentProfile = function(profile) {
             element(by.model('desk.edit.default_content_profile'))
-            .$('[data-test-id="profile ' + profile + '"]').click();
+                .$('[data-test-id="profile ' + profile + '"]').click();
         };
 
         /**
