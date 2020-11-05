@@ -55,7 +55,7 @@ function querySearchString(source: IRootElasticQuery, params: IAssetSearchParams
             superdeskApi.elasticsearch.queryString({
                 query: params.textSearch,
                 lenient: true,
-                default_operator: 'OR',
+                default_operator: 'AND',
             }),
         );
     }
@@ -84,7 +84,7 @@ function querySetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
 }
 
 function queryState(source: IRootElasticQuery, params: IAssetSearchParams) {
-    if (params.state != null) {
+    if (params.state != null && params.state.length > 0) {
         source.query.bool.must.push(
             superdeskApi.elasticsearch.term({
                 field: 'state',
@@ -110,8 +110,8 @@ function queryName(source: IRootElasticQuery, params: IAssetSearchParams) {
         source.query.bool.must.push(
             superdeskApi.elasticsearch.queryString({
                 query: `name:(${params.name})`,
-                lenient: false,
-                default_operator: 'OR',
+                lenient: true,
+                default_operator: 'AND',
             }),
         );
     }
@@ -122,8 +122,8 @@ function queryFilename(source: IRootElasticQuery, params: IAssetSearchParams) {
         source.query.bool.must.push(
             superdeskApi.elasticsearch.queryString({
                 query: `filename:(${params.filename})`,
-                lenient: false,
-                default_operator: 'OR',
+                lenient: true,
+                default_operator: 'AND',
             }),
         );
     }
@@ -135,7 +135,7 @@ function queryDescription(source: IRootElasticQuery, params: IAssetSearchParams)
             superdeskApi.elasticsearch.queryString({
                 query: `description:(${params.description})`,
                 lenient: false,
-                default_operator: 'OR',
+                default_operator: 'AND',
             }),
         );
     }
