@@ -1,6 +1,7 @@
 import {EditorState, ContentState, SelectionState} from 'draft-js';
 import reducer from '..';
 import {applyLink} from '../../actions/toolbar';
+import {LIMIT_CHARACTERS_OVERFLOW_STYLE} from 'core/editor3/helpers/characters-limit';
 
 /**
  * @description Creates a new store state that contains the editorState and searchTerm.
@@ -331,5 +332,17 @@ describe('editor3.reducers', () => {
         });
 
         expect(nextState.editorState.getCurrentContent().getPlainText()).toBe(nextContentState.getPlainText());
+    });
+
+    it('EDITOR_CHANGE_LIMIT_CONFIG changes the config', () => {
+        const nextState = reducer({
+            limitConfig: {ui: 'limit', chars: 5},
+        }, {
+            type: 'EDITOR_CHANGE_LIMIT_CONFIG',
+            payload: {ui: 'highlight', chars: 10},
+        });
+
+        expect(nextState.limitConfig.ui).toBe('highlight');
+        expect(nextState.limitConfig.chars).toBe(10);
     });
 });

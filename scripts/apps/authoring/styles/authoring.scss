@@ -219,7 +219,7 @@ $bottom-bar-item-border-color-active: transparent;
 .opened-articles-bar {
     position: fixed;
     height: $authoring-opened-articles;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     background: rgba(20, 20, 20, 0.95);
@@ -689,6 +689,10 @@ $authoring-toolbar-spacing: 10px;
 .authoring-header__row--wrap {
     flex-wrap: wrap;
     align-content:flex-start;
+}
+
+.char-count-config-button {
+    float: right;
 }
 
 .authoring-header__item {
