@@ -184,8 +184,7 @@ describe('search', () => {
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
         expect(globalSearch.getItems().count()).toBe(2);
-        // toggle filter panel to reset it
-        globalSearch.openFilterPanel();
+        globalSearch.closeFilterPanel();
 
         // search spiked content
         globalSearch.openGlobalSearch();

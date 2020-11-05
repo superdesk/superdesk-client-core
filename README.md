@@ -1,7 +1,8 @@
 # Superdesk Client
 
-[![Build Status](https://travis-ci.com/superdesk/superdesk-client-core.svg?branch=develop)](https://travis-ci.com/superdesk/superdesk-client-core)
+![CI](https://github.com/superdesk/superdesk-client-core/workflows/CI/badge.svg)
 [![Code Climate](https://codeclimate.com/github/superdesk/superdesk-client-core/badges/gpa.svg)](https://codeclimate.com/github/superdesk/superdesk-client-core)
+
 ### Installation
 
 For installation instructions, please refer to the README file at: [https://github.com/superdesk/superdesk/](https://github.com/superdesk/superdesk/ "")

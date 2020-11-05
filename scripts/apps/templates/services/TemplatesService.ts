@@ -80,6 +80,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
             page: page || 1,
             max_results: pageSize || PAGE_SIZE,
             sort: 'template_name',
+            manage: true,
         };
 
         var criteria: any = {};

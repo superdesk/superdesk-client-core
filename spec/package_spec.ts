@@ -77,7 +77,7 @@ describe('package', () => {
         authoring.publish();
         monitoring.showSearch();
         globalSearch.setListView();
-        globalSearch.showCustomSearch();
+        globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
         globalSearch.toggleByType('text');
         expect(globalSearch.getTextItem(0)).toBe('item5');

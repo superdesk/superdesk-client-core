@@ -18,7 +18,7 @@ import {IApplicationState} from '../store';
 import {samsApi} from '../apis';
 
 // UI
-import {PanelContent, PanelContentBlock, PanelContentBlockInner} from '../ui';
+import {PanelContent} from '../ui';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -39,10 +39,8 @@ import {
     getAssetListTotal,
     getAssetSearchParams,
     getAssetSearchResults,
-    getSelectedAsset,
     getSelectedAssetId,
     getSelectedAssetIds,
-    getSetNameForSelectedAsset,
     getSelectedAssetItems,
     getSetContentPanelState,
 } from '../store/assets/selectors';
@@ -64,7 +62,6 @@ interface IProps {
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
     asset?: IAssetItem;
-    setName?: string;
     selectedAssetId: string | undefined;
     selectedAssetIds: Array<string>;
     filterPanelOpen: boolean;
@@ -95,8 +92,6 @@ const mapStateToProps = (state: IApplicationState) => ({
     filterPanelOpen: isFilterPanelOpen(state),
     selectedAssetId: getSelectedAssetId(state),
     selectedAssetIds: getSelectedAssetIds(state),
-    asset: getSelectedAsset(state),
-    setName: getSetNameForSelectedAsset(state),
     selectedAssets: getSelectedAssetItems(state),
     contentPanelState: getSetContentPanelState(state),
 });
@@ -241,19 +236,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                         <div />
                     ) : (
                         <PanelContent>
-                            <PanelContentBlock flex={true}>
-                                <PanelContentBlockInner grow={true}>
-                                    <ContentPanel
-                                        key={this.props.selectedAssetId}
-                                        asset={this.props.asset!}
-                                        fields={[
-                                            'name',
-                                            'description',
-                                            'state',
-                                        ]}
-                                    />
-                                </PanelContentBlockInner>
-                            </PanelContentBlock>
+                            <ContentPanel key={this.props.selectedAssetId}/>
                         </PanelContent>
                     )}
                     mainClassName="sd-padding--2"

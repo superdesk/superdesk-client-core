@@ -21,12 +21,14 @@ import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {AuthoringWorkspaceService} from './services';
+import {AuthoringMediaActions} from './authoring-media-actions';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
 import {FullPreviewDirective} from './directives/FullPreviewDirective';
 import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
+import {FullPreview} from '../preview/fullPreview';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -99,6 +101,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)
+    .component('sdAuthoringMediaActions', reactToAngular1(AuthoringMediaActions, ['article']))
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
@@ -113,6 +116,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
     .directive('sdFullPreview', FullPreviewDirective)
     .directive('sdFullPreviewItem', FullPreviewItemDirective)
+    .component('sdFullPreviewReact', reactToAngular1(FullPreview, ['item', 'editor', 'fields', 'hideMedia']))
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)

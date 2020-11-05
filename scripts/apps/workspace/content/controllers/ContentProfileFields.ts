@@ -4,7 +4,7 @@ import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {getTypeForFieldId} from '../../helpers/getTypeForFieldId';
 import {getFields} from 'apps/fields';
 
-const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
+export const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
     'keywords',
     'genre',
     'anpa_take_key',
@@ -19,7 +19,7 @@ const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
     'authors',
 ]);
 
-const ARTICLE_COMMON_FIELDS = new Set<keyof IArticle>([
+export const ARTICLE_COMMON_FIELDS = new Set<keyof IArticle>([
     'slugline',
 ]);
 
