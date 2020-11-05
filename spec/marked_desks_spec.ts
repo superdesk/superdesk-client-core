@@ -51,6 +51,7 @@ describe('marked desks', () => {
 
             // mark for desk in globalSearch
             globalSearch.openGlobalSearch();
+            globalSearch.closeFilterPanel();
             globalSearch.setListView();
             globalSearch.actionOnSubmenuItem('Mark for desk', 'Sports Desk', 3);
             globalSearch.checkMarkedForDesk('Sports Desk', 3);

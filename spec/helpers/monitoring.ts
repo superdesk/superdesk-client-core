@@ -353,7 +353,7 @@ class Monitoring {
         this.getPreviewTitle = function() {
             var headline = element(by.css('.content-container')).element(by.css('.preview-headline'));
 
-            waitFor(headline, 500);
+            browser.wait(ECE.visibilityOf(headline), 1000);
 
             return headline.getText();
         };

@@ -4,6 +4,7 @@ import {merge, flatMap} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
+import {logger} from 'core/services/logger';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
@@ -162,6 +163,20 @@ export function AuthoringDirective(
             }
 
             /**
+             * Get the Current Template for the item.
+            */
+            function getCurrentTemplate() {
+                if (typeof $scope.item?.template !== 'string') {
+                    logger.error(new Error('template must be present'));
+                    return;
+                }
+                api('content_templates').getById($scope.item.template)
+                    .then((result) => {
+                        $scope.currentTemplate = result;
+                    });
+            }
+
+            /**
              * Check if it is allowed to publish on desk
              * @returns {Boolean}
              */
@@ -171,6 +186,7 @@ export function AuthoringDirective(
             };
 
             getDeskStage();
+            getCurrentTemplate();
             /**
              * `desk_stage:change` event from send and publish action.
              * If send action succeeds but publish fails then we need change item location.
@@ -254,10 +270,6 @@ export function AuthoringDirective(
                 } else {
                     _exportHighlight(item._id);
                 }
-            };
-
-            $scope.canSaveTemplate = function() {
-                return privileges.userHasPrivileges({content_templates: 1});
             };
 
             function _exportHighlight(_id) {

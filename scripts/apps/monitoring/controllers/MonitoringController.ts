@@ -155,11 +155,11 @@ export function MonitoringController($rootScope, $scope, $location, desks, super
 
         if (group.subheader) {
             groupLabel = activeWorkspace === 'workspace' ?
-                group.header + ' ' + group.subheader : group.subheader;
+                group.header + ' ' + group.subheader : group.header + ' / ' + group.subheader;
         } else if (group.type === 'search') {
             groupLabel = group.header;
         } else {
-            groupLabel = getLabelForStage(group);
+            groupLabel = group.header + ' / ' + getLabelForStage(group);
         }
 
         return groupLabel;
