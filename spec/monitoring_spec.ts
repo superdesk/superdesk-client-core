@@ -627,7 +627,7 @@ describe('monitoring', () => {
         expect(authoring.save_button.isDisplayed()).toBe(true);
     });
 
-    it('can display desk content in desk single view with their respective titles', () => {
+    fit('can display desk content in desk single view with their respective titles', () => {
         monitoring.openMonitoring();
         expect(workspace.getCurrentDesk()).toEqual('POLITIC DESK');
         expect(monitoring.getGroups().count()).toBe(6);
@@ -659,7 +659,7 @@ describe('monitoring', () => {
         // Stage single view
         monitoring.actionOnStageSingleView();
         expect(monitoring.getSingleViewItemCount()).toBe(0);
-        expect(monitoring.getStageSingleViewTitle()).toBe('Working Stage');
+        expect(monitoring.getStageSingleViewTitle()).toBe('Politic Desk / Working Stage');
     });
 
     it('can remember multi selection even after scrolling and can reset multi-selection', () => {
