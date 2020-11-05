@@ -36,6 +36,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
     public reset: () => void;
     public updateItems: (items: Set<string>) => void;
+    private _mounted: boolean;
 
     constructor(props: IProps<T>) {
         super(props);
@@ -49,7 +50,11 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         this.allItemsLoaded = this.allItemsLoaded.bind(this);
         this.getLoadedItemsCount = this.getLoadedItemsCount.bind(this);
 
-        this.reset = () => throttle(this._reset, 500);
+        this.reset = throttle(() => {
+            if (this._mounted) {
+                this._reset();
+            }
+        }, 500);
         this.updateItems = throttleAndCombineSet(this._updateItems, 500);
     }
 
@@ -113,7 +118,13 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
     }
 
     componentDidMount() {
+        this._mounted = true;
+
         this.loadMore();
+    }
+
+    componentWillUnmount() {
+        this._mounted = false;
     }
 
     componentDidUpdate(prevProps: IProps<T>, prevState: IState<T>) {

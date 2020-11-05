@@ -85,6 +85,7 @@ interface IState {
 
 export class Item extends React.Component<IProps, IState> {
     clickTimeout: number;
+    private _mounted: boolean;
 
     constructor(props) {
         super(props);
@@ -115,7 +116,12 @@ export class Item extends React.Component<IProps, IState> {
         }
     }
 
+    componentDidMount() {
+        this._mounted = true;
+    }
+
     componentWillUnmount() {
+        this._mounted = false;
         closeActionsMenu(this.props.item._id);
     }
 
@@ -151,7 +157,11 @@ export class Item extends React.Component<IProps, IState> {
         if (planningActivity) {
             this.setActioningState(true);
             activityService.start(planningActivity, {data: {item: this.props.item}})
-                .finally(() => this.setActioningState(false));
+                .finally(() => {
+                    if (this._mounted) {
+                        this.setActioningState(false);
+                    }
+                });
         }
     }
 
