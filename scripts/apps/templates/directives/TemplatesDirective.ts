@@ -376,13 +376,16 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.activeFilter = idx;
             };
 
-            // fetch all desks for the current user and add them to
-            // the list of filters.
-            desks.fetchDesks().then((_desks) => {
-                $scope.filters = $scope.filters.concat(
-                    _desks._items.map((d) => ({label: d.name, value: d._id})),
-                );
-            });
+            if ($scope.privileges.content_templates) {
+                // fetch all desks for the current user and add them to
+                // the list of filters.
+
+                desks.fetchDesks().then((_desks) => {
+                    $scope.filters = $scope.filters.concat(
+                        _desks._items.map((d) => ({label: d.name, value: d._id})),
+                    );
+                });
+            }
 
             fetchTemplates();
         },

@@ -1,7 +1,27 @@
 import notifySaveError from '../helpers';
 
-CreateTemplateController.$inject = ['item', 'templates', 'api', 'desks', '$q', 'notify', 'lodash', 'session'];
-export function CreateTemplateController(item, templates, api, desks, $q, notify, _, session) {
+CreateTemplateController.$inject = [
+    'item',
+    'templates',
+    'api',
+    'desks',
+    '$q',
+    'notify',
+    'lodash',
+    'privileges',
+    'session',
+];
+export function CreateTemplateController(
+    item,
+    templates,
+    api,
+    desks,
+    $q,
+    notify,
+    _,
+    privileges,
+    session,
+) {
     var self = this;
 
     this.type = 'create';
@@ -12,18 +32,12 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
     this.types = templates.types;
     this.createTypes = _.filter(templates.types, (element) => element._id !== 'kill');
     this.save = save;
-    let currentUser = null;
 
     activate();
 
     function activate() {
         if (item.template) {
-            $q.all([
-                api.find('content_templates', item.template),
-                session.getIdentity(),
-            ]).then(([template, user]) => {
-                currentUser = user;
-
+            api.find('content_templates', item.template).then((template) => {
                 self.name = template.template_name;
                 self.desk = !_.isNil(template.template_desks) ? template.template_desks[0] : null;
                 self.is_public = template.is_public !== false;
@@ -35,6 +49,31 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
             self.desks = _desks;
         });
     }
+
+    self.canEdit = () => {
+        if (self.template == null) {
+            return false; // no template exists yet
+        } else if (self.template?.is_public === true && self.is_public === false) {
+            // if template is changed from public to private, always create a copy of a template
+            // and don't modify the original one.
+            return false;
+        } else if (self.is_public === true) {
+            return privileges.userHasPrivileges({content_templates: 1});
+        } else if (self.template?.user === session.identity._id) {
+            return true; // can always edit own templates
+        } else {
+            return privileges.userHasPrivileges({personal_template: 1}); // can edit templates of other users
+        }
+    };
+
+    self.wasRenamed = () => {
+        return self.template != null && self.name !== self.template.template_name;
+    };
+
+    self.willCreateNew = () =>
+        self.template == null // no template exists yet
+        || self.wasRenamed()
+        || self.canEdit() !== true;
 
     function save() {
         var data = {
@@ -48,15 +87,22 @@ export function CreateTemplateController(item, templates, api, desks, $q, notify
         var template = self.template ? self.template : data;
         var diff: any = self.template ? data : null;
 
-        // in case there is old template but user renames it - create a new one
-        if (self.template && self.name !== self.template.template_name) {
+        // in case there is old template but user renames it
+        // or user is not allowed to edit it - create a new one
+        if (self.willCreateNew()) {
             template = data;
             diff = null;
+
+            if (self.canEdit() !== true) {
+                template.is_public = false;
+                template.user = session.identity._id;
+                template.template_desks = null;
+            }
         }
 
         // if template is made private, set current user as template owner
         if (template.is_public === true && diff?.is_public === false) {
-            diff.user = currentUser._id;
+            diff.user = session.identity._id;
         }
 
         return api.save('content_templates', template, diff)
