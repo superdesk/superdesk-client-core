@@ -6,6 +6,7 @@ import {replaceWord} from './spellchecker';
 import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
 import {insertEntity} from '../helpers/draftInsertEntity';
+import {handleOverflowHighlights} from '../helpers/characters-limit';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -42,6 +43,8 @@ const editor3 = (state: IEditorStore, action) => {
         return applyEmbed(state, action.payload);
     case 'EDITOR_LOADING':
         return setLoading(state, action.payload);
+    case 'EDITOR_CHANGE_LIMIT_CONFIG':
+        return changeLimitConfig(state, action.payload);
     default:
         return state;
     }
@@ -94,6 +97,23 @@ function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: E
     }
 }
 
+function editorStateChangeMiddlewares(state, editorState: EditorState, contentChanged: boolean) {
+    let newState = state;
+
+    newState = applyAbbreviations({
+        ...state, editorState,
+    });
+
+    if (contentChanged && state.limitConfig?.ui === 'highlight') {
+        newState = {
+            ...state,
+            editorState: handleOverflowHighlights(newState.editorState, state.limitConfig?.chars),
+        };
+    }
+
+    return newState;
+}
+
 /**
  * @ngdoc method
  * @name onChange
@@ -111,7 +131,7 @@ function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: E
 
 export const onChange = (
     state: IEditorStore,
-    newState: EditorState,
+    newEditorState: EditorState,
     force = false, // TODO: Remove `force` once Draft v0.11.0 is in
     keepSelection = false,
     skipOnChange = false,
@@ -125,7 +145,7 @@ export const onChange = (
         will make offsets inaccurate and when the decorator runs again
         it will decorate the wrong ranges.
     */
-    const editorStateNext = clearSpellcheckInfo(state.editorState, newState);
+    const editorStateNext = clearSpellcheckInfo(state.editorState, newEditorState);
 
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
@@ -135,20 +155,13 @@ export const onChange = (
         state.onChangeValue(editorStateNext.getCurrentContent(), {plainText});
     }
 
+    const newState = editorStateChangeMiddlewares(state, editorStateNext, contentChanged);
+
     if (force) {
-        return forceUpdate(
-            applyAbbreviations({
-                ...state,
-                editorState: editorStateNext,
-            }),
-            keepSelection,
-        );
+        return forceUpdate(newState, keepSelection);
     }
 
-    return applyAbbreviations({
-        ...state,
-        editorState: editorStateNext,
-    });
+    return newState;
 };
 
 /**
@@ -438,6 +451,8 @@ const applyEmbed = (state, {code, targetBlockKey}) => {
 };
 
 const setLoading = (state, loading) => ({...state, loading});
+
+const changeLimitConfig = (state, limitConfig) => ({...state, limitConfig});
 
 const pushState = (state: IEditorStore, contentState: ContentState) => {
     const editorState = EditorState.push(state.editorState, contentState, 'insert-characters');

@@ -95,7 +95,6 @@ export const replaceWord = (state, replaceWordData: IReplaceWordData, skipOnChan
             const deleteSelection = selection.merge({
                 anchorOffset: word.offset + newWord.length,
                 focusOffset: word.offset + word.text.length,
-
             });
 
             newContent = Modifier.replaceText(newContent, deleteSelection, '');
