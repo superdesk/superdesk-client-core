@@ -11,6 +11,7 @@ import {isMediaField} from './isMediaField';
 import {gettext} from 'core/utils';
 import {formatDate} from 'core/get-superdesk-api-implementation';
 import {MediaMetadataView} from '../media/MediaMetadataView';
+import {appConfig} from 'appConfig';
 
 interface IProps {
     item: IArticle;
@@ -156,7 +157,13 @@ export class FullPreview extends React.Component<IProps, IState> {
                             .map((field) => {
                                 return (
                                     <div key={field.id}>
-                                        <h3 style={{marginTop: 20, marginBottom: 10}}>{this.getLabel(field.id)}</h3>
+                                        {
+                                            appConfig?.authoring?.preview?.hideContentLabels === true ? <br /> : (
+                                                <h3 style={{marginTop: 20, marginBottom: 10}}>
+                                                    {this.getLabel(field.id)}
+                                                </h3>
+                                            )
+                                        }
                                         <div>
                                             <PreviewFieldType field={field} language={item.language} />
                                         </div>
