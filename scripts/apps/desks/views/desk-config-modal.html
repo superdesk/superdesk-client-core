@@ -22,7 +22,7 @@
                                     required
                                     data-test-id="field--name"
                                 >
-                                <div class="sd-line-input__char-count" sd-character-count data-item="desk.edit.name" data-limit="limits.desk"></div>
+                                <sd-character-count class="sd-line-input__char-count" data-item="desk.edit.name" data-limit="limits.desk"></sd-character-count>
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
                                 <li class="stage editable addnew" ng-show="editStage && !editStage._id">
                                     <div class="sd-line-input">
                                         <input class="sd-line-input__input" type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" autofocus placeholder="{{ 'New stage' | translate }}">
-                                        <div sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></div>
+                                        <sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></sd-character-count>
                                     </div>
                                 </li>
                                 <li ng-repeat="stage in stages track by stage._id" ng-click="select(stage)" ng-class="{active: selected === stage, editable: isActive(stage)}">
@@ -227,7 +227,7 @@
                                     <div ng-if="isActive(stage)">
                                         <div class="sd-line-input">
                                             <input class="sd-line-input__input" type="text" id="edit-stage" ng-model="editStage.name" ng-keyup="handleEdit($event);" required>
-                                            <div sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></div>
+                                            <sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></sd-character-count>
                                         </div>
                                     </div>
                                     <div class="actions" ng-if="!editStage">
