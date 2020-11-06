@@ -1372,7 +1372,7 @@ declare module 'superdesk-api' {
             formatDate(date: Date): string;
             formatDateTime(date: Date): string;
             longFormatDateTime(date: Date | string): string;
-            localeForDatePicker(): DatePickerLocaleSettings;
+            localeForDatePicker(targetLocale?: string): DatePickerLocaleSettings;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
