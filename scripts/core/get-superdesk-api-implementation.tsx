@@ -32,6 +32,7 @@ import {
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {downloadBlob} from './helpers/utils';
+import {getLocaleForDatePicker} from './helpers/locale';
 import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -306,6 +307,7 @@ export function getSuperdeskApiImplementation(
                     .tz(appConfig.defaultTimezone)
                     .format(appConfig.longDateFormat || 'LLL');
             },
+            localeForDatePicker: getLocaleForDatePicker,
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),

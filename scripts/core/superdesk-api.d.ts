@@ -1,4 +1,5 @@
 /* tslint:disable */
+import {DatePickerLocaleSettings} from 'superdesk-ui-framework/react';
 
 declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
@@ -1362,6 +1363,7 @@ declare module 'superdesk-api' {
             formatDate(date: Date): string;
             formatDateTime(date: Date): string;
             longFormatDateTime(date: Date | string): string;
+            localeForDatePicker(): DatePickerLocaleSettings;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
@@ -1437,7 +1439,6 @@ declare module 'superdesk-api' {
         override_ednote_for_corrections: any;
         override_ednote_template: any;
         default_genre: any;
-        default_language: string;
         japanese_characters_per_minute: any;
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
@@ -1622,7 +1623,6 @@ declare module 'superdesk-api' {
         releaseDate: any;
         isTestEnvironment: any;
         environmentName: any;
-        workspace: any;
         paths: {
             superdesk: any;
         };
