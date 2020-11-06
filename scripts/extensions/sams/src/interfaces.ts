@@ -70,6 +70,13 @@ export enum ASSET_ACTIONS {
     EDIT = 'edit',
 }
 
+export enum DATA_UNIT {
+    BYTES = 'bytes',
+    KB = 'kb',
+    MB = 'mb',
+    GB = 'gb',
+}
+
 export interface IAssetAction {
     id: string;
     label: string;

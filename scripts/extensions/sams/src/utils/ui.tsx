@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Provider} from 'react-redux';
 
 // Types
-import {ASSET_SORT_FIELD, ASSET_STATE} from '../interfaces';
+import {ASSET_SORT_FIELD, ASSET_STATE, DATA_UNIT} from '../interfaces';
 import {superdeskApi} from '../apis';
 
 // Redux Actions & Selectors
@@ -53,14 +53,15 @@ export function getIconTypeFromMimetype(mimetype: string) {
     }
 }
 
-export function getFileSizeFromHumanReadable(fileSize: number, dataUnit: string) {
-    if (dataUnit.startsWith('Bytes')) {
+export function getFileSizeFromHumanReadable(fileSize: number, dataUnit: DATA_UNIT) {
+    switch (dataUnit) {
+    case DATA_UNIT.BYTES:
         return fileSize;
-    } else if (dataUnit.startsWith('KB')) {
+    case DATA_UNIT.KB:
         return fileSize * 1024;
-    } else if (dataUnit.startsWith('MB')) {
+    case DATA_UNIT.MB:
         return fileSize * 1024 * 1024;
-    } else {
+    case DATA_UNIT.GB:
         return fileSize * 1024 * 1024 * 1024;
     }
 }

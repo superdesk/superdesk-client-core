@@ -5,7 +5,7 @@ import {Dispatch} from 'redux';
 import {cloneDeep} from 'lodash';
 
 // Types
-import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
+import {ISetItem, IStorageDestinationItem, SET_STATE, DATA_UNIT} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {superdeskApi} from '../../apis';
 
@@ -45,7 +45,7 @@ interface IState {
     updates: Partial<ISetItem>;
     isDirty: boolean;
     submitting: boolean;
-    storage_unit: string;
+    storage_unit: DATA_UNIT;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
@@ -74,14 +74,14 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                 },
                 isDirty: true,
                 submitting: false,
-                storage_unit: 'Bytes',
+                storage_unit: DATA_UNIT.BYTES,
             };
         } else {
             this.state = {
                 updates: cloneDeep<ISetItem>(this.props.original),
                 isDirty: false,
                 submitting: false,
-                storage_unit: 'Bytes',
+                storage_unit: DATA_UNIT.BYTES,
             };
         }
 
@@ -96,7 +96,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
             description: (value: string) => this.onFieldChange('description', value.trim()),
             destination_name: (value: string) => this.onFieldChange('destination_name', value),
             maximum_asset_size: (value: number) => this.onMaxAssetSizeChange(+value, this.state.storage_unit),
-            storage_unit: (value: string) => this.updateStorageUnit(value),
+            storage_unit: (value: DATA_UNIT) => this.updateStorageUnit(value),
             state: (value: boolean) => this.onStateChange(value),
         };
     }
@@ -117,14 +117,14 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
         });
     }
 
-    onMaxAssetSizeChange(assetSize: number, unit: string) {
+    onMaxAssetSizeChange(assetSize: number, unit: DATA_UNIT) {
         let newFileSize: number;
 
         newFileSize = getFileSizeFromHumanReadable(assetSize, unit);
         this.onFieldChange('maximum_asset_size', newFileSize);
     }
 
-    updateStorageUnit(value: string) {
+    updateStorageUnit(value: DATA_UNIT) {
         this.setState({
             storage_unit: value,
         });
@@ -251,13 +251,13 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                 </FormRow>
                                 <FormRow>
                                     <Select
-                                        label={gettext('Stoeage Unit')}
+                                        label={gettext('Storage Unit')}
                                         onChange={this.onChange.storage_unit}
                                     >
-                                        <Option>{gettext('Bytes')}</Option>
-                                        <Option>{gettext('KB')}</Option>
-                                        <Option>{gettext('MB')}</Option>
-                                        <Option>{gettext('GB')}</Option>
+                                        <Option>{DATA_UNIT.BYTES}</Option>
+                                        <Option>{DATA_UNIT.KB}</Option>
+                                        <Option>{DATA_UNIT.MB}</Option>
+                                        <Option>{DATA_UNIT.GB}</Option>
                                     </Select>
                                 </FormRow>
                             </FormGroup>
