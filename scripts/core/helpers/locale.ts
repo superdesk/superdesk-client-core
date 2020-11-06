@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {DatePickerLocaleSettings} from 'superdesk-ui-framework/react';
+import {DatePickerLocaleSettings} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
 export function getMonthNamesShort(targetLocale: string): Array<string> {

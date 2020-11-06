@@ -3,13 +3,13 @@ import * as React from 'react';
 
 // Types
 import {ASSET_STATE, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
+import {DatePickerLocaleSettings} from 'superdesk-api';
 import {superdeskApi} from '../../apis';
 
 // UI
 import {
     Button,
     DatePicker,
-    DatePickerLocaleSettings,
     FormLabel,
     Input,
     Option,

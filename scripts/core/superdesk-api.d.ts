@@ -1,5 +1,4 @@
 /* tslint:disable */
-import {DatePickerLocaleSettings} from 'superdesk-ui-framework/react';
 
 declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
@@ -1222,6 +1221,16 @@ declare module 'superdesk-api' {
         bool(params: IElasticBoolQueryParams): IElasticBoolQuery;
     }
 
+    // Copied from 'superdesk-ui-framework/react/components/DatePicker.tsx
+    // Otherwise we have to import it here, which causes issues with extensions
+    export interface DatePickerLocaleSettings {
+        firstDayOfWeek?: number;
+        dayNames: string[];
+        dayNamesShort: string[];
+        dayNamesMin: string[];
+        monthNames: string[];
+        monthNamesShort: string[];
+    }
 
     // APPLICATION API
 
