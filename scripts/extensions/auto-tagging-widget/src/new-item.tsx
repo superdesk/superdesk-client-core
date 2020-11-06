@@ -119,23 +119,27 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                         },
                                     };
                                 }}
-                                listItemTemplate={(_item: any) => (
-                                    <div className="auto-tagging-widget__autocomplete-item">
-                                        <b>{_item.name}</b>
+                                listItemTemplate={(__item: any) => {
+                                    const _item: ITagUi = __item;
 
-                                        {
-                                            item?.group?.value == null ? null : (
-                                                <p>{_item.group.value}</p>
-                                            )
-                                        }
+                                    return (
+                                        <div className="auto-tagging-widget__autocomplete-item">
+                                            <b>{_item.name}</b>
 
-                                        {
-                                            item?.description == null ? null : (
-                                                <p>{_item.description}</p>
-                                            )
-                                        }
-                                    </div>
-                                )}
+                                            {
+                                                _item?.group?.value == null ? null : (
+                                                    <p>{_item.group.value}</p>
+                                                )
+                                            }
+
+                                            {
+                                                _item?.description == null ? null : (
+                                                    <p>{_item.description}</p>
+                                                )
+                                            }
+                                        </div>
+                                    );
+                                }}
                                 onChange={(name) => {
                                     onChange({
                                         ...item,
