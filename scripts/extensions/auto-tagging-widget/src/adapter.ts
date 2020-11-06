@@ -94,7 +94,7 @@ export function toClientFormat(response: IServerResponse, saved: boolean): Order
                     kind: 'visual',
                     value: group,
                 },
-                saved: true,
+                saved,
             };
 
             tags = tags.set(tag.qcode, tag);
