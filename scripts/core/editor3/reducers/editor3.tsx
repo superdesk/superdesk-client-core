@@ -104,7 +104,9 @@ function editorStateChangeMiddlewares(state, editorState: EditorState, contentCh
         ...state, editorState,
     });
 
-    if (contentChanged && state.limitConfig?.ui === 'highlight') {
+    if (contentChanged) {
+        // state.limitConfig?.ui can be 'limit', but we need to
+        // highlight it anyway to handle overflow when pasting text
         newState = {
             ...state,
             editorState: handleOverflowHighlights(newState.editorState, state.limitConfig?.chars),
