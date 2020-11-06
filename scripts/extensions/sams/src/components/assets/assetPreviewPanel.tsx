@@ -74,6 +74,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
             .then(() => {
                 this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
             });
+        this.props.onPanelClosed();
     }
 
     onDownloadSingleAssetCompressedBinary(): void {
