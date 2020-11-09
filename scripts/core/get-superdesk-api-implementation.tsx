@@ -105,6 +105,7 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
+export const isLocked = (article: IArticle) => article['lock_session'] != null;
 export const formatDate = (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat);
 
 // imported from planning
@@ -119,7 +120,6 @@ export function getSuperdeskApiImplementation(
     config,
     metadata,
 ): ISuperdesk {
-    const isLocked = (article: IArticle) => article['lock_session'] != null;
     const isLockedInCurrentSession = (article: IArticle) => lock.isLockedInCurrentSession(article);
     const isLockedInOtherSession = (article: IArticle) => isLocked(article) && !isLockedInCurrentSession(article);
 
