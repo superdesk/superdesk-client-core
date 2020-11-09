@@ -254,10 +254,10 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                         label={gettext('Storage Unit')}
                                         onChange={this.onChange.storage_unit}
                                     >
-                                        <Option>{DATA_UNIT.BYTES}</Option>
-                                        <Option>{DATA_UNIT.KB}</Option>
-                                        <Option>{DATA_UNIT.MB}</Option>
-                                        <Option>{DATA_UNIT.GB}</Option>
+                                        <Option value={DATA_UNIT.BYTES}>{gettext('Bytes')}</Option>
+                                        <Option value={DATA_UNIT.KB}>{gettext('KB')}</Option>
+                                        <Option value={DATA_UNIT.MB}>{gettext('MB')}</Option>
+                                        <Option value={DATA_UNIT.GB}>{gettext('GB')}</Option>
                                     </Select>
                                 </FormRow>
                             </FormGroup>
