@@ -1,5 +1,4 @@
-import {ISubject, IArticle, IRelatedArticle, IVocabulary} from 'superdesk-api';
-import {IAttachment} from 'superdesk-api';
+import {ISubject, IArticle, IRelatedArticle, IVocabulary, IAttachment} from 'superdesk-api';
 
 export type IAuthoringField =
     {
