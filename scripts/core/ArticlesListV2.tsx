@@ -55,6 +55,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
             if (
                 resource === 'archive'
+                || resource === 'archive_spike'
                 || resource === 'archive_unspike'
             ) {
                 const reloadTheList = this.props?.shouldReloadTheList(
