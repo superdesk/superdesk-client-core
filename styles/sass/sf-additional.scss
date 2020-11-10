@@ -208,10 +208,9 @@
         }
         .trigger-icon {
             @include user-select(none);
-            float: left;
             width: 28px;
             height: 28px;
-            display: inline-block;
+            display: block;
             @include opacity(50);
             &:hover {
                 cursor: pointer;
@@ -233,14 +232,80 @@
         border: 0;
         background: none;
         display: none;
-        @include opacity(0);
+        height: 1.6rem;
+        width: 1.6rem;
+        align-self: center;
+        flex-grow: 0;
+        flex-shrink: 0;
+        margin: 0 1rem 0 0;
+        padding: 0;
+        opacity: 0.35;
+        transition: opacity 0.2s ease-out;
+        color: currentColor;
+        opacity: 0;
         &.visible {
-            @include opacity(40);
+            opacity: 0.35;
             &:hover {
-                @include opacity(100);
+                opacity: 0.7;
+            }
+            &:active {
+                opacity: 1;
+            }
+        }
+        i {
+            display: block;
+        }
+    }
+
+    .search-start {
+        height: 2.8rem;
+        width: 2.8rem;
+        flex-grow: 0;
+        flex-shrink: 0;
+        align-self: center;
+        margin: 0 0.8rem 0 0;
+        padding: 0;
+        transition: all 0.2s ease-out;
+        background-color: rgba(61,143,177,0.25);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        i {
+            transition: color 0.2s ease-out;
+            color: $sd-blue;
+        }
+        &.visible {
+            opacity: 1;
+            &:hover {
+                background-color: rgba(61,143,177,0.75);
+                i {
+                    color: $white;
+                }
+            }
+            &:active {
+                background-color: rgba(61,143,177,1);
+                i {
+                    color: $white;
+                }
+            }
+        }
+        &:hover {
+            background-color: rgba(61,143,177,0.75);
+            i {
+                color: $white;
+            }
+        }
+        &:active {
+            background-color: rgba(61,143,177,1);
+            i {
+                color: $white;
             }
         }
     }
+
+
 
     &.extended {
         flex-grow: 1;
@@ -2008,6 +2073,35 @@ sd-multi-image-edit {
         border: 1px solid rgba(94, 169, 200, 0.6);
     }
 }
+
+.sd-position--relative {
+    position: relative !important;
+}
+.sd-position--absolute {
+    position: absolute !important;
+}
 .sd-empty {
     display: contents !important;
+}
+
+.a11y-only {
+    position: absolute;
+    top:0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    height: 1px;
+    overflow: hidden;
+}
+
+.panel__heading {
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+    margin: 0;
+    font-size: 1.5rem;
+    color: inherit;
+    opacity: 0.8;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 48px;
 }

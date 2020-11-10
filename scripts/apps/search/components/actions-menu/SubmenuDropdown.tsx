@@ -31,9 +31,11 @@ export default class SubmenuDropdown extends React.Component<any, any> {
 
     render() {
         return (
-            <div className="dropdown dropdown--noarrow"
+            <div
+                className="dropdown dropdown--noarrow"
                 onMouseEnter={this.openSubmenu}
-                onMouseLeave={this.closeSubmenu}>
+                onMouseLeave={this.closeSubmenu}
+            >
                 <a className="dropdown__toggle" title={this.props.label}>
                     {this.props.icon &&
                         <i className={`icon-${this.props.icon}`} />

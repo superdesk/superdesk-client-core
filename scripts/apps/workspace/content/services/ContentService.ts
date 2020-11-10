@@ -4,7 +4,9 @@ import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
-import {IArticle, IContentProfileEditorConfig, IVocabulary, IContentProfile} from 'superdesk-api';
+import {IVocabulary, IContentProfile} from 'superdesk-api';
+import {IArticle, IContentProfileEditorConfig} from 'superdesk-api';
+import {IPackagesService} from 'types/Services/Packages';
 
 /**
  * @ngdoc service
@@ -42,7 +44,7 @@ ContentService.$inject = [
     'renditions',
     'modal',
 ];
-export function ContentService(api, templates, desks, packages, archiveService, notify,
+export function ContentService(api, templates, desks, packages: IPackagesService, archiveService, notify,
     $filter, $q, $rootScope, session, send, renditions, modal) {
     const TEXT_TYPE = 'text';
 

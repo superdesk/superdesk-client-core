@@ -273,35 +273,4 @@ describe('spellcheck', () => {
         document.body.appendChild(p);
         return p;
     }
-
-    describe('spellcheck menu', () => {
-        it('can toggle auto spellcheck',
-            inject((editor, editorResolver, $controller, $rootScope, preferencesService) => {
-                var $scope = $rootScope.$new();
-
-                $scope.item = {language: 'en'};
-                $scope.$digest();
-                var ctrl = $controller('SpellcheckMenu', {$scope: $scope});
-
-                expect(ctrl.isAuto).toBe(false);
-
-                $rootScope.$digest();
-                expect(ctrl.isAuto).toBe(true);
-                expect(preferencesService.get).toHaveBeenCalledWith('spellchecker:status');
-
-                ctrl.pushSettings();
-                expect(editor.settings.spellcheck).toBe(true);
-                expect(preferencesService.update).toHaveBeenCalled();
-
-                ctrl.isAuto = false;
-                ctrl.pushSettings();
-                expect(editor.settings.spellcheck).toBe(false);
-                expect(preferencesService.update).toHaveBeenCalled();
-
-                spyOn(editor, 'render');
-                ctrl.runSpellchecker();
-                expect(editor.render).toHaveBeenCalled();
-            }),
-        );
-    });
 });

@@ -343,6 +343,18 @@
             .embed-block__description {
                 @include caption-text-style;
             }
+            .title {
+                font-size: 19px;
+                line-height: 120%;
+                @include text-semibold();
+                margin-top: 15px;
+                margin-bottom: 20px;
+                color: #333;
+
+                &.condensed {
+                    padding-right: 15px;
+                }
+            }
         }
     }
 
@@ -1206,7 +1218,7 @@ $lightbox-composite-condensed : 100px;
             line-height: 16px;
             min-width: 0;
             margin: 0;
-            color: silver;
+            color: $sd-gray-text;
             @include text-overflow();
             b {
                 font-size: 12px;
@@ -1225,7 +1237,7 @@ $lightbox-composite-condensed : 100px;
             text-transform: uppercase;
             font-size: 11px;
             margin: 0 6px 0 0;
-            color: silver;
+            color: $sd-gray-text;
             line-height: 116.6%;
         }
         .takekey, company-codes {
@@ -1344,4 +1356,12 @@ figure.preview-overlay-on {
         font-weight: 500;
         letter-spacing: 0.08em;
     }
+}
+
+.preview-tab--enable-scrolling {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 1px; // take border of the parent into account
 }

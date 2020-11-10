@@ -8,9 +8,15 @@ import createEditorStore from './store';
 import {getInitialContent} from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
-import {changeEditorState, setReadOnly} from './actions';
+import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 
 import ng from 'core/services/ng';
+import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {addInternalEventListener} from 'core/internal-events';
+import {
+    CHARACTER_LIMIT_UI_PREF,
+    CharacterLimitUiBehavior,
+} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 /**
  * @ngdoc directive
  * @module superdesk.core.editor3
@@ -41,15 +47,24 @@ class Editor3Directive {
     $scope: any;
     svc: any;
     pathToValue: any;
+    limit?: number;
+    limitBehavior?: CharacterLimitUiBehavior;
     scrollContainer: any;
     refreshTrigger: any;
-    editorFormat?: Array<string>;
+    editorFormat?: Array<RICH_FORMATTING_OPTION>;
     cleanPastedHtml?: boolean;
+    removeEventListeners?: Array<() => void>;
 
     constructor() {
         this.scope = {};
         this.controllerAs = 'vm';
-        this.controller = ['$element', 'editor3', '$scope', '$rootScope', this.initialize];
+        this.controller = [
+            '$element',
+            'editor3',
+            '$scope',
+            '$rootScope',
+            this.initialize,
+        ];
 
         this.bindToController = {
             /**
@@ -160,105 +175,180 @@ class Editor3Directive {
             showTitle: '=?',
 
             cleanPastedHtml: '=?',
+
+            limit: '=?',
         };
     }
 
     initialize($element, editor3, $scope, $rootScope) {
         if (this.item == null) {
-            throw new Error('Item must be provided in order to be able to save editor_state on it');
+            throw new Error(
+                'Item must be provided in order to be able to save editor_state on it',
+            );
         }
 
-        // defaults
-        this.language = this.language || 'en';
-        this.readOnly = this.readOnly || false;
-        this.findReplaceTarget = typeof this.findReplaceTarget !== 'undefined';
-        this.singleLine = this.singleLine || false;
-        this.debounce = parseInt(this.debounce || '100', 10);
-        this.bindToValue = this.bindToValue || false;
-        this.tabindex = this.tabindex || 0;
-        this.refreshTrigger = this.refreshTrigger || 0;
-        this.showTitle = this.showTitle || false;
-        this.$rootScope = $rootScope;
-        this.$scope = $scope;
-        this.svc = {};
+        ng.get('preferencesService')
+            .get()
+            .then((userPreferences) => {
+                // defaults
+                this.language = this.language || 'en';
+                this.readOnly = this.readOnly || false;
+                this.findReplaceTarget =
+                    typeof this.findReplaceTarget !== 'undefined';
+                this.singleLine = this.singleLine || false;
+                this.debounce = parseInt(this.debounce || '100', 10);
+                this.bindToValue = this.bindToValue || false;
+                this.tabindex = this.tabindex || 0;
+                this.refreshTrigger = this.refreshTrigger || 0;
+                this.showTitle = this.showTitle || false;
+                this.$rootScope = $rootScope;
+                this.$scope = $scope;
+                this.svc = {};
+                this.limitBehavior =
+                    userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
+                        this.pathToValue
+                    ];
 
-        const store = createEditorStore(this, ng.get('spellcheck'));
+                const store = createEditorStore(this, ng.get('spellcheck'));
 
-        // bind the directive value attribute bi-directionally between Angular and Redux.
-        if (this.bindToValue) {
-            $scope.$watch('vm.value', (newValue, oldValue) => {
-                const text = (newValue || '')
-                    .replace(/<ins/g, '<code')
-                    .replace(/<\/ins>/g, '</code>');
-                const content = getContentStateFromHtml(text);
-                const state = store.getState();
-                const editorState = EditorState.push(state.editorState, content, 'insert-characters');
+                window.dispatchEvent(new CustomEvent('editorInitialized'));
 
-                store.dispatch(changeEditorState(editorState));
-            });
-        }
+                // bind the directive value attribute bi-directionally between Angular and Redux.
+                if (this.bindToValue) {
+                    $scope.$watch('vm.value', (newValue, oldValue) => {
+                        const text = (newValue || '')
+                            .replace(/<ins/g, '<code')
+                            .replace(/<\/ins>/g, '</code>');
+                        const content = getContentStateFromHtml(text);
+                        const state = store.getState();
+                        const editorState = EditorState.push(
+                            state.editorState,
+                            content,
+                            'insert-characters',
+                        );
 
-        // bind the directive refreshTrigger attribute bi-directionally between Angular and Redux.
-        $scope.$watch('vm.refreshTrigger', (val, old) => {
-            if (val === 0) {
-                return;
-            }
+                        store.dispatch(changeEditorState(editorState));
+                    });
+                }
 
-            const props = {
-                item: this.item,
-                pathToValue: this.pathToValue,
-            };
+                // bind the directive refreshTrigger attribute bi-directionally between Angular and Redux.
+                $scope.$watch('vm.refreshTrigger', (val, old) => {
+                    if (val === 0) {
+                        return;
+                    }
 
-            const content = getInitialContent(props);
-            const state = store.getState();
-            const editorState = EditorState.push(state.editorState, content, 'change-block-data');
+                    const props = {
+                        item: this.item,
+                        pathToValue: this.pathToValue,
+                    };
 
-            store.dispatch(changeEditorState(editorState, false, true));
-        });
+                    const content = getInitialContent(props);
+                    const state = store.getState();
+                    const editorState = EditorState.push(
+                        state.editorState,
+                        content,
+                        'change-block-data',
+                    );
 
-        // this is triggered from MacrosController.call
-        // if the current editor is for 'field' replace the current content with 'value'
-        $scope.$on('macro:refreshField', (evt, field, value, options) => {
-            if (field === this.pathToValue) {
-                const _options = Object.assign({skipOnChange: true}, options);
-                const content = getContentStateFromHtml(value);
-                const state = store.getState();
-                const editorState = EditorState.push(state.editorState, content, 'spellcheck-change');
+                    store.dispatch(changeEditorState(editorState, false, true));
+                });
 
-                store.dispatch(changeEditorState(editorState, true, _options.skipOnChange));
-            }
-        });
+                // this is triggered from MacrosController.call
+                // if the current editor is for 'field' replace the current content with 'value'
+                $scope.$on(
+                    'macro:refreshField',
+                    (evt, field, value, options) => {
+                        if (field === this.pathToValue) {
+                            const _options = Object.assign(
+                                {skipOnChange: true},
+                                options,
+                            );
+                            const content = getContentStateFromHtml(value);
+                            const state = store.getState();
+                            const editorState = EditorState.push(
+                                state.editorState,
+                                content,
+                                'spellcheck-change',
+                            );
 
-        // bind the directive readOnly attribute bi-directionally between Angular and Redux.
-        $scope.$watch('vm.readOnly', (val, old) => {
-            if (val !== old) {
-                store.dispatch(setReadOnly(val));
-            }
-        });
-
-        // if this editor is the find & replace target, expose the store in the editor3
-        // find & replace service.
-        if (this.findReplaceTarget) {
-            editor3.setStore(store);
-            $scope.$on('$destroy', editor3.unsetStore);
-        }
-
-        // Expose the store in the editor3 spellchecker service
-        const storeIndex = editor3.addSpellcheckerStore(store);
-
-        $scope.$on('$destroy', () => editor3.removeSpellcheckerStore(storeIndex));
-
-        ng.waitForServicesToBeAvailable()
-            .then(() => {
-                ReactDOM.render(
-                    <Provider store={store}>
-                        <Editor3
-                            scrollContainer={this.scrollContainer}
-                            singleLine={this.singleLine}
-                            cleanPastedHtml={this.cleanPastedHtml}
-                        />
-                    </Provider>, $element.get(0),
+                            store.dispatch(
+                                changeEditorState(
+                                    editorState,
+                                    true,
+                                    _options.skipOnChange,
+                                ),
+                            );
+                        }
+                    },
                 );
+
+                // bind the directive readOnly attribute bi-directionally between Angular and Redux.
+                $scope.$watch('vm.readOnly', (val, old) => {
+                    if (val !== old) {
+                        store.dispatch(setReadOnly(val));
+                    }
+                });
+
+                // if this editor is the find & replace target, expose the store in the editor3
+                // find & replace service.
+                if (this.findReplaceTarget) {
+                    editor3.setStore(store);
+                    $scope.$on('$destroy', editor3.unsetStore);
+                }
+
+                const initListeners = () => {
+                    // Subscribe to changes on user preferences
+                    const userPreferencesListener = addInternalEventListener(
+                        'changeUserPreferences',
+                        (event) => {
+                            const limitBehavior =
+                                event.detail?.[CHARACTER_LIMIT_UI_PREF]?.[
+                                    this.pathToValue
+                                ];
+
+                            if (limitBehavior) {
+                                this.limitBehavior = limitBehavior;
+                                store.dispatch(
+                                    changeLimitConfig({
+                                        ui: limitBehavior,
+                                        chars: this.limit,
+                                    }),
+                                );
+                            }
+                        },
+                    );
+
+                    this.removeEventListeners = [userPreferencesListener];
+                };
+
+                const removeListeners = () => {
+                    this.removeEventListeners.forEach((fn) => fn());
+                };
+
+                // Expose the store in the editor3 spellchecker service
+                const storeIndex = editor3.addSpellcheckerStore(store);
+
+                initListeners();
+
+                $scope.$on('$destroy', () => {
+                    editor3.removeSpellcheckerStore(storeIndex);
+                    removeListeners();
+                });
+
+                const render = () => {
+                    ReactDOM.render(
+                        <Provider store={store}>
+                            <Editor3
+                                scrollContainer={this.scrollContainer}
+                                singleLine={this.singleLine}
+                                cleanPastedHtml={this.cleanPastedHtml}
+                            />
+                        </Provider>,
+                        $element.get(0),
+                    );
+                };
+
+                ng.waitForServicesToBeAvailable().then(render);
             });
     }
 }

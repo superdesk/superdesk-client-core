@@ -483,7 +483,7 @@ describe('authoring', () => {
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
-        browser.sleep(500);
+        browser.sleep(3000);
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
@@ -499,7 +499,7 @@ describe('authoring', () => {
         ctrlKey('x');
         authoring.save();
         authoring.publish(true);
-        assertToastMsg('error', 'BODY_HTML empty values not allowed');
+        assertToastMsg('error', 'BODY HTML empty values not allowed');
     });
 
     it('keyboard navigation operations on subject dropdown', () => {

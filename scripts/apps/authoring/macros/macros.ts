@@ -9,7 +9,7 @@
  */
 
 import {gettext} from 'core/utils';
-import _ from 'lodash';
+import _, {debounce, once} from 'lodash';
 
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {
@@ -81,7 +81,11 @@ function MacrosService(api, notify) {
             commit: !!commit,
         }).then((res) => res, (err) => {
             if (angular.isDefined(err.data._message)) {
-                notify.error(gettext('Error: {{message}}', {message: err.data._message}));
+                const error_messages = JSON.parse(err.data._message);
+
+                error_messages.forEach((error_message) => {
+                    notify.error(error_message);
+                });
             }
         });
     }
@@ -348,7 +352,17 @@ function MacrosReplaceDirective(editorResolver) {
                 return scope.diff[from] || null;
             }
 
-            init(scope.diff);
+            // There may be multiple instances of editors. Try waiting for all.
+            const initializeMacros = debounce(once(() => {
+                init(scope.diff);
+                scope.$apply();
+            }), 500);
+
+            window.addEventListener('editorInitialized', initializeMacros);
+
+            scope.$on('$destroy', () => {
+                window.removeEventListener('editorInitialized', initializeMacros);
+            });
         },
     };
 }

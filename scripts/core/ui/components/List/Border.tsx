@@ -8,10 +8,12 @@ import classNames from 'classnames';
  * @description Component to show border for a list item. Eg. red border for locked item
  */
 export const Border: React.StatelessComponent<any> = ({state}) => (
-    <div className={classNames(
-        'sd-list-item__border',
-        state ? `sd-list-item__border--${state}` : null,
-    )} />
+    <div
+        className={classNames(
+            'sd-list-item__border',
+            state ? `sd-list-item__border--${state}` : null,
+        )}
+    />
 );
 
 Border.propTypes = {

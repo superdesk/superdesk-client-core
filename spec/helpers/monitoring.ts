@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor, ElementFinder} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {s, ECE, el} from 'end-to-end-testing-helpers';
+import {s, ECE, el, els} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {
@@ -305,7 +305,7 @@ class Monitoring {
         };
 
         this.searchAction = function(search) {
-            element(by.css('.flat-searchbar')).click();
+            element(by.css('.flat-searchbar .trigger-icon')).click();
             element(by.model('query')).sendKeys(search);
             browser.actions().sendKeys(protractor.Key.ENTER).perform();
         };
@@ -335,7 +335,7 @@ class Monitoring {
             item.click();
             var preview = element(by.id('item-preview'));
 
-            waitFor(preview);
+            waitFor(preview, 5000);
         };
 
         this.closePreview = function() {
@@ -345,7 +345,7 @@ class Monitoring {
         this.getPreviewTitle = function() {
             var headline = element(by.css('.content-container')).element(by.css('.preview-headline'));
 
-            waitFor(headline, 500);
+            browser.wait(ECE.visibilityOf(headline), 1000);
 
             return headline.getText();
         };
@@ -367,13 +367,19 @@ class Monitoring {
         };
 
         this.tabAction = function(tab) {
-            element.all(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]')).click();
+            const btn = element(by.css('[ng-click="vm.current_tab = \'' + tab + '\'"]'));
+
+            browser.wait(ECE.elementToBeClickable(btn), 2000);
+
+            btn.click();
         };
 
         this.openRelatedItem = function(index) {
-            var relatedItem = element.all(by.repeater('relatedItem in relatedItems._items')).get(index);
+            const relatedItemsContainer = el(['related-items-view']);
 
-            relatedItem.all(by.className('related-item')).get(index).click();
+            browser.wait(ECE.visibilityOf(relatedItemsContainer));
+            els(['article-item'], null, relatedItemsContainer).get(index).click();
+            browser.wait(ECE.presenceOf(el(['authoring'])));
         };
 
         /**

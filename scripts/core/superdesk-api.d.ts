@@ -69,6 +69,8 @@ declare module 'superdesk-api' {
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
+            mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
@@ -94,7 +96,7 @@ declare module 'superdesk-api' {
             authoring?: {
                 /**
                  * Updates can be intercepted and modified. Return value will be used to compute a patch.
-                 * 
+                 *
                  * Example: onUpdateBefore = (current, next) => ({...next, priority: next.headline.includes('important') ? 10 : 1})
                 */
                 onUpdateBefore?(current: IArticle, next: IArticle): Promise<IArticle>;
@@ -137,10 +139,15 @@ declare module 'superdesk-api' {
     // ENTITIES
 
     export interface IAuthor {
-        role: string;
-        parent: string;
+        _id: string;
+        name: string;
+        scheme: any | null;
+        user: IUser;
+        role?: string;
+        parent?: string;
     }
 
+    // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
     export enum ITEM_STATE {
         /**
          * Item created in user workspace.
@@ -225,6 +232,9 @@ declare module 'superdesk-api' {
         // picture and video only
         width?: number;
         height?: number;
+
+        // video id, set when item is stored in video server
+        video_editor_id?: string;
     };
 
     export interface IArticle extends IBaseRestApiResponse {
@@ -244,8 +254,8 @@ declare module 'superdesk-api' {
         genre: any;
         anpa_take_key?: any;
         place: any;
-        priority?: any;
-        urgency: any;
+        priority?: number;
+        urgency: number;
         anpa_category?: any;
         subject?: Array<ISubject>;
         company_codes?: Array<any>;
@@ -254,8 +264,24 @@ declare module 'superdesk-api' {
         headline: string;
         sms?: string;
         abstract?: string;
+        attachments?: Array<{attachment: string}>;
         byline: string;
-        dateline?: any;
+        dateline?: {
+            day?: string;
+            date?: string;
+            source?: string;
+            located?: {
+                dateline?: string;
+                city?: string;
+                city_code?: string;
+                state_code?: string;
+                country?: string;
+                country_code?: string;
+                tz?: string;
+                state?: string;
+            };
+            text?: string;
+        };
         body_html?: string;
         footer?: string;
         firstcreated: any;
@@ -268,7 +294,14 @@ declare module 'superdesk-api' {
         sign_off: string;
         feature_media?: any;
         media_description?: string;
-        associations?: {[id: string]: IArticle | IRelatedArticle};
+        description_text?: string;
+
+        associations?: {
+            'featuremedia': IArticle;
+
+            // IArticle is used for media galleries and IRelatedArticle for linking articles.
+            [id: string]: IArticle | IRelatedArticle;
+        };
         type:
             | 'text'
             | 'picture'
@@ -290,6 +323,7 @@ declare module 'superdesk-api' {
         rewrite_of?: IArticle['_id'];
         profile: string;
         word_count?: number;
+        lines_count?: number;
         version_creator: string;
         state: ITEM_STATE;
         embargo?: any;
@@ -313,7 +347,7 @@ declare module 'superdesk-api' {
 
         highlights?: Array<string>;
         highlight?: any;
-        sms_message?: any;
+        sms_message?: string;
 
         // storage for custom fields created by users
         extra?: {[key: string]: any};
@@ -384,6 +418,9 @@ declare module 'superdesk-api' {
             [key: string]: IRendition;
         };
 
+        // media fields
+        alt_text?: any;
+
         // planning extension
         assignment_id?: string;
         event_id?: any;
@@ -406,15 +443,16 @@ declare module 'superdesk-api' {
         actioning?: {
             archive?: boolean;
             externalsource: boolean;
+            archiveContent?: boolean;
         };
         _autosave?: any;
         _locked?: boolean;
     }
 
     export interface IDangerousArticlePatchingOptions {
-        // when this option is set, an HTTP request will be sent and item patched immediately
-        // otherwise, the patch will get applied to authoring view
-        // and will get saved together with the rest of the article changes by the user
+        // When this option is set, an HTTP request will be sent immediately
+        // even if the article is locked and is being edited.
+        // Data received from the server will overwrite values edited by a user in case of a conflict.
         patchDirectlyAndOverwriteAuthoringValues?: boolean;
     }
 
@@ -514,6 +552,11 @@ declare module 'superdesk-api' {
         name?: string;
         qcode?: string;
         is_active?: boolean;
+        translations?: {
+            name?: {
+                [key: string]: string;
+            }
+        };
     }
 
     export interface IVocabulary extends IBaseRestApiResponse {
@@ -535,6 +578,7 @@ declare module 'superdesk-api' {
             | 'media'
             | 'date'
             | 'embed'
+            | 'urls'
             | 'related_content'
             | 'custom';
         field_options?: { // Used for related content fields
@@ -826,6 +870,10 @@ declare module 'superdesk-api' {
         UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
     }
 
+    export interface IConfigurableAlgorithms {
+        countLines?(plainText: string, lineLength: number): number;
+    }
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
@@ -1034,7 +1082,7 @@ declare module 'superdesk-api' {
         };
         ui: {
             article: {
-                view(id: string): void;
+                view(id: IArticle['_id']): void;
 
                 // This isn't implemented for all fields accepting images.
                 addImage(field: string, image: IArticle): void;
@@ -1158,6 +1206,8 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
+            stripHtmlTags(htmlString: string): string;
+            getLinesCount(plainText: string): number | null;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -1184,6 +1234,7 @@ declare module 'superdesk-api' {
         override_ednote_for_corrections: any;
         override_ednote_template: any;
         default_genre: any;
+        default_language: string;
         japanese_characters_per_minute: any;
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
@@ -1196,6 +1247,9 @@ declare module 'superdesk-api' {
         saml_auth: any;
         google_auth: any;
         saml_label: any;
+        oidc_auth: any;
+        keycloak_config: any;
+
         archive_autocomplete: boolean;
 
         /** allow updates for items which aren't published yet */
@@ -1203,6 +1257,9 @@ declare module 'superdesk-api' {
 
         /** allow users who are not members of a desk to duplicate its content */
         workflow_allow_duplicate_non_members: boolean;
+
+        /** allow users to copy from desk to personal space */
+        workflow_allow_copy_to_personal: boolean;
 
         allow_updating_scheduled_items: boolean;
 
@@ -1248,6 +1305,8 @@ declare module 'superdesk-api' {
             nestedItemsInOutputStage?: boolean;
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;
+            sendToPersonal?: boolean;
+            publishFromPersonal?: boolean;
         };
         auth: {
             google: boolean
@@ -1287,6 +1346,10 @@ declare module 'superdesk-api' {
         previewSubjectFilterKey: any;
         authoring?: {
             timeToRead?: any;
+            lineLength?: number;
+            preview?: {
+                hideContentLabels: boolean;
+            };
         };
         ui: {
             publishEmbargo?: any;
@@ -1295,6 +1358,11 @@ declare module 'superdesk-api' {
             sendPublishSchedule?: boolean;
             sendEmbargo?: boolean;
             sendDefaultStage?: 'working' | 'incoming';
+            authoring?: {
+                firstLine?: {
+                    wordCount?: boolean;
+                };
+            };
         };
         list: {
             narrowView: any;
@@ -1308,6 +1376,12 @@ declare module 'superdesk-api' {
                 secondLine: Array<string>,
             };
         };
+        gridViewFields: Array<string>;
+        gridViewFooterFields: {
+            left: Array<string>;
+            right: Array<string>;
+        };
+        swimlaneViewFields: any;
         item_profile: {
             change_profile: any;
         };

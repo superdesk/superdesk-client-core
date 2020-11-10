@@ -57,7 +57,7 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                         </ListItemRow>
                         <ListItemRow justifyContent="flex-end">
                             <ListItemColumn>
-                                <State item={article} svc={{datetime: this.props.datetime}} />
+                                <State item={article} />
                             </ListItemColumn>
                         </ListItemRow>
                     </ListItemColumn>

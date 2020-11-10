@@ -1,7 +1,8 @@
 import _ from 'lodash';
+import {IPackagesService} from 'types/Services/Packages';
 
 SearchWidgetCtrl.$inject = ['$scope', 'packages', 'api', 'search'];
-export function SearchWidgetCtrl($scope, packages, api, search) {
+export function SearchWidgetCtrl($scope, packages: IPackagesService, api, search) {
     $scope.selected = null;
     $scope.multiSelected = [];
     $scope.query = null;

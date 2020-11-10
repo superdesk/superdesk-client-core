@@ -55,7 +55,7 @@
 
                         <div class="sd-line-input  sd-line-input--is-select">
                             <label class="sd-line-input__label" translate>Content Filter</label>
-                            <select class="sd-line-input__select" ng-model="product.edit.content_filter.filter_id">
+                            <select class="sd-line-input__select" ng-model="product.edit.content_filter.filter_id" ng-change="handleContentFilterChange()">
                                 <option value=""></option>
                                 <option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
                             </select>

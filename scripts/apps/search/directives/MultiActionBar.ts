@@ -5,10 +5,60 @@ import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighl
 import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {dataApi} from 'core/helpers/CrudManager';
+import {canPrintPreview} from '../helpers';
+
+interface IScope extends ng.IScope {
+    multi: any;
+    display: any;
+    type: any;
+    activity: any;
+    export: boolean;
+    spike: any;
+    publish: any;
+    state: any;
+    printPreview: Array<IArticle>;
+    action: {
+        send: any;
+        sendAs: any;
+        canRemoveIngestItems: any;
+        removeIngestItems: any;
+        fetch: any;
+        canEditMetadata: any;
+        multiImageEdit: any;
+        multiedit: any;
+        openExport: any;
+        spikeItems: any;
+        unspikeItems: any;
+        canPackageItems: any;
+        canPublishItem: any;
+        duplicateInPlace: any;
+        duplicateTo: any;
+        publish: any;
+        createPackage: any;
+        addToPackage: any;
+        canHighlightItems: any;
+    };
+    toggleDisplay(): void;
+    hideMultiActionBar(): void;
+    hideMultiActionBar(): void;
+    getActions(articles: Array<IArticle>): Array<IArticleActionBulkExtended>;
+    openExport();
+    isOpenItemType(type: any): boolean;
+    closeExport(): void;
+    closePrintPreview(): void;
+}
 
 MultiActionBar.$inject = [
-    'asset', 'multi', 'authoringWorkspace', 'superdesk',
-    'keyboardManager', 'desks', 'api', 'archiveService',
+    'asset',
+    'multi',
+    'authoringWorkspace',
+    'superdesk',
+    'keyboardManager',
+    'desks',
+    'api',
+    'archiveService',
+    'authoring',
 ];
 export function MultiActionBar(
     asset,
@@ -19,16 +69,23 @@ export function MultiActionBar(
     desks,
     api,
     archiveService,
+    authoring,
 ) {
     return {
         controller: 'MultiActionBar',
         controllerAs: 'action',
         templateUrl: asset.templateUrl('apps/search/views/multi-action-bar.html'),
         scope: true,
-        link: function(scope) {
+        link: function(scope: IScope) {
             scope.multi = multi;
             scope.display = true;
             scope.$watch(multi.getItems, detectType);
+
+            scope.printPreview = [];
+
+            scope.closePrintPreview = () => {
+                scope.printPreview = [];
+            };
 
             scope.$watch('multi.count', () => {
                 scope.display = true;
@@ -117,7 +174,8 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.activity['edit.item']) {
+
+                    if (articles.every((item) => authoring.itemActions(item).edit === true)) {
                         actions.push({
                             label: gettext('Multiedit'),
                             icon: 'icon-multiedit',
@@ -145,17 +203,6 @@ export function MultiActionBar(
                             icon: 'icon-expand-thin',
                             onTrigger: () => {
                                 scope.action.sendAs();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.activity['edit.item'] && scope.action.canPublishItem()) {
-                        actions.push({
-                            label: gettext('Publish'),
-                            icon: 'icon-ok',
-                            onTrigger: () => {
-                                scope.action.publish();
                                 scope.$apply();
                             },
                             canAutocloseMultiActionBar: false,
@@ -237,6 +284,38 @@ export function MultiActionBar(
                         },
                         onTrigger: () => {
                             scope.action.duplicateInPlace();
+                            scope.$apply();
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
+
+                if (articles.every((item) => canPrintPreview(item))) {
+                    actions.push({
+                        label: gettext('Print'),
+                        icon: 'icon-print',
+                        onTrigger: () => {
+                            const ids: Array<string> = multi.getIds();
+
+                            scope.hideMultiActionBar();
+
+                            Promise.all(
+                                ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
+                            ).then((res: Array<IArticle>) => {
+                                scope.printPreview = res;
+                                scope.$apply();
+                            });
+                        },
+                        canAutocloseMultiActionBar: false,
+                    });
+                }
+
+                if (scope.activity['edit.item'] && scope.action.canPublishItem()) {
+                    actions.push({
+                        label: gettext('Publish'),
+                        icon: 'icon-ok',
+                        onTrigger: () => {
+                            scope.action.publish();
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,

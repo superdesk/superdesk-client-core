@@ -35,7 +35,6 @@ angular.module('superdesk.apps.vocabularies', [
     .directive('sdVocabularyConfig', directive.VocabularyConfigDirective)
     .directive('sdVocabularyConfigModal', directive.VocabularyConfigModal)
     .component('sdCustomFieldConfigs', reactToAngular1(CustomFieldConfigs, ['vocabulary', 'onChange']))
-    .directive('sdVocabularyObjectField', directive.VocabularyObjectField)
 
     .factory('cvSchema', SchemaFactory)
 

@@ -1549,3 +1549,14 @@ body.prepare-print {
         }
     }
 }
+
+.loading-overlay-for-tree-dot{
+    position: relative;
+
+    &.active {
+        background: url('~images/three-dots-white.svg') no-repeat center;
+        opacity: 0.5;
+        text-indent: -9999px;
+        background-size: 20%;
+    }
+}

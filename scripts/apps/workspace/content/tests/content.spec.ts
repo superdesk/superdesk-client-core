@@ -1,3 +1,5 @@
+import {IPackagesService} from 'types/Services/Packages';
+
 describe('superdesk.apps.workspace.content', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.desks'));
@@ -24,7 +26,7 @@ describe('superdesk.apps.workspace.content', () => {
             expect(done).toHaveBeenCalledWith(ITEM);
         }));
 
-        it('can create packages', inject((api, packages, desks, session, $rootScope) => {
+        it('can create packages', inject((api, packages: IPackagesService, desks, session, $rootScope) => {
             session.identity = {_id: '1'};
             desks.userDesks = {_items: []};
             spyOn(desks, 'getCurrentDesk')
@@ -35,7 +37,7 @@ describe('superdesk.apps.workspace.content', () => {
             $rootScope.$digest();
             expect(api.save).toHaveBeenCalledWith('archive', {headline: '', slugline: '',
                 description_text: '', type: 'composite',
-                groups: [{role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
+                groups: [{role: 'grpRole:NEP', refs: [{idRef: 'main', label: 'main'}], id: 'root'},
                     {refs: [], id: 'main', role: 'grpRole:main'}], version: 0,
                 task: {desk: '1', stage: '2', user: '1'}});
             expect(done).toHaveBeenCalledWith(ITEM);
@@ -58,7 +60,7 @@ describe('superdesk.apps.workspace.content', () => {
                 version: 0,
                 task: {desk: '1', stage: '2', user: '1'},
                 groups: [
-                    {role: 'grpRole:NEP', refs: [{idRef: 'main'}], id: 'root'},
+                    {role: 'grpRole:NEP', refs: [{idRef: 'main', label: 'main'}], id: 'root'},
                     {refs: [{headline: '', residRef: undefined, location: 'archive',
                         slugline: '', renditions: {}, itemClass: '', type: ''}],
                     id: 'main', role: 'grpRole:main'}]});

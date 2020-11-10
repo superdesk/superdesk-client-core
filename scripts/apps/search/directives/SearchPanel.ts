@@ -51,7 +51,7 @@ export function SearchPanel($location,
         },
         link: function(scope, element, attrs, controller) {
             scope.config = appConfig;
-            scope.flags = controller.flags;
+            scope.toggleFiltersPane = controller.toggleFiltersPane;
             scope.sTab = 'advancedSearch';
             scope.innerTab = 'parameters';
             scope.editingSearch = false;
@@ -103,7 +103,7 @@ export function SearchPanel($location,
             };
 
             scope.closeFacets = function() {
-                scope.flags.facets = false;
+                scope.toggleFiltersPane();
                 $rootScope.aggregations = 0;
             };
 

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {stripHtmlTags} from 'core/utils';
 import {META_FIELD_NAME, fieldsMetaKeys, getFieldMetadata} from 'core/editor3/helpers/fieldsMeta';
 import {isSuggestion, isComment} from 'core/editor3/highlightsConfig';
+import {IArticle} from 'superdesk-api';
 
 export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     headline: '',
@@ -52,6 +53,7 @@ export const CONTENT_FIELDS_DEFAULTS = Object.freeze({
     annotations: null,
     marked_for_user: null,
     [META_FIELD_NAME]: {},
+    task: {},
 });
 
 export const DEFAULT_ACTIONS = Object.freeze({
@@ -262,4 +264,24 @@ export function cutoffPreviousRenditions(update, origItem) {
             });
         }
     });
+}
+
+export function formatDatelineText(located: IArticle['dateline']['located'], month, date, source = '') {
+    var dateline = located?.city_code;
+
+    if (typeof dateline !== 'string') {
+        return '';
+    }
+
+    var datelineFields = located.dateline.split(',');
+
+    if (_.indexOf(datelineFields, 'state')) {
+        dateline.concat(', ', located.state_code);
+    }
+
+    if (_.indexOf(datelineFields, 'country')) {
+        dateline.concat(', ', located.country_code);
+    }
+
+    return dateline.toUpperCase().concat(', ', month, ' ', date, ' ', source, ' -');
 }

@@ -4,6 +4,7 @@ import {merge, flatMap} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
+import {logger} from 'core/services/logger';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
@@ -131,7 +132,6 @@ export function AuthoringDirective(
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.fullPreview = false;
-            $scope.fullPreviewUrl = '/#/preview/' + $scope.origItem._id;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
@@ -163,6 +163,20 @@ export function AuthoringDirective(
             }
 
             /**
+             * Get the Current Template for the item.
+            */
+            function getCurrentTemplate() {
+                if (typeof $scope.item?.template !== 'string') {
+                    logger.error(new Error('template must be present'));
+                    return;
+                }
+                api('content_templates').getById($scope.item.template)
+                    .then((result) => {
+                        $scope.currentTemplate = result;
+                    });
+            }
+
+            /**
              * Check if it is allowed to publish on desk
              * @returns {Boolean}
              */
@@ -172,6 +186,7 @@ export function AuthoringDirective(
             };
 
             getDeskStage();
+            getCurrentTemplate();
             /**
              * `desk_stage:change` event from send and publish action.
              * If send action succeeds but publish fails then we need change item location.
@@ -255,10 +270,6 @@ export function AuthoringDirective(
                 } else {
                     _exportHighlight(item._id);
                 }
-            };
-
-            $scope.canSaveTemplate = function() {
-                return privileges.userHasPrivileges({content_templates: 1});
             };
 
             function _exportHighlight(_id) {
@@ -588,6 +599,37 @@ export function AuthoringDirective(
                         window.tansa.settings.profileId = profiles[$scope.item.language];
                     }
 
+                    (function workAroundTansaSpellcheckerSelectionBug() {
+                        /**
+                         * The issue was that Tansa spell-checker would only check a single field, even if no input
+                         * field was focused at the time of initializing the spell-checker.
+                         *
+                         * If spell-checking was cancelled, that field would receive focus.
+                         *
+                         * If the page was reloaded, or an article reopened - all fields were spell-checked as expected.
+                         *
+                         * The issue was only happening if an expanded text selection was made in input[type="text"]
+                         * field at **any point** prior to initializing the spell-checker.
+                         * Such a selection is made every time when focusing a
+                         * non-empty input[type="text"] field using a tab key.
+                         * Even if other text fields received focus after that,
+                         * it would only spell-check the single field,
+                         * that last had an expanded text selection performed on it.
+                         *
+                         * I assume Tansa spell-checker has a feature to only spell-check a selected part of the text
+                         * and their JavaScript code has a bug where it can't differentiate between text that
+                         * was intentionally selected for spell-checking from text that was selected long before
+                         * initializing the spell-checker, even after multiple other input fields received focus.
+                         */
+
+                        Array.from(document.querySelectorAll('input[type="text"]')).forEach((el: HTMLInputElement) => {
+                            // Making sure there are no expanded selections.
+                            if (el !== document.activeElement) {
+                                el.setSelectionRange(0, 0);
+                            }
+                        });
+                    })();
+
                     window.RunTansaProofing();
                 } else {
                     notify.error(gettext('Tansa is not responding. You can continue editing or publish the story.'));
@@ -722,7 +764,7 @@ export function AuthoringDirective(
                 // returned promise used by superdesk-fi
                 return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
                     authoringWorkspace.close(true);
-                    $scope.$broadcast('item:close', $scope.origItem._id);
+                    $rootScope.$broadcast('item:close', $scope.origItem._id);
                 });
             };
 
@@ -881,6 +923,11 @@ export function AuthoringDirective(
 
                 $scope.autosave(item);
             };
+
+            $scope.firstLineConfig = appConfig?.ui?.authoring?.firstLine ?? {};
+
+            // default to true
+            $scope.firstLineConfig.wordCount = $scope.firstLineConfig.wordCount ?? true;
 
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
@@ -1124,7 +1171,7 @@ export function AuthoringDirective(
                     var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
                     var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
 
-                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length < maxItems) {
+                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length <= maxItems) {
                         addMediaFieldVersion(fieldId, $scope.getNewMediaFieldId(fieldId));
                     }
                     _.forEach(mediaFields[fieldId], (version) => {

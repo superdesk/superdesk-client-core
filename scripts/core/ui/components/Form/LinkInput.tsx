@@ -135,7 +135,8 @@ export class LinkInput extends React.Component<any, any> {
                     {showLink && iframelyKey && (
                         <a
                             href={this.getAbsoulteURL(value)}
-                            target="_blank" rel="noopener noreferrer"
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
                             {this.state.title}
                         </a>

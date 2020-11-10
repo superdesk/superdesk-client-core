@@ -1,3 +1,19 @@
+<!--
+
+
+
+    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    !!! IMPORTANT:
+
+    If you add a new field here in authoring,
+    do not forget to also map it to field types
+    for preview in preview/getAuthoringField.ts
+    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+
+-->
+
 <div class="field"
      sd-width="{{editor.headline.sdWidth|| 'full'}}"
      ng-if="schema.headline && !(features.onlyEditor3 || editor.body_html.editor3)"
@@ -6,8 +22,10 @@
      ng-attr-title="{{schema.headline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.headline.required">
 
-    <label class="field__label">{{label('headline')}}</label>
-    <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <label for="title" class="field__label">{{label('headline')}}</label>
+    <span ng-if="schema.headline.maxlength">
+        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
         item="item.headline"
@@ -30,8 +48,11 @@
      ng-attr-title="{{schema.headline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.headline.required">
 
-    <label class="field__label">{{label('headline')}}</label>
-    <span ng-if="schema.headline.maxlength" sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></span>
+    <label for="title" class="field__label">{{label('headline')}}</label>
+    <span ng-if="schema.headline.maxlength">
+        <sd-character-count-config-button data-field="'headline'"></sd-character-count-config-button>
+        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
         item="item.headline"
@@ -52,6 +73,7 @@
          data-tabindex="editor.headline.order"
          data-clean-pasted-html="editor.headline.cleanPastedHTML"
          data-test-id="field--headline"
+         data-limit="schema.headline.maxlength"
     ></div>
 </div>
 
@@ -63,13 +85,13 @@
      ng-attr-title="{{schema.sms.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.sms.required">
 
-    <label class="field__label" ng-if="_editable">{{label('sms')}}</label>
+    <label for="sms_message" class="field__label" ng-if="_editable">{{label('sms')}}</label>
     <div ng-if="_editable">
         <span ng-if="_editable" sd-switch ng-model="item.flags.marked_for_sms" ng-attr-data-disabled="schema.sms.readonly === true" class="sms-switch" tabindex="{{editor.sms.order}}" ng-change="toggleSMS()"></span>
     </div>
 
     <div ng-if="item.flags.marked_for_sms" style="margin-top: 27px;">
-        <span sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></span>
+        <sd-character-count data-item="item.sms_message" data-html="true" data-limit="160"></sd-character-count>
         <label class="field__label">{{label('sms_message')}}</label>
         <textarea sd-remove-tags
             class="byline text-editor"
@@ -144,8 +166,8 @@
      ng-attr-title="{{schema.abstract.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.abstract.required">
 
-    <label class="field__label">{{label('abstract')}}</label>
-    <span sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
+    <label for="abstract" class="field__label">{{label('abstract')}}</label>
+    <sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></sd-character-count>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-text-editor
@@ -167,8 +189,9 @@
      ng-attr-title="{{schema.abstract.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.abstract.required">
 
-    <label class="field__label">{{label('abstract')}}</label>
-    <span sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></span>
+    <label for="abstract" class="field__label">{{label('abstract')}}</label>
+    <sd-character-count-config-button data-field="'abstract'"></sd-character-count-config-button>
+    <sd-character-count data-item="item.abstract" data-html="true" data-limit="schema.abstract.maxlength"></sd-character-count>
     <span sd-word-count data-item="item.abstract" data-html="true"></span>
     <div id="abstract" class="abstract"
          sd-editor3
@@ -184,6 +207,7 @@
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.abstract.order"
          data-clean-pasted-html="editor.abstract.cleanPastedHTML"
+         data-limit="schema.abstract.maxlength"
     ></div>
 </div>
 
@@ -195,7 +219,7 @@
      ng-attr-title="{{schema.byline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.byline.required">
 
-    <label class="field__label">{{label('byline')}}</label>
+    <label for="byline" class="field__label">{{label('byline')}}</label>
     <input type="text"
            sd-remove-tags
            class="byline"
@@ -241,7 +265,6 @@
         <div ng-show="!editor.dateline.hideDate" class="dateline-date">
             <select class="field__select" id="datelineMonth"
                     tabindex="{{editor.dateline.order}}"
-                    ng-options="monthName | translate for (monthName, monthValue) in monthNames"
                     ng-disabled="!item.dateline.located || !_editable || schema.dateline.readonly === true"
                     ng-change="resetNumberOfDays(true, dateline.month)"
                     placeholder="Choose month"
@@ -251,6 +274,7 @@
                     data-append-class="active"
                     tabindex="{{editor.dateline.order}}">
                 <option value=""></option>
+                <option ng-repeat="monthName in monthNames track by monthName.id" value="{{monthName.id}}">{{monthName.label}}</option>
             </select>
 
             <select class="field__select" id="datelineDay"
@@ -277,9 +301,9 @@
      data-required="schema.body_html.required"
      ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.body_html.sdWidth|| 'full'}}">
-    <label class="field__label">{{label('body_html')}}</label>
+    <label for="bodyhtml" class="field__label">{{label('body_html')}}</label>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
-    <span sd-character-count data-item="item.body_html" data-html="true"></span>
+    <sd-character-count data-item="item.body_html" data-html="true"></sd-character-count>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <sd-line-count data-html="item.body_html"></sd-line-count>
     <div id="bodyhtml"
@@ -307,9 +331,10 @@
      ng-attr-title="{{schema.body_html.readonly === true ? readOnlyLabel : ''}}"
      tansa-proofing="false">
 
-    <label class="field__label">{{label('body_html')}}</label>
+    <label for="bodyhtml" class="field__label">{{label('body_html')}}</label>
+    <sd-character-count-config-button data-field="'body_html'" ng-if="schema.body_html.maxlength"></sd-character-count-config-button>
     <span sd-reading-time data-item="item.body_html" data-html="true" data-language="item.language"></span>
-    <span sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></span>
+    <sd-character-count data-item="item.body_html" data-html="true" data-limit="schema.body_html.maxlength"></sd-character-count>
     <span sd-word-count data-item="item.body_html" data-html="true"></span>
     <sd-line-count data-html="item.body_html"></sd-line-count>
     <div id="bodyhtml"
@@ -328,6 +353,7 @@
          data-show-title="editor.body_html.imageTitle"
          data-tabindex="editor.body_html.order"
          data-clean-pasted-html="editor.body_html.cleanPastedHTML"
+         data-limit="schema.body_html.maxlength"
     ></div>
 </div>
 
@@ -347,17 +373,19 @@
 
                 <div class="item-association__image-overlay" ng-if="_editable">
                     <div class="item-association__icons-block">
-                        <a class="item-association__image-action" sd-tooltip="Edit metadata" ng-click="editMedia('view')"><i class="icon-pencil"></i></a>
-                        <a class="item-association__image-action" sd-tooltip="Edit image" ng-click="editMedia('image-edit')"><i class="icon-switches"></i></a>
-                        <a class="item-association__image-action" sd-tooltip="Edit crops" ng-click="editMedia('crop')" ng-if="metadata.crop_sizes"><i class="icon-crop"></i></a>
+                        <a class="item-association__image-action" sd-tooltip="Edit metadata" ng-click="editMedia('view')" aria-label="{{ 'Edit metadata' | translate}}"><i class="icon-pencil"></i></a>
+                        <a class="item-association__image-action" sd-tooltip="Edit image" ng-click="editMedia('image-edit')" aria-label="{{ 'Edit image' | translate}}"><i class="icon-switches"></i></a>
+                        <a class="item-association__image-action" sd-tooltip="Edit crops" ng-click="editMedia('crop')" ng-if="metadata.crop_sizes" aria-label="{{ 'Edit crops' | translate}}"><i class="icon-crop"></i></a>
                     </div>
                 </div>
             </div>
 
             <span class="media-item__item-label" translate>Original ({{item.renditions.original.width}} x {{item.renditions.original.height}} px)</span>
-            <div sd-media-metadata-view
-                 class="media-container__metadata media-container__metadata--image"
-                 data-item="item"></div>
+
+            <sd-media-metadata-view
+                item="item"
+                class-name="'media-container__metadata media-container__metadata--image'"
+            ></sd-media-metadata-view>
 
         </div>
         <div sd-item-crops data-item="item"></div>
@@ -366,9 +394,12 @@
     <div ng-if="item.type == 'audio'">
         <div class="media-container">
             <audio controls="controls" sd-sources data-renditions="item.renditions"></audio>
-            <div sd-media-metadata-view
-                 class="media-container__metadata"
-                 data-item="item"></div>
+
+            <sd-media-metadata-view
+                item="item"
+                class-name="'media-container__metadata'"
+            ></sd-media-metadata-view>
+
             <div class="media-container__action-bar" ng-if="_editable">
                 <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
             </div>
@@ -377,9 +408,12 @@
     <div ng-if="item.type == 'video'">
         <div class="media-container">
             <sd-video item="item"></sd-video>
-            <div sd-media-metadata-view
-                 class="media-container__metadata"
-                 data-item="item"></div>
+
+            <sd-media-metadata-view
+                item="item"
+                class-name="'media-container__metadata'"
+            ></sd-media-metadata-view>
+
             <div class="media-container__action-bar" ng-if="_editable">
                 <div class="flex-grid flex-grid--medium-3">
                     <div class="flex-grid__item sd-text__left" style="text-align: left;">
@@ -387,8 +421,9 @@
                     </div>
                     <div class="flex-grid__item">
                     </div>
-                    <div class="flex-grid__item">
+                    <div class="flex-grid__item" style="display: flex; justify-content: flex-end;">
                         <a class="btn btn--hollow btn--small" ng-click="editMedia()"><span translate>Edit metadata</span></a>
+                        <sd-authoring-media-actions article="item"></sd-authoring-media-actions>
                     </div>
                 </div>
             </div>
@@ -403,8 +438,10 @@
      sd-width="{{editor.media_description.sdWidth|| 'full'}}"
      ng-attr-title="{{schema.media_description.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.media_description.required">
-    <label class="field__label" translate>Caption</label>
-    <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
+    <label for="title" class="field__label" translate>Caption</label>
+    <span ng-if="validator.description_text.maxlength">
+        <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
+    </span>
     <div id="title" class="abstract"
          sd-text-editor
          data-config="{disableToolbar: true, disableReturn: true, disableEditing: isPublished(item), tabindex: editor.description_text.order, paste: {cleanPastedHTML: editor.description_text.cleanPastedHTML}}"
@@ -424,8 +461,11 @@
      sd-width="{{editor.media_description.sdWidth|| 'full'}}"
      ng-attr-title="{{schema.media_description.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.media_description.required">
-    <label class="field__label" translate>Caption</label>
-    <span ng-if="validator.description_text.maxlength" sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></span>
+    <label for="title" class="field__label" translate>Caption</label>
+    <span ng-if="validator.description_text.maxlength">
+        <sd-character-count-config-button data-field="'description_text'"></sd-character-count-config-button>
+        <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
+    </span>
     <div id="title" class="abstract"
          sd-editor3
          data-path-to-value="'description_text'"
@@ -440,6 +480,7 @@
          data-refresh-trigger="refreshTrigger"
          data-tabindex="editor.media_description.order"
          data-clean-pasted-html="editor.description_text.cleanPastedHTML"
+         data-limit="schema.description_text.maxlength"
     ></div>
 </div>
 
@@ -472,7 +513,7 @@
      data-required="schema.body_footer.required"
      ng-attr-title="{{schema.body_footer.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.body_footer.sdWidth|| 'full'}}">
-    <label class="field__label">{{label('body_footer')}}</label>
+    <label for="body_footer" class="field__label">{{label('body_footer')}}</label>
     <div id="body_footer" class="body"
          sd-text-editor
          data-config="{disableToolbar: true, disableEditing: isPublished(item), tabindex: editor.body_footer.order, paste: {cleanPastedHTML: editor.body_footer.cleanPastedHTML}}"
@@ -494,7 +535,7 @@
      data-required="schema.body_footer.required"
      ng-attr-title="{{schema.body_footer.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.body_footer.sdWidth|| 'full'}}">
-    <label class="field__label">{{label('body_footer')}}</label>
+    <label for="body_footer" class="field__label">{{label('body_footer')}}</label>
     <div id="body_footer" class="body"
          sd-editor3
          data-path-to-value="'body_footer'"
@@ -524,17 +565,18 @@
      data-required="schema.sign_off.required"
      ng-attr-title="{{schema.sign_off.readonly === true ? readOnlyLabel : ''}}"
      sd-width="{{editor.sign_off.sdWidth|| 'full'}}">
-    <label class="field__label">{{label('sign_off')}}</label>
+    <label for="sign_off" class="field__label">{{label('sign_off')}}</label>
     <button
         id="sign-off-unlock"
         class="icn-btn btn-signOff"
         ng-click="changeSignOffEdit()"
         tabindex="{{editor.sign_off.order}}"
-        title="Unlock edit Sign-Off"
+        title="{{ 'Toggle Sign-Off lock' | translate}}"
+        aria-label="{{ 'Toggle Sign-Off lock' | translate}}"
         ng-if="_editable && schema.sign_off.readonly !== true"
     >
-        <i class="icon-lock" ng-hide="editSignOff"></i>
-        <i class="icon-unlocked" ng-show="editSignOff"></i>
+        <i class="icon-lock" ng-hide="editSignOff" aria-label="{{ 'Locked' | translate}}"></i>
+        <i class="icon-unlocked" ng-show="editSignOff" aria-label="{{ 'Unlocked' | translate}}"></i>
     </button>
     <div ng-hide="editSignOff" class="text-field__non-editable" id="sign-off">{{item.sign_off}}</div>
     <input type="text" sd-remove-tags
@@ -565,7 +607,7 @@
     sd-validation-error="error.usageterms"
     ng-attr-title="{{schema.usageterms.readonly === true ? readOnlyLabel : ''}}"
     data-required="schema.usageterms.required">
-  <label class="field__label">{{label('usageterms')}}</label>
+  <label for="usageterms" class="field__label">{{label('usageterms')}}</label>
   <input type="text"
          sd-remove-tags
          class="usageterms"
@@ -588,8 +630,10 @@
     sd-validation-error="error[field.display_name.toLowerCase()] || error.extra[field._id]">
 
     <label class="field__label">{{field.display_name}}</label>
-    <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
-        data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+    <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
+        <sd-character-count-config-button data-field="field._id"></sd-character-count-config-button>
+        <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema[field._id].validate_characters"
         class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
     <div sd-editor3
@@ -606,6 +650,7 @@
         data-refresh-trigger="refreshTrigger"
         data-tabindex="editor[field._id].order"
         data-clean-pasted-html="editor[field._id].cleanPastedHTML"
+        data-limit="schema[field._id].maxlength"
     ></div>
     <div class="sd-editor__info-text" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
 </div>
@@ -801,8 +846,10 @@
      sd-width="{{editor.slugline.sdWidth}}"
      ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
      order="{{editor.slugline.order}}">
-    <label class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <label for="slugline" class="field__label">{{label('slugline')}}</label>
+    <span ng-if="schema.slugline.maxlength">
+        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema.slugline.validate_characters"
         class="disallowed-char-error"
         item="item.slugline"
@@ -823,8 +870,11 @@
      sd-validation-error="error.slugline"
      ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
      data-required="schema.slugline.required">
-    <label class="field__label">{{label('slugline')}}</label>
-    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+    <label for="title" class="field__label">{{label('slugline')}}</label>
+    <span ng-if="schema.slugline.maxlength">
+        <sd-character-count-config-button data-field="'slugline'"></sd-character-count-config-button>
+        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
+    </span>
     <sd-validate-characters ng-if="schema.slugline.validate_characters"
         class="disallowed-char-error"
         item="item.slugline"
@@ -841,6 +891,7 @@
          data-read-only="!_editable || schema.slugline.readonly === true"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
-         data-tabindex="editor.slugline.order">
-    </div>
+         data-tabindex="editor.slugline.order"
+         data-limit="schema.slugline.maxlength"
+    ></div>
 </div>

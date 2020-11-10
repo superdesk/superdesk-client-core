@@ -1,5 +1,8 @@
 import gettextjs from 'gettext.js';
 import {debugInfo} from 'appConfig';
+import {IVocabularyItem} from 'superdesk-api';
+
+export type IScopeApply = (fn: () => void) => void;
 
 export const i18n = gettextjs();
 
@@ -131,4 +134,12 @@ export const gettextCatalog = {
  */
 export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function getVocabularyItemNameTranslated(item: IVocabularyItem, language: string) {
+    if (language == null) {
+        return item.name;
+    }
+
+    return item?.translations?.name?.[language] ?? item.name;
 }

@@ -18,6 +18,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.selected = null;
     this.groups = [];
     this.spikeGroups = [];
+    this.personalGroup = {};
     this.modalActive = false;
     this.displayOnlyCurrentStep = false;
     this.columnsLimit = null;
@@ -46,6 +47,14 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         customFilters: $scope.type === 'monitoring' ? storage.getItem('customFilters') || {} : {},
     };
     this.activeFilterTags = {};
+
+    function initPersonalGroup() {
+        self.personalGroup = {type: 'personal', header: gettext('Personal')};
+    }
+
+    this.togglePersonalShowSent = () => {
+        self.personalGroup.sent = !self.personalGroup.sent;
+    };
 
     desks.initialize()
         .then(angular.bind(this, function() {
@@ -135,38 +144,31 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     function deskWorkspaceMonitoringConfig(activeWorkspace) {
         // Read available groups from user preferences first
         return preferencesService.get(PREFERENCES_KEY).then((preference) => {
-            let groups = [];
             let desk = self.deskLookup[activeWorkspace.id];
-            let monitoringSettings = desk ? desk.monitoring_settings || [] : [];
+            let monitoringSettings = desk?.monitoring_settings;
             let activePrefGroups = preference[activeWorkspace.id] ? preference[activeWorkspace.id].groups || [] : [];
 
-            if (activePrefGroups.length) {
-                if (monitoringSettings.length) {
-                    // compare and determine if set of groups in desk monitoring settings &
-                    // user preferences are same or changed now, due to stages activated
-                    // or deactivated in desk's monitoring settings.
-                    let diff = _.xorBy(monitoringSettings, activePrefGroups, '_id');
-
-                    if (diff.length) {
-                        // if different, that means available stages/groups are changed now in desk monitoring settings
-                        // so simply return recent desk monitoring settings.
-                        groups = monitoringSettings;
-                    } else {
-                        // update groups in preferences with any changes in desk's monitoring settings groups.
-                        activePrefGroups.forEach((group) =>
-                            angular.extend(group, monitoringSettings.find((grp) => grp._id === group._id)));
-
-                        groups = activePrefGroups;
-                    }
-                } else {
-                    groups = activePrefGroups;
-                }
-            } else {
-                // when no user preferences found
-                groups = monitoringSettings;
+            if (monitoringSettings == null) {
+                return {type: 'desk', groups: []};
             }
 
-            return {type: 'desk', groups: groups};
+            const monitoringSettingsIds: Array<string> = monitoringSettings.map(({_id}) => _id);
+
+            // ensure correct order by first taking items from personal preferences
+            const groupsFromPersonalPreferences: Array<string> = activePrefGroups
+                .map(({_id}) => _id)
+                .filter((_id) => monitoringSettingsIds.includes(_id));
+
+            const remainingGroups = monitoringSettings
+                .map(({_id}) => _id)
+                .filter((_id) => groupsFromPersonalPreferences.includes(_id) === false);
+
+            const allItems = [
+                ...groupsFromPersonalPreferences,
+                ...remainingGroups,
+            ].map((id) => monitoringSettings.find((item) => item._id === id));
+
+            return {type: 'desk', groups: allItems};
         });
     }
 
@@ -274,6 +276,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             }
         }
         initSpikeGroups(settings.type === 'desk');
+        initPersonalGroup();
         updateFilteringCriteria();
         self.search(self.searchQuery);
     }
@@ -378,6 +381,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             _.each(self.spikeGroups, (item) => {
                 item[filterType] = value;
             });
+
+            self.personalGroup[filterType] = value;
         });
     }
 
@@ -572,6 +577,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         _.each(this.spikeGroups, (item) => {
             item.query = query;
         });
+        self.personalGroup.query = query;
     };
 
     this.state = storage.getItem('agg:state') || {};

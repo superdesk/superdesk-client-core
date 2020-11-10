@@ -91,12 +91,13 @@ export class Dropdown extends React.Component<any, any> {
                 className={this.props.className}
             >
                 {this.props.tooltip ? (
-                    <OverlayTrigger placement="left"
-                        overlay={
+                    <OverlayTrigger
+                        placement="left"
+                        overlay={(
                             <Tooltip id="create_new_btn">
                                 {this.props.tooltip}
                             </Tooltip>
-                        }
+                        )}
                     >
                         <span>{buttonDropMenu}</span>
                     </OverlayTrigger>
@@ -124,16 +125,20 @@ export class Dropdown extends React.Component<any, any> {
                                 <li key={index}>
                                     <button onClick={() => item.action()}>
                                         {item.icon && (
-                                            <i className={classNames(
-                                                {'icon--gray': item.disabled},
-                                                item.icon,
-                                            )} />
+                                            <i
+                                                className={classNames(
+                                                    {'icon--gray': item.disabled},
+                                                    item.icon,
+                                                )}
+                                            />
                                         )}
 
-                                        <span className={classNames(
-                                            {'dropdown__menu-item--disabled': item.disabled},
-                                            item.className,
-                                        )}>
+                                        <span
+                                            className={classNames(
+                                                {'dropdown__menu-item--disabled': item.disabled},
+                                                item.className,
+                                            )}
+                                        >
                                             {firstCharUpperCase(item.label)}
                                         </span>
                                     </button>

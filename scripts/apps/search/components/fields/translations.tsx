@@ -6,7 +6,6 @@ import {TranslationsList} from './translations-list';
 import {ItemListPopup} from '../item-list-popup';
 
 interface IProps {
-    svc: any;
     item: IArticle;
 }
 
@@ -29,19 +28,25 @@ export class Translations extends React.PureComponent<IProps, IState> {
         return (
             <React.Fragment>
                 {this.props.item.translated_from != null && (
-                    <button key="translated" className="label label--hollow"
+                    <button
+                        key="translated"
+                        className="label label--hollow"
                         onClick={(event) => {
                             this.renderOriginalArticle(event.target);
-                        }}>
+                        }}
+                    >
                         {gettext('translation')}
                     </button>
                 )}
 
                 {this.props.item.translations != null && this.props.item.translations.length > 0 && (
-                    <button key="translations" className="text-link"
+                    <button
+                        key="translations"
+                        className="text-link"
                         onClick={(event) => {
                             this.renderTranslations(event.target);
-                        }}>
+                        }}
+                    >
                         {'('}<b>{this.props.item.translations.length}</b>{')'}
                         {' '}
                         {gettextPlural(this.props.item.translations.length, 'translation', 'translations')}
@@ -53,7 +58,8 @@ export class Translations extends React.PureComponent<IProps, IState> {
                         key="popup"
                         target={this.state.popup.target}
                         label={this.state.popup.label}
-                        close={this.closePopup}>
+                        close={this.closePopup}
+                    >
                         <TranslationsList
                             ids={this.state.popup.ids}
                             onClick={(item) => {

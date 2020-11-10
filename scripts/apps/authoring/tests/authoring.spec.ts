@@ -628,7 +628,7 @@ describe('authoring', () => {
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
                 spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
-                $httpBackend.expectPATCH(orig._links.self.href, item)
+                $httpBackend.expectPATCH(orig._links.self.href + '?publish_from_personal=false', item)
                     .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();
@@ -795,6 +795,7 @@ describe('lock service', () => {
     beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     var user = {_id: 'user'};
     var sess = {_id: 'sess'};
@@ -802,6 +803,10 @@ describe('lock service', () => {
 
     beforeEach(inject((session) => {
         session.start(sess, user);
+    }));
+
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
     }));
 
     it('can test if item is locked', inject((lock) => {
@@ -875,7 +880,8 @@ describe('authoring actions', () => {
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
 
-    beforeEach(inject((desks, $q) => {
+    beforeEach(inject((desks, $q, $httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
         spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when(userDesks));
     }));
 

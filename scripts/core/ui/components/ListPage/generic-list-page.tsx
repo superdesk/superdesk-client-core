@@ -514,10 +514,12 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                     </SidePanelHeader>
                                     <SidePanelContent>
                                         <SidePanelContentBlock>
-                                            <form onSubmit={(event) => {
-                                                event.preventDefault();
-                                                this.filter();
-                                            }}>
+                                            <form
+                                                onSubmit={(event) => {
+                                                    event.preventDefault();
+                                                    this.filter();
+                                                }}
+                                            >
                                                 <FormViewEdit
                                                     item={this.state.filterValues}
                                                     formConfig={getFormGroupForFiltering(

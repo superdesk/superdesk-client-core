@@ -7,7 +7,7 @@ import {
     IEvents,
     IStage,
 } from 'superdesk-api';
-import {gettext, gettextPlural} from 'core/utils';
+import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
@@ -52,9 +52,19 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
+import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
+}
+
+export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise<void> {
+    const authoringWorkspace = ng.get('authoringWorkspace');
+
+    return ng.getService('$location').then(($location) => {
+        $location.url('/workspace/monitoring');
+        authoringWorkspace.edit({_id: id}, mode);
+    });
 }
 
 const getContentTypeMemoized = memoize(getContentType);
@@ -95,6 +105,8 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
+export const formatDate = (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat);
+
 // imported from planning
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -119,7 +131,9 @@ export function getSuperdeskApiImplementation(
         },
         entities: {
             article: {
-                isPersonal: (article) => article.task == null || article.task.desk == null,
+                isPersonal: (article) => article.task == null
+                    || article.task.desk == null
+                    || article.task.stage == null,
                 isLocked: isLocked,
                 isLockedInCurrentSession,
                 isLockedInOtherSession,
@@ -191,11 +205,8 @@ export function getSuperdeskApiImplementation(
         },
         ui: {
             article: {
-                view: (id: string) => {
-                    ng.getService('$location').then(($location) => {
-                        $location.url('/workspace/monitoring');
-                        authoringWorkspace.edit({_id: id}, 'view');
-                    });
+                view: (id: IArticle['_id']) => {
+                    openArticle(id, 'view');
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
@@ -257,7 +268,7 @@ export function getSuperdeskApiImplementation(
         localization: {
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
-            formatDate: (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat),
+            formatDate: formatDate,
             formatDateTime: (date: Date) => {
                 return moment(date)
                     .tz(appConfig.defaultTimezone)
@@ -281,6 +292,8 @@ export function getSuperdeskApiImplementation(
             dateToServerString: (date: Date) => {
                 return date.toISOString().slice(0, 19) + '+0000';
             },
+            stripHtmlTags,
+            getLinesCount,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

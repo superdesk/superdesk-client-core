@@ -99,7 +99,7 @@ var extension: IExtension = {
                 },
                 pages: [
                     {
-                        title: gettext('Annotations library'),
+                        title: gettext('Annotations Library'),
                         url: '/annotations-library',
                         component: getAnnotationsLibraryPage(superdesk),
                     },

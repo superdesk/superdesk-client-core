@@ -54,20 +54,20 @@ describe('monitoring', () => {
 
     it('can display the item in Desk Output when it\'s published in a production desk', () => {
         monitoring.openMonitoring();
-        expect(monitoring.getTextItem(3, 2)).toBe('item6');
-        monitoring.actionOnItem('Edit', 3, 2);
+        expect(monitoring.getTextItem(2, 2)).toBe('item7');
+        monitoring.actionOnItem('Edit', 2, 2);
         authoring.publish();
-        expect(monitoring.getTextItem(5, 0)).toBe('item6');
+        expect(monitoring.getTextItem(5, 0)).toBe('item7');
     });
 
     it('can display the item in Desk Output when it\'s scheduled for publish ', () => {
         monitoring.openMonitoring();
-        expect(monitoring.getTextItem(3, 2)).toBe('item6');
-        monitoring.actionOnItem('Edit', 3, 2);
+        expect(monitoring.getTextItem(2, 2)).toBe('item7');
+        monitoring.actionOnItem('Edit', 2, 2);
         authoring.writeText('Two');
         authoring.save();
         authoring.schedule();
-        expect(monitoring.getTextItem(5, 0)).toBe('item6');
+        expect(monitoring.getTextItem(5, 0)).toBe('item7');
     });
 
     it('configure personal and show it on monitoring view', () => {
@@ -659,7 +659,7 @@ describe('monitoring', () => {
         // Stage single view
         monitoring.actionOnStageSingleView();
         expect(monitoring.getSingleViewItemCount()).toBe(0);
-        expect(monitoring.getStageSingleViewTitle()).toBe('Working Stage stage');
+        expect(monitoring.getStageSingleViewTitle()).toBe('Politic Desk / Working Stage');
     });
 
     it('can remember multi selection even after scrolling and can reset multi-selection', () => {

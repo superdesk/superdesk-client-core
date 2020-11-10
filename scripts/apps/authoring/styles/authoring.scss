@@ -38,7 +38,7 @@
     .page-content-container {
         left:0;
         right:50px;
-        top: 38px;
+        top: 0;
     }
 
     .widget-wrapper {
@@ -132,7 +132,8 @@
     bottom: 0;
     left: $tablist-width + $article-tabpane-padding;
     right: $tablist-width + $article-tabpane-padding;
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .workqueue .page-content-container {
@@ -218,7 +219,7 @@ $bottom-bar-item-border-color-active: transparent;
 .opened-articles-bar {
     position: fixed;
     height: $authoring-opened-articles;
-    left: 0; 
+    left: 0;
     right: 0;
     bottom: 0;
     background: rgba(20, 20, 20, 0.95);
@@ -228,6 +229,7 @@ $bottom-bar-item-border-color-active: transparent;
     display: grid;
     grid-template-rows: 32px;
     grid-template-columns: $sidebar-width 1fr auto auto;
+    transition: left 0.3s ease;
     .opened-articles-bar__list {
         display: flex;
         flex-grow: 1;
@@ -357,6 +359,10 @@ $bottom-bar-item-border-color-active: transparent;
             border-radius: 0 !important;
         }
     }
+    &.menu-open {
+        left: $sf-main-menu-width !important;
+        right: 0 !important;
+    }
 }
 
 
@@ -456,52 +462,59 @@ $bottom-bar-item-border-color-active: transparent;
     }
 }
 
+$authoring-toolbar-spacing: 10px;
+
 // Authoring Header
 // -------------------------------------------------
 
 // ---- Sticky header ----
 .authoring-sticky {
-    position: absolute;
     @include box-sizing(border-box);
-    left: 0; right: 58px;
     max-width: 900px;
     margin: 0 auto;
-    padding: 10px 20px;
-    border: 1px solid #cacaca;
-    border-top: 0;
-    border-bottom: 0;
+    padding: 4px 20px;
     background-color: $white;
     z-index: 3;
     @include transition(all .5s);
+    display: flex;
+    justify-content: space-between;
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 3;
 
     .authoring-sticky__detailed {
         display: inline-block;
-        > div {
+
+        dl, dt, dd, .authoring-sticky__from-extensions {
             display: inline-block;
-            margin-left: 15px;
-            padding-left: 10px;
-            border-left: 1px solid #DADADA;
-        }
-        label, time, b {
-            display: inline-block;
-            vertical-align: top;
-            font-size: 12px;
-            color: $sd-gray-text;
-            padding-right: .3em;
+            vertical-align: bottom;
+            padding: 0;
             margin: 0;
         }
-        b {
-            max-width: 45%;
+
+        > dl + dl, .authoring-sticky__from-extensions {
+            margin-left: $authoring-toolbar-spacing;
+            padding-left: $authoring-toolbar-spacing;
+            border-left: 1px solid #DADADA;
+        }
+        dt {
+            font-size: 12px;
+            color: $sd-gray-text;
+        }
+        dd {
             color: $sd-text;
-            font-weight: 500;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
         }
-    }
-    &.authoring-sticky--fixed {
-        z-index: 3;
-        @include box-shadow(0px 2px 4px -1px rgba(0,0,0,0.2));
+
+        // display `|` separators correctly over multiple lines
+
+        overflow: hidden;
+
+        .authoring-sticky__detailed-wrapper {
+            margin-left: -$authoring-toolbar-spacing * 2;
+        }
     }
 }
 
@@ -510,7 +523,7 @@ $bottom-bar-item-border-color-active: transparent;
     position: relative;
     max-width: 900px;
     margin: 0 auto;
-    padding: 5px 10px 12px 10px;
+    padding: 12px 10px;
     border: 1px solid #cacaca;
     border-top: 0;
     border-bottom: 0;
@@ -681,6 +694,10 @@ $bottom-bar-item-border-color-active: transparent;
 .authoring-header__row--wrap {
     flex-wrap: wrap;
     align-content:flex-start;
+}
+
+.char-count-config-button {
+    float: right;
 }
 
 .authoring-header__item {
@@ -869,6 +886,18 @@ $bottom-bar-item-border-color-active: transparent;
 // -------------------------------------------------
 // END Authoring Header
 
+.input-term {
+    display: flex;
+    align-items: center;
+    .input-term__icon {
+        flex-grow: 0;
+        opacity: 0.5;
+        pointer-events: none;
+        margin: 0 4px;
+        display: none;
+    }
+}
+
 .dropdown-terms {
     width: auto !important;
     .dropdown__toggle {
@@ -896,14 +925,18 @@ $bottom-bar-item-border-color-active: transparent;
         max-height: 275px;
         padding: 0;
         .input-term {
-            padding: 5px 0 5px 25px;
-            background: url(~images/search-icon.png) left 10px center no-repeat white;
-            border-bottom: 1px solid $grayLighter;
+            padding: 8px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
             input {
                 box-shadow: none!important;
                 border: 0!important;
+                flex-grow: 1;
             }
         }
+        .input-term__icon {
+            display: block;
+        }
+
         .main-list {
             background-color: $white;
             max-height: 215px;
@@ -924,15 +957,22 @@ $bottom-bar-item-border-color-active: transparent;
         }
         .levelup {
             display: flex;
-            padding: 4.5px;
-            margin-bottom: -1px;
-            border-bottom: 1px solid $grayLighter;
+            align-items: center;
+            padding: 5px;
+            margin-bottom: 1px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            z-index: 1;
+
+
             background-color: $white;
             i.backlink {
                 flex-grow: 0;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
                 cursor: pointer;
-                height: 27px;
-                margin-top: 0;
+                height: 28px;
+                margin: 0 4px;
             }
             button {
                 flex-grow: 1;
@@ -950,6 +990,9 @@ $bottom-bar-item-border-color-active: transparent;
             }
         }
         .item-list { position: static; max-height: 215px; }
+        .nested-indicator {
+            margin-right: -10px !important;
+        }
     }
 }
 
@@ -959,38 +1002,55 @@ $bottom-bar-item-border-color-active: transparent;
     vertical-align: top;
     text-align: left;
     li {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
         position: relative;
         font-size: 12px;
         color: inherit;
         background-color: rgba(123,123,123,0.2);
         margin-right: 3px;
         margin-bottom: 3px;
-        padding: 3px 12px;
+        padding: 0 12px;
+        height: 24px;
         border-radius: 12px;
         @include transition(color .2s);
         i {
-            position: absolute;
-            margin-left: -7px;
+            display: block;
+            height: 18px;
+            width: 18px;
+            padding: 1px;
+            margin-left: 4px;
+            margin-right: -8px;
             color: $sd-text;
-            left: 50%;
-            top: 5px;
-            @include opacity(0);
+            opacity: 0.25;
+            background-color: rgba(255, 255, 255, 0.75);
+            border-radius: 50%;
             @include transition(opacity .2s);
         }
         &:not([disabled]):not([data-disabled]) {
             cursor: pointer;
 
             &:hover {
-                text-align: center;
                 background-color: rgba(123,123,123,0.3);
-                color: rgba(123,123,123,0.5);
                 i {
-                    @include opacity(85);
+                    opacity: 1;
+                }
+            }
+            &:active {
+                background-color: rgba(94, 169, 200, 0.35);
+                i {
+                    color: $sd-blue;
                 }
             }
         }
-        
+        &[disabled], &[data-disabled], &:disabled {
+            background-color: rgba(123,123,123,0.2);
+            pointer-events: none;
+            i {
+                display: none !important;
+            }
+        }
+
         label {
             display: inline;
             min-width: auto;

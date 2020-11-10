@@ -3,7 +3,8 @@ import {IArticle, IVocabulary} from 'superdesk-api';
 import {isPublished, isIngested} from 'apps/archive/utils';
 
 const RELATED_LINK_KEYS = 3; // links only have _id, type keys and order (and some old ones only _id)
-const isLink = (association) =>
+
+export const isLink = (association) =>
     association != null && Object.keys(association).length <= RELATED_LINK_KEYS;
 
 RelationsService.$inject = ['api', '$q'];
@@ -21,7 +22,14 @@ export function RelationsService(api, $q) {
 
         return $q.all(relatedItemsKeys.map((key) => {
             if (isLink(associations[key])) {
-                return api.find('archive', associations[key]._id);
+                return api.find('archive', associations[key]._id)
+                    .catch((response) => {
+                        if (response?.status === 404) {
+                            return null;
+                        }
+
+                        return Promise.reject(response);
+                    });
             }
 
             return $q.when(associations[key]);

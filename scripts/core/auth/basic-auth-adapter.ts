@@ -34,6 +34,17 @@ angular.module('superdesk.core.auth.basic', [])
 
         /**
          * @ngdoc method
+         * @name authAdapter#authenticate
+         * @param {string} authorization_code Authorization code return from keycloak
+         * @returns {Promise} If successful, session data is returned, including session token
+         * @description authenticate user using oidc auth
+         */
+        this.authenticateOIDC = (authorization_code) => urls.resource('auth_oidc')
+            .then((url) => $http.post(url, {}, {headers: {Authorization: formatTokenBearer(authorization_code)}}))
+            .then(this.setToken);
+
+        /**
+         * @ngdoc method
          * @name authAdapter#authenticateXMPP
          * @param {string} jid XMPP identified (Jabber ID)
          * @param {string} transactionId ID which will be sent to the device, to check transaction
@@ -52,5 +63,9 @@ angular.module('superdesk.core.auth.basic', [])
          */
         function formatToken(token) {
             return token.startsWith('Basic') ? token : 'Basic ' + btoa(token + ':');
+        }
+
+        function formatTokenBearer(token) {
+            return token.startsWith('Bearer') ? token : 'Bearer ' + token;
         }
     }]);

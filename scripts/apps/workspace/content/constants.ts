@@ -1,7 +1,6 @@
 import {gettext} from 'core/utils';
 import {IStage} from 'superdesk-api';
 import {ICard} from 'apps/monitoring/services/CardsService';
-import {SplitFilter} from 'apps/monitoring/filters';
 
 // labelMap maps schema entry keys to their display names.
 export const GET_LABEL_MAP = () => ({
@@ -90,7 +89,7 @@ export function getLabelForStage(stage: IStage | ICard): string {
     }
 
     if (isCard(stage)) {
-        return getLabelForStageType(stage.type) ?? SplitFilter()(stage.type);
+        return getLabelForStageType(stage.type) ?? stage.type;
     }
 }
 

@@ -8,13 +8,13 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-import {browser} from 'protractor';
-
+import {element, by} from 'protractor';
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
-import {assertToastMsg} from './helpers/utils';
+import {assertToastMsg, refresh} from './helpers/utils';
 import {desks} from './helpers/desks';
+import {contentProfiles} from './helpers/content_profiles';
 
 describe('desks', () => {
     beforeEach(() => {
@@ -27,6 +27,8 @@ describe('desks', () => {
         desks.deskSourceElement().sendKeys('Test');
         desks.setDeskType('production');
         desks.setDeskContentExpiry(1, 10);
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
         desks.showTab('macros');
         // expect(desks.listedMacros.count()).toBeGreaterThan(0);
@@ -47,6 +49,8 @@ describe('desks', () => {
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
         desks.setDeskContentExpiry(10, 1);
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
         desks.showTab('macros');
         desks.save();
@@ -67,6 +71,8 @@ describe('desks', () => {
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
         desks.setDeskContentExpiry(10, 1);
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
         desks.showTab('macros');
         desks.save();
@@ -86,6 +92,8 @@ describe('desks', () => {
         desks.deskDescriptionElement().sendKeys('Test Description');
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionDoneOnGeneralTab();
         expect(desks.getStageCount('Test Desk')).toEqual('2');
 
@@ -126,6 +134,8 @@ describe('desks', () => {
         desks.deskNameElement().sendKeys('Test Desk A');
         desks.deskSourceElement().sendKeys('Test Source A');
         desks.setDeskType('authoring');
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
 
         // Now create a new stage
@@ -166,6 +176,8 @@ describe('desks', () => {
         desks.deskNameElement().sendKeys('Test Desk');
         desks.deskSourceElement().sendKeys('Test Source A');
         desks.setDeskType('authoring');
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
 
         desks.getNewStageButton().click();
@@ -190,18 +202,28 @@ describe('desks', () => {
         desks.addUser('admin');
         desks.close();
 
+        // update the content profile
+        contentProfiles.openContentProfileSettings();
+        contentProfiles.edit('testing');
+        contentProfiles.setRequired('Subject');
+        element(by.buttonText('Content fields')).click();
+        contentProfiles.setRequired('Body HTML');
+        contentProfiles.update();
+
         // confirm story is created on working stage
         monitoring.openMonitoring();
-        browser.refresh();
+        refresh();
         workspace.selectDesk('Test Desk');
-        authoring.createTextItem();
-        authoring.writeTextToHeadline('new item');
+        authoring.createTextItemFromTemplate('testing');
+        authoring.writeTextToHeadlineFromRecentTemplate('new item');
         authoring.save();
         expect(monitoring.getGroupItems(0).count()).toBe(1);
 
         // confirm incoming rule kicks in
         authoring.sendTo('Test Desk', 'Test Stage A');
-        assertToastMsg('error', 'BODY_HTML is a required field');
+        // FIXME: Improve error messages
+        assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
+            + ' in incoming rule:Validate for Publish for stage:Test Stage A');
         expect(monitoring.getGroupItems(2).count()).toBe(0);
 
         authoring.closeSendAndPublish();
@@ -210,7 +232,9 @@ describe('desks', () => {
         // confirm onstage rule kicks in
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.sendTo('Test Desk', 'Test Stage C');
-        assertToastMsg('error', 'BODY_HTML is a required field');
+        // FIXME: Improve error messages
+        assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
+            + ' in onstage rule:Validate for Publish for stage:Test Stage C');
         expect(monitoring.getGroupItems(4).count()).toBe(1);
 
         authoring.closeSendAndPublish();
@@ -221,7 +245,9 @@ describe('desks', () => {
         authoring.sendTo('Test Desk', 'Test Stage B');
         monitoring.actionOnItem('Edit', 3, 0);
         authoring.sendTo('Test Desk', 'Test Stage A');
-        assertToastMsg('error', 'BODY_HTML is a required field');
+        // FIXME: Improve error messages
+        assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
+            + ' in outgoing rule:Validate for Publish for stage:Test Stage B');
         expect(monitoring.getGroupItems(3).count()).toBe(1);
         expect(monitoring.getGroupItems(2).count()).toBe(0);
     });

@@ -67,7 +67,8 @@ export default class SearchField extends React.Component<any, any> {
                         this.onSearchClick();
                     }
                 }}
-                onFocus={this.props.onFocus} />
+                onFocus={this.props.onFocus}
+            />
         );
     }
 }

@@ -64,6 +64,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                                             page.startEditing(item._id);
                                         }}
                                         title={gettext('Edit')}
+                                        aria-label={gettext('Edit')}
                                     >
                                         <i className="icon-pencil" />
                                     </button>
@@ -74,6 +75,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                                             page.deleteItem(item);
                                         }}
                                         title={gettext('Remove')}
+                                        aria-label={gettext('Remove')}
                                     >
                                         <i className="icon-trash" />
                                     </button>

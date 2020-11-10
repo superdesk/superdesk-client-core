@@ -42,6 +42,8 @@
                         <div sd-desk-select
                             data-desks="desks"
                             data-selected-desk="selectedDesk"
+                            data-allow-personal-space="true"
+                            data-personal-space="PERSONAL_SPACE"
                             on-change="selectDesk(desk)"
                         ></div>
                     </div>
@@ -288,21 +290,23 @@
                 </button>
 
                 <button type="submit"
-                        class="btn btn--large btn--primary btn--hollow btn--expanded btn--ui-dark"
+                        class="btn btn--large btn--primary btn--hollow btn--expanded btn--ui-dark loading-overlay-for-tree-dot"
                         ng-show="isSendEnabled() && showSendButtonAndDestination() && _editable"
                         ng-click="sendAndPublish()"
-                        ng-disabled="!canSendAndPublish()"
+                        ng-disabled="!canSendAndPublish() || loading"
                         data-test-id="publish-from--submit"
+                        ng-class="{active: loading && canSendAndPublish()} "
                         translate>
                         publish from
                 </button>
             </div>
             <button type="submit"
-                    class="btn btn--large btn--highlight btn--expanded"
+                    class="btn btn--large btn--highlight btn--expanded loading-overlay-for-tree-dot"
                     ng-show="canSendItem() && canPublishItem() && _editable"
                     ng-click="publish()"
-                    ng-disabled="canSendAndPublish()"
-                    data-test-id="publish">
+                    ng-disabled="canSendAndPublish() || loading"
+                    data-test-id="publish"
+                    ng-class="{active: loading && !canSendAndPublish()}">
                     {{ getPublishLabel(_action) }}
             </button>
         </div>
