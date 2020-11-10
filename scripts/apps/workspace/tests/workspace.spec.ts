@@ -160,7 +160,7 @@ describe('workspace', () => {
         });
 
         describe('selectWorkspace() scope method', () => {
-            it('selectWorkspace()can set workspace type', inject(() => {
+            it('selectWorkspace() can set workspace type', inject(() => {
                 var workspace = {name: 'foo', widgets: [{_id: 'foo'}]};
 
                 scope.workspaceType = null;
