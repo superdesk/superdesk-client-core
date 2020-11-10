@@ -29,7 +29,7 @@ import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {FullPreview} from '../preview/fullPreview';
-import {isLocked} from 'core/get-superdesk-api-implementation';
+import {sdApi} from 'api';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -236,7 +236,9 @@ angular.module('superdesk.apps.authoring', [
                 additionalCondition: ['item', 'authoring', (item, authoring) => {
                     const mediaTypes = ['audio', 'picture', 'video'];
 
-                    return !isLocked(item) && mediaTypes.includes(item.type) && authoring.itemActions(item).edit;
+                    return !sdApi.article.isLocked(item)
+                        && mediaTypes.includes(item.type)
+                        && authoring.itemActions(item).edit;
                 }],
             })
             .activity('move.item', {

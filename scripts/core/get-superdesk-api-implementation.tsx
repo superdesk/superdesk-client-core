@@ -53,6 +53,7 @@ import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
+import {sdApi} from 'api';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -105,7 +106,6 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
-export const isLocked = (article: IArticle) => article['lock_session'] != null;
 export const formatDate = (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat);
 
 // imported from planning
@@ -121,7 +121,8 @@ export function getSuperdeskApiImplementation(
     metadata,
 ): ISuperdesk {
     const isLockedInCurrentSession = (article: IArticle) => lock.isLockedInCurrentSession(article);
-    const isLockedInOtherSession = (article: IArticle) => isLocked(article) && !isLockedInCurrentSession(article);
+    const isLockedInOtherSession = (article: IArticle) =>
+        sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
 
     return {
         dataApi: dataApi,
@@ -134,7 +135,7 @@ export function getSuperdeskApiImplementation(
                 isPersonal: (article) => article.task == null
                     || article.task.desk == null
                     || article.task.stage == null,
-                isLocked: isLocked,
+                isLocked: sdApi.article.isLocked,
                 isLockedInCurrentSession,
                 isLockedInOtherSession,
                 patch: (article, patch, dangerousOptions) => {
