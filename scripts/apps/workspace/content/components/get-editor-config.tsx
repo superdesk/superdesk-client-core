@@ -3,7 +3,7 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {IContentProfileEditorConfig, IArticle} from 'superdesk-api';
 import {getFields} from 'apps/fields';
 
-const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
+export const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
     'keywords',
     'genre',
     'anpa_take_key',
@@ -18,7 +18,7 @@ const ARTICLE_HEADER_FIELDS = new Set<keyof IArticle>([
     'authors',
 ]);
 
-const ARTICLE_COMMON_FIELDS = new Set<keyof IArticle>([
+export const ARTICLE_COMMON_FIELDS = new Set<keyof IArticle>([
     'slugline',
 ]);
 

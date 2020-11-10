@@ -37,7 +37,7 @@ import {
     ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
-import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {IEDITOR3_RICH_FORMATTING_OPTION} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -55,7 +55,7 @@ interface IProps {
     singleLine?: any;
     tabindex?: any;
     showTitle?: any;
-    editorFormat?: Array<RICH_FORMATTING_OPTION>;
+    editorFormat?: Array<IEDITOR3_RICH_FORMATTING_OPTION>;
     item?: any;
     svc?: any;
     trim?: any;
@@ -75,7 +75,7 @@ export interface IEditorStore {
     tabindex: any;
     showTitle: any;
     activeCell: any;
-    editorFormat: Array<RICH_FORMATTING_OPTION>;
+    editorFormat: Array<IEDITOR3_RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;
     spellchecking: {
