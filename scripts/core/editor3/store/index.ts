@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {
     EditorState,
     convertFromRaw,
@@ -42,6 +43,7 @@ import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {handleOverflowHighlights} from '../helpers/characters-limit';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -151,13 +153,13 @@ export default function createEditorStore(
         middlewares.push(createLogger());
     }
 
+    const editorState =
+        handleOverflowHighlights(EditorState.createWithContent(content, getCustomDecorator()), props.limit);
+
     const store = createStore<IEditorStore, any, any, any>(
         reducers,
         {
-            editorState: EditorState.createWithContent(
-                content,
-                getCustomDecorator(),
-            ),
+            editorState,
             searchTerm: {pattern: '', index: -1, caseSensitive: false},
             popup: {type: PopupTypes.Hidden},
             readOnly: props.readOnly,

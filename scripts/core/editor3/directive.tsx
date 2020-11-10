@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
@@ -208,6 +209,7 @@ class Editor3Directive {
                     userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
                         this.pathToValue
                     ];
+                this.limit = this.limit || null;
 
                 const store = createEditorStore(this, ng.get('spellcheck'));
 
@@ -286,6 +288,16 @@ class Editor3Directive {
                 $scope.$watch('vm.readOnly', (val, old) => {
                     if (val !== old) {
                         store.dispatch(setReadOnly(val));
+                    }
+                });
+
+                // bind the directive limit attribute bi-directionally between Angular and Redux.
+                $scope.$watch('vm.limit', (val, old) => {
+                    if (val !== old) {
+                        store.dispatch(changeLimitConfig({
+                            chars: val,
+                            ui: this.limitBehavior,
+                        }));
                     }
                 });
 
