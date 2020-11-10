@@ -1498,6 +1498,7 @@ angular.module('superdesk.apps.editor2', [
             };
         }])
     .run(['embedService', 'iframelyService', function(embedService, iframelyService) {
+        // eslint-disable-next-line no-useless-escape
         var playBuzzPattern = 'https?:\/\/(?:www)\.playbuzz\.com(.*)$';
         var playBuzzlLoader = '//snappa.embed.pressassociation.io/playbuzz.js';
         var playBuzzEmbed = [

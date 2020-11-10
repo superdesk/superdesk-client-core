@@ -387,47 +387,6 @@ describe('sdSearchPanel directive', () => {
                 },
             };
         });
-
-        xit('does not throw an error if desk not in deskLookup', () => {
-            isoScope.desk = null;
-
-            isoScope.items._aggregations.desk.buckets = [
-                {doc_count: 123, key: 'abc123'},
-            ];
-
-            desks.deskLookup = {
-                otherDesk: {}, // desk abc123 not present in deskLookup
-            };
-
-            try {
-                facetsInit.resolve();
-                isoScope.$digest();
-            } catch (ex) {
-                fail('A desk not in deskLookup should not cause an error.');
-            }
-        });
-
-        xit('outputs a warning if desk not in deskLookup', () => {
-            isoScope.desk = null;
-
-            isoScope.items._aggregations.desk.buckets = [
-                {doc_count: 123, key: 'abc123'},
-            ];
-
-            desks.deskLookup = {
-                otherDesk: {}, // desk abc123 not present in deskLookup
-            };
-
-            spyOn(console, 'warn');
-
-            facetsInit.resolve();
-            isoScope.$digest();
-
-            expect(console.warn).toHaveBeenCalledWith(
-                'Desk (key: abc123) not found in deskLookup, ' +
-                'probable storage inconsistency.',
-            );
-        });
     });
 });
 
@@ -441,7 +400,7 @@ describe('sort service', () => {
         'superdesk.apps.search',
     ));
 
-    it('can sort items', inject((sort, $location, $rootScope) => {
+    it('can sort items (sort service)', inject((sort, $location, $rootScope) => {
         sort.setSort('urgency', sortOptions);
         $rootScope.$digest();
         expect($location.search().sort).toBe('urgency:desc');

@@ -32,6 +32,7 @@ export function IngestRoutingFilter() {
      */
     // XXX: should probably be moved into some utils module - but where?
     RegExp['escape'] = function(s) {
+        // eslint-disable-next-line no-useless-escape
         return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
     };
 

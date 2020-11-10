@@ -1,5 +1,5 @@
 /* tslint:disable:max-line-length */
-/* eslint-disable max-len */
+/* eslint-disable max-len, no-useless-escape */
 
 import {gettext} from 'core/utils';
 

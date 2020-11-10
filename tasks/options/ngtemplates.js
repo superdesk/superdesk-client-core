@@ -17,7 +17,7 @@ var options = {
         collapseBooleanAttributes: true,
     },
     bootstrap: function(module, script) {
-        return '"use strict";' +
+        return '/* eslint-disable */\n"use strict";' +
             'angular.module("superdesk.templates-cache")' +
             '.run([\'$templateCache\', function($templateCache) {' +
             script + ' }]);';

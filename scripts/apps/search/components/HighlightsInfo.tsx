@@ -127,6 +127,7 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
             />
         );
 
+        // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
 
         const icon = thisNode.getElementsByClassName('icon-star')[0] ||
