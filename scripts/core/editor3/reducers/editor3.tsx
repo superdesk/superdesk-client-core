@@ -97,19 +97,18 @@ function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: E
     }
 }
 
-function editorStateChangeMiddlewares(state, editorState: EditorState, contentChanged: boolean) {
-    let newState = state;
+function editorStateChangeMiddlewares(state: IEditorStore, editorState: EditorState, contentChanged: boolean) {
+    let newState = {...state};
 
+    // abbreviations
     newState = applyAbbreviations({
-        ...state, editorState,
+        ...newState, editorState,
     });
 
     if (contentChanged) {
-        // state.limitConfig?.ui can be 'limit', but we need to
-        // highlight it anyway to handle overflow when pasting text
         newState = {
-            ...state,
-            editorState: handleOverflowHighlights(newState.editorState, state.limitConfig?.chars),
+            ...newState,
+            editorState: handleOverflowHighlights(newState.editorState, newState.limitConfig?.chars),
         };
     }
 
@@ -454,7 +453,11 @@ const applyEmbed = (state, {code, targetBlockKey}) => {
 
 const setLoading = (state, loading) => ({...state, loading});
 
-const changeLimitConfig = (state, limitConfig) => ({...state, limitConfig});
+const changeLimitConfig = (state: IEditorStore, limitConfig) => {
+    const editorState = handleOverflowHighlights(state.editorState, limitConfig.chars);
+
+    return {...state, limitConfig, editorState};
+};
 
 const pushState = (state: IEditorStore, contentState: ContentState) => {
     const editorState = EditorState.push(state.editorState, contentState, 'insert-characters');
