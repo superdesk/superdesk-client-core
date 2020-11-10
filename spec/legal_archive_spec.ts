@@ -59,18 +59,6 @@ describe('legal_archive', () => {
         assertAuthoringTopbarAndItemState();
     });
 
-    xit('can open items in the package', () => {
-        legalArchive.open();
-
-        content.actionOnItem('Open', 'package1 in legal archive');
-
-        element.all(by.repeater('child in item.childData')).then((itemsInPackage) => {
-            hover(itemsInPackage[0]);
-            itemsInPackage[0].element(by.className('package-item__open-item')).click();
-            assertAuthoringTopbarAndItemState();
-        });
-    });
-
     it('can show version and item history for an item', () => {
         legalArchive.open();
         content.actionOnItem('Open', 'item2 in legal archive');

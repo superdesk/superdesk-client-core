@@ -880,25 +880,6 @@ describe('monitoring', () => {
         expect(el(['authoring', 'field-slugline']).getAttribute('value')).toBe(slugline);
         expect(el(['authoring', 'field-editors-note']).getAttribute('value')).toBe(editorsNote);
     });
-
-    xit('can display embargo label when set for published item', () => {
-        setupDeskMonitoringSettings('POLITIC DESK');
-        monitoring.turnOffDeskWorkingStage(0);
-
-        monitoring.openMonitoring();
-
-        monitoring.actionOnItem('Edit', 1, 0);
-        authoring.sendToButton.click();
-        authoring.setEmbargo();
-        authoring.sendToButton.click();
-        authoring.save();
-        authoring.publish();
-
-        // filter published text item
-        monitoring.filterAction('text');
-        expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
-        expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
-    });
 });
 
 function markForAdmin(groupIndex, itemIndex) {
@@ -917,6 +898,7 @@ function markForAdmin(groupIndex, itemIndex) {
 }
 
 // disabling tests until test instance is configured to run with markForUser extension enabled
+// eslint-disable-next-line jasmine/no-disabled-tests
 xdescribe('marked for me filter in monitoring', () => {
     beforeEach(() => {
         const multipleSourcesDesk: string = 'Multiple sources';

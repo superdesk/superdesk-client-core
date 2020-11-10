@@ -12,17 +12,15 @@ describe('vocabularies', () => {
         const toAdd = 'test';
         const vocabularyItem = els(['vocabulary-item']).get(0);
 
-        browser.wait(ECE.presenceOf(vocabularyItem));
-
-        expect(ECE.textToBePresentInElement(vocabularyItem, initialTitle));
+        browser.wait(ECE.textToBePresentInElement(vocabularyItem, initialTitle));
 
         hover(vocabularyItem);
 
         el(['vocabulary-item--start-editing']).click();
         el(['vocabulary-edit-field--name']).sendKeys(toAdd);
-        expect(ECE.textToBePresentInElement(vocabularyItem, initialTitle + toAdd));
+        browser.wait(ECE.textToBePresentInElement(vocabularyItem, initialTitle + toAdd));
 
         el(['vocabulary-edit-modal--cancel']).click();
-        expect(ECE.textToBePresentInElement(vocabularyItem, initialTitle));
+        browser.wait(ECE.textToBePresentInElement(vocabularyItem, initialTitle));
     });
 });
