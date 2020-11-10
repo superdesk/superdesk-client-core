@@ -20,6 +20,8 @@ import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {IArticleSchema} from 'superdesk-interfaces/ArticleSchema';
 import {AuthoringTopbarReact} from './authoring-topbar-react';
+import {CharacterCount} from './components/CharacterCount';
+import {CharacterCountConfigButton} from './components/CharacterCountConfigButton';
 import {AuthoringWorkspaceService} from './services';
 import {AuthoringMediaActions} from './authoring-media-actions';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
@@ -97,7 +99,10 @@ angular.module('superdesk.apps.authoring', [
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .directive('sdSendItem', directive.SendItem)
-    .directive('sdCharacterCount', directive.CharacterCount)
+    .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
+    .component('sdCharacterCountConfigButton', reactToAngular1(
+        CharacterCountConfigButton, ['field'], [], 'display: inline',
+    ))
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)

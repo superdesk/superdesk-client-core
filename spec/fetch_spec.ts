@@ -86,6 +86,8 @@ describe('fetch', () => {
         desks.deskDescriptionElement().sendKeys('Test Description');
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionDoneOnGeneralTab();
 
         workspace.openIngest();
@@ -109,6 +111,8 @@ describe('fetch', () => {
         desks.deskDescriptionElement().sendKeys('Test Description');
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab(); // save desk and continue to Stages tab
 
         // Consider one stage with Global Read OFF and another stage with Global Read ON status.
