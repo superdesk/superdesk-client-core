@@ -55,7 +55,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                 this._reset();
             }
         }, 500);
-        this.updateItems = throttleAndCombineSet(this._updateItems, 500);
+        this.updateItems = throttleAndCombineSet(this._updateItems.bind(this), 500);
     }
 
     private _updateItems(ids: Set<string>): void {
@@ -128,7 +128,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
     }
 
     componentDidUpdate(prevProps: IProps<T>, prevState: IState<T>) {
-        if (this.state.items !== prevState.items) {
+        if (!this.state.loading && this.state.items !== prevState.items) {
             // update indexesById
 
             const {items} = this.state;
