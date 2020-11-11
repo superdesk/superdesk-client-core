@@ -114,7 +114,9 @@
                         tabindex="{{editor.slugline.order}}"
                         data-test-id="field-slugline"
                     >
-                    <span ng-if="schema.slugline.maxlength" sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></span>
+                    <span ng-if="schema.slugline.maxlength">
+                        <sd-character-count data-item="item.slugline" data-html="true" data-limit="schema.slugline.maxlength"></sd-character-count>
+                    </span>
                     <sd-validate-characters ng-if="schema.slugline.validate_characters"
                         class="disallowed-char-error"
                         item="item.slugline"
@@ -447,8 +449,9 @@
                 sd-validation-error="error[field._id.toLowerCase()]">
 
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
-                <span ng-if="schema[field._id].maxlength || schema[field._id].minlength" sd-character-count
-                    data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></span>
+                <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
+                    <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
+                </span>
                 <sd-validate-characters ng-if="schema[field._id].validate_characters"
                     class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
                 <div class="authoring-header__input-holder">
