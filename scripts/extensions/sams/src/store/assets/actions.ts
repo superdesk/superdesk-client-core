@@ -163,3 +163,13 @@ export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>):
             });
     };
 }
+
+export function deleteAsset(asset: IAssetItem): IThunkAction<void> {
+    return (dispatch) => {     
+        return samsApi.assets.deleteAsset(asset)
+            .then(() => {
+                dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
+                dispatch(closeAssetContentPanel());
+            });
+    };
+}
