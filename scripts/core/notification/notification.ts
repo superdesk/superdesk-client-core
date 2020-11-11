@@ -93,24 +93,28 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
         ws.onmessage = function(event) {
             var msg = angular.fromJson(event.data);
 
-            const addressedForExtension = typeof msg.extra === 'object' && typeof msg.extra.extension === 'string';
+            // Delay all websocket events to avoid getting old data.
+            // The server is sending websocket events before it is able to return updated data.
+            setTimeout(() => {
+                const addressedForExtension = typeof msg.extra === 'object' && typeof msg.extra.extension === 'string';
 
-            if (addressedForExtension || isWebsocketEventPublic(msg.event)) {
-                window.dispatchEvent(
-                    new CustomEvent(
-                        getWebsocketMessageEventName(
-                            msg.event,
-                            isWebsocketEventPublic(msg.event) ? undefined : msg.extra.extension,
+                if (addressedForExtension || isWebsocketEventPublic(msg.event)) {
+                    window.dispatchEvent(
+                        new CustomEvent(
+                            getWebsocketMessageEventName(
+                                msg.event,
+                                isWebsocketEventPublic(msg.event) ? undefined : msg.extra.extension,
+                            ),
+                            {detail: msg},
                         ),
-                        {detail: msg},
-                    ),
-                );
-            }
+                    );
+                }
 
-            $rootScope.$broadcast(msg.event, msg.extra);
-            if (_.includes(ReloadEvents, msg.event)) {
-                $rootScope.$broadcast('reload', msg);
-            }
+                $rootScope.$broadcast(msg.event, msg.extra);
+                if (_.includes(ReloadEvents, msg.event)) {
+                    $rootScope.$broadcast('reload', msg);
+                }
+            }, 50);
         };
 
         ws.onerror = function(event) {
