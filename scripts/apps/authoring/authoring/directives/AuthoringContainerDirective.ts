@@ -1,7 +1,7 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 
-AuthoringContainerDirective.$inject = ['authoringWorkspace'];
-export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspaceService) {
+AuthoringContainerDirective.$inject = ['authoringWorkspace', 'session'];
+export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspaceService, session) {
     function AuthoringContainerController() {
         var self = this;
 
@@ -28,6 +28,26 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
         scope: {},
         require: 'sdAuthoringContainer',
         link: function(scope, elem, attrs, ctrl) {
+            let lastLockSession = 'not-set';
+            const thisSessionId = session.sessionId;
+
+            scope.loaded = true;
+
+            scope.$watch(() => authoringWorkspace.getState()?.item?.lock_session, (currentLockSession) => {
+                if (lastLockSession === thisSessionId && currentLockSession == null) {
+                    // Re-mount authoring view when item is locked by someone else
+                    // in order to clean up old UI elements
+
+                    scope.loaded = false;
+
+                    scope.$applyAsync(() => {
+                        scope.loaded = true;
+                    });
+                }
+
+                lastLockSession = currentLockSession;
+            });
+
             scope.$watch(authoringWorkspace.getState, (state) => {
                 if (state) {
                     ctrl.edit(null, null);
