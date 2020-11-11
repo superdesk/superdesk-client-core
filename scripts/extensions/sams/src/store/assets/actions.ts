@@ -16,7 +16,7 @@ import {
 import {samsApi} from '../../apis';
 
 // Redux Selectors
-import {getAssetListStyle, getAssetSearchParams} from './selectors';
+import {getAssetListStyle, getAssetSearchParams, getSelectedAssetId} from './selectors';
 
 export function receiveAssets(
     response: IRestApiResponse<IAssetItem>,
@@ -165,11 +165,15 @@ export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>):
 }
 
 export function deleteAsset(asset: IAssetItem): IThunkAction<void> {
-    return (dispatch) => {
+    return (dispatch, getState) => {
+        const selectedAssetId = getSelectedAssetId(getState());
+
         return samsApi.assets.deleteAsset(asset)
             .then(() => {
                 dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
-                dispatch(closeAssetContentPanel());
+                if (selectedAssetId === asset._id) {
+                    dispatch(closeAssetContentPanel());
+                }
             });
     };
 }
