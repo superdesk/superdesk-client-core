@@ -36,7 +36,6 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
     if (props.item.state != null) {
         let title = getStateLabel(props.item.state);
         const text = title;
-        let className = 'state-label';
 
         if (props.item.state === 'scheduled') {
             const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
