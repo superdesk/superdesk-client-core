@@ -1,6 +1,7 @@
 import React from 'react';
 import {get} from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 import {removeLodash} from 'core/filters';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {longFormat} from 'core/datetime/datetime';
@@ -35,6 +36,7 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
     if (props.item.state != null) {
         let title = getStateLabel(props.item.state);
         const text = title;
+        let className = 'state-label';
 
         if (props.item.state === 'scheduled') {
             const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
@@ -47,7 +49,9 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
         return (
             <span
                 title={title}
-                className={'state-label state-' + props.item.state}
+                className={props.item.state === 'corrected' && appConfig?.corrections_workflow
+                    ? 'label pink--500'
+                    : 'state-label state-' + props.item.state}
                 key="state"
             >
                 {text}

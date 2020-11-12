@@ -1192,6 +1192,8 @@ declare module 'superdesk-api' {
 
         allow_updating_scheduled_items: boolean;
 
+        corrections_workflow: boolean;
+
         // TANSA SERVER CONFIG
         tansa?: {
             base_url: string;
