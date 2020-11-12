@@ -18,6 +18,7 @@ import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {isMediaType} from 'core/helpers/item';
 
 /**
  * @ngdoc directive
@@ -100,7 +101,7 @@ export function AuthoringDirective(
             $scope.views = {send: false};
             $scope.stage = null;
             $scope._editable = !!$scope.origItem._editable;
-            $scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], $scope.origItem.type);
+            $scope.isMediaType = isMediaType($scope.origItem);
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
 
             $scope.highlight = !!$scope.origItem.highlight;
