@@ -11,8 +11,12 @@ export class WidgetReact extends React.PureComponent<IProps> {
     render() {
         const Component = this.props.widget.component;
 
+        // Ensure that widget component re-mounts if the item is locked/unlocked.
+        // Avoid null key in case item is unlocked - use a random string to force it to re-mount.
+        const key = this.props.article.lock_session ?? Math.random().toString();
+
         return (
-            <Component article={this.props.article} />
+            <Component key={key} article={this.props.article} />
         );
     }
 }
