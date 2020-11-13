@@ -190,6 +190,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             const dirty = data === 'loading' || data === 'not-initialized' ? false :
                 this.isDirty(data.original, data.changes);
 
+            const readOnly = superdesk.entities.article.isLockedInOtherSession(this.props.article);
+
             return (
                 <React.Fragment>
                     <div className="widget-header">
@@ -231,6 +233,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 <ButtonGroup align="left">
                                     <Switch
                                         value={runAutomaticallyPreference}
+                                        disabled={readOnly}
                                         onChange={() => {
                                             const newValue = !runAutomaticallyPreference;
 
@@ -255,6 +258,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 shape="round"
                                                 text={gettext('Add')}
                                                 iconOnly={true}
+                                                disabled={readOnly}
                                                 onClick={() => {
                                                     this.setState({
                                                         newItem: {
@@ -277,7 +281,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 return (
                                     <EmptyState
                                         title={gettext('No tags yet')}
-                                        description={gettext('Click "Run" to generate')}
+                                        description={readOnly ? undefined : gettext('Click "Run" to generate')}
                                     />
                                 );
                             } else {
@@ -335,6 +339,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     >
                                                         <TagListComponent
                                                             tags={tags.toMap()}
+                                                            readOnly={readOnly}
                                                             onRemove={(id) => {
                                                                 this.updateTags(
                                                                     data.changes.analysis.remove(id),
@@ -363,6 +368,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                                 </div>
                                                                 <TagListComponent
                                                                     tags={tags.toMap()}
+                                                                    readOnly={readOnly}
                                                                     onRemove={(id) => {
                                                                         this.updateTags(
                                                                             data.changes.analysis.remove(id),
@@ -391,6 +397,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             type="primary"
                                             text={gettext('Run')}
                                             expand={true}
+                                            disabled={readOnly}
                                             onClick={() => {
                                                 this.runAnalysis();
                                             }}
@@ -402,6 +409,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             type="primary"
                                             text={gettext('Refresh')}
                                             expand={true}
+                                            disabled={readOnly}
                                             onClick={() => {
                                                 this.runAnalysis();
                                             }}
