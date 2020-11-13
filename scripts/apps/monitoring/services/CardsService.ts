@@ -90,7 +90,7 @@ export function CardsService(search, session, desks, $location) {
                 }});
             } else {
                 query.filter({bool: {
-                    must: {term: {original_creator: session.identity._id}},
+                    must: {term: {'task.user': session.identity._id}},
                     must_not: {exists: {field: 'task.desk'}},
                 }});
             }
