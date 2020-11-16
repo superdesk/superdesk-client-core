@@ -136,7 +136,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             const groupNames = Object.keys(groups);
 
             return (
-                <div data-test-id="multi-actions-inline">
+                <div style={{display: 'flex'}} data-test-id="multi-actions-inline">
                     {
                         groupNames.map((group, i) => group === 'undefined'
                             ? groups[group].map((action, key) => (
@@ -164,7 +164,6 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
                                             <Icon className={groups[group][0].group.icon} size={22} />
                                         </button>
                                     )}
-                                    inline={true}
                                     key={i}
                                     groups={[{render: () => null, items: groups[group]}]}
                                     renderItem={(key, item, closeDropdown) => (
