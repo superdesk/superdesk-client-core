@@ -293,7 +293,8 @@ class Editor3Directive {
 
                 // bind the directive limit attribute bi-directionally between Angular and Redux.
                 $scope.$watch('vm.limit', (val, old) => {
-                    if (val !== old) {
+                    // tslint:disable-next-line:triple-equals
+                    if (val != old) { // keep `!=` cause `!==` will trigger with null !== undefined
                         store.dispatch(changeLimitConfig({
                             chars: val,
                             ui: this.limitBehavior,
