@@ -59,10 +59,10 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 || resource === 'archive_unspike'
             ) {
                 const reloadTheList = this.props?.shouldReloadTheList(
-                    new Set(Array.from(Object.keys(fields ?? {}))),
+                    new Set(Object.keys(fields ?? {})),
                 ) ?? false;
 
-                if (reloadTheList) {
+                if (reloadTheList || fields == null) {
                     this.lazyLoaderRef.reset();
                 } else {
                     this.lazyLoaderRef.updateItems(new Set([itemId]));
