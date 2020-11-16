@@ -1470,6 +1470,10 @@ body.prepare-print {
             font-size: 16pt !important;
             margin-bottom: 16px !important;
         }
+        .modal__body {
+            display: block !important;
+            padding: 0 !important;
+        }
         .modal-content {
             display: block !important;
             > * {
