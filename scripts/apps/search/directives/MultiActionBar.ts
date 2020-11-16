@@ -8,6 +8,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {dataApi} from 'core/helpers/CrudManager';
 import {canPrintPreview} from '../helpers';
 import {getMultiActions} from '../controllers/get-multi-actions';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 interface IScope extends ng.IScope {
     multi: any;
@@ -18,7 +19,6 @@ interface IScope extends ng.IScope {
     spike: any;
     publish: any;
     state: any;
-    printPreview: Array<IArticle>;
     toggleDisplay(): void;
     hideMultiActionBar(): void;
     hideMultiActionBar(): void;
@@ -26,7 +26,6 @@ interface IScope extends ng.IScope {
     openExport();
     isOpenItemType(type: any): boolean;
     closeExport(): void;
-    closePrintPreview(): void;
 }
 
 MultiActionBar.$inject = [
@@ -63,12 +62,6 @@ export function MultiActionBar(
             scope.multi = multi;
             scope.display = true;
             scope.$watch(multi.getItems, detectType);
-
-            scope.printPreview = [];
-
-            scope.closePrintPreview = () => {
-                scope.printPreview = [];
-            };
 
             scope.$watch('multi.count', () => {
                 scope.display = true;
@@ -296,8 +289,7 @@ export function MultiActionBar(
                             Promise.all(
                                 ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
                             ).then((res: Array<IArticle>) => {
-                                scope.printPreview = res;
-                                scope.$apply();
+                                dispatchInternalEvent('openFullPreview', res);
                             });
                         },
                         canAutocloseMultiActionBar: false,

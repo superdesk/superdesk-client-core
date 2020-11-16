@@ -1,6 +1,7 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
+import {addInternalEventListener} from 'core/internal-events';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -60,6 +61,23 @@ angular.module('superdesk.core.menu', [
             }, () => {
                 // Trigger resize event to update elements, 500ms delay is for animation
                 $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
+            });
+
+            // full preview
+
+            $scope.fullPreviewItems = [];
+
+            $scope.closeFullPreview = () => {
+                $scope.fullPreviewItems = [];
+            };
+
+            const removeMultiPreviewEventListener = addInternalEventListener('openFullPreview', (event) => {
+                $scope.fullPreviewItems = event.detail;
+                $scope.$apply();
+            });
+
+            $scope.$on('$destroy', () => {
+                removeMultiPreviewEventListener();
             });
         }
 

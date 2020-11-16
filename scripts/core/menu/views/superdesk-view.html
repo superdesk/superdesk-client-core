@@ -23,6 +23,14 @@
     <div id="authoring-container" ng-show="superdesk.flags.authoring" ng-if="superdesk.flags.workspace" sd-authoring-container></div>
     <div id="superdesk-workqueue" ng-if="superdesk.flags.workspace === true && superdesk.flags.workqueue === true" sd-workqueue></div>
     <div sd-item-preview-container></div>
+
+    <div
+        ng-if="fullPreviewItems.length > 0"
+        sd-full-preview
+        data-items="fullPreviewItems"
+        data-close-action="closeFullPreview"
+    ></div>
+
 </div>
 
 <div id="main-container" ng-class="superdesk.flags" ng-if="popup">
