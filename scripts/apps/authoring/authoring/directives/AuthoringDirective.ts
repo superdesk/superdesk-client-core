@@ -84,6 +84,8 @@ export function AuthoringDirective(
 ) {
     return {
         link: function($scope, elem, attrs) {
+            $scope.loading = false;
+
             var _closing;
             var mediaFields = {};
             var userDesks;
@@ -1074,8 +1076,11 @@ export function AuthoringDirective(
             });
 
             $scope.$on('item:unlock', (_e, data) => {
-                if ($scope.item._id === data.item && !_closing &&
-                    (session.sessionId !== data.lock_session || lock.previewUnlock)) {
+                if (
+                    $scope.item._id === data.item
+                    && !_closing
+                    && (session.sessionId !== data.lock_session || lock.previewUnlock)
+                ) {
                     if (lock.previewUnlock) {
                         $scope.edit($scope.item);
                         lock.previewUnlock = false;
@@ -1090,6 +1095,15 @@ export function AuthoringDirective(
                             $scope.item.state = data.state;
                             $scope.origItem.state = data.state;
                         }
+
+                        // Re-mount authoring view when item is locked by someone else
+                        // in order to clean up old UI elements
+                        $scope.loading = true;
+
+                        setTimeout(() => {
+                            $scope.loading = false;
+                            $scope.$apply();
+                        });
                     }
                 }
             });
