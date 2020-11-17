@@ -3,6 +3,9 @@ import {IRestApiResponse} from 'superdesk-api';
 import {ISetItem} from '../interfaces';
 import {superdeskApi} from '../apis';
 
+// Utils
+import {getApiErrorMessage, isSamsApiError} from '../utils/api';
+
 const RESOURCE = 'sams/sets';
 
 export function getAllSets(): Promise<Array<ISetItem>> {
@@ -19,7 +22,11 @@ export function getAllSets(): Promise<Array<ISetItem>> {
             return response?._items ?? [];
         })
         .catch((error: any) => {
-            notify.error(gettext('Failed to load all sets'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to load all sets'));
+            }
 
             return Promise.reject(error);
         });
@@ -36,7 +43,11 @@ export function createSet(item: Partial<ISetItem>): Promise<ISetItem> {
             return set;
         })
         .catch((error: any) => {
-            notify.error(gettext('Failed to create the Set'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to create the Set'));
+            }
 
             return Promise.reject(error);
         });
@@ -53,7 +64,11 @@ export function updateSet(original: ISetItem, updates: Partial<ISetItem>): Promi
             return set;
         })
         .catch((error: any) => {
-            notify.error(gettext('Failed to update the Set'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to update the Set'));
+            }
 
             return Promise.reject(error);
         });
@@ -68,7 +83,11 @@ export function deleteSet(item: ISetItem): Promise<void> {
             notify.success(gettext('Set deleted successfully'));
         })
         .catch((error: any) => {
-            notify.error(gettext('Failed to delete the Set'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to delete the Set'));
+            }
 
             return Promise.reject(error);
         });

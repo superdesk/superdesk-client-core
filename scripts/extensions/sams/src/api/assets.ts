@@ -328,7 +328,12 @@ export function getAssetsCount(set_ids: Array<string>): Promise<Dictionary<strin
         COUNT_RESOURCE + JSON.stringify(set_ids),
     )
         .catch((error: any) => {
-            notify.error(gettext('Failed to get assets counts for sets'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to get assets counts for sets'));
+            }
+
             return Promise.reject(error);
         });
 }
@@ -339,7 +344,12 @@ export function getAssetById(assetId: string): Promise<IAssetItem> {
 
     return superdeskApi.dataApi.findOne<IAssetItem>(RESOURCE, assetId)
         .catch((error: any) => {
-            notify.error(gettext(`Failed to get asset "${assetId}"`));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext(`Failed to get asset "${assetId}"`));
+            }
+
             return Promise.reject(error);
         });
 }
@@ -404,7 +414,12 @@ export function getAssetBinary(asset: IAssetItem): Promise<void | Response> {
                 downloadBlob(blob, res.headers.get('Content-type')!, asset.filename);
             }))
         .catch((error: any) => {
-            notify.error(gettext('Failed to get binary for asset'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to get binary for asset'));
+            }
+
             return Promise.reject(error);
         });
 }
@@ -422,7 +437,12 @@ export function getAssetsCompressedBinary(asset_ids: Array<string>): Promise<voi
                 downloadBlob(blob, 'application/zip', 'download');
             }))
         .catch((error: any) => {
-            notify.error(gettext('Failed to get compressed binaries for assets'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to get compressed binaries for assets'));
+            }
+
             return Promise.reject(error);
         });
 }
@@ -438,7 +458,11 @@ export function deleteAsset(item: IAssetItem): Promise<void> {
             return Promise.resolve();
         })
         .catch((error: any) => {
-            notify.error(gettext('Failed to delete the Asset'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to delete the Asset'));
+            }
 
             return Promise.reject(error);
         });
@@ -455,7 +479,11 @@ export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>):
             return asset;
         })
         .catch((error: any) => {
-            notify.error(gettext('Failed to update the Asset'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to update the Asset'));
+            }
 
             return Promise.reject(error);
         });

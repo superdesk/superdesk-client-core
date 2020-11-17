@@ -6,6 +6,9 @@ import {IRestApiResponse} from 'superdesk-api';
 import {IStorageDestinationItem} from '../interfaces';
 import {superdeskApi} from '../apis';
 
+// Utils
+import {getApiErrorMessage, isSamsApiError} from '../utils/api';
+
 const RESOURCE = 'sams/destinations';
 
 export function getAllStorageDestinations(): Promise<Array<IStorageDestinationItem>> {
@@ -25,7 +28,11 @@ export function getAllStorageDestinations(): Promise<Array<IStorageDestinationIt
             );
         })
         .catch((error: any) => {
-            notify.error(gettext('Failed to load all storage destinations'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to load all storage destinations'));
+            }
 
             return Promise.reject(error);
         });
