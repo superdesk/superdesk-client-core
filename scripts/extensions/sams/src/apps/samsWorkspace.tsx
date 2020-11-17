@@ -23,6 +23,7 @@ import {PanelContent} from '../ui';
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
+import {deleteAsset} from '../store/assets/actions';
 
 import {
     loadNextAssetsPage,
@@ -65,6 +66,7 @@ interface IProps {
     selectedAssetId: string | undefined;
     selectedAssetIds: Array<string>;
     filterPanelOpen: boolean;
+    deleteAsset(asset: IAssetItem): void;
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
     onEdit(asset: IAssetItem): void;
@@ -111,14 +113,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
     onEdit: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
+    deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
 });
 
 export function downloadAssetBinary(asset: IAssetItem): void {
     samsApi.assets.getAssetBinary(asset);
-}
-
-export function deleteAsset(asset: IAssetItem): Promise<void> {
-    return samsApi.assets.deleteAsset(asset);
 }
 
 export class SamsWorkspaceApp extends React.PureComponent {
@@ -160,10 +159,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     }
 
     onDeleteAsset(asset: IAssetItem): void {
-        deleteAsset(asset)
-            .then(() => {
-                this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
-            });
+        this.props.deleteAsset(asset);
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
