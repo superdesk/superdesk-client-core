@@ -174,6 +174,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form__row" ng-if="showScheduling() && template.schedule.is_active">
                             <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
                                 <label for="schedule-desk" class="sd-line-input__label" translate>Schedule Desk</label>
@@ -185,6 +186,7 @@
                                 </select>
                             </div>
                         </div>
+
                         <div class="form__row" ng-if="showStages() && template.schedule.is_active">
                             <div class="sd-line-input sd-line-input--is-select sd-line-input--required">
                                 <label for="template-stage" class="sd-line-input__label" translate>Schedule Stage</label>
@@ -194,6 +196,22 @@
                                 </select>
                             </div>
                         </div>
+
+                        <div class="form__row" ng-if="macros != null">
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <label for="template-macro" class="sd-line-input__label" translate>Schedule Macro</label>
+                                <select id="template-macro" ng-model="template.schedule_macro" class="sd-line-input__select">
+                                    <option
+                                        ng-repeat="macro in macros track by macro.name"
+                                        value="{{macro.name}}"
+                                        ng-selected="macro.name === template.schedule_macro"
+                                    >
+                                        {{:: macro.name}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </form>

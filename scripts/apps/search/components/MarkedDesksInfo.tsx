@@ -80,6 +80,7 @@ export class MarkedDesksInfo extends React.Component<any, any> {
             markedDesksById: this.props.markedDesksById,
         });
 
+        // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
 
         const icon = thisNode.getElementsByClassName('icon-bell')[0] ||

@@ -73,6 +73,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
     }
 
     handleClickOutside(event) {
+        // eslint-disable-next-line react/no-find-dom-node
         const domNode = ReactDOM.findDOMNode(menuHolderElem());
 
         if (!domNode || !domNode.contains(event.target)) {

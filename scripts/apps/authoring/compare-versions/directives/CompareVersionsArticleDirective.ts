@@ -1,6 +1,7 @@
 import DiffMatchPatch from 'diff-match-patch';
 import shortid from 'shortid';
 import _ from 'lodash';
+import {isMediaType} from 'core/helpers/item';
 
 class LinkFunction {
     compareVersions: any;
@@ -65,7 +66,7 @@ class LinkFunction {
         this.scope.item = _.cloneDeep(item);
         this.scope.compareView = true;
         this.scope._editable = false;
-        this.scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], this.scope.item.type);
+        this.scope.isMediaType = isMediaType(this.scope.item);
 
         if (this.scope.compareWith && this.scope.article !== this.scope.compareWith) {
             let compareWithItem = _.find(this.compareVersions.versions,
