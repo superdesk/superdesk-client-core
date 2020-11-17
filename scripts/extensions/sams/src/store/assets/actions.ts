@@ -16,7 +16,12 @@ import {
 import {samsApi} from '../../apis';
 
 // Redux Selectors
-import {getAssetListStyle, getAssetSearchParams, getSelectedAssetId} from './selectors';
+import {getAssetListStyle,
+    getAssetSearchParams,
+    getSelectedAssetId,
+    getSelectedAssetIds,
+    getSelectedAssetItems,
+} from './selectors';
 
 export function receiveAssets(
     response: IRestApiResponse<IAssetItem>,
@@ -167,6 +172,7 @@ export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>):
 export function deleteAsset(asset: IAssetItem): IThunkAction<void> {
     return (dispatch, getState) => {
         const selectedAssetId = getSelectedAssetId(getState());
+        const selectedAssetIds = getSelectedAssetIds(getState());
 
         return samsApi.assets.deleteAsset(asset)
             .then(() => {
@@ -174,6 +180,22 @@ export function deleteAsset(asset: IAssetItem): IThunkAction<void> {
                 if (selectedAssetId === asset._id) {
                     dispatch(closeAssetContentPanel());
                 }
+                if (selectedAssetIds.indexOf(asset._id) !== -1) {
+                    dispatch(updateSelectedAssetIds(asset._id));
+                }
             });
+    };
+}
+
+export function deleteMultipleAssets(): (dispatch: any, getState: any) => void {
+    return (dispatch, getState) => {
+        const selectedAssets = getSelectedAssetItems(getState());
+
+        selectedAssets.map((selectedAsset) =>
+            dispatch(deleteAsset(selectedAsset))
+                .then(() => {
+                    dispatch(closeMultiActionBar());
+                }),
+        );
     };
 }
