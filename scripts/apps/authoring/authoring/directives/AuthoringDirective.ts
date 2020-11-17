@@ -99,6 +99,7 @@ export function AuthoringDirective(
                 $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
             });
             $scope.privileges = privileges.privileges;
+            $scope.isPersonalSpace = $location.path() === '/workspace/personal';
             $scope.dirty = false;
             $scope.views = {send: false};
             $scope.stage = null;
@@ -713,7 +714,9 @@ export function AuthoringDirective(
             }
 
             $scope.showCustomButtons = function(item) {
-                if ($location.path() === '/workspace/personal') {
+                if ($scope.isPersonalSpace && appConfig?.features?.publishFromPersonal) {
+                    return item.state === 'in_progress' || $scope.dirty;
+                } else if ($scope.isPersonalSpace) {
                     return false;
                 }
                 return item.task && item.task.desk && item.state !== 'draft' || $scope.dirty;

@@ -77,7 +77,8 @@
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true && canPublishOnDesk()"
+                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true
+                && canPublishOnDesk() && !isPersonalSpace"
                 class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 aria-label="{{ :: 'Publish and Continue' | translate }}"
