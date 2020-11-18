@@ -93,13 +93,17 @@ export function AuthoringDirective(
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
+            const isPersonalSpace = $location.path() === '/workspace/personal';
+            $scope.toDeskAvailable = false;
+            $scope.closeAndContinueAvailable = false;
+            $scope.publishAvailable = false;
+            $scope.publishAndContinueAvailable = false;
 
             desks.fetchCurrentUserDesks().then((desksList) => {
                 userDesks = desksList;
                 $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
             });
             $scope.privileges = privileges.privileges;
-            $scope.isPersonalSpace = $location.path() === '/workspace/personal';
             $scope.dirty = false;
             $scope.views = {send: false};
             $scope.stage = null;
@@ -447,6 +451,15 @@ export function AuthoringDirective(
 
                 $scope.error = {};
 
+                if (appConfig.features.publishFromPersonal && !orig?.task?.desk && !item?.task?.desk) {
+                    var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
+
+                    item.task = {
+                        ...(item.task ?? {}),
+                        desk: currentDeskId,
+                    };
+                }
+
                 return onPublishMiddlewares.reduce(
                     (current, next) => {
                         return current.then((result) => {
@@ -713,13 +726,25 @@ export function AuthoringDirective(
                 return false;
             }
 
-            $scope.showCustomButtons = function(item) {
-                if ($scope.isPersonalSpace && appConfig?.features?.publishFromPersonal) {
-                    return item.state === 'in_progress' || $scope.dirty;
-                } else if ($scope.isPersonalSpace) {
-                    return false;
-                }
-                return item.task && item.task.desk && item.state !== 'draft' || $scope.dirty;
+            // ToDesk -- Send an Item to a desk
+
+            // closeAndContinue -- Create an update of an item and Close the item.
+
+            // publish -- publish an item
+
+            // publishAndContinue -- Publish an item and Create an update.
+
+            $scope.showCustomButtons = () => {
+                $scope.publishAvailable = (isPersonalSpace && appConfig?.features?.publishFromPersonal
+                    && $scope.item.state === 'in_progress' || $scope.dirty)
+                    || $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
+
+                $scope.toDeskAvailable = $scope.closeAndContinueAvailable = $scope.publishAndContinueAvailable =
+                    !isPersonalSpace && $scope.item.task && $scope.item.task.desk
+                    && $scope.item.state !== 'draft' || !isPersonalSpace && $scope.dirty;
+
+                return $scope.toDeskAvailable || $scope.closeAndContinueAvailable
+                    || $scope.publishAndContinueAvailable || $scope.publishAvailable;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {

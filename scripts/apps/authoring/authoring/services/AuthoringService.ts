@@ -368,15 +368,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
 
-        if (appConfig.features.publishFromPersonal && !orig?.task?.desk && !extDiff?.task?.desk) {
-            var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
-
-            extDiff.task = {
-                ...(extDiff.task ?? {}),
-                desk: currentDeskId,
-            };
-        }
-
         return api.update(endpoint, orig, extDiff, {publishing_warnings_confirmed: publishingWarningsConfirmed})
             .then(
                 (result) => lock.unlock(result).catch(() => result), // ignore unlock err
