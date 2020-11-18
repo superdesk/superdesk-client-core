@@ -29,7 +29,11 @@ export function getApiErrorMessage(error: IAPIError): string {
     if (API_ERRORS[error.error] != null) {
         return API_ERRORS[error.error](error);
     }
-
+    if (error.errors?.name != null) {
+        return superdeskApi.localization.gettext('Error[{{number}}]: Name requried', {
+            number: error.error,
+        });
+    }
     return superdeskApi.localization.gettext('Error[{{number}}]: {{description}}', {
         number: error.error,
         description: error.description,
