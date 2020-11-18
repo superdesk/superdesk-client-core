@@ -39,11 +39,23 @@ export function uploadAsset(
     data: FormData,
     onProgress: (event: ProgressEvent) => void,
 ): Promise<IAssetItem> {
-    return superdeskApi.dataApi.uploadFileWithProgress(
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.uploadFileWithProgress<IAssetItem>(
         '/' + RESOURCE,
         data,
         onProgress,
-    );
+    )
+        .catch((error: any) => {
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to upload file.'));
+            }
+
+            return Promise.reject(error);
+        });
 }
 
 const GRID_PAGE_SIZE = 25;
@@ -359,6 +371,9 @@ export function updateAssetMetadata(
     originalAttachment: IAttachment,
     updates: Partial<IAssetItem>,
 ): Promise<[IAttachment, IAssetItem]> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
     return Promise.all([
         superdeskApi.entities.attachment.save(originalAttachment, {
             ...originalAttachment,
@@ -366,7 +381,16 @@ export function updateAssetMetadata(
             description: updates.description,
             internal: updates.state !== ASSET_STATE.PUBLIC,
         }),
-        superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, originalAsset, updates),
+        superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, originalAsset, updates)
+            .catch((error: any) => {
+                if (isSamsApiError(error)) {
+                    notify.error(getApiErrorMessage(error));
+                } else {
+                    notify.error(gettext('Failed to update asset.'));
+                }
+
+                return Promise.reject(error);
+            }),
     ]);
 }
 
