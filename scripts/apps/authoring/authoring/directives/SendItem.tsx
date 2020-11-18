@@ -94,6 +94,7 @@ export function SendItem($q,
             scope.subscribersWithPreviewConfigured = [];
             scope.sendPublishSchedule = appConfig?.ui?.sendPublishSchedule ?? true;
             scope.sendEmbargo = appConfig?.ui?.sendEmbargo ?? true;
+            scope.allowPersonalSpace = false;
             scope.PERSONAL_SPACE = {label: gettext('Personal Space'), value: 'PERSONAL_SPACE'};
 
             // if authoring:publish extension point is not defined
@@ -217,8 +218,12 @@ export function SendItem($q,
 
             scope.selectDesk = function(desk) {
                 scope.selectedDesk = desk ? _.cloneDeep(desk)
-                    : appConfig?.features?.sendToPersonal && privileges.userHasPrivileges({send_to_personal: 1})
-                        ? scope.PERSONAL_SPACE : desk;
+                    : (
+                        appConfig?.features?.sendToPersonal &&
+                        privileges.userHasPrivileges({send_to_personal: 1}) &&
+                        scope.allowPersonalSpace
+                            ? scope.PERSONAL_SPACE : desk
+                    );
                 scope.selectedStage = null;
                 fetchStages();
                 fetchMacros();
@@ -916,7 +921,7 @@ export function SendItem($q,
                     return;
                 }
 
-                scope.stages = desks.deskStages[scope.selectedDesk._id];
+                scope.stages = desks.deskStages[scope.selectedDesk._id] || [];
                 var stage = null;
 
                 if (scope.currentUserAction === ctrl.userActions.send_to ||
@@ -990,6 +995,10 @@ export function SendItem($q,
                         scope.currentUserAction = ctrl.userActions.send_to;
                     }
                 }
+
+                const item = scope.orig || scope.item || scope.config?.item;
+
+                scope.allowPersonalSpace = item.task?.desk != null;
             }
 
             /**

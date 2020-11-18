@@ -219,6 +219,9 @@ export function SendService(
         self.config.itemIds = _.map(items, '_id');
         self.config.items = items;
         self.config.isPackage = items.some((item) => item.type === 'composite');
+        if (items.length === 1) {
+            self.config.item = items[0];
+        }
 
         if (self.config.isPackage) {
             self.config.packageItemIds = getItemsFromPackages(items);

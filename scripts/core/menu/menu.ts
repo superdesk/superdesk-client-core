@@ -55,8 +55,6 @@ angular.module('superdesk.core.menu', [
                 this.currentRoute = route;
                 this.flags.workspace = !!route.sideTemplateUrl;
                 this.flags.workqueue = this.flags.workqueue || true;
-
-                console.info('flags', this.flags);
             });
 
             $scope.$watch(() => {
