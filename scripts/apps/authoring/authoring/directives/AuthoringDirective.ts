@@ -94,6 +94,7 @@ export function AuthoringDirective(
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
             const isPersonalSpace = $location.path() === '/workspace/personal';
+
             $scope.toDeskAvailable = false;
             $scope.closeAndContinueAvailable = false;
             $scope.publishAvailable = false;
