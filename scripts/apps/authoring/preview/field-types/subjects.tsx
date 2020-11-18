@@ -1,9 +1,8 @@
 import React from 'react';
-import {ISubject} from 'superdesk-api';
 import {SmallTags} from 'core/ui/components/SmallTags';
 
 interface IProps {
-    subjects: Array<ISubject>;
+    subjects: Array<{qcode: string; name: string}>;
 }
 
 export class SubjectsPreview extends React.Component<IProps> {

@@ -8,68 +8,6 @@ describe('ingest_settings', () => {
         nav('/settings/ingest').then(done);
     });
 
-    xit('unselecting options in dropdown lists on the Actions pane', () => {
-        var deskList, // dropdown list for choosing a desk
-            macroList, // dropdown list for choosing a macro
-            stageList, // dropdown list for choosing a desk stage
-            ruleSettings;
-
-        // open the routing scheme edit modal under the  Routing tab, add a new
-        // routing rule and open its Action settings pane
-        ingestSettings.tabs.routingTab.click();
-        ingestSettings.newSchemeBtn.click();
-
-        ingestSettings.writeTextToSchemeName('Test Scheme');
-
-        ingestSettings.newRoutingRuleBtn.click();
-        ruleSettings = ingestSettings.routingRuleSettings;
-
-        // Select values in the three dropdown lists under the FETCH section,
-        // then try to deselect them, i.e. select an empty option. If the
-        // latter exists, the value of the selected options in all lists should
-        // be empty.
-        ruleSettings.showFetchBtn.click();
-
-        deskList = ruleSettings.fetchDeskList;
-        getListOption(deskList, 2).click();
-
-        stageList = ruleSettings.fetchStageList;
-        getListOption(stageList, 2).click();
-
-        macroList = ruleSettings.fetchMacroList;
-        getListOption(macroList, 2).click();
-
-        // now select first options and then check that they are all blank
-        getListOption(deskList, 1).click();
-        getListOption(stageList, 1).click();
-        getListOption(macroList, 1).click();
-
-        expect(deskList.$('option:checked').getAttribute('value')).toEqual('');
-        expect(stageList.$('option:checked').getAttribute('value')).toEqual('');
-        expect(macroList.$('option:checked').getAttribute('value')).toEqual('');
-
-        // We now perform the same check for the dropdown menus under the
-        // PUBLISH section
-        ruleSettings.showPublishBtn.click();
-
-        deskList = ruleSettings.publishDeskList;
-        getListOption(deskList, 2).click();
-
-        stageList = ruleSettings.publishStageList;
-        getListOption(stageList, 2).click();
-
-        macroList = ruleSettings.publishMacroList;
-        getListOption(macroList, 2).click();
-
-        getListOption(deskList, 1).click();
-        getListOption(stageList, 1).click();
-        getListOption(macroList, 1).click();
-
-        expect(deskList.$('option:checked').getAttribute('value')).toEqual('');
-        expect(stageList.$('option:checked').getAttribute('value')).toEqual('');
-        expect(macroList.$('option:checked').getAttribute('value')).toEqual('');
-    });
-
     it('contains the Schedule tab for editing routing schedules', () => {
         var ruleSettings,
             tzOption;

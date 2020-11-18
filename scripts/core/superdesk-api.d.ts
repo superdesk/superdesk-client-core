@@ -1550,6 +1550,9 @@ declare module 'superdesk-api' {
         authoring?: {
             timeToRead?: any;
             lineLength?: number;
+            preview?: {
+                hideContentLabels: boolean;
+            };
         };
         ui: {
             publishEmbargo?: any;

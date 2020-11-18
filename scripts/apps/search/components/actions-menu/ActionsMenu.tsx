@@ -23,6 +23,8 @@ export class ActionsMenu extends React.PureComponent<IProps> {
     toggle(event) {
         this.stopEvent(event);
         closeActionsMenu(this.props.item._id);
+
+        // eslint-disable-next-line react/no-find-dom-node
         const icon = (ReactDOM.findDOMNode(this) as HTMLElement)
             .getElementsByClassName('icon-dots-vertical')[0];
 

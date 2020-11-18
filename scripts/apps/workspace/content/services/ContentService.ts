@@ -6,6 +6,7 @@ import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
 import {IPackagesService} from 'types/Services/Packages';
+import {isMediaType} from 'core/helpers/item';
 
 /**
  * @ngdoc service
@@ -377,6 +378,16 @@ export function ContentService(api, templates, desks, packages: IPackagesService
             return this.getCustomFields().then(() => {
                 scope.schema = this.schema(null, get(item, 'type', 'text'));
                 scope.editor = this.editor(null, get(item, 'type', 'text'));
+
+                // sign_off field used to always be hidden for media items in authoring, but was visible in preview
+                // to fix the inconsistency, I am making it read only so it's displayed in both places,
+                // but not editable, to keep it similar to past behaviour.
+                // In the future when we drop support for default profiles, this setting should be applied to
+                // customer configurations and removed from here.
+                if (isMediaType(item) && scope.schema.sign_off != null) {
+                    scope.schema.sign_off.readonly = true;
+                }
+
                 scope.fields = this.fields({editor: scope.editor});
             });
         }

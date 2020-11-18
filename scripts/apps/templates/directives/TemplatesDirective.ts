@@ -1,6 +1,7 @@
 import notifySaveError from '../helpers';
 import {gettext} from 'core/utils';
 import {getTemplateFilters} from '../constants';
+import {dataApi} from 'core/helpers/CrudManager';
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
     'content', '$filter', 'session', 'lodash'];
@@ -309,6 +310,33 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                     $scope.cron_times = [];
                     $scope.template.schedule_desk = null;
                     $scope.template.schedule_stage = null;
+
+                    $scope.macros = null;
+                    $scope.template.schedule_macro = null;
+                }
+            });
+
+            $scope.$watch('template.schedule_desk', (newValue, oldValue) => {
+                if ($scope.template == null) {
+                    return;
+                }
+
+                if (oldValue != null) {
+                    // Desk has changed. Available macros depend desk.
+                    $scope.template.schedule_macro = null;
+                }
+
+                if (newValue != null && newValue !== '') {
+                    dataApi.query(
+                        'macros',
+                        1,
+                        {field: 'name', direction: 'ascending'},
+                        {deskId: newValue},
+                    )
+                        .then((res) => {
+                            $scope.macros = res._items;
+                            $scope.$apply();
+                        });
                 }
             });
 

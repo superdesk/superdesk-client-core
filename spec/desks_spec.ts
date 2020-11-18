@@ -8,11 +8,13 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
+import {element, by} from 'protractor';
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {assertToastMsg, refresh} from './helpers/utils';
 import {desks} from './helpers/desks';
+import {contentProfiles} from './helpers/content_profiles';
 
 describe('desks', () => {
     beforeEach(() => {
@@ -25,6 +27,8 @@ describe('desks', () => {
         desks.deskSourceElement().sendKeys('Test');
         desks.setDeskType('production');
         desks.setDeskContentExpiry(1, 10);
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
         desks.showTab('macros');
         // expect(desks.listedMacros.count()).toBeGreaterThan(0);
@@ -45,6 +49,8 @@ describe('desks', () => {
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
         desks.setDeskContentExpiry(10, 1);
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
         desks.showTab('macros');
         desks.save();
@@ -65,6 +71,8 @@ describe('desks', () => {
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
         desks.setDeskContentExpiry(10, 1);
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
         desks.showTab('macros');
         desks.save();
@@ -84,6 +92,8 @@ describe('desks', () => {
         desks.deskDescriptionElement().sendKeys('Test Description');
         desks.deskSourceElement().sendKeys('Test Source');
         desks.setDeskType('authoring');
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionDoneOnGeneralTab();
         expect(desks.getStageCount('Test Desk')).toEqual('2');
 
@@ -124,6 +134,8 @@ describe('desks', () => {
         desks.deskNameElement().sendKeys('Test Desk A');
         desks.deskSourceElement().sendKeys('Test Source A');
         desks.setDeskType('authoring');
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
 
         // Now create a new stage
@@ -164,6 +176,8 @@ describe('desks', () => {
         desks.deskNameElement().sendKeys('Test Desk');
         desks.deskSourceElement().sendKeys('Test Source A');
         desks.setDeskType('authoring');
+        desks.setDeskDefaultContentTemplate('testing');
+        desks.setDeskDefaultContentProfile('testing');
         desks.actionSaveAndContinueOnGeneralTab();
 
         desks.getNewStageButton().click();
@@ -188,12 +202,20 @@ describe('desks', () => {
         desks.addUser('admin');
         desks.close();
 
+        // update the content profile
+        contentProfiles.openContentProfileSettings();
+        contentProfiles.edit('testing');
+        contentProfiles.setRequired('Subject');
+        element(by.buttonText('Content fields')).click();
+        contentProfiles.setRequired('Body HTML');
+        contentProfiles.update();
+
         // confirm story is created on working stage
         monitoring.openMonitoring();
         refresh();
         workspace.selectDesk('Test Desk');
-        authoring.createTextItem();
-        authoring.writeTextToHeadline('new item');
+        authoring.createTextItemFromTemplate('testing');
+        authoring.writeTextToHeadlineFromRecentTemplate('new item');
         authoring.save();
         expect(monitoring.getGroupItems(0).count()).toBe(1);
 

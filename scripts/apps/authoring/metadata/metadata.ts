@@ -857,7 +857,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
 
             scope.selectTerm = function(term, $event) {
                 // while searching, allow to search for categories but don't select them
-                if (scope.tree?.[term[scope.uniqueField]] && !scope.allowEntireCat) {
+                if (scope.tree?.[term?.[scope.uniqueField]] && !scope.allowEntireCat) {
                     scope.openTree(term, $event);
                 } else if (term) {
                     addTerm(term);
