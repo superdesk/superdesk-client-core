@@ -41,6 +41,8 @@ describe('text editor', () => {
             importSelection: function(pos) { /* no-op */ },
         };
         document.body.appendChild(scope.node);
+
+        // eslint-disable-next-line jasmine/no-unsafe-spy
         spyOn(scope.model, '$setViewValue').and.callThrough();
         return scope;
     }

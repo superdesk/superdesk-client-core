@@ -14,7 +14,7 @@ export type IAuthoringField =
     | {
         type: 'subjects';
         id: string;
-        value: Array<ISubject>;
+        value: Array<{name: string; qcode: string}>;
     }
     | {
         type: 'vocabulary-values';

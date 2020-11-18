@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {IArticle, IAttachment, IAttachmentsWidgetProps, IAttachmentsWrapperProps} from 'superdesk-api';
-import {isLocked, isLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
+import {isLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
+import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
 import {notify} from 'core/notify/notify';
 import {gettext, gettextCatalog} from 'core/utils';
@@ -57,7 +58,7 @@ class AttachmentsWidgetWrapper extends React.PureComponent<IProps> {
     }
 
     isUploadValid(files: Array<File>) {
-        if (files.length === 0 || !isLocked(this.props.item)) {
+        if (files.length === 0 || !sdApi.article.isLocked(this.props.item)) {
             return false;
         } else if (files.length + this.props.attachments.length > appConfig.attachments_max_files) {
             notify.error(gettextCatalog.getPlural(
@@ -95,7 +96,7 @@ class AttachmentsWidgetWrapper extends React.PureComponent<IProps> {
             <Widget
                 {...this.props}
                 editable={!!this.props.item._editable}
-                isLocked={isLocked(this.props.item)}
+                isLocked={sdApi.article.isLocked(this.props.item)}
                 isLockedByMe={isLockedInCurrentSession(this.props.item)}
                 isUploadValid={this.isUploadValid}
                 addAttachments={this.addAttachments}

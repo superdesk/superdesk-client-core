@@ -66,6 +66,7 @@ import {appConfig} from 'appConfig';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
 import {notify} from './notify/notify';
+import {sdApi} from 'api';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -82,8 +83,6 @@ export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise
 
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
-
-const isPublished = (article) => article.item_id != null;
 
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
@@ -118,16 +117,12 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
-export function isLocked(article: IArticle): boolean {
-    return article.lock_session != null;
-}
-
 export function isLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
 }
 
 export function isLockedInOtherSession(article: IArticle): boolean {
-    return isLocked(article) && !isLockedInCurrentSession(article);
+    return sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
 }
 
 export const formatDate = (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat);
@@ -160,7 +155,7 @@ export function getSuperdeskApiImplementation(
                 isPersonal: (article) => article.task == null
                     || article.task.desk == null
                     || article.task.stage == null,
-                isLocked: isLocked,
+                isLocked: sdApi.article.isLocked,
                 isLockedInCurrentSession,
                 isLockedInOtherSession,
                 patch: (article, patch, dangerousOptions) => {
@@ -175,7 +170,7 @@ export function getSuperdeskApiImplementation(
                         return dataApi.patchRaw<IArticle>(
                             // distinction between handling published and non-published items
                             // should be removed: SDESK-4687
-                            (isPublished(article) ? 'published' : 'archive'),
+                            (sdApi.article.isPublished(article) ? 'published' : 'archive'),
                             article._id,
                             article._etag,
                             patchFinal,
@@ -194,7 +189,7 @@ export function getSuperdeskApiImplementation(
                     });
                 },
                 isArchived: (article) => article._type === 'archived',
-                isPublished: (article) => isPublished(article),
+                isPublished: (article) => sdApi.article.isPublished(article),
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>
