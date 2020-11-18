@@ -7,7 +7,8 @@ import {IDateTimeFieldConfig} from './extension';
 import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/react';
 
 export function getDateTimeField(superdesk: ISuperdesk) {
-    const {gettext, gettextPlural, localeForDatePicker} = superdesk.localization;
+    const {gettext, gettextPlural} = superdesk.localization;
+    const {getLocaleForDatePicker} = superdesk.ui.framework;
     const {Spacer} = superdesk.components;
     const {dateToServerString} = superdesk.utilities;
 
@@ -44,7 +45,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                 // Get the DatePicker locale using the language of this item
                 const language = this.props.item.language ?? superdesk.instance.config.default_language;
-                const datePickerLocale = localeForDatePicker(language);
+                const datePickerLocale = getLocaleForDatePicker(language);
 
                 return (
                     <Spacer type="horizontal" align="center" spacing="medium">

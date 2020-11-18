@@ -1281,6 +1281,9 @@ declare module 'superdesk-api' {
                 warning(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
                 error(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
             },
+            framework: {
+                getLocaleForDatePicker(targetLocale?: string): DatePickerLocaleSettings;
+            };
         };
         entities: {
             article: {
@@ -1372,7 +1375,6 @@ declare module 'superdesk-api' {
             formatDate(date: Date): string;
             formatDateTime(date: Date): string;
             longFormatDateTime(date: Date | string): string;
-            localeForDatePicker(targetLocale?: string): DatePickerLocaleSettings;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;

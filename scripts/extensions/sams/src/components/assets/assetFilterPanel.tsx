@@ -65,7 +65,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
         this.clearSearch = this.clearSearch.bind(this);
         this.submitSearch = this.submitSearch.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
-        this.datePickerLocale = superdeskApi.localization.localeForDatePicker();
+        this.datePickerLocale = superdeskApi.ui.framework.getLocaleForDatePicker();
 
         this.onChange = {
             name: (value: string) => this.setLocalAssetSearchParams({name: value}),
