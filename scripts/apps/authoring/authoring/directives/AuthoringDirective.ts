@@ -95,10 +95,10 @@ export function AuthoringDirective(
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
             const isPersonalSpace = $location.path() === '/workspace/personal';
 
-            $scope.toDeskAvailable = false;
-            $scope.closeAndContinueAvailable = false;
-            $scope.publishAvailable = false;
-            $scope.publishAndContinueAvailable = false;
+            $scope.toDeskEnabled = false;
+            $scope.closeAndContinueEnabled = false;
+            $scope.publishEnabled = false;
+            $scope.publishAndContinueEnabled = false;
 
             desks.fetchCurrentUserDesks().then((desksList) => {
                 userDesks = desksList;
@@ -136,6 +136,35 @@ export function AuthoringDirective(
                     $scope.origItem.flags = oldValue;
                     $scope.dirty = true;
                 }
+            }, true);
+
+            function checkShortcutButtonAvailability(personal = false) {
+                if (personal && appConfig?.features?.publishFromPersonal) {
+                    return $scope.item.state === 'in_progress' || $scope.dirty;
+                }
+                return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
+            }
+
+            // ToDesk -- Send an Item to a desk
+
+            // closeAndContinue -- Create an update of an item and Close the item.
+
+            // publish -- publish an item
+
+            // publishAndContinue -- Publish an item and Create an update.
+
+            $scope.$watch('item', () => {
+                $scope.toDeskEnabled = appConfig?.features?.customAuthoringTopbar?.toDesk
+                && !isPersonalSpace && checkShortcutButtonAvailability();
+
+                $scope.closeAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.closeAndContinue
+                && !isPersonalSpace && checkShortcutButtonAvailability();
+
+                $scope.publishEnabled = appConfig?.features?.customAuthoringTopbar?.publish
+                    && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
+
+                $scope.publishAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.publishAndContinue
+                    && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
             }, true);
 
             $scope._isInProductionStates = !isPublished($scope.origItem);
@@ -189,10 +218,10 @@ export function AuthoringDirective(
              * Check if it is allowed to publish on desk
              * @returns {Boolean}
              */
-            $scope.canPublishOnDesk = function() {
+            function canPublishOnDesk() {
                 return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
                     privileges.userHasPrivileges({publish: 1});
-            };
+            }
 
             getDeskStage();
             getCurrentTemplate();
@@ -727,25 +756,9 @@ export function AuthoringDirective(
                 return false;
             }
 
-            // ToDesk -- Send an Item to a desk
-
-            // closeAndContinue -- Create an update of an item and Close the item.
-
-            // publish -- publish an item
-
-            // publishAndContinue -- Publish an item and Create an update.
-
             $scope.showCustomButtons = () => {
-                $scope.publishAvailable = (isPersonalSpace && appConfig?.features?.publishFromPersonal
-                    && $scope.item.state === 'in_progress' || $scope.dirty)
-                    || $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
-
-                $scope.toDeskAvailable = $scope.closeAndContinueAvailable = $scope.publishAndContinueAvailable =
-                    !isPersonalSpace && $scope.item.task && $scope.item.task.desk
-                    && $scope.item.state !== 'draft' || !isPersonalSpace && $scope.dirty;
-
-                return $scope.toDeskAvailable || $scope.closeAndContinueAvailable
-                    || $scope.publishAndContinueAvailable || $scope.publishAvailable;
+                return $scope.toDeskEnabled || $scope.closeAndContinueEnabled
+                    || $scope.publishAndContinueEnabled || $scope.publishEnabled;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {

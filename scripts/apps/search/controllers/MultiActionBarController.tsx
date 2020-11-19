@@ -304,8 +304,13 @@ export function MultiActionBarController(
                     multi.reset();
                 } else {
                     errors.forEach((err) => {
-                        let messages = JSON.parse(err.message.replace(/'/gi, '"'));
+                        let messages = null;
 
+                        try {
+                            messages = JSON.parse(err.message.replace(/'/gi, '"'));
+                        } catch (error) {
+                            messages = [[err.message]];
+                        }
                         messages[0].forEach((message: string) =>
                             notify.error(gettext('Error on item:') + ` ${err.itemName} ${message}`));
                     });
