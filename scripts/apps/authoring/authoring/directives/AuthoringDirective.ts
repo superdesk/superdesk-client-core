@@ -95,10 +95,10 @@ export function AuthoringDirective(
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
             const isPersonalSpace = $location.path() === '/workspace/personal';
 
-            $scope.toDeskEnabled = false;
-            $scope.closeAndContinueEnabled = false;
-            $scope.publishEnabled = false;
-            $scope.publishAndContinueEnabled = false;
+            $scope.toDeskEnabled = false; // Send an Item to a desk
+            $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
+            $scope.publishEnabled = false; // publish an item
+            $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
 
             desks.fetchCurrentUserDesks().then((desksList) => {
                 userDesks = desksList;
@@ -144,14 +144,6 @@ export function AuthoringDirective(
                 }
                 return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
             }
-
-            // ToDesk -- Send an Item to a desk
-
-            // closeAndContinue -- Create an update of an item and Close the item.
-
-            // publish -- publish an item
-
-            // publishAndContinue -- Publish an item and Create an update.
 
             $scope.$watch('item', () => {
                 $scope.toDeskEnabled = appConfig?.features?.customAuthoringTopbar?.toDesk
