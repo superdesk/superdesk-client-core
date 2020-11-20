@@ -283,7 +283,7 @@ export function MultiImageEditController(
 
         if (values[field].length === 1) {
             extra[field] = getMetaValue(field, values[field], null);
-        } else {
+        } else if (values[field].length > 1) {
             $scope.placeholder[field] = gettext('(multiple values)');
         }
     }
