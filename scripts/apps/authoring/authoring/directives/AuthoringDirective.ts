@@ -137,7 +137,7 @@ export function AuthoringDirective(
 
             function checkShortcutButtonAvailability(personal = false) {
                 if (personal && appConfig?.features?.publishFromPersonal) {
-                    return $scope.item.state === 'in_progress' || $scope.dirty;
+                    return $scope.item.state !== 'draft' || $scope.dirty;
                 }
                 return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
             }
@@ -475,6 +475,17 @@ export function AuthoringDirective(
                         ...(item.task ?? {}),
                         desk: currentDeskId,
                     };
+
+                    if (item.associations) {
+                        Object.keys(item.associations).forEach((key) => {
+                            if (item.associations[key] != null) {
+                                item.associations[key].task = {
+                                    ...(item.associations[key].task ?? {}),
+                                    desk: currentDeskId,
+                                };
+                            }
+                        });
+                    }
                 }
 
                 return onPublishMiddlewares.reduce(
