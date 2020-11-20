@@ -483,10 +483,12 @@ export function AuthoringDirective(
 
                     if (item.associations) {
                         Object.keys(item.associations).forEach((key) => {
-                            item.associations[key].task = {
-                                ...(item.associations[key]?.task ?? {}),
-                                desk: currentDeskId,
-                            };
+                            if (item.association[key] != null) {
+                                item.associations[key].task = {
+                                    ...(item.associations[key].task ?? {}),
+                                    desk: currentDeskId,
+                                };
+                            }
                         });
                     }
                 }
