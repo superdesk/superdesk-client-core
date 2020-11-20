@@ -90,8 +90,15 @@ export function CardsService(search, session, desks, $location) {
                 }});
             } else {
                 query.filter({bool: {
-                    must: {term: {original_creator: session.identity._id}},
                     must_not: {exists: {field: 'task.desk'}},
+                    should: [
+                        {term: {'task.user': session.identity._id}}, // sent to personal
+                        {bool: { // just created in personal
+                            must: {term: {original_creator: session.identity._id}},
+                            must_not: {exists: {field: 'task.user'}},
+                        }},
+                    ],
+                    minimum_should_match: 1,
                 }});
             }
             break;
