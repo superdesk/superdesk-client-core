@@ -70,6 +70,13 @@ export enum ASSET_ACTIONS {
     EDIT = 'edit',
 }
 
+export enum DATA_UNIT {
+    BYTES = 'bytes',
+    KB = 'kb',
+    MB = 'mb',
+    GB = 'gb',
+}
+
 export interface IAssetAction {
     id: string;
     label: string;
@@ -87,6 +94,7 @@ export interface ISetItem extends IBaseRestApiResponse {
     name: string;
     state: SET_STATE;
     description?: string;
+    maximum_asset_size?: number;
     destination_name?: string;
     destination_config?: Dictionary<string, any>;
     destination?: IStorageDestinationItem;

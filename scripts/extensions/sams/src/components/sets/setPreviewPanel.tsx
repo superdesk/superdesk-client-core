@@ -24,6 +24,7 @@ import {
     Text,
 } from '../../ui';
 import {IPanelTools} from '../../ui/PanelTools';
+import {getHumanReadableFileSize} from '../../utils/ui';
 
 interface IProps {
     set?: ISetItem;
@@ -95,6 +96,11 @@ export class SetPreviewPanelComponent extends React.PureComponent<IProps> {
                             <FormRow>
                                 <FormLabel text={gettext('Description')} style="light" />
                                 <Text>{set.description}</Text>
+                            </FormRow>
+
+                            <FormRow>
+                                <FormLabel text={gettext('Max Asset Size')} style="light" />
+                                <Text>{getHumanReadableFileSize(set.maximum_asset_size || 0)}</Text>
                             </FormRow>
 
                             <FormRow>

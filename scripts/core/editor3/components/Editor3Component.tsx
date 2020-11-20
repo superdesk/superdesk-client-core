@@ -24,7 +24,6 @@ import {getEntityTypeAfterCursor, getEntityTypeBeforeCursor} from './links/entit
 import {HighlightsPopup} from './HighlightsPopup';
 import UnstyledBlock from './UnstyledBlock';
 import UnstyledWrapper from './UnstyledWrapper';
-import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import * as Suggestions from '../helpers/suggestions';
 import {getCurrentAuthor} from '../helpers/author';
 import {setSpellcheckerProgress, applySpellcheck} from '../actions';
@@ -35,6 +34,9 @@ import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
 import {EDITOR_BLOCK_TYPE} from '../constants';
 import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {preventInputWhenLimitIsPassed, handleOverflowHighlights} from '../helpers/characters-limit';
+import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
+import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -123,6 +125,8 @@ interface IProps {
     highlightsManager?: any;
     spellchecking?: IEditorStore['spellchecking'];
     cleanPastedHtml?: boolean;
+    limit?: number;
+    limitBehavior?: CharacterLimitUiBehavior;
     onCreateAddSuggestion?(chars): void;
     onCreateDeleteSuggestion?(type): void;
     onPasteFromSuggestingMode?(): void;
@@ -161,6 +165,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
     editor: any;
     spellcheckCancelFn: () => void;
     onDragEnd: () => void;
+    removeListeners: Array<() => void> = [];
 
     constructor(props) {
         super(props);
@@ -414,7 +419,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
      * at the end of content, any character added will continue to be part of the link.
      * This logic stops that behavior.
      */
-    handleBeforeInput(chars, editorState) {
+    handleBeforeInput(chars: string, editorState: EditorState) {
         const author = getCurrentAuthor();
         const {onChange, suggestingMode, onCreateAddSuggestion} = this.props;
 
@@ -426,6 +431,12 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
             onCreateAddSuggestion(chars);
             return 'handled';
+        }
+
+        if (this.props.limit && this.props.limitBehavior === 'limit') {
+            if (preventInputWhenLimitIsPassed(editorState, chars, this.props.limit)) {
+                return 'handled';
+            }
         }
 
         if (handleBeforeInputHighlights(this.props.onChange, chars, editorState) === 'handled') {
@@ -477,6 +488,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
         this.editor = editor;
 
         this.editorKey = this.editor === null ? null : this.editor._editorKey;
+
+        // eslint-disable-next-line react/no-find-dom-node
         this.editorNode = this.editor === null ? undefined : ReactDOM.findDOMNode(this.editor);
     }
 
@@ -504,11 +517,11 @@ export class Editor3Component extends React.Component<IProps, IState> {
             readOnly,
             locked,
             showToolbar,
-            editorState,
             onChange,
             tabindex,
             scrollContainer,
             cleanPastedHtml,
+            editorState,
         } = this.props;
 
         const cx = classNames({

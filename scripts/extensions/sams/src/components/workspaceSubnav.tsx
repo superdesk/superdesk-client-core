@@ -12,7 +12,6 @@ import {
     LIST_ACTION,
     SET_STATE,
     SORT_ORDER,
-    IAssetItem,
 } from '../interfaces';
 import {superdeskApi, samsApi} from '../apis';
 import {IApplicationState} from '../store';
@@ -24,14 +23,13 @@ import {getAssetListStyle,
     getAssetSearchParams,
     getAssetSetFilter,
     getSelectedAssetIds,
-    getSelectedAssetItems,
 } from '../store/assets/selectors';
 import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
 import {toggleAssetListStyle,
     updateAssetSearchParamsAndListItems,
     closeMultiActionBar,
-    queryAssetsFromCurrentSearch,
+    deleteMultipleAssets,
 } from '../store/assets/actions';
 
 // UI
@@ -62,7 +60,6 @@ interface IProps {
     disabledSets: Array<ISetItem>;
     currentSet?: ISetItem;
     selectedAssetIds: Array<string> | [];
-    selectedAssets: Array<IAssetItem>;
     toggleFilterPanel(): void;
     toggleListStyle(): void;
     closeMultiActionBar(): void;
@@ -70,8 +67,7 @@ interface IProps {
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
     ): void;
-    queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
-
+    deleteMultipleAssets(): void;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
@@ -83,7 +79,6 @@ const mapStateToProps = (state: IApplicationState) => ({
     disabledSets: getDisabledSets(state),
     currentSet: getAssetSetFilter(state),
     selectedAssetIds: getSelectedAssetIds(state),
-    selectedAssets: getSelectedAssetItems(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -102,15 +97,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         );
     },
     closeMultiActionBar: () => dispatch(closeMultiActionBar()),
-    queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
+    deleteMultipleAssets: () => dispatch<any>(deleteMultipleAssets()),
 });
 
 export function downloadCompressedBinary(asset_ids: Array<string>): void {
     samsApi.assets.getCompressedBinary(asset_ids);
-}
-
-export function deleteAsset(asset: IAssetItem): Promise<void> {
-    return samsApi.assets.deleteAsset(asset);
 }
 
 export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
@@ -240,24 +231,12 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         );
     }
 
-    selectedAssets(): boolean {
-        let selectedAssets = false;
-
-        this.props.selectedAssetIds?.length !== 0 ? selectedAssets = true : selectedAssets = false;
-        return selectedAssets;
-    }
-
     onDownloadMultipleAssetsCompressedBinary(): void {
         downloadCompressedBinary(this.props.selectedAssetIds);
     }
 
     onDeleteMultipleAssets(): void {
-        this.props.selectedAssets.map((selectedAsset) =>
-            deleteAsset(selectedAsset)
-                .then(() => {
-                    this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
-                }),
-        );
+        this.props.deleteMultipleAssets();
     }
 
     onCloseMultiActionBar() {
@@ -273,9 +252,9 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
         const buttonIcon = this.props.currentSet?.state === SET_STATE.DISABLED ? 'lock' : undefined;
         const sortFieldText = getAssetListSortFieldText(this.props.searchParams.sortField);
 
-        if (this.selectedAssets()) {
-            return (
-                <React.Fragment>
+        return (
+            <React.Fragment>
+                {(this.props.selectedAssetIds?.length !== 0) ? (
                     <SubNav zIndex={2}>
                         <div className="multi-action-bar">
                             <button className="toggle" onClick={this.props.closeMultiActionBar}>
@@ -304,50 +283,7 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                             </div>
                         </div>
                     </SubNav>
-                    <SubNav zIndex={1}>
-                        <ButtonGroup align="inline">
-                            <NavButton
-                                icon="filter-large"
-                                onClick={this.props.toggleFilterPanel}
-                                type={this.props.filterPanelOpen === true ?
-                                    'primary' :
-                                    'default'
-                                }
-                            />
-                        </ButtonGroup>
-                        <AssetTypeFilterButtons />
-                        <ButtonGroup align="right">
-                            <SubNavSpacer noMargin={true} />
-                            <ContentBar>
-                                <span className="sd-margin-r--1">
-                                    <span className="sd-margin-r--1">
-                                        {gettext('Total:')}
-                                    </span>
-                                    <Badge text={numberToString(this.props.totalAssets)} />
-                                </span>
-                                <Dropdown items={this.sortFieldOptions}>
-                                    {sortFieldText}
-                                </Dropdown>
-                                <IconButton
-                                    ariaValue={this.props.searchParams.sortOrder}
-                                    onClick={this.toggleSortOrder}
-                                    icon={this.props.searchParams.sortOrder}
-                                />
-                            </ContentBar>
-                            <NavButton
-                                icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
-                                    'list-view' :
-                                    'grid-view'
-                                }
-                                onClick={this.props.toggleListStyle}
-                            />
-                        </ButtonGroup>
-                    </SubNav>
-                </React.Fragment>
-            );
-        } else {
-            return (
-                <React.Fragment>
+                ) : (
                     <SubNav zIndex={2}>
                         <ButtonGroup align="inline">
                             <Dropdown items={items}>
@@ -387,49 +323,48 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                 />
                             </Tooltip>
                         </ButtonGroup>
-                    </SubNav>
-                    <SubNav zIndex={1}>
-                        <ButtonGroup align="inline">
-                            <NavButton
-                                icon="filter-large"
-                                onClick={this.props.toggleFilterPanel}
-                                type={this.props.filterPanelOpen === true ?
-                                    'primary' :
-                                    'default'
-                                }
-                            />
-                        </ButtonGroup>
-                        <AssetTypeFilterButtons />
-                        <ButtonGroup align="right">
-                            <SubNavSpacer noMargin={true} />
-                            <ContentBar>
+                    </SubNav>)}
+                <SubNav zIndex={1}>
+                    <ButtonGroup align="inline">
+                        <NavButton
+                            icon="filter-large"
+                            onClick={this.props.toggleFilterPanel}
+                            type={this.props.filterPanelOpen === true ?
+                                'primary' :
+                                'default'
+                            }
+                        />
+                    </ButtonGroup>
+                    <AssetTypeFilterButtons />
+                    <ButtonGroup align="right">
+                        <SubNavSpacer noMargin={true} />
+                        <ContentBar>
+                            <span className="sd-margin-r--1">
                                 <span className="sd-margin-r--1">
-                                    <span className="sd-margin-r--1">
-                                        {gettext('Total:')}
-                                    </span>
-                                    <Badge text={numberToString(this.props.totalAssets)} />
+                                    {gettext('Total:')}
                                 </span>
-                                <Dropdown items={this.sortFieldOptions}>
-                                    {sortFieldText}
-                                </Dropdown>
-                                <IconButton
-                                    ariaValue={this.props.searchParams.sortOrder}
-                                    onClick={this.toggleSortOrder}
-                                    icon={this.props.searchParams.sortOrder}
-                                />
-                            </ContentBar>
-                            <NavButton
-                                icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
-                                    'list-view' :
-                                    'grid-view'
-                                }
-                                onClick={this.props.toggleListStyle}
+                                <Badge text={numberToString(this.props.totalAssets)} />
+                            </span>
+                            <Dropdown items={this.sortFieldOptions}>
+                                {sortFieldText}
+                            </Dropdown>
+                            <IconButton
+                                ariaValue={this.props.searchParams.sortOrder}
+                                onClick={this.toggleSortOrder}
+                                icon={this.props.searchParams.sortOrder}
                             />
-                        </ButtonGroup>
-                    </SubNav>
-                </React.Fragment>
-            );
-        }
+                        </ContentBar>
+                        <NavButton
+                            icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                                'list-view' :
+                                'grid-view'
+                            }
+                            onClick={this.props.toggleListStyle}
+                        />
+                    </ButtonGroup>
+                </SubNav>
+            </React.Fragment>
+        );
     }
 }
 

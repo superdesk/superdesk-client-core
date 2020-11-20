@@ -124,7 +124,7 @@ export function ArticleEditDirective(
                 scope.validator = appConfig.validator_media_metadata;
                 scope.features = appConfig.features;
 
-                var mainEditScope: any = scope.$parent.$parent;
+                var mainEditScope: any = scope.$parent.$parent.$parent;
                 var autopopulateByline = appConfig.features != null && appConfig.features.autopopulateByline;
 
                 scope.label = (id) => getLabelForFieldId(id);

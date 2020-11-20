@@ -39,11 +39,23 @@ export function uploadAsset(
     data: FormData,
     onProgress: (event: ProgressEvent) => void,
 ): Promise<IAssetItem> {
-    return superdeskApi.dataApi.uploadFileWithProgress(
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.uploadFileWithProgress<IAssetItem>(
         '/' + RESOURCE,
         data,
         onProgress,
-    );
+    )
+        .catch((error: any) => {
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to upload file.'));
+            }
+
+            return Promise.reject(error);
+        });
 }
 
 const GRID_PAGE_SIZE = 25;
@@ -55,7 +67,7 @@ function querySearchString(source: IRootElasticQuery, params: IAssetSearchParams
             superdeskApi.elasticsearch.queryString({
                 query: params.textSearch,
                 lenient: true,
-                default_operator: 'OR',
+                default_operator: 'AND',
             }),
         );
     }
@@ -84,7 +96,7 @@ function querySetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
 }
 
 function queryState(source: IRootElasticQuery, params: IAssetSearchParams) {
-    if (params.state != null) {
+    if (params.state != null && params.state.length > 0) {
         source.query.bool.must.push(
             superdeskApi.elasticsearch.term({
                 field: 'state',
@@ -110,8 +122,8 @@ function queryName(source: IRootElasticQuery, params: IAssetSearchParams) {
         source.query.bool.must.push(
             superdeskApi.elasticsearch.queryString({
                 query: `name:(${params.name})`,
-                lenient: false,
-                default_operator: 'OR',
+                lenient: true,
+                default_operator: 'AND',
             }),
         );
     }
@@ -122,8 +134,8 @@ function queryFilename(source: IRootElasticQuery, params: IAssetSearchParams) {
         source.query.bool.must.push(
             superdeskApi.elasticsearch.queryString({
                 query: `filename:(${params.filename})`,
-                lenient: false,
-                default_operator: 'OR',
+                lenient: true,
+                default_operator: 'AND',
             }),
         );
     }
@@ -135,7 +147,7 @@ function queryDescription(source: IRootElasticQuery, params: IAssetSearchParams)
             superdeskApi.elasticsearch.queryString({
                 query: `description:(${params.description})`,
                 lenient: false,
-                default_operator: 'OR',
+                default_operator: 'AND',
             }),
         );
     }
@@ -328,7 +340,12 @@ export function getAssetsCount(set_ids: Array<string>): Promise<Dictionary<strin
         COUNT_RESOURCE + JSON.stringify(set_ids),
     )
         .catch((error: any) => {
-            notify.error(gettext('Failed to get assets counts for sets'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to get assets counts for sets'));
+            }
+
             return Promise.reject(error);
         });
 }
@@ -339,7 +356,12 @@ export function getAssetById(assetId: string): Promise<IAssetItem> {
 
     return superdeskApi.dataApi.findOne<IAssetItem>(RESOURCE, assetId)
         .catch((error: any) => {
-            notify.error(gettext(`Failed to get asset "${assetId}"`));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext(`Failed to get asset "${assetId}"`));
+            }
+
             return Promise.reject(error);
         });
 }
@@ -349,6 +371,9 @@ export function updateAssetMetadata(
     originalAttachment: IAttachment,
     updates: Partial<IAssetItem>,
 ): Promise<[IAttachment, IAssetItem]> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
     return Promise.all([
         superdeskApi.entities.attachment.save(originalAttachment, {
             ...originalAttachment,
@@ -356,7 +381,16 @@ export function updateAssetMetadata(
             description: updates.description,
             internal: updates.state !== ASSET_STATE.PUBLIC,
         }),
-        superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, originalAsset, updates),
+        superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, originalAsset, updates)
+            .catch((error: any) => {
+                if (isSamsApiError(error)) {
+                    notify.error(getApiErrorMessage(error));
+                } else {
+                    notify.error(gettext('Failed to update asset.'));
+                }
+
+                return Promise.reject(error);
+            }),
     ]);
 }
 
@@ -404,7 +438,12 @@ export function getAssetBinary(asset: IAssetItem): Promise<void | Response> {
                 downloadBlob(blob, res.headers.get('Content-type')!, asset.filename);
             }))
         .catch((error: any) => {
-            notify.error(gettext('Failed to get binary for asset'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to get binary for asset'));
+            }
+
             return Promise.reject(error);
         });
 }
@@ -422,7 +461,12 @@ export function getAssetsCompressedBinary(asset_ids: Array<string>): Promise<voi
                 downloadBlob(blob, 'application/zip', 'download');
             }))
         .catch((error: any) => {
-            notify.error(gettext('Failed to get compressed binaries for assets'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to get compressed binaries for assets'));
+            }
+
             return Promise.reject(error);
         });
 }
@@ -438,7 +482,32 @@ export function deleteAsset(item: IAssetItem): Promise<void> {
             return Promise.resolve();
         })
         .catch((error: any) => {
-            notify.error(gettext('Failed to delete the Asset'));
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to delete the Asset'));
+            }
+
+            return Promise.reject(error);
+        });
+}
+
+export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): Promise<IAssetItem> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.patch<IAssetItem>(RESOURCE, original, updates)
+        .then((asset: IAssetItem) => {
+            notify.success(gettext('Asset updated successfully'));
+
+            return asset;
+        })
+        .catch((error: any) => {
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to update the Asset'));
+            }
 
             return Promise.reject(error);
         });

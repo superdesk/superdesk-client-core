@@ -42,11 +42,12 @@ export function SearchContainer() {
                         this.flags.facets = filtersPanelPreferences[FILTERS_PANEL_PREFERENCES_KEY]['default'];
                     }
                 });
-                $scope.toggleFiltersPane = () => {
+                this.toggleFiltersPane = () => {
                     $scope.flags.facets = !$scope.flags.facets;
                     filtersPanelPreferences[FILTERS_PANEL_PREFERENCES_KEY]['enabled'] = $scope.flags.facets;
                     preferencesService.update(filtersPanelPreferences);
                 };
+                $scope.toggleFiltersPane = this.toggleFiltersPane;
             }],
     };
 }

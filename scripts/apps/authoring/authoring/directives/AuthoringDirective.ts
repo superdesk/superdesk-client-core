@@ -4,6 +4,7 @@ import {merge, flatMap} from 'lodash';
 import postscribe from 'postscribe';
 import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
+import {logger} from 'core/services/logger';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {getArticleSchemaMiddleware} from '..';
@@ -16,6 +17,7 @@ import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {isMediaType} from 'core/helpers/item';
 
 /**
  * @ngdoc directive
@@ -82,6 +84,8 @@ export function AuthoringDirective(
 ) {
     return {
         link: function($scope, elem, attrs) {
+            $scope.loading = false;
+
             var _closing;
             var mediaFields = {};
             var userDesks;
@@ -98,7 +102,7 @@ export function AuthoringDirective(
             $scope.views = {send: false};
             $scope.stage = null;
             $scope._editable = !!$scope.origItem._editable;
-            $scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], $scope.origItem.type);
+            $scope.isMediaType = isMediaType($scope.origItem);
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
 
             $scope.highlight = !!$scope.origItem.highlight;
@@ -161,6 +165,20 @@ export function AuthoringDirective(
             }
 
             /**
+             * Get the Current Template for the item.
+            */
+            function getCurrentTemplate() {
+                if (typeof $scope.item?.template !== 'string') {
+                    logger.error(new Error('template must be present'));
+                    return;
+                }
+                api('content_templates').getById($scope.item.template)
+                    .then((result) => {
+                        $scope.currentTemplate = result;
+                    });
+            }
+
+            /**
              * Check if it is allowed to publish on desk
              * @returns {Boolean}
              */
@@ -170,6 +188,7 @@ export function AuthoringDirective(
             };
 
             getDeskStage();
+            getCurrentTemplate();
             /**
              * `desk_stage:change` event from send and publish action.
              * If send action succeeds but publish fails then we need change item location.
@@ -253,10 +272,6 @@ export function AuthoringDirective(
                 } else {
                     _exportHighlight(item._id);
                 }
-            };
-
-            $scope.canSaveTemplate = function() {
-                return privileges.userHasPrivileges({content_templates: 1});
             };
 
             function _exportHighlight(_id) {
@@ -1061,8 +1076,11 @@ export function AuthoringDirective(
             });
 
             $scope.$on('item:unlock', (_e, data) => {
-                if ($scope.item._id === data.item && !_closing &&
-                    (session.sessionId !== data.lock_session || lock.previewUnlock)) {
+                if (
+                    $scope.item._id === data.item
+                    && !_closing
+                    && (session.sessionId !== data.lock_session || lock.previewUnlock)
+                ) {
                     if (lock.previewUnlock) {
                         $scope.edit($scope.item);
                         lock.previewUnlock = false;
@@ -1077,6 +1095,15 @@ export function AuthoringDirective(
                             $scope.item.state = data.state;
                             $scope.origItem.state = data.state;
                         }
+
+                        // Re-mount authoring view when item is locked by someone else
+                        // in order to clean up old UI elements
+                        $scope.loading = true;
+
+                        setTimeout(() => {
+                            $scope.loading = false;
+                            $scope.$apply();
+                        });
                     }
                 }
             });

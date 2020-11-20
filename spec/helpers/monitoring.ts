@@ -317,11 +317,12 @@ class Monitoring {
          * @param {string} fileType
          */
         this.filterAction = function(fileType) {
-            if (fileType === 'all') {
-                element(by.className('toggle-button__text--all')).click();
-            } else {
-                element(by.className('filetype-icon-' + fileType)).click();
-            }
+            const elem = fileType === 'all'
+                ? element(by.className('toggle-button__text--all'))
+                : element(by.className('filetype-icon-' + fileType));
+
+            browser.wait(ECE.visibilityOf(elem));
+            elem.click();
         };
 
         this.compactActionDropdown = function() {
@@ -345,7 +346,7 @@ class Monitoring {
         this.getPreviewTitle = function() {
             var headline = element(by.css('.content-container')).element(by.css('.preview-headline'));
 
-            waitFor(headline, 500);
+            browser.wait(ECE.visibilityOf(headline), 1000);
 
             return headline.getText();
         };

@@ -9,7 +9,7 @@ import {IApplicationState} from '../../store';
 import {superdeskApi, samsApi} from '../../apis';
 
 // Redux Actions & Selectors
-import {closeAssetContentPanel, queryAssetsFromCurrentSearch, editAsset} from '../../store/assets/actions';
+import {closeAssetContentPanel, queryAssetsFromCurrentSearch, editAsset, deleteAsset} from '../../store/assets/actions';
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 
 // UI
@@ -30,6 +30,7 @@ import {getMimetypeHumanReadable} from '../../utils/assets';
 interface IProps {
     asset?: IAssetItem;
     setName?: string;
+    deleteAsset(asset: IAssetItem): void;
     editAsset(asset: IAssetItem): void;
     onPanelClosed(): void;
     downloadAsset(asset: Partial<IAssetItem>): void;
@@ -43,6 +44,7 @@ const mapStateToProps = (state: IApplicationState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     editAsset: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
+    deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
     onPanelClosed: () => dispatch(closeAssetContentPanel()),
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
 
@@ -50,10 +52,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 
 export function downloadAssetBinary(asset: IAssetItem): void {
     samsApi.assets.getAssetBinary(asset);
-}
-
-export function deleteAsset(asset: IAssetItem): Promise<void> {
-    return samsApi.assets.deleteAsset(asset);
 }
 
 export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
@@ -70,10 +68,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
     }
 
     onDeleteAsset(): void {
-        deleteAsset(this.props.asset!)
-            .then(() => {
-                this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
-            });
+        this.props.deleteAsset(this.props.asset!);
     }
 
     onDownloadSingleAssetCompressedBinary(): void {

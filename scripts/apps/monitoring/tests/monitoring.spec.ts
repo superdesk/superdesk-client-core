@@ -233,7 +233,7 @@ describe('monitoring', () => {
         it('can get criteria for saved search with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
-                search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}},
+                search: {filter: {query: {q: 'foo', type: '["picture"]'}}},
             };
             var criteria = cards.criteria(card);
 

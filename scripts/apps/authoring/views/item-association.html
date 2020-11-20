@@ -24,7 +24,12 @@
             <!-- video -->
             <div class="item-association__video-container" ng-if="related && related.type === 'video'">
                 <sd-video item="related"></sd-video>
-                <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
+                
+                <sd-media-metadata-view
+                    item="related"
+                    class-name="'item-association__metadata'"
+                ></sd-media-metadata-view>
+
                 <div class="item-association__action-bar" ng-if="related && editable">
                     <div class="flex-grid flex-grid--medium-3">
                         <div class="flex-grid__item sd-text__left" style="text-align: left;">
@@ -47,7 +52,12 @@
                             ng-repeat="(key, rendition) in related.renditions"
                             ng-if="associations.checkRenditions.isAudio(rendition)" html5vfix>
                 </audio>
-                <div class="item-association__metadata" sd-media-metadata-view data-item="related"></div>
+                
+                <sd-media-metadata-view
+                    item="related"
+                    class-name="'item-association__metadata'"
+                ></sd-media-metadata-view>
+
                 <div class="item-association__action-bar" ng-if="related && editable">
                     <a class="btn btn--hollow btn--small" ng-click="associations.isMediaEditable() && associations.edit(this, related); $event.stopPropagation()"><span translate>Edit metadata</span></a>
                 </div>
@@ -66,9 +76,13 @@
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'image-edit'}); $event.stopPropagation()" sd-tooltip="Edit image"><i class="icon-switches"></i></a>
                         <a ng-if="related && editable" class="item-association__image-action" ng-click="associations.isMediaEditable() && associations.edit(this, related, {defaultTab: 'crop'}); $event.stopPropagation()" sd-tooltip="Edit crops"><i class="icon-crop"></i></a>
                     </div>
-                    <div sd-media-metadata-view data-item="related" data-show-alt-text="true"
-                         class="item-association__metadata item-association__metadata--bottom-overlay"
-                         ng-if="related.type === 'picture' || related.type === 'graphic'"></div>
+
+                    <sd-media-metadata-view
+                        ng-if="related.type === 'picture' || related.type === 'graphic'"
+                        item="related"
+                        class-name="'item-association__metadata item-association__metadata--bottom-overlay'"
+                        show-alt-text="true"
+                     ></sd-media-metadata-view>
                 </div>
                 <img ng-src="{{ related.renditions.viewImage.href}}"
                     ng-class="{'not-editable': !associations.isMediaEditable() || !editable}"

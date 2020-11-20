@@ -77,32 +77,11 @@ describe('package', () => {
         authoring.publish();
         monitoring.showSearch();
         globalSearch.setListView();
-        globalSearch.showCustomSearch();
+        globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
         globalSearch.toggleByType('text');
         expect(globalSearch.getTextItem(0)).toBe('item5');
         globalSearch.actionOnItem('Create package', 0);
         expect(authoring.getGroupItems('MAIN').count()).toBe(1);
-    });
-
-    xit('sets package item label', () => {
-        workspace.selectDesk('Politic Desk');
-        expect(monitoring.getTextItem(3, 1)).toBe('package2');
-        monitoring.actionOnItem('Edit', 3, 'package2');
-        monitoring.getPackageItemActionDropdown(0).click();
-        browser.actions()
-            .mouseMove(monitoring.getPackageItemLabelEntry())
-            .perform();
-        monitoring.getPackageItemLabelOption(1).click();
-        expect(monitoring.getPackageItemLabel(0).getText()).toBe('Featured');
-    });
-
-    xit('can preview package in a package', () => {
-        monitoring.actionOnItem('Edit', 3, 0);
-        monitoring.actionOnItemSubmenu('Add to current', 'main', 3, 1);
-        authoring.save();
-        authoring.close();
-        monitoring.previewAction(3, 0);
-        // There is no preview in preview, SD-3319
     });
 });
