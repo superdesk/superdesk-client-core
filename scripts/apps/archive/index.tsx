@@ -204,8 +204,10 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Duplicate to personal'),
                 icon: 'copy',
                 monitor: true,
-                controller: ['api', 'data', '$rootScope', (api, data, $rootScope) =>
-                    actions.copy(data.item, api, $rootScope)],
+                controller: ['data', '$injector', (data, $injector) => {
+                    data.isPersonal = true;
+                    $injector.invoke(ctrl.DuplicateController, {}, {data});
+                }],
                 filters: [{action: 'list', type: 'archive'}],
                 condition: (item: IArticle) => item.lock_user == null && item.task?.desk != null,
                 additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).copy],
