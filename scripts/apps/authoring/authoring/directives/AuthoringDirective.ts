@@ -532,6 +532,11 @@ export function AuthoringDirective(
                         let issues = _.get(response, 'data._issues');
 
                         if (issues) {
+                            if (appConfig.features.publishFromPersonal
+                                && orig?.task?.desk == null && item?.task?.desk && item?.task?.stage == null) {
+                                item['task'] = orig.task;
+                            }
+
                             if (angular.isDefined(issues['validator exception'])) {
                                 var errors = issues['validator exception'];
                                 var modifiedErrors = errors.replace(/\[/g, '')
