@@ -173,7 +173,7 @@ describe('API Provider', () => {
             expect(urls.resource).toHaveBeenCalledWith('users');
         }));
 
-        it('can update', inject((api, $httpBackend) => {
+        it('can update endpoint', inject((api, $httpBackend) => {
             var user;
             var userData = {
                 _links: {self: {href: USER_PATH}},

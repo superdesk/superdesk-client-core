@@ -31,19 +31,6 @@ describe('users api', () => {
         expect(user.FirstName).toBe('foo');
         expect(user.LastName).toBe('bar');
     }));
-
-    xit('can change user password', inject((usersService, resource, $rootScope) => {
-        var user: any = {UserPassword: {href: 'pwd_url'}};
-
-        spyOn(resource, 'replace');
-
-        usersService.changePassword(user.username, 'old', 'new');
-
-        expect(resource.replace).toHaveBeenCalledWith('pwd_url', {
-            old_pwd: 'old',
-            new_pwd: 'new',
-        });
-    }));
 });
 
 describe('userlist service', () => {

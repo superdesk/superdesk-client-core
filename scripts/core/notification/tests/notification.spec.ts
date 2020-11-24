@@ -34,6 +34,8 @@ describe('Reload Service', () => {
             });
 
             rootScope.$apply();
+
+            // eslint-disable-next-line jasmine/no-expect-in-setup-teardown
             expect(reloadService.userDesks.length).toBe(2);
         });
     });

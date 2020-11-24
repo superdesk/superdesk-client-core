@@ -72,6 +72,7 @@ export function openActionsMenu(elem, target, itemId) {
  * @param {integer} zIndex z-index styling to be applied to the elem
  */
 export function renderToBody(elem, target, zIndex = 1000) {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem()));
     positionPopup(target, zIndex);
 }

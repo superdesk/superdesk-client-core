@@ -15,7 +15,7 @@ describe('dictionaries', () => {
             expect(dictionaries.getRow('Test').count()).toBe(1);
         });
 
-        it('add dictionary', () => {
+        it('add personal dictionary', () => {
             dictionaries.addPersonalDictionary();
             dictionaries.setLanguageId('en');
             dictionaries.save();
