@@ -21,6 +21,8 @@ export function getStateLabel(itemState: ITEM_STATE) {
     case ITEM_STATE.PUBLISHED: return gettext('Published');
     case ITEM_STATE.SCHEDULED: return gettext('Scheduled');
     case ITEM_STATE.CORRECTED: return gettext('Corrected');
+    case ITEM_STATE.CORRECTION: return gettext('Correction');
+    case ITEM_STATE.BEING_CORRECTED: return gettext('Being Corrected');
     case ITEM_STATE.KILLED: return gettext('Killed');
     case ITEM_STATE.RECALLED: return gettext('Recalled');
     case ITEM_STATE.UNPUBLISHED: return gettext('Unpublished');
@@ -33,9 +35,14 @@ interface IProps {
 }
 
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
+
     if (props.item.state != null) {
         let title = getStateLabel(props.item.state);
         const text = title;
+        const openItem = function(event) {
+            event.stopPropagation();
+            props.openAuthoringView(props.item.archive_item.correction_by);
+        };
 
         if (props.item.state === 'scheduled') {
             const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
@@ -48,10 +55,13 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
         return (
             <span
                 title={title}
-                className={props.item.state === 'corrected' && appConfig?.corrections_workflow
+                className={props.item.state === 'correction' && appConfig?.corrections_workflow
                     ? 'label pink--500'
-                    : 'state-label state-' + props.item.state}
+                    : (props.item.state === 'being_corrected'
+                    ? 'label label--hollow hollow-pink--500'
+                    : 'state-label state-' + props.item.state)}
                 key="state"
+                onClick={props.item.state === 'being_corrected' ? openItem : null}
             >
                 {text}
             </span>
