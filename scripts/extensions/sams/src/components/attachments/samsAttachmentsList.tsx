@@ -84,21 +84,17 @@ class SamsAttachmentsListComponent extends React.Component<IProps, IState> {
             });
     }
 
-    canEditAttachment(file: IAttachment): boolean {
-        // We don't allow editing until we receive Assets and Sets
-        if (this.state.loading) {
-            return false;
-        }
-
+    getAttachmentSet(file: IAttachment): ISetItem | undefined {
         const mediaId = superdeskApi.entities.attachment.getMediaId(file);
         const asset = this.props.assets?.[mediaId];
 
-        return this.props.sets?.[asset?.set_id]?.state === SET_STATE.USABLE;
+        return this.props.sets?.[asset?.set_id];
     }
 
     renderFile(file: IAttachment) {
         const {gettext} = superdeskApi.localization;
-        const canEdit = this.canEditAttachment(file);
+        const set = this.getAttachmentSet(file);
+        const canEdit = this.state.loading === false && set?.state === SET_STATE.USABLE;
 
         return (
             <ListItem key={file._id} shadow={1}>
@@ -121,6 +117,14 @@ class SamsAttachmentsListComponent extends React.Component<IProps, IState> {
                         <ListItemRow>
                             <Label
                                 text={gettext('internal')}
+                                color="label--orange2"
+                            />
+                        </ListItemRow>
+                    )}
+                    {set?.state !== SET_STATE.DISABLED ? null : (
+                        <ListItemRow>
+                            <Label
+                                text={gettext('Set Disabled')}
                                 color="label--orange2"
                             />
                         </ListItemRow>
