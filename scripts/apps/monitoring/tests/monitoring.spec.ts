@@ -148,8 +148,15 @@ describe('monitoring', () => {
 
             expect(criteria.source.query.filtered.filter.and).toContain({
                 bool: {
-                    must: {term: {original_creator: session.identity._id}},
                     must_not: {exists: {field: 'task.desk'}},
+                    should: [
+                        {term: {'task.user': session.identity._id}},
+                        {bool: {
+                            must: {term: {original_creator: session.identity._id}},
+                            must_not: {exists: {field: 'task.user'}},
+                        }},
+                    ],
+                    minimum_should_match: 1,
                 },
             });
         }));
