@@ -76,8 +76,30 @@ angular.module('superdesk.core.menu', [
                 $scope.$apply();
             });
 
+            $scope.itemsForExport = null;
+
+            /**
+             * Called from:
+             * scripts/apps/archive/views/export.html
+             * scripts/apps/archive/directives/Export.ts
+             *
+             * It's a dirty solution to define it in the root scope, it would be better to pass it as a parameter
+             * to each directive instance, but that directive is already reading scopes of other controllers/directives
+             * and if `scope: {closeExport: '=?'}` was defined - these other scopes might become inaccessible
+             */
+            $scope.closeExport = () => {
+                $scope.itemsForExport = null;
+            };
+
+            const removeOpenExportListener = addInternalEventListener('openExportView', (event) => {
+                $scope.itemsForExport = event.detail;
+                $scope.$apply();
+            });
+
+            // remove listeners
             $scope.$on('$destroy', () => {
                 removeMultiPreviewEventListener();
+                removeOpenExportListener();
             });
         }
 

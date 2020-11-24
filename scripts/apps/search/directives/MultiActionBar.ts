@@ -15,7 +15,6 @@ interface IScope extends ng.IScope {
     display: any;
     type: any;
     activity: any;
-    export: boolean;
     spike: any;
     publish: any;
     state: any;
@@ -23,9 +22,7 @@ interface IScope extends ng.IScope {
     hideMultiActionBar(): void;
     hideMultiActionBar(): void;
     getActions(articles: Array<IArticle>): Array<IArticleActionBulkExtended>;
-    openExport();
     isOpenItemType(type: any): boolean;
-    closeExport(): void;
 }
 
 MultiActionBar.$inject = [
@@ -139,13 +136,12 @@ export function MultiActionBar(
                             canAutocloseMultiActionBar: false,
                         });
                     }
-                    if (scope.activity['export']) {
+                    if (scope.activity['export']) { // && (item not locked || locked in current session)
                         actions.push({
                             label: gettext('Export'),
                             icon: 'icon-download',
                             onTrigger: () => {
-                                scope.openExport();
-                                scope.$apply();
+                                dispatchInternalEvent('openExportView', multi.getIds());
                             },
                             canAutocloseMultiActionBar: false,
                         });
@@ -329,14 +325,6 @@ export function MultiActionBar(
                 return openItem && openItem.type === type;
             };
 
-            scope.openExport = function() {
-                scope.export = true;
-            };
-
-            scope.closeExport = function() {
-                scope.export = false;
-            };
-
             /**
              * Detects type of all selected items and assign it to scope,
              * but only when it's same for all of them.
@@ -355,7 +343,7 @@ export function MultiActionBar(
                     states.push(item.state);
 
                     var _activities = superdesk.findActivities({action: 'list', type: type}, item) || [];
-                    let allowOnSessionOwnerLock = ['spike', 'export'];
+                    let allowOnSessionOwnerLock = ['spike'];
 
                     _activities.forEach((activity) => {
                         // Ignore activities if the item is locked (except those in allowOnSessionOwnerLock)

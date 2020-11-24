@@ -24,6 +24,8 @@
     <div id="superdesk-workqueue" ng-if="superdesk.flags.workspace === true && superdesk.flags.workqueue === true" sd-workqueue></div>
     <div sd-item-preview-container></div>
 
+    <div ng-if="itemsForExport != null" sd-export></div>
+
     <div
         ng-if="fullPreviewItems.length > 0"
         sd-full-preview
