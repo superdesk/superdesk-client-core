@@ -62,6 +62,7 @@ export const DEFAULT_LIST_CONFIG = {
     ],
     secondLine: [
         'profile',
+        'state',
         'scheduledDateTime',
         'embargo',
         'update',

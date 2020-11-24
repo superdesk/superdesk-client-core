@@ -55,7 +55,7 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
         return (
             <span
                 title={title}
-                className={props.item.state === 'correction' && appConfig?.corrections_workflow
+                className={props.item.state === 'correction'
                     ? 'label pink--500'
                     : (props.item.state === 'being_corrected'
                     ? 'label label--hollow hollow-pink--500'
