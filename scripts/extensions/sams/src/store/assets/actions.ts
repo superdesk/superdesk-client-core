@@ -16,11 +16,13 @@ import {
 import {samsApi} from '../../apis';
 
 // Redux Selectors
-import {getAssetListStyle,
+import {
+    getAssetListStyle,
     getAssetSearchParams,
     getSelectedAssetId,
     getSelectedAssetIds,
     getSelectedAssetItems,
+    getAssets,
 } from './selectors';
 
 export function receiveAssets(
@@ -197,5 +199,23 @@ export function deleteMultipleAssets(): (dispatch: any, getState: any) => void {
                     dispatch(closeMultiActionBar());
                 }),
         );
+    };
+}
+
+export function loadAssetsByIds(ids: Array<string>): IThunkAction<void> {
+    return (dispatch, getState) => {
+        const loadedAssetIds = Object.keys(getAssets(getState()));
+        const attachmentsToLoad = ids.filter(
+            (id) => !loadedAssetIds.includes(id),
+        );
+
+        if (attachmentsToLoad.length === 0) {
+            return Promise.resolve();
+        }
+
+        return samsApi.assets.getByIds(attachmentsToLoad)
+            .then((response) => {
+                dispatch(receiveAssets(response));
+            });
     };
 }

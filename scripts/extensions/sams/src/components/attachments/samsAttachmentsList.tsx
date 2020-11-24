@@ -1,8 +1,17 @@
 // External Modules
 import * as React from 'react';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
 
 // Types
 import {IAttachment} from 'superdesk-api';
+import {superdeskApi} from '../../apis';
+import {IAssetItem, ISetItem, SET_STATE} from '../../interfaces';
+import {IApplicationState} from '../../store';
+
+// Redux Actions & Selectors
+import {getAssets} from '../../store/assets/selectors';
+import {loadAssetsByIds} from '../../store/assets/actions';
 
 // UI
 import {Icon, Label, IconButton} from 'superdesk-ui-framework/react';
@@ -18,21 +27,79 @@ import {getIconTypeFromMimetype, getHumanReadableFileSize} from '../../utils/ui'
 
 interface IProps {
     files: Array<IAttachment>;
+    assets: Dictionary<string, IAssetItem>;
+    sets: Dictionary<string, ISetItem>;
     readOnly: boolean;
 
     editFile: (file: IAttachment) => void;
     download: (file: IAttachment) => void;
     removeFile: (file: IAttachment) => void;
+
+    loadAssetsByIds(ids: Array<string>): Promise<void>;
 }
 
-export class SamsAttachmentsList extends React.PureComponent<IProps> {
+interface IState {
+    loading: boolean;
+}
+
+const mapStateToProps = (state: IApplicationState) => ({
+    assets: getAssets(state),
+});
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    loadAssetsByIds: (ids: Array<string>) => dispatch<any>(loadAssetsByIds(ids)),
+});
+
+class SamsAttachmentsListComponent extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
+
+        this.state = {
+            loading: false,
+        };
 
         this.renderFile = this.renderFile.bind(this);
     }
 
+    componentDidMount() {
+        this.loadAssets();
+    }
+
+    componentDidUpdate(prevProps: Readonly<IProps>) {
+        if (prevProps.files.length !== this.props.files.length) {
+            this.loadAssets();
+        }
+    }
+
+    loadAssets() {
+        this.setState({loading: true});
+        const {getMediaId} = superdeskApi.entities.attachment;
+        const mediaIds = this.props.files.map(
+            (file) => getMediaId(file),
+        );
+
+        this.props.loadAssetsByIds(mediaIds)
+            .then(() => {
+                this.setState({loading: false});
+            });
+    }
+
+    canEditAttachment(file: IAttachment): boolean {
+        // We don't allow editing until we receive Assets and Sets
+        if (this.state.loading) {
+            return false;
+        }
+
+        const mediaId = superdeskApi.entities.attachment.getMediaId(file);
+        const asset = this.props.assets?.[mediaId];
+
+        return this.props.sets?.[asset?.set_id]?.state === SET_STATE.USABLE;
+    }
+
     renderFile(file: IAttachment) {
+        const {gettext} = superdeskApi.localization;
+        const canEdit = this.canEditAttachment(file);
+
         return (
             <ListItem key={file._id} shadow={1}>
                 <ListItemColumn>
@@ -52,7 +119,10 @@ export class SamsAttachmentsList extends React.PureComponent<IProps> {
                     </ListItemRow>
                     {file.internal === false ? null : (
                         <ListItemRow>
-                            <Label text={'internal'} color="label--orange2" />
+                            <Label
+                                text={gettext('internal')}
+                                color="label--orange2"
+                            />
                         </ListItemRow>
                     )}
                 </ListItemColumn>
@@ -64,11 +134,13 @@ export class SamsAttachmentsList extends React.PureComponent<IProps> {
                     />
                     {this.props.readOnly === true ? null : (
                         <React.Fragment>
-                            <IconButton
-                                ariaValue="edit"
-                                onClick={() => this.props.editFile(file)}
-                                icon="pencil"
-                            />
+                            {canEdit === false ? null : (
+                                <IconButton
+                                    ariaValue="edit"
+                                    onClick={() => this.props.editFile(file)}
+                                    icon="pencil"
+                                />
+                            )}
                             <IconButton
                                 ariaValue="delete"
                                 onClick={() => this.props.removeFile(file)}
@@ -84,6 +156,9 @@ export class SamsAttachmentsList extends React.PureComponent<IProps> {
     render() {
         return (
             <div className="attachments-list">
+                {this.state.loading === false ? null : (
+                    <div className="sd-loader" />
+                )}
                 {this.props.files.length === 0 ? null : (
                     <ul>
                         {this.props.files.map(this.renderFile)}
@@ -93,3 +168,8 @@ export class SamsAttachmentsList extends React.PureComponent<IProps> {
         );
     }
 }
+
+export const SamsAttachmentsList = connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(SamsAttachmentsListComponent);
