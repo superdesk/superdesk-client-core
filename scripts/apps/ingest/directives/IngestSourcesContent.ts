@@ -40,6 +40,7 @@ interface IProvider {
     last_opened?: {};
     critical_errors?: {};
     skip_config_test?: boolean;
+    url_id?: string;
 }
 
 IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
@@ -620,14 +621,27 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 };
 
                 /**
+                 * Generates ID compatible with MongoDB's ObjectID
+                 */
+                function mongoDBObjectId(): str {
+                    let oid = Math.floor(Date.now()/1000).toString(16);
+                    for (let i = 0; i < 16; i++) {
+                        oid += Math.floor(Math.random()*16).toString(16);
+                    }
+                    return oid;
+                }
+
+
+                /**
                  * Do URL request specified in url_request field
                  * @param provider ingest provider metadata
                  * @param field url_request field metadata
                  */
                 $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
                     let provider_name = encodeURIComponent(provider.name);
+                    provider.url_id = mongoDBObjectId();
 
-                    window.open(field.url.replace('{PROVIDER_NAME}', provider_name));
+                    window.open(field.url.replace('{OID}', provider.url_id));
                 };
 
                 function getCurrentService() {
