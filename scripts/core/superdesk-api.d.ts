@@ -481,11 +481,28 @@ declare module 'superdesk-api' {
     }
 
     export interface IDesk extends IBaseRestApiResponse {
-        incoming_stage: IStage['_id'];
-        members: Array<IUser['_id']>;
         name: string;
-        desk_type: 'authoring' | 'production';
+        description?: string;
+        members: Array<IUser['_id']>;
+        incoming_stage: IStage['_id'];
         working_stage: IStage['_id'];
+        content_expiry?: number;
+        source: string;
+        monitoring_settings?: Array<{
+            _id: string;
+            type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+            max_items: number;
+        }>;
+        desk_type: 'authoring' | 'production';
+        desk_metadata: {[key: string]: any};
+        content_profiles: {[key: IContentProfile['_id']]: any};
+        desk_language?: string;
+        monitoring_default_view?: 'list' | 'swimlane' | 'photogrid';
+        default_content_profile: string;
+        default_content_template: string;
+        slack_channel_name?: string;
+        preferred_cv_items: {[key: string]: any};
+        preserve_published_content: boolean;
     }
 
     export interface IStage extends IBaseRestApiResponse {
