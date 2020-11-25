@@ -75,6 +75,7 @@ export default class MenuItem extends React.Component<IProps, IState> {
     }
 
     setPosition() {
+        // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
         const targetRect = thisNode.getBoundingClientRect();
         const BUFFER = 250;

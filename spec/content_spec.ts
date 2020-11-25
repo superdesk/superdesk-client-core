@@ -22,6 +22,8 @@ describe('content', () => {
         workspace.open();
         workspace.createWorkspace('Personal');
         workspace.switchToDesk('PERSONAL');
+
+        // eslint-disable-next-line jasmine/no-expect-in-setup-teardown
         expect(element.all(by.css('.media-box')).count()).toBe(2);
     });
 
@@ -131,21 +133,6 @@ describe('content', () => {
         authoring.close();
 
         expect(content.count()).toBe(3);
-    });
-
-    xit('can close unsaved empty package in a desk', () => {
-        workspace.switchToDesk('SPORTS DESK');
-        content.setListView();
-
-        element(by.className('sd-create-btn')).click();
-        element(by.id('create_package')).click();
-
-        element.all(by.model('item.headline')).first().sendKeys('Empty Package');
-        authoring.close();
-
-        element.all(by.className('btn--warning')).first().click();
-
-        browser.wait(() => content.count().then((contentCount) => contentCount && contentCount === 2), 500);
     });
 
     it('can open item using hotkey ctrl+0', () => {

@@ -8,13 +8,14 @@
  * at https://www.sourcefabric.org/superdesk/license
  */
 
-import {element, by} from 'protractor';
+import {element, by, browser} from 'protractor';
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {assertToastMsg, refresh} from './helpers/utils';
 import {desks} from './helpers/desks';
 import {contentProfiles} from './helpers/content_profiles';
+import {ECE, els} from 'end-to-end-testing-helpers';
 
 describe('desks', () => {
     beforeEach(() => {
@@ -217,14 +218,22 @@ describe('desks', () => {
         authoring.createTextItemFromTemplate('testing');
         authoring.writeTextToHeadlineFromRecentTemplate('new item');
         authoring.save();
-        expect(monitoring.getGroupItems(0).count()).toBe(1);
+
+        browser.wait(ECE.hasElementCount(
+            els(['article-item'], null, els(['monitoring-group']).get(0)),
+            1,
+        ));
 
         // confirm incoming rule kicks in
         authoring.sendTo('Test Desk', 'Test Stage A');
         // FIXME: Improve error messages
         assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
             + ' in incoming rule:Validate for Publish for stage:Test Stage A');
-        expect(monitoring.getGroupItems(2).count()).toBe(0);
+
+        browser.wait(ECE.hasElementCount(
+            els(['article-item'], null, els(['monitoring-group']).get(2)),
+            0,
+        ));
 
         authoring.closeSendAndPublish();
         authoring.close();
@@ -235,7 +244,10 @@ describe('desks', () => {
         // FIXME: Improve error messages
         assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
             + ' in onstage rule:Validate for Publish for stage:Test Stage C');
-        expect(monitoring.getGroupItems(4).count()).toBe(1);
+        browser.wait(ECE.hasElementCount(
+            els(['article-item'], null, els(['monitoring-group']).get(4)),
+            1,
+        ));
 
         authoring.closeSendAndPublish();
         authoring.close();
@@ -248,7 +260,13 @@ describe('desks', () => {
         // FIXME: Improve error messages
         assertToastMsg('error', 'Error:["BODY HTML is a required field", "SUBJECT is a required field"]'
             + ' in outgoing rule:Validate for Publish for stage:Test Stage B');
-        expect(monitoring.getGroupItems(3).count()).toBe(1);
-        expect(monitoring.getGroupItems(2).count()).toBe(0);
+        browser.wait(ECE.hasElementCount(
+            els(['article-item'], null, els(['monitoring-group']).get(3)),
+            1,
+        ));
+        browser.wait(ECE.hasElementCount(
+            els(['article-item'], null, els(['monitoring-group']).get(2)),
+            0,
+        ));
     });
 });

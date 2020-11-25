@@ -43,8 +43,8 @@ describe('editor3.components.toolbar', () => {
         wrapper.find('StyleButton').forEach((btn) => {
             const key = btn.key();
 
-            expect(opts.indexOf(key) > -1).toBeTruthy();
-            expect(['h3', 'h4', 'h5', 'h6', 'quote', 'ol'].indexOf(key)).toEqual(-1);
+            expect(opts).toContain(key);
+            expect(['h3', 'h4', 'h5', 'h6', 'quote', 'ol']).not.toContain(key);
         });
     });
 
@@ -61,7 +61,7 @@ describe('editor3.components.toolbar', () => {
         wrapper.find('StyleButton').forEach((btn) => {
             const key = btn.key();
 
-            expect(opts.indexOf(key) > -1).toBeTruthy();
+            expect(opts).toContain(key);
             expect(key).not.toEqual('ITALIC');
         });
     });

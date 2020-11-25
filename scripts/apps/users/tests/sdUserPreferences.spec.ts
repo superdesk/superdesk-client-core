@@ -204,7 +204,7 @@ describe('sdUserPreferences directive', () => {
             });
         });
 
-        it('marks the form as dirty', () => {
+        it('checkAll() marks the form as dirty', () => {
             scope.userPrefs.$dirty = false;
             scope.checkAll();
             expect(scope.userPrefs.$dirty).toBe(true);
@@ -228,7 +228,7 @@ describe('sdUserPreferences directive', () => {
             });
         });
 
-        it('marks the form as dirty', () => {
+        it('checkNone() marks the form as dirty', () => {
             scope.userPrefs.$dirty = false;
             scope.checkNone();
             expect(scope.userPrefs.$dirty).toBe(true);
@@ -256,7 +256,7 @@ describe('sdUserPreferences directive', () => {
             });
         });
 
-        it('marks the form as dirty', () => {
+        it('checkDefault() marks the form as dirty', () => {
             scope.userPrefs.$dirty = false;
             scope.checkDefault();
             expect(scope.userPrefs.$dirty).toBe(true);
