@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {cloneDeep} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IFeedingServiceField {
     id?: string;
@@ -620,17 +621,6 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     return feedingService ? feedingService.templateUrl : '';
                 };
 
-                /**
-                 * Generates ID compatible with MongoDB's ObjectID
-                 */
-                function mongoDBObjectId(): str {
-                    let oid = Math.floor(Date.now()/1000).toString(16);
-                    for (let i = 0; i < 16; i++) {
-                        oid += Math.floor(Math.random()*16).toString(16);
-                    }
-                    return oid;
-                }
-
 
                 /**
                  * Do URL request specified in url_request field
@@ -638,9 +628,9 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @param field url_request field metadata
                  */
                 $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
-                    provider.url_id = mongoDBObjectId();
+                    provider.url_id = uuidv4();
 
-                    window.open(field.url.replace('{OID}', provider.url_id));
+                    window.open(field.url.replace('{URL_ID}', provider.url_id));
                 };
 
                 function getCurrentService() {
