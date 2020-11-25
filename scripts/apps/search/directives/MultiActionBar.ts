@@ -1,14 +1,9 @@
 import _ from 'lodash';
-import {gettext} from 'core/utils';
-import {showModal} from 'core/services/modalService';
-import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
 import {IArticleActionBulkExtended} from 'apps/monitoring/MultiActionBarReact';
 import {IArticle} from 'superdesk-api';
-import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {dataApi} from 'core/helpers/CrudManager';
-import {canPrintPreview} from '../helpers';
 import {getMultiActions} from '../controllers/get-multi-actions';
-import {dispatchInternalEvent} from 'core/internal-events';
+import ng from 'core/services/ng';
+import {getBulkActions} from '../controllers/get-bulk-actions';
 
 interface IScope extends ng.IScope {
     multi: any;
@@ -25,35 +20,38 @@ interface IScope extends ng.IScope {
     isOpenItemType(type: any): boolean;
 }
 
+export function isOpenItemType(type) {
+    var openItem = ng.get('authoringWorkspace').getItem();
+
+    return openItem && openItem.type === type;
+}
+
 MultiActionBar.$inject = [
     'asset',
     'multi',
-    'authoringWorkspace',
     'superdesk',
     'keyboardManager',
-    'desks',
     'api',
     'archiveService',
-    'authoring',
 ];
 export function MultiActionBar(
     asset,
     multi,
-    authoringWorkspace: AuthoringWorkspaceService,
     superdesk,
     keyboardManager,
-    desks,
     api,
     archiveService,
-    authoring,
 ) {
     return {
         templateUrl: asset.templateUrl('apps/search/views/multi-action-bar.html'),
         scope: true,
         link: function(scope: IScope) {
+            const getSelectedItems = () => multi.getItems();
+            const unselectAll = () => multi.reset();
+
             const multiActions = getMultiActions(
-                () => multi.getItems(),
-                () => multi.reset(),
+                getSelectedItems,
+                unselectAll,
             );
 
             scope.multi = multi;
@@ -72,228 +70,15 @@ export function MultiActionBar(
                 scope.display = multi.reset();
             };
 
-            scope.getActions = (articles: Array<IArticle>): Array<IArticleActionBulkExtended> => {
-                const actions: Array<IArticleActionBulkExtended> = [];
-
-                if (scope.type === 'ingest') {
-                    actions.push({
-                        label: gettext('Fetch'),
-                        icon: 'icon-archive',
-                        onTrigger: () => {
-                            multiActions.send();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-                    actions.push({
-                        label: gettext('Fetch to'),
-                        icon: 'icon-fetch-as',
-                        onTrigger: () => {
-                            multiActions.sendAs();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-
-                    if (multiActions.canRemoveIngestItems()) {
-                        actions.push({
-                            label: gettext('Remove'),
-                            icon: 'icon-trash',
-                            onTrigger: () => {
-                                multiActions.removeIngestItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                } else if (scope.type === 'externalsource') {
-                    actions.push({
-                        label: gettext('Fetch'),
-                        icon: 'icon-archive',
-                        onTrigger: () => {
-                            multiActions.fetch();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    }, {
-                        label: gettext('Fetch to'),
-                        icon: 'icon-fetch-as',
-                        onTrigger: () => {
-                            multiActions.fetch(true);
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-                } else if (scope.type === 'archive') {
-                    if (multiActions.canEditMetadata() && scope.activity['edit.item']) {
-                        actions.push({
-                            label: gettext('Edit metadata'),
-                            icon: 'icon-edit-line',
-                            onTrigger: () => {
-                                multiActions.multiImageEdit();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.activity['export']) { // && (item not locked || locked in current session)
-                        actions.push({
-                            label: gettext('Export'),
-                            icon: 'icon-download',
-                            onTrigger: () => {
-                                dispatchInternalEvent('openExportView', multi.getIds());
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-
-                    if (articles.every((item) => authoring.itemActions(item).edit === true)) {
-                        actions.push({
-                            label: gettext('Multiedit'),
-                            icon: 'icon-multiedit',
-                            onTrigger: () => {
-                                multiActions.multiedit();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (!scope.spike && !scope.publish && scope.activity['spike']) {
-                        actions.push({
-                            label: gettext('Spike'),
-                            icon: 'icon-trash',
-                            onTrigger: () => {
-                                multiActions.spikeItems();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.activity['edit.item']) {
-                        actions.push({
-                            label: gettext('Send to'),
-                            icon: 'icon-expand-thin',
-                            onTrigger: () => {
-                                multiActions.sendAs();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                    if (scope.activity['edit.item'] && multiActions.canPublishItem()) {
-                        actions.push({
-                            label: gettext('Publish'),
-                            icon: 'icon-ok',
-                            onTrigger: () => {
-                                multiActions.publish();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-                } else if (scope.type === 'spike') {
-                    actions.push({
-                        label: gettext('Unspike'),
-                        icon: 'icon-unspike',
-                        onTrigger: () => {
-                            multiActions.unspikeItems();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-                }
-
-                if (multiActions.canPackageItems()) {
-                    actions.push({
-                        label: gettext('Create Package'),
-                        icon: 'icon-package-create',
-                        onTrigger: () => {
-                            multiActions.createPackage();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-
-                    if (scope.isOpenItemType('composite')) {
-                        actions.push({
-                            label: gettext('Add to Current Package'),
-                            icon: 'icon-package-plus',
-                            onTrigger: () => {
-                                multiActions.addToPackage();
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: false,
-                        });
-                    }
-
-                    const currentDeskId = desks.getCurrentDeskId();
-
-                    if (currentDeskId != null && multiActions.canHighlightItems()) {
-                        actions.push({
-                            label: gettext('Add to highlight'),
-                            icon: 'icon-star',
-                            onTrigger: () => {
-                                showModal(getModalForMultipleHighlights(articles, currentDeskId));
-                                scope.$apply();
-                            },
-                            canAutocloseMultiActionBar: true,
-                        });
-                    }
-                }
-
-                if (scope.activity['duplicateTo']) {
-                    actions.push({
-                        label: gettext('Duplicate To'),
-                        icon: 'icon-copy',
-                        group: {
-                            label: gettext('Duplicate'),
-                            icon: 'icon-copy',
-                        },
-                        onTrigger: () => {
-                            multiActions.duplicateTo();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-                }
-
-                if (scope.activity['duplicateInPlace']) {
-                    actions.push({
-                        label: gettext('Duplicate In Place'),
-                        icon: 'icon-copy',
-                        group: {
-                            label: gettext('Duplicate'),
-                            icon: 'icon-copy',
-                        },
-                        onTrigger: () => {
-                            multiActions.duplicateInPlace();
-                            scope.$apply();
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-                }
-
-                if (articles.every((item) => canPrintPreview(item))) {
-                    actions.push({
-                        label: gettext('Print'),
-                        icon: 'icon-print',
-                        onTrigger: () => {
-                            const ids: Array<string> = multi.getIds();
-
-                            scope.hideMultiActionBar();
-
-                            Promise.all(
-                                ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
-                            ).then((res: Array<IArticle>) => {
-                                dispatchInternalEvent('openFullPreview', res);
-                            });
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-                }
-
-                return actions;
-            };
+            scope.getActions = (articles: Array<IArticle>): Array<IArticleActionBulkExtended> => getBulkActions(
+                articles,
+                multiActions,
+                getSelectedItems,
+                unselectAll,
+                () => {
+                    scope.$apply();
+                },
+            );
 
             scope.$on('item:lock', (_e, data) => {
                 if (_.includes(multi.getIds(), data.item)) {
@@ -319,11 +104,7 @@ export function MultiActionBar(
                 }
             });
 
-            scope.isOpenItemType = function(type) {
-                var openItem = authoringWorkspace.getItem();
-
-                return openItem && openItem.type === type;
-            };
+            scope.isOpenItemType = isOpenItemType;
 
             /**
              * Detects type of all selected items and assign it to scope,
