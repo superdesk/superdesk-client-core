@@ -1,27 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {DebounceInput} from 'react-debounce-input';
-import {isNil, uniqueId} from 'lodash';
+import {uniqueId} from 'lodash';
 import './style.scss';
 import {gettext} from 'core/utils';
 
-/**
- * @ngdoc react
- * @name SearchBar
- * @description Component to search by debounced input to fetch results from backend
- */
-export default class SearchBar extends React.Component<any, any> {
+interface IProps {
+    onSearch(queryString: string): void;
+    extendOnOpen?: boolean;
+    allowCollapsed?: boolean;
+    timeout?: number;
+    minLength?: number;
+    initialValue?: string;
+}
+
+interface IState {
+    searchBarExtended: boolean;
+    searchInputValue: string;
+    uniqueId: string;
+}
+
+export default class SearchBar extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
     dom: any;
 
-    constructor(props) {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             // initialize state from props
-            searchBarExtended: !isNil(this.props.value),
-            searchInputValue: this.props.value || '',
+            searchBarExtended: !props.allowCollapsed,
+            searchInputValue: props.initialValue ?? '',
             uniqueId: uniqueId('SearchBar'),
         };
 
@@ -55,12 +64,12 @@ export default class SearchBar extends React.Component<any, any> {
             searchBarExtended: false,
             searchInputValue: '',
         });
-        this.props.onSearch();
+        this.props.onSearch('');
     }
 
     resetSearchValue() {
         this.setState({
-            searchInputValue: this.props.value,
+            searchInputValue: '',
         });
     }
 
@@ -76,7 +85,7 @@ export default class SearchBar extends React.Component<any, any> {
     }
 
     render() {
-        const {timeout, allowCollapsed} = this.props;
+        const {timeout} = this.props;
         const {searchBarExtended} = this.state;
         const _uniqueId = this.state.uniqueId;
         const minLength = this.props.minLength ? this.props.minLength : 2;
@@ -101,7 +110,7 @@ export default class SearchBar extends React.Component<any, any> {
                         placeholder={gettext('Search')}
                         type="text"
                     />
-                    {allowCollapsed && (
+                    {searchBarExtended && this.state.searchInputValue.trim().length > 0 && (
                         <button
                             type="button"
                             className="search-close visible"
@@ -115,15 +124,6 @@ export default class SearchBar extends React.Component<any, any> {
         );
     }
 }
-
-SearchBar.propTypes = {
-    onSearch: PropTypes.func.isRequired,
-    value: PropTypes.string,
-    minLength: PropTypes.number,
-    extendOnOpen: PropTypes.bool,
-    timeout: PropTypes.number,
-    allowCollapsed: PropTypes.bool,
-};
 
 SearchBar.defaultProps = {
     timeout: 800,

@@ -131,7 +131,6 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                 onMonitoringItemSelect={scope.onMonitoringItemSelect}
                 onMonitoringItemDoubleClick={scope.onMonitoringItemDoubleClick}
                 hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
-                disableMonitoringMultiSelect={scope.disableMonitoringMultiSelect}
                 singleLine={scope.singleLine}
                 customRender={scope.customRender}
                 viewType={scope.viewType}
@@ -141,9 +140,12 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                 groupId={scope.$id}
                 edit={scope.edit}
                 preview={scope.preview}
-                multiSelect={this.multiSelect}
-                setSelectedItem={(itemId) => {
-                    this.setState({selected: itemId});
+                multiSelect={scope.disableMonitoringMultiSelect ? undefined : {
+                    kind: 'legacy',
+                    multiSelect: this.multiSelect,
+                    setSelectedItem: (itemId) => {
+                        this.setState({selected: itemId});
+                    },
                 }}
                 narrow={this.state.narrow}
                 view={this.state.view}

@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, browser, protractor, ElementFinder} from 'protractor';
+import {element, by, browser, protractor, ElementFinder, promise as wdpromise} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
 import {s, ECE, el, els} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
@@ -54,7 +54,7 @@ class Monitoring {
     selectGivenItem: (item: any) => any;
     spikeMultipleItems: () => void;
     unspikeMultipleItems: any;
-    unspikeItem: any;
+    unspikeItem: (item, desk?, stage?) => wdpromise.Promise<void>;
     openItemMenu: (group: any, item: any) => ElementFinder;
     showMonitoringSettings: () => void;
     setLabel: (label: any) => void;
@@ -139,6 +139,8 @@ class Monitoring {
 
         this.showSpiked = function() {
             element(by.className('big-icon--spike')).click();
+
+            browser.wait(ECE.presenceOf(els(['article-item']).get(0)));
         };
 
         /**
@@ -254,7 +256,13 @@ class Monitoring {
         };
 
         this.getSpikedItems = function() {
-            return this.getAllItems();
+            const wrapper = el(['articles-list']);
+
+            browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)));
+
+            const items = els(['article-item'], null, wrapper);
+
+            return items;
         };
 
         this.getAllItems = function() {
@@ -467,7 +475,7 @@ class Monitoring {
             return element(by.buttonText('send')).click();
         };
 
-        this.unspikeItem = function(item, desk, stage) {
+        this.unspikeItem = function(item, desk?, stage?) {
             var itemElem = this.getSpikedItem(item);
 
             browser.actions().mouseMove(itemElem).perform();

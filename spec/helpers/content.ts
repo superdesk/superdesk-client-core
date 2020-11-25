@@ -156,7 +156,7 @@ class Content {
 
         this.selectItem = function(item) {
             var crtItem = this.getItem(item);
-            var typeIcon = crtItem.element(by.className('type-icon'));
+            var typeIcon = crtItem.element(by.css('[data-test-id="multi-select-checkbox"]'));
 
             expect(typeIcon.isDisplayed()).toBe(true);
             browser.actions()
@@ -164,7 +164,7 @@ class Content {
                 .mouseMove(crtItem)
                 .mouseMove(typeIcon)
                 .perform();
-            return typeIcon.element(by.className('selectbox')).click();
+            return typeIcon.click();
         };
 
         this.spikeItems = function() {

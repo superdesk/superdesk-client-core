@@ -1,21 +1,23 @@
 import React from 'react';
-import {ItemContainer, SelectBox} from './index';
+import {ItemContainer} from './index';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {MultiSelectCheckbox} from './MultiSelectCheckbox';
 
 function hasThumbnail(item) {
     return item.renditions && item.renditions.thumbnail;
 }
 
 interface IProps {
-    onMultiSelect: any;
     desk: any;
     item: any;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
 /**
  * Media Preview - renders item thumbnail
  */
 export const MediaPreview: React.StatelessComponent<IProps> = (props) => {
-    const item = props.item;
+    const {item, multiSelect} = props;
     const headline = item.headline || item.slugline || item.type;
     // headline could contains html tags hence stripping for tooltips
     const headlineText = headline.replace(/(<([^>]+)>)/ig, '');
@@ -28,30 +30,24 @@ export const MediaPreview: React.StatelessComponent<IProps> = (props) => {
         );
     }
 
-    return React.createElement(
-        'div',
-        {className: 'media multi'},
-        preview ? React.createElement(
-            'figure',
-            null,
-            preview,
-        ) : null,
-        React.createElement(
-            'span',
-            {className: 'text'},
-            React.createElement(
-                'small',
-                {title: headlineText,
-                    dangerouslySetInnerHTML: {__html: headline}},
-            ),
-            React.createElement(ItemContainer, {
-                item: item,
-                desk: props.desk,
-            }),
-        ),
-        React.createElement(SelectBox, {
-            item: item,
-            onMultiSelect: props.onMultiSelect,
-        }),
+    return (
+        <div className="media multi">
+            {
+                preview ?
+                    (<figure>{preview}</figure>)
+                    : null
+            }
+            <span className="text">
+                <small title={headlineText} dangerouslySetInnerHTML={{__html: headline}} />
+                <ItemContainer
+                    item={item}
+                    desk={props.desk}
+                />
+            </span>
+            <MultiSelectCheckbox
+                item={item}
+                multiSelect={multiSelect}
+            />
+        </div>
     );
 };

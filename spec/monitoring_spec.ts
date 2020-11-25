@@ -502,12 +502,16 @@ describe('monitoring', () => {
         browser.sleep(100);
 
         monitoring.showSpiked();
-        browser.sleep(100);
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
 
         monitoring.unspikeItem(0);
-        browser.sleep(100);
-        expect(monitoring.getSpikedItems().count()).toBe(0);
+
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, el(['articles-list'])),
+                0,
+            ),
+        );
     });
 
     it('updates personal on single item spike', () => {
@@ -543,7 +547,12 @@ describe('monitoring', () => {
         monitoring.selectSpikedItem(0);
         browser.sleep(1000); // Wait for animation
         monitoring.unspikeMultipleItems();
-        expect(monitoring.getSpikedItems().count()).toBe(0);
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, el(['articles-list'])),
+                0,
+            ),
+        );
     });
 
     it('can show/hide monitoring list', () => {
