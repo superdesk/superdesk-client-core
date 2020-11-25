@@ -638,7 +638,6 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @param field url_request field metadata
                  */
                 $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
-                    let provider_name = encodeURIComponent(provider.name);
                     provider.url_id = mongoDBObjectId();
 
                     window.open(field.url.replace('{OID}', provider.url_id));
