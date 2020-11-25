@@ -92,6 +92,12 @@ export function AuthoringDirective(
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
+            const isPersonalSpace = $location.path() === '/workspace/personal';
+
+            $scope.toDeskEnabled = false; // Send an Item to a desk
+            $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
+            $scope.publishEnabled = false; // publish an item
+            $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
 
             desks.fetchCurrentUserDesks().then((desksList) => {
                 userDesks = desksList;
@@ -129,6 +135,27 @@ export function AuthoringDirective(
                     $scope.origItem.flags = oldValue;
                     $scope.dirty = true;
                 }
+            }, true);
+
+            function checkShortcutButtonAvailability(personal = false) {
+                if (personal && appConfig?.features?.publishFromPersonal) {
+                    return $scope.item.state !== 'draft' || $scope.dirty;
+                }
+                return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
+            }
+
+            $scope.$watch('item', () => {
+                $scope.toDeskEnabled = appConfig?.features?.customAuthoringTopbar?.toDesk
+                && !isPersonalSpace && checkShortcutButtonAvailability();
+
+                $scope.closeAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.closeAndContinue
+                && !isPersonalSpace && checkShortcutButtonAvailability();
+
+                $scope.publishEnabled = appConfig?.features?.customAuthoringTopbar?.publish
+                    && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
+
+                $scope.publishAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.publishAndContinue
+                    && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
             }, true);
 
             $scope._isInProductionStates = !isPublished($scope.origItem);
@@ -182,10 +209,10 @@ export function AuthoringDirective(
              * Check if it is allowed to publish on desk
              * @returns {Boolean}
              */
-            $scope.canPublishOnDesk = function() {
+            function canPublishOnDesk() {
                 return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
                     privileges.userHasPrivileges({publish: 1});
-            };
+            }
 
             getDeskStage();
             getCurrentTemplate();
@@ -444,6 +471,26 @@ export function AuthoringDirective(
                 const initialValue: Promise<onPublishMiddlewareResult> = Promise.resolve({});
 
                 $scope.error = {};
+
+                if (appConfig.features.publishFromPersonal && !orig?.task?.desk && !item?.task?.desk) {
+                    var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
+
+                    item.task = {
+                        ...(item.task ?? {}),
+                        desk: currentDeskId,
+                    };
+
+                    if (item.associations) {
+                        Object.keys(item.associations).forEach((key) => {
+                            if (item.associations[key] != null) {
+                                item.associations[key].task = {
+                                    ...(item.associations[key].task ?? {}),
+                                    desk: currentDeskId,
+                                };
+                            }
+                        });
+                    }
+                }
 
                 return onPublishMiddlewares.reduce(
                     (current, next) => {
@@ -711,11 +758,9 @@ export function AuthoringDirective(
                 return false;
             }
 
-            $scope.showCustomButtons = function(item) {
-                if ($location.path() === '/workspace/personal') {
-                    return false;
-                }
-                return item.task && item.task.desk && item.state !== 'draft' || $scope.dirty;
+            $scope.showCustomButtons = () => {
+                return $scope.toDeskEnabled || $scope.closeAndContinueEnabled
+                    || $scope.publishAndContinueEnabled || $scope.publishEnabled;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {

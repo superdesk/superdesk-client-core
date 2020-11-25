@@ -42,14 +42,14 @@
           translate>Read-only</span>
     </div>
 
-    <div class="subnav__stretch-bar sd-overflow-ellipsis" ng-if="showCustomButtons(item)" style="min-width: 150px;">
+    <div class="subnav__stretch-bar sd-overflow-ellipsis" ng-if="showCustomButtons()" style="min-width: 150px;">
       <div
         class="subnav__button-stack subnav__button-stack--custom-buttons sd-overflow-ellipsis"
         ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true)"
         ng-show="_editable && itemActions.save && action === 'edit'"
       >
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.toDesk === true"
+                ng-if="toDeskEnabled"
                 class="btn sd-overflow-ellipsis btn--custom"
                 ng-click="saveAndContinue(sendToNextStage, false)"
                 aria-label="{{ 'To Desk' | translate }}"
@@ -58,7 +58,7 @@
                 <span class="btn__text--short" translate>T D</span>
         </button>
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.closeAndContinue === true"
+                ng-if="closeAndContinueEnabled"
                 class="btn sd-overflow-ellipsis btn--custom"
                 ng-click="saveAndContinue(closeAndContinue, false)"
                 aria-label="{{ 'Close and Continue' | translate }}"
@@ -67,7 +67,7 @@
                 <span class="btn__text--short" translate>C & C</span>
         </button>
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.publish === true && canPublishOnDesk()"
+                ng-if="publishEnabled"
                 class="btn btn--custom btn--publish"
                 type="submit"
                 ng-click="saveAndContinue(publish, true)"
@@ -77,7 +77,7 @@
                 <span class="btn__text--short" translate>P</span>
         </button>
         <button
-                ng-if="$root.config.features.customAuthoringTopbar.publishAndContinue === true && canPublishOnDesk()"
+                ng-if="publishAndContinueEnabled"
                 class="btn sd-overflow-ellipsis btn--custom btn--publish-plus"
                 ng-click="saveAndContinue(publishAndContinue, true)"
                 aria-label="{{ :: 'Publish and Continue' | translate }}"

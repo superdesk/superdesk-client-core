@@ -1510,6 +1510,12 @@ declare module 'superdesk-api' {
             showCharacterLimit?: number;
             sendToPersonal?: boolean;
             publishFromPersonal?: boolean;
+            customAuthoringTopbar?: {
+                toDesk?: boolean;
+                publish?: boolean;
+                closeAndContinue?: boolean;
+                publishAndContinue?: boolean;
+            }
         };
         auth: {
             google: boolean

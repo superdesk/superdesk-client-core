@@ -34,13 +34,13 @@ import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 MultiActionBarController.$inject = [
     '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', 'lock',
     'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location', 'api', 'desks',
-    'session',
+    'session', 'privileges', 'confirm',
 ];
 
 export function MultiActionBarController(
     $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, lock,
     packages, superdesk, notify, spike, authoring, $location, api, desks,
-    session,
+    session, privileges, confirm,
 ) {
     const personalLocationPath = $location.path() === '/workspace/personal';
 
@@ -193,10 +193,12 @@ export function MultiActionBarController(
 
     this.canPublishItem = function() {
         return multi.getItems().every((item) => {
-            if (item.state !== 'draft' && $location.path() !== '/workspace/personal') {
-                return true;
-            } else if (item.state !== 'draft' && $location.path() === '/workspace/personal') {
-                return appConfig?.features?.publishFromPersonal;
+            if (privileges.userHasPrivileges({publish: 1})) {
+                if (item.state !== 'draft' && $location.path() !== '/workspace/personal') {
+                    return true;
+                } else if (item.state !== 'draft' && $location.path() === '/workspace/personal') {
+                    return appConfig?.features?.publishFromPersonal;
+                }
             }
             return false;
         });
@@ -272,41 +274,48 @@ export function MultiActionBarController(
             }
         };
 
-        Promise.all(
-            multi.getItems().map((item) => new Promise((resolve) => {
-                if (appConfig.features.publishFromPersonal && personalLocationPath) {
-                    var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
+        confirm.confirmQuickPublish(multi.getItems().length).then(() => {
+            Promise.all(
+                multi.getItems().map((item) => new Promise((resolve) => {
+                    if (appConfig.features.publishFromPersonal && personalLocationPath) {
+                        var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
 
-                    item.task = {
-                        ...(item.task ?? {}),
-                        desk: currentDeskId,
-                    };
-                }
-                authoring.publish(item, item)
-                    .then((response) => {
-                        if (response.status >= 400) {
+                        item.task = {
+                            ...(item.task ?? {}),
+                            desk: currentDeskId,
+                        };
+                    }
+                    authoring.publish(item, item)
+                        .then((response) => {
+                            if (response.status >= 400) {
+                                addErrorForItem(item, response);
+                            }
+
+                            resolve();
+                        })
+                        .catch((response) => {
                             addErrorForItem(item, response);
+                            resolve();
+                        });
+                })),
+            ).then(() => {
+                if (errors.length < 1) {
+                    notify.success(gettext('All items were published successfully.'));
+                    multi.reset();
+                } else {
+                    errors.forEach((err) => {
+                        let messages = null;
+
+                        try {
+                            messages = JSON.parse(err.message.replace(/'/gi, '"'));
+                        } catch (error) {
+                            messages = [[err.message]];
                         }
-
-                        resolve();
-                    })
-                    .catch((response) => {
-                        addErrorForItem(item, response);
-                        resolve();
+                        messages[0].forEach((message: string) =>
+                            notify.error(gettext('Error on item:') + ` ${err.itemName} ${message}`));
                     });
-            })),
-        ).then(() => {
-            if (errors.length < 1) {
-                notify.success(gettext('All items were published successfully.'));
-                multi.reset();
-            } else {
-                errors.forEach((err) => {
-                    let messages = JSON.parse(err.message.replace(/'/gi, '"'));
-
-                    messages[0].forEach((message: string) =>
-                        notify.error(gettext('Error on item:') + ` ${err.itemName} ${message}`));
-                });
-            }
+                }
+            });
         });
     };
 }

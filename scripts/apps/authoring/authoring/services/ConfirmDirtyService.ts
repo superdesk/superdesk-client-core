@@ -1,4 +1,4 @@
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 
 /**
  * @ngdoc service
@@ -66,9 +66,9 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
     /**
      * In case publish is triggered by quick buttons, show confirmation dialog
      */
-    this.confirmQuickPublish = function() {
+    this.confirmQuickPublish = function(length = 1) {
         return modal.confirm(
-            gettext('Do you want to publish the article?'),
+            gettextPlural(length, 'Do you want to publish the article?', 'Do you want to publish the articles?'),
             gettext('Publishing'),
             gettext('Publish'),
             gettext('Cancel'),
