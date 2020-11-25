@@ -18,6 +18,7 @@ import {IArticleActionBulkExtended, MultiActionBarReact} from 'apps/monitoring/M
 import {getMultiActions} from 'apps/search/controllers/get-multi-actions';
 import {Button} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
+import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
 
 class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelectOptions}> {
     render() {
@@ -261,25 +262,23 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
             <MultiSelectHoc>
                 {(multiSelectOptions) => {
                     const getMultiSelectToolbar = (articles: Array<IArticle>) => {
+                        const getSelectedItems = () => articles;
+                        const unselectAll = () => multiSelectOptions.unselectAll();
+
                         const multiActions = getMultiActions(
-                            () => articles,
-                            () => multiSelectOptions.unselectAll(),
+                            getSelectedItems,
+                            unselectAll,
                         );
 
-                        // TODO: Port everything from MultiActionBar.ts to react.
-                        const actions: Array<IArticleActionBulkExtended> = [];
-
-                        if (articles.every(({state}) => state === 'spiked')) {
-                            actions.push({
-                                label: gettext('Unspike'),
-                                icon: 'icon-unspike',
-                                onTrigger: () => {
-                                    multiActions.unspikeItems();
-                                    ng.get('$rootScope').$apply();
-                                },
-                                canAutocloseMultiActionBar: false,
-                            });
-                        }
+                        const actions: Array<IArticleActionBulkExtended> = getBulkActions(
+                            articles,
+                            multiActions,
+                            getSelectedItems,
+                            unselectAll,
+                            () => {
+                                ng.get('$rootScope').$apply();
+                            },
+                        );
 
                         return (
                             <div

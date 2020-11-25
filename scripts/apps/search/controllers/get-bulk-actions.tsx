@@ -17,7 +17,7 @@ export function getBulkActions(
     multiActions: IMultiActions,
     getSelectedItems: () => Array<IArticle>,
     unselectAll: () => void,
-    scopeApply?: () => void, // only needed when using from angular views
+    scopeApply: () => void,
 ): Array<IArticleActionBulkExtended> {
     const actions: Array<IArticleActionBulkExtended> = [];
 
