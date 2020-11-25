@@ -136,7 +136,7 @@ export class MultiActionBarReact extends React.Component<IProps, IState> {
             const groupNames = Object.keys(groups);
 
             return (
-                <div style={{display: 'flex'}} data-test-id="multi-actions-inline">
+                <div className="multi-action-bar-inline" data-test-id="multi-actions-inline">
                     {
                         groupNames.map((group, i) => group === 'undefined'
                             ? groups[group].map((action, key) => (

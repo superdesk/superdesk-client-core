@@ -163,6 +163,34 @@ export function getBulkActions(
                     canAutocloseMultiActionBar: false,
                 });
             }
+
+            actions.push({
+                label: gettext('Duplicate To'),
+                icon: 'icon-copy',
+                group: {
+                    label: gettext('Duplicate'),
+                    icon: 'icon-copy',
+                },
+                onTrigger: () => {
+                    multiActions.duplicateTo();
+                    scopeApply?.();
+                },
+                canAutocloseMultiActionBar: false,
+            });
+
+            actions.push({
+                label: gettext('Duplicate In Place'),
+                icon: 'icon-copy',
+                group: {
+                    label: gettext('Duplicate'),
+                    icon: 'icon-copy',
+                },
+                onTrigger: () => {
+                    multiActions.duplicateInPlace();
+                    scopeApply?.();
+                },
+                canAutocloseMultiActionBar: false,
+            });
         }
     }
 
@@ -202,36 +230,6 @@ export function getBulkActions(
                 canAutocloseMultiActionBar: true,
             });
         }
-    }
-
-    if (noneLocked) {
-        actions.push({
-            label: gettext('Duplicate To'),
-            icon: 'icon-copy',
-            group: {
-                label: gettext('Duplicate'),
-                icon: 'icon-copy',
-            },
-            onTrigger: () => {
-                multiActions.duplicateTo();
-                scopeApply?.();
-            },
-            canAutocloseMultiActionBar: false,
-        });
-
-        actions.push({
-            label: gettext('Duplicate In Place'),
-            icon: 'icon-copy',
-            group: {
-                label: gettext('Duplicate'),
-                icon: 'icon-copy',
-            },
-            onTrigger: () => {
-                multiActions.duplicateInPlace();
-                scopeApply?.();
-            },
-            canAutocloseMultiActionBar: false,
-        });
     }
 
     if (articles.every((item) => canPrintPreview(item))) {
