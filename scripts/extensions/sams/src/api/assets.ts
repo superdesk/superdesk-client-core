@@ -366,6 +366,36 @@ export function getAssetById(assetId: string): Promise<IAssetItem> {
         });
 }
 
+export function getAssetsByIds(ids: Array<string>): Promise<IRestApiResponse<IAssetItem>> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.queryRawJson<IRestApiResponse<IAssetItem>>(
+        RESOURCE,
+        {source: JSON.stringify({
+            query: {
+                bool: {
+                    must: [
+                        superdeskApi.elasticsearch.terms({
+                            field: '_id',
+                            value: ids,
+                        }),
+                    ],
+                },
+            },
+        })},
+    )
+        .catch((error: any) => {
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to get Assets'));
+            }
+
+            return Promise.reject(error);
+        });
+}
+
 export function updateAssetMetadata(
     originalAsset: IAssetItem,
     originalAttachment: IAttachment,

@@ -16,7 +16,7 @@ import {superdeskApi, samsApi} from '../apis';
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
 import {setAssetSearchParams} from '../store/assets/actions';
-import {getActiveSets} from '../store/sets/selectors';
+import {getActiveSets, getSetsById} from '../store/sets/selectors';
 
 // UI
 import {Button} from 'superdesk-ui-framework/react';
@@ -45,10 +45,12 @@ export class SamsAttachmentsWidget<T extends IAttachmentsWidgetProps> extends Re
 interface IProps extends IAttachmentsWidgetProps {
     setAssetSearchParams(params: Partial<IAssetSearchParams>): void;
     activeSets: Array<ISetItem>;
+    setsById: Dictionary<string, ISetItem>;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
     activeSets: getActiveSets(state),
+    setsById: getSetsById(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -66,18 +68,10 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
         this.onAddFiles = this.onAddFiles.bind(this);
         this.onDragFiles = this.onDragFiles.bind(this);
         this.onDropFiles = this.onDropFiles.bind(this);
-        this.onStoreInit = this.onStoreInit.bind(this);
 
         this.showUploadAssetModal = this.showUploadAssetModal.bind(this);
         this.showEditAssetModal = this.showEditAssetModal.bind(this);
         this.showSelectAssetModal = this.showSelectAssetModal.bind(this);
-    }
-
-    onStoreInit(store: Store) {
-        return Promise.all([
-            store.dispatch<any>(loadStorageDestinations()),
-            store.dispatch<any>(loadSets()),
-        ]);
     }
 
     onAddFiles(event: React.ChangeEvent<HTMLInputElement>) {
@@ -164,7 +158,7 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
         });
 
         return (
-            <SamsApp onStoreInit={this.onStoreInit}>
+            <React.Fragment>
                 <div
                     className={containerClasses}
                     onDragOver={this.onDragFiles}
@@ -173,6 +167,7 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
                 >
                     <SamsAttachmentsList
                         files={this.props.attachments}
+                        sets={this.props.setsById}
                         readOnly={this.props.readOnly ?? false}
                         editFile={this.showEditAssetModal}
                         download={download}
@@ -241,7 +236,7 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
                         style={{visibility: 'hidden'}}
                     />
                 </div>
-            </SamsApp>
+            </React.Fragment>
         );
     }
 }

@@ -178,6 +178,7 @@ export interface ISamsAPI {
         setSearchUrlParams(params: Partial<IAssetSearchParams>): void;
         getCount(set_ids: Array<string>): Promise<Dictionary<string, number>>;
         getById(assetId: string): Promise<IAssetItem>;
+        getByIds(ids: Array<string>): Promise<IRestApiResponse<IAssetItem>>;
         updateMetadata(
             originalAsset: IAssetItem,
             originalAttachment: IAttachment,
