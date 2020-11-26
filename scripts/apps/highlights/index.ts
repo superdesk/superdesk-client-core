@@ -33,14 +33,12 @@ export default angular.module('superdesk.apps.highlights', [
 ])
     .service('highlightsService', HighlightsService)
 
-    .directive('sdCreateHighlightsButton', directive.CreateHighlightsButton)
     .directive('sdMarkHighlightsDropdown', directive.MarkHighlightsDropdown)
     .directive('sdPackageHighlightsDropdown', directive.PackageHighlightsDropdown)
     .directive('sdHighlightsInfo', directive.HighlightsInfo)
     .directive('sdSearchHighlights', directive.SearchHighlights)
     .directive('sdHighlightsConfig', () => ({controller: ctrl.HighlightsConfig}))
     .directive('sdHighlightsConfigModal', directive.HighlightsConfigModal)
-    .directive('sdHighlightLabel', directive.HighlightsLabel)
 
     .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenuProvider) => {
         superdesk
