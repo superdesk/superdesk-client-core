@@ -1,4 +1,4 @@
-import {element, by} from 'protractor';
+import {element, by, browser} from 'protractor';
 import {monitoring} from './helpers/monitoring';
 import {route} from './helpers/utils';
 import {globalSearch} from './helpers/search';
@@ -78,6 +78,7 @@ describe('marked desks', () => {
 
             // Remove the marked desk
             monitoring.removeFromFirstDesk(0, 1);
+            browser.sleep(300);
             expect(monitoring.getGroupItems(0).count()).toBe(2);
         });
     });

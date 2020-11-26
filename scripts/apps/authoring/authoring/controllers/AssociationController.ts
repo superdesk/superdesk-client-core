@@ -259,7 +259,7 @@ export class AssociationController {
         }
 
         return this.content.dropItem(__item)
-            .then((item) => {
+            .then((item: IArticle) => {
                 if (item.lock_user) {
                     this.notify.error(gettext('Item is locked. Cannot associate media item.'));
                     return false;
@@ -268,7 +268,7 @@ export class AssociationController {
                 // save generated association id in order to be able to update the same item after editing.
                 const originalRel = scope.rel;
 
-                if (this.isMediaEditable(item) && get(item, '_type') === 'externalsource') {
+                if (this.isMediaEditable(item) && item._type === 'externalsource') {
                     // if media is editable then association will be updated by this.edit method
                     return this.renditions.ingest(item)
                         .then((_item) => this.edit(scope, _item, {customRel: originalRel}));

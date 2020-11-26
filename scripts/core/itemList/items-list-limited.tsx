@@ -69,7 +69,6 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
                     this.props.onItemClick(item);
                 }}
                 hideActionsForMonitoringItems={true}
-                disableMonitoringMultiSelect={true}
                 singleLine={false}
                 customRender={undefined}
                 viewType={undefined}
@@ -79,8 +78,6 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
                 groupId={undefined}
                 edit={noop}
                 preview={noop}
-                multiSelect={noop}
-                setSelectedItem={noop}
                 narrow={false}
                 view={undefined}
                 selected={undefined}

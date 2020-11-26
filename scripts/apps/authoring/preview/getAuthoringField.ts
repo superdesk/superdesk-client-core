@@ -67,7 +67,7 @@ export function getAuthoringField(
             return {
                 type: 'media-gallery',
                 id: fieldId,
-                value: item.associations.featuremedia == null ? [] : [item.associations.featuremedia],
+                value: item.associations?.featuremedia == null ? [] : [item.associations.featuremedia],
             };
 
         case 'abstract':
@@ -91,7 +91,7 @@ export function getAuthoringField(
             return {
                 type: 'subjects',
                 id: fieldId,
-                value: item[fieldId]?.map(({name, code}) => ({name, qcode: code})),
+                value: item.place?.map(({name, qcode}) => ({name, qcode})),
             };
 
         case 'authors':

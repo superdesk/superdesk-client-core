@@ -148,8 +148,15 @@ describe('monitoring', () => {
 
             expect(criteria.source.query.filtered.filter.and).toContain({
                 bool: {
-                    must: {term: {original_creator: session.identity._id}},
                     must_not: {exists: {field: 'task.desk'}},
+                    should: [
+                        {term: {'task.user': session.identity._id}},
+                        {bool: {
+                            must: {term: {original_creator: session.identity._id}},
+                            must_not: {exists: {field: 'task.user'}},
+                        }},
+                    ],
+                    minimum_should_match: 1,
                 },
             });
         }));
@@ -233,7 +240,7 @@ describe('monitoring', () => {
         it('can get criteria for saved search with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
-                search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}},
+                search: {filter: {query: {q: 'foo', type: '["picture"]'}}},
             };
             var criteria = cards.criteria(card);
 

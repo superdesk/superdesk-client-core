@@ -11,7 +11,7 @@ export function DuplicateController(api, notify, $rootScope, data, desks, $locat
     currentDeskId = currentDeskId || desks.getCurrentDeskId();
 
     api.save('duplicate', {}, {
-        desk: currentDeskId,
+        desk: data.isPersonal ? null : currentDeskId,
         type: data.item._type,
         item_id: data.item.item_id,
     }, data.item)

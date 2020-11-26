@@ -6,32 +6,6 @@ describe('highlights', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
-    xdescribe('sdPackageHighlightsDropdown directive', () => {
-        var scope, desk;
-
-        beforeEach(inject((desks, highlightsService, $rootScope, $compile, $q) => {
-            desk = {_id: '123'};
-            desks.setCurrentDeskId(desk._id);
-
-            spyOn(highlightsService, 'get').and.returnValue($q.when({_items: [
-                {_id: '1', name: 'Spotlight'},
-                {_id: '2', name: 'New'},
-            ]}));
-
-            scope = $rootScope.$new();
-            $compile('<div dropdown sd-package-highlights-dropdown></div>')(scope);
-            scope.$digest();
-        }));
-
-        it('can set highlights', inject((desks, highlightsService, $q, $rootScope) => {
-            var active = desks.active;
-
-            expect(active.desk).toEqual('123');
-            $rootScope.$digest();
-            expect(highlightsService.get).toHaveBeenCalledWith(active.desk);
-        }));
-    });
-
     describe('create highlights button directive', () => {
         it('can create highlights package',
             inject(($compile, $rootScope, $q, api, authoring) => {

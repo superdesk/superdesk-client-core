@@ -199,6 +199,12 @@ ul.list-view.list-without-items {
 
 // SPACER END
 
+
+.hover-AB:hover .hover-AB--A,
+.hover-AB:not(:hover) .hover-AB--B {
+    display: none!important;
+}
+
 @media print
 {    
     .no-print

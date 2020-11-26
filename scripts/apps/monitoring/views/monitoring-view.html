@@ -5,7 +5,7 @@
         <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'spike'" translate>Spiked items</h2>
         <div class="preview-layout monitoring-preview-layout" sd-media-query min-width="700" element-class="narrowList">
             <div class="content-list monitoring__content" ng-if="!aggregate.loading">
-                <div class="monitoring__toolbar-container">
+                <div class="monitoring__toolbar-container" ng-if="hideMonitoringToolbar1 !== true || hideMonitoringToolbar2 !== true">
                     <div class="subnav" ng-if="hideMonitoringToolbar1 !== true">
                         <div class="flat-searchbar monitoring-backlink" ng-if="monitoring.singleGroup">
                             <button sd-tooltip="{{ 'Back to original view' | translate }}" flow="right" class="navbtn navbtn--left" ng-click="monitoring.viewMonitoringHome()">
@@ -46,11 +46,7 @@
                             </ul>
                         </div>
 
-                        <h2 class="subnav__page-title sd-flex-no-grow" ng-hide="monitoring.singleGroup.singleViewType !== 'desk' && type === 'monitoring'">
-                            <span ng-if="type === 'spike'">
-                                <span translate>Spiked Items</span>
-                                <span ng-if="aggregate.spikeGroups.length === 1" class="label-total">{{ monitoring.totalItems}}</span>
-                            </span>
+                        <h2 class="subnav__page-title sd-flex-no-grow sd-empty" ng-hide="monitoring.singleGroup.singleViewType !== 'desk' && type === 'monitoring'">
                             <span ng-if="type === 'personal'">
                                 <button class="sd-checkbox sd-checkbox--button-style"
                                     ng-class="{checked: !aggregate.personalGroup.sent}"
@@ -110,7 +106,7 @@
                         <div class="subnav__button-stack--square-buttons sd-margin-l--auto">
                             <div class="refresh-box">
                                 <button ng-if="monitoring.showRefresh &&
-                                                        (monitoring.singleGroup || type === 'spike' || type === 'highlights' || monitoring.viewColumn)"
+                                                        (monitoring.singleGroup || type === 'highlights' || monitoring.viewColumn)"
                                         ng-click="refreshGroup(monitoring.singleGroup)"
                                         class="btn btn--primary btn--icon-only-circle btn--small"
                                         sd-tooltip="{{ 'Refresh' | translate }}" flow="left" class="navbtn" aria-label="{{ 'Refresh content' | translate }}">
@@ -123,7 +119,7 @@
                             </button>
 
                             <div
-                                ng-if="type === 'monitoring'"
+                                ng-if="type === 'monitoring' && activeDeskId != null"
                                 style="display: flex; align-items: center; padding-left: 10px; padding-right: 10px;"
                             >
                                 <sd-monitoring-filtering-buttons
@@ -136,7 +132,7 @@
                                 ></sd-monitoring-filtering-buttons>
                             </div>
 
-                            <div ng-if="disableMonitoringCreateItem == null && (!state.opened && (type !== 'spike' && type !== 'highlights'))" class="dropdown dropdown--align-right strict" sd-tooltip="{{ 'Create new item' | translate }}" flow="left" dropdown>
+                            <div ng-if="disableMonitoringCreateItem == null && (!state.opened && type !== 'highlights')" class="dropdown dropdown--align-right strict" sd-tooltip="{{ 'Create new item' | translate }}" flow="left" dropdown>
                                 <div ngf-drop="openUpload($files)" ngf-multiple="true">
                                     <button
                                         class="navbtn dropdown__toggle sd-create-btn"
@@ -202,7 +198,7 @@
                                     </button>
                                 </li>
                                 <li>
-                                    <button ng-if="type !== 'spike'" ng-click="switchView('photogrid')">
+                                    <button ng-click="switchView('photogrid')">
                                         <i class="icon-grid-view"></i>{{ 'Photo Grid View' | translate }}
                                     </button>
                                 </li>
@@ -244,9 +240,10 @@
                         </ul>
                     </div>
                 </div>
+
                 <div class="monitoring__main-content">
                     <div class="sd-column-box--3">
-                        <div style="padding: 0 20px 20px;" class="sd-column-box__main-column">
+                        <div ng-style="{{contentStyle}}" class="sd-column-box__main-column">
                             <!-- list view -->
                             <div ng-if="!monitoring.viewColumn && type === 'monitoring'" class="list">
                                 <div ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
@@ -267,14 +264,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div ng-if="type === 'spike'" class="list">
-                                <div ng-repeat="group in aggregate.spikeGroups track by group._id | orderBy: name"
-                                        sd-monitoring-group
-                                        ng-class="{'single-group': aggregate.spikeGroups.length === 1}"
-                                        data-group="group"
-                                        data-view-type="'spiked'"
-                                        data-force-limited="{{ aggregate.spikeGroups.length > 1}}">
-                                </div>
+                            <div ng-if="type === 'spike' && spikedItemsQuery != null" style="height: 100%">
+                                <sd-articles-list-react
+                                    heading="'Spiked Items' | translate"
+                                    query="spikedItemsQuery"
+                                    monitoring-controller="monitoring"
+                                    style="height: 100%"
+                                ></sd-articles-list-react>
                             </div>
                             <div ng-if="monitoring.singleGroup && !monitoring.isDeskChanged()" class="list">
                                 <div sd-monitoring-group class="single-group" data-group="monitoring.singleGroup" data-view="view" data-view-type="'single_monitoring'">

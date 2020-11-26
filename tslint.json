@@ -34,10 +34,7 @@
         "variable-name": false,
         "forin": false,
         "member-ordering": false,
-        "member-access": [
-            true,
-            "no-public"
-        ],
+        "member-access": false,
         "no-string-literal": false,
         "jsdoc-format": false,
         "no-console": false,
