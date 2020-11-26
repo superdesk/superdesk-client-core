@@ -171,7 +171,6 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             hideActionsForMonitoringItems={false}
                             singleLine={false}
                             customRender={undefined}
-                            viewType={undefined}
                             flags={{hideActions: false}}
                             loading={false}
                             viewColumn={undefined}

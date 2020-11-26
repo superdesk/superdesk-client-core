@@ -29,7 +29,6 @@ interface IProps {
     onMonitoringItemDoubleClick: any;
     singleLine: any;
     customRender: any;
-    viewType: any;
     flags: {
         hideActions: any;
     };
@@ -569,7 +568,6 @@ export class ItemList extends React.Component<IProps, IState> {
                                     actioning={!!this.state.actioning[itemId]}
                                     singleLine={this.props.singleLine}
                                     customRender={this.props.customRender}
-                                    viewType={this.props.viewType}
                                     scopeApply={this.props.scopeApply}
                                     multiSelect={this.props.multiSelect ?? {
                                         kind: 'legacy',

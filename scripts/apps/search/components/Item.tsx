@@ -70,7 +70,6 @@ interface IProps {
     actioning: boolean;
     singleLine: any;
     customRender: any;
-    viewType: any;
     scopeApply: IScopeApply;
 }
 
@@ -352,7 +351,6 @@ export class Item extends React.Component<IProps, IState> {
                         toggleNested={this.toggleNested}
                         singleLine={this.props.singleLine}
                         customRender={this.props.customRender}
-                        viewType={this.props.viewType}
                     />
                 );
             }
@@ -395,7 +393,6 @@ export class Item extends React.Component<IProps, IState> {
                                 actioning={false}
                                 singleLine={this.props.singleLine}
                                 customRender={this.props.customRender}
-                                viewType={this.props.viewType}
                                 scopeApply={this.props.scopeApply}
                             />
                         ))}

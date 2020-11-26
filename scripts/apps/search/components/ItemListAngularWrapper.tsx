@@ -133,7 +133,6 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                 hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
                 singleLine={scope.singleLine}
                 customRender={scope.customRender}
-                viewType={scope.viewType}
                 flags={scope.flags}
                 loading={scope.loading}
                 viewColumn={scope.viewColumn}
