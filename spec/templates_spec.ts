@@ -88,7 +88,8 @@ describe('templates', () => {
 
         templates.getListCount().then((count) => {
             templates.remove('Second New Template');
-            expect(templates.getListCount()).toBeLessThan(count);
+            browser.sleep(300);
+            expect(templates.getListCount()).toBe(count - 1);
         });
 
         // cannot save empty template

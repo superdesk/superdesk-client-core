@@ -238,7 +238,7 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
-        _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | string;
+        _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | 'externalsource' | string;
         uri?: string; // uri is external id which stays when image is fetched from provider/ingest
         guid: string;
         family_id: string;
@@ -351,9 +351,9 @@ declare module 'superdesk-api' {
         extra?: {[key: string]: any};
 
         task: {
-            desk: IDesk['_id'];
-            stage: IStage['_id'];
-            user: IUser['_id'];
+            desk?: IDesk['_id'];
+            stage?: IStage['_id'];
+            user?: IUser['_id'];
         };
 
         // might be only used for client-side state
@@ -999,6 +999,22 @@ declare module 'superdesk-api' {
         stages: {[itemId: string]: 1};
     }
 
+    export interface IResourceUpdateEvent {
+        fields: {[key: string]: 1};
+        resource: string;
+        _id: string;
+    }
+
+    export interface IResourceCreatedEvent {
+        resource: string;
+        _id: string;
+    }
+
+    export interface IResourceDeletedEvent {
+        resource: string;
+        _id: string;
+    }
+
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
@@ -1013,6 +1029,9 @@ declare module 'superdesk-api' {
 
     export interface IPublicWebsocketMessages {
         'content:update': IWebsocketMessage<IArticleUpdateEvent>;
+        'resource:created': IWebsocketMessage<IResourceCreatedEvent>;
+        'resource:updated': IWebsocketMessage<IResourceUpdateEvent>;
+        'resource:deleted': IWebsocketMessage<IResourceDeletedEvent>;
     }
 
 

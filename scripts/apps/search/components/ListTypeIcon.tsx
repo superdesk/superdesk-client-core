@@ -1,17 +1,22 @@
 import React from 'react';
-import {TypeIcon, SelectBox} from './index';
+import {TypeIcon} from './index';
 import {CHECKBOX_PARENT_CLASS} from './constants';
+import {IArticle} from 'superdesk-api';
+import {SelectBox} from './SelectBox';
 
 interface IProps {
     selectingDisabled?: boolean;
-    onMultiSelect: () => void;
-    item: any;
+    onMultiSelect: (items: Array<IArticle>, selected: boolean) => void;
+    item: IArticle;
 }
 
 interface IState {
     hover: boolean;
 }
 
+/**
+ * @deprecated Mutates item object.
+ */
 export class ListTypeIcon extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
@@ -35,26 +40,24 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
         const {selectingDisabled} = this.props;
         const showSelect = selectingDisabled !== true && (this.state.hover || this.props.item.selected);
 
-        return React.createElement(
-            'div',
-            {
-                className: 'list-field type-icon ' + CHECKBOX_PARENT_CLASS,
-                onMouseEnter: selectingDisabled ? null : this.setHover,
-                onMouseLeave: selectingDisabled ? null : this.unsetHover,
-                style: {lineHeight: 0},
-            },
-            showSelect ?
-                React.createElement(SelectBox, {
-                    item: this.props.item,
-                    onMultiSelect: this.props.onMultiSelect,
-                }) :
-                React.createElement(
-                    TypeIcon,
-                    {
-                        type: this.props.item.type,
-                        highlight: this.props.item.highlight,
-                    },
-                ),
+        return (
+            <div
+                className={'list-field type-icon ' + CHECKBOX_PARENT_CLASS}
+                onMouseEnter={selectingDisabled ? null : this.setHover}
+                onMouseLeave={selectingDisabled ? null : this.unsetHover}
+                style={{lineHeight: 0}}
+                data-test-id="multi-select-checkbox"
+            >
+                {
+                    showSelect
+                        ? (
+                            <SelectBox item={this.props.item} onMultiSelect={this.props.onMultiSelect} />
+                        )
+                        : (
+                            <TypeIcon type={this.props.item.type} highlight={this.props.item.highlight} />
+                        )
+                }
+            </div>
         );
     }
 }

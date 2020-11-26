@@ -67,7 +67,7 @@ export function getAuthoringField(
             return {
                 type: 'media-gallery',
                 id: fieldId,
-                value: item.associations.featuremedia == null ? [] : [item.associations.featuremedia],
+                value: item.associations?.featuremedia == null ? [] : [item.associations.featuremedia],
             };
 
         case 'abstract':

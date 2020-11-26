@@ -12,7 +12,7 @@ interface IProps {
     sortOptions: Array<ISortFields>;
     selected: ISortOption;
 
-    itemsCount: number;
+    itemsCount?: number;
     onSortOptionChange(nextSortOption: ISortOption): void;
 }
 
@@ -24,10 +24,14 @@ export class SortBar extends React.Component<IProps, any> {
 
         return (
             <div className="sortbar" data-test-id="sortbar">
-                <span>{gettext('Total:')}</span>
-                {' '}
-                <span><span className="badge">{this.props.itemsCount}</span></span>
-                {' '}
+                {this.props.itemsCount == null ? null : (
+                    <span>
+                        <span>{gettext('Total:')}</span>
+                        {' '}
+                        <span><span className="badge">{this.props.itemsCount}</span></span>
+                        {' '}
+                    </span>
+                )}
                 <DropdownTree
                     getToggleElement={(isOpen, onClick) => (
                         <button

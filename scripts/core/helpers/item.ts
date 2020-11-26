@@ -20,6 +20,6 @@ export function associationIsArticle(a: IArticle | IRelatedArticle): a is IArtic
     return a['_etag'] != null;
 }
 
-export function isMediaType(item: IArticle) {
-    return ['audio', 'video', 'picture', 'graphic'].includes(item.type);
+export function isMediaType(item: IArticle | null | undefined) {
+    return item != null && ['audio', 'video', 'picture', 'graphic'].includes(item.type);
 }
