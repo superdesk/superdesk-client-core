@@ -140,13 +140,13 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     const isCorrection = (item: IArticle): boolean => {
 
-        if (appConfig?.corrections_workflow && item.state === ITEM_STATE.CORRECTION) {
+        if (item.state === ITEM_STATE.CORRECTION) {
             return true;
         }
     };
 
     const isBeingCorrected = (item: IArticle): boolean => {
-        if (appConfig?.corrections_workflow && item.state === ITEM_STATE.BEING_CORRECTED) {
+        if (item.state === ITEM_STATE.BEING_CORRECTED) {
             return true;
         }
     };
