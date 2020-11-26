@@ -14,6 +14,7 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
+import {MonitoringHighlightsController} from './controllers/MonitoringHighlightsController';
 
 /**
  * @ngdoc module
@@ -69,6 +70,7 @@ export default angular.module('superdesk.apps.highlights', [
             })
             .activity('/workspace/highlights', {
                 label: gettext('Highlights View'),
+                controller: MonitoringHighlightsController,
                 priority: 100,
                 templateUrl: 'scripts/apps/monitoring/views/highlights-view.html',
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',

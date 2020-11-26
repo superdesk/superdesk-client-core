@@ -26,6 +26,7 @@ interface IScope extends ng.IScope {
     addResourceUpdatedEventListener: (callback: any) => void;
     openUpload: (files: Array<File>) => void;
     spikedItemsQuery: ISuperdeskQuery;
+    highlightedItemsQuery: ISuperdeskQuery;
 }
 
 /**
@@ -38,6 +39,7 @@ MonitoringView.$inject = [
     'authoringWorkspace',
     'pageTitle',
     '$timeout',
+    '$location',
     'workspaces',
     'desks',
     'superdesk',
@@ -49,6 +51,7 @@ export function MonitoringView(
     authoringWorkspace: AuthoringWorkspaceService,
     pageTitle,
     $timeout,
+    $location,
     workspaces,
     desks,
     superdesk,
@@ -69,6 +72,7 @@ export function MonitoringView(
             disableMonitoringCreateItem: '=?',
             hideMonitoringToolbar1: '=?',
             hideMonitoringToolbar2: '=?',
+            selectedHighlightName: '=?',
             contentStyle: '=?',
         },
         link: function(scope: IScope, elem) {
@@ -129,6 +133,24 @@ export function MonitoringView(
                                 ]},
                                 {'package_type': {$ne: 'takes'}},
                                 {'task.desk': {$eq: scope.activeDeskId}},
+                            ]},
+                            sort: [{'versioncreated': 'desc'}],
+                            page: 1,
+                            max_results: 20,
+                        };
+
+                        scope.highlightedItemsQuery = {
+                            filter: {$and: [
+                                {'state': {$ne: 'spiked'}},
+                                {$or: [
+                                    {$and: [
+                                        {'state': {$eq: 'draft'}},
+                                        {'original_creator': {$eq: user._id}},
+                                    ]},
+                                    {'state': {$ne: 'draft'}},
+                                ]},
+                                {'package_type': {$ne: 'takes'}},
+                                {'highlights': {$eq: $location.search().highlight}},
                             ]},
                             sort: [{'versioncreated': 'desc'}],
                             page: 1,
