@@ -371,8 +371,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var params = {
             publishing_warnings_confirmed: publishingWarningsConfirmed,
             desk_id: appConfig.features.publishFromPersonal && !orig?.task?.desk && !extDiff?.task?.desk
-                    ? session.identity.desk || desks.getCurrentDeskId()
-                    : null,
+                ? session.identity.desk || desks.getCurrentDeskId()
+                : null,
         };
 
         return api.update(endpoint, orig, extDiff, params)

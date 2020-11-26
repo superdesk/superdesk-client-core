@@ -481,7 +481,7 @@ describe('authoring', () => {
             spyOn(api, 'update').and.returnValue($q.when());
             authoring.publish(item);
             expect(api.update).toHaveBeenCalledWith('archive_publish', item, {},
-                {publishing_warnings_confirmed: false});
+                {publishing_warnings_confirmed: false, desk_id: null});
         }));
 
         it('confirms if an item is dirty and saves and publish',
@@ -507,7 +507,7 @@ describe('authoring', () => {
                 $rootScope.$digest();
 
                 expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {},
-                    {publishing_warnings_confirmed: false});
+                    {publishing_warnings_confirmed: false, desk_id: null});
                 expect(lock.unlock).toHaveBeenCalled();
             }));
 
