@@ -368,7 +368,14 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
 
-        return api.update(endpoint, orig, extDiff, {publishing_warnings_confirmed: publishingWarningsConfirmed})
+        var params = {
+            publishing_warnings_confirmed: publishingWarningsConfirmed,
+            desk_id: appConfig.features.publishFromPersonal && !orig?.task?.desk && !extDiff?.task?.desk
+                    ? session.identity.desk || desks.getCurrentDeskId()
+                    : null,
+        };
+
+        return api.update(endpoint, orig, extDiff, params)
             .then(
                 (result) => lock.unlock(result).catch(() => result), // ignore unlock err
                 (reason) => {
