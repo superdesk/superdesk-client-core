@@ -2,7 +2,6 @@ import './styles/search.scss';
 
 import * as svc from './services';
 import * as directive from './directives';
-import {MultiActionBarController} from './controllers';
 import {SearchController} from './controllers';
 import SearchMenuController from './controllers/SearchMenuController';
 import {MultiImageEditDirective} from './MultiImageEdit';
@@ -46,7 +45,6 @@ angular.module('superdesk.apps.search', [
     .service('tags', svc.TagService)
     .service('sort', svc.SortService)
 
-    .controller('MultiActionBar', MultiActionBarController)
     .controller('SearchMenuController', SearchMenuController)
 
     .directive('sdSearchPanel', directive.SearchPanel)
@@ -72,7 +70,7 @@ angular.module('superdesk.apps.search', [
         'sdMultiActionBarReact',
         reactToAngular1(
             MultiActionBarReact,
-            ['context', 'articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
+            ['articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
         ),
     )
 
