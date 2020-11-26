@@ -208,7 +208,10 @@ angular.module('superdesk.apps.archive', [
                     actions.copy(data.item, api, $rootScope)],
                 filters: [{action: 'list', type: 'archive'}],
                 condition: (item: IArticle) => item.lock_user == null && item.task?.desk != null,
-                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).copy],
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).copy
+                    && item.state !== 'correction' && item.state !== 'being_corrected';
+                }],
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
                 groupIcon: 'copy',

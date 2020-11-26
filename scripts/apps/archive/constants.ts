@@ -62,7 +62,7 @@ export enum ITEM_STATE {
     /**
      * Correction, If Correction workflow is true, Correction is send on a desk.
      */
-    CORRECTED = 'corrected',
+    CORRECTION = 'correction',
 
     /**
      * being_corrected, If Correction workflow is true, being_corrected, correction of an article.

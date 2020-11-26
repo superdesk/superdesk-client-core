@@ -186,7 +186,7 @@
 
         <button class="btn btn--primary" type="submit"
                 id="send-correction-btn"
-                ng-if="action === 'correct'"
+                ng-if="action === 'correct' && item.state !== 'correction'"
                 ng-show="_editable"
                 ng-disabled="canSendAndPublish()"
                 ng-click="publish()"

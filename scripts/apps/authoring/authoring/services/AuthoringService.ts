@@ -13,6 +13,7 @@ import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware} from '../index';
+import {dataApi} from 'core/helpers/CrudManager';
 
 export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promise<IArticle> {
     return coreApplyMiddleware(onChangeMiddleware, {item: item, original: orig}, 'item')
@@ -135,6 +136,19 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      */
     this.getContentFieldDefaults = function() {
         return helpers.CONTENT_FIELDS_DEFAULTS;
+    };
+
+    const isCorrection = (item: IArticle): boolean => {
+
+        if (appConfig?.corrections_workflow && item.state === ITEM_STATE.CORRECTION) {
+            return true;
+        }
+    };
+
+    const isBeingCorrected = (item: IArticle): boolean => {
+        if (appConfig?.corrections_workflow && item.state === ITEM_STATE.BEING_CORRECTED) {
+            return true;
+        }
     };
 
     desks.fetchCurrentUserDesks().then((desksList) => {
@@ -408,6 +422,27 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             );
     };
 
+    this.correction = function correction(item: IPublishedArticle) {
+        var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+
+        function handleSuccess() {
+            notify.success(gettext('Correction Created'));
+        }
+
+        if (!isPublished(item)) {
+            logger.warn('Trying to send correction of a non published item');
+            return;
+        }
+
+        return self.publish(item, {}, 'correction', {notifyErrors: true})
+            .then((newItem) => {
+                handleSuccess();
+                return dataApi.findOne('archive', newItem.correction_by).then((articleOriginal) => {
+                    authoringWorkspace.edit(articleOriginal);
+                });
+            });
+    };
+
     this.unpublish = function unpublish(item: IPublishedArticle) {
         let relatedItems = [];
 
@@ -616,7 +651,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.view = !lockedByMe;
         action.unlinkUpdate = this._canUnlinkUpdate(currentItem);
-        action.export = currentItem && currentItem.type && currentItem.type === 'text';
+        action.export = currentItem && currentItem.type && currentItem.type === 'text'
+            && !isBeingCorrected(currentItem);
 
         // item is published state - corrected, published, scheduled, killed
         if (isPublished(currentItem) && item.state !== 'unpublished') {
@@ -684,7 +720,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let lockedByMe = !lock.isLocked(currentItem);
         let isReadOnlyState = this._isReadOnly(currentItem);
         let isPublishedOrCorrected = currentItem.state === ITEM_STATE.PUBLISHED ||
-            currentItem.state === ITEM_STATE.CORRECTED;
+            currentItem.state === ITEM_STATE.CORRECTED || isCorrection(currentItem) || isBeingCorrected(currentItem);
 
         action.view = true;
 
@@ -692,7 +728,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             action.deschedule = true;
         } else if (isPublishedOrCorrected) {
             action.kill = userPrivileges.kill && lockedByMe && !isReadOnlyState;
-            action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState;
+            action.correct = userPrivileges.correct && lockedByMe && !isReadOnlyState
+                && !isBeingCorrected(currentItem) && !isCorrection(currentItem);
             action.takedown = userPrivileges.takedown && lockedByMe && !isReadOnlyState;
             action.unpublish = userPrivileges.unpublish && lockedByMe && !isReadOnlyState;
         }
@@ -711,7 +748,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.edit = currentItem.state !== ITEM_STATE.SPIKED && lockedByMe;
 
-        action.spike = currentItem.state !== ITEM_STATE.SPIKED && userPrivileges.spike;
+        action.spike = currentItem.state !== ITEM_STATE.SPIKED && userPrivileges.spike
+            && !isCorrection(currentItem) && !isBeingCorrected(currentItem);
 
         action.send = currentItem._current_version > 0 && lockedByMe;
     };
@@ -725,21 +763,25 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let userPrivileges = privileges.privileges;
         let isPersonalSpace = $location.path() === '/workspace/personal';
 
-        action.re_write = canRewrite(currentItem) === true;
+        action.re_write = canRewrite(currentItem) === true && !isBeingCorrected(currentItem) 
+            && !isCorrection(currentItem);
         action.resend = currentItem.type === 'text' &&
             isPublished(currentItem, false);
 
         // mark item for highlights
         action.mark_item_for_highlight = currentItem.task && currentItem.task.desk && !isPersonalSpace
-            && !isReadOnlyState && currentItem.type === 'text' && userPrivileges.mark_for_highlights;
+            && !isReadOnlyState && currentItem.type === 'text' && userPrivileges.mark_for_highlights
+            && !isCorrection(currentItem) && !isBeingCorrected(currentItem);
 
         // mark item for desks
         action.mark_item_for_desks = currentItem.task && currentItem.task.desk && !isPersonalSpace
-            && !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text';
+            && !isReadOnlyState && userPrivileges.mark_for_desks && currentItem.type === 'text'
+            && !isBeingCorrected(currentItem);
 
         // allow all stories to be packaged if it doesn't have Embargo
         action.package_item = !READONLY_STATES.includes(currentItem.state) &&
-            !currentItem.embargo && (isPublished(currentItem) || !currentItem.publish_schedule);
+            !currentItem.embargo && !isCorrection(currentItem) && !isBeingCorrected(currentItem)
+            && (isPublished(currentItem) || !currentItem.publish_schedule);
 
         action.create_broadcast = _.includes([ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED], currentItem.state) &&
             _.includes(['text', 'preformatted'], currentItem.type) &&
@@ -759,7 +801,8 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             // in production
 
             action.duplicate = userPrivileges.duplicate &&
-                !CANCELED_STATES.includes(currentItem.state);
+                !CANCELED_STATES.includes(currentItem.state)
+                && !isCorrection(currentItem) && !isBeingCorrected(currentItem);
             const duplicateTo = action.duplicateTo = action.duplicate;
 
             action.add_to_current = !READONLY_STATES.includes(currentItem.state);
