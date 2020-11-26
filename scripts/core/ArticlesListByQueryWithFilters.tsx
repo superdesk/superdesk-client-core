@@ -340,6 +340,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                         <h3
                                             className="subnav__page-title sd-flex-no-grow"
                                             style={{padding: 0, marginRight: 10}}
+                                            data-test-id="articles-list--heading"
                                         >
                                             {this.props.heading}
                                         </h3>
