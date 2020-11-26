@@ -19,6 +19,7 @@ import {getMultiActions} from 'apps/search/controllers/get-multi-actions';
 import {Button} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
+import {ResizeObserverComponent} from './components/resize-observer-component';
 
 class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelectOptions}> {
     render() {
@@ -281,42 +282,46 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                         );
 
                         return (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    height: toolbar2Height,
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    backgroundColor: '#d2e5ed',
-                                    paddingLeft: padding,
-                                    paddingRight: padding,
-                                }}
-                            >
-                                <div style={{display: 'flex', alignItems: 'center'}}>
-                                    <Button
-                                        text={gettext('Cancel')}
-                                        onClick={() => {
-                                            multiSelectOptions.unselectAll();
+                            <ResizeObserverComponent>
+                                {(dimensions) => (
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            height: toolbar2Height,
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            backgroundColor: '#d2e5ed',
+                                            paddingLeft: padding,
+                                            paddingRight: padding,
                                         }}
-                                    />
-                                    <h4 style={{marginLeft: 20}}>
-                                        {gettextPlural(
-                                            articles.length,
-                                            '1 item selected',
-                                            '{{number}} items selected',
-                                            {number: articles.length},
-                                        )}
-                                    </h4>
-                                </div>
-                                <div>
-                                    <MultiActionBarReact
-                                        articles={multiSelectOptions.selected.toArray()}
-                                        getCoreActions={() => actions}
-                                        compact={false}
-                                        hideMultiActionBar={() => multiSelectOptions.unselectAll()}
-                                    />
-                                </div>
-                            </div>
+                                    >
+                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                            <Button
+                                                text={gettext('Cancel')}
+                                                onClick={() => {
+                                                    multiSelectOptions.unselectAll();
+                                                }}
+                                            />
+                                            <h4 style={{marginLeft: 20}}>
+                                                {gettextPlural(
+                                                    articles.length,
+                                                    '1 item selected',
+                                                    '{{number}} items selected',
+                                                    {number: articles.length},
+                                                )}
+                                            </h4>
+                                        </div>
+                                        <div>
+                                            <MultiActionBarReact
+                                                articles={multiSelectOptions.selected.toArray()}
+                                                getCoreActions={() => actions}
+                                                compact={dimensions.width < 700}
+                                                hideMultiActionBar={() => multiSelectOptions.unselectAll()}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </ResizeObserverComponent>
                         );
                     };
 
