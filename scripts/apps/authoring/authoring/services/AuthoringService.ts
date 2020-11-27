@@ -97,6 +97,11 @@ interface IPublishOptions {
     notifyErrors: boolean;
 }
 
+interface Iparams {
+    publishing_warnings_confirmed?: boolean;
+    desk_id?: string;
+}
+
 /**
  * @ngdoc service
  * @module superdesk.apps.authoring
@@ -369,7 +374,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
 
-        var params = {
+        var params: Iparams = {
             publishing_warnings_confirmed: publishingWarningsConfirmed,
         };
 
