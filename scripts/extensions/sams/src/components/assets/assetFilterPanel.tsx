@@ -3,6 +3,7 @@ import * as React from 'react';
 
 // Types
 import {ASSET_STATE, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
+import {DatePickerLocaleSettings} from 'superdesk-api';
 import {superdeskApi} from '../../apis';
 
 // UI
@@ -14,6 +15,7 @@ import {
     Option,
     Select,
 } from 'superdesk-ui-framework/react';
+
 import {
     FormGroup,
     FormItem,
@@ -40,6 +42,7 @@ interface IState {
 
 export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
     onChange: Dictionary<string, (value: any) => void>;
+    datePickerLocale: DatePickerLocaleSettings;
 
     constructor(props: IProps) {
         super(props);
@@ -62,6 +65,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
         this.clearSearch = this.clearSearch.bind(this);
         this.submitSearch = this.submitSearch.bind(this);
         this.onKeyDown = this.onKeyDown.bind(this);
+        this.datePickerLocale = superdeskApi.ui.framework.getLocaleForDatePicker();
 
         this.onChange = {
             name: (value: string) => this.setLocalAssetSearchParams({name: value}),
@@ -240,6 +244,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         value={this.state.localSearchParams.dateFrom ?? null}
                                         onChange={this.onChange.dateFrom}
                                         dateFormat={config.view.dateformat}
+                                        locale={this.datePickerLocale}
                                     />
                                 </FormItem>
                                 <FormItem>
@@ -248,6 +253,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         value={this.state.localSearchParams.dateTo ?? null}
                                         onChange={this.onChange.dateTo}
                                         dateFormat={config.view.dateformat}
+                                        locale={this.datePickerLocale}
                                     />
                                 </FormItem>
                             </FormGroup>

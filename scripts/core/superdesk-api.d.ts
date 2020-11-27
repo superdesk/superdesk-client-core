@@ -1221,6 +1221,16 @@ declare module 'superdesk-api' {
         bool(params: IElasticBoolQueryParams): IElasticBoolQuery;
     }
 
+    // Copied from 'superdesk-ui-framework/react/components/DatePicker.tsx
+    // Otherwise we have to import it here, which causes issues with extensions
+    export interface DatePickerLocaleSettings {
+        firstDayOfWeek?: number;
+        dayNames: string[];
+        dayNamesShort: string[];
+        dayNamesMin: string[];
+        monthNames: string[];
+        monthNamesShort: string[];
+    }
 
     // APPLICATION API
 
@@ -1271,6 +1281,9 @@ declare module 'superdesk-api' {
                 warning(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
                 error(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
             },
+            framework: {
+                getLocaleForDatePicker(targetLocale?: string): DatePickerLocaleSettings;
+            };
         };
         entities: {
             article: {
@@ -1437,7 +1450,6 @@ declare module 'superdesk-api' {
         override_ednote_for_corrections: any;
         override_ednote_template: any;
         default_genre: any;
-        default_language: string;
         japanese_characters_per_minute: any;
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
@@ -1631,7 +1643,6 @@ declare module 'superdesk-api' {
         releaseDate: any;
         isTestEnvironment: any;
         environmentName: any;
-        workspace: any;
         paths: {
             superdesk: any;
         };

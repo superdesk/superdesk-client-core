@@ -32,6 +32,7 @@ import {
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {downloadBlob} from './helpers/utils';
+import {getLocaleForDatePicker} from './helpers/ui-framework';
 import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -244,6 +245,9 @@ export function getSuperdeskApiImplementation(
             }),
             showModal,
             notify: notify,
+            framework: {
+                getLocaleForDatePicker,
+            },
         },
         components: {
             UserHtmlSingleLine,
