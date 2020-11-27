@@ -127,6 +127,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     // TODO: have to trap desk update event for refereshing users desks.
     this.userDesks = [];
+    const publishFromPersonal = appConfig?.features?.publishFromPersonal;
 
     /**
      * Returns the default properties which should be picked from item before sending API Request for save/update.
@@ -370,10 +371,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         var params = {
             publishing_warnings_confirmed: publishingWarningsConfirmed,
-            desk_id: appConfig.features.publishFromPersonal && !orig?.task?.desk && !extDiff?.task?.desk
-                ? session.identity.desk || desks.getCurrentDeskId()
-                : null,
         };
+
+        if (publishFromPersonal) {
+            params.desk_id = session.identity.desk || desks.getCurrentDeskId();
+        }
 
         return api.update(endpoint, orig, extDiff, params)
             .then(
@@ -509,7 +511,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             if (_.size(diff) > 0) {
                 return api.save('archive', origItem, diff, {},
-                    {publish_from_personal: appConfig?.features?.publishFromPersonal ?? false}).then((__item) => {
+                    {publish_from_personal: publishFromPersonal}).then((__item) => {
                     runAfterUpdateEvent(origItem, __item);
 
                     if (origItem.type === 'picture') {
