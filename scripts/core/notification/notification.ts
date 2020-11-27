@@ -26,6 +26,9 @@ export function dispatchCustomEvent<T extends keyof IEvents>(name: T, arg: IEven
 // implementing interface to be able to get keys at runtime
 const publicWebsocketMessageNames: IPublicWebsocketMessages = {
     'content:update': undefined,
+    'resource:created': undefined,
+    'resource:updated': undefined,
+    'resource:deleted': undefined,
 };
 
 export const getWebsocketMessageEventName = (
@@ -36,6 +39,18 @@ export const getWebsocketMessageEventName = (
 // can also be private, meaning it could only be accessed in extension the event is addressed to.
 export function isWebsocketEventPublic(eventName: string) {
     return Object.keys(publicWebsocketMessageNames).includes(eventName);
+}
+
+export function addWebsocketEventListener<T extends keyof IPublicWebsocketMessages>(
+    event: T,
+    handler: (message: IPublicWebsocketMessages[T]) => void,
+): () => void {
+    const eventName = getWebsocketMessageEventName(event);
+    const _handler = (e: CustomEvent) => handler(e.detail);
+
+    window.addEventListener(eventName, _handler);
+
+    return () => window.removeEventListener(eventName, _handler);
 }
 
 WebSocketProxy.$inject = ['$rootScope', '$interval', 'session', 'SESSION_EVENTS'];
@@ -86,24 +101,28 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
         ws.onmessage = function(event) {
             var msg = angular.fromJson(event.data);
 
-            const addressedForExtension = typeof msg.extra === 'object' && typeof msg.extra.extension === 'string';
+            // Delay all websocket events to avoid getting old data.
+            // The server is sending websocket events before it is able to return updated data.
+            setTimeout(() => {
+                const addressedForExtension = typeof msg.extra === 'object' && typeof msg.extra.extension === 'string';
 
-            if (addressedForExtension || isWebsocketEventPublic(msg.event)) {
-                window.dispatchEvent(
-                    new CustomEvent(
-                        getWebsocketMessageEventName(
-                            msg.event,
-                            isWebsocketEventPublic(msg.event) ? undefined : msg.extra.extension,
+                if (addressedForExtension || isWebsocketEventPublic(msg.event)) {
+                    window.dispatchEvent(
+                        new CustomEvent(
+                            getWebsocketMessageEventName(
+                                msg.event,
+                                isWebsocketEventPublic(msg.event) ? undefined : msg.extra.extension,
+                            ),
+                            {detail: msg},
                         ),
-                        {detail: msg},
-                    ),
-                );
-            }
+                    );
+                }
 
-            $rootScope.$broadcast(msg.event, msg.extra);
-            if (_.includes(ReloadEvents, msg.event)) {
-                $rootScope.$broadcast('reload', msg);
-            }
+                $rootScope.$broadcast(msg.event, msg.extra);
+                if (_.includes(ReloadEvents, msg.event)) {
+                    $rootScope.$broadcast('reload', msg);
+                }
+            }, 50);
         };
 
         ws.onerror = function(event) {

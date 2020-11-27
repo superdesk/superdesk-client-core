@@ -4,7 +4,6 @@ export {TimeElem} from './TimeElem';
 export {MediaPreview} from './MediaPreview';
 export {PhotoDeskPreview} from './PhotoDeskPreview';
 export {ItemContainer} from './ItemContainer';
-export {SelectBox} from './SelectBox';
 export {MediaInfo} from './MediaInfo';
 export {PhotoDeskInfo} from './PhotoDeskInfo';
 export {FetchedDesksInfo} from './FetchedDesksInfo';

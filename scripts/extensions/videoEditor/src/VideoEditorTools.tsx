@@ -67,7 +67,7 @@ class VideoEditorToolsComponent extends React.PureComponent<IProps> {
                 <div>
                     <span className="sd-text__strong-s">{gettext('Quality:')}</span>
                     <Dropdown
-                        label={
+                        label={(
                             <QualityLabel
                                 gettext={gettext}
                                 getClass={getClass}
@@ -79,7 +79,7 @@ class VideoEditorToolsComponent extends React.PureComponent<IProps> {
                                         : null
                                 }
                             />
-                        }
+                        )}
                         items={resolutions}
                         onSelect={this.props.onQualityChange}
                         disabled={this.props.videoQuality === 0}

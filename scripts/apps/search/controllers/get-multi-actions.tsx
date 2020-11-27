@@ -1,6 +1,3 @@
-/* eslint-disable indent */
-
-import React from 'react';
 import _, {flatMap} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
@@ -8,65 +5,77 @@ import {gettext} from 'core/utils';
 import {IExtensionActivationResult} from 'superdesk-api';
 import {extensions, appConfig} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
+import ng from 'core/services/ng';
 
-/**
- * @ngdoc controller
- * @module superdesk.apps.search
- * @name MultiActionBarController
- * @requires $rootScope
- * @requires multi
- * @requires multiEdit
- * @requires send
- * @requires remove
- * @requires modal
- * @requires $q
- * @requires packages
- * @requires superdesk
- * @requires notify
- * @requires spike
- * @requires authoring
- * @requires $location
- * @requires config
- * @description MultiActionBarController holds a set of convenience functions which
- * are used by the Multi-Action bar wwhen an item is click-selected.
- */
+interface IMultiActions {
+    send(): void;
+    sendAs(): void;
+    fetch(fetchAs?: boolean): void;
+    canRemoveIngestItems(): boolean;
+    removeIngestItems(): void;
+    multiedit(): void;
+    multiImageEdit(): void;
+    createPackage(): void;
+    addToPackage(): void;
+    spikeItems(): void;
+    unspikeItems(): void;
+    canEditMetadata(): boolean;
+    canPackageItems(): boolean;
+    canPublishItem(): boolean;
+    duplicateTo(): Promise<any>;
+    duplicateInPlace(): void;
+    canHighlightItems(): boolean;
+    publish(): void;
+}
 
-MultiActionBarController.$inject = [
-    '$rootScope', 'multi', 'multiEdit', 'multiImageEdit', 'send', 'remove', 'modal', 'lock',
-    'packages', 'superdesk', 'notify', 'spike', 'authoring', '$location', 'api', 'desks',
-    'session', 'privileges', 'confirm',
-];
-
-export function MultiActionBarController(
-    $rootScope, multi, multiEdit, multiImageEdit, send, remove, modal, lock,
-    packages, superdesk, notify, spike, authoring, $location, api, desks,
-    session, privileges, confirm,
+export function getMultiActions(
+    getSelectedItems: () => Array<IArticle>,
+    unselectAll: () => void,
 ) {
+    const $location = ng.get('$location');
+    const $rootScope = ng.get('$rootScope');
+    const api = ng.get('api');
+    const authoring = ng.get('authoring');
+    const desks = ng.get('desks');
+    const lock = ng.get('lock');
+    const modal = ng.get('modal');
+    const multiEdit = ng.get('multiEdit');
+    const multiImageEdit = ng.get('multiImageEdit');
+    const notify = ng.get('notify');
+    const packages = ng.get('packages');
+    const remove = ng.get('remove');
+    const send = ng.get('send');
+    const privileges = ng.get('privileges');
+    const confirm = ng.get('confirm');
+    const session = ng.get('session');
+    const spike = ng.get('spike');
+    const superdesk = ng.get('superdesk');
+
     const personalLocationPath = $location.path() === '/workspace/personal';
 
-    this.send = function() {
-        send.all(multi.getItems());
-    };
+    function sendFn() {
+        send.all(getSelectedItems());
+    }
 
-    this.sendAs = function() {
-        send.allAs(multi.getItems());
-    };
+    function sendAs() {
+        send.allAs(getSelectedItems());
+    }
 
-    this.fetch = (fetchAs = false) => {
-        const items = multi.getItems().concat();
+    const fetch = (fetchAs = false) => {
+        const items = getSelectedItems().concat();
 
         setActioning(true, items);
 
         (fetchAs ?
-            send.allAs(multi.getItems(), 'externalsourceTo') :
-            send.all(multi.getItems())
+            send.allAs(getSelectedItems(), 'externalsourceTo') :
+            send.all(getSelectedItems())
         )
-        .then(() => {
-            multi.reset();
-        })
-        .finally(() => {
-            setActioning(false, items);
-        });
+            .then(() => {
+                unselectAll();
+            })
+            .finally(() => {
+                setActioning(false, items);
+            });
     };
 
     const setActioning = (actioning: boolean, items) => {
@@ -75,68 +84,68 @@ export function MultiActionBarController(
         });
     };
 
-    this.canRemoveIngestItems = function() {
+    function canRemoveIngestItems() {
         var canRemove = true;
 
-        multi.getItems().forEach((item) => {
+        getSelectedItems().forEach((item) => {
             canRemove = canRemove && remove.canRemove(item);
         });
         return canRemove;
-    };
+    }
 
     /**
      * Remove multiple ingest items
      */
-    this.removeIngestItems = function() {
-        multi.getItems().forEach((item) => {
+    function removeIngestItems() {
+        getSelectedItems().forEach((item) => {
             remove.remove(item);
         });
-        multi.reset();
-    };
+        unselectAll();
+    }
 
-    this.multiedit = function() {
-        multiEdit.create(multi.getIds());
+    function multiedit() {
+        multiEdit.create(getSelectedItems().map(({_id}) => _id));
         multiEdit.open();
-    };
+    }
 
-    this.multiImageEdit = function() {
+    function multiImageEditFn() {
         // before opening the edit modal make sure all the items are locked
-        Promise.all(multi.getItems().map((item) => lock.lock(item, true, 'edit')))
+        Promise.all(getSelectedItems().map((item) => lock.lock(item, true, 'edit')))
             .then((selectedImages) => {
                 multiImageEdit.edit(selectedImages, (editedImages: Array<IArticle>) => Promise.all(
-                        editedImages.map((image: IArticle) => authoring.save(
+                    editedImages.map((image: IArticle) => authoring.save(
                         _.find(selectedImages, (_item: IArticle) => _item._id === image._id),
                         image,
                     )),
                 ));
             });
-    };
+    }
 
-    this.createPackage = function() {
-        packages.createPackageFromItems(multi.getItems())
+    function createPackage() {
+        packages.createPackageFromItems(getSelectedItems())
             .then((newPackage) => {
                 superdesk.intent('edit', 'item', newPackage);
-                multi.reset();
+                unselectAll();
             }, (response) => {
                 if (response.status === 403 && response.data && response.data._message) {
                     notify.error(gettext(response.data._message), 3000);
                 }
             });
-    };
+    }
 
-    this.addToPackage = function() {
-        $rootScope.$broadcast('package:addItems', {items: multi.getItems(), group: 'main'});
-        multi.reset();
-    };
+    function addToPackage() {
+        $rootScope.$broadcast('package:addItems', {items: getSelectedItems(), group: 'main'});
+        unselectAll();
+    }
 
     /**
      * Multiple item spike
      */
-    this.spikeItems = function(): void {
+    function spikeItems(): void {
         const spikeMultiple = () => {
-            spike.spikeMultiple(multi.getItems());
+            spike.spikeMultiple(getSelectedItems());
             $rootScope.$broadcast('item:spike');
-            multi.reset();
+            unselectAll();
         };
 
         if ($location.path() === '/workspace/personal') {
@@ -157,7 +166,7 @@ export function MultiActionBarController(
                         : [],
             );
 
-        const items: Array<IArticle> = multi.getItems();
+        const items: Array<IArticle> = getSelectedItems();
 
         showSpikeDialog(
             modal,
@@ -166,33 +175,33 @@ export function MultiActionBarController(
             onSpikeMultipleMiddlewares,
             items,
         );
-    };
+    }
 
     /**
      * Multiple item unspike
      */
-    this.unspikeItems = function() {
-        spike.unspikeMultiple(multi.getItems());
+    function unspikeItems() {
+        spike.unspikeMultiple(getSelectedItems());
         $rootScope.$broadcast('item:unspike');
-        multi.reset();
-    };
+        unselectAll();
+    }
 
-    this.canEditMetadata = () => multi.getItems().every(
+    const canEditMetadata = () => getSelectedItems().every(
         (item) => !item.lock_user && ['picture', 'video', 'audio'].includes(item.type),
     );
 
-    this.canPackageItems = function() {
+    function canPackageItems() {
         var canPackage = true;
 
-        multi.getItems().forEach((item) => {
+        getSelectedItems().forEach((item) => {
             canPackage = canPackage && item._type !== 'archived' && !item.lock_user &&
                 !_.includes(['ingested', 'spiked', 'killed', 'recalled', 'unpublished', 'draft'], item.state);
         });
         return canPackage;
-    };
+    }
 
-    this.canPublishItem = function() {
-        return multi.getItems().every((item) => {
+    function canPublishItem() {
+        return getSelectedItems().every((item) => {
             if (privileges.userHasPrivileges({publish: 1})) {
                 if (item.state !== 'draft' && $location.path() !== '/workspace/personal') {
                     return true;
@@ -200,19 +209,20 @@ export function MultiActionBarController(
                     return appConfig?.features?.publishFromPersonal;
                 }
             }
+
             return false;
         });
-    };
+    }
 
     /**
      * Multiple items duplicate
      */
-    this.duplicateTo = function() {
-        return send.allAs(multi.getItems(), 'duplicateTo');
-    };
+    function duplicateTo() {
+        return send.allAs(getSelectedItems(), 'duplicateTo');
+    }
 
-    this.duplicateInPlace = function() {
-        const items = multi.getItems();
+    function duplicateInPlace() {
+        const items = getSelectedItems();
 
         items.forEach((item) => {
             api.save('duplicate', {}, {
@@ -234,23 +244,21 @@ export function MultiActionBarController(
             });
         });
 
-        multi.reset();
-    };
+        unselectAll();
+    }
 
     /**
-     * @ngdoc method
-     * @name MultiActionBarController#canHighlightItems
      * @description Checks if all items multi-selected are eligible to be highlighted
      * @returns {Boolean}
      */
-    this.canHighlightItems = function() {
-        return multi.getItems().every((item) => authoring.itemActions(item).mark_item_for_highlight);
-    };
+    function canHighlightItems() {
+        return getSelectedItems().every((item) => authoring.itemActions(item).mark_item_for_highlight);
+    }
 
     /**
      * Publish all items
      */
-    this.publish = () => {
+    const publish = () => {
         const errors = [];
 
         const addErrorForItem = (item, err) => {
@@ -274,9 +282,11 @@ export function MultiActionBarController(
             }
         };
 
-        confirm.confirmQuickPublish(multi.getItems().length).then(() => {
+        const selectedItems = getSelectedItems();
+
+        confirm.confirmQuickPublish(selectedItems.length).then(() => {
             Promise.all(
-                multi.getItems().map((item) => new Promise((resolve) => {
+                selectedItems.map((item) => new Promise((resolve) => {
                     if (appConfig.features.publishFromPersonal && personalLocationPath) {
                         var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
 
@@ -301,7 +311,7 @@ export function MultiActionBarController(
             ).then(() => {
                 if (errors.length < 1) {
                     notify.success(gettext('All items were published successfully.'));
-                    multi.reset();
+                    unselectAll();
                 } else {
                     errors.forEach((err) => {
                         let messages = null;
@@ -318,4 +328,27 @@ export function MultiActionBarController(
             });
         });
     };
+
+    const actions: IMultiActions = {
+        send: sendFn,
+        sendAs,
+        fetch,
+        canRemoveIngestItems,
+        removeIngestItems,
+        multiedit,
+        multiImageEdit: multiImageEditFn,
+        createPackage,
+        addToPackage,
+        spikeItems,
+        unspikeItems,
+        canEditMetadata,
+        canPackageItems,
+        canPublishItem,
+        duplicateTo,
+        duplicateInPlace,
+        canHighlightItems,
+        publish,
+    };
+
+    return actions;
 }

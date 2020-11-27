@@ -75,7 +75,11 @@ function getContentType(id): Promise<IContentProfile> {
 export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise<void> {
     const authoringWorkspace = ng.get('authoringWorkspace');
 
-    setUrlPage('/workspace/monitoring');
+    if (document.querySelector('[sd-monitoring-view]') == null) {
+        // redirect if outside monitoring view
+        setUrlPage('/workspace/monitoring');
+    }
+
     authoringWorkspace.edit({_id: id}, mode);
 
     return Promise.resolve();
