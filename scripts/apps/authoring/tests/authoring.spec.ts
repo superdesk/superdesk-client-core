@@ -481,7 +481,7 @@ describe('authoring', () => {
             spyOn(api, 'update').and.returnValue($q.when());
             authoring.publish(item);
             expect(api.update).toHaveBeenCalledWith('archive_publish', item, {},
-                {publishing_warnings_confirmed: false, desk_id: null});
+                {publishing_warnings_confirmed: false});
         }));
 
         it('confirms if an item is dirty and saves and publish',
@@ -507,7 +507,7 @@ describe('authoring', () => {
                 $rootScope.$digest();
 
                 expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {},
-                    {publishing_warnings_confirmed: false, desk_id: null});
+                    {publishing_warnings_confirmed: false});
                 expect(lock.unlock).toHaveBeenCalled();
             }));
 
@@ -599,7 +599,7 @@ describe('authoring', () => {
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
                 spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
-                $httpBackend.expectPATCH(orig._links.self.href + '?publish_from_personal=false', item)
+                $httpBackend.expectPATCH(orig._links.self.href, item)
                     .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();
