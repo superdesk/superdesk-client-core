@@ -468,26 +468,6 @@ export function AuthoringDirective(
 
                 $scope.error = {};
 
-                if (appConfig.features.publishFromPersonal && !orig?.task?.desk && !item?.task?.desk) {
-                    var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
-
-                    item.task = {
-                        ...(item.task ?? {}),
-                        desk: currentDeskId,
-                    };
-
-                    if (item.associations) {
-                        Object.keys(item.associations).forEach((key) => {
-                            if (item.associations[key] != null) {
-                                item.associations[key].task = {
-                                    ...(item.associations[key].task ?? {}),
-                                    desk: currentDeskId,
-                                };
-                            }
-                        });
-                    }
-                }
-
                 return onPublishMiddlewares.reduce(
                     (current, next) => {
                         return current.then((result) => {
