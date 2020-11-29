@@ -12,12 +12,6 @@ import {getGroups} from './groups';
 import {OrderedMap} from 'immutable';
 import {getAutoTaggingVocabularyLabels} from './common';
 
-interface IAutoTaggingSearchResult {
-    result: {
-        tags: IServerResponse;
-    };
-}
-
 interface IProps {
     item: INewItem;
     onChange(item: INewItem | null): void;
@@ -85,74 +79,27 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                         }
 
                         <div className="form__row">
-                            <Autocomplete
-                                label={gettext('Title')}
-                                value={item ?? ''}
-                                keyValue="name"
-                                items={[]}
-                                search={(searchString, callback) => {
-                                    let cancelled = false;
+                            <div className="sd-input">
+                                <label
+                                    className="sd-input__label"
+                                    htmlFor="at-name"
+                                >
+                                    {gettext('Name')}
+                                </label>
 
-                                    httpRequestJsonLocal<IAutoTaggingSearchResult>({
-                                        method: 'POST',
-                                        path: '/ai_data_op/',
-                                        payload: {
-                                            service: 'imatrics',
-                                            operation: 'search',
-                                            data: {term: searchString},
-                                        },
-                                    }).then((res) => {
-                                        if (cancelled !== true) {
-                                            const result = toClientFormat(res.result.tags, false).toArray();
-
-                                            const withoutExistingTags = result.filter(
-                                                (searchTag) => tagAlreadyExists(searchTag.qcode) !== true,
-                                            );
-
-                                            callback(withoutExistingTags);
-                                        }
-                                    });
-
-                                    return {
-                                        cancel: () => {
-                                            cancelled = true;
-                                        },
-                                    };
-                                }}
-                                listItemTemplate={(__item: any) => {
-                                    const _item: ITagUi = __item;
-
-                                    return (
-                                        <div className="auto-tagging-widget__autocomplete-item">
-                                            <b>{_item.name}</b>
-
-                                            {
-                                                _item?.group?.value == null ? null : (
-                                                    <p>{_item.group.value}</p>
-                                                )
-                                            }
-
-                                            {
-                                                _item?.description == null ? null : (
-                                                    <p>{_item.description}</p>
-                                                )
-                                            }
-                                        </div>
-                                    );
-                                }}
-                                onChange={(name) => {
-                                    onChange({
-                                        ...item,
-                                        name,
-                                    });
-                                }}
-                                onSelect={(_value: any) => {
-                                    const value = _value as ITagUi;
-
-                                    insertTagFromSearch(value);
-                                    this.props.onChange(null); // closing new item view
-                                }}
-                            />
+                                <input
+                                    id="at-name"
+                                    className="sd-input__input"
+                                    type="text"
+                                    value={item.name ?? ''}
+                                    onChange={(event) => {
+                                        onChange({
+                                            ...item,
+                                            name: event.target.value,
+                                        });
+                                    }}
+                                />
+                            </div>
                         </div>
                         <div className="form__row">
                             <Select
@@ -169,11 +116,11 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                     )).toArray()
                                 }
                             </Select>
+                        </div>
 
-                            <br />
-
-                            {
-                                this.state.type !== 'entity' ? null : (
+                        {
+                            this.state.type !== 'entity' ? null : (
+                                <div className="form__row">
                                     <Select
                                         label={gettext('Entity type')}
                                         value={this.state.entityType ?? ''}
@@ -188,9 +135,11 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                             )).toArray()
                                         }
                                     </Select>
-                                )
-                            }
+                                </div>
+                            )
+                        }
 
+                        <div className="form__row">
                             <div className="sd-input">
                                 <label
                                     className="sd-input__label"
@@ -214,6 +163,7 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                             </div>
                         </div>
                     </div>
+
                     <div className="sd-card__footer">
                         <button className="btn sd-flex-grow" onClick={() => cancel()}>
                             {gettext('Cancel')}

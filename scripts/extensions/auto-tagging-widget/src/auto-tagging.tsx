@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import {OrderedMap, OrderedSet, Map} from 'immutable';
-import {Switch, Button, ButtonGroup, EmptyState} from 'superdesk-ui-framework/react';
+import {Switch, Button, ButtonGroup, EmptyState, Autocomplete} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 
 import {IArticle, ISuperdesk} from 'superdesk-api';
@@ -15,6 +15,7 @@ import {SOURCE_IMATRICS} from './constants';
 import {getGroups} from './groups';
 import {getAutoTaggingVocabularyLabels} from './common';
 import {getExistingTags, createTagsPatch} from './data-transformations';
+import {noop} from 'lodash';
 
 export const entityGroups = OrderedSet(['place', 'person', 'organisation']);
 
@@ -22,6 +23,12 @@ export type INewItem = Partial<ITagUi>;
 
 interface IAutoTaggingResponse {
     analysis: OrderedMap<string, ITagUi>;
+}
+
+interface IAutoTaggingSearchResult {
+    result: {
+        tags: IServerResponse;
+    };
 }
 
 interface IProps {
@@ -38,6 +45,10 @@ interface IState {
 }
 
 const RUN_AUTOMATICALLY_PREFERENCE = 'run_automatically';
+
+function tagAlreadyExists(data: IEditableData, qcode: string): boolean {
+    return data.changes.analysis.has(qcode);
+}
 
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
@@ -228,8 +239,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                     </div>
 
                     <div className="widget-content sd-padding-all--2">
-                        {
-                            <div className="form__row form__row--flex">
+                        <div>
+                            <div className="form__row form__row--flex" style={{padding: 0}}>
                                 <ButtonGroup align="left">
                                     <Switch
                                         value={runAutomaticallyPreference}
@@ -248,9 +259,83 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     />
                                     <label>{gettext('Run automatically')}</label>
                                 </ButtonGroup>
-                                {
-                                    data === 'loading' || data === 'not-initialized' ? null : (
-                                        <ButtonGroup align="right">
+                            </div>
+
+                            {
+                                data === 'loading' || data === 'not-initialized' ? null : (
+                                    <div className="form__row form__row--flex" style={{alignItems: 'center'}}>
+                                        <div style={{flexGrow: 1}}>
+                                            <Autocomplete
+                                                value={''}
+                                                keyValue="name"
+                                                items={[]}
+                                                search={(searchString, callback) => {
+                                                    let cancelled = false;
+
+                                                    httpRequestJsonLocal<IAutoTaggingSearchResult>({
+                                                        method: 'POST',
+                                                        path: '/ai_data_op/',
+                                                        payload: {
+                                                            service: 'imatrics',
+                                                            operation: 'search',
+                                                            data: {term: searchString},
+                                                        },
+                                                    }).then((res) => {
+                                                        if (cancelled !== true) {
+                                                            const result = toClientFormat(
+                                                                res.result.tags,
+                                                                false,
+                                                            ).toArray();
+
+                                                            const withoutExistingTags = result.filter(
+                                                                (searchTag) => tagAlreadyExists(
+                                                                    data,
+                                                                    searchTag.qcode,
+                                                                ) !== true,
+                                                            );
+
+                                                            callback(withoutExistingTags);
+                                                        }
+                                                    });
+
+                                                    return {
+                                                        cancel: () => {
+                                                            cancelled = true;
+                                                        },
+                                                    };
+                                                }}
+                                                listItemTemplate={(__item: any) => {
+                                                    const _item: ITagUi = __item;
+
+                                                    return (
+                                                        <div className="auto-tagging-widget__autocomplete-item">
+                                                            <b>{_item.name}</b>
+
+                                                            {
+                                                                _item?.group?.value == null ? null : (
+                                                                    <p>{_item.group.value}</p>
+                                                                )
+                                                            }
+
+                                                            {
+                                                                _item?.description == null ? null : (
+                                                                    <p>{_item.description}</p>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    );
+                                                }}
+                                                onSelect={(_value: any) => {
+                                                    const value = _value as ITagUi;
+
+                                                    this.insertTagFromSearch(value, data);
+                                                    // TODO: clear autocomplete?
+                                                }}
+                                                onChange={noop}
+                                            />
+                                        </div>
+
+                                        <div style={{marginLeft: 10}}>
                                             <Button
                                                 type="primary"
                                                 icon="plus-large"
@@ -265,12 +350,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             name: '',
                                                         },
                                                     });
-                                                }} />
-                                        </ButtonGroup>
-                                    )
-                                }
-                            </div>
-                        }
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                )
+                            }
+                        </div>
 
                         {(() => {
                             if (data === 'loading') {
@@ -318,9 +404,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     cancel={() => {
                                                         this.setState({newItem: null});
                                                     }}
-                                                    tagAlreadyExists={(qcode) => {
-                                                        return data.changes.analysis.has(qcode);
-                                                    }}
+                                                    tagAlreadyExists={
+                                                        (qcode) => tagAlreadyExists(data, qcode)
+                                                    }
                                                     insertTagFromSearch={(tag: ITagUi) => {
                                                         this.insertTagFromSearch(tag, data);
                                                     }}
