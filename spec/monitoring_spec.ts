@@ -537,11 +537,23 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        expect(monitoring.getGroupItems(1).count()).toBe(4);
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, els(['monitoring-group']).get(1)),
+                4,
+            ),
+        );
+
         monitoring.selectItem(1, 2);
         browser.sleep(1000); // Wait for animation
         monitoring.spikeMultipleItems();
-        expect(monitoring.getGroupItems(1).count()).toBe(3);
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, els(['monitoring-group']).get(1)),
+                3,
+            ),
+        );
+
         monitoring.showSpiked();
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
         monitoring.selectSpikedItem(0);

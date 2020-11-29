@@ -461,7 +461,7 @@ class Monitoring {
             browser.actions().mouseMove(itemTypeIcon, {x: -100, y: -100}).mouseMove(itemTypeIcon).perform();
             var checkbox = item.element(by.className('sd-checkbox'));
 
-            waitFor(checkbox, 500);
+            browser.wait(ECE.presenceOf(checkbox));
             return checkbox.click();
         };
 
