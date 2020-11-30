@@ -98,20 +98,16 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         },
                     },
                 }).then((res) => {
-                    const resClient = toClientFormat(res.analysis, false);
+                    const resClient = toClientFormat(res.analysis);
 
-                    if (dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized') {
-                        this.setState({
-                            data: {original: {analysis: OrderedMap<string, ITagUi>()}, changes: {analysis: resClient}},
-                        });
-                    } else {
-                        this.setState({
-                            data: {
-                                ...dataBeforeLoading,
-                                changes: {analysis: resClient.merge(dataBeforeLoading.changes.analysis)},
-                            },
-                        });
-                    }
+                    this.setState({
+                        data: {
+                            original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
+                                ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
+                                : dataBeforeLoading.original, // use previous data
+                            changes: {analysis: resClient},
+                        },
+                    });
                 });
             });
         }
@@ -119,7 +115,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             const existingTags = getExistingTags(this.props.article);
 
             if (Object.keys(existingTags).length > 0) {
-                const resClient = toClientFormat(existingTags, true);
+                const resClient = toClientFormat(existingTags);
 
                 this.setState({
                     data: {original: {analysis: resClient}, changes: {analysis: resClient}},
@@ -154,7 +150,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 source: SOURCE_IMATRICS,
                 altids: {},
                 group: newItem.group,
-                saved: false,
             };
 
             this.updateTags(
@@ -280,10 +275,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         },
                                                     }).then((res) => {
                                                         if (cancelled !== true) {
-                                                            const result = toClientFormat(
-                                                                res.result.tags,
-                                                                false,
-                                                            ).toArray();
+                                                            const result = toClientFormat(res.result.tags).toArray();
 
                                                             const withoutExistingTags = result.filter(
                                                                 (searchTag) => tagAlreadyExists(
@@ -359,7 +351,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         {(() => {
                             if (data === 'loading') {
                                 return (
-                                    <div className="spinner-big" />
+                                    <div style={{display: 'flex', alignItems: 'center'}}>
+                                        <div className="spinner-big" />
+                                    </div>
                                 );
                             } else if (data === 'not-initialized') {
                                 return (
@@ -370,6 +364,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 );
                             } else {
                                 const items = data.changes.analysis;
+                                const savedTags = data.original.analysis.keySeq().toSet();
 
                                 const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
 
@@ -422,6 +417,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         isOpen={true}
                                                     >
                                                         <TagListComponent
+                                                            savedTags={savedTags}
                                                             tags={tags.toMap()}
                                                             readOnly={readOnly}
                                                             onRemove={(id) => {
@@ -451,6 +447,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                                     {groupLabels.get(key).plural}
                                                                 </div>
                                                                 <TagListComponent
+                                                                    savedTags={savedTags}
                                                                     tags={tags.toMap()}
                                                                     readOnly={readOnly}
                                                                     onRemove={(id) => {

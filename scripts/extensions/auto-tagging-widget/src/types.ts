@@ -5,5 +5,4 @@ export interface ITagUi {
     source: string;
     altids: {[key: string]: string};
     group: {kind: 'scheme' | 'visual'; value: string};
-    saved: boolean;
 }
