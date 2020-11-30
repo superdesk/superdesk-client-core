@@ -4,10 +4,9 @@ import * as React from 'react';
 import {INewItem, entityGroups} from './auto-tagging';
 import {ISuperdesk} from 'superdesk-api';
 
-import {Autocomplete, Select, Option, Alert} from 'superdesk-ui-framework/react';
+import {Select, Option, Alert} from 'superdesk-ui-framework/react';
 
 import {ITagUi} from './types';
-import {IServerResponse, toClientFormat} from './adapter';
 import {getGroups} from './groups';
 import {OrderedMap} from 'immutable';
 import {getAutoTaggingVocabularyLabels} from './common';
@@ -30,7 +29,6 @@ interface IState {
 
 export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<IProps> {
     const {gettext} = superdesk.localization;
-    const {httpRequestJsonLocal} = superdesk;
 
     const entityGroupsWithLabels = getGroups(superdesk).filter((_, id) => entityGroups.has(id));
 
@@ -58,7 +56,7 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
             });
         }
         render() {
-            const {onChange, save, cancel, insertTagFromSearch, tagAlreadyExists} = this.props;
+            const {onChange, save, cancel} = this.props;
             const item = this.props.item;
             const {groupAvailableForNewItem} = this.state;
 

@@ -36,7 +36,7 @@ export function getServerResponseKeys(): Array<keyof IServerResponse> {
     return Object.keys(obj) as Array<keyof IServerResponse>;
 }
 
-export function toClientFormat(response: IServerResponse, saved: boolean): OrderedMap<string, ITagUi> {
+export function toClientFormat(response: IServerResponse): OrderedMap<string, ITagUi> {
     let tags = OrderedMap<string, ITagUi>();
 
     response.subject?.forEach((item) => {
@@ -52,7 +52,6 @@ export function toClientFormat(response: IServerResponse, saved: boolean): Order
                 kind: 'scheme',
                 value: item.scheme,
             },
-            saved: saved,
         };
 
         tags = tags.set(tag.qcode, tag);
@@ -94,7 +93,6 @@ export function toClientFormat(response: IServerResponse, saved: boolean): Order
                     kind: 'visual',
                     value: group,
                 },
-                saved,
             };
 
             tags = tags.set(tag.qcode, tag);
