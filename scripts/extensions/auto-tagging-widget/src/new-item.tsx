@@ -37,7 +37,14 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
             super(props);
 
             this.state = {
-                type: null,
+                /**
+                 * Requirements have been clarified to only allow entities.
+                 * The functionality to support all types is already there,
+                 * so I will simply disable other types for now
+                 * and keep the code in case we need it later.
+                 */
+                type: 'entity',
+
                 entityType: null,
                 validationErrors: [],
                 groupAvailableForNewItem: 'loading',
@@ -67,7 +74,7 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
             return (
                 <div className="sd-card auto-tagging-widget__card-absolute">
                     <div className="sd-card__header sd-card__header--white">
-                        <div className="sd-card__heading">{gettext('Add keyword')}</div>
+                        <div className="sd-card__heading">{gettext('Add entity')}</div>
                     </div>
                     <div className="sd-card__content">
                         {
@@ -99,22 +106,30 @@ export function getNewItemComponent(superdesk: ISuperdesk): React.ComponentType<
                                 />
                             </div>
                         </div>
-                        <div className="form__row">
-                            <Select
-                                label={gettext('Type')}
-                                value={this.state.type ?? ''}
-                                onChange={(value) => {
-                                    this.setState({type: value, entityType: null});
-                                }}
-                            >
-                                <Option>{gettext('Select type')}</Option>
-                                {
-                                    groupAvailableForNewItem.map((label, id) => (
-                                        <Option key={id} value={id}>{label}</Option>
-                                    )).toArray()
-                                }
-                            </Select>
-                        </div>
+
+                        {/*
+                            * Requirements have been clarified to only allow entities.
+                            * The functionality to support all types is already there,
+                            * so I will simply disable other types for now
+                            * and keep the code in case we need it later.
+
+                            <div className="form__row">
+                                <Select
+                                    label={gettext('Type')}
+                                    value={this.state.type ?? ''}
+                                    onChange={(value) => {
+                                        this.setState({type: value, entityType: null});
+                                    }}
+                                >
+                                    <Option>{gettext('Select type')}</Option>
+                                    {
+                                        groupAvailableForNewItem.map((label, id) => (
+                                            <Option key={id} value={id}>{label}</Option>
+                                        )).toArray()
+                                    }
+                                </Select>
+                            </div>
+                        */}
 
                         {
                             this.state.type !== 'entity' ? null : (
