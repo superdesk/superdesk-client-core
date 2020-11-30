@@ -110,7 +110,18 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         this.setState({
                             data: {
                                 ...dataBeforeLoading,
-                                changes: {analysis: resClient.merge(dataBeforeLoading.changes.analysis)},
+                                changes: {analysis: resClient.map((value, key) => {
+                                    if (dataBeforeLoading.original.analysis.has(key)) {
+                                        const updatedValue: ITagUi = {
+                                            ...value,
+                                            saved: true,
+                                        };
+
+                                        return updatedValue;
+                                    } else {
+                                        return value;
+                                    }
+                                }).toOrderedMap()},
                             },
                         });
                     }
