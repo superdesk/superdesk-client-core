@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {cloneDeep} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 
 interface IFeedingServiceField {
     id?: string;
@@ -620,7 +620,6 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
 
                     return feedingService ? feedingService.templateUrl : '';
                 };
-
 
                 /**
                  * Do URL request specified in url_request field
