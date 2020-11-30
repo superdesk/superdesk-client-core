@@ -24,6 +24,6 @@ if (patchesCurrentDir !== patchesDestinationDir) {
 }
 
 execSync(
-    'npx patch-package',
+    `cd ${clientCoreRoot} && npx patch-package`,
     {stdio: 'inherit'}
 );
