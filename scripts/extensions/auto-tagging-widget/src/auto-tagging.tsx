@@ -361,7 +361,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                         {(() => {
                             if (data === 'loading') {
                                 return (
-                                    <div className="spinner-big" />
+                                    <div style={{display: 'flex', alignItems: 'center'}}>
+                                        <div className="spinner-big" />
+                                    </div>
                                 );
                             } else if (data === 'not-initialized') {
                                 return (
