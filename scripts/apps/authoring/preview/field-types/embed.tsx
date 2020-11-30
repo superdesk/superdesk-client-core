@@ -1,4 +1,5 @@
 import React from 'react';
+import postscribe from 'postscribe';
 
 interface IProps {
     embed: string;
@@ -6,15 +7,26 @@ interface IProps {
 }
 
 export class EmbedPreview extends React.Component<IProps> {
+    el: HTMLDivElement;
+
+    componentDidMount() {
+        postscribe(this.el, this.props.embed);
+    }
+
     render() {
-        const {embed, description} = this.props;
+        const {description} = this.props;
 
         return (
             <div>
-                {description == null ? null : (
-                    <div>{description}</div>
-                )}
-                <div dangerouslySetInnerHTML={{__html: embed}} />
+                {
+                    description != null && <div>{description}</div>
+                }
+
+                <div
+                    ref={(el) => {
+                        this.el = el;
+                    }}
+                />
             </div>
         );
     }

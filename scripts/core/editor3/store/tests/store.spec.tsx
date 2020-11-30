@@ -22,6 +22,8 @@ describe('editor3.store', () => {
                 onChange: () => { /* no-op */ },
                 value: 'abc',
                 item: {},
+                limitBehavior: 'highlight',
+                limit: 42,
             },
             spellcheck,
         );
@@ -34,5 +36,7 @@ describe('editor3.store', () => {
         expect(state.showToolbar).toBe(true);
         expect(state.editorFormat.length).toBe(1);
         expect(state.editorFormat[0]).toBe('h1');
+        expect(state.limitConfig.ui).toBe('highlight');
+        expect(state.limitConfig.chars).toBe(42);
     }));
 });

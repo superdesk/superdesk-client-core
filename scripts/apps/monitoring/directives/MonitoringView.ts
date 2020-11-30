@@ -1,9 +1,11 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IDesk} from 'superdesk-api';
+import {IDesk, IUser} from 'superdesk-api';
+import {ISuperdeskQuery} from 'core/query-formatting';
 
 interface IScope extends ng.IScope {
+    contentStyle: {};
     monitoringItemsLoading: boolean;
     activeDeskId: IDesk['_id'] | null;
     swimlane: any;
@@ -23,6 +25,7 @@ interface IScope extends ng.IScope {
     toggleFilter: () => void;
     addResourceUpdatedEventListener: (callback: any) => void;
     openUpload: (files: Array<File>) => void;
+    spikedItemsQuery: ISuperdeskQuery;
 }
 
 /**
@@ -38,6 +41,7 @@ MonitoringView.$inject = [
     'workspaces',
     'desks',
     'superdesk',
+    'session',
 ];
 
 export function MonitoringView(
@@ -48,6 +52,7 @@ export function MonitoringView(
     workspaces,
     desks,
     superdesk,
+    session,
 ) {
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-view.html',
@@ -64,15 +69,14 @@ export function MonitoringView(
             disableMonitoringCreateItem: '=?',
             hideMonitoringToolbar1: '=?',
             hideMonitoringToolbar2: '=?',
+            contentStyle: '=?',
         },
         link: function(scope: IScope, elem) {
             let containerElem = elem.find('.sd-column-box__main-column');
 
-            scope.gettext = gettext;
+            scope.contentStyle = scope.contentStyle ?? {padding: '0 20px 20px'};
 
-            scope.$watch(() => desks.active.desk, (activeDeskId) => {
-                scope.activeDeskId = activeDeskId;
-            });
+            scope.gettext = gettext;
 
             scope.addResourceUpdatedEventListener = (callback) => {
                 scope.$on('resource:updated', (_event, data) => {
@@ -108,7 +112,31 @@ export function MonitoringView(
             workspaces.getActive();
 
             scope.desks = desks;
-            scope.$watch(desks.getCurrentDesk.bind(desks), (currentDesk: any) => {
+            scope.$watch(desks.getCurrentDesk.bind(desks), (currentDesk: IDesk | null) => {
+                scope.activeDeskId = currentDesk?._id ?? null;
+
+                if (scope.activeDeskId != null) {
+                    session.getIdentity().then((user: IUser) => {
+                        scope.spikedItemsQuery = {
+                            filter: {$and: [
+                                {'state': {$eq: 'spiked'}},
+                                {$or: [
+                                    {$and: [
+                                        {'state': {$eq: 'draft'}},
+                                        {'original_creator': {$eq: user._id}},
+                                    ]},
+                                    {'state': {$ne: 'draft'}},
+                                ]},
+                                {'package_type': {$ne: 'takes'}},
+                                {'task.desk': {$eq: scope.activeDeskId}},
+                            ]},
+                            sort: [{'versioncreated': 'desc'}],
+                            page: 1,
+                            max_results: 20,
+                        };
+                    });
+                }
+
                 if (currentDesk && currentDesk.monitoring_default_view) {
                     switch (currentDesk.monitoring_default_view) {
                     case 'list':

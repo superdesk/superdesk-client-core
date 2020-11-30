@@ -116,6 +116,7 @@ class Authoring {
     checkMarkedForHighlight: (highlight: any, item?: any) => void;
     writeText: (text: any) => void;
     writeTextToHeadline: (text: any) => void;
+    writeTextToHeadlineFromRecentTemplate: (text: any) => void;
     writeTextToAbstract: (text: any) => void;
     writeTextToByline: (text: any) => void;
     getBylineText: () => any;
@@ -756,6 +757,10 @@ class Authoring {
 
         this.writeTextToHeadline = function(text) {
             this.headline.sendKeys(text);
+        };
+
+        this.writeTextToHeadlineFromRecentTemplate = function(text) {
+            el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys(text);
         };
 
         this.writeTextToAbstract = function(text) {

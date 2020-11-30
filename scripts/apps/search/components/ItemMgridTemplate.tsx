@@ -5,15 +5,16 @@ import {GridTypeIcon} from './GridTypeIcon';
 import {IArticle, IDesk} from 'superdesk-api';
 import {ItemPriority} from './ItemPriority';
 import {ItemUrgency} from './ItemUrgency';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 
 interface IProps {
     item: IArticle;
     desk: IDesk;
     swimlane: any;
     ingestProvider: any;
-    onMultiSelect(): any;
     broadcast(obj: any): any;
     getActionsMenu(): any;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
 export class ItemMgridTemplate extends React.Component<IProps, never> {
@@ -25,7 +26,7 @@ export class ItemMgridTemplate extends React.Component<IProps, never> {
                 <MediaPreview
                     item={item}
                     desk={this.props.desk}
-                    onMultiSelect={this.props.onMultiSelect}
+                    multiSelect={this.props.multiSelect}
                 />
                 <MediaInfo
                     item={item}
