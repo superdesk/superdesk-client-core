@@ -6,6 +6,7 @@ import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {nav} from './helpers/utils';
+import {ECE, els, el} from 'end-to-end-testing-helpers';
 
 describe('spike', () => {
     beforeEach((done) => {
@@ -37,12 +38,22 @@ describe('spike', () => {
         content.spikeItems();
 
         monitoring.showSpiked();
-        expect(monitoring.getAllItems().count()).toBe(2);
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, el(['articles-list'])),
+                2,
+            ),
+        );
 
         content.selectItem(0);
         content.selectItem(1);
         content.unspikeItems();
 
-        expect(monitoring.getAllItems().count()).toBe(0);
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, el(['articles-list'])),
+                0,
+            ),
+        );
     });
 });
