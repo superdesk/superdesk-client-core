@@ -11,7 +11,7 @@ export function MediaMetadata(userList, archiveService, metadata) {
         templateUrl: 'scripts/apps/archive/views/metadata-view.html',
         link: function(scope, elem) {
             scope.$watch('item', reloadData);
-            scope.isCorrectionWorkflowEnabled = true;
+            scope.isCorrectionWorkflowEnabled = appConfig?.corrections_workflow;
 
             function reloadData() {
                 var qcodes = [];

@@ -32,10 +32,10 @@ export function getStateLabel(itemState: ITEM_STATE) {
 
 interface IProps {
     item: IArticle;
+    openAuthoringView(correction_by: string): void;
 }
 
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
-
     if (props.item.state != null) {
         let title = getStateLabel(props.item.state);
         const text = title;
@@ -58,8 +58,8 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
                 className={props.item.state === 'correction'
                     ? 'label pink--500'
                     : (props.item.state === 'being_corrected'
-                    ? 'label label--hollow hollow-pink--500'
-                    : 'state-label state-' + props.item.state)}
+                        ? 'label label--hollow hollow-pink--500'
+                        : 'state-label state-' + props.item.state)}
                 key="state"
                 onClick={props.item.state === 'being_corrected' ? openItem : null}
             >

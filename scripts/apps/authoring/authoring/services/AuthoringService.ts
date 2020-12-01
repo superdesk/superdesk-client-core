@@ -139,7 +139,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     const isCorrection = (item: IArticle): boolean => {
-
         if (item.state === ITEM_STATE.CORRECTION) {
             return true;
         }
@@ -195,6 +194,17 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             })
             .then((item) => autosave.open(item).then(null, (err) => item));
     };
+
+    this.cancelCorrection = (item) => api.remove(item, {}, 'archive_correction')
+        .then((data) => notify.success(gettext('Correction has been removed')),
+            (response) => {
+                if (angular.isDefined(response.data._message)) {
+                    notify.error(gettext('Failed to remove correction: {{message}}',
+                        {message: response.data._message}));
+                } else {
+                    notify.error(gettext('There was an error. Failed to remove correction.'));
+                }
+            });
 
     this.rewrite = function(item): void {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
@@ -433,13 +443,20 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             logger.warn('Trying to send correction of a non published item');
             return;
         }
+        var updates = {
+            desk_id: desks.getCurrentDeskId() || item.task.desk,
+        };
 
-        return self.publish(item, {}, 'correction', {notifyErrors: true})
+        return api.save('archive_correction', {}, updates, item)
             .then((newItem) => {
-                handleSuccess();
-                return dataApi.findOne('archive', newItem.correction_by).then((articleOriginal) => {
-                    authoringWorkspace.edit(articleOriginal);
-                });
+                notify.success(gettext('Update Created.'));
+                authoringWorkspace.edit(newItem);
+            }, (response) => {
+                if (angular.isDefined(response.data._message)) {
+                    notify.error(gettext('Failed to generate update: {{message}}', {message: response.data._message}));
+                } else {
+                    notify.error(gettext('There was an error. Failed to generate update.'));
+                }
             });
     };
 
@@ -651,6 +668,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.view = !lockedByMe;
         action.unlinkUpdate = this._canUnlinkUpdate(currentItem);
+        action.cancleCorrection = !this._isReadOnly(item) && currentItem.state === ITEM_STATE.CORRECTION;
         action.export = currentItem && currentItem.type && currentItem.type === 'text'
             && !isBeingCorrected(currentItem);
 
@@ -763,7 +781,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let userPrivileges = privileges.privileges;
         let isPersonalSpace = $location.path() === '/workspace/personal';
 
-        action.re_write = canRewrite(currentItem) === true && !isBeingCorrected(currentItem) 
+        action.re_write = canRewrite(currentItem) === true && !isBeingCorrected(currentItem)
             && !isCorrection(currentItem);
         action.resend = currentItem.type === 'text' &&
             isPublished(currentItem, false);

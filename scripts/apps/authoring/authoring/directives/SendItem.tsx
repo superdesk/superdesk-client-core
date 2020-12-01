@@ -6,6 +6,7 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {ITEM_STATE} from 'apps/archive/constants';
 
 SendItem.$inject = [
     '$q',
@@ -95,6 +96,8 @@ export function SendItem($q,
             scope.sendPublishSchedule = appConfig?.ui?.sendPublishSchedule ?? true;
             scope.sendEmbargo = appConfig?.ui?.sendEmbargo ?? true;
             scope.PERSONAL_SPACE = {label: gettext('Personal Space'), value: 'PERSONAL_SPACE'};
+            scope.isCorrection = appConfig?.corrections_workflow
+                && scope.item?.state === ITEM_STATE.CORRECTION;
 
             // if authoring:publish extension point is not defined
             // then publish pane is single column
@@ -547,7 +550,7 @@ export function SendItem($q,
                     return scope.item ? !scope.item.flags.marked_for_not_publication && scope.itemActions.publish :
                         scope.itemActions.publish;
                 } else if (scope._action === 'correct') {
-                    return privileges.privileges.publish && scope.itemActions.correct;
+                    return privileges.privileges.publish && (scope.itemActions.correct || scope.isCorrection);
                 } else if (scope._action === 'kill') {
                     return privileges.privileges.publish && scope.itemActions.kill;
                 }
@@ -1030,7 +1033,11 @@ export function SendItem($q,
             // update actions on item save
             scope.$watch('orig._current_version', initializeItemActions);
 
-            scope.getPublishLabel = (action) => action === 'edit' ? gettext('publish') : gettext(action);
+            scope.getPublishLabel = (action) => action === 'edit'
+                ? (scope.isCorrection
+                    ? gettext('Send Correction')
+                    : gettext('publish'))
+                : gettext(action);
         },
     };
 }

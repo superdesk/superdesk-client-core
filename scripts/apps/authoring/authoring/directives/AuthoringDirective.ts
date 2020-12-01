@@ -934,7 +934,7 @@ export function AuthoringDirective(
 
             $scope.openAction = function(action) {
                 if (action === 'correct') {
-                    if ($scope.item.state === ITEM_STATE.PUBLISHED) {
+                    if ($scope.item.state !== ITEM_STATE.BEING_CORRECTED) {
                         authoring.correction($scope.item);
                     } else {
                         authoringWorkspace.correct($scope.item);

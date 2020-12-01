@@ -32,7 +32,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                     .filter((field: IArticleField) => field.field_type == null);
             };
 
-            scope.isCorrectionWorkflowEnabled = true;
+            scope.isCorrectionWorkflowEnabled = appConfig?.corrections_workflow;
             scope.checkRenditions = checkRenditions;
             scope.previewState = {toggleHeader: false};
             if (scope.selected.preview.profile) {

@@ -326,6 +326,22 @@ angular.module('superdesk.apps.archive', [
                     authoring.unlink(data.item);
                 }],
             })
+            .activity('cancelCorrection', {
+                label: gettext('Cancel correction'),
+                icon: 'remove-sign',
+                filters: [{action: 'list', type: 'archive'}],
+                group: 'corrections',
+                privileges: {correct: 1},
+                condition: function(item) {
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
+                },
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).cancleCorrection;
+                }],
+                controller: ['data', 'authoring', function(data, authoring) {
+                    authoring.cancelCorrection(data.item);
+                }],
+            })
             .activity('export', {
                 label: gettext('Export'),
                 icon: 'download',

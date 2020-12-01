@@ -60,13 +60,13 @@ export enum ITEM_STATE {
     RECALLED = 'recalled',
 
     /**
-     * Correction, If Correction workflow is true, Correction is send on a desk.
+     * Correction, If Correction workflow is true, correction, copy of published article which we can edit.
      */
     CORRECTION = 'correction',
 
     /**
-     * being_corrected, If Correction workflow is true, being_corrected, correction of an article.
-     */
+     * being_corrected, If Correction workflow is true, being_corrected, the item is being corrected.
+    */
     BEING_CORRECTED = 'being_corrected',
 
     /**

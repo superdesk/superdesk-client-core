@@ -211,6 +211,16 @@ declare module 'superdesk-api' {
          * Unpublished, might be published again.
          */
         UNPUBLISHED = 'unpublished',
+
+        /**
+        * Correction, If Correction workflow is true, correction, copy of published article which we can edit.
+        */
+        CORRECTION = 'correction',
+
+        /**
+        * being_corrected, If Correction workflow is true, being_corrected, the item is being corrected.
+        */
+        BEING_CORRECTED = 'being_corrected',
     }
 
 
@@ -319,6 +329,8 @@ declare module 'superdesk-api' {
         lock_session: any;
         rewritten_by?: IArticle['_id'];
         rewrite_of?: IArticle['_id'];
+        correction_by?: IArticle['_id'];
+        corrected_of?: IArticle['_id'];
         profile: string;
         word_count?: number;
         lines_count?: number;
