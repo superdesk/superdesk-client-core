@@ -2,6 +2,12 @@ const execSync = require('child_process').execSync;
 const fs = require('fs');
 const path = require('path');
 
+function directoryName(path) {
+    const parts = path.split('/');
+
+    return parts[parts.length - 2];
+}
+
 function copyFolderSync(from, to) {
     fs.mkdirSync(to);
     fs.readdirSync(from).forEach((element) => {
@@ -13,10 +19,12 @@ function copyFolderSync(from, to) {
     });
 }
 
-const currentDir = process.cwd();
 const clientCoreRoot = path.join(__dirname, '../');
+const maybeParentModulePath = path.join(clientCoreRoot, '../../');
+const mainDirectory = directoryName(maybeParentModulePath) === 'client' ? maybeParentModulePath : clientCoreRoot;
+
 const patchesCurrentDir = path.join(clientCoreRoot, 'patches');
-const patchesDestinationDir = path.join(currentDir, 'patches');
+const patchesDestinationDir = path.join(mainDirectory, 'patches');
 
 if (patchesCurrentDir !== patchesDestinationDir) {
     fs.rmdirSync(patchesDestinationDir, {recursive: true});
@@ -24,6 +32,6 @@ if (patchesCurrentDir !== patchesDestinationDir) {
 }
 
 execSync(
-    `cd ${currentDir} && npx patch-package`,
+    `cd ${mainDirectory} && npx patch-package`,
     {stdio: 'inherit'}
 );
