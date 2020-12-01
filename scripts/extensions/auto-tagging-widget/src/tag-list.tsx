@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as React from 'react';
 import {Set, OrderedMap} from 'immutable';
 import {ISuperdesk} from 'superdesk-api';

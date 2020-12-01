@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import * as React from 'react';
 import {OrderedMap, OrderedSet, Map} from 'immutable';
 import {Switch, Button, ButtonGroup, EmptyState, Autocomplete} from 'superdesk-ui-framework/react';
