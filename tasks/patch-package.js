@@ -27,7 +27,9 @@ const patchesCurrentDir = path.join(clientCoreRoot, 'patches');
 const patchesDestinationDir = path.join(mainDirectory, 'patches');
 
 if (patchesCurrentDir !== patchesDestinationDir) {
-    fs.rmdirSync(patchesDestinationDir, {recursive: true});
+    if (fs.existsSync(patchesDestinationDir)) {
+        fs.rmdirSync(patchesDestinationDir, {recursive: true});
+    }
     copyFolderSync(patchesCurrentDir, patchesDestinationDir);
 }
 
