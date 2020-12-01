@@ -72,6 +72,7 @@ export class DesksDropdown extends React.Component<any, any> {
             onMouseLeave: this.close,
         }, React.createElement('ul', {}, desks));
 
+        // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
         const icon = thisNode.getElementsByClassName('dropdown__toggle')[0];
 

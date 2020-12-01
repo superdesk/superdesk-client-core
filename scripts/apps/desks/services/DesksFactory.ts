@@ -45,12 +45,12 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
     session, $filter, privileges, $rootScope) {
     let _cache = {};
 
-    var _fetchAll = function(endpoint, parent?, page = 1, items = []) {
+    var _fetchAll = function(endpoint, parent?, page = 1, items = [], refresh = false) {
         let key;
 
         if (page === 1) {
             key = angular.toJson({resource: endpoint, parent: parent});
-            if (_cache[key]) {
+            if (!refresh && _cache[key]) {
                 return _cache[key];
             }
         }
@@ -62,7 +62,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
 
                 if (result._links && result._links.next) {
                     pg++;
-                    return _fetchAll(endpoint, parent, pg, extended);
+                    return _fetchAll(endpoint, parent, pg, extended, refresh);
                 }
                 return extended;
             });
@@ -135,10 +135,10 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                     });
                 });
         },
-        fetchStages: function() {
+        fetchStages: function(refresh = false) {
             var self = this;
 
-            return _fetchAll('stages')
+            return _fetchAll('stages', undefined, undefined, undefined, refresh)
                 .then((items) => {
                     self.stages = {_items: items};
                     _.each(items, (item) => {
@@ -153,7 +153,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 return $q.when().then(returnDeskStages);
             }
 
-            return self.fetchStages()
+            return self.fetchStages(refresh)
                 .then(angular.bind(self, self.generateDeskStages))
                 .then(returnDeskStages);
 

@@ -53,31 +53,6 @@ describe('master_desk', () => {
         expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
     });
 
-    xit('show tasks view', () => {
-        masterDesks.switchToTab('tasks');
-        expect(masterDesks.getTask(1, 0, 0).element(by.className('content-item__text')).getText())
-            .toContain('item3 slugline');
-        expect(masterDesks.getTask(1, 2, 0).element(by.className('content-item__text')).getText())
-            .toContain('item4 slugline');
-        expect(masterDesks.getTask(0, 0, 0).element(by.className('content-item__text')).getText())
-            .toContain('item5 slugline');
-        expect(masterDesks.getTask(0, 1, 2).element(by.className('content-item__text')).getText())
-            .toContain('item6 slugline');
-    });
-
-    xit('tasks view - show desk', () => {
-        masterDesks.switchToTab('tasks');
-        masterDesks.goToDesk(0);
-        expect(browser.getCurrentUrl()).toContain('#/workspace');
-    });
-
-    xit('tasks view - edit desk', () => {
-        masterDesks.switchToTab('tasks');
-        masterDesks.editDesk(0);
-        browser.sleep(200);
-        expect(element(by.className('modal__content')).isDisplayed()).toBe(true);
-    });
-
     it('show user role view all users', () => {
         masterDesks.switchToTab('users');
         expect(masterDesks.getUser(1, 1, 0).element(by.className('content-item__text')).getText())
@@ -94,6 +69,7 @@ describe('master_desk', () => {
 
     // after https://github.com/superdesk/superdesk-core/pull/2008
     // need another way to detect active session
+    // eslint-disable-next-line jasmine/no-disabled-tests
     xit('show user role view online users', () => {
         masterDesks.switchToTab('users');
         browser.sleep(3000);

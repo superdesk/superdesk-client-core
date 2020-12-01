@@ -502,12 +502,16 @@ describe('monitoring', () => {
         browser.sleep(100);
 
         monitoring.showSpiked();
-        browser.sleep(100);
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
 
         monitoring.unspikeItem(0);
-        browser.sleep(100);
-        expect(monitoring.getSpikedItems().count()).toBe(0);
+
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, el(['articles-list'])),
+                0,
+            ),
+        );
     });
 
     it('updates personal on single item spike', () => {
@@ -533,17 +537,34 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        expect(monitoring.getGroupItems(1).count()).toBe(4);
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, els(['monitoring-group']).get(1)),
+                4,
+            ),
+        );
+
         monitoring.selectItem(1, 2);
         browser.sleep(1000); // Wait for animation
         monitoring.spikeMultipleItems();
-        expect(monitoring.getGroupItems(1).count()).toBe(3);
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, els(['monitoring-group']).get(1)),
+                3,
+            ),
+        );
+
         monitoring.showSpiked();
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
         monitoring.selectSpikedItem(0);
         browser.sleep(1000); // Wait for animation
         monitoring.unspikeMultipleItems();
-        expect(monitoring.getSpikedItems().count()).toBe(0);
+        browser.wait(
+            ECE.hasElementCount(
+                els(['article-item'], null, el(['articles-list'])),
+                0,
+            ),
+        );
     });
 
     it('can show/hide monitoring list', () => {
@@ -880,25 +901,6 @@ describe('monitoring', () => {
         expect(el(['authoring', 'field-slugline']).getAttribute('value')).toBe(slugline);
         expect(el(['authoring', 'field-editors-note']).getAttribute('value')).toBe(editorsNote);
     });
-
-    xit('can display embargo label when set for published item', () => {
-        setupDeskMonitoringSettings('POLITIC DESK');
-        monitoring.turnOffDeskWorkingStage(0);
-
-        monitoring.openMonitoring();
-
-        monitoring.actionOnItem('Edit', 1, 0);
-        authoring.sendToButton.click();
-        authoring.setEmbargo();
-        authoring.sendToButton.click();
-        authoring.save();
-        authoring.publish();
-
-        // filter published text item
-        monitoring.filterAction('text');
-        expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).isDisplayed()).toBe(true);
-        expect(monitoring.getItem(4, 0).element(by.className('state_embargo')).getText()).toEqual('EMBARGO');
-    });
 });
 
 function markForAdmin(groupIndex, itemIndex) {
@@ -917,6 +919,7 @@ function markForAdmin(groupIndex, itemIndex) {
 }
 
 // disabling tests until test instance is configured to run with markForUser extension enabled
+// eslint-disable-next-line jasmine/no-disabled-tests
 xdescribe('marked for me filter in monitoring', () => {
     beforeEach(() => {
         const multipleSourcesDesk: string = 'Multiple sources';

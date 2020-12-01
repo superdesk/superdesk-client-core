@@ -7,6 +7,7 @@ import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {dataApi} from 'core/helpers/CrudManager';
 import {canPrintPreview} from '../helpers';
+import {getMultiActions} from '../controllers/get-multi-actions';
 
 interface IScope extends ng.IScope {
     multi: any;
@@ -18,27 +19,6 @@ interface IScope extends ng.IScope {
     publish: any;
     state: any;
     printPreview: Array<IArticle>;
-    action: {
-        send: any;
-        sendAs: any;
-        canRemoveIngestItems: any;
-        removeIngestItems: any;
-        fetch: any;
-        canEditMetadata: any;
-        multiImageEdit: any;
-        multiedit: any;
-        openExport: any;
-        spikeItems: any;
-        unspikeItems: any;
-        canPackageItems: any;
-        canPublishItem: any;
-        duplicateInPlace: any;
-        duplicateTo: any;
-        publish: any;
-        createPackage: any;
-        addToPackage: any;
-        canHighlightItems: any;
-    };
     toggleDisplay(): void;
     hideMultiActionBar(): void;
     hideMultiActionBar(): void;
@@ -72,11 +52,14 @@ export function MultiActionBar(
     authoring,
 ) {
     return {
-        controller: 'MultiActionBar',
-        controllerAs: 'action',
         templateUrl: asset.templateUrl('apps/search/views/multi-action-bar.html'),
         scope: true,
         link: function(scope: IScope) {
+            const multiActions = getMultiActions(
+                () => multi.getItems(),
+                () => multi.reset(),
+            );
+
             scope.multi = multi;
             scope.display = true;
             scope.$watch(multi.getItems, detectType);
@@ -107,7 +90,7 @@ export function MultiActionBar(
                         label: gettext('Fetch'),
                         icon: 'icon-archive',
                         onTrigger: () => {
-                            scope.action.send();
+                            multiActions.send();
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
@@ -116,18 +99,18 @@ export function MultiActionBar(
                         label: gettext('Fetch to'),
                         icon: 'icon-fetch-as',
                         onTrigger: () => {
-                            scope.action.sendAs();
+                            multiActions.sendAs();
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
                     });
 
-                    if (scope.action.canRemoveIngestItems()) {
+                    if (multiActions.canRemoveIngestItems()) {
                         actions.push({
                             label: gettext('Remove'),
                             icon: 'icon-trash',
                             onTrigger: () => {
-                                scope.action.removeIngestItems();
+                                multiActions.removeIngestItems();
                                 scope.$apply();
                             },
                             canAutocloseMultiActionBar: false,
@@ -138,7 +121,7 @@ export function MultiActionBar(
                         label: gettext('Fetch'),
                         icon: 'icon-archive',
                         onTrigger: () => {
-                            scope.action.fetch();
+                            multiActions.fetch();
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
@@ -146,18 +129,18 @@ export function MultiActionBar(
                         label: gettext('Fetch to'),
                         icon: 'icon-fetch-as',
                         onTrigger: () => {
-                            scope.action.fetch(true);
+                            multiActions.fetch(true);
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
                     });
                 } else if (scope.type === 'archive') {
-                    if (scope.action.canEditMetadata() && scope.activity['edit.item']) {
+                    if (multiActions.canEditMetadata() && scope.activity['edit.item']) {
                         actions.push({
                             label: gettext('Edit metadata'),
                             icon: 'icon-edit-line',
                             onTrigger: () => {
-                                scope.action.multiImageEdit();
+                                multiActions.multiImageEdit();
                                 scope.$apply();
                             },
                             canAutocloseMultiActionBar: false,
@@ -180,7 +163,7 @@ export function MultiActionBar(
                             label: gettext('Multiedit'),
                             icon: 'icon-multiedit',
                             onTrigger: () => {
-                                scope.action.multiedit();
+                                multiActions.multiedit();
                                 scope.$apply();
                             },
                             canAutocloseMultiActionBar: false,
@@ -191,7 +174,7 @@ export function MultiActionBar(
                             label: gettext('Spike'),
                             icon: 'icon-trash',
                             onTrigger: () => {
-                                scope.action.spikeItems();
+                                multiActions.spikeItems();
                                 scope.$apply();
                             },
                             canAutocloseMultiActionBar: false,
@@ -202,7 +185,18 @@ export function MultiActionBar(
                             label: gettext('Send to'),
                             icon: 'icon-expand-thin',
                             onTrigger: () => {
-                                scope.action.sendAs();
+                                multiActions.sendAs();
+                                scope.$apply();
+                            },
+                            canAutocloseMultiActionBar: false,
+                        });
+                    }
+                    if (scope.activity['edit.item'] && multiActions.canPublishItem()) {
+                        actions.push({
+                            label: gettext('Publish'),
+                            icon: 'icon-ok',
+                            onTrigger: () => {
+                                multiActions.publish();
                                 scope.$apply();
                             },
                             canAutocloseMultiActionBar: false,
@@ -213,19 +207,19 @@ export function MultiActionBar(
                         label: gettext('Unspike'),
                         icon: 'icon-unspike',
                         onTrigger: () => {
-                            scope.action.unspikeItems();
+                            multiActions.unspikeItems();
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
                     });
                 }
 
-                if (scope.action.canPackageItems()) {
+                if (multiActions.canPackageItems()) {
                     actions.push({
                         label: gettext('Create Package'),
                         icon: 'icon-package-create',
                         onTrigger: () => {
-                            scope.action.createPackage();
+                            multiActions.createPackage();
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
@@ -236,7 +230,7 @@ export function MultiActionBar(
                             label: gettext('Add to Current Package'),
                             icon: 'icon-package-plus',
                             onTrigger: () => {
-                                scope.action.addToPackage();
+                                multiActions.addToPackage();
                                 scope.$apply();
                             },
                             canAutocloseMultiActionBar: false,
@@ -245,7 +239,7 @@ export function MultiActionBar(
 
                     const currentDeskId = desks.getCurrentDeskId();
 
-                    if (currentDeskId != null && scope.action.canHighlightItems()) {
+                    if (currentDeskId != null && multiActions.canHighlightItems()) {
                         actions.push({
                             label: gettext('Add to highlight'),
                             icon: 'icon-star',
@@ -267,7 +261,7 @@ export function MultiActionBar(
                             icon: 'icon-copy',
                         },
                         onTrigger: () => {
-                            scope.action.duplicateTo();
+                            multiActions.duplicateTo();
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
@@ -283,7 +277,7 @@ export function MultiActionBar(
                             icon: 'icon-copy',
                         },
                         onTrigger: () => {
-                            scope.action.duplicateInPlace();
+                            multiActions.duplicateInPlace();
                             scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
@@ -305,18 +299,6 @@ export function MultiActionBar(
                                 scope.printPreview = res;
                                 scope.$apply();
                             });
-                        },
-                        canAutocloseMultiActionBar: false,
-                    });
-                }
-
-                if (scope.activity['edit.item'] && scope.action.canPublishItem()) {
-                    actions.push({
-                        label: gettext('Publish'),
-                        icon: 'icon-ok',
-                        onTrigger: () => {
-                            scope.action.publish();
-                            scope.$apply();
                         },
                         canAutocloseMultiActionBar: false,
                     });
@@ -407,7 +389,7 @@ export function MultiActionBar(
 
             keyboardManager.bind('ctrl+shift+#', () => {
                 if (scope.activity.spike > 0) {
-                    scope.action.spikeItems();
+                    multiActions.spikeItems();
                 }
             });
         },

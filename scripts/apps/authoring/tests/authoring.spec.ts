@@ -48,6 +48,8 @@ describe('authoring', () => {
 
     beforeEach(inject((session) => {
         session.start({_id: 'sess'}, {_id: USER});
+
+        // eslint-disable-next-line jasmine/no-expect-in-setup-teardown
         expect(session.identity._id).toBe(USER);
     }));
 
@@ -77,7 +79,7 @@ describe('authoring', () => {
         }));
 
     it('does lock item only once',
-        inject((superdesk, api, lock, autosave, session, $injector, $q, $rootScope) => {
+        inject((superdesk, api, session, $injector, $q, $rootScope) => {
             var lockedItem: any = ITEM;
 
             lockedItem.lock_user = USER;
@@ -88,22 +90,6 @@ describe('authoring', () => {
             $injector.invoke(superdesk.activity('authoring').resolve.item);
             $rootScope.$digest();
             expect(ITEM._locked).toBe(true);
-        }));
-
-    it('unlocks a locked item and locks by current user',
-        inject((authoring, lock, $rootScope, $timeout, api, $q, $location) => {
-            spyOn(api, 'save').and.returnValue($q.when({}));
-            spyOn(lock, 'unlock').and.returnValue($q.when({}));
-
-            var lockedItem = {guid: GUID, _id: GUID, _locked: true, lock_user: 'user:5', task: 'desk:1'};
-            var $scope = startAuthoring(lockedItem, 'edit');
-
-            $rootScope.$digest();
-
-            $scope.unlock();
-            $timeout.flush(5000);
-            $rootScope.$digest();
-            expect($location.path(), '/authoring/' + $scope.item._id);
         }));
 
     it('can use a previously created autosave', inject(() => {
@@ -613,7 +599,7 @@ describe('authoring', () => {
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
                 spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
-                $httpBackend.expectPATCH(orig._links.self.href + '?publish_from_personal=false', item)
+                $httpBackend.expectPATCH(orig._links.self.href, item)
                     .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();

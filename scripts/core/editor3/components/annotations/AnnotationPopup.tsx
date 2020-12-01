@@ -19,7 +19,7 @@ class Annotation extends React.Component<any, any> {
     static defaultProps: any;
 
     render() {
-        const {annotation, editorNode, highlightId, highlightsManager, annotationTypes} = this.props;
+        const {annotation, editorNode, highlightId, highlightsManager, annotationTypes, close} = this.props;
         const _showPopup = this.props.showPopup;
         const {author, authorId, date, msg, annotationType} = annotation.data;
         const {name: type} = annotationTypes.find((t) => t.qcode === annotationType);
@@ -28,7 +28,10 @@ class Annotation extends React.Component<any, any> {
         const html = editor3StateToHtml(convertFromRaw(JSON.parse(msg)));
         const modal = ng.get('modal');
 
-        const onEdit = () => _showPopup(PopupTypes.Annotation, {annotation, highlightId});
+        const onEdit = () => {
+            _showPopup(PopupTypes.Annotation, {annotation, highlightId});
+            close();
+        };
         const onDelete = () => modal
             .confirm(gettext('The annotation will be deleted. Are you sure?'))
             .then(() => {

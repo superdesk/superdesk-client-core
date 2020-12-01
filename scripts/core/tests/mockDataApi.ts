@@ -1,3 +1,5 @@
+/* eslint-disable jasmine/no-unsafe-spy */
+
 import {dataApi} from 'core/helpers/CrudManager';
 import {
     IDataApi,

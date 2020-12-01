@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 // mentionRegexp matches mentions in the comment body. It captures $1(name), $2(type), $3(id)
 // the format is: @[name](type:id)
+// eslint-disable-next-line no-useless-escape
 const mentionRegexp = /@\[([^\]]+)\]\((desk|user):([^\)]+)\)/g;
 
 /*
