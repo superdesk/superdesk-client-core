@@ -16,6 +16,7 @@ import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
 import {dataApi} from './helpers/CrudManager';
 import {IScope} from 'angular';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 
 interface IState {
     initialized: boolean;
@@ -54,11 +55,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         this.loadMore = this.loadMore.bind(this);
 
         this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
-            if (
-                resource === 'archive'
-                || resource === 'archive_spike'
-                || resource === 'archive_unspike'
-            ) {
+            if (ARTICLE_RELATED_RESOURCE_NAMES.includes(resource)) {
                 const reloadTheList = this.props?.shouldReloadTheList(
                     new Set(Object.keys(fields ?? {})),
                 ) ?? false;
