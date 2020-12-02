@@ -289,14 +289,6 @@ export function getMultiActions(
         confirm.confirmQuickPublish(selectedItems.length).then(() => {
             Promise.all(
                 selectedItems.map((item) => new Promise((resolve) => {
-                    if (appConfig.features.publishFromPersonal && personalLocationPath) {
-                        var currentDeskId = session.identity.desk || desks.getCurrentDeskId();
-
-                        item.task = {
-                            ...(item.task ?? {}),
-                            desk: currentDeskId,
-                        };
-                    }
                     authoring.publish(item, item)
                         .then((response) => {
                             if (response.status >= 400) {
