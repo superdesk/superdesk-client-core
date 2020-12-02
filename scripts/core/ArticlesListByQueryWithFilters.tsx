@@ -68,6 +68,7 @@ interface IProps {
     query: ISuperdeskQuery;
     onItemClick(item: IArticle): void;
     onItemDoubleClick(item: IArticle): void;
+    getExtraButtons?(): Array<{label: string; onClick: () => void}>;
 }
 
 interface IState {
@@ -197,6 +198,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
     }
     render() {
         const padding = 20;
+        const extraButtons = this.props.getExtraButtons?.() ?? null;
 
         /**
          * When multi-select is started, filter/sort bar disappears and multi-select toolbar appears.
@@ -356,6 +358,23 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                             initialValue={this.state.fullTextSearch}
                                         />
                                     </div>
+
+                                    {
+                                        extraButtons == null ? null : (
+                                            <div style={{marginLeft: 10}}>
+                                                {
+                                                    extraButtons.map(({label, onClick}) => (
+                                                        <Button
+                                                            key={label}
+                                                            text={label}
+                                                            type="primary"
+                                                            onClick={onClick}
+                                                        />
+                                                    ))
+                                                }
+                                            </div>
+                                        )
+                                    }
                                 </div>
 
                                 {(() => {

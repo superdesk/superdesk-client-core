@@ -27,6 +27,8 @@ interface IScope extends ng.IScope {
     openUpload: (files: Array<File>) => void;
     spikedItemsQuery: ISuperdeskQuery;
     highlightedItemsQuery: ISuperdeskQuery;
+    selectedHighlightId: string;
+    getExtraButtonsForHighlightsView(): Array<{label: string; onClick: () => void}>;
 }
 
 /**
@@ -44,6 +46,8 @@ MonitoringView.$inject = [
     'desks',
     'superdesk',
     'session',
+    'privileges',
+    'highlightsService',
 ];
 
 export function MonitoringView(
@@ -56,6 +60,8 @@ export function MonitoringView(
     desks,
     superdesk,
     session,
+    privileges,
+    highlightsService,
 ) {
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-view.html',
@@ -73,6 +79,7 @@ export function MonitoringView(
             hideMonitoringToolbar1: '=?',
             hideMonitoringToolbar2: '=?',
             selectedHighlightName: '=?',
+            selectedHighlightId: '=?',
             contentStyle: '=?',
         },
         link: function(scope: IScope, elem) {
@@ -155,6 +162,23 @@ export function MonitoringView(
                             sort: [{'versioncreated': 'desc'}],
                             page: 1,
                             max_results: 20,
+                        };
+
+                        scope.getExtraButtonsForHighlightsView = () => {
+                            if (privileges.privileges.mark_for_highlights) {
+                                return [
+                                    {
+                                        label: gettext('Create'),
+                                        onClick: () => {
+                                            highlightsService.find(scope.selectedHighlightId)
+                                                .then(highlightsService.createEmptyHighlight)
+                                                .then(authoringWorkspace.edit);
+                                        },
+                                    },
+                                ];
+                            } else {
+                                return null;
+                            }
                         };
                     });
                 }
