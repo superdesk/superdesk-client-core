@@ -1,8 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticle, ISortOption} from 'superdesk-api';
-import {ISuperdeskQuery, IOrOperator, IAndOperator} from './query-formatting';
+import {IArticle, ISortOption, IRestApiResponse} from 'superdesk-api';
+import {ISuperdeskQuery, IOrOperator, IAndOperator, toElasticQuery} from './query-formatting';
 import {ArticlesListByQuery} from './ArticlesListByQuery';
 import {Set, Map} from 'immutable';
 import classNames from 'classnames';
@@ -20,6 +20,7 @@ import {Button} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
 import {ResizeObserverComponent} from './components/resize-observer-component';
+import {httpRequestJsonLocal} from './helpers/network';
 
 const COMPACT_WIDTH = 700;
 
@@ -202,6 +203,13 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         const padding = 20;
         const extraButtons = this.props.getExtraButtons?.() ?? null;
 
+        const query: ISuperdeskQuery = getQueryWithFilters(
+            this.props.query,
+            this.state.activeFilters,
+            this.state.fullTextSearch,
+            this.state.sortOption,
+        );
+
         /**
          * When multi-select is started, filter/sort bar disappears and multi-select toolbar appears.
          * Height is hardcoded in order for the position of all items to remain the same.
@@ -299,7 +307,39 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         );
 
         return (
-            <MultiSelectHoc>
+            <MultiSelectHoc
+                shouldUnselect={(ids) => {
+                    // Use the same query except only for selected items.
+                    const queryForSpecificItems: ISuperdeskQuery = {
+                        ...query,
+                        page: 0,
+                        max_results: 200,
+                        filter: {
+                            $and: [
+                                query.filter,
+                                {'_id': {$in: ids.toJS()}},
+                            ],
+                        },
+                    };
+
+                    const elasticQuery = toElasticQuery(queryForSpecificItems);
+
+                    return httpRequestJsonLocal<IRestApiResponse<{_id: string}>>({ // projections only return _id
+                        method: 'GET',
+                        path: '/search',
+                        urlParams: {
+                            aggregations: 0,
+                            es_highlight: 1,
+                            projections: JSON.stringify(['_id']),
+                            source: JSON.stringify(elasticQuery),
+                        },
+                    }).then((res) => {
+                        var stillMatchQuery = Set(res._items.map(({_id}) => _id));
+
+                        return ids.filter((id) => stillMatchQuery.has(id) !== true).toSet();
+                    });
+                }}
+            >
                 {(multiSelectOptions) => {
                     const getMultiSelectToolbar = (articles: Array<IArticle>) => {
                         const getSelectedItems = () => articles;
@@ -429,12 +469,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
                     return (
                         <ArticlesListByQuery
-                            query={getQueryWithFilters(
-                                this.props.query,
-                                this.state.activeFilters,
-                                this.state.fullTextSearch,
-                                this.state.sortOption,
-                            )}
+                            query={query}
                             onItemClick={this.props.onItemClick}
                             onItemDoubleClick={this.props.onItemDoubleClick}
                             header={header}
