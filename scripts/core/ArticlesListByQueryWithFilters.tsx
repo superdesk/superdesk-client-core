@@ -21,6 +21,8 @@ import ng from 'core/services/ng';
 import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
 import {ResizeObserverComponent} from './components/resize-observer-component';
 
+const COMPACT_WIDTH = 700;
+
 class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelectOptions}> {
     render() {
         const {item, options} = this.props;
@@ -206,59 +208,94 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
          */
         const toolbar2Height = 50;
 
-        const sortFilterToolbar = (
-            <div
-                style={{
-                    display: 'flex',
-                    height: toolbar2Height,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    borderTop: '1px solid #d5d5d5',
-                    borderBottom: '1px solid #d5d5d5',
-                    paddingTop: 8,
-                    paddingBottom: 8,
-                    paddingLeft: padding,
-                    paddingRight: padding,
-                }}
-            >
+        const getTypeFilteringComponent = (compact: boolean) => {
+            interface IFileTypeOption {
+                label: string;
+                icon?: string;
+                selected: boolean;
+                onSelect: () => void;
+            }
+
+            const filterAll: IFileTypeOption = {
+                label: gettext('All'),
+                selected: this.hasFilter('type') === false,
+                onSelect: () => {
+                    this.removeFilter('type');
+                },
+            };
+
+            const options: Array<IFileTypeOption> = [
+                filterAll,
+                ...getItemTypes().map((itemType) => {
+                    return {
+                        label: itemType.label,
+                        icon: `filetype-icon-${itemType.type}`,
+                        selected: this.hasFilter('type', itemType.type),
+                        onSelect: () => {
+                            this.toggleFilter('type', itemType.type);
+                        },
+                    };
+                }),
+            ];
+
+            // TODO: Implement compact mode when multi select component is available in UI framework.
+
+            return (
                 <div>
                     <div className="button-list">
-                        <button
-                            className={classNames(
-                                'toggle-button',
-                                {'toggle-button--active': this.hasFilter('type') === false},
-                            )}
-                            onClick={() => {
-                                this.removeFilter('type');
-                            }}
-                        >
-                            {gettext('All')}
-                        </button>
-                        {getItemTypes().map(({type, label}) => (
+                        {options.map(({label, icon, selected, onSelect}) => (
                             <button
-                                key={type}
+                                key={label}
                                 className={classNames(
                                     'toggle-button',
-                                    {'toggle-button--active': this.hasFilter('type', type)},
+                                    {'toggle-button--active': selected},
                                 )}
                                 onClick={() => {
-                                    this.toggleFilter('type', type);
+                                    onSelect();
                                 }}
                                 aria-label={label}
                             >
-                                <i className={`toggle-button__icon filetype-icon-${type}`} />
+                                {
+                                    icon != null
+                                        ? <i className={`toggle-button__icon ${icon}`} />
+                                        : label
+                                }
                             </button>
                         ))}
                     </div>
                 </div>
-                <SortBar
-                    sortOptions={getArticleSortOptions()}
-                    selected={this.state.sortOption}
-                    onSortOptionChange={(sortOption) => {
-                        this.setState({sortOption});
-                    }}
-                />
-            </div>
+            );
+        };
+
+        const sortFilterToolbar = (
+            <ResizeObserverComponent>
+                {(dimensions) => (
+                    <div
+                        style={{
+                            display: 'flex',
+                            height: toolbar2Height,
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            borderTop: '1px solid #d5d5d5',
+                            borderBottom: '1px solid #d5d5d5',
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                            paddingLeft: padding,
+                            paddingRight: padding,
+                        }}
+                    >
+                        {getTypeFilteringComponent(dimensions.width < COMPACT_WIDTH)}
+
+                        <SortBar
+                            sortOptions={getArticleSortOptions()}
+                            selected={this.state.sortOption}
+                            onSortOptionChange={(sortOption) => {
+                                this.setState({sortOption});
+                            }}
+                        />
+                    </div>
+                )}
+            </ResizeObserverComponent>
         );
 
         return (
@@ -317,7 +354,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                             <MultiActionBarReact
                                                 articles={multiSelectOptions.selected.toArray()}
                                                 getCoreActions={() => actions}
-                                                compact={dimensions.width < 700}
+                                                compact={dimensions.width < COMPACT_WIDTH}
                                                 hideMultiActionBar={() => multiSelectOptions.unselectAll()}
                                             />
                                         </div>

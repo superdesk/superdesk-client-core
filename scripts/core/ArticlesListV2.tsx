@@ -34,12 +34,13 @@ interface IProps {
 }
 
 export class ArticlesListV2 extends React.Component<IProps, IState> {
-    monitoringState: any;
-    lazyLoaderRef: LazyLoader<IArticle>;
-    handleContentChanges: (resource: string, itemId: string, fields?: {[key: string]: 1}) => void;
-    removeResourceCreatedListener: () => void;
-    removeContentUpdateListener: () => void;
-    removeResourceDeletedListener: () => void;
+    private monitoringState: any;
+    private lazyLoaderRef: LazyLoader<IArticle>;
+    private handleContentChanges: (resource: string, itemId: string, fields?: {[key: string]: 1}) => void;
+    private removeResourceCreatedListener: () => void;
+    private removeContentUpdateListener: () => void;
+    private removeResourceDeletedListener: () => void;
+    private _mounted: boolean;
 
     constructor(props: any) {
         super(props);
@@ -88,15 +89,25 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
+        this._mounted = true;
+
         this.monitoringState.init().then(() => {
-            this.setState({initialized: true});
+            if (this._mounted) {
+                this.setState({initialized: true});
+            }
         });
     }
 
     componentWillUnmount() {
-        this.removeResourceCreatedListener();
-        this.removeContentUpdateListener();
-        this.removeResourceDeletedListener();
+        this._mounted = false;
+
+        /**
+         * Conditional calls are used because sometimes the component is unmounted quicker
+         * than initialization is complete.
+         */
+        this.removeResourceCreatedListener?.();
+        this.removeContentUpdateListener?.();
+        this.removeResourceDeletedListener?.();
     }
 
     render() {
