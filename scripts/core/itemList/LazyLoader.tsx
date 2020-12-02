@@ -55,7 +55,8 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                 this._reset();
             }
         }, 500);
-        this.updateItems = throttleAndCombineSet(this._updateItems.bind(this), 500);
+        // this.updateItems = throttleAndCombineSet(this._updateItems.bind(this), 500);
+        this.updateItems = this._updateItems.bind(this);
     }
 
     private _updateItems(ids: Set<string>): void {

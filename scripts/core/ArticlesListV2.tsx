@@ -53,6 +53,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         this.loadMore = this.loadMore.bind(this);
 
         this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
+            debugger;
             if (
                 resource === 'archive'
                 || resource === 'archive_spike'
@@ -115,7 +116,13 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 getItemsByIds={(ids) => {
                     return Promise.all(
                         ids.map((id) => dataApi.findOne<IArticle>('search', id)),
-                    );
+                    ).then((rrr) => {
+                        rrr.forEach((iii) => {
+                            console.log(JSON.stringify(iii.task));
+                        });
+
+                        return rrr;
+                    });
                 }}
                 ref={(component) => {
                     this.lazyLoaderRef = component;

@@ -97,6 +97,7 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
             // The server is sending websocket events before it is able to return updated data.
             setTimeout(() => {
                 const addressedForExtension = typeof msg.extra === 'object' && typeof msg.extra.extension === 'string';
+                console.log('emit notification now');
 
                 if (addressedForExtension || isWebsocketEventPublic(msg.event)) {
                     window.dispatchEvent(
@@ -114,7 +115,7 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
                 if (_.includes(ReloadEvents, msg.event)) {
                     $rootScope.$broadcast('reload', msg);
                 }
-            }, 50);
+            }, 5000);
         };
 
         ws.onerror = function(event) {
