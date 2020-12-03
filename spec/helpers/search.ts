@@ -347,8 +347,11 @@ class GlobalSearch {
          */
         this.checkMarkedForDesk = function(deskName, item) {
             var crtItem = this.getItem(item);
+            const bellIcon = crtItem.element(by.className('icon-bell'));
 
-            expect(crtItem.element(by.className('icon-bell')).isDisplayed()).toBeTruthy();
+            browser.wait(ECE.visibilityOf(bellIcon));
+
+            expect(bellIcon.isDisplayed()).toBeTruthy();
         };
 
         /**

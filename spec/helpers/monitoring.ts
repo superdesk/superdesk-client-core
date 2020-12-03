@@ -779,7 +779,11 @@ class Monitoring {
         this.checkMarkedForDesk = function(desk, group, item) {
             var crtItem = this.getItem(group, item);
 
-            crtItem.element(by.className('icon-bell')).click();
+            const bellIcon = crtItem.element(by.className('icon-bell'));
+
+            browser.wait(ECE.visibilityOf(bellIcon));
+
+            bellIcon.click();
             var deskList = element(by.className('highlights-list-menu'));
 
             waitFor(deskList);
