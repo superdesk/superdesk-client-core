@@ -195,7 +195,9 @@ class Monitoring {
         this.getItem = function(group, item) {
             var all = this.getGroupItems(group);
 
-            browser.wait(() => all.count(), 7500);
+            all.each((_el) => {
+                browser.wait(ECE.visibilityOf(_el));
+            });
 
             if (item.type) {
                 return all.filter((elem) =>
