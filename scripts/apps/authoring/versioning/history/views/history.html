@@ -161,6 +161,17 @@
                 </div>
             </div>
 
+            <div ng-if="historyItem.operation === 'cancel_correction'">
+                <strong>{{ :: 'Cancel Correction by' | translate }}</strong> {{ :: historyItem.displayName }}
+                <em><time sd-absdate datetime="historyItem._created"></time></em>
+                <span ng-if="historyItems[$index-1].version !== historyItem.version && historyItem.version !== 0" class="version">
+                    <span translate>version</span><span>: {{:: historyItem.version }}</span>
+                </span>
+                <div class="more-description" ng-if="!historyItem.update">
+                    <span translate>Correction link is removed</span>
+                </div>
+            </div>
+
             <div ng-if="historyItem.operation === 'rewrite'">
                 <strong>{{ :: 'Rewritten by' | translate }}</strong> {{ :: historyItem.displayName }}
                 <em><time sd-absdate datetime="historyItem._created"></time></em>

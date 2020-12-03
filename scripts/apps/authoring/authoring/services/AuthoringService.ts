@@ -668,7 +668,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
         action.view = !lockedByMe;
         action.unlinkUpdate = this._canUnlinkUpdate(currentItem);
-        action.cancleCorrection = !this._isReadOnly(item) && currentItem.state === ITEM_STATE.CORRECTION;
+        action.cancelCorrection = !this._isReadOnly(item) && currentItem.state === ITEM_STATE.CORRECTION;
         action.export = currentItem && currentItem.type && currentItem.type === 'text'
             && !isBeingCorrected(currentItem);
 

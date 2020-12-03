@@ -336,7 +336,7 @@ angular.module('superdesk.apps.archive', [
                     return item.lock_user === null || angular.isUndefined(item.lock_user);
                 },
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
-                    return authoring.itemActions(item).cancleCorrection;
+                    return authoring.itemActions(item).cancelCorrection;
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {
                     authoring.cancelCorrection(data.item);

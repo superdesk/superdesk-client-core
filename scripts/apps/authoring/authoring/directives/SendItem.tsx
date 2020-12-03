@@ -1035,7 +1035,7 @@ export function SendItem($q,
 
             scope.getPublishLabel = (action) => action === 'edit'
                 ? (scope.isCorrection
-                    ? gettext('Send Correction')
+                    ? gettext('Send correction')
                     : gettext('publish'))
                 : gettext(action);
         },
