@@ -5,6 +5,7 @@ import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {desks} from './helpers/desks';
 import {multiAction} from './helpers/actions';
+import {ECE, els} from 'end-to-end-testing-helpers';
 
 describe('fetch', () => {
     beforeEach(() => {
@@ -132,12 +133,13 @@ describe('fetch', () => {
 
     it('can remove multiple ingest items', () => {
         workspace.openIngest();
+        browser.wait(ECE.hasElementCount(els(['article-item']), 1));
+
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
 
         multiAction('Remove');
-        browser.sleep(100);
 
-        expect(content.count()).toBe(0);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 0));
     });
 });
