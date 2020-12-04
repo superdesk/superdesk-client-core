@@ -302,10 +302,12 @@ export function MultiImageEditController(
         const uniqueValues = getUniqueValues(fieldName);
         const defaultValues = {subject: []};
 
-        if (uniqueValues.length === 1 || defaultValues) {
+        if (uniqueValues.length === 1) {
             return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
-        } else {
+        } else if (uniqueValues.length > 1) {
             $scope.placeholder[fieldName] = gettext('(multiple values)');
+        } else {
+            $scope.placeholder[fieldName] = '';
         }
     }
 }
