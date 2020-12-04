@@ -18,9 +18,11 @@ import {dataApi} from './helpers/CrudManager';
 import {IScope} from 'angular';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 import {OrderedMap} from 'immutable';
+import {openArticle} from './get-superdesk-api-implementation';
 
 interface IState {
     initialized: boolean;
+    selected: IArticle['_id'] | undefined;
 }
 
 interface IProps {
@@ -49,6 +51,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
 
         this.state = {
             initialized: false,
+            selected: undefined,
         };
 
         this.monitoringState = ng.get('monitoringState');
@@ -182,7 +185,10 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             desksById={this.monitoringState.state.desksById}
                             ingestProvidersById={this.monitoringState.state.ingestProvidersById}
                             usersById={this.monitoringState.state.usersById}
-                            onMonitoringItemSelect={this.props.onItemClick}
+                            onMonitoringItemSelect={(item) => {
+                                this.setState({selected: item._id});
+                                this.props.onItemClick(item);
+                            }}
                             onMonitoringItemDoubleClick={this.props.onItemDoubleClick ?? noop}
                             hideActionsForMonitoringItems={false}
                             singleLine={false}
@@ -191,12 +197,14 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             loading={false}
                             viewColumn={undefined}
                             groupId={undefined}
-                            edit={noop}
+                            edit={(item) => {
+                                openArticle(item._id, 'edit');
+                            }}
                             preview={noop}
                             multiSelect={this.props.multiSelect}
                             narrow={false}
                             view={undefined}
-                            selected={undefined}
+                            selected={this.state.selected}
                             swimlane={false}
                             scopeApply={(fn) => {
                                 const $rootScope: IScope = ng.get('$rootScope');
