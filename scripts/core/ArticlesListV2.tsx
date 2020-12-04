@@ -17,6 +17,7 @@ import {addWebsocketEventListener} from './notification/notification';
 import {dataApi} from './helpers/CrudManager';
 import {IScope} from 'angular';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
+import {OrderedMap} from 'immutable';
 
 interface IState {
     initialized: boolean;
@@ -69,18 +70,18 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         };
     }
 
-    loadMore(from: number, to: number) {
+    loadMore(from: number, to: number): Promise<OrderedMap<IArticle['_id'], IArticle>> {
         const {loadItems} = this.props;
 
-        return new Promise<Dictionary<string, IArticle>>((resolve) => {
+        return new Promise<OrderedMap<IArticle['_id'], IArticle>>((resolve) => {
             loadItems(from, to).then((items) => {
-                const patch = items.reduce<{[key: string]: IArticle}>((acc, item, index) => {
-                    acc[from + index] = item;
+                let result = OrderedMap<IArticle['_id'], IArticle>();
 
-                    return acc;
-                }, {});
+                items.forEach((item) => {
+                    result = result.set(item._id, item);
+                });
 
-                resolve(patch);
+                resolve(result);
             });
         });
     }
@@ -119,11 +120,18 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 itemCount={itemCount}
                 loadMoreItems={this.loadMore}
                 pageSize={pageSize}
-                getId={(item) => item._id}
                 getItemsByIds={(ids) => {
                     return Promise.all(
                         ids.map((id) => dataApi.findOne<IArticle>('search', id)),
-                    );
+                    ).then((items) => {
+                        let result = OrderedMap<IArticle['_id'], IArticle>();
+
+                        items.forEach((item) => {
+                            result = result.set(item._id, item);
+                        });
+
+                        return result;
+                    });
                 }}
                 ref={(component) => {
                     this.lazyLoaderRef = component;
@@ -166,8 +174,8 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 {(items) => {
                     return (
                         <ItemList
-                            itemsList={Object.keys(items)}
-                            itemsById={items}
+                            itemsList={items.keySeq().toJS()}
+                            itemsById={items.toJS()}
                             profilesById={this.monitoringState.state.profilesById}
                             highlightsById={this.monitoringState.state.highlightsById}
                             markedDesksById={this.monitoringState.state.markedDesksById}
