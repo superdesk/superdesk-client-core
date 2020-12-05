@@ -241,6 +241,7 @@ export function MultiImageEditController(
             creditline: compare('creditline'),
             source: compare('source'),
             ednote: compare('ednote'),
+            sign_off: compare('sign_off'),
         };
     }
 
