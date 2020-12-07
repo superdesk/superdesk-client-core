@@ -32,7 +32,7 @@ export function getStateLabel(itemState: ITEM_STATE) {
 
 interface IProps {
     item: IArticle;
-    openAuthoringView(correction_by: string): void;
+    openAuthoringView(_id): void;
 }
 
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
@@ -41,7 +41,7 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
         const text = title;
         const openItem = function(event) {
             event.stopPropagation();
-            props.openAuthoringView(props.item.archive_item.correction_by);
+            props.openAuthoringView(props.item.archive_item._id);
         };
 
         if (props.item.state === 'scheduled') {

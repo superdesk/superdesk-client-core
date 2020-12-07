@@ -329,8 +329,6 @@ declare module 'superdesk-api' {
         lock_session: any;
         rewritten_by?: IArticle['_id'];
         rewrite_of?: IArticle['_id'];
-        correction_by?: IArticle['_id'];
-        corrected_of?: IArticle['_id'];
         profile: string;
         word_count?: number;
         lines_count?: number;

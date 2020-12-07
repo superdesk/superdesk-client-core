@@ -329,7 +329,7 @@ angular.module('superdesk.apps.authoring', [
                     authoring,
                 ) {
                     if (appConfig?.corrections_workflow && data.item.state === 'published') {
-                        authoring.correction(data.item);
+                        authoring.correction(data.item.archive_item);
                     } else {
                         authoringWorkspace.correct(data.item);
                     }

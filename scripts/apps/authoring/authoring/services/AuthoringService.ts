@@ -162,7 +162,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
      * @param {string} repo - repository where an item whose identifier is _id can be found.
      * @param {string} action - action performed to open the story: edit, correct or kill
      */
-    this.open = function openAuthoring(_id, readOnly, repo, action) {
+    this.open = function openAuthoring(_id, readOnly, repo, action, state) {
+        let endpoint = 'archive';
+
         if ($location.$$path !== '/multiedit') {
             superdeskFlags.flags.authoring = true;
         }
@@ -173,7 +175,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             });
         }
 
-        return api.find('archive', _id, {embedded: {lock_user: 1}})
+        if (state) {
+            endpoint = 'published';
+        }
+
+        return api.find(endpoint, _id, {embedded: {lock_user: 1}})
             .then(function _lock(item) {
                 if (readOnly) {
                     item._locked = lock.isLockedInCurrentSession(item);
@@ -432,25 +438,21 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             );
     };
 
-    this.correction = function correction(item: IPublishedArticle) {
+    this.correction = function correction(item: IPublishedArticle, removeCorrection = false) {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
         function handleSuccess() {
             notify.success(gettext('Correction Created'));
         }
 
-        if (!isPublished(item)) {
-            logger.warn('Trying to send correction of a non published item');
-            return;
-        }
-        var updates = {
-            desk_id: desks.getCurrentDeskId() || item.task.desk,
-        };
-
-        return api.save('archive_correction', {}, updates, item)
+        return api.update('archive_correction', item, {}, {remove_correction: removeCorrection})
             .then((newItem) => {
-                notify.success(gettext('Update Created.'));
-                authoringWorkspace.edit(newItem);
+                if (removeCorrection) {
+                    notify.success(gettext('Correction has been removed'));
+                } else {
+                    authoringWorkspace.edit(newItem);
+                    notify.success(gettext('Update Created.'));
+                }
             }, (response) => {
                 if (angular.isDefined(response.data._message)) {
                     notify.error(gettext('Failed to generate update: {{message}}', {message: response.data._message}));
@@ -476,9 +478,11 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             relatedItems = items;
 
             const unpublishAction = (selected) => {
-                self.publish(item, {}, 'unpublish', {notifyErrors: true})
-                    .then(handleSuccess);
-
+                // get the latest updated item.
+                api.find('archive', item._id).then((updatedItem) => {
+                    self.publish(updatedItem, {}, 'unpublish', {notifyErrors: true})
+                        .then(handleSuccess);
+                });
                 relatedItems.forEach((relatedItem) => {
                     if (selected[relatedItem._id]) {
                         self.publish(relatedItem, {}, 'unpublish', {notifyErrors: true})
@@ -773,6 +777,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     };
 
     this._getCurrentItem = function(item) {
+        if (item.state === 'being_corrected') {
+            return item;
+        }
         return item && item.archive_item && item.archive_item.state ? item.archive_item : item;
     };
 
