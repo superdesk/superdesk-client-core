@@ -130,7 +130,11 @@ export function isLockedInOtherSession(article: IArticle): boolean {
     return sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
 }
 
-export const formatDate = (date: Date | string) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat);
+export const formatDate = (date: Date | string) => (
+    moment(date)
+        .tz(appConfig.defaultTimezone)
+        .format(appConfig.view.dateformat)
+);
 
 export function getRelativeOrAbsoluteDateTime(
     datetimeString: string,
@@ -249,7 +253,7 @@ export function getSuperdeskApiImplementation(
                         1,
                         {field: 'display_name', direction: 'ascending'},
                         {_id: {$in: ids}},
-                        200
+                        200,
                     )
                         .then((response) => response._items)
                 ),

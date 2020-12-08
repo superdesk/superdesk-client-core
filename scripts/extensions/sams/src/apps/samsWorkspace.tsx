@@ -232,7 +232,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                         <div />
                     ) : (
                         <PanelContent>
-                            <ContentPanel key={this.props.selectedAssetId}/>
+                            <ContentPanel key={this.props.selectedAssetId} />
                         </PanelContent>
                     )}
                     mainClassName="sd-padding--2"
