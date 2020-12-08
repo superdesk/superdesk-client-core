@@ -24,6 +24,7 @@ import {getStore} from '../store';
 import {loadSets} from '../store/sets/actions';
 
 // Utils
+import {fixItemResponseVersionDates, fixItemVersionDates} from './common';
 import {getApiErrorMessage, isSamsApiError} from '../utils/api';
 
 // UI
@@ -282,6 +283,7 @@ export function queryAssets(
             sort: sort,
         },
     )
+        .then(fixItemResponseVersionDates)
         .catch((error: any) => {
             if (isSamsApiError(error)) {
                 notify.error(getApiErrorMessage(error));
@@ -355,6 +357,7 @@ export function getAssetById(assetId: string): Promise<IAssetItem> {
     const {notify} = superdeskApi.ui;
 
     return superdeskApi.dataApi.findOne<IAssetItem>(RESOURCE, assetId)
+        .then(fixItemVersionDates)
         .catch((error: any) => {
             if (isSamsApiError(error)) {
                 notify.error(getApiErrorMessage(error));
@@ -385,6 +388,7 @@ export function getAssetsByIds(ids: Array<string>): Promise<IRestApiResponse<IAs
             },
         })},
     )
+        .then(fixItemResponseVersionDates)
         .catch((error: any) => {
             if (isSamsApiError(error)) {
                 notify.error(getApiErrorMessage(error));

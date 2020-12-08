@@ -4,6 +4,7 @@ import {ISetItem} from '../interfaces';
 import {superdeskApi} from '../apis';
 
 // Utils
+import {fixItemResponseVersionDates} from './common';
 import {getApiErrorMessage, isSamsApiError} from '../utils/api';
 
 const RESOURCE = 'sams/sets';
@@ -18,6 +19,7 @@ export function getAllSets(): Promise<Array<ISetItem>> {
         {field: 'name', direction: 'ascending'},
         {},
     )
+        .then(fixItemResponseVersionDates)
         .then((response: IRestApiResponse<ISetItem>) => {
             return response?._items ?? [];
         })
