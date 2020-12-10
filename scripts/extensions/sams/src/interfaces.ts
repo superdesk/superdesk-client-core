@@ -188,5 +188,7 @@ export interface ISamsAPI {
         getCompressedBinary(asset_ids: Array<string>): void;
         getAssetBinary(asset: IAssetItem): Promise<void | Response>;
         deleteAsset(asset: IAssetItem): Promise<void>;
+        lockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
+        unlockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
     };
 }

@@ -72,7 +72,9 @@ export class AssetListItem extends React.PureComponent<IProps> {
             <ListItem
                 onClick={this.onItemClick}
                 onDoubleClick={this.onItemDoubleClick}
-                selected={this.props.selected || this.props.itemSelected} shadow={1}>
+                selected={this.props.selected || this.props.itemSelected}
+                shadow={1}
+            >
                 <ListItemBorder />
                 <ListItemColumn hasCheck={true} checked={this.props.itemSelected}>
                     <div className="sd-list-item__checkbox-container" onClick={this.onCheckboxClick}>

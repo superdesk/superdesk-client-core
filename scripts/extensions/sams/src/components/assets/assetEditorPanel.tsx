@@ -7,7 +7,7 @@ import {cloneDeep} from 'lodash';
 // Types
 import {IAssetItem, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
-import {superdeskApi} from '../../apis';
+import {superdeskApi, samsApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {previewAsset, updateAsset, queryAssetsFromCurrentSearch} from '../../store/assets/actions';
@@ -102,9 +102,14 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
     }
 
     onCancel() {
-        if (this.props.original != null) {
-            this.props.previewAsset(this.props.original);
-        }
+        const updates: Dictionary<string, any> = {};
+
+        samsApi.assets.unlockAsset(this.props.original!, updates)
+            .then(() => {
+                if (this.props.original != null) {
+                    this.props.previewAsset(this.props.original);
+                }
+            });
     }
 
     render() {

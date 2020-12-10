@@ -17,6 +17,7 @@ interface IProps {
     selectedItems?: Array<string>;
     actions?: Array<IAssetCallback>;
     selectedAssetIds: Array<string> | undefined;
+    itemSelectedForEdit?: boolean;
     onItemClicked(asset: IAssetItem): void;
     onItemDoubleClicked?(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
@@ -72,6 +73,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             onDoubleClick={this.onItemDoubleClick}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
+                            itemSelectedForEdit={this.props.itemSelectedForEdit}
                             updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
                         />
                     ))}

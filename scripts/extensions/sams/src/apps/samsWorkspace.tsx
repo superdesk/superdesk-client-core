@@ -69,7 +69,7 @@ interface IProps {
     deleteAsset(asset: IAssetItem): void;
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
-    onEdit(asset: IAssetItem): void;
+    editAsset(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
@@ -112,7 +112,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
-    onEdit: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
+    editAsset: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
 });
 
@@ -156,10 +156,20 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onMultiActionBar = this.onMultiActionBar.bind(this);
         this.onDeleteAsset = this.onDeleteAsset.bind(this);
+        this.onEditAsset = this.onEditAsset.bind(this);
     }
 
     onDeleteAsset(asset: IAssetItem): void {
         this.props.deleteAsset(asset);
+    }
+
+    onEditAsset(asset: IAssetItem): void {
+        const updates: Dictionary<string, any> = {'lock_action': 'edit'};
+
+        samsApi.assets.lockAsset(asset, updates)
+            .then(() =>
+                this.props.editAsset(asset),
+            );
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
@@ -232,7 +242,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                         <div />
                     ) : (
                         <PanelContent>
-                            <ContentPanel key={this.props.selectedAssetId}/>
+                            <ContentPanel key={this.props.selectedAssetId} />
                         </PanelContent>
                     )}
                     mainClassName="sd-padding--2"
@@ -246,12 +256,13 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                                 [this.props.selectedAssetId]
                             }
                             onItemClicked={this.props.previewAsset}
-                            onItemDoubleClicked={this.props.onEdit}
+                            onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
+                            itemSelectedForEdit={this.props.contentPanelState === ASSET_CONTENT_PANEL_STATE.EDIT}
                             updateSelectedAssetIds={this.onMultiActionBar}
                             actions={[{
                                 action: ASSET_ACTIONS.EDIT,
-                                onSelect: this.props.onEdit,
+                                onSelect: this.props.editAsset,
                             },
                             {
                                 action: ASSET_ACTIONS.PREVIEW,

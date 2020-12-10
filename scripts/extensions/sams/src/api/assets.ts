@@ -34,6 +34,8 @@ const RESOURCE = 'sams/assets';
 const COUNT_RESOURCE = `${RESOURCE}/counts/`;
 const BINARY_RESOURCE = `${RESOURCE}/binary/`;
 const COMPRESSED_BINARY_RESOURCE = `${RESOURCE}/compressed_binary/`;
+const LOCK_ASSET = `${RESOURCE}/lock`;
+const UNLOCK_ASSET = `${RESOURCE}/unlock`;
 
 export function uploadAsset(
     data: FormData,
@@ -537,6 +539,48 @@ export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>):
                 notify.error(getApiErrorMessage(error));
             } else {
                 notify.error(gettext('Failed to update the Asset'));
+            }
+
+            return Promise.reject(error);
+        });
+}
+
+export function lockAsset(original: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.patch<IAssetItem>(LOCK_ASSET, original, updates)
+        .then((asset: IAssetItem) => {
+            notify.success(gettext('Asset locked successfully'));
+
+            return asset;
+        })
+        .catch((error: any) => {
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to lock the Asset'));
+            }
+
+            return Promise.reject(error);
+        });
+}
+
+export function unlockAsset(original: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.patch<IAssetItem>(UNLOCK_ASSET, original, updates)
+        .then((asset: IAssetItem) => {
+            notify.success(gettext('Asset unlocked successfully'));
+
+            return asset;
+        })
+        .catch((error: any) => {
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to unlock the Asset'));
             }
 
             return Promise.reject(error);

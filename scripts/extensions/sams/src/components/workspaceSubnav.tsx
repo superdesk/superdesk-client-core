@@ -262,7 +262,9 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                             </button>
                             <button
                                 className="btn"
-                                onClick={this.props.closeMultiActionBar}>{gettext('cancel')}
+                                onClick={this.props.closeMultiActionBar}
+                            >
+                                {gettext('cancel')}
                             </button>
                             <span id="multi-select-count">
                                 {gettextPlural(
@@ -323,7 +325,8 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                 />
                             </Tooltip>
                         </ButtonGroup>
-                    </SubNav>)}
+                    </SubNav>
+                )}
                 <SubNav zIndex={1}>
                     <ButtonGroup align="inline">
                         <NavButton
