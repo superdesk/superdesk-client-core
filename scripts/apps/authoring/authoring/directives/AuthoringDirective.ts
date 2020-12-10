@@ -18,6 +18,7 @@ import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {ITEM_STATE} from 'apps/archive/constants';
 import {isMediaType} from 'core/helpers/item';
 
 /**
@@ -718,6 +719,8 @@ export function AuthoringDirective(
 
                     if ($scope.action && $scope.action !== 'edit') {
                         message = $scope.action;
+                    } else if ($scope.action === 'edit' && $scope.item.state === ITEM_STATE.CORRECTION) {
+                        $scope.action = 'correct';
                     }
 
                     if ($scope.dirty && message === 'publish') {
@@ -911,7 +914,12 @@ export function AuthoringDirective(
 
             $scope.openAction = function(action) {
                 if (action === 'correct') {
-                    authoringWorkspace.correct($scope.item);
+                    if (appConfig?.corrections_workflow &&
+                    [ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED].includes($scope.item.state)) {
+                        authoring.correction($scope.item);
+                    } else {
+                        authoringWorkspace.correct($scope.item);
+                    }
                 } else if (action === 'kill') {
                     authoringWorkspace.kill($scope.item);
                 } else if (action === 'takedown') {

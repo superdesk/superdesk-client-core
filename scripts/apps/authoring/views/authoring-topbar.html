@@ -46,7 +46,7 @@
       <div
         class="subnav__button-stack subnav__button-stack--custom-buttons sd-overflow-ellipsis"
         ng-if="$root.config.features.customAuthoringTopbar != null && ($root.config.features.customAuthoringTopbar.toDesk === true || $root.config.features.customAuthoringTopbar.publish === true || $root.config.features.customAuthoringTopbar.publishAndContinue == true)"
-        ng-show="_editable && itemActions.save && action === 'edit'"
+        ng-show="_editable && itemActions.save && (action === 'edit' || isCorrection(item))"
       >
         <button
                 ng-if="toDeskEnabled"
@@ -146,7 +146,7 @@
         <button class="btn btn--hollow"
                 id="closeAuthoringBtn"
                 ng-click="close()"
-                ng-if="action !== 'correct' && action !== 'kill'"
+                ng-if="(action !== 'correct' || isCorrection(item)) && action !== 'kill'"
                 aria-label="{{ :: 'Close' | translate }}"
                 title="{{ :: 'Close' | translate }}"
                 sd-hotkey="ctrl+shift+e"
@@ -159,7 +159,7 @@
       <button class="btn btn--primary" type="submit"
         ng-click="saveTopbar()"
         ng-show="_editable"
-        ng-if = "itemActions.save && action === 'edit'"
+        ng-if = "itemActions.save && (action === 'edit' || isCorrection(item))"
         ng-disabled="!save_enabled() || saveDisabled"
         sd-hotkey="ctrl+shift+s"
         sd-hotkey-options="{global: true}"
@@ -186,7 +186,7 @@
 
         <button class="btn btn--primary" type="submit"
                 id="send-correction-btn"
-                ng-if="action === 'correct'"
+                ng-if="action === 'correct' && !isCorrection(item)"
                 ng-show="_editable"
                 ng-disabled="canSendAndPublish()"
                 ng-click="publish()"
@@ -210,7 +210,7 @@
 
         <button class="btn"
                 id="cancelAuthoringBtn"
-                ng-if="action === 'correct' || action === 'kill'"
+                ng-if="action === 'correct' && !isCorrection(item) || action === 'kill'"
                 ng-click="close()"
                 translate>Cancel</button>
 
@@ -364,7 +364,8 @@
         </div>
 
         <button id="send-to-btn" ng-show="_editable"
-            ng-if="action !== 'correct' && action !== 'kill' && buttonsToHide['article-edit--topbar--sendto-publish'] !== true"
+            ng-if="(action !== 'correct' && action !== 'kill' && buttonsToHide['article-edit--topbar--sendto-publish'] !== true)
+            || isCorrection(item)"
             class="navbtn navbtn--highlighted"
             aria-label="{{ :: 'Send to / Publish' | translate }}"
             sd-tooltip="{{ :: 'Send to / Publish' | translate }}"

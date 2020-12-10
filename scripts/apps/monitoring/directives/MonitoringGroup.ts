@@ -194,6 +194,7 @@ export function MonitoringGroup(
             scope.$on('item:spike', scheduleIfShouldUpdate);
             scope.$on('item:copy', scheduleQuery);
             scope.$on('item:unlink', scheduleQuery);
+            scope.$on('item:correction', scheduleQuery);
             scope.$on('item:duplicate', scheduleQuery);
             scope.$on('item:translate', scheduleQuery);
             scope.$on('item:move', scheduleQuery);

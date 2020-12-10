@@ -2021,11 +2021,11 @@ describe('authoring workspace', () => {
     ) => {
         item.state = 'draft';
         authoringWorkspace.open(item);
-        expect(authoring.open).toHaveBeenCalledWith(item._id, false, null, 'edit');
+        expect(authoring.open).toHaveBeenCalledWith(item._id, false, null, 'edit', false);
 
         item.state = 'published';
         authoringWorkspace.open(item);
-        expect(authoring.open).toHaveBeenCalledWith(item._id, true, null, 'view');
+        expect(authoring.open).toHaveBeenCalledWith(item._id, true, null, 'view', false);
 
         var archived = {_id: 'bar'};
 
@@ -2034,7 +2034,7 @@ describe('authoring workspace', () => {
         authoringWorkspace.open(item);
         expect(send.validateAndSend).toHaveBeenCalledWith(item);
         $rootScope.$digest();
-        expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null, 'edit');
+        expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null, 'edit', false);
     }));
 
     describe('init', () => {

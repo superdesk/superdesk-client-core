@@ -211,6 +211,16 @@ declare module 'superdesk-api' {
          * Unpublished, might be published again.
          */
         UNPUBLISHED = 'unpublished',
+
+        /**
+        * Correction, If Correction workflow is true, correction, copy of published article which we can edit.
+        */
+        CORRECTION = 'correction',
+
+        /**
+        * being_corrected, If Correction workflow is true, being_corrected, the item is being corrected.
+        */
+        BEING_CORRECTED = 'being_corrected',
     }
 
 
@@ -1227,6 +1237,8 @@ declare module 'superdesk-api' {
         workflow_allow_copy_to_personal: boolean;
 
         allow_updating_scheduled_items: boolean;
+
+        corrections_workflow: boolean;
 
         // TANSA SERVER CONFIG
         tansa?: {
