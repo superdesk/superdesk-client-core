@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2020-09-24 16:44+0000\n"
+"PO-Revision-Date: 2020-11-13 18:56+0000\n"
 "Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1210,7 +1210,7 @@ msgstr "Êtes-vous certain de vouloir supprimer la recherche enregistrée?"
 
 #: scripts/extensions/sams/dist/src/store/sets/actions.js:69
 msgid "Are you sure you want to delete the Set \"{{name}}\"?"
-msgstr ""
+msgstr "Êtes-vous certain de vouloir supprimer l'ensemble \"{{name}}\"?"
 
 #: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:122
 msgid "Are you sure you want to delete the saved report?"
@@ -3293,6 +3293,10 @@ msgstr "Date prévue"
 msgid "Date/Time"
 msgstr "Date/heure"
 
+#: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:415
+msgid "Date/Time"
+msgstr "Date/heure"
+
 #: scripts/apps/archive/views/metadata-view.html:69
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:151
 #: scripts/apps/users/views/user-preferences.html:54
@@ -3407,7 +3411,7 @@ msgstr "Supprimer le rapport enregistré"
 
 #: scripts/extensions/sams/dist/src/store/sets/actions.js:69
 msgid "Delete Set?"
-msgstr ""
+msgstr "Supprimer l'ensemble?"
 
 #: scripts/core/editor3/highlightsConfig.ts:116
 msgid "Delete empty paragraphs"
@@ -3714,7 +3718,7 @@ msgstr "Désactivé"
 
 #: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:57
 msgid "Disabled Sets"
-msgstr ""
+msgstr "Ensembles désactivés"
 
 #: scripts/core/notification/notification.ts:139
 msgid "Disconnected from Notification Server!"
@@ -4992,7 +4996,7 @@ msgstr "L'horaire de rapport n'a pas pu être créé!"
 
 #: scripts/extensions/sams/dist/src/api/sets.js:27
 msgid "Failed to create the Set"
-msgstr ""
+msgstr "L'ensemble n'a pas pu être créé"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:196
 msgid "Failed to create/update Events and Planning view filter"
@@ -5000,7 +5004,7 @@ msgstr "Le filtre d'événements et de planification n'a pas pu être créé ou 
 
 #: scripts/extensions/sams/dist/src/api/sets.js:54
 msgid "Failed to delete the Set"
-msgstr ""
+msgstr "L'ensemble n'a pas pu être supprimé"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:194
 msgid "Failed to delete the saved report"
@@ -5073,7 +5077,7 @@ msgstr "Le lien avec l'affectation demandée n'a pas pu être créé!"
 
 #: scripts/extensions/sams/dist/src/api/sets.js:13
 msgid "Failed to load all sets"
-msgstr ""
+msgstr "Tous les ensembles n'ont pas pu être chargés"
 
 #: scripts/extensions/sams/dist/src/api/storageDestinations.js:15
 msgid "Failed to load all storage destinations"
@@ -5255,7 +5259,7 @@ msgstr "L'heure de l'événement n'a pas pu être mise à jour!"
 
 #: scripts/extensions/sams/dist/src/api/sets.js:41
 msgid "Failed to update the Set"
-msgstr ""
+msgstr "L'ensemble n'a pas pu être mis à jour"
 
 #: ../superdesk-planning/client/actions/locations.js:28
 msgid "Failed to updated location!"
@@ -5923,7 +5927,7 @@ msgstr "Priorité élevée"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:35
 msgid "Highcharts {{licenseType}} License"
-msgstr ""
+msgstr "Licence Highcharts {{licenseType}}"
 
 #: scripts/apps/packaging/views/sd-package-items-edit.html:21
 msgid "Highlight Preview"
@@ -6986,7 +6990,7 @@ msgstr "Gestion des fournisseurs de recherche"
 #: scripts/extensions/sams/dist/src/apps/samsWorkspace.js:48
 #: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:81
 msgid "Manage Sets"
-msgstr ""
+msgstr "Gérer les ensembles"
 
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:16
 msgid "Manage agendas"
@@ -7962,7 +7966,7 @@ msgstr "Nombre d'éléments"
 
 #: ../superdesk-analytics/client/components/HighchartsLicense.tsx:27
 msgid "OEM"
-msgstr ""
+msgstr "Ensemblier"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPopup/index.jsx:72
 #: ../superdesk-planning/client/components/Assignments/EditCoverageAssignmentModal.jsx:106
@@ -9315,6 +9319,10 @@ msgstr ""
 #: scripts/apps/authoring/versioning/history/HistoryController.ts:205
 msgid "Recalled by"
 msgstr "Rappelé par"
+
+#: ../superdesk-analytics/client/charts/services/ChartConfig.js:577
+msgid "Recalls"
+msgstr ""
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:24
 msgid "Recent templates"
@@ -10756,7 +10764,7 @@ msgstr "Séances fermées"
 
 #: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:85
 msgid "Set Details"
-msgstr ""
+msgstr "Détails de l'ensemble"
 
 #: scripts/apps/users/views/settings-roles.html:49
 msgid "Set as default"
@@ -10764,11 +10772,11 @@ msgstr "Définir par défault"
 
 #: scripts/extensions/sams/dist/src/api/sets.js:23
 msgid "Set created successfully"
-msgstr ""
+msgstr "Ensemble créé"
 
 #: scripts/extensions/sams/dist/src/api/sets.js:51
 msgid "Set deleted successfully"
-msgstr ""
+msgstr "Ensemble supprimé"
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:80
 msgid "Set highlights"
@@ -10793,7 +10801,7 @@ msgstr "Configurez différents moniteurs pour suivre un sujet depuis son ingesti
 
 #: scripts/extensions/sams/dist/src/api/sets.js:37
 msgid "Set updated successfully"
-msgstr ""
+msgstr "Ensemble mis à jour"
 
 #: scripts/apps/settings/index.ts:19 scripts/apps/settings/settings.tsx:32
 #: scripts/core/menu/views/menu.html:12
@@ -11396,7 +11404,7 @@ msgstr "Envoyer"
 #: ../superdesk-planning/client/utils/index.ts:469
 #: scripts/apps/search/components/fields/state.tsx:17
 msgid "Submitted"
-msgstr "Soumis"
+msgstr "Déplacé"
 
 #: ../superdesk-analytics/client/email_report/views/email-report-modal.html:109
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:202
@@ -12290,7 +12298,7 @@ msgstr "Ceci va également afficher toute les séries récurrentes de l'événem
 msgid "This will also postpone the following planning items"
 msgstr "Cela reportera également les éléments de planification suivants"
 
-#: ../superdesk-planning/client/actions/assignments/ui.js:839
+#: ../superdesk-planning/client/actions/assignments/ui.js:842
 msgid ""
 "This will also remove other linked assignments (if any, for story updates). "
 "Are you sure?"
@@ -12641,7 +12649,7 @@ msgstr "MàJ"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:126
 msgid "UP"
-msgstr "MaJ"
+msgstr "ANN"
 
 #: scripts/apps/dashboard/workspace-tasks/views/workspace-tasks.html:18
 msgid "UPCOMING"
@@ -12952,7 +12960,7 @@ msgstr "Mise à jour de l'heure de {{event}}"
 
 #: scripts/apps/search/components/fields/update.tsx:15
 msgid "Update {{sequence}}"
-msgstr "Mettre à jour {{sequence}}"
+msgstr "Version {{sequence}}"
 
 #: ../superdesk-analytics/client/publishing_performance_report/widgets/publishing_actions/settings.html:44
 #: ../superdesk-planning/client/components/Assignments/FiltersBar.jsx:67
@@ -13026,7 +13034,7 @@ msgstr "Téléverser un contenu multimédia"
 
 #: scripts/apps/authoring/views/item-carousel.html:163
 msgid "Upload new"
-msgstr ""
+msgstr "Nouveau téléversement"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:560
 #: ../superdesk-analytics/client/search/directives/PreviewSourceFilter.js:139
@@ -13058,7 +13066,7 @@ msgstr "Statistiques de priorités"
 
 #: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:56
 msgid "Usable Sets"
-msgstr ""
+msgstr "Ensembles utilisables"
 
 #: scripts/apps/workspace/content/constants.ts:105
 msgid "Usage Terms"
@@ -13103,6 +13111,7 @@ msgstr "Utilisé"
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.jsx:301
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:46
 #: scripts/apps/users/views/user-privileges.html:16
+#: scripts/extensions/markForUser/dist/get-authoring-actions.js:8
 msgid "User"
 msgstr "Utilisateur"
 
@@ -13444,7 +13453,7 @@ msgstr "Largeur"
 msgid ""
 "Width of the\n"
 "                                    popup window (in pixels)"
-msgstr ""
+msgstr "Largeur de la fenêtre surgissante (en pixels)"
 
 #: ../superdesk-planning/client/components/AdvancedSearch/index.jsx:226
 msgid "Without Coverage"
@@ -13657,7 +13666,7 @@ msgstr "ajout d'un nouvel élément {{type}} concernant \"{{subject}}\""
 
 #: scripts/core/lang/missing-translations-strings.ts:35
 msgid "added new {{type}} item with empty header/title"
-msgstr "ajout d'un nouvel élément {{type}} avec en-tête / titre vide"
+msgstr "ajout d'un nouvel élément {{type}} avec en-tête/titre vide"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:76
 msgid "added to workflow"
@@ -13729,20 +13738,20 @@ msgstr "audio"
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-article.html:7
 #: scripts/apps/authoring/compare-versions/views/sd-compare-versions-inner-dropdown.html:7
 msgid "author"
-msgstr "auteure"
+msgstr "auteur"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "authoring"
-msgstr "création"
+msgstr ""
 
 #: scripts/core/editor2/editor.ts:1046
 msgid "bold"
-msgstr "audacieuse"
+msgstr "gras"
 
 #: ../superdesk-planning/client/components/UI/Form/FileInput.jsx:146
 #: scripts/core/ui/components/Form/FileInput.tsx:133
 msgid "browse"
-msgstr "Feuilleter"
+msgstr "parcourir"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:43
 #: ../superdesk-planning/client/components/AuditInformation/index.jsx:48
@@ -13799,7 +13808,7 @@ msgstr "a commenté dans"
 
 #: scripts/core/lang/missing-translations-strings.ts:13
 msgid "compact"
-msgstr "compact"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:9
 msgid "composite"
@@ -13951,15 +13960,15 @@ msgstr "p. ex. @superdeskman"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:526
 msgid "e.g. Rhodes, CBD"
-msgstr "par exemple. Rhodes, CDB"
+msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:465
 msgid "e.g. cityofsydney from https://www.facebook.com/cityofsydney"
-msgstr "par exemple. cityofsydney à partir de https://www.facebook.com/cityofsydney"
+msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:484
 msgid "e.g. cityofsydney from https://www.instagram.com/cityofsydney"
-msgstr "par exemple. cityofsydney à partir de https://www.instagram.com/cityofsydney"
+msgstr ""
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:432
 msgid "e.g. http://www.website.com"
@@ -14073,7 +14082,7 @@ msgstr "prénom"
 
 #: ../superdesk-planning/client/utils/tests/index_test.js:207
 msgid "foo"
-msgstr "foo"
+msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:971
 msgid "for"
@@ -14111,7 +14120,7 @@ msgstr "de"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:28
 msgid "from content"
-msgstr "du contenu"
+msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:90
 msgid "from coverage assignment by"
@@ -14148,7 +14157,7 @@ msgstr "type d'en-tête 2"
 
 #: scripts/core/views/sdSlider.html:3
 msgid "high"
-msgstr "haute"
+msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:34
 msgid "highlights"
@@ -14282,7 +14291,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/constants/planning.js:103
 msgid "live_video"
-msgstr "live_video"
+msgstr ""
 
 #: scripts/apps/contacts/views/search-results.html:4
 #: scripts/apps/content-api/views/search-results.html:4
@@ -14299,15 +14308,15 @@ msgstr "chargement de plus d'éléments..."
 #: scripts/apps/desks/directives/DeskeditPeople.ts:13
 #: scripts/apps/desks/directives/DeskeditStages.ts:40
 msgid "loading..."
-msgstr "chargement"
+msgstr "chargement..."
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:527
 msgid "locality"
-msgstr "localité"
+msgstr ""
 
 #: scripts/apps/search/components/ItemContainer.tsx:16
 msgid "location:"
-msgstr "emplacement:"
+msgstr ""
 
 #: scripts/core/views/sdSlider.html:2
 msgid "low"
@@ -14423,7 +14432,7 @@ msgstr "sur"
 
 #: ../superdesk-planning/client/utils/events.js:986
 msgid "on all week (including weekends)"
-msgstr "sur toute la semaine (y compris les week-ends)"
+msgstr "toute la semaine (y compris les week-ends)"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:94
 msgid "on assignment by"
@@ -14589,7 +14598,7 @@ msgstr "citation"
 
 #: ../superdesk-planning/client/utils/history.js:105
 msgid "re-posted"
-msgstr "re-posté"
+msgstr ""
 
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:10
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:7
@@ -14610,7 +14619,7 @@ msgstr "élément de budget supprimé"
 
 #: scripts/core/lang/missing-translations-strings.ts:37
 msgid "removed item {{type}} about {{subject}}"
-msgstr "élément supprimé {{type}} sur {{subject}}"
+msgstr "retiré élément {{type}} concernant {{subject}}"
 
 #: scripts/apps/authoring/macros/views/macros-replace.html:6
 msgid "replace"
@@ -14622,7 +14631,7 @@ msgstr "élément {{type}} à propos de {{subject}} remplacé"
 
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "retrying"
-msgstr "Réessayer"
+msgstr ""
 
 #: scripts/apps/authoring/versioning/versions/views/versions.html:20
 msgid "revert"
@@ -14754,7 +14763,7 @@ msgstr "état, région, ..."
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:80
 #: scripts/core/lang/missing-translations-strings.ts:11
 msgid "submitted"
-msgstr "soumis"
+msgstr "déplacé"
 
 #: scripts/core/lang/missing-translations-strings.ts:32
 msgid "subscription"
@@ -14820,15 +14829,15 @@ msgstr "liste non ordonnée"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.jsx:120
 msgid "unpost"
-msgstr "dépublier"
+msgstr ""
 
 #: ../superdesk-planning/client/utils/history.js:100
 msgid "unposted"
-msgstr "non posté"
+msgstr ""
 
 #: ../superdesk-planning/client/utils/events.js:956
 msgid "until {{until}}"
-msgstr "jusqu'au {{until}}"
+msgstr "jusqu'à {{until}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:27
 msgid "update"
