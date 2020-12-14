@@ -179,7 +179,7 @@ class Monitoring {
         };
 
         this.getGroups = function() {
-            browser.sleep(5000); // due to debouncing, loading does not start immediately
+            browser.sleep(3000); // due to debouncing, loading does not start immediately
             browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0));
 
             return element.all(by.repeater('group in aggregate.groups'));
