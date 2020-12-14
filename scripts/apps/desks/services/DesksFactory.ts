@@ -284,6 +284,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
         },
         fetchDeskById: function(Id) {
             return api.desks.getById(Id).then((_desk) => {
+                _desk.desk_metadata = _desk.desk_metadata ?? {};
                 return _desk;
             }, () => {
                 logger.error(new Error('Something went wrong: desk not found'));
