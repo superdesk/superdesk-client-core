@@ -60,6 +60,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
+        private _mounted: boolean;
 
         constructor(props: IProps) {
             super(props);
@@ -71,6 +72,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 vocabularyLabels: null,
             };
 
+            this._mounted = false;
             this.runAnalysis = this.runAnalysis.bind(this);
             this.initializeData = this.initializeData.bind(this);
             this.updateTags = this.updateTags.bind(this);
@@ -100,14 +102,16 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 }).then((res) => {
                     const resClient = toClientFormat(res.analysis);
 
-                    this.setState({
-                        data: {
-                            original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
-                                ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
-                                : dataBeforeLoading.original, // use previous data
-                            changes: {analysis: resClient},
-                        },
-                    });
+                    if (this._mounted) {
+                        this.setState({
+                            data: {
+                                original: dataBeforeLoading === 'loading' || dataBeforeLoading === 'not-initialized'
+                                    ? {analysis: OrderedMap<string, ITagUi>()} // initialize empty data
+                                    : dataBeforeLoading.original, // use previous data
+                                changes: {analysis: resClient},
+                            },
+                        });
+                    }
                 });
             });
         }
@@ -171,6 +175,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.initializeData(false);
         }
         componentDidMount() {
+            this._mounted = true;
+
             Promise.all([
                 getAutoTaggingVocabularyLabels(superdesk),
                 preferences.get(RUN_AUTOMATICALLY_PREFERENCE),
@@ -182,6 +188,9 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                 this.initializeData(runAutomatically);
             });
+        }
+        componentWillUnmount() {
+            this._mounted = false;
         }
         render() {
             const {runAutomaticallyPreference, vocabularyLabels} = this.state;
