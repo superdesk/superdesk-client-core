@@ -162,6 +162,7 @@ export function ItemList(
                         itemsList: itemsList,
                         itemsById: itemsById,
                         view: scope.view,
+                        loading: false,
                     }, () => {
                         scope.rendering = scope.loading = false;
                     });

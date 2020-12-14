@@ -179,6 +179,8 @@ class Monitoring {
         };
 
         this.getGroups = function() {
+            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0));
+
             return element.all(by.repeater('group in aggregate.groups'));
         };
 
@@ -194,8 +196,6 @@ class Monitoring {
          */
         this.getItem = function(group, item) {
             var all = this.getGroupItems(group);
-
-            browser.wait(() => all.count(), 7500);
 
             if (item.type) {
                 return all.filter((elem) =>
