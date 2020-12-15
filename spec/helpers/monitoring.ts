@@ -563,8 +563,9 @@ class Monitoring {
             var btn = element(by.css('[ng-click="save()"]'));
 
             btn.click();
+
             // wait for modal to be removed
-            browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 600);
+            browser.wait(ECE.invisibilityOf(el(['desk--monitoring-settings'])));
         };
 
         /**
