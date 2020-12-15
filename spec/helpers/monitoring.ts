@@ -566,6 +566,7 @@ class Monitoring {
 
             // wait for modal to be removed
             browser.wait(ECE.invisibilityOf(el(['desk--monitoring-settings'])));
+            browser.sleep(3000);
         };
 
         /**
