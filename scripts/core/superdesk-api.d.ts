@@ -504,7 +504,7 @@ declare module 'superdesk-api' {
             max_items: number;
         }>;
         desk_type: 'authoring' | 'production';
-        desk_metadata: {[key: string]: any};
+        desk_metadata?: {[key: string]: any};
         content_profiles: {[key: IContentProfile['_id']]: any};
         desk_language?: string;
         monitoring_default_view?: 'list' | 'swimlane' | 'photogrid';
