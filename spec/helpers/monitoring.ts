@@ -130,7 +130,8 @@ class Monitoring {
         this.label = element(by.model('widget.configuration.label'));
 
         this.openMonitoring = function() {
-            return nav('/workspace/monitoring');
+            nav('/workspace/monitoring');
+            browser.wait(ECE.visibilityOf(el(['monitoring-view'])));
         };
 
         this.showMonitoring = function() {
