@@ -27,6 +27,7 @@ import {
     Text,
 } from '../../ui';
 import {getFileSizeFromHumanReadable} from '../../utils/ui';
+import {VersionUserDateLines} from '../common/versionUserDateLines';
 
 // Utils
 import {hasItemChanged} from '../../utils/api';
@@ -205,6 +206,13 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                     </PanelHeaderSlidingToolbar>
                 </PanelHeader>
                 <PanelContent>
+                    {this.props.original == null ? null : (
+                        <PanelContentBlock flex={true}>
+                            <PanelContentBlockInner grow={true}>
+                                <VersionUserDateLines item={this.props.original} />
+                            </PanelContentBlockInner>
+                        </PanelContentBlock>
+                    )}
                     <PanelContentBlock>
                         <PanelContentBlockInner grow={true}>
                             {this.props.original == null ? null : (

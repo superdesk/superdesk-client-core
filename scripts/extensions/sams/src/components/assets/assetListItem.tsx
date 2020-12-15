@@ -64,9 +64,12 @@ export class AssetListItem extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {gettext, longFormatDateTime} = superdeskApi.localization;
+        const {gettext, longFormatDateTime, getRelativeOrAbsoluteDateTime} = superdeskApi.localization;
+        const {config} = superdeskApi.instance;
         const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
         const mimetype = getMimetypeHumanReadable(this.props.asset.mimetype);
+        const versionShort = getRelativeOrAbsoluteDateTime(this.props.asset.versioncreated, config.view.dateformat);
+        const versionLong = longFormatDateTime(this.props.asset.versioncreated);
 
         return (
             <ListItem
@@ -95,7 +98,9 @@ export class AssetListItem extends React.PureComponent<IProps> {
                             </span>
                             {this.props.asset.description}
                         </span>
-                        <time>{longFormatDateTime(this.props.asset._updated)}</time>
+                        <time title={versionLong}>
+                            {gettext('Updated {{ datetime }}', {datetime: versionShort})}
+                        </time>
                     </ListItemRow>
                     <ListItemRow>
                         {getAssetStateLabel(this.props.asset.state)}

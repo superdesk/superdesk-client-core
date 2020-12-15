@@ -1332,6 +1332,9 @@ declare module 'superdesk-api' {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
             };
             attachment: IAttachmentsApi;
+            users: {
+                getUsersByIds(ids: Array<IUser['_id']>): Promise<Array<IUser>>;
+            };
         };
         helpers: {
             assertNever(x: never): never;
@@ -1392,9 +1395,15 @@ declare module 'superdesk-api' {
         localization: {
             gettext(message: string, params?: {[key: string]: string | number}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[key: string]: string | number}): string;
-            formatDate(date: Date): string;
+            formatDate(date: Date | string): string;
             formatDateTime(date: Date): string;
             longFormatDateTime(date: Date | string): string;
+            getRelativeOrAbsoluteDateTime(
+                datetimeString: string,
+                format: string,
+                relativeDuration: number = 1,
+                relativeUnit: string = 'days'
+            ): string;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;

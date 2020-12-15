@@ -3,6 +3,7 @@ import {
     IAttachment,
     IBaseRestApiResponse,
     IRestApiResponse,
+    IUser,
 } from 'superdesk-api';
 import {IModalSize} from './ui/modal';
 
@@ -90,7 +91,14 @@ export interface IAssetCallback {
     onSelect(asset: Partial<IAssetItem>): void;
 }
 
-export interface ISetItem extends IBaseRestApiResponse {
+export interface IVersionInformation extends IBaseRestApiResponse{
+    firstcreated: string;
+    versioncreated: string;
+    original_creator?: IUser['_id'];
+    version_creator?: IUser['_id'];
+}
+
+export interface ISetItem extends IVersionInformation {
     name: string;
     state: SET_STATE;
     description?: string;
@@ -104,7 +112,7 @@ export interface IStorageDestinationItem extends IBaseRestApiResponse {
     provider?: string;
 }
 
-export interface IAssetItem extends IBaseRestApiResponse {
+export interface IAssetItem extends IVersionInformation {
     set_id: string;
     parent_id: string;
     state: ASSET_STATE;
