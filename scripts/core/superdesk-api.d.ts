@@ -993,6 +993,7 @@ declare module 'superdesk-api' {
             max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
+        queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;

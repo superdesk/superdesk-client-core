@@ -176,6 +176,13 @@ export const dataApi: IDataApi = {
             path: '/' + endpoint + queryString,
         });
     },
+    queryRawJson: (endpoint, params?: Dictionary<string, any>) => {
+        return httpRequestJsonLocal({
+            method: 'GET',
+            path: '/' + endpoint,
+            urlParams: params,
+        });
+    },
     patch: (endpoint, item1, item2) => {
         const patch = generatePatch(item1, item2);
 
