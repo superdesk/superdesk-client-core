@@ -745,7 +745,7 @@ describe('monitoring', () => {
         monitoring.expectIsNotChecked(0, 8);
     });
 
-    xit('can update selected item count after a selected item is corrected', () => {
+    it('can update selected item count after a selected item is corrected', () => {
         setupDeskMonitoringSettings('POLITIC DESK');
         monitoring.turnOffDeskWorkingStage(0, false);
 
@@ -766,6 +766,7 @@ describe('monitoring', () => {
 
         monitoring.actionOnItem('Edit', 1, 2);
         authoring.publish();
+
         monitoring.filterAction('text');
         expect(monitoring.getTextItem(0, 0)).toBe('item6');
         // select first item
