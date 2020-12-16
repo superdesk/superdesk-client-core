@@ -25,6 +25,7 @@ import {
 } from '../../ui';
 import {IPanelTools} from '../../ui/PanelTools';
 import {getHumanReadableFileSize} from '../../utils/ui';
+import {VersionUserDateLines} from '../common/versionUserDateLines';
 
 interface IProps {
     set?: ISetItem;
@@ -87,6 +88,11 @@ export class SetPreviewPanelComponent extends React.PureComponent<IProps> {
                 </PanelHeader>
                 <PanelContent>
                     <PanelContentBlock flex={true}>
+                        <PanelContentBlockInner grow={true}>
+                            <VersionUserDateLines item={set} />
+                        </PanelContentBlockInner>
+                    </PanelContentBlock>
+                    <PanelContentBlock className="sd-padding-t--0">
                         <PanelContentBlockInner grow={true}>
                             <FormRow>
                                 <FormLabel text={gettext('Name')} style="light" />

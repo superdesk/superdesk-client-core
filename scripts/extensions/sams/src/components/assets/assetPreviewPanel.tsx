@@ -22,6 +22,7 @@ import {
     PanelHeader,
     Text,
 } from '../../ui';
+import {VersionUserDateLines} from '../common/versionUserDateLines';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
@@ -86,9 +87,11 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
             <React.Fragment>
                 <PanelHeader onClose={this.props.onPanelClosed} borderB={true} title={gettext('Asset Preview')} />
                 <PanelContent>
-                    <div className="side-panel__content-block side-panel__content-block--flex">
-                        <div className="side-panel__content-block-inner side-panel__content-block-inner--grow" />
-                        <div className="side-panel__content-block-inner side-panel__content-block-inner--right">
+                    <PanelContentBlock flex={true}>
+                        <PanelContentBlockInner grow={true}>
+                            <VersionUserDateLines item={this.props.asset} />
+                        </PanelContentBlockInner>
+                        <PanelContentBlockInner right={true}>
                             <Dropdown
                                 align = "right"
                                 items={[
@@ -119,8 +122,8 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                                     onClick={() => false}
                                 />
                             </Dropdown>
-                        </div>
-                    </div>
+                        </PanelContentBlockInner>
+                    </PanelContentBlock>
                     <PanelContentBlock flex={true}>
                         <PanelContentBlockInner grow={true}>
                             <FormRow>

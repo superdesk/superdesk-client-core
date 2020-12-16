@@ -79,6 +79,7 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
                         <FormRow>
                             <Input
                                 label={gettext('Name')}
+                                required={true}
                                 value={this.props.asset.name}
                                 onChange={this.onChange.name}
                                 disabled={this.props.disabled === true}

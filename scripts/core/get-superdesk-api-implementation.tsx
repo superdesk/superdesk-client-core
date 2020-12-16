@@ -6,6 +6,7 @@ import {
     IContentProfile,
     IEvents,
     IStage,
+    IUser,
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
@@ -129,7 +130,28 @@ export function isLockedInOtherSession(article: IArticle): boolean {
     return sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
 }
 
-export const formatDate = (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat);
+export const formatDate = (date: Date | string) => (
+    moment(date)
+        .tz(appConfig.defaultTimezone)
+        .format(appConfig.view.dateformat)
+);
+
+export function getRelativeOrAbsoluteDateTime(
+    datetimeString: string,
+    format: string,
+    relativeDuration: number = 1,
+    relativeUnit: string = 'days',
+): string {
+    const datetime = moment(datetimeString);
+
+    if (datetime.isSameOrAfter(moment().subtract(relativeDuration, relativeUnit))) {
+        return datetime.fromNow();
+    }
+
+    return datetime
+        .tz(appConfig.defaultTimezone)
+        .format(format);
+}
 
 // imported from planning
 export function getSuperdeskApiImplementation(
@@ -224,6 +246,18 @@ export function getSuperdeskApiImplementation(
                 getVocabulary: (id: string) => metadata.initialize().then(() => metadata.values[id]),
             },
             attachment: attachmentsApi,
+            users: {
+                getUsersByIds: (ids) => (
+                    dataApi.query<IUser>(
+                        'users',
+                        1,
+                        {field: 'display_name', direction: 'ascending'},
+                        {_id: {$in: ids}},
+                        200,
+                    )
+                        .then((response) => response._items)
+                ),
+            },
         },
         state: applicationState,
         instance: {
@@ -309,6 +343,7 @@ export function getSuperdeskApiImplementation(
                     .tz(appConfig.defaultTimezone)
                     .format(appConfig.longDateFormat || 'LLL');
             },
+            getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),

@@ -22,6 +22,7 @@ import {
     PanelContentBlockInner,
 } from '../../ui';
 import {AssetEditor} from './assetEditor';
+import {VersionUserDateLines} from '../common/versionUserDateLines';
 
 interface IProps {
     original?: IAssetItem;
@@ -135,6 +136,13 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
                         </ButtonGroup>
                     </PanelHeaderSlidingToolbar>
                 </PanelHeader>
+                {this.props.original == null ? null : (
+                    <PanelContentBlock flex={true}>
+                        <PanelContentBlockInner grow={true}>
+                            <VersionUserDateLines item={this.props.original} />
+                        </PanelContentBlockInner>
+                    </PanelContentBlock>
+                )}
                 <PanelContentBlock flex={true}>
                     <PanelContentBlockInner grow={true}>
                         <AssetEditor

@@ -272,7 +272,8 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                     '{{count}} item selected',
                                     '{{count}} items selected',
                                     {count: this.props.selectedAssetIds?.length},
-                                )}</span>
+                                )}
+                            </span>
                             <div className="pull-right">
                                 <NavButton
                                     icon="trash"
