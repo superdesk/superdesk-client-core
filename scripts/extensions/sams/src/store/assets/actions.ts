@@ -185,6 +185,15 @@ export function lockAsset(asset: IAssetItem): IThunkAction<void> {
     };
 }
 
+export function onEditAsset(asset: IAssetItem): (dispatch: any) => void {
+    return (dispatch) => {
+        dispatch(lockAsset(asset))
+            .then(() => {
+                dispatch(editAsset(asset._id));
+            });
+    };
+}
+
 export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): IThunkAction<IAssetItem> {
     return (dispatch) => {
         return samsApi.assets.update(original, updates)

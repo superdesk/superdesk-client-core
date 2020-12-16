@@ -32,7 +32,7 @@ import {
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
     updateSelectedAssetIds,
-    editAsset,
+    onEditAsset,
     deleteAsset,
     lockAsset,
 } from '../store/assets/actions';
@@ -70,7 +70,7 @@ interface IProps {
     deleteAsset(asset: IAssetItem): void;
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
-    editAsset(asset: IAssetItem): void;
+    onEditAsset(asset: IAssetItem): void;
     lockAsset(asset: IAssetItem): Promise<IAssetItem>;
     updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
@@ -114,7 +114,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
-    editAsset: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
+    onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
     lockAsset: (asset: IAssetItem) => dispatch<any>(lockAsset(asset)),
 });
@@ -167,12 +167,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     }
 
     onEditAsset(asset: IAssetItem) {
-        if (asset != null) {
-            this.props.lockAsset(asset)
-                .then(() => {
-                    this.props.editAsset(asset);
-                });
-        }
+        this.props.onEditAsset(asset);
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
@@ -265,7 +260,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             updateSelectedAssetIds={this.onMultiActionBar}
                             actions={[{
                                 action: ASSET_ACTIONS.EDIT,
-                                onSelect: this.props.editAsset,
+                                onSelect: this.onEditAsset,
                             },
                             {
                                 action: ASSET_ACTIONS.PREVIEW,
