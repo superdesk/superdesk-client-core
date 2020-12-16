@@ -551,8 +551,6 @@ export function lockAsset(original: IAssetItem, updates: Dictionary<string, any>
 
     return superdeskApi.dataApi.patch<IAssetItem>(LOCK_ASSET, original, updates)
         .then((asset: IAssetItem) => {
-            notify.success(gettext('Asset locked successfully'));
-
             return asset;
         })
         .catch((error: any) => {
@@ -572,8 +570,6 @@ export function unlockAsset(original: IAssetItem, updates: Dictionary<string, an
 
     return superdeskApi.dataApi.patch<IAssetItem>(UNLOCK_ASSET, original, updates)
         .then((asset: IAssetItem) => {
-            notify.success(gettext('Asset unlocked successfully'));
-
             return asset;
         })
         .catch((error: any) => {

@@ -25,6 +25,7 @@ interface IProps {
     onDoubleClick?(asset: IAssetItem): void;
     actions?: Array<IAssetCallback>;
     itemSelected: boolean;
+    itemSelectedLocked?: boolean;
     updateSelectedAssetIds(asset: Partial<IAssetItem>): void;
 }
 
@@ -75,7 +76,12 @@ export class AssetListItem extends React.PureComponent<IProps> {
                 selected={this.props.selected || this.props.itemSelected}
                 shadow={1}
             >
-                <ListItemBorder />
+                {this.props.selected && this.props.itemSelectedLocked ? (
+                    <ListItemBorder
+                        state="locked"
+                    />
+                ) : null
+                }
                 <ListItemColumn hasCheck={true} checked={this.props.itemSelected}>
                     <div className="sd-list-item__checkbox-container" onClick={this.onCheckboxClick}>
                         <Checkbox

@@ -33,7 +33,7 @@ interface IProps {
     toggleSelected?(asset: Partial<IAssetItem>): void;
     actions?: Array<IAssetCallback>;
     itemSelected?: boolean;
-    itemSelectedForEdit?: boolean;
+    itemSelectedLocked?: boolean;
     updateSelectedAssetIds?(asset: Partial<IAssetItem>): void;
 }
 
@@ -96,7 +96,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                 onClick={this.onItemClick}
                 onDoubleClick={this.onItemDoubleClick}
                 singleClickSelected={this.props.selected || this.props.itemSelected}
-                doubleClickSelected={this.props.selected && this.props.itemSelectedForEdit}
+                locked={this.props.selected && this.props.itemSelectedLocked}
             >
                 <GridItemThumb
                     uploading={true}

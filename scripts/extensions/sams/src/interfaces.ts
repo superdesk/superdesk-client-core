@@ -113,6 +113,9 @@ export interface IAssetItem extends IBaseRestApiResponse {
     mimetype: string;
     name: string;
     description: string;
+    lock_action: string;
+    lock_user: string;
+    lock_session: string;
     tags: Array<{
         code: string;
         name: string;

@@ -7,10 +7,10 @@ import {cloneDeep} from 'lodash';
 // Types
 import {IAssetItem, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
-import {superdeskApi, samsApi} from '../../apis';
+import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
-import {previewAsset, updateAsset, queryAssetsFromCurrentSearch} from '../../store/assets/actions';
+import {previewAsset, updateAsset, queryAssetsFromCurrentSearch, unlockAsset} from '../../store/assets/actions';
 import {getSelectedAsset} from '../../store/assets/selectors';
 
 // UI
@@ -28,6 +28,7 @@ interface IProps {
     previewAsset(asset: IAssetItem): void;
     updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): Promise<IAssetItem>;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
+    unlockAsset(asset: IAssetItem): Promise<void>;
 }
 
 interface IState {
@@ -44,6 +45,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateAsset: (original: IAssetItem, updates: IAssetItem) => dispatch<any>(updateAsset(original, updates)),
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
+    unlockAsset: (asset: IAssetItem) => dispatch<any>(unlockAsset(asset)),
 });
 
 export class AssetEditorPanelComponent extends React.PureComponent<IProps, IState> {
@@ -102,9 +104,7 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
     }
 
     onCancel() {
-        const updates: Dictionary<string, any> = {};
-
-        samsApi.assets.unlockAsset(this.props.original!, updates)
+        this.props.unlockAsset(this.props.original!)
             .then(() => {
                 if (this.props.original != null) {
                     this.props.previewAsset(this.props.original);

@@ -25,6 +25,9 @@ import {
     getAssets,
 } from './selectors';
 
+// Utils
+import {verifyAssetBeforeLocking} from '../../utils/assets';
+
 export function receiveAssets(
     response: IRestApiResponse<IAssetItem>,
     listAction?: LIST_ACTION,
@@ -157,6 +160,28 @@ export function editAsset(assetId?: string): IAssetActionTypes {
     return {
         type: MANAGE_ASSETS_EDIT,
         payload: assetId,
+    };
+}
+
+export function unlockAsset(asset: IAssetItem): IThunkAction<void> {
+    return (dispatch) => {
+        return samsApi.assets.unlockAsset(asset, {})
+            .then(() => {
+                return dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
+            });
+    };
+}
+
+export function lockAsset(asset: IAssetItem): IThunkAction<void> {
+    return (dispatch) => {
+        if (verifyAssetBeforeLocking(asset, 'edit')) {
+            return dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
+        } else {
+            return samsApi.assets.lockAsset(asset, {'lock_action': 'edit'})
+                .then(() => {
+                    return dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
+                });
+        }
     };
 }
 

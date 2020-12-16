@@ -93,3 +93,16 @@ export function getMimetypeHumanReadable(mimetype?: string): string {
         return gettext('Other');
     }
 }
+
+export function verifyAssetBeforeLocking(asset: Partial<IAssetItem>, lock_action?: string): boolean {
+    const session_id = superdeskApi.session.getSessionId();
+    const user_id_verified = superdeskApi.session.getCurrentUser().then((user) => {
+        return asset.lock_user === user._id;
+    });
+
+    if (asset.lock_action === lock_action && asset.lock_session === session_id && user_id_verified) {
+        return true;
+    } else {
+        return false;
+    }
+}

@@ -23,7 +23,6 @@ import {PanelContent} from '../ui';
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
-import {deleteAsset} from '../store/assets/actions';
 
 import {
     loadNextAssetsPage,
@@ -34,6 +33,8 @@ import {
     updateAssetSearchParamsAndListItemsFromURL,
     updateSelectedAssetIds,
     editAsset,
+    deleteAsset,
+    lockAsset,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
@@ -70,6 +71,7 @@ interface IProps {
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
     editAsset(asset: IAssetItem): void;
+    lockAsset(asset: IAssetItem): Promise<IAssetItem>;
     updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
@@ -114,6 +116,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
     editAsset: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
+    lockAsset: (asset: IAssetItem) => dispatch<any>(lockAsset(asset)),
 });
 
 export function downloadAssetBinary(asset: IAssetItem): void {
@@ -163,13 +166,13 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.props.deleteAsset(asset);
     }
 
-    onEditAsset(asset: IAssetItem): void {
-        const updates: Dictionary<string, any> = {'lock_action': 'edit'};
-
-        samsApi.assets.lockAsset(asset, updates)
-            .then(() =>
-                this.props.editAsset(asset),
-            );
+    onEditAsset(asset: IAssetItem) {
+        if (asset != null) {
+            this.props.lockAsset(asset)
+                .then(() => {
+                    this.props.editAsset(asset);
+                });
+        }
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {

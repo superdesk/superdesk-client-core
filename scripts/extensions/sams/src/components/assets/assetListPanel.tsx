@@ -73,7 +73,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             onDoubleClick={this.onItemDoubleClick}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
-                            itemSelectedForEdit={this.props.itemSelectedForEdit}
+                            itemSelectedLocked={this.props.itemSelectedForEdit}
                             updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
                         />
                     ))}
@@ -91,6 +91,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             onDoubleClick={this.onItemDoubleClick}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
+                            itemSelectedLocked={this.props.itemSelectedForEdit}
                             updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
                         />
                     ))}
