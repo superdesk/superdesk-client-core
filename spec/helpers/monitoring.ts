@@ -664,6 +664,8 @@ class Monitoring {
                                 .mouseUp()
                                 .perform();
                         });
+
+                        browser.sleep(3000);
                     });
             });
         };

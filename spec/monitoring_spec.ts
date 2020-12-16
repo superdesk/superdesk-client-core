@@ -735,7 +735,7 @@ describe('monitoring', () => {
         monitoring.expectIsNotChecked(0, 8);
     });
 
-    xit('can update selected item count after a selected item is corrected', () => {
+    fit('can update selected item count after a selected item is corrected', () => {
         setupDeskMonitoringSettings('POLITIC DESK');
         monitoring.turnOffDeskWorkingStage(0, false);
 
