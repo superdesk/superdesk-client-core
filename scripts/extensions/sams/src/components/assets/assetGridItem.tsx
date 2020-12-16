@@ -117,10 +117,10 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                         <time>{longFormatDateTime(this.props.asset._updated)}</time>
                     )}
                     <p className="sd-grid-item__title">
-                        {this.props.asset.name}
+                        {this.props.asset.name?.substring(0, 25)}
                     </p>
                     <p className="sd-grid-item--element-grow">
-                        {this.props.asset.description}
+                        {this.props.asset.description?.substring(0, 120)}
                     </p>
                     <div className="sd-grid-item__content-block">
                         <span className="sd-grid-item__text-label">
