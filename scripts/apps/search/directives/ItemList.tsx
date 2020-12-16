@@ -135,6 +135,10 @@ export function ItemList(
 
                 scope.$watch('items', (items) => {
                     if (!items || !items._items) {
+                        listComponent.setState({
+                            loading: true,
+                        });
+
                         return;
                     }
 
@@ -162,6 +166,7 @@ export function ItemList(
                         itemsList: itemsList,
                         itemsById: itemsById,
                         view: scope.view,
+                        loading: false,
                     }, () => {
                         scope.rendering = scope.loading = false;
                     });
