@@ -1,6 +1,7 @@
 import React from 'react';
 import {get} from 'lodash';
 import {gettext} from 'core/utils';
+import {appConfig} from 'appConfig';
 import {removeLodash} from 'core/filters';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {longFormat} from 'core/datetime/datetime';
@@ -20,6 +21,8 @@ export function getStateLabel(itemState: ITEM_STATE) {
     case ITEM_STATE.PUBLISHED: return gettext('Published');
     case ITEM_STATE.SCHEDULED: return gettext('Scheduled');
     case ITEM_STATE.CORRECTED: return gettext('Corrected');
+    case ITEM_STATE.CORRECTION: return gettext('Correction');
+    case ITEM_STATE.BEING_CORRECTED: return gettext('Being Corrected');
     case ITEM_STATE.KILLED: return gettext('Killed');
     case ITEM_STATE.RECALLED: return gettext('Recalled');
     case ITEM_STATE.UNPUBLISHED: return gettext('Unpublished');
@@ -29,12 +32,17 @@ export function getStateLabel(itemState: ITEM_STATE) {
 
 interface IProps {
     item: IArticle;
+    openAuthoringView(_id): void;
 }
 
 export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
     if (props.item.state != null) {
         let title = getStateLabel(props.item.state);
         const text = title;
+        const openItem = function(event) {
+            event.stopPropagation();
+            props.openAuthoringView(props.item.archive_item._id);
+        };
 
         if (props.item.state === 'scheduled') {
             const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
@@ -47,8 +55,13 @@ export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> =
         return (
             <span
                 title={title}
-                className={'state-label state-' + props.item.state}
+                className={props.item.state === 'correction'
+                    ? 'label pink--500'
+                    : (props.item.state === 'being_corrected'
+                        ? 'label label--hollow hollow-pink--500'
+                        : 'state-label state-' + props.item.state)}
                 key="state"
+                onClick={props.item.state === 'being_corrected' ? openItem : null}
             >
                 {text}
             </span>

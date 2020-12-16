@@ -82,7 +82,7 @@
 
                 <div sd-toggle-box
                     id="publishScheduleTimestamp"
-                    ng-if="mode === 'authoring' && showPublishSchedule() && sendPublishSchedule"
+                    ng-if="mode === 'authoring' && showPublishSchedule() && sendPublishSchedule && !isCorrection"
                     data-title="{{ 'Publishing Schedule' | translate }}"
                     data-open="true"
                     data-style="circle">
@@ -110,7 +110,7 @@
              ng-if="currentUserAction === vm.userActions.publish"
              ng-class="{'side-panel__content--split': vm.userActions.publish_pane_two_columns}">
             <div class="side-panel__content-block side-panel__content-block--left">
-                <div ng-if="showSendButtonAndDestination()" data-test-id="publish-from--options">
+                <div ng-if="showSendButtonAndDestination() && !isCorrection" data-test-id="publish-from--options">
                     <div sd-toggle-box
                         data-title="{{ 'From' | translate }}"
                         data-open="true"
@@ -146,7 +146,7 @@
 
                 <div sd-toggle-box
                     id="publishScheduleTimestamp"
-                    ng-if="mode === 'authoring' && showPublishSchedule()"
+                    ng-if="mode === 'authoring' && showPublishSchedule() && !isCorrection"
                     data-title="{{ 'Publish Schedule' | translate }}"
                     data-open="true"
                     data-style="circle">
@@ -167,7 +167,7 @@
                     <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
                 </div>
 
-                <div sd-toggle-box id="target" data-title="{{ 'Target' | translate }}" data-open="true" data-style="circle">
+                <div sd-toggle-box id="target" ng-if="!isCorrection" data-title="{{ 'Target' | translate }}" data-open="true" data-style="circle">
                     <div class="form__row">
                         <label class="form-label" translate>Target Subscribers</label>
                         <div class="term-editor"
