@@ -39,7 +39,7 @@ describe('fetch', () => {
     it('can remove ingest item', () => {
         workspace.openIngest();
         content.actionOnItem('Remove', 0);
-        expect(content.count()).toBe(0);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 0));
     });
 
     it('can not Fetch-and-Open if selected desk as a non-member', () => {

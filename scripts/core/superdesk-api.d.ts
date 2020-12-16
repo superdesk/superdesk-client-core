@@ -211,6 +211,16 @@ declare module 'superdesk-api' {
          * Unpublished, might be published again.
          */
         UNPUBLISHED = 'unpublished',
+
+        /**
+        * Correction, If Correction workflow is true, correction, copy of published article which we can edit.
+        */
+        CORRECTION = 'correction',
+
+        /**
+        * being_corrected, If Correction workflow is true, being_corrected, the item is being corrected.
+        */
+        BEING_CORRECTED = 'being_corrected',
     }
 
 
@@ -481,12 +491,28 @@ declare module 'superdesk-api' {
     }
 
     export interface IDesk extends IBaseRestApiResponse {
-        incoming_stage: IStage['_id'];
-        members: Array<IUser['_id']>;
         name: string;
-        desk_type: 'authoring' | 'production';
+        description?: string;
+        members: Array<IUser['_id']>;
+        incoming_stage: IStage['_id'];
         working_stage: IStage['_id'];
-        monitoring_default_view?: any;
+        content_expiry?: number;
+        source: string;
+        monitoring_settings?: Array<{
+            _id: string;
+            type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+            max_items: number;
+        }>;
+        desk_type: 'authoring' | 'production';
+        desk_metadata?: {[key: string]: any};
+        content_profiles: {[key: IContentProfile['_id']]: any};
+        desk_language?: string;
+        monitoring_default_view?: 'list' | 'swimlane' | 'photogrid';
+        default_content_profile: string;
+        default_content_template: string;
+        slack_channel_name?: string;
+        preferred_cv_items: {[key: string]: any};
+        preserve_published_content: boolean;
     }
 
     export interface IStage extends IBaseRestApiResponse {
@@ -966,6 +992,7 @@ declare module 'superdesk-api' {
             max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
+        queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
@@ -1210,6 +1237,8 @@ declare module 'superdesk-api' {
         workflow_allow_copy_to_personal: boolean;
 
         allow_updating_scheduled_items: boolean;
+
+        corrections_workflow: boolean;
 
         // TANSA SERVER CONFIG
         tansa?: {

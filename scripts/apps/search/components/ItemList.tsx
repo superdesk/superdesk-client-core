@@ -514,9 +514,34 @@ export class ItemList extends React.Component<IProps, IState> {
 
     render() {
         const {storage} = this.angularservices;
-
         const isEmpty = !this.props.itemsList.length;
-        const displayEmptyList = isEmpty && !this.props.loading;
+
+        if (this.props.loading) {
+            return (
+                <ul
+                    className="list-view list-without-items"
+                    tabIndex={0}
+                    ref={(el) => {
+                        this.focusableElement = el;
+                    }}
+                    data-test-id="item-list--loading"
+                >
+                    <li>{gettext('Loading...')}</li>
+                </ul>
+            );
+        } else if (isEmpty) {
+            return (
+                <ul
+                    className="list-view list-without-items"
+                    tabIndex={0}
+                    ref={(el) => {
+                        this.focusableElement = el;
+                    }}
+                >
+                    <li>{gettext('There are currently no items')}</li>
+                </ul>
+            );
+        }
 
         return (
             <ul
@@ -524,7 +549,6 @@ export class ItemList extends React.Component<IProps, IState> {
                     this.props.view === 'photogrid' ?
                         'sd-grid-list sd-grid-list--no-margin' :
                         (this.props.view || 'compact') + '-view list-view',
-                    {'list-without-items': displayEmptyList},
                 )}
                 onClick={closeActionsMenu}
                 onKeyDown={(event) => {
@@ -536,50 +560,44 @@ export class ItemList extends React.Component<IProps, IState> {
                 }}
             >
                 {
-                    displayEmptyList
-                        ? (
-                            <li onClick={closeActionsMenu}>
-                                {gettext('There are currently no items')}
-                            </li>
-                        )
-                        : this.props.itemsList.map((itemId) => {
-                            const item = this.props.itemsById[itemId];
-                            const task = item.task || {desk: null};
+                    this.props.itemsList.map((itemId) => {
+                        const item = this.props.itemsById[itemId];
+                        const task = item.task || {desk: null};
 
-                            return (
-                                <Item
-                                    key={itemId}
-                                    isNested={false}
-                                    item={item}
-                                    view={this.props.view}
-                                    swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
-                                    flags={{selected: this.props.selected === itemId}}
-                                    onEdit={this.edit}
-                                    onDbClick={this.dbClick}
-                                    onSelect={this.select}
-                                    ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
-                                    desk={this.props.desksById[task.desk] || null}
-                                    highlightsById={this.props.highlightsById}
-                                    markedDesksById={this.props.markedDesksById}
-                                    profilesById={this.props.profilesById}
-                                    versioncreator={this.modifiedUserName(item.version_creator)}
-                                    narrow={this.props.narrow}
-                                    hideActions={
-                                        this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
-                                    }
-                                    multiSelectDisabled={this.props.multiSelect == null}
-                                    actioning={!!this.state.actioning[itemId]}
-                                    singleLine={this.props.singleLine}
-                                    customRender={this.props.customRender}
-                                    scopeApply={this.props.scopeApply}
-                                    multiSelect={this.props.multiSelect ?? {
-                                        kind: 'legacy',
-                                        multiSelect: noop,
-                                        setSelectedItem: noop,
-                                    }}
-                                />
-                            );
-                        })
+                        return (
+                            <Item
+                                key={itemId}
+                                isNested={false}
+                                item={item}
+                                view={this.props.view}
+                                swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
+                                flags={{selected: this.props.selected === itemId}}
+                                onEdit={this.edit}
+                                onDbClick={this.dbClick}
+                                onSelect={this.select}
+                                ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
+                                desk={this.props.desksById[task.desk] || null}
+                                highlightsById={this.props.highlightsById}
+                                markedDesksById={this.props.markedDesksById}
+                                profilesById={this.props.profilesById}
+                                versioncreator={this.modifiedUserName(item.version_creator)}
+                                narrow={this.props.narrow}
+                                hideActions={
+                                    this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
+                                }
+                                multiSelectDisabled={this.props.multiSelect == null}
+                                actioning={!!this.state.actioning[itemId]}
+                                singleLine={this.props.singleLine}
+                                customRender={this.props.customRender}
+                                scopeApply={this.props.scopeApply}
+                                multiSelect={this.props.multiSelect ?? {
+                                    kind: 'legacy',
+                                    multiSelect: noop,
+                                    setSelectedItem: noop,
+                                }}
+                            />
+                        );
+                    })
                 }
             </ul>
         );

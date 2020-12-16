@@ -90,7 +90,7 @@
     "keycloak-js": "10.0.2",
     "load-grunt-config": "0.19.2",
     "load-grunt-tasks": "3.5.2",
-    "lodash": "4.17.5",
+    "lodash": "4.17.19",
     "medium-editor": "5.23.3",
     "medium-editor-tables": "0.6.1",
     "ment.io": "0.9.23",

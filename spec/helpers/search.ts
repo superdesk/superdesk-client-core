@@ -33,7 +33,6 @@ class GlobalSearch {
     getItemSubjectContains: any;
     getSelectedSubjectsInFilter: any;
     getSelectedTags: any;
-    checkMarkedForHighlight: (highlight: any, item: any) => void;
     checkMarkedForDesk: (deskName: any, item: any) => void;
     showCustomSearch: () => void;
     toggleByType: (type: any) => void;
@@ -323,20 +322,6 @@ class GlobalSearch {
          */
         this.getSelectedTags = function() {
             return element.all(by.repeater('parameter in tags.selectedParameters'));
-        };
-
-        /**
-         * Check if on search view an item is marked for highlight
-         *
-         * @param {string} highlight
-         * @param {number} item
-         */
-        this.checkMarkedForHighlight = function(highlight, item) {
-            var crtItem = this.getItem(item);
-
-            expect(crtItem.element(by.className('icon-star')).isDisplayed()).toBeTruthy();
-            expect(crtItem.element(by.className('icon-star')).getAttribute('tooltip-html-unsafe'))
-                .toContain(highlight);
         };
 
         /**

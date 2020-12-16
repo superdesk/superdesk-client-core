@@ -170,7 +170,7 @@ describe('highlights', () => {
             authoring.markForHighlights();
             expect(highlights.getHighlights(authoring.getSubnav()).count()).toBe(3);
             highlights.selectHighlight(authoring.getSubnav(), 'Highlight two');
-            authoring.checkMarkedForHighlight('Highlight two');
+            monitoring.checkMarkedForHighlight('Highlight two', 1, 0);
             globalSearch.openGlobalSearch();
             monitoring.openMonitoring();
             monitoring.checkMarkedForHighlight('Highlight two', 1, 1);
