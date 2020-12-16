@@ -143,7 +143,7 @@ export function MonitoringView(
                             ]},
                             sort: [{'versioncreated': 'desc'}],
                             page: 1,
-                            max_results: 20,
+                            max_results: 50,
                         };
 
                         scope.highlightedItemsQuery = {
@@ -161,7 +161,7 @@ export function MonitoringView(
                             ]},
                             sort: [{'versioncreated': 'desc'}],
                             page: 1,
-                            max_results: 20,
+                            max_results: 50,
                         };
 
                         scope.getExtraButtonsForHighlightsView = () => {
