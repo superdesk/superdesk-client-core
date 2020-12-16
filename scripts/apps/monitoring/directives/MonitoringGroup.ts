@@ -542,6 +542,9 @@ export function MonitoringGroup(
                     multi.reset();
                 }
 
+                // reset in order to display loading indicator
+                scope.items = undefined;
+
                 return (function() {
                     const customFilters: {[key: string]: IMonitoringFilter} = JSON.parse(
                         scope?.group?.customFilters ?? '{}',

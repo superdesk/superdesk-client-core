@@ -756,6 +756,7 @@ describe('monitoring', () => {
 
         monitoring.actionOnItem('Edit', 1, 2);
         authoring.publish();
+
         monitoring.filterAction('text');
         expect(monitoring.getTextItem(0, 0)).toBe('item6');
         // select first item
