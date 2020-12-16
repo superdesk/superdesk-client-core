@@ -10,7 +10,7 @@ export function SortGroups() {
                 tolerance: 'pointer',
                 placeholder: {
                     element: function(current) {
-                        var height = current.height() - 20;
+                        var height = Math.max(15, current.height() - 20);
 
                         return $('<li class="placeholder" style="height:' + height + 'px"></li>')[0];
                     },
