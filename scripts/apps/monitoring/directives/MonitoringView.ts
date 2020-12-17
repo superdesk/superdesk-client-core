@@ -4,6 +4,8 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {IDesk, IUser} from 'superdesk-api';
 import {ISuperdeskQuery} from 'core/query-formatting';
 
+const PAGE_SIZE = 50;
+
 interface IScope extends ng.IScope {
     contentStyle: {};
     monitoringItemsLoading: boolean;
@@ -143,7 +145,7 @@ export function MonitoringView(
                             ]},
                             sort: [{'versioncreated': 'desc'}],
                             page: 1,
-                            max_results: 50,
+                            max_results: PAGE_SIZE,
                         };
 
                         scope.highlightedItemsQuery = {
@@ -161,7 +163,7 @@ export function MonitoringView(
                             ]},
                             sort: [{'versioncreated': 'desc'}],
                             page: 1,
-                            max_results: 50,
+                            max_results: PAGE_SIZE,
                         };
 
                         scope.getExtraButtonsForHighlightsView = () => {
