@@ -130,7 +130,8 @@ class Monitoring {
         this.label = element(by.model('widget.configuration.label'));
 
         this.openMonitoring = function() {
-            return nav('/workspace/monitoring');
+            nav('/workspace/monitoring');
+            browser.wait(ECE.visibilityOf(el(['monitoring-view'])));
         };
 
         this.showMonitoring = function() {
@@ -179,6 +180,9 @@ class Monitoring {
         };
 
         this.getGroups = function() {
+            browser.sleep(3000); // due to debouncing, loading does not start immediately
+            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0));
+
             return element.all(by.repeater('group in aggregate.groups'));
         };
 
@@ -194,8 +198,6 @@ class Monitoring {
          */
         this.getItem = function(group, item) {
             var all = this.getGroupItems(group);
-
-            browser.wait(() => all.count(), 7500);
 
             if (item.type) {
                 return all.filter((elem) =>
@@ -461,7 +463,7 @@ class Monitoring {
             browser.actions().mouseMove(itemTypeIcon, {x: -100, y: -100}).mouseMove(itemTypeIcon).perform();
             var checkbox = item.element(by.className('sd-checkbox'));
 
-            waitFor(checkbox, 500);
+            browser.wait(ECE.presenceOf(checkbox));
             return checkbox.click();
         };
 
@@ -561,8 +563,9 @@ class Monitoring {
             var btn = element(by.css('[ng-click="save()"]'));
 
             btn.click();
+
             // wait for modal to be removed
-            browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 600);
+            browser.wait(ECE.invisibilityOf(el(['desk--monitoring-settings'])));
         };
 
         /**

@@ -17,6 +17,7 @@ interface IState {
     selected: string;
     swimlane: any;
     actioning: {};
+    loading: boolean;
 }
 
 export class ItemListAngularWrapper extends React.Component<IProps, IState> {
@@ -33,6 +34,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
             narrow: false,
             swimlane: null,
             actioning: {},
+            loading: true,
         };
 
         this.focus = this.focus.bind(this);
@@ -135,7 +137,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                 customRender={scope.customRender}
                 viewType={scope.viewType}
                 flags={scope.flags}
-                loading={scope.loading}
+                loading={this.state.loading}
                 viewColumn={scope.viewColumn}
                 groupId={scope.$id}
                 edit={scope.edit}

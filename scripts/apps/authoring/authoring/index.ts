@@ -323,11 +323,17 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'edit-line',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', function(
+                controller: ['data', 'authoringWorkspace', 'authoring', function(
                     data,
                     authoringWorkspace: AuthoringWorkspaceService,
+                    authoring,
                 ) {
-                    authoringWorkspace.correct(data.item);
+                    if (appConfig?.corrections_workflow
+                    && data.item.state === 'published' || data.item.state === 'corrected') {
+                        authoring.correction(data.item.archive_item);
+                    } else {
+                        authoringWorkspace.correct(data.item);
+                    }
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', function(authoring, item) {

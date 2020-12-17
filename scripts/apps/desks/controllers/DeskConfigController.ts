@@ -27,6 +27,7 @@ export function DeskConfigController($scope, $controller, notify, desks, modal) 
     const initializeDesk = function(desk, step) {
         $scope.modalActive = true;
         $scope.step.current = step;
+        desk.desk_metadata = desk.desk_metadata ?? {};
         $scope.desk.edit = _.cloneDeep(desk);
         $scope.desk.orig = _.cloneDeep(desk);
     };

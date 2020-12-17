@@ -100,7 +100,7 @@ export class AuthoringWorkspaceService {
      * Open item for editing
      */
     edit(
-        item: {_id: IArticle['_id'], _type?: IArticle['_type']},
+        item: {_id: IArticle['_id'], _type?: IArticle['_type'], state?: IArticle['state']},
         action?: IAuthoringAction,
     ) {
         if (item) {
@@ -111,7 +111,7 @@ export class AuthoringWorkspaceService {
             ) {
                 return;
             }
-            this.authoringOpen(item._id, action || 'edit', item._type || null);
+            this.authoringOpen(item._id, action || 'edit', item._type || null, item.state === 'being_corrected');
         } else {
             this.close();
         }
@@ -307,8 +307,8 @@ export class AuthoringWorkspaceService {
     /**
      * Fetch item by id and start editing it
      */
-    private authoringOpen(itemId, action: IAuthoringAction, repo?) {
-        return this.authoring.open(itemId, action === 'view', repo, action)
+    private authoringOpen(itemId, action: IAuthoringAction, repo?, state?) {
+        return this.authoring.open(itemId, action === 'view', repo, action, state)
             .then((item: IArticle) => {
                 if (this.item != null) { // action isn't relevant
                     window.dispatchEvent(

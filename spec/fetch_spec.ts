@@ -5,6 +5,7 @@ import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {desks} from './helpers/desks';
 import {multiAction} from './helpers/actions';
+import {ECE, els} from 'end-to-end-testing-helpers';
 
 describe('fetch', () => {
     beforeEach(() => {
@@ -38,7 +39,7 @@ describe('fetch', () => {
     it('can remove ingest item', () => {
         workspace.openIngest();
         content.actionOnItem('Remove', 0);
-        expect(content.count()).toBe(0);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 0));
     });
 
     it('can not Fetch-and-Open if selected desk as a non-member', () => {
