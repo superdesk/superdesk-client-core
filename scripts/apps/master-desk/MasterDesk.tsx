@@ -79,8 +79,6 @@ export class MasterDesk extends React.Component<IProps, IState> {
                 this.getDeskList(desks.items);
         });
 
-        this.getDeskList();
-
         if (appConfig?.apps?.includes('superdesk-planning')) {
             this.setState({planning: true});
         }
