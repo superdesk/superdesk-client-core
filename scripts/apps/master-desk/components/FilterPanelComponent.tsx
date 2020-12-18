@@ -147,7 +147,9 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                             </div>
                         </div>
                         <div className="side-panel__footer side-panel__footer--button-box">
-                            <a className="btn btn--primary btn--expanded" onClick={this.addFilter}>{gettext('Apply Filters')}</a>
+                            <a className="btn btn--primary btn--expanded" onClick={this.addFilter}>
+                                {gettext('Apply Filters')}
+                            </a>
                         </div>
                     </div>
                 </div>
