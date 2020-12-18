@@ -23,8 +23,7 @@ export enum IMasterDeskTab {
     assignments = 'assignments',
 }
 
-// TODO: Once PR is merged in superdesk-core, change this to 'masterdesk:desks'
-export const USER_PREFERENCE_SETTINGS = 'workqueue:items';
+export const USER_PREFERENCE_SETTINGS = 'masterdesk:desks';
 
 export function getLabelForMasterDeskTab(tab: IMasterDeskTab): string {
     switch (tab) {
