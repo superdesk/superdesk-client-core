@@ -21,6 +21,11 @@ interface IGroup {
     collapsed?: boolean;
 }
 
+interface IProps {
+    header?: boolean;
+    user?: IUser;
+}
+
 interface IState {
     userSearchField: string;
     user?: IUser;
@@ -186,7 +191,7 @@ function getStageForItem(item, {desks}) {
     return stage;
 }
 
-export default class UserActivityWidget extends React.Component<{}, IState> {
+export default class UserActivityWidget extends React.Component<IProps, IState> {
     services: any;
     removeListeners: Array<() => void>;
 
@@ -227,12 +232,22 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     componentDidMount() {
         this.addListeners();
 
-        if (this.state.user == null) {
+        if (!this.props.user && this.state.user == null) {
             this.setState({loading: true});
 
             this.services.session.getIdentity().then((user) => {
                 this.setUser(user);
             });
+        }
+
+        if (this.props.user) {
+            this.setUser(this.props.user);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.user && prevProps.user !== this.props.user) {
+            this.setUser(this.props.user);
         }
     }
 
@@ -395,11 +410,13 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         return (
             <div className="widget-container">
                 <div className="main-list" style={{top: 0}}>
-                    <div className="widget-header">
-                        <h3 className="widget-title">
-                            {gettext('User Activity')}
-                        </h3>
-                    </div>
+                    {!this.props.header && this.props.header === true ? (
+                        <div className="widget-header">
+                            <h3 className="widget-title">
+                                {gettext('User Activity')}
+                            </h3>
+                        </div>
+                    ) : null}
                     <div
                         className="search-box search-box--no-shadow search-box--fluid-height"
                     >

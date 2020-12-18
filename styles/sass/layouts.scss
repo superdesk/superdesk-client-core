@@ -1564,3 +1564,15 @@ body.prepare-print {
         background-size: 20%;
     }
 }
+
+// Things for masterdesk, should be moved to ui-framework
+.sd-main-content-grid__preview {
+    .search-box {
+        margin-top: -10px;
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+    .content-list-holder {
+        display: contents;
+    }
+}
