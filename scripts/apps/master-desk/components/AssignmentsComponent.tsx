@@ -83,19 +83,19 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
                     >
 
                         <CardListComponent
-                            name={'To Do'}
+                            name={gettext('To Do')}
                             color={this.hashColors[0]}
                             total={this.getStageTotal(desk, 'assigned')}
                         />
 
                         <CardListComponent
-                            name={'In Progress'}
+                            name={gettext('In Progress')}
                             color={this.hashColors[1]}
                             total={this.getStageTotal(desk, 'in_progress')}
                         />
 
                         <CardListComponent
-                            name={'Completed'}
+                            name={gettext('Completed')}
                             color={this.hashColors[2]}
                             total={this.getStageTotal(desk, 'completed')}
                         />
