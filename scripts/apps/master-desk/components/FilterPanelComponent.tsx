@@ -1,4 +1,5 @@
 import React from 'react';
+import {gettext} from 'core/utils';
 
 interface IProps {
     open: boolean;
@@ -102,7 +103,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                                 <div className="form__group">
                                     <div className="form__item">
                                         <div className="sd-input">
-                                            <label className="sd-input__label">Slugline</label>
+                                            <label className="sd-input__label">{gettext('Slugline')}</label>
                                             <input
                                                 className="sd-input__input"
                                                 name="slugline"
@@ -117,7 +118,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                                 <div className="form__group">
                                     <div className="form__item">
                                         <div className="sd-input">
-                                            <label className="sd-input__label">Headline</label>
+                                            <label className="sd-input__label">{gettext('Headline')}</label>
                                             <input
                                                 className="sd-input__input"
                                                 name="headline"
@@ -132,7 +133,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                                 <div className="form__group">
                                     <div className="form__item">
                                         <div className="sd-input">
-                                            <label className="sd-input__label">Byline</label>
+                                            <label className="sd-input__label">{gettext('Byline')}</label>
                                             <input
                                                 className="sd-input__input"
                                                 name="byline"
@@ -146,7 +147,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                             </div>
                         </div>
                         <div className="side-panel__footer side-panel__footer--button-box">
-                            <a className="btn btn--primary btn--expanded" onClick={this.addFilter}>Apply filters</a>
+                            <a className="btn btn--primary btn--expanded" onClick={this.addFilter}>{gettext('Apply Filters')}</a>
                         </div>
                     </div>
                 </div>
