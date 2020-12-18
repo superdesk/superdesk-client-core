@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, {cloneDeep} from 'lodash';
 import {flatMap} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
@@ -247,7 +247,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                         });
                     },
                     Promise.resolve(Object.freeze(newItem)),
-                );
+                )
+                    // Create a copy in order to avoid returning a frozen object.
+                    // Freezing is only meant to affect middlewares.
+                    .then((_item) => cloneDeep(_item));
             })
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));
