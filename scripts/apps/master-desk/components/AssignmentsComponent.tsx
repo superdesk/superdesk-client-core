@@ -21,8 +21,29 @@ interface IState {
     deskData: Array<any>;
 }
 
+interface IAssignmentStage {
+    name: string;
+    color: string;
+    code: string;
+}
 export class AssignmentsComponent extends React.Component<IProps, IState> {
-    private hashColors: Array<string> = ['#c4170b', '#d17d00', '#74a838'];
+    private assignmentStages: Array<IAssignmentStage> = [
+        {
+            name: gettext('To Do'),
+            color: '#c4170b',
+            code: 'assigned'
+        },
+        {
+            name: gettext('In Progress'),
+            color: '#d17d00',
+            code: 'in_progress'
+        },
+        {
+            name: gettext('Completed'),
+            color: '#74a838',
+            code: 'completed'
+        }
+    ];
 
     constructor(props) {
         super(props);
@@ -71,6 +92,27 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
         return total;
     }
 
+    getDonutData(desk: IDesk) {
+        let labels = [];
+        let dataSet = {
+            data: [],
+            backgroundColor: [],
+        };
+
+        this.assignmentStages.map((item: IAssignmentStage) => {
+            labels.push(item.name);
+            dataSet.data.push(this.getStageTotal(desk, item.code));
+            dataSet.backgroundColor.push(item.color);
+
+            return dataSet;
+        });
+
+        return {
+            labels: labels,
+            datasets: [dataSet],
+        };
+    }
+
     render() {
         return (
             <div className="sd-grid-list sd-grid-list--medium sd-grid-list--gap-xl sd-margin-x--5">
@@ -78,28 +120,17 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
                     <CardComponent
                         key={index}
                         desk={desk}
+                        donutData={this.getDonutData(desk)}
                         total={this.getDeskTotal(desk)}
                         label={gettext('items in total')}
                     >
-
-                        <CardListComponent
-                            name={gettext('To Do')}
-                            color={this.hashColors[0]}
-                            total={this.getStageTotal(desk, 'assigned')}
-                        />
-
-                        <CardListComponent
-                            name={gettext('In Progress')}
-                            color={this.hashColors[1]}
-                            total={this.getStageTotal(desk, 'in_progress')}
-                        />
-
-                        <CardListComponent
-                            name={gettext('Completed')}
-                            color={this.hashColors[2]}
-                            total={this.getStageTotal(desk, 'completed')}
-                        />
-
+                        {this.assignmentStages.map((item: IAssignmentStage) =>
+                            <CardListComponent
+                                name={item.name}
+                                color={item.color}
+                                total={this.getStageTotal(desk, item.code)}
+                            />
+                        )}
                     </CardComponent>
                 ))}
             </div>
