@@ -21,7 +21,7 @@ interface IProps {
 interface IState {
     stagesCount: Array<any>;
     filteredDesks: Array<IDesk>;
-    view: string;
+    view: 'card' | 'list';
 }
 
 export class OverviewComponent extends React.Component<IProps, IState> {
@@ -47,9 +47,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
     }
 
     componentDidUpdate(prevProps: IProps) {
-        let hasFilters = false;
-
-        hasFilters = Object.keys(this.props.filters).some((item: any) =>
+        const hasFilters = Object.keys(this.props.filters).some((item: any) =>
             this.props.filters[item] && this.props.filters[item].length);
 
         if (hasFilters) {
@@ -152,9 +150,9 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                                     <h3 className="sd-board__header-title">{desk.name}</h3>
                                 </div>
                                 <div className="sd-board__content sd-padding-t--1">
-                                    {(this.props.stages?.[desk._id] ?? []).map((stage, i) => (
+                                    {(this.props.stages?.[desk._id] ?? []).map((stage) => (
                                         this.getStageItems(stage).length ? (
-                                            <React.Fragment key={i}>
+                                            <React.Fragment key={stage._id}>
                                                 <div className="sd-board__subheader">
                                                     <h5 className="sd-board__subheader-title">{stage.name}</h5>
                                                 </div>

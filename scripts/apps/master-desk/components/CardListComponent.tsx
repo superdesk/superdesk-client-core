@@ -6,7 +6,7 @@ interface IProps {
     color: string;
 }
 
-export class CardListComponent extends React.Component<IProps, {}> {
+export class CardListComponent extends React.Component<IProps> {
     render() {
         return (
             <li className="sd-board__list-item">

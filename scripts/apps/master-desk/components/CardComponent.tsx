@@ -8,7 +8,7 @@ interface IProps {
     desk: IDesk;
     label: string;
     total: number;
-    donutData?: any;
+    donutData: any;
 }
 
 export class CardComponent extends React.Component<IProps, {}> {

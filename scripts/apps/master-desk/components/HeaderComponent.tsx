@@ -7,10 +7,11 @@ import {gettext} from 'core/utils';
 
 interface IProps {
     desks: Array<IDesk>;
-    activeTab?: string;
+    activeTab: string;
     preferencesService?: any;
     deskService?: any;
     isFilterAllowed?: boolean;
+    isFilterOpened: boolean;
     isPlaningActive?: boolean;
     onTabChange(tab: IMasterDeskTab): void;
     onUpdateDeskList(desks: Array<string>): void;
@@ -18,8 +19,6 @@ interface IProps {
 }
 
 interface IState {
-    currentTab: IMasterDeskTab;
-    openFilter: boolean;
     openDeskDropdown: boolean;
     availableDesks: Array<IDesk>;
     activeDesks: Array<string>;
@@ -30,8 +29,6 @@ export class HeaderComponent extends React.Component<IProps, IState> {
         super(props);
 
         this.state = {
-            currentTab: IMasterDeskTab.overview,
-            openFilter: false,
             openDeskDropdown: false,
             activeDesks: [],
             availableDesks: [],
@@ -39,42 +36,53 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
         this.changeTab.bind(this);
         this.openFilter.bind(this);
+    }
 
-        this.props.deskService.initialize().then(() => {
+    componentDidMount() {
+        Promise.all([
+            this.props.deskService.initialize(),
+            this.props.preferencesService.get(USER_PREFERENCE_SETTINGS),
+        ]).then((res) => {
+            const [desk, preferences] = res;
+
             this.setState({availableDesks: this.props.deskService.desks._items});
-        });
 
-        this.props.preferencesService.get(USER_PREFERENCE_SETTINGS).then((desks) => {
-            if (!desks) {
-                return;
+            if (preferences) {
+                this.setState({activeDesks: preferences.items});
             }
-
-            this.setState({activeDesks: desks.items});
         });
     }
 
     changeTab(tab: IMasterDeskTab) {
-        this.setState({currentTab: tab});
         this.props.onTabChange(tab);
     }
 
     openFilter() {
-        this.setState({openFilter: !this.state.openFilter});
-        this.props.onFilterOpen(!this.state.openFilter);
+        this.props.onFilterOpen(!this.props.isFilterOpened);
     }
 
     toggleDesk(desk: IDesk) {
-        let update = [], desks = this.state.activeDesks;
+        if (this.state.activeDesks.includes(desk._id)) {
+            let index = this.state.activeDesks.indexOf(desk._id);
 
-        this.state.activeDesks.includes(desk._id) ?
-            desks.splice(desks.indexOf(desk._id), 1) :
-            desks.push(desk._id);
+            this.setState({activeDesks: [
+                ...this.state.activeDesks.slice(0, index),
+                ...this.state.activeDesks.slice(index + 1),
+            ]}, this.saveDeskPreferences);
+        } else {
+            this.setState({
+                activeDesks: this.state.activeDesks.concat(desk._id),
+            }, this.saveDeskPreferences);
+        }
+    }
 
-        update[USER_PREFERENCE_SETTINGS] = {items: desks};
+    saveDeskPreferences() {
+        let update = [];
 
-        this.props.preferencesService.update(update).then((result) => {
-            this.setState({activeDesks: desks});
-            this.props.onUpdateDeskList(desks);
+        update[USER_PREFERENCE_SETTINGS] = {items: this.state.activeDesks};
+
+        this.props.preferencesService.update(update).then(() => {
+            this.props.onUpdateDeskList(this.state.activeDesks);
         });
     }
 
@@ -97,7 +105,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                     {this.props.isFilterAllowed ? (
                         <button
                             className={'sd-navbtn sd-navbtn--left sd-navbtn--darker' +
-                                (this.state.openFilter ? ' sd-navbtn--active' : '')}
+                                (this.props.isFilterOpened ? ' sd-navbtn--active' : '')}
                             onClick={() => this.openFilter()}
                         >
                             <i className="icon-filter-large" />
@@ -107,7 +115,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                     <div className="button-group button-group--left button-group--padded">
                         <CheckButtonGroup>
                             <RadioButton
-                                value={this.state.currentTab}
+                                value={this.props.activeTab}
                                 options={tabs}
                                 onChange={(value: IMasterDeskTab) => this.changeTab(value)}
                             />

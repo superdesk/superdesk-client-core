@@ -4,18 +4,19 @@ import classNames from 'classnames';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {IDesk, IUserRole, IUser} from 'superdesk-api';
 
-interface IUserExtra extends IUser {
+export interface IUserExtra extends IUser {
     data: {
         assigned: number;
         locked: number;
     };
+    authors: Array<string>;
 }
 
 interface IProps {
     desk: IDesk;
     role: IUserRole;
     users: Array<IUserExtra>;
-    onUserSelect(user: IUser): void;
+    onUserSelect(user: IUserExtra): void;
 }
 
 export class UserListComponent extends React.Component<IProps, {}> {
@@ -25,7 +26,7 @@ export class UserListComponent extends React.Component<IProps, {}> {
         this.selectUser.bind(this);
     }
 
-    selectUser(user: IUser) {
+    selectUser(user: IUserExtra) {
         this.props.onUserSelect(user);
     }
 

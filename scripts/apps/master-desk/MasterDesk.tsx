@@ -1,15 +1,13 @@
 import React from 'react';
 import {IDesk, IStage, IUser} from 'superdesk-api';
 
-import {
-    HeaderComponent,
-    OverviewComponent,
-    UsersComponent,
-    AssignmentsComponent,
-    PreviewComponent,
-    FilterPanelComponent,
-    FilterBarComponent,
-} from 'apps/master-desk/components';
+import {HeaderComponent} from './components/HeaderComponent';
+import {OverviewComponent} from './components/OverviewComponent';
+import {UsersComponent} from './components/UsersComponent';
+import {AssignmentsComponent} from './components/AssignmentsComponent';
+import {PreviewComponent} from './components/PreviewComponent';
+import {FilterPanelComponent} from './components/FilterPanelComponent';
+import {FilterBarComponent} from './components/FilterBarComponent';
 
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {gettext} from 'core/utils';
@@ -66,7 +64,7 @@ export class MasterDesk extends React.Component<IProps, IState> {
             desks: [],
             stages: [],
             activeUser: null,
-            planning: true,
+            planning: false,
             deskFilter: '',
             filters: {},
         };
@@ -108,11 +106,13 @@ export class MasterDesk extends React.Component<IProps, IState> {
         return (
             <div className="sd-content-wrapper__main-content-area sd-main-content-grid">
                 <HeaderComponent
+                    activeTab={this.state.currentTab}
                     desks={this.state.desks}
                     preferencesService={this.props.preferencesService}
                     deskService={this.props.desks}
                     isPlaningActive={this.state.planning}
                     isFilterAllowed={this.isFilterAllowed()}
+                    isFilterOpened={this.state.filterOpen}
                     onTabChange={(tab) => this.setState({currentTab: tab})}
                     onUpdateDeskList={(desks) => this.getDeskList(desks)}
                     onFilterOpen={(filter) => this.setState({filterOpen: filter})}

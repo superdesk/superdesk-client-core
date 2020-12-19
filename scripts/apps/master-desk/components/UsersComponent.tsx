@@ -3,19 +3,19 @@ import {gettext} from 'core/utils';
 
 import {dataApi} from 'core/helpers/CrudManager';
 
-import {UserListComponent} from './UserListComponent';
-import {IDesk, IUserRole, IUser} from 'superdesk-api';
+import {UserListComponent, IUserExtra} from './UserListComponent';
+import {IDesk, IUserRole} from 'superdesk-api';
 
 interface IProps {
     desks: Array<IDesk>;
     deskService: any;
     apiService: any;
-    onUserSelect(user: IUser): void;
+    onUserSelect(user: IUserExtra): void;
 }
 
 interface IState {
     roles: Array<IUserRole>;
-    users: any;
+    users: Array<IUserExtra>;
 }
 
 export class UsersComponent extends React.Component<IProps, IState> {
@@ -30,26 +30,29 @@ export class UsersComponent extends React.Component<IProps, IState> {
         this.selectUser.bind(this);
     }
 
-    selectUser(user: IUser) {
+    selectUser(user: IUserExtra) {
         this.props.onUserSelect(user);
     }
 
     componentDidMount() {
-        const api = this.props.apiService;
+        Promise.all([
+            this.props.apiService('roles').query(),
+            dataApi.query('desks/all/overview/users', 1, {field: null, direction: 'ascending'}, {}),
+        ]).then((res: any) => {
+            const [roles, users] = res;
 
-        api('roles').query().then((result) => {
-            this.setState({roles: result._items});
+            this.setState({
+                roles: roles._items,
+                users: users._items,
+            });
         });
-
-        dataApi.query('desks/all/overview/users', 1, {field: null, direction: 'ascending'}, {})
-            .then((res) => this.setState({users: res._items}));
     }
 
     getUsers(desk: IDesk, role: IUserRole): Array<any> {
         const deskMembers = this.props.deskService.deskMembers[desk._id];
         const authors = this.state.users.find((item) => item.role === role._id);
 
-        let users: Array<any> = [];
+        let users: Array<IUserExtra> = [];
 
         deskMembers.forEach((user) => {
             if (role._id === user.role) {
@@ -64,16 +67,16 @@ export class UsersComponent extends React.Component<IProps, IState> {
     render() {
         return (
             <div className="sd-kanban-list sd-pdding-x--2 sd-padding-t--2">
-                {this.props.desks.map((desk, index) => (
-                    <div className="sd-board" key={index}>
+                {this.props.desks.map((desk) => (
+                    <div className="sd-board" key={desk._id}>
                         <div className="sd-board__header">
                             <h3 className="sd-board__header-title">{desk.name}</h3>
                         </div>
                         <div className="sd-board__content sd-padding-t--1">
-                            {this.state.roles.map((role, i) => (
+                            {this.state.roles.map((role) => (
                                 this.getUsers(desk, role).length ? (
                                     <UserListComponent
-                                        key={i}
+                                        key={role._id}
                                         desk={desk}
                                         role={role}
                                         users={this.getUsers(desk, role)}

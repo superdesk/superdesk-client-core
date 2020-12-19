@@ -1,17 +1,16 @@
 import {gettext} from 'core/utils';
 import React from 'react';
 
+import {IFilter} from './FilterPanelComponent';
+
 interface IProps {
-    filters: boolean;
+    filters: IFilter;
     onFilterChange(filters: any): void;
 }
 
 export class FilterBarComponent extends React.Component<IProps, {}> {
     removeFilter(item: any): void {
-        let filter = this.props.filters;
-
-        filter[item] = [];
-        this.props.onFilterChange(filter);
+        this.props.onFilterChange({...this.props.filters, [item]: []});
     }
 
     clearFilters(): void {
@@ -19,12 +18,8 @@ export class FilterBarComponent extends React.Component<IProps, {}> {
     }
 
     checkIfIsNotEmpty(): boolean {
-        let isNotEmpty = false;
-
-        isNotEmpty = Object.keys(this.props.filters).some((item: any) =>
+        return Object.keys(this.props.filters).some((item: any) =>
             this.props.filters[item] && this.props.filters[item].length);
-
-        return isNotEmpty;
     }
 
     render() {
@@ -32,9 +27,9 @@ export class FilterBarComponent extends React.Component<IProps, {}> {
             this.checkIfIsNotEmpty() ? (
                 <div className="sd-main-content-grid__content-filter-bar sd-search-tags__bar">
                     <ul className="sd-search-tags__tag-list">
-                        {Object.keys(this.props.filters).map((item: any, index) =>
+                        {Object.keys(this.props.filters).map((item: any) =>
                             this.props.filters[item] && this.props.filters[item].length ? (
-                                <li className="sd-search-tags__tag tag-label tag-label--highlight1" key={index}>
+                                <li className="sd-search-tags__tag tag-label tag-label--highlight1" key={item}>
                                     {item}: ({this.props.filters[item]})
                                     <button className="tag-label__remove" onClick={() => this.removeFilter(item)}>
                                         <i className="icon-close-small" /></button>

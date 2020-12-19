@@ -55,11 +55,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
 
     componentDidMount() {
         this.props.desks.forEach((desk) => this.getDeskOverview(desk).then((data: any) => {
-            let deskData = this.state.deskData;
-
-            deskData[desk._id] = data._items;
-
-            this.setState({deskData: deskData});
+            this.setState({deskData: {...this.state.deskData, [desk._id]: data._items}});
         }));
     }
 
