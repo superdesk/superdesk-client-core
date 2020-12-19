@@ -13,11 +13,11 @@ angular.module('superdesk.apps.master-desk', [])
                 priority: 100,
                 template: require('./views/master-desk.html'),
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
-                privileges: {desks: 1},
+                privileges: { masterdesk: 1 },
             });
 
         workspaceMenuProvider.item({
-            if: 'privileges.desks',
+            if: 'privileges.masterdesk',
             icon: 'master',
             href: '/master-desk',
             label: gettext('Master Desk'),

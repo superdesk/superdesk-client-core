@@ -66,7 +66,7 @@ export class MasterDesk extends React.Component<IProps, IState> {
             desks: [],
             stages: [],
             activeUser: null,
-            planning: false,
+            planning: true,
             deskFilter: '',
             filters: {},
         };
