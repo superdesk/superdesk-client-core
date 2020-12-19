@@ -31,18 +31,18 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
         {
             name: gettext('To Do'),
             color: '#c4170b',
-            code: 'assigned'
+            code: 'assigned',
         },
         {
             name: gettext('In Progress'),
             color: '#d17d00',
-            code: 'in_progress'
+            code: 'in_progress',
         },
         {
             name: gettext('Completed'),
             color: '#74a838',
-            code: 'completed'
-        }
+            code: 'completed',
+        },
     ];
 
     constructor(props) {
@@ -124,12 +124,14 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
                         total={this.getDeskTotal(desk)}
                         label={gettext('items in total')}
                     >
-                        {this.assignmentStages.map((item: IAssignmentStage) =>
+                        {this.assignmentStages.map((item: IAssignmentStage) => (
                             <CardListComponent
+                                key={item.code}
                                 name={item.name}
                                 color={item.color}
                                 total={this.getStageTotal(desk, item.code)}
                             />
+                        ),
                         )}
                     </CardComponent>
                 ))}
