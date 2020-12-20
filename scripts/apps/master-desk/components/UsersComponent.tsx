@@ -9,7 +9,6 @@ import {IDesk, IUserRole} from 'superdesk-api';
 interface IProps {
     desks: Array<IDesk>;
     deskService: any;
-    apiService: any;
     onUserSelect(user: IUserExtra): void;
 }
 
@@ -36,7 +35,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
 
     componentDidMount() {
         Promise.all([
-            this.props.apiService('roles').query(),
+            dataApi.query('roles', 1, {field: null, direction: 'ascending'}, {}),
             dataApi.query('desks/all/overview/users', 1, {field: null, direction: 'ascending'}, {}),
         ]).then((res: any) => {
             const [roles, users] = res;

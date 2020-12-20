@@ -14,7 +14,6 @@ interface IDeskExtra extends IDesk {
 interface IProps {
     desks: Array<IDesk | IDeskExtra>;
     stages: Array<IStage>;
-    apiService: any;
 }
 
 interface IState {

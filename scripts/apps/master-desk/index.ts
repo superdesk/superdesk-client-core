@@ -5,7 +5,7 @@ import {MasterDesk} from './MasterDesk';
 const styles = 'margin-top: 48px';
 
 angular.module('superdesk.apps.master-desk', [])
-    .component('sdMasterDesk', reactToAngular1(MasterDesk, [], ['desks', 'api', 'tasks', 'preferencesService'], styles))
+    .component('sdMasterDesk', reactToAngular1(MasterDesk, [], [], styles))
     .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenuProvider) => {
         superdesk
             .activity('/master-desk/', {

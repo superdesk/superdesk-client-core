@@ -1,4 +1,5 @@
 import React from 'react';
+import ng from 'core/services/ng';
 import {IDesk, IStage, IUser} from 'superdesk-api';
 
 import {HeaderComponent} from './components/HeaderComponent';
@@ -36,13 +37,6 @@ export function getLabelForMasterDeskTab(tab: IMasterDeskTab): string {
     }
 }
 
-interface IProps {
-    desks: any;
-    api: any;
-    tasks: any;
-    preferencesService: any;
-}
-
 interface IState {
     desks: Array<IDesk>;
     stages: Array<IStage>;
@@ -54,8 +48,10 @@ interface IState {
     filters: any;
 }
 
-export class MasterDesk extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+export class MasterDesk extends React.Component<{}, IState> {
+    services: any;
+
+    constructor(props: {}) {
         super(props);
 
         this.state = {
@@ -68,10 +64,15 @@ export class MasterDesk extends React.Component<IProps, IState> {
             deskFilter: '',
             filters: {},
         };
+
+        this.services = {
+            desks: ng.get('desks'),
+            preferences: ng.get('preferencesService'),
+        };
     }
 
     componentDidMount() {
-        this.props.preferencesService.get(USER_PREFERENCE_SETTINGS).then((desks) => {
+        this.services.preferences.get(USER_PREFERENCE_SETTINGS).then((desks) => {
             !desks || !desks.items.length ?
                 this.getDeskList() :
                 this.getDeskList(desks.items);
@@ -83,7 +84,7 @@ export class MasterDesk extends React.Component<IProps, IState> {
     }
 
     getDeskList(enabledDeskIds?: Array<string>) {
-        const desks = this.props.desks;
+        const desks = this.services.desks;
 
         desks.initialize().then(() => {
             this.setState({stages: desks.deskStages});
@@ -108,8 +109,8 @@ export class MasterDesk extends React.Component<IProps, IState> {
                 <HeaderComponent
                     activeTab={this.state.currentTab}
                     desks={this.state.desks}
-                    preferencesService={this.props.preferencesService}
-                    deskService={this.props.desks}
+                    preferencesService={this.services.preferences}
+                    deskService={this.services.desks}
                     isPlaningActive={this.state.planning}
                     isFilterAllowed={this.isFilterAllowed()}
                     isFilterOpened={this.state.filterOpen}
@@ -153,8 +154,7 @@ export class MasterDesk extends React.Component<IProps, IState> {
                                 return (
                                     <UsersComponent
                                         desks={this.state.desks}
-                                        apiService={this.props.api}
-                                        deskService={this.props.desks}
+                                        deskService={this.services.desks}
                                         onUserSelect={(user) => this.setState({activeUser: user})}
                                     />
                                 );
@@ -162,7 +162,6 @@ export class MasterDesk extends React.Component<IProps, IState> {
                                 return (
                                     <AssignmentsComponent
                                         desks={this.state.desks}
-                                        apiService={this.props.api}
                                         stages={this.state.stages}
                                     />
                                 );
