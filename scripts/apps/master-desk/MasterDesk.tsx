@@ -60,7 +60,7 @@ export class MasterDesk extends React.Component<{}, IState> {
             desks: [],
             stages: [],
             activeUser: null,
-            planning: true,
+            planning: false,
             deskFilter: '',
             filters: {},
         };
