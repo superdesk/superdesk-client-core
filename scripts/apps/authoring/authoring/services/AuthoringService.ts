@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, {cloneDeep} from 'lodash';
 import {flatMap} from 'lodash';
 import * as helpers from 'apps/authoring/authoring/helpers';
 import {gettext} from 'core/utils';
@@ -126,9 +126,9 @@ interface Iparams {
  * @description Authoring Service is responsible for management of the actions on a story
  */
 AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges', 'desks',
-    'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService', 'modal'];
+    'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService', 'modal', 'archiveService'];
 export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, familyService, modal) {
+    notify, session, $injector, moment, familyService, modal, archiveService) {
     var self = this;
 
     // TODO: have to trap desk update event for refereshing users desks.
@@ -207,17 +207,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             .then((item) => autosave.open(item).then(null, (err) => item));
     };
 
-    this.cancelCorrection = (item) => api.remove(item, {}, 'archive_correction')
-        .then((data) => notify.success(gettext('Correction has been removed')),
-            (response) => {
-                if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to remove correction: {{message}}',
-                        {message: response.data._message}));
-                } else {
-                    notify.error(gettext('There was an error. Failed to remove correction.'));
-                }
-            });
-
     this.rewrite = function(item): void {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
 
@@ -258,7 +247,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                         });
                     },
                     Promise.resolve(Object.freeze(newItem)),
-                );
+                )
+                    // Create a copy in order to avoid returning a frozen object.
+                    // Freezing is only meant to affect middlewares.
+                    .then((_item) => cloneDeep(_item));
             })
             .then((newItem) => {
                 notify.success(gettext('Update Created.'));
@@ -454,25 +446,40 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
     this.correction = function correction(item: IPublishedArticle, removeCorrection = false) {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
+        let extDiff = {};
 
-        function handleSuccess() {
-            notify.success(gettext('Correction Created'));
-        }
-
-        return api.update('archive_correction', item, {}, {remove_correction: removeCorrection})
-            .then((newItem) => {
+        desks.initialize()
+            .then(() => {
+                return archiveService.getVersions(item, desks, 'versions');
+            })
+            .then((versions) => {
                 if (removeCorrection) {
-                    notify.success(gettext('Correction has been removed'));
-                } else {
-                    authoringWorkspace.edit(newItem);
-                    notify.success(gettext('Update Created.'));
+                    const previous_version = versions.find((version) => {
+                        if (version.state === 'corrected' && version.correction_sequence === item.correction_sequence) {
+                            return version;
+                        }
+                        return version.state === 'published';
+                    });
+
+                    extDiff = helpers.extendItem({}, previous_version);
                 }
-            }, (response) => {
-                if (angular.isDefined(response.data._message)) {
-                    notify.error(gettext('Failed to generate update: {{message}}', {message: response.data._message}));
-                } else {
-                    notify.error(gettext('There was an error. Failed to generate update.'));
-                }
+
+                return api.update('archive_correction', item, extDiff, {remove_correction: removeCorrection})
+                    .then((newItem) => {
+                        if (removeCorrection) {
+                            notify.success(gettext('Correction has been removed'));
+                        } else {
+                            authoringWorkspace.edit(newItem);
+                            notify.success(gettext('Update Created.'));
+                        }
+                    }, (response) => {
+                        if (angular.isDefined(response.data._message)) {
+                            notify.error(gettext('Failed to generate update: {{message}}',
+                                {message: response.data._message}));
+                        } else {
+                            notify.error(gettext('There was an error. Failed to generate update.'));
+                        }
+                    });
             });
     };
 
@@ -756,7 +763,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         let lockedByMe = !lock.isLocked(currentItem);
         let isReadOnlyState = this._isReadOnly(currentItem);
         let isPublishedOrCorrected = currentItem.state === ITEM_STATE.PUBLISHED ||
-            currentItem.state === ITEM_STATE.CORRECTED || isCorrection(currentItem) || isBeingCorrected(currentItem);
+            currentItem.state === ITEM_STATE.CORRECTED || isCorrection(currentItem);
 
         action.view = true;
 
