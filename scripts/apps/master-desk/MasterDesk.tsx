@@ -60,7 +60,7 @@ export class MasterDesk extends React.Component<{}, IState> {
             desks: [],
             stages: [],
             activeUser: null,
-            planning: false,
+            planning: true,
             deskFilter: '',
             filters: {},
         };
@@ -73,7 +73,7 @@ export class MasterDesk extends React.Component<{}, IState> {
 
     componentDidMount() {
         this.services.preferences.get(USER_PREFERENCE_SETTINGS).then((desks) => {
-            !desks || !desks.items.length ?
+            desks.showAllDesks || desks.showAllDesks === undefined ?
                 this.getDeskList() :
                 this.getDeskList(desks.items);
         });
@@ -83,7 +83,7 @@ export class MasterDesk extends React.Component<{}, IState> {
         }
     }
 
-    getDeskList(enabledDeskIds?: Array<string>) {
+    getDeskList(enabledDeskIds?: Array<string>, showAll?: boolean) {
         const desks = this.services.desks;
 
         desks.initialize().then(() => {
@@ -91,7 +91,7 @@ export class MasterDesk extends React.Component<{}, IState> {
 
             let filteredDesks;
 
-            enabledDeskIds && enabledDeskIds.length ?
+            enabledDeskIds && !showAll ?
                 filteredDesks = desks.desks._items.filter((item) => enabledDeskIds.includes(item._id)) :
                 filteredDesks = desks.desks._items;
 
@@ -115,7 +115,7 @@ export class MasterDesk extends React.Component<{}, IState> {
                     isFilterAllowed={this.isFilterAllowed()}
                     isFilterOpened={this.state.filterOpen}
                     onTabChange={(tab) => this.setState({currentTab: tab})}
-                    onUpdateDeskList={(desks) => this.getDeskList(desks)}
+                    onUpdateDeskList={(desks, showAll) => this.getDeskList(desks, showAll)}
                     onFilterOpen={(filter) => this.setState({filterOpen: filter})}
                 />
 

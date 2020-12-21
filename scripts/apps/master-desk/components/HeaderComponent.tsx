@@ -14,7 +14,7 @@ interface IProps {
     isFilterOpened: boolean;
     isPlaningActive?: boolean;
     onTabChange(tab: IMasterDeskTab): void;
-    onUpdateDeskList(desks: Array<string>): void;
+    onUpdateDeskList(desks: Array<string>, showAllDesks: boolean): void;
     onFilterOpen(filter: boolean): void;
 }
 
@@ -22,6 +22,7 @@ interface IState {
     openDeskDropdown: boolean;
     availableDesks: Array<IDesk>;
     activeDesks: Array<string>;
+    showAllDesks: boolean;
 }
 
 export class HeaderComponent extends React.Component<IProps, IState> {
@@ -32,6 +33,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
             openDeskDropdown: false,
             activeDesks: [],
             availableDesks: [],
+            showAllDesks: true,
         };
 
         this.changeTab.bind(this);
@@ -48,7 +50,11 @@ export class HeaderComponent extends React.Component<IProps, IState> {
             this.setState({availableDesks: this.props.deskService.desks._items});
 
             if (preferences) {
-                this.setState({activeDesks: preferences.items});
+                this.setState({
+                    activeDesks: preferences.items || [],
+                    showAllDesks: preferences.showAllDesks === undefined ?
+                        true : preferences.showAllDesks,
+                });
             }
         });
     }
@@ -65,24 +71,38 @@ export class HeaderComponent extends React.Component<IProps, IState> {
         if (this.state.activeDesks.includes(desk._id)) {
             let index = this.state.activeDesks.indexOf(desk._id);
 
-            this.setState({activeDesks: [
-                ...this.state.activeDesks.slice(0, index),
-                ...this.state.activeDesks.slice(index + 1),
-            ]}, this.saveDeskPreferences);
+            this.setState({
+                activeDesks: [
+                    ...this.state.activeDesks.slice(0, index),
+                    ...this.state.activeDesks.slice(index + 1),
+                ],
+                showAllDesks: false,
+            }, this.saveDeskPreferences);
         } else {
             this.setState({
                 activeDesks: this.state.activeDesks.concat(desk._id),
+                showAllDesks: false,
             }, this.saveDeskPreferences);
         }
+    }
+
+    toggleShowAll() {
+        this.setState({
+            showAllDesks: !this.state.showAllDesks,
+            activeDesks: [],
+        }, this.saveDeskPreferences);
     }
 
     saveDeskPreferences() {
         let update = [];
 
-        update[USER_PREFERENCE_SETTINGS] = {items: this.state.activeDesks};
+        update[USER_PREFERENCE_SETTINGS] = {
+            items: this.state.activeDesks,
+            showAllDesks: this.state.showAllDesks,
+        };
 
         this.props.preferencesService.update(update).then(() => {
-            this.props.onUpdateDeskList(this.state.activeDesks);
+            this.props.onUpdateDeskList(this.state.activeDesks, this.state.showAllDesks);
         });
     }
 
@@ -131,8 +151,18 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                         </button>
                         <ul className="dropdown__menu dropdown--align-right">
                             <li className="dropdown__menu-label">{gettext('Select desks')}</li>
+                            <li className="dropdown__menu-item--no-link" >
+                                <label>{gettext('Show all')}</label>
+                                <div className="pull-right">
+                                    <Switch
+                                        value={this.state.showAllDesks}
+                                        onChange={() => this.toggleShowAll()}
+                                    />
+                                </div>
+                            </li>
+                            <li className="dropdown__menu-divider" />
                             {this.state.availableDesks.map((item, key) => (
-                                <div className="dropdown__menu-item--no-link" key={key}>
+                                <li className="dropdown__menu-item--no-link" key={key}>
                                     <label>{item.name}</label>
                                     <div className="pull-right">
                                         <Switch
@@ -140,7 +170,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                             onChange={() => this.toggleDesk(item)}
                                         />
                                     </div>
-                                </div>
+                                </li>
                             ),
                             )}
                         </ul>
