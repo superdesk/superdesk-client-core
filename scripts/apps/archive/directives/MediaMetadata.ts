@@ -1,9 +1,10 @@
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
+import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 
-MediaMetadata.$inject = ['userList', 'archiveService', 'metadata'];
+MediaMetadata.$inject = ['userList', 'archiveService', 'metadata', 'vocabularies'];
 
-export function MediaMetadata(userList, archiveService, metadata) {
+export function MediaMetadata(userList, archiveService, metadata, vocabularies) {
     return {
         scope: {
             item: '=',
@@ -12,6 +13,10 @@ export function MediaMetadata(userList, archiveService, metadata) {
         link: function(scope, elem) {
             scope.$watch('item', reloadData);
             scope.isCorrectionWorkflowEnabled = appConfig?.corrections_workflow;
+
+            vocabularies.getVocabularies().then((vocabulariesCollection) => {
+                scope.label = (id) => getLabelForFieldId(id, vocabulariesCollection);
+            });
 
             function reloadData() {
                 var qcodes = [];
