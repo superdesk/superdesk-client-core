@@ -17,6 +17,8 @@ import {
     getAssetBinary,
     getAssetsCompressedBinary,
     deleteAsset,
+    lockAsset,
+    unlockAsset,
 } from './api/assets';
 
 // will be set asynchronously on SAMS extension start
@@ -48,5 +50,7 @@ export const samsApi: ISamsAPI = {
         getCompressedBinary: getAssetsCompressedBinary,
         getAssetBinary: getAssetBinary,
         deleteAsset: deleteAsset,
+        lockAsset: lockAsset,
+        unlockAsset: unlockAsset,
     },
 };

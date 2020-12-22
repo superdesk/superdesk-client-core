@@ -9,7 +9,12 @@ import {IApplicationState} from '../../store';
 import {superdeskApi, samsApi} from '../../apis';
 
 // Redux Actions & Selectors
-import {closeAssetContentPanel, queryAssetsFromCurrentSearch, editAsset, deleteAsset} from '../../store/assets/actions';
+import {
+    closeAssetContentPanel,
+    deleteAsset,
+    onEditAsset,
+    queryAssetsFromCurrentSearch,
+} from '../../store/assets/actions';
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 
 // UI
@@ -32,7 +37,7 @@ interface IProps {
     asset?: IAssetItem;
     setName?: string;
     deleteAsset(asset: IAssetItem): void;
-    editAsset(asset: IAssetItem): void;
+    onEditAsset(asset: IAssetItem): void;
     onPanelClosed(): void;
     downloadAsset(asset: Partial<IAssetItem>): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
@@ -44,7 +49,7 @@ const mapStateToProps = (state: IApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    editAsset: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
+    onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
     onPanelClosed: () => dispatch(closeAssetContentPanel()),
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
@@ -65,7 +70,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
     }
 
     onEditAsset(): void {
-        this.props.editAsset(this.props.asset!);
+        this.props.onEditAsset(this.props.asset!);
     }
 
     onDeleteAsset(): void {

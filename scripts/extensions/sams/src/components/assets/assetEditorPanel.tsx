@@ -10,7 +10,7 @@ import {IApplicationState} from '../../store';
 import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
-import {previewAsset, updateAsset, queryAssetsFromCurrentSearch} from '../../store/assets/actions';
+import {previewAsset, updateAsset, queryAssetsFromCurrentSearch, unlockAsset} from '../../store/assets/actions';
 import {getSelectedAsset} from '../../store/assets/selectors';
 
 // UI
@@ -29,6 +29,7 @@ interface IProps {
     previewAsset(asset: IAssetItem): void;
     updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): Promise<IAssetItem>;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
+    unlockAsset(asset: IAssetItem): Promise<IAssetItem>;
 }
 
 interface IState {
@@ -45,6 +46,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateAsset: (original: IAssetItem, updates: IAssetItem) => dispatch<any>(updateAsset(original, updates)),
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
+    unlockAsset: (asset: IAssetItem) => dispatch<any>(unlockAsset(asset)),
 });
 
 export class AssetEditorPanelComponent extends React.PureComponent<IProps, IState> {
@@ -85,14 +87,16 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
         this.setState({submitting: true});
 
         if (this.props.original != null) {
-            const promise = this.props.updateAsset(this.props.original!, this.state.updates);
+            const promise = this.props.updateAsset(this.props.original, this.state.updates);
 
             promise
                 .then((asset: IAssetItem) => {
                     // If the submission was completed successfully
                     // then close the editor and open the preview
-                    this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
-                    this.props.previewAsset(asset);
+                    this.props.unlockAsset(asset)
+                        .then(() => {
+                            this.props.previewAsset(asset);
+                        });
                 })
                 .catch(() => {
                     // If there was an error submitting the request
@@ -103,9 +107,12 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
     }
 
     onCancel() {
-        if (this.props.original != null) {
-            this.props.previewAsset(this.props.original);
-        }
+        this.props.unlockAsset(this.props.original!)
+            .then(() => {
+                if (this.props.original != null) {
+                    this.props.previewAsset(this.props.original);
+                }
+            });
     }
 
     render() {

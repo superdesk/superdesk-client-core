@@ -121,6 +121,9 @@ export interface IAssetItem extends IVersionInformation {
     mimetype: string;
     name: string;
     description: string;
+    lock_action: string;
+    lock_user: string;
+    lock_session: string;
     tags: Array<{
         code: string;
         name: string;
@@ -196,5 +199,7 @@ export interface ISamsAPI {
         getCompressedBinary(asset_ids: Array<string>): void;
         getAssetBinary(asset: IAssetItem): Promise<void | Response>;
         deleteAsset(asset: IAssetItem): Promise<void>;
+        lockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
+        unlockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
     };
 }

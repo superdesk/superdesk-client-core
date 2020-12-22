@@ -20,7 +20,7 @@ import {
     getIconTypeFromMimetype,
     getAssetStateLabel,
 } from '../../utils/ui';
-import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/assets';
+import {getDropdownItemsForActions, getMimetypeHumanReadable, isAssetLocked} from '../../utils/assets';
 
 interface IProps {
     asset: Partial<IAssetItem>;
@@ -95,6 +95,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                 onClick={this.onItemClick}
                 onDoubleClick={this.onItemDoubleClick}
                 selected={this.props.selected || this.props.itemSelected}
+                locked={isAssetLocked(this.props.asset)}
             >
                 <GridItemThumb
                     uploading={true}
@@ -174,6 +175,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                         </GridItemFooterBlock>
                     )}
                 </GridItemFooter>
+                <div className="sd-grid-item__state-border" />
             </GridItem>
         );
     }

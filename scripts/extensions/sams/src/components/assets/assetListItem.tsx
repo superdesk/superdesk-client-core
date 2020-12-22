@@ -16,7 +16,7 @@ import {
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
-import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/assets';
+import {getDropdownItemsForActions, getMimetypeHumanReadable, isAssetLocked} from '../../utils/assets';
 
 interface IProps {
     asset: IAssetItem;
@@ -25,6 +25,7 @@ interface IProps {
     onDoubleClick?(asset: IAssetItem): void;
     actions?: Array<IAssetCallback>;
     itemSelected: boolean;
+    itemSelectedLocked?: boolean;
     updateSelectedAssetIds(asset: Partial<IAssetItem>): void;
 }
 
@@ -78,7 +79,12 @@ export class AssetListItem extends React.PureComponent<IProps> {
                 selected={this.props.selected || this.props.itemSelected}
                 shadow={1}
             >
-                <ListItemBorder />
+                {isAssetLocked(this.props.asset) ? (
+                    <ListItemBorder
+                        state="locked"
+                    />
+                ) : null
+                }
                 <ListItemColumn hasCheck={true} checked={this.props.itemSelected}>
                     <div className="sd-list-item__checkbox-container" onClick={this.onCheckboxClick}>
                         <Checkbox

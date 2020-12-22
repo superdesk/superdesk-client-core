@@ -23,7 +23,6 @@ import {PanelContent} from '../ui';
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
-import {deleteAsset} from '../store/assets/actions';
 
 import {
     loadNextAssetsPage,
@@ -33,7 +32,8 @@ import {
     updateAssetSearchParamsAndListItems,
     updateAssetSearchParamsAndListItemsFromURL,
     updateSelectedAssetIds,
-    editAsset,
+    onEditAsset,
+    deleteAsset,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
@@ -69,7 +69,7 @@ interface IProps {
     deleteAsset(asset: IAssetItem): void;
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
-    onEdit(asset: IAssetItem): void;
+    onEditAsset(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
@@ -112,7 +112,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
-    onEdit: (asset: IAssetItem) => dispatch(editAsset(asset._id)),
+    onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
 });
 
@@ -156,10 +156,15 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onMultiActionBar = this.onMultiActionBar.bind(this);
         this.onDeleteAsset = this.onDeleteAsset.bind(this);
+        this.onEditAsset = this.onEditAsset.bind(this);
     }
 
     onDeleteAsset(asset: IAssetItem): void {
         this.props.deleteAsset(asset);
+    }
+
+    onEditAsset(asset: IAssetItem) {
+        this.props.onEditAsset(asset);
     }
 
     onDownloadSingleAssetCompressedBinary(asset: IAssetItem): void {
@@ -246,12 +251,12 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                                 [this.props.selectedAssetId]
                             }
                             onItemClicked={this.props.previewAsset}
-                            onItemDoubleClicked={this.props.onEdit}
+                            onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
                             updateSelectedAssetIds={this.onMultiActionBar}
                             actions={[{
                                 action: ASSET_ACTIONS.EDIT,
-                                onSelect: this.props.onEdit,
+                                onSelect: this.onEditAsset,
                             },
                             {
                                 action: ASSET_ACTIONS.PREVIEW,

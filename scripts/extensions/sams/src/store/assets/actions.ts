@@ -12,6 +12,7 @@ import {
     UPDATE_SELECTED_ASSET_IDS,
     MANAGE_MULTIACTIONBAR_CLOSE,
     MANAGE_ASSETS_EDIT,
+    MANAGE_ASSET_UPDATE_IN_STORE,
 } from './types';
 import {samsApi} from '../../apis';
 
@@ -24,6 +25,9 @@ import {
     getSelectedAssetItems,
     getAssets,
 } from './selectors';
+
+// Utils
+import {verifyAssetBeforeLocking} from '../../utils/assets';
 
 export function receiveAssets(
     response: IRestApiResponse<IAssetItem>,
@@ -153,10 +157,58 @@ export function updateAssetSearchParamsAndListItemsFromURL(listAction?: LIST_ACT
     };
 }
 
+export function updateAssetInStore(asset: Partial<IAssetItem>, assetId: string): IAssetActionTypes {
+    return {
+        type: MANAGE_ASSET_UPDATE_IN_STORE,
+        payload: {
+            asset: asset,
+            assetId: assetId,
+        },
+    };
+}
+
 export function editAsset(assetId?: string): IAssetActionTypes {
     return {
         type: MANAGE_ASSETS_EDIT,
         payload: assetId,
+    };
+}
+
+export function unlockAsset(asset: IAssetItem): IThunkAction<Partial<IAssetItem>> {
+    return (dispatch, getState) => {
+        return samsApi.assets.unlockAsset(asset, {})
+            .then((unlockedAsset: Partial<IAssetItem>) => {
+                dispatch(updateAssetInStore(unlockedAsset, asset._id));
+                const getassets = getAssets(getState());
+
+                return getassets[asset._id];
+            });
+    };
+}
+
+export function lockAsset(asset: IAssetItem): (dispatch: any, getState: any) =>
+    Promise<void | IAssetItem | Partial<IAssetItem>> {
+    return (dispatch, getState) => {
+        if (verifyAssetBeforeLocking(asset, 'edit')) {
+            return Promise.resolve();
+        } else {
+            return samsApi.assets.lockAsset(asset, {'lock_action': 'edit'})
+                .then((lockedAsset: Partial<IAssetItem>) => {
+                    dispatch(updateAssetInStore(lockedAsset, asset._id));
+                    const getassets = getAssets(getState());
+
+                    return getassets[asset._id];
+                });
+        }
+    };
+}
+
+export function onEditAsset(asset: IAssetItem): (dispatch: any) => void {
+    return (dispatch) => {
+        dispatch(lockAsset(asset))
+            .then(() => {
+                dispatch(editAsset(asset._id));
+            });
     };
 }
 
@@ -165,8 +217,8 @@ export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>):
         return samsApi.assets.update(original, updates)
             .then((updatedAsset: IAssetItem) => {
                 // Wait for the Assets to update before returning the updated Asset
-                return dispatch(queryAssetsFromCurrentSearch())
-                    .then(() => updatedAsset);
+                dispatch(updateAssetInStore(updatedAsset, updatedAsset._id));
+                return updatedAsset;
             });
     };
 }
