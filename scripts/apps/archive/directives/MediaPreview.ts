@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {checkRenditions, getAssociationsByFieldId} from 'apps/authoring/authoring/controllers/AssociationController';
 import {IArticleField} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc directive
@@ -31,6 +32,7 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                     .filter((field: IArticleField) => field.field_type == null);
             };
 
+            scope.isCorrectionWorkflowEnabled = appConfig?.corrections_workflow;
             scope.checkRenditions = checkRenditions;
             scope.previewState = {toggleHeader: false};
             if (scope.selected.preview.profile) {

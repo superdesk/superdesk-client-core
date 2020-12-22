@@ -198,7 +198,10 @@ angular.module('superdesk.apps.archive', [
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 condition: (item: IArticle) => item.lock_user == null && item.task?.desk != null,
-                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).copy],
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).copy
+                    && item.state !== 'correction' && item.state !== 'being_corrected';
+                }],
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
                 groupIcon: 'copy',
@@ -309,6 +312,22 @@ angular.module('superdesk.apps.archive', [
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {
                     authoring.unlink(data.item);
+                }],
+            })
+            .activity('cancelCorrection', {
+                label: gettext('Cancel correction'),
+                icon: 'remove-sign',
+                filters: [{action: 'list', type: 'archive'}],
+                group: 'corrections',
+                privileges: {correct: 1},
+                condition: function(item) {
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
+                },
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).cancelCorrection;
+                }],
+                controller: ['data', 'authoring', function(data, authoring) {
+                    authoring.correction(data.item.archive_item || data.item, true);
                 }],
             })
             .activity('export', {

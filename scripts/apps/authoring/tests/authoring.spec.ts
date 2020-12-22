@@ -599,7 +599,7 @@ describe('authoring', () => {
                 var orig: any = {_links: {self: {href: 'archive/foo'}}};
 
                 spyOn(urls, 'item').and.returnValue($q.when(orig._links.self.href));
-                $httpBackend.expectPATCH(orig._links.self.href + '?publish_from_personal=false', item)
+                $httpBackend.expectPATCH(orig._links.self.href, item)
                     .respond(200, {_etag: 'new', _current_version: 2});
                 authoring.save(orig, item);
                 $rootScope.$digest();
@@ -2021,11 +2021,11 @@ describe('authoring workspace', () => {
     ) => {
         item.state = 'draft';
         authoringWorkspace.open(item);
-        expect(authoring.open).toHaveBeenCalledWith(item._id, false, null, 'edit');
+        expect(authoring.open).toHaveBeenCalledWith(item._id, false, null, 'edit', false);
 
         item.state = 'published';
         authoringWorkspace.open(item);
-        expect(authoring.open).toHaveBeenCalledWith(item._id, true, null, 'view');
+        expect(authoring.open).toHaveBeenCalledWith(item._id, true, null, 'view', false);
 
         var archived = {_id: 'bar'};
 
@@ -2034,7 +2034,7 @@ describe('authoring workspace', () => {
         authoringWorkspace.open(item);
         expect(send.validateAndSend).toHaveBeenCalledWith(item);
         $rootScope.$digest();
-        expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null, 'edit');
+        expect(authoring.open).toHaveBeenCalledWith(archived._id, false, null, 'edit', false);
     }));
 
     describe('init', () => {

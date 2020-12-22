@@ -14,4 +14,6 @@ export enum ITEM_STATE {
     KILLED = 'killed',
     RECALLED = 'recalled',
     UNPUBLISHED = 'unpublished',
+    CORRECTION = 'correction',
+    BEING_CORRECTED = 'being_corrected',
 }
