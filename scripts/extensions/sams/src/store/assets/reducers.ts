@@ -155,13 +155,16 @@ function manageAssetsInSelectedAssetsArray(prevState: IAssetState, payload: stri
 }
 
 function updateAssetInStore(prevState: IAssetState, payload: Dictionary<string, any>): IAssetState {
-    const newState = {...prevState};
+    const assets = {...prevState.assets};
     const updates = payload.asset;
     const assetId = payload.assetId;
 
-    newState.assets[assetId] = {
+    assets[assetId] = {
         ...prevState.assets[assetId],
         ...updates,
     };
-    return newState;
+    return {
+        ...prevState,
+        assets: assets,
+    };
 }

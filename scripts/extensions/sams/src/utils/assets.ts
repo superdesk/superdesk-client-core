@@ -106,7 +106,7 @@ export function verifyAssetBeforeLocking(asset: Partial<IAssetItem>, lock_action
 }
 
 export function isAssetLocked(asset: Partial<IAssetItem>): boolean {
-    if (asset.lock_session !== null) {
+    if (asset.lock_session != null) {
         return true;
     } else {
         return false;
