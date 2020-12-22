@@ -1413,6 +1413,7 @@ declare module 'superdesk-api' {
             getToken(): string;
             getCurrentUser(): Promise<IUser>;
             getSessionId(): String;
+            getCurrentUserId(): String;
         };
         browser: {
             location: {

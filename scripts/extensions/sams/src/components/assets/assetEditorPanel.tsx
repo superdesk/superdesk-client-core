@@ -29,7 +29,7 @@ interface IProps {
     previewAsset(asset: IAssetItem): void;
     updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): Promise<IAssetItem>;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
-    unlockAsset(asset: IAssetItem): Promise<void>;
+    unlockAsset(asset: IAssetItem): Promise<IAssetItem>;
 }
 
 interface IState {
@@ -87,14 +87,16 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
         this.setState({submitting: true});
 
         if (this.props.original != null) {
-            const promise = this.props.updateAsset(this.props.original!, this.state.updates);
+            const promise = this.props.updateAsset(this.props.original, this.state.updates);
 
             promise
                 .then((asset: IAssetItem) => {
                     // If the submission was completed successfully
                     // then close the editor and open the preview
-                    this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
-                    this.props.previewAsset(asset);
+                    this.props.unlockAsset(asset)
+                        .then(() => {
+                            this.props.previewAsset(asset);
+                        });
                 })
                 .catch(() => {
                     // If there was an error submitting the request

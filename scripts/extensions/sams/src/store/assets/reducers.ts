@@ -21,6 +21,7 @@ import {
     UPDATE_SELECTED_ASSET_IDS,
     MANAGE_MULTIACTIONBAR_CLOSE,
     MANAGE_ASSETS_EDIT,
+    MANAGE_ASSET_UPDATE_IN_STORE,
 } from './types';
 
 const initialState: IAssetState = {
@@ -78,6 +79,8 @@ export function assetsReducer(
             contentPanelState: ASSET_CONTENT_PANEL_STATE.EDIT,
             selectedAssetId: action.payload,
         };
+    case MANAGE_ASSET_UPDATE_IN_STORE:
+        return updateAssetInStore(state, action.payload);
     default:
         return state;
     }
@@ -148,5 +151,17 @@ function manageAssetsInSelectedAssetsArray(prevState: IAssetState, payload: stri
         selectedAssetIdsArray.splice(selectedAssetIdsArray.indexOf(selectedAssetId), 1);
         newState.selectedAssetIds = selectedAssetIdsArray;
     }
+    return newState;
+}
+
+function updateAssetInStore(prevState: IAssetState, payload: Dictionary<string, any>): IAssetState {
+    const newState = {...prevState};
+    const updates = payload.asset;
+    const assetId = payload.assetId;
+
+    newState.assets[assetId] = {
+        ...prevState.assets[assetId],
+        ...updates,
+    };
     return newState;
 }

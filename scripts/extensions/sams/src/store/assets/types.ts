@@ -36,7 +36,8 @@ export type IAssetActionTypes = IReceiveAssetsAction |
     IPreviewAssetAction |
     IUpdateSelectedAssetIds |
     ICloseMultiActionBar |
-    IEditAssetAction;
+    IEditAssetAction |
+    IUpdateAssetInStore;
 
 export interface IAssetState {
     assets: Dictionary<string, IAssetItem>;
@@ -75,4 +76,13 @@ export const MANAGE_ASSETS_EDIT = 'manage_assets__edit';
 interface IEditAssetAction {
     type: typeof MANAGE_ASSETS_EDIT;
     payload?: string;
+}
+
+export const MANAGE_ASSET_UPDATE_IN_STORE = 'manage_asset__update_in_store';
+interface IUpdateAssetInStore {
+    type: typeof MANAGE_ASSET_UPDATE_IN_STORE;
+    payload: {
+        asset: Partial<IAssetItem>;
+        assetId: string
+    };
 }

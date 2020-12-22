@@ -353,6 +353,7 @@ export function getSuperdeskApiImplementation(
             getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
             getSessionId: () => session.sessionId,
+            getCurrentUserId: () => session.identity._id,
         },
         browser: {
             location: {

@@ -20,7 +20,7 @@ import {
     getIconTypeFromMimetype,
     getAssetStateLabel,
 } from '../../utils/ui';
-import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/assets';
+import {getDropdownItemsForActions, getMimetypeHumanReadable, isAssetLocked} from '../../utils/assets';
 
 interface IProps {
     asset: Partial<IAssetItem>;
@@ -33,7 +33,6 @@ interface IProps {
     toggleSelected?(asset: Partial<IAssetItem>): void;
     actions?: Array<IAssetCallback>;
     itemSelected?: boolean;
-    itemSelectedLocked?: boolean;
     updateSelectedAssetIds?(asset: Partial<IAssetItem>): void;
 }
 
@@ -95,8 +94,8 @@ export class AssetGridItem extends React.PureComponent<IProps> {
             <GridItem
                 onClick={this.onItemClick}
                 onDoubleClick={this.onItemDoubleClick}
-                singleClickSelected={this.props.selected || this.props.itemSelected}
-                locked={this.props.selected && this.props.itemSelectedLocked}
+                selected={this.props.selected || this.props.itemSelected}
+                locked={isAssetLocked(this.props.asset)}
             >
                 <GridItemThumb
                     uploading={true}

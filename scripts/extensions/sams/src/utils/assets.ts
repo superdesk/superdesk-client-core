@@ -96,11 +96,17 @@ export function getMimetypeHumanReadable(mimetype?: string): string {
 
 export function verifyAssetBeforeLocking(asset: Partial<IAssetItem>, lock_action?: string): boolean {
     const session_id = superdeskApi.session.getSessionId();
-    const user_id_verified = superdeskApi.session.getCurrentUser().then((user) => {
-        return asset.lock_user === user._id;
-    });
+    const user_id = superdeskApi.session.getCurrentUserId();
 
-    if (asset.lock_action === lock_action && asset.lock_session === session_id && user_id_verified) {
+    if (asset.lock_action === lock_action && asset.lock_session === session_id && asset.lock_user === user_id) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+export function isAssetLocked(asset: Partial<IAssetItem>): boolean {
+    if (asset.lock_session !== null) {
         return true;
     } else {
         return false;

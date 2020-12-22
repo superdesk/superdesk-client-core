@@ -34,7 +34,6 @@ import {
     updateSelectedAssetIds,
     onEditAsset,
     deleteAsset,
-    lockAsset,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
@@ -71,7 +70,6 @@ interface IProps {
     loadNextPage(): Promise<void>;
     previewAsset(asset: IAssetItem): void;
     onEditAsset(asset: IAssetItem): void;
-    lockAsset(asset: IAssetItem): Promise<IAssetItem>;
     updateSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
@@ -116,7 +114,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
     onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
-    lockAsset: (asset: IAssetItem) => dispatch<any>(lockAsset(asset)),
 });
 
 export function downloadAssetBinary(asset: IAssetItem): void {
@@ -256,7 +253,6 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             onItemClicked={this.props.previewAsset}
                             onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
-                            itemSelectedForEdit={this.props.contentPanelState === ASSET_CONTENT_PANEL_STATE.EDIT}
                             updateSelectedAssetIds={this.onMultiActionBar}
                             actions={[{
                                 action: ASSET_ACTIONS.EDIT,

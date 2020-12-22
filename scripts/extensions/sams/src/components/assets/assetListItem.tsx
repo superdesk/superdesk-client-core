@@ -16,7 +16,7 @@ import {
 
 // Utils
 import {getIconTypeFromMimetype, getAssetStateLabel, getHumanReadableFileSize} from '../../utils/ui';
-import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/assets';
+import {getDropdownItemsForActions, getMimetypeHumanReadable, isAssetLocked} from '../../utils/assets';
 
 interface IProps {
     asset: IAssetItem;
@@ -79,7 +79,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
                 selected={this.props.selected || this.props.itemSelected}
                 shadow={1}
             >
-                {this.props.selected && this.props.itemSelectedLocked ? (
+                {isAssetLocked(this.props.asset) ? (
                     <ListItemBorder
                         state="locked"
                     />

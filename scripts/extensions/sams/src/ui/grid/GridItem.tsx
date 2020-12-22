@@ -5,7 +5,7 @@ interface IProps {
     children: React.ReactNode;
     onClick?(): void;
     onDoubleClick?(): void;
-    singleClickSelected?: boolean;
+    selected?: boolean;
     locked?: boolean;
 }
 
@@ -39,7 +39,7 @@ export class GridItem extends React.PureComponent<IProps> {
             {
                 'sd-grid-item--with-click': this.props.onClick != null,
                 'sd-grid-item--with-click locked': this.props.locked,
-                'sd-grid-item--selected': this.props.singleClickSelected,
+                'sd-grid-item--selected': this.props.selected,
             },
         );
 
