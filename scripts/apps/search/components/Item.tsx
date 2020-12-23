@@ -281,6 +281,9 @@ export class Item extends React.Component<IProps, IState> {
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
+        const selectedInSingleSelectMode = this.props.flags.selected;
+        const selectedInMultiSelectMode = this.props.item.selected;
+
         // Customize item class from its props
         if (this.props.customRender && typeof this.props.customRender.getItemClass === 'function') {
             classes = `${classes} ${this.props.customRender.getItemClass(item)}`;
@@ -289,14 +292,17 @@ export class Item extends React.Component<IProps, IState> {
         const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
-            this.props.hideActions !== true && this.state.hover && !item.gone ? (
-                <ActionsMenu
-                    item={item}
-                    onActioning={this.setActioningState}
-                    template={template}
-                    scopeApply={this.props.scopeApply}
-                />
-            ) : null;
+            this.props.hideActions !== true
+            && (this.state.hover || selectedInSingleSelectMode || selectedInMultiSelectMode)
+            && !item.gone
+                ? (
+                    <ActionsMenu
+                        item={item}
+                        onActioning={this.setActioningState}
+                        template={template}
+                        scopeApply={this.props.scopeApply}
+                    />
+                ) : null;
 
         const getTemplate = () => {
             switch (this.props.view) {
@@ -416,7 +422,7 @@ export class Item extends React.Component<IProps, IState> {
                     'list-item-view',
                     {
                         'actions-visible': this.props.hideActions !== true,
-                        'active': this.props.flags.selected,
+                        'active': selectedInSingleSelectMode || selectedInMultiSelectMode,
                         'selected': this.props.item.selected && !this.props.flags.selected,
                         'sd-list-item-nested': this.state.nested.length,
                         'sd-list-item-nested--expanded': this.state.nested.length && this.state.showNested,
@@ -433,7 +439,7 @@ export class Item extends React.Component<IProps, IState> {
             (
                 <div
                     className={classNames(classes, {
-                        active: this.props.flags.selected,
+                        active: selectedInSingleSelectMode || selectedInMultiSelectMode,
                         locked: isLocked,
                         selected: this.props.item.selected || this.props.flags.selected,
                         archived: item.archived || item.created,
