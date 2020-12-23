@@ -1,120 +1,139 @@
 import React from 'react';
 import {IPropsSelectUser, IUser} from 'superdesk-api';
-import {Select2} from './select2';
-import {keyBy} from 'lodash';
 import {gettext} from 'core/utils';
-import {dataApi} from 'core/helpers/CrudManager';
-import {ListItem, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {SelectWithTemplate} from 'superdesk-ui-framework/react';
+import {dataApi} from 'core/helpers/CrudManager';
+import {appConfig} from 'appConfig';
+import ng from 'core/services/ng';
 
 interface IState {
-    fetchedUsers?: Array<IUser>;
-    selectedUser?: IUser;
-    loading: boolean;
+    selectedUser: IUser | null | 'loading';
 }
 
 export class SelectUser extends React.Component<IPropsSelectUser, IState> {
     _mounted: boolean;
+    abortController: AbortController | null;
 
     constructor(props: IPropsSelectUser) {
         super(props);
 
         this.state = {
-            loading: false,
+            selectedUser: props.selectedUserId == null ? null : 'loading',
         };
 
-        this.queryUsers = this.queryUsers.bind(this);
-
         this._mounted = false;
-    }
-
-    queryUsers(_searchString: string = '') {
-        const searchString = _searchString.trim();
-
-        this.setState({loading: true, fetchedUsers: null});
-
-        return dataApi.query<IUser>(
-            'users',
-            1,
-            {field: 'display_name', direction: 'ascending'},
-            (
-                searchString.length > 0
-                    ? {
-                        $or: [
-                            {
-                                display_name: {
-                                    $regex: searchString,
-                                    $options: '-i',
-                                },
-                            },
-                            {
-                                username: {
-                                    $regex: searchString,
-                                    $options: '-i',
-                                },
-                            },
-                        ],
-                    }
-                    : {}
-            ),
-            50,
-        )
-            .then((res) => {
-                if (this._mounted === true) {
-                    this.setState({
-                        fetchedUsers: res._items,
-                        loading: false,
-                    });
-                }
-            });
+        this.abortController = null;
     }
 
     componentDidMount() {
         this._mounted = true;
 
-        this.queryUsers();
+        if (this.props.selectedUserId != null) {
+            dataApi.findOne<IUser>('users', this.props.selectedUserId).then((selectedUser) => {
+                this.setState({selectedUser});
+            });
+        }
     }
 
     componentWillUnmount() {
         this._mounted = false;
     }
 
+    componentDidUpdate(prevProps: IPropsSelectUser) {
+        if (prevProps.selectedUserId !== this.props.selectedUserId && this.props.selectedUserId != null) {
+            dataApi.findOne<IUser>('users', this.props.selectedUserId).then((selectedUser) => {
+                this.setState({selectedUser});
+            });
+        }
+    }
+
     render() {
-        const keyedUsers = keyBy(this.state.fetchedUsers, (user) => user._id);
+        if (this.state.selectedUser === 'loading') {
+            return null;
+        }
 
         return (
-            <Select2
-                autoFocus={this.props.autoFocus ?? true}
-                disabled={this.props.disabled}
-                placeholder={(
-                    <ListItem fullWidth noBackground noShadow>
-                        <ListItemColumn ellipsisAndGrow>
-                            <ListItemRow>{gettext('Select a user')}</ListItemRow>
-                        </ListItemColumn>
-                    </ListItem>
-                )}
-                value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
-                items={keyedUsers}
-                getItemValue={(user) => user._id}
-                onSelect={(value) => {
-                    this.props.onSelect(keyedUsers[value]);
-                }}
-                renderItem={(user) => (
-                    <ListItem fullWidth noBackground noShadow>
-                        <ListItemColumn noBorder>
-                            <UserAvatar user={user} displayStatus={true} />
-                        </ListItemColumn>
+            <SelectWithTemplate
+                getItems={(searchString) => {
+                    this.abortController?.abort();
+                    this.abortController = new AbortController();
 
-                        <ListItemColumn ellipsisAndGrow>
-                            <ListItemRow>{user.display_name}</ListItemRow>
-                            <ListItemRow>@{user.username}</ListItemRow>
-                        </ListItemColumn>
-                    </ListItem>
-                )}
+                    const query = JSON.stringify(
+                        searchString != null && searchString.length > 0
+                            ? {
+                                $or: [
+                                    {
+                                        display_name: {
+                                            $regex: searchString,
+                                            $options: '-i',
+                                        },
+                                    },
+                                    {
+                                        username: {
+                                            $regex: searchString,
+                                            $options: '-i',
+                                        },
+                                    },
+                                ],
+                            }
+                            : {},
+                    );
+
+                    return new Promise((resolve) => {
+                        fetch(`${appConfig.server.url}/users?where=${query}&max_results=50`, {
+                            signal: this.abortController.signal,
+                            method: 'GET',
+                            headers: {
+                                'Authorization': ng.get('session').token,
+                            },
+                            mode: 'cors',
+                        })
+                            .then((res) => res.json())
+                            .then((res) => {
+                                resolve(res._items);
+                            })
+                            .catch((err) => {
+                                if (err?.name !== 'AbortError') {
+                                    throw err;
+                                }
+                            });
+                    });
+                }}
+                value={this.state.selectedUser}
+                onChange={(user) => {
+                    this.props.onSelect(user);
+                }}
+                getLabel={(option) => option.display_name}
+                itemTemplate={
+                    (props) => {
+                        const user = props.option;
+
+                        return user == null
+                            ? (
+                                <div>
+                                    {gettext('Select a user')}
+                                </div>
+                            )
+                            : (
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <UserAvatar user={user} displayStatus={true} />
+                                    <div style={{marginLeft: 14, padding: '4px 0'}}>
+                                        <div>{user.display_name}</div>
+                                        <div style={{fontSize: 12}}>@{user.username}</div>
+                                    </div>
+                                </div>
+                            );
+                    }
+                }
+                areEqual={(a, b) => a._id === b._id}
+                autoFocus={this.props.autoFocus}
+                autoOpen={this.state.selectedUser == null}
+                width="100%"
+                zIndex={1050}
+                noResultsFoundMessage={gettext('No results found.')}
+                filterPlaceholder={gettext('Search...')}
                 data-test-id="select-user-dropdown"
-                onSearch={(search) => this.queryUsers(search)}
-                loading={this.state.loading}
-                horizontalSpacing={this.props.horizontalSpacing}
                 required
             />
         );
