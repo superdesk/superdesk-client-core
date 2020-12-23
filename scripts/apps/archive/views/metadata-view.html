@@ -2,15 +2,15 @@
 
     <div class="metadata-view__content-block">
         <dl>
-            <dt translate>Slugline</dt>
+            <dt>{{label('slugline')}}</dt>
             <dd sd-html-preview="item.slugline"></dd>
         </dl>
         <dl>
-            <dt translate>Urgency</dt>
+            <dt>{{label('urgency')}}</dt>
             <dd>{{ item.urgency }}</dd>
         </dl>
         <dl>
-            <dt translate>Priority</dt>
+            <dt>{{label('priority')}}</dt>
             <dd>{{ item.priority }}</dd>
         </dl>
         <dl>
@@ -18,7 +18,7 @@
             <dd>{{ item.word_count }}</dd>
         </dl>
         <dl ng-if="item.keywords && item.keywords.length">
-            <dt translate>Keywords</dt>
+            <dt>{{label('keywords')}}</dt>
             <dd>{{ item.keywords | mergeWords}}</dd>
         </dl>
 
@@ -38,7 +38,7 @@
         </dl>
 
         <dl>
-            <dt translate>Take key</dt>
+            <dt>{{label('anpa_take_key')}}</dt>
             <dd>{{ item.anpa_take_key }}</dd>
         </dl>
         <dl ng-if="item.signal">
@@ -46,7 +46,7 @@
             <dd>{{ item.signal }}</dd>
         </dl>
         <dl ng-if="item.anpa_category && item.anpa_category.length">
-            <dt translate>Service</dt>
+            <dt>{{label('anpa_category')}}</dt>
             <dd>{{ item.anpa_category | mergeWords:'name' }}</dd>
         </dl>
         <dl ng-repeat="cv in cvs track by cv._id" ng-if="item[cv.schema_field] | mergeWords:'name' : cv._id">
@@ -54,27 +54,27 @@
             <dd>{{ getLocaleName(item[cv.schema_field], cv._id) }}</dd>
         </dl>
         <dl ng-if="item.genre  && item.genre.length > 0 && !genreInCvs">
-            <dt translate>Genre</dt>
+            <dt>{{label('genre')}}</dt>
             <dd>{{ item.genre | mergeWords:'name'}}</dd>
         </dl>
         <dl ng-if="item.place && item.place.length > 0 && !placeInCvs">
-            <dt translate>Place</dt>
+            <dt>{{label('place')}}</dt>
             <dd>{{ item.place | mergeWords:'name'}}</dd>
         </dl>
         <dl ng-if="item.ednote">
-            <dt translate>Editorial Note</dt>
+            <dt>{{label('ednote')}}</dt>
             <dd>{{ item.ednote }}</dd>
         </dl>
         <dl>
-            <dt translate>Dateline</dt>
+            <dt>{{label('dateline')}}</dt>
             <dd>{{ item.dateline.text }}</dd>
         </dl>
         <dl>
-            <dt translate>Byline</dt>
+            <dt>{{label('byline')}}</dt>
             <dd>{{ item.byline }}</dd>
         </dl>
         <dl>
-            <dt translate>Sign-Off</dt>
+            <dt>{{label('sign_off')}}</dt>
             <dd>{{ item.sign_off }}</dd>
         </dl>
     </div>
