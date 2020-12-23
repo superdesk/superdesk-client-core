@@ -493,23 +493,13 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        browser.wait(
-            ECE.hasElementCount(
-                els(['article-item'], null, els(['monitoring-group']).get(1)),
-                4,
-            ),
-        );
+        expect(monitoring.getGroupItems(1).count()).toBe(4);
 
         monitoring.actionOnItem('Edit', 1, 2);
         authoring.close();
         monitoring.actionOnItem('Spike', 1, 2, null, true);
-
-        browser.wait(
-            ECE.hasElementCount(
-                els(['article-item'], null, els(['monitoring-group']).get(1)),
-                3,
-            ),
-        );
+        expect(monitoring.getGroupItems(1).count()).toBe(3);
+        browser.sleep(100);
 
         monitoring.showSpiked();
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
