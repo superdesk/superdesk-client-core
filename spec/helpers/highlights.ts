@@ -2,7 +2,7 @@
 
 import {element, by, browser} from 'protractor';
 import {waitFor, nav} from './utils';
-import {el, ECE, s} from 'end-to-end-testing-helpers';
+import {el} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Highlights {
@@ -207,12 +207,7 @@ class Highlights {
         this.createHighlightsPackage = function(highlight) {
             element(by.className('big-icon--marked-star')).click();
             this.selectHighlight(element(by.id('highlightPackage')), highlight);
-
-            const createButton = element(s(['articles-list--toolbar'])).element(by.buttonText('Create'));
-
-            browser.wait(ECE.elementToBeClickable(createButton));
-
-            createButton.click();
+            element(by.id('create')).click();
         };
 
         this.exportHighlights = function() {

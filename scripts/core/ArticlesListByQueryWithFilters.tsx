@@ -323,7 +323,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
                     const header = (itemsCount: number): JSX.Element => {
                         return (
-                            <div data-test-id="articles-list--toolbar">
+                            <div>
                                 <div
                                     style={{
                                         display: 'flex',
