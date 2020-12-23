@@ -8,5 +8,6 @@ export function MonitoringHighlightsController($scope, $location) {
     dataApi.findOne<IHighlight>('highlights', id).then((highlight) => {
         $scope.selectedHighlightName = highlight.name;
         $scope.selectedHighlightId = id;
+        $scope.$apply();
     });
 }
