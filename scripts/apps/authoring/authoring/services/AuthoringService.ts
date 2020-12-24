@@ -860,7 +860,10 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                 // Allow some actions even if a user is not a member of the desk where an item is localted.
 
                 action.re_write = oldAction.re_write;
-                action.mark_item_for_desks = oldAction.mark_item_for_desks;
+
+                if (privileges.privileges.mark_for_desks__non_members) {
+                    action.mark_item_for_desks = oldAction.mark_item_for_desks;
+                }
 
                 if (appConfig.workflow_allow_duplicate_non_members) {
                     action.duplicateTo = duplicateTo;
