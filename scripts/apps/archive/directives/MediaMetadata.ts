@@ -1,10 +1,10 @@
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
-import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
-MediaMetadata.$inject = ['userList', 'archiveService', 'metadata', 'vocabularies'];
+MediaMetadata.$inject = ['userList', 'archiveService', 'metadata', '$timeout'];
 
-export function MediaMetadata(userList, archiveService, metadata, vocabularies) {
+export function MediaMetadata(userList, archiveService, metadata, $timeout) {
     return {
         scope: {
             item: '=',
@@ -14,8 +14,12 @@ export function MediaMetadata(userList, archiveService, metadata, vocabularies) 
             scope.$watch('item', reloadData);
             scope.isCorrectionWorkflowEnabled = appConfig?.corrections_workflow;
 
-            vocabularies.getVocabularies().then((vocabulariesCollection) => {
-                scope.label = (id) => getLabelForFieldId(id, vocabulariesCollection);
+            scope.label = (id) => id;
+
+            getLabelNameResolver().then((_getLabelForFieldId) => {
+                $timeout(() => {
+                    scope.label = _getLabelForFieldId;
+                });
             });
 
             function reloadData() {
