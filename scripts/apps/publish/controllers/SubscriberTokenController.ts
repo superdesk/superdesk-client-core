@@ -13,6 +13,17 @@ export function SubscriberTokenController($scope, api, $rootScope) {
 
     this.tokens = [];
 
+    this.days = {
+        '1 week': 7,
+        '2 weeks': 14,
+        '1 month': 30,
+        '6 months': 180,
+        '1 year': 365,
+        '2 years': 730,
+        '5 years': 1825,
+        '10 years': 3650,
+    };
+
     const fetchTokens = () => {
         if (subscriber._id) {
             api.query('subscriber_token', {where: {subscriber: subscriber._id}})
@@ -38,8 +49,11 @@ export function SubscriberTokenController($scope, api, $rootScope) {
      * @description Generate new token on server and refresh the list.
      */
     this.generate = (ttl) =>
-        api.save('subscriber_token', {subscriber: subscriber._id, expiry: expiry(ttl)})
-            .then(fetchTokens);
+        api.save('subscriber_token', {
+            subscriber: subscriber._id,
+            expiry: !this.neverExpire ? expiry(ttl) : null,
+            never_expire: this.neverExpire,
+        }).then(fetchTokens);
 
     /**
      * @ngdoc method
@@ -57,6 +71,8 @@ export function SubscriberTokenController($scope, api, $rootScope) {
      * @description Default time to live value for new tokens.
      */
     this.ttl = '7'; // default ttl
+
+    this.neverExpire = false;
 
     // init
     fetchTokens();
