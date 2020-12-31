@@ -270,7 +270,7 @@
                                                 ng-model="tokens.ttl"
                                                 ng-disabled="tokens.neverExpire"
                                                 title="{{ :: 'Token expiry' | translate }}">
-                                                <option ng-repeat="(key, value) in tokens.days" value="{{value}}" translate>{{key}}</option>
+                                                <option ng-repeat="key in tokens.getExpiryFields" value="{{key.value}}">{{key.days}}</option>
                                             </select>
                                         </div>
                                     </div>

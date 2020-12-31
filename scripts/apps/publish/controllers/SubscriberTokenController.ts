@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc controller
@@ -13,16 +14,16 @@ export function SubscriberTokenController($scope, api, $rootScope) {
 
     this.tokens = [];
 
-    this.days = {
-        '1 week': 7,
-        '2 weeks': 14,
-        '1 month': 30,
-        '6 months': 180,
-        '1 year': 365,
-        '2 years': 730,
-        '5 years': 1825,
-        '10 years': 3650,
-    };
+    this.getExpiryFields = [
+        {days: gettext('1 week'), value: 7},
+        {days: gettext('2 weeks'), value: 14},
+        {days: gettext('1 month'), value: 30},
+        {days: gettext('6 months'), value: 180},
+        {days: gettext('1 year'), value: 365},
+        {days: gettext('2 years'), value: 730},
+        {days: gettext('5 years'), value: 1825},
+        {days: gettext('10 years'), value: 3650},
+    ];
 
     const fetchTokens = () => {
         if (subscriber._id) {
