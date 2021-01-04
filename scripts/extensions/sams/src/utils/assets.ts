@@ -40,6 +40,14 @@ export function getAction(assetCallback: IAssetCallback): IAssetAction {
             onSelect: assetCallback.onSelect,
             isAllowed: (asset) => asset._created != null,
         };
+    case ASSET_ACTIONS.FORCE_UNLOCK:
+        return {
+            id: ASSET_ACTIONS.FORCE_UNLOCK,
+            label: gettext('Force Unlock'),
+            icon: 'unlocked',
+            onSelect: assetCallback.onSelect,
+            isAllowed: (asset) => asset._created != null,
+        };
     }
 
     assertNever(assetCallback.action);

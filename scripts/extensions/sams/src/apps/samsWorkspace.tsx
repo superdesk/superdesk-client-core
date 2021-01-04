@@ -34,6 +34,7 @@ import {
     updateSelectedAssetIds,
     onEditAsset,
     deleteAsset,
+    forceUnlockAsset,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
@@ -78,6 +79,7 @@ interface IProps {
         listAction: LIST_ACTION,
     ): void;
     toggleFilterPanel(): void;
+    forceUnlockAsset(asset: IAssetItem): void;
     selectedAssets: Array<IAssetItem>;
     contentPanelState: ASSET_CONTENT_PANEL_STATE;
 }
@@ -114,6 +116,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
     onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
+    forceUnlockAsset: (asset: IAssetItem) => dispatch<any>(forceUnlockAsset(asset)),
 });
 
 export function downloadAssetBinary(asset: IAssetItem): void {
@@ -254,6 +257,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
                             updateSelectedAssetIds={this.onMultiActionBar}
+                            forceUnlockAsset={this.props.forceUnlockAsset}
                             actions={[{
                                 action: ASSET_ACTIONS.EDIT,
                                 onSelect: this.onEditAsset,

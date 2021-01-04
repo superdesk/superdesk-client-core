@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 // Types
-import {IAssetItem, ASSET_LIST_STYLE, IAssetCallback} from '../../interfaces';
+import {ASSET_ACTIONS, IAssetItem, ASSET_LIST_STYLE, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
@@ -20,6 +20,7 @@ interface IProps {
     onItemClicked(asset: IAssetItem): void;
     onItemDoubleClicked?(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
+    forceUnlockAsset?(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
@@ -28,6 +29,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
         this.onItemClick = this.onItemClick.bind(this);
         this.onItemDoubleClick = this.onItemDoubleClick.bind(this);
         this.onUpdateSelectedAssetIds = this.onUpdateSelectedAssetIds.bind(this);
+        this.onForceUnlock = this.onForceUnlock.bind(this);
     }
 
     onItemClick(asset: IAssetItem) {
@@ -44,9 +46,20 @@ export class AssetListPanel extends React.PureComponent<IProps> {
         this.props.updateSelectedAssetIds(asset);
     }
 
+    onForceUnlock(asset: IAssetItem) {
+        this.props.forceUnlockAsset!(asset);
+    }
+
     render() {
         const {gettext} = superdeskApi.localization;
         const {assertNever} = superdeskApi.helpers;
+
+        if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
+            this.props.actions!.push({
+                action: ASSET_ACTIONS.FORCE_UNLOCK,
+                onSelect: this.onForceUnlock,
+            });
+        }
 
         if (this.props.assets.length === 0) {
             return (
