@@ -129,6 +129,7 @@ export class Item extends React.Component<IProps, IState> {
         if (nextProps.item !== this.props.item) {
             closeActionsMenu(this.props.item._id);
         }
+        this.setActioningState(nextProps.actioning);
     }
 
     loadPlanningModals() {
