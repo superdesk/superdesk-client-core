@@ -46,7 +46,7 @@ export function getAction(assetCallback: IAssetCallback): IAssetAction {
             label: gettext('Force Unlock'),
             icon: 'unlocked',
             onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null,
+            isAllowed: (asset) => asset._created != null && isAssetLocked(asset),
         };
     }
 

@@ -101,7 +101,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
             ];
 
         if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
-            actions!.push({
+            actions.push({
                 action: ASSET_ACTIONS.FORCE_UNLOCK,
                 onSelect: this.props.forceUnlockAsset,
             });

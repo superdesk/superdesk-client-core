@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 // Types
-import {ASSET_ACTIONS, IAssetItem, ASSET_LIST_STYLE, IAssetCallback} from '../../interfaces';
+import {IAssetItem, ASSET_LIST_STYLE, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
@@ -53,13 +53,6 @@ export class AssetListPanel extends React.PureComponent<IProps> {
     render() {
         const {gettext} = superdeskApi.localization;
         const {assertNever} = superdeskApi.helpers;
-
-        if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
-            this.props.actions!.push({
-                action: ASSET_ACTIONS.FORCE_UNLOCK,
-                onSelect: this.onForceUnlock,
-            });
-        }
 
         if (this.props.assets.length === 0) {
             return (
