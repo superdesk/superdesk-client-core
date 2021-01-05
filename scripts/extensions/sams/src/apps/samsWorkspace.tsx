@@ -226,6 +226,10 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                 onSelect: this.onDownloadSingleAssetCompressedBinary,
             },
             {
+                action: ASSET_ACTIONS.PREVIEW,
+                onSelect: this.props.previewAsset,
+            },
+            {
                 action: ASSET_ACTIONS.DELETE,
                 onSelect: this.onDeleteAsset,
             },
