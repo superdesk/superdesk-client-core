@@ -52,7 +52,7 @@ export function SubscriberTokenController($scope, api, $rootScope) {
     this.generate = (ttl) =>
         api.save('subscriber_token', {
             subscriber: subscriber._id,
-            expiry_days: this.neverExpire ? null : ttl,
+            expiry_days: this.neverExpire ? 0 : ttl,
         }).then(fetchTokens);
 
     /**
