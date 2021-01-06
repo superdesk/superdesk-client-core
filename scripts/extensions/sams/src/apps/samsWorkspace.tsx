@@ -282,7 +282,6 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
                             updateSelectedAssetIds={this.onMultiActionBar}
-                            forceUnlockAsset={this.props.forceUnlockAsset}
                             actions={actions}
                         />
                     )}

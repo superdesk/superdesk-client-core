@@ -20,7 +20,6 @@ interface IProps {
     onItemClicked(asset: IAssetItem): void;
     onItemDoubleClicked?(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
-    forceUnlockAsset?(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
@@ -29,7 +28,6 @@ export class AssetListPanel extends React.PureComponent<IProps> {
         this.onItemClick = this.onItemClick.bind(this);
         this.onItemDoubleClick = this.onItemDoubleClick.bind(this);
         this.onUpdateSelectedAssetIds = this.onUpdateSelectedAssetIds.bind(this);
-        this.onForceUnlock = this.onForceUnlock.bind(this);
     }
 
     onItemClick(asset: IAssetItem) {
@@ -44,10 +42,6 @@ export class AssetListPanel extends React.PureComponent<IProps> {
 
     onUpdateSelectedAssetIds(asset: IAssetItem) {
         this.props.updateSelectedAssetIds(asset);
-    }
-
-    onForceUnlock(asset: IAssetItem) {
-        this.props.forceUnlockAsset!(asset);
     }
 
     render() {
