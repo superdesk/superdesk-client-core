@@ -69,6 +69,7 @@ export enum ASSET_ACTIONS {
     DOWNLOAD = 'download',
     DELETE = 'delete',
     EDIT = 'edit',
+    FORCE_UNLOCK = 'force_unlock',
 }
 
 export enum DATA_UNIT {
