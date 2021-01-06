@@ -239,7 +239,7 @@
                                             <span class="sd-overflow-ellipsis sd-list-item--element-grow"><code contenteditable="false" spellcheck="false">{{ :: token._id}}</code></span>
                                             <span class="sd-list-item__text-label">{{ :: 'expires:' | translate }}
                                                 <time ng-if="token.expiry" sd-datetime data-date="token.expiry" data-from-now="true"></time>
-                                                <span ng-if="token.never_expire" translate>Never Expire</span>
+                                                <span ng-if="token.expiry == null" translate>Never</span>
                                             </span>
                                         </div>
                                     </div>
