@@ -1,5 +1,4 @@
 import ng from 'core/services/ng';
-import {logger} from 'core/services/logger';
 import {appConfig} from '../../appConfig';
 
 interface IHttpRequestOptions {

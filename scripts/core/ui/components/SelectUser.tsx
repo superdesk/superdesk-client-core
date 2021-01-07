@@ -3,15 +3,14 @@ import {IPropsSelectUser, IUser, IRestApiResponse} from 'superdesk-api';
 import {gettext, getUserSearchMongoQuery} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {SelectWithTemplate} from 'superdesk-ui-framework/react';
-import {dataApi} from 'core/helpers/CrudManager';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 
 interface IState {
     selectedUser: IUser | null | 'loading';
 }
 
-export class SelectUser extends React.Component<IPropsSelectUser, IState> {
-    _mounted: boolean;
+export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState> {
     abortController: AbortController | null;
 
     constructor(props: IPropsSelectUser) {
@@ -21,30 +20,30 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
             selectedUser: props.selectedUserId == null ? null : 'loading',
         };
 
-        this._mounted = false;
         this.abortController = null;
     }
 
     componentDidMount() {
-        this._mounted = true;
-
         if (this.props.selectedUserId != null) {
-            dataApi.findOne<IUser>('users', this.props.selectedUserId).then((selectedUser) => {
-                if (this._mounted) {
-                    this.setState({selectedUser});
-                }
+            this.asyncHelpers.httpRequestJsonLocal<IUser>({
+                method: 'GET',
+                path: `/users/${this.props.selectedUserId}`,
+            }).then((selectedUser) => {
+                this.setState({selectedUser});
             });
         }
     }
 
     componentWillUnmount() {
-        this._mounted = false;
         this.abortController?.abort();
     }
 
     componentDidUpdate(prevProps: IPropsSelectUser) {
         if (prevProps.selectedUserId !== this.props.selectedUserId && this.props.selectedUserId != null) {
-            dataApi.findOne<IUser>('users', this.props.selectedUserId).then((selectedUser) => {
+            this.asyncHelpers.httpRequestJsonLocal<IUser>({
+                method: 'GET',
+                path: `/users/${this.props.selectedUserId}`,
+            }).then((selectedUser) => {
                 this.setState({selectedUser});
             });
         }
