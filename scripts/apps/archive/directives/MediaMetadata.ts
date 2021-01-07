@@ -13,11 +13,10 @@ export function MediaMetadata(userList, archiveService, metadata, $timeout) {
         link: function(scope, elem) {
             scope.$watch('item', reloadData);
             scope.isCorrectionWorkflowEnabled = appConfig?.corrections_workflow;
-
-            scope.label = (id) => id;
+            scope.loading = true;
 
             getLabelNameResolver().then((_getLabelForFieldId) => {
-                $timeout(() => {
+                scope.$apply(() => {
                     scope.label = _getLabelForFieldId;
                 });
             });
@@ -64,6 +63,12 @@ export function MediaMetadata(userList, archiveService, metadata, $timeout) {
 
                 return term.name;
             };
+
+            scope.$watch('label', (newValue) => {
+                if (newValue) {
+                    scope.loading = false;
+                }
+            });
         },
     };
 }
