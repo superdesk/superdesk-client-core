@@ -18,6 +18,7 @@ export function MediaMetadata(userList, archiveService, metadata, $timeout) {
             getLabelNameResolver().then((_getLabelForFieldId) => {
                 scope.$apply(() => {
                     scope.label = _getLabelForFieldId;
+                    scope.loading = false;
                 });
             });
 
@@ -63,12 +64,6 @@ export function MediaMetadata(userList, archiveService, metadata, $timeout) {
 
                 return term.name;
             };
-
-            scope.$watch('label', (newValue) => {
-                if (newValue) {
-                    scope.loading = false;
-                }
-            });
         },
     };
 }
