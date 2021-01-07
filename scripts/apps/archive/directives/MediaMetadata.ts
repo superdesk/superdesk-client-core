@@ -2,9 +2,9 @@ import _ from 'lodash';
 import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
-MediaMetadata.$inject = ['userList', 'archiveService', 'metadata'];
+MediaMetadata.$inject = ['userList', 'archiveService', 'metadata', '$timeout'];
 
-export function MediaMetadata(userList, archiveService, metadata) {
+export function MediaMetadata(userList, archiveService, metadata, $timeout) {
     return {
         scope: {
             item: '=',
@@ -13,11 +13,13 @@ export function MediaMetadata(userList, archiveService, metadata) {
         link: function(scope, elem) {
             scope.$watch('item', reloadData);
             scope.isCorrectionWorkflowEnabled = appConfig?.corrections_workflow;
-
-            scope.label = (id) => id;
+            scope.loading = true;
 
             getLabelNameResolver().then((_getLabelForFieldId) => {
-                scope.label = _getLabelForFieldId;
+                scope.$apply(() => {
+                    scope.label = _getLabelForFieldId;
+                    scope.loading = false;
+                });
             });
 
             function reloadData() {

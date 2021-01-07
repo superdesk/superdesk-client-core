@@ -1,6 +1,6 @@
 <div class="metadata-view">
 
-    <div class="metadata-view__content-block">
+    <div ng-if="!loading" class="metadata-view__content-block">
         <dl>
             <dt>{{label('slugline')}}</dt>
             <dd sd-html-preview="item.slugline"></dd>
