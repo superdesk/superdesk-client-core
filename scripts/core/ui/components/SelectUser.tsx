@@ -1,6 +1,6 @@
 import React from 'react';
 import {IPropsSelectUser, IUser, IRestApiResponse} from 'superdesk-api';
-import {gettext} from 'core/utils';
+import {gettext, getUserSearchMongoQuery} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {SelectWithTemplate} from 'superdesk-ui-framework/react';
 import {dataApi} from 'core/helpers/CrudManager';
@@ -30,13 +30,16 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
 
         if (this.props.selectedUserId != null) {
             dataApi.findOne<IUser>('users', this.props.selectedUserId).then((selectedUser) => {
-                this.setState({selectedUser});
+                if (this._mounted) {
+                    this.setState({selectedUser});
+                }
             });
         }
     }
 
     componentWillUnmount() {
         this._mounted = false;
+        this.abortController?.abort();
     }
 
     componentDidUpdate(prevProps: IPropsSelectUser) {
@@ -60,22 +63,7 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
 
                     const query = JSON.stringify(
                         searchString != null && searchString.length > 0
-                            ? {
-                                $or: [
-                                    {
-                                        display_name: {
-                                            $regex: searchString,
-                                            $options: '-i',
-                                        },
-                                    },
-                                    {
-                                        username: {
-                                            $regex: searchString,
-                                            $options: '-i',
-                                        },
-                                    },
-                                ],
-                            }
+                            ? getUserSearchMongoQuery(searchString)
                             : {},
                     );
 
