@@ -1,11 +1,10 @@
 import React from 'react';
-import {IPropsSelectUser, IUser} from 'superdesk-api';
+import {IPropsSelectUser, IUser, IRestApiResponse} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {SelectWithTemplate} from 'superdesk-ui-framework/react';
 import {dataApi} from 'core/helpers/CrudManager';
-import {appConfig} from 'appConfig';
-import ng from 'core/services/ng';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 
 interface IState {
     selectedUser: IUser | null | 'loading';
@@ -80,24 +79,28 @@ export class SelectUser extends React.Component<IPropsSelectUser, IState> {
                             : {},
                     );
 
+                    // Wrapping into additional promise in order to avoid having to handle rejected promise
+                    // in `SelectWithTemplate` component. The component takes a generic promise
+                    // as an argument and not a fetch result so it wouldn't be good to handle
+                    // fetch-specific rejections there.
                     return new Promise((resolve) => {
-                        fetch(`${appConfig.server.url}/users?where=${query}&max_results=50`, {
-                            signal: this.abortController.signal,
+                        httpRequestJsonLocal<IRestApiResponse<IUser>>({
                             method: 'GET',
-                            headers: {
-                                'Authorization': ng.get('session').token,
+                            path: '/users',
+                            urlParams: {
+                                where: query,
+                                max_results: 50,
                             },
-                            mode: 'cors',
-                        })
-                            .then((res) => res.json())
-                            .then((res) => {
-                                resolve(res._items);
-                            })
-                            .catch((err) => {
-                                if (err?.name !== 'AbortError') {
-                                    throw err;
-                                }
-                            });
+                            abortSignal: this.abortController.signal,
+                        }).then((res) => {
+                            resolve(res._items);
+                        }).catch((err) => {
+                            // If user types something in the filter input all unfinished requests will be aborted.
+                            // This is expected behaviour here and should not throw an error.
+                            if (err?.name !== 'AbortError') {
+                                throw err;
+                            }
+                        });
                     });
                 }}
                 value={this.state.selectedUser}
