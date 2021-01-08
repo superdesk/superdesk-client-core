@@ -2,6 +2,21 @@ import React from 'react';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {noop} from 'lodash';
 
+/**
+ * Wraps a promise in order to ignore AbortError and break the promise chain when it occurs.
+ */
+function ignoreAbortError<T>(promise: Promise<T>): Promise<T> {
+    return new Promise((resolve, reject) => {
+        promise
+            .then(resolve)
+            .catch((err) => {
+                if (err?.name !== 'AbortError') {
+                    reject(err);
+                }
+            });
+    });
+}
+
 export class SuperdeskReactComponent<IProps = {}, IState = {}> extends React.PureComponent<IProps, IState> {
     private abortControllers: Array<AbortController>;
 
@@ -24,31 +39,18 @@ export class SuperdeskReactComponent<IProps = {}, IState = {}> extends React.Pur
 
                 this.abortControllers.push(controller);
 
-                // wrapping in another promise in order to handle AbortError in this component.
-                return new Promise((resolve, reject) => {
-                    fetch(input, {...(init ?? {}), signal: controller.signal})
-                        .then(resolve)
-                        .catch((err) => {
-                            if (err?.name !== 'AbortError') { // ignore AbortError
-                                reject(err);
-                            }
-                        });
-                });
+                return ignoreAbortError(
+                    fetch(input, {...(init ?? {}), signal: controller.signal}),
+                );
             },
             httpRequestJsonLocal: (options: Parameters<typeof httpRequestJsonLocal>[0]) => {
                 const controller = new AbortController();
 
                 this.abortControllers.push(controller);
 
-                return new Promise((resolve, reject) => {
-                    httpRequestJsonLocal({...options, abortSignal: controller.signal})
-                        .then(resolve)
-                        .catch((err) => {
-                            if (err?.name !== 'AbortError') { // ignore AbortError
-                                reject(err);
-                            }
-                        });
-                });
+                return ignoreAbortError(
+                    httpRequestJsonLocal({...options, abortSignal: controller.signal}),
+                );
             },
         };
 
