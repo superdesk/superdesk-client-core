@@ -110,7 +110,7 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
                                     <UserAvatar user={user} displayStatus={true} />
                                     <div style={{marginLeft: 14, padding: '4px 0'}}>
                                         <div>{user.display_name}</div>
-                                        <div style={{fontSize: 12}}>@{user.username}</div>
+                                        <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
                                     </div>
                                 </div>
                             );
