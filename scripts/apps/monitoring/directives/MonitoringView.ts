@@ -159,6 +159,7 @@ export function MonitoringView(
                                     {'state': {$ne: 'draft'}},
                                 ]},
                                 {'package_type': {$ne: 'takes'}},
+                                {'task.desk': {$eq: scope.activeDeskId}},
                                 {'highlights': {$eq: $location.search().highlight}},
                             ]},
                             sort: [{'versioncreated': 'desc'}],
