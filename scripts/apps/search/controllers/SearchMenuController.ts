@@ -102,7 +102,7 @@ export default function SearchMenuController(
 
     // init search providers
     if (get($rootScope.config, 'features.searchShortcut')) {
-        api.search_providers.query({max_results: 200, where: {is_closed: {$ne: true}}, with_privileges: true})
+        api.search_providers.query({max_results: 200, where: {is_closed: {$ne: true}}})
             .then((result) => {
                 this.providers = $filter('sortByName')(result._items, 'search_provider');
 
