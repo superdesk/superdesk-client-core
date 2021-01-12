@@ -11,7 +11,7 @@ export function getTansaHtml(editorState) {
     const content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
-    return blockMap.reduce((tansaHtml, block) => {
+    return blockMap.map((block) => {
         let html = '';
 
         if (block.getType() === 'atomic' && block.getEntityAt(0) != null) {
@@ -37,8 +37,8 @@ export function getTansaHtml(editorState) {
             html = getBlockHtml('text', block.getKey(), block.getText());
         }
 
-        return tansaHtml + html;
-    }, '');
+        return html;
+    }).join('\n');
 }
 
 /**
@@ -88,7 +88,8 @@ export function setTansaHtml(editorState, html, simpleReplace?) {
 function getTextFromTag(htmlElement, field, key) {
     const tagElement = htmlElement.querySelector('#' + getHtmlId(field, key));
 
-    return tagElement != null ? tagElement.innerText : null;
+    // second part of tansa workaround now unescaping returned value
+    return tagElement != null ? tagElement.innerText.replace('&amp;', '&') : null;
 }
 
 /**
@@ -114,8 +115,12 @@ function getBlockHtml(field, key, text) {
     const p = document.createElement('p');
 
     p.id = getHtmlId(field, key);
-    p.innerText = text;
-    return p.outerHTML;
+
+    // tansa handles &... as entity so we have to
+    // do double escaping as a workaround
+    p.innerText = text.replace('&', '&amp;');
+
+    return p.outerHTML.trim();
 }
 
 /**

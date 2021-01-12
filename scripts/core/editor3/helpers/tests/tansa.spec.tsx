@@ -14,7 +14,7 @@ describe('editor3.helpers.tansa', () => {
         const editorState = Setup.getInitialEditorState(rawContent);
 
         expect(getTansaHtml(editorState)).toEqual(
-            '<p id="text-4vu4i">paragraph1 foo&amp;bar</p><p id="text-9d99u">paragraph2</p>');
+            '<p id="text-4vu4i">paragraph1 foo&amp;amp;bar</p>\n<p id="text-9d99u">paragraph2</p>');
     });
 
     it('should update the text added', () => {
@@ -86,12 +86,11 @@ describe('editor3.helpers.tansa', () => {
 
         const editorState = Setup.getInitialEditorState(rawContent);
 
-        const tansaHtml = [
-            '<p id="description-4vu4i">description</p>',
-            '<p id="alt-4vu4i">alt</p>',
-            '<p id="headline-4vu4i">headline</p>',
-            '<p id="text-9d99u">paragraph2</p>',
-        ].join('');
+        const tansaHtml =
+            '<p id="description-4vu4i">description</p>' +
+            '<p id="alt-4vu4i">alt</p>' +
+            '<p id="headline-4vu4i">headline</p>\n' +
+            '<p id="text-9d99u">paragraph2</p>';
 
         expect(getTansaHtml(editorState)).toEqual(tansaHtml);
     });
