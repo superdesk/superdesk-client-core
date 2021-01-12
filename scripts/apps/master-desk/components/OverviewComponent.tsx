@@ -21,7 +21,7 @@ interface IProps {
 interface IState {
     stagesCount: Array<any>;
     filteredDesks: Array<IDesk>;
-    view: 'card' | 'list';
+    view: 'card' | 'detailed';
 }
 
 export class OverviewComponent extends React.Component<IProps, IState> {
@@ -58,9 +58,9 @@ export class OverviewComponent extends React.Component<IProps, IState> {
             dataApi.create('desks/all/overview/stages', {
                 filters: this.props.filters,
             }).then((res) => {
-                this.setState({stagesCount: res['_items'], view: 'list'});
+                this.setState({stagesCount: res['_items'], view: 'detailed'});
             });
-        } else if (this.state.view === 'list') {
+        } else if (this.state.view === 'detailed') {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({view: 'card'});
         }
@@ -140,8 +140,8 @@ export class OverviewComponent extends React.Component<IProps, IState> {
     }
 
     render() {
-        return (
-            this.state.view === 'list' ? (
+        if (this.state.view === 'detailed') {
+            return (
                 <div className="sd-kanban-list sd-pdding-x--2 sd-padding-t--2">
                     {this.state.filteredDesks.map((desk, index) =>
                         this.getDeskTotal(desk) > 0 ? (
@@ -189,7 +189,9 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                         ) : null,
                     )}
                 </div>
-            ) : (
+            );
+        } else {
+            return (
                 <div className="sd-grid-list sd-grid-list--medium sd-grid-list--gap-xl sd-margin-x--5">
                     {this.state.filteredDesks.map((desk, index) => (
                         <CardComponent
@@ -212,7 +214,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                         </CardComponent>
                     ))}
                 </div>
-            )
-        );
+            );
+        }
     }
 }

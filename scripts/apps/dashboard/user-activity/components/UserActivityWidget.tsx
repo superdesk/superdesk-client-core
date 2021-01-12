@@ -24,6 +24,7 @@ interface IGroup {
 interface IProps {
     header?: boolean;
     user?: IUser;
+    onUserChange(user: IUser): void;
 }
 
 interface IState {
@@ -232,7 +233,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
     componentDidMount() {
         this.addListeners();
 
-        if (!this.props.user && this.state.user == null) {
+        if (!this.props.user) {
             this.setState({loading: true});
 
             this.services.session.getIdentity().then((user) => {
@@ -269,7 +270,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
     }
 
     refreshItems() {
-        if (this.state.user) {
+        if (this.props.user) {
             this.fetchGroupsData();
         }
     }
@@ -396,8 +397,10 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
     }
 
     setUser(user: IUser) {
+        this.props.onUserChange(user);
+
         this.setState(
-            {user, groups: GET_GROUPS(user._id, this.services), loading: true},
+            {groups: GET_GROUPS(user._id, this.services), loading: true},
             () => {
                 this.fetchGroupsData();
             },
@@ -422,7 +425,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                     >
                         <form className="search-box__content">
                             <SelectUser
-                                selectedUserId={this.state.user?._id}
+                                selectedUserId={this.props.user?._id}
                                 autoFocus={false}
                                 onSelect={(user) => {
                                     this.setUser(user);
@@ -433,7 +436,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                     </div>
                     {
                         loading ? <Loader /> :
-                            this.state.user && this.state.groupsData && (
+                            this.state.groupsData && (
                                 <div className="content-list-holder">
                                     <div className="shadow-list-holder">
                                         <div className="content-list">

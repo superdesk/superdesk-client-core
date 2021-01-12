@@ -73,7 +73,7 @@ export class MasterDesk extends React.Component<{}, IState> {
 
     componentDidMount() {
         this.services.preferences.get(USER_PREFERENCE_SETTINGS).then((desks) => {
-            desks.showAllDesks || desks.showAllDesks === undefined ?
+            desks && (desks.showAllDesks || desks.showAllDesks === undefined) ?
                 this.getDeskList() :
                 this.getDeskList(desks.items);
         });
@@ -109,8 +109,6 @@ export class MasterDesk extends React.Component<{}, IState> {
                 <HeaderComponent
                     activeTab={this.state.currentTab}
                     desks={this.state.desks}
-                    preferencesService={this.services.preferences}
-                    deskService={this.services.desks}
                     isPlaningActive={this.state.planning}
                     isFilterAllowed={this.isFilterAllowed()}
                     isFilterOpened={this.state.filterOpen}
@@ -154,7 +152,6 @@ export class MasterDesk extends React.Component<{}, IState> {
                                 return (
                                     <UsersComponent
                                         desks={this.state.desks}
-                                        deskService={this.services.desks}
                                         onUserSelect={(user) => this.setState({activeUser: user})}
                                     />
                                 );
@@ -173,7 +170,10 @@ export class MasterDesk extends React.Component<{}, IState> {
                 </div>
                 {this.state.activeUser ? (
                     <PreviewComponent header={'User Activity'} onClose={() => this.setState({activeUser: null})}>
-                        <UserActivityWidget user={this.state.activeUser} />
+                        <UserActivityWidget
+                            user={this.state.activeUser}
+                            onUserChange={(user) => this.setState({activeUser: user})}
+                        />
                     </PreviewComponent>
                 ) : null}
             </div>

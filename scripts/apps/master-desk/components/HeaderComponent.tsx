@@ -1,4 +1,5 @@
 import React from 'react';
+import ng from 'core/services/ng';
 import {IDesk} from 'superdesk-api';
 
 import {CheckButtonGroup, RadioButton, Switch} from 'superdesk-ui-framework/react';
@@ -8,8 +9,6 @@ import {gettext} from 'core/utils';
 interface IProps {
     desks: Array<IDesk>;
     activeTab: string;
-    preferencesService?: any;
-    deskService?: any;
     isFilterAllowed?: boolean;
     isFilterOpened: boolean;
     isPlaningActive?: boolean;
@@ -26,6 +25,8 @@ interface IState {
 }
 
 export class HeaderComponent extends React.Component<IProps, IState> {
+    services: any;
+
     constructor(props: IProps) {
         super(props);
 
@@ -36,18 +37,23 @@ export class HeaderComponent extends React.Component<IProps, IState> {
             showAllDesks: true,
         };
 
+        this.services = {
+            desks: ng.get('desks'),
+            preferences: ng.get('preferencesService'),
+        };
+
         this.changeTab.bind(this);
         this.openFilter.bind(this);
     }
 
     componentDidMount() {
         Promise.all([
-            this.props.deskService.initialize(),
-            this.props.preferencesService.get(USER_PREFERENCE_SETTINGS),
+            this.services.preferences.get(USER_PREFERENCE_SETTINGS),
+            this.services.desks.initialize(),
         ]).then((res) => {
-            const [desk, preferences] = res;
+            const [preferences] = res;
 
-            this.setState({availableDesks: this.props.deskService.desks._items});
+            this.setState({availableDesks: this.services.desks.desks._items});
 
             if (preferences) {
                 this.setState({
@@ -101,7 +107,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
             showAllDesks: this.state.showAllDesks,
         };
 
-        this.props.preferencesService.update(update).then(() => {
+        this.services.preferences.update(update).then(() => {
             this.props.onUpdateDeskList(this.state.activeDesks, this.state.showAllDesks);
         });
     }

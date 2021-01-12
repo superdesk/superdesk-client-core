@@ -1,4 +1,5 @@
 import React from 'react';
+import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 
 import {dataApi} from 'core/helpers/CrudManager';
@@ -8,7 +9,6 @@ import {IDesk, IUserRole} from 'superdesk-api';
 
 interface IProps {
     desks: Array<IDesk>;
-    deskService: any;
     onUserSelect(user: IUserExtra): void;
 }
 
@@ -18,12 +18,18 @@ interface IState {
 }
 
 export class UsersComponent extends React.Component<IProps, IState> {
+    services: any;
+
     constructor(props: IProps) {
         super(props);
 
         this.state = {
             roles: [],
             users: [],
+        };
+
+        this.services = {
+            desks: ng.get('desks'),
         };
 
         this.selectUser.bind(this);
@@ -48,7 +54,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
     }
 
     getUsers(desk: IDesk, role: IUserRole): Array<any> {
-        const deskMembers = this.props.deskService.deskMembers[desk._id];
+        const deskMembers = this.services.desks.deskMembers[desk._id];
         const authors = this.state.users.find((item) => item.role === role._id);
 
         let users: Array<IUserExtra> = [];
@@ -84,7 +90,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
                                 ) : null
                             ))}
 
-                            {!this.props.deskService.deskMembers[desk._id].length ? (
+                            {!this.services.desks.deskMembers[desk._id].length ? (
                                 <div className="sd-board__subheader">
                                     <h5 className="sd-board__subheader-title">
                                         {gettext('There are no users assigned to this desk')}
