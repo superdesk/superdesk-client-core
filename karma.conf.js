@@ -35,6 +35,9 @@ module.exports = function(config) {
             debug: false,
             progress: false,
             // quiet: true
+            watchOptions: {
+                ignored: /extensions/,
+            },
         },
 
         files: [
