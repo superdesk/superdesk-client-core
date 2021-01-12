@@ -1,5 +1,6 @@
 import moment from 'moment';
 import {gettext} from 'core/utils';
+import {copyString} from 'core/helpers/utils';
 
 /**
  * @ngdoc controller
@@ -12,6 +13,7 @@ import {gettext} from 'core/utils';
 export function SubscriberTokenController($scope, api, $rootScope) {
     const subscriber = $scope.subscriber;
 
+    this.copy = copyString;
     this.tokens = [];
 
     this.getExpiryFields = [
