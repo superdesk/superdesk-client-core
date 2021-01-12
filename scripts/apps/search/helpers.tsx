@@ -5,6 +5,7 @@ import {fields} from './components/fields';
 import ng from '../../core/services/ng';
 import {isKilled} from 'apps/archive/utils';
 import {IArticle, IPublishedArticle} from 'superdesk-api';
+import {getVocabularyItemNameTranslated} from 'core/utils';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -17,7 +18,7 @@ export function getSpecStyle(spec) {
 }
 
 export function getSpecTitle(spec, title) {
-    return spec.name ? `${title}: ${spec.name}` : title;
+    return spec.name ? `${title}: ${getVocabularyItemNameTranslated(spec)}` : title;
 }
 
 export function getSpecValue(spec, value) {

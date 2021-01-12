@@ -1,5 +1,5 @@
 import gettextjs from 'gettext.js';
-import {debugInfo} from 'appConfig';
+import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem} from 'superdesk-api';
 
 export type IScopeApply = (fn: () => void) => void;
@@ -112,10 +112,12 @@ export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function getVocabularyItemNameTranslated(item: IVocabularyItem, language: string) {
-    if (language == null) {
-        return item.name;
-    }
+export function getVocabularyItemNameTranslated(term: IVocabularyItem, language?: string) {
+    const _language = language ?? getUserInterfaceLanguage();
 
-    return item?.translations?.name?.[language] ?? item.name;
+    // FIXME: Remove replacing _/- when language codes are normalized on the server.
+
+    return term.translations?.name?.[_language]
+        ?? term.translations?.name?.[_language.replace('_', '-')]
+        ?? term.name;
 }
