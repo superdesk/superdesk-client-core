@@ -88,7 +88,7 @@ export function setTansaHtml(editorState, html, simpleReplace?) {
 function getTextFromTag(htmlElement, field, key) {
     const tagElement = htmlElement.querySelector('#' + getHtmlId(field, key));
 
-    return tagElement != null ? tagElement.innerHTML : null;
+    return tagElement != null ? tagElement.innerText : null;
 }
 
 /**
@@ -111,7 +111,11 @@ function getHtmlId(field, key) {
  * @returns {String}
  */
 function getBlockHtml(field, key, text) {
-    return `<p id="${getHtmlId(field, key)}">${text}</p>\n`;
+    const p = document.createElement('p');
+
+    p.id = getHtmlId(field, key);
+    p.innerText = text;
+    return p.outerHTML;
 }
 
 /**

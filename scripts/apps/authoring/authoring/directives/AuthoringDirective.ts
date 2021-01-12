@@ -674,7 +674,7 @@ export function AuthoringDirective(
             function afterTansa(e, isCancelled) {
                 const _editor = editorResolver.get();
 
-                if (_editor && _editor.version() === '3') {
+                if (_editor && _editor.version() === '3' && !isCancelled) {
                     _editor.setHtmlFromTansa($('#editor3Tansa').html());
                 }
             }

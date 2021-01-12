@@ -5,7 +5,7 @@ describe('editor3.helpers.tansa', () => {
     it('should generate the tansa custom html', () => {
         const rawContent = {
             blocks: [
-                {key: '4vu4i', text: 'paragraph1'},
+                {key: '4vu4i', text: 'paragraph1 foo&bar'},
                 {key: '9d99u', text: 'paragraph2'},
             ],
             entityMap: {},
@@ -14,7 +14,7 @@ describe('editor3.helpers.tansa', () => {
         const editorState = Setup.getInitialEditorState(rawContent);
 
         expect(getTansaHtml(editorState)).toEqual(
-            '<p id="text-4vu4i">paragraph1</p>\n<p id="text-9d99u">paragraph2</p>\n');
+            '<p id="text-4vu4i">paragraph1 foo&amp;bar</p><p id="text-9d99u">paragraph2</p>');
     });
 
     it('should update the text added', () => {
@@ -29,13 +29,13 @@ describe('editor3.helpers.tansa', () => {
         let editorState = Setup.getInitialEditorState(rawContent);
 
         editorState = setTansaHtml(editorState,
-            '<p id="text-4vu4i">para-graph-1</p>\n<p id="text-9d99u">para-graph-2</p>\n');
+            '<p id="text-4vu4i">para-graph-1 foo&amp;bar</p>\n<p id="text-9d99u">para-graph-2</p>\n');
 
         const content = editorState.getCurrentContent();
         const firstBlock = content.getFirstBlock();
         const lastBlock = content.getLastBlock();
 
-        expect(firstBlock.getText()).toEqual('para-graph-1');
+        expect(firstBlock.getText()).toEqual('para-graph-1 foo&bar');
         expect(lastBlock.getText()).toEqual('para-graph-2');
     });
 
@@ -86,10 +86,12 @@ describe('editor3.helpers.tansa', () => {
 
         const editorState = Setup.getInitialEditorState(rawContent);
 
-        const tansaHtml = '<p id="description-4vu4i">description</p>\n'
-            + '<p id="alt-4vu4i">alt</p>\n'
-            + '<p id="headline-4vu4i">headline</p>\n'
-            + '<p id="text-9d99u">paragraph2</p>\n';
+        const tansaHtml = [
+            '<p id="description-4vu4i">description</p>',
+            '<p id="alt-4vu4i">alt</p>',
+            '<p id="headline-4vu4i">headline</p>',
+            '<p id="text-9d99u">paragraph2</p>',
+        ].join('');
 
         expect(getTansaHtml(editorState)).toEqual(tansaHtml);
     });
