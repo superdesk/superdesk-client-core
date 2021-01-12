@@ -56,7 +56,7 @@ export const gettext = (
 
     let translated = i18n.gettext(text);
 
-    Object.keys(params).forEach((param) => {
+    Object.keys(params ?? {}).forEach((param) => {
         translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`), params[param]);
     });
 
@@ -89,7 +89,7 @@ export const gettextPlural = (
 
     let translated = i18n.ngettext(text, pluralText, count);
 
-    Object.keys(params).forEach((param) => {
+    Object.keys(params ?? {}).forEach((param) => {
         translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`), params[param]);
     });
 
