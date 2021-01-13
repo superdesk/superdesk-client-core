@@ -1,5 +1,6 @@
 module.exports = {
     options: {
+        markerNamePlural: 'gettextPlural',
         extensions: {
             htm: 'html',
             html: 'html',

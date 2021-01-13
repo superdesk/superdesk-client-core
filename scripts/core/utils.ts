@@ -97,10 +97,6 @@ export const gettextPlural = (
     return translated;
 };
 
-export const gettextCatalog = {
-    getPlural: gettextPlural,
-};
-
 /**
  * Escape given string for reg exp
  *

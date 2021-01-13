@@ -123,6 +123,12 @@ msgstr ""
 msgid "1 hour"
 msgstr ""
 
+#: scripts/core/ArticlesListByQueryWithFilters.tsx:304
+msgid "1 item selected"
+msgid_plural "{{number}} items selected"
+msgstr[0] ""
+msgstr[1] ""
+
 #: ../superdesk-planning/client/actions/multiSelect.js:217
 msgid "1 item was not included in the export."
 msgstr ""
@@ -130,6 +136,12 @@ msgstr ""
 #: ../superdesk-analytics/client/utils.js:209
 msgid "1 minute"
 msgstr ""
+
+#: scripts/apps/authoring/authoring/directives/ReadingTime.ts:35
+msgid "1 minute read"
+msgid_plural "{{x}} minutes read"
+msgstr[0] ""
+msgstr[1] ""
 
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:20
 msgid "1 month"
@@ -2212,6 +2224,12 @@ msgstr ""
 msgid "Character limit settings"
 msgstr ""
 
+#: scripts/apps/authoring/authoring/ValidateCharacters.tsx:23
+msgid "Character {{chars}} not allowed in the {{field}}."
+msgid_plural "Characters {{chars}} not allowed in the {{field}}."
+msgstr[0] ""
+msgstr[1] ""
+
 #: ../superdesk-analytics/client/content_publishing_report/views/content-publishing-report-panel.html:55
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-panel.html:55
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-report-panel.html:55
@@ -3844,6 +3862,12 @@ msgstr ""
 #: ../superdesk-planning/client/services/AssignmentsService.js:274
 msgid "Do you want to link it to that assignment ?"
 msgstr ""
+
+#: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:71
+msgid "Do you want to publish the article?"
+msgid_plural "Do you want to publish the articles?"
+msgstr[0] ""
+msgstr[1] ""
 
 #: scripts/apps/users/directives/UserEditDirective.ts:135
 msgid "Do you want to reload the page now?"
@@ -6624,6 +6648,12 @@ msgstr ""
 msgid "Item updated."
 msgstr ""
 
+#: scripts/apps/authoring/authoring/controllers/AssociationController.ts:165
+msgid "Item was not added. Only 1 item is allowed for this field."
+msgid_plural "Item was not added. Only {{number}} items are allowed in this field."
+msgstr[0] ""
+msgstr[1] ""
+
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:490
 msgid "Item was unpublished successfully."
 msgstr ""
@@ -8223,6 +8253,12 @@ msgstr ""
 #: scripts/apps/users/controllers/UserListController.ts:153
 msgid "Online"
 msgstr ""
+
+#: scripts/apps/authoring/authoring/directives/ItemCarouselDirective.ts:83
+msgid "Only 1 image is allowed in this field"
+msgid_plural "Only {{number}} images are allowed in this field"
+msgstr[0] ""
+msgstr[1] ""
 
 #: ../superdesk-planning/client/components/fields/editor/OnlyPosted.tsx:14
 msgid "Only Posted"
@@ -12094,6 +12130,12 @@ msgstr ""
 msgid "The event(s) have been unspiked"
 msgstr ""
 
+#: scripts/apps/archive/controllers/file-upload-error-modal.tsx:33
+msgid "The file was not uploaded"
+msgid_plural "Some files were not uploaded"
+msgstr[0] ""
+msgstr[1] ""
+
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/spikeEventForm.jsx:108
 msgid "The following Events are in use and will not be spiked:"
 msgstr ""
@@ -14631,6 +14673,12 @@ msgstr ""
 msgid "less than one minute read"
 msgstr ""
 
+#: scripts/apps/authoring/authoring/components/line-count.tsx:21
+msgid "line"
+msgid_plural "lines"
+msgstr[0] ""
+msgstr[1] ""
+
 #: scripts/core/editor2/editor.ts:1083
 msgid "link"
 msgstr ""
@@ -15166,8 +15214,11 @@ msgid "to coverage assignment by"
 msgstr ""
 
 #: scripts/apps/search/components/fields/translations.tsx:38
+#: scripts/apps/search/components/fields/translations.tsx:52
 msgid "translation"
-msgstr ""
+msgid_plural "translations"
+msgstr[0] ""
+msgstr[1] ""
 
 #: scripts/apps/authoring/views/authoring-header.html:84
 msgid "translations"
@@ -15543,6 +15594,13 @@ msgstr ""
 #: ../superdesk-analytics/client/search/directives/DateFilters.js:128
 msgid "{{weeks}} weeks"
 msgstr ""
+
+#: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:71
+#: scripts/extensions/datetimeField/src/getDateTimeField.tsx:119
+msgid "{{x}} hour"
+msgid_plural "{{x}} hours"
+msgstr[0] ""
+msgstr[1] ""
 
 #: scripts/apps/search/components/fields/linesCount.tsx:14
 msgid "{{x}} lines"
