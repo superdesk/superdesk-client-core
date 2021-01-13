@@ -88,8 +88,7 @@ export function setTansaHtml(editorState, html, simpleReplace?) {
 function getTextFromTag(htmlElement, field, key) {
     const tagElement = htmlElement.querySelector('#' + getHtmlId(field, key));
 
-    // second part of tansa workaround now unescaping returned value
-    return tagElement != null ? tagElement.innerText.replace('&amp;', '&') : null;
+    return tagElement != null ? tansaDecode(tagElement.innerText) : null;
 }
 
 /**
@@ -115,12 +114,9 @@ function getBlockHtml(field, key, text) {
     const p = document.createElement('p');
 
     p.id = getHtmlId(field, key);
+    p.innerText = tansaEncode(text);
 
-    // tansa handles &... as entity so we have to
-    // do double escaping as a workaround
-    p.innerText = text.replace('&', '&amp;');
-
-    return p.outerHTML.trim();
+    return p.outerHTML;
 }
 
 /**
@@ -315,4 +311,28 @@ function createSelectionForBlock(editorState, block, offset, size = 0) {
         focusOffset: offset + size,
         isBackward: false,
     });
+}
+
+/**
+ * Tansa uses text from selected element for proofing
+ * but then it parses entities in it so those must be
+ * escaped.
+ */
+function tansaEncode(text: string): string {
+    const div = document.createElement('div');
+
+    div.innerText = text;
+
+    return div.innerHTML;
+}
+
+/**
+ * Decode encoded tansa output.
+ */
+function tansaDecode(text: string): string {
+    const div = document.createElement('div');
+
+    div.innerHTML = text;
+
+    return div.innerText;
 }
