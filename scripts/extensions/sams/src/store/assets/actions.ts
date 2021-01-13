@@ -14,7 +14,7 @@ import {
     MANAGE_ASSETS_EDIT,
     MANAGE_ASSET_UPDATE_IN_STORE,
 } from './types';
-import {samsApi} from '../../apis';
+import {superdeskApi, samsApi} from '../../apis';
 
 // Redux Selectors
 import {
@@ -253,16 +253,32 @@ export function deleteAsset(asset: IAssetItem): IThunkAction<void> {
     };
 }
 
-export function deleteMultipleAssets(): (dispatch: any, getState: any) => void {
+export function deleteAssets(asset?: IAssetItem): IThunkAction<void> {
     return (dispatch, getState) => {
-        const selectedAssets = getSelectedAssetItems(getState());
+        if (asset !== undefined) {
+            return openDeleteConfirmationModal(asset.name)
+                .then((response: boolean) => {
+                    if (response === true) {
+                        dispatch(deleteAsset(asset));
+                    }
+                });
+        } else {
+            const selectedAssets = getSelectedAssetItems(getState());
+            const assetName = (selectedAssets.length === 1) ? selectedAssets[0].name : undefined;
 
-        selectedAssets.map((selectedAsset) =>
-            dispatch(deleteAsset(selectedAsset))
-                .then(() => {
-                    dispatch(closeMultiActionBar());
-                }),
-        );
+            return openDeleteConfirmationModal(assetName, selectedAssets.length)
+                .then((response: boolean) => {
+                    if (response === true) {
+                        selectedAssets.map((selectedAsset) =>
+                            dispatch(deleteAsset(selectedAsset))
+                                .then(() => {
+                                    dispatch(closeMultiActionBar());
+                                }),
+                        );
+                    }
+                    return Promise.resolve();
+                });
+        }
     };
 }
 
@@ -282,4 +298,41 @@ export function loadAssetsByIds(ids: Array<string>): IThunkAction<void> {
                 dispatch(receiveAssets(response));
             });
     };
+}
+
+function openDeleteConfirmationModal(assetName?: string, asset_length?: number): Promise<boolean> {
+    const {gettext} = superdeskApi.localization;
+    const {confirm} = superdeskApi.ui;
+
+    const el = document.createElement('div');
+
+    // FIXME: Add an extra backdrop that will cover the Manage Assets modal
+    // This is required because the ui-framework calculates z-index
+    // based on the number of active modals, where as we're using
+    // a mixture of the ui-framework and pure React modals
+    // (superdeskApi.ui.showModal vs superdeskApi.ui.confirm)
+    el.classList.add('modal__backdrop', 'fade', 'in');
+    el.style.zIndex = '1050';
+    document.body.append(el);
+    if (assetName !== undefined) {
+        return confirm(
+            gettext('Are you sure you want to delete the asset "{{name}}"?', {name: assetName}),
+            gettext('Delete Asset?'),
+        )
+            .then((response: boolean) => {
+                el.remove();
+                return response;
+            });
+    } else if (asset_length !== undefined) {
+        return confirm(
+            gettext('Are you sure you want to delete these {{length}} assets', {length: asset_length}),
+            gettext('Delete Asset?'),
+        )
+            .then((response: boolean) => {
+                el.remove();
+                return response;
+            });
+    } else {
+        return Promise.reject();
+    }
 }
