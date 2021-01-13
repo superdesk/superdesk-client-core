@@ -4,7 +4,7 @@ import {Dispatch} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {IAssetItem, LIST_ACTION} from '../../interfaces';
+import {ASSET_ACTIONS, IAssetCallback, IAssetItem, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {superdeskApi, samsApi} from '../../apis';
 
@@ -14,6 +14,7 @@ import {
     deleteAsset,
     onEditAsset,
     queryAssetsFromCurrentSearch,
+    forceUnlockAsset,
 } from '../../store/assets/actions';
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 
@@ -31,7 +32,7 @@ import {VersionUserDateLines} from '../common/versionUserDateLines';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
-import {getMimetypeHumanReadable} from '../../utils/assets';
+import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/assets';
 
 interface IProps {
     asset?: IAssetItem;
@@ -41,6 +42,7 @@ interface IProps {
     onPanelClosed(): void;
     downloadAsset(asset: Partial<IAssetItem>): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
+    forceUnlockAsset(asset: IAssetItem): void;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
@@ -53,7 +55,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
     onPanelClosed: () => dispatch(closeAssetContentPanel()),
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
-
+    forceUnlockAsset: (asset: IAssetItem) => dispatch<any>(forceUnlockAsset(asset)),
 });
 
 export function downloadAssetBinary(asset: IAssetItem): void {
@@ -83,6 +85,29 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
 
     render() {
         const {gettext} = superdeskApi.localization;
+        const actions: Array<IAssetCallback> =
+            [{
+                action: ASSET_ACTIONS.EDIT,
+                onSelect: this.onEditAsset,
+            },
+            {
+                action: ASSET_ACTIONS.DOWNLOAD,
+                onSelect: this.onDownloadSingleAssetCompressedBinary,
+            },
+            {
+                action: ASSET_ACTIONS.DELETE,
+                onSelect: this.onDeleteAsset,
+            },
+            ];
+
+        if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
+            actions.push({
+                action: ASSET_ACTIONS.FORCE_UNLOCK,
+                onSelect: this.props.forceUnlockAsset,
+            });
+        }
+
+        const newActions = getDropdownItemsForActions(this.props.asset!, actions);
 
         if (this.props.asset?._id == null) {
             return null;
@@ -105,18 +130,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                                         label: gettext('Actions'),
                                         items: [
                                             'divider',
-                                            {
-                                                label: gettext('Edit'), icon: 'trash',
-                                                onSelect: this.onEditAsset,
-                                            },
-                                            {
-                                                label: gettext('Download'), icon: 'download',
-                                                onSelect: this.onDownloadSingleAssetCompressedBinary,
-                                            },
-                                            {
-                                                label: gettext('Delete'), icon: 'trash',
-                                                onSelect: this.onDeleteAsset,
-                                            },
+                                            ...newActions,
                                         ],
                                     },
                                 ]}

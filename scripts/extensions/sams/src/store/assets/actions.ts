@@ -187,6 +187,18 @@ export function unlockAsset(asset: IAssetItem): IThunkAction<Partial<IAssetItem>
     };
 }
 
+export function forceUnlockAsset(asset: IAssetItem): IThunkAction<Partial<IAssetItem>> {
+    return (dispatch, getState) => {
+        return samsApi.assets.unlockAsset(asset, {'force': true})
+            .then((unlockedAsset: Partial<IAssetItem>) => {
+                dispatch(updateAssetInStore(unlockedAsset, asset._id));
+                const getassets = getAssets(getState());
+
+                return getassets[asset._id];
+            });
+    };
+}
+
 export function lockAsset(asset: IAssetItem): (dispatch: any, getState: any) =>
     Promise<void | IAssetItem | Partial<IAssetItem>> {
     return (dispatch, getState) => {

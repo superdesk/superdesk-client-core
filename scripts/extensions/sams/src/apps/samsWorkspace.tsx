@@ -9,16 +9,14 @@ import {connect} from 'react-redux';
 import {
     ASSET_ACTIONS,
     ASSET_LIST_STYLE,
+    IAssetCallback,
     IAssetItem,
     IAssetSearchParams,
     LIST_ACTION,
     ASSET_CONTENT_PANEL_STATE,
 } from '../interfaces';
 import {IApplicationState} from '../store';
-import {samsApi} from '../apis';
-
-// UI
-import {PanelContent} from '../ui';
+import {samsApi, superdeskApi} from '../apis';
 
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
@@ -34,6 +32,7 @@ import {
     updateSelectedAssetIds,
     onEditAsset,
     deleteAsset,
+    forceUnlockAsset,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
@@ -49,6 +48,7 @@ import {toggleFilterPanelState} from '../store/workspace/actions';
 import {isFilterPanelOpen} from '../store/workspace/selectors';
 
 // UI
+import {PanelContent} from '../ui';
 import {SamsApp} from './samsApp';
 import {PageLayout} from '../containers/PageLayout';
 import {AssetListPanel} from '../components/assets/assetListPanel';
@@ -78,6 +78,7 @@ interface IProps {
         listAction: LIST_ACTION,
     ): void;
     toggleFilterPanel(): void;
+    forceUnlockAsset(asset: IAssetItem): void;
     selectedAssets: Array<IAssetItem>;
     contentPanelState: ASSET_CONTENT_PANEL_STATE;
 }
@@ -114,6 +115,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
     onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
+    forceUnlockAsset: (asset: IAssetItem) => dispatch<any>(forceUnlockAsset(asset)),
 });
 
 export function downloadAssetBinary(asset: IAssetItem): void {
@@ -214,6 +216,32 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     render() {
         const ContentPanel = this.getContentPanelComponent();
 
+        const actions: Array<IAssetCallback> =
+            [{
+                action: ASSET_ACTIONS.EDIT,
+                onSelect: this.onEditAsset,
+            },
+            {
+                action: ASSET_ACTIONS.DOWNLOAD,
+                onSelect: this.onDownloadSingleAssetCompressedBinary,
+            },
+            {
+                action: ASSET_ACTIONS.PREVIEW,
+                onSelect: this.props.previewAsset,
+            },
+            {
+                action: ASSET_ACTIONS.DELETE,
+                onSelect: this.onDeleteAsset,
+            },
+            ];
+
+        if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
+            actions.push({
+                action: ASSET_ACTIONS.FORCE_UNLOCK,
+                onSelect: this.props.forceUnlockAsset,
+            });
+        }
+
         return (
             <div className="sd-page">
                 <PageLayout
@@ -254,23 +282,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
                             updateSelectedAssetIds={this.onMultiActionBar}
-                            actions={[{
-                                action: ASSET_ACTIONS.EDIT,
-                                onSelect: this.onEditAsset,
-                            },
-                            {
-                                action: ASSET_ACTIONS.PREVIEW,
-                                onSelect: this.props.previewAsset,
-                            },
-                            {
-                                action: ASSET_ACTIONS.DOWNLOAD,
-                                onSelect: this.onDownloadSingleAssetCompressedBinary,
-                            },
-                            {
-                                action: ASSET_ACTIONS.DELETE,
-                                onSelect: this.onDeleteAsset,
-                            },
-                            ]}
+                            actions={actions}
                         />
                     )}
                 />
