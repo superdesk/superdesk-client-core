@@ -1,7 +1,7 @@
 import {compact, trim, filter} from 'lodash';
 import {cleanHtml} from '../helpers';
 import {appConfig} from 'appConfig';
-import {applyDefault} from 'core/helpers/typescript-helpers';
+import {gettext, gettextPlural} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -17,10 +17,8 @@ export function ReadingTime() {
             html: '@',
             language: '=',
         },
-        template: '<span ng-if="readingTime===0" class="char-count reading-time" translate>' +
-            'less than one minute read</span>' +
-            '<span ng-if="readingTime>0" class="char-count reading-time" translate>' +
-            '{{readingTime}} min read</span>',
+        // tslint:disable-next-line: max-line-length
+        template: `<span class="char-count reading-time">{{readingTime === 0 ? getReadingTimeLabelLessThanMinute() : getReadingTimeLabel(readingTime)}}</span>`,
         link: function ReadingTimeLink(scope, elem, attrs) {
             const timeToRead = appConfig.authoring == null || appConfig.authoring.timeToRead == null
                 ? true
@@ -30,6 +28,10 @@ export function ReadingTime() {
                 scope.readingTime = null;
                 return;
             }
+
+            scope.getReadingTimeLabel = (minutes) => gettext('{{x}} min read', {x: minutes});
+
+            scope.getReadingTimeLabelLessThanMinute = () => gettext('less than one minute read');
 
             scope.$watchGroup(['item', 'language'], () => {
                 let {html, item, language} = scope;
