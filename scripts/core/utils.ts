@@ -52,7 +52,10 @@ export const gettext = (
     }
 
     if (debugInfo.translationsLoaded !== true) {
-        console.error(`Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`);
+        console.warn(
+            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
+            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
+        );
     }
 
     let translated = i18n.gettext(text);
@@ -85,7 +88,10 @@ export const gettextPlural = (
     }
 
     if (debugInfo.translationsLoaded !== true) {
-        console.error(`Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`);
+        console.warn(
+            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
+            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
+        );
     }
 
     let translated = i18n.ngettext(text, pluralText, count);
