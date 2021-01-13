@@ -137,12 +137,6 @@ msgstr ""
 msgid "1 minute"
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/ReadingTime.ts:35
-msgid "1 minute read"
-msgid_plural "{{x}} minutes read"
-msgstr[0] ""
-msgstr[1] ""
-
 #: scripts/apps/publish/controllers/SubscriberTokenController.ts:20
 msgid "1 month"
 msgstr ""
@@ -723,6 +717,10 @@ msgstr ""
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningItem.jsx:113
 msgid "Add to Feature Stories"
+msgstr ""
+
+#: ../superdesk-planning/index.ts:45
+msgid "Add to Planning"
 msgstr ""
 
 #: scripts/apps/packaging/index.ts:73
@@ -1568,6 +1566,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/Assignments/SubNavBar.jsx:35
 #: ../superdesk-planning/client/controllers/AssignmentController.js:34
 #: ../superdesk-planning/client/index.js:56
+#: ../superdesk-planning/index.ts:26
 msgid "Assignments"
 msgstr ""
 
@@ -5771,6 +5770,7 @@ msgid "From:"
 msgstr ""
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPreviewContainer/index.jsx:123
+#: ../superdesk-planning/index.ts:80
 msgid "Fulfil Assignment"
 msgstr ""
 
@@ -7181,6 +7181,11 @@ msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Manage Global Saved Searches"
+msgstr ""
+
+#: ../superdesk-planning/index.ts:33
+#: ../superdesk-planning/index.ts:34
+msgid "Manage Locations"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:18
@@ -8793,6 +8798,11 @@ msgstr ""
 #: ../superdesk-planning/client/index.js:66
 #: ../superdesk-planning/client/utils/eventsplanning.ts:19
 #: ../superdesk-planning/client/utils/history.js:75
+#: ../superdesk-planning/index.ts:121
+#: ../superdesk-planning/index.ts:18
+#: ../superdesk-planning/index.ts:19
+#: ../superdesk-planning/index.ts:60
+#: ../superdesk-planning/index.ts:95
 #: scripts/apps/users/views/user-preferences.html:152
 msgid "Planning"
 msgstr ""
@@ -11325,7 +11335,7 @@ msgstr ""
 msgid "Sorry, but image must be at least {{width}}x{{height}}."
 msgstr ""
 
-#: scripts/apps/authoring/attachments/actions.ts:40
+#: scripts/apps/authoring/attachments/actions.ts:44
 msgid "Sorry, but some files \"{{filenames}}\" are bigger than limit ({{limit}})."
 msgstr ""
 
@@ -12849,7 +12859,7 @@ msgstr ""
 msgid "Too long"
 msgstr ""
 
-#: scripts/apps/authoring/attachments/actions.ts:29
+#: scripts/apps/authoring/attachments/actions.ts:30
 msgid "Too many files selected. Only 1 file is allowed."
 msgid_plural "Too many files selected. Only {{$count}} files are allowed."
 msgstr[0] ""
@@ -13077,6 +13087,10 @@ msgstr ""
 
 #: ../superdesk-analytics/client/utils.js:159
 msgid "Unlink"
+msgstr ""
+
+#: ../superdesk-planning/index.ts:107
+msgid "Unlink as Coverage"
 msgstr ""
 
 #: scripts/apps/archive/index.tsx:314
@@ -14112,7 +14126,7 @@ msgstr ""
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:37
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:130
 #: scripts/core/lang/missing-translations-strings.ts:9
-#: scripts/core/utils.ts:129
+#: scripts/core/utils.ts:125
 msgid "audio"
 msgstr ""
 
@@ -14191,7 +14205,7 @@ msgid "compact"
 msgstr ""
 
 #: scripts/core/lang/missing-translations-strings.ts:9
-#: scripts/core/utils.ts:131
+#: scripts/core/utils.ts:127
 msgid "composite"
 msgstr ""
 
@@ -14530,7 +14544,7 @@ msgstr ""
 #: ../superdesk-planning/client/constants/planning.js:106
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:33
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:126
-#: scripts/core/utils.ts:133
+#: scripts/core/utils.ts:129
 msgid "graphic"
 msgstr ""
 
@@ -14669,7 +14683,7 @@ msgstr ""
 msgid "last update and last item arrived."
 msgstr ""
 
-#: scripts/apps/authoring/authoring/directives/ReadingTime.ts:37
+#: scripts/apps/authoring/authoring/directives/ReadingTime.ts:34
 msgid "less than one minute read"
 msgstr ""
 
@@ -14914,7 +14928,7 @@ msgstr ""
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:32
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:125
 #: scripts/core/lang/missing-translations-strings.ts:9
-#: scripts/core/utils.ts:135
+#: scripts/core/utils.ts:131
 msgid "picture"
 msgstr ""
 
@@ -14947,7 +14961,7 @@ msgid "posted"
 msgstr ""
 
 #: scripts/core/editor3/helpers/highlights.ts:68
-#: scripts/core/utils.ts:137
+#: scripts/core/utils.ts:133
 msgid "preformatted"
 msgstr ""
 
@@ -15195,7 +15209,7 @@ msgstr ""
 #: scripts/apps/workspace/helpers/getTypeForFieldId.ts:6
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:124
 #: scripts/core/lang/missing-translations-strings.ts:9
-#: scripts/core/utils.ts:139
+#: scripts/core/utils.ts:135
 msgid "text"
 msgstr ""
 
@@ -15338,7 +15352,7 @@ msgstr ""
 #: scripts/apps/monitoring/controllers/AggregateCtrl.ts:36
 #: scripts/core/ArticlesListByQueryWithFilters.tsx:129
 #: scripts/core/lang/missing-translations-strings.ts:9
-#: scripts/core/utils.ts:141
+#: scripts/core/utils.ts:137
 msgid "video"
 msgstr ""
 
@@ -15609,4 +15623,8 @@ msgstr ""
 #: scripts/extensions/datetimeField/dist/src/getDateTimeField.js:74
 #: scripts/extensions/datetimeField/src/getDateTimeField.tsx:128
 msgid "{{x}} min"
+msgstr ""
+
+#: scripts/apps/authoring/authoring/directives/ReadingTime.ts:32
+msgid "{{x}} min read"
 msgstr ""

@@ -18,12 +18,12 @@ module.exports = {
                 '!scripts/**/*.d.ts',
 
                 // planning
-                '../superdesk-planning/index.js',
+                '../superdesk-planning/index.{js,jsx,ts,tsx}',
                 '../superdesk-planning/client/**/*.{html,js,jsx,tsx,ts}',
                 '!../superdesk-planning/client/planning-extension/node_modules/**/*',
 
                 // analytics
-                '../superdesk-analytics/index.js',
+                '../superdesk-analytics/index.{js,jsx,ts,tsx}',
                 '../superdesk-analytics/client/**/*.{html,js,jsx,tsx,ts}',
             ],
         },
