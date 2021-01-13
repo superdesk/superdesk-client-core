@@ -22,6 +22,7 @@ import {superdeskApi} from '../apis';
 // Redux Actions & Selectors
 import {getStore} from '../store';
 import {loadSets} from '../store/sets/actions';
+import {getSetsById} from '../store/sets/selectors';
 
 // Utils
 import {fixItemResponseVersionDates, fixItemVersionDates} from './common';
@@ -585,4 +586,14 @@ export function unlockAsset(original: IAssetItem, updates: Dictionary<string, an
 
             return Promise.reject(error);
         });
+}
+
+export function getSetsSync(): Dictionary<string, ISetItem> {
+    const store = getStore();
+
+    if (store === undefined) {
+        throw new Error('SAMS store has not been initialised');
+    }
+
+    return getSetsById(store.getState());
 }
