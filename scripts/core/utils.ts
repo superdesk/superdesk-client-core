@@ -1,6 +1,7 @@
 import gettextjs from 'gettext.js';
 import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
-import {IVocabularyItem} from 'superdesk-api';
+import {IVocabularyItem, IArticle} from 'superdesk-api';
+import {assertNever} from './helpers/typescript-helpers';
 
 export type IScopeApply = (fn: () => void) => void;
 
@@ -120,4 +121,25 @@ export function getVocabularyItemNameTranslated(term: IVocabularyItem, language?
     return term.translations?.name?.[_language]
         ?? term.translations?.name?.[_language.replace('_', '-')]
         ?? term.name;
+}
+
+export function translateArticleType(type: IArticle['type']) {
+    switch (type) {
+        case 'audio':
+            return gettext('audio');
+        case 'composite':
+            return gettext('composite');
+        case 'graphic':
+            return gettext('graphic');
+        case 'picture':
+            return gettext('picture');
+        case 'preformatted':
+            return gettext('preformatted');
+        case 'text':
+            return gettext('text');
+        case 'video':
+            return gettext('video');
+        default:
+            assertNever(type);
+    }
 }
