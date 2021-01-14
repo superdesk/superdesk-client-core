@@ -18,6 +18,8 @@ import * as svc from './services';
 import {gettext} from 'core/utils';
 
 import {dashboardRoute} from 'appConfig';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {WidgetReact} from './widget-react';
 
 angular.module('superdesk.apps.dashboard.widgets', [])
     .provider('dashboardWidgets', svc.DashboardWidgets);
@@ -71,4 +73,11 @@ angular.module('superdesk.apps.dashboard', [
         });
     }]);
 
-angular.module('superdesk.apps.dashboard').directive('sdWidget', directive.Widget);
+angular.module('superdesk.apps.dashboard')
+    .component('sdWidgetReact',
+        reactToAngular1(
+            WidgetReact,
+            ['widget', 'article'],
+        ),
+    )
+    .directive('sdWidget', directive.Widget);
