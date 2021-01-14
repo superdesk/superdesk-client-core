@@ -18,7 +18,7 @@ export function ReadingTime() {
             language: '=',
         },
         // tslint:disable-next-line: max-line-length
-        template: `<span class="char-count reading-time">{{readingTime === 0 ? getReadingTimeLabelLessThanMinute() : getReadingTimeLabel(readingTime)}}</span>`,
+        template: '<span class="char-count reading-time">{{readingTime === 0 ? getReadingTimeLabelLessThanMinute() : getReadingTimeLabel(readingTime)}}</span>',
         link: function ReadingTimeLink(scope, elem, attrs) {
             const timeToRead = appConfig.authoring == null || appConfig.authoring.timeToRead == null
                 ? true
