@@ -269,12 +269,13 @@ export function deleteAssets(asset?: IAssetItem): IThunkAction<void> {
             return openDeleteConfirmationModal(assetName, selectedAssets.length)
                 .then((response: boolean) => {
                     if (response === true) {
-                        selectedAssets.map((selectedAsset) =>
-                            dispatch(deleteAsset(selectedAsset))
-                                .then(() => {
-                                    dispatch(closeMultiActionBar());
-                                }),
-                        );
+                        Promise.all(
+                            selectedAssets.map(
+                                (selectedAsset) => dispatch(deleteAsset(selectedAsset)),
+                            ),
+                        ).finally(() => {
+                            dispatch(closeMultiActionBar());
+                        });
                     }
                     return Promise.resolve();
                 });
