@@ -73,7 +73,7 @@ export class WidgetItem extends React.Component<IProps, any> {
                     />
                 </div>
                 <div className="content-item__urgency-field">
-                    <ItemUrgency svc={this.props.svc} item={this.item} />
+                    <ItemUrgency urgency={this.item.urgency} language={this.item.language} />
                 </div>
                 <div className="content-item__text">
                     <span className="keywords">{this.item.slugline}</span>
