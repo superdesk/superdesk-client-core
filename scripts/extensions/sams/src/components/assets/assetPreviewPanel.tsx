@@ -11,7 +11,7 @@ import {superdeskApi, samsApi} from '../../apis';
 // Redux Actions & Selectors
 import {
     closeAssetContentPanel,
-    deleteAsset,
+    deleteAssets,
     onEditAsset,
     queryAssetsFromCurrentSearch,
     forceUnlockAsset,
@@ -52,7 +52,7 @@ const mapStateToProps = (state: IApplicationState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
-    deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
+    deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAssets(asset)),
     onPanelClosed: () => dispatch(closeAssetContentPanel()),
     queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
     forceUnlockAsset: (asset: IAssetItem) => dispatch<any>(forceUnlockAsset(asset)),

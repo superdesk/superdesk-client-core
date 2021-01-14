@@ -29,7 +29,7 @@ import {toggleFilterPanelState} from '../store/workspace/actions';
 import {toggleAssetListStyle,
     updateAssetSearchParamsAndListItems,
     closeMultiActionBar,
-    deleteMultipleAssets,
+    deleteAssets,
 } from '../store/assets/actions';
 
 // UI
@@ -97,7 +97,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
         );
     },
     closeMultiActionBar: () => dispatch(closeMultiActionBar()),
-    deleteMultipleAssets: () => dispatch<any>(deleteMultipleAssets()),
+    deleteMultipleAssets: () => dispatch<any>(deleteAssets()),
 });
 
 export function downloadCompressedBinary(asset_ids: Array<string>): void {

@@ -31,7 +31,7 @@ import {
     updateAssetSearchParamsAndListItemsFromURL,
     updateSelectedAssetIds,
     onEditAsset,
-    deleteAsset,
+    deleteAssets,
     forceUnlockAsset,
 } from '../store/assets/actions';
 import {
@@ -114,7 +114,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
     onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
-    deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAsset(asset)),
+    deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAssets(asset)),
     forceUnlockAsset: (asset: IAssetItem) => dispatch<any>(forceUnlockAsset(asset)),
 });
 
