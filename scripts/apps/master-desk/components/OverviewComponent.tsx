@@ -166,7 +166,10 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                                                                 />
                                                             </div>
                                                             <div className="content-item__urgency-field">
-                                                                <ItemUrgency item={item} />
+                                                                <ItemUrgency
+                                                                    urgency={item.urgency}
+                                                                    language={item.language}
+                                                                />
                                                             </div>
                                                             <div className="content-item__text">
                                                                 <span className="keywords">{item.slugline}</span>
