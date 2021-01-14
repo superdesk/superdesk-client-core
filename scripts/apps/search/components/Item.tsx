@@ -21,6 +21,8 @@ import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
 import {IScopeApply} from 'core/utils';
 import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {IActivityService} from 'core/activity/activity';
+import {IActivity} from 'superdesk-interfaces/Activity';
 
 function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -135,7 +137,7 @@ export class Item extends React.Component<IProps, IState> {
     loadPlanningModals() {
         const session = ng.get('session');
         const superdesk = ng.get('superdesk');
-        const activityService = ng.get('activityService');
+        const activityService: IActivityService = ng.get('activityService');
 
         if (!['add_to_planning', 'fulfil_assignment'].includes(get(this.props, 'item.lock_action')) ||
                 get(this.props, 'item.lock_user') !== session.identity._id ||
@@ -143,7 +145,7 @@ export class Item extends React.Component<IProps, IState> {
             return;
         }
 
-        let planningActivity;
+        let planningActivity: IActivity | null;
         const activities = superdesk.findActivities({action: 'list', type: 'archive'},
             this.props.item);
 
@@ -153,6 +155,15 @@ export class Item extends React.Component<IProps, IState> {
             planningActivity = activities.find((a) => a._id === 'planning.addto');
         } else if (this.props.item.lock_action === 'fulfil_assignment') {
             planningActivity = activities.find((a) => a._id === 'planning.fulfil');
+        }
+
+        const openActivities = activityService.activityStack || [];
+
+        // Item list is rerendered from planning on certain actions and this will trigger
+        // opening a modal that might be open already (without page refresh)
+        if (openActivities.find(({activity}) => activity._id === planningActivity._id) != null) {
+            // if activity is open already, don't do anything
+            return;
         }
 
         if (planningActivity) {
