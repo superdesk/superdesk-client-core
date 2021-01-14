@@ -1,3 +1,4 @@
+var path = require('path');
 var grunt = require('grunt');
 var makeConfig = require('./webpack.config.js');
 
@@ -36,7 +37,7 @@ module.exports = function(config) {
             progress: false,
             // quiet: true
             watchOptions: {
-                ignored: /extensions/,
+                ignored: path.join(__dirname, 'scripts', 'extensions'),
             },
         },
 
