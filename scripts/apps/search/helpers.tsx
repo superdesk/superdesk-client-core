@@ -17,8 +17,8 @@ export function getSpecStyle(spec) {
     return style;
 }
 
-export function getSpecTitle(spec, title) {
-    return spec.name ? `${title}: ${getVocabularyItemNameTranslated(spec)}` : title;
+export function getSpecTitle(spec, title, language: string) {
+    return spec.name ? `${title}: ${getVocabularyItemNameTranslated(spec, language)}` : title;
 }
 
 export function getSpecValue(spec, value) {
