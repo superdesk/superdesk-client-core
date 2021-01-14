@@ -1,12 +1,12 @@
 // widgets-article.scss
 // Widget styling for article edit and packaging screen
 // ----------------------------------------------------------------------------------------
-@import '~mixins.scss';
-@import '~variables.scss';
+@import "~variables.scss";
+@import "~superdesk-ui-framework/app/styles/_mixins.scss";
 
 .widget-wrapper {
     position: absolute;
-    top:0;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
@@ -39,10 +39,10 @@
 
 .tabpane {
     .sd-widget {
-        width: auto; 
+        width: auto;
         height: 100%;
         position: relative;
-        border:0;
+        border: 0;
         .widget-line {
             display: none;
         }
@@ -58,6 +58,13 @@
                 padding: 0 1rem;
                 font-weight: 400;
             }
+            .widget-actions {
+                margin-left: auto;
+                margin-right: 10px;
+            }
+        }
+        .widget__sliding-toolbar {
+            @include sliding-toolbar;
         }
         .widget-settings {
             top: 8px;
@@ -88,7 +95,7 @@
             .nav-tabs {
                 padding: 0 6px;
                 background-color: $white;
-                @include box-shadow(0 1px 0 0 rgba(0, 0, 0, 0.1));
+                @include box-shadow(0, 1px, 0, 0, rgba(0, 0, 0, 0.1));
             }
             .widget-content-padding {
                 padding: 10px;
@@ -116,6 +123,10 @@
             grid-column: 1/2;
             position: relative;
         }
+    }
+
+    sd-widget-react > div {
+        display: contents;
     }
 }
 

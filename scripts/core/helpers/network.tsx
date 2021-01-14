@@ -1,23 +1,7 @@
 import ng from 'core/services/ng';
 import {logger} from 'core/services/logger';
 import {appConfig} from '../../appConfig';
-
-interface IHttpRequestOptions {
-    method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
-    url: string; // absolute url
-    payload?: {};
-    headers?: {[key: string]: any};
-    urlParams?: {[key: string]: any};
-}
-
-interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
-    path: string; // relative to application server
-}
-
-interface IHttpRequestJsonOptionsLocal extends IHttpRequestOptionsLocal {
-    // JSON not available with DELETE method
-    method: 'GET' | 'POST' | 'PATCH' | 'PUT';
-}
+import {IHttpRequestOptions, IHttpRequestJsonOptionsLocal, IHttpRequestOptionsLocal} from 'superdesk-api';
 
 interface IHttpLocalApiErrorResponse {
     _error: {

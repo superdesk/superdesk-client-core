@@ -247,6 +247,9 @@
                                         <button class="icn-btn" ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
                                             <i class="icon-trash"></i>
                                         </button>
+                                        <button class="icn-btn" ng-click="tokens.copy(token._id)" title="{{ :: 'Copy' | translate }}">
+                                            <i class="icon-copy"></i>
+                                        </button>
                                     </div>
                                 </li>
 
@@ -281,7 +284,6 @@
                                         translate>Generate token</button>
                                     </div>
                                 </div>
-                                <span sd-switch ng-model="tokens.neverExpire"></span><label translate>Never Expire</label>
                             </fieldset>
                         </div>
                     </div>

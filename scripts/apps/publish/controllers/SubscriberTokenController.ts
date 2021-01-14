@@ -1,5 +1,6 @@
 import moment from 'moment';
 import {gettext} from 'core/utils';
+import {copyString} from 'core/helpers/utils';
 
 /**
  * @ngdoc controller
@@ -12,6 +13,7 @@ import {gettext} from 'core/utils';
 export function SubscriberTokenController($scope, api, $rootScope) {
     const subscriber = $scope.subscriber;
 
+    this.copy = copyString;
     this.tokens = [];
 
     this.getExpiryFields = [
@@ -23,6 +25,7 @@ export function SubscriberTokenController($scope, api, $rootScope) {
         {days: gettext('2 years'), value: 730},
         {days: gettext('5 years'), value: 1825},
         {days: gettext('10 years'), value: 3650},
+        {days: gettext('Never expire'), value: 0},
     ];
 
     const fetchTokens = () => {
@@ -52,7 +55,7 @@ export function SubscriberTokenController($scope, api, $rootScope) {
     this.generate = (ttl) =>
         api.save('subscriber_token', {
             subscriber: subscriber._id,
-            expiry_days: this.neverExpire ? 0 : ttl,
+            expiry_days: ttl,
         }).then(fetchTokens);
 
     /**
@@ -71,8 +74,6 @@ export function SubscriberTokenController($scope, api, $rootScope) {
      * @description Default time to live value for new tokens.
      */
     this.ttl = '7'; // default ttl
-
-    this.neverExpire = false;
 
     // init
     fetchTokens();
