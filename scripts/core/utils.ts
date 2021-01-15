@@ -1,6 +1,7 @@
 import gettextjs from 'gettext.js';
-import {debugInfo} from 'appConfig';
-import {IVocabularyItem} from 'superdesk-api';
+import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
+import {IVocabularyItem, IArticle} from 'superdesk-api';
+import {assertNever} from './helpers/typescript-helpers';
 
 export type IScopeApply = (fn: () => void) => void;
 
@@ -51,12 +52,15 @@ export const gettext = (
     }
 
     if (debugInfo.translationsLoaded !== true) {
-        console.error(`Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`);
+        console.warn(
+            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
+            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
+        );
     }
 
     let translated = i18n.gettext(text);
 
-    Object.keys(params).forEach((param) => {
+    Object.keys(params ?? {}).forEach((param) => {
         translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`), params[param]);
     });
 
@@ -84,20 +88,19 @@ export const gettextPlural = (
     }
 
     if (debugInfo.translationsLoaded !== true) {
-        console.error(`Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`);
+        console.warn(
+            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
+            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
+        );
     }
 
     let translated = i18n.ngettext(text, pluralText, count);
 
-    Object.keys(params).forEach((param) => {
+    Object.keys(params ?? {}).forEach((param) => {
         translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`), params[param]);
     });
 
     return translated;
-};
-
-export const gettextCatalog = {
-    getPlural: gettextPlural,
 };
 
 /**
@@ -112,10 +115,33 @@ export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function getVocabularyItemNameTranslated(item: IVocabularyItem, language: string) {
-    if (language == null) {
-        return item.name;
-    }
+export function getVocabularyItemNameTranslated(term: IVocabularyItem, language?: string) {
+    const _language = language ?? getUserInterfaceLanguage();
 
-    return item?.translations?.name?.[language] ?? item.name;
+    // FIXME: Remove replacing _/- when language codes are normalized on the server.
+
+    return term.translations?.name?.[_language]
+        ?? term.translations?.name?.[_language.replace('_', '-')]
+        ?? term.name;
+}
+
+export function translateArticleType(type: IArticle['type']) {
+    switch (type) {
+    case 'audio':
+        return gettext('audio');
+    case 'composite':
+        return gettext('composite');
+    case 'graphic':
+        return gettext('graphic');
+    case 'picture':
+        return gettext('picture');
+    case 'preformatted':
+        return gettext('preformatted');
+    case 'text':
+        return gettext('text');
+    case 'video':
+        return gettext('video');
+    default:
+        assertNever(type);
+    }
 }
