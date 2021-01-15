@@ -69,7 +69,10 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
         let total = 0;
 
         if (this.state.deskData && this.state.deskData[desk._id]) {
-            this.state.deskData[desk._id].forEach((item) => total += item ? item.count : 0);
+            this.state.deskData[desk._id].forEach((item) => 
+                this.assignmentStages.some(stage =>
+                    stage.code === item.state ? (total += item ? item.count : 0) : false)
+            );
         }
 
         return total;
