@@ -2,12 +2,6 @@ const execSync = require('child_process').execSync;
 const fs = require('fs');
 const path = require('path');
 
-function directoryName(path) {
-    const parts = path.split('/');
-
-    return parts[parts.length - 2];
-}
-
 function copyFolderSync(from, to) {
     fs.mkdirSync(to);
     fs.readdirSync(from).forEach((element) => {
@@ -19,9 +13,15 @@ function copyFolderSync(from, to) {
     });
 }
 
+let copied = false;
+
 const clientCoreRoot = path.join(__dirname, '../');
 const maybeParentModulePath = path.join(clientCoreRoot, '../../');
-const mainDirectory = directoryName(maybeParentModulePath) === 'client' ? maybeParentModulePath : clientCoreRoot;
+
+// If node_modules exists in `maybeParentModulePath` set it as mainDirectory where patches will be put
+const mainDirectory = fs.existsSync(path.join(maybeParentModulePath, 'node_modules'))
+    ? maybeParentModulePath
+    : clientCoreRoot;
 
 const patchesCurrentDir = path.join(clientCoreRoot, 'patches');
 const patchesDestinationDir = path.join(mainDirectory, 'patches');
@@ -31,9 +31,14 @@ if (patchesCurrentDir !== patchesDestinationDir) {
         fs.rmdirSync(patchesDestinationDir, {recursive: true});
     }
     copyFolderSync(patchesCurrentDir, patchesDestinationDir);
+    copied = true;
 }
 
 execSync(
     `cd ${mainDirectory} && npx patch-package`,
     {stdio: 'inherit'}
 );
+
+if (copied) { // remove copied directory from a parent project after patching
+    fs.rmdirSync(patchesDestinationDir, {recursive: true});
+}
