@@ -19,7 +19,9 @@ const clientCoreRoot = path.join(__dirname, '../');
 const maybeParentModulePath = path.join(clientCoreRoot, '../../');
 
 // If node_modules exists in `maybeParentModulePath` set it as mainDirectory where patches will be put
-const mainDirectory = fs.existsSync(path.join(maybeParentModulePath, 'node_modules')) ? maybeParentModulePath : clientCoreRoot;
+const mainDirectory = fs.existsSync(path.join(maybeParentModulePath, 'node_modules'))
+    ? maybeParentModulePath
+    : clientCoreRoot;
 
 const patchesCurrentDir = path.join(clientCoreRoot, 'patches');
 const patchesDestinationDir = path.join(mainDirectory, 'patches');
