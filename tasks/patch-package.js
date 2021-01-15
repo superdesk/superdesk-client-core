@@ -13,6 +13,8 @@ function copyFolderSync(from, to) {
     });
 }
 
+let copied = false;
+
 const clientCoreRoot = path.join(__dirname, '../');
 const maybeParentModulePath = path.join(clientCoreRoot, '../../');
 
@@ -27,9 +29,14 @@ if (patchesCurrentDir !== patchesDestinationDir) {
         fs.rmdirSync(patchesDestinationDir, {recursive: true});
     }
     copyFolderSync(patchesCurrentDir, patchesDestinationDir);
+    copied = true;
 }
 
 execSync(
     `cd ${mainDirectory} && npx patch-package`,
     {stdio: 'inherit'}
 );
+
+if (copied) { // remove copied directory from a parent project after patching
+    fs.rmdirSync(patchesDestinationDir, {recursive: true});
+}
