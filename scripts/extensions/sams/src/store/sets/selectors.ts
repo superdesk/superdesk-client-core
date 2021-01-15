@@ -38,6 +38,17 @@ export function getDisabledSets(state: IApplicationState): Array<ISetItem> {
     );
 }
 
+export function getDisabledSetIds(state: IApplicationState): Array<string> {
+    const disabledSets = getDisabledSets(state);
+
+    let disabledSetIds: Array<string> = [];
+
+    disabledSets.forEach((set) => {
+        disabledSetIds.push(set._id);
+    });
+    return disabledSetIds;
+}
+
 export const getSetsById = createSelector<IApplicationState, Array<ISetItem>, Dictionary<string, ISetItem>>(
     [getSets],
     (sets: Array<ISetItem>) => {

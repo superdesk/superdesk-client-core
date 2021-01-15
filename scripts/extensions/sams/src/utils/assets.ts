@@ -2,6 +2,7 @@ import {ASSET_ACTIONS, IAssetAction, IAssetItem, IAssetCallback} from '../interf
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
 
 import {superdeskApi} from '../apis';
+import {getSetsSync} from '../api/assets';
 
 export function getAction(assetCallback: IAssetCallback): IAssetAction {
     const {gettext} = superdeskApi.localization;
@@ -38,7 +39,7 @@ export function getAction(assetCallback: IAssetCallback): IAssetAction {
             label: gettext('Edit'),
             icon: 'pencil',
             onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null,
+            isAllowed: (asset) => asset._created != null && isSetDisabled(asset),
         };
     case ASSET_ACTIONS.FORCE_UNLOCK:
         return {
@@ -118,5 +119,15 @@ export function isAssetLocked(asset: Partial<IAssetItem>): boolean {
         return true;
     } else {
         return false;
+    }
+}
+
+export function isSetDisabled(asset: Partial<IAssetItem>): boolean {
+    const sets = getSetsSync();
+
+    if (sets[asset.set_id!].state === 'disabled') {
+        return false;
+    } else {
+        return true;
     }
 }

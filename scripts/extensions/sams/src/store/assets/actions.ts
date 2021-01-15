@@ -25,6 +25,7 @@ import {
     getSelectedAssetItems,
     getAssets,
 } from './selectors';
+import {getDisabledSetIds} from '../sets/selectors';
 
 // Utils
 import {verifyAssetBeforeLocking} from '../../utils/assets';
@@ -215,12 +216,16 @@ export function lockAsset(asset: IAssetItem): (dispatch: any, getState: any) =>
     };
 }
 
-export function onEditAsset(asset: IAssetItem): (dispatch: any) => void {
-    return (dispatch) => {
-        dispatch(lockAsset(asset))
-            .then(() => {
-                dispatch(editAsset(asset._id));
-            });
+export function onEditAsset(asset: IAssetItem): (dispatch: any, getState: any) => void {
+    return (dispatch, getState) => {
+        const disabledSetIds = getDisabledSetIds(getState());
+
+        if (disabledSetIds.indexOf(asset.set_id) === -1) {
+            dispatch(lockAsset(asset))
+                .then(() => {
+                    dispatch(editAsset(asset._id));
+                });
+        }
     };
 }
 
