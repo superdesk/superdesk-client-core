@@ -4,8 +4,10 @@ import MetaPlaceDirective from './MetaPlaceDirective';
 import {getVocabularySelectionTypes} from '../../vocabularies/constants';
 import {gettext, getVocabularyItemNameTranslated} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
-import {appConfig, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig} from 'appConfig';
 import {ISubject} from 'superdesk-api';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {MetaDataDropdownSingleSelectReact} from './views/MetaDataDropdownSingleSelectReact';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
@@ -392,6 +394,9 @@ function MetaDropdownDirective($filter, metadata) {
                 if (scope.values) {
                     scope.selected = scope.values[fieldObject[scope.field]] || null;
                 }
+
+                // is needed when `select` is called from react component e.g. MetaDataDropdownSingleSelectReact
+                scope.$applyAsync();
             };
 
             scope.$watch(':: list', () => {
@@ -1417,6 +1422,20 @@ angular.module('superdesk.apps.authoring.metadata', [
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)
+    .component(
+        'sdMetaDataDropdownSingleSelectReact',
+        reactToAngular1(
+            MetaDataDropdownSingleSelectReact,
+            [
+                'selectedItemLabel',
+                'options',
+                'onChange',
+                'tabIndex',
+                'disabled',
+                'language',
+            ],
+        ),
+    )
     .directive('sdMetaWordsList', MetaWordsListDirective)
     .directive('sdMetadropdownFocus', MetadropdownFocusDirective)
     .directive('sdMetaLocators', MetaLocatorsDirective)
