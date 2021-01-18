@@ -95,7 +95,7 @@ export function DeskConfigController($scope, $controller, notify, desks, modal) 
             gettext('Save'),
             gettext('Ignore'))
             .then(() => {
-                return desks.save(updatedDesk, diff).then((res) => {
+                return desks.save($scope.desk.orig, diff).then((res) => {
                     _.merge($scope.desk.edit, res);
                     _.merge($scope.desk.orig, res);
                     return true;
