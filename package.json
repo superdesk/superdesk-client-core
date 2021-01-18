@@ -152,7 +152,8 @@
     "react-test-renderer": "^16.13.1",
     "request": "^2.88.2",
     "superdesk-code-style": "1.5.0",
-    "typescript-eslint-parser": "^18.0.0"
+    "typescript-eslint-parser": "^18.0.0",
+    "webdriver-manager": "12.1.7"
   },
   "resolutions": {
     "moment": "2.20.1"
