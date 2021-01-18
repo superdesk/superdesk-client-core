@@ -1,4 +1,5 @@
 import React from 'react';
+import {Select, Option} from 'superdesk-ui-framework/react';
 import {IVocabularyItem} from 'superdesk-api';
 import {getVocabularyItemNameTranslated} from 'core/utils';
 
@@ -23,26 +24,22 @@ export class MetaDataDropdownSingleSelectReact extends React.PureComponent<IProp
         )?.option.qcode ?? '';
 
         return (
-            <div className="sd-line-input sd-line-input--is-select">
-                <select
-                    value={selectedValue}
-                    onChange={(event) => {
-                        const _qcode = event.target.value;
-
-                        this.props.onChange(options.find(({qcode}) => qcode === _qcode));
-                    }}
-                    disabled={disabled}
-                    tabIndex={tabIndex}
-                    className="sd-line-input__select"
-                >
-                    <option value=""></option>
-                    {
-                        optionsWithTranslations.map(({label, value}) => (
-                            <option key={value} value={value}>{label}</option>
-                        ))
-                    }
-                </select>
-            </div>
+            <Select
+                value={selectedValue}
+                onChange={(_qcode) => {
+                    this.props.onChange(options.find(({qcode}) => qcode === _qcode));
+                }}
+                required={true}
+                disabled={disabled}
+                tabIndex={tabIndex}
+            >
+                <Option value=""></Option>
+                {
+                    optionsWithTranslations.map(({label, value}) => (
+                        <Option key={value} value={value}>{label}</Option>
+                    ))
+                }
+            </Select>
         );
     }
 }
