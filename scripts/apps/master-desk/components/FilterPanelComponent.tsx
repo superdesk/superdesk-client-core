@@ -1,0 +1,160 @@
+import React from 'react';
+import {gettext} from 'core/utils';
+
+interface IProps {
+    open: boolean;
+    onDeskFilterChange(desk: string): void;
+    onFilterChange(filters: object): void;
+}
+
+interface IState {
+    desk: string;
+    filter: IFilter;
+}
+export interface IFilter {
+    slugline: Array<string>;
+    headline: Array<string>;
+    byline: Array<string>;
+}
+
+export class FilterPanelComponent extends React.Component<IProps, IState> {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            desk: '',
+            filter: {
+                slugline: [],
+                headline: [],
+                byline: [],
+            },
+        };
+
+        this.handleDeskChange = this.handleDeskChange.bind(this);
+        this.handleInputChange = this.handleInputChange.bind(this);
+        this.addFilter = this.addFilter.bind(this);
+        this.clearDeskFilter = this.clearDeskFilter.bind(this);
+    }
+
+    handleDeskChange(event) {
+        this.setState({desk: event.target.value});
+
+        this.props.onDeskFilterChange(event.target.value);
+    }
+
+    handleInputChange(event) {
+        let filter = {
+            slugline: this.state.filter.slugline,
+            headline: this.state.filter.headline,
+            byline: this.state.filter.byline,
+        };
+
+        filter[event.target.name] = [event.target.value];
+
+        this.setState({filter: filter});
+    }
+
+    addFilter() {
+        let filter = {
+            slugline: this.state.filter.slugline,
+            headline: this.state.filter.headline,
+            byline: this.state.filter.byline,
+        };
+
+        this.setState({filter: filter});
+
+        this.props.onFilterChange(filter);
+    }
+
+    clearDeskFilter() {
+        this.setState({desk: ''});
+        this.props.onDeskFilterChange('');
+    }
+
+    render() {
+        return (
+            <div className={'sd-main-content-grid__filter' + (this.props.open ? ' open-filters' : '')}>
+                <div className="side-panel__container side-panel__container--small">
+                    <div className="side-panel side-panel--shadow-left side-panel--bg-00">
+                        <div className="side-panel__header side-panel__header--border-b">
+                            <h3 className="side-panel__heading">Filters</h3>
+                        </div>
+                        <div className="side-panel__content">
+                            <div className="side-panel__content-block">
+                                <div className="form__group">
+                                    <div className="form__item">
+                                        <div className="sd-inset-search">
+                                            <input
+                                                className="sd-inset-search__input"
+                                                type="text"
+                                                placeholder="Search desk"
+                                                value={this.state.desk}
+                                                onChange={this.handleDeskChange}
+                                            />
+                                            <button
+                                                className="sd-inset-search__cancel"
+                                                onClick={() => this.clearDeskFilter()}
+                                            >
+                                                <i className="icon-remove-sign" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form__group">
+                                    <div className="form__item">
+                                        <div className="sd-input">
+                                            <label className="sd-input__label">{gettext('Slugline')}</label>
+                                            <input
+                                                className="sd-input__input"
+                                                name="slugline"
+                                                type="text"
+                                                value={this.state.filter.slugline}
+                                                onChange={this.handleInputChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form__group">
+                                    <div className="form__item">
+                                        <div className="sd-input">
+                                            <label className="sd-input__label">{gettext('Headline')}</label>
+                                            <input
+                                                className="sd-input__input"
+                                                name="headline"
+                                                type="text"
+                                                value={this.state.filter.headline}
+                                                onChange={this.handleInputChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="form__group">
+                                    <div className="form__item">
+                                        <div className="sd-input">
+                                            <label className="sd-input__label">{gettext('Byline')}</label>
+                                            <input
+                                                className="sd-input__input"
+                                                name="byline"
+                                                type="text"
+                                                value={this.state.filter.byline}
+                                                onChange={this.handleInputChange}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="side-panel__footer side-panel__footer--button-box">
+                            <a className="btn btn--primary btn--expanded" onClick={this.addFilter}>
+                                {gettext('Apply Filters')}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}

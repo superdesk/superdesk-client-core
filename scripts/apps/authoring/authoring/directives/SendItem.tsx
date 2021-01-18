@@ -334,6 +334,7 @@ export function SendItem($q,
                     var preCondition = scope.mode === 'ingest' ||
                                         scope.mode === 'personal' ||
                                         scope.mode === 'monitoring' ||
+                                        scope.mode === 'highlights' ||
                                         scope.mode === 'authoring' &&
                                         scope.isSendEnabled() &&
                                         scope.itemActions.send ||
@@ -524,8 +525,14 @@ export function SendItem($q,
                     itemType = typesList.length === 1 ? typesList[0] : null;
                 }
 
-                return scope.mode === 'authoring' || itemType === 'archive' || scope.mode === 'spike' ||
-                    (scope.mode === 'monitoring' && _.get(scope, 'config.action') === scope.vm.userActions.send_to);
+                return scope.mode === 'authoring'
+                    || scope.mode === 'spike'
+                    || scope.mode === 'highlights'
+                    || itemType === 'archive'
+                    || (
+                        scope.mode === 'monitoring'
+                        && _.get(scope, 'config.action') === scope.vm.userActions.send_to
+                    );
             };
 
             /**

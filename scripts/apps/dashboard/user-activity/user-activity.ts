@@ -1,6 +1,6 @@
 import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
-import UserActivityWidget from './components/UserActivityWidget';
+import UserActivityWidgetWithUser from './components/UserActivityWidgetWithUser';
 
 angular
     .module('superdesk.apps.dashboard.user-activity', [
@@ -51,5 +51,5 @@ angular
     ])
     .component(
         'sdUserActivityWidgetReact',
-        reactToAngular1(UserActivityWidget, []),
+        reactToAngular1(UserActivityWidgetWithUser, []),
     );

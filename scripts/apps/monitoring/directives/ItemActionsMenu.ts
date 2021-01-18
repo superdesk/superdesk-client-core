@@ -2,6 +2,7 @@ import {getAuthoringMenuGroups} from '../../authoring/authoring/constants';
 import {IArticle, IArticleAction} from 'superdesk-api';
 import {IActivity} from 'superdesk-interfaces/Activity';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {IActivityService} from 'core/activity/activity';
 
 type IAction =
     {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IArticleAction};
@@ -25,7 +26,13 @@ interface IScope extends ng.IScope {
 }
 
 ItemActionsMenu.$inject = ['superdesk', 'activityService', 'workflowService', 'archiveService', '$rootScope'];
-export function ItemActionsMenu(superdesk, activityService, workflowService, archiveService, $rootScope) {
+export function ItemActionsMenu(
+    superdesk,
+    activityService: IActivityService,
+    workflowService,
+    archiveService,
+    $rootScope,
+) {
     return {
         scope: {
             item: '=',

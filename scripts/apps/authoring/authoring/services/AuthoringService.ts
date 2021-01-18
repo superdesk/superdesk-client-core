@@ -840,7 +840,6 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     // actions accordingly
     this._updateDeskActions = function(currentItem, oldAction, userDesks) {
         let action = oldAction;
-        let reWrite = action.re_write;
         let userPrivileges = privileges.privileges;
 
         if (currentItem.task && currentItem.task.desk) {
@@ -857,8 +856,15 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
 
             if (!desk) {
                 action = angular.extend({}, helpers.DEFAULT_ACTIONS);
-                // user can action `update` even if the user is not a member.
-                action.re_write = reWrite;
+
+                // Allow some actions even if a user is not a member of the desk where an item is localted.
+
+                action.re_write = oldAction.re_write;
+
+                if (privileges.privileges.mark_for_desks__non_members) {
+                    action.mark_item_for_desks = oldAction.mark_item_for_desks;
+                }
+
                 if (appConfig.workflow_allow_duplicate_non_members) {
                     action.duplicateTo = duplicateTo;
                 }
