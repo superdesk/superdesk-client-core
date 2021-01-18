@@ -95,17 +95,20 @@ export function DeskConfigController($scope, $controller, notify, desks, modal) 
             gettext('Save'),
             gettext('Ignore'))
             .then(() => {
-                return desks.save($scope.desk.orig, diff).then((res) => {
-                    _.merge($scope.desk.edit, res);
-                    _.merge($scope.desk.orig, res);
-                    return true;
-                }, (response) => {
-                    if (angular.isDefined(response.data._message)) {
-                        notify.error(gettext('Error: ' + response.data._message));
-                    } else {
-                        notify.error(gettext('There was a problem, desk not saved. Refresh Desks.'));
-                    }
-                    return false;
+                // First fetch the latest updated desk and then save it.
+                return desks.fetchDeskById($scope.desk.orig._id).then((updatedDesk) => {
+                    return desks.save(updatedDesk, diff).then((res) => {
+                        _.merge($scope.desk.edit, res);
+                        _.merge($scope.desk.orig, res);
+                        return true;
+                    }, (response) => {
+                        if (angular.isDefined(response.data._message)) {
+                            notify.error(gettext('Error: ' + response.data._message));
+                        } else {
+                            notify.error(gettext('There was a problem, desk not saved. Refresh Desks.'));
+                        }
+                        return false;
+                    });
                 });
             }, () => {
                 $scope.desk.edit = _.cloneDeep($scope.desk.orig);
