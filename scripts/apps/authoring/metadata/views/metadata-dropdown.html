@@ -1,52 +1,40 @@
-<!-- if field is single input field-->
-<!-- IF START -->
-<div ng-if="!multiInputFields.includes(field) && !icon">
-    <sd-meta-data-dropdown-single-select-react
-        selected-item-label="key && values[item[field]]  && values[item[field]].name ? getLocaleName(values[item[field]], item) : (item[field].name || item[field] ? getLocaleName(item[field], item) || item[field] : '')"
-        options="list"
-        on-change="select"
-        tab-index="tabindex"
-        disabled="disabled"
-        language="item.language"
-    ></sd-meta-data-dropdown-single-select-react>
-</div>
+<div class="dropdown dropdown--noarrow" dropdown sd-metadropdown-focus>
+    <!-- if field is single input field-->
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="!multiInputFields.includes(field) && !icon">
+        {{ key && values[item[field]]  && values[item[field]].name ? getLocaleName(values[item[field]], item) : (item[field].name || item[field] ? getLocaleName(item[field], item) || item[field] : '') }}
+        <b class="dropdown__caret"></b>
+    </button>
+    <!-- if field is multi input field and the data source is not a custom vocabulary-->
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.includes(field) && !icon && !cv">
+        {{ item[field].length > 0 ? getLocaleName(item[field][0], item) : '' | translate }}
+        <b class="dropdown__caret"></b>
+    </button>
+    <!-- if cv stored inside other parent field ex: subject:[{name: "a", qcode: "a", scheme: cv._id}]-->
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.includes(field) && !icon && cv">
+        {{ item[field].length > 0 ? findItemByScheme(item[field], cv._id) : '' }}
+        <b class="dropdown__caret"></b>
+    </button>
+    <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="icon">
+        <span class="{{icon}}-{{item[field]}}"
+            ng-style="{backgroundColor: values[item[field]].color}">{{ values[item[field]].short || item[field] || 0 }}</span>
+        {{ getLocaleName(values[item[field]], item) }} <b class="dropdown__caret"></b>
+    </button>
+    <ul class="dropdown__menu">
+        <li ng-if="label"><div class="dropdown__menu-label">{{ label }}</div></li>
+        <li ng-click="select()"><button ng-disabled="disabled" translate>None</button></li>
 
-<!-- ELSE -->
-<div ng-if="!(!multiInputFields.includes(field) && !icon)">
-    <div class="dropdown dropdown--noarrow" dropdown sd-metadropdown-focus>
-        <!-- if field is multi input field and the data source is not a custom vocabulary-->
-        <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.includes(field) && !icon && !cv">
-            {{ item[field].length > 0 ? getLocaleName(item[field][0], item) : '' | translate }}
-            <b class="dropdown__caret"></b>
-        </button>
-        <!-- if cv stored inside other parent field ex: subject:[{name: "a", qcode: "a", scheme: cv._id}]-->
-        <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="multiInputFields.includes(field) && !icon && cv">
-            {{ item[field].length > 0 ? findItemByScheme(item[field], cv._id) : '' }}
-            <b class="dropdown__caret"></b>
-        </button>
-        <button ng-disabled="disabled" class="dropdown__toggle line-input" tabindex="{{tabindex}}" dropdown__toggle ng-if="icon">
-            <span class="{{icon}}-{{item[field]}}"
-                ng-style="{backgroundColor: values[item[field]].color}">{{ values[item[field]].short || item[field] || 0 }}</span>
-            {{ getLocaleName(values[item[field]], item) }} <b class="dropdown__caret"></b>
-        </button>
-        <ul class="dropdown__menu">
-            <li ng-if="label"><div class="dropdown__menu-label">{{ label }}</div></li>
-            <li ng-click="select()"><button ng-disabled="disabled" translate>None</button></li>
-    
-            <li ng-repeat="term in list" ng-click="select(term)" ng-if="field !== 'place'" data-test-id="dropdown__item">
-                <button ng-disabled="disabled">
-                    <span ng-if="icon"
-                        class="{{icon}}-{{term.name}}"
-                        ng-style="{backgroundColor: term.color}">{{term.short || term.name}}</span>
-                    {{getLocaleName(term, item)}}
-                </button>
-            </li>
-    
-            <li class="place-dropdown" ng-repeat="(region, placelist) in places" ng-if="field === 'place'">
-                <span ng-if="region !== 'undefined'">{{ ::region }}</span>
-                <button ng-repeat="item in placelist" ng-click="select(item)">{{ ::item.name }}</button>
-            </li>
-        </ul>
-    </div>    
+        <li ng-repeat="term in list" ng-click="select(term)" ng-if="field !== 'place'" data-test-id="dropdown__item">
+            <button ng-disabled="disabled">
+                <span ng-if="icon"
+                    class="{{icon}}-{{term.name}}"
+                    ng-style="{backgroundColor: term.color}">{{term.short || term.name}}</span>
+                {{getLocaleName(term, item)}}
+            </button>
+        </li>
+
+        <li class="place-dropdown" ng-repeat="(region, placelist) in places" ng-if="field === 'place'">
+            <span ng-if="region !== 'undefined'">{{ ::region }}</span>
+            <button ng-repeat="item in placelist" ng-click="select(item)">{{ ::item.name }}</button>
+        </li>
+    </ul>
 </div>
-<!-- IF END -->
