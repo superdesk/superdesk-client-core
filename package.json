@@ -121,7 +121,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.3.0",
+    "superdesk-ui-framework": "2.3.1",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.9.7",
@@ -152,7 +152,8 @@
     "react-test-renderer": "^16.13.1",
     "request": "^2.88.2",
     "superdesk-code-style": "1.5.0",
-    "typescript-eslint-parser": "^18.0.0"
+    "typescript-eslint-parser": "^18.0.0",
+    "webdriver-manager": "12.1.7"
   },
   "resolutions": {
     "moment": "2.20.1"
