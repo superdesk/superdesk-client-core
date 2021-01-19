@@ -1,3 +1,5 @@
+import ng from 'core/services/ng';
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.desks
@@ -14,8 +16,13 @@
 import React from 'react';
 import {MarkDesksDropdown} from 'apps/desks/components';
 
-export const DesksReactDropdown: any = (item, className, desks, noDesksLabel) => (
-    <MarkDesksDropdown className={className} desks={desks} item={item} noDesksLabel={noDesksLabel} />
+export const DesksReactDropdown: any = (item, className, noDesksLabel) => (
+    <MarkDesksDropdown
+        desks={ng.get('desks').desks._items}
+        item={item}
+        className={className}
+        noDesksLabel={noDesksLabel}
+    />
 );
 
 DesksReactDropdown.$inject = ['item', 'className', 'desks', 'noDesksLabel'];
