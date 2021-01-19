@@ -18,6 +18,8 @@ function getSingleSelection() {
     return getVocabularySelectionTypes().SINGLE_SELECTION.id;
 }
 
+const DISABLE_CHILDREN_SEARCH_FIELDS = ['authors'];
+
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper, userList,
     preferencesService, archiveService, moment, content) {
@@ -640,12 +642,13 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             disableEntireCategory: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
-        link: function(scope, elem, attrs) {
+        link: function MetaTermsDirectiveLink(scope, elem, attrs) {
             metadata.subjectScope = scope;
             scope.getLocaleName = metadata.getLocaleName;
-            var reloadList = scope.reloadList === 'true';
-            var includeParent = scope.includeParent === 'true';
-            var searchUnique = scope.searchUnique === 'true';
+            const reloadList = scope.reloadList === 'true';
+            const includeParent = scope.includeParent === 'true';
+            const searchUnique = scope.searchUnique === 'true';
+            const disabledChildrenSearch = DISABLE_CHILDREN_SEARCH_FIELDS.includes(scope.field);
 
             scope.allowEntireCat = scope.disableEntireCategory !== 'true';
 
@@ -772,7 +775,15 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
                 } else {
-                    const searchList = reloadList ? scope.list : scope.combinedList;
+                    let searchList;
+
+                    if (disabledChildrenSearch) {
+                        searchList = scope.list.filter((item) => !item.parent);
+                    } else if (reloadList) {
+                        searchList = scope.list;
+                    } else {
+                        searchList = scope.combinedList;
+                    }
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
