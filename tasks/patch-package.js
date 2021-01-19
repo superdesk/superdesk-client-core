@@ -2,6 +2,10 @@ const execSync = require('child_process').execSync;
 const fs = require('fs');
 const path = require('path');
 
+function removeNonEmptyDirectorySync(path) {
+    execSync(`rm -rf ${path}`, {stdio: 'inherit'});
+}
+
 function copyFolderSync(from, to) {
     fs.mkdirSync(to);
     fs.readdirSync(from).forEach((element) => {
@@ -28,7 +32,7 @@ const patchesDestinationDir = path.join(mainDirectory, 'patches');
 
 if (patchesCurrentDir !== patchesDestinationDir) {
     if (fs.existsSync(patchesDestinationDir)) {
-        fs.rmdirSync(patchesDestinationDir, {recursive: true});
+        removeNonEmptyDirectorySync(patchesDestinationDir);
     }
     copyFolderSync(patchesCurrentDir, patchesDestinationDir);
     copied = true;
@@ -40,5 +44,5 @@ execSync(
 );
 
 if (copied) { // remove copied directory from a parent project after patching
-    fs.rmdirSync(patchesDestinationDir, {recursive: true});
+    removeNonEmptyDirectorySync(patchesDestinationDir);
 }
