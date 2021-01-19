@@ -682,6 +682,8 @@ declare module 'superdesk-api' {
         payload?: {};
         headers?: {[key: string]: any};
         urlParams?: {[key: string]: any};
+
+        abortSignal?: AbortSignal;
     }
     
     export interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
@@ -944,7 +946,7 @@ declare module 'superdesk-api' {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
-        autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
+        autoFocus?: boolean;
         horizontalSpacing?: boolean;
     }
 

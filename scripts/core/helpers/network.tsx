@@ -1,7 +1,24 @@
 import ng from 'core/services/ng';
-import {logger} from 'core/services/logger';
 import {appConfig} from '../../appConfig';
-import {IHttpRequestOptions, IHttpRequestJsonOptionsLocal, IHttpRequestOptionsLocal} from 'superdesk-api';
+
+interface IHttpRequestOptions {
+    method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+    url: string; // absolute url
+    payload?: {};
+    headers?: {[key: string]: any};
+    urlParams?: {[key: string]: any};
+
+    abortSignal?: AbortSignal;
+}
+
+interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
+    path: string; // relative to application server
+}
+
+interface IHttpRequestJsonOptionsLocal extends IHttpRequestOptionsLocal {
+    // JSON not available with DELETE method
+    method: 'GET' | 'POST' | 'PATCH' | 'PUT';
+}
 
 interface IHttpLocalApiErrorResponse {
     _error: {
@@ -17,7 +34,7 @@ export function isHttpApiError(x): x is IHttpLocalApiErrorResponse {
 }
 
 function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
-    const {method, url, payload, headers} = options;
+    const {method, url, payload, headers, abortSignal} = options;
 
     const _url = new URL(url);
 
@@ -32,16 +49,7 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
         headers: headers || {},
         mode: 'cors',
         body: JSON.stringify(payload), // works when `payload` is `undefined`
-    }).catch((res) => {
-        if (res instanceof Error) {
-            logger.error(res);
-        } else {
-            logger.error(new Error(res));
-        }
-
-        // unless a rejected Promise is returned or an error is thrown in the catch block
-        // the promise will become resolved and `.then chain` will get executed
-        return Promise.reject(res);
+        signal: abortSignal,
     });
 }
 
