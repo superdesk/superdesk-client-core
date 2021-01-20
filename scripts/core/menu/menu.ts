@@ -275,7 +275,6 @@ angular.module('superdesk.core.menu', [
             link: function(scope) {
                 api.query('backend_meta', {}).then(
                     (metadata) => {
-                        scope.build_rev = appConfig.version || metadata.meta_rev;
                         scope.modules = metadata.modules;
                     });
                 scope.version = appConfig.version;

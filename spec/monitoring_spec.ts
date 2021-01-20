@@ -761,6 +761,7 @@ describe('monitoring', () => {
         monitoring.saveSettings();
 
         monitoring.openMonitoring();
+        browser.sleep(3000); // wait for monitoring groups to load
 
         expect(monitoring.getTextItem(1, 2)).toBe('item6');
 

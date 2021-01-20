@@ -1,4 +1,4 @@
-import {gettext} from 'core/utils';
+import {gettext, getUserSearchMongoQuery} from 'core/utils';
 
 UserListController.$inject = ['$scope', '$location', 'api', 'lodash', 'session', 'usersService'];
 export function UserListController($scope, $location, api, _, session, usersService) {
@@ -89,11 +89,7 @@ export function UserListController($scope, $location, api, _, session, usersServ
         }
 
         if (search.q) {
-            query.$or = [
-                {username: {$regex: search.q, $options: '-i'}},
-                {display_name: {$regex: search.q, $options: '-i'}},
-                {email: {$regex: search.q, $options: '-i'}},
-            ];
+            Object.assign(query, getUserSearchMongoQuery(search.q));
         }
 
         switch (filter) {

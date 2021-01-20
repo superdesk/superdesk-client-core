@@ -77,7 +77,7 @@ export function getMarkForUserModal(options: {
                             disabled={lockedInOtherSession}
                             onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
                             selectedUserId={this.state.selectedUserId}
-                            autoFocus={{initializeWithDropdownHidden: true}}
+                            autoFocus={true}
                         />
                     </ModalBody>
                     <ModalFooter>

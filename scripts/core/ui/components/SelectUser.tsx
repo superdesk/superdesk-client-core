@@ -1,120 +1,129 @@
 import React from 'react';
-import {IPropsSelectUser, IUser} from 'superdesk-api';
-import {Select2} from './select2';
-import {keyBy} from 'lodash';
-import {gettext} from 'core/utils';
-import {dataApi} from 'core/helpers/CrudManager';
-import {ListItem, ListItemColumn, ListItemRow} from 'core/components/ListItem';
+import {IPropsSelectUser, IUser, IRestApiResponse} from 'superdesk-api';
+import {gettext, getUserSearchMongoQuery} from 'core/utils';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
+import {SelectWithTemplate} from 'superdesk-ui-framework/react';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 
 interface IState {
-    fetchedUsers?: Array<IUser>;
-    selectedUser?: IUser;
-    loading: boolean;
+    selectedUser: IUser | null | 'loading';
 }
 
-export class SelectUser extends React.Component<IPropsSelectUser, IState> {
-    _mounted: boolean;
+export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState> {
+    abortController: AbortController | null;
 
     constructor(props: IPropsSelectUser) {
         super(props);
 
         this.state = {
-            loading: false,
+            selectedUser: props.selectedUserId == null ? null : 'loading',
         };
 
-        this.queryUsers = this.queryUsers.bind(this);
-
-        this._mounted = false;
-    }
-
-    queryUsers(_searchString: string = '') {
-        const searchString = _searchString.trim();
-
-        this.setState({loading: true, fetchedUsers: null});
-
-        return dataApi.query<IUser>(
-            'users',
-            1,
-            {field: 'display_name', direction: 'ascending'},
-            (
-                searchString.length > 0
-                    ? {
-                        $or: [
-                            {
-                                display_name: {
-                                    $regex: searchString,
-                                    $options: '-i',
-                                },
-                            },
-                            {
-                                username: {
-                                    $regex: searchString,
-                                    $options: '-i',
-                                },
-                            },
-                        ],
-                    }
-                    : {}
-            ),
-            50,
-        )
-            .then((res) => {
-                if (this._mounted === true) {
-                    this.setState({
-                        fetchedUsers: res._items,
-                        loading: false,
-                    });
-                }
-            });
+        this.abortController = null;
     }
 
     componentDidMount() {
-        this._mounted = true;
-
-        this.queryUsers();
+        if (this.props.selectedUserId != null) {
+            this.asyncHelpers.httpRequestJsonLocal<IUser>({
+                method: 'GET',
+                path: `/users/${this.props.selectedUserId}`,
+            }).then((selectedUser) => {
+                this.setState({selectedUser});
+            });
+        }
     }
 
     componentWillUnmount() {
-        this._mounted = false;
+        this.abortController?.abort();
+    }
+
+    componentDidUpdate(prevProps: IPropsSelectUser) {
+        if (prevProps.selectedUserId !== this.props.selectedUserId && this.props.selectedUserId != null) {
+            this.asyncHelpers.httpRequestJsonLocal<IUser>({
+                method: 'GET',
+                path: `/users/${this.props.selectedUserId}`,
+            }).then((selectedUser) => {
+                this.setState({selectedUser});
+            });
+        }
     }
 
     render() {
-        const keyedUsers = keyBy(this.state.fetchedUsers, (user) => user._id);
+        if (this.state.selectedUser === 'loading') {
+            return null;
+        }
 
         return (
-            <Select2
-                autoFocus={this.props.autoFocus ?? true}
-                disabled={this.props.disabled}
-                placeholder={(
-                    <ListItem fullWidth noBackground noShadow>
-                        <ListItemColumn ellipsisAndGrow>
-                            <ListItemRow>{gettext('Select a user')}</ListItemRow>
-                        </ListItemColumn>
-                    </ListItem>
-                )}
-                value={this.props.selectedUserId == null ? undefined : this.props.selectedUserId}
-                items={keyedUsers}
-                getItemValue={(user) => user._id}
-                onSelect={(value) => {
-                    this.props.onSelect(keyedUsers[value]);
-                }}
-                renderItem={(user) => (
-                    <ListItem fullWidth noBackground noShadow>
-                        <ListItemColumn noBorder>
-                            <UserAvatar user={user} displayStatus={true} />
-                        </ListItemColumn>
+            <SelectWithTemplate
+                getItems={(searchString) => {
+                    this.abortController?.abort();
+                    this.abortController = new AbortController();
 
-                        <ListItemColumn ellipsisAndGrow>
-                            <ListItemRow>{user.display_name}</ListItemRow>
-                            <ListItemRow>@{user.username}</ListItemRow>
-                        </ListItemColumn>
-                    </ListItem>
-                )}
+                    const query = JSON.stringify(
+                        searchString != null && searchString.length > 0
+                            ? getUserSearchMongoQuery(searchString)
+                            : {},
+                    );
+
+                    // Wrapping into additional promise in order to avoid having to handle rejected promise
+                    // in `SelectWithTemplate` component. The component takes a generic promise
+                    // as an argument and not a fetch result so it wouldn't be good to handle
+                    // fetch-specific rejections there.
+                    return new Promise((resolve) => {
+                        httpRequestJsonLocal<IRestApiResponse<IUser>>({
+                            method: 'GET',
+                            path: '/users',
+                            urlParams: {
+                                where: query,
+                                max_results: 50,
+                            },
+                            abortSignal: this.abortController.signal,
+                        }).then((res) => {
+                            resolve(res._items);
+                        }).catch((err) => {
+                            // If user types something in the filter input all unfinished requests will be aborted.
+                            // This is expected behaviour here and should not throw an error.
+                            if (err?.name !== 'AbortError') {
+                                throw err;
+                            }
+                        });
+                    });
+                }}
+                value={this.state.selectedUser}
+                onChange={(user) => {
+                    this.props.onSelect(user);
+                }}
+                getLabel={(option) => option.display_name}
+                itemTemplate={
+                    (props) => {
+                        const user = props.option;
+
+                        return user == null
+                            ? (
+                                <div>
+                                    {gettext('Select a user')}
+                                </div>
+                            )
+                            : (
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <UserAvatar user={user} displayStatus={true} />
+                                    <div style={{marginLeft: 14, padding: '4px 0'}}>
+                                        <div>{user.display_name}</div>
+                                        <div style={{fontSize: '1.2rem'}}>@{user.username}</div>
+                                    </div>
+                                </div>
+                            );
+                    }
+                }
+                areEqual={(a, b) => a._id === b._id}
+                autoFocus={this.props.autoFocus}
+                autoOpen={this.state.selectedUser == null}
+                width="100%"
+                zIndex={1050}
+                noResultsFoundMessage={gettext('No results found.')}
+                filterPlaceholder={gettext('Search...')}
                 data-test-id="select-user-dropdown"
-                onSearch={(search) => this.queryUsers(search)}
-                loading={this.state.loading}
-                horizontalSpacing={this.props.horizontalSpacing}
                 required
             />
         );

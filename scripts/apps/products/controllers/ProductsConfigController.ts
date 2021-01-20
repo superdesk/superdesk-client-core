@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {copyString} from 'core/helpers/utils';
 
 interface IScope {
     testLookup: any;
@@ -24,6 +25,7 @@ interface IScope {
     articleId: string;
     rawResults: string;
     filteredProducts: Array<any>;
+    copy: (data: any) => void;
 }
 
 /**
@@ -50,6 +52,7 @@ export function ProductsConfigController($scope: IScope, notify, api, products, 
     $scope.resultType = 'All';
     $scope.products = [];
     $scope.modalTab = 'details';
+    $scope.copy = copyString;
 
     /**
      * @ngdoc method

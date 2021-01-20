@@ -525,13 +525,14 @@ export function SendItem($q,
                     itemType = typesList.length === 1 ? typesList[0] : null;
                 }
 
-                return (
-                    scope.mode === 'authoring'
+                return scope.mode === 'authoring'
+                    || scope.mode === 'spike'
                     || scope.mode === 'highlights'
                     || itemType === 'archive'
-                    || scope.mode === 'spike'
-                    || (scope.mode === 'monitoring' && _.get(scope, 'config.action') === scope.vm.userActions.send_to)
-                );
+                    || (
+                        scope.mode === 'monitoring'
+                        && _.get(scope, 'config.action') === scope.vm.userActions.send_to
+                    );
             };
 
             /**

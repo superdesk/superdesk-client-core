@@ -1,4 +1,4 @@
-import {gettext, gettextCatalog} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {filesize} from 'core/ui/ui';
 import {appConfig} from 'appConfig';
 
@@ -26,10 +26,14 @@ export function selectFiles(files: Array<File>) {
 
         if (Array.isArray(files) && files.length > 0 && !state.editor.isLocked) {
             if (files.length + state.attachments.files.length > state.attachments.maxFiles) {
-                notify.error(gettextCatalog.getPlural(state.attachments.maxFiles,
-                    'Too many files selected. Only 1 file is allowed.',
-                    'Too many files selected. Only {{$count}} files are allowed.',
-                ));
+                notify.error(
+                    gettextPlural(
+                        state.attachments.maxFiles,
+                        'Too many files selected. Only 1 file is allowed.',
+                        'Too many files selected. Only {{$count}} files are allowed.',
+                        {$count: state.attachments.maxFiles},
+                    ),
+                );
                 return;
             }
 

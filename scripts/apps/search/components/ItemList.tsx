@@ -11,6 +11,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {CHECKBOX_PARENT_CLASS} from './constants';
 import ng from 'core/services/ng';
 import {IMultiSelectOptions} from 'core/MultiSelectHoc';
+import {IActivityService} from 'core/activity/activity';
 
 interface IProps {
     itemsList: Array<string>;
@@ -69,7 +70,7 @@ export class ItemList extends React.Component<IProps, IState> {
     angularservices: {
         $rootScope: any;
         $timeout: any;
-        activityService: any;
+        activityService: IActivityService;
         archiveService: any;
         authoringWorkspace: AuthoringWorkspaceService;
         keyboardManager: any;

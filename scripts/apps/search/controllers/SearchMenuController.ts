@@ -13,9 +13,11 @@ const isSameRepo = (shortcut, provider) => {
 
 SearchMenuController.$inject = [
     '$rootScope', '$scope', '$filter', '$location', '$route', 'searchProviderService', 'api', 'savedSearch',
+    'privileges',
 ];
 export default function SearchMenuController(
     $rootScope, $scope, $filter, $location, $route, searchProviderService, api, savedSearch,
+    privileges,
 ) {
     let providerLabels = {};
 
@@ -108,9 +110,11 @@ export default function SearchMenuController(
 
                 if (defaultProvider) {
                     this.providers = this.providers.filter((provider) => provider !== defaultProvider);
-                    this.providers.unshift(SUPERDESK_PROVIDER);
+                    if (privileges.use_global_saved_search) {
+                        this.providers.unshift(SUPERDESK_PROVIDER);
+                    }
                     this.providers.unshift(defaultProvider);
-                } else {
+                } else if (privileges.use_global_saved_search) {
                     this.providers.unshift(SUPERDESK_PROVIDER);
                 }
             })

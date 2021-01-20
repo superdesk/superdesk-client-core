@@ -94,3 +94,13 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
 export function copyJson(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
+
+export function copyString(data) {
+    var element = document.createElement('textarea');
+
+    document.body.appendChild(element);
+    element.value = data;
+    element.select();
+    document.execCommand('copy');
+    document.body.removeChild(element);
+}
