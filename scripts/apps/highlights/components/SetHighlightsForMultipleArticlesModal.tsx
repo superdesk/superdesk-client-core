@@ -32,9 +32,7 @@ export function getModalForMultipleHighlights(articles: Array<IArticle>, deskId:
         componentDidMount() {
             this.props.highlightsService.get(deskId).then((res) => {
                 this.setState({
-                    highlightsForDesk: res._items.filter(
-                        (item) => item.desks.length < 1, // Multi mark highlights should only show global highlights
-                    ),
+                    highlightsForDesk: res._items,
                 });
             });
         }
