@@ -1,6 +1,6 @@
 import {ConfigController} from 'apps/dashboard/controllers';
 
-Widget.$inject = ['asset', '$modal'];
+Widget.$inject = ['asset', '$modal', '$rootScope'];
 
 /**
  * sdWidget give appropriate template to data assgined to it
@@ -11,7 +11,7 @@ Widget.$inject = ['asset', '$modal'];
  * Params:
  * @scope {Object} widget
  */
-export function Widget(asset, $modal) {
+export function Widget(asset, $modal, $rootScope) {
     return {
         templateUrl: asset.templateUrl('apps/dashboard/views/widget.html'),
         restrict: 'A',
@@ -26,6 +26,10 @@ export function Widget(asset, $modal) {
                     scope: scope,
                     size: scope.widget.classes,
                 });
+            };
+
+            scope.pinWidget = function(widget) {
+                $rootScope.$broadcast('widget:pin', widget);
             };
         },
     };

@@ -37,7 +37,7 @@
     bottom: 30px;
 }
 
-.tabpane {
+.tabpane, .pinned-tab__wrapper {
     .sd-widget {
         width: auto; 
         height: 100%;
@@ -57,6 +57,26 @@
                 font-size: 1.4rem;
                 padding: 0 1rem;
                 font-weight: 400;
+            }
+        }
+        .widget-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: auto;
+        }
+        .icn-btn {
+            margin-left: auto;
+            margin-right: 5px;
+            transition: all .2s ease-in-out;
+
+            &.active {
+                color: $sd-blue;
+                transform: rotate(90deg);
+            }
+
+            &:hover {
+                border: 0;
             }
         }
         .widget-settings {

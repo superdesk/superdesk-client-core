@@ -5,6 +5,9 @@
     </div>
     <div class="widget-header" ng-if="!widget.removeHeader">
         <h3 class="widget-title">{{ widget.configuration.label || widget.label | translate}}</h3>
+        <button class="icn-btn" ng-click="pinWidget(widget)" ng-class="{'active': widget.pinned}">
+            <i class="icon-pin"></i>
+        </button>
     </div>
 
     <div class="widget-content" ng-transclude></div>

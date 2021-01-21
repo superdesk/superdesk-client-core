@@ -5,6 +5,11 @@
     <li ng-class="{active: tab === 'history'}">
         <button ng-click="tab = 'history'" translate>Item history</button>
     </li>
+    <div class="widget-actions">
+        <button class="icn-btn" ng-click="pinWidget(active)" ng-class="{'active': active.pinned}">
+            <i class="icon-pin"></i>
+        </button>
+    </div>
 </ul>
 <div class="content">
     <div ng-if="tab === 'versions' || !tab" sd-versioning-version></div>

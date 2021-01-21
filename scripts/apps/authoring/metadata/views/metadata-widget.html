@@ -7,6 +7,12 @@
     <li ng-show="isAssigned(item)" ng-class="{active: tab === 'assignment'}">
         <button ng-click="tab = 'assignment'" translate>Assignment</button>
     </li>
+
+    <div class="widget-actions">
+        <button class="icn-btn" ng-click="pinWidget(active)" ng-class="{'active': active.pinned}">
+            <i class="icon-pin"></i>
+        </button>
+    </div>
 </ul>
 <div ng-controller="MetadataWidgetCtrl" class="widget-content__main">
     <div class="sd-padding-all--2" ng-if="tab === 'metadata' || !tab">
