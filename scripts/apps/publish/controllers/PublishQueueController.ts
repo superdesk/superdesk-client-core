@@ -300,8 +300,13 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         $scope.selected.extensionPoint = false;
 
         if (queueItem) {
+            let endpoint = 'archive';
+
             if (isSuperdeskContent(queueItem.content_type)) {
-                api.archive.getById(queueItem.item_id, {version: queueItem.item_version})
+                if (queueItem.publishing_action === 'being_corrected') {
+                    endpoint = 'published';
+                }
+                api.find(endpoint, queueItem.item_id, {version: queueItem.item_version})
                     .then((item) => {
                         $scope.selected.preview = item;
                     });
