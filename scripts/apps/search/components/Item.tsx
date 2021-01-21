@@ -444,9 +444,10 @@ export class Item extends React.Component<IProps, IState> {
                 onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
-                onClick: getCallback(this.select),
+                onFocus: getCallback(this.select),
                 onDoubleClick: getCallback(this.dbClick),
                 draggable: !this.props.isNested,
+                tabIndex: 0,
             },
             (
                 <div

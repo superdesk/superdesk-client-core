@@ -444,52 +444,28 @@ export class ItemList extends React.Component<IProps, IState> {
             break;
         }
 
-        const highlightSelected = (_event) => {
-            for (let i = 0; i < this.props.itemsList.length; i++) {
-                if (this.props.itemsList[i] === this.props.selected) {
-                    const next = Math.min(this.props.itemsList.length - 1, Math.max(0, i + diff));
+        if (event.key === 'ArrowDown') {
+            const nextEl = document.activeElement.nextElementSibling;
 
-                    this.select(this.props.itemsById[this.props.itemsList[next]], _event);
-                    return;
-                }
+            if (nextEl instanceof HTMLElement) {
+                // Don't scroll the list. The list will be scrolled automatically
+                // when an item is focued that is outside of the viewport.
+                event.preventDefault();
+
+                nextEl.focus();
             }
-        };
+        }
 
-        const checkRemaining = (_event) => {
-            event.preventDefault();
-            event.stopPropagation();
+        if (event.key === 'ArrowUp') {
+            const prevEl = document.activeElement.previousElementSibling;
 
-            if (this.props.selected) {
-                highlightSelected(_event);
-            } else {
-                this.select(this.props.itemsById[this.props.itemsList[0]], _event);
+            if (prevEl instanceof HTMLElement) {
+                // Don't scroll the list. The list will be scrolled automatically
+                // when an item is focued that is outside of the viewport.
+                event.preventDefault();
+
+                prevEl.focus();
             }
-        };
-
-        // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        const scrollSelectedItemIfRequired = (_event) => {
-            const container = this.props.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
-
-            const selectedItemElem = $(_event.currentTarget.firstChild).children('.list-item-view.active');
-
-            if (selectedItemElem.length > 0) {
-                // The following line translated to: top_Of_Selected_Item (minus) top_Of_Scrollable_Div
-
-                const distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
-                $(container[0]).offset().top - $(document).scrollTop();
-
-                // If the selected item goes beyond container view, scroll it to middle.
-                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight ||
-                    distanceOfSelItemFromVisibleTop < 0) {
-                    container.scrollTop(container.scrollTop() + distanceOfSelItemFromVisibleTop -
-                    container[0].offsetHeight * 0.5);
-                }
-            }
-        };
-
-        if (!_.isNil(diff)) {
-            checkRemaining(event);
-            scrollSelectedItemIfRequired(event);
         }
     }
 
