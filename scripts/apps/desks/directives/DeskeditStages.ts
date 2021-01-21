@@ -123,7 +123,7 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                         return desks.fetchDeskById(item.desk);
                     })
                     .then((desk) => {
-                        scope.desk.edit = desk;
+                        scope.desk.edit = scope.desk.orig = desk;
                         scope.getstages();
                     }, errorMessage)
                     .finally(() => {

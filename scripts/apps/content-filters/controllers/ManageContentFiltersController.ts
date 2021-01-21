@@ -44,6 +44,14 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
         $scope.saveFilter = function() {
             delete $scope.contentFilter.article_id;
+
+            for (var i = 0; i < $scope.contentFilter.content_filter.length; i++) {
+                if (Object.keys($scope.contentFilter.content_filter[i].expression).length < 1) {
+                    notify.error(gettext('Filter statement {{id}} does not have a filter condition.', {id: i + 1}));
+                    return;
+                }
+            }
+
             contentFilters.saveContentFilter($scope.origContentFilter, $scope.contentFilter)
                 .then(
                     () => {

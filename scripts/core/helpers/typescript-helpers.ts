@@ -16,3 +16,7 @@ export function isArray<T>(x: T | Array<T>): x is Array<T> {
 export function assertNever(x: never): never {
     throw new Error('Unexpected object: ' + x);
 }
+
+export function notNullOrUndefined<T>(x: null | undefined | T): x is T {
+    return x != null;
+}

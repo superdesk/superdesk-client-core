@@ -5,6 +5,7 @@ import {gettext, IScopeApply} from 'core/utils';
 import ng from 'core/services/ng';
 
 import {closeActionsMenu} from '../../helpers';
+import {IActivityService} from 'core/activity/activity';
 
 interface IProps {
     item: any;
@@ -21,7 +22,7 @@ interface IState {
 export default class MenuItem extends React.Component<IProps, IState> {
     closeTimeout: any;
 
-    activityService: any;
+    activityService: IActivityService;
     $timeout: any;
     $injector: any;
 

@@ -27,10 +27,6 @@ export function Widget(asset, $modal, $rootScope) {
                     size: scope.widget.classes,
                 });
             };
-
-            scope.pinWidget = function(widget) {
-                $rootScope.$broadcast('widget:pin', widget);
-            };
         },
     };
 }
