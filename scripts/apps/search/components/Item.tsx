@@ -453,6 +453,16 @@ export class Item extends React.Component<IProps, IState> {
                 }),
                 onClick: getCallback(this.select),
                 onDoubleClick: getCallback(this.dbClick),
+                onKeyDown: (event) => {
+                    if (event.key === ' ') { // display item actions when space is clicked
+                        const el = event.target?.querySelector('.more-activity-toggle-ref');
+
+                        if (typeof el?.click === 'function') {
+                            event.preventDefault();
+                            el.click();
+                        }
+                    }
+                },
                 draggable: !this.props.isNested,
                 tabIndex: 0,
             },
