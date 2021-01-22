@@ -444,7 +444,14 @@ export class Item extends React.Component<IProps, IState> {
                 onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
-                onFocus: getCallback(this.select),
+                onFocus: getCallback(() => {
+                    // not using this.select in order to avoid the timeout
+                    // that is used to enable double-click
+                    if (!this.props.item.gone) {
+                        this.props.onSelect(this.props.item, event);
+                    }
+                }),
+                onClick: getCallback(this.select),
                 onDoubleClick: getCallback(this.dbClick),
                 draggable: !this.props.isNested,
                 tabIndex: 0,
