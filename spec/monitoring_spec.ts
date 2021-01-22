@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, browser, by, protractor} from 'protractor';
+import {element, browser, by, protractor, WebElementPromise} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
@@ -8,8 +8,6 @@ import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
 import {desks} from './helpers/desks';
 import {el, s, els, ECE, articleList} from 'end-to-end-testing-helpers';
-import {contentProfiles} from './helpers/content_profiles';
-import {templates} from './helpers/templates';
 import {nav} from './helpers/utils';
 
 describe('monitoring', () => {
@@ -902,6 +900,77 @@ describe('monitoring', () => {
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
         expect(el(['authoring', 'field-slugline']).getAttribute('value')).toBe(slugline);
         expect(el(['authoring', 'field-editors-note']).getAttribute('value')).toBe(editorsNote);
+    });
+});
+
+function getFocusedElement(): WebElementPromise {
+    return browser.switchTo().activeElement();
+}
+
+describe('navigation using a keyboard', () => {
+    beforeEach(() => {
+        monitoring.openMonitoring();
+
+        browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0));
+
+        els(['article-item']).get(0).click();
+
+        browser.actions().sendKeys(protractor.Key.TAB).perform(); // focusing from list into an item
+
+        expect(
+            getFocusedElement().findElement(by.css('[data-test-id="field--slugline"]')).getText(),
+        ).toBe('ITEM5 SLUGLINE ONE/TWO');
+    });
+
+    it('can focus the next or previous item using arrow keys', () => {
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+
+        expect(
+            getFocusedElement().findElement(by.css('[data-test-id="field--slugline"]')).getText(),
+        ).toBe('ITEM9 SLUGLINE');
+
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+
+        expect(
+            getFocusedElement().findElement(by.css('[data-test-id="field--slugline"]')).getText(),
+        ).toBe('ITEM7 SLUGLINE');
+
+        browser.actions().sendKeys(protractor.Key.UP).perform();
+
+        expect(
+            getFocusedElement().findElement(by.css('[data-test-id="field--slugline"]')).getText(),
+        ).toBe('ITEM9 SLUGLINE');
+    });
+
+    it('can tab into the item and open context menu by hitting space when three dots menu is focused', () => {
+        browser.actions().sendKeys(protractor.Key.TAB).perform();
+        expect(getFocusedElement().getAttribute('data-test-id')).toBe('context-menu-button');
+        browser.actions().sendKeys(protractor.Key.SPACE).perform();
+        expect(getFocusedElement().getAttribute('data-test-id')).toBe('context-menu');
+    });
+
+    it('can open context menu by pressing space when an item is focused', () => {
+        browser.actions().sendKeys(protractor.Key.SPACE).perform();
+
+        expect(getFocusedElement().getAttribute('data-test-id')).toBe('context-menu');
+    });
+
+    it('can use the TAB key to go through context menu options', () => {
+        browser.actions().sendKeys(protractor.Key.SPACE).perform();
+        browser.actions().sendKeys(protractor.Key.TAB).perform();
+        expect(getFocusedElement().getAttribute('data-test-id')).toBe('close');
+        browser.actions().sendKeys(protractor.Key.TAB).perform();
+        expect(getFocusedElement().getText()).toBe('Edit');
+    });
+
+    it('can close context menu using ESC key and return focus to where it was before opening the menu', () => {
+        browser.actions().sendKeys(protractor.Key.SPACE).perform();
+        browser.actions().sendKeys(protractor.Key.TAB).perform();
+        browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
+
+        expect(
+            getFocusedElement().findElement(by.css('[data-test-id="field--slugline"]')).getText(),
+        ).toBe('ITEM5 SLUGLINE ONE/TWO');
     });
 });
 
