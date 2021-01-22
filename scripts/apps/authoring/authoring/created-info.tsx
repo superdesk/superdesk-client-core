@@ -13,17 +13,28 @@ interface IState {
 }
 
 export class CreatedInfo extends React.PureComponent<IProps, IState> {
+    private _mounted: boolean;
+
     constructor(props: IProps) {
         super(props);
 
         this.state = {
             user: null,
         };
+
+        this._mounted = false;
     }
     componentDidMount() {
+        this._mounted = true;
+
         dataApi.findOne<IUser>('users', this.props.article.original_creator).then((user) => {
-            this.setState({user});
+            if (this._mounted) {
+                this.setState({user});
+            }
         });
+    }
+    componentWillUnmount() {
+        this._mounted = false;
     }
     render() {
         const {article} = this.props;
