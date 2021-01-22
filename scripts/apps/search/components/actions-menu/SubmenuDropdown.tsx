@@ -1,19 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import Submenu from './Submenu';
+
+interface IProps {
+    label: string;
+    submenu: Array<JSX.Element>;
+    icon: string | null;
+}
+
+interface IState {
+    open: boolean;
+}
 
 /**
  * Submenu within item actions.
  */
-export default class SubmenuDropdown extends React.Component<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
-
+export default class SubmenuDropdown extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
-        this.state = {open: false};
+
+        this.state = {
+            open: false,
+        };
+
         this.openSubmenu = this.openSubmenu.bind(this);
         this.closeSubmenu = this.closeSubmenu.bind(this);
+        this.toggleState = this.toggleState.bind(this);
     }
 
     openSubmenu() {
@@ -24,24 +36,25 @@ export default class SubmenuDropdown extends React.Component<any, any> {
         this.setState({open: false});
     }
 
-    toggleState(event) {
-        event.stopPropagation();
+    toggleState() {
         this.setState({open: !this.state.open});
     }
 
     render() {
         return (
-            <div
-                className="dropdown dropdown--noarrow"
-                onMouseEnter={this.openSubmenu}
-                onMouseLeave={this.closeSubmenu}
-            >
-                <a className="dropdown__toggle" title={this.props.label}>
+            <div className={classNames('dropdown dropdown--noarrow', {'open': this.state.open})}>
+                <button
+                    className="dropdown__toggle"
+                    title={this.props.label}
+                    onMouseEnter={this.openSubmenu}
+                    onMouseLeave={this.closeSubmenu}
+                    onClick={this.toggleState} // required for keyboard navigation
+                >
                     {this.props.icon &&
                         <i className={`icon-${this.props.icon}`} />
                     }
                     {this.props.label}
-                </a>
+                </button>
                 {this.state.open && (
                     <Submenu>{this.props.submenu}</Submenu>
                 )}
@@ -49,9 +62,3 @@ export default class SubmenuDropdown extends React.Component<any, any> {
         );
     }
 }
-
-SubmenuDropdown.propTypes = {
-    icon: PropTypes.string,
-    label: PropTypes.string,
-    submenu: PropTypes.arrayOf(PropTypes.element),
-};

@@ -13,6 +13,7 @@ import {IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 import ng from 'core/services/ng';
+import {once} from 'lodash';
 
 interface IProps {
     item: IArticle;
@@ -32,6 +33,8 @@ export default class MenuItems extends React.Component<IProps, IState> {
     superdesk: any;
     workflowService: any;
     archiveService: any;
+    private focus: (el: HTMLElement) => void;
+    private previousFocusedElement: HTMLElement | null;
 
     constructor(props) {
         super(props);
@@ -47,6 +50,14 @@ export default class MenuItems extends React.Component<IProps, IState> {
         this.superdesk = ng.get('superdesk');
         this.workflowService = ng.get('workflowService');
         this.archiveService = ng.get('archiveService');
+
+        // using once to simulate componentDidMount.
+        // using componentDidMount doesn't work because el is only set after the first update.
+        this.focus = once((el) => {
+            this.previousFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+            el.focus();
+        });
     }
 
     componentDidMount() {
@@ -238,6 +249,18 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 className="dropdown dropdown__menu more-activity-menu open"
                 style={{display: 'block', minWidth: 200}}
                 data-test-id="context-menu"
+                ref={(el) => {
+                    if (el != null) {
+                        this.focus(el);
+                    }
+                }}
+                tabIndex={0}
+                onKeyUp={(event) => {
+                    if (event.key === 'Escape') {
+                        closeActionsMenu(this.props.item._id);
+                        this.previousFocusedElement?.focus();
+                    }
+                }}
             >
                 <Label
                     label={gettext('Actions')}
