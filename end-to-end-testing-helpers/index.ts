@@ -1,4 +1,4 @@
-import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promise} from 'protractor';
+import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promise, WebElementPromise} from 'protractor';
 import {ECE} from './expected-conditions-extended';
 import {executeContextMenuAction} from './articlesList';
 import {navigateTo} from './workspace';
@@ -110,6 +110,10 @@ export function selectFilesForUpload(
             )
             .join('\n'),
     );
+}
+
+export function getFocusedElement(): WebElementPromise {
+    return browser.switchTo().activeElement();
 }
 
 export const articleList = {
