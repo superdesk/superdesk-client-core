@@ -60,6 +60,8 @@ export class SelectBoxWithoutMutation extends React.PureComponent<IPropsSelectBo
                 title={isCheckAllowed(this.props.item) ? null : gettext('selection not allowed')}
                 onClick={this.toggle}
                 className={this.props.className}
+                role="checkbox"
+                aria-checked={this.props.selected}
             >
                 <span className={'sd-checkbox' + (this.props.selected ? ' checked' : '')} />
             </button>

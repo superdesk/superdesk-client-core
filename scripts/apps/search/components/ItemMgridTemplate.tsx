@@ -9,6 +9,7 @@ import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 
 interface IProps {
     item: IArticle;
+    itemSelected: boolean;
     desk: IDesk;
     swimlane: any;
     ingestProvider: any;
@@ -17,14 +18,15 @@ interface IProps {
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
-export class ItemMgridTemplate extends React.Component<IProps, never> {
+export class ItemMgridTemplate extends React.Component<IProps> {
     render() {
-        const {item} = this.props;
+        const {item, itemSelected} = this.props;
 
         return (
             <div>
                 <MediaPreview
                     item={item}
+                    itemSelected={itemSelected}
                     desk={this.props.desk}
                     multiSelect={this.props.multiSelect}
                 />

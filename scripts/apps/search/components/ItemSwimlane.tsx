@@ -37,6 +37,7 @@ const renderGroup = (groups, item: IArticle) => groups.map((group, groupIndex) =
 
 interface IProps {
     item: IArticle;
+    itemSelected: boolean;
     isLocked: boolean;
     getActionsMenu: (fn) => ReactElement<any>;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
@@ -44,7 +45,7 @@ interface IProps {
 
 export class ItemSwimlane extends React.Component<IProps, any> {
     render() {
-        const {item, isLocked, getActionsMenu, multiSelect} = this.props;
+        const {item, itemSelected, isLocked, getActionsMenu, multiSelect} = this.props;
 
         const swimlaneViewFieldsConfig = appConfig.swimlaneViewFields ?? DEFAULT_SWIMLANE_FIELDS_CONFIG;
 
@@ -60,6 +61,7 @@ export class ItemSwimlane extends React.Component<IProps, any> {
                 <span className="sd-list-item__column">
                     <MultiSelectCheckbox
                         item={item}
+                        itemSelected={itemSelected}
                         multiSelect={multiSelect}
                     />
                 </span>
