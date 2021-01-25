@@ -465,6 +465,7 @@ export class Item extends React.Component<IProps, IState> {
                 },
                 draggable: !this.props.isNested,
                 tabIndex: 0,
+                'data-test-id': 'article-item',
             },
             (
                 <div
@@ -476,7 +477,6 @@ export class Item extends React.Component<IProps, IState> {
                         gone: item.gone,
                         actioning: this.state.actioning || this.props.actioning,
                     })}
-                    data-test-id="article-item"
                 >
                     {getTemplate()}
                 </div>
