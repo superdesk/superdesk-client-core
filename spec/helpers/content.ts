@@ -1,7 +1,7 @@
 import {element, by, browser} from 'protractor';
 import {acceptConfirm, nav} from './utils';
 import {multiAction} from './actions';
-import {ECE} from 'end-to-end-testing-helpers';
+import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 class Content {
     send: any;

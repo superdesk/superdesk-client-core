@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, browser, protractor, by, $} from 'protractor';
-import {el, els, ECE} from 'end-to-end-testing-helpers';
+import {el, els, ECE} from '@superdesk/end-to-end-testing-helpers';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';

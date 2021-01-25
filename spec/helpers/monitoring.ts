@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor, ElementFinder, promise as wdpromise} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
-import {s, ECE, el, els} from 'end-to-end-testing-helpers';
+import {s, ECE, el, els} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {

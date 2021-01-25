@@ -15,7 +15,7 @@ import {dictionaries} from './helpers/dictionaries';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 
-import {el, ECE, els, hover, selectFilesForUpload} from 'end-to-end-testing-helpers';
+import {el, ECE, els, hover, selectFilesForUpload} from '@superdesk/end-to-end-testing-helpers';
 
 function uploadMedia(imageName) {
     el(['media-gallery--upload-placeholder']).click();

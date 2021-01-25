@@ -1,6 +1,6 @@
 import {LoginModal} from './pages';
 import {browser, protractor, element, by, ElementFinder, ElementArrayFinder} from 'protractor';
-import {ECE, s} from 'end-to-end-testing-helpers';
+import {ECE, s} from '@superdesk/end-to-end-testing-helpers';
 
 // construct url from uri and base url
 export function constructUrl(base, uri) {

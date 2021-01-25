@@ -2,7 +2,7 @@
 
 import {element, by, browser, ElementFinder} from 'protractor';
 import {nav, waitFor, scrollToView, scrollRelative} from './utils';
-import {el, ECE, els} from 'end-to-end-testing-helpers';
+import {el, ECE, els} from '@superdesk/end-to-end-testing-helpers';
 
 class GlobalSearch {
     ingestRepo: ElementFinder;

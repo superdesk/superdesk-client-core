@@ -2,7 +2,7 @@ import {content} from './content';
 import {monitoring} from './monitoring';
 import {nav, waitFor} from './utils';
 import {element, by, browser} from 'protractor';
-import {el} from 'end-to-end-testing-helpers';
+import {el} from '@superdesk/end-to-end-testing-helpers';
 
 class Workspace {
     sideMenu: any;

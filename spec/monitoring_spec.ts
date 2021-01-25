@@ -7,7 +7,7 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
 import {desks} from './helpers/desks';
-import {el, s, els, ECE, articleList, getFocusedElement} from 'end-to-end-testing-helpers';
+import {el, s, els, ECE, articleList, getFocusedElement} from '@superdesk/end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
 
 describe('monitoring', () => {

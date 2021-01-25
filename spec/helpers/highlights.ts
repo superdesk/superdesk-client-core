@@ -2,7 +2,7 @@
 
 import {element, by, browser} from 'protractor';
 import {waitFor, nav} from './utils';
-import {el} from 'end-to-end-testing-helpers';
+import {el} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Highlights {

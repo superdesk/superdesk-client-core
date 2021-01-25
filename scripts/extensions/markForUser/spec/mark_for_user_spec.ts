@@ -1,5 +1,5 @@
 import {browser} from 'protractor';
-import {el, els, ECE, login, articleList, workspace} from 'end-to-end-testing-helpers';
+import {el, els, ECE, login, articleList, workspace} from '@superdesk/end-to-end-testing-helpers';
 
 describe('mark for user extension', () => {
     it('persists changing marked user from authoring topbar in read-only mode', () => {
