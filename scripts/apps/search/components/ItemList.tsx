@@ -176,13 +176,13 @@ export class ItemList extends React.Component<IProps, IState> {
     /*
      * Unbind all item actions
      */
-    unbindActionKeyShortcuts() {
+    unbindActionKeyShortcuts(callback?) {
         const {keyboardManager} = this.angularservices;
 
         this.state.bindedShortcuts.forEach((shortcut) => {
             keyboardManager.unbind(shortcut);
         });
-        this.setState({bindedShortcuts: []});
+        this.setState({bindedShortcuts: []}, callback);
     }
 
     /*
@@ -200,26 +200,32 @@ export class ItemList extends React.Component<IProps, IState> {
             workflowService,
         } = this.angularservices;
 
+        const doBind = () => {
+            const intent = {action: 'list', type: archiveService.getType(selectedItem)};
+
+            superdesk.findActivities(intent, selectedItem).forEach((activity) => {
+                if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
+                    this.state.bindedShortcuts.push(activity.keyboardShortcut);
+
+                    keyboardManager.bind(activity.keyboardShortcut, () => {
+                        if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
+                            bindMarkItemShortcut(activity.label);
+                        } else {
+                            activityService.start(activity, {data: {item: selectedItem}});
+                        }
+                    });
+                }
+            });
+        };
+
         // First unbind all binded shortcuts
         if (this.state.bindedShortcuts.length) {
-            this.unbindActionKeyShortcuts();
+            this.unbindActionKeyShortcuts(() => {
+                doBind();
+            });
+        } else {
+            doBind();
         }
-
-        const intent = {action: 'list', type: archiveService.getType(selectedItem)};
-
-        superdesk.findActivities(intent, selectedItem).forEach((activity) => {
-            if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
-                this.state.bindedShortcuts.push(activity.keyboardShortcut);
-
-                keyboardManager.bind(activity.keyboardShortcut, () => {
-                    if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
-                        bindMarkItemShortcut(activity.label);
-                    } else {
-                        activityService.start(activity, {data: {item: selectedItem}});
-                    }
-                });
-            }
-        });
     }
 
     selectItem(item) {

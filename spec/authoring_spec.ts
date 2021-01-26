@@ -174,7 +174,7 @@ describe('authoring', () => {
         browser.sleep(300);
 
         monitoring.filterAction('text');
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0);
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
         browser.sleep(300);
@@ -188,7 +188,7 @@ describe('authoring', () => {
         browser.sleep(300);
 
         monitoring.filterAction('text');
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0, true);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0);
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();
         authoring.cancel();
 
@@ -311,7 +311,7 @@ describe('authoring', () => {
 
         // view item history duplicate operation
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 0, 0);
         authoring.showHistory();
@@ -467,7 +467,7 @@ describe('authoring', () => {
 
         monitoring.filterAction('text');
         // Duplicate item9 text published item
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Update', 5, 0, true);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Update', 5, 0);
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         monitoring.actionOnItem('Edit', 0, 0);
 
@@ -482,7 +482,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0);
         browser.sleep(3000);
         expect(authoring.getBodyText()).toBe('This is kill template. Slugged item5 slugline one/two.');
         expect(authoring.getHeadlineText()).toBe('KILL NOTICE');
@@ -540,7 +540,7 @@ describe('authoring', () => {
         expect(authoring.multieditButton.isDisplayed()).toBe(true);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0);
         authoring.moreActionsButton.click();
         expect(authoring.multieditButton.isDisplayed()).toBe(false);
     });
@@ -617,7 +617,7 @@ describe('authoring', () => {
 
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0);
 
         // Body:
         // undo without editing body text
@@ -681,12 +681,12 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 3, 2);
         authoring.publish();
         monitoring.filterAction('text');
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0, true); // Edit for correction
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 5, 0); // Edit for correction
         authoring.minimize(); // minimize before publishing the correction
         expect(monitoring.getTextItem(2, 1)).toBe('item9');
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.publish();
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0, true); // Edit for kill
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Kill item', 5, 0); // Edit for kill
         authoring.minimize(); // minimize before publishing the kill
         authoring.maximize('item6');
         expect(authoring.send_correction_button.isDisplayed()).toBeTruthy();

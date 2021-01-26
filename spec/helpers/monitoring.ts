@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser, protractor, ElementFinder, promise as wdpromise} from 'protractor';
-import {nav, waitFor, acceptConfirm} from './utils';
+import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
 import {s, ECE, el, els} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
@@ -46,9 +46,9 @@ class Monitoring {
     openAction: (group: any, item: any) => void;
     tabAction: (tab: any) => void;
     openRelatedItem: (index: any) => void;
-    actionOnItem: (action: any, group: any, item: any, useFullLinkText?: any, confirm?: any) => void;
+    actionOnItem: (action: any, group: any, item: any, useFullButtonText?: any, confirm?: any) => void;
     getMenuActionElement: (action: any, group: any, item: any) => any;
-    actionOnItemSubmenu: (action: any, submenu: any, group: any, item: any, linkTypeBtn?: any) => void;
+    actionOnItemSubmenu: (action: any, submenu: any, group: any, item: any) => void;
     selectItem: (group: any, item: any) => any;
     selectSpikedItem: (item: any) => any;
     selectGivenItem: (item: any) => any;
@@ -400,18 +400,18 @@ class Monitoring {
          * @param {string} action
          * @param {number} group
          * @param {number} item
-         * @param {boolean} useFullLinkText
+         * @param {boolean} useFullButtonText
          * @param {boolean} confirm Accept confirmation dialog.
          */
-        this.actionOnItem = function(action, group, item, useFullLinkText, confirm) {
+        this.actionOnItem = function(action, group, item, useFullButtonText, confirm) {
             var menu = this.openItemMenu(group, item);
 
             browser.wait(() => menu.isPresent(), 3000);
 
-            if (useFullLinkText) {
-                menu.element(by.linkText(action)).click();
+            if (useFullButtonText) {
+                menu.element(by.buttonText(action)).click();
             } else {
-                menu.all(by.partialLinkText(action)).first().click();
+                menu.all(by.partialButtonText(action)).first().click();
             }
 
             if (confirm) {
@@ -422,7 +422,7 @@ class Monitoring {
         this.getMenuActionElement = function(action, group, item) {
             var menu = this.openItemMenu(group, item);
 
-            return menu.all(by.partialLinkText(action)).first();
+            return menu.all(by.partialButtonText(action)).first();
         };
 
         /**
@@ -434,12 +434,10 @@ class Monitoring {
          * @param {number} group
          * @param {number} item
          */
-        this.actionOnItemSubmenu = function(action, submenu, group, item, linkTypeBtn) {
+        this.actionOnItemSubmenu = function(action, submenu, group, item) {
             var menu = this.openItemMenu(group, item);
-            var header = menu.element(by.partialLinkText(action));
-            var btn = linkTypeBtn ?
-                menu.all(by.partialLinkText(submenu)).first() :
-                menu.all(by.partialButtonText(submenu)).first();
+            var header = menu.element(by.partialButtonText(action));
+            var btn = menu.all(by.partialButtonText(submenu)).first();
 
             browser.actions()
                 .mouseMove(header, {x: -50, y: -50})
@@ -458,12 +456,19 @@ class Monitoring {
         };
 
         this.selectGivenItem = function(item) {
-            var itemTypeIcon = item.element(by.css('.type-icon'));
+            var itemTypeAndMultiSelect = el(['item-type-and-multi-select'], null, item);
 
-            browser.actions().mouseMove(itemTypeIcon, {x: -100, y: -100}).mouseMove(itemTypeIcon).perform();
-            var checkbox = item.element(by.className('sd-checkbox'));
+            scrollToView(itemTypeAndMultiSelect);
 
-            browser.wait(ECE.presenceOf(checkbox));
+            browser.actions()
+                .mouseMove(itemTypeAndMultiSelect, {x: -100, y: -100})
+                .mouseMove(itemTypeAndMultiSelect)
+                .perform();
+
+            var checkbox = el(['multi-select-checkbox'], null, item);
+
+            browser.wait(ECE.visibilityOf(checkbox));
+
             return checkbox.click();
         };
 
@@ -757,7 +762,7 @@ class Monitoring {
 
             var highlightList = el(['highlights-list']);
 
-            browser.wait(ECE.presenceOf(highlightList));
+            browser.wait(ECE.visibilityOf(highlightList));
 
             expect(highlightList.getText()).toContain(highlight);
         };

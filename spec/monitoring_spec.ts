@@ -475,7 +475,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
@@ -765,7 +765,7 @@ describe('monitoring', () => {
         browser.sleep(100); // from react to angular
         expect(monitoring.getMultiSelectCount()).toBe('1 Item selected');
 
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 0, 0, true);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 0, 0);
         authoring.send_correction_button.click();
         expect(element(by.id('multi-select-count')).isPresent()).toBeFalsy();
     });
@@ -775,7 +775,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5'); // duplicated item
@@ -793,7 +793,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
         authoring.duplicateTo('Sports Desk', 'one');
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(2).count()).toBe(2);
@@ -802,7 +802,7 @@ describe('monitoring', () => {
         authoring.setHeaderSluglineText(' testing');
         authoring.save();
         authoring.close();
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
         authoring.duplicateTo('Politic Desk', 'two', true);
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 0)).toBe('item5');
@@ -811,16 +811,16 @@ describe('monitoring', () => {
 
     it('can remember last duplicate destination desk', () => {
         monitoring.openMonitoring();
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
         authoring.duplicateTo('Sports Desk', 'one');
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
 
         var dropdownSelected = monitoring.getSendToDropdown();
 
         browser.sleep(500);
         expect(dropdownSelected.getText()).toEqual('Sports Desk');
         authoring.duplicateTo('Politic Desk', 'two', true);
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
 
         dropdownSelected = monitoring.getSendToDropdown();
         authoring.close();

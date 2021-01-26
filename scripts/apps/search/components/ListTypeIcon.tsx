@@ -48,7 +48,7 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
                 onMouseEnter={selectingDisabled ? null : this.setHover}
                 onMouseLeave={selectingDisabled ? null : this.unsetHover}
                 style={{lineHeight: 0}}
-                data-test-id="multi-select-checkbox"
+                data-test-id="item-type-and-multi-select"
             >
                 {/*
                     When an item is focused with a keyboard, SelectBox is displayed and TypeIcon hidden.

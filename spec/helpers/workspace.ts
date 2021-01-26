@@ -22,7 +22,7 @@ class Workspace {
     getItemText: (index: any) => any;
     openItemMenu: any;
     actionOnItem: (action: any, item: any) => void;
-    actionOnItemSubmenu: (action: any, submenu: any, item: any, linkTypeBtn?: any) => void;
+    actionOnItemSubmenu: (action: any, submenu: any, item: any) => void;
     switchToDesk: any;
     selectStage: any;
     editItem: (item: any, desk?: any) => any;
@@ -220,13 +220,13 @@ class Workspace {
          * @param {string} submenu
          * @param {number} item
          */
-        this.actionOnItemSubmenu = function(action, submenu, item, linkTypeBtn) {
+        this.actionOnItemSubmenu = function(action, submenu, item) {
             var menu = this.openItemMenu(item);
 
             browser.actions()
-                .mouseMove(menu.element(by.partialLinkText(action)))
+                .mouseMove(menu.element(by.partialButtonText(action)))
                 .perform();
-            menu.element(linkTypeBtn ? by.partialLinkText(submenu) : by.partialButtonText(submenu)).click();
+            menu.element(by.partialButtonText(submenu)).click();
         };
 
         /**

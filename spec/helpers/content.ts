@@ -147,7 +147,7 @@ class Content {
 
         this.selectItem = function(item) {
             var crtItem = this.getItem(item);
-            var typeIcon = crtItem.element(by.css('[data-test-id="multi-select-checkbox"]'));
+            var typeIcon = crtItem.element(by.css('[data-test-id="item-type-and-multi-select"]'));
 
             expect(typeIcon.isDisplayed()).toBe(true);
             browser.actions()

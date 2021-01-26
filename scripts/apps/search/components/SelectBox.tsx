@@ -23,6 +23,7 @@ export class SelectBox extends React.Component<IPropsSelectBox> {
                 onSelect={(selected) => {
                     this.props.onMultiSelect([this.props.item], selected);
                 }}
+                data-test-id="multi-select-checkbox"
             />
         );
     }
@@ -33,6 +34,7 @@ interface IPropsSelectBoxWithoutMutation {
     selected: boolean;
     onSelect(selected: boolean): void;
     className?: string;
+    'data-test-id'?: string;
 }
 
 export class SelectBoxWithoutMutation extends React.PureComponent<IPropsSelectBoxWithoutMutation> {
@@ -62,6 +64,7 @@ export class SelectBoxWithoutMutation extends React.PureComponent<IPropsSelectBo
                 className={this.props.className}
                 role="checkbox"
                 aria-checked={this.props.selected}
+                data-test-id={this.props['data-test-id']}
             >
                 <span className={'sd-checkbox' + (this.props.selected ? ' checked' : '')} />
             </button>
