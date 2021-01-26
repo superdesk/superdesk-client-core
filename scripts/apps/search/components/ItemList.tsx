@@ -8,7 +8,6 @@ import {isMediaEditable} from 'core/config';
 import {gettext, IScopeApply} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {CHECKBOX_PARENT_CLASS} from './constants';
 import ng from 'core/services/ng';
 import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 import {IActivityService} from 'core/activity/activity';
@@ -159,13 +158,14 @@ export class ItemList extends React.Component<IProps, IState> {
 
         $timeout.cancel(this.updateTimeout);
 
-        const showPreview = event == null || event.target == null ||
-            (querySelectorParent(event.target, '.' + CHECKBOX_PARENT_CLASS) == null &&
-            event.target.classList.contains(CHECKBOX_PARENT_CLASS) === false);
+        // Don't open preview when a button is clicked.
+        // The button can be three dots menu, bulk actions checkbox, a button to preview existing highlights etc.
+        const preventPreview = event?.target != null
+            && querySelectorParent(event.target, 'button', {self: true}) != null;
 
         if (item && this.props.preview != null) {
             this.props.scopeApply(() => {
-                if (showPreview) {
+                if (!preventPreview) {
                     this.props.preview(item);
                 }
                 this.bindActionKeyShortcuts(item);
