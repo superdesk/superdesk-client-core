@@ -756,9 +756,12 @@ class Monitoring {
          * @param {number} item
          */
         this.checkMarkedForHighlight = function(highlight, group, item) {
-            var crtItem = this.getItem(group, item);
+            const crtItem = this.getItem(group, item);
+            const highlightsPreviewTriggerButton = el(['highlights-indicator'], null, crtItem);
 
-            el(['highlights-indicator'], null, crtItem).click();
+            browser.wait(ECE.visibilityOf(highlightsPreviewTriggerButton));
+
+            highlightsPreviewTriggerButton.click();
 
             var highlightList = el(['highlights-list']);
 
