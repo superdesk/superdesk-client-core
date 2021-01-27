@@ -106,7 +106,7 @@ export function selectFilesForUpload(
         fileNames
             .map(
                 (relativePath) =>
-                    path.resolve(__dirname, '../../../spec/test-files/' + relativePath),
+                    path.resolve(__dirname, '../../../../spec/test-files/' + relativePath),
             )
             .join('\n'),
     );
