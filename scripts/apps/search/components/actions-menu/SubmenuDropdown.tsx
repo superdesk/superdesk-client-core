@@ -42,12 +42,14 @@ export default class SubmenuDropdown extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <div className={classNames('dropdown dropdown--noarrow', {'open': this.state.open})}>
+            <div
+                className={classNames('dropdown dropdown--noarrow', {'open': this.state.open})}
+                onMouseEnter={this.openSubmenu}
+                onMouseLeave={this.closeSubmenu}
+            >
                 <button
                     className="dropdown__toggle"
                     title={this.props.label}
-                    onMouseEnter={this.openSubmenu}
-                    onMouseLeave={this.closeSubmenu}
                     onClick={this.toggleState} // required for keyboard navigation
                 >
                     {this.props.icon &&
