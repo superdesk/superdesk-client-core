@@ -69,7 +69,7 @@ export default angular.module('superdesk.core.keyboard', [])
                     isGlobal = ctrlKey && shiftKey;
 
                 if (isGlobal || !ignoreNodes[e.target.nodeName]) { // $document.body is empty when testing
-                    var character = String.fromCharCode(e.which).toLowerCase(),
+                    var character = e.key.toLowerCase(),
                         modifier = '';
 
                     modifier += ctrlKey ? 'ctrl:' : '';
@@ -195,19 +195,6 @@ export default angular.module('superdesk.core.keyboard', [])
                 }
             };
 
-            const getCharacter = function(codeNumber) {
-                let character = String.fromCharCode(codeNumber).toLowerCase();
-
-                if (codeNumber === 188) {
-                    character = ',';
-                } // If the user presses , when the type is onkeydown
-                if (codeNumber === 190) {
-                    character = '.';
-                } // If the user presses , when the type is onkeydown
-
-                return character;
-            };
-
             fct = function keyboardHandler(e = $window.event) {
             // Disable event handler when focus input and textarea
                 if (inputDisabled(e)) {
@@ -217,7 +204,7 @@ export default angular.module('superdesk.core.keyboard', [])
                 // Find out which key is pressed
                 code = e.keyCode || e.which;
 
-                let character = getCharacter(code);
+                let character = e.key.toLowerCase();
 
                 var keys = lbl.split('+');
                 // Key Pressed - counts the number of valid keypresses
