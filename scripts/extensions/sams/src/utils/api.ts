@@ -30,9 +30,17 @@ export function getApiErrorMessage(error: IAPIError): string {
         return API_ERRORS[error.error](error);
     }
     if (error.errors?.name != null) {
-        return superdeskApi.localization.gettext('Error[{{number}}]: Name requried', {
-            number: error.error,
-        });
+        for (let key of error.errors.name) {
+            if (key === 'unique') {
+                return superdeskApi.localization.gettext('Error[{{number}}]: Name not unique', {
+                    number: error.error,
+                });
+            } else if (key === 'required') {
+                return superdeskApi.localization.gettext('Error[{{number}}]: Name requried', {
+                    number: error.error,
+                });
+            }
+        }
     }
     return superdeskApi.localization.gettext('Error[{{number}}]: {{description}}', {
         number: error.error,
