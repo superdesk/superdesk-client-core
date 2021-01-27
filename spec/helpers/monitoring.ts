@@ -503,15 +503,16 @@ class Monitoring {
         this.openItemMenu = function(group, item) {
             var itemElem = this.getItem(group, item);
 
+            scrollToView(itemElem);
+
             browser.actions()
                 .mouseMove(itemElem, {x: -50, y: -50}) // first move out
                 .mouseMove(itemElem) // now it can mouseover for sure
                 .perform();
-            var dotsElem = itemElem.element(by.className('icon-dots-vertical'));
 
-            waitFor(dotsElem, 1000);
-            dotsElem.click();
-            return element(by.css('.dropdown__menu.open'));
+            el(['context-menu-button']).click();
+
+            return el(['context-menu']);
         };
 
         this.showMonitoringSettings = function() {
