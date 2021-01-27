@@ -450,7 +450,7 @@ export class ItemList extends React.Component<IProps, IState> {
             break;
         }
 
-        if (event.key === 'ArrowDown') {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
             const nextEl = document.activeElement.nextElementSibling;
 
             if (nextEl instanceof HTMLElement) {
@@ -462,7 +462,7 @@ export class ItemList extends React.Component<IProps, IState> {
             }
         }
 
-        if (event.key === 'ArrowUp') {
+        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
             const prevEl = document.activeElement.previousElementSibling;
 
             if (prevEl instanceof HTMLElement) {
