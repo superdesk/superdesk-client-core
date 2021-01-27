@@ -14,6 +14,51 @@ export const KEYS = Object.freeze({
     backspace: 8,
 });
 
+function getKeyAccordingToSuperdeskConvention(key: string) {
+    switch (key) {
+        case 'Enter':
+            return 'enter';
+        case 'ArrowUp':
+            return 'up';
+        case 'ArrowRight':
+            return 'right';
+        case 'ArrowDown':
+            return 'down';
+        case 'ArrowLeft':
+            return 'left';
+        case 'Escape':
+            return 'escape';
+        default:
+            return key;
+    }
+}
+
+function shouldInvoke(combination: string, event: KeyboardEvent) {
+    let key = null;
+    let ctrlKey = false;
+    let altKey = false;
+    let shiftKey = false;
+
+    combination.split('+').forEach((_key) => {
+        if (_key === 'ctrl') {
+            ctrlKey = true;
+        } else if (_key === 'alt') {
+            altKey = true;
+        } else if (_key === 'shift') {
+            shiftKey = true;
+        } else {
+            key = _key;
+        }
+    });
+
+    return (
+        event.ctrlKey === ctrlKey
+        && event.altKey === altKey
+        && event.shiftKey === shiftKey
+        && getKeyAccordingToSuperdeskConvention(event.key) === key
+    );
+}
+
 export default angular.module('superdesk.core.keyboard', [])
 
     .constant('Keys', KEYS)
@@ -168,7 +213,7 @@ export default angular.module('superdesk.core.keyboard', [])
 
         // Add a new keyboard combination shortcut
         this.bind = function bind(label, callback, opt) {
-            var fct, elt, code, k;
+            var fct, elt;
             // Initialize options object
             let options = angular.extend({}, defaultOpt, opt);
             let lbl = label.toLowerCase();
@@ -201,71 +246,7 @@ export default angular.module('superdesk.core.keyboard', [])
                     return;
                 }
 
-                // Find out which key is pressed
-                code = e.keyCode || e.which;
-
-                let character = e.key.toLowerCase();
-
-                var keys = lbl.split('+');
-                // Key Pressed - counts the number of valid keypresses
-                // - if it is same as the number of keys, the shortcut function is invoked
-                var kp = 0;
-                // Some modifiers key
-                var modifiers = {
-                    shift: {
-                        wanted: false,
-                        pressed: !!e.shiftKey,
-                    },
-                    ctrl: {
-                        wanted: false,
-                        pressed: !!e.ctrlKey,
-                    },
-                    alt: {
-                        wanted: false,
-                        pressed: !!e.altKey,
-                    },
-                    meta: { // Meta is Mac specific
-                        wanted: false,
-                        pressed: !!e.metaKey,
-                    },
-                };
-
-                let computeKeys = () => {
-                    let isCtrl = (key) => key === 'ctrl' || key === 'control';
-                    let isMeta = (key) => key === 'alt' || key === 'shift' || key === 'meta';
-
-                    // Foreach keys in label (split on +)
-                    for (var i = 0, l = keys.length; k = keys[i], i < l; i++) {
-                        if (isCtrl(k)) {
-                            kp++;
-                            modifiers.ctrl.wanted = true;
-                        } else if (isMeta(k)) {
-                            kp++;
-                            modifiers[k].wanted = true;
-                        }
-
-                        let shouldIncrease = k.length > 1 && specialKeys[k] === code
-                        || options.keyCode && options.keyCode === code || character === k;
-
-                        if (shouldIncrease) {
-                            kp++;
-                        } else if (shiftNums[character] && e.shiftKey) {
-                            // Stupid Shift key bug created by using lowercase
-                            character = shiftNums[character];
-                            if (character === k) {
-                                kp++;
-                            }
-                        }
-                    }
-                };
-
-                computeKeys();
-
-                if (kp === keys.length &&
-                modifiers.ctrl.pressed === modifiers.ctrl.wanted &&
-                modifiers.shift.pressed === modifiers.shift.wanted &&
-                modifiers.alt.pressed === modifiers.alt.wanted &&
-                modifiers.meta.pressed === modifiers.meta.wanted) {
+                if (shouldInvoke(label, e)) {
                     $timeout(() => {
                         callback(e);
                     }, 1);
