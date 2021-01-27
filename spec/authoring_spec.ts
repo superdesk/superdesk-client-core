@@ -9,6 +9,7 @@ import {
     assertToastMsgNotDisplayed,
     waitForToastMsgDissapear,
     nav,
+    shiftKey,
 } from './helpers/utils';
 import {monitoring} from './helpers/monitoring';
 import {dictionaries} from './helpers/dictionaries';
@@ -495,7 +496,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.writeText('');
         authoring.writeText(protractor.Key.HOME);
-        ctrlShiftKey(protractor.Key.END);
+        shiftKey(protractor.Key.END);
         ctrlKey('x');
         authoring.save();
         authoring.publish(true);

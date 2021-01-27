@@ -142,6 +142,16 @@ export function ctrlShiftKey(key) {
 }
 
 /**
+ * Performs SHIFT + key action
+ */
+export function shiftKey(key: string) {
+    var Key = protractor.Key;
+
+    browser.actions().sendKeys(Key.chord(Key.SHIFT, key))
+        .perform();
+}
+
+/**
  * Performs CTRL + ALT + key action
  *
  * @param {char} key
