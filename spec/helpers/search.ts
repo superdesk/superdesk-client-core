@@ -198,15 +198,9 @@ class GlobalSearch {
         this.actionOnItem = function(action, index, useFullLinkText) {
             var menu = this.openItemMenu(index);
 
-            if (useFullLinkText) {
-                menu.element(by.linkText(action)).waitReady()
-                    .then((elem) => {
-                        elem.click();
-                    });
-                return;
-            }
-
-            const elem = menu.element(by.partialButtonText(action));
+            const elem = useFullLinkText
+                ? menu.element(by.buttonText(action))
+                : menu.element(by.partialButtonText(action));
 
             browser.wait(ECE.visibilityOf(elem));
 
