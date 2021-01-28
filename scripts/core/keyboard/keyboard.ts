@@ -14,23 +14,22 @@ export const KEYS = Object.freeze({
     backspace: 8,
 });
 
+const superdeskKeyboardKeyNamesConvention = {
+    // native key name, superdesk key name
+    'Enter': 'enter',
+    'ArrowUp': 'up',
+    'ArrowRight': 'right',
+    'ArrowLeft': 'left',
+    'Escape': 'escape',
+};
+
 function getKeyAccordingToSuperdeskConvention(key: string) {
-    switch (key) {
-        case 'Enter':
-            return 'enter';
-        case 'ArrowUp':
-            return 'up';
-        case 'ArrowRight':
-            return 'right';
-        case 'ArrowDown':
-            return 'down';
-        case 'ArrowLeft':
-            return 'left';
-        case 'Escape':
-            return 'escape';
-        default:
-            return key;
-    }
+    return superdeskKeyboardKeyNamesConvention[key] ?? key;
+}
+
+export function getNativeKey(superdeskKey) {
+    return Object.keys(superdeskKeyboardKeyNamesConvention)
+        .find((key) => superdeskKeyboardKeyNamesConvention[key] === superdeskKey) ?? superdeskKey;
 }
 
 function shouldInvoke(combination: string, event: KeyboardEvent) {
