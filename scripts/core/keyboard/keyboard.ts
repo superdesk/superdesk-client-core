@@ -20,6 +20,7 @@ const superdeskKeyboardKeyNamesConvention = {
     'ArrowUp': 'up',
     'ArrowRight': 'right',
     'ArrowLeft': 'left',
+    'ArrowDown': 'down',
     'Escape': 'escape',
 };
 
