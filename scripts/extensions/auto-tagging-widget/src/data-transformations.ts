@@ -63,7 +63,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
                         name,
                         description,
                         qcode,
-                        source,
+                        source: source ?? '',
                         altids: altids ?? {},
                         scheme,
                     };
@@ -85,7 +85,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     name,
                     description,
                     qcode,
-                    source,
+                    source: source ?? '',
                     altids: altids ?? {},
                 };
 
