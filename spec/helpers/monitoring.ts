@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor, ElementFinder, promise as wdpromise} from 'protractor';
 import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
-import {s, ECE, el, els} from '@superdesk/end-to-end-testing-helpers';
+import {s, ECE, el, els, articleList} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {
@@ -54,7 +54,7 @@ class Monitoring {
     selectGivenItem: (item: any) => any;
     spikeMultipleItems: () => void;
     unspikeMultipleItems: any;
-    unspikeItem: (item, desk?, stage?) => wdpromise.Promise<void>;
+    unspikeItem: (item, stage?: string) => wdpromise.Promise<void>;
     openItemMenu: (group: any, item: any) => ElementFinder;
     showMonitoringSettings: () => void;
     setLabel: (label: any) => void;
@@ -482,14 +482,8 @@ class Monitoring {
             return element(by.buttonText('send')).click();
         };
 
-        this.unspikeItem = function(item, desk?, stage?) {
-            var itemElem = this.getSpikedItem(item);
-
-            browser.actions().mouseMove(itemElem).perform();
-            el(['context-menu-button']).click();
-            var menu = element(by.css('.dropdown__menu.open'));
-
-            menu.element(by.partialLinkText('Unspike')).click();
+        this.unspikeItem = function(item, stage?: string) {
+            articleList.executeContextMenuAction(this.getSpikedItem(item), 'Unspike Item');
 
             var sidebar = element.all(by.css('.side-panel')).last();
 

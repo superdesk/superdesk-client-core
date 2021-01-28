@@ -300,7 +300,7 @@ describe('authoring', () => {
         monitoring.actionOnItem('Spike', 2, 2, null, true);
         monitoring.showSpiked();
         expect(monitoring.getSpikedTextItem(0)).toBe('item7');
-        monitoring.unspikeItem(0, 'Politic desk', 'Incoming Stage');
+        monitoring.unspikeItem(0, 'Incoming Stage');
         monitoring.showMonitoring();
         expect(monitoring.getTextItem(1, 0)).toBe('item7');
         monitoring.actionOnItem('Edit', 1, 0);
