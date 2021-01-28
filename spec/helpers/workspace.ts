@@ -209,7 +209,7 @@ class Workspace {
         this.actionOnItem = function(action, item) {
             var menu = this.openItemMenu(item);
 
-            menu.element(by.partialLinkText(action)).click();
+            menu.element(by.partialButtonText(action)).click();
         };
 
         /**

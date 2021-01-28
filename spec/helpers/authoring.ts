@@ -958,7 +958,7 @@ class Authoring {
             relItem.element(by.className('icon-dots-vertical')).click();
             let menu = element(by.css('.dropdown__menu.open'));
 
-            menu.element(by.partialLinkText('Open')).click();
+            menu.element(by.partialButtonText('Open')).click();
         };
 
         this.actionRelatedItem = function(item, actionId) {

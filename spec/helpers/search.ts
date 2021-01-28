@@ -206,10 +206,11 @@ class GlobalSearch {
                 return;
             }
 
-            menu.element(by.partialLinkText(action)).waitReady()
-                .then((elem) => {
-                    elem.click();
-                });
+            const elem = menu.element(by.partialButtonText(action));
+
+            browser.wait(ECE.visibilityOf(elem));
+
+            elem.click();
         };
 
         /**

@@ -78,7 +78,7 @@ class Content {
             if (useFullLinkText) {
                 menu.element(by.linkText(action)).click();
             } else {
-                menu.all(by.partialLinkText(action))
+                menu.all(by.partialButtonText(action))
                     .first()
                     .click();
             }
