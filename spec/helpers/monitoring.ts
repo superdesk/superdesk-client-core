@@ -504,7 +504,7 @@ class Monitoring {
                 .mouseMove(itemElem) // now it can mouseover for sure
                 .perform();
 
-            el(['context-menu-button']).click();
+            el(['context-menu-button'], null, itemElem).click();
 
             return el(['context-menu']);
         };

@@ -941,7 +941,7 @@ describe('navigation using a keyboard', () => {
     it('can tab into the item and open context menu by hitting space when three dots menu is focused', () => {
         browser.actions().sendKeys(protractor.Key.TAB).perform();
 
-        browser.wait(ECE.elementsEqual(getFocusedElement(), el(['context-menu-button'])));
+        browser.wait(ECE.elementsEqual(getFocusedElement(), el(['context-menu-button'], null, firstItem)));
 
         browser.actions().sendKeys(protractor.Key.SPACE).perform();
 
