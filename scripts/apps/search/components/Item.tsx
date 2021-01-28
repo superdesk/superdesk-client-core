@@ -24,7 +24,7 @@ import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 import {IActivityService} from 'core/activity/activity';
 import {IActivity} from 'superdesk-interfaces/Activity';
 
-function isButtonClicked(event): boolean {
+export function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
     // if an extension registers a button, it should be able to totally control it.
     // target can be an image or an icon inside a button, so parents need to be checked too

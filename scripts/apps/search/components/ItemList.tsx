@@ -3,7 +3,6 @@ import React from 'react';
 import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
-import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {isMediaEditable} from 'core/config';
 import {gettext, IScopeApply} from 'core/utils';
 import {IArticle} from 'superdesk-api';
@@ -11,6 +10,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 import {IActivityService} from 'core/activity/activity';
+import {isButtonClicked} from './Item';
 
 interface IProps {
     itemsList: Array<string>;
@@ -139,6 +139,12 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     select(item, event) {
+        // Don't select item / open preview when a button is clicked.
+        // The button can be three dots menu, bulk actions checkbox, a button to preview existing highlights etc.
+        if (isButtonClicked(event)) {
+            return;
+        }
+
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
@@ -158,16 +164,9 @@ export class ItemList extends React.Component<IProps, IState> {
 
         $timeout.cancel(this.updateTimeout);
 
-        // Don't open preview when a button is clicked.
-        // The button can be three dots menu, bulk actions checkbox, a button to preview existing highlights etc.
-        const preventPreview = event?.target != null
-            && querySelectorParent(event.target, 'button', {self: true}) != null;
-
         if (item && this.props.preview != null) {
             this.props.scopeApply(() => {
-                if (!preventPreview) {
-                    this.props.preview(item);
-                }
+                this.props.preview(item);
                 this.bindActionKeyShortcuts(item);
             });
         }
