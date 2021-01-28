@@ -62,35 +62,30 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     render() {
         const items = [];
 
-        items.push(React.createElement('dt', {
-            key: 'dt',
-            style: {paddingRight: '5px'},
-        }, gettext('fetched in')));
-
-        if (this.state.desks.length) {
-            const desk = this.state.desks[0];
-            const name = this.formatDeskName(desk.desk.name);
-
-            items.push(
-                <dd key="dd1">
-                    {
-                        desk.isUserDeskMember ?
-                            <a onClick={this.openDesk(desk)}>{name}</a> :
-                            <span className="container">{name}</span>
-                    }
-                </dd>,
-            );
-
-            if (this.state.desks.length > 1) {
-                items.push(
-                    <DesksDropdown key="dd2" desks={this.state.desks} openDesk={this.openDesk} />,
-                );
-            }
+        if (!this.state.desks?.length) {
+            return null;
         }
+
+        const desk = this.state.desks[0];
+        const name = this.formatDeskName(desk.desk.name);
 
         return (
             <div>
-                <dl>{items}</dl>
+                <dl>
+                    <dt style={{paddingRight: '5px'}}>{gettext('fetched in')}</dt>
+                    <dd>
+                        {
+                            desk.isUserDeskMember ?
+                                <a onClick={this.openDesk(desk)}>{name}</a> :
+                                <span className="container">{name}</span>
+                        }
+                    </dd>
+                    <dd>
+                        {this.state.desks.length > 1 && (
+                            <DesksDropdown desks={this.state.desks} openDesk={this.openDesk} />
+                        )}
+                    </dd>
+                </dl>
             </div>
         );
     }
