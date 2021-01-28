@@ -689,16 +689,16 @@ declare module 'superdesk-api' {
 
         abortSignal?: AbortSignal;
     }
-    
+
     export interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
         path: string; // relative to application server
     }
-    
+
     export interface IHttpRequestJsonOptionsLocal extends IHttpRequestOptionsLocal {
         // JSON not available with DELETE method
         method: 'GET' | 'POST' | 'PATCH' | 'PUT';
     }
-    
+
 
     export interface IBaseRestApiResponse {
         _created: string;
@@ -1558,7 +1558,7 @@ declare module 'superdesk-api' {
         description?: string;
         qcode: string;
         scheme?: string;
-        source: string;
+        source?: string;
         translations?: {};
         altids?: {[key: string]: string};
     }
