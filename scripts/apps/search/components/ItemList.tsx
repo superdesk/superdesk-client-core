@@ -490,7 +490,16 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     focus() {
-        this.focusableElement?.focus();
+        if (this.focusableElement == null) {
+            return;
+        }
+
+        // Focus only if a child item doesn't already have focus.
+        // Otherwise, it always re-focuses the entire list after clicking a particular item
+        // and user is unable to use keyboard shortcuts on an item that was clicked.
+        if (this.focusableElement.contains(document.activeElement) === false) {
+            this.focusableElement.focus();
+        }
     }
 
     render() {
