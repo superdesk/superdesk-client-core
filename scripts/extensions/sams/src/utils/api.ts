@@ -35,9 +35,14 @@ export function getApiErrorMessage(error: IAPIError): string {
                 return superdeskApi.localization.gettext('Error[{{number}}]: Name not unique', {
                     number: error.error,
                 });
-            } else if (key === 'required') {
+            } else if (key === 'required' || key === 'empty values not allowed') {
                 return superdeskApi.localization.gettext('Error[{{number}}]: Name requried', {
                     number: error.error,
+                });
+            } else {
+                return superdeskApi.localization.gettext('Error[{{number}}]: {{description}}', {
+                    number: error.error,
+                    description: error.description,
                 });
             }
         }
