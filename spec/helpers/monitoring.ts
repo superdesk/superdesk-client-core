@@ -898,12 +898,22 @@ class Monitoring {
         };
 
         this.expectIsChecked = function(group, item) {
-            return expect(this.getItem(group, item).element(by.className('sd-checkbox')).getAttribute('class'))
-                .toContain('checked');
+            return expect(
+                el(['multi-select-checkbox'], null, this.getItem(group, item))
+                    .getAttribute('aria-checked'),
+            ).toBe('true');
         };
 
         this.expectIsNotChecked = function(group, item) {
-            return expect(this.getItem(group, item).element(by.className('sd-checkbox')).isPresent()).toBeFalsy();
+            const checkboxEl = el(['multi-select-checkbox'], null, this.getItem(group, item));
+
+            return checkboxEl.isPresent().then((present) => {
+                if (present) {
+                    expect(checkboxEl.getAttribute('aria-checked')).toBe('false');
+                } else {
+                    expect(present).toBe(false);
+                }
+            });
         };
 
         this.turnOffDeskWorkingStage = function(deskIndex, canCloseSettingsModal) {
