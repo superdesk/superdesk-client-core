@@ -1,10 +1,9 @@
-<a title="{{ :: activity.label | translate }}"
-    ng-href="{{ :: $root.link(activity._id, item) }}"
+<button title="{{ :: activity.label | translate }}"
     ng-if=":: !activity.dropdown"
     ng-click="run(activity, $event)">
     <i class="icon-{{ :: activity.icon }} {{!activity.monitor|| !item.actioning[activity._id] || 'actioning'}}" ng-show=":: activity.icon"></i>
     <span>{{ :: activity.label | translate }}</span>
-</a>
+</button>
 <div ng-if=":: activity.dropdown"
      class="dropdown dropdown--noarrow"
      ng-class="{open: dropdownOpen}"
