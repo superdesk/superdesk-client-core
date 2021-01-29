@@ -331,12 +331,7 @@ class GlobalSearch {
          * @param {number} item
          */
         this.checkMarkedForDesk = function(deskName, item) {
-            var crtItem = this.getItem(item);
-            const bellIcon = crtItem.element(by.className('icon-bell'));
-
-            browser.wait(ECE.visibilityOf(bellIcon));
-
-            expect(bellIcon.isDisplayed()).toBeTruthy();
+            browser.wait(ECE.visibilityOf(this.getItem(item).element(by.className('icon-bell'))));
         };
 
         /**
