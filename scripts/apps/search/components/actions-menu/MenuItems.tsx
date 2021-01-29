@@ -70,6 +70,10 @@ export default class MenuItems extends React.Component<IProps, IState> {
                     actionsFromExtensions: actions,
                 });
             });
+        } else {
+            this.setState({
+                actionsFromExtensions: [],
+            });
         }
     }
 
