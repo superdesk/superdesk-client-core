@@ -3,6 +3,9 @@ import {ISetItem} from '../../interfaces';
 import {IThunkAction} from '../types';
 import {superdeskApi, samsApi} from '../../apis';
 
+// Redux Selectors
+import {getSelectedSetId} from './selectors';
+
 import {
     ISetActionTypes,
     RECEIVE_SETS,
@@ -112,11 +115,16 @@ function openDeleteConfirmationModal(set: ISetItem): Promise<boolean> {
 }
 
 export function confirmBeforeDeletingSet(set: ISetItem): IThunkAction<void> {
-    return () => {
+    return (dispatch, getState) => {
         return openDeleteConfirmationModal(set)
             .then((response: boolean) => {
                 if (response === true) {
                     return samsApi.sets.delete(set)
+                        .then(() => {
+                            if (getSelectedSetId(getState()) === set._id) {
+                                dispatch(closeSetContentPanel());
+                            }
+                        });
                 }
 
                 return Promise.resolve();

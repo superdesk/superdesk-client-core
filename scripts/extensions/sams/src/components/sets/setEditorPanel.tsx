@@ -149,7 +149,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
 
         const promise = this.props.original != null ?
             samsApi.sets.update(this.props.original, this.state.updates) :
-            samsApi.sets.create(this.state.updates)
+            samsApi.sets.create(this.state.updates);
 
         promise
             .then((set: ISetItem) => {

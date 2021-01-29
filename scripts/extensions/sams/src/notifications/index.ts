@@ -1,9 +1,7 @@
-// import {IWebsocketMessage} from 'superdesk-api';
 import {superdeskApi} from '../apis';
-import {onSetCreated,  onSetUpdated,onSetDeleted} from './sets';
+import {onSetCreated, onSetUpdated, onSetDeleted} from './sets';
 
-
-const websocketNotificationMap: {[key: string]: (event: any)=> void} = {
+const websocketNotificationMap: {[key: string]: (event: any) => void} = {
     'sams:set:created': onSetCreated,
     'sams:set:updated': onSetUpdated,
     'sams:set:deleted': onSetDeleted,
@@ -13,7 +11,6 @@ let websocketDeregistrationArray: Array<() => void> = [];
 
 export function registerWebsocketNotifications() {
     if (websocketDeregistrationArray.length > 0) {
-        // No need to re-register event listeners, as this will call listeners twice
         return;
     }
 
@@ -28,6 +25,6 @@ export function deregisterWebsocketListeners() {
     websocketDeregistrationArray.forEach((deregisterListener) => {
         deregisterListener();
     });
-    
+
     websocketDeregistrationArray = [];
 }
