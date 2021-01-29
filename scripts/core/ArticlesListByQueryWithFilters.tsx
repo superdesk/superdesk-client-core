@@ -31,6 +31,7 @@ class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelect
                 }}
                 selected={options.selected.has(item._id)}
                 className="hover-AB--B"
+                data-test-id="multi-select-checkbox"
             />
         );
 
