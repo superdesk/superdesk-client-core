@@ -23,29 +23,28 @@ export function isSamsApiError(error: any): boolean {
 export const API_ERRORS: Dictionary<string, (error: IAPIError) => string> = {
     '04002': (_error) =>
         superdeskApi.localization.gettext('Error[04002]: Invalid search query'),
+    '04001': (_error) => {
+        for (let key of _error.errors!.name) {
+            if (key === 'unique') {
+                return superdeskApi.localization.gettext('Error[{{number}}]: Name not unique', {
+                    number: _error.error,
+                });
+            } else if (key === 'required' || key === 'empty values not allowed') {
+                return superdeskApi.localization.gettext('Error[{{number}}]: Name requried', {
+                    number: _error.error,
+                });
+            }
+        }
+        return superdeskApi.localization.gettext('Error[{{number}}]: {{description}}', {
+            number: _error.error,
+            description: _error.description,
+        });
+    },
 };
 
 export function getApiErrorMessage(error: IAPIError): string {
     if (API_ERRORS[error.error] != null) {
         return API_ERRORS[error.error](error);
-    }
-    if (error.errors?.name != null) {
-        for (let key of error.errors.name) {
-            if (key === 'unique') {
-                return superdeskApi.localization.gettext('Error[{{number}}]: Name not unique', {
-                    number: error.error,
-                });
-            } else if (key === 'required' || key === 'empty values not allowed') {
-                return superdeskApi.localization.gettext('Error[{{number}}]: Name requried', {
-                    number: error.error,
-                });
-            } else {
-                return superdeskApi.localization.gettext('Error[{{number}}]: {{description}}', {
-                    number: error.error,
-                    description: error.description,
-                });
-            }
-        }
     }
     return superdeskApi.localization.gettext('Error[{{number}}]: {{description}}', {
         number: error.error,
