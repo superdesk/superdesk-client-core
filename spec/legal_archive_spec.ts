@@ -4,7 +4,6 @@ import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {legalArchive} from './helpers/legal_archive';
-import {hover} from './helpers/utils';
 
 describe('legal_archive', () => {
     it('can display Legal Archive option in hamburger menu', () => {
@@ -31,8 +30,7 @@ describe('legal_archive', () => {
 
         content.previewItem('item1 in legal archive');
         expect(element(by.id('item-preview')).isDisplayed()).toBe(true);
-
-        content.actionOnItem('Open', 'item1 in legal archive');
+        element(by.className('close-preview')).click();
         expect(element(by.id('item-preview')).isDisplayed()).toBe(false);
     });
 
