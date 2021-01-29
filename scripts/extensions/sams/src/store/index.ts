@@ -16,6 +16,8 @@ import {storageDestinationReducer} from './storageDestinations/reducers';
 import {assetsReducer} from './assets/reducers';
 import {workspaceReducer} from './workspace/reducers';
 
+import {registerWebsocketNotifications, deregisterWebsocketListeners} from '../notifications';
+
 export const rootReducer = combineReducers({
     sets: setsReducer,
     storageDestinations: storageDestinationReducer,
@@ -66,7 +68,7 @@ export function createReduxStore(
         // (this should always be the last middleware)
         middlewares.push(createLogger());
     }
-
+    registerWebsocketNotifications();
     store = createStore(
         reducer,
         initialState,
@@ -94,6 +96,7 @@ export function unsetStore() {
     storeReferenceCount -= 1;
 
     if (storeReferenceCount === 0) {
+        deregisterWebsocketListeners();
         store = undefined;
     }
 }

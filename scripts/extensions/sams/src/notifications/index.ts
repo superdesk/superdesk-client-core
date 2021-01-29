@@ -1,44 +1,33 @@
-// import {ISuperdesk} from 'superdesk-api';
-// import { superdeskApi } from 'apis';
+// import {IWebsocketMessage} from 'superdesk-api';
+import {superdeskApi} from '../apis';
+import {onSetCreated,  onSetUpdated,onSetDeleted} from './sets';
 
-export interface IArticleUpdateEvent {
-    user: string;
-    items: {[itemId: string]: 1};
-    desks: {[itemId: string]: 1};
-    stages: {[itemId: string]: 1};
+
+const websocketNotificationMap: {[key: string]: (event: any)=> void} = {
+    'sams:set:created': onSetCreated,
+    'sams:set:updated': onSetUpdated,
+    'sams:set:deleted': onSetDeleted,
+};
+
+let websocketDeregistrationArray: Array<() => void> = [];
+
+export function registerWebsocketNotifications() {
+    if (websocketDeregistrationArray.length > 0) {
+        // No need to re-register event listeners, as this will call listeners twice
+        return;
+    }
+
+    Object.keys(websocketNotificationMap).forEach((name) => {
+        const deregisterListener = superdeskApi.addWebsocketMessageListener(name, websocketNotificationMap[name]);
+
+        websocketDeregistrationArray.push(deregisterListener);
+    });
 }
 
-  export interface IResourceUpdateEvent {
-    fields: {[key: string]: 1};
-    resource: string;
-    _id: string;
-}
-
-export interface IResourceCreatedEvent {
-    resource: string;
-    _id: string;
-}
-
-export interface IResourceDeletedEvent {
-    resource: string;
-    _id: string;
-}
-
-export interface IWebsocketMessage<T> {
-    event: string;
-    extra: T;
-    _created: string;
-    _process: string;
-}
-
-export interface IPublicWebsocketMessages {
-    'sams:asset:lock_asset': IWebsocketMessage<IArticleUpdateEvent>;
-    'sams:asset:unlock_asset': IWebsocketMessage<IResourceCreatedEvent>;
-    'sams:asset:session_unlock': IWebsocketMessage<IResourceUpdateEvent>;
-    'sams:asset:created': IWebsocketMessage<IResourceCreatedEvent>;
-    'sams:asset:updated': IWebsocketMessage<IResourceUpdateEvent>;
-    'sams:asset:deleted': IWebsocketMessage<IResourceDeletedEvent>;
-    'sams:set:created': IWebsocketMessage<IResourceCreatedEvent>;
-    'sams:set:updated': IWebsocketMessage<IResourceUpdateEvent>;
-    'sams:set:deleted': IWebsocketMessage<IResourceDeletedEvent>;
+export function deregisterWebsocketListeners() {
+    websocketDeregistrationArray.forEach((deregisterListener) => {
+        deregisterListener();
+    });
+    
+    websocketDeregistrationArray = [];
 }
