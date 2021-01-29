@@ -1,7 +1,7 @@
 import {element, by, browser} from 'protractor';
 import {acceptConfirm, nav} from './utils';
 import {multiAction} from './actions';
-import {ECE} from '@superdesk/end-to-end-testing-helpers';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 
 class Content {
     send: any;
@@ -76,7 +76,7 @@ class Content {
             var menu = this.openItemMenu(item);
 
             if (useFullLinkText) {
-                menu.element(by.linkText(action)).click();
+                menu.element(by.buttonText(action)).click();
             } else {
                 menu.all(by.partialButtonText(action))
                     .first()
@@ -98,22 +98,16 @@ class Content {
         }
 
         this.openItemMenu = function(item) {
-            this.getItem(item).click();
+            const itemElem = this.getItem(item);
 
-            var preview = element(by.id('item-preview'));
+            browser.actions()
+                .mouseMove(itemElem, {x: -50, y: -50}) // first move out
+                .mouseMove(itemElem) // now it can mouseover for sure
+                .perform();
 
-            waitFor(preview);
+            el(['context-menu-button'], null, itemElem).click();
 
-            var toggle = preview.element(by.className('icon-dots-vertical'));
-
-            waitFor(toggle);
-
-            toggle.click();
-
-            var menu = element(by.css('.dropdown__menu.open'));
-
-            waitFor(menu);
-            return menu;
+            return el(['context-menu']);
         };
 
         this.previewItem = function(item) {
