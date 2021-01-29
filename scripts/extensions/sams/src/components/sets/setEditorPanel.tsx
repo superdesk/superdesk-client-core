@@ -7,10 +7,10 @@ import {cloneDeep} from 'lodash';
 // Types
 import {ISetItem, IStorageDestinationItem, SET_STATE, DATA_UNIT} from '../../interfaces';
 import {IApplicationState} from '../../store';
-import {superdeskApi} from '../../apis';
+import {superdeskApi, samsApi} from '../../apis';
 
 // Redux Actions & Selectors
-import {createSet, previewSet, updateSet, closeSetContentPanel} from '../../store/sets/actions';
+import {previewSet, closeSetContentPanel} from '../../store/sets/actions';
 import {getSelectedSet, getSelectedSetStorageDestination} from '../../store/sets/selectors';
 import {getStorageDestinations} from '../../store/storageDestinations/selectors';
 
@@ -37,8 +37,6 @@ interface IProps {
     destinations: Array<IStorageDestinationItem>;
     closeEditor(): void;
     previewSet(set: ISetItem): void;
-    updateSet(original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem>;
-    createSet(set: Partial<ISetItem>): Promise<ISetItem>;
     currentDestination?: IStorageDestinationItem;
 }
 
@@ -58,8 +56,6 @@ const mapStateToProps = (state: IApplicationState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     closeEditor: () => dispatch(closeSetContentPanel()),
     previewSet: (set: ISetItem) => dispatch(previewSet(set._id)),
-    updateSet: (original: ISetItem, updates: ISetItem) => dispatch<any>(updateSet(original, updates)),
-    createSet: (set: ISetItem) => dispatch<any>(createSet(set)),
 });
 
 export class SetEditorPanelComponent extends React.Component<IProps, IState> {
@@ -152,8 +148,8 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
         this.setState({submitting: true});
 
         const promise = this.props.original != null ?
-            this.props.updateSet(this.props.original, this.state.updates) :
-            this.props.createSet(this.state.updates);
+            samsApi.sets.update(this.props.original, this.state.updates) :
+            samsApi.sets.create(this.state.updates)
 
         promise
             .then((set: ISetItem) => {

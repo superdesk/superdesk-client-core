@@ -3,9 +3,6 @@ import {ISetItem} from '../../interfaces';
 import {IThunkAction} from '../types';
 import {superdeskApi, samsApi} from '../../apis';
 
-// Redux Selectors
-import {getSelectedSetId} from './selectors';
-
 import {
     ISetActionTypes,
     RECEIVE_SETS,
@@ -115,43 +112,14 @@ function openDeleteConfirmationModal(set: ISetItem): Promise<boolean> {
 }
 
 export function confirmBeforeDeletingSet(set: ISetItem): IThunkAction<void> {
-    return (dispatch, getState) => {
+    return () => {
         return openDeleteConfirmationModal(set)
             .then((response: boolean) => {
                 if (response === true) {
                     return samsApi.sets.delete(set)
-                        .then(() => {
-                            dispatch(removeSetInStore(set));
-
-                            if (getSelectedSetId(getState()) === set._id) {
-                                dispatch(closeSetContentPanel());
-                            }
-                        });
                 }
 
                 return Promise.resolve();
-            });
-    };
-}
-
-export function updateSet(original: ISetItem, updates: Partial<ISetItem>): IThunkAction<ISetItem> {
-    return (dispatch) => {
-        return samsApi.sets.update(original, updates)
-            .then((updatedSet: ISetItem) => {
-                // Wait for the Sets to update before returning the updated Set
-                return dispatch(loadSets())
-                    .then(() => updatedSet);
-            });
-    };
-}
-
-export function createSet(item: Partial<ISetItem>): IThunkAction<ISetItem> {
-    return (dispatch) => {
-        return samsApi.sets.create(item)
-            .then((newSet: ISetItem) => {
-                // Wait for the Sets to update before returning the new Set
-                return dispatch(loadSets())
-                    .then(() => newSet);
             });
     };
 }

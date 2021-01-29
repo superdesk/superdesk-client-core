@@ -4,6 +4,7 @@ import {ISuperdesk, IExtension} from 'superdesk-api';
 // Apps
 import {SamsWorkspaceApp} from './apps/samsWorkspace';
 import {superdeskApi} from './apis';
+import {onSetCreated, onSetUpdated, onSetDeleted} from '../src/notifications/sets'
 
 const extension: IExtension = {
     id: 'sams',
@@ -12,6 +13,10 @@ const extension: IExtension = {
 
         Object.assign(superdeskApi, superdesk);
 
+        // Then using the following to test (inside the extension.activate function):
+        superdesk.addWebsocketMessageListener('sams:set:created', onSetCreated);
+        superdesk.addWebsocketMessageListener('sams:set:updated', onSetUpdated);
+        superdesk.addWebsocketMessageListener('sams:set:deleted', onSetDeleted);
         return Promise.resolve({
             contributions: {
                 pages: [{
