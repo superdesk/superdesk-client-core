@@ -25,7 +25,7 @@ const superdeskKeyboardKeyNamesConvention = {
 };
 
 function getKeyAccordingToSuperdeskConvention(key: string) {
-    return superdeskKeyboardKeyNamesConvention[key] ?? key;
+    return superdeskKeyboardKeyNamesConvention[key] ?? key.toLowerCase();
 }
 
 export function getNativeKey(superdeskKey) {
