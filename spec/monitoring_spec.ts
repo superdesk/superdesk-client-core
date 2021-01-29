@@ -919,8 +919,6 @@ describe('navigation using a keyboard', () => {
 
         firstItem.click();
 
-        browser.actions().sendKeys(protractor.Key.TAB).perform(); // focusing from list into an item
-
         browser.wait(ECE.elementsEqual(getFocusedElement(), firstItem));
     });
 
@@ -939,7 +937,8 @@ describe('navigation using a keyboard', () => {
     });
 
     it('can tab into the item and open context menu by hitting space when three dots menu is focused', () => {
-        browser.actions().sendKeys(protractor.Key.TAB).perform();
+        browser.actions().sendKeys(protractor.Key.TAB).perform(); // focuses bulk action checkbox
+        browser.actions().sendKeys(protractor.Key.TAB).perform(); // focuses three dots menu
 
         browser.wait(ECE.elementsEqual(getFocusedElement(), el(['context-menu-button'], null, firstItem)));
 
