@@ -216,9 +216,9 @@ class GlobalSearch {
          */
         this.actionOnSubmenuItem = function(action, submenu, index, linkTypeBtn) {
             var menu = this.openItemMenu(index);
-            var header = menu.element(by.partialLinkText(action));
+            var header = menu.element(by.buttonText(action));
             var btn = linkTypeBtn ?
-                menu.element(by.partialLinkText(submenu)) :
+                menu.element(by.partialButtonText(submenu)) :
                 menu.element(by.partialButtonText(submenu));
 
             browser.actions()
