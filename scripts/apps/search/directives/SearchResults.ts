@@ -108,6 +108,7 @@ export function SearchResults(
             scope.$on('item:unspike', scheduleIfShouldUpdate);
             scope.$on('item:duplicate', queryItems);
             scope.$on('item:translate', queryItems);
+            scope.$on('item:marked_desks', queryItems);
 
             // used by superdesk-fi
             scope.showtags = attr.showtags !== 'false';
