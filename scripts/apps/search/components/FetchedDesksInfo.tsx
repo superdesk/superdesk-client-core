@@ -75,16 +75,14 @@ export class FetchedDesksInfo extends React.Component<any, any> {
                     <dt style={{paddingRight: '5px'}}>{gettext('fetched in')}</dt>
                     <dd>
                         {
-                            desk.isUserDeskMember ?
-                                <a onClick={this.openDesk(desk)}>{name}</a> :
-                                <span className="container">{name}</span>
+                            desk.isUserDeskMember
+                                ? <button onClick={this.openDesk(desk)}>{name}</button>
+                                : <span className="container">{name}</span>
                         }
                     </dd>
-                    <dd>
-                        {this.state.desks.length > 1 && (
-                            <DesksDropdown desks={this.state.desks} openDesk={this.openDesk} />
-                        )}
-                    </dd>
+                    {this.state.desks.length > 1 && (
+                        <DesksDropdown desks={this.state.desks} openDesk={this.openDesk} />
+                    )}
                 </dl>
             </div>
         );
