@@ -92,7 +92,6 @@
 }
 
 .filter-content {
-    float: left;
     margin-top: 10px;
 }
 
@@ -253,11 +252,11 @@
     &.refresh {
         padding-right: 50px;
         min-height: 44px;
-        .refresh-box { 
+        .refresh-box {
             display: block;
             position: absolute;
             right: 10px; top: 8px;
-        } 
+        }
     }
 }
 
@@ -468,7 +467,7 @@
                 opacity: 1;
                 transition: opacity ease-in-out 0.4s;
                 transition-delay: 0.2s;
-                
+
             }
             @media only screen and (max-width: 1430px) {
                 width: $sidepreview-width - 40;
@@ -480,9 +479,9 @@
                 overflow: hidden;
                 .content-item-preview {
                     opacity: 0;
-                } 
+                }
             }
-    
+
         }
     }
 }
@@ -531,7 +530,7 @@
 
                 .content-item-preview {
                     opacity: 0;
-                } 
+                }
             }
             .search-preview--overlay {
                 opacity: 0;
