@@ -3,7 +3,7 @@ import {gettext} from 'core/utils';
 import {IPackagesService} from 'types/Services/Packages';
 import {IBaseRestApiResponse} from 'superdesk-api';
 
-export interface IHighlight extends IBaseRestApiResponse  {
+export interface IHighlight extends IBaseRestApiResponse {
     name: string;
     desks: Array<string>;
     auto_insert?: string;
