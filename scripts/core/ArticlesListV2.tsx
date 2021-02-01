@@ -37,6 +37,13 @@ interface IProps {
     multiSelect?: IMultiSelectNew;
 }
 
+/**
+ * "Track By" ids are a workaround to published items having _id set
+ * to a an _id of the original story (_id from archive endpoint). If an update is created,
+ * /search endpoint will return 2 items with the same _id
+ */
+type ITrackById = string;
+
 export class ArticlesListV2 extends React.Component<IProps, IState> {
     private monitoringState: any;
     private lazyLoaderRef: LazyLoader<IArticle>;
@@ -45,6 +52,11 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
     private removeContentUpdateListener: () => void;
     private removeResourceDeletedListener: () => void;
     private _mounted: boolean;
+    private services: {search: any};
+
+    // required for updating the list after receiving a websocket notification
+    // notifications return real _id, but LazyLoader works with ITrackById
+    private idMap: Map<IArticle['_id'], ITrackById>;
 
     constructor(props: any) {
         super(props);
@@ -66,22 +78,37 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
 
                 if (reloadTheList || fields == null) {
                     this.lazyLoaderRef.reset();
+                    this.idMap.clear();
                 } else {
-                    this.lazyLoaderRef.updateItems(new Set([itemId]));
+                    const trackById = this.idMap.get(itemId);
+
+                    if (trackById != null) {
+                        this.lazyLoaderRef.updateItems(new Set([trackById]));
+                    }
                 }
             }
         };
+
+        this.idMap = new Map<IArticle['_id'], ITrackById>();
+
+        this.services = {
+            search: ng.get('search'),
+        };
     }
 
-    loadMore(from: number, to: number): Promise<OrderedMap<IArticle['_id'], IArticle>> {
+    loadMore(from: number, to: number): Promise<OrderedMap<ITrackById, IArticle>> {
         const {loadItems} = this.props;
 
-        return new Promise<OrderedMap<IArticle['_id'], IArticle>>((resolve) => {
+        return new Promise<OrderedMap<ITrackById, IArticle>>((resolve) => {
             loadItems(from, to).then((items) => {
-                let result = OrderedMap<IArticle['_id'], IArticle>();
+                let result = OrderedMap<ITrackById, IArticle>();
 
                 items.forEach((item) => {
-                    result = result.set(item._id, item);
+                    const trackById: ITrackById = this.services.search.generateTrackByIdentifier(item);
+
+                    this.idMap.set(item._id, trackById);
+
+                    result = result.set(trackById, item);
                 });
 
                 resolve(result);
@@ -117,20 +144,27 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         }
 
         const {itemCount, pageSize} = this.props;
+        const {services} = this;
 
         return (
             <LazyLoader
                 itemCount={itemCount}
                 loadMoreItems={this.loadMore}
                 pageSize={pageSize}
-                getItemsByIds={(ids) => {
+                getItemsByIds={(trackByIds) => {
+                    const ids = trackByIds.map((x) => services.search.extractIdFromTrackByIndentifier(x));
+
                     return Promise.all(
                         ids.map((id) => dataApi.findOne<IArticle>('search', id)),
                     ).then((items) => {
-                        let result = OrderedMap<IArticle['_id'], IArticle>();
+                        let result = OrderedMap<ITrackById, IArticle>();
 
                         items.forEach((item) => {
-                            result = result.set(item._id, item);
+                            const trackById = services.search.generateTrackByIdentifier(item);
+
+                            this.idMap.set(item._id, trackById);
+
+                            result = result.set(trackById, item);
                         });
 
                         return result;
@@ -186,7 +220,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             ingestProvidersById={this.monitoringState.state.ingestProvidersById}
                             usersById={this.monitoringState.state.usersById}
                             onMonitoringItemSelect={(item) => {
-                                this.setState({selected: item._id});
+                                this.setState({selected: services.search.generateTrackByIdentifier(item)});
                                 this.props.onItemClick(item);
                             }}
                             onMonitoringItemDoubleClick={this.props.onItemDoubleClick ?? noop}
