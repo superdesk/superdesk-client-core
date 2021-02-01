@@ -178,8 +178,8 @@ export function editAsset(assetId?: string): IAssetActionTypes {
 export function unlockAsset(asset: IAssetItem): IThunkAction<Partial<IAssetItem>> {
     return (dispatch, getState) => {
         return samsApi.assets.unlockAsset(asset, {})
-            .then((unlockedAsset: Partial<IAssetItem>) => {
-                dispatch(updateAssetInStore(unlockedAsset, asset._id));
+            .then(() => {
+                dispatch
                 const getassets = getAssets(getState());
 
                 return getassets[asset._id];
@@ -206,8 +206,8 @@ export function lockAsset(asset: IAssetItem): (dispatch: any, getState: any) =>
             return Promise.resolve();
         } else {
             return samsApi.assets.lockAsset(asset, {'lock_action': 'edit'})
-                .then((lockedAsset: Partial<IAssetItem>) => {
-                    dispatch(updateAssetInStore(lockedAsset, asset._id));
+                .then(() => {
+                    dispatch
                     const getassets = getAssets(getState());
 
                     return getassets[asset._id];
@@ -230,11 +230,10 @@ export function onEditAsset(asset: IAssetItem): (dispatch: any, getState: any) =
 }
 
 export function updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): IThunkAction<IAssetItem> {
-    return (dispatch) => {
+    return () => {
         return samsApi.assets.update(original, updates)
             .then((updatedAsset: IAssetItem) => {
                 // Wait for the Assets to update before returning the updated Asset
-                dispatch(updateAssetInStore(updatedAsset, updatedAsset._id));
                 return updatedAsset;
             });
     };
@@ -247,7 +246,6 @@ export function deleteAsset(asset: IAssetItem): IThunkAction<void> {
 
         return samsApi.assets.deleteAsset(asset)
             .then(() => {
-                dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
                 if (selectedAssetId === asset._id) {
                     dispatch(closeAssetContentPanel());
                 }
