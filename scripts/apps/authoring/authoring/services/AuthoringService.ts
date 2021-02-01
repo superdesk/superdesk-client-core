@@ -28,7 +28,7 @@ export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promis
                     : onUpdateFromExtensions
                         .reduce(
                             (current, next) => current.then(
-                                (result) => next(orig, result),
+                                (result) => next(orig._autosave ?? orig, result),
                             ),
                             Promise.resolve(item),
                         )
