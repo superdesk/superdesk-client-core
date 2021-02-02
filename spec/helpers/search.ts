@@ -416,7 +416,9 @@ class GlobalSearch {
             const toggleButton = markedDesks.element(by.className('dropdown-toggle'));
 
             scrollToView(toggleButton);
+            browser.sleep(1000);
             scrollRelative(advancedSearchPanel, 'up', 60); // account for sticky tabs
+            browser.sleep(1000);
 
             toggleButton.click();
             markedDesks.all(el(['dropdown__item']).locator()).get(index).click();
