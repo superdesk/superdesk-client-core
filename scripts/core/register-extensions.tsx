@@ -49,12 +49,6 @@ export function registerExtensions(
             Object.keys(extensionsWithActivationResult).map((extensionId) => {
                 const extensionObject = extensionsWithActivationResult[extensionId];
 
-                // USE EXTENSION ID TO GET IMPLEMENTATION
-                // SET IMPLEMENTATION AS A GLOBAL OR IN A MODULE
-                // LOAD EXTENSION
-                // ACTIVATE EXTENSION
-                // SAVE ACTIVATION RESULT
-
                 return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
                     .then((activationResult) => {
                         extensionObject.activationResult = activationResult;
