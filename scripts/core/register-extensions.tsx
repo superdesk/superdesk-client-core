@@ -72,7 +72,7 @@ export function registerExtensions(
                         category: superdesk.MENU_MAIN,
                         adminTools: false,
                         controller: noop,
-                        template: '<sd-extension-page></<sd-extension-page>',
+                        template: '<sd-extension-page></sd-extension-page>',
                     });
             });
         });
