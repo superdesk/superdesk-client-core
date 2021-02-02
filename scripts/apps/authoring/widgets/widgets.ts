@@ -322,7 +322,9 @@ function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
                     angular.element('body').removeClass('main-section--pinned-tabs');
                     scope.pinnedWidget = null;
 
-                    widget ? widget.pinned = false : null;
+                    if (widget) {
+                        widget.pinned = false;
+                    }
                 } else {
                     angular.element('body').addClass('main-section--pinned-tabs');
                     scope.pinnedWidget = widget;

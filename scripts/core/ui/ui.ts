@@ -845,7 +845,7 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
 
             const resize = () => {
                 var remainingSpace = container.width() - workspace.outerWidth() - 48,
-                authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
+                    authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
 
                 var stage = workspace.find('.stage.swimlane');
                 var header = stage.find('.column-header.swimlane');
@@ -865,7 +865,7 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 authoring.width(authoringWidth / container.width() * 100 + '%');
 
                 header.width(stage.outerWidth());
-            }
+            };
 
             const afterResize = () => {
                 var stage = workspace.find('.stage.swimlane');
@@ -886,7 +886,7 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
 
                 // Trigger resize event to update elements
                 $timeout(() => window.dispatchEvent(new Event('resize')), 0, false);
-            }
+            };
 
             /*
              * If custom sizes are defined, preload them
@@ -896,7 +896,7 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 authoring.css({width: superdesk.authoringWidth});
             }
 
-             /*
+            /*
              * Resize on request
              */
             $rootScope.$on('resize:monitoring', (e, value) => {
