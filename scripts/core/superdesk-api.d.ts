@@ -133,7 +133,6 @@ declare module 'superdesk-api' {
     export type IExtensionObject = {
         extension: IExtension;
         activationResult: IExtensionActivationResult;
-        apiInstance: ISuperdesk;
     };
 
     export type IExtensions = {[key: string]: IExtensionObject};

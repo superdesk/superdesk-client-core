@@ -16,6 +16,8 @@ export function registerExtensions(
     metadata,
     preferencesService,
 ): Promise<void> {
+    window['extensionsApiInstances'] = {};
+
     return Promise.all(
         extensionLoaders.map(
             ({id, load}) => {
@@ -32,11 +34,12 @@ export function registerExtensions(
                     preferencesService,
                 );
 
+                window['extensionsApiInstances'][id] = apiInstance;
+
                 return load().then((extension) => {
                     extensionsWithActivationResult[id] = {
                         extension,
                         activationResult: {},
-                        apiInstance,
                     };
                 });
             },
@@ -52,11 +55,12 @@ export function registerExtensions(
                 // ACTIVATE EXTENSION
                 // SAVE ACTIVATION RESULT
 
-                return extensionObject.extension.activate(extensionObject.apiInstance).then((activationResult) => {
-                    extensionObject.activationResult = activationResult;
+                return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
+                    .then((activationResult) => {
+                        extensionObject.activationResult = activationResult;
 
-                    return activationResult;
-                });
+                        return activationResult;
+                    });
             }),
         ).then((activationResults) => {
             const pages = flatMap(activationResults, (activationResult) =>
