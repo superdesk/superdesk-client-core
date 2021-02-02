@@ -265,8 +265,8 @@ function WidgetsManagerCtrl(
         unbindAllShortcuts();
     });
 }
-AuthoringWidgetsDir.$inject = ['desks', 'commentsService', '$injector'];
-function AuthoringWidgetsDir(desks, commentsService, $injector) {
+AuthoringWidgetsDir.$inject = ['desks', 'commentsService', '$injector', '$rootScope'];
+function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
     return {
         controller: WidgetsManagerCtrl,
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
@@ -326,6 +326,7 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
                 } else {
                     angular.element('body').addClass('main-section--pinned-tabs');
                     scope.pinnedWidget = widget;
+                    $rootScope.$broadcast('resize:monitoring', '30%');
 
                     widget.pinned = true;
                 }

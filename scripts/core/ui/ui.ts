@@ -835,8 +835,8 @@ function WeekdayPickerDirective(weekdays) {
  * resize monitoring and authoring screen
  *
  */
-splitterWidget.$inject = ['superdesk', '$timeout'];
-function splitterWidget(superdesk, $timeout) {
+splitterWidget.$inject = ['superdesk', '$timeout', '$rootScope'];
+function splitterWidget(superdesk, $timeout, $rootScope) {
     return {
         link: function(scope, element) {
             var workspace = element,
@@ -849,6 +849,16 @@ function splitterWidget(superdesk, $timeout) {
                 workspace.css({width: superdesk.monitoringWidth});
                 authoring.css({width: superdesk.authoringWidth});
             }
+
+             /*
+             * Resize on request
+             */
+            $rootScope.$on('resize:monitoring', (e, value) => {
+                workspace.css({width: value});
+
+               // Trigger resize event to update elements
+               $timeout(() => window.dispatchEvent(new Event('resize')), 0, false); 
+            });
 
             /*
              * If authoring is not initialized,
