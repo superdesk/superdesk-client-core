@@ -318,15 +318,15 @@ function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
                     scope.pinnedWidget.pinned = false;
                 }
 
-                if (scope.pinnedWidget === widget) {
+                if (!widget || scope.pinnedWidget === widget) {
                     angular.element('body').removeClass('main-section--pinned-tabs');
                     scope.pinnedWidget = null;
 
-                    widget.pinned = false;
+                    widget ? widget.pinned = false : null;
                 } else {
                     angular.element('body').addClass('main-section--pinned-tabs');
                     scope.pinnedWidget = widget;
-                    $rootScope.$broadcast('resize:monitoring', '30%');
+                    $rootScope.$broadcast('resize:monitoring', -330);
 
                     widget.pinned = true;
                 }

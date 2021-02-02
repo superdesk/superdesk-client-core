@@ -840,7 +840,53 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
     return {
         link: function(scope, element) {
             var workspace = element,
-                authoring = element.next('#authoring-container');
+                authoring = element.next('#authoring-container'),
+                container = element.parent();
+
+            const resize = () => {
+                var remainingSpace = container.width() - workspace.outerWidth() - 48,
+                authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
+
+                var stage = workspace.find('.stage.swimlane');
+                var header = stage.find('.column-header.swimlane');
+
+                if (workspace.outerWidth() < 655) {
+                    workspace.addClass('ui-responsive-medium');
+                } else {
+                    workspace.removeClass('ui-responsive-medium');
+                }
+
+                if (workspace.outerWidth() < 460) {
+                    workspace.addClass('ui-responsive-small');
+                } else {
+                    workspace.removeClass('ui-responsive-small');
+                }
+
+                authoring.width(authoringWidth / container.width() * 100 + '%');
+
+                header.width(stage.outerWidth());
+            }
+
+            const afterResize = () => {
+                var stage = workspace.find('.stage.swimlane');
+                var header = stage.find('.column-header.swimlane');
+
+                superdesk.monitoringWidth = workspace.outerWidth() / container.width() * 100 + '%';
+                superdesk.authoringWidth = authoring.outerWidth() / container.width() * 100 + '%';
+
+                superdesk.headerWidth = superdesk.stageWidth = stage.outerWidth();
+
+                workspace.css({
+                    width: superdesk.monitoringWidth,
+                });
+
+                header.css({
+                    width: superdesk.headerWidth,
+                });
+
+                // Trigger resize event to update elements
+                $timeout(() => window.dispatchEvent(new Event('resize')), 0, false);
+            }
 
             /*
              * If custom sizes are defined, preload them
@@ -854,10 +900,10 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
              * Resize on request
              */
             $rootScope.$on('resize:monitoring', (e, value) => {
-                workspace.css({width: value});
-                authoring.css({width: 100 - parseInt(value) + '%'});
+                workspace.width(workspace.outerWidth() + value);
 
-                workspace.trigger("resize");
+                resize();
+                afterResize();
             });
 
             /*
@@ -878,56 +924,10 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 handles: 'e',
                 minWidth: 400,
                 start: function(e, ui) {
-                    var container = ui.element.parent();
-
                     workspace.resizable({maxWidth: container.width() - 730});
                 },
-                resize: function(e, ui) {
-                    var container = ui.element.parent(),
-                        remainingSpace = container.width() - workspace.outerWidth() - 48,
-                        authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
-
-                    var stage = ui.element.find('.stage.swimlane');
-                    var header = stage.find('.column-header.swimlane');
-
-                    if (workspace.outerWidth() < 655) {
-                        workspace.addClass('ui-responsive-medium');
-                    } else {
-                        workspace.removeClass('ui-responsive-medium');
-                    }
-
-                    if (workspace.outerWidth() < 460) {
-                        workspace.addClass('ui-responsive-small');
-                    } else {
-                        workspace.removeClass('ui-responsive-small');
-                    }
-
-                    authoring.width(authoringWidth / container.width() * 100 + '%');
-
-                    header.width(stage.outerWidth());
-                },
-                stop: function(e, ui) {
-                    var container = ui.element.parent();
-
-                    var stage = ui.element.find('.stage.swimlane');
-                    var header = stage.find('.column-header.swimlane');
-
-                    superdesk.monitoringWidth = workspace.outerWidth() / container.width() * 100 + '%';
-                    superdesk.authoringWidth = authoring.outerWidth() / container.width() * 100 + '%';
-
-                    superdesk.headerWidth = superdesk.stageWidth = stage.outerWidth();
-
-                    ui.element.css({
-                        width: superdesk.monitoringWidth,
-                    });
-
-                    header.css({
-                        width: superdesk.headerWidth,
-                    });
-
-                    // Trigger resize event to update elements
-                    $timeout(() => window.dispatchEvent(new Event('resize')), 0, false);
-                },
+                resize: resize,
+                stop: afterResize,
             });
         },
     };
