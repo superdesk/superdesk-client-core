@@ -855,9 +855,9 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
              */
             $rootScope.$on('resize:monitoring', (e, value) => {
                 workspace.css({width: value});
+                authoring.css({width: 100 - parseInt(value) + '%'});
 
-               // Trigger resize event to update elements
-               $timeout(() => window.dispatchEvent(new Event('resize')), 0, false); 
+                workspace.trigger("resize");
             });
 
             /*
