@@ -21,6 +21,8 @@ import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
 import {IScopeApply} from 'core/utils';
 import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {IActivityService} from 'core/activity/activity';
+import {IActivity} from 'superdesk-interfaces/Activity';
 
 function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -129,12 +131,13 @@ export class Item extends React.Component<IProps, IState> {
         if (nextProps.item !== this.props.item) {
             closeActionsMenu(this.props.item._id);
         }
+        this.setActioningState(nextProps.actioning);
     }
 
     loadPlanningModals() {
         const session = ng.get('session');
         const superdesk = ng.get('superdesk');
-        const activityService = ng.get('activityService');
+        const activityService: IActivityService = ng.get('activityService');
 
         if (!['add_to_planning', 'fulfil_assignment'].includes(get(this.props, 'item.lock_action')) ||
                 get(this.props, 'item.lock_user') !== session.identity._id ||
@@ -142,7 +145,7 @@ export class Item extends React.Component<IProps, IState> {
             return;
         }
 
-        let planningActivity;
+        let planningActivity: IActivity | null;
         const activities = superdesk.findActivities({action: 'list', type: 'archive'},
             this.props.item);
 
@@ -152,6 +155,15 @@ export class Item extends React.Component<IProps, IState> {
             planningActivity = activities.find((a) => a._id === 'planning.addto');
         } else if (this.props.item.lock_action === 'fulfil_assignment') {
             planningActivity = activities.find((a) => a._id === 'planning.fulfil');
+        }
+
+        const openActivities = activityService.activityStack || [];
+
+        // Item list is rerendered from planning on certain actions and this will trigger
+        // opening a modal that might be open already (without page refresh)
+        if (openActivities.find(({activity}) => activity._id === planningActivity._id) != null) {
+            // if activity is open already, don't do anything
+            return;
         }
 
         if (planningActivity) {
@@ -281,6 +293,9 @@ export class Item extends React.Component<IProps, IState> {
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
+        const selectedInSingleSelectMode = this.props.flags.selected;
+        const selectedInMultiSelectMode = this.props.item.selected;
+
         // Customize item class from its props
         if (this.props.customRender && typeof this.props.customRender.getItemClass === 'function') {
             classes = `${classes} ${this.props.customRender.getItemClass(item)}`;
@@ -289,14 +304,17 @@ export class Item extends React.Component<IProps, IState> {
         const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
-            this.props.hideActions !== true && this.state.hover && !item.gone ? (
-                <ActionsMenu
-                    item={item}
-                    onActioning={this.setActioningState}
-                    template={template}
-                    scopeApply={this.props.scopeApply}
-                />
-            ) : null;
+            this.props.hideActions !== true
+            && (this.state.hover || selectedInSingleSelectMode || selectedInMultiSelectMode)
+            && !item.gone
+                ? (
+                    <ActionsMenu
+                        item={item}
+                        onActioning={this.setActioningState}
+                        template={template}
+                        scopeApply={this.props.scopeApply}
+                    />
+                ) : null;
 
         const getTemplate = () => {
             switch (this.props.view) {
@@ -416,7 +434,7 @@ export class Item extends React.Component<IProps, IState> {
                     'list-item-view',
                     {
                         'actions-visible': this.props.hideActions !== true,
-                        'active': this.props.flags.selected,
+                        'active': selectedInSingleSelectMode || selectedInMultiSelectMode,
                         'selected': this.props.item.selected && !this.props.flags.selected,
                         'sd-list-item-nested': this.state.nested.length,
                         'sd-list-item-nested--expanded': this.state.nested.length && this.state.showNested,
@@ -433,7 +451,7 @@ export class Item extends React.Component<IProps, IState> {
             (
                 <div
                     className={classNames(classes, {
-                        active: this.props.flags.selected,
+                        active: selectedInSingleSelectMode || selectedInMultiSelectMode,
                         locked: isLocked,
                         selected: this.props.item.selected || this.props.flags.selected,
                         archived: item.archived || item.created,

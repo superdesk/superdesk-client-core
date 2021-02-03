@@ -30,6 +30,7 @@ import {
     filterKeys,
     stringToNumber,
     numberToString,
+    notNullOrUndefined,
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {downloadBlob} from './helpers/utils';
@@ -64,6 +65,9 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
+import {httpRequestJsonLocal} from './helpers/network';
+import {memoize as memoizeLocal} from './memoize';
+import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
 import {notify} from './notify/notify';
@@ -164,6 +168,7 @@ export function getSuperdeskApiImplementation(
     authoringWorkspace: AuthoringWorkspaceService,
     config,
     metadata,
+    preferencesService,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
@@ -175,7 +180,9 @@ export function getSuperdeskApiImplementation(
             filterKeys,
             stringToNumber,
             numberToString,
+            notNullOrUndefined,
         },
+        httpRequestJsonLocal,
         entities: {
             article: {
                 isPersonal: (article) => article.task == null
@@ -189,7 +196,7 @@ export function getSuperdeskApiImplementation(
                         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
                         .filter((middleware) => middleware != null);
 
-                    onPatchBeforeMiddlewares.reduce(
+                    return onPatchBeforeMiddlewares.reduce(
                         (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
                         Promise.resolve(patch),
                     ).then((patchFinal) => {
@@ -349,6 +356,26 @@ export function getSuperdeskApiImplementation(
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
             hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
         },
+        preferences: {
+            get: (key) => {
+                return preferencesService.get().then((res: Dictionary<string, any>) => {
+                    return res?.extensions?.[requestingExtensionId]?.[key] ?? null;
+                });
+            },
+            set: (key, value) => {
+                return preferencesService.get().then((res: Dictionary<string, any>) => {
+                    const extensionsPreferences = res.extensions ?? {};
+
+                    if (extensionsPreferences[requestingExtensionId] == null) {
+                        extensionsPreferences[requestingExtensionId] = {};
+                    }
+
+                    extensionsPreferences[requestingExtensionId][key] = value;
+
+                    return preferencesService.update({extensions: extensionsPreferences});
+                });
+            },
+        },
         session: {
             getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
@@ -371,6 +398,8 @@ export function getSuperdeskApiImplementation(
             dateToServerString: (date: Date) => {
                 return date.toISOString().slice(0, 19) + '+0000';
             },
+            memoize: memoizeLocal,
+            generatePatch,
             stripHtmlTags,
             getLinesCount,
             downloadBlob,

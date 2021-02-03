@@ -710,7 +710,8 @@ $rightfield-width:60px;
             width: 100%;
         }
     }
-    .actions-visible .media-box:hover {
+    .actions-visible .media-box:hover,
+    .actions-visible .media-box.active {
         .item-info {
             padding: 10px 30px 10px 10px;
         }

@@ -1,4 +1,6 @@
 import moment from 'moment';
+import {gettext} from 'core/utils';
+import {copyString} from 'core/helpers/utils';
 
 /**
  * @ngdoc controller
@@ -11,7 +13,20 @@ import moment from 'moment';
 export function SubscriberTokenController($scope, api, $rootScope) {
     const subscriber = $scope.subscriber;
 
+    this.copy = copyString;
     this.tokens = [];
+
+    this.getExpiryFields = [
+        {days: gettext('1 week'), value: 7},
+        {days: gettext('2 weeks'), value: 14},
+        {days: gettext('1 month'), value: 30},
+        {days: gettext('6 months'), value: 180},
+        {days: gettext('1 year'), value: 365},
+        {days: gettext('2 years'), value: 730},
+        {days: gettext('5 years'), value: 1825},
+        {days: gettext('10 years'), value: 3650},
+        {days: gettext('Never expire'), value: 0},
+    ];
 
     const fetchTokens = () => {
         if (subscriber._id) {
@@ -38,8 +53,10 @@ export function SubscriberTokenController($scope, api, $rootScope) {
      * @description Generate new token on server and refresh the list.
      */
     this.generate = (ttl) =>
-        api.save('subscriber_token', {subscriber: subscriber._id, expiry: expiry(ttl)})
-            .then(fetchTokens);
+        api.save('subscriber_token', {
+            subscriber: subscriber._id,
+            expiry_days: ttl,
+        }).then(fetchTokens);
 
     /**
      * @ngdoc method
