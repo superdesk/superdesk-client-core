@@ -1,16 +1,14 @@
 import React from 'react';
-import {closeActionsMenu} from '../../helpers';
 import {gettext} from 'core/utils';
-import {IArticle} from 'superdesk-api';
 
 interface IProps {
-    item: IArticle;
     label: string;
+    onClose(): void;
 }
 
 class Label extends React.PureComponent<IProps> {
     render() {
-        const {item, label} = this.props;
+        const {label} = this.props;
 
         return (
             <li>
@@ -22,9 +20,7 @@ class Label extends React.PureComponent<IProps> {
                             ? (
                                 <button
                                     className="dropdown__menu-close"
-                                    onClick={() => {
-                                        closeActionsMenu(item._id);
-                                    }}
+                                    onClick={this.props.onClose}
                                     aria-label={gettext('Close')}
                                     data-test-id="close"
                                 >

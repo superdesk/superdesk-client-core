@@ -268,7 +268,10 @@ export default class MenuItems extends React.Component<IProps, IState> {
             >
                 <Label
                     label={gettext('Actions')}
-                    item={this.props.item}
+                    onClose={() => {
+                        closeActionsMenu(this.props.item._id);
+                        this.previousFocusedElement?.focus();
+                    }}
                 />
                 {this.renderMenu()}
             </ul>
