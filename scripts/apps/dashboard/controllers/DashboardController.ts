@@ -155,10 +155,7 @@ export function DashboardController(
      * Confirms and deletes current workspace
      */
     this.delete = function() {
-        modal.confirm(
-            gettext('Are you sure you want to delete current workspace?'),
-        )
-            .then(() => workspaces.delete(self.current));
+        workspaces.confirmAndDelete(self.current);
     };
 
     /*
