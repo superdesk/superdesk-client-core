@@ -26,6 +26,9 @@ interface IScope extends ng.IScope {
     addResourceUpdatedEventListener: (callback: any) => void;
     openUpload: (files: Array<File>) => void;
     spikedItemsQuery: ISuperdeskQuery;
+    afterWorkspaceRename: () => void;
+    initWorkspaceRename: (workspace) => void;
+    workspaceToRename: any;
 }
 
 /**
@@ -77,6 +80,14 @@ export function MonitoringView(
             scope.contentStyle = scope.contentStyle ?? {padding: '0 20px 20px'};
 
             scope.gettext = gettext;
+
+            scope.initWorkspaceRename = (workspace) => {
+                scope.workspaceToRename = workspace;
+
+                scope.afterWorkspaceRename = () => {
+                    scope.workspaceToRename = undefined;
+                };
+            };
 
             scope.addResourceUpdatedEventListener = (callback) => {
                 scope.$on('resource:updated', (_event, data) => {
