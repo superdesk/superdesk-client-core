@@ -1,7 +1,10 @@
+// Types
 import {superdeskApi} from '../apis';
+import {ISAMSWebsocketEvent} from '../interfaces';
+
 import {onSetCreated, onSetUpdated, onSetDeleted} from './sets';
 
-const websocketNotificationMap: {[key: string]: (event: any) => void} = {
+const websocketNotificationMap: {[key: string]: (event: ISAMSWebsocketEvent) => void} = {
     'sams:set:created': onSetCreated,
     'sams:set:updated': onSetUpdated,
     'sams:set:deleted': onSetDeleted,

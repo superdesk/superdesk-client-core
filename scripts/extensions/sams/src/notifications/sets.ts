@@ -1,11 +1,11 @@
 // Types
-import {superdeskApi} from '../../src/apis';
-import {ISetItem} from '../interfaces';
-import {getStore} from '../../src/store';
+import {superdeskApi} from '../apis';
+import {ISAMSWebsocketEvent, ISetItem} from '../interfaces';
+import {getStore} from '../store';
 
 // Redux Actions & Selectors
-import {loadSets, closeSetContentPanel, removeSetInStore} from '../../src/store/sets/actions';
-import {getSets, getSelectedSetId} from '../../src/store/sets/selectors';
+import {loadSets, closeSetContentPanel, removeSetInStore} from '../store/sets/actions';
+import {getSets, getSelectedSetId} from '../store/sets/selectors';
 
 export function onSetCreated() {
     const store = getStore();
@@ -13,7 +13,7 @@ export function onSetCreated() {
     store?.dispatch<any>(loadSets());
 }
 
-export function onSetUpdated(event: any) {
+export function onSetUpdated(event: ISAMSWebsocketEvent) {
     const {notify} = superdeskApi.ui;
     const {gettext} = superdeskApi.localization;
     const store = getStore();
@@ -30,7 +30,7 @@ export function onSetUpdated(event: any) {
     }
 }
 
-export function onSetDeleted(event: any) {
+export function onSetDeleted(event: ISAMSWebsocketEvent) {
     const {notify} = superdeskApi.ui;
     const {gettext} = superdeskApi.localization;
     const store = getStore();
