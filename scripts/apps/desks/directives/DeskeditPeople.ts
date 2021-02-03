@@ -72,8 +72,8 @@ export function DeskeditPeople(WizardHandler, desks, notify) {
                     });
             };
 
-            scope.$watch('desk.edit', (newVal) => {
-                const diff = calculateDiff(scope.desk.edit, scope.desk.orig);
+            scope.$watch('desk.edit', (newVal, oldVal) => {
+                const diff = calculateDiff(newVal, oldVal);
 
                 if (scope.step.current === 'people' && Object.keys(diff).length > 0) {
                     scope.saveEnabled = true;

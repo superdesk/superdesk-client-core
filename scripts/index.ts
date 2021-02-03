@@ -158,6 +158,7 @@ export function startApp(
             'authoringWorkspace',
             'config',
             'metadata',
+            'preferencesService',
             (
                 modal,
                 privileges,
@@ -166,6 +167,7 @@ export function startApp(
                 authoringWorkspace,
                 config,
                 metadata,
+                preferencesService,
             ) => {
                 registerExtensions(
                     extensions,
@@ -178,6 +180,7 @@ export function startApp(
                     config,
                     metadata,
                     _workspaceMenu,
+                    preferencesService,
                 );
             },
         ]);

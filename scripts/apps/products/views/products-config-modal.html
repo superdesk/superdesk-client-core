@@ -25,6 +25,9 @@
                             <div class="sd-line-input sd-line-input--boxed sd-line-input--disabled">
                                 <label class="sd-line-input__label" for="product-id" translate>Product ID</label>
                                 <input class="sd-line-input__input" id="product-id" type="text" ng-model="product._id" ng-disabled="true">
+                                <button class="icn-btn pull-right" ng-click="copy(product._id)" title="{{ :: 'Copy' | translate }}">
+                                    <i class="icon-copy"></i>
+                                </button>
                                 <span class="sd-line-input__hint" translate>The Product ID can be copied and used as Superdesk Newshub product query.</span>
                             </div>
                         </div>

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import _ from 'lodash';
 
 import {WidgetItemList as WidgetItemListComponent} from 'apps/search/components';
+import {IActivityService} from 'core/activity/activity';
 
 WidgetGroup.$inject = [
     'search',
@@ -21,7 +22,7 @@ WidgetGroup.$inject = [
 ];
 
 export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
-    $location, $anchorScroll, activityService, $rootScope, datetime, metadata) {
+    $location, $anchorScroll, activityService: IActivityService, $rootScope, datetime, metadata) {
     const services = {
         $anchorScroll: $anchorScroll,
         $location: $location,

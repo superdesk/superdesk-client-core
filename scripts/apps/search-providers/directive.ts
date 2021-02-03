@@ -30,7 +30,7 @@ export default function SearchProviderConfigDirective(searchProviderService, not
              * Fetches all search providers from backend
              */
             function fetchSearchProviders() {
-                searchProviderService.getSearchProviders().then(
+                searchProviderService.getSearchProviders({manage: 1}).then(
                     (result) => {
                         $scope.providers = result;
                     },

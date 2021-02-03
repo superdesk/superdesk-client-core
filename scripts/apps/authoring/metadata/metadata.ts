@@ -2,10 +2,12 @@ import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
 import {getVocabularySelectionTypes} from '../../vocabularies/constants';
-import {gettext} from 'core/utils';
+import {gettext, getVocabularyItemNameTranslated} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
-import {appConfig, getUserInterfaceLanguage} from 'appConfig';
+import {appConfig} from 'appConfig';
 import {ISubject} from 'superdesk-api';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {MetaDataDropdownSingleSelectReact} from './views/MetaDataDropdownSingleSelectReact';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
@@ -15,6 +17,8 @@ MetadataCtrl.$inject = [
 function getSingleSelection() {
     return getVocabularySelectionTypes().SINGLE_SELECTION.id;
 }
+
+const DISABLE_CHILDREN_SEARCH_FIELDS = ['authors'];
 
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper, userList,
@@ -392,6 +396,9 @@ function MetaDropdownDirective($filter, metadata) {
                 if (scope.values) {
                     scope.selected = scope.values[fieldObject[scope.field]] || null;
                 }
+
+                // is needed when `select` is called from react component e.g. MetaDataDropdownSingleSelectReact
+                scope.$applyAsync();
             };
 
             scope.$watch(':: list', () => {
@@ -635,12 +642,13 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             disableEntireCategory: '@',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
-        link: function(scope, elem, attrs) {
+        link: function MetaTermsDirectiveLink(scope, elem, attrs) {
             metadata.subjectScope = scope;
             scope.getLocaleName = metadata.getLocaleName;
-            var reloadList = scope.reloadList === 'true';
-            var includeParent = scope.includeParent === 'true';
-            var searchUnique = scope.searchUnique === 'true';
+            const reloadList = scope.reloadList === 'true';
+            const includeParent = scope.includeParent === 'true';
+            const searchUnique = scope.searchUnique === 'true';
+            const disabledChildrenSearch = DISABLE_CHILDREN_SEARCH_FIELDS.includes(scope.field);
 
             scope.allowEntireCat = scope.disableEntireCategory !== 'true';
 
@@ -767,7 +775,15 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     scope.terms = filterSelected(scope.list);
                     scope.activeList = false;
                 } else {
-                    const searchList = reloadList ? scope.list : scope.combinedList;
+                    let searchList;
+
+                    if (disabledChildrenSearch) {
+                        searchList = scope.list.filter((item) => !item.parent);
+                    } else if (reloadList) {
+                        searchList = scope.list;
+                    } else {
+                        searchList = scope.combinedList;
+                    }
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
                         var searchObj = {};
@@ -1345,13 +1361,9 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             // depending where the function is called from.
             // It's checked if language is a string in order not to confuse it when language
             // is an array when called from global search filters.
-            const language = typeof item.language === 'string' ? item.language : getUserInterfaceLanguage();
+            const language = typeof item.language === 'string' ? item.language : undefined;
 
-            // FIXME: Remove replacing _/- when language codes are normalized on the server.
-
-            return term.translations?.name?.[language]
-                ?? term.translations?.name?.[language.replace('_', '-')]
-                ?? term.name;
+            return getVocabularyItemNameTranslated(term, language);
         },
     };
 
@@ -1421,6 +1433,20 @@ angular.module('superdesk.apps.authoring.metadata', [
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)
+    .component(
+        'sdMetaDataDropdownSingleSelectReact',
+        reactToAngular1(
+            MetaDataDropdownSingleSelectReact,
+            [
+                'selectedItemLabel',
+                'options',
+                'onChange',
+                'tabIndex',
+                'disabled',
+                'language',
+            ],
+        ),
+    )
     .directive('sdMetaWordsList', MetaWordsListDirective)
     .directive('sdMetadropdownFocus', MetadropdownFocusDirective)
     .directive('sdMetaLocators', MetaLocatorsDirective)

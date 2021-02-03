@@ -18,6 +18,7 @@ declare module 'superdesk-api' {
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
+    export type ICallable = (...args: Array<any>) => any;
 
 
     // EXTENSIONS
@@ -58,6 +59,15 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface IAuthoringSideWidget {
+        _id: string; // required for configuring widget visibility in content profile
+        label: string;
+        order: number; // Integer.
+        icon: string;
+        component: React.ComponentType<{article: IArticle}>;
+        isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -67,6 +77,7 @@ declare module 'superdesk-api' {
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringSideWidgets?: Array<IAuthoringSideWidget>;
             authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -262,9 +273,15 @@ declare module 'superdesk-api' {
         slugline: string;
         genre: any;
         anpa_take_key?: any;
-        place: any;
-        priority?: number;
-        urgency: number;
+
+        place: Array<ISubject>;
+        object?: Array<ISubject>;
+        person?: Array<ISubject>;
+        organisation?: Array<ISubject>;
+        event?: Array<ISubject>;
+
+        priority?: any;
+        urgency: any;
         anpa_category?: any;
         subject?: Array<ISubject>;
         company_codes?: Array<any>;
@@ -352,7 +369,11 @@ declare module 'superdesk-api' {
         ingest_provider?: any;
         archive_item?: any;
         item_id?: string; // id of corresponding item in 'published' collection
-        marked_desks?: any;
+        marked_desks?: Array<{
+            date_marked: string;
+            desk_id: IDesk['_id'];
+            user_marked: IUser['_id'];
+        }>;
 
         highlights?: Array<string>;
         highlight?: any;
@@ -696,6 +717,26 @@ declare module 'superdesk-api' {
 
     // REST API
 
+    export interface IHttpRequestOptions {
+        method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+        url: string; // absolute url
+        payload?: {};
+        headers?: {[key: string]: any};
+        urlParams?: {[key: string]: any};
+
+        abortSignal?: AbortSignal;
+    }
+
+    export interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
+        path: string; // relative to application server
+    }
+
+    export interface IHttpRequestJsonOptionsLocal extends IHttpRequestOptionsLocal {
+        // JSON not available with DELETE method
+        method: 'GET' | 'POST' | 'PATCH' | 'PUT';
+    }
+
+
     export interface IBaseRestApiResponse {
         _created: string;
         _updated: string;
@@ -947,7 +988,7 @@ declare module 'superdesk-api' {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
-        autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
+        autoFocus?: boolean;
         horizontalSpacing?: boolean;
     }
 
@@ -1299,6 +1340,7 @@ declare module 'superdesk-api' {
             };
         };
         elasticsearch: IElasticSearchApi;
+        httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T>;
         state: {
             articleInEditMode?: IArticle['_id'];
         };
@@ -1342,7 +1384,7 @@ declare module 'superdesk-api' {
                     article: IArticle,
                     patch: Partial<IArticle>,
                     dangerousOptions?: IDangerousArticlePatchingOptions,
-                ): void;
+                ): Promise<void>;
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
@@ -1368,6 +1410,7 @@ declare module 'superdesk-api' {
             filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T>;
             stringToNumber(value?: string, radix?: number): number | undefined;
             numberToString(value?: number): string | undefined;
+            notNullOrUndefined<T>(x: null | undefined | T): x is T;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -1435,6 +1478,13 @@ declare module 'superdesk-api' {
             getOwnPrivileges(): Promise<any>;
             hasPrivilege(privilege: string): boolean;
         };
+        preferences: {
+            get(key: string): Promise<any | null>;
+            set(
+                key: string,
+                value: any,
+            ): Promise<void>;
+        };
         session: {
             getToken(): string;
             getCurrentUser(): Promise<IUser>;
@@ -1478,6 +1528,8 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
+            memoize<T extends ICallable>(func: T, maxCacheEntryCount = 1): T;
+            generatePatch<T>(a: Partial<T>, b: Partial<T>): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
             downloadBlob(data: BinaryType, mimetype: string, filename: string): void;
@@ -1798,8 +1850,11 @@ declare module 'superdesk-api' {
 
     export interface ISubject {
         name: string;
+        description?: string;
         qcode: string;
         scheme?: string;
+        source?: string;
         translations?: {};
+        altids?: {[key: string]: string};
     }
 }
