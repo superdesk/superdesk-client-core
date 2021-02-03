@@ -12,7 +12,6 @@ const extension: IExtension = {
 
         Object.assign(superdeskApi, superdesk);
 
-        // Then using the following to test (inside the extension.activate function):
         return Promise.resolve({
             contributions: {
                 pages: [{
