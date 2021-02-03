@@ -50,6 +50,8 @@ interface IScope extends ng.IScope {
     closeWidget(): void;
     isWidgetLocked(widget: IWidget): boolean;
     isAssigned(item: IArticle): boolean;
+    autosave(): void;
+    updateItem(updates: Partial<IArticle>): void;
 }
 
 function AuthoringWidgetsProvider() {

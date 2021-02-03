@@ -4,7 +4,7 @@ import {isLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
 import {notify} from 'core/notify/notify';
-import {gettext, gettextCatalog} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {filesize} from 'core/ui/ui';
 import {CC} from 'core/ui/configurable-ui-components';
 import {AttachmentsWidgetComponent} from './AttachmentsWidgetComponent';
@@ -61,7 +61,7 @@ class AttachmentsWidgetWrapper extends React.PureComponent<IProps> {
         if (files.length === 0 || !sdApi.article.isLocked(this.props.item)) {
             return false;
         } else if (files.length + this.props.attachments.length > appConfig.attachments_max_files) {
-            notify.error(gettextCatalog.getPlural(
+            notify.error(gettextPlural(
                 appConfig.attachments_max_files,
                 'Too many files selected. Only 1 file is allowed',
                 'Too many files selected. Only {{count}} files are allowed',
