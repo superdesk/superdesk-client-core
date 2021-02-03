@@ -13,6 +13,7 @@ const websocketNotificationMap: {[key: string]: (event: ISAMSWebsocketEvent) => 
 let websocketDeregistrationArray: Array<() => void> = [];
 
 export function registerWebsocketNotifications() {
+    // To make sure that callbacks don't get registered multiple times.
     if (websocketDeregistrationArray.length > 0) {
         return;
     }
