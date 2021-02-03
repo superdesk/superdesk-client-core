@@ -64,6 +64,7 @@ export class SelectBoxWithoutMutation extends React.PureComponent<IPropsSelectBo
                 className={this.props.className}
                 role="checkbox"
                 aria-checked={this.props.selected}
+                aria-label={gettext('bulk actions')}
                 data-test-id={this.props['data-test-id']}
             >
                 <span className={'sd-checkbox' + (this.props.selected ? ' checked' : '')} />
