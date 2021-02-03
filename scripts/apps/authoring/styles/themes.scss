@@ -215,16 +215,12 @@ body, html {
 .main-article {
     width:auto;
     background: $white;
-    border: 1px solid #cacaca;
-    border-width:0 1px;
     position:relative;
     z-index: 1;
     padding: $main-article-padding;
     margin:0 auto;
     min-height:100%;
     @include box-sizing(border-box);
-    max-width: 900px;
-
     .field {
         max-width: 100%;
         margin-bottom: 20px;
@@ -314,6 +310,8 @@ body, html {
         flex-direction: row;
         flex-wrap: wrap;
         align-content: flex-start;
+        max-width: 1000px;
+        margin: 0 auto;
     }
     .sd-validate .sd-required {
         color: inherit;
