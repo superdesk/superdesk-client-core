@@ -236,7 +236,6 @@ export function ItemList(
                 });
 
                 scope.$on('item:highlights', (_e, data) => updateMarkedItems('highlights', data));
-                scope.$on('item:marked_desks', (_e, data) => updateMarkedItems('marked_desks', data));
 
                 function updateMarkedItems(field, data) {
                     var item = listComponent.findItemByPrefix(data.item_id);
@@ -248,10 +247,6 @@ export function ItemList(
                     if (item) {
                         var itemId = search.generateTrackByIdentifier(item);
                         var markedItems = item[field] || [];
-
-                        if (field === 'marked_desks' && item[field]) {
-                            markedItems = _.isString(markedItems[0]) ? markedItems : _.map(markedItems, 'desk_id');
-                        }
 
                         if (data.marked) {
                             markedItems = markedItems.concat([data.mark_id]);

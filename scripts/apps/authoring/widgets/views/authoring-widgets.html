@@ -28,10 +28,22 @@
     <div class="tabpane right-tabpane open-tabpane widget-{{active._id}}"
         ng-if="active && !isWidgetLocked(active)">
         <section class="tabcontent" ng-init="widget=active">
-            <div sd-widget data-widget="active" data-configurable="active.configurable"
-            data-save="active.save()">
+            <div
+                ng-if="active.component == null"
+                sd-widget
+                data-widget="active"
+                data-configurable="active.configurable"
+                data-save="active.save()"
+            >
                 <div ng-include="active.template" class="sd-wrap-helper"></div>
             </div>
+
+            <sd-widget-react
+                ng-if="active.component != null"
+                widget="active"
+                article="item"
+                class="sd-widget"
+            ></sd-widget-react>
         </section>
     </div>
 

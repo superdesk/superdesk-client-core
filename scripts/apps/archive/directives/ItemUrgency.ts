@@ -1,3 +1,5 @@
+import {getVocabularyItemNameTranslated} from 'core/utils';
+
 ItemUrgency.$inject = ['metadata'];
 
 export function ItemUrgency(metadata) {
@@ -16,7 +18,7 @@ export function ItemUrgency(metadata) {
                     if (spec) {
                         scope.color = spec.color;
                         scope.short = spec.short || urgency;
-                        scope.title = spec.name;
+                        scope.title = getVocabularyItemNameTranslated(spec);
                     }
                 }
             });

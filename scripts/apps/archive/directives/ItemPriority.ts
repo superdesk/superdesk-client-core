@@ -1,3 +1,5 @@
+import {getVocabularyItemNameTranslated} from 'core/utils';
+
 ItemPriority.$inject = ['metadata'];
 
 export function ItemPriority(metadata) {
@@ -17,7 +19,7 @@ export function ItemPriority(metadata) {
                     if (spec) {
                         scope.color = spec.color;
                         scope.short = spec.short || priority;
-                        scope.title = spec.name;
+                        scope.title = getVocabularyItemNameTranslated(spec);
                     }
                 }
             });

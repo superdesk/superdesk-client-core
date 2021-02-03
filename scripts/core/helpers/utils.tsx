@@ -107,3 +107,13 @@ export function downloadBlob(data: BinaryType, mimetype: string, filename: strin
     window.URL.revokeObjectURL(url);
     a.remove();
 }
+
+export function copyString(data) {
+    var element = document.createElement('textarea');
+
+    document.body.appendChild(element);
+    element.value = data;
+    element.select();
+    document.execCommand('copy');
+    document.body.removeChild(element);
+}

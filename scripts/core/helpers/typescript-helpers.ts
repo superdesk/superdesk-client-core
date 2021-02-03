@@ -49,3 +49,7 @@ export function stringToNumber(value?: string, radix?: number): number | undefin
 export function numberToString(value?: number): string | undefined {
     return value?.toString() ?? undefined;
 }
+
+export function notNullOrUndefined<T>(x: null | undefined | T): x is T {
+    return x != null;
+}

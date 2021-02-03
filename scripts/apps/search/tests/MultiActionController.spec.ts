@@ -83,6 +83,7 @@ describe('Multi Action Bar', () => {
             session,
             authoringWorkspace: AuthoringWorkspaceService,
             metadata,
+            preferencesService,
         ) => {
             const testConfig: Partial<ISuperdeskGlobalConfig> = {
                 confirm_spike: true,
@@ -126,6 +127,7 @@ describe('Multi Action Bar', () => {
                 appConfig,
                 metadata,
                 {item: () => false},
+                preferencesService,
             ).then(() => {
                 const actions = getMultiActions(
                     () => [],

@@ -304,6 +304,8 @@ describe('users', () => {
             // now type some search term and check if down arrow navigates to filtered list
             browser.actions().sendKeys('fin').perform();
             browser.actions().sendKeys(protractor.Key.DOWN).perform();
+            browser.sleep(500);
+
             expect(element(by.css('.sd-typeahead li.active')).getText()).toBe('Finance');
         },
         );

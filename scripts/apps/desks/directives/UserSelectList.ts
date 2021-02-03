@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import {getUserSearchMongoQuery} from 'core/utils';
 
 UserSelectList.$inject = ['$filter', 'api'];
 export function UserSelectList($filter, api) {
@@ -23,14 +24,7 @@ export function UserSelectList($filter, api) {
 
             var _refresh = function() {
                 scope.users = {};
-                return api('users').query({where: JSON.stringify({
-                    $or: [
-                        {username: {$regex: scope.search, $options: '-i'}},
-                        {first_name: {$regex: scope.search, $options: '-i'}},
-                        {last_name: {$regex: scope.search, $options: '-i'}},
-                        {email: {$regex: scope.search, $options: '-i'}},
-                    ],
-                })})
+                return api('users').query({where: JSON.stringify(getUserSearchMongoQuery(scope.search))})
                     .then((result) => {
                         scope.users = result;
                         scope.users._items = _.filter(scope.users._items,
