@@ -37,6 +37,7 @@ import {associatedItems} from './associatedItems';
 import {Translations} from './translations';
 import {Used} from './used';
 import {LinesCount} from './linesCount';
+import {Authors} from './authors';
 
 interface IFieldProps extends Partial<IPropsItemListInfo> {
     item: IPropsItemListInfo['item']; // this one not nullable
@@ -79,4 +80,5 @@ export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {
     associatedItems,
     translations: Translations,
     used: Used,
+    authors: Authors,
 };
