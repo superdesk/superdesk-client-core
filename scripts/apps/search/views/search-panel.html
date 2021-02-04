@@ -25,7 +25,10 @@
     <div
         class="content"
         ng-if="sTab==='advancedSearch'"
-        ng-class="{pull: showSaveSearch || innerTab==='parameters', 'pull-heigher': innerTab==='parameters' && showSaveSearch}"
+        ng-class="{
+            pull: showSaveSearch || innerTab==='parameters' || searching(),
+            'pull-heigher': innerTab==='parameters' && showSaveSearch,
+        }"
         data-test-id="advanced-search-panel"
     >
 
