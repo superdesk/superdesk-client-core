@@ -98,7 +98,7 @@ export function getAuthoringField(
             return {
                 type: 'subjects',
                 id: fieldId,
-                value: item[fieldId]?.map(({_id, name}) => ({name, qcode: _id})),
+                value: item[fieldId]?.map(({_id, name}) => ({name, qcode: _id[1]})),
             };
 
         case 'keywords':
