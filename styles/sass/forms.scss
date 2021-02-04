@@ -1044,8 +1044,11 @@ textarea {
 
     }
 }
+
 input, textarea, .dropdown__toggle {
-    @include boxedInputBase();
+    &.boxed-input {
+        @include boxedInputBase();
+    }
 }
 textarea {
     &.boxed-input {
