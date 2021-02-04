@@ -1009,9 +1009,8 @@ textarea {
     }
 }
 
-// boxed inputs
-input, textarea, .dropdown__toggle {
-    &.boxed-input, &.boxed-input.line-input {
+//------------- boxed inputs
+@mixin boxedInputBase () {
         width: 100%;
         border: 0;
         border-bottom: 1px solid var(--color-input-border);
@@ -1030,8 +1029,7 @@ input, textarea, .dropdown__toggle {
             box-shadow: 0 1px 0 0 #5ea9c8;
             border-color: #5ea9c8;
         }
-
-        /* alt is line input for dark background */
+        /* --alt is boxed-input for dark backgrounds */
         &.boxed-input--alt {
             color: $white;
             border-bottom: 1px solid rgba(255,255,255,0.2)!important;
@@ -1043,24 +1041,23 @@ input, textarea, .dropdown__toggle {
                 border-color: rgba(255,255,255,0.7) !important;
                 background-color: transparent !important;
             }
-        }
+
     }
+}
+input, textarea, .dropdown__toggle {
+    @include boxedInputBase();
 }
 textarea {
     &.boxed-input {
         padding-top: 6px;
     }
 }
-
 .boxed-input[sd-meta-terms] {
     min-height: 3.2rem;
     border-radius: 2px 2px 0 0;
     background-color: var(--color-input-bg);
     padding: 4px 4px 0 4px;
-    
-
 }
-
 .boxed-input {
     .dropdown__toggle {
         &.line-input {
@@ -1106,7 +1103,6 @@ textarea {
 
     }
 }
-
 .dropdown__toggle {
     &.boxed-input {
         position: relative;
@@ -1116,7 +1112,8 @@ textarea {
     }
 }
 
-// ------------
+// end boxed inputs
+// ----------------
 
 .line-select {
     position: relative;
