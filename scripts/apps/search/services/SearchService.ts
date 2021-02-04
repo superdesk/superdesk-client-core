@@ -2,7 +2,6 @@ import {
     getParameters,
     getExcludeFacets,
     CORE_PROJECTED_FIELDS,
-    UI_PROJECTED_FIELD_MAPPINGS,
     DEFAULT_LIST_CONFIG,
 } from 'apps/search/constants';
 
@@ -865,21 +864,45 @@ export function SearchService($location, session, multi,
      * @description Returns the list of fields to be used in projections
      */
     this.getProjectedFields = function() {
-        var uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
-        var uiFields: any = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
+        const UI_PROJECTED_FIELD_MAPPINGS = {
+            wordcount: 'word_count',
+            takekey: 'anpa_take_key',
+            update: 'correction_sequence',
+            provider: 'ingest_provider',
+            category: 'anpa_category',
+            versioncreator: 'version_creator',
+            markedDesks: 'marked_desks',
+            queueError: 'error_message',
+            used: ['used', 'used_updated', 'used_count'],
+        };
 
-        let projectedFields: Array<string> = [];
+        const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
-        uiFields.forEach((uiField) => {
-            if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
-                if (Array.isArray(UI_PROJECTED_FIELD_MAPPINGS[uiField])) {
-                    projectedFields.push(...UI_PROJECTED_FIELD_MAPPINGS[uiField]);
-                } else {
-                    projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
-                }
+        const uiFields = [
+            ...(uiConfig.priority ?? []),
+            ...(uiConfig.firstLine ?? []),
+            ...(uiConfig.secondLine ?? []),
+        ];
+
+        const projectedFields: Set<string> = new Set();
+
+        CORE_PROJECTED_FIELDS.fields.forEach((field) => {
+            projectedFields.add(field);
+        });
+
+        uiFields.forEach((field) => {
+            const adjustedField = UI_PROJECTED_FIELD_MAPPINGS[field] ?? field;
+
+            if (Array.isArray(adjustedField)) {
+                adjustedField.forEach((_field) => {
+                    projectedFields.add(_field);
+                });
+            } else {
+                projectedFields.add(adjustedField);
             }
         });
-        return _.union(CORE_PROJECTED_FIELDS.fields, projectedFields);
+
+        return Array.from(projectedFields);
     };
 
     /**

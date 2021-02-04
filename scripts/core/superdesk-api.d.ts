@@ -148,7 +148,7 @@ declare module 'superdesk-api' {
     // ENTITIES
 
     export interface IAuthor {
-        _id: string;
+        _id: Array<string, string>; // user id, role
         name: string;
         scheme: any | null;
         user: IUser;
@@ -1401,13 +1401,13 @@ declare module 'superdesk-api' {
             };
         };
         list: {
-            narrowView: any;
-            singleLineView: any;
-            singleLine: any;
-            priority: any;
-            firstLine: Array<string>,
-            secondLine: Array<string>,
-            relatedItems: {
+            narrowView?: any;
+            singleLineView?: any;
+            singleLine?: any;
+            priority?: Array<string>;
+            firstLine?: Array<string>,
+            secondLine?: Array<string>,
+            relatedItems?: {
                 firstLine: Array<string>,
                 secondLine: Array<string>,
             };
