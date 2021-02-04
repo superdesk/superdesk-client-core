@@ -4,6 +4,7 @@ import {
     IBaseRestApiResponse,
     IRestApiResponse,
     IUser,
+    IWebsocketMessage,
 } from 'superdesk-api';
 import {IModalSize} from './ui/modal';
 
@@ -112,6 +113,19 @@ export interface ISetItem extends IVersionInformation {
 export interface IStorageDestinationItem extends IBaseRestApiResponse {
     provider?: string;
 }
+
+export interface ISAMSBaseEvent {
+    // Every event from SAMS should contain the following
+    user_id: string;
+    session_id: string;
+    extension: 'sams';
+
+    // These attributes are provided with most events from SAMS
+    item_id?: string;
+    _etag?: string;
+}
+
+export type ISAMSWebsocketEvent = CustomEvent<IWebsocketMessage<ISAMSBaseEvent>>;
 
 export interface IAssetItem extends IVersionInformation {
     set_id: string;
