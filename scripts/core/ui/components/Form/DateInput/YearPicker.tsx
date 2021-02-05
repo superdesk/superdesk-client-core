@@ -18,7 +18,7 @@ export const YearPicker: React.StatelessComponent<any> = ({selectedDate, onChang
     const rows = chunk(years, 5);
 
     return (
-        <table>
+        <table className="table">
             <tbody>
                 {rows.map((row, rowIndex) => (
                     <tr key={rowIndex}>
