@@ -907,9 +907,11 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
              * Resize on request
              */
             $rootScope.$on('resize:monitoring', (e, value) => {
-                if ((workspace.outerWidth() + value) > MONITORING_MIN_WIDTH) {
-                    workspace.width(workspace.outerWidth() + value);
+                if ((workspace.outerWidth() + value) < MONITORING_MIN_WIDTH) {
+                    return;
                 }
+
+                workspace.width(workspace.outerWidth() + value);
 
                 resize();
 
