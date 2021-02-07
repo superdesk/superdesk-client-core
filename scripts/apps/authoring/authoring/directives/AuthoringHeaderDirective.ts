@@ -49,6 +49,7 @@ export function AuthoringHeaderDirective(
             // dropdown (useful for searching through terms)
             scope.showDropdownAsMultiTerms = [
                 'countries',
+                'label',
             ];
 
             scope.isCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault == null

@@ -11,7 +11,7 @@
             <li class="simple-list__item"
                 ng-repeat="(id, p) in preferences track by id"
                 ng-if="showCategory(p)">
-                <div class="user-preferences__heading">{{ p.category_label }}</div>
+                <div class="user-preferences__heading">{{ p.category }}</div>
                 <div sd-info-item>
 
                     <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview' || id === 'singleline:view'">
@@ -80,7 +80,7 @@
 
             <li class="simple-list__item" ng-hide="profileConfig.category === false">
                 <div class="user-preferences__heading">
-                    {{ preferences['categories:preferred'].category_label }}
+                    {{ preferences['categories:preferred'].category }}
                 </div>
 
                 <div sd-info-item>
@@ -126,7 +126,7 @@
 
             <li class="simple-list__item" ng-hide="profileConfig.desks === false">
                 <div class="user-preferences__heading">
-                    {{ :: preferences['desks:preferred'].category_label }}
+                    {{ :: preferences['desks:preferred'].category }}
                 </div>
                 <div sd-info-item>
                     <label>
