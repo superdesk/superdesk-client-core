@@ -839,11 +839,16 @@ splitterWidget.$inject = ['superdesk', '$timeout', '$rootScope'];
 function splitterWidget(superdesk, $timeout, $rootScope) {
     return {
         link: function(scope, element) {
-            var workspace = element,
+            const MONITORING_MIN_WIDTH = 400;
+            const AUTHORING_MIN_WIDTH = 730;
+
+            const workspace = element,
                 authoring = element.next('#authoring-container'),
                 container = element.parent();
 
             const resize = () => {
+                workspace.addClass('ui-resizable-resizing');
+
                 var remainingSpace = container.width() - workspace.outerWidth() - 48,
                     authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
 
@@ -884,6 +889,8 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                     width: superdesk.headerWidth,
                 });
 
+                workspace.removeClass('ui-resizable-resizing');
+
                 // Trigger resize event to update elements
                 $timeout(() => window.dispatchEvent(new Event('resize')), 0, false);
             };
@@ -900,10 +907,15 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
              * Resize on request
              */
             $rootScope.$on('resize:monitoring', (e, value) => {
-                workspace.width(workspace.outerWidth() + value);
+                if ((workspace.outerWidth() + value) > MONITORING_MIN_WIDTH) {
+                    workspace.width(workspace.outerWidth() + value);
+                }
 
                 resize();
-                afterResize();
+
+                $timeout(() => {
+                    afterResize();
+                }, 500, false);
             });
 
             /*
@@ -915,19 +927,31 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
              */
             if (!authoring.length) {
                 $timeout(() => {
-                    authoring = element.next('#authoring-container');
                     authoring.width(superdesk.authoringWidth);
                 }, 0, false);
             }
 
             workspace.resizable({
                 handles: 'e',
-                minWidth: 400,
+                minWidth: MONITORING_MIN_WIDTH,
                 start: function(e, ui) {
-                    workspace.resizable({maxWidth: container.width() - 730});
+                    workspace.resizable({maxWidth: container.width() - AUTHORING_MIN_WIDTH});
                 },
                 resize: resize,
                 stop: afterResize,
+                create: () => {
+                    // On double click handle, reset size to default
+                    angular.element('.ui-resizable-handle').dblclick(() => {
+                        workspace.removeAttr('style');
+                        authoring.removeAttr('style');
+
+                        resize();
+
+                        $timeout(() => {
+                            afterResize();
+                        }, 500, false);
+                    });
+                },
             });
         },
     };

@@ -51,7 +51,7 @@
         ng-if="active && !isWidgetLocked(active) && !active.pinned">
         <section class="tabcontent" ng-init="widget=active">
             <div class="tabcontent-actions">
-                <button class="icn-btn" ng-click="pinWidget(widget)" ng-class="{'active': widget.pinned}">
+                <button class="icn-btn" ng-click="pinWidget(active)" ng-class="{'active': widget.pinned}">
                     <i class="icon-pin"></i>
                 </button>
             </div>

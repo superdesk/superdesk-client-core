@@ -318,8 +318,13 @@ function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
                     scope.pinnedWidget.pinned = false;
                 }
 
+                if (widget && !scope.pinnedWidget) {
+                    $rootScope.$broadcast('resize:monitoring', -330);
+                }
+
                 if (!widget || scope.pinnedWidget === widget) {
                     angular.element('body').removeClass('main-section--pinned-tabs');
+                    $rootScope.$broadcast('resize:monitoring', 330);
                     scope.pinnedWidget = null;
 
                     if (widget) {
@@ -328,8 +333,6 @@ function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
                 } else {
                     angular.element('body').addClass('main-section--pinned-tabs');
                     scope.pinnedWidget = widget;
-                    $rootScope.$broadcast('resize:monitoring', -330);
-
                     widget.pinned = true;
                 }
             };
