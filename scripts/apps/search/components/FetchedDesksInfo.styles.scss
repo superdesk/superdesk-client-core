@@ -1,0 +1,11 @@
+@import '~variables.scss';
+
+.fetched-desks-info-component {
+  button {
+    color: $linkColor;
+  }
+  button:hover {
+    text-decoration: underline;
+    color: $linkColorHover;
+  }
+}

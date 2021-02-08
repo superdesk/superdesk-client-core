@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {DesksDropdown} from './index';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
+import './FetchedDesksInfo.styles.scss';
 
 export class FetchedDesksInfo extends React.Component<any, any> {
     static propTypes: any;
@@ -70,7 +71,7 @@ export class FetchedDesksInfo extends React.Component<any, any> {
         const name = this.formatDeskName(desk.desk.name);
 
         return (
-            <div>
+            <div className="fetched-desks-info-component">
                 <dl>
                     <dt style={{paddingRight: '5px'}}>{gettext('fetched in')}</dt>
                     <dd>
