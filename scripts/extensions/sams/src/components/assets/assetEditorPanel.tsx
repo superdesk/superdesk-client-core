@@ -5,12 +5,12 @@ import {Dispatch} from 'redux';
 import {cloneDeep} from 'lodash';
 
 // Types
-import {IAssetItem, LIST_ACTION} from '../../interfaces';
+import {IAssetItem} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
-import {previewAsset, updateAsset, queryAssetsFromCurrentSearch, unlockAsset} from '../../store/assets/actions';
+import {previewAsset, updateAsset, unlockAsset} from '../../store/assets/actions';
 import {getSelectedAsset} from '../../store/assets/selectors';
 
 // UI
@@ -28,7 +28,6 @@ interface IProps {
     original?: IAssetItem;
     previewAsset(asset: IAssetItem): void;
     updateAsset(original: IAssetItem, updates: Partial<IAssetItem>): Promise<IAssetItem>;
-    queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
     unlockAsset(asset: IAssetItem): Promise<IAssetItem>;
 }
 
@@ -45,7 +44,6 @@ const mapStateToProps = (state: IApplicationState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateAsset: (original: IAssetItem, updates: IAssetItem) => dispatch<any>(updateAsset(original, updates)),
-    queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
     unlockAsset: (asset: IAssetItem) => dispatch<any>(unlockAsset(asset)),
 });
 

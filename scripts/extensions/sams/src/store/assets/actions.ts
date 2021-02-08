@@ -24,6 +24,7 @@ import {
     getSelectedAssetIds,
     getSelectedAssetItems,
     getAssets,
+    getAssetListItemIds,
 } from './selectors';
 import {getDisabledSetIds} from '../sets/selectors';
 
@@ -47,6 +48,21 @@ export function setAssetSearchParams(params: Partial<IAssetSearchParams>): IAsse
     return {
         type: SET_ASSET_SEARCH_PARAMS,
         payload: params,
+    };
+}
+
+export function sessionUnlock(session_id: string): IThunkAction<void> {
+    return (dispatch, getState) => {
+        const assetItemIds = getAssetListItemIds(getState());
+        const assets = getAssets(getState());
+        const assetIds: Array<string> = [];
+
+        Object.keys(assetItemIds).forEach((element: any) => {
+            if (assets[assetItemIds[element]].lock_session === session_id) {
+                assetIds.push(assets[assetItemIds[element]]._id);
+            }
+        });
+        return dispatch<any>(loadAssetsByIds(assetIds));
     };
 }
 
@@ -247,7 +263,6 @@ export function deleteAsset(asset: IAssetItem): IThunkAction<void> {
 
         return samsApi.assets.deleteAsset(asset)
             .then(() => {
-                dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
                 if (selectedAssetId === asset._id) {
                     dispatch(closeAssetContentPanel());
                 }
@@ -292,7 +307,7 @@ export function loadAssetsByIds(ids: Array<string>): IThunkAction<void> {
     return (dispatch, getState) => {
         const loadedAssetIds = Object.keys(getAssets(getState()));
         const attachmentsToLoad = ids.filter(
-            (id) => !loadedAssetIds.includes(id),
+            (id) => loadedAssetIds.includes(id),
         );
 
         if (attachmentsToLoad.length === 0) {
