@@ -944,8 +944,8 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 create: () => {
                     // On double click handle, reset size to default
                     angular.element('.ui-resizable-handle').dblclick(() => {
-                        workspace.removeAttr('style');
-                        authoring.removeAttr('style');
+                        workspace.css('width', '');
+                        authoring.css('width', '');
 
                         resize();
 
