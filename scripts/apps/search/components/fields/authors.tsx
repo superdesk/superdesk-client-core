@@ -3,7 +3,8 @@ import React from 'react';
 import {IUser, IRestApiResponse, IVocabulary, IVocabularyItem} from 'superdesk-api';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
-import {getVocabularyItemNameTranslated} from 'core/utils';
+import {getVocabularyItemNameTranslated, gettext} from 'core/utils';
+import {Positioner} from 'superdesk-ui-framework';
 
 interface IProps {
     authors: Array<{userId: IUser['_id'], roleId: string}>;
@@ -23,6 +24,9 @@ const settings: ISettings = {
     displayField: 'display_name',
     includeRoles: ['photographer', 'writer', 'translator'],
 };
+
+const SEPARATOR = <span style={{opacity: 0.5}}> / </span>;
+const AUTHORS_TO_SHOW_AT_ONCE: number = 2;
 
 export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
     constructor(props: IProps) {
@@ -74,15 +78,76 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
 
         const {vocabularyItems} = this.state;
 
+        function renderAuthorRole(roleQcode: string) {
+            return (
+                <em style={{opacity: 0.85, fontWeight: 'normal'}}>
+                    {getVocabularyItemNameTranslated(vocabularyItems.get(roleQcode))}:{' '}
+                </em>
+            );
+        }
+
+        function renderUser(user: IUser) {
+            return (
+                <strong>{user[settings.displayField]}</strong>
+            );
+        }
+
         return (
-            <span>
+            <span className="container" style={{marginRight: '1.2rem'}}>
                 {
-                    this.state.authors.map(({user, roleQcode}) => (
-                        <span key={user._id} style={{marginRight: '0.4rem'}}>
-                            <span>USER: {user[settings.displayField]}</span>{' '}
-                            <span>ROLE: {getVocabularyItemNameTranslated(vocabularyItems.get(roleQcode))}</span>
+                    this.state.authors.slice(0, AUTHORS_TO_SHOW_AT_ONCE).map(({user, roleQcode}, index) => (
+                        <span key={user._id}>
+                            {index > 0 && SEPARATOR}
+                            <span>{renderAuthorRole(roleQcode)}</span>
+                            <span>{renderUser(user)}</span>{' '}
                         </span>
                     ))
+                }
+
+                {
+                    this.state.authors.length > AUTHORS_TO_SHOW_AT_ONCE && (
+                        <span>
+                            {SEPARATOR}
+
+                            <button
+                                id="more-authors-button"
+                                className="icon-button--small"
+                                aria-label={gettext('All authors')}
+                            >
+                                <i className="icon-dots" />
+                            </button>
+
+                            <Positioner
+                                className="sd-popover"
+                                placement="bottom-end"
+                                triggerSelector="#more-authors-button"
+                                zIndex={1031}
+                            >
+                                <div>
+                                    <div className="sd-popover--header">
+                                        <h4 className="sd-popover--title">Authors</h4>
+                                        <button className="icon-button--small" style={{marginLeft: 10, opacity: 0.5}}>
+                                            <i className="icon-close-small icon--white" />
+                                        </button>
+                                    </div>
+                                    <table style={{lineHeight: 1.5}}>
+                                        <tbody>
+                                            {
+                                                this.state.authors.map(({user, roleQcode}) => (
+                                                    <tr key={user._id}>
+                                                        <td style={{paddingRight: 4, opacity: 0.6}}>
+                                                            {renderAuthorRole(roleQcode)}
+                                                        </td>
+                                                        <td>{renderUser(user)}</td>
+                                                    </tr>
+                                                ))
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </Positioner>
+                        </span>
+                    )
                 }
             </span>
         );
