@@ -8,7 +8,7 @@ import {
     loadAssetsByIds,
 } from '../store/assets/actions';
 import {superdeskApi, samsApi} from '../../src/apis';
-import {ISAMSWebsocketEvent, LIST_ACTION} from '../interfaces';
+import {ISAMSWebsocketEvent, LIST_ACTION, IAssetItem} from '../interfaces';
 import {
     getAssetSearchParams,
     getAssetListStyle,
@@ -25,8 +25,8 @@ export function onAssetCreated(event: ISAMSWebsocketEvent) {
 
     return samsApi.assets.query(params, listStyle)
         .then((response) => {
-            Object.keys(response._items).forEach((element: any) => {
-                if (response._items[element]._id === item_id) {
+            response._items.forEach((element: IAssetItem) => {
+                if (element._id === item_id) {
                     store?.dispatch(
                         receiveAssets(
                             response,
