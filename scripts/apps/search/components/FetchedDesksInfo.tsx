@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import {DesksDropdown} from './index';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
-import './FetchedDesksInfo.styles.scss';
 
 export class FetchedDesksInfo extends React.Component<any, any> {
     static propTypes: any;
@@ -71,13 +70,13 @@ export class FetchedDesksInfo extends React.Component<any, any> {
         const name = this.formatDeskName(desk.desk.name);
 
         return (
-            <div className="fetched-desks-info-component">
+            <div>
                 <dl>
                     <dt style={{paddingRight: '5px'}}>{gettext('fetched in')}</dt>
                     <dd>
                         {
                             desk.isUserDeskMember
-                                ? <button onClick={this.openDesk(desk)}>{name}</button>
+                                ? <button className="link" onClick={this.openDesk(desk)}>{name}</button>
                                 : <span className="container">{name}</span>
                         }
                     </dd>
