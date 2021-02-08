@@ -32,8 +32,6 @@ angular.module('superdesk.apps.desks', [
     .factory('desks', DesksFactory)
 
     .directive('sdTaskStatusItems', directive.TaskStatusItemsDirective)
-    .directive('sdUserRoleItems', directive.UserRoleItemListDirective)
-    .directive('sdSluglinesItems', directive.SluglinesItemListDirective)
     .directive('sdDeskConfig', () => ({controller: ctrl.DeskConfigController}))
     .directive('sdDeskConfigModal', directive.DeskConfigModal)
     .directive('sdFocusElement', directive.FocusElement)
