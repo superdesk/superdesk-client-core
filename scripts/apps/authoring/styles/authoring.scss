@@ -469,7 +469,6 @@ $authoring-toolbar-spacing: 10px;
 
 // ---- Sticky header ----
 .authoring-sticky {
-    width:100%;
     height:$sd-base-increment * 6;
     margin: 0 auto;
     padding: 4px 20px;
@@ -524,7 +523,6 @@ $authoring-toolbar-spacing: 10px;
 // ---- Main header ----
 .authoring-header {
     position: relative;
-    width: 100%;
     margin: 0 auto;
     padding: 0 12px;
     border-top: 0;

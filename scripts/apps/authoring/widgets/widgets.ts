@@ -265,13 +265,16 @@ function WidgetsManagerCtrl(
         unbindAllShortcuts();
     });
 }
-AuthoringWidgetsDir.$inject = ['desks', 'commentsService', '$injector'];
-function AuthoringWidgetsDir(desks, commentsService, $injector) {
+AuthoringWidgetsDir.$inject = ['desks', 'commentsService', '$injector', '$rootScope'];
+function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
     return {
         controller: WidgetsManagerCtrl,
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
         transclude: true,
         link: function(scope, elem) {
+            scope.widget = null;
+            scope.pinnedWidget = null;
+
             scope.userLookup = desks.userLookup;
 
             function reload() {
@@ -307,6 +310,30 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
                     return 'ctrl+alt+0';
                 } else if (order > 10) {
                     return tooltip ? `ctrl+shift+${order - 10}` : `ctrl+shift+${shiftNums[order - 10]}`;
+                }
+            };
+
+            scope.pinWidget = (widget) => {
+                if (scope.pinnedWidget) {
+                    scope.pinnedWidget.pinned = false;
+                }
+
+                if (widget && !scope.pinnedWidget) {
+                    $rootScope.$broadcast('resize:monitoring', -330);
+                }
+
+                if (!widget || scope.pinnedWidget === widget) {
+                    angular.element('body').removeClass('main-section--pinned-tabs');
+                    $rootScope.$broadcast('resize:monitoring', 330);
+                    scope.pinnedWidget = null;
+
+                    if (widget) {
+                        widget.pinned = false;
+                    }
+                } else {
+                    angular.element('body').addClass('main-section--pinned-tabs');
+                    scope.pinnedWidget = widget;
+                    widget.pinned = true;
                 }
             };
 
