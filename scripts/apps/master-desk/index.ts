@@ -21,6 +21,7 @@ angular.module('superdesk.apps.master-desk', [])
             icon: 'master',
             href: '/master-desk',
             label: gettext('Master Desk'),
+            shortcut: 'ctrl+alt+d',
             order: 1000,
         });
     }]);

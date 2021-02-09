@@ -37,7 +37,7 @@
     bottom: 30px;
 }
 
-.tabpane {
+.tabpane, .pinned-tab__wrapper {
     .sd-widget {
         width: auto;
         height: 100%;
@@ -58,16 +58,19 @@
                 padding: 0 1rem;
                 font-weight: 400;
             }
-            .widget-actions {
-                margin-left: auto;
-                margin-right: 10px;
-            }
         }
         .widget__sliding-toolbar {
             @include sliding-toolbar;
         }
+        .widget-actions {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: auto;
+        }
         .widget-settings {
             top: 8px;
+            right: 35px;
         }
         .widget-content {
             background-color: $sd-background;
@@ -122,6 +125,28 @@
             grid-row: 3/4;
             grid-column: 1/2;
             position: relative;
+        }
+    }
+
+    .tabcontent-actions {
+        position: absolute;
+        top: 8px;
+        right: 0;
+        z-index: 100;
+
+        .icn-btn {
+            margin-left: auto;
+            margin-right: 5px;
+            transition: all .2s ease-in-out;
+
+            &.active {
+                color: $sd-blue;
+                transform: rotate(90deg);
+            }
+
+            &:hover {
+                border: 0;
+            }
         }
     }
 

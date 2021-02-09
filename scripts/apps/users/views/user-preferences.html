@@ -10,7 +10,7 @@
 
             <li class="simple-list__item"
                 ng-repeat="(id, p) in preferences track by id"
-                ng-if="showCategory(p)">
+                ng-if="showCategory(p) && (p.allowed || id === 'feature:preview' || id === 'singleline:view')">
                 <div class="user-preferences__heading">{{ p.category }}</div>
                 <div sd-info-item>
 

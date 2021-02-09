@@ -1,6 +1,3 @@
-export {TaskStatusItemsDirective} from './TaskStatusItemsDirective';
-export {UserRoleItemListDirective} from './UserRoleItemListDirective';
-export {SluglinesItemListDirective} from './SluglinesItemListDirective';
 export {StageHeaderDirective} from './StageHeaderDirective';
 export {DeskConfigModal} from './DeskConfigModal';
 export {FocusElement} from './FocusElement';

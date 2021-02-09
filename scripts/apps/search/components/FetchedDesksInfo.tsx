@@ -76,7 +76,7 @@ export class FetchedDesksInfo extends React.Component<any, any> {
                     <dd>
                         {
                             desk.isUserDeskMember
-                                ? <button onClick={this.openDesk(desk)}>{name}</button>
+                                ? <button className="link" onClick={this.openDesk(desk)}>{name}</button>
                                 : <span className="container">{name}</span>
                         }
                     </dd>
