@@ -4,7 +4,7 @@ import {IUser, IRestApiResponse, IVocabulary, IVocabularyItem} from 'superdesk-a
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 import {getVocabularyItemNameTranslated, gettext} from 'core/utils';
-import {Positioner} from 'superdesk-ui-framework';
+import {Popover} from 'superdesk-ui-framework/react';
 
 interface IProps {
     authors: Array<{userId: IUser['_id'], roleId: string}>;
@@ -117,35 +117,27 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
                                 <i className="icon-dots" />
                             </button>
 
-                            <Positioner
-                                className="sd-popover"
+                            <Popover
+                                title={gettext('Authors')}
                                 placement="bottom-end"
                                 triggerSelector="#more-authors-button"
                                 zIndex={1031}
                             >
-                                <div>
-                                    <div className="sd-popover--header">
-                                        <h4 className="sd-popover--title">Authors</h4>
-                                        <button className="icon-button--small" style={{marginLeft: 10, opacity: 0.5}}>
-                                            <i className="icon-close-small icon--white" />
-                                        </button>
-                                    </div>
-                                    <table style={{lineHeight: 1.5}}>
-                                        <tbody>
-                                            {
-                                                this.state.authors.map(({user, roleQcode}) => (
-                                                    <tr key={user._id}>
-                                                        <td style={{paddingRight: 4, opacity: 0.6}}>
-                                                            {renderAuthorRole(roleQcode)}
-                                                        </td>
-                                                        <td>{renderUser(user)}</td>
-                                                    </tr>
-                                                ))
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </Positioner>
+                                <table style={{lineHeight: 1.5}}>
+                                    <tbody>
+                                        {
+                                            this.state.authors.map(({user, roleQcode}) => (
+                                                <tr key={user._id}>
+                                                    <td style={{paddingRight: 4, opacity: 0.6}}>
+                                                        {renderAuthorRole(roleQcode)}
+                                                    </td>
+                                                    <td>{renderUser(user)}</td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
+                            </Popover>
                         </span>
                     )
                 }
