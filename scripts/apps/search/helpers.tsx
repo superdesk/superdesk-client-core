@@ -4,7 +4,7 @@ import {DEFAULT_LIST_CONFIG} from './constants';
 import {fields} from './components/fields';
 import ng from '../../core/services/ng';
 import {isKilled} from 'apps/archive/utils';
-import {IArticle, IPublishedArticle} from 'superdesk-api';
+import {IArticle, IPublishedArticle, IListViewFieldWithOptions} from 'superdesk-api';
 import {getVocabularyItemNameTranslated} from 'core/utils';
 
 export function getSpecStyle(spec) {
@@ -164,7 +164,17 @@ export function renderArea(
     }
 
     const elemProps = angular.extend({key: area}, props);
-    const components = specs.map((field, i) => {
+    const components = specs.map((value: string | IListViewFieldWithOptions, i) => {
+        let field;
+        let options: IListViewFieldWithOptions['options'] | undefined;
+
+        if (typeof value === 'string') {
+            field = value;
+        } else {
+            field = value.field;
+            options = value.options;
+        }
+
         if (customRender.fields && field in customRender.fields) {
             return customRender.fields[field](itemProps);
         }
@@ -172,7 +182,7 @@ export function renderArea(
         const Component = fields[field];
 
         if (Component != null) {
-            return <Component key={i} {...itemProps} />;
+            return <Component key={i} {...itemProps} options={options} />;
         }
 
         return null;

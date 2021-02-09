@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {IUser, IRestApiResponse, IVocabulary, IVocabularyItem} from 'superdesk-api';
+import {IUser, IRestApiResponse, IVocabulary, IVocabularyItem, IAuthorsFieldOptions} from 'superdesk-api';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 import {getVocabularyItemNameTranslated, gettext} from 'core/utils';
@@ -8,22 +8,13 @@ import {Popover} from 'superdesk-ui-framework/react';
 
 interface IProps {
     authors: Array<{userId: IUser['_id'], roleId: string}>;
+    options: IAuthorsFieldOptions;
 }
 
 interface IState {
     authors?: Array<{user: IUser, roleQcode: string}>;
     vocabularyItems?: Map<string, IVocabularyItem>; // indexed by qcode
 }
-
-interface ISettings {
-    displayField: keyof IUser;
-    includeRoles: Array<string>; // qcodes
-}
-
-const settings: ISettings = {
-    displayField: 'display_name',
-    includeRoles: ['photographer', 'writer', 'translator'],
-};
 
 const SEPARATOR = <span style={{opacity: 0.5}}> / </span>;
 const AUTHORS_TO_SHOW_AT_ONCE: number = 2;
@@ -77,6 +68,7 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
         }
 
         const {vocabularyItems} = this.state;
+        const {options} = this.props;
 
         function renderAuthorRole(roleQcode: string) {
             return (
@@ -88,7 +80,7 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
 
         function renderUser(user: IUser) {
             return (
-                <strong>{user[settings.displayField]}</strong>
+                <strong>{user[options.displayField] ?? user.display_name}</strong>
             );
         }
 
@@ -148,12 +140,14 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
 
 export class Authors extends React.PureComponent<IPropsItemListInfo> {
     render() {
-        if ((this.props.item.authors) == null) {
+        const options: IAuthorsFieldOptions = this.props.options;
+
+        if ((this.props.item.authors) == null || options == null) {
             return null;
         }
 
         const allAuthors = this.props.item.authors.map(({_id}) => ({userId: _id[0], roleId: _id[1]}));
-        const authors = allAuthors.filter(({roleId}) => settings.includeRoles.includes(roleId));
+        const authors = allAuthors.filter(({roleId}) => options.includeRoles.includes(roleId));
 
         if (authors.length < 1) {
             return null;
@@ -163,6 +157,7 @@ export class Authors extends React.PureComponent<IPropsItemListInfo> {
             <AuthorsComponent
                 key={JSON.stringify(this.props.item.authors)} // force component to remount and re-initialize state
                 authors={authors}
+                options={options}
             />
         );
     }

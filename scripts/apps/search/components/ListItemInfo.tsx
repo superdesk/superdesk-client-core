@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import {renderArea} from '../helpers';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
-import {IDesk, IArticle} from 'superdesk-api';
+import {IDesk, IArticle, IListViewFieldWithOptions} from 'superdesk-api';
 
 export interface IPropsItemListInfo {
     item: IArticle;
@@ -23,6 +23,7 @@ export interface IPropsItemListInfo {
     singleLine: boolean;
     customRender: any;
     viewType: any;
+    options?: IListViewFieldWithOptions['options'];
 }
 
 export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {

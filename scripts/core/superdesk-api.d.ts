@@ -1248,6 +1248,18 @@ declare module 'superdesk-api' {
         removeEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
     }>;
 
+    export interface IAuthorsFieldOptions {
+        displayField: keyof IUser;
+        includeRoles: Array<string>; // qcodes
+    }
+
+    // Use a union type to add more fields. Listing them explicitly here will help to get static typing in the instance config file.
+    export type IListViewFieldWithOptions =
+        {
+            field: 'authors';
+            options: IAuthorsFieldOptions;
+        };
+
 
     export interface ISuperdeskGlobalConfig {
         // FROM SERVER
@@ -1405,11 +1417,11 @@ declare module 'superdesk-api' {
             singleLineView?: any;
             singleLine?: any;
             priority?: Array<string>;
-            firstLine?: Array<string>,
-            secondLine?: Array<string>,
+            firstLine?: Array<string | IListViewFieldWithOptions>,
+            secondLine?: Array<string | IListViewFieldWithOptions>,
             relatedItems?: {
-                firstLine: Array<string>,
-                secondLine: Array<string>,
+                firstLine: Array<string | IListViewFieldWithOptions>,
+                secondLine: Array<string | IListViewFieldWithOptions>,
             };
         };
         gridViewFields: Array<string>;
