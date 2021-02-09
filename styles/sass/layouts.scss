@@ -20,11 +20,11 @@ body {
 // Links
 // -----
 
-a {
+a, .link {
     color: $linkColor;
     text-decoration: none;
 }
-a:hover {
+a:hover, .link:hover {
     color: $linkColorHover;
     text-decoration: underline;
 }
@@ -51,7 +51,7 @@ a:hover {
     .subnav--authoring {
         top: 0;
     }
-    
+
     .main-section {
         // excludes $subnav-height
         top: $topspace;
@@ -362,7 +362,7 @@ a:hover {
         top: 0;
         bottom: 0;
         width: 56rem;
-    }  
+    }
 }
 .workspace.authoring .main-section {
     .sd-overlay-panel {
@@ -374,9 +374,9 @@ a:hover {
     .archive-content {
         .sd-overlay-panel {
             top: 4.8rem;
-        } 
+        }
     }
-} 
+}
 
 
 //Variables
@@ -505,9 +505,9 @@ $slide-pane-width: 400px;
     }
     > .content {
         position: absolute;
-        top: $nav-height; 
-        left: 0; 
-        right: 0; 
+        top: $nav-height;
+        left: 0;
+        right: 0;
         bottom: 0;
         overflow: auto;
         overflow-x: hidden;
@@ -891,7 +891,7 @@ $main-item-color-inactive: #aaa;
                 @include box-shadow(none);
                 opacity: 1;
             }
-            [class^="icon-"], 
+            [class^="icon-"],
             [class*=" icon-"] {
                 color: $white;
             }
@@ -982,8 +982,8 @@ $main-item-color-inactive: #aaa;
             &--inline {
                 display: flex;
                 h4 { flex: 1 1; }
-                span { 
-                    flex: 1 1; 
+                span {
+                    flex: 1 1;
                     text-align: right;
                 }
             }
