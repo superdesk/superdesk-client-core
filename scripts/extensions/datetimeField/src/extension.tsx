@@ -34,7 +34,6 @@ export const defaultDateTimeConfig: IDateTimeFieldConfig = {
 };
 
 const extension: IExtension = {
-    id: 'datetimeField',
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
 
