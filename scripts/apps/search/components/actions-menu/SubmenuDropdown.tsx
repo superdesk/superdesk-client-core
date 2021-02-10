@@ -16,6 +16,8 @@ interface IState {
  * Submenu within item actions.
  */
 export default class SubmenuDropdown extends React.Component<IProps, IState> {
+    refEl: HTMLDivElement;
+
     constructor(props) {
         super(props);
 
@@ -29,7 +31,15 @@ export default class SubmenuDropdown extends React.Component<IProps, IState> {
     }
 
     openSubmenu() {
-        this.setState({open: true});
+        function focusFirstItem() {
+            const btn = this.refEl.querySelectorAll('ul')[0]?.querySelectorAll('button:not([disabled])')[0];
+
+            if (btn instanceof HTMLElement) {
+                btn.focus();
+            }
+        }
+
+        this.setState({open: true}, focusFirstItem);
     }
 
     closeSubmenu() {
@@ -37,7 +47,11 @@ export default class SubmenuDropdown extends React.Component<IProps, IState> {
     }
 
     toggleState() {
-        this.setState({open: !this.state.open});
+        if (this.state.open) {
+            this.closeSubmenu();
+        } else {
+            this.openSubmenu();
+        }
     }
 
     render() {
@@ -46,6 +60,9 @@ export default class SubmenuDropdown extends React.Component<IProps, IState> {
                 className={classNames('dropdown dropdown--noarrow', {'open': this.state.open})}
                 onMouseEnter={this.openSubmenu}
                 onMouseLeave={this.closeSubmenu}
+                ref={(el) => {
+                    this.refEl = el;
+                }}
             >
                 <button
                     className="dropdown__toggle"

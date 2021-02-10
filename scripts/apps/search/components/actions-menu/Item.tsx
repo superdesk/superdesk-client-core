@@ -81,10 +81,18 @@ export default class MenuItem extends React.Component<IProps, IState> {
         const targetRect = thisNode.getBoundingClientRect();
         const BUFFER = 250;
 
+        function focusFirstItem() {
+            const btn = thisNode.querySelectorAll('ul')[0]?.querySelectorAll('button:not([disabled])')[0];
+
+            if (btn instanceof HTMLElement) {
+                btn.focus();
+            }
+        }
+
         if (targetRect.left < LEFT_SIDEBAR_WIDTH + BUFFER) {
-            this.setState({position: 'dropdown__menu--submenu-right'});
+            this.setState({position: 'dropdown__menu--submenu-right'}, focusFirstItem);
         } else {
-            this.setState({position: 'dropdown__menu--submenu-left'});
+            this.setState({position: 'dropdown__menu--submenu-left'}, focusFirstItem);
         }
     }
 
@@ -144,7 +152,7 @@ export default class MenuItem extends React.Component<IProps, IState> {
                                     : null
                             }
 
-                            {activity.label}
+                            {activity.label};;;
                         </button>
 
                         {
@@ -176,7 +184,7 @@ export default class MenuItem extends React.Component<IProps, IState> {
                     }
 
                     <span style={{display: 'inline'}}>
-                        {activity.label}
+                        {activity.label}:::
                     </span>
                 </button>
             </li>
