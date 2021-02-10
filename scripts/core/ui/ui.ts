@@ -849,11 +849,11 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
             const resize = () => {
                 workspace.addClass('ui-resizable-resizing');
 
-                var remainingSpace = container.width() - workspace.outerWidth() - 48,
+                let remainingSpace = container.width() - workspace.outerWidth() - 48,
                     authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
 
-                var stage = workspace.find('.stage.swimlane');
-                var header = stage.find('.column-header.swimlane');
+                let stage = workspace.find('.stage.swimlane');
+                let header = stage.find('.column-header.swimlane');
 
                 if (workspace.outerWidth() < 655) {
                     workspace.addClass('ui-responsive-medium');
@@ -867,7 +867,7 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                     workspace.removeClass('ui-responsive-small');
                 }
 
-                authoring.width(authoringWidth / container.width() * 100 + '%');
+                workspace.next('#authoring-container').width(authoringWidth / container.width() * 100 + '%');
 
                 header.width(stage.outerWidth());
             };
