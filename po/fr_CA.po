@@ -1270,7 +1270,11 @@ msgstr "Êtes-vous sur de vouloir supprimer l'ensemble de règles?"
 msgid "Are you sure you want to delete saved search?"
 msgstr "Êtes-vous certain de vouloir supprimer la recherche enregistrée?"
 
-#: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:123
+#: scripts/extensions/sams/dist/src/store/sets/actions.js:69
+msgid "Are you sure you want to delete the Set \"{{name}}\"?"
+msgstr "Êtes-vous certain de vouloir supprimer l'ensemble \"{{name}}\"?"
+
+#: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:122
 msgid "Are you sure you want to delete the saved report?"
 msgstr "Êtes-vous certain de vouloir supprimer le rapport enregistré?"
 
@@ -3434,6 +3438,7 @@ msgstr "Date prévue"
 msgid "Date/Time"
 msgstr "Date/heure"
 
+#: scripts/apps/archive/views/metadata-view.html:69
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:151
 #: scripts/apps/users/views/user-preferences.html:54
 #: scripts/apps/workspace/content/constants.ts:83
@@ -3548,6 +3553,10 @@ msgstr "Supprimer la règle"
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:33
 msgid "Delete Saved Report"
 msgstr "Supprimer le rapport enregistré"
+
+#: scripts/extensions/sams/dist/src/store/sets/actions.js:69
+msgid "Delete Set?"
+msgstr "Supprimer l'ensemble?"
 
 #: scripts/core/editor3/highlightsConfig.ts:116
 msgid "Delete empty paragraphs"
@@ -3852,7 +3861,11 @@ msgstr "Désactiver l'utilisateur"
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: scripts/core/notification/notification.ts:158
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:57
+msgid "Disabled Sets"
+msgstr "Ensembles désactivés"
+
+#: scripts/core/notification/notification.ts:139
 msgid "Disconnected from Notification Server!"
 msgstr "Déconnecté du serveur de notifications!"
 
@@ -5175,11 +5188,19 @@ msgstr "L'élément d'archive n'a pas pu être créé."
 msgid "Failed to create the Report Schedule!"
 msgstr "L'horaire de rapport n'a pas pu être créé!"
 
+#: scripts/extensions/sams/dist/src/api/sets.js:27
+msgid "Failed to create the Set"
+msgstr "L'ensemble n'a pas pu être créé"
+
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:196
 msgid "Failed to create/update Events and Planning view filter"
 msgstr "Le filtre d'événements et de planification n'a pas pu être créé ou mis à jour"
 
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:196
+#: scripts/extensions/sams/dist/src/api/sets.js:54
+msgid "Failed to delete the Set"
+msgstr "L'ensemble n'a pas pu être supprimé"
+
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:194
 msgid "Failed to delete the saved report"
 msgstr "Le rapport enregistré n'a pas pu être supprimé"
 
@@ -5249,7 +5270,15 @@ msgstr "L'élément de la file d'attente n'a pas pu être obtenu"
 msgid "Failed to link to requested assignment!"
 msgstr "Le lien avec l'affectation demandée n'a pas pu être créé!"
 
-#: ../superdesk-planning/client/actions/events/ui.ts:350
+#: scripts/extensions/sams/dist/src/api/sets.js:13
+msgid "Failed to load all sets"
+msgstr "Tous les ensembles n'ont pas pu être chargés"
+
+#: scripts/extensions/sams/dist/src/api/storageDestinations.js:15
+msgid "Failed to load all storage destinations"
+msgstr ""
+
+#: ../superdesk-planning/client/actions/events/ui.js:349
 msgid "Failed to load duplicated Event."
 msgstr "L'événement dupliqué n'a pas pu être chargé."
 
@@ -5422,6 +5451,10 @@ msgstr "Les répétitions d'événements n'ont pas pu être mises à jour"
 #: ../superdesk-planning/client/actions/events/ui.ts:499
 msgid "Failed to update the Event time!"
 msgstr "L'heure de l'événement n'a pas pu être mise à jour!"
+
+#: scripts/extensions/sams/dist/src/api/sets.js:41
+msgid "Failed to update the Set"
+msgstr "L'ensemble n'a pas pu être mis à jour"
 
 #: ../superdesk-planning/client/actions/locations.js:28
 msgid "Failed to updated location!"
@@ -6114,6 +6147,10 @@ msgstr "Cacher les éléments envoyés ou en file d'attente"
 #: scripts/apps/publish/views/subscribers.html:173
 msgid "High priority"
 msgstr "Priorité élevée"
+
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:35
+msgid "Highcharts {{licenseType}} License"
+msgstr "Licence Highcharts {{licenseType}}"
 
 #: scripts/apps/packaging/views/sd-package-items-edit.html:21
 msgid "Highlight Preview"
@@ -7246,6 +7283,11 @@ msgstr "Gestion des endroits"
 msgid "Manage Search Providers"
 msgstr "Gestion des fournisseurs de recherche"
 
+#: scripts/extensions/sams/dist/src/apps/samsWorkspace.js:48
+#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:81
+msgid "Manage Sets"
+msgstr "Gérer les ensembles"
+
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:16
 msgid "Manage agendas"
 msgstr "Gestion des agendas"
@@ -8248,6 +8290,10 @@ msgstr "Nombre"
 #: scripts/apps/users/activity-widget/configuration.html:6
 msgid "Number of items"
 msgstr "Nombre d'éléments"
+
+#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:27
+msgid "OEM"
+msgstr "Ensemblier"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentPopup/index.jsx:72
 #: ../superdesk-planning/client/components/Assignments/EditCoverageAssignmentModal.jsx:106
@@ -11160,9 +11206,21 @@ msgstr "Service"
 msgid "Sessions cleared"
 msgstr "Séances fermées"
 
+#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:85
+msgid "Set Details"
+msgstr "Détails de l'ensemble"
+
 #: scripts/apps/users/views/settings-roles.html:49
 msgid "Set as default"
 msgstr "Définir par défault"
+
+#: scripts/extensions/sams/dist/src/api/sets.js:23
+msgid "Set created successfully"
+msgstr "Ensemble créé"
+
+#: scripts/extensions/sams/dist/src/api/sets.js:51
+msgid "Set deleted successfully"
+msgstr "Ensemble supprimé"
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:80
 msgid "Set highlights"
@@ -11184,6 +11242,10 @@ msgid ""
 " anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
 msgstr "Configurez différents moniteurs pour suivre un sujet depuis son ingestion ou sa production, sa publication dans un pupitre, ou n'importe quelle étape du flux de travail. Il suffit de lui donner un nom approprié, puis de sélectionner une recherche enregistrée, un pupitre ou une étape du flux de travail. Il est possible de suivre n'importe quoi, n'importe où à n'importe quel moment. Il n'y a pas de limite quant au nombre de moniteurs."
+
+#: scripts/extensions/sams/dist/src/api/sets.js:37
+msgid "Set updated successfully"
+msgstr "Ensemble mis à jour"
 
 #: scripts/apps/settings/index.ts:19 scripts/apps/settings/settings.tsx:32
 #: scripts/core/menu/views/menu.html:13
@@ -12699,7 +12761,7 @@ msgstr "Ceci va également publier toute les séries récurrentes de l'événeme
 msgid "This will also postpone the following planning items"
 msgstr "Cela reportera également les éléments de planification suivants"
 
-#: ../superdesk-planning/client/actions/assignments/ui.js:839
+#: ../superdesk-planning/client/actions/assignments/ui.js:842
 msgid ""
 "This will also remove other linked assignments (if any, for story updates). "
 "Are you sure?"
@@ -13535,6 +13597,10 @@ msgstr "Statistiques de priorités"
 msgid "Urgency:"
 msgstr "Priorité:"
 
+#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:56
+msgid "Usable Sets"
+msgstr "Ensembles utilisables"
+
 #: scripts/apps/workspace/content/constants.ts:112
 msgid "Usage Terms"
 msgstr "Conditions d'utilisation"
@@ -13587,6 +13653,7 @@ msgstr "Utilisé"
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.jsx:303
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:46
 #: scripts/apps/users/views/user-privileges.html:16
+#: scripts/extensions/markForUser/dist/get-authoring-actions.js:8
 msgid "User"
 msgstr "Utilisateur"
 
