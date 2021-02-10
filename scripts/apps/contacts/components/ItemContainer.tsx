@@ -74,7 +74,7 @@ export class ItemContainer extends React.Component<any, any> {
         }
 
         if (item.country) {
-            addressInfo.push(item.country);
+            addressInfo.push(item.country?.name);
         }
 
         const contactAddress = addressInfo.join(', ');
