@@ -11,6 +11,7 @@ import ng from 'core/services/ng';
 import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 import {IActivityService} from 'core/activity/activity';
 import {isButtonClicked} from './Item';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 
 interface IProps {
     itemsList: Array<string>;
@@ -380,6 +381,11 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     handleKey(event) {
+        if (querySelectorParent(event.target, 'button', {self: true}) != null) {
+            // don't execute key bindings when a button inside the list item is focused.
+            return;
+        }
+
         // don't do anything when modifier key is pressed
         // this allows shortcuts defined in activities to work without two actions firing for one shortcut
         if (event.ctrlKey || event.altKey || event.shiftKey) {
