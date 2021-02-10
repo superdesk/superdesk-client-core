@@ -1,13 +1,11 @@
-import {IExtension} from 'superdesk-api';
-import {superdesk} from './superdesk';
-
-const {gettext} = superdesk.localization;
-
-const str = gettext('Hello world');
+import {ISuperdesk, IExtension} from 'superdesk-api';
 
 const extension: IExtension = {
-    activate: () => {
-        superdesk.ui.alert(str);
+    id: 'helloWorld',
+    activate: (superdesk: ISuperdesk) => {
+        const {gettext} = superdesk.localization;
+
+        superdesk.ui.alert(gettext('Hello world'));
 
         return Promise.resolve({});
     },
