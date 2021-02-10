@@ -337,6 +337,11 @@ function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
                 }
             };
 
+            scope.$on('$destroy', () => {
+                angular.element('body').removeClass('main-section--pinned-tabs');
+                scope.pinnedWidget.pinned = false;
+            });
+
             reload();
         },
     };
