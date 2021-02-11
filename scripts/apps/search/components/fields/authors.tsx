@@ -1,3 +1,5 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 
 import {IUser, IRestApiResponse, IVocabulary, IVocabularyItem, IAuthorsFieldOptions} from 'superdesk-api';
@@ -43,7 +45,7 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
 
         const getAuthorRolesVocabulary = () => this.asyncHelpers.httpRequestJsonLocal<IVocabulary>({
             method: 'GET',
-            path: `/vocabularies/author_roles`,
+            path: '/vocabularies/author_roles',
         });
 
         Promise.all([
@@ -60,7 +62,7 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
                 vocabularyItems,
                 authors: usersResponse._items.map((user) => ({user, roleQcode: rolesByUserId[user._id]})),
             });
-        }) ;
+        });
     }
     render() {
         if (this.state.authors == null) {
