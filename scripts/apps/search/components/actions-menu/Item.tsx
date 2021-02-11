@@ -152,7 +152,7 @@ export default class MenuItem extends React.Component<IProps, IState> {
                                     : null
                             }
 
-                            {activity.label};;;
+                            {activity.label}
                         </button>
 
                         {
@@ -184,7 +184,7 @@ export default class MenuItem extends React.Component<IProps, IState> {
                     }
 
                     <span style={{display: 'inline'}}>
-                        {activity.label}:::
+                        {activity.label}
                     </span>
                 </button>
             </li>
