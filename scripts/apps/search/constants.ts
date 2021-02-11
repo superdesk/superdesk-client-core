@@ -183,4 +183,3 @@ export const CORE_PROJECTED_FIELDS = {
         'translations',
     ],
 };
-
