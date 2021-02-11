@@ -18,7 +18,7 @@
     <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
         <div class="authoring-header__general-info">
             <div>
-                <i class="filetype-icon-{{ :: item.type}}" title="{{'Article Type'| translate }}: {{ item.type}}"></i>
+                <i class="filetype-icon-{{ :: item.type}}" title="{{getArticleTypeLabel(item)}}"></i>
             </div>
             <div ng-if="item.profile && !change_profile">
                 <span class="authoring-header__label" translate>PROFILE</span>
@@ -105,7 +105,7 @@
                     <input type="text"
                         tansa-scope-sync
                         tabindex="{{editor.slugline.order}}"
-                        class="line-input slugline"
+                        class="boxed-input slugline"
                         id="slugline"
                         ng-model="item.slugline"
                         ng-change="autosave(item)"
@@ -134,7 +134,7 @@
                 <label class="authoring-header__item-label" for="a11y-keywords">{{getLabelForFieldId('keywords')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-words-list
-                        class="data terms-box"
+                        class="data terms-box boxed-input"
                         id="a11y-keywords"
                         data-item="item"
                         data-field="keywords"
@@ -142,7 +142,7 @@
                         data-header="_editable"
                         data-list="metadata.keywords"
                         data-disabled="!_editable || schema.keywords.readonly === true"
-                        data-style="line-input"
+                        data-style="boxed-input"
                         tabindex="{{editor.keywords.order}}">
                     </div>
                     <div class="authoring-header__hint" ng-if="helper_text.keywords">{{helper_text.keywords}}</div>
@@ -159,7 +159,7 @@
                 <label class="authoring-header__item-label" for="a11y-genre">{{getLabelForFieldId('genre')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
-                         class="data"
+                         class="boxed-input data"
                          id="a11y-genre"
                          data-tabindex="editor.genre.order"
                          data-item="item"
@@ -184,7 +184,7 @@
                 <div class="authoring-header__input-holder">
                     <input type="text"
                            tabindex="{{editor.anpa_take_key.order}}"
-                           class="line-input"
+                           class="boxed-input"
                            id="anpa_take_key"
                            ng-model="item.anpa_take_key"
                            ng-change="autosave(item)"
@@ -204,7 +204,7 @@
                 <label class="authoring-header__item-label" for="a11y-place">{{getLabelForFieldId('place')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms ng-if="!features.places_autocomplete && !single_value.locators"
-                         class="data"
+                         class="boxed-input data"
                          id="a11y-place"
                          data-tabindex="editor.place.order"
                          data-item="item"
@@ -217,7 +217,7 @@
                     </div>
 
                     <div sd-meta-dropdown ng-if="!features.places_autocomplete && single_value.locators"
-                         class="data"
+                         class="boxed-input data"
                          id="a11y-place"
                          data-tabindex="editor.place.order"
                          data-item="item"
@@ -230,7 +230,7 @@
                     </div>
 
                     <div sd-meta-place ng-if="features.places_autocomplete"
-                        class="data"
+                        class="boxed-input data"
                         id="a11y-place"
                         data-tabindex="editor.place.order"
                         data-item="item"
@@ -254,7 +254,7 @@
                 <label class="authoring-header__item-label" for="a11y-language">{{getLabelForFieldId('language')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
-                         class="data"
+                         class="boxed-input data"
                          id="a11y-language"
                          data-tabindex="editor.language.order"
                          data-item="item"
@@ -278,6 +278,7 @@
                 <label class="authoring-header__item-label" for="a11y-priority">{{getLabelForFieldId('priority')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
+                        class="boxed-input"
                          data-item="item"
                          id="a11y-priority"
                          data-tabindex="editor.priority.order"
@@ -303,6 +304,7 @@
                 <label class="authoring-header__item-label" for="a11y-urgency">{{getLabelForFieldId('urgency')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
+                         class="boxed-input"
                          data-item="item"
                          id="a11y-urgency"
                          data-tabindex="editor.urgency.order"
@@ -330,7 +332,7 @@
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
                         ng-if="categoriesVocabulary.selection_type === 'multi selection'"
-                        class="data"
+                        class="data boxed-input"
                         id="anpa_category"
                         data-tabindex="editor.anpa_category.order"
                         ng-disabled="!_editable || schema.anpa_category.readonly === true"
@@ -358,6 +360,7 @@
                         data-change="autosave(item)"
                         tabindex="{{editor.anpa_category.order}}"
                         data-key="qcode"
+                        class="boxed-input"
                         >
                    </div>
 
@@ -376,7 +379,7 @@
                 <div class="authoring-header__input-holder">
                     <div id="subjects"
                         sd-meta-terms
-                        class="data"
+                        class="data boxed-input"
                         id="a11y-subject"
                         data-tabindex="editor.subject.order"
                         data-item="item"
@@ -405,7 +408,7 @@
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
                         ng-if="cv.selection_type === 'multi selection' || showDropdownAsMultiTerms.includes(cv._id)"
-                        class="data"
+                        class="data boxed-input"
                         data-tabindex="editor[cv._id].order"
                         data-item="item"
                         data-field="{{cv.schema_field || 'subject'}}"
@@ -432,6 +435,7 @@
                         data-change="autosave(item)"
                         tabindex="{{editor[cv._id].order}}"
                         data-key="qcode"
+                        class="boxed-input"
                         >
                    </div>
                    <div class="authoring-header__hint" ng-if="helper_text[cv._id]">{{helper_text[cv._id]}}</div>
@@ -553,7 +557,7 @@
                  order="{{editor.ednote.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('ednote')}}</label>
                 <div class="authoring-header__input-holder">
-                    <textarea id="ednote" class="line-input ed-note"
+                    <textarea id="ednote" class="boxed-input ed-note"
                               sd-auto-height
                               tansa-scope-sync
                               tabindex="{{editor.ednote.order}}"
@@ -580,7 +584,7 @@
                 <div class="authoring-header__input-holder">
                     <div id="authors"
                         sd-meta-terms
-                        class="data"
+                        class="data boxed-input"
                         data-tabindex="editor.authors.order"
                         data-item="item"
                         data-field="authors"

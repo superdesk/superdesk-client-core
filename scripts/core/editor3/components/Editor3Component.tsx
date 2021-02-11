@@ -488,6 +488,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
         this.editor = editor;
 
         this.editorKey = this.editor === null ? null : this.editor._editorKey;
+
+        // eslint-disable-next-line react/no-find-dom-node
         this.editorNode = this.editor === null ? undefined : ReactDOM.findDOMNode(this.editor);
     }
 

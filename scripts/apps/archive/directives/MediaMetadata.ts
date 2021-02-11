@@ -1,8 +1,10 @@
 import _ from 'lodash';
+import {appConfig} from 'appConfig';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
-MediaMetadata.$inject = ['userList', 'archiveService', 'metadata'];
+MediaMetadata.$inject = ['userList', 'archiveService', 'metadata', '$timeout'];
 
-export function MediaMetadata(userList, archiveService, metadata) {
+export function MediaMetadata(userList, archiveService, metadata, $timeout) {
     return {
         scope: {
             item: '=',
@@ -10,6 +12,15 @@ export function MediaMetadata(userList, archiveService, metadata) {
         templateUrl: 'scripts/apps/archive/views/metadata-view.html',
         link: function(scope, elem) {
             scope.$watch('item', reloadData);
+            scope.isCorrectionWorkflowEnabled = appConfig?.corrections_workflow;
+            scope.loading = true;
+
+            getLabelNameResolver().then((_getLabelForFieldId) => {
+                scope.$apply(() => {
+                    scope.label = _getLabelForFieldId;
+                    scope.loading = false;
+                });
+            });
 
             function reloadData() {
                 var qcodes = [];

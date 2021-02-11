@@ -21,7 +21,7 @@ import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
-import {assertNever, Writeable} from './helpers/typescript-helpers';
+import {assertNever, Writeable, notNullOrUndefined} from './helpers/typescript-helpers';
 import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -52,7 +52,11 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
+import {httpRequestJsonLocal} from './helpers/network';
+import {memoize as memoizeLocal} from './memoize';
+import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
+import {sdApi} from 'api';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -62,15 +66,17 @@ export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise
     const authoringWorkspace = ng.get('authoringWorkspace');
 
     return ng.getService('$location').then(($location) => {
-        $location.url('/workspace/monitoring');
+        if (document.querySelector('[sd-monitoring-view]') == null) {
+            // redirect if outside monitoring view
+            $location.url('/workspace/monitoring');
+        }
+
         authoringWorkspace.edit({_id: id}, mode);
     });
 }
 
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
-
-const isPublished = (article) => article.item_id != null;
 
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
@@ -118,23 +124,26 @@ export function getSuperdeskApiImplementation(
     authoringWorkspace: AuthoringWorkspaceService,
     config,
     metadata,
+    preferencesService,
 ): ISuperdesk {
-    const isLocked = (article: IArticle) => article['lock_session'] != null;
     const isLockedInCurrentSession = (article: IArticle) => lock.isLockedInCurrentSession(article);
-    const isLockedInOtherSession = (article: IArticle) => isLocked(article) && !isLockedInCurrentSession(article);
+    const isLockedInOtherSession = (article: IArticle) =>
+        sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
 
     return {
         dataApi: dataApi,
         dataApiByEntity,
+        httpRequestJsonLocal,
         helpers: {
             assertNever,
+            notNullOrUndefined,
         },
         entities: {
             article: {
                 isPersonal: (article) => article.task == null
                     || article.task.desk == null
                     || article.task.stage == null,
-                isLocked: isLocked,
+                isLocked: sdApi.article.isLocked,
                 isLockedInCurrentSession,
                 isLockedInOtherSession,
                 patch: (article, patch, dangerousOptions) => {
@@ -142,14 +151,14 @@ export function getSuperdeskApiImplementation(
                         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
                         .filter((middleware) => middleware != null);
 
-                    onPatchBeforeMiddlewares.reduce(
+                    return onPatchBeforeMiddlewares.reduce(
                         (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
                         Promise.resolve(patch),
                     ).then((patchFinal) => {
                         return dataApi.patchRaw<IArticle>(
                             // distinction between handling published and non-published items
                             // should be removed: SDESK-4687
-                            (isPublished(article) ? 'published' : 'archive'),
+                            (sdApi.article.isPublished(article) ? 'published' : 'archive'),
                             article._id,
                             article._etag,
                             patchFinal,
@@ -168,7 +177,7 @@ export function getSuperdeskApiImplementation(
                     });
                 },
                 isArchived: (article) => article._type === 'archived',
-                isPublished: (article) => isPublished(article),
+                isPublished: (article) => sdApi.article.isPublished(article),
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>
@@ -279,6 +288,26 @@ export function getSuperdeskApiImplementation(
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
             hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
         },
+        preferences: {
+            get: (key) => {
+                return preferencesService.get().then((res: Dictionary<string, any>) => {
+                    return res?.extensions?.[requestingExtensionId]?.[key] ?? null;
+                });
+            },
+            set: (key, value) => {
+                return preferencesService.get().then((res: Dictionary<string, any>) => {
+                    const extensionsPreferences = res.extensions ?? {};
+
+                    if (extensionsPreferences[requestingExtensionId] == null) {
+                        extensionsPreferences[requestingExtensionId] = {};
+                    }
+
+                    extensionsPreferences[requestingExtensionId][key] = value;
+
+                    return preferencesService.update({extensions: extensionsPreferences});
+                });
+            },
+        },
         session: {
             getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
@@ -292,6 +321,8 @@ export function getSuperdeskApiImplementation(
             dateToServerString: (date: Date) => {
                 return date.toISOString().slice(0, 19) + '+0000';
             },
+            memoize: memoizeLocal,
+            generatePatch,
             stripHtmlTags,
             getLinesCount,
         },

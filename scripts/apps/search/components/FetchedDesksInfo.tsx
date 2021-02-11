@@ -47,7 +47,7 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     }
 
     openDesk(desk) {
-        return function(event) {
+        return (event) => {
             event.stopPropagation();
             if (desk.isUserDeskMember) {
                 this.desks.setCurrentDeskId(desk.desk._id);
@@ -62,31 +62,29 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     render() {
         const items = [];
 
-        items.push(React.createElement('dt', {
-            key: 'dt',
-            style: {paddingRight: '5px'},
-        }, gettext('fetched in')));
-
-        if (this.state.desks.length) {
-            const desk = this.state.desks[0];
-            const name = this.formatDeskName(desk.desk.name);
-
-            items.push(React.createElement('dd', {key: 'dd1'}, desk.isUserDeskMember ?
-                React.createElement('a', {onClick: this.openDesk(desk)}, name) :
-                React.createElement('span', {className: 'container'}, name),
-            ));
-
-            if (this.state.desks.length > 1) {
-                items.push(React.createElement(DesksDropdown, {
-                    key: 'dd2',
-                    desks: this.state.desks,
-                    openDesk: this.openDesk,
-                }));
-            }
+        if (!this.state.desks?.length) {
+            return null;
         }
 
-        return React.createElement('div', {},
-            React.createElement('dl', {}, items),
+        const desk = this.state.desks[0];
+        const name = this.formatDeskName(desk.desk.name);
+
+        return (
+            <div>
+                <dl>
+                    <dt style={{paddingRight: '5px'}}>{gettext('fetched in')}</dt>
+                    <dd>
+                        {
+                            desk.isUserDeskMember
+                                ? <button className="link" onClick={this.openDesk(desk)}>{name}</button>
+                                : <span className="container">{name}</span>
+                        }
+                    </dd>
+                    {this.state.desks.length > 1 && (
+                        <DesksDropdown desks={this.state.desks} openDesk={this.openDesk} />
+                    )}
+                </dl>
+            </div>
         );
     }
 }

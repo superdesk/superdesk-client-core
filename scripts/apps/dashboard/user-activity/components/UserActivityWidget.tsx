@@ -21,6 +21,12 @@ interface IGroup {
     collapsed?: boolean;
 }
 
+interface IProps {
+    header?: boolean;
+    user?: IUser;
+    onUserChange(user: IUser): void;
+}
+
 interface IState {
     userSearchField: string;
     user?: IUser;
@@ -186,7 +192,7 @@ function getStageForItem(item, {desks}) {
     return stage;
 }
 
-export default class UserActivityWidget extends React.Component<{}, IState> {
+export default class UserActivityWidget extends React.Component<IProps, IState> {
     services: any;
     removeListeners: Array<() => void>;
 
@@ -227,12 +233,22 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     componentDidMount() {
         this.addListeners();
 
-        if (this.state.user == null) {
+        if (!this.props.user) {
             this.setState({loading: true});
 
             this.services.session.getIdentity().then((user) => {
                 this.setUser(user);
             });
+        }
+
+        if (this.props.user) {
+            this.setUser(this.props.user);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.user && prevProps.user !== this.props.user) {
+            this.setUser(this.props.user);
         }
     }
 
@@ -254,7 +270,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     }
 
     refreshItems() {
-        if (this.state.user) {
+        if (this.props.user) {
             this.fetchGroupsData();
         }
     }
@@ -381,8 +397,10 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     }
 
     setUser(user: IUser) {
+        this.props.onUserChange(user);
+
         this.setState(
-            {user, groups: GET_GROUPS(user._id, this.services), loading: true},
+            {groups: GET_GROUPS(user._id, this.services), loading: true},
             () => {
                 this.fetchGroupsData();
             },
@@ -395,17 +413,19 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         return (
             <div className="widget-container">
                 <div className="main-list" style={{top: 0}}>
-                    <div className="widget-header">
-                        <h3 className="widget-title">
-                            {gettext('User Activity')}
-                        </h3>
-                    </div>
+                    {this.props.header ? (
+                        <div className="widget-header">
+                            <h3 className="widget-title">
+                                {gettext('User Activity')}
+                            </h3>
+                        </div>
+                    ) : null}
                     <div
                         className="search-box search-box--no-shadow search-box--fluid-height"
                     >
                         <form className="search-box__content">
                             <SelectUser
-                                selectedUserId={this.state.user?._id}
+                                selectedUserId={this.props.user?._id}
                                 autoFocus={false}
                                 onSelect={(user) => {
                                     this.setUser(user);
@@ -416,7 +436,7 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
                     </div>
                     {
                         loading ? <Loader /> :
-                            this.state.user && this.state.groupsData && (
+                            this.state.groupsData && (
                                 <div className="content-list-holder">
                                     <div className="shadow-list-holder">
                                         <div className="content-list">

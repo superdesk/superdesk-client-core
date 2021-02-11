@@ -1,9 +1,8 @@
 import React from 'react';
 import {closeActionsMenu} from '../helpers';
-import {isString, map} from 'lodash';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IDesk} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
@@ -74,8 +73,6 @@ export class MarkedDesksList extends React.Component<IProps> {
 
     render() {
         const {desks} = this;
-        const markedDesks = isString(this.props.item.marked_desks[0]) ?
-            this.props.item.marked_desks : map(this.props.item.marked_desks, 'desk_id');
         const markedDesksById = this.props.markedDesksById || {};
 
         return (
@@ -92,23 +89,31 @@ export class MarkedDesksList extends React.Component<IProps> {
                     </div>
                 </li>
                 {
-                    markedDesks.map((d) => (
-                        <li key={'item-marked-' + markedDesksById[d]._id}>
-                            {markedDesksById[d].name}
-                            {
-                                desks.hasMarkItemPrivilege()
-                                    ? (
-                                        <button
-                                            className="btn btn--small btn--hollow btn--primary btn--ui-dark"
-                                            onClick={this.removeMarkedDesk(markedDesksById[d])}
-                                        >
-                                            {gettext('REMOVE')}
-                                        </button>
-                                    )
-                                    : null
-                            }
-                        </li>
-                    ))
+                    this.props.item.marked_desks.map(({desk_id}) => {
+                        const desk: IDesk = markedDesksById[desk_id];
+
+                        if (desk == null) {
+                            return null;
+                        }
+
+                        return (
+                            <li key={desk._id}>
+                                {desk.name}
+                                {
+                                    desks.hasMarkItemPrivilege()
+                                        ? (
+                                            <button
+                                                className="btn btn--small btn--hollow btn--primary btn--ui-dark"
+                                                onClick={this.removeMarkedDesk(desk)}
+                                            >
+                                                {gettext('REMOVE')}
+                                            </button>
+                                        )
+                                        : null
+                                }
+                            </li>
+                        );
+                    })
                 }
             </ul>
         );

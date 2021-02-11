@@ -100,6 +100,7 @@ export class HighlightsPopup extends React.Component<any, any> {
                     highlightId={highlightId}
                     highlightsManager={this.props.highlightsManager}
                     editorNode={this.props.editorNode}
+                    close={() => this.unmountCustom()}
                 />
             );
         } else if (type === 'COMMENT') {

@@ -1,3 +1,25 @@
+<div class="pinned-tab__wrapper">
+    <section class="tabcontent">
+        <div class="tabcontent-actions">
+            <button class="icn-btn active" ng-click="pinWidget(widget)">
+                <i class="icon-pin"></i>
+            </button>
+        </div>
+
+        <div sd-widget data-widget="pinnedWidget" data-configurable="pinnedWidget.configurable"
+            data-save="pinnedWidget.save()" ng-if="pinnedWidget.component == null">
+            <div ng-include="pinnedWidget.template" class="sd-wrap-helper"></div>
+        </div>
+
+        <sd-widget-react
+            ng-if="pinnedWidget.component != null"
+            widget="pinnedWidget"
+            article="item"
+            class="sd-widget"
+        ></sd-widget-react>
+    </section>
+</div>
+
 <div class="widget-wrapper"
     ng-class="{
         'active-right': active,
@@ -5,7 +27,7 @@
     <div class="sd-sidetab-menu sd-sidetab-menu--right" ng-if="item">
         <ul class="navigation-tabs">
             <li ng-repeat="widget in widgets | orderBy:'order'"
-                ng-class="{active: widget === active}">                
+                ng-class="{active: widget === active, pinned: widget.pinned}">
                 <a class="sd-sidetab-menu__btn" type="submit"
                     ng-click="activate(widget)"
                     ng-disabled="isWidgetLocked(widget)"
@@ -26,12 +48,30 @@
     </div>
 
     <div class="tabpane right-tabpane open-tabpane widget-{{active._id}}"
-        ng-if="active && !isWidgetLocked(active)">
+        ng-if="active && !isWidgetLocked(active) && !active.pinned">
         <section class="tabcontent" ng-init="widget=active">
-            <div sd-widget data-widget="active" data-configurable="active.configurable"
-            data-save="active.save()">
+            <div class="tabcontent-actions">
+                <button class="icn-btn" ng-click="pinWidget(active)" ng-class="{'active': widget.pinned}">
+                    <i class="icon-pin"></i>
+                </button>
+            </div>
+
+            <div
+                ng-if="active.component == null"
+                sd-widget
+                data-widget="active"
+                data-configurable="active.configurable"
+                data-save="active.save()"
+            >
                 <div ng-include="active.template" class="sd-wrap-helper"></div>
             </div>
+
+            <sd-widget-react
+                ng-if="active.component != null"
+                widget="active"
+                article="item"
+                class="sd-widget"
+            ></sd-widget-react>
         </section>
     </div>
 

@@ -1,8 +1,9 @@
-import {MultiActionBarController} from '../controllers';
 import {registerExtensions} from 'core/register-extensions';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {ISuperdeskGlobalConfig} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {noop} from 'lodash';
+import {getMultiActions} from '../controllers/get-multi-actions';
 
 describe('Multi Action Bar', () => {
     beforeEach(window.module('superdesk.templates-cache'));
@@ -56,9 +57,12 @@ describe('Multi Action Bar', () => {
             spyOn(modal, 'confirm').and.returnValue($q.when({}));
             spyOn(spike, 'spikeMultiple').and.returnValue($q.when({}));
 
-            const ctrl = $controller(MultiActionBarController, {});
+            const actions = getMultiActions(
+                () => multi.getItems(),
+                () => multi.reset(),
+            );
 
-            ctrl.spikeItems();
+            actions.spikeItems();
             $rootScope.$digest();
 
             setTimeout(() => {
@@ -73,13 +77,13 @@ describe('Multi Action Bar', () => {
     it('onSpikeMultiple middleware is called',
         (done) => inject((
             superdesk,
-            $controller,
             privileges,
             modal,
             lock,
             session,
             authoringWorkspace: AuthoringWorkspaceService,
             metadata,
+            preferencesService,
         ) => {
             const testConfig: Partial<ISuperdeskGlobalConfig> = {
                 confirm_spike: true,
@@ -122,12 +126,16 @@ describe('Multi Action Bar', () => {
                 authoringWorkspace,
                 appConfig,
                 metadata,
+                preferencesService,
             ).then(() => {
-                const ctrl = $controller(MultiActionBarController, {});
+                const actions = getMultiActions(
+                    () => [],
+                    noop,
+                );
 
                 spyOn(modal, 'createCustomModal').and.callThrough(); // called after middlewares;
 
-                ctrl.spikeItems();
+                actions.spikeItems();
 
                 setTimeout(() => {
                     expect(modal.createCustomModal).not.toHaveBeenCalled();

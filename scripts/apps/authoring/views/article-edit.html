@@ -346,7 +346,7 @@
          data-editor-format="editor.body_html.formatOptions"
          data-value="item.body_html"
          data-read-only="!_editable || schema.body_html.readonly === true"
-         data-on-change="autosave(item, 0)"
+         data-on-change="autosave(item, 500)"
          data-language="item.language"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
@@ -373,9 +373,9 @@
 
                 <div class="item-association__image-overlay" ng-if="_editable">
                     <div class="item-association__icons-block">
-                        <a class="item-association__image-action" sd-tooltip="Edit metadata" ng-click="editMedia('view')" aria-label="{{ 'Edit metadata' | translate}}"><i class="icon-pencil"></i></a>
-                        <a class="item-association__image-action" sd-tooltip="Edit image" ng-click="editMedia('image-edit')" aria-label="{{ 'Edit image' | translate}}"><i class="icon-switches"></i></a>
-                        <a class="item-association__image-action" sd-tooltip="Edit crops" ng-click="editMedia('crop')" ng-if="metadata.crop_sizes" aria-label="{{ 'Edit crops' | translate}}"><i class="icon-crop"></i></a>
+                        <a class="item-association__image-action" sd-tooltip="{{'Edit metadata' | translate}}" ng-click="editMedia('view')" aria-label="{{ 'Edit metadata' | translate}}"><i class="icon-pencil"></i></a>
+                        <a class="item-association__image-action" sd-tooltip="{{'Edit image' | translate}}" ng-click="editMedia('image-edit')" aria-label="{{ 'Edit image' | translate}}"><i class="icon-switches"></i></a>
+                        <a class="item-association__image-action" sd-tooltip="{{'Edit crops' | translate}}" ng-click="editMedia('crop')" ng-if="metadata.crop_sizes" aria-label="{{ 'Edit crops' | translate}}"><i class="icon-crop"></i></a>
                     </div>
                 </div>
             </div>
@@ -433,12 +433,12 @@
 
 <div ng-if="isMediaType && !(features.onlyEditor3 || editor.body_html.editor3)"
      class="field abstract"
-     order="{{editor.media_description.order}}"
+     order="{{editor.description_text.order}}"
      sd-validation-error="error.description_text"
-     sd-width="{{editor.media_description.sdWidth|| 'full'}}"
-     ng-attr-title="{{schema.media_description.readonly === true ? readOnlyLabel : ''}}"
-     data-required="schema.media_description.required">
-    <label for="title" class="field__label" translate>Caption</label>
+     sd-width="{{editor.description_text.sdWidth|| 'full'}}"
+     ng-attr-title="{{schema.description_text.readonly === true ? readOnlyLabel : ''}}"
+     data-required="schema.description_text.required">
+    <label for="title" class="field__label">{{label('description_text')}}</label>
     <span ng-if="validator.description_text.maxlength">
         <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
     </span>
@@ -449,19 +449,19 @@
          data-language="item.language"
          ng-model="item.description_text"
          ng-change="autosave(item)"
-         data-read-only="!_editable || schema.media_description.readonly === true"
+         data-read-only="!_editable || schema.description_text.readonly === true"
          ng-trim="false"></div>
     <div class="abstract" ng-if="!_editable">{{item.description_text}}</div>
 </div>
 
 <div ng-if="isMediaType && (features.onlyEditor3 || editor.body_html.editor3)"
      class="field abstract"
-     order="{{editor.media_description.order}}"
+     order="{{editor.description_text.order}}"
      sd-validation-error="error.description_text"
-     sd-width="{{editor.media_description.sdWidth|| 'full'}}"
-     ng-attr-title="{{schema.media_description.readonly === true ? readOnlyLabel : ''}}"
-     data-required="schema.media_description.required">
-    <label for="title" class="field__label" translate>Caption</label>
+     sd-width="{{editor.description_text.sdWidth|| 'full'}}"
+     ng-attr-title="{{schema.description_text.readonly === true ? readOnlyLabel : ''}}"
+     data-required="schema.description_text.required">
+    <label for="title" class="field__label">{{label('description_text')}}</label>
     <span ng-if="validator.description_text.maxlength">
         <sd-character-count-config-button data-field="'description_text'"></sd-character-count-config-button>
         <sd-character-count data-item="item.description_text" data-html="true" data-limit="validator.description_text.maxlength"></sd-character-count>
@@ -473,12 +473,12 @@
          data-scroll-container=".page-content-container"
          data-bind-to-value="compareView"
          data-value="item.description_text"
-         data-read-only="!_editable || schema.media_description.readonly === true"
+         data-read-only="!_editable || schema.description_text.readonly === true"
          data-on-change="autosave(item)"
          data-language="item.language"
          data-item="item"
          data-refresh-trigger="refreshTrigger"
-         data-tabindex="editor.media_description.order"
+         data-tabindex="editor.description_text.order"
          data-clean-pasted-html="editor.description_text.cleanPastedHTML"
          data-limit="schema.description_text.maxlength"
     ></div>
@@ -490,7 +490,7 @@
      data-required="schema.footer.required"
      order="{{editor.footer.order}}"
      ng-attr-title="{{schema.footer.readonly === true ? readOnlyLabel : ''}}"
-     sd-width="{{editor.media_description.sdWidth|| 'full'}}">
+     sd-width="{{editor.footer.sdWidth|| 'full'}}">
     <label class="field__label"translate>Helplines/Contact Information</label>
     <select class="field__select" id="helplines"
             ng-model="extra.body_footer_value"
@@ -559,7 +559,7 @@
 </div>
 
 <div class="field pull-left"
-     ng-if="schema.sign_off && !isMediaType"
+     ng-if="schema.sign_off"
      order="{{editor.sign_off.order}}"
      sd-validation-error="error.sign_off"
      data-required="schema.sign_off.required"

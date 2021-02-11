@@ -18,6 +18,8 @@ import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {ITEM_STATE} from 'apps/archive/constants';
+import {isMediaType} from 'core/helpers/item';
 
 /**
  * @ngdoc directive
@@ -84,12 +86,21 @@ export function AuthoringDirective(
 ) {
     return {
         link: function($scope, elem, attrs) {
+            $scope.loading = false;
+            $scope.tabsPinned = false;
+
             var _closing;
             var mediaFields = {};
             var userDesks;
 
             const UNIQUE_NAME_ERROR = gettext('Error: Unique Name is not unique.');
             const MEDIA_TYPES = ['video', 'picture', 'audio'];
+            const isPersonalSpace = $location.path() === '/workspace/personal';
+
+            $scope.toDeskEnabled = false; // Send an Item to a desk
+            $scope.closeAndContinueEnabled = false; // Create an update of an item and Close the item.
+            $scope.publishEnabled = false; // publish an item
+            $scope.publishAndContinueEnabled = false; // Publish an item and Create an update.
 
             desks.fetchCurrentUserDesks().then((desksList) => {
                 userDesks = desksList;
@@ -100,7 +111,7 @@ export function AuthoringDirective(
             $scope.views = {send: false};
             $scope.stage = null;
             $scope._editable = !!$scope.origItem._editable;
-            $scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], $scope.origItem.type);
+            $scope.isMediaType = isMediaType($scope.origItem);
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
 
             $scope.highlight = !!$scope.origItem.highlight;
@@ -127,6 +138,27 @@ export function AuthoringDirective(
                     $scope.origItem.flags = oldValue;
                     $scope.dirty = true;
                 }
+            }, true);
+
+            function checkShortcutButtonAvailability(personal = false) {
+                if (personal && appConfig?.features?.publishFromPersonal) {
+                    return $scope.item.state !== 'draft' || $scope.dirty;
+                }
+                return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
+            }
+
+            $scope.$watch('item', () => {
+                $scope.toDeskEnabled = appConfig?.features?.customAuthoringTopbar?.toDesk
+                && !isPersonalSpace && checkShortcutButtonAvailability();
+
+                $scope.closeAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.closeAndContinue
+                && !isPersonalSpace && checkShortcutButtonAvailability();
+
+                $scope.publishEnabled = appConfig?.features?.customAuthoringTopbar?.publish
+                    && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
+
+                $scope.publishAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.publishAndContinue
+                    && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
             }, true);
 
             $scope._isInProductionStates = !isPublished($scope.origItem);
@@ -180,10 +212,10 @@ export function AuthoringDirective(
              * Check if it is allowed to publish on desk
              * @returns {Boolean}
              */
-            $scope.canPublishOnDesk = function() {
+            function canPublishOnDesk() {
                 return !($scope.deskType === 'authoring' && appConfig.features.noPublishOnAuthoringDesk) &&
                     privileges.userHasPrivileges({publish: 1});
-            };
+            }
 
             getDeskStage();
             getCurrentTemplate();
@@ -643,7 +675,7 @@ export function AuthoringDirective(
             function afterTansa(e, isCancelled) {
                 const _editor = editorResolver.get();
 
-                if (_editor && _editor.version() === '3') {
+                if (_editor && _editor.version() === '3' && !isCancelled) {
                     _editor.setHtmlFromTansa($('#editor3Tansa').html());
                 }
             }
@@ -688,6 +720,8 @@ export function AuthoringDirective(
 
                     if ($scope.action && $scope.action !== 'edit') {
                         message = $scope.action;
+                    } else if ($scope.action === 'edit' && $scope.item.state === ITEM_STATE.CORRECTION) {
+                        $scope.action = 'correct';
                     }
 
                     if ($scope.dirty && message === 'publish') {
@@ -709,11 +743,9 @@ export function AuthoringDirective(
                 return false;
             }
 
-            $scope.showCustomButtons = function(item) {
-                if ($location.path() === '/workspace/personal') {
-                    return false;
-                }
-                return item.task && item.task.desk && item.state !== 'draft' || $scope.dirty;
+            $scope.showCustomButtons = () => {
+                return $scope.toDeskEnabled || $scope.closeAndContinueEnabled
+                    || $scope.publishAndContinueEnabled || $scope.publishEnabled;
             };
 
             $scope.saveAndContinue = function(customButtonAction, showConfirm) {
@@ -883,7 +915,12 @@ export function AuthoringDirective(
 
             $scope.openAction = function(action) {
                 if (action === 'correct') {
-                    authoringWorkspace.correct($scope.item);
+                    if (appConfig?.corrections_workflow &&
+                    [ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED].includes($scope.item.state)) {
+                        authoring.correction($scope.item);
+                    } else {
+                        authoringWorkspace.correct($scope.item);
+                    }
                 } else if (action === 'kill') {
                     authoringWorkspace.kill($scope.item);
                 } else if (action === 'takedown') {
@@ -1074,8 +1111,11 @@ export function AuthoringDirective(
             });
 
             $scope.$on('item:unlock', (_e, data) => {
-                if ($scope.item._id === data.item && !_closing &&
-                    (session.sessionId !== data.lock_session || lock.previewUnlock)) {
+                if (
+                    $scope.item._id === data.item
+                    && !_closing
+                    && (session.sessionId !== data.lock_session || lock.previewUnlock)
+                ) {
                     if (lock.previewUnlock) {
                         $scope.edit($scope.item);
                         lock.previewUnlock = false;
@@ -1090,6 +1130,15 @@ export function AuthoringDirective(
                             $scope.item.state = data.state;
                             $scope.origItem.state = data.state;
                         }
+
+                        // Re-mount authoring view when item is locked by someone else
+                        // in order to clean up old UI elements
+                        $scope.loading = true;
+
+                        setTimeout(() => {
+                            $scope.loading = false;
+                            $scope.$apply();
+                        });
                     }
                 }
             });

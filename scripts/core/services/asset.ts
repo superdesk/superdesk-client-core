@@ -20,6 +20,8 @@ export default angular.module('superdesk.core.services.asset', [])
             if (!/^(https?:\/\/|\/\/)/.test(path) && appConfig.paths != null && appConfig.paths.superdesk) {
                 ret = appConfig.paths.superdesk + ret;
             }
+
+            // eslint-disable-next-line no-useless-escape
             ret = ret.replace(/[^\/]+\/+\.\.\//g, '')
                 .replace(/\.\//g, '')
                 .replace(/(\w)\/\/(\w)/g, '$1/$2');

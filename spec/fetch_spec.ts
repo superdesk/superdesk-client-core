@@ -5,42 +5,13 @@ import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {desks} from './helpers/desks';
 import {multiAction} from './helpers/actions';
+import {ECE, els} from 'end-to-end-testing-helpers';
 
 describe('fetch', () => {
     beforeEach(() => {
         workspace.open();
         workspace.switchToDesk('SPORTS DESK');
         content.setListView();
-    });
-
-    xit('items in personal should have copy icon and in desk should have duplicate icon',
-        () => {
-            var menu = content.openItemMenu('item4');
-
-            expect(menu.element(by.partialLinkText('Duplicate')).isDisplayed()).toBe(true);
-            expect(menu.element(by.partialLinkText('Copy')).isPresent()).toBe(false);
-
-            workspace.switchToDesk('PERSONAL');
-            content.setListView();
-
-            menu = content.openItemMenu('item1');
-            expect(menu.element(by.partialLinkText('Copy')).isDisplayed()).toBe(true);
-            expect(menu.element(by.partialLinkText('Duplicate')).isPresent()).toBe(false);
-        },
-    );
-
-    // @todo(petr): figure out how it should work for authoring+list
-    xit('can fetch from ingest with keyboards', () => {
-        var body;
-
-        workspace.openIngest();
-        // select & fetch item
-        body = $('body');
-        body.sendKeys(protractor.Key.DOWN);
-        body.sendKeys('f');
-        workspace.open();
-        workspace.switchToDesk('SPORTS DESK');
-        expect(content.count()).toBe(3);
     });
 
     it('can fetch from ingest with menu', () => {
@@ -68,7 +39,7 @@ describe('fetch', () => {
     it('can remove ingest item', () => {
         workspace.openIngest();
         content.actionOnItem('Remove', 0);
-        expect(content.count()).toBe(0);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 0));
     });
 
     it('can not Fetch-and-Open if selected desk as a non-member', () => {
@@ -162,12 +133,13 @@ describe('fetch', () => {
 
     it('can remove multiple ingest items', () => {
         workspace.openIngest();
+        browser.wait(ECE.hasElementCount(els(['article-item']), 1));
+
         content.selectItem(0);
         browser.sleep(1000); // Wait for animation
 
         multiAction('Remove');
-        browser.sleep(100);
 
-        expect(content.count()).toBe(0);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 0));
     });
 });

@@ -19,3 +19,7 @@ export const getThumbnailForItem = (item: IArticle) => {
 export function associationIsArticle(a: IArticle | IRelatedArticle): a is IArticle {
     return a['_etag'] != null;
 }
+
+export function isMediaType(item: IArticle | null | undefined) {
+    return item != null && ['audio', 'video', 'picture', 'graphic'].includes(item.type);
+}

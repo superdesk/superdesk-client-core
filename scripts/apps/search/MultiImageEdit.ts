@@ -241,6 +241,7 @@ export function MultiImageEditController(
             creditline: compare('creditline'),
             source: compare('source'),
             ednote: compare('ednote'),
+            sign_off: compare('sign_off'),
         };
     }
 
@@ -283,7 +284,7 @@ export function MultiImageEditController(
 
         if (values[field].length === 1) {
             extra[field] = getMetaValue(field, values[field], null);
-        } else {
+        } else if (values[field].length > 1) {
             $scope.placeholder[field] = gettext('(multiple values)');
         }
     }
@@ -302,10 +303,12 @@ export function MultiImageEditController(
         const uniqueValues = getUniqueValues(fieldName);
         const defaultValues = {subject: []};
 
-        if (uniqueValues.length === 1 || defaultValues) {
+        if (uniqueValues.length === 1) {
             return getMetaValue(fieldName, uniqueValues, defaultValues[fieldName]);
-        } else {
+        } else if (uniqueValues.length > 1) {
             $scope.placeholder[fieldName] = gettext('(multiple values)');
+        } else {
+            $scope.placeholder[fieldName] = '';
         }
     }
 }

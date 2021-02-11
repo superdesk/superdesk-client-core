@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {cloneDeep} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {v4 as uuidv4} from 'uuid';
 
 interface IFeedingServiceField {
     id?: string;
@@ -40,6 +41,7 @@ interface IProvider {
     last_opened?: {};
     critical_errors?: {};
     skip_config_test?: boolean;
+    url_id?: string;
 }
 
 IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
@@ -625,9 +627,11 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @param field url_request field metadata
                  */
                 $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
-                    let provider_name = encodeURIComponent(provider.name);
+                    if (provider.url_id == null) {
+                        provider.url_id = uuidv4();
+                    }
 
-                    window.open(field.url.replace('{PROVIDER_NAME}', provider_name));
+                    window.open(field.url.replace('{URL_ID}', provider.url_id));
                 };
 
                 function getCurrentService() {

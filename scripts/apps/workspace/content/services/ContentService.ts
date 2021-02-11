@@ -7,6 +7,7 @@ import {dataApi} from 'core/helpers/CrudManager';
 import {IVocabulary, IContentProfile} from 'superdesk-api';
 import {IArticle, IContentProfileEditorConfig} from 'superdesk-api';
 import {IPackagesService} from 'types/Services/Packages';
+import {isMediaType} from 'core/helpers/item';
 
 /**
  * @ngdoc service

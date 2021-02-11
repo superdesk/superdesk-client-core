@@ -2,7 +2,6 @@ import './styles/search.scss';
 
 import * as svc from './services';
 import * as directive from './directives';
-import {MultiActionBarController} from './controllers';
 import {SearchController} from './controllers';
 import SearchMenuController from './controllers/SearchMenuController';
 import {MultiImageEditDirective} from './MultiImageEdit';
@@ -46,7 +45,6 @@ angular.module('superdesk.apps.search', [
     .service('tags', svc.TagService)
     .service('sort', svc.SortService)
 
-    .controller('MultiActionBar', MultiActionBarController)
     .controller('SearchMenuController', SearchMenuController)
 
     .directive('sdSearchPanel', directive.SearchPanel)
@@ -72,7 +70,7 @@ angular.module('superdesk.apps.search', [
         'sdMultiActionBarReact',
         reactToAngular1(
             MultiActionBarReact,
-            ['context', 'articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
+            ['articles', 'hideMultiActionBar', 'getCoreActions', 'compact'],
         ),
     )
 
@@ -106,7 +104,6 @@ angular.module('superdesk.apps.search', [
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 controller: SearchController,
                 controllerAs: 'search',
-                privileges: {use_global_saved_searches: 1},
             });
 
             workspaceMenuProvider.item({
@@ -114,6 +111,15 @@ angular.module('superdesk.apps.search', [
                 href: '/search',
                 label: gettext('Search'),
                 templateUrl: asset.templateUrl('apps/search/views/menu.html'),
+                order: 800,
+                group: 'personal',
+            });
+
+            workspaceMenuProvider.item({
+                if: '!privileges.use_global_saved_searches',
+                href: '/search',
+                label: gettext('Search'),
+                templateUrl: asset.templateUrl('apps/search/views/menu-providers.html'),
                 order: 800,
                 group: 'personal',
             });

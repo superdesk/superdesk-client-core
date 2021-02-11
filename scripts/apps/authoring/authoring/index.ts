@@ -31,6 +31,7 @@ import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {FullPreview} from '../preview/fullPreview';
+import {sdApi} from 'api';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -240,7 +241,9 @@ angular.module('superdesk.apps.authoring', [
                 additionalCondition: ['item', 'authoring', (item, authoring) => {
                     const mediaTypes = ['audio', 'picture', 'video'];
 
-                    return mediaTypes.includes(item.type) && authoring.itemActions(item).edit;
+                    return !sdApi.article.isLocked(item)
+                        && mediaTypes.includes(item.type)
+                        && authoring.itemActions(item).edit;
                 }],
             })
             .activity('move.item', {
@@ -320,11 +323,17 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'edit-line',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', function(
+                controller: ['data', 'authoringWorkspace', 'authoring', function(
                     data,
                     authoringWorkspace: AuthoringWorkspaceService,
+                    authoring,
                 ) {
-                    authoringWorkspace.correct(data.item);
+                    if (appConfig?.corrections_workflow
+                    && (data.item.state === 'published' || data.item.state === 'corrected')) {
+                        authoring.correction(data.item.archive_item);
+                    } else {
+                        authoringWorkspace.correct(data.item);
+                    }
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', function(authoring, item) {

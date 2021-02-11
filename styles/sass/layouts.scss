@@ -20,11 +20,11 @@ body {
 // Links
 // -----
 
-a {
+a, .link {
     color: $linkColor;
     text-decoration: none;
 }
-a:hover {
+a:hover, .link:hover {
     color: $linkColorHover;
     text-decoration: underline;
 }
@@ -51,7 +51,7 @@ a:hover {
     .subnav--authoring {
         top: 0;
     }
-    
+
     .main-section {
         // excludes $subnav-height
         top: $topspace;
@@ -362,7 +362,7 @@ a:hover {
         top: 0;
         bottom: 0;
         width: 56rem;
-    }  
+    }
 }
 .workspace.authoring .main-section {
     .sd-overlay-panel {
@@ -374,9 +374,9 @@ a:hover {
     .archive-content {
         .sd-overlay-panel {
             top: 4.8rem;
-        } 
+        }
     }
-} 
+}
 
 
 //Variables
@@ -505,9 +505,9 @@ $slide-pane-width: 400px;
     }
     > .content {
         position: absolute;
-        top: $nav-height; 
-        left: 0; 
-        right: 0; 
+        top: $nav-height;
+        left: 0;
+        right: 0;
         bottom: 0;
         overflow: auto;
         overflow-x: hidden;
@@ -891,7 +891,7 @@ $main-item-color-inactive: #aaa;
                 @include box-shadow(none);
                 opacity: 1;
             }
-            [class^="icon-"], 
+            [class^="icon-"],
             [class*=" icon-"] {
                 color: $white;
             }
@@ -982,8 +982,8 @@ $main-item-color-inactive: #aaa;
             &--inline {
                 display: flex;
                 h4 { flex: 1 1; }
-                span { 
-                    flex: 1 1; 
+                span {
+                    flex: 1 1;
                     text-align: right;
                 }
             }
@@ -1470,6 +1470,10 @@ body.prepare-print {
             font-size: 16pt !important;
             margin-bottom: 16px !important;
         }
+        .modal__body {
+            display: block !important;
+            padding: 0 !important;
+        }
         .modal-content {
             display: block !important;
             > * {
@@ -1558,5 +1562,28 @@ body.prepare-print {
         opacity: 0.5;
         text-indent: -9999px;
         background-size: 20%;
+    }
+}
+
+// Fix for height on master desk panel
+.sd-content-wrapper__main-content-area {
+    grid-column: contentArea;
+    overflow: auto;
+    height: calc(100vh - 80px);
+}
+
+.sd-main-content-grid__content-inner {
+    height: 100%;
+}
+
+// Things for masterdesk, should be moved to ui-framework
+.sd-main-content-grid__preview {
+    .search-box {
+        margin-top: -10px;
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+    .content-list-holder {
+        display: contents;
     }
 }

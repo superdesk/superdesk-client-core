@@ -12,6 +12,7 @@ import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
+import {isMediaType} from 'core/helpers/item';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -191,7 +192,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     scope.origItem = item;
                     scope.item = JSON.parse(JSON.stringify(item));
                     scope._editable = authoring.isEditable(item);
-                    scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type);
+                    scope.isMediaType = isMediaType(scope.item);
 
                     if (scope.focus) {
                         $timeout(() => {

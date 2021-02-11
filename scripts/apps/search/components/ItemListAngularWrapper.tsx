@@ -17,6 +17,7 @@ interface IState {
     selected: string;
     swimlane: any;
     actioning: {};
+    loading: boolean;
 }
 
 export class ItemListAngularWrapper extends React.Component<IProps, IState> {
@@ -33,6 +34,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
             narrow: false,
             swimlane: null,
             actioning: {},
+            loading: true,
         };
 
         this.focus = this.focus.bind(this);
@@ -131,19 +133,21 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                 onMonitoringItemSelect={scope.onMonitoringItemSelect}
                 onMonitoringItemDoubleClick={scope.onMonitoringItemDoubleClick}
                 hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
-                disableMonitoringMultiSelect={scope.disableMonitoringMultiSelect}
                 singleLine={scope.singleLine}
                 customRender={scope.customRender}
                 viewType={scope.viewType}
                 flags={scope.flags}
-                loading={scope.loading}
+                loading={this.state.loading}
                 viewColumn={scope.viewColumn}
                 groupId={scope.$id}
                 edit={scope.edit}
                 preview={scope.preview}
-                multiSelect={this.multiSelect}
-                setSelectedItem={(itemId) => {
-                    this.setState({selected: itemId});
+                multiSelect={scope.disableMonitoringMultiSelect ? undefined : {
+                    kind: 'legacy',
+                    multiSelect: this.multiSelect,
+                    setSelectedItem: (itemId) => {
+                        this.setState({selected: itemId});
+                    },
                 }}
                 narrow={this.state.narrow}
                 view={this.state.view}

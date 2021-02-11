@@ -113,7 +113,6 @@ class Authoring {
     openLiveSuggest: () => void;
     getSuggestedItems: () => any;
     getSubnav: () => any;
-    checkMarkedForHighlight: (highlight: any, item?: any) => void;
     writeText: (text: any) => void;
     writeTextToHeadline: (text: any) => void;
     writeTextToHeadlineFromRecentTemplate: (text: any) => void;
@@ -731,14 +730,6 @@ class Authoring {
 
         this.getSubnav = function() {
             return element(by.id('subnav'));
-        };
-
-        this.checkMarkedForHighlight = function(highlight, item) {
-            expect(element(by.className('icon-star')).isDisplayed()).toBeTruthy();
-            browser.actions().click(element(by.className('icon-star'))).perform();
-            element.all(by.css('.dropdown__menu.open li')).then((items) => {
-                expect(items[1].getText()).toContain(highlight);
-            });
         };
 
         var getBodyHtml = () => browser.wait(ECE.presenceOf(element(by.model('item.body_html'))))

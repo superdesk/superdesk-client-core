@@ -76,9 +76,16 @@ export class FullPreview extends React.Component<IProps, IState> {
                             || ARTICLE_HEADER_FIELDS.has(key as keyof IArticle)
                             || ARTICLE_COMMON_FIELDS.has(key as keyof IArticle);
 
-                        const inSection = editor[key].section != null
-                            ? editor[key].section === section
-                            : section === 'header' ? isHeader : !isHeader;
+                        const inSection = (() => {
+                            if (ARTICLE_HEADER_FIELDS.has(key as keyof IArticle)) {
+                                // Handle invalid config when header-only fields are set as content.
+                                return section === 'header';
+                            } if (editor[key].section != null) {
+                                return editor[key].section === section;
+                            } else {
+                                return section === 'header' ? isHeader : !isHeader;
+                            }
+                        })();
 
                         return inSection && editor[key]?.hideOnPrint !== true;
                     },

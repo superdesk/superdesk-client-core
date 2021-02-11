@@ -14,7 +14,6 @@ class Content {
     openItemMenu: any;
     previewItem: (item: any) => void;
     closePreview: () => void;
-    checkMarkedForHighlight: (highlight: any, item: any) => void;
     getCount: any;
     getItemCount: any;
     count: any;
@@ -129,14 +128,6 @@ class Content {
             element(by.className('close-preview')).click();
         };
 
-        this.checkMarkedForHighlight = function(highlight, item) {
-            var crtItem = this.getItem(item);
-
-            expect(crtItem.element(by.className('icon-star')).isDisplayed()).toBeTruthy();
-            expect(crtItem.element(by.className('icon-star')).getAttribute('tooltip-html-unsafe'))
-                .toContain(highlight);
-        };
-
         var list = element(by.className('list-view'));
 
         this.getCount = function() {
@@ -156,7 +147,7 @@ class Content {
 
         this.selectItem = function(item) {
             var crtItem = this.getItem(item);
-            var typeIcon = crtItem.element(by.className('type-icon'));
+            var typeIcon = crtItem.element(by.css('[data-test-id="multi-select-checkbox"]'));
 
             expect(typeIcon.isDisplayed()).toBe(true);
             browser.actions()
@@ -164,7 +155,7 @@ class Content {
                 .mouseMove(crtItem)
                 .mouseMove(typeIcon)
                 .perform();
-            return typeIcon.element(by.className('selectbox')).click();
+            return typeIcon.click();
         };
 
         this.spikeItems = function() {

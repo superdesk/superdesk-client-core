@@ -1,6 +1,6 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, browser, protractor, ElementFinder} from 'protractor';
+import {element, by, browser, protractor, ElementFinder, promise as wdpromise} from 'protractor';
 import {nav, waitFor, acceptConfirm} from './utils';
 import {s, ECE, el, els} from 'end-to-end-testing-helpers';
 import {multiAction} from './actions';
@@ -54,7 +54,7 @@ class Monitoring {
     selectGivenItem: (item: any) => any;
     spikeMultipleItems: () => void;
     unspikeMultipleItems: any;
-    unspikeItem: any;
+    unspikeItem: (item, desk?, stage?) => wdpromise.Promise<void>;
     openItemMenu: (group: any, item: any) => ElementFinder;
     showMonitoringSettings: () => void;
     setLabel: (label: any) => void;
@@ -130,7 +130,8 @@ class Monitoring {
         this.label = element(by.model('widget.configuration.label'));
 
         this.openMonitoring = function() {
-            return nav('/workspace/monitoring');
+            nav('/workspace/monitoring');
+            browser.wait(ECE.visibilityOf(el(['monitoring-view'])));
         };
 
         this.showMonitoring = function() {
@@ -139,6 +140,8 @@ class Monitoring {
 
         this.showSpiked = function() {
             element(by.className('big-icon--spike')).click();
+
+            browser.wait(ECE.presenceOf(els(['article-item']).get(0)));
         };
 
         /**
@@ -177,6 +180,9 @@ class Monitoring {
         };
 
         this.getGroups = function() {
+            browser.sleep(3000); // due to debouncing, loading does not start immediately
+            browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0));
+
             return element.all(by.repeater('group in aggregate.groups'));
         };
 
@@ -192,8 +198,6 @@ class Monitoring {
          */
         this.getItem = function(group, item) {
             var all = this.getGroupItems(group);
-
-            browser.wait(() => all.count(), 7500);
 
             if (item.type) {
                 return all.filter((elem) =>
@@ -254,7 +258,13 @@ class Monitoring {
         };
 
         this.getSpikedItems = function() {
-            return this.getAllItems();
+            const wrapper = el(['articles-list']);
+
+            browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)));
+
+            const items = els(['article-item'], null, wrapper);
+
+            return items;
         };
 
         this.getAllItems = function() {
@@ -317,11 +327,12 @@ class Monitoring {
          * @param {string} fileType
          */
         this.filterAction = function(fileType) {
-            if (fileType === 'all') {
-                element(by.className('toggle-button__text--all')).click();
-            } else {
-                element(by.className('filetype-icon-' + fileType)).click();
-            }
+            const elem = fileType === 'all'
+                ? element(by.className('toggle-button__text--all'))
+                : element(by.className('filetype-icon-' + fileType));
+
+            browser.wait(ECE.visibilityOf(elem));
+            elem.click();
         };
 
         this.compactActionDropdown = function() {
@@ -452,7 +463,7 @@ class Monitoring {
             browser.actions().mouseMove(itemTypeIcon, {x: -100, y: -100}).mouseMove(itemTypeIcon).perform();
             var checkbox = item.element(by.className('sd-checkbox'));
 
-            waitFor(checkbox, 500);
+            browser.wait(ECE.presenceOf(checkbox));
             return checkbox.click();
         };
 
@@ -466,7 +477,7 @@ class Monitoring {
             return element(by.buttonText('send')).click();
         };
 
-        this.unspikeItem = function(item, desk, stage) {
+        this.unspikeItem = function(item, desk?, stage?) {
             var itemElem = this.getSpikedItem(item);
 
             browser.actions().mouseMove(itemElem).perform();
@@ -552,8 +563,9 @@ class Monitoring {
             var btn = element(by.css('[ng-click="save()"]'));
 
             btn.click();
+
             // wait for modal to be removed
-            browser.wait(() => btn.isPresent().then((isPresent) => !isPresent), 600);
+            browser.wait(ECE.invisibilityOf(el(['desk--monitoring-settings'])));
         };
 
         /**

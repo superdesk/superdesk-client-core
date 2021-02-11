@@ -236,13 +236,19 @@
                                     <div class="sd-list-item__border"></div>
                                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                                         <div class="sd-list-item__row">
-                                            <span class="sd-overflow-ellipsis sd-list-item--element-grow"><code contenteditable="true" spellcheck="false">{{ :: token._id}}</code></span>
-                                            <span class="sd-list-item__text-label">{{ :: 'expires:' | translate }} <time sd-datetime data-date="token.expiry" data-from-now="true"></time></span>
+                                            <span class="sd-overflow-ellipsis sd-list-item--element-grow"><code contenteditable="false" spellcheck="false">{{ :: token._id}}</code></span>
+                                            <span class="sd-list-item__text-label">{{ :: 'expires:' | translate }}
+                                                <time ng-if="token.expiry" sd-datetime data-date="token.expiry" data-from-now="true"></time>
+                                                <span ng-if="token.expiry == null" translate>Never</span>
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
                                         <button class="icn-btn" ng-click="tokens.revoke(token)" title="{{ :: 'Revoke' | translate }}">
                                             <i class="icon-trash"></i>
+                                        </button>
+                                        <button class="icn-btn" ng-click="tokens.copy(token._id)" title="{{ :: 'Copy' | translate }}">
+                                            <i class="icon-copy"></i>
                                         </button>
                                     </div>
                                 </li>
@@ -265,12 +271,9 @@
                                         <div class="sd-line-input sd-line-input--is-select">
                                             <select class="sd-line-input__select"
                                                 ng-model="tokens.ttl"
+                                                ng-disabled="tokens.neverExpire"
                                                 title="{{ :: 'Token expiry' | translate }}">
-                                                <option value="7" translate>1 week</option>
-                                                <option value="14" translate>2 weeks</option>
-                                                <option value="30" translate>1 month</option>
-                                                <option value="180" translate>6 months</option>
-                                                <option value="365" translate>1 year</option>
+                                                <option ng-repeat="key in tokens.getExpiryFields" value="{{key.value}}">{{key.days}}</option>
                                             </select>
                                         </div>
                                     </div>

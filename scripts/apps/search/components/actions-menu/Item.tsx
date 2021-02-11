@@ -5,6 +5,7 @@ import {gettext, IScopeApply} from 'core/utils';
 import ng from 'core/services/ng';
 
 import {closeActionsMenu} from '../../helpers';
+import {IActivityService} from 'core/activity/activity';
 
 interface IProps {
     item: any;
@@ -21,9 +22,11 @@ interface IState {
 export default class MenuItem extends React.Component<IProps, IState> {
     closeTimeout: any;
 
-    activityService: any;
+    activityService: IActivityService;
     $timeout: any;
     $injector: any;
+
+    private _mounted: boolean;
 
     constructor(props) {
         super(props);
@@ -44,7 +47,7 @@ export default class MenuItem extends React.Component<IProps, IState> {
     }
 
     updateActioningStatus(isActioning) {
-        if (!this.props.item.gone) {
+        if (this._mounted && !this.props.item.gone) {
             this.props.onActioning(isActioning);
         }
     }
@@ -73,6 +76,7 @@ export default class MenuItem extends React.Component<IProps, IState> {
     }
 
     setPosition() {
+        // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
         const targetRect = thisNode.getBoundingClientRect();
         const BUFFER = 250;
@@ -108,7 +112,12 @@ export default class MenuItem extends React.Component<IProps, IState> {
         }
     }
 
+    componentDidMount() {
+        this._mounted = true;
+    }
+
     componentWillUnmount() {
+        this._mounted = false;
         this.$timeout.cancel(this.closeTimeout);
         this.closeTimeout = null;
     }

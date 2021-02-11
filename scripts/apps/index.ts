@@ -6,6 +6,7 @@ import 'apps/publish';
 import 'apps/templates';
 import 'apps/profiling';
 import 'apps/desks';
+import 'apps/master-desk';
 import 'apps/authoring';
 import 'apps/search';
 import 'apps/legal-archive';
@@ -37,6 +38,7 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.archive',
     'superdesk.apps.ingest',
     'superdesk.apps.desks',
+    'superdesk.apps.master-desk',
     'superdesk.apps.products',
     'superdesk.apps.authoring',
     'superdesk.apps.packaging',

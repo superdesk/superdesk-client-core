@@ -15,7 +15,6 @@ export interface IArticleActionBulkExtended extends IArticleActionBulk {
 }
 
 interface IProps {
-    context: 'archive' | 'ingest';
     articles: Array<IArticle>;
     compact: boolean;
     getCoreActions(articles: Array<IArticle>): Array<IArticleActionBulkExtended>;

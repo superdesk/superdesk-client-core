@@ -12,8 +12,10 @@
     <input type="password" id="ftp_password" placeholder="{{ :: 'Password'|translate }}" ng-model="destination.config.password" ng-change="$parent.setConfig(destination)">
 </div>
 <div class="field">
-    <label for="ftp_passive" translate>Passive mode</label>
-    <input type="checkbox" id="ftp_passive" ng-model="destination.config.passive" ng-change="$parent.setConfig(destination)">
+    <sd-check ng-model="destination.config.passive">{{ :: 'Passive mode' | translate }}</sd-check>
+</div>
+<div class="field">
+    <sd-check ng-model="destination.config.use_ftps">{{ :: 'Use Transport Layer Security (FTPS)' | translate }}</sd-check>
 </div>
 <div class="field">
     <label for="ftp_path" translate>Path</label>

@@ -11,6 +11,7 @@ import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
 import {KILLED_STATES} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
+import {ISortFields} from 'core/ui/components/SortBar';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -62,6 +63,18 @@ export function setFilters(search) {
     return search;
 }
 
+export function getArticleSortOptions(): Array<ISortFields> {
+    return [
+        {field: 'versioncreated', label: gettext('Updated')},
+        {field: 'firstcreated', label: gettext('Created')},
+        {field: 'urgency', label: gettext('Urgency')},
+        {field: 'anpa_category.name', label: gettext('ANPA Category')},
+        {field: 'slugline.phrase', label: gettext('Slugline')},
+        {field: 'priority', label: gettext('Priority')},
+        {field: 'genre.name', label: gettext('Genre')},
+    ];
+}
+
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -90,15 +103,7 @@ export function SearchService($location, session, multi,
     const PARAMETERS = getParameters();
     const EXCLUDE_FACETS = getExcludeFacets();
 
-    var sortOptions = [
-        {field: 'versioncreated', label: gettext('Updated')},
-        {field: 'firstcreated', label: gettext('Created')},
-        {field: 'urgency', label: gettext('Urgency')},
-        {field: 'anpa_category.name', label: gettext('ANPA Category')},
-        {field: 'slugline.phrase', label: gettext('Slugline')},
-        {field: 'priority', label: gettext('Priority')},
-        {field: 'genre.name', label: gettext('Genre')},
-    ];
+    var sortOptions = getArticleSortOptions();
 
     var self = this;
 

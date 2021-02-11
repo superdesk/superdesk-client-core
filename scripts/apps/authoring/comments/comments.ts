@@ -95,6 +95,7 @@ function CommentTextDirective($compile) {
             html = attrs.text.replace(/(?:\r\n|\r|\n)/g, '</p><p>');
 
             // map user mentions
+            // eslint-disable-next-line no-useless-escape
             var mentionedUsers = html.match(/\@([a-zA-Z0-9-_.\w]+)/g);
 
             each(mentionedUsers, (token) => {
@@ -108,6 +109,7 @@ function CommentTextDirective($compile) {
             });
 
             // map desk mentions
+            // eslint-disable-next-line no-useless-escape
             var mentionedDesks = html.match(/\#([a-zA-Z0-9-_.]\w+)/g);
 
             each(mentionedDesks, (token) => {

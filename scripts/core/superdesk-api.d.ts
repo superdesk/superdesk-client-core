@@ -20,6 +20,7 @@ declare module 'superdesk-api' {
 
     export type IArrayKeyed<T> = Array<{key: string; value: T}>;
 
+    export type ICallable = (...args: Array<any>) => any;
 
 
     // EXTENSIONS
@@ -60,6 +61,15 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface IAuthoringSideWidget {
+        _id: string; // required for configuring widget visibility in content profile
+        label: string;
+        order: number; // Integer.
+        icon: string;
+        component: React.ComponentType<{article: IArticle}>;
+        isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -69,6 +79,7 @@ declare module 'superdesk-api' {
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringSideWidgets?: Array<IAuthoringSideWidget>;
             authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -213,6 +224,16 @@ declare module 'superdesk-api' {
          * Unpublished, might be published again.
          */
         UNPUBLISHED = 'unpublished',
+
+        /**
+        * Correction, If Correction workflow is true, correction, copy of published article which we can edit.
+        */
+        CORRECTION = 'correction',
+
+        /**
+        * being_corrected, If Correction workflow is true, being_corrected, the item is being corrected.
+        */
+        BEING_CORRECTED = 'being_corrected',
     }
 
 
@@ -240,7 +261,7 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
-        _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | string;
+        _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | 'externalsource' | string;
         uri?: string; // uri is external id which stays when image is fetched from provider/ingest
         guid: string;
         family_id: string;
@@ -253,9 +274,15 @@ declare module 'superdesk-api' {
         slugline: string;
         genre: any;
         anpa_take_key?: any;
-        place: any;
-        priority?: number;
-        urgency: number;
+
+        place: Array<ISubject>;
+        object?: Array<ISubject>;
+        person?: Array<ISubject>;
+        organisation?: Array<ISubject>;
+        event?: Array<ISubject>;
+
+        priority?: any;
+        urgency: any;
         anpa_category?: any;
         subject?: Array<ISubject>;
         company_codes?: Array<any>;
@@ -343,7 +370,11 @@ declare module 'superdesk-api' {
         ingest_provider?: any;
         archive_item?: any;
         item_id?: string; // id of corresponding item in 'published' collection
-        marked_desks?: any;
+        marked_desks?: Array<{
+            date_marked: string;
+            desk_id: IDesk['_id'];
+            user_marked: IUser['_id'];
+        }>;
 
         highlights?: Array<string>;
         highlight?: any;
@@ -353,9 +384,9 @@ declare module 'superdesk-api' {
         extra?: {[key: string]: any};
 
         task: {
-            desk: IDesk['_id'];
-            stage: IStage['_id'];
-            user: IUser['_id'];
+            desk?: IDesk['_id'];
+            stage?: IStage['_id'];
+            user?: IUser['_id'];
         };
 
         // might be only used for client-side state
@@ -483,11 +514,28 @@ declare module 'superdesk-api' {
     }
 
     export interface IDesk extends IBaseRestApiResponse {
-        incoming_stage: IStage['_id'];
-        members: Array<IUser['_id']>;
         name: string;
-        desk_type: 'authoring' | 'production';
+        description?: string;
+        members: Array<IUser['_id']>;
+        incoming_stage: IStage['_id'];
         working_stage: IStage['_id'];
+        content_expiry?: number;
+        source: string;
+        monitoring_settings?: Array<{
+            _id: string;
+            type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+            max_items: number;
+        }>;
+        desk_type: 'authoring' | 'production';
+        desk_metadata?: {[key: string]: any};
+        content_profiles: {[key: IContentProfile['_id']]: any};
+        desk_language?: string;
+        monitoring_default_view?: 'list' | 'swimlane' | 'photogrid';
+        default_content_profile: string;
+        default_content_template: string;
+        slack_channel_name?: string;
+        preferred_cv_items: {[key: string]: any};
+        preserve_published_content: boolean;
     }
 
     export interface IStage extends IBaseRestApiResponse {
@@ -657,6 +705,26 @@ declare module 'superdesk-api' {
 
 
     // REST API
+
+    export interface IHttpRequestOptions {
+        method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
+        url: string; // absolute url
+        payload?: {};
+        headers?: {[key: string]: any};
+        urlParams?: {[key: string]: any};
+
+        abortSignal?: AbortSignal;
+    }
+
+    export interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
+        path: string; // relative to application server
+    }
+
+    export interface IHttpRequestJsonOptionsLocal extends IHttpRequestOptionsLocal {
+        // JSON not available with DELETE method
+        method: 'GET' | 'POST' | 'PATCH' | 'PUT';
+    }
+
 
     export interface IBaseRestApiResponse {
         _created: string;
@@ -947,7 +1015,7 @@ declare module 'superdesk-api' {
         onSelect(user: IUser): void;
         selectedUserId?: string;
         disabled?: boolean;
-        autoFocus?: boolean | {initializeWithDropdownHidden: boolean};
+        autoFocus?: boolean;
         horizontalSpacing?: boolean;
     }
 
@@ -1031,6 +1099,7 @@ declare module 'superdesk-api' {
             max_results?: number,
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
+        queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
@@ -1047,6 +1116,22 @@ declare module 'superdesk-api' {
         stages: {[itemId: string]: 1};
     }
 
+    export interface IResourceUpdateEvent {
+        fields: {[key: string]: 1};
+        resource: string;
+        _id: string;
+    }
+
+    export interface IResourceCreatedEvent {
+        resource: string;
+        _id: string;
+    }
+
+    export interface IResourceDeletedEvent {
+        resource: string;
+        _id: string;
+    }
+
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
@@ -1061,6 +1146,9 @@ declare module 'superdesk-api' {
 
     export interface IPublicWebsocketMessages {
         'content:update': IWebsocketMessage<IArticleUpdateEvent>;
+        'resource:created': IWebsocketMessage<IResourceCreatedEvent>;
+        'resource:updated': IWebsocketMessage<IResourceUpdateEvent>;
+        'resource:deleted': IWebsocketMessage<IResourceDeletedEvent>;
     }
 
 
@@ -1074,6 +1162,7 @@ declare module 'superdesk-api' {
                 query(parameters: IArticleQuery): Promise<IArticleQueryResult>;
             };
         };
+        httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T>;
         state: {
             articleInEditMode?: IArticle['_id'];
         };
@@ -1108,7 +1197,7 @@ declare module 'superdesk-api' {
                     article: IArticle,
                     patch: Partial<IArticle>,
                     dangerousOptions?: IDangerousArticlePatchingOptions,
-                ): void;
+                ): Promise<void>;
 
                 isArchived(article: IArticle): boolean;
                 isPublished(article: IArticle): boolean;
@@ -1126,6 +1215,7 @@ declare module 'superdesk-api' {
         };
         helpers: {
             assertNever(x: never): never;
+            notNullOrUndefined<T>(x: null | undefined | T): x is T;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -1192,6 +1282,13 @@ declare module 'superdesk-api' {
             getOwnPrivileges(): Promise<any>;
             hasPrivilege(privilege: string): boolean;
         };
+        preferences: {
+            get(key: string): Promise<any | null>;
+            set(
+                key: string,
+                value: any,
+            ): Promise<void>;
+        };
         session: {
             getToken(): string;
             getCurrentUser(): Promise<IUser>;
@@ -1206,6 +1303,8 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
+            memoize<T extends ICallable>(func: T, maxCacheEntryCount = 1): T;
+            generatePatch<T>(a: Partial<T>, b: Partial<T>): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
         };
@@ -1263,6 +1362,8 @@ declare module 'superdesk-api' {
 
         allow_updating_scheduled_items: boolean;
 
+        corrections_workflow: boolean;
+
         // TANSA SERVER CONFIG
         tansa?: {
             base_url: string;
@@ -1307,6 +1408,12 @@ declare module 'superdesk-api' {
             showCharacterLimit?: number;
             sendToPersonal?: boolean;
             publishFromPersonal?: boolean;
+            customAuthoringTopbar?: {
+                toDesk?: boolean;
+                publish?: boolean;
+                closeAndContinue?: boolean;
+                publishAndContinue?: boolean;
+            }
         };
         auth: {
             google: boolean
@@ -1519,8 +1626,11 @@ declare module 'superdesk-api' {
 
     export interface ISubject {
         name: string;
+        description?: string;
         qcode: string;
         scheme?: string;
+        source?: string;
         translations?: {};
+        altids?: {[key: string]: string};
     }
 }

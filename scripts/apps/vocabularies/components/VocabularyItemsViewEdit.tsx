@@ -342,10 +342,15 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             >
                                 <i className="icon-search" />
                             </label>
-                            <input id="vocabulary-search" type="text" value={this.state.searchTerm}
-                                placeholder={gettext('Search')} onChange={(event) => {
+                            <input
+                                id="vocabulary-search"
+                                type="text"
+                                value={this.state.searchTerm}
+                                placeholder={gettext('Search')}
+                                onChange={(event) => {
                                     this.setState({searchTerm: event.target.value, page: 1});
-                                }} />
+                                }}
+                            />
                             <button aria-label={gettext('Clear search')} className="search-close">
                                 <i className="icon-remove-sign" />
                             </button>
