@@ -1,5 +1,7 @@
-WorkspaceService.$inject = ['api', 'desks', 'session', 'preferencesService', '$q'];
-export function WorkspaceService(api, desks, session, preferences, $q) {
+import {gettext} from 'core/utils';
+
+WorkspaceService.$inject = ['api', 'desks', 'session', 'preferencesService', '$q', 'modal'];
+export function WorkspaceService(api, desks, session, preferences, $q, modal) {
     this.active = null;
     this.save = save;
     this.delete = _delete;
@@ -12,6 +14,12 @@ export function WorkspaceService(api, desks, session, preferences, $q) {
     this.isCustom = isCustom;
     this.extraItems = [];
     this.registerExtraItem = registerExtraItem;
+    this.confirmAndDelete = (workspace) => {
+        modal.confirm(
+            gettext('Are you sure you want to delete current workspace?'),
+        )
+            .then(() => this.delete(workspace));
+    };
 
     var PREFERENCE_KEY = 'workspace:active',
         RESOURCE = 'workspaces',

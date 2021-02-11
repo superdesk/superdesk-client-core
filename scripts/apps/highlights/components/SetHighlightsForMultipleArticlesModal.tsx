@@ -6,6 +6,7 @@ import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {IDesk, IArticle} from 'superdesk-api';
+import {getHighlightsLabel, IHighlight} from '../services/HighlightsService';
 
 interface IProps {
     closeModal(): void;
@@ -14,7 +15,7 @@ interface IProps {
 
 interface IState {
     selectedHighlights: Array<string>;
-    highlightsForDesk?: Array<any>;
+    highlightsForDesk?: Array<IHighlight>;
 }
 
 export function getModalForMultipleHighlights(articles: Array<IArticle>, deskId: IDesk['_id']) {
@@ -93,7 +94,7 @@ export function getModalForMultipleHighlights(articles: Array<IArticle>, deskId:
                                                         key={i}
                                                         value={highlight._id}
                                                     >
-                                                        {highlight.name}
+                                                        {getHighlightsLabel(highlight)}
                                                     </option>
                                                 ))
                                             }
