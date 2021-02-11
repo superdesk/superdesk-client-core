@@ -31,6 +31,9 @@ interface IScope extends ng.IScope {
     highlightedItemsQuery: ISuperdeskQuery;
     selectedHighlightId: string;
     getExtraButtonsForHighlightsView(): Array<{label: string; onClick: () => void}>;
+    afterWorkspaceRename: () => void;
+    initWorkspaceRename: (workspace) => void;
+    workspaceToRename: any;
 }
 
 /**
@@ -90,6 +93,14 @@ export function MonitoringView(
             scope.contentStyle = scope.contentStyle ?? {padding: '0 20px 20px'};
 
             scope.gettext = gettext;
+
+            scope.initWorkspaceRename = (workspace) => {
+                scope.workspaceToRename = workspace;
+
+                scope.afterWorkspaceRename = () => {
+                    scope.workspaceToRename = undefined;
+                };
+            };
 
             scope.addResourceUpdatedEventListener = (callback) => {
                 scope.$on('resource:updated', (_event, data) => {
