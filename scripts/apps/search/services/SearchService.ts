@@ -11,6 +11,7 @@ import {gettext} from 'core/utils';
 import {KILLED_STATES} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
 import {ISortFields} from 'core/ui/components/SortBar';
+import {IListViewFieldWithOptions} from 'superdesk-api';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -890,12 +891,14 @@ export function SearchService($location, session, multi,
             projectedFields.add(field);
         });
 
-        uiFields.forEach((field) => {
+        uiFields.forEach((_field: string | IListViewFieldWithOptions) => {
+            const field = typeof _field === 'string' ? _field : _field.field;
+
             const adjustedField = UI_PROJECTED_FIELD_MAPPINGS[field] ?? field;
 
             if (Array.isArray(adjustedField)) {
-                adjustedField.forEach((_field) => {
-                    projectedFields.add(_field);
+                adjustedField.forEach((__field) => {
+                    projectedFields.add(__field);
                 });
             } else {
                 projectedFields.add(adjustedField);
