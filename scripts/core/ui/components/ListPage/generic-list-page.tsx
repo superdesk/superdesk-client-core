@@ -70,12 +70,14 @@ class DefaultItemsContainerComponent extends React.PureComponent {
 const subNavWrapper: React.ComponentType = (props) => (
     <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
         <div className="subnav">
-            <div style={{
-                display: 'flex',
-                width: '100%',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-            }}>
+            <div
+                style={{
+                    display: 'flex',
+                    width: '100%',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                }}
+            >
                 {props.children}
             </div>
         </div>

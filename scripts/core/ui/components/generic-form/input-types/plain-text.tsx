@@ -35,15 +35,15 @@ export class PlainText extends React.Component<IInputType<string>> {
             );
 
         return (
-            <div className={
-                classNames(
+            <div
+                className={classNames(
                     'sd-line-input',
                     {
                         'sd-line-input--invalid': this.props.issues.length > 0,
                         'sd-line-input--required': this.props.formField.required === true,
                     },
-                )
-            }>
+                )}
+            >
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
                 {fieldElement}
                 {

@@ -166,13 +166,15 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                 {
                     !sortingInProgress
                         ? (
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                width: '100%',
-                                position: 'absolute',
-                                top: '-19px',
-                            }}>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    position: 'absolute',
+                                    top: '-19px',
+                                }}
+                            >
                                 {newFieldSelect(index)}
                             </div>
                         )
@@ -189,13 +191,15 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                 {
                     !sortingInProgress && isLast
                         ? (
-                            <div style={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                width: '100%',
-                                position: 'absolute',
-                                bottom: '-17px',
-                            }}>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    width: '100%',
+                                    position: 'absolute',
+                                    bottom: '-17px',
+                                }}
+                            >
                                 {newFieldSelect(index + 1)}
                             </div>
                         )

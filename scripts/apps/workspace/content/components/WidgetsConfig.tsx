@@ -3,7 +3,6 @@ import ng from 'core/services/ng';
 import {IWidget} from 'superdesk-interfaces/Widget';
 import {IContentProfile} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import ng from 'core/services/ng';
 
 interface IProps {
     initialWidgetsConfig: IContentProfile['widgets_config'];
