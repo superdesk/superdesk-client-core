@@ -11,6 +11,7 @@ interface IProps {
     heading: string;
     query: ISuperdeskQuery;
     monitoringController: any;
+    getExtraButtons?(): Array<{label: string; onClick: () => void}>;
 }
 
 interface IState {
@@ -34,6 +35,7 @@ export class ArticlesList extends React.PureComponent<IProps, IState> {
                 onItemDoubleClick={(item) => {
                     openArticle(item._id, 'edit');
                 }}
+                getExtraButtons={this.props.getExtraButtons}
             />
         );
     }

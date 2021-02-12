@@ -1,6 +1,7 @@
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
+import {addInternalEventListener} from 'core/internal-events';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -60,6 +61,45 @@ angular.module('superdesk.core.menu', [
             }, () => {
                 // Trigger resize event to update elements, 500ms delay is for animation
                 $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
+            });
+
+            // full preview
+
+            $scope.fullPreviewItems = [];
+
+            $scope.closeFullPreview = () => {
+                $scope.fullPreviewItems = [];
+            };
+
+            const removeMultiPreviewEventListener = addInternalEventListener('openFullPreview', (event) => {
+                $scope.fullPreviewItems = event.detail;
+                $scope.$apply();
+            });
+
+            $scope.itemsForExport = null;
+
+            /**
+             * Called from:
+             * scripts/apps/archive/views/export.html
+             * scripts/apps/archive/directives/Export.ts
+             *
+             * It's a dirty solution to define it in the root scope, it would be better to pass it as a parameter
+             * to each directive instance, but that directive is already reading scopes of other controllers/directives
+             * and if `scope: {closeExport: '=?'}` was defined - these other scopes might become inaccessible
+             */
+            $scope.closeExport = () => {
+                $scope.itemsForExport = null;
+            };
+
+            const removeOpenExportListener = addInternalEventListener('openExportView', (event) => {
+                $scope.itemsForExport = event.detail;
+                $scope.$apply();
+            });
+
+            // remove listeners
+            $scope.$on('$destroy', () => {
+                removeMultiPreviewEventListener();
+                removeOpenExportListener();
             });
         }
 

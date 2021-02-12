@@ -4,7 +4,8 @@ type IComparisonOptions =
     | {$gt: any}
     | {$gte: any}
     | {$lt: any}
-    | {$lte: any};
+    | {$lte: any}
+    | {$in: any};
 
 export type IComparison = {[field: string]: IComparisonOptions};
 export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
@@ -55,6 +56,8 @@ function toElasticFilter(q: ILogicalOperator | IComparison) {
                 return {range: {[field]: {'lt': value}}};
             case '$lte':
                 return {range: {[field]: {'lte': value}}};
+            case '$in':
+                return {terms: {[field]: value}};
             }
 
             throw new Error(`Conversion for operator ${operator} is not defined.`);

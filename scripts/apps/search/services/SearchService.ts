@@ -656,6 +656,10 @@ export function SearchService($location, session, multi,
         return version ? id + ':' + version : id;
     };
 
+    this.extractIdFromTrackByIndentifier = function(identifier: string) {
+        return identifier.slice(0, identifier.lastIndexOf(':'));
+    };
+
     /*
      * helper to compare if items in 'a' are different with 'b' on _id and _current_version, if type is published.
      */
