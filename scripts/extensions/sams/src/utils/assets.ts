@@ -31,7 +31,7 @@ export function getAction(assetCallback: IAssetCallback): IAssetAction {
             label: gettext('Delete'),
             icon: 'trash',
             onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null,
+            isAllowed: (asset) => asset._created != null && isAssetLockedByCurrentUser(asset),
         };
     case ASSET_ACTIONS.EDIT:
         return {
@@ -39,7 +39,7 @@ export function getAction(assetCallback: IAssetCallback): IAssetAction {
             label: gettext('Edit'),
             icon: 'pencil',
             onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null && isSetDisabled(asset),
+            isAllowed: (asset) => asset._created != null && isSetDisabled(asset) && isAssetLockedByCurrentUser(asset),
         };
     case ASSET_ACTIONS.FORCE_UNLOCK:
         return {
@@ -129,5 +129,15 @@ export function isSetDisabled(asset: Partial<IAssetItem>): boolean {
         return false;
     } else {
         return true;
+    }
+}
+
+export function isAssetLockedByCurrentUser(asset: Partial<IAssetItem>): boolean {
+    const user_id = superdeskApi.session.getCurrentUserId();
+
+    if (asset.lock_user === user_id || !isAssetLocked(asset)) {
+        return true;
+    } else {
+        return false;
     }
 }
