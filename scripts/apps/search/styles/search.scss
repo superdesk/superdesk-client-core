@@ -148,6 +148,14 @@
     }
 }
 
+.multi-action-bar-inline {
+    display: flex;
+
+    .navbtn {
+        border: none;
+    }
+}
+
 .item-searchbar {
     border-left: 1px solid #dfdfdf;
     border-right: 1px solid #dfdfdf;

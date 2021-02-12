@@ -44,7 +44,6 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                     toggleNested={this.props.toggleNested}
                     singleLine={this.props.singleLine}
                     customRender={this.props.customRender}
-                    viewType={this.props.viewType}
                 />
                 {this.props.getActionsMenu()}
             </div>

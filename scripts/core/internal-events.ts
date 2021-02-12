@@ -8,6 +8,8 @@ interface IInternalEvents {
     saveArticleInEditMode: void;
     dangerouslyOverwriteAuthoringData: Partial<IArticle>;
     changeUserPreferences: {[preferenceId: string]: any};
+    openFullPreview: Array<IArticle>;
+    openExportView: Array<IArticle['_id']>;
 }
 
 export function addInternalEventListener<T extends keyof IInternalEvents>(

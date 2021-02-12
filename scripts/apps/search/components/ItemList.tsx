@@ -30,7 +30,6 @@ interface IProps {
     onMonitoringItemDoubleClick: any;
     singleLine: any;
     customRender: any;
-    viewType: any;
     flags: {
         hideActions: any;
     };
@@ -139,7 +138,7 @@ export class ItemList extends React.Component<IProps, IState> {
         }
     }
 
-    select(item, event) {
+    select(item: IArticle, event) {
         // Don't select item / open preview when a button is clicked.
         // The button can be three dots menu, bulk actions checkbox, a button to preview existing highlights etc.
         if (isButtonClicked(event)) {
@@ -327,11 +326,14 @@ export class ItemList extends React.Component<IProps, IState> {
         }
     }
 
-    edit(item) {
+    edit(item: IArticle) {
         const {authoringWorkspace} = this.angularservices;
         const {$timeout} = this.angularservices;
 
-        this.setSelectedItem(item);
+        if (this.props.selected !== item._id) {
+            this.select(item, null);
+        }
+
         $timeout.cancel(this.updateTimeout);
 
         if (this.props.flags?.hideActions || item == null) {
@@ -584,7 +586,6 @@ export class ItemList extends React.Component<IProps, IState> {
                                 actioning={!!this.state.actioning[itemId]}
                                 singleLine={this.props.singleLine}
                                 customRender={this.props.customRender}
-                                viewType={this.props.viewType}
                                 scopeApply={this.props.scopeApply}
                                 multiSelect={this.props.multiSelect ?? {
                                     kind: 'legacy',
