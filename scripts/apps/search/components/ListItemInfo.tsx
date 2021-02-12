@@ -46,7 +46,6 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('singleLine', angular.extend({
-                    viewType: this.props.viewType, // for highlights list
                     singleLine: this.props.singleLine,
                 }, this.props), {className: 'line article-list-fields'}),
             );
@@ -56,11 +55,9 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('firstLine', angular.extend({
-                    viewType: this.props.viewType, // for highlights list
                     singleLine: this.props.singleLine,
                 }, this.props), {className: 'line'}, this.props.customRender),
                 renderArea('secondLine', angular.extend({
-                    viewType: this.props.viewType, // for highlights list
                     singleLine: this.props.singleLine,
                 }, this.props), {className: 'line'}, this.props.customRender),
             );

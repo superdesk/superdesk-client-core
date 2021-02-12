@@ -2,20 +2,20 @@ import React from 'react';
 import {gettext} from 'core/utils';
 import {throttle} from 'lodash';
 import {throttleAndCombineSet} from './throttleAndCombine';
+import {OrderedMap} from 'immutable';
 
 interface IProps<T> {
     pageSize: number;
     itemCount: number;
     padding?: string;
-    getId(item: T): string;
-    getItemsByIds(ids: Array<string>): Promise<Array<T>>;
-    loadMoreItems(from: number, to: number): Promise<Dictionary<string, T>>;
-    children: (items: Dictionary<string, T>) => JSX.Element;
+    getItemsByIds(ids: Array<string>): Promise<OrderedMap<string, T>>;
+    loadMoreItems(from: number, to: number): Promise<OrderedMap<string, T>>;
+    children: (items: OrderedMap<string, T>) => JSX.Element;
     'data-test-id'?: string;
 }
 
 interface IState<T> {
-    items: Dictionary<string, T>;
+    items: OrderedMap<string, T>; // id, entity
     loading: boolean;
 }
 
@@ -31,18 +31,20 @@ function hasScrollbar(element: Element) {
 }
 
 export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
-    private indexesById: Dictionary<string, string>; // id, index
     private containerRef: any;
-
-    public reset: () => void;
-    public updateItems: (items: Set<string>) => void;
     private _mounted: boolean;
+
+    // throttled
+    public reset: () => void;
+
+    // throttled
+    public updateItems: (items: Set<string>) => void;
 
     constructor(props: IProps<T>) {
         super(props);
 
         this.state = {
-            items: {},
+            items: OrderedMap(),
             loading: true,
         };
 
@@ -59,28 +61,19 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
     }
 
     private _updateItems(ids: Set<string>): void {
-        const {getId} = this.props;
-        const onlyLoadedIds = Object.keys(this.indexesById).filter((id) => ids.has(id));
+        const {items} = this.state;
+        const onlyLoadedIds = Array.from(ids).filter((id) => items.has(id));
 
-        this.props.getItemsByIds(onlyLoadedIds).then((res) => {
-            const updates = res.reduce<Dictionary<string, T>>((acc, item) => {
-                acc[this.indexesById[getId(item)]] = item;
-
-                return acc;
-            }, {});
-
+        this.props.getItemsByIds(onlyLoadedIds).then((updates) => {
             this.setState({
-                items: {
-                    ...this.state.items,
-                    ...updates,
-                },
+                items: items.merge(updates),
             });
         });
     }
 
     private _reset() {
         this.setState({
-            items: {},
+            items: OrderedMap(),
             loading: true,
         }, () => {
             this.loadMore();
@@ -91,15 +84,12 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         this.setState({loading: true});
 
         const {items} = this.state;
-        const from = Object.keys(items).length;
+        const from = items.size;
         const to = from + this.props.pageSize;
 
         this.props.loadMoreItems(from, to).then((moreItems) => {
             this.setState({
-                items: {
-                    ...this.state.items,
-                    ...moreItems,
-                },
+                items: items.merge(moreItems),
                 loading: false,
             });
         });
@@ -107,14 +97,14 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
     private allItemsLoaded() {
         const {items} = this.state;
-        const from = Object.keys(items).length;
-        const loadedCount = Object.keys(items).length;
+        const from = items.size;
+        const loadedCount = items.size;
 
         return Math.max(from, loadedCount) >= this.props.itemCount;
     }
 
     private getLoadedItemsCount() {
-        return Object.keys(this.state.items).length;
+        return this.state.items.size;
     }
 
     componentDidMount() {
@@ -129,19 +119,6 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
     componentDidUpdate(prevProps: IProps<T>, prevState: IState<T>) {
         if (!this.state.loading && this.state.items !== prevState.items) {
-            // update indexesById
-
-            const {items} = this.state;
-            const {getId} = this.props;
-
-            this.indexesById = {};
-
-            for (const key in items) {
-                const item = items[key];
-
-                this.indexesById[getId(item)] = key;
-            }
-
             // Ensure there are enough items for the scrollbar to appear.
             // Lazy loading wouldn't work otherwise because it depends on "scroll" event firing.
             if (hasScrollbar(this.containerRef) !== true && this.allItemsLoaded() !== true) {

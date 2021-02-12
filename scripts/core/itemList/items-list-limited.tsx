@@ -71,7 +71,6 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
                 hideActionsForMonitoringItems={true}
                 singleLine={false}
                 customRender={undefined}
-                viewType={undefined}
                 flags={{hideActions: true}}
                 loading={false}
                 viewColumn={undefined}

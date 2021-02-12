@@ -627,7 +627,9 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @param field url_request field metadata
                  */
                 $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
-                    provider.url_id = uuidv4();
+                    if (provider.url_id == null) {
+                        provider.url_id = uuidv4();
+                    }
 
                     window.open(field.url.replace('{URL_ID}', provider.url_id));
                 };
