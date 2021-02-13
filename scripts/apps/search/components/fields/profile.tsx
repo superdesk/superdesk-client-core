@@ -1,22 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const profile: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    if (props.item.profile && props.profilesById?.[props.item.profile]) {
-        return React.createElement(
-            'div',
-            {className: 'profile-label profile-label--' + props.item.profile, key: 'profile'},
-            props.profilesById[props.item.profile] ?
-                props.profilesById[props.item.profile].label :
-                props.item.profile,
-        );
-    } else {
-        return null;
-    }
-};
+class ProfileComponent extends React.Component<IPropsItemListInfo> {
+    render() {
+        const props = this.props;
 
-profile.propTypes = {
-    item: PropTypes.any,
-    profilesById: PropTypes.any,
-};
+        if (props.item.profile && props.profilesById?.[props.item.profile]) {
+            return React.createElement(
+                'div',
+                {className: 'profile-label profile-label--' + props.item.profile, key: 'profile'},
+                props.profilesById[props.item.profile] ?
+                    props.profilesById[props.item.profile].label :
+                    props.item.profile,
+            );
+        } else {
+            return null;
+        }
+    }
+}
+
+export const profile = ProfileComponent;
