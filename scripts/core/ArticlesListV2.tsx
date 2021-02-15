@@ -19,10 +19,12 @@ import {IScope} from 'angular';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 import {OrderedMap} from 'immutable';
 import {openArticle} from './get-superdesk-api-implementation';
+import {getRelatedEntities, IRelatedEntities, mergeRelatedEntities} from './getRelatedEntities';
 
 interface IState {
     initialized: boolean;
     selected: IArticle['_id'] | undefined;
+    relatedEntities: IRelatedEntities;
 }
 
 interface IProps {
@@ -64,11 +66,14 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         this.state = {
             initialized: false,
             selected: undefined,
+            relatedEntities: {},
         };
 
         this.monitoringState = ng.get('monitoringState');
 
+        this.fetchRelatedEntities = this.fetchRelatedEntities.bind(this);
         this.loadMore = this.loadMore.bind(this);
+        this.getItemsByIds = this.getItemsByIds.bind(this);
 
         this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
             if (ARTICLE_RELATED_RESOURCE_NAMES.includes(resource)) {
@@ -96,6 +101,24 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         };
     }
 
+    fetchRelatedEntities(items: OrderedMap<ITrackById, IArticle>): Promise<OrderedMap<ITrackById, IArticle>> {
+        const articles: Array<IArticle> = [];
+
+        items.forEach((item) => {
+            articles.push(item);
+        });
+
+        return new Promise((resolve) => {
+            getRelatedEntities(articles, this.state.relatedEntities).then((relatedEntities) => {
+                this.setState({
+                    relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
+                }, () => {
+                    resolve(items);
+                });
+            });
+        });
+    }
+
     loadMore(from: number, to: number): Promise<OrderedMap<ITrackById, IArticle>> {
         const {loadItems} = this.props;
 
@@ -113,7 +136,28 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
 
                 resolve(result);
             });
-        });
+        }).then(this.fetchRelatedEntities);
+    }
+
+    getItemsByIds(trackByIds: Array<string>): Promise<OrderedMap<ITrackById, IArticle>> {
+        const {services} = this;
+        const ids = trackByIds.map((x) => services.search.extractIdFromTrackByIndentifier(x));
+
+        return Promise.all(
+            ids.map((id) => dataApi.findOne<IArticle>('search', id)),
+        ).then((items) => {
+            let result = OrderedMap<ITrackById, IArticle>();
+
+            items.forEach((item) => {
+                const trackById = services.search.generateTrackByIdentifier(item);
+
+                this.idMap.set(item._id, trackById);
+
+                result = result.set(trackById, item);
+            });
+
+            return result;
+        }).then(this.fetchRelatedEntities);
     }
 
     componentDidMount() {
@@ -151,25 +195,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 itemCount={itemCount}
                 loadMoreItems={this.loadMore}
                 pageSize={pageSize}
-                getItemsByIds={(trackByIds) => {
-                    const ids = trackByIds.map((x) => services.search.extractIdFromTrackByIndentifier(x));
-
-                    return Promise.all(
-                        ids.map((id) => dataApi.findOne<IArticle>('search', id)),
-                    ).then((items) => {
-                        let result = OrderedMap<ITrackById, IArticle>();
-
-                        items.forEach((item) => {
-                            const trackById = services.search.generateTrackByIdentifier(item);
-
-                            this.idMap.set(item._id, trackById);
-
-                            result = result.set(trackById, item);
-                        });
-
-                        return result;
-                    });
-                }}
+                getItemsByIds={this.getItemsByIds}
                 ref={(component) => {
                     this.lazyLoaderRef = component;
 
@@ -213,6 +239,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                         <ItemList
                             itemsList={items.keySeq().toJS()}
                             itemsById={items.toJS()}
+                            relatedEntities={this.state.relatedEntities}
                             profilesById={this.monitoringState.state.profilesById}
                             highlightsById={this.monitoringState.state.highlightsById}
                             markedDesksById={this.monitoringState.state.markedDesksById}

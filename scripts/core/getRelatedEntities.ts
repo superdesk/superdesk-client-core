@@ -11,7 +11,24 @@ import {Set, Map} from 'immutable';
  */
 export type IRelatedEntities = {[collectionName: string]: Map<string, any>};
 
-export function getRelatedEntities(items: Array<IArticle>): Promise<IRelatedEntities> {
+export function mergeRelatedEntities(a: IRelatedEntities, b: IRelatedEntities): IRelatedEntities {
+    const next: IRelatedEntities = {...a};
+
+    Object.keys(b).forEach((entityName) => {
+        if (next[entityName] == null) {
+            next[entityName] = b[entityName];
+        } else {
+            next[entityName] = next[entityName].merge(b[entityName]);
+        }
+    });
+
+    return next;
+}
+
+export function getRelatedEntities(
+    items: Array<IArticle>,
+    alreadyFetched: IRelatedEntities,
+): Promise<IRelatedEntities> {
     return new Promise((resolve) => {
         const listConfig = appConfig.list ?? DEFAULT_LIST_CONFIG;
 
@@ -20,7 +37,7 @@ export function getRelatedEntities(items: Array<IArticle>): Promise<IRelatedEnti
             .concat(listConfig.firstLine ?? [])
             .concat(listConfig.secondLine ?? []);
 
-        const relatedEntities = flatMap(configuredFields, (f) => {
+        const relatedEntitiesConfig = flatMap(configuredFields, (f) => {
             const field = typeof f === 'string' ? f : f.field;
 
             const component = fields[field];
@@ -28,42 +45,42 @@ export function getRelatedEntities(items: Array<IArticle>): Promise<IRelatedEnti
             return component?.relatedEntities ?? [];
         });
 
-        Promise.all(
-            relatedEntities.map(({pathToId, collection}) => {
-                // Use a set to avoid duplicates(multiple items may have the same related entity ID).
-                let ids = Set<string>();
+        // ids indexed by collection name
+        const itemsToFetch: {[collectionName: string]: Set<string>} = {};
 
-                items.forEach((item) => {
-                    const id = get(item, pathToId);
+        items.forEach((item) => {
+            relatedEntitiesConfig.forEach(({pathToId, collection}) => {
+                const id = get(item, pathToId);
 
-                    if (id != null) {
-                        ids = ids.add(id);
+                if (id != null && !alreadyFetched[collection]?.has(id)) {
+                    if (itemsToFetch[collection] == null) {
+                        itemsToFetch[collection] = Set<string>();
                     }
-                });
+
+                    itemsToFetch[collection] = itemsToFetch[collection].add(id);
+                }
+            });
+        });
+
+        const result: IRelatedEntities = {};
+
+        Promise.all(
+            Object.keys(itemsToFetch).map((collection) => {
+                const ids: Array<string> = itemsToFetch[collection].toJS();
 
                 return httpRequestJsonLocal<IRestApiResponse<unknown>>({
                     method: 'GET',
-                    path: `/${collection}?where=${JSON.stringify({_id: {$in: ids.toJS()}})}`,
+                    path: `/${collection}?where=${JSON.stringify({_id: {$in: ids}})}`,
+                }).then((response) => {
+                    result[collection] = Map<string, any>();
+
+                    response._items.forEach((entity) => {
+                        result[collection] = result[collection].set(entity._id, entity);
+                    });
                 });
             }),
-        ).then((responses) => {
-            const entities: {[key: string]: Map<string, any>} = {};
-
-            relatedEntities.forEach(({collection}, index) => {
-                const entityItems = responses[index]?._items;
-
-                if (entityItems?.length < 1) {
-                    return;
-                }
-
-                entities[collection] = Map<string, any>();
-
-                entityItems.forEach((entity) => {
-                    entities[collection] = entities[collection].set(entity._id, entity);
-                });
-            });
-
-            resolve(entities);
+        ).then(() => {
+            resolve(result);
         });
     });
 }

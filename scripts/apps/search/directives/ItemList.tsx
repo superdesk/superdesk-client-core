@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import {closeActionsMenu} from '../helpers';
 import {ItemListAngularWrapper} from '../components/ItemListAngularWrapper';
+import {getRelatedEntities, mergeRelatedEntities} from 'core/getRelatedEntities';
 
 ItemList.$inject = [
     '$timeout',
@@ -162,13 +163,16 @@ export function ItemList(
                         }
                     });
 
-                    listComponent.setState({
-                        itemsList: itemsList,
-                        itemsById: itemsById,
-                        view: scope.view,
-                        loading: false,
-                    }, () => {
-                        scope.rendering = scope.loading = false;
+                    getRelatedEntities(items._items, listComponent.state.relatedEntities).then((relatedEntities) => {
+                        listComponent.setState({
+                            itemsList: itemsList,
+                            itemsById: itemsById,
+                            relatedEntities: mergeRelatedEntities(listComponent.state.relatedEntities, relatedEntities),
+                            view: scope.view,
+                            loading: false,
+                        }, () => {
+                            scope.rendering = scope.loading = false;
+                        });
                     });
                 }, true);
 

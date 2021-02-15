@@ -3,6 +3,7 @@ import {forOwn, startsWith} from 'lodash';
 import ng from 'core/services/ng';
 import {ItemList} from 'apps/search/components';
 import {IArticle} from 'superdesk-api';
+import {IRelatedEntities, getRelatedEntities, mergeRelatedEntities} from 'core/getRelatedEntities';
 
 interface IProps {
     scope: any;
@@ -14,6 +15,7 @@ interface IState {
     view: 'compact' | 'mgrid' | 'photogrid';
     itemsList: Array<string>;
     itemsById: any;
+    relatedEntities: IRelatedEntities;
     selected: string;
     swimlane: any;
     actioning: {};
@@ -29,6 +31,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.state = {
             itemsList: [],
             itemsById: {},
+            relatedEntities: {},
             selected: null,
             view: 'compact',
             narrow: false,
@@ -75,22 +78,36 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
 
         if (item) {
             const itemsById = angular.extend({}, this.state.itemsById);
+            const updatedItem: IArticle = angular.extend({}, item, changes);
 
-            itemsById[itemId] = angular.extend({}, item, changes);
-            this.setState({itemsById: itemsById});
+            itemsById[itemId] = updatedItem;
+
+            getRelatedEntities([updatedItem], this.state.relatedEntities).then((relatedEntities) => {
+                this.setState({
+                    itemsById,
+                    relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
+                });
+            });
         }
     }
 
     updateAllItems(itemId, changes) {
         const itemsById = angular.extend({}, this.state.itemsById);
+        const updatedItems = [];
 
         forOwn(itemsById, (value, key) => {
             if (startsWith(key, itemId)) {
                 itemsById[key] = angular.extend({}, value, changes);
+                updatedItems.push(itemsById[key]);
             }
         });
 
-        this.setState({itemsById: itemsById});
+        getRelatedEntities(updatedItems, this.state.relatedEntities).then((relatedEntities) => {
+            this.setState({
+                itemsById,
+                relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
+            });
+        });
     }
 
     multiSelect(items: Array<IArticle>, selected: boolean) {
@@ -124,6 +141,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
             <ItemList
                 itemsList={this.state.itemsList}
                 itemsById={this.state.itemsById}
+                relatedEntities={this.state.relatedEntities}
                 profilesById={monitoringState.state.profilesById}
                 highlightsById={monitoringState.state.highlightsById}
                 markedDesksById={monitoringState.state.markedDesksById}

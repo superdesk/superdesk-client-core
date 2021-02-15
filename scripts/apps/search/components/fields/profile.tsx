@@ -17,7 +17,7 @@ class ProfileComponent extends React.Component<IPropsItemListInfo> {
                     <div className="profile-label">
                         {contentProfile.label}
                     </div>
-            )}
+                )}
             </WithRelatedEntity>
         );
     }

@@ -6,6 +6,7 @@ import {ItemList} from 'apps/search/components/ItemList';
 import {noop} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
+import {IRelatedEntities, getRelatedEntities, mergeRelatedEntities} from 'core/getRelatedEntities';
 
 interface IProps {
     ids: Array<IArticle['_id']>;
@@ -14,6 +15,7 @@ interface IProps {
 
 interface IState {
     items: Array<IArticle>;
+    relatedEntities: IRelatedEntities;
 }
 
 // DOES NOT SUPPORT item actions, pagination, multiselect
@@ -25,6 +27,7 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
 
         this.state = {
             items: null,
+            relatedEntities: {},
         };
 
         this.monitoringState = ng.get('monitoringState');
@@ -35,7 +38,12 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
         this.monitoringState.init().then(() => {
             Promise.all(ids.map((id) => dataApi.findOne<IArticle>('search', id)))
                 .then((items) => {
-                    this.setState({items});
+                    getRelatedEntities(items, this.state.relatedEntities).then((relatedEntities) => {
+                        this.setState({
+                            items,
+                            relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
+                        });
+                    });
                 });
         });
     }
@@ -56,6 +64,7 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
             <ItemList
                 itemsList={Object.keys(itemsById)}
                 itemsById={itemsById}
+                relatedEntities={this.state.relatedEntities}
                 profilesById={this.monitoringState.state.profilesById}
                 highlightsById={this.monitoringState.state.highlightsById}
                 markedDesksById={this.monitoringState.state.markedDesksById}
