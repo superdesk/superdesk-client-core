@@ -30,7 +30,7 @@ describe('content', () => {
     // wait a bit after sending keys to body
     function pressKey(key) {
         browser.actions().sendKeys(key).perform();
-        browser.sleep(50);
+        browser.sleep(200);
     }
 
     function setEmbargo() {
