@@ -1,10 +1,11 @@
 import {IArticle, IListViewFieldWithOptions, IRestApiResponse} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {DEFAULT_LIST_CONFIG} from 'apps/search/constants';
-import {flatMap, get} from 'lodash';
+import {flatMap} from 'lodash';
 import {fields} from 'apps/search/components/fields';
 import {httpRequestJsonLocal} from './helpers/network';
 import {Set, Map} from 'immutable';
+import {notNullOrUndefined} from './helpers/typescript-helpers';
 
 /**
  * Holds Maps of entities keyed by IDs.
@@ -37,28 +38,28 @@ export function getRelatedEntities(
             .concat(listConfig.firstLine ?? [])
             .concat(listConfig.secondLine ?? []);
 
-        const relatedEntitiesConfig = flatMap(configuredFields, (f) => {
+        const relatedEntitiesConfigGetterFunctions = flatMap(configuredFields, (f) => {
             const field = typeof f === 'string' ? f : f.field;
 
             const component = fields[field];
 
-            return component?.relatedEntities ?? [];
-        });
+            return component?.getRelatedEntities;
+        }).filter(notNullOrUndefined);
 
         // ids indexed by collection name
         const itemsToFetch: {[collectionName: string]: Set<string>} = {};
 
         items.forEach((item) => {
-            relatedEntitiesConfig.forEach(({pathToId, collection}) => {
-                const id = get(item, pathToId);
+            relatedEntitiesConfigGetterFunctions.forEach((fn) => {
+                fn(item).forEach(({collection, id}) => {
+                    if (id != null && !alreadyFetched[collection]?.has(id)) {
+                        if (itemsToFetch[collection] == null) {
+                            itemsToFetch[collection] = Set<string>();
+                        }
 
-                if (id != null && !alreadyFetched[collection]?.has(id)) {
-                    if (itemsToFetch[collection] == null) {
-                        itemsToFetch[collection] = Set<string>();
+                        itemsToFetch[collection] = itemsToFetch[collection].add(id);
                     }
-
-                    itemsToFetch[collection] = itemsToFetch[collection].add(id);
-                }
+                });
             });
         });
 

@@ -38,13 +38,14 @@ import {Translations} from './translations';
 import {Used} from './used';
 import {LinesCount} from './linesCount';
 import {Authors} from './authors';
+import {IArticle} from 'superdesk-api';
 
 interface IFieldProps extends Partial<IPropsItemListInfo> {
     item: IPropsItemListInfo['item']; // this one not nullable
 }
 
 interface IReactFieldComponentClass<P> extends React.ComponentClass<P> {
-    relatedEntities?: Array<{pathToId: string; collection: string}>;
+    getRelatedEntities?(item: IArticle): Array<{collection: string; id: string}>;
 }
 
 export const fields: {[key: string]: IReactFieldComponentClass<IFieldProps>} = {
