@@ -2066,6 +2066,7 @@ describe('authoring workspace', () => {
 
 describe('authoring container directive', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
 
