@@ -1,21 +1,25 @@
 import React from 'react';
 import {IPropsItemListInfo} from '../ListItemInfo';
+import {IContentProfile} from 'superdesk-api';
+import {WithRelatedEntity} from 'core/withRelatedEntity';
 
 class ProfileComponent extends React.Component<IPropsItemListInfo> {
-    render() {
-        const props = this.props;
+    public static relatedEntities = [
+        {pathToId: 'profile', collection: 'content_types'},
+    ];
 
-        if (props.item.profile && props.profilesById?.[props.item.profile]) {
-            return React.createElement(
-                'div',
-                {className: 'profile-label profile-label--' + props.item.profile, key: 'profile'},
-                props.profilesById[props.item.profile] ?
-                    props.profilesById[props.item.profile].label :
-                    props.item.profile,
-            );
-        } else {
-            return null;
-        }
+    render() {
+        const {relatedEntities, item} = this.props;
+
+        return (
+            <WithRelatedEntity entities={relatedEntities} collection="content_types" entityId={item.profile}>
+                {(contentProfile: IContentProfile) => (
+                    <div className="profile-label">
+                        {contentProfile.label}
+                    </div>
+            )}
+            </WithRelatedEntity>
+        );
     }
 }
 

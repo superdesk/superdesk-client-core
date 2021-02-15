@@ -4,8 +4,6 @@ import React from 'react';
 import classNames from 'classnames';
 import {get} from 'lodash';
 
-import {broadcast} from './fields/broadcast';
-
 import {ActionsMenu} from './actions-menu/ActionsMenu';
 import {closeActionsMenu, isIPublishedArticle} from '../helpers';
 import {gettext} from 'core/utils';
@@ -23,6 +21,7 @@ import {IScopeApply} from 'core/utils';
 import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 import {IActivityService} from 'core/activity/activity';
 import {IActivity} from 'superdesk-interfaces/Activity';
+import {IRelatedEntities} from 'core/getRelatedEntities';
 
 export function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -53,6 +52,7 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
 interface IProps {
     swimlane: any;
     item: IArticle | IPublishedArticle;
+    relatedEntities: IRelatedEntities;
     profilesById: any;
     highlightsById: any;
     markedDesksById: any;
@@ -336,7 +336,6 @@ export class Item extends React.Component<IProps, IState> {
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
                         ingestProvider={this.props.ingestProvider}
-                        broadcast={broadcast}
                         getActionsMenu={getActionsMenu}
                         multiSelect={this.props.multiSelect}
                     />
@@ -356,6 +355,7 @@ export class Item extends React.Component<IProps, IState> {
                 return (
                     <ListItemTemplate
                         item={item}
+                        relatedEntities={this.props.relatedEntities}
                         itemSelected={itemSelected}
                         desk={this.props.desk}
                         openAuthoringView={this.openAuthoringView}
@@ -395,6 +395,7 @@ export class Item extends React.Component<IProps, IState> {
                         {this.state.nested.map((childItem) => (
                             <Item
                                 item={childItem}
+                                relatedEntities={this.props.relatedEntities}
                                 key={childItem._id + childItem._current_version}
                                 flags={{}}
                                 profilesById={this.props.profilesById}

@@ -1,22 +1,22 @@
 import React from 'react';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-class BroadcastComponent extends React.Component<IPropsItemListInfo> {
+export class BroadcastFieldComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
     render() {
         const props = this.props;
 
-        const _broadcast = props.item.broadcast || {};
+        const status = props.item?.broadcast?.status;
 
-        if (_broadcast.status == null) {
+        if (status == null) {
             return null;
         }
 
         return React.createElement(
             'span',
-            {className: 'broadcast-status', title: _broadcast.status, key: 'broadcast'},
+            {className: 'broadcast-status', title: status, key: 'broadcast'},
             '!',
         );
     }
 }
 
-export const broadcast = BroadcastComponent;
+export const broadcast = BroadcastFieldComponent;

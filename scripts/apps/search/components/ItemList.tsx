@@ -12,10 +12,12 @@ import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 import {IActivityService} from 'core/activity/activity';
 import {isButtonClicked} from './Item';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {IRelatedEntities} from 'core/getRelatedEntities';
 
 interface IProps {
     itemsList: Array<string>;
     itemsById: any;
+    relatedEntities: IRelatedEntities;
     narrow: boolean;
     view: 'compact' | 'mgrid' | 'photogrid';
     selected: string;
@@ -566,6 +568,7 @@ export class ItemList extends React.Component<IProps, IState> {
                                 key={itemId}
                                 isNested={false}
                                 item={item}
+                                relatedEntities={this.props.relatedEntities}
                                 view={this.props.view}
                                 swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
                                 flags={{selected: this.props.selected === itemId}}

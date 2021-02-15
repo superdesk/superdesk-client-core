@@ -44,7 +44,7 @@ interface IFieldProps extends Partial<IPropsItemListInfo> {
 }
 
 interface IReactFieldComponentClass<P> extends React.ComponentClass<P> {
-    relatedEntities?: Array<any>;
+    relatedEntities?: Array<{pathToId: string; collection: string}>;
 }
 
 export const fields: {[key: string]: IReactFieldComponentClass<IFieldProps>} = {
