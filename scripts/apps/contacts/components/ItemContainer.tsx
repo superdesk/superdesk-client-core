@@ -73,8 +73,8 @@ export class ItemContainer extends React.Component<any, any> {
             addressInfo.push(item.postcode);
         }
 
-        if (item.country) {
-            addressInfo.push(item.country);
+        if (item.country?.name != null) {
+            addressInfo.push(item.country.name);
         }
 
         const contactAddress = addressInfo.join(', ');

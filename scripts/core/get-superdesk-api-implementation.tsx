@@ -185,12 +185,10 @@ export function getSuperdeskApiImplementation(
         httpRequestJsonLocal,
         entities: {
             article: {
-                isPersonal: (article) => article.task == null
-                    || article.task.desk == null
-                    || article.task.stage == null,
+                isPersonal: sdApi.article.isPersonal,
                 isLocked: sdApi.article.isLocked,
-                isLockedInCurrentSession,
-                isLockedInOtherSession,
+                isLockedInCurrentSession: sdApi.article.isLockedInCurrentSession,
+                isLockedInOtherSession: sdApi.article.isLockedInOtherSession,
                 patch: (article, patch, dangerousOptions) => {
                     const onPatchBeforeMiddlewares = Object.values(extensions)
                         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
@@ -221,7 +219,7 @@ export function getSuperdeskApiImplementation(
                         }
                     });
                 },
-                isArchived: (article) => article._type === 'archived',
+                isArchived: sdApi.article.isArchived,
                 isPublished: (article) => sdApi.article.isPublished(article),
             },
             desk: {

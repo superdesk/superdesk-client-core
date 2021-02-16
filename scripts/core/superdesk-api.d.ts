@@ -593,6 +593,7 @@ declare module 'superdesk-api' {
         invisible_stages: Array<any>;
         slack_username: string;
         slack_user_id: string;
+        last_activity_at?: string;
     }
 
     export interface IVocabularyTag {
@@ -1002,7 +1003,6 @@ declare module 'superdesk-api' {
         groups: Array<IDropdownTreeGroup<T>>;
         getToggleElement(isOpen: boolean, onClick: () => void): JSX.Element;
         renderItem(key: string, item: T, closeDropdown: () => void): JSX.Element;
-        inline?: boolean;
         wrapperStyles?: React.CSSProperties;
         'data-test-id'?: string;
     }
@@ -1638,7 +1638,7 @@ declare module 'superdesk-api' {
                 publish?: boolean;
                 closeAndContinue?: boolean;
                 publishAndContinue?: boolean;
-            }
+            },
         };
         auth: {
             google: boolean
@@ -1770,6 +1770,8 @@ declare module 'superdesk-api' {
             name: string;
             config: any;
         }>;
+
+        userOnlineMinutes: number;
     }
 
 

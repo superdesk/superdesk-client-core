@@ -8,7 +8,7 @@ angular.module('superdesk.apps.master-desk', [])
     .component('sdMasterDesk', reactToAngular1(MasterDesk, [], [], styles))
     .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenuProvider) => {
         superdesk
-            .activity('/master-desk/', {
+            .activity('/master-desk', {
                 label: gettext('Master Desk'),
                 priority: 100,
                 template: require('./views/master-desk.html'),
@@ -21,6 +21,7 @@ angular.module('superdesk.apps.master-desk', [])
             icon: 'master',
             href: '/master-desk',
             label: gettext('Master Desk'),
+            shortcut: 'ctrl+alt+d',
             order: 1000,
         });
     }]);

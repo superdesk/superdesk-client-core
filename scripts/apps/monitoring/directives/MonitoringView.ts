@@ -4,6 +4,8 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {IDesk, IUser} from 'superdesk-api';
 import {ISuperdeskQuery} from 'core/query-formatting';
 
+const PAGE_SIZE = 50;
+
 interface IScope extends ng.IScope {
     contentStyle: {};
     monitoringItemsLoading: boolean;
@@ -26,6 +28,12 @@ interface IScope extends ng.IScope {
     addResourceUpdatedEventListener: (callback: any) => void;
     openUpload: (files: Array<File>) => void;
     spikedItemsQuery: ISuperdeskQuery;
+    highlightedItemsQuery: ISuperdeskQuery;
+    selectedHighlightId: string;
+    getExtraButtonsForHighlightsView(): Array<{label: string; onClick: () => void}>;
+    afterWorkspaceRename: () => void;
+    initWorkspaceRename: (workspace) => void;
+    workspaceToRename: any;
 }
 
 /**
@@ -38,10 +46,13 @@ MonitoringView.$inject = [
     'authoringWorkspace',
     'pageTitle',
     '$timeout',
+    '$location',
     'workspaces',
     'desks',
     'superdesk',
     'session',
+    'privileges',
+    'highlightsService',
 ];
 
 export function MonitoringView(
@@ -49,10 +60,13 @@ export function MonitoringView(
     authoringWorkspace: AuthoringWorkspaceService,
     pageTitle,
     $timeout,
+    $location,
     workspaces,
     desks,
     superdesk,
     session,
+    privileges,
+    highlightsService,
 ) {
     return {
         templateUrl: 'scripts/apps/monitoring/views/monitoring-view.html',
@@ -69,6 +83,8 @@ export function MonitoringView(
             disableMonitoringCreateItem: '=?',
             hideMonitoringToolbar1: '=?',
             hideMonitoringToolbar2: '=?',
+            selectedHighlightName: '=?',
+            selectedHighlightId: '=?',
             contentStyle: '=?',
         },
         link: function(scope: IScope, elem) {
@@ -77,6 +93,14 @@ export function MonitoringView(
             scope.contentStyle = scope.contentStyle ?? {padding: '0 20px 20px'};
 
             scope.gettext = gettext;
+
+            scope.initWorkspaceRename = (workspace) => {
+                scope.workspaceToRename = workspace;
+
+                scope.afterWorkspaceRename = () => {
+                    scope.workspaceToRename = undefined;
+                };
+            };
 
             scope.addResourceUpdatedEventListener = (callback) => {
                 scope.$on('resource:updated', (_event, data) => {
@@ -132,7 +156,43 @@ export function MonitoringView(
                             ]},
                             sort: [{'versioncreated': 'desc'}],
                             page: 1,
-                            max_results: 20,
+                            max_results: PAGE_SIZE,
+                        };
+
+                        scope.highlightedItemsQuery = {
+                            filter: {$and: [
+                                {'state': {$ne: 'spiked'}},
+                                {$or: [
+                                    {$and: [
+                                        {'state': {$eq: 'draft'}},
+                                        {'original_creator': {$eq: user._id}},
+                                    ]},
+                                    {'state': {$ne: 'draft'}},
+                                ]},
+                                {'package_type': {$ne: 'takes'}},
+                                {'task.desk': {$eq: scope.activeDeskId}},
+                                {'highlights': {$eq: $location.search().highlight}},
+                            ]},
+                            sort: [{'versioncreated': 'desc'}],
+                            page: 1,
+                            max_results: PAGE_SIZE,
+                        };
+
+                        scope.getExtraButtonsForHighlightsView = () => {
+                            if (privileges.privileges.mark_for_highlights) {
+                                return [
+                                    {
+                                        label: gettext('Create'),
+                                        onClick: () => {
+                                            highlightsService.find(scope.selectedHighlightId)
+                                                .then(highlightsService.createEmptyHighlight)
+                                                .then(authoringWorkspace.edit);
+                                        },
+                                    },
+                                ];
+                            } else {
+                                return null;
+                            }
                         };
                     });
                 }

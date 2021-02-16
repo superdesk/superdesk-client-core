@@ -7,7 +7,7 @@ import {extensions, appConfig} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 import ng from 'core/services/ng';
 
-interface IMultiActions {
+export interface IMultiActions {
     send(): void;
     sendAs(): void;
     fetch(fetchAs?: boolean): void;
@@ -218,7 +218,9 @@ export function getMultiActions(
      * Multiple items duplicate
      */
     function duplicateTo() {
-        return send.allAs(getSelectedItems(), 'duplicateTo');
+        return send.allAs(getSelectedItems(), 'duplicateTo').then(() => {
+            unselectAll();
+        });
     }
 
     function duplicateInPlace() {

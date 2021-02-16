@@ -1,7 +1,6 @@
 <div class="monitoring" ng-controller="AggregateCtrl as aggregate">
     <section class="main-section" ng-class="monitoring.state" aria-labelledby="monitoring-heading">
         <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'monitoring'" translate>Monitoring</h2>
-        <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'highlights'" translate>Highlights</h2>
         <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'spike'" translate>Spiked items</h2>
         <div class="preview-layout monitoring-preview-layout" sd-media-query min-width="700" element-class="narrowList" data-test-id="monitoring-view">
             <div class="content-list monitoring__content" ng-if="!aggregate.loading">
@@ -57,12 +56,12 @@
                                     ng-click="aggregate.togglePersonalShowSent()"
                                     translate>Sent Items</button>
                             </span>
-                            <span ng-if="type === 'highlights'" sd-highlight-label data-highlight="monitoring.queryParam.highlight"
-                                data-total="monitoring.totalItems" data-test-id="highlightTitle"></span>
+
                             <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
                                 {{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}
                                 <span class="label-total">{{ monitoring.totalItems}}</span>
                             </span>
+
                             <span ng-if="monitoring.singleGroup.singleViewType === 'desk'">
                                 {{ monitoring.singleGroup.header }} {{ monitoring.singleGroup.singleViewType}}
                                 <span class="label-total">{{ monitoring.totalItems}}</span>
@@ -105,15 +104,13 @@
                         <div sd-multi-action-bar></div>
                         <div class="subnav__button-stack--square-buttons sd-margin-l--auto">
                             <div class="refresh-box">
-                                <button ng-if="monitoring.showRefresh &&
-                                                        (monitoring.singleGroup || type === 'highlights' || monitoring.viewColumn)"
+                                <button ng-if="monitoring.showRefresh && (monitoring.singleGroup || monitoring.viewColumn)"
                                         ng-click="refreshGroup(monitoring.singleGroup)"
                                         class="btn btn--primary btn--icon-only-circle btn--small"
                                         sd-tooltip="{{ 'Refresh' | translate }}" flow="left" class="navbtn" aria-label="{{ 'Refresh content' | translate }}">
                                     <i class="icon-repeat"></i>
                                 </button>
                             </div>
-                            <div class="pull-left-10x" ng-if="type === 'highlights'" sd-create-highlights-button data-highlight="monitoring.queryParam.highlight"></div>
                             <button class="navbtn strict" ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'" ng-click="aggregate.edit()" aria-label="{{ 'Monitoring settings' | translate }}">
                                 <i class="icon-settings"></i>
                             </button>
@@ -132,7 +129,7 @@
                                 ></sd-monitoring-filtering-buttons>
                             </div>
 
-                            <div ng-if="disableMonitoringCreateItem == null && (!state.opened && type !== 'highlights')" class="dropdown dropdown--align-right strict" sd-tooltip="{{ 'Create new item' | translate }}" flow="left" dropdown>
+                            <div ng-if="disableMonitoringCreateItem == null" class="dropdown dropdown--align-right strict" sd-tooltip="{{ 'Create new item' | translate }}" flow="left" dropdown>
                                 <div ngf-drop="openUpload($files)" ngf-multiple="true">
                                     <button
                                         class="navbtn dropdown__toggle sd-create-btn"
@@ -219,6 +216,20 @@
                                         &nbsp;<span translate>Rearrange Groups</span>
                                     </button>
                                 </li>
+
+                                <li ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'">
+                                    <button ng-click="initWorkspaceRename(workspace)">
+                                        <i class="icon-pencil"></i>
+                                        &nbsp;<span translate>Rename workspace</span>
+                                    </button>
+                                </li>
+
+                                <li ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace'">
+                                    <button ng-click="workspaces.confirmAndDelete(workspace)">
+                                        <i class="icon-trash"></i>
+                                        &nbsp;<span translate>Delete workspace</span>
+                                    </button>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -293,11 +304,14 @@
                                         on-monitoring-item-select="onMonitoringItemSelect"
                                         on-monitoring-item-double-click="onMonitoringItemDoubleClick"></div>
                             </div>
-                            <div ng-if="type === 'highlights' && !monitoring.highlightsDeskChanged()" class="list">
-                                <div sd-monitoring-group class="single-group"
-                                        data-group="{'type': 'highlights', 'query': query, 'fileType': aggregate.getSelectedFileTypes(), contentProfile: aggregate.getSelectedContentProfiles()}"
-                                        data-view="view"
-                                        data-view-type="'highlights'"></div>
+                            <div ng-if="type === 'highlights' && selectedHighlightName != null && !monitoring.highlightsDeskChanged()" style="height: 100%">
+                                <sd-articles-list-react
+                                    heading="selectedHighlightName"
+                                    query="highlightedItemsQuery"
+                                    monitoring-controller="monitoring"
+                                    get-extra-buttons="getExtraButtonsForHighlightsView"
+                                    style="height: 100%"
+                                ></sd-articles-list-react>
                             </div>
                         </div>
                         <div class="sd-preview-panel" style="position: relative;" ng-if="!narrowList">
@@ -344,4 +358,8 @@
          data-action="archived_kill_action"></div>
 
     <div sd-resend-item data-item="resend"></div>
+
+    <div ng-if="type === 'monitoring' && aggregate.settings.type === 'workspace' && workspaceToRename != null">
+        <div sd-edit-workspace data-workspace="workspaceToRename" data-done="afterWorkspaceRename"></div>
+    </div>
 </div>

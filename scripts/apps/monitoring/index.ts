@@ -50,6 +50,7 @@ angular.module('superdesk.apps.monitoring', [
                 'heading',
                 'query',
                 'monitoringController',
+                'getExtraButtons',
             ],
             [],
             'height: 100%',

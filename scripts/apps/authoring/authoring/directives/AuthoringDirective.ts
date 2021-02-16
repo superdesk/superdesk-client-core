@@ -86,6 +86,7 @@ export function AuthoringDirective(
     return {
         link: function($scope, elem, attrs) {
             $scope.loading = false;
+            $scope.tabsPinned = false;
 
             var _closing;
             var mediaFields = {};

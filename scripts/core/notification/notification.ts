@@ -122,7 +122,7 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
                 if (_.includes(ReloadEvents, msg.event)) {
                     $rootScope.$broadcast('reload', msg);
                 }
-            }, 50);
+            }, 100);
         };
 
         ws.onerror = function(event) {

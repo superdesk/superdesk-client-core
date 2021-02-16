@@ -123,7 +123,6 @@ export class HighlightsInfo extends React.PureComponent<any, any> {
                 item={this.props.item}
                 highlights={this.getHighlights()}
                 highlightsById={this.props.highlightsById}
-                viewType={this.props.viewType}
             />
         );
 
