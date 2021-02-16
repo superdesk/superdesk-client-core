@@ -1,4 +1,8 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
+import {getCustomEventNamePrefixed} from 'core/notification/notification';
+import {IArticle} from 'superdesk-api';
+
+let itemInEditMode: IArticle | null = null;
 
 AuthoringContainerDirective.$inject = ['authoringWorkspace'];
 export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspaceService) {
@@ -30,6 +34,22 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
         link: function(scope, elem, attrs, ctrl) {
             scope.$watch(authoringWorkspace.getState, (state) => {
                 if (state) {
+                    if (itemInEditMode != null) {
+                        window.dispatchEvent(
+                            new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: itemInEditMode}),
+                        );
+
+                        itemInEditMode = null;
+                    }
+
+                    if (state.action === 'edit') {
+                        itemInEditMode = state.item;
+
+                        window.dispatchEvent(
+                            new CustomEvent(getCustomEventNamePrefixed('articleEditStart'), {detail: itemInEditMode}),
+                        );
+                    }
+
                     ctrl.edit(null, null);
                     // do this in next digest cycle so that it can
                     // destroy authoring/packaging-embedded in current cycle
