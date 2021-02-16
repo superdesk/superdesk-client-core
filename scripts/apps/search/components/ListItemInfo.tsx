@@ -22,7 +22,6 @@ export interface IPropsItemListInfo {
     toggleNested: (event) => void;
     singleLine: boolean;
     customRender: any;
-    viewType: any;
     options?: IListViewFieldWithOptions['options'];
 }
 
