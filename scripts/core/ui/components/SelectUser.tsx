@@ -40,7 +40,12 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
 
     componentDidUpdate(prevProps: IPropsSelectUser) {
         // state.user needs to be updated if props.selectedUserId changes
-        if (this.state.selectedUser === 'loading' || this.state.selectedUser._id !== this.props.selectedUserId) {
+        if (this.props.selectedUserId == null && this.state.selectedUser != null) {
+            this.setState({selectedUser: null});
+        } else if (
+            this.state.selectedUser === 'loading'
+            || this.state.selectedUser?._id !== this.props.selectedUserId
+        ) {
             this.asyncHelpers.httpRequestJsonLocal<IUser>({
                 method: 'GET',
                 path: `/users/${this.props.selectedUserId}`,
