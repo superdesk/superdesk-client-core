@@ -1070,6 +1070,8 @@ declare module 'superdesk-api' {
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
+        articlePreviewStart: IArticle;
+        articlePreviewEnd: IArticle;
     }
 
     export interface IWebsocketMessage<T> {
