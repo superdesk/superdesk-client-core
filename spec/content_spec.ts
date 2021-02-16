@@ -39,6 +39,12 @@ describe('content', () => {
 
     it('can navigate with keyboard', () => {
         content.getItems().first().click();
+        browser.wait(
+            ECE.textToBePresentInElement(
+                el(['authoring-preview', 'field--headline']),
+                'item1',
+            ),
+        );
 
         pressKey(protractor.Key.UP);
         browser.wait(
