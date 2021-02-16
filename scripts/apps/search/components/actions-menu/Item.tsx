@@ -81,10 +81,18 @@ export default class MenuItem extends React.Component<IProps, IState> {
         const targetRect = thisNode.getBoundingClientRect();
         const BUFFER = 250;
 
+        function focusFirstItem() {
+            const btn = thisNode.querySelectorAll('ul')[0]?.querySelectorAll('button:not([disabled])')[0];
+
+            if (btn instanceof HTMLElement) {
+                btn.focus();
+            }
+        }
+
         if (targetRect.left < LEFT_SIDEBAR_WIDTH + BUFFER) {
-            this.setState({position: 'dropdown__menu--submenu-right'});
+            this.setState({position: 'dropdown__menu--submenu-right'}, focusFirstItem);
         } else {
-            this.setState({position: 'dropdown__menu--submenu-left'});
+            this.setState({position: 'dropdown__menu--submenu-left'}, focusFirstItem);
         }
     }
 
@@ -103,12 +111,11 @@ export default class MenuItem extends React.Component<IProps, IState> {
         closeActionsMenu(this.props.item._id);
     }
 
-    toggle(event) {
+    toggle() {
         if (!this.state.open) {
             this.open();
         } else {
             this.close();
-            this.closeMenu(event);
         }
     }
 
@@ -128,47 +135,59 @@ export default class MenuItem extends React.Component<IProps, IState> {
         const invoke = typeof activity.dropdown === 'function' || typeof activity.dropdown === 'object';
 
         if (activity.dropdown) {
-            return React.createElement(
-                'li',
-                {onMouseEnter: this.open, onMouseLeave: this.close, onClick: this.toggle},
-                React.createElement(
-                    'div',
-                    {className: 'dropdown dropdown--noarrow' + (this.state.open ? ' open' : '')},
-                    React.createElement(
-                        'a',
+            return (
+                <li
+                    onMouseEnter={this.open}
+                    onMouseLeave={this.close}
+                    onClick={this.toggle}
+                >
+                    <div className={'dropdown dropdown--noarrow' + (this.state.open ? ' open' : '')}>
+                        <button
+                            className="dropdown__toggle"
+                            title={activity.label}
+                        >
+                            {
+                                activity.icon
+                                    ? (<i className={'icon-' + activity.icon} />)
+                                    : null
+                            }
+
+                            {activity.label}
+                        </button>
+
                         {
-                            className: 'dropdown__toggle',
-                            title: gettext(activity.label),
-                        },
-                        activity.icon ? React.createElement('i', {
-                            className: 'icon-' + activity.icon,
-                        }, '') : null,
-                        gettext(activity.label),
-                    ),
-                    this.state.open && invoke ? this.$injector.invoke(activity.dropdown, activity, {
-                        item: this.props.item,
-                        className: 'dropdown__menu upward ' + this.state.position,
-                        noHighlightsLabel: gettext('No available highlights'),
-                        noDesksLabel: gettext('No available desks'),
-                        noLanguagesLabel: gettext('No available translations'),
-                    }) : null,
-                ),
+                            this.state.open && invoke
+                                ? this.$injector.invoke(activity.dropdown, activity, {
+                                    item: this.props.item,
+                                    className: 'dropdown__menu upward ' + this.state.position,
+                                    noHighlightsLabel: gettext('No available highlights'),
+                                    noDesksLabel: gettext('No available desks'),
+                                    noLanguagesLabel: gettext('No available translations'),
+                                })
+                                : null
+                        }
+                    </div>
+                </li>
             );
         }
 
-        return React.createElement(
-            'li',
-            null,
-            React.createElement(
-                'a',
-                {title: gettext(activity.label), onClick: this.run},
-                React.createElement('i', {
-                    className: 'icon-' + activity.icon,
-                }),
-                React.createElement('span', {
-                    style: {display: 'inline'},
-                }, gettext(activity.label)),
-            ),
+        return (
+            <li>
+                <button
+                    title={activity.label}
+                    onClick={this.run}
+                >
+                    {
+                        activity.icon
+                            ? (<i className={'icon-' + activity.icon} />)
+                            : null
+                    }
+
+                    <span style={{display: 'inline'}}>
+                        {activity.label}
+                    </span>
+                </button>
+            </li>
         );
     }
 }

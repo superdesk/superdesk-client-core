@@ -29,6 +29,7 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                             item={article}
                             onMultiSelect={noop}
                             selectingDisabled={true}
+                            itemSelected={false}
                         />
                     </ListItemColumn>
 

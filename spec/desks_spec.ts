@@ -15,7 +15,7 @@ import {authoring} from './helpers/authoring';
 import {assertToastMsg, refresh} from './helpers/utils';
 import {desks} from './helpers/desks';
 import {contentProfiles} from './helpers/content_profiles';
-import {ECE, els} from 'end-to-end-testing-helpers';
+import {ECE, els} from '@superdesk/end-to-end-testing-helpers';
 
 describe('desks', () => {
     beforeEach(() => {

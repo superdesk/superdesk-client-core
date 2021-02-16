@@ -1,4 +1,4 @@
-import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promise} from 'protractor';
+import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promise, WebElementPromise} from 'protractor';
 import {ECE} from './expected-conditions-extended';
 import {executeContextMenuAction} from './articlesList';
 import {navigateTo} from './workspace';
@@ -106,10 +106,14 @@ export function selectFilesForUpload(
         fileNames
             .map(
                 (relativePath) =>
-                    path.resolve(__dirname, '../../../spec/test-files/' + relativePath),
+                    path.resolve(__dirname, '../../../../spec/test-files/' + relativePath),
             )
             .join('\n'),
     );
+}
+
+export function getFocusedElement(): WebElementPromise {
+    return browser.switchTo().activeElement();
 }
 
 export const articleList = {

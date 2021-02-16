@@ -31,13 +31,14 @@ class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelect
                 }}
                 selected={options.selected.has(item._id)}
                 className="hover-AB--B"
+                data-test-id="multi-select-checkbox"
             />
         );
 
         return (
             <div
                 className="list-field type-icon"
-                data-test-id="multi-select-checkbox"
+                data-test-id="item-type-and-multi-select"
             >
                 {
                     options.selected.has(item._id)

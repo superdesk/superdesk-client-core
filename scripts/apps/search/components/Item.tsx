@@ -24,7 +24,7 @@ import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 import {IActivityService} from 'core/activity/activity';
 import {IActivity} from 'superdesk-interfaces/Activity';
 
-function isButtonClicked(event): boolean {
+export function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
     // if an extension registers a button, it should be able to totally control it.
     // target can be an image or an icon inside a button, so parents need to be checked too
@@ -295,6 +295,7 @@ export class Item extends React.Component<IProps, IState> {
 
         const selectedInSingleSelectMode = this.props.flags.selected;
         const selectedInMultiSelectMode = this.props.item.selected;
+        const itemSelected = selectedInSingleSelectMode || selectedInMultiSelectMode;
 
         // Customize item class from its props
         if (this.props.customRender && typeof this.props.customRender.getItemClass === 'function') {
@@ -305,7 +306,7 @@ export class Item extends React.Component<IProps, IState> {
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
             this.props.hideActions !== true
-            && (this.state.hover || selectedInSingleSelectMode || selectedInMultiSelectMode)
+            && (this.state.hover || itemSelected)
             && !item.gone
                 ? (
                     <ActionsMenu
@@ -322,6 +323,7 @@ export class Item extends React.Component<IProps, IState> {
                 return (
                     <ItemSwimlane
                         item={item}
+                        itemSelected={itemSelected}
                         isLocked={isLocked}
                         getActionsMenu={getActionsMenu}
                         multiSelect={this.props.multiSelect}
@@ -331,6 +333,7 @@ export class Item extends React.Component<IProps, IState> {
                 return (
                     <ItemMgridTemplate
                         item={item}
+                        itemSelected={itemSelected}
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
                         ingestProvider={this.props.ingestProvider}
@@ -343,6 +346,7 @@ export class Item extends React.Component<IProps, IState> {
                 return (
                     <ItemPhotoGrid
                         item={item}
+                        itemSelected={itemSelected}
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
                         multiSelect={this.props.multiSelect}
@@ -353,6 +357,7 @@ export class Item extends React.Component<IProps, IState> {
                 return (
                     <ListItemTemplate
                         item={item}
+                        itemSelected={itemSelected}
                         desk={this.props.desk}
                         openAuthoringView={this.openAuthoringView}
                         ingestProvider={this.props.ingestProvider}
@@ -434,7 +439,7 @@ export class Item extends React.Component<IProps, IState> {
                     'list-item-view',
                     {
                         'actions-visible': this.props.hideActions !== true,
-                        'active': selectedInSingleSelectMode || selectedInMultiSelectMode,
+                        'active': itemSelected,
                         'selected': this.props.item.selected && !this.props.flags.selected,
                         'sd-list-item-nested': this.state.nested.length,
                         'sd-list-item-nested--expanded': this.state.nested.length && this.state.showNested,
@@ -444,21 +449,39 @@ export class Item extends React.Component<IProps, IState> {
                 onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
+                onFocus: getCallback(() => {
+                    // not using this.select in order to avoid the timeout
+                    // that is used to enable double-click
+                    if (!this.props.item.gone) {
+                        this.props.onSelect(this.props.item, event);
+                    }
+                }),
                 onClick: getCallback(this.select),
                 onDoubleClick: getCallback(this.dbClick),
+                onKeyDown: (event) => {
+                    if (event.key === ' ') { // display item actions when space is clicked
+                        const el = event.target?.querySelector('.more-activity-toggle-ref');
+
+                        if (typeof el?.click === 'function') {
+                            event.preventDefault();
+                            el.click();
+                        }
+                    }
+                },
                 draggable: !this.props.isNested,
+                tabIndex: 0,
+                'data-test-id': 'article-item',
             },
             (
                 <div
                     className={classNames(classes, {
-                        active: selectedInSingleSelectMode || selectedInMultiSelectMode,
+                        active: itemSelected,
                         locked: isLocked,
-                        selected: this.props.item.selected || this.props.flags.selected,
+                        selected: itemSelected,
                         archived: item.archived || item.created,
                         gone: item.gone,
                         actioning: this.state.actioning || this.props.actioning,
                     })}
-                    data-test-id="article-item"
                 >
                     {getTemplate()}
                 </div>

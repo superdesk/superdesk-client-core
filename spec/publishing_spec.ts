@@ -7,8 +7,8 @@ import {
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
-import {el, els, ECE} from 'end-to-end-testing-helpers';
-import {executeContextMenuAction} from 'end-to-end-testing-helpers/dist/articlesList';
+import {el, els, ECE} from '@superdesk/end-to-end-testing-helpers';
+import {executeContextMenuAction} from '@superdesk/end-to-end-testing-helpers/dist/articlesList';
 
 describe('publishing', () => {
     beforeEach(monitoring.openMonitoring);

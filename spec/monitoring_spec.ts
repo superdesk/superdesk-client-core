@@ -1,15 +1,13 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, browser, by, protractor} from 'protractor';
+import {element, browser, by, protractor, WebElementPromise, ElementFinder} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {dashboard} from './helpers/dashboard';
 import {desks} from './helpers/desks';
-import {el, s, els, ECE, articleList} from 'end-to-end-testing-helpers';
-import {contentProfiles} from './helpers/content_profiles';
-import {templates} from './helpers/templates';
+import {el, s, els, ECE, articleList, getFocusedElement} from '@superdesk/end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
 
 describe('monitoring', () => {
@@ -478,7 +476,7 @@ describe('monitoring', () => {
         monitoring.openMonitoring();
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5');
@@ -768,7 +766,7 @@ describe('monitoring', () => {
         browser.sleep(100); // from react to angular
         expect(monitoring.getMultiSelectCount()).toBe('1 Item selected');
 
-        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 0, 0, true);
+        monitoring.actionOnItemSubmenu('Publishing actions', 'Correct item', 0, 0);
         authoring.send_correction_button.click();
         expect(element(by.id('multi-select-count')).isPresent()).toBeFalsy();
     });
@@ -778,7 +776,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate in place', 2, 0);
         monitoring.filterAction('text');
         expect(monitoring.getGroupItems(0).count()).toBe(1);
         expect(monitoring.getTextItem(0, 0)).toBe('item5'); // duplicated item
@@ -796,7 +794,7 @@ describe('monitoring', () => {
         expect(monitoring.getGroupItems(1).count()).toBe(0);
         expect(monitoring.getGroupItems(2).count()).toBe(4);
         expect(monitoring.getTextItem(2, 0)).toBe('item5'); // original item
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
         authoring.duplicateTo('Sports Desk', 'one');
         workspace.selectDesk('Sports Desk');
         expect(monitoring.getGroupItems(2).count()).toBe(2);
@@ -805,7 +803,7 @@ describe('monitoring', () => {
         authoring.setHeaderSluglineText(' testing');
         authoring.save();
         authoring.close();
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
         authoring.duplicateTo('Politic Desk', 'two', true);
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 0)).toBe('item5');
@@ -814,16 +812,16 @@ describe('monitoring', () => {
 
     it('can remember last duplicate destination desk', () => {
         monitoring.openMonitoring();
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
         authoring.duplicateTo('Sports Desk', 'one');
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
 
         var dropdownSelected = monitoring.getSendToDropdown();
 
         browser.sleep(500);
         expect(dropdownSelected.getText()).toEqual('Sports Desk');
         authoring.duplicateTo('Politic Desk', 'two', true);
-        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0, true);
+        monitoring.actionOnItemSubmenu('Duplicate', 'Duplicate To', 2, 0);
 
         dropdownSelected = monitoring.getSendToDropdown();
         authoring.close();
@@ -903,6 +901,76 @@ describe('monitoring', () => {
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
         expect(el(['authoring', 'field-slugline']).getAttribute('value')).toBe(slugline);
         expect(el(['authoring', 'field-editors-note']).getAttribute('value')).toBe(editorsNote);
+    });
+});
+
+describe('navigation using a keyboard', () => {
+    let firstItem: ElementFinder = null;
+    let secondItem: ElementFinder = null;
+    let thirdItem: ElementFinder = null;
+
+    beforeEach(() => {
+        monitoring.openMonitoring();
+
+        browser.wait(ECE.hasElementCount(els(['item-list--loading']), 0));
+
+        firstItem = els(['article-item']).get(0);
+        secondItem = els(['article-item']).get(1);
+        thirdItem = els(['article-item']).get(2);
+
+        firstItem.click();
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), firstItem));
+    });
+
+    it('can focus the next or previous item using arrow keys', () => {
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), secondItem));
+
+        browser.actions().sendKeys(protractor.Key.DOWN).perform();
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), thirdItem));
+
+        browser.actions().sendKeys(protractor.Key.UP).perform();
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), secondItem));
+    });
+
+    it('can tab into the item and open context menu by hitting space when three dots menu is focused', () => {
+        browser.actions().sendKeys(protractor.Key.TAB).perform(); // focuses bulk action checkbox
+        browser.actions().sendKeys(protractor.Key.TAB).perform(); // focuses three dots menu
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), el(['context-menu-button'], null, firstItem)));
+
+        browser.actions().sendKeys(protractor.Key.SPACE).perform();
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), el(['context-menu'])));
+    });
+
+    it('can open context menu by pressing space when an item is focused', () => {
+        browser.actions().sendKeys(protractor.Key.SPACE).perform();
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), el(['context-menu'])));
+    });
+
+    it('can use the TAB key to go through context menu options', () => {
+        browser.actions().sendKeys(protractor.Key.SPACE).perform();
+        browser.actions().sendKeys(protractor.Key.TAB).perform();
+        browser.wait(ECE.elementsEqual(getFocusedElement(), el(['close'])));
+        browser.actions().sendKeys(protractor.Key.TAB).perform();
+        expect(getFocusedElement().getText()).toBe('Edit');
+    });
+
+    it('can close context menu using ESC key and return focus to where it was before opening the menu', () => {
+        browser.actions().sendKeys(protractor.Key.SPACE).perform();
+        browser.actions().sendKeys(protractor.Key.TAB).perform();
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), el(['context-menu'])));
+
+        browser.actions().sendKeys(protractor.Key.ESCAPE).perform();
+
+        browser.wait(ECE.elementsEqual(getFocusedElement(), firstItem));
     });
 });
 

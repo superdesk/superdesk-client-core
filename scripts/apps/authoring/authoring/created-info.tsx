@@ -19,6 +19,8 @@ export class CreatedInfo extends React.PureComponent<IProps, IState> {
         this.state = {
             user: null,
         };
+
+        this._mounted = false;
     }
     componentDidMount() {
         dataApi.findOne<IUser>('users', this.props.article.original_creator).then((user) => {
