@@ -7,20 +7,22 @@ import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 
 interface IProps {
     item: IArticle;
+    itemSelected: boolean;
     desk: IDesk;
     swimlane: any;
     getActionsMenu: () => any;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
-export class ItemPhotoGrid extends React.Component<IProps, never> {
+export class ItemPhotoGrid extends React.Component<IProps> {
     render() {
-        const {item, multiSelect} = this.props;
+        const {item, itemSelected, multiSelect} = this.props;
 
         return (
             <div className="sd-wrap-helper">
                 <PhotoDeskPreview
                     item={item}
+                    itemSelected={itemSelected}
                     multiSelect={multiSelect}
                 />
                 <PhotoDeskInfo

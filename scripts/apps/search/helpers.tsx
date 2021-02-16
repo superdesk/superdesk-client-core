@@ -204,31 +204,33 @@ export function renderArea(
  * @param {String} label - activity label
  */
 export function bindMarkItemShortcut(label) {
+    const currentActiveElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const keyboardManager = ng.get('keyboardManager');
 
     angular.element('.active .more-activity-toggle-ref').click();
 
     setTimeout(() => {
         let markDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
+        let option = markDropdown.find('[title="' + label + '"]').parent();
 
-        if (markDropdown.find('[title="' + label + '"]').length > 0) {
-            markDropdown.find('[title="' + label + '"]')[0].click();
+        if (option.length > 0) {
+            option.click();
         }
 
-        if (markDropdown.find('button').length > 0) {
-            markDropdown.find('button:not([disabled])')
-                .first()
-                .focus();
+        let moreOptions = option.find('button:not([disabled])').parents('ul').first();
+
+        if (moreOptions.find('button:not([disabled])').length > 0) {
+            moreOptions.find('button:not([disabled])').first().focus();
 
             keyboardManager.push('up', () => {
-                markDropdown.find('button:focus')
+                option.find('button:focus')
                     .parent('li')
                     .prev()
                     .children('button')
                     .focus();
             });
             keyboardManager.push('down', () => {
-                markDropdown.find('button:focus')
+                option.find('button:focus')
                     .parent('li')
                     .next()
                     .children('button')
@@ -238,6 +240,8 @@ export function bindMarkItemShortcut(label) {
                 let actionMenu = angular.element('.more-activity-menu.open');
 
                 actionMenu.find('button.dropdown__menu-close').click();
+
+                currentActiveElement?.focus(); // return focus to where it was before invoking the keybinding
             });
         }
     });

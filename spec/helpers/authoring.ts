@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {waitHidden, waitFor} from './utils';
-import {ECE, els, el} from 'end-to-end-testing-helpers';
+import {ECE, els, el} from '@superdesk/end-to-end-testing-helpers';
 
 class Authoring {
     lock: any;
@@ -958,7 +958,7 @@ class Authoring {
             relItem.element(by.className('icon-dots-vertical')).click();
             let menu = element(by.css('.dropdown__menu.open'));
 
-            menu.element(by.partialLinkText('Open')).click();
+            menu.element(by.partialButtonText('Open')).click();
         };
 
         this.actionRelatedItem = function(item, actionId) {

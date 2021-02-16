@@ -28,7 +28,7 @@ describe('package', () => {
         monitoring.actionOnItemSubmenu('Add to current', 'main', 2, 0);
         // Open menu.
         var menu = monitoring.openItemMenu(2, 0);
-        var header = menu.element(by.partialLinkText('Add to current'));
+        var header = menu.element(by.partialButtonText('Add to current'));
 
         expect(header.isPresent()).toBeFalsy();
         // Close menu.

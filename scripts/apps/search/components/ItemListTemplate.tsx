@@ -5,6 +5,7 @@ import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 import {MultiSelectCheckbox} from './MultiSelectCheckbox';
 
 interface IPropsItemsListTemplate extends IPropsItemListInfo {
+    itemSelected: boolean;
     selectingDisabled: boolean;
     getActionsMenu: () => any;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
@@ -12,13 +13,14 @@ interface IPropsItemsListTemplate extends IPropsItemListInfo {
 
 export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
     render() {
-        const {item, multiSelect} = this.props;
+        const {item, itemSelected, multiSelect} = this.props;
 
         return (
             <div>
                 <span className="state-border" />
                 <MultiSelectCheckbox
                     item={item}
+                    itemSelected={itemSelected}
                     multiSelect={multiSelect}
                 />
                 {

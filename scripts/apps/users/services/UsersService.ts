@@ -1,8 +1,12 @@
 import _ from 'lodash';
+import moment from 'moment';
 import {IUser} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 export function isUserLoggedIn(user: IUser) {
-    return user?.session_preferences != null && Object.keys(user.session_preferences).length > 0;
+    return user?.last_activity_at != null && (
+        moment().diff(user.last_activity_at, 'minute') < appConfig.userOnlineMinutes
+    );
 }
 
 /**
