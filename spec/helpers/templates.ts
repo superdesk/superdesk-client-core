@@ -2,7 +2,7 @@
 
 import {nav} from './utils';
 import {element, by, browser} from 'protractor';
-import {el} from 'end-to-end-testing-helpers';
+import {el} from '@superdesk/end-to-end-testing-helpers';
 
 class Templates {
     list: any;
