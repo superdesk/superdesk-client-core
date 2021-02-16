@@ -588,6 +588,7 @@ declare module 'superdesk-api' {
         invisible_stages: Array<any>;
         slack_username: string;
         slack_user_id: string;
+        last_activity_at?: string;
     }
 
     export interface IVocabularyTag {
@@ -1341,7 +1342,7 @@ declare module 'superdesk-api' {
                 publish?: boolean;
                 closeAndContinue?: boolean;
                 publishAndContinue?: boolean;
-            }
+            },
         };
         auth: {
             google: boolean
@@ -1474,6 +1475,8 @@ declare module 'superdesk-api' {
             name: string;
             config: any;
         }>;
+
+        userOnlineMinutes: number;
     }
 
 
