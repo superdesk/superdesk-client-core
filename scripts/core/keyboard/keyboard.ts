@@ -14,6 +14,51 @@ export const KEYS = Object.freeze({
     backspace: 8,
 });
 
+const superdeskKeyboardKeyNamesConvention = {
+    // native key name, superdesk key name
+    'Enter': 'enter',
+    'ArrowUp': 'up',
+    'ArrowRight': 'right',
+    'ArrowLeft': 'left',
+    'ArrowDown': 'down',
+    'Escape': 'escape',
+};
+
+function getKeyAccordingToSuperdeskConvention(key: string) {
+    return superdeskKeyboardKeyNamesConvention[key] ?? key.toLowerCase();
+}
+
+export function getNativeKey(superdeskKey) {
+    return Object.keys(superdeskKeyboardKeyNamesConvention)
+        .find((key) => superdeskKeyboardKeyNamesConvention[key] === superdeskKey) ?? superdeskKey;
+}
+
+function shouldInvoke(combination: string, event: KeyboardEvent) {
+    let key = null;
+    let ctrlKey = false;
+    let altKey = false;
+    let shiftKey = false;
+
+    combination.split('+').forEach((_key) => {
+        if (_key === 'ctrl') {
+            ctrlKey = true;
+        } else if (_key === 'alt') {
+            altKey = true;
+        } else if (_key === 'shift') {
+            shiftKey = true;
+        } else {
+            key = _key;
+        }
+    });
+
+    return (
+        event.ctrlKey === ctrlKey
+        && event.altKey === altKey
+        && event.shiftKey === shiftKey
+        && getKeyAccordingToSuperdeskConvention(event.key) === key
+    );
+}
+
 export default angular.module('superdesk.core.keyboard', [])
 
     .constant('Keys', KEYS)
@@ -69,7 +114,7 @@ export default angular.module('superdesk.core.keyboard', [])
                     isGlobal = ctrlKey && shiftKey;
 
                 if (isGlobal || !ignoreNodes[e.target.nodeName]) { // $document.body is empty when testing
-                    var character = String.fromCharCode(e.which).toLowerCase(),
+                    var character = e.key.toLowerCase(),
                         modifier = '';
 
                     modifier += ctrlKey ? 'ctrl:' : '';
@@ -168,7 +213,7 @@ export default angular.module('superdesk.core.keyboard', [])
 
         // Add a new keyboard combination shortcut
         this.bind = function bind(label, callback, opt) {
-            var fct, elt, code, k;
+            var fct, elt;
             // Initialize options object
             let options = angular.extend({}, defaultOpt, opt);
             let lbl = label.toLowerCase();
@@ -195,90 +240,13 @@ export default angular.module('superdesk.core.keyboard', [])
                 }
             };
 
-            const getCharacter = function(codeNumber) {
-                let character = String.fromCharCode(codeNumber).toLowerCase();
-
-                if (codeNumber === 188) {
-                    character = ',';
-                } // If the user presses , when the type is onkeydown
-                if (codeNumber === 190) {
-                    character = '.';
-                } // If the user presses , when the type is onkeydown
-
-                return character;
-            };
-
             fct = function keyboardHandler(e = $window.event) {
             // Disable event handler when focus input and textarea
                 if (inputDisabled(e)) {
                     return;
                 }
 
-                // Find out which key is pressed
-                code = e.keyCode || e.which;
-
-                let character = getCharacter(code);
-
-                var keys = lbl.split('+');
-                // Key Pressed - counts the number of valid keypresses
-                // - if it is same as the number of keys, the shortcut function is invoked
-                var kp = 0;
-                // Some modifiers key
-                var modifiers = {
-                    shift: {
-                        wanted: false,
-                        pressed: !!e.shiftKey,
-                    },
-                    ctrl: {
-                        wanted: false,
-                        pressed: !!e.ctrlKey,
-                    },
-                    alt: {
-                        wanted: false,
-                        pressed: !!e.altKey,
-                    },
-                    meta: { // Meta is Mac specific
-                        wanted: false,
-                        pressed: !!e.metaKey,
-                    },
-                };
-
-                let computeKeys = () => {
-                    let isCtrl = (key) => key === 'ctrl' || key === 'control';
-                    let isMeta = (key) => key === 'alt' || key === 'shift' || key === 'meta';
-
-                    // Foreach keys in label (split on +)
-                    for (var i = 0, l = keys.length; k = keys[i], i < l; i++) {
-                        if (isCtrl(k)) {
-                            kp++;
-                            modifiers.ctrl.wanted = true;
-                        } else if (isMeta(k)) {
-                            kp++;
-                            modifiers[k].wanted = true;
-                        }
-
-                        let shouldIncrease = k.length > 1 && specialKeys[k] === code
-                        || options.keyCode && options.keyCode === code || character === k;
-
-                        if (shouldIncrease) {
-                            kp++;
-                        } else if (shiftNums[character] && e.shiftKey) {
-                            // Stupid Shift key bug created by using lowercase
-                            character = shiftNums[character];
-                            if (character === k) {
-                                kp++;
-                            }
-                        }
-                    }
-                };
-
-                computeKeys();
-
-                if (kp === keys.length &&
-                modifiers.ctrl.pressed === modifiers.ctrl.wanted &&
-                modifiers.shift.pressed === modifiers.shift.wanted &&
-                modifiers.alt.pressed === modifiers.alt.wanted &&
-                modifiers.meta.pressed === modifiers.meta.wanted) {
+                if (shouldInvoke(label, e)) {
                     $timeout(() => {
                         callback(e);
                     }, 1);

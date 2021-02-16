@@ -5,7 +5,7 @@ import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {desks} from './helpers/desks';
 import {multiAction} from './helpers/actions';
-import {ECE, els} from 'end-to-end-testing-helpers';
+import {ECE, els} from '@superdesk/end-to-end-testing-helpers';
 
 describe('fetch', () => {
     beforeEach(() => {

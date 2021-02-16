@@ -6,6 +6,7 @@ import {MultiSelectCheckbox} from './MultiSelectCheckbox';
 
 interface IProps {
     item: IArticle;
+    itemSelected: boolean;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
@@ -29,6 +30,7 @@ export const PhotoDeskPreview: React.StatelessComponent<IProps> = (props) => {
             {preview}
             <MultiSelectCheckbox
                 item={item}
+                itemSelected={props.itemSelected}
                 multiSelect={multiSelect}
             />
         </div>

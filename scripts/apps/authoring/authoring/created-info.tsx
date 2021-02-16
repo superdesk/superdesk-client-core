@@ -21,6 +21,8 @@ export class CreatedInfo extends React.PureComponent<IProps, IState> {
         this.state = {
             user: null,
         };
+
+        this._mounted = false;
     }
     componentDidMount() {
         this._mounted = true;

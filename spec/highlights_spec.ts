@@ -7,7 +7,7 @@ import {authoring} from './helpers/authoring';
 import {highlights} from './helpers/highlights';
 import {route, ctrlShiftKey} from './helpers/utils';
 import {desks} from './helpers/desks';
-import {ECE, el, hover} from 'end-to-end-testing-helpers';
+import {ECE, el, hover} from '@superdesk/end-to-end-testing-helpers';
 
 describe('highlights', () => {
     describe('add highlights configuration:', () => {

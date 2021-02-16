@@ -2,7 +2,7 @@ import {content} from './content';
 import {monitoring} from './monitoring';
 import {nav, waitFor} from './utils';
 import {element, by, browser} from 'protractor';
-import {el, ECE} from 'end-to-end-testing-helpers';
+import {el, ECE} from '@superdesk/end-to-end-testing-helpers';
 
 class Workspace {
     sideMenu: any;
@@ -22,7 +22,7 @@ class Workspace {
     getItemText: (index: any) => any;
     openItemMenu: any;
     actionOnItem: (action: any, item: any) => void;
-    actionOnItemSubmenu: (action: any, submenu: any, item: any, linkTypeBtn?: any) => void;
+    actionOnItemSubmenu: (action: any, submenu: any, item: any) => void;
     switchToDesk: any;
     selectStage: any;
     editItem: (item: any, desk?: any) => any;
@@ -211,7 +211,7 @@ class Workspace {
         this.actionOnItem = function(action, item) {
             var menu = this.openItemMenu(item);
 
-            menu.element(by.partialLinkText(action)).click();
+            menu.element(by.partialButtonText(action)).click();
         };
 
         /**
@@ -222,13 +222,13 @@ class Workspace {
          * @param {string} submenu
          * @param {number} item
          */
-        this.actionOnItemSubmenu = function(action, submenu, item, linkTypeBtn) {
+        this.actionOnItemSubmenu = function(action, submenu, item) {
             var menu = this.openItemMenu(item);
 
             browser.actions()
-                .mouseMove(menu.element(by.partialLinkText(action)))
+                .mouseMove(menu.element(by.partialButtonText(action)))
                 .perform();
-            menu.element(linkTypeBtn ? by.partialLinkText(submenu) : by.partialButtonText(submenu)).click();
+            menu.element(by.partialButtonText(submenu)).click();
         };
 
         /**

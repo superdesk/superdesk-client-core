@@ -10,6 +10,7 @@ function hasThumbnail(item) {
 interface IProps {
     desk: any;
     item: any;
+    itemSelected: boolean;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
@@ -46,6 +47,7 @@ export const MediaPreview: React.StatelessComponent<IProps> = (props) => {
             </span>
             <MultiSelectCheckbox
                 item={item}
+                itemSelected={props.itemSelected}
                 multiSelect={multiSelect}
             />
         </div>
