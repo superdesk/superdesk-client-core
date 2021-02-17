@@ -99,6 +99,12 @@ const removeEventListener = <T extends keyof IEvents>(eventName: T, callback: (a
     }
 };
 
+export const dispatchCustomEvent = <T extends keyof IEvents>(eventName: T, payload: IEvents[T]) => {
+    window.dispatchEvent(
+        new CustomEvent(getCustomEventNamePrefixed(eventName), {detail: payload}),
+    );
+};
+
 let applicationState: Writeable<ISuperdesk['state']> = {
     articleInEditMode: undefined,
 };

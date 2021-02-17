@@ -9,10 +9,9 @@ import {getAuthoringField} from './getAuthoringField';
 import {authoringFieldHasValue} from './authoringFieldHasValue';
 import {isMediaField} from './isMediaField';
 import {gettext} from 'core/utils';
-import {formatDate} from 'core/get-superdesk-api-implementation';
+import {formatDate, dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {MediaMetadataView} from '../media/MediaMetadataView';
 import {appConfig} from 'appConfig';
-import {getCustomEventNamePrefixed} from 'core/notification/notification';
 
 interface IProps {
     item: IArticle;
@@ -39,9 +38,7 @@ export class FullPreview extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
-        window.dispatchEvent(
-            new CustomEvent(getCustomEventNamePrefixed('articlePreviewStart'), {detail: this.props.item}),
-        );
+        dispatchCustomEvent('articlePreviewStart', this.props.item);
 
         Promise.all([
             dataApi.query<IVocabulary>(
@@ -67,20 +64,13 @@ export class FullPreview extends React.Component<IProps, IState> {
     }
 
     componentWillUnmount() {
-        window.dispatchEvent(
-            new CustomEvent(getCustomEventNamePrefixed('articlePreviewEnd'), {detail: this.props.item}),
-        );
+        dispatchCustomEvent('articlePreviewEnd', this.props.item);
     }
 
     componentDidUpdate(prevProps: IProps) {
         if (prevProps.item._id !== this.props.item._id) {
-            window.dispatchEvent(
-                new CustomEvent(getCustomEventNamePrefixed('articlePreviewEnd'), {detail: prevProps.item}),
-            );
-
-            window.dispatchEvent(
-                new CustomEvent(getCustomEventNamePrefixed('articlePreviewStart'), {detail: this.props.item}),
-            );
+            dispatchCustomEvent('articlePreviewEnd', prevProps.item);
+            dispatchCustomEvent('articlePreviewStart', this.props.item);
         }
     }
 

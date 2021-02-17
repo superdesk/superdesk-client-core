@@ -1,5 +1,5 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {getCustomEventNamePrefixed} from 'core/notification/notification';
+import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {IArticle} from 'superdesk-api';
 
 let itemInEditMode: IArticle | null = null;
@@ -35,9 +35,7 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
             scope.$watch(authoringWorkspace.getState, (state) => {
                 if (state) {
                     if (itemInEditMode != null) {
-                        window.dispatchEvent(
-                            new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: itemInEditMode}),
-                        );
+                        dispatchCustomEvent('articleEditEnd', itemInEditMode);
 
                         itemInEditMode = null;
                     }
@@ -45,9 +43,7 @@ export function AuthoringContainerDirective(authoringWorkspace: AuthoringWorkspa
                     if (state.action === 'edit') {
                         itemInEditMode = state.item;
 
-                        window.dispatchEvent(
-                            new CustomEvent(getCustomEventNamePrefixed('articleEditStart'), {detail: itemInEditMode}),
-                        );
+                        dispatchCustomEvent('articleEditStart', itemInEditMode);
                     }
 
                     ctrl.edit(null, null);

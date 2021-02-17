@@ -1,6 +1,5 @@
-import {get, includes} from 'lodash';
+import {includes} from 'lodash';
 import {IArticle} from 'superdesk-api';
-import {getCustomEventNamePrefixed} from 'core/notification/notification';
 import {appConfig} from 'appConfig';
 
 export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';

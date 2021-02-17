@@ -13,7 +13,7 @@ import {gettext} from 'core/utils';
 import {IEvents, IPublicWebsocketMessages} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
-export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-websocket-event--' + name;
+export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-event--' + name;
 
 // implementing interface to be able to get keys at runtime
 const publicWebsocketMessageNames: IPublicWebsocketMessages = {

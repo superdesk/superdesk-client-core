@@ -1,5 +1,5 @@
 import {IArticle} from 'superdesk-api';
-import {getCustomEventNamePrefixed} from 'core/notification/notification';
+import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 
 let itemInPreviewMode: IArticle | null = null;
 
@@ -70,9 +70,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                 scope.links = [];
 
                 if (itemInPreviewMode != null) {
-                    window.dispatchEvent(
-                        new CustomEvent(getCustomEventNamePrefixed('articlePreviewEnd'), {detail: itemInPreviewMode}),
-                    );
+                    dispatchCustomEvent('articlePreviewEnd', itemInPreviewMode);
 
                     itemInPreviewMode = null;
                 }
@@ -80,9 +78,7 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
                 if (newItem != null) {
                     itemInPreviewMode = newItem;
 
-                    window.dispatchEvent(
-                        new CustomEvent(getCustomEventNamePrefixed('articlePreviewStart'), {detail: itemInPreviewMode}),
-                    );
+                    dispatchCustomEvent('articlePreviewStart', itemInPreviewMode);
                 }
 
                 if (newItem !== oldItem) {
