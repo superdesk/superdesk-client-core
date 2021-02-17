@@ -1,11 +1,11 @@
 import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IExtension} from 'superdesk-api';
+import {IExtension, ISuperdesk} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
 
 export function registerExtensions(
-    extensions: Array<IExtension>,
+    extensionLoaders: Array<{id: string; load(): Promise<IExtension>}>,
     superdesk,
     modal,
     privileges,
@@ -16,54 +16,65 @@ export function registerExtensions(
     metadata,
     preferencesService,
 ): Promise<void> {
-    extensions.forEach((extension) => {
-        extensionsWithActivationResult[extension.id] = {
-            extension,
-            activationResult: {},
-        };
-    });
+    window['extensionsApiInstances'] = {};
 
     return Promise.all(
-        Object.keys(extensionsWithActivationResult).map((extensionId) => {
-            const extensionObject = extensionsWithActivationResult[extensionId];
+        extensionLoaders.map(
+            ({id, load}) => {
+                const apiInstance: ISuperdesk = getSuperdeskApiImplementation(
+                    id,
+                    extensionsWithActivationResult,
+                    modal,
+                    privileges,
+                    lock,
+                    session,
+                    authoringWorkspace,
+                    config,
+                    metadata,
+                    preferencesService,
+                );
 
-            const superdeskApi = getSuperdeskApiImplementation(
-                extensionId,
-                extensionsWithActivationResult,
-                modal,
-                privileges,
-                lock,
-                session,
-                authoringWorkspace,
-                config,
-                metadata,
-                preferencesService,
+                window['extensionsApiInstances'][id] = apiInstance;
+
+                return load().then((extension) => {
+                    extensionsWithActivationResult[id] = {
+                        extension,
+                        activationResult: {},
+                    };
+                });
+            },
+        ),
+    ).then(() => {
+        return Promise.all(
+            Object.keys(extensionsWithActivationResult).map((extensionId) => {
+                const extensionObject = extensionsWithActivationResult[extensionId];
+
+                return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
+                    .then((activationResult) => {
+                        extensionObject.activationResult = activationResult;
+
+                        return activationResult;
+                    });
+            }),
+        ).then((activationResults) => {
+            const pages = flatMap(activationResults, (activationResult) =>
+                activationResult.contributions != null
+                && activationResult.contributions.pages != null
+                    ? activationResult.contributions.pages
+                    : [],
             );
 
-            return extensionObject.extension.activate(superdeskApi).then((activationResult) => {
-                extensionObject.activationResult = activationResult;
-
-                return activationResult;
+            pages.forEach((page) => {
+                superdesk
+                    .activity(page.url, {
+                        label: page.title,
+                        priority: 100,
+                        category: superdesk.MENU_MAIN,
+                        adminTools: false,
+                        controller: noop,
+                        template: '<sd-extension-page></sd-extension-page>',
+                    });
             });
-        }),
-    ).then((activationResults) => {
-        const pages = flatMap(activationResults, (activationResult) =>
-            activationResult.contributions != null
-            && activationResult.contributions.pages != null
-                ? activationResult.contributions.pages
-                : [],
-        );
-
-        pages.forEach((page) => {
-            superdesk
-                .activity(page.url, {
-                    label: page.title,
-                    priority: 100,
-                    category: superdesk.MENU_MAIN,
-                    adminTools: false,
-                    controller: noop,
-                    template: '<sd-extension-page></<sd-extension-page>',
-                });
         });
     });
 }
