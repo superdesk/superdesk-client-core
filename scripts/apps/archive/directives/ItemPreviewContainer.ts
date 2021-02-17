@@ -1,3 +1,8 @@
+import {IArticle} from 'superdesk-api';
+import {getCustomEventNamePrefixed} from 'core/notification/notification';
+
+let itemInPreviewMode: IArticle | null = null;
+
 export function ItemPreviewContainer() {
     return {
         template: '<div ng-if="item" sd-media-view data-item="item" data-close="close()"></div>',
@@ -6,6 +11,22 @@ export function ItemPreviewContainer() {
             scope.item = null;
 
             scope.$on('intent:preview:item', (event, intent) => {
+                if (itemInPreviewMode != null) {
+                    window.dispatchEvent(
+                        new CustomEvent(getCustomEventNamePrefixed('articlePreviewEnd'), {detail: itemInPreviewMode}),
+                    );
+
+                    itemInPreviewMode = null;
+                }
+
+                if (intent.data != null) {
+                    itemInPreviewMode = intent.data;
+
+                    window.dispatchEvent(
+                        new CustomEvent(getCustomEventNamePrefixed('articlePreviewStart'), {detail: itemInPreviewMode}),
+                    );
+                }
+
                 scope.item = intent.data;
             });
 
@@ -14,6 +35,14 @@ export function ItemPreviewContainer() {
              */
             scope.close = function() {
                 scope.item = null;
+
+                if (itemInPreviewMode != null) {
+                    window.dispatchEvent(
+                        new CustomEvent(getCustomEventNamePrefixed('articlePreviewEnd'), {detail: itemInPreviewMode}),
+                    );
+
+                    itemInPreviewMode = null;
+                }
             };
         },
     };

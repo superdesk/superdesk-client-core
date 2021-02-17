@@ -12,6 +12,7 @@ import {gettext} from 'core/utils';
 import {formatDate} from 'core/get-superdesk-api-implementation';
 import {MediaMetadataView} from '../media/MediaMetadataView';
 import {appConfig} from 'appConfig';
+import {getCustomEventNamePrefixed} from 'core/notification/notification';
 
 interface IProps {
     item: IArticle;
@@ -38,6 +39,10 @@ export class FullPreview extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
+        window.dispatchEvent(
+            new CustomEvent(getCustomEventNamePrefixed('articlePreviewStart'), {detail: this.props.item}),
+        );
+
         Promise.all([
             dataApi.query<IVocabulary>(
                 'vocabularies',
@@ -59,6 +64,24 @@ export class FullPreview extends React.Component<IProps, IState> {
                 loading: false,
             });
         });
+    }
+
+    componentWillUnmount() {
+        window.dispatchEvent(
+            new CustomEvent(getCustomEventNamePrefixed('articlePreviewEnd'), {detail: this.props.item}),
+        );
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (prevProps.item._id !== this.props.item._id) {
+            window.dispatchEvent(
+                new CustomEvent(getCustomEventNamePrefixed('articlePreviewEnd'), {detail: prevProps.item}),
+            );
+
+            window.dispatchEvent(
+                new CustomEvent(getCustomEventNamePrefixed('articlePreviewStart'), {detail: this.props.item}),
+            );
+        }
     }
 
     render() {
