@@ -16,6 +16,11 @@ class ProfileComponent extends React.Component<IPropsItemListInfo> {
 
     render() {
         const {relatedEntities, item} = this.props;
+
+        if (item.profile == null) {
+            return null;
+        }
+
         const contentProfile: IContentProfile = relatedEntities['content_types'].get(item.profile);
 
         return (
