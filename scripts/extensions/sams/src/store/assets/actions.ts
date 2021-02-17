@@ -129,6 +129,7 @@ export function queryAssetsFromCurrentSearch(listAction?: LIST_ACTION): IThunkAc
     return (dispatch, getState) => {
         const params = getAssetSearchParams(getState());
 
+        params.page = 1
         return dispatch(queryAssets(params, listAction));
     };
 }
