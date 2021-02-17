@@ -110,7 +110,7 @@ function isDateFormatValid() {
 }
 
 export function startApp(
-    extensions: Array<IExtension>,
+    extensions: Array<{id: string; load(): Promise<IExtension>}>,
     customUiComponents: IConfigurableUiComponents,
     customAlgorithms: IConfigurableAlgorithms = {},
 ) {

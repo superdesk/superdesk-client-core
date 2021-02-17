@@ -3,11 +3,13 @@ import {TypeIcon} from './index';
 import {CHECKBOX_PARENT_CLASS} from './constants';
 import {IArticle} from 'superdesk-api';
 import {SelectBox} from './SelectBox';
+import {gettext, translateArticleType} from 'core/utils';
 
 interface IProps {
     selectingDisabled?: boolean;
     onMultiSelect: (items: Array<IArticle>, selected: boolean) => void;
     item: IArticle;
+    itemSelected: boolean;
 }
 
 interface IState {
@@ -38,7 +40,7 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
 
     render() {
         const {selectingDisabled} = this.props;
-        const showSelect = selectingDisabled !== true && (this.state.hover || this.props.item.selected);
+        const showSelect = selectingDisabled !== true && (this.state.hover || this.props.itemSelected);
 
         return (
             <div
@@ -46,15 +48,27 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
                 onMouseEnter={selectingDisabled ? null : this.setHover}
                 onMouseLeave={selectingDisabled ? null : this.unsetHover}
                 style={{lineHeight: 0}}
-                data-test-id="multi-select-checkbox"
+                data-test-id="item-type-and-multi-select"
             >
+                {/*
+                    When an item is focused with a keyboard, SelectBox is displayed and TypeIcon hidden.
+                    A separate always-visible label is required so it's accessible by screen readers.
+                */}
+                <span className="a11y-only">
+                    {gettext('Article Type: {{type}}', {type: translateArticleType(this.props.item.type)})}
+                </span>
+
                 {
                     showSelect
                         ? (
                             <SelectBox item={this.props.item} onMultiSelect={this.props.onMultiSelect} />
                         )
                         : (
-                            <TypeIcon type={this.props.item.type} highlight={this.props.item.highlight} />
+                            <TypeIcon
+                                type={this.props.item.type}
+                                highlight={this.props.item.highlight}
+                                aria-hidden={true}
+                            />
                         )
                 }
             </div>

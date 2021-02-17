@@ -1,5 +1,5 @@
 import {browser} from 'protractor';
-import {el, els, ECE, hover} from 'end-to-end-testing-helpers';
+import {el, els, ECE, hover} from '@superdesk/end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
 
 describe('vocabularies', () => {

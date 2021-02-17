@@ -3,15 +3,15 @@ import React from 'react';
 import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
-import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {isMediaEditable} from 'core/config';
 import {gettext, IScopeApply} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {CHECKBOX_PARENT_CLASS} from './constants';
 import ng from 'core/services/ng';
 import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 import {IActivityService} from 'core/activity/activity';
+import {isButtonClicked} from './Item';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 
 interface IProps {
     itemsList: Array<string>;
@@ -139,6 +139,12 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     select(item: IArticle, event) {
+        // Don't select item / open preview when a button is clicked.
+        // The button can be three dots menu, bulk actions checkbox, a button to preview existing highlights etc.
+        if (isButtonClicked(event)) {
+            return;
+        }
+
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
@@ -158,15 +164,9 @@ export class ItemList extends React.Component<IProps, IState> {
 
         $timeout.cancel(this.updateTimeout);
 
-        const showPreview = event == null || event.target == null ||
-            (querySelectorParent(event.target, '.' + CHECKBOX_PARENT_CLASS) == null &&
-            event.target.classList.contains(CHECKBOX_PARENT_CLASS) === false);
-
         if (item && this.props.preview != null) {
             this.props.scopeApply(() => {
-                if (showPreview) {
-                    this.props.preview(item);
-                }
+                this.props.preview(item);
                 this.bindActionKeyShortcuts(item);
             });
         }
@@ -175,13 +175,13 @@ export class ItemList extends React.Component<IProps, IState> {
     /*
      * Unbind all item actions
      */
-    unbindActionKeyShortcuts() {
+    unbindActionKeyShortcuts(callback?) {
         const {keyboardManager} = this.angularservices;
 
         this.state.bindedShortcuts.forEach((shortcut) => {
             keyboardManager.unbind(shortcut);
         });
-        this.setState({bindedShortcuts: []});
+        this.setState({bindedShortcuts: []}, callback);
     }
 
     /*
@@ -199,26 +199,32 @@ export class ItemList extends React.Component<IProps, IState> {
             workflowService,
         } = this.angularservices;
 
+        const doBind = () => {
+            const intent = {action: 'list', type: archiveService.getType(selectedItem)};
+
+            superdesk.findActivities(intent, selectedItem).forEach((activity) => {
+                if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
+                    this.state.bindedShortcuts.push(activity.keyboardShortcut);
+
+                    keyboardManager.bind(activity.keyboardShortcut, () => {
+                        if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
+                            bindMarkItemShortcut(activity.label);
+                        } else {
+                            activityService.start(activity, {data: {item: selectedItem}});
+                        }
+                    });
+                }
+            });
+        };
+
         // First unbind all binded shortcuts
         if (this.state.bindedShortcuts.length) {
-            this.unbindActionKeyShortcuts();
+            this.unbindActionKeyShortcuts(() => {
+                doBind();
+            });
+        } else {
+            doBind();
         }
-
-        const intent = {action: 'list', type: archiveService.getType(selectedItem)};
-
-        superdesk.findActivities(intent, selectedItem).forEach((activity) => {
-            if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
-                this.state.bindedShortcuts.push(activity.keyboardShortcut);
-
-                keyboardManager.bind(activity.keyboardShortcut, () => {
-                    if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
-                        bindMarkItemShortcut(activity.label);
-                    } else {
-                        activityService.start(activity, {data: {item: selectedItem}});
-                    }
-                });
-            }
-        });
     }
 
     selectItem(item) {
@@ -377,6 +383,11 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     handleKey(event) {
+        if (querySelectorParent(event.target, 'button', {self: true}) != null) {
+            // don't execute key bindings when a button inside the list item is focused.
+            return;
+        }
+
         // don't do anything when modifier key is pressed
         // this allows shortcuts defined in activities to work without two actions firing for one shortcut
         if (event.ctrlKey || event.altKey || event.shiftKey) {
@@ -446,52 +457,28 @@ export class ItemList extends React.Component<IProps, IState> {
             break;
         }
 
-        const highlightSelected = (_event) => {
-            for (let i = 0; i < this.props.itemsList.length; i++) {
-                if (this.props.itemsList[i] === this.props.selected) {
-                    const next = Math.min(this.props.itemsList.length - 1, Math.max(0, i + diff));
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+            const nextEl = document.activeElement.nextElementSibling;
 
-                    this.select(this.props.itemsById[this.props.itemsList[next]], _event);
-                    return;
-                }
+            if (nextEl instanceof HTMLElement) {
+                // Don't scroll the list. The list will be scrolled automatically
+                // when an item is focued that is outside of the viewport.
+                event.preventDefault();
+
+                nextEl.focus();
             }
-        };
+        }
 
-        const checkRemaining = (_event) => {
-            event.preventDefault();
-            event.stopPropagation();
+        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+            const prevEl = document.activeElement.previousElementSibling;
 
-            if (this.props.selected) {
-                highlightSelected(_event);
-            } else {
-                this.select(this.props.itemsById[this.props.itemsList[0]], _event);
+            if (prevEl instanceof HTMLElement) {
+                // Don't scroll the list. The list will be scrolled automatically
+                // when an item is focued that is outside of the viewport.
+                event.preventDefault();
+
+                prevEl.focus();
             }
-        };
-
-        // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        const scrollSelectedItemIfRequired = (_event) => {
-            const container = this.props.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
-
-            const selectedItemElem = $(_event.currentTarget.firstChild).children('.list-item-view.active');
-
-            if (selectedItemElem.length > 0) {
-                // The following line translated to: top_Of_Selected_Item (minus) top_Of_Scrollable_Div
-
-                const distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
-                $(container[0]).offset().top - $(document).scrollTop();
-
-                // If the selected item goes beyond container view, scroll it to middle.
-                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight ||
-                    distanceOfSelItemFromVisibleTop < 0) {
-                    container.scrollTop(container.scrollTop() + distanceOfSelItemFromVisibleTop -
-                    container[0].offsetHeight * 0.5);
-                }
-            }
-        };
-
-        if (!_.isNil(diff)) {
-            checkRemaining(event);
-            scrollSelectedItemIfRequired(event);
         }
     }
 
@@ -510,7 +497,16 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     focus() {
-        this.focusableElement?.focus();
+        if (this.focusableElement == null) {
+            return;
+        }
+
+        // Focus only if a child item doesn't already have focus.
+        // Otherwise, it always re-focuses the entire list after clicking a particular item
+        // and user is unable to use keyboard shortcuts on an item that was clicked.
+        if (this.focusableElement.contains(document.activeElement) === false) {
+            this.focusableElement.focus();
+        }
     }
 
     render() {

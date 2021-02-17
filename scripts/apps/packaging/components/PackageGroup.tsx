@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {closeActionsMenu} from 'apps/search/helpers';
 
 export default class PackageGroup extends React.Component<any, any> {
     static propTypes: any;
@@ -12,6 +13,7 @@ export default class PackageGroup extends React.Component<any, any> {
 
     select() {
         this.props.packages.addPackageGroupItem(this.props.group, this.props.item);
+        closeActionsMenu(this.props.item._id);
     }
 
     render() {

@@ -1,11 +1,11 @@
 import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult} from 'superdesk-api';
+import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
 
 export function registerExtensions(
-    extensions: Array<IExtension>,
+    extensionLoaders: Array<{id: string; load(): Promise<IExtension>}>,
     superdesk,
     modal,
     privileges,
@@ -17,12 +17,7 @@ export function registerExtensions(
     workspaceMenuProvider,
     preferencesService,
 ): Promise<void> {
-    extensions.forEach((extension) => {
-        extensionsWithActivationResult[extension.id] = {
-            extension,
-            activationResult: {},
-        };
-    });
+    window['extensionsApiInstances'] = {};
 
     function registerPage(page: IPage) {
         const params: any = {
@@ -68,39 +63,55 @@ export function registerExtensions(
     }
 
     return Promise.all(
-        Object.keys(extensionsWithActivationResult).map((extensionId) => {
-            const extensionObject = extensionsWithActivationResult[extensionId];
+        extensionLoaders.map(
+            ({id, load}) => {
+                const apiInstance: ISuperdesk = getSuperdeskApiImplementation(
+                    id,
+                    extensionsWithActivationResult,
+                    modal,
+                    privileges,
+                    lock,
+                    session,
+                    authoringWorkspace,
+                    config,
+                    metadata,
+                    preferencesService,
+                );
 
-            const superdeskApi = getSuperdeskApiImplementation(
-                extensionId,
-                extensionsWithActivationResult,
-                modal,
-                privileges,
-                lock,
-                session,
-                authoringWorkspace,
-                config,
-                metadata,
-                preferencesService,
-            );
+                window['extensionsApiInstances'][id] = apiInstance;
 
-            return extensionObject.extension.activate(superdeskApi).then((activationResult) => {
-                extensionObject.activationResult = activationResult;
+                return load().then((extension) => {
+                    extensionsWithActivationResult[id] = {
+                        extension,
+                        activationResult: {},
+                    };
+                });
+            },
+        ),
+    ).then(() => {
+        return Promise.all(
+            Object.keys(extensionsWithActivationResult).map((extensionId) => {
+                const extensionObject = extensionsWithActivationResult[extensionId];
 
-                return activationResult;
-            });
-        }),
-    ).then((activationResults: Array<IExtensionActivationResult>) => {
-        flatMap(
-            activationResults,
-            (activationResult) => activationResult.contributions?.pages ?? [],
-        )
-            .forEach(registerPage);
+                return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
+                    .then((activationResult) => {
+                        extensionObject.activationResult = activationResult;
 
-        flatMap(
-            activationResults,
-            (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
-        )
-            .forEach(registerWorkspaceMenu);
+                        return activationResult;
+                    });
+            }),
+        ).then((activationResults: Array<IExtensionActivationResult>) => {
+            flatMap(
+                activationResults,
+                (activationResult) => activationResult.contributions?.pages ?? [],
+            )
+                .forEach(registerPage);
+
+            flatMap(
+                activationResults,
+                (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
+            )
+                .forEach(registerWorkspaceMenu);
+        });
     });
 }
