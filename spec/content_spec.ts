@@ -6,17 +6,10 @@ import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {multiAction} from './helpers/actions';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 
 describe('content', () => {
     var body = element(by.tagName('body'));
-
-    function selectedHeadline() {
-        var headline = element.all(by.css('.preview-headline')).first();
-
-        browser.wait(() => headline.isDisplayed(), 500); // animated sidebar
-
-        return headline.getText();
-    }
 
     beforeEach(() => {
         workspace.open();
@@ -30,7 +23,6 @@ describe('content', () => {
     // wait a bit after sending keys to body
     function pressKey(key) {
         browser.actions().sendKeys(key).perform();
-        browser.sleep(50);
     }
 
     function setEmbargo() {
@@ -47,21 +39,52 @@ describe('content', () => {
 
     it('can navigate with keyboard', () => {
         content.getItems().first().click();
+        browser.wait(
+            ECE.textToBePresentInElement(
+                el(['authoring-preview', 'field--headline']),
+                'item1',
+            ),
+        );
 
         pressKey(protractor.Key.UP);
-        expect(selectedHeadline()).toBe('item1');
+        browser.wait(
+            ECE.textToBePresentInElement(
+                el(['authoring-preview', 'field--headline']),
+                'item1',
+            ),
+        );
 
         pressKey(protractor.Key.DOWN);
-        expect(selectedHeadline()).toBe('item2');
+        browser.wait(
+            ECE.textToBePresentInElement(
+                el(['authoring-preview', 'field--headline']),
+                'item2',
+            ),
+        );
 
         pressKey(protractor.Key.LEFT);
-        expect(selectedHeadline()).toBe('item1');
+        browser.wait(
+            ECE.textToBePresentInElement(
+                el(['authoring-preview', 'field--headline']),
+                'item1',
+            ),
+        );
 
         pressKey(protractor.Key.RIGHT);
-        expect(selectedHeadline()).toBe('item2');
+        browser.wait(
+            ECE.textToBePresentInElement(
+                el(['authoring-preview', 'field--headline']),
+                'item2',
+            ),
+        );
 
         pressKey(protractor.Key.UP);
-        expect(selectedHeadline()).toBe('item1');
+        browser.wait(
+            ECE.textToBePresentInElement(
+                el(['authoring-preview', 'field--headline']),
+                'item1',
+            ),
+        );
     });
 
     it('can open search with s', () => {

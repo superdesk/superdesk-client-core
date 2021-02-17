@@ -1,3 +1,4 @@
+import {getNativeKey} from '../keyboard';
 
 describe('keyboardManager', () => {
     beforeEach(window.module('superdesk.core.keyboard'));
@@ -5,13 +6,27 @@ describe('keyboardManager', () => {
     var km, elem, $timeout,
         options = {inputDisabled: false};
 
-    function keydown(label, code) {
+    function keydown(label) {
         var e = new $.Event('keydown');
 
-        e.which = code;
+        e.ctrlKey = false;
+        e.altKey = false;
+        e.shiftKey = false;
+
+        e.key = getNativeKey(label);
         elem.trigger(e);
         km.keyboardEvent[label].callback(e);
         $timeout.flush(100);
+    }
+
+    function elemKeydown(key, ctrl?, shift?, target?) {
+        var e = new $.Event('keydown');
+
+        e.key = getNativeKey(key);
+        e.ctrlKey = ctrl;
+        e.shiftKey = shift;
+        e.altKey = false;
+        $(target || document.body).trigger(e);
     }
 
     beforeEach(inject(($injector) => {
@@ -29,7 +44,7 @@ describe('keyboardManager', () => {
 
         expect(status).toBe(false);
 
-        keydown('up', 38);
+        keydown('up');
 
         expect(status).toBe(true);
 
@@ -49,19 +64,19 @@ describe('keyboardManager', () => {
             from = '2';
         }, options);
 
-        keydown('up', 38);
+        keydown('up');
 
         expect(from).toBe('2');
 
         km.pop('up');
 
-        keydown('up', 38);
+        keydown('up');
 
         expect(from).toBe('1');
 
         km.pop('up');
 
-        keydown('up', 38);
+        keydown('up');
 
         expect(from).toBe('1'); // no change
     });
@@ -71,10 +86,7 @@ describe('keyboardManager', () => {
 
         $rootScope.$on('key:t', handler);
 
-        var e = new $.Event('keydown');
-
-        e.which = 't'.charCodeAt(0);
-        $(document.body).trigger(e);
+        elemKeydown('t');
 
         $rootScope.$digest();
         expect(handler).toHaveBeenCalled();
@@ -121,13 +133,4 @@ describe('keyboardManager', () => {
 
         expect(handle).toHaveBeenCalled();
     }));
-
-    function elemKeydown(which, ctrl, shift?, target?) {
-        var e = new $.Event('keydown');
-
-        e.which = which.charCodeAt(0);
-        e.ctrlKey = ctrl;
-        e.shiftKey = shift;
-        $(target || document.body).trigger(e);
-    }
 });

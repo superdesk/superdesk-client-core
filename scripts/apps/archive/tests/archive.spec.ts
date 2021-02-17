@@ -81,15 +81,17 @@ describe('content', () => {
                 [
                     {
                         id: 'test-extension',
-                        activate: () => {
-                            return Promise.resolve({
-                                contributions: {
-                                    entities: {
-                                        article: articleEntities,
+                        load: () => Promise.resolve({
+                            activate: () => {
+                                return Promise.resolve({
+                                    contributions: {
+                                        entities: {
+                                            article: articleEntities,
+                                        },
                                     },
-                                },
-                            });
-                        },
+                                });
+                            },
+                        }),
                     },
                 ],
                 superdesk,

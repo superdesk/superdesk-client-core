@@ -2,7 +2,7 @@ import {element, browser, protractor, by} from 'protractor';
 
 import {monitoring} from './helpers/monitoring';
 import {authoring} from './helpers/authoring';
-import {ECE, el} from 'end-to-end-testing-helpers';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 import {assertToastMsg} from './helpers/utils';
 
 class Editor3Toolbar {

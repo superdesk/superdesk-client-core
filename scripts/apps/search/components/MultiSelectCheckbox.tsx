@@ -6,17 +6,19 @@ import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 
 interface IProps {
     item: IArticle;
+    itemSelected: boolean;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
 export class MultiSelectCheckbox extends React.PureComponent<IProps> {
     render() {
-        const {multiSelect, item} = this.props;
+        const {multiSelect, item, itemSelected} = this.props;
 
         if (multiSelect.kind === 'legacy') {
             return (
                 <ListTypeIcon
                     item={item}
+                    itemSelected={itemSelected}
                     onMultiSelect={multiSelect.multiSelect}
                 />
 
