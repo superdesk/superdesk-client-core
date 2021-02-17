@@ -4,7 +4,6 @@ import {debounce, Cancelable} from 'lodash';
 let registerPreviewDebounced: ((article: IArticle) => void) & Cancelable;
 
 const extension: IExtension = {
-    id: 'usageMetrics',
     activate: (superdesk: ISuperdesk) => {
         const {httpRequestJsonLocal} = superdesk;
         const {dateToServerString} = superdesk.utilities;
