@@ -20,6 +20,7 @@ import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 import {OrderedMap} from 'immutable';
 import {openArticle} from './get-superdesk-api-implementation';
 import {getRelatedEntities, IRelatedEntities, mergeRelatedEntities} from './getRelatedEntities';
+import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 
 interface IState {
     initialized: boolean;
@@ -46,7 +47,7 @@ interface IProps {
  */
 type ITrackById = string;
 
-export class ArticlesListV2 extends React.Component<IProps, IState> {
+export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
     private monitoringState: any;
     private lazyLoaderRef: LazyLoader<IArticle>;
     private handleContentChanges: (resource: string, itemId: string, fields?: {[key: string]: 1}) => void;
@@ -109,7 +110,11 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         });
 
         return new Promise((resolve) => {
-            getRelatedEntities(articles, this.state.relatedEntities).then((relatedEntities) => {
+            getRelatedEntities(
+                articles,
+                this.state.relatedEntities,
+                this.abortController.signal,
+            ).then((relatedEntities) => {
                 this.setState({
                     relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
                 }, () => {

@@ -3,12 +3,12 @@
 import React from 'react';
 import {ArticlesListV2} from './ArticlesListV2';
 import {IRestApiResponse, IArticle} from 'superdesk-api';
-import {httpRequestJsonLocal} from './helpers/network';
 import {flatMap, once} from 'lodash';
 import ng from 'core/services/ng';
 import {ISuperdeskQuery, toElasticQuery, getQueryFieldsRecursive} from './query-formatting';
 import {Loader} from 'superdesk-ui-framework/react/components/Loader';
 import {IMultiSelectNew} from 'apps/search/components/ItemList';
+import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 
 interface IProps {
     query: ISuperdeskQuery;
@@ -28,7 +28,7 @@ interface IState {
     itemCount: number | 'loading';
 }
 
-class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, IState> {
+class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, IState> {
     markAsInitializedOnce: () => void;
 
     constructor(props: IPropsInner) {
@@ -54,7 +54,7 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
 
         const query = toElasticQuery(withPagination);
 
-        return httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+        return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
             method: 'GET',
             path: '/search',
             urlParams: {

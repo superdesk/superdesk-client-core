@@ -25,6 +25,8 @@ export function ItemList(
     monitoringState,
     $rootScope,
 ) {
+    const abortController = new AbortController();
+
     return {
         link: function(scope, elem) {
             var groupId = scope.$id;
@@ -163,7 +165,11 @@ export function ItemList(
                         }
                     });
 
-                    getRelatedEntities(items._items, listComponent.state.relatedEntities).then((relatedEntities) => {
+                    getRelatedEntities(
+                        items._items,
+                        listComponent.state.relatedEntities,
+                        abortController.signal,
+                    ).then((relatedEntities) => {
                         listComponent.setState({
                             itemsList: itemsList,
                             itemsById: itemsById,
@@ -347,6 +353,7 @@ export function ItemList(
 
                 // remove react elem on destroy
                 scope.$on('$destroy', () => {
+                    abortController.abort();
                     elem.off();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });

@@ -24,6 +24,7 @@ interface IState {
 
 export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     componentRef: ItemList;
+    private abortController: AbortController;
 
     constructor(props: IProps) {
         super(props);
@@ -47,6 +48,8 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.updateItem = this.updateItem.bind(this);
         this.updateAllItems = this.updateAllItems.bind(this);
         this.multiSelect = this.multiSelect.bind(this);
+
+        this.abortController = new AbortController();
     }
 
     focus() {
@@ -82,7 +85,11 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
 
             itemsById[itemId] = updatedItem;
 
-            getRelatedEntities([updatedItem], this.state.relatedEntities).then((relatedEntities) => {
+            getRelatedEntities(
+                [updatedItem],
+                this.state.relatedEntities,
+                this.abortController.signal,
+            ).then((relatedEntities) => {
                 this.setState({
                     itemsById,
                     relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
@@ -102,7 +109,11 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
             }
         });
 
-        getRelatedEntities(updatedItems, this.state.relatedEntities).then((relatedEntities) => {
+        getRelatedEntities(
+            updatedItems,
+            this.state.relatedEntities,
+            this.abortController.signal,
+        ).then((relatedEntities) => {
             this.setState({
                 itemsById,
                 relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
@@ -132,6 +143,10 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         });
 
         this.setState({itemsById, selected: selectedId});
+    }
+
+    componentWillUnmount() {
+        this.abortController.abort();
     }
 
     render() {

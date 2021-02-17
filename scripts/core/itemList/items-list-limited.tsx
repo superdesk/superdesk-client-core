@@ -21,6 +21,7 @@ interface IState {
 // DOES NOT SUPPORT item actions, pagination, multiselect
 class ItemsListLimitedComponent extends React.Component<IProps, IState> {
     monitoringState: any;
+    private abortController: AbortController;
 
     constructor(props: any) {
         super(props);
@@ -31,6 +32,7 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
         };
 
         this.monitoringState = ng.get('monitoringState');
+        this.abortController = new AbortController();
     }
     componentDidMount() {
         const {ids} = this.props;
@@ -38,7 +40,11 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
         this.monitoringState.init().then(() => {
             Promise.all(ids.map((id) => dataApi.findOne<IArticle>('search', id)))
                 .then((items) => {
-                    getRelatedEntities(items, this.state.relatedEntities).then((relatedEntities) => {
+                    getRelatedEntities(
+                        items,
+                        this.state.relatedEntities,
+                        this.abortController.signal,
+                    ).then((relatedEntities) => {
                         this.setState({
                             items,
                             relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
@@ -46,6 +52,9 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
                     });
                 });
         });
+    }
+    componentWillUnmount() {
+        this.abortController.abort();
     }
     render() {
         const {items} = this.state;

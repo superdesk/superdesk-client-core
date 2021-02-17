@@ -6,6 +6,7 @@ import {fields} from 'apps/search/components/fields';
 import {httpRequestJsonLocal} from './helpers/network';
 import {Set, Map} from 'immutable';
 import {notNullOrUndefined} from './helpers/typescript-helpers';
+import {ignoreAbortError} from './SuperdeskReactComponent';
 
 /**
  * Holds Maps of entities keyed by IDs.
@@ -29,6 +30,7 @@ export function mergeRelatedEntities(a: IRelatedEntities, b: IRelatedEntities): 
 export function getRelatedEntities(
     items: Array<IArticle>,
     alreadyFetched: IRelatedEntities,
+    abortSignal: AbortSignal,
 ): Promise<IRelatedEntities> {
     return new Promise((resolve) => {
         const listConfig = appConfig.list ?? DEFAULT_LIST_CONFIG;
@@ -69,10 +71,13 @@ export function getRelatedEntities(
             Object.keys(itemsToFetch).map((collection) => {
                 const ids: Array<string> = itemsToFetch[collection].toJS();
 
-                return httpRequestJsonLocal<IRestApiResponse<unknown>>({
-                    method: 'GET',
-                    path: `/${collection}?where=${JSON.stringify({_id: {$in: ids}})}`,
-                }).then((response) => {
+                return ignoreAbortError(
+                    httpRequestJsonLocal<IRestApiResponse<unknown>>({
+                        method: 'GET',
+                        path: `/${collection}?where=${JSON.stringify({_id: {$in: ids}})}`,
+                        abortSignal,
+                    }),
+                ).then((response) => {
                     result[collection] = Map<string, any>();
 
                     response._items.forEach((entity) => {
