@@ -3,22 +3,14 @@
 // Tables for, you guessed it, tabular data
 // ----------------------------------------
 
-
-// BASE TABLES
-// -----------------
-
-.table {
-  max-width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-  background-color: $tableBackground;
-}
-
 // BASELINE STYLES
 // ---------------
 
 .table  {
   width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background-color: $tableBackground;
   margin-bottom: $baseLineHeight;
   // Cells
   th,
