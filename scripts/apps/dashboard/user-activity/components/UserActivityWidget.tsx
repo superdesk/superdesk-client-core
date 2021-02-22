@@ -55,21 +55,14 @@ function getQueryLockedByUser(userId) {
     };
 }
 
-function getQueryNotLockedOrLockedByMe(userId) {
+function getQueryNotLockedByMe(userId) {
     return {
         bool: {
-            should: [
-                {
-                    bool: {
-                        must_not: {
-                            exists: {
-                                field: 'lock_user',
-                            },
-                        },
-                    },
+            must_not: {
+                term: {
+                    lock_user: userId,
                 },
-                {...getQueryLockedByUser(userId)},
-            ],
+            },
         },
     };
 }
@@ -126,7 +119,7 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
 
                 const mustQuery = [
                     {...getQueryCreatedByUser(userId)},
-                    {...getQueryNotLockedOrLockedByMe(userId)},
+                    {...getQueryNotLockedByMe(userId)},
                 ];
 
                 if (markedQuery != null) {
