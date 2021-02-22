@@ -51,7 +51,7 @@ interface IScope extends ng.IScope {
     widgets: any;
     pinnedWidget: IWidget;
     activate(widget: IWidget): void;
-    pinWidget(widget: IWidget, resize: boolean): void;
+    pinWidget(widget: IWidget): void;
     closeWidget(): void;
     isWidgetLocked(widget: IWidget): boolean;
     isAssigned(item: IArticle): boolean;
@@ -90,7 +90,7 @@ function AuthoringWidgetsProvider() {
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
-    '$injector', 'preferencesService', '$rootScope'];
+    '$injector', 'superdesk', 'preferencesService', '$rootScope'];
 function WidgetsManagerCtrl(
     $scope: IScope,
     $routeParams,
@@ -105,6 +105,7 @@ function WidgetsManagerCtrl(
     _,
     privileges,
     $injector,
+    superdesk,
     preferencesService,
     $rootScope,
 ) {
@@ -188,7 +189,9 @@ function WidgetsManagerCtrl(
                     let widgetFromPreferences = $scope.widgets.find((widget) =>
                         widget._id === this.widgetFromPreferences._id);
 
-                    $scope.pinWidget(widgetFromPreferences, false);
+                    if (widgetFromPreferences) {
+                        $scope.pinWidget(widgetFromPreferences);
+                    }
                 }
 
                 $scope.$apply(); // tell angular to re-render
@@ -249,19 +252,24 @@ function WidgetsManagerCtrl(
         }
     };
 
-    $scope.pinWidget = (widget: IWidget, resize = true) => {
+    $scope.pinWidget = (widget: IWidget) => {
         if ($scope.pinnedWidget) {
             $scope.pinnedWidget.pinned = false;
         }
 
-        if (widget && !$scope.pinnedWidget && resize) {
+        if (!superdesk.pinnedWidgetResized && widget && !$scope.pinnedWidget) {
             $rootScope.$broadcast('resize:monitoring', -330);
+
+            superdesk.pinnedWidgetResized = true;
         }
 
         if (!widget || $scope.pinnedWidget === widget) {
-            angular.element('body').removeClass('main-section--pinned-tabs');
             $rootScope.$broadcast('resize:monitoring', 330);
+
+            angular.element('body').removeClass('main-section--pinned-tabs');
+
             $scope.pinnedWidget = null;
+            superdesk.pinnedWidgetResized = false;
 
             this.widgetFromPreferences = null;
 
@@ -282,7 +290,10 @@ function WidgetsManagerCtrl(
     this.updateUserPreferences = (widget?: IWidget) => {
         let update = [];
 
-        update[USER_PREFERENCE_SETTINGS] = widget;
+        update[USER_PREFERENCE_SETTINGS] = {
+            type: 'string',
+            _id: widget ? widget._id : null,
+        };
         preferencesService.update(update);
     };
 

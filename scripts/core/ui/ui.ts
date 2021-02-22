@@ -842,11 +842,21 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
             const MONITORING_MIN_WIDTH = 400;
             const AUTHORING_MIN_WIDTH = 730;
 
-            const workspace = element,
-                authoring = element.next('#authoring-container'),
+            let workspace, authoring, container;
+
+            const initializeContainers = () => {
+                workspace = element ? element :
+                    angular.element('#workspace-container');
+
+                authoring = element.next('#authoring-container');
                 container = element.parent();
+            };
+
+            initializeContainers();
 
             const resize = () => {
+                initializeContainers();
+
                 workspace.addClass('ui-resizable-resizing');
 
                 let remainingSpace = container.width() - workspace.outerWidth() - 48,
@@ -873,6 +883,8 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
             };
 
             const afterResize = () => {
+                initializeContainers();
+
                 var stage = workspace.find('.stage.swimlane');
                 var header = stage.find('.column-header.swimlane');
 
