@@ -23,13 +23,12 @@ interface IGroup {
 
 interface IProps {
     header?: boolean;
-    user?: IUser;
+    user: IUser;
     onUserChange(user: IUser): void;
 }
 
 interface IState {
     userSearchField: string;
-    user?: IUser;
     groups: Array<IGroup> | null;
     groupsData: Array<{ id; itemIds; itemsById }> | null;
     loading: boolean;
@@ -227,28 +226,18 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
         };
 
         this.refreshItems = this.refreshItems.bind(this);
-        this.setUser = this.setUser.bind(this);
+        this.updateGroupDataOnUserChange = this.updateGroupDataOnUserChange.bind(this);
     }
 
     componentDidMount() {
         this.addListeners();
 
-        if (!this.props.user) {
-            this.setState({loading: true});
-
-            this.services.session.getIdentity().then((user) => {
-                this.setUser(user);
-            });
-        }
-
-        if (this.props.user) {
-            this.setUser(this.props.user);
-        }
+        this.updateGroupDataOnUserChange(this.props.user);
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.props.user && prevProps.user !== this.props.user) {
-            this.setUser(this.props.user);
+    componentDidUpdate(prevProps: IProps) {
+        if (this.props.user._id !== prevProps.user._id) {
+            this.updateGroupDataOnUserChange(this.props.user);
         }
     }
 
@@ -396,9 +385,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
         );
     }
 
-    setUser(user: IUser) {
-        this.props.onUserChange(user);
-
+    updateGroupDataOnUserChange(user: IUser) {
         this.setState(
             {groups: GET_GROUPS(user._id, this.services), loading: true},
             () => {
@@ -428,7 +415,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                                 selectedUserId={this.props.user?._id}
                                 autoFocus={false}
                                 onSelect={(user) => {
-                                    this.setUser(user);
+                                    this.props.onUserChange(user);
                                 }}
                                 horizontalSpacing={true}
                             />
