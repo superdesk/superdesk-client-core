@@ -41,17 +41,20 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
     componentDidUpdate(prevProps: IPropsSelectUser) {
         // state.user needs to be updated if props.selectedUserId changes
         if (this.props.selectedUserId == null && this.state.selectedUser != null) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({selectedUser: null});
         } else if (
             this.state.selectedUser === 'loading'
             || this.state.selectedUser?._id !== this.props.selectedUserId
         ) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({selectedUser: 'loading'});
 
             this.asyncHelpers.httpRequestJsonLocal<IUser>({
                 method: 'GET',
                 path: `/users/${this.props.selectedUserId}`,
             }).then((selectedUser) => {
+                // eslint-disable-next-line react/no-did-update-set-state
                 this.setState({selectedUser});
             });
         }
