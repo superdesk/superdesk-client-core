@@ -183,7 +183,6 @@ export interface IUploadAssetModalProps {
     }>;
     onAssetUploaded?(asset: IAssetItem): Promise<void>;
     onModalClosed?(assets?: Dictionary<string, IAssetItem>): void;
-    queryAssetsFromCurrentSearch(listAction?: LIST_ACTION): void;
 }
 
 export interface ISamsAPI {

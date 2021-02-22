@@ -1,47 +1,29 @@
 import {getStore} from '../store';
-import {receiveAssets} from '../store/assets/actions';
 import {
     closeAssetContentPanel,
-    queryAssetsFromCurrentSearch,
+    reloadAssetList,
     updateSelectedAssetIds,
     sessionUnlock,
     loadAssetsByIds,
 } from '../store/assets/actions';
-import {superdeskApi, samsApi} from '../../src/apis';
-import {ISAMSWebsocketEvent, LIST_ACTION, IAssetItem} from '../interfaces';
+import {superdeskApi} from '../../src/apis';
+import {ISAMSWebsocketEvent} from '../interfaces';
 import {
-    getAssetSearchParams,
-    getAssetListStyle,
     getAssetListItemIds,
     getSelectedAssetId,
     getSelectedAssetIds,
 } from '../store/assets/selectors';
 
-export function onAssetCreated(event: ISAMSWebsocketEvent) {
+export function onAssetCreated() {
     const store = getStore();
-    const item_id = event.detail.extra.item_id!;
-    const params = getAssetSearchParams(store?.getState());
-    const listStyle = getAssetListStyle(store?.getState());
 
-    return samsApi.assets.query(params, listStyle)
-        .then((response) => {
-            response._items.forEach((element: IAssetItem) => {
-                if (element._id === item_id) {
-                    store?.dispatch(
-                        receiveAssets(
-                            response,
-                            LIST_ACTION.REPLACE,
-                        ),
-                    );
-                }
-            });
-        });
+    store?.dispatch<any>(reloadAssetList());
 }
 
 export function onAssetUpdated() {
     const store = getStore();
 
-    store?.dispatch<any>(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
+    store?.dispatch<any>(reloadAssetList());
 }
 
 export function onAssetDeleted(event: ISAMSWebsocketEvent) {
@@ -50,13 +32,10 @@ export function onAssetDeleted(event: ISAMSWebsocketEvent) {
     const store = getStore();
     const user_id = superdeskApi.session.getCurrentUserId();
     const item_id = event.detail.extra.item_id!;
-    const assetItemIds = getAssetListItemIds(store?.getState());
     const selectedAssetId = getSelectedAssetId(store?.getState());
     const selectedAssetIds = getSelectedAssetIds(store?.getState());
 
-    if (assetItemIds.includes(item_id)) {
-        store?.dispatch<any>(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
-    }
+    store?.dispatch<any>(reloadAssetList());
 
     if (selectedAssetId === item_id) {
         store?.dispatch(closeAssetContentPanel());
