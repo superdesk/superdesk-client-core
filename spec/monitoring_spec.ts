@@ -228,9 +228,9 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        expect(monitoring.getTextItem(0, 0)).toBe('item5');
-        expect(monitoring.getTextItem(0, 1)).toBe('item9');
-        expect(monitoring.getTextItem(0, 3)).toBe('ingest1');
+        expect(monitoring.getTextItem(0, 0)).toBe('item1');
+        expect(monitoring.getTextItem(0, 1)).toBe('item2');
+        expect(monitoring.getTextItem(0, 5)).toBe('ingest1');
     });
 
     it('configure a saved search from other user', () => {
@@ -246,8 +246,9 @@ describe('monitoring', () => {
         monitoring.nextReorder();
         monitoring.saveSettings();
 
-        expect(monitoring.getTextItem(0, 0)).toBe('item5');
-        expect(monitoring.getTextItem(0, 1)).toBe('item9');
+        expect(monitoring.getTextItem(0, 0)).toBe('item1');
+        expect(monitoring.getTextItem(0, 1)).toBe('item2');
+
         monitoring.showMonitoringSettings();
         monitoring.nextStages();
         expect(monitoring.getGlobalSearchText(0)).toBe('global saved search ingest1 by first name last name');
@@ -599,10 +600,10 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        monitoring.openAction(0, 3); // creates new item
+        monitoring.openAction(0, 5); // creates new item
 
         expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
-        expect(monitoring.getTextItem(0, 4)).toBe('ingest1');
+        expect(monitoring.getTextItem(0, 6)).toBe('ingest1');
     });
 
     it('can fetch as item', () => {
@@ -617,7 +618,7 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        monitoring.openFetchAsOptions(0, 3);
+        monitoring.openFetchAsOptions(0, 5);
 
         expect(element(by.id('publishScheduleTimestamp')).isPresent()).toBe(false);
         expect(element(by.id('embargoScheduleTimestamp')).isPresent()).toBe(false);
@@ -651,7 +652,7 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        monitoring.fetchAndOpen(0, 3);
+        monitoring.fetchAndOpen(0, 5);
 
         expect(authoring.save_button.isDisplayed()).toBe(true);
     });
