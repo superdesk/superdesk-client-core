@@ -51,9 +51,7 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
     private monitoringState: any;
     private lazyLoaderRef: LazyLoader<IArticle>;
     private handleContentChanges: (resource: string, itemId: string, fields?: {[key: string]: 1}) => void;
-    private removeResourceCreatedListener: () => void;
-    private removeContentUpdateListener: () => void;
-    private removeResourceDeletedListener: () => void;
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private services: {search: any};
 
@@ -77,6 +75,10 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         this.getItemsByIds = this.getItemsByIds.bind(this);
 
         this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
+            if (this.lazyLoaderRef == null) {
+                return;
+            }
+
             if (ARTICLE_RELATED_RESOURCE_NAMES.includes(resource)) {
                 const reloadTheList = this.props?.shouldReloadTheList(
                     new Set(Object.keys(fields ?? {})),
@@ -100,6 +102,8 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         this.services = {
             search: ng.get('search'),
         };
+
+        this.eventListenersToRemoveBeforeUnmounting = [];
     }
 
     fetchRelatedEntities(items: OrderedMap<ITrackById, IArticle>): Promise<OrderedMap<ITrackById, IArticle>> {
@@ -173,18 +177,47 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
                 this.setState({initialized: true});
             }
         });
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:created',
+                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges(resource, _id);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:updated',
+                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                    const {resource, _id, fields} = event.extra;
+
+                    this.handleContentChanges(resource, _id, fields);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:deleted',
+                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges(resource, _id);
+                },
+            ),
+        );
     }
 
     componentWillUnmount() {
         this._mounted = false;
 
-        /**
-         * Conditional calls are used because sometimes the component is unmounted quicker
-         * than initialization is complete.
-         */
-        this.removeResourceCreatedListener?.();
-        this.removeContentUpdateListener?.();
-        this.removeResourceDeletedListener?.();
+        this.eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
+            removeListener();
+        });
     }
 
     render() {
@@ -203,38 +236,6 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
                 getItemsByIds={this.getItemsByIds}
                 ref={(component) => {
                     this.lazyLoaderRef = component;
-
-                    if (this.lazyLoaderRef != null && this.removeContentUpdateListener == null) {
-                        // wouldn't work in componentDidMount, because this.state.loading would be true
-                        // and LazyLoader wouldn't be mounted at that point yet.
-
-                        this.removeResourceCreatedListener = addWebsocketEventListener(
-                            'resource:created',
-                            (event: IWebsocketMessage<IResourceCreatedEvent>) => {
-                                const {resource, _id} = event.extra;
-
-                                this.handleContentChanges(resource, _id);
-                            },
-                        );
-
-                        this.removeContentUpdateListener = addWebsocketEventListener(
-                            'resource:updated',
-                            (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                                const {resource, _id, fields} = event.extra;
-
-                                this.handleContentChanges(resource, _id, fields);
-                            },
-                        );
-
-                        this.removeResourceDeletedListener = addWebsocketEventListener(
-                            'resource:deleted',
-                            (event: IWebsocketMessage<IResourceDeletedEvent>) => {
-                                const {resource, _id} = event.extra;
-
-                                this.handleContentChanges(resource, _id);
-                            },
-                        );
-                    }
                 }}
                 padding={this.props.padding}
                 data-test-id="articles-list"
