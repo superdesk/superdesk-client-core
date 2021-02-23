@@ -17,7 +17,7 @@ import {
     IArticleQuery,
     IArticle,
 } from 'superdesk-api';
-import {httpRequestJsonLocal, httpRequestVoidLocal} from './network';
+import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
 
 export function queryElastic(
@@ -101,8 +101,8 @@ export const dataApiByEntity = {
     },
 };
 
-export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: T): Partial<T> {
-    const patch: Partial<T> = generate(item1, item2);
+export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: Partial<T>): Partial<T> {
+    const patch = (generate(item1, item2) ?? {}) as Partial<T>;
 
     // due to the use of "projections"(partial entities) item2 is sometimes missing fields which item1 has
     // which is triggering patching algorithm to think we want to set those missing fields to null
@@ -137,10 +137,11 @@ export const dataApi: IDataApi = {
         method: 'GET',
         path: '/' + endpoint + '/' + id,
     }),
-    create: (endpoint, item) => httpRequestJsonLocal({
+    create: (endpoint, item, urlParams) => httpRequestJsonLocal({
         'method': 'POST',
         path: '/' + endpoint,
         payload: item,
+        urlParams: urlParams ?? {},
     }),
     query: (
         endpoint: string,
@@ -183,6 +184,13 @@ export const dataApi: IDataApi = {
             urlParams: params,
         });
     },
+    queryRaw: (endpoint, params?: Dictionary<string, any>) => {
+        return httpRequestRawLocal({
+            method: 'GET',
+            path: '/' + endpoint,
+            urlParams: params,
+        });
+    },
     patch: (endpoint, item1, item2) => {
         const patch = generatePatch(item1, item2);
 
@@ -212,6 +220,7 @@ export const dataApi: IDataApi = {
             'If-Match': item._etag,
         },
     }),
+    uploadFileWithProgress: uploadFileWithProgress,
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(

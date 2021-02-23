@@ -6,6 +6,7 @@ import {
     IContentProfile,
     IEvents,
     IStage,
+    IUser,
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
@@ -20,8 +21,20 @@ import {
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
+import {elasticsearchApi} from './helpers/elasticsearch';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
-import {assertNever, Writeable, notNullOrUndefined} from './helpers/typescript-helpers';
+import {
+    assertNever,
+    Writeable,
+    filterUndefined,
+    filterKeys,
+    stringToNumber,
+    numberToString,
+    notNullOrUndefined,
+} from './helpers/typescript-helpers';
+import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
+import {downloadBlob} from './helpers/utils';
+import {getLocaleForDatePicker} from './helpers/ui-framework';
 import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -56,6 +69,8 @@ import {httpRequestJsonLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
+import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
+import {notify} from './notify/notify';
 import {sdApi} from 'api';
 
 function getContentType(id): Promise<IContentProfile> {
@@ -65,14 +80,14 @@ function getContentType(id): Promise<IContentProfile> {
 export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise<void> {
     const authoringWorkspace = ng.get('authoringWorkspace');
 
-    return ng.getService('$location').then(($location) => {
-        if (document.querySelector('[sd-monitoring-view]') == null) {
-            // redirect if outside monitoring view
-            $location.url('/workspace/monitoring');
-        }
+    if (document.querySelector('[sd-monitoring-view]') == null) {
+        // redirect if outside monitoring view
+        setUrlPage('/workspace/monitoring');
+    }
 
-        authoringWorkspace.edit({_id: id}, mode);
-    });
+    authoringWorkspace.edit({_id: id}, mode);
+
+    return Promise.resolve();
 }
 
 const getContentTypeMemoized = memoize(getContentType);
@@ -82,7 +97,7 @@ let getContentTypeMemoizedLastCall: number = 0; // unix time
 // so the original event listener can be removed later
 const customEventMap = new Map();
 
-const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
+export const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
     const handlerWrapper = (customEvent: CustomEvent) => callback(customEvent.detail);
 
     customEventMap.set(callback, handlerWrapper);
@@ -90,7 +105,7 @@ const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg:
     window.addEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
 };
 
-const removeEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
+export const removeEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
     const handlerWrapper = customEventMap.get(callback);
 
     if (handlerWrapper != null) {
@@ -111,7 +126,36 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
-export const formatDate = (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat);
+export function isLockedInCurrentSession(article: IArticle): boolean {
+    return ng.get('lock').isLockedInCurrentSession(article);
+}
+
+export function isLockedInOtherSession(article: IArticle): boolean {
+    return sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
+}
+
+export const formatDate = (date: Date | string) => (
+    moment(date)
+        .tz(appConfig.defaultTimezone)
+        .format(appConfig.view.dateformat)
+);
+
+export function getRelativeOrAbsoluteDateTime(
+    datetimeString: string,
+    format: string,
+    relativeDuration: number = 1,
+    relativeUnit: string = 'days',
+): string {
+    const datetime = moment(datetimeString);
+
+    if (datetime.isSameOrAfter(moment().subtract(relativeDuration, relativeUnit))) {
+        return datetime.fromNow();
+    }
+
+    return datetime
+        .tz(appConfig.defaultTimezone)
+        .format(format);
+}
 
 // imported from planning
 export function getSuperdeskApiImplementation(
@@ -129,11 +173,16 @@ export function getSuperdeskApiImplementation(
     return {
         dataApi: dataApi,
         dataApiByEntity,
-        httpRequestJsonLocal,
+        elasticsearch: elasticsearchApi,
         helpers: {
             assertNever,
+            filterUndefined,
+            filterKeys,
+            stringToNumber,
+            numberToString,
             notNullOrUndefined,
         },
+        httpRequestJsonLocal,
         entities: {
             article: {
                 isPersonal: sdApi.article.isPersonal,
@@ -201,6 +250,19 @@ export function getSuperdeskApiImplementation(
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
                 getVocabulary: (id: string) => metadata.initialize().then(() => metadata.values[id]),
             },
+            attachment: attachmentsApi,
+            users: {
+                getUsersByIds: (ids) => (
+                    dataApi.query<IUser>(
+                        'users',
+                        1,
+                        {field: 'display_name', direction: 'ascending'},
+                        {_id: {$in: ids}},
+                        200,
+                    )
+                        .then((response) => response._items)
+                ),
+            },
         },
         state: applicationState,
         instance: {
@@ -219,12 +281,16 @@ export function getSuperdeskApiImplementation(
                 },
             },
             alert: (message: string) => modal.alert({bodyText: message}),
-            confirm: (message: string) => new Promise((resolve) => {
-                modal.confirm(message, gettext('Cancel'))
+            confirm: (message: string, title?: string) => new Promise((resolve) => {
+                modal.confirm(message, title ?? gettext('Cancel'))
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
             showModal,
+            notify: notify,
+            framework: {
+                getLocaleForDatePicker,
+            },
         },
         components: {
             UserHtmlSingleLine,
@@ -277,6 +343,12 @@ export function getSuperdeskApiImplementation(
                     .tz(appConfig.defaultTimezone)
                     .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
             },
+            longFormatDateTime: (date: Date | string) => {
+                return moment(date)
+                    .tz(appConfig.defaultTimezone)
+                    .format(appConfig.longDateFormat || 'LLL');
+            },
+            getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
@@ -305,6 +377,15 @@ export function getSuperdeskApiImplementation(
         session: {
             getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
+            getSessionId: () => session.sessionId,
+            getCurrentUserId: () => session.identity._id,
+        },
+        browser: {
+            location: {
+                getPage: getUrlPage,
+                setPage: setUrlPage,
+                urlParams: urlParams,
+            },
         },
         utilities: {
             logger,
@@ -319,6 +400,7 @@ export function getSuperdeskApiImplementation(
             generatePatch,
             stripHtmlTags,
             getLinesCount,
+            downloadBlob,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

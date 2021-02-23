@@ -14,6 +14,14 @@ import {IEvents, IPublicWebsocketMessages} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
 export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-websocket-event--' + name;
+export function dispatchCustomEvent<T extends keyof IEvents>(name: T, arg: IEvents[T]) {
+    window.dispatchEvent(
+        new CustomEvent(
+            getCustomEventNamePrefixed(name),
+            {detail: arg},
+        ),
+    );
+}
 
 // implementing interface to be able to get keys at runtime
 const publicWebsocketMessageNames: IPublicWebsocketMessages = {

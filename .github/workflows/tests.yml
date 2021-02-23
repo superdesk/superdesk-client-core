@@ -15,17 +15,19 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-    
+
     - name: Cache NPM
       uses: actions/cache@v2
       with:
         # npm cache files are stored in `~/.npm` on Linux/macOS
-        path: ~/.npm 
+        path: ~/.npm
         key: ${{ runner.OS }}-node-${{ hashFiles('package-lock.json') }}
         restore-keys: |
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
 
+    # avoid file watch limit error
+    - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
     - run: npm ci
     - run: npm run test
 
@@ -43,12 +45,12 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: '12.x'
-  
+
     - name: Cache NPM
       uses: actions/cache@v2
       with:
         # npm cache files are stored in `~/.npm` on Linux/macOS
-        path: ~/.npm 
+        path: ~/.npm
         key: ${{ runner.OS }}-node-${{ hashFiles('package-lock.json') }}
         restore-keys: |
             ${{ runner.OS }}-node-
@@ -71,7 +73,7 @@ jobs:
       env:
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp
-    
+
     - name: Upload screenshots
       if: ${{ failure() }}
       uses: actions/upload-artifact@v2

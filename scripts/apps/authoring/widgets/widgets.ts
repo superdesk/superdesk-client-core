@@ -3,7 +3,7 @@ import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/component
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
-import {IContentProfile, IArticle} from 'superdesk-api';
+import {IArticle, IContentProfile} from 'superdesk-api';
 import {appConfig, extensions} from 'appConfig';
 
 interface IWidget {
@@ -50,6 +50,8 @@ interface IScope extends ng.IScope {
     closeWidget(): void;
     isWidgetLocked(widget: IWidget): boolean;
     isAssigned(item: IArticle): boolean;
+    autosave(): void;
+    updateItem(updates: Partial<IArticle>): void;
 }
 
 function AuthoringWidgetsProvider() {
@@ -260,6 +262,13 @@ function WidgetsManagerCtrl(
             $scope.activate(widget);
         }
     });
+
+    $scope.updateItem = (updates: Partial<IArticle>) => {
+        $scope.$applyAsync(() => {
+            angular.extend($scope.item, updates);
+            $scope.autosave();
+        });
+    };
 
     $scope.$on('$destroy', () => {
         unbindAllShortcuts();

@@ -1,37 +1,30 @@
 /* eslint-disable react/no-multi-comp */
 
-import React from 'react';
-import {Provider, connect} from 'react-redux';
+import * as React from 'react';
 import {gettext} from 'core/utils';
 import {filesize, fileicon} from 'core/ui/ui';
 
-import {
-    editFile,
-    download,
-    removeFile,
-} from './actions';
-
 import {Item, Column, Row, ActionMenu} from 'core/ui/components/List';
 
-import {IAttachment} from '.';
+import {IAttachment} from 'superdesk-api';
+import {attachmentsApi} from './attachmentsService';
 
 interface IProps {
-    files: Array<IAttachment>;
+    attachments: Array<IAttachment>;
     readOnly: boolean;
 
-    editFile: (file: IAttachment) => void;
-    download: (file: IAttachment) => void;
-    removeFile: (file: IAttachment) => void;
+    editAttachment: (attachment: IAttachment) => void;
+    removeAttachment: (attachment: IAttachment) => void;
 }
 
-class AttachmentsListComponent extends React.PureComponent<IProps> {
+export class AttachmentsList extends React.PureComponent<IProps> {
     constructor(props) {
         super(props);
-        this.renderFile = this.renderFile.bind(this);
+        this.renderAttachment = this.renderAttachment.bind(this);
     }
 
-    renderFile(file: IAttachment) {
-        const {readOnly, download: _download, editFile: _editFile, removeFile: _removeFile} = this.props;
+    renderAttachment(file: IAttachment) {
+        const {readOnly, editAttachment, removeAttachment} = this.props;
 
         return (
             <Item key={file._id} shadow={1}>
@@ -59,7 +52,7 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
                 <ActionMenu row={true}>
                     <button
                         className="dropdown__toggle"
-                        onClick={() => _download(file)}
+                        onClick={() => attachmentsApi.download(file)}
                         title={gettext('Download')}
                     >
                         <i className="icon-download" />
@@ -69,7 +62,7 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
                         readOnly === true ? null : (
                             <button
                                 className="dropdown__toggle"
-                                onClick={() => _editFile(file)}
+                                onClick={() => editAttachment(file)}
                                 title={gettext('Edit')}
                             >
                                 <i className="icon-pencil" />
@@ -81,7 +74,7 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
                         readOnly === true ? null : (
                             <button
                                 className="dropdown__toggle"
-                                onClick={() => _removeFile(file)}
+                                onClick={() => removeAttachment(file)}
                                 title={gettext('Remove')}
                             >
                                 <i className="icon-trash" />
@@ -94,37 +87,16 @@ class AttachmentsListComponent extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {files} = this.props;
+        const {attachments} = this.props;
 
         return (
             <div className="attachments-list">
-                {!!files.length && (
+                {!!attachments.length && (
                     <ul>
-                        {files.map(this.renderFile)}
+                        {attachments.map(this.renderAttachment)}
                     </ul>
                 )}
             </div>
         );
     }
 }
-
-const mapStateToProps = (state, ownProps) => {
-    return {
-        files: state.attachments.files,
-        readOnly: state.editor.isLocked || ownProps.readOnly === true,
-    };
-};
-
-const mapDispatchToProps = {
-    editFile,
-    download,
-    removeFile,
-};
-
-const AttachmentsListConnected = connect(mapStateToProps, mapDispatchToProps)(AttachmentsListComponent);
-
-export const AttachmentsList = (props: {store: any, readOnly?: boolean}) => (
-    <Provider store={props.store}>
-        <AttachmentsListConnected readOnly={props.readOnly} />
-    </Provider>
-);

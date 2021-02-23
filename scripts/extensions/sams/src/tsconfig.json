@@ -1,0 +1,19 @@
+{
+  "extends": "superdesk-code-style/tsconfig-strict",
+  "compilerOptions": {
+    "outDir": "../dist/src",
+    "baseUrl": ".",
+    "sourceMap": false,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "module": "commonjs",
+    "target": "es5",
+    "skipLibCheck": true,
+    "lib": [
+      "dom",
+      "es2017",
+      "es2018.promise"
+    ],
+    "jsx": "react"
+  }
+}

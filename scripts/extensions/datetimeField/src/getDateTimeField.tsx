@@ -8,6 +8,7 @@ import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/
 
 export function getDateTimeField(superdesk: ISuperdesk) {
     const {gettext, gettextPlural} = superdesk.localization;
+    const {getLocaleForDatePicker} = superdesk.ui.framework;
     const {Spacer} = superdesk.components;
     const {dateToServerString} = superdesk.utilities;
 
@@ -42,6 +43,10 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                 const steps = this.props.config?.increment_steps ?? [];
 
+                // Get the DatePicker locale using the language of this item
+                const language = this.props.item.language ?? superdesk.instance.config.default_language;
+                const datePickerLocale = getLocaleForDatePicker(language);
+
                 return (
                     <Spacer type="horizontal" align="center" spacing="medium">
                         {checkbox}
@@ -49,6 +54,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                         <Spacer type="horizontal" align="stretch" spacing="medium">
                             <DatePickerISO
                                 dateFormat={superdesk.instance.config.view.dateformat}
+                                locale={datePickerLocale}
                                 value={day}
                                 onChange={(dateString) => {
                                     if (dateString === '') {

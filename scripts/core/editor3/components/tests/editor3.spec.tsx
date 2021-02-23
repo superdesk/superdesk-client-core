@@ -1,4 +1,6 @@
 import React from 'react';
+import {Provider} from 'react-redux';
+import {Store} from 'redux';
 import {shallow, mount} from 'enzyme';
 import {Editor3Component, getValidMediaType} from '../Editor3Component';
 import {EditorState, ContentBlock} from 'draft-js';
@@ -170,9 +172,13 @@ describe('editor3.blockRenderer', () => {
         const contentState = {getEntity: () => ({getType: () => 'EMBED', getData: () => ({data: {html: 'abc'}})})};
         const component = blockRenderer(block)
             .component({block, contentState});
-        const {options} = mockStore();
+        const store = mockStore().store as unknown as Store;
 
         expect(component).not.toBe(null);
-        expect(mount(component, options).name()).toBe('Connect(DragableEditor3BlockComponent)');
+        expect(
+            mount(<Provider store={store}>{component}</Provider>)
+                .childAt(0)
+                .name(),
+        ).toBe('Connect(DragableEditor3BlockComponent)');
     });
 });
