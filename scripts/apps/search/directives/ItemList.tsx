@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 import {closeActionsMenu} from '../helpers';
 import {ItemListAngularWrapper} from '../components/ItemListAngularWrapper';
-import {getAndMergeRelatedEntities} from 'core/getRelatedEntities';
+import {getAndMergeRelatedEntitiesForArticles} from 'core/getRelatedEntities';
 
 ItemList.$inject = [
     '$timeout',
@@ -165,7 +165,7 @@ export function ItemList(
                         }
                     });
 
-                    getAndMergeRelatedEntities(
+                    getAndMergeRelatedEntitiesForArticles(
                         items._items,
                         listComponent.state.relatedEntities,
                         abortController.signal,

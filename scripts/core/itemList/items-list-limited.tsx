@@ -6,7 +6,7 @@ import {ItemList} from 'apps/search/components/ItemList';
 import {noop} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
-import {IRelatedEntities, getAndMergeRelatedEntities} from 'core/getRelatedEntities';
+import {IRelatedEntities, getAndMergeRelatedEntitiesForArticles} from 'core/getRelatedEntities';
 
 interface IProps {
     ids: Array<IArticle['_id']>;
@@ -40,7 +40,7 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
         this.monitoringState.init().then(() => {
             Promise.all(ids.map((id) => dataApi.findOne<IArticle>('search', id)))
                 .then((items) => {
-                    getAndMergeRelatedEntities(
+                    getAndMergeRelatedEntitiesForArticles(
                         items,
                         this.state.relatedEntities,
                         this.abortController.signal,

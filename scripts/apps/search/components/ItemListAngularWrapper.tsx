@@ -3,7 +3,7 @@ import {forOwn, startsWith} from 'lodash';
 import ng from 'core/services/ng';
 import {ItemList} from 'apps/search/components';
 import {IArticle} from 'superdesk-api';
-import {IRelatedEntities, getAndMergeRelatedEntities} from 'core/getRelatedEntities';
+import {IRelatedEntities, getAndMergeRelatedEntitiesForArticles} from 'core/getRelatedEntities';
 
 interface IProps {
     scope: any;
@@ -85,7 +85,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
 
             itemsById[itemId] = updatedItem;
 
-            getAndMergeRelatedEntities(
+            getAndMergeRelatedEntitiesForArticles(
                 [updatedItem],
                 this.state.relatedEntities,
                 this.abortController.signal,
@@ -109,7 +109,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
             }
         });
 
-        getAndMergeRelatedEntities(
+        getAndMergeRelatedEntitiesForArticles(
             updatedItems,
             this.state.relatedEntities,
             this.abortController.signal,
