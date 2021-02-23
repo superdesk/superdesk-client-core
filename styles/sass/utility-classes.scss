@@ -212,3 +212,15 @@ ul.list-view.list-without-items {
         display: none!important;
     }
 }
+
+.icon-button--small {
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+
+    &:hover, &:active {
+        [class^="icon-"], [class*=" icon-"] {
+            color: $sd-blue;
+        }
+    }
+}

@@ -7,8 +7,14 @@
         width: 30px;
         padding: 8px 10px;
     }
+
+    table {
+        width: 100%;
+        border-spacing: 0;
+    }
+
     table th, table td {
-        vertical-align: middle;
+        vertical-align: top;
     }
     tbody tr {
         td:not(:first-child):last-child {
@@ -30,12 +36,10 @@
             }
         }
     }
-    tr.no-bottom-border td {
-        border-bottom: none;
-    }
 
-    tr:not(:first-child).add-border-top td {
-        border-top: 1px solid rgba(0, 0, 0, 0.15);
+    tr.add-border-top td {
+        padding: 20px;
+        border-top: 2px solid rgba(0, 0, 0, 0.15);
     }
 }
 
