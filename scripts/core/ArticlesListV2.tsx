@@ -19,7 +19,7 @@ import {IScope} from 'angular';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 import {OrderedMap} from 'immutable';
 import {openArticle} from './get-superdesk-api-implementation';
-import {getRelatedEntities, IRelatedEntities, mergeRelatedEntities} from './getRelatedEntities';
+import {getAndMergeRelatedEntities, IRelatedEntities} from './getRelatedEntities';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 
 interface IState {
@@ -110,13 +110,13 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         });
 
         return new Promise((resolve) => {
-            getRelatedEntities(
+            getAndMergeRelatedEntities(
                 articles,
                 this.state.relatedEntities,
                 this.abortController.signal,
             ).then((relatedEntities) => {
                 this.setState({
-                    relatedEntities: mergeRelatedEntities(this.state.relatedEntities, relatedEntities),
+                    relatedEntities,
                 }, () => {
                     resolve(items);
                 });

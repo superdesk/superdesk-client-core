@@ -13,7 +13,7 @@ import {ignoreAbortError} from './SuperdeskReactComponent';
  */
 export type IRelatedEntities = {[collectionName: string]: Map<string, any>};
 
-export function mergeRelatedEntities(a: IRelatedEntities, b: IRelatedEntities): IRelatedEntities {
+function mergeRelatedEntities(a: IRelatedEntities, b: IRelatedEntities): IRelatedEntities {
     const next: IRelatedEntities = {...a};
 
     Object.keys(b).forEach((entityName) => {
@@ -27,7 +27,7 @@ export function mergeRelatedEntities(a: IRelatedEntities, b: IRelatedEntities): 
     return next;
 }
 
-export function getRelatedEntities(
+export function getAndMergeRelatedEntities(
     items: Array<IArticle>,
     alreadyFetched: IRelatedEntities,
     abortSignal: AbortSignal,
@@ -86,7 +86,7 @@ export function getRelatedEntities(
                 });
             }),
         ).then(() => {
-            resolve(result);
+            resolve(mergeRelatedEntities(alreadyFetched, result));
         });
     });
 }

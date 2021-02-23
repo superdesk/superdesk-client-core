@@ -6,7 +6,7 @@ import _ from 'lodash';
 
 import {closeActionsMenu} from '../helpers';
 import {ItemListAngularWrapper} from '../components/ItemListAngularWrapper';
-import {getRelatedEntities, mergeRelatedEntities} from 'core/getRelatedEntities';
+import {getAndMergeRelatedEntities} from 'core/getRelatedEntities';
 
 ItemList.$inject = [
     '$timeout',
@@ -165,7 +165,7 @@ export function ItemList(
                         }
                     });
 
-                    getRelatedEntities(
+                    getAndMergeRelatedEntities(
                         items._items,
                         listComponent.state.relatedEntities,
                         abortController.signal,
@@ -173,7 +173,7 @@ export function ItemList(
                         listComponent.setState({
                             itemsList: itemsList,
                             itemsById: itemsById,
-                            relatedEntities: mergeRelatedEntities(listComponent.state.relatedEntities, relatedEntities),
+                            relatedEntities,
                             view: scope.view,
                             loading: false,
                         }, () => {
