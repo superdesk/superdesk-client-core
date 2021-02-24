@@ -321,6 +321,12 @@ export function loadAssetsByIds(ids: Array<string>): IThunkAction<void> {
     };
 }
 
+export function reloadAssetList(): IThunkAction<void> {
+    return (dispatch) => (
+        dispatch(updateAssetSearchParamsAndListItems({}, LIST_ACTION.REPLACE))
+    );
+}
+
 function openDeleteConfirmationModal(assetName?: string, asset_length?: number): Promise<boolean> {
     const {gettext} = superdeskApi.localization;
     const {confirm} = superdeskApi.ui;
