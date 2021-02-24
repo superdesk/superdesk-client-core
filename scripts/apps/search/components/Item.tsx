@@ -64,7 +64,7 @@ interface IProps {
     view: any;
     onDbClick: any;
     onEdit: any;
-    onSelect: any;
+    onSelect(item: IArticle, event): void;
     narrow: any;
     hideActions: boolean;
     multiSelectDisabled: boolean;

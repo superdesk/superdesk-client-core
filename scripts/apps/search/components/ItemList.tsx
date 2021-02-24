@@ -328,12 +328,12 @@ export class ItemList extends React.Component<IProps, IState> {
         }
     }
 
-    edit(item: IArticle) {
+    edit(item: IArticle, event) {
         const {authoringWorkspace} = this.angularservices;
         const {$timeout} = this.angularservices;
 
         if (this.props.selected !== item._id) {
-            this.select(item, null);
+            this.select(item, event);
         }
 
         $timeout.cancel(this.updateTimeout);
@@ -415,9 +415,9 @@ export class ItemList extends React.Component<IProps, IState> {
             });
         };
 
-        const openItem = () => {
+        const openItem = (_event) => {
             if (this.props.selected) {
-                this.edit(this.getSelectedItem());
+                this.edit(this.getSelectedItem(), _event);
             }
 
             event.stopPropagation();
@@ -443,7 +443,7 @@ export class ItemList extends React.Component<IProps, IState> {
             break;
 
         case Keys.enter:
-            openItem();
+            openItem(event);
             closeActionsMenu();
             break;
 

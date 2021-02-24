@@ -1,16 +1,14 @@
 // External modules
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {Dispatch} from 'redux';
 
 // Types
-import {ASSET_STATE, IAssetItem, IUploadAssetModalProps, LIST_ACTION} from '../../interfaces';
+import {ASSET_STATE, IAssetItem, IUploadAssetModalProps} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {samsApi, superdeskApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {getActiveSets} from '../../store/sets/selectors';
-import {queryAssetsFromCurrentSearch} from '../../store/assets/actions';
 
 // UI
 import {
@@ -28,10 +26,6 @@ interface IState {
 
 const mapStateToProps = (state: IApplicationState) => ({
     sets: getActiveSets(state),
-});
-
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-    queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => dispatch<any>(queryAssetsFromCurrentSearch(listAction)),
 });
 
 export class UploadAssetModalComponent extends React.Component<IUploadAssetModalProps, IState> {
@@ -78,8 +72,6 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
     }
 
     closeModal() {
-        this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
-
         if (this.props.onModalClosed != null) {
             this.props.onModalClosed();
         }
@@ -211,4 +203,4 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
     }
 }
 
-export const UploadAssetModal = connect(mapStateToProps, mapDispatchToProps)(UploadAssetModalComponent);
+export const UploadAssetModal = connect(mapStateToProps)(UploadAssetModalComponent);
