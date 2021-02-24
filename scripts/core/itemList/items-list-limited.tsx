@@ -49,6 +49,8 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
         this.monitoringState = ng.get('monitoringState');
         this.abortController = new AbortController();
 
+        this.eventListenersToRemoveBeforeUnmounting = [];
+
         this.handleContentChanges = throttleAndCombineArray(
             (changes) => {
                 getAndMergeRelatedEntitiesUpdated(
