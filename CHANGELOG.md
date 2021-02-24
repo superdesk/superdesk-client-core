@@ -1,5 +1,17 @@
 # Superdesk Client Changelog
 
+## [1.33.6] 2021-02-24
+
+### Fixed
+
+- Improve performance of authors widget in authoring.
+
+## [1.33.5] 2020-09-30
+
+### Fixed
+
+- Update UI framework version to 2.1.19.
+
 ## [1.33.4] 2020-09-29
 
 ### Fixed
