@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [2.1.2] 2021-02-24
+
+### Fixed
+
+- Fix user activity widget.
+
 ## [2.1.1] 2021-02-15
 
 ### Fixed
