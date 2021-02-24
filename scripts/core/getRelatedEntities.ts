@@ -69,6 +69,41 @@ export function getAndMergeRelatedEntitiesForArticles(
         .then((result) => mergeRelatedEntities(alreadyFetched, result));
 }
 
+export interface IResourceChange {
+    changeType: 'created' | 'updated' | 'deleted';
+    resource: string;
+    itemId: string;
+    fields?: {[key: string]: 1};
+}
+
+export function getAndMergeRelatedEntitiesUpdated(
+    currentEntities: IRelatedEntities,
+    changes: Array<IResourceChange>,
+    abortSignal: AbortSignal,
+): Promise<IRelatedEntities> {
+    const changesToRelatedEntities = changes.filter(
+        ({changeType, resource, itemId}) =>
+            changeType !== 'deleted' && this.state.relatedEntities[resource]?.get(itemId) != null,
+    );
+
+    const entitiesToFetch = changesToRelatedEntities.reduce<IEntitiesToFetch>((acc, change) => {
+        if (acc[change.resource] == null) {
+            acc[change.resource] = Set<string>();
+        }
+
+        acc[change.resource] = acc[change.resource].add(change.itemId);
+
+        return acc;
+    }, {});
+
+    if (Object.keys(entitiesToFetch).length > 0) {
+        return fetchRelatedEntities(entitiesToFetch, abortSignal)
+            .then((result) => mergeRelatedEntities(currentEntities, result));
+    } else {
+        return Promise.resolve({});
+    }
+}
+
 export function fetchRelatedEntities(
     entitiesToFetch: IEntitiesToFetch,
     abortSignal: AbortSignal,

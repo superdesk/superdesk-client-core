@@ -4,9 +4,22 @@ import React from 'react';
 import ng from 'core/services/ng';
 import {ItemList} from 'apps/search/components/ItemList';
 import {noop} from 'lodash';
-import {IArticle} from 'superdesk-api';
+import {
+    IArticle,
+    IWebsocketMessage,
+    IResourceCreatedEvent,
+    IResourceUpdateEvent,
+    IResourceDeletedEvent,
+} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
-import {IRelatedEntities, getAndMergeRelatedEntitiesForArticles} from 'core/getRelatedEntities';
+import {
+    IRelatedEntities,
+    getAndMergeRelatedEntitiesForArticles,
+    IResourceChange,
+    getAndMergeRelatedEntitiesUpdated,
+} from 'core/getRelatedEntities';
+import {throttleAndCombineArray} from './throttleAndCombine';
+import {addWebsocketEventListener} from 'core/notification/notification';
 
 interface IProps {
     ids: Array<IArticle['_id']>;
@@ -22,6 +35,8 @@ interface IState {
 class ItemsListLimitedComponent extends React.Component<IProps, IState> {
     monitoringState: any;
     private abortController: AbortController;
+    private handleContentChanges: (changes: Array<IResourceChange>) => void;
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
     constructor(props: any) {
         super(props);
@@ -33,6 +48,19 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
 
         this.monitoringState = ng.get('monitoringState');
         this.abortController = new AbortController();
+
+        this.handleContentChanges = throttleAndCombineArray(
+            (changes) => {
+                getAndMergeRelatedEntitiesUpdated(
+                    this.state.relatedEntities,
+                    changes,
+                    this.abortController.signal,
+                ).then((relatedEntities) => {
+                    this.setState({relatedEntities});
+                });
+            },
+            300,
+        );
     }
     componentDidMount() {
         const {ids} = this.props;
@@ -52,9 +80,46 @@ class ItemsListLimitedComponent extends React.Component<IProps, IState> {
                     });
                 });
         });
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:created',
+                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:updated',
+                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                    const {resource, _id, fields} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:deleted',
+                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
     }
     componentWillUnmount() {
         this.abortController.abort();
+
+        this.eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
+            removeListener();
+        });
     }
     render() {
         const {items} = this.state;
