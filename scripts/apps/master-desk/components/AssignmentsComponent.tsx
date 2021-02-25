@@ -24,6 +24,7 @@ interface IAssignmentStage {
     name: string;
     color: string;
     code: string;
+    states: Array<string>;
 }
 export class AssignmentsComponent extends React.Component<IProps, IState> {
     private assignmentStages: Array<IAssignmentStage> = [
@@ -31,16 +32,19 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
             name: gettext('To Do'),
             color: '#c4170b',
             code: 'assigned',
+            states: ['assigned', 'submitted'],
         },
         {
             name: gettext('In Progress'),
             color: '#d17d00',
             code: 'in_progress',
+            states: ['in_progress'],
         },
         {
             name: gettext('Completed'),
             color: '#74a838',
             code: 'completed',
+            states: ['completed', 'cancelled'],
         },
     ];
 
@@ -71,7 +75,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
         if (this.state.deskData && this.state.deskData[desk._id]) {
             this.state.deskData[desk._id].forEach((item) => {
                 let assignment = this.assignmentStages.find((stage) =>
-                    stage.code === item.state);
+                    stage.states.includes(item.state));
 
                 if (assignment) {
                     total += item ? item.count : 0;
@@ -82,13 +86,14 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
         return total;
     }
 
-    getStageTotal(desk: IDeskExtra, state: string) {
+    getStageTotal(desk: IDeskExtra, state: Array<string>) {
         let total = 0;
 
         if (this.state.deskData && this.state.deskData[desk._id]) {
-            let data = this.state.deskData[desk._id].find((item) => item.state === state);
+            let data = this.state.deskData[desk._id].filter((item) =>
+                state.includes(item.state));
 
-            total = data ? data.count : 0;
+            data.forEach((item) => total += item.count);
         }
 
         return total;
@@ -103,7 +108,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
 
         this.assignmentStages.map((item: IAssignmentStage) => {
             labels.push(item.name);
-            dataSet.data.push(this.getStageTotal(desk, item.code));
+            dataSet.data.push(this.getStageTotal(desk, item.states));
             dataSet.backgroundColor.push(item.color);
 
             return dataSet;
@@ -131,7 +136,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
                                 key={item.code}
                                 name={item.name}
                                 color={item.color}
-                                total={this.getStageTotal(desk, item.code)}
+                                total={this.getStageTotal(desk, item.states)}
                             />
                         ),
                         )}
