@@ -87,8 +87,6 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
     }
 
     getStageTotal(desk: IDeskExtra, state: Array<string>) {
-        let total = 0;
-
         if (this.state.deskData && this.state.deskData[desk._id]) {
             let data = this.state.deskData[desk._id].filter((item) =>
                 state.includes(item.state));
@@ -96,7 +94,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
             return data.reduce((total, item) => total + item.count, 0);
         }
 
-        return total;
+        return 0;
     }
 
     getDonutData(desk: IDesk) {
