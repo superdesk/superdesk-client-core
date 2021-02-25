@@ -93,7 +93,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
             let data = this.state.deskData[desk._id].filter((item) =>
                 state.includes(item.state));
 
-            data.forEach((item) => total += item.count);
+            return data.reduce((total, item) => total + item.count, 0);
         }
 
         return total;
