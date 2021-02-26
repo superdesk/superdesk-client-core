@@ -101,6 +101,7 @@ var extension: IExtension = {
                         title: gettext('Annotations Library'),
                         url: '/annotations-library',
                         component: getAnnotationsLibraryPage(superdesk),
+                        privileges: ['concept_items'],
                     },
                 ],
             },
