@@ -6,7 +6,6 @@ import {SelectBox} from './SelectBox';
 import {gettext, translateArticleType} from 'core/utils';
 
 interface IProps {
-    selectingDisabled?: boolean;
     onMultiSelect: (items: Array<IArticle>, selected: boolean) => void;
     item: IArticle;
     itemSelected: boolean;
@@ -39,14 +38,13 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {selectingDisabled} = this.props;
-        const showSelect = selectingDisabled !== true && (this.state.hover || this.props.itemSelected);
+        const showSelect = this.state.hover || this.props.itemSelected;
 
         return (
             <div
                 className={'list-field type-icon ' + CHECKBOX_PARENT_CLASS}
-                onMouseEnter={selectingDisabled ? null : this.setHover}
-                onMouseLeave={selectingDisabled ? null : this.unsetHover}
+                onMouseEnter={this.setHover}
+                onMouseLeave={this.unsetHover}
                 style={{lineHeight: 0}}
                 data-test-id="item-type-and-multi-select"
             >
