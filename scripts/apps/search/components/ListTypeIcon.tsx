@@ -6,7 +6,7 @@ import {SelectBox} from './SelectBox';
 import {gettext, translateArticleType} from 'core/utils';
 
 interface IProps {
-    onMultiSelect: (items: Array<IArticle>, selected: boolean) => void;
+    onMultiSelect: (item: IArticle, value: boolean, multiSelectMode: boolean) => void;
     item: IArticle;
     itemSelected: boolean;
 }
