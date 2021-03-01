@@ -1,4 +1,4 @@
-import {fill, flatMap, noop, zipObject} from 'lodash';
+import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
@@ -26,7 +26,6 @@ export function registerExtensions(
             adminTools: false,
             controller: noop,
             template: '<sd-extension-page></sd-extension-page>',
-            privileges: page.privileges ? zipObject(page.privileges, fill(Array(page.privileges.length), 1)) : null,
         };
 
         if (page.addToMainMenu ?? true) {

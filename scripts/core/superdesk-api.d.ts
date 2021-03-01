@@ -702,7 +702,6 @@ declare module 'superdesk-api' {
         showSideMenu?: boolean;
 
         addToMainMenu?: boolean; // defaults to true
-        privileges?: Array<string>;
     }>;
 
     export type IWorkspaceMenuItem = DeepReadonly<{
