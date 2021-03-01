@@ -60,7 +60,6 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
                 },
             }).then((res) => {
                 return new Promise((resolve) => {
-
                     const firstLoad = this.state.itemCount === 'loading';
 
                     // update item count
@@ -162,6 +161,7 @@ export class ArticlesListByQuery extends React.PureComponent<IProps, {loading: b
         // re-mount the component when the query changes
         const key = JSON.stringify(this.props.query);
         const keyHasChanged = this.prevKey !== key;
+
         this.prevKey = key;
 
         return (
