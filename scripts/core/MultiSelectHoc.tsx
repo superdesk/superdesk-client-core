@@ -12,7 +12,7 @@ import {throttleAndCombineSet} from './itemList/throttleAndCombine';
 
 export interface IMultiSelectOptions {
     selected: Map<string, IArticle>;
-    select(item: IArticle): void;
+    select(item: IArticle, multiSelectMode: boolean): void;
     unselect(id: string): void;
     unselectAll(): void;
     toggle(item: IArticle): void;
@@ -52,7 +52,9 @@ export class MultiSelectHoc extends React.PureComponent<IProps, IState> {
         this.handleContentChanges = this.handleContentChanges.bind(this);
         this.maybeUnselectItems = throttleAndCombineSet(this._maybeUnselectItems.bind(this), 500);
     }
-    select(item: IArticle) {
+    select(item: IArticle, multiSelectMode?: boolean) {
+        // TODO: impplement multi-select mode
+
         this.setState({selected: this.state.selected.set(item._id, item)});
     }
     unselect(id: string) {
