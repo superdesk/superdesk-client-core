@@ -9,7 +9,7 @@ import {generateTrackByIdentifier} from 'apps/search/services/SearchService';
 interface IProps {
     item: IArticle;
     allItems: OrderedMap<string, IArticle>;
-    options: IMultiSelectOptions;
+    options: IMultiSelectOptions<IArticle>;
 }
 
 /**

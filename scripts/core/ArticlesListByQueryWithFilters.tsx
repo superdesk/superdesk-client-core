@@ -7,7 +7,7 @@ import {ArticlesListByQuery} from './ArticlesListByQuery';
 import {Set, Map} from 'immutable';
 import classNames from 'classnames';
 import {gettext, gettextPlural} from './utils';
-import {getArticleSortOptions} from 'apps/search/services/SearchService';
+import {getArticleSortOptions, generateTrackByIdentifier} from 'apps/search/services/SearchService';
 import {SearchBar} from './ui/components';
 import {SortBar} from './ui/components/SortBar';
 import {Badge} from './ui/components/Badge';
@@ -20,6 +20,7 @@ import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
 import {ResizeObserverComponent} from './components/resize-observer-component';
 import {httpRequestJsonLocal} from './helpers/network';
 import {MultiSelect} from './ArticlesListV2MultiSelect';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 
 const COMPACT_WIDTH = 700;
 
@@ -267,6 +268,8 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
         return (
             <MultiSelectHoc
+                resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
+                getId={(item: IArticle) => generateTrackByIdentifier(item)}
                 shouldUnselect={(ids) => {
                     // Use the same query except only for selected items.
                     const queryForSpecificItems: ISuperdeskQuery = {
@@ -283,17 +286,19 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
                     const elasticQuery = toElasticQuery(queryForSpecificItems);
 
-                    return httpRequestJsonLocal<IRestApiResponse<{_id: string}>>({ // projections only return _id
-                        method: 'GET',
-                        path: '/search',
-                        urlParams: {
-                            aggregations: 0,
-                            es_highlight: 1,
-                            projections: JSON.stringify(['_id']),
-                            source: JSON.stringify(elasticQuery),
+                    return httpRequestJsonLocal<IRestApiResponse<Pick<IArticle, '_id' | 'state' | '_current_version'>>>(
+                        {
+                            method: 'GET',
+                            path: '/search',
+                            urlParams: {
+                                aggregations: 0,
+                                es_highlight: 1,
+                                projections: JSON.stringify(['_id', 'state', '_current_version']),
+                                source: JSON.stringify(elasticQuery),
+                            },
                         },
-                    }).then((res) => {
-                        var stillMatchQuery = Set(res._items.map(({_id}) => _id));
+                    ).then((res) => {
+                        var stillMatchQuery = Set(res._items.map((item) => generateTrackByIdentifier(item)));
 
                         return ids.filter((id) => stillMatchQuery.has(id) !== true).toSet();
                     });

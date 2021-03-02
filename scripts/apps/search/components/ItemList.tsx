@@ -54,7 +54,7 @@ export interface ILegacyMultiSelect {
 
 export interface IMultiSelectNew {
     kind: 'new';
-    options: IMultiSelectOptions;
+    options: IMultiSelectOptions<IArticle>;
     items: OrderedMap<string, IArticle>;
     MultiSelectComponent: typeof MultiSelect;
 }

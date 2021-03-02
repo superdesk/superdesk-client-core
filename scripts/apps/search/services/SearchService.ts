@@ -79,7 +79,9 @@ export function getTrackByIdentifier(id: string, version: string | number): stri
     return version ? id + ':' + version : id;
 }
 
-export function generateTrackByIdentifier(item: IArticle): string {
+export function generateTrackByIdentifier(
+    item: IArticle | Pick<IArticle, '_id' | 'state' | '_current_version'>,
+): string {
     return getTrackByIdentifier(item._id, item.state !== ITEM_STATE.INGESTED ? item._current_version : null);
 }
 
