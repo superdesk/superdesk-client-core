@@ -433,11 +433,12 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                             onItemDoubleClick={this.props.onItemDoubleClick}
                             header={header}
                             padding={`${3 / 4 * padding}px ${padding}px`}
-                            multiSelect={{
+                            getMultiSelect={(items) => ({
                                 kind: 'new',
                                 options: multiSelectOptions,
+                                items,
                                 MultiSelectComponent: MultiSelect,
-                            }}
+                            })}
                         />
                     );
                 }}

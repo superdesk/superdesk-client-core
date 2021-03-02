@@ -8,10 +8,10 @@ import {
 import _ from 'lodash';
 import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
-import {KILLED_STATES} from 'apps/archive/constants';
+import {KILLED_STATES, ITEM_STATE} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
 import {ISortFields} from 'core/ui/components/SortBar';
-import {IListViewFieldWithOptions} from 'superdesk-api';
+import {IListViewFieldWithOptions, IArticle} from 'superdesk-api';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -73,6 +73,14 @@ export function getArticleSortOptions(): Array<ISortFields> {
         {field: 'priority', label: gettext('Priority')},
         {field: 'genre.name', label: gettext('Genre')},
     ];
+}
+
+export function getTrackByIdentifier(id: string, version: string | number): string {
+    return version ? id + ':' + version : id;
+}
+
+export function generateTrackByIdentifier(item: IArticle): string {
+    return getTrackByIdentifier(item._id, item.state !== ITEM_STATE.INGESTED ? item._current_version : null);
 }
 
 /**
@@ -635,26 +643,9 @@ export function SearchService($location, session, multi,
         return new Query(params, this.cvs, options);
     };
 
-    /**
-     * Generate Track By Identifier for search results.
-     *
-     * @param {Object} item
-     * @return {String}
-     */
-    this.generateTrackByIdentifier = function(item) {
-        return this.getTrackByIdentifier(item._id, item.state !== 'ingested' ? item._current_version : null);
-    };
+    this.generateTrackByIdentifier = generateTrackByIdentifier;
 
-    /**
-     * Get unique id for an item
-     *
-     * @param {String} id
-     * @param {String} version
-     * @return {String}
-     */
-    this.getTrackByIdentifier = function(id, version) {
-        return version ? id + ':' + version : id;
-    };
+    this.getTrackByIdentifier = getTrackByIdentifier;
 
     this.extractIdFromTrackByIndentifier = function(identifier: string) {
         return identifier.slice(0, identifier.lastIndexOf(':'));
