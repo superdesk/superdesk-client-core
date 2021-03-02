@@ -24,7 +24,7 @@ export function ItemSearchbar($location, $document, asset) {
 
             scope.search = function() {
                 if (scope.query) {
-                    let newQuery = _.uniq(scope.query.split(/[\s,]+/));
+                    let newQuery = _.uniq(scope.query.split(/[\s]+/));
 
                     scope.query = newQuery.join(' ');
                 }
