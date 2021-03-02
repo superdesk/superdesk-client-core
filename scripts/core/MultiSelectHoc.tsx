@@ -4,7 +4,7 @@ import {IArticle} from 'superdesk-api';
 
 export interface IMultiSelectOptions {
     selected: Map<string, IArticle>;
-    select(item: IArticle): void;
+    select(item: IArticle, multiSelectMode: boolean): void;
     unselect(id: string): void;
     unselectAll(): void;
     toggle(item: IArticle): void;
@@ -31,7 +31,9 @@ export class MultiSelectHoc extends React.PureComponent<IProps, Istate> {
         this.toggle = this.toggle.bind(this);
         this.unselectAll = this.unselectAll.bind(this);
     }
-    select(item: IArticle) {
+    select(item: IArticle, multiSelectMode?: boolean) {
+        // TODO: impplement multi-select mode
+
         this.setState({selected: this.state.selected.set(item._id, item)});
     }
     unselect(id: string) {

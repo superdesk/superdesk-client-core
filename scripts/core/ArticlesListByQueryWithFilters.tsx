@@ -11,54 +11,12 @@ import {getArticleSortOptions} from 'apps/search/services/SearchService';
 import {SearchBar} from './ui/components';
 import {SortBar} from './ui/components/SortBar';
 import {Badge} from './ui/components/Badge';
-import {IMultiSelectOptions, MultiSelectHoc} from './MultiSelectHoc';
-import {SelectBoxWithoutMutation} from 'apps/search/components/SelectBox';
-import {TypeIcon} from 'apps/search/components';
+import {MultiSelectHoc} from './MultiSelectHoc';
 import {IArticleActionBulkExtended, MultiActionBarReact} from 'apps/monitoring/MultiActionBarReact';
 import {getMultiActions} from 'apps/search/controllers/get-multi-actions';
 import {Button} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
-
-class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelectOptions}> {
-    render() {
-        const {item, options} = this.props;
-
-        const checkbox = (
-            <SelectBoxWithoutMutation
-                item={item}
-                onSelect={(id) => {
-                    options.toggle(item);
-                }}
-                selected={options.selected.has(item._id)}
-                className="hover-AB--B"
-                data-test-id="multi-select-checkbox"
-            />
-        );
-
-        return (
-            <div
-                className="list-field type-icon"
-                data-test-id="item-type-and-multi-select"
-            >
-                {
-                    options.selected.has(item._id)
-                        ? checkbox
-                        : (
-                            <div className="hover-AB">
-                                <div className="hover-AB--A" style={{display: 'flex'}}>
-                                    <TypeIcon
-                                        type={item.type}
-                                        highlight={item.highlight}
-                                    />
-                                </div>
-                                {checkbox}
-                            </div>
-                        )
-                }
-            </div>
-        );
-    }
-}
+import {MultiSelect} from './ArticlesListV2MultiSelect';
 
 type IFilterValue = string | number;
 

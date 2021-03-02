@@ -410,6 +410,7 @@ declare module 'superdesk-api' {
         order?: number;
         _status: any;
         _fetchable?: boolean;
+        last_published_version?: any;
 
         /**
          * Wrapper for different renditions of non-textual content of the news object
