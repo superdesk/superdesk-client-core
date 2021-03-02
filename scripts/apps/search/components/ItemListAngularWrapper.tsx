@@ -1,5 +1,5 @@
 import React from 'react';
-import {forOwn, startsWith} from 'lodash';
+import {forOwn, startsWith, indexOf} from 'lodash';
 import ng from 'core/services/ng';
 import {ItemList} from 'apps/search/components';
 import {
@@ -17,6 +17,8 @@ import {
 } from 'core/getRelatedEntities';
 import {addWebsocketEventListener} from 'core/notification/notification';
 import {throttleAndCombineArray} from 'core/itemList/throttleAndCombine';
+import {isCheckAllowed} from '../helpers';
+import {SmoothLoader} from './SmoothLoader';
 
 interface IProps {
     scope: any;
@@ -63,6 +65,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.updateItem = this.updateItem.bind(this);
         this.updateAllItems = this.updateAllItems.bind(this);
         this.multiSelect = this.multiSelect.bind(this);
+        this.selectMultipleItems = this.selectMultipleItems.bind(this);
 
         this.abortController = new AbortController();
         this.eventListenersToRemoveBeforeUnmounting = [];
@@ -150,6 +153,33 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         });
     }
 
+    selectMultipleItems(lastItem: IArticle) {
+        const {itemsList, itemsById, selected} = this.state;
+
+        const search = ng.get('search');
+        const itemId = search.generateTrackByIdentifier(lastItem);
+        let positionStart = 0;
+        const positionEnd = indexOf(itemsList, itemId);
+        const selectedItems = [];
+
+        if (selected) {
+            positionStart = indexOf(itemsList, selected);
+        }
+
+        const start = Math.min(positionStart, positionEnd);
+        const end = Math.max(positionStart, positionEnd);
+
+        for (let i = start; i <= end; i++) {
+            const item = itemsById[itemsList[i]];
+
+            if (isCheckAllowed(item)) {
+                selectedItems.push(item);
+            }
+        }
+
+        this.multiSelect(selectedItems, true);
+    }
+
     multiSelect(items: Array<IArticle>, selected: boolean) {
         const search = ng.get('search');
         const multi = ng.get('multi');
@@ -221,48 +251,58 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         const {scope, monitoringState} = this.props;
 
         return (
-            <ItemList
-                itemsList={this.state.itemsList}
-                itemsById={this.state.itemsById}
-                relatedEntities={this.state.relatedEntities}
-                profilesById={monitoringState.state.profilesById}
-                highlightsById={monitoringState.state.highlightsById}
-                markedDesksById={monitoringState.state.markedDesksById}
-                desksById={monitoringState.state.desksById}
-                ingestProvidersById={monitoringState.state.ingestProvidersById}
-                usersById={monitoringState.state.usersById}
-                onMonitoringItemSelect={scope.onMonitoringItemSelect}
-                onMonitoringItemDoubleClick={scope.onMonitoringItemDoubleClick}
-                hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
-                singleLine={scope.singleLine}
-                customRender={scope.customRender}
-                flags={scope.flags}
-                loading={this.state.loading}
-                viewColumn={scope.viewColumn}
-                groupId={scope.$id}
-                edit={scope.edit}
-                preview={scope.preview}
-                multiSelect={scope.disableMonitoringMultiSelect ? undefined : {
-                    kind: 'legacy',
-                    multiSelect: this.multiSelect,
-                    setSelectedItem: (itemId) => {
-                        this.setState({selected: itemId});
-                    },
-                }}
-                narrow={this.state.narrow}
-                view={this.state.view}
-                selected={this.state.selected}
-                swimlane={this.state.swimlane}
-                scopeApply={(callback) => {
-                    scope.$apply(callback);
-                }}
-                scopeApplyAsync={(callback) => {
-                    scope.$applyAsync(callback);
-                }}
-                ref={(component) => {
-                    this.componentRef = component;
-                }}
-            />
+            <SmoothLoader loading={this.state.loading}>
+                <div style={scope.style ?? {}}>
+                    <ItemList
+                        itemsList={this.state.itemsList}
+                        itemsById={this.state.itemsById}
+                        relatedEntities={this.state.relatedEntities}
+                        profilesById={monitoringState.state.profilesById}
+                        highlightsById={monitoringState.state.highlightsById}
+                        markedDesksById={monitoringState.state.markedDesksById}
+                        desksById={monitoringState.state.desksById}
+                        ingestProvidersById={monitoringState.state.ingestProvidersById}
+                        usersById={monitoringState.state.usersById}
+                        onMonitoringItemSelect={scope.onMonitoringItemSelect}
+                        onMonitoringItemDoubleClick={scope.onMonitoringItemDoubleClick}
+                        hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
+                        singleLine={scope.singleLine}
+                        customRender={scope.customRender}
+                        flags={scope.flags}
+                        loading={this.state.loading}
+                        viewColumn={scope.viewColumn}
+                        groupId={scope.$id}
+                        edit={scope.edit}
+                        preview={scope.preview}
+                        multiSelect={scope.disableMonitoringMultiSelect ? undefined : {
+                            kind: 'legacy',
+                            multiSelect: (item: IArticle, selected: boolean, multiSelectMode: boolean) => {
+                                if (multiSelectMode) {
+                                    this.selectMultipleItems(item);
+                                } else {
+                                    this.multiSelect([item], selected);
+                                }
+                            },
+                            setSelectedItem: (itemId) => {
+                                this.setState({selected: itemId});
+                            },
+                        }}
+                        narrow={this.state.narrow}
+                        view={this.state.view}
+                        selected={this.state.selected}
+                        swimlane={this.state.swimlane}
+                        scopeApply={(callback) => {
+                            scope.$apply(callback);
+                        }}
+                        scopeApplyAsync={(callback) => {
+                            scope.$applyAsync(callback);
+                        }}
+                        ref={(component) => {
+                            this.componentRef = component;
+                        }}
+                    />
+                </div>
+            </SmoothLoader>
         );
     }
 }

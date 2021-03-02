@@ -48,7 +48,7 @@ interface IProps {
 
 export interface ILegacyMultiSelect {
     kind: 'legacy';
-    multiSelect(items: Array<IArticle>, selected: boolean): void;
+    multiSelect(item: IArticle, selected: boolean, multiSelectMode: boolean): void;
     setSelectedItem(itemId: string): void;
 }
 
@@ -97,7 +97,6 @@ export class ItemList extends React.Component<IProps, IState> {
 
         this.select = this.select.bind(this);
         this.selectItem = this.selectItem.bind(this);
-        this.selectMultipleItems = this.selectMultipleItems.bind(this);
         this.dbClick = this.dbClick.bind(this);
         this.edit = this.edit.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
@@ -136,7 +135,7 @@ export class ItemList extends React.Component<IProps, IState> {
         const selectedItem = this.getSelectedItem();
 
         if (selectedItem) {
-            this.props.multiSelect.multiSelect([selectedItem], !selectedItem.selected);
+            this.props.multiSelect.multiSelect(selectedItem, !selectedItem.selected, false);
         }
     }
 
@@ -153,10 +152,6 @@ export class ItemList extends React.Component<IProps, IState> {
         }
 
         const {$timeout} = this.angularservices;
-
-        if (event && event.shiftKey) {
-            return this.selectMultipleItems(item);
-        }
 
         this.setSelectedItem(item);
 
@@ -237,37 +232,8 @@ export class ItemList extends React.Component<IProps, IState> {
         if (isCheckAllowed(item)) {
             const selected = !item.selected;
 
-            this.props.multiSelect.multiSelect([item], selected);
+            this.props.multiSelect.multiSelect(item, selected, false);
         }
-    }
-
-    selectMultipleItems(lastItem) {
-        if (this.props.multiSelect.kind !== 'legacy') {
-            throw new Error('Legacy multiselect API expected.');
-        }
-
-        const {search} = this.angularservices;
-        const itemId = search.generateTrackByIdentifier(lastItem);
-        let positionStart = 0;
-        const positionEnd = _.indexOf(this.props.itemsList, itemId);
-        const selectedItems = [];
-
-        if (this.props.selected) {
-            positionStart = _.indexOf(this.props.itemsList, this.props.selected);
-        }
-
-        const start = Math.min(positionStart, positionEnd);
-        const end = Math.max(positionStart, positionEnd);
-
-        for (let i = start; i <= end; i++) {
-            const item = this.props.itemsById[this.props.itemsList[i]];
-
-            if (isCheckAllowed(item)) {
-                selectedItems.push(item);
-            }
-        }
-
-        this.props.multiSelect.multiSelect(selectedItems, true);
     }
 
     setActioning(item: IArticle, isActioning: boolean) {
