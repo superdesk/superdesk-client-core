@@ -19,8 +19,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.groups = [];
     this.spikeGroups = [];
     this.personalGroups = {
-        'personal': {type: 'personal', header: gettext('Personal')},
-        'sent': {type: 'sent', header: gettext('Sent')},
+        'personal': {type: 'personal', header: gettext('Personal Items')},
+        'sent': {type: 'sent', header: gettext('Sent Items')},
         'markedForMe': {type: 'markedForMe', header: gettext('Marked for me')},
     };
     this.defaultPersonalGroup = {};
