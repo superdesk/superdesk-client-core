@@ -18,7 +18,12 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.selected = null;
     this.groups = [];
     this.spikeGroups = [];
-    this.personalGroup = {};
+    this.personalGroups = {
+        'personal': {type: 'personal', header: gettext('Personal')},
+        'sent': {type: 'sent', header: gettext('Sent')},
+        'markedForMe': {type: 'markedForMe', header: gettext('Marked for me')},
+    };
+    this.defaultPersonalGroup = {};
     this.modalActive = false;
     this.displayOnlyCurrentStep = false;
     this.columnsLimit = null;
@@ -49,12 +54,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.activeFilterTags = {};
 
     function initPersonalGroup() {
-        self.personalGroup = {type: 'personal', header: gettext('Personal')};
+        self.defaultPersonalGroup = self.personalGroups['personal'];
     }
-
-    this.togglePersonalShowSent = () => {
-        self.personalGroup.sent = !self.personalGroup.sent;
-    };
 
     desks.initialize()
         .then(angular.bind(this, function() {
@@ -382,7 +383,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                 item[filterType] = value;
             });
 
-            self.personalGroup[filterType] = value;
+            self.defaultPersonalGroup[filterType] = value;
         });
     }
 
@@ -577,7 +578,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         _.each(this.spikeGroups, (item) => {
             item.query = query;
         });
-        self.personalGroup.query = query;
+        self.defaultPersonalGroup.query = query;
     };
 
     this.state = storage.getItem('agg:state') || {};

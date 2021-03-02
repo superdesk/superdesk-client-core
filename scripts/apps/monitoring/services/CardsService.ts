@@ -40,6 +40,7 @@ export interface ICard {
     singleViewType?: 'desk' | 'stage' | any;
     query: any;
     sent?: boolean;
+    markedForMe?: boolean;
 }
 
 CardsService.$inject = ['search', 'session', 'desks', '$location'];
@@ -83,26 +84,32 @@ export function CardsService(search, session, desks, $location) {
 
         case 'spike-personal':
         case 'personal':
-            if (card.sent) {
-                query.filter({bool: {
-                    must: [
-                        {term: {original_creator: session.identity._id}},
-                        {exists: {field: 'task.desk'}},
-                    ],
-                }});
-            } else {
-                query.filter({bool: {
-                    must_not: {exists: {field: 'task.desk'}},
-                    should: [
-                        {term: {'task.user': session.identity._id}}, // sent to personal
-                        {bool: { // just created in personal
-                            must: {term: {original_creator: session.identity._id}},
-                            must_not: {exists: {field: 'task.user'}},
-                        }},
-                    ],
-                    minimum_should_match: 1,
-                }});
-            }
+            query.filter({bool: {
+                must_not: {exists: {field: 'task.desk'}},
+                should: [
+                    {term: {'task.user': session.identity._id}}, // sent to personal
+                    {bool: { // just created in personal
+                        must: {term: {original_creator: session.identity._id}},
+                        must_not: {exists: {field: 'task.user'}},
+                    }},
+                ],
+                minimum_should_match: 1,
+            }});
+            break;
+
+        case 'sent':
+            query.filter({bool: {
+                must: [
+                    {term: {original_creator: session.identity._id}},
+                    {exists: {field: 'task.desk'}},
+                ],
+            }});
+            break;
+
+        case 'markedForMe':
+            query.filter({and: [
+                {term: {marked_for_user: session.identity._id}},
+            ]});
             break;
 
         case 'spike':

@@ -46,16 +46,18 @@
                         </div>
 
                         <h2 class="subnav__page-title sd-flex-no-grow sd-empty" ng-hide="monitoring.singleGroup.singleViewType !== 'desk' && type === 'monitoring'">
-                            <span ng-if="type === 'personal'">
-                                <button class="sd-checkbox sd-checkbox--button-style"
-                                    ng-class="{checked: !aggregate.personalGroup.sent}"
-                                    ng-click="aggregate.togglePersonalShowSent()"
-                                    translate>Personal Items</button>
-                                <button class="sd-checkbox sd-checkbox--button-style"
-                                    ng-class="{checked: aggregate.personalGroup.sent}"
-                                    ng-click="aggregate.togglePersonalShowSent()"
-                                    translate>Sent Items</button>
-                            </span>
+                            <div>
+                                <sd-check
+                                    ng-repeat="(id, group) in aggregate.personalGroups"
+                                    type="radio"
+                                    label-position="inside"
+                                    ng-model="aggregate.defaultPersonalGroup.type"
+                                    ng-click="aggregate.defaultPersonalGroup.type = id"
+                                    ng-value="{{id}}"
+                                >
+                                {{group.header}}
+                            </sd-check>
+                            </div>
 
                             <span ng-if="monitoring.singleGroup.subheader && monitoring.singleGroup.singleViewType == null">
                                 {{ monitoring.singleGroup.header}} / {{ monitoring.singleGroup.subheader}} {{ monitoring.singleGroup.type}}
@@ -291,7 +293,7 @@
                                 <div
                                     sd-monitoring-group
                                     data-view="view"
-                                    data-group="aggregate.personalGroup"
+                                    data-group="aggregate.defaultPersonalGroup"
                                     view-type="'personal'"
                                 ></div>
                             </div>
