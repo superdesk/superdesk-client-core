@@ -1,8 +1,9 @@
 import React from 'react';
-import {forOwn, startsWith} from 'lodash';
+import {forOwn, startsWith, indexOf} from 'lodash';
 import ng from 'core/services/ng';
 import {ItemList} from 'apps/search/components';
 import {IArticle} from 'superdesk-api';
+import {isCheckAllowed} from '../helpers';
 import {SmoothLoader} from './SmoothLoader';
 
 interface IProps {
@@ -45,6 +46,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.updateItem = this.updateItem.bind(this);
         this.updateAllItems = this.updateAllItems.bind(this);
         this.multiSelect = this.multiSelect.bind(this);
+        this.selectMultipleItems = this.selectMultipleItems.bind(this);
     }
 
     focus() {
@@ -92,6 +94,33 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         });
 
         this.setState({itemsById: itemsById});
+    }
+
+    selectMultipleItems(lastItem: IArticle) {
+        const {itemsList, itemsById, selected} = this.state;
+
+        const search = ng.get('search');
+        const itemId = search.generateTrackByIdentifier(lastItem);
+        let positionStart = 0;
+        const positionEnd = indexOf(itemsList, itemId);
+        const selectedItems = [];
+
+        if (selected) {
+            positionStart = indexOf(itemsList, selected);
+        }
+
+        const start = Math.min(positionStart, positionEnd);
+        const end = Math.max(positionStart, positionEnd);
+
+        for (let i = start; i <= end; i++) {
+            const item = itemsById[itemsList[i]];
+
+            if (isCheckAllowed(item)) {
+                selectedItems.push(item);
+            }
+        }
+
+        this.multiSelect(selectedItems, true);
     }
 
     multiSelect(items: Array<IArticle>, selected: boolean) {
@@ -146,7 +175,13 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                         preview={scope.preview}
                         multiSelect={scope.disableMonitoringMultiSelect ? undefined : {
                             kind: 'legacy',
-                            multiSelect: this.multiSelect,
+                            multiSelect: (item: IArticle, selected: boolean, multiSelectMode: boolean) => {
+                                if (multiSelectMode) {
+                                    this.selectMultipleItems(item);
+                                } else {
+                                    this.multiSelect([item], selected);
+                                }
+                            },
                             setSelectedItem: (itemId) => {
                                 this.setState({selected: itemId});
                             },
