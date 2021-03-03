@@ -52,7 +52,7 @@
                                     type="radio"
                                     label-position="inside"
                                     ng-model="aggregate.defaultPersonalGroup.type"
-                                    ng-click="aggregate.defaultPersonalGroup.type = id"
+                                    ng-click="aggregate.togglePersonalGroup(id, group)"
                                     ng-value="{{id}}"
                                 >
                                 {{group.header}}

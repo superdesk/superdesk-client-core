@@ -1,4 +1,11 @@
-import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle, IMonitoringFilter} from 'superdesk-api';
+import {
+    ISuperdesk,
+    IExtension,
+    IExtensionActivationResult,
+    IArticle,
+    IMonitoringFilter,
+    IPersonalSpaceSection,
+} from 'superdesk-api';
 import {getDisplayMarkedUserComponent} from './show-marked-user';
 import {getActionsInitialize} from './get-article-actions';
 import {getActionsBulkInitialize} from './get-article-actions-bulk';
@@ -23,6 +30,23 @@ const extension: IExtension = {
                 globalMenuHorizontal: [getMarkedForMeComponent(superdesk)],
                 articleListItemWidgets: [getDisplayMarkedUserComponent(superdesk)],
                 authoringTopbarWidgets: [getDisplayMarkedUserComponent(superdesk)],
+                personalSpace: {
+                    getSections: () => superdesk.session.getCurrentUser().then((user) => {
+                        const items: Array<IPersonalSpaceSection> = [
+                            {
+                                type: 'markedForMe',
+                                label: gettext('Marked for me'),
+                                query: {
+                                    term: {
+                                        marked_for_user: user._id,
+                                    },
+                                },
+                            },
+                        ];
+
+                        return items;
+                    }),
+                },
                 notifications: {
                     'item:marked': (notification: IMarkForUserNotification) => {
                         return {

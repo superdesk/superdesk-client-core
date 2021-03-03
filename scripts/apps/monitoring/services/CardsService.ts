@@ -41,6 +41,7 @@ export interface ICard {
     query: any;
     sent?: boolean;
     markedForMe?: boolean;
+    queryParams?: any;
 }
 
 CardsService.$inject = ['search', 'session', 'desks', '$location'];
@@ -107,9 +108,7 @@ export function CardsService(search, session, desks, $location) {
             break;
 
         case 'markedForMe':
-            query.filter({and: [
-                {term: {marked_for_user: session.identity._id}},
-            ]});
+            query.filter(card.queryParams);
             break;
 
         case 'spike':

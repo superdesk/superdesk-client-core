@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter} from 'superdesk-api';
 import {getLabelForStage} from 'apps/workspace/content/constants';
 
@@ -21,7 +21,6 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.personalGroups = {
         'personal': {type: 'personal', header: gettext('Personal Items')},
         'sent': {type: 'sent', header: gettext('Sent Items')},
-        'markedForMe': {type: 'markedForMe', header: gettext('Marked for me')},
     };
     this.defaultPersonalGroup = {};
     this.modalActive = false;
@@ -53,9 +52,30 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     };
     this.activeFilterTags = {};
 
+    Promise.all(
+        Object.values(extensions)
+            .map(
+                (extension) =>
+                    extension.activationResult?.contributions?.personalSpace?.getSections?.(),
+            ),
+    ).then((res) => {
+        const response = _.flattenDeep(res);
+
+        response.forEach((resp) => {
+            if (resp?.type === 'markedForMe') {
+                self.personalGroups[resp.type] = {type: resp.type, header: resp.label, query: resp.query};
+            }
+        });
+    });
+
     function initPersonalGroup() {
         self.defaultPersonalGroup = self.personalGroups['personal'];
     }
+
+    this.togglePersonalGroup = (id, group) => {
+        self.defaultPersonalGroup.type = id;
+        self.defaultPersonalGroup.queryParams = group.query;
+    };
 
     desks.initialize()
         .then(angular.bind(this, function() {
