@@ -1,4 +1,4 @@
-import {IArticle} from 'superdesk-api';
+import {IArticle, ISuperdeskGlobalConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 /**
@@ -45,7 +45,7 @@ export function getExcludeFacets() {
 /**
  * Default list of fields
  */
-export const DEFAULT_LIST_CONFIG = {
+export const DEFAULT_LIST_CONFIG: ISuperdeskGlobalConfig['list'] = {
     priority: [
         'priority',
         'urgency',
@@ -182,26 +182,4 @@ export const CORE_PROJECTED_FIELDS = {
         'translated_from',
         'translations',
     ],
-};
-
-/**
- * Mappings of UI fields to schema fields for projection
- */
-export const UI_PROJECTED_FIELD_MAPPINGS = {
-    priority: 'priority',
-    urgency: 'urgency',
-    wordcount: 'word_count',
-    slugline: 'slugline',
-    headline: 'headline',
-    profile: 'profile',
-    signal: 'signal',
-    takekey: 'anpa_take_key',
-    update: 'correction_sequence',
-    provider: 'ingest_provider',
-    category: 'anpa_category',
-    versioncreator: 'version_creator',
-    versioncreated: 'versioncreated',
-    markedDesks: 'marked_desks',
-    queueError: 'error_message',
-    used: ['used', 'used_updated', 'used_count'],
 };

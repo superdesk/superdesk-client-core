@@ -1,41 +1,7 @@
-<div class="attachments-pane" ng-controller="AttachmentsCtrl as ctrl"
-    ngf-drop="ctrl.selectFiles($files)"
-    ngf-stop-propagation="true"
-    ngf-multiple="true">
-    <sd-attachments-list store="store" read-only="readOnly"></sd-attachments-list>
-
-    <div class="attach-indicator"
-        ng-if="widget"
-        ng-show="ctrl.files.length < ctrl.maxFiles && ctrl.isLockedByMe"
-        ng-class="{empty: ctrl.files.length === 0}"
-        >
-
-        <div class="round-box">
-            <i class="big-icon--upload-alt icon"></i>
-        </div>
-
-        <div class="subtext" translate>Drag one or more files here to upload them, or just click the button below.</div>
-
-        <a class="btn btn--hollow"
-            ng-disabled="readOnly || !ctrl.editable"
-            ngf-select="ctrl.selectFiles($files)"
-            ngf-multiple="true">
-            {{ :: 'Attach files' | translate }}
-        </a>
-    </div>
-
-    <button ng-if="!widget" class="item-association"
-        ng-disabled="readOnly || !ctrl.editable"
-        ngf-select="ctrl.selectFiles($files)"
-        ngf-multiple="true">
-        <div class="subtext">
-            <i class="icon-attachment-large"></i>
-            <span translate>Drag one or more files here to upload them, or just click here.</span>
-        </div>
-    </button>
-
-    <div sd-modal data-model="ctrl.edit" data-close="ctrl.closeEdit()">
-        <sd-attachments-editor-modal store="store"></sd-attachments-editor-modal>
-    </div>
-
-</div>
+<sd-attachments-widget
+    class="sd-wrap-helper"
+    read-only="readOnly"
+    is-widget="widget != null"
+    item="item"
+    update-item="updateItem"
+></sd-attachments-widget>

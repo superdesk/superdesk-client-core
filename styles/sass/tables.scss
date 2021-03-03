@@ -3,22 +3,14 @@
 // Tables for, you guessed it, tabular data
 // ----------------------------------------
 
-
-// BASE TABLES
-// -----------------
-
-table {
-  max-width: 100%;
-  border-collapse: collapse;
-  border-spacing: 0;
-  background-color: $tableBackground;
-}
-
 // BASELINE STYLES
 // ---------------
 
-.table {
+.table  {
   width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background-color: $tableBackground;
   margin-bottom: $baseLineHeight;
   // Cells
   th,
@@ -152,19 +144,17 @@ table {
 
 // FIXED HEADER STYLE
 // ---------------
-.table {
-    &--fixed-header {
-        thead th {
-          position: sticky;
-          top: 0;
-        }
-        tbody {
-            max-height: calc(100vh - 250px);
-            overflow: auto;
-            overflow-x: hidden;
-        }
-        th, td {
-            min-width: 80px;
-        }
-    }
+.table--fixed-header {
+  thead th {
+    position: sticky;
+    top: 0;
+  }
+  tbody {
+      max-height: calc(100vh - 250px);
+      overflow: auto;
+      overflow-x: hidden;
+  }
+  th, td {
+      min-width: 80px;
+  }
 }

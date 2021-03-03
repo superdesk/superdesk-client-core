@@ -102,6 +102,7 @@ describe('content', () => {
                 authoringWorkspace,
                 config,
                 metadata,
+                {item: () => false},
                 preferencesService,
             ).then(() => {
                 activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});

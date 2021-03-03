@@ -81,6 +81,7 @@ declare module 'superdesk-api' {
             authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
+            workspaceMenuItems?: Array<IWorkspaceMenuItem>;
             customFieldTypes?: Array<ICustomFieldType>;
             notifications?: {
                 [id: string]: (notification) => {
@@ -147,7 +148,7 @@ declare module 'superdesk-api' {
     // ENTITIES
 
     export interface IAuthor {
-        _id: string;
+        _id: Array<string, string>; // user id, role
         name: string;
         scheme: any | null;
         user: IUser;
@@ -409,6 +410,7 @@ declare module 'superdesk-api' {
         order?: number;
         _status: any;
         _fetchable?: boolean;
+        last_published_version?: any;
 
         /**
          * Wrapper for different renditions of non-textual content of the news object
@@ -475,6 +477,10 @@ declare module 'superdesk-api' {
         };
         _autosave?: any;
         _locked?: boolean;
+
+        attachments?: Array<{
+            attachment: string;
+        }>;
     }
 
     export interface IDangerousArticlePatchingOptions {
@@ -665,6 +671,23 @@ declare module 'superdesk-api' {
         updated_by: string;
     }
 
+    export interface IMedia {
+        _id: string;
+        md5: string;
+        name: string;
+        filename: string;
+        content_type: string;
+        length: number;
+    }
+
+    export interface IAttachment extends IBaseRestApiResponse{
+        title: string;
+        mimetype: string;
+        filename: string;
+        description: string;
+        media: string | IMedia;
+        internal: boolean;
+    }
 
 
 
@@ -673,7 +696,22 @@ declare module 'superdesk-api' {
     export type IPage = DeepReadonly<{
         title: string;
         url: string;
-        component: React.ComponentClass;
+        component: React.ComponentType;
+        priority?: number;
+
+        showTopMenu?: boolean;
+        showSideMenu?: boolean;
+
+        addToMainMenu?: boolean; // defaults to true
+    }>;
+
+    export type IWorkspaceMenuItem = DeepReadonly<{
+        href: string;
+        icon: string;
+        label: string;
+        order?: number;
+        shortcut?: string;
+        privileges?: Array<string>;
     }>;
 
 
@@ -872,6 +910,7 @@ declare module 'superdesk-api' {
 
     export interface IConfigurableUiComponents {
         UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
+        AuthoringAttachmentsWidget?: React.ComponentType<IAttachmentsWidgetProps>;
     }
 
     export interface IConfigurableAlgorithms {
@@ -915,7 +954,7 @@ declare module 'superdesk-api' {
     }
 
     export interface IDropZoneComponentProps {
-        label: string;
+        label?: string;
         className?: string;
         onDrop: (event: DragEvent) => void;
         canDrop: (event: DragEvent) => boolean;
@@ -973,12 +1012,10 @@ declare module 'superdesk-api' {
         marginTop?: number;
         marginRight?: number;
         marginBottom?: number;
-        marginTop?: number;
         padding?: number;
         paddingTop?: number;
         paddingRight?: number;
         paddingBottom?: number;
-        paddingTop?: number;
     }
 
     interface IPropsBadge extends ISpacingProps {
@@ -998,6 +1035,25 @@ declare module 'superdesk-api' {
         children: Array<React.ReactNode>;
     }
 
+    export interface IAttachmentsWrapperProps {
+        item: IArticle;
+        attachments: Array<IAttachment>;
+    }
+
+    export interface IAttachmentsWidgetProps extends IAttachmentsWrapperProps {
+        // These props are passed in from the `AuthoringDirective` scope
+        addAttachments(attachments: Array<IAttachment>): void;
+        removeAttachment(attachment: IAttachment): void;
+        updateAttachment(attachment: IAttachment): void;
+        updateItem?(updates: Partial<IArticle>): void;
+        readOnly?: boolean;
+        isWidget: boolean;
+
+        editable: boolean;
+        isLocked: boolean;
+        isLockedByMe: boolean;
+        isUploadValid(files: Array<File>): boolean;
+    }
 
 
     // EDITOR3
@@ -1024,7 +1080,7 @@ declare module 'superdesk-api' {
 
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
-        create<T>(endpoint: string, item: T): Promise<T>;
+        create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
         query<T extends IBaseRestApiResponse>(
             endpoint: string,
             page: number,
@@ -1034,9 +1090,11 @@ declare module 'superdesk-api' {
             formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
         ): Promise<IRestApiResponse<T>>;
         queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
-        patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: T): Promise<T>;
+        queryRaw<T>(endpoint, params?: Dictionary<string, any>): Promise<Response>;
+        patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
+        uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress: (event: ProgressEvent) => void): Promise<T>;
     }
 
 
@@ -1069,6 +1127,11 @@ declare module 'superdesk-api' {
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
+
+        // Attachments
+        attachmentsAdded: Array<IAttachment>;
+        attachmentRemoved: IAttachment;
+        attachmentUpdated: IAttachment;
     }
 
     export interface IWebsocketMessage<T> {
@@ -1085,9 +1148,189 @@ declare module 'superdesk-api' {
         'resource:deleted': IWebsocketMessage<IResourceDeletedEvent>;
     }
 
+    export interface INotifyMessageOptions {
+        button?: {
+            onClick(): void;
+            label: string;
+        }
+    }
 
+    export interface IElasticExistsQueryParams {
+        field: string;
+    }
+
+    export interface IElasticExistsQuery {
+        exists: IElasticExistsQueryParams;
+    }
+
+    export interface IElasticTermQueryParams {
+        field: string;
+        value: string;
+        boost?: number; // Defaults to 1.0
+    }
+
+    export interface IElasticTermQuery {
+        term: {[field: string]: Omit<IElasticTermQueryParams, 'field'>};
+    }
+
+    export interface IElasticTermsQueryParams {
+        field: string;
+        value: Array<string>;
+        boost?: number; // Defaults to 1.0
+    }
+
+    export interface IElasticTermsQuery {
+        terms: {
+            [field: string]: IElasticTermsQuery['value'];
+            boost?: IElasticTermsQuery['boost'];
+        };
+    }
+
+    export interface IElasticMatchPhraseQueryParams {
+        field: string;
+        query: string;
+        analyzer?: string; // Defaults to the default analyzer
+    }
+
+    export interface IElasticMatchPhraseQuery {
+        match_phrase: {
+            [field: string]: Omit<IElasticMatchPhraseQueryParams, 'field'>;
+        }
+    }
+
+    export interface IElasticMatchQueryParams {
+        field: string;
+        query: string;
+        analyzer?: string; // Defaults to default analyzer
+        auto_generate_synonyms_phrase_query?: boolean; // Defaults to true
+        fuzziness?: string;
+        max_expansions?: number; // Defaults to 50
+        prefix_length?: number; // Defaults to 0
+        fuzzy_transpositions?: boolean; // Defaults to true
+        fuzzy_rewrite?: string;
+        lenient?: boolean; // Defaults to false
+        operator?: 'OR' | 'AND'; // Defaults to `OR`
+        minimum_should_match?: number | string;
+        zero_terms_query?: 'none' | 'all'; // Defaults to `none`
+    }
+
+    export interface IElasticMatchQuery {
+        match: {
+            [field: string]: Omit<IElasticMatchQueryParams, 'field'>;
+        };
+    }
+
+    export interface IElasticRangeQueryParams {
+        field: string;
+        gt?: string | number;
+        gte?: string | number;
+        lt?: string | number;
+        lte?: string | number;
+        format?: string;
+        relation?: 'INTERSECTS' | 'CONTAINS' | 'WITHIN'; // Defaults to `INTERSECTS`
+        time_zone?: string;
+        boost?: number; // Defaults to 1.0
+    }
+
+    export interface IElasticRangeQuery {
+        range: {
+            [field: string]: Omit<IElasticRangeQueryParams, 'field'>;
+        }
+    }
+
+    export interface IElasticQueryStringParams {
+        query: string;
+        default_field?: string;
+        allow_leading_wildcard?: boolean; // Defaults to true
+        analyze_wildcard?: boolean; // Defaults to false
+        analyzer?: string; // Defaults to default analyzer
+        auto_generate_synonyms_phrase_query?: boolean; // Defaults to true
+        boost?: number; // Defaults to 1.0
+        default_operator?: 'OR' | 'AND'; // Defaults to 'OR'
+        enable_position_increments?: boolean; // Defaults to true
+        fields?: Array<string>;
+        fuzziness?: string;
+        fuzzy_max_expansions?: number; // Defaults to 50
+        fuzzy_prefix_length?: number; // Defaults to 0
+        fuzzy_transpositions?: boolean; // Defaults to true
+        lenient?: boolean; // Defaults to false
+        max_determinized_states?: number; // Defaults to 10000
+        minimum_should_match?: string;
+        quote_analyzer?: string;
+        phrase_slop?: number; // Defaults to 0
+        quote_field_suffix?: string;
+        rewrite?: string;
+        time_zone?: string;
+    }
+
+    export interface IElasticQueryStringQuery {
+        query_string: IElasticQueryStringParams;
+    }
+
+    export type IElasticQuery = IElasticExistsQuery |
+        IElasticTermQuery |
+        IElasticTermsQuery |
+        IElasticMatchPhraseQuery |
+        IElasticMatchQuery |
+        IElasticRangeQuery |
+        IElasticQueryStringQuery;
+
+
+    export interface IElasticBoolQueryParams {
+        must: Array<IElasticQuery>;
+        must_not: Array<IElasticQuery>;
+        filter?: Array<IElasticQuery>;
+        should?: Array<IElasticQuery>;
+        minimum_should_match?: string;
+        boost?: number; // Defaults to 1.0
+    }
+
+    export interface IElasticBoolQuery {
+        bool: IElasticBoolQueryParams;
+    }
+
+    export interface IRootElasticQuery {
+        query: {
+            bool: IElasticBoolQueryParams;
+        };
+        size?: number;
+        from?: number;
+    }
+
+    export interface IElasticSearchApi {
+        exists(params: IElasticExistsQueryParams): IElasticExistsQuery;
+        term(params: IElasticTermQueryParams): IElasticTermQuery;
+        terms(params: IElasticTermsQueryParams): IElasticTermsQuery;
+        matchPhrase(params: IElasticMatchPhraseQueryParams): IElasticMatchPhraseQuery;
+        match(params: IElasticMatchQueryParams): IElasticMatchQuery;
+        range(params: IElasticRangeQueryParams): IElasticRangeQuery;
+        queryString(params: IElasticQueryStringParams): IElasticQueryStringQuery;
+        bool(params: IElasticBoolQueryParams): IElasticBoolQuery;
+    }
+
+    // Copied from 'superdesk-ui-framework/react/components/DatePicker.tsx
+    // Otherwise we have to import it here, which causes issues with extensions
+    export interface DatePickerLocaleSettings {
+        firstDayOfWeek?: number;
+        dayNames: string[];
+        dayNamesShort: string[];
+        dayNamesMin: string[];
+        monthNames: string[];
+        monthNamesShort: string[];
+    }
 
     // APPLICATION API
+
+    export interface IAttachmentsApi {
+        byArticle(article: IArticle): Promise<Array<IAttachment>>;
+        byId(id: IAttachment['_id']): Promise<IAttachment>;
+        create(attachment: Partial<IAttachment>): Promise<IAttachment>;
+        save(original: IAttachment, updates: Partial<IAttachment>): Promise<IAttachment>;
+        delete(attachment: IAttachment): Promise<void>;
+        upload(attachment: Partial<IAttachment>, file: File, onProgress?: (event: ProgressEvent) => void): Promise<IAttachment>;
+        download(attachment: IAttachment): void;
+        getMediaId(attachment: IAttachment): IMedia['_id'];
+    }
 
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
@@ -1096,6 +1339,7 @@ declare module 'superdesk-api' {
                 query(parameters: IArticleQuery): Promise<IArticleQueryResult>;
             };
         };
+        elasticsearch: IElasticSearchApi;
         httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T>;
         state: {
             articleInEditMode?: IArticle['_id'];
@@ -1117,8 +1361,17 @@ declare module 'superdesk-api' {
                 save(): void;
             };
             alert(message: string): Promise<void>;
-            confirm(message: string): Promise<boolean>;
+            confirm(message: string, title?: string): Promise<boolean>;
             showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
+            notify: {
+                info(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                success(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                warning(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+                error(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
+            },
+            framework: {
+                getLocaleForDatePicker(targetLocale?: string): DatePickerLocaleSettings;
+            };
         };
         entities: {
             article: {
@@ -1146,9 +1399,17 @@ declare module 'superdesk-api' {
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
             };
+            attachment: IAttachmentsApi;
+            users: {
+                getUsersByIds(ids: Array<IUser['_id']>): Promise<Array<IUser>>;
+            };
         };
         helpers: {
             assertNever(x: never): never;
+            filterUndefined<T>(values: Partial<T>): Partial<T>;
+            filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T>;
+            stringToNumber(value?: string, radix?: number): number | undefined;
+            numberToString(value?: number): string | undefined;
             notNullOrUndefined<T>(x: null | undefined | T): x is T;
         },
         components: {
@@ -1203,8 +1464,15 @@ declare module 'superdesk-api' {
         localization: {
             gettext(message: string, params?: {[key: string]: string | number}): string;
             gettextPlural(count: number, singular: string, plural: string, params?: {[key: string]: string | number}): string;
-            formatDate(date: Date): string;
+            formatDate(date: Date | string): string;
             formatDateTime(date: Date): string;
+            longFormatDateTime(date: Date | string): string;
+            getRelativeOrAbsoluteDateTime(
+                datetimeString: string,
+                format: string,
+                relativeDuration: number = 1,
+                relativeUnit: string = 'days'
+            ): string;
         };
         privileges: {
             getOwnPrivileges(): Promise<any>;
@@ -1220,6 +1488,35 @@ declare module 'superdesk-api' {
         session: {
             getToken(): string;
             getCurrentUser(): Promise<IUser>;
+            getSessionId(): String;
+            getCurrentUserId(): String;
+        };
+        browser: {
+            location: {
+                getPage(): string;
+                setPage(page: string);
+                urlParams: {
+                    // Strings
+                    getString(field: string, defaultValue?: string): string | undefined;
+                    setString(field: string, value?: string);
+
+                    // Numbers
+                    getNumber(field: string, defaultValue?: number): number | undefined;
+                    setNumber(field: string, value?: number);
+
+                    // Booleans
+                    getBoolean(field: string, defaultValue?: boolean): boolean | undefined;
+                    setBoolean(field: string, value?: boolean);
+
+                    // Dates
+                    getDate(field: string, defaultValue?: Date): Date | undefined;
+                    setDate(field: string, value?: Date);
+
+                    // JSON
+                    getJson<T = any>(field: string, defaultValue?: T): T | undefined;
+                    setJson<T>(field: string, value?: T);
+                };
+            };
         };
         utilities: {
             CSS: {
@@ -1235,6 +1532,7 @@ declare module 'superdesk-api' {
             generatePatch<T>(a: Partial<T>, b: Partial<T>): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
+            downloadBlob(data: BinaryType, mimetype: string, filename: string): void;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -1246,6 +1544,18 @@ declare module 'superdesk-api' {
         addEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
         removeEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
     }>;
+
+    export interface IAuthorsFieldOptions {
+        displayField: keyof IUser;
+        includeRoles: Array<string>; // qcodes
+    }
+
+    // Use a union type to add more fields. Listing them explicitly here will help to get static typing in the instance config file.
+    export type IListViewFieldWithOptions =
+        {
+            field: 'authors';
+            options: IAuthorsFieldOptions;
+        };
 
 
     export interface ISuperdeskGlobalConfig {
@@ -1261,7 +1571,6 @@ declare module 'superdesk-api' {
         override_ednote_for_corrections: any;
         override_ednote_template: any;
         default_genre: any;
-        default_language: string;
         japanese_characters_per_minute: any;
         validator_media_metadata: any;
         publish_content_expiry_minutes: any;
@@ -1400,15 +1709,15 @@ declare module 'superdesk-api' {
             };
         };
         list: {
-            narrowView: any;
-            singleLineView: any;
-            singleLine: any;
-            priority: any;
-            firstLine: Array<string>,
-            secondLine: Array<string>,
-            relatedItems: {
-                firstLine: Array<string>,
-                secondLine: Array<string>,
+            narrowView?: any;
+            singleLineView?: any;
+            singleLine?: any;
+            priority?: Array<string>;
+            firstLine?: Array<string | IListViewFieldWithOptions>,
+            secondLine?: Array<string | IListViewFieldWithOptions>,
+            relatedItems?: {
+                firstLine: Array<string | IListViewFieldWithOptions>,
+                secondLine: Array<string | IListViewFieldWithOptions>,
             };
         };
         gridViewFields: Array<string>;
@@ -1457,7 +1766,6 @@ declare module 'superdesk-api' {
         releaseDate: any;
         isTestEnvironment: any;
         environmentName: any;
-        workspace: any;
         paths: {
             superdesk: any;
         };

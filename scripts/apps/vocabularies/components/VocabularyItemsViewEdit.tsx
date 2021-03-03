@@ -471,7 +471,7 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                             {filteredItems.slice(takeFrom, takeTo).map((item) => {
                                 return (
                                     <React.Fragment key={item.id}>
-                                        <tr className="no-bottom-border add-border-top">
+                                        <tr className="add-border-top">
                                             {this.props.schemaFields.map((field) => {
                                                 return (
                                                     <td key={field.key}>
@@ -481,6 +481,20 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                                             required={field.required}
                                                             update={this.updateItem}
                                                         />
+
+                                                        {
+                                                            field.key === 'name' && (
+                                                                <div style={{paddingTop: 20}}>
+                                                                    <ManageVocabularyItemTranslations
+                                                                        item={item}
+                                                                        update={(_field, value) => {
+                                                                            this.updateItem(item, _field, value);
+                                                                        }}
+                                                                        languages={languages}
+                                                                    />
+                                                                </div>
+                                                            )
+                                                        }
                                                     </td>
                                                 );
                                             })}
@@ -505,17 +519,6 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                                 >
                                                     <i className="icon-close-small" />
                                                 </button>
-                                            </td>
-                                        </tr>
-                                        <tr className="no-bottom-border">
-                                            <td>
-                                                <ManageVocabularyItemTranslations
-                                                    item={item}
-                                                    update={(field, value) => {
-                                                        this.updateItem(item, field, value);
-                                                    }}
-                                                    languages={languages}
-                                                />
                                             </td>
                                         </tr>
                                     </React.Fragment>

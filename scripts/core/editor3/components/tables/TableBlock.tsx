@@ -123,7 +123,7 @@ export class TableBlockComponent extends React.Component<IProps> {
         const data = this.getData();
         const {numRows, numCols, withHeader} = data;
 
-        const cx = classNames({
+        const cx = classNames('table-inside', {
             'table-block': true,
             'table-header': withHeader,
         });

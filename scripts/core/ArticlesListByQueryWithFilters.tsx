@@ -7,13 +7,11 @@ import {ArticlesListByQuery} from './ArticlesListByQuery';
 import {Set, Map} from 'immutable';
 import classNames from 'classnames';
 import {gettext, gettextPlural} from './utils';
-import {getArticleSortOptions} from 'apps/search/services/SearchService';
+import {getArticleSortOptions, generateTrackByIdentifier} from 'apps/search/services/SearchService';
 import {SearchBar} from './ui/components';
 import {SortBar} from './ui/components/SortBar';
 import {Badge} from './ui/components/Badge';
-import {IMultiSelectOptions, MultiSelectHoc} from './MultiSelectHoc';
-import {SelectBoxWithoutMutation} from 'apps/search/components/SelectBox';
-import {TypeIcon} from 'apps/search/components';
+import {MultiSelectHoc} from './MultiSelectHoc';
 import {IArticleActionBulkExtended, MultiActionBarReact} from 'apps/monitoring/MultiActionBarReact';
 import {getMultiActions} from 'apps/search/controllers/get-multi-actions';
 import {Button} from 'superdesk-ui-framework';
@@ -21,49 +19,10 @@ import ng from 'core/services/ng';
 import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
 import {ResizeObserverComponent} from './components/resize-observer-component';
 import {httpRequestJsonLocal} from './helpers/network';
+import {MultiSelect} from './ArticlesListV2MultiSelect';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 
 const COMPACT_WIDTH = 700;
-
-class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelectOptions}> {
-    render() {
-        const {item, options} = this.props;
-
-        const checkbox = (
-            <SelectBoxWithoutMutation
-                item={item}
-                onSelect={(id) => {
-                    options.toggle(item);
-                }}
-                selected={options.selected.has(item._id)}
-                className="hover-AB--B"
-                data-test-id="multi-select-checkbox"
-            />
-        );
-
-        return (
-            <div
-                className="list-field type-icon"
-                data-test-id="item-type-and-multi-select"
-            >
-                {
-                    options.selected.has(item._id)
-                        ? checkbox
-                        : (
-                            <div className="hover-AB">
-                                <div className="hover-AB--A" style={{display: 'flex'}}>
-                                    <TypeIcon
-                                        type={item.type}
-                                        highlight={item.highlight}
-                                    />
-                                </div>
-                                {checkbox}
-                            </div>
-                        )
-                }
-            </div>
-        );
-    }
-}
 
 type IFilterValue = string | number;
 
@@ -309,6 +268,8 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
         return (
             <MultiSelectHoc
+                resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
+                getId={(item: IArticle) => generateTrackByIdentifier(item)}
                 shouldUnselect={(ids) => {
                     // Use the same query except only for selected items.
                     const queryForSpecificItems: ISuperdeskQuery = {
@@ -325,17 +286,19 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
                     const elasticQuery = toElasticQuery(queryForSpecificItems);
 
-                    return httpRequestJsonLocal<IRestApiResponse<{_id: string}>>({ // projections only return _id
-                        method: 'GET',
-                        path: '/search',
-                        urlParams: {
-                            aggregations: 0,
-                            es_highlight: 1,
-                            projections: JSON.stringify(['_id']),
-                            source: JSON.stringify(elasticQuery),
+                    return httpRequestJsonLocal<IRestApiResponse<Pick<IArticle, '_id' | 'state' | '_current_version'>>>(
+                        {
+                            method: 'GET',
+                            path: '/search',
+                            urlParams: {
+                                aggregations: 0,
+                                es_highlight: 1,
+                                projections: JSON.stringify(['_id', 'state', '_current_version']),
+                                source: JSON.stringify(elasticQuery),
+                            },
                         },
-                    }).then((res) => {
-                        var stillMatchQuery = Set(res._items.map(({_id}) => _id));
+                    ).then((res) => {
+                        var stillMatchQuery = Set(res._items.map((item) => generateTrackByIdentifier(item)));
 
                         return ids.filter((id) => stillMatchQuery.has(id) !== true).toSet();
                     });
@@ -475,11 +438,12 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                             onItemDoubleClick={this.props.onItemDoubleClick}
                             header={header}
                             padding={`${3 / 4 * padding}px ${padding}px`}
-                            multiSelect={{
+                            getMultiSelect={(items) => ({
                                 kind: 'new',
                                 options: multiSelectOptions,
+                                items,
                                 MultiSelectComponent: MultiSelect,
-                            }}
+                            })}
                         />
                     );
                 }}

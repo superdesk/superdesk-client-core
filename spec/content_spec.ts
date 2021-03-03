@@ -44,6 +44,7 @@ describe('content', () => {
                 el(['authoring-preview', 'field--headline']),
                 'item1',
             ),
+            1000,
         );
 
         pressKey(protractor.Key.UP);
@@ -52,7 +53,10 @@ describe('content', () => {
                 el(['authoring-preview', 'field--headline']),
                 'item1',
             ),
+            1000,
         );
+
+        browser.sleep(100);
 
         pressKey(protractor.Key.DOWN);
         browser.wait(
@@ -60,7 +64,10 @@ describe('content', () => {
                 el(['authoring-preview', 'field--headline']),
                 'item2',
             ),
+            1000,
         );
+
+        browser.sleep(100);
 
         pressKey(protractor.Key.LEFT);
         browser.wait(
@@ -68,7 +75,10 @@ describe('content', () => {
                 el(['authoring-preview', 'field--headline']),
                 'item1',
             ),
+            1000,
         );
+
+        browser.sleep(100);
 
         pressKey(protractor.Key.RIGHT);
         browser.wait(
@@ -76,7 +86,10 @@ describe('content', () => {
                 el(['authoring-preview', 'field--headline']),
                 'item2',
             ),
+            1000,
         );
+
+        browser.sleep(100);
 
         pressKey(protractor.Key.UP);
         browser.wait(
@@ -84,6 +97,7 @@ describe('content', () => {
                 el(['authoring-preview', 'field--headline']),
                 'item1',
             ),
+            1000,
         );
     });
 
@@ -124,6 +138,8 @@ describe('content', () => {
 
         toggle(boxes.last());
         expect(count.getText()).toBe('2 Items selected');
+
+        browser.sleep(100);
 
         multiAction('Multiedit');
         expect(browser.getCurrentUrl()).toMatch(/multiedit$/);

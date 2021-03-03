@@ -2,16 +2,16 @@ import {
     getParameters,
     getExcludeFacets,
     CORE_PROJECTED_FIELDS,
-    UI_PROJECTED_FIELD_MAPPINGS,
     DEFAULT_LIST_CONFIG,
 } from 'apps/search/constants';
 
 import _ from 'lodash';
 import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
-import {KILLED_STATES} from 'apps/archive/constants';
+import {KILLED_STATES, ITEM_STATE} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
 import {ISortFields} from 'core/ui/components/SortBar';
+import {IListViewFieldWithOptions, IArticle} from 'superdesk-api';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -73,6 +73,16 @@ export function getArticleSortOptions(): Array<ISortFields> {
         {field: 'priority', label: gettext('Priority')},
         {field: 'genre.name', label: gettext('Genre')},
     ];
+}
+
+export function getTrackByIdentifier(id: string, version: string | number): string {
+    return version ? id + ':' + version : id;
+}
+
+export function generateTrackByIdentifier(
+    item: IArticle | Pick<IArticle, '_id' | 'state' | '_current_version'>,
+): string {
+    return getTrackByIdentifier(item._id, item.state !== ITEM_STATE.INGESTED ? item._current_version : null);
 }
 
 /**
@@ -635,26 +645,9 @@ export function SearchService($location, session, multi,
         return new Query(params, this.cvs, options);
     };
 
-    /**
-     * Generate Track By Identifier for search results.
-     *
-     * @param {Object} item
-     * @return {String}
-     */
-    this.generateTrackByIdentifier = function(item) {
-        return this.getTrackByIdentifier(item._id, item.state !== 'ingested' ? item._current_version : null);
-    };
+    this.generateTrackByIdentifier = generateTrackByIdentifier;
 
-    /**
-     * Get unique id for an item
-     *
-     * @param {String} id
-     * @param {String} version
-     * @return {String}
-     */
-    this.getTrackByIdentifier = function(id, version) {
-        return version ? id + ':' + version : id;
-    };
+    this.getTrackByIdentifier = getTrackByIdentifier;
 
     this.extractIdFromTrackByIndentifier = function(identifier: string) {
         return identifier.slice(0, identifier.lastIndexOf(':'));
@@ -869,21 +862,47 @@ export function SearchService($location, session, multi,
      * @description Returns the list of fields to be used in projections
      */
     this.getProjectedFields = function() {
-        var uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
-        var uiFields: any = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
+        const UI_PROJECTED_FIELD_MAPPINGS = {
+            wordcount: 'word_count',
+            takekey: 'anpa_take_key',
+            update: 'correction_sequence',
+            provider: 'ingest_provider',
+            category: 'anpa_category',
+            versioncreator: 'version_creator',
+            markedDesks: 'marked_desks',
+            queueError: 'error_message',
+            used: ['used', 'used_updated', 'used_count'],
+        };
 
-        let projectedFields: Array<string> = [];
+        const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
-        uiFields.forEach((uiField) => {
-            if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
-                if (Array.isArray(UI_PROJECTED_FIELD_MAPPINGS[uiField])) {
-                    projectedFields.push(...UI_PROJECTED_FIELD_MAPPINGS[uiField]);
-                } else {
-                    projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
-                }
+        const uiFields = [
+            ...(uiConfig.priority ?? []),
+            ...(uiConfig.firstLine ?? []),
+            ...(uiConfig.secondLine ?? []),
+        ];
+
+        const projectedFields: Set<string> = new Set();
+
+        CORE_PROJECTED_FIELDS.fields.forEach((field) => {
+            projectedFields.add(field);
+        });
+
+        uiFields.forEach((_field: string | IListViewFieldWithOptions) => {
+            const field = typeof _field === 'string' ? _field : _field.field;
+
+            const adjustedField = UI_PROJECTED_FIELD_MAPPINGS[field] ?? field;
+
+            if (Array.isArray(adjustedField)) {
+                adjustedField.forEach((__field) => {
+                    projectedFields.add(__field);
+                });
+            } else {
+                projectedFields.add(adjustedField);
             }
         });
-        return _.union(CORE_PROJECTED_FIELDS.fields, projectedFields);
+
+        return Array.from(projectedFields);
     };
 
     /**

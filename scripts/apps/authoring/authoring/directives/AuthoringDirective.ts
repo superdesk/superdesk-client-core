@@ -6,7 +6,6 @@ import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
-import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {getArticleSchemaMiddleware} from '..';
 import {isPublished} from 'apps/archive/utils';
@@ -1330,7 +1329,7 @@ export function AuthoringDirective(
                 return state;
             }
 
-            const reducer = combineReducers({attachments, editor});
+            const reducer = combineReducers({editor});
 
             $scope.store = createStore(reducer, applyMiddleware(thunk.withExtraArgument({
                 $scope: $scope,
@@ -1338,10 +1337,7 @@ export function AuthoringDirective(
                 urls: $injector.get('urls'),
                 notify: notify,
                 superdesk: superdesk,
-                attachments: $injector.get('attachments'),
             })));
-
-            $scope.store.dispatch(initAttachments($scope.item));
 
             $scope.$watch('item.profile', (profile) => {
                 content.setupAuthoring(profile, $scope, $scope.item)

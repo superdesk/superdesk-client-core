@@ -18,7 +18,7 @@ export const MonthPicker: React.StatelessComponent<any> = ({selectedDate, onChan
     const rows = chunk(monthNames, 3);
 
     return (
-        <table>
+        <table className="table">
             <tbody>
                 {rows.map((row, rowIndex) => (
                     <tr key={rowIndex}>
