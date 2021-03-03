@@ -25,6 +25,7 @@ export interface IGroupData {
     id: any;
     itemIds: any;
     itemsById: any;
+    total: number;
 }
 
 interface IProps {
@@ -273,30 +274,29 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
         }
     }
 
-    fetchItems(group: IGroup): Promise<{
-        id: string,
-        itemIds: Array<string>,
-        itemsById: Array<{[id: string]: IArticle}>
-    }> {
+    fetchItems(group: IGroup): Promise<IGroupData> {
         const {api, search} = this.services;
         const promise = typeof group.dataSource === 'function'
             ? group.dataSource((repo, filters) => genericFetch({search, api}, repo, filters))
             : genericFetch({search, api}, group.dataSource.repo, group.dataSource.query);
 
-        return promise.then(({_items}) => {
+        return promise.then((res) => {
             const itemIds = [];
             const itemsById = {};
 
-            for (const item of _items) {
+            for (const item of res._items) {
                 itemIds.push(item._id);
                 itemsById[item._id] = item;
             }
 
-            return {
+            const groupData: IGroupData = {
                 id: group.id,
                 itemIds,
                 itemsById,
+                total: res._meta.total,
             };
+
+            return groupData;
         });
     }
 

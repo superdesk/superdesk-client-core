@@ -29,6 +29,7 @@ export class GroupComponent extends React.Component<IProps> {
 
     render() {
         const {group, data, toggleCollapseExpand} = this.props;
+        const loadedItemsCount = data.itemIds.length;
 
         return (
             <div className="stage">
@@ -44,7 +45,7 @@ export class GroupComponent extends React.Component<IProps> {
                     </span>
                     <div className="stage-header__line" />
                     <span className="label-total stage-header__number">
-                        {data.itemIds.length}
+                        {loadedItemsCount < data.total ? `${data.itemIds.length} / ${data.total}` : data.total}
                     </span>
                 </div>
                 {group.collapsed === true ? null : (
