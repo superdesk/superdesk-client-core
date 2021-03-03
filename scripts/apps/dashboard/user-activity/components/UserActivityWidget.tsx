@@ -1,5 +1,4 @@
 import React from 'react';
-import {WidgetItemList} from 'apps/search/components';
 import {IArticle, IUser, IStage} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 import ng from 'core/services/ng';
@@ -8,10 +7,11 @@ import {SelectUser} from 'core/ui/components/SelectUser';
 import {logger} from 'core/services/logger';
 import {extensions} from 'appConfig';
 import {Loader} from 'core/ui/components/Loader';
+import {GroupComponent} from './Group';
 
 type FetchFunction = (repo: string, criteria: any) => Promise<any>;
 
-interface IGroup {
+export interface IGroup {
     id: string;
     label: string;
     precondition?: () => boolean;
@@ -19,6 +19,12 @@ interface IGroup {
         {repo: string, query: object}
         | ((f: FetchFunction) => Promise<any>);
     collapsed?: boolean;
+}
+
+export interface IGroupData {
+    id: any;
+    itemIds: any;
+    itemsById: any;
 }
 
 interface IProps {
@@ -30,7 +36,7 @@ interface IProps {
 interface IState {
     userSearchField: string;
     groups: Array<IGroup> | null;
-    groupsData: Array<{ id; itemIds; itemsById }> | null;
+    groupsData: Array<IGroupData> | null;
     loading: boolean;
 }
 
@@ -214,6 +220,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
         };
 
         this.refreshItems = this.refreshItems.bind(this);
+        this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
         this.updateGroupDataOnUserChange = this.updateGroupDataOnUserChange.bind(this);
     }
 
@@ -231,6 +238,20 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
 
     componentWillUnmount() {
         this.removeListeners.forEach((remove) => remove());
+    }
+
+    toggleCollapseExpand(group: IGroup) {
+        const newGroups = this.state.groups.map((g) => {
+            if (g.id === group.id) {
+                return {...g, collapsed: !g.collapsed};
+            }
+
+            return g;
+        });
+
+        this.setState({
+            groups: newGroups,
+        });
     }
 
     addListeners() {
@@ -298,81 +319,6 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
         });
     }
 
-    renderGroup(group: IGroup) {
-        const {groups, groupsData} = this.state;
-        const data = groupsData.find((g) => g.id === group.id);
-
-        if (!data) {
-            logger.warn(
-                `Tried to render group '${group.id}' but no data was found`,
-            );
-            return null;
-        }
-
-        return (
-            <div className="stage">
-                <div className="stage-header">
-                    <button
-                        className={`stage-header__toggle ${group.collapsed ? 'closed' : ''}`}
-                        onClick={() => {
-                            const newGroups = groups.map((g) => {
-                                if (g.id === group.id) {
-                                    return {...g, collapsed: !g.collapsed};
-                                }
-
-                                return g;
-                            });
-
-                            this.setState({
-                                groups: newGroups,
-                            });
-                        }}
-                    >
-                        <i className="icon-chevron-down-thin" />
-                    </button>
-                    <span className="stage-header__name">
-                        {group.label}
-                    </span>
-                    <div className="stage-header__line" />
-                    <span className="label-total stage-header__number">
-                        {data.itemIds.length}
-                    </span>
-                </div>
-                {group.collapsed === true ? null : (
-                    <div className="stage-content">
-                        <WidgetItemList
-                            customUIMessages={{
-                                empty: gettext('No results for this user'),
-                            }}
-                            canEdit={true}
-                            svc={this.services}
-                            preview={(item: IArticle) => {
-                                this.services.superdesk.intent(
-                                    'preview',
-                                    'item',
-                                    item,
-                                );
-                            }}
-                            select={(item: IArticle) => {
-                                this.services.superdesk.intent(
-                                    'preview',
-                                    'item',
-                                    item,
-                                );
-                            }}
-                            edit={(item: IArticle) => {
-                                this.services.authoringWorkspace.edit(item);
-                            }}
-                            itemIds={data.itemIds}
-                            itemsById={data.itemsById}
-                            loading={false}
-                        />
-                    </div>
-                )}
-            </div>
-        );
-    }
-
     updateGroupDataOnUserChange(user: IUser) {
         this.setState(
             {groups: GET_GROUPS(user._id, this.services), loading: true},
@@ -415,11 +361,29 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                                 <div className="content-list-holder">
                                     <div className="shadow-list-holder">
                                         <div className="content-list">
-                                            {this.state.groups.map((group) => (
-                                                <div key={`user-activity-${group.id}`}>
-                                                    {this.renderGroup(group)}
-                                                </div>
-                                            ))}
+                                            {
+                                                this.state.groups.map((group) => {
+                                                    const {groupsData} = this.state;
+                                                    const data = groupsData.find((g) => g.id === group.id);
+
+                                                    if (!data) {
+                                                        logger.warn(
+                                                            `Tried to render group '${group.id}' but no data was found`,
+                                                        );
+                                                        return null;
+                                                    }
+
+                                                    return (
+                                                        <div key={`user-activity-${group.id}`}>
+                                                            <GroupComponent
+                                                                group={group}
+                                                                data={data}
+                                                                toggleCollapseExpand={this.toggleCollapseExpand}
+                                                            />
+                                                        </div>
+                                                    );
+                                                },
+                                            )}
                                         </div>
                                     </div>
                                 </div>
