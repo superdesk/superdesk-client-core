@@ -129,17 +129,17 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
                         .filter(({default_incoming}) => default_incoming === true)
                         .map(({_id}) => _id);
 
-                        const isNotOnIncomingStage: any = {
-                            bool: {
-                                must_not: {
-                                    terms: {
-                                        'task.stage': incomingStages,
-                                    },
+                    const isNotOnIncomingStage: any = {
+                        bool: {
+                            must_not: {
+                                terms: {
+                                    'task.stage': incomingStages,
                                 },
                             },
-                        };
+                        },
+                    };
 
-                        mustQuery.push({...isNotOnIncomingStage});
+                    mustQuery.push({...isNotOnIncomingStage});
 
                     return fetchFn('archive', {
                         bool: {
@@ -382,8 +382,8 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                                                             />
                                                         </div>
                                                     );
-                                                },
-                                            )}
+                                                })
+                                            }
                                         </div>
                                     </div>
                                 </div>
