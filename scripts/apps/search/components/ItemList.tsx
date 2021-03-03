@@ -12,6 +12,8 @@ import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 import {IActivityService} from 'core/activity/activity';
 import {isButtonClicked} from './Item';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {OrderedMap} from 'immutable';
+import {MultiSelect} from 'core/ArticlesListV2MultiSelect';
 
 interface IProps {
     itemsList: Array<string>;
@@ -52,8 +54,9 @@ export interface ILegacyMultiSelect {
 
 export interface IMultiSelectNew {
     kind: 'new';
-    options: IMultiSelectOptions;
-    MultiSelectComponent: React.ComponentType<{item: IArticle; options: IMultiSelectOptions}>;
+    options: IMultiSelectOptions<IArticle>;
+    items: OrderedMap<string, IArticle>;
+    MultiSelectComponent: typeof MultiSelect;
 }
 
 interface IState {
