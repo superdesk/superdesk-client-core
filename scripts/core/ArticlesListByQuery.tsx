@@ -9,6 +9,7 @@ import ng from 'core/services/ng';
 import {ISuperdeskQuery, toElasticQuery, getQueryFieldsRecursive} from './query-formatting';
 import {SmoothLoader} from 'apps/search/components/SmoothLoader';
 import {IMultiSelectNew} from 'apps/search/components/ItemList';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     query: ISuperdeskQuery;
@@ -16,7 +17,7 @@ interface IProps {
     onItemDoubleClick(item: IArticle): void;
     header?(itemCount: number): JSX.Element;
     padding?: string;
-    multiSelect?: IMultiSelectNew;
+    getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
 }
 
 interface IState {
@@ -129,7 +130,7 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
                         onItemClick={this.props.onItemClick}
                         onItemDoubleClick={this.props.onItemDoubleClick}
                         padding={this.props.padding}
-                        multiSelect={this.props.multiSelect}
+                        getMultiSelect={this.props.getMultiSelect}
                     />
                 </div>
             </div>

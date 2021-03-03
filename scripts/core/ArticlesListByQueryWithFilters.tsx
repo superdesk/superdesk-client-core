@@ -1,13 +1,13 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticle, ISortOption} from 'superdesk-api';
-import {ISuperdeskQuery, IOrOperator, IAndOperator} from './query-formatting';
+import {IArticle, ISortOption, IRestApiResponse} from 'superdesk-api';
+import {ISuperdeskQuery, IOrOperator, IAndOperator, toElasticQuery} from './query-formatting';
 import {ArticlesListByQuery} from './ArticlesListByQuery';
 import {Set, Map} from 'immutable';
 import classNames from 'classnames';
 import {gettext, gettextPlural} from './utils';
-import {getArticleSortOptions} from 'apps/search/services/SearchService';
+import {getArticleSortOptions, generateTrackByIdentifier} from 'apps/search/services/SearchService';
 import {SearchBar} from './ui/components';
 import {SortBar} from './ui/components/SortBar';
 import {Badge} from './ui/components/Badge';
@@ -17,6 +17,8 @@ import {getMultiActions} from 'apps/search/controllers/get-multi-actions';
 import {Button} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {MultiSelect} from './ArticlesListV2MultiSelect';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
+import {httpRequestJsonLocal} from './helpers/network';
 
 type IFilterValue = string | number;
 
@@ -154,6 +156,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
     }
     render() {
         const padding = 20;
+        const {query} = this.props;
 
         /**
          * When multi-select is started, filter/sort bar disappears and multi-select toolbar appears.
@@ -217,7 +220,43 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
         );
 
         return (
-            <MultiSelectHoc>
+            <MultiSelectHoc
+                resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
+                getId={(item: IArticle) => generateTrackByIdentifier(item)}
+                shouldUnselect={(ids) => {
+                    // Use the same query except only for selected items.
+                    const queryForSpecificItems: ISuperdeskQuery = {
+                        ...query,
+                        page: 0,
+                        max_results: 200,
+                        filter: {
+                            $and: [
+                                query.filter,
+                                {'_id': {$in: ids.toJS()}},
+                            ],
+                        },
+                    };
+
+                    const elasticQuery = toElasticQuery(queryForSpecificItems);
+
+                    return httpRequestJsonLocal<IRestApiResponse<Pick<IArticle, '_id' | 'state' | '_current_version'>>>(
+                        {
+                            method: 'GET',
+                            path: '/search',
+                            urlParams: {
+                                aggregations: 0,
+                                es_highlight: 1,
+                                projections: JSON.stringify(['_id', 'state', '_current_version']),
+                                source: JSON.stringify(elasticQuery),
+                            },
+                        },
+                    ).then((res) => {
+                        var stillMatchQuery = Set(res._items.map((item) => generateTrackByIdentifier(item)));
+
+                        return ids.filter((id) => stillMatchQuery.has(id) !== true).toSet();
+                    });
+                }}
+            >
                 {(multiSelectOptions) => {
                     const getMultiSelectToolbar = (articles: Array<IArticle>) => {
                         const multiActions = getMultiActions(
@@ -337,11 +376,12 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                             onItemDoubleClick={this.props.onItemDoubleClick}
                             header={header}
                             padding={`${3 / 4 * padding}px ${padding}px`}
-                            multiSelect={{
+                            getMultiSelect={(items) => ({
                                 kind: 'new',
                                 options: multiSelectOptions,
+                                items,
                                 MultiSelectComponent: MultiSelect,
-                            }}
+                            })}
                         />
                     );
                 }}

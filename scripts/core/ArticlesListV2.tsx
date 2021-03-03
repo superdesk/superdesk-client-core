@@ -30,7 +30,7 @@ interface IProps {
 
     onItemClick(item: IArticle): void;
     onItemDoubleClick?(item: IArticle): void;
-    multiSelect?: IMultiSelectNew;
+    getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
 }
 
 export class ArticlesListV2 extends React.Component<IProps, IState> {
@@ -178,7 +178,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             groupId={undefined}
                             edit={noop}
                             preview={noop}
-                            multiSelect={this.props.multiSelect}
+                            multiSelect={this.props.getMultiSelect(items)}
                             narrow={false}
                             view={undefined}
                             selected={undefined}
