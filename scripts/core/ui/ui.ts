@@ -848,7 +848,7 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
                 workspace = element ? element :
                     angular.element('#workspace-container');
 
-                authoring = element.next('#authoring-container');
+                authoring = angular.element('#authoring-container');
                 container = element.parent();
             };
 

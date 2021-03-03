@@ -8,6 +8,8 @@ import {appConfig, extensions} from 'appConfig';
 
 const USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
 
+let PINNED_WIDGET_RESIZED = false;
+
 interface IWidget {
     label?: string;
     icon?: string;
@@ -92,7 +94,7 @@ function AuthoringWidgetsProvider() {
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
-    '$injector', 'superdesk', 'preferencesService', '$rootScope'];
+    '$injector', 'preferencesService', '$rootScope'];
 function WidgetsManagerCtrl(
     $scope: IScope,
     $routeParams,
@@ -107,7 +109,6 @@ function WidgetsManagerCtrl(
     _,
     privileges,
     $injector,
-    superdesk,
     preferencesService,
     $rootScope,
 ) {
@@ -259,10 +260,10 @@ function WidgetsManagerCtrl(
             $scope.pinnedWidget.pinned = false;
         }
 
-        if (!superdesk.pinnedWidgetResized && widget && !$scope.pinnedWidget) {
+        if (!PINNED_WIDGET_RESIZED && widget && !$scope.pinnedWidget) {
             $rootScope.$broadcast('resize:monitoring', -330);
 
-            superdesk.pinnedWidgetResized = true;
+            PINNED_WIDGET_RESIZED = true;
         }
 
         if (!widget || $scope.pinnedWidget === widget) {
@@ -271,7 +272,7 @@ function WidgetsManagerCtrl(
             angular.element('body').removeClass('main-section--pinned-tabs');
 
             $scope.pinnedWidget = null;
-            superdesk.pinnedWidgetResized = false;
+            PINNED_WIDGET_RESIZED = false;
 
             this.widgetFromPreferences = null;
 
