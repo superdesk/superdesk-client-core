@@ -6,6 +6,10 @@ import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspac
 import {IArticle, IContentProfile} from 'superdesk-api';
 import {appConfig, extensions} from 'appConfig';
 
+const USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
+
+let PINNED_WIDGET_RESIZED = false;
+
 interface IWidget {
     label?: string;
     icon?: string;
@@ -29,6 +33,7 @@ interface IWidget {
     badge?: any; // injectable function to badge number for item.
     badgeAsync: any; // injectable function to badge number for item. Returns a promise.
     removeHeader?: boolean;
+    pinned?: boolean;
     _id?: string;
     feature?: string;
     afterClose(): void;
@@ -46,7 +51,9 @@ interface IScope extends ng.IScope {
     item: IArticle;
     active: any;
     widgets: any;
+    pinnedWidget: IWidget;
     activate(widget: IWidget): void;
+    pinWidget(widget: IWidget): void;
     closeWidget(): void;
     isWidgetLocked(widget: IWidget): boolean;
     isAssigned(item: IArticle): boolean;
@@ -86,7 +93,8 @@ function AuthoringWidgetsProvider() {
 }
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
-    'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges', '$injector'];
+    'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
+    '$injector', 'preferencesService', '$rootScope'];
 function WidgetsManagerCtrl(
     $scope: IScope,
     $routeParams,
@@ -101,8 +109,14 @@ function WidgetsManagerCtrl(
     _,
     privileges,
     $injector,
+    preferencesService,
+    $rootScope,
 ) {
     $scope.active = null;
+
+    preferencesService.get(USER_PREFERENCE_SETTINGS).then((preferences) =>
+        this.widgetFromPreferences = preferences,
+    );
 
     $scope.$watch('item', (item: IArticle) => {
         if (!item) {
@@ -173,6 +187,16 @@ function WidgetsManagerCtrl(
                             .then((value) => widget.badgeAsyncValue = value);
                     }
                 });
+
+                if (this.widgetFromPreferences) {
+                    let widgetFromPreferences = $scope.widgets.find((widget) =>
+                        widget._id === this.widgetFromPreferences._id);
+
+                    if (widgetFromPreferences) {
+                        $scope.pinWidget(widgetFromPreferences);
+                    }
+                }
+
                 $scope.$apply(); // tell angular to re-render
             });
         });
@@ -231,6 +255,51 @@ function WidgetsManagerCtrl(
         }
     };
 
+    $scope.pinWidget = (widget: IWidget) => {
+        if ($scope.pinnedWidget) {
+            $scope.pinnedWidget.pinned = false;
+        }
+
+        if (!PINNED_WIDGET_RESIZED && widget && !$scope.pinnedWidget) {
+            $rootScope.$broadcast('resize:monitoring', -330);
+
+            PINNED_WIDGET_RESIZED = true;
+        }
+
+        if (!widget || $scope.pinnedWidget === widget) {
+            $rootScope.$broadcast('resize:monitoring', 330);
+
+            angular.element('body').removeClass('main-section--pinned-tabs');
+
+            $scope.pinnedWidget = null;
+            PINNED_WIDGET_RESIZED = false;
+
+            this.widgetFromPreferences = null;
+
+            if (widget) {
+                widget.pinned = false;
+            }
+
+            this.updateUserPreferences();
+        } else {
+            angular.element('body').addClass('main-section--pinned-tabs');
+            $scope.pinnedWidget = widget;
+            widget.pinned = true;
+
+            this.updateUserPreferences(widget);
+        }
+    };
+
+    this.updateUserPreferences = (widget?: IWidget) => {
+        let update = [];
+
+        update[USER_PREFERENCE_SETTINGS] = {
+            type: 'string',
+            _id: widget ? widget._id : null,
+        };
+        preferencesService.update(update);
+    };
+
     // item is associated to an assignment
     $scope.isAssigned = (item) => _.get(item, 'assignment_id') != null
         && _.get(privileges, 'privileges.planning') === 1;
@@ -274,13 +343,13 @@ function WidgetsManagerCtrl(
         unbindAllShortcuts();
     });
 }
-AuthoringWidgetsDir.$inject = ['desks', 'commentsService', '$injector', '$rootScope'];
-function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
+AuthoringWidgetsDir.$inject = ['desks', 'commentsService', '$injector'];
+function AuthoringWidgetsDir(desks, commentsService, $injector) {
     return {
         controller: WidgetsManagerCtrl,
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
         transclude: true,
-        link: function(scope, elem) {
+        link: function(scope) {
             scope.widget = null;
             scope.pinnedWidget = null;
 
@@ -322,33 +391,12 @@ function AuthoringWidgetsDir(desks, commentsService, $injector, $rootScope) {
                 }
             };
 
-            scope.pinWidget = (widget) => {
+            scope.$on('$destroy', () => {
+                angular.element('body').removeClass('main-section--pinned-tabs');
+
                 if (scope.pinnedWidget) {
                     scope.pinnedWidget.pinned = false;
                 }
-
-                if (widget && !scope.pinnedWidget) {
-                    $rootScope.$broadcast('resize:monitoring', -330);
-                }
-
-                if (!widget || scope.pinnedWidget === widget) {
-                    angular.element('body').removeClass('main-section--pinned-tabs');
-                    $rootScope.$broadcast('resize:monitoring', 330);
-                    scope.pinnedWidget = null;
-
-                    if (widget) {
-                        widget.pinned = false;
-                    }
-                } else {
-                    angular.element('body').addClass('main-section--pinned-tabs');
-                    scope.pinnedWidget = widget;
-                    widget.pinned = true;
-                }
-            };
-
-            scope.$on('$destroy', () => {
-                angular.element('body').removeClass('main-section--pinned-tabs');
-                scope.pinnedWidget.pinned = false;
             });
 
             reload();

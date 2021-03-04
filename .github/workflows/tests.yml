@@ -69,7 +69,7 @@ jobs:
       run: npm run build && npm run start-client-server
 
     - name: Protractor
-      run: npm run protractor -- --suite=${{ matrix.suite }}
+      run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
       env:
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp

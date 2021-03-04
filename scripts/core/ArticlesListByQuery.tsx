@@ -3,13 +3,13 @@
 import React from 'react';
 import {ArticlesListV2} from './ArticlesListV2';
 import {IRestApiResponse, IArticle} from 'superdesk-api';
-import {httpRequestJsonLocal} from './helpers/network';
 import {flatMap} from 'lodash';
 import ng from 'core/services/ng';
 import {ISuperdeskQuery, toElasticQuery, getQueryFieldsRecursive} from './query-formatting';
 import {SmoothLoader} from 'apps/search/components/SmoothLoader';
 import {IMultiSelectNew} from 'apps/search/components/ItemList';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     query: ISuperdeskQuery;
@@ -17,7 +17,7 @@ interface IProps {
     onItemDoubleClick(item: IArticle): void;
     header?(itemCount: number): JSX.Element;
     padding?: string;
-    multiSelect?: IMultiSelectNew;
+    getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
 }
 
 interface IState {
@@ -130,7 +130,7 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                         onItemClick={this.props.onItemClick}
                         onItemDoubleClick={this.props.onItemDoubleClick}
                         padding={this.props.padding}
-                        multiSelect={this.props.multiSelect}
+                        getMultiSelect={this.props.getMultiSelect}
                     />
                 </div>
             </div>

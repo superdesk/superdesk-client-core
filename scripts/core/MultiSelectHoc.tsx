@@ -1,25 +1,29 @@
 import React from 'react';
-import {Map, Set} from 'immutable';
+import {OrderedMap, Set} from 'immutable';
 import {
-    IArticle,
     IWebsocketMessage,
     IResourceUpdateEvent,
     IResourceDeletedEvent,
 } from 'superdesk-api';
 import {addWebsocketEventListener} from './notification/notification';
-import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 import {throttleAndCombineSet} from './itemList/throttleAndCombine';
 
-export interface IMultiSelectOptions {
-    selected: Map<string, IArticle>;
-    select(item: IArticle, multiSelectMode: boolean): void;
-    unselect(id: string): void;
+export interface IMultiSelectOptions<T> {
+    selected: OrderedMap<string, T>;
+    select(item: T): void;
+    selectMultiple(items: OrderedMap<string, T>): void;
+    unselect(item: T): void;
     unselectAll(): void;
-    toggle(item: IArticle): void;
+    toggle(item: T): void;
 }
 
-interface IProps {
-    children: (options: IMultiSelectOptions) => JSX.Element;
+interface IProps<T> {
+    getId(item: T): string;
+
+    // used to listen for websocket events in order to decide if items have to be unselected
+    resourceNames: Array<string>;
+
+    children: (options: IMultiSelectOptions<T>) => JSX.Element;
 
     /**
      * When items are updated/deleted, we need to check if they should be unselected
@@ -29,46 +33,54 @@ interface IProps {
     shouldUnselect(ids: Set<string>): Promise<Set<string>>;
 }
 
-interface IState {
-    selected: Map<string, IArticle>;
+interface IState<T> {
+    selected: OrderedMap<string, T>;
 }
 
-export class MultiSelectHoc extends React.PureComponent<IProps, IState> {
+export class MultiSelectHoc<T> extends React.PureComponent<IProps<T>, IState<T>> {
     private removeContentUpdateListener: () => void;
     private removeResourceDeletedListener: () => void;
     private maybeUnselectItems: (ids: globalThis.Set<string>) => void;
 
-    constructor(props: IProps) {
+    constructor(props: IProps<T>) {
         super(props);
 
         this.state = {
-            selected: Map<string, IArticle>(),
+            selected: OrderedMap<string, T>(),
         };
 
         this.select = this.select.bind(this);
+        this.selectMultiple = this.selectMultiple.bind(this);
         this.unselect = this.unselect.bind(this);
         this.toggle = this.toggle.bind(this);
         this.unselectAll = this.unselectAll.bind(this);
         this.handleContentChanges = this.handleContentChanges.bind(this);
         this.maybeUnselectItems = throttleAndCombineSet(this._maybeUnselectItems.bind(this), 500);
     }
-    select(item: IArticle, multiSelectMode?: boolean) {
-        // TODO: impplement multi-select mode
+    select(item: T) {
+        const {getId} = this.props;
 
-        this.setState({selected: this.state.selected.set(item._id, item)});
+        this.setState({selected: this.state.selected.set(getId(item), item)});
     }
-    unselect(id: string) {
-        this.setState({selected: this.state.selected.remove(id)});
+    selectMultiple(items: OrderedMap<string, T>): void {
+        this.setState({selected: this.state.selected.merge(items)});
     }
-    toggle(item: IArticle) {
-        if (this.state.selected.has(item._id)) {
-            this.unselect(item._id);
+    unselect(item: T) {
+        const {getId} = this.props;
+
+        this.setState({selected: this.state.selected.remove(getId(item))});
+    }
+    toggle(item: T) {
+        const {getId} = this.props;
+
+        if (this.state.selected.has(getId(item))) {
+            this.unselect(item);
         } else {
             this.select(item);
         }
     }
     unselectAll() {
-        this.setState({selected: Map<string, IArticle>()});
+        this.setState({selected: OrderedMap<string, T>()});
     }
     _maybeUnselectItems(ids: globalThis.Set<string>) { // only throttled version should be used internally
         this.props.shouldUnselect(Set(Array.from(ids))).then((idsToUnselect) => {
@@ -86,7 +98,7 @@ export class MultiSelectHoc extends React.PureComponent<IProps, IState> {
     handleContentChanges(resource: string, id: string) {
         // Unselect items that no longer match the query.
 
-        if (ARTICLE_RELATED_RESOURCE_NAMES.includes(resource) && this.state.selected.has(id)) {
+        if (this.props.resourceNames.includes(resource) && this.state.selected.has(id)) {
             this.maybeUnselectItems(new global.Set([id]));
         }
     }
@@ -119,6 +131,7 @@ export class MultiSelectHoc extends React.PureComponent<IProps, IState> {
         return this.props.children({
             selected: this.state.selected,
             select: this.select,
+            selectMultiple: this.selectMultiple,
             unselect: this.unselect,
             unselectAll: this.unselectAll,
             toggle: this.toggle,

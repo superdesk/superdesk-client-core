@@ -28,6 +28,7 @@ export class MultiSelectCheckbox extends React.PureComponent<IProps> {
             return (
                 <MultiSelectComponent
                     item={item}
+                    allItems={multiSelect.items}
                     options={multiSelect.options}
                 />
             );
