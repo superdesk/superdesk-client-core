@@ -83,7 +83,7 @@ export function getAndMergeRelatedEntitiesUpdated(
 ): Promise<IRelatedEntities> {
     const changesToRelatedEntities = changes.filter(
         ({changeType, resource, itemId}) =>
-            changeType !== 'deleted' && this.state.relatedEntities[resource]?.get(itemId) != null,
+            changeType !== 'deleted' && currentEntities[resource]?.get(itemId) != null,
     );
 
     const entitiesToFetch = changesToRelatedEntities.reduce<IEntitiesToFetch>((acc, change) => {
