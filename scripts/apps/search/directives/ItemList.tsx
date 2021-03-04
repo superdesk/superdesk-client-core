@@ -25,10 +25,9 @@ export function ItemList(
     monitoringState,
     $rootScope,
 ) {
-    const abortController = new AbortController();
-
     return {
         link: function(scope, elem) {
+            const abortController = new AbortController();
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
 
