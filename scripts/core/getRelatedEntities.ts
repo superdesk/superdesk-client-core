@@ -130,7 +130,6 @@ export function fetchRelatedEntities(
                 });
             }),
         ).then(() => {
-            console.log('fetched related', result);
             resolve(result);
         });
     });
