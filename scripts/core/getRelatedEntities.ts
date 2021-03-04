@@ -100,7 +100,7 @@ export function getAndMergeRelatedEntitiesUpdated(
         return fetchRelatedEntities(entitiesToFetch, abortSignal)
             .then((result) => mergeRelatedEntities(currentEntities, result));
     } else {
-        return Promise.resolve({});
+        return Promise.resolve(currentEntities);
     }
 }
 
@@ -130,6 +130,7 @@ export function fetchRelatedEntities(
                 });
             }),
         ).then(() => {
+            console.log('fetched related', result);
             resolve(result);
         });
     });
