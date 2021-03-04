@@ -4,13 +4,13 @@ import {ItemUrgency, TypeIcon} from './index';
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import ng from 'core/services/ng';
 
 interface IProps {
     item?: any;
     selected?: boolean;
     canEdit?: boolean;
     customMonitoringWidget?: boolean;
-    svc: any;
     preview: (item: IArticle) => void;
     select: (item: IArticle) => void;
     edit: (item: IArticle) => void;
@@ -55,6 +55,7 @@ export class WidgetItem extends React.Component<IProps, any> {
     }
 
     render() {
+        const {shortFormat} = ng.get('datetime');
         const className = classNames(
             'content-item',
             {'content-item--locked': this.item.lock_user},
@@ -80,7 +81,7 @@ export class WidgetItem extends React.Component<IProps, any> {
                     <span id="title" className="headline">{this.item.headline}</span>
                 </div>
                 <div className="content-item__date">
-                    <time>{this.props.svc.datetime.shortFormat(this.item.versioncreated)}</time>
+                    <time>{shortFormat(this.item.versioncreated)}</time>
                 </div>
                 {this.props.canEdit && !this.item.gone ? (
                     <div className="content-item__action">

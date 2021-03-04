@@ -2,11 +2,11 @@ import React from 'react';
 import {WidgetItem} from './index';
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
+import {generateTrackByIdentifier} from '../services/SearchService';
 
 interface IProps {
     canEdit?: boolean;
     customMonitoringWidget?: boolean;
-    svc: any;
     preview: (item: IArticle) => void;
     select: (item: IArticle) => void;
     edit: (item: IArticle) => void;
@@ -49,9 +49,7 @@ export class WidgetItemList extends React.Component<IProps> {
 
                         return (
                             <WidgetItem
-                                key={this.props.svc.search.generateTrackByIdentifier(
-                                    item,
-                                )}
+                                key={generateTrackByIdentifier(item)}
                                 item={item}
                                 selected={
                                     this.props.selected &&
@@ -61,7 +59,6 @@ export class WidgetItemList extends React.Component<IProps> {
                                 customMonitoringWidget={
                                     this.props.customMonitoringWidget
                                 }
-                                svc={this.props.svc}
                                 preview={this.props.preview}
                                 select={this.props.select}
                                 edit={this.props.edit}
