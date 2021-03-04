@@ -16,6 +16,7 @@ import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
 import {dataApi} from './helpers/CrudManager';
 import {IScope} from 'angular';
+import {OrderedMap} from 'immutable';
 
 interface IState {
     initialized: boolean;
@@ -111,7 +112,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 itemCount={itemCount}
                 loadMoreItems={this.loadMore}
                 pageSize={pageSize}
-                getId={(item) => item._id}
+                getId={(item: IArticle) => item._id}
                 getItemsByIds={(ids) => {
                     return Promise.all(
                         ids.map((id) => dataApi.findOne<IArticle>('search', id)),
@@ -178,7 +179,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                             groupId={undefined}
                             edit={noop}
                             preview={noop}
-                            multiSelect={this.props.getMultiSelect(items)}
+                            multiSelect={this.props.getMultiSelect(OrderedMap<string, IArticle>(items))}
                             narrow={false}
                             view={undefined}
                             selected={undefined}
