@@ -2,7 +2,21 @@ import React from 'react';
 import {forOwn, startsWith, indexOf} from 'lodash';
 import ng from 'core/services/ng';
 import {ItemList} from 'apps/search/components';
-import {IArticle} from 'superdesk-api';
+import {
+    IArticle,
+    IWebsocketMessage,
+    IResourceCreatedEvent,
+    IResourceUpdateEvent,
+    IResourceDeletedEvent,
+} from 'superdesk-api';
+import {
+    IRelatedEntities,
+    getAndMergeRelatedEntitiesForArticles,
+    IResourceChange,
+    getAndMergeRelatedEntitiesUpdated,
+} from 'core/getRelatedEntities';
+import {addWebsocketEventListener} from 'core/notification/notification';
+import {throttleAndCombineArray} from 'core/itemList/throttleAndCombine';
 import {isCheckAllowed} from '../helpers';
 import {SmoothLoader} from './SmoothLoader';
 
@@ -16,6 +30,7 @@ interface IState {
     view: 'compact' | 'mgrid' | 'photogrid';
     itemsList: Array<string>;
     itemsById: any;
+    relatedEntities: IRelatedEntities;
     selected: string;
     swimlane: any;
     actioning: {};
@@ -24,6 +39,9 @@ interface IState {
 
 export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     componentRef: ItemList;
+    private abortController: AbortController;
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+    private handleContentChanges: (changes: Array<IResourceChange>) => void;
 
     constructor(props: IProps) {
         super(props);
@@ -31,6 +49,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.state = {
             itemsList: [],
             itemsById: {},
+            relatedEntities: {},
             selected: null,
             view: 'compact',
             narrow: false,
@@ -47,6 +66,22 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.updateAllItems = this.updateAllItems.bind(this);
         this.multiSelect = this.multiSelect.bind(this);
         this.selectMultipleItems = this.selectMultipleItems.bind(this);
+
+        this.abortController = new AbortController();
+        this.eventListenersToRemoveBeforeUnmounting = [];
+
+        this.handleContentChanges = throttleAndCombineArray(
+            (changes) => {
+                getAndMergeRelatedEntitiesUpdated(
+                    this.state.relatedEntities,
+                    changes,
+                    this.abortController.signal,
+                ).then((relatedEntities) => {
+                    this.setState({relatedEntities});
+                });
+            },
+            300,
+        );
     }
 
     focus() {
@@ -78,22 +113,44 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
 
         if (item) {
             const itemsById = angular.extend({}, this.state.itemsById);
+            const updatedItem: IArticle = angular.extend({}, item, changes);
 
-            itemsById[itemId] = angular.extend({}, item, changes);
-            this.setState({itemsById: itemsById});
+            itemsById[itemId] = updatedItem;
+
+            getAndMergeRelatedEntitiesForArticles(
+                [updatedItem],
+                this.state.relatedEntities,
+                this.abortController.signal,
+            ).then((relatedEntities) => {
+                this.setState({
+                    itemsById,
+                    relatedEntities,
+                });
+            });
         }
     }
 
     updateAllItems(itemId, changes) {
         const itemsById = angular.extend({}, this.state.itemsById);
+        const updatedItems = [];
 
         forOwn(itemsById, (value, key) => {
             if (startsWith(key, itemId)) {
                 itemsById[key] = angular.extend({}, value, changes);
+                updatedItems.push(itemsById[key]);
             }
         });
 
-        this.setState({itemsById: itemsById});
+        getAndMergeRelatedEntitiesForArticles(
+            updatedItems,
+            this.state.relatedEntities,
+            this.abortController.signal,
+        ).then((relatedEntities) => {
+            this.setState({
+                itemsById,
+                relatedEntities,
+            });
+        });
     }
 
     selectMultipleItems(lastItem: IArticle) {
@@ -147,6 +204,49 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.setState({itemsById, selected: selectedId});
     }
 
+    componentDidMount() {
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:created',
+                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:updated',
+                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                    const {resource, _id, fields} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:deleted',
+                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
+    }
+
+    componentWillUnmount() {
+        this.abortController.abort();
+
+        this.eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
+            removeListener();
+        });
+    }
+
     render() {
         const {scope, monitoringState} = this.props;
 
@@ -156,6 +256,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                     <ItemList
                         itemsList={this.state.itemsList}
                         itemsById={this.state.itemsById}
+                        relatedEntities={this.state.relatedEntities}
                         profilesById={monitoringState.state.profilesById}
                         highlightsById={monitoringState.state.highlightsById}
                         markedDesksById={monitoringState.state.markedDesksById}

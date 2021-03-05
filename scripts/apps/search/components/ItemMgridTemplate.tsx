@@ -6,6 +6,7 @@ import {IArticle, IDesk} from 'superdesk-api';
 import {ItemPriority} from './ItemPriority';
 import {ItemUrgency} from './ItemUrgency';
 import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {BroadcastFieldComponent} from './fields/broadcast';
 
 interface IProps {
     item: IArticle;
@@ -13,7 +14,6 @@ interface IProps {
     desk: IDesk;
     swimlane: any;
     ingestProvider: any;
-    broadcast(obj: any): any;
     getActionsMenu(): any;
     multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
@@ -38,7 +38,7 @@ export class ItemMgridTemplate extends React.Component<IProps> {
                     <GridTypeIcon item={item} />
                     {item.priority ? <ItemPriority priority={item.priority} language={item.language} /> : null}
                     {item.urgency ? <ItemUrgency urgency={item.urgency} language={item.language} /> : null}
-                    {this.props.broadcast({item: item})}
+                    <BroadcastFieldComponent item={item} />
                     {this.props.getActionsMenu()}
                 </div>
             </div>

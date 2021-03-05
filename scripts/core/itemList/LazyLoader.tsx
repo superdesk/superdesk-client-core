@@ -1,7 +1,5 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {throttle} from 'lodash';
-import {throttleAndCombineSet} from './throttleAndCombine';
 import {OrderedMap} from 'immutable';
 
 interface IProps<T> {
@@ -34,12 +32,6 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
     private containerRef: any;
     private _mounted: boolean;
 
-    // throttled
-    public reset: () => void;
-
-    // throttled
-    public updateItems: (items: Set<string>) => void;
-
     constructor(props: IProps<T>) {
         super(props);
 
@@ -52,15 +44,11 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         this.allItemsLoaded = this.allItemsLoaded.bind(this);
         this.getLoadedItemsCount = this.getLoadedItemsCount.bind(this);
 
-        this.reset = throttle(() => {
-            if (this._mounted) {
-                this._reset();
-            }
-        }, 500);
-        this.updateItems = throttleAndCombineSet(this._updateItems.bind(this), 500);
+        this.reset = this.reset.bind(this);
+        this.updateItems = this.updateItems.bind(this);
     }
 
-    private _updateItems(ids: Set<string>): void {
+    public updateItems(ids: Set<string>): void {
         const {items} = this.state;
         const onlyLoadedIds = Array.from(ids).filter((id) => items.has(id));
 
@@ -71,13 +59,15 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         });
     }
 
-    private _reset() {
-        this.setState({
-            items: OrderedMap(),
-            loading: true,
-        }, () => {
-            this.loadMore();
-        });
+    public reset(): void {
+        if (this._mounted) {
+            this.setState({
+                items: OrderedMap(),
+                loading: true,
+            }, () => {
+                this.loadMore();
+            });
+        }
     }
 
     private loadMore() {

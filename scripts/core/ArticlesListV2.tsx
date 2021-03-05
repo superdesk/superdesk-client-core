@@ -19,10 +19,20 @@ import {IScope} from 'angular';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 import {OrderedMap} from 'immutable';
 import {openArticle} from './get-superdesk-api-implementation';
+import {
+    getAndMergeRelatedEntitiesForArticles,
+    IRelatedEntities,
+    IResourceChange,
+    getAndMergeRelatedEntitiesUpdated,
+} from './getRelatedEntities';
+import {SuperdeskReactComponent} from './SuperdeskReactComponent';
+import {notNullOrUndefined} from './helpers/typescript-helpers';
+import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 
 interface IState {
     initialized: boolean;
     selected: IArticle['_id'] | undefined;
+    relatedEntities: IRelatedEntities;
 }
 
 interface IProps {
@@ -44,13 +54,11 @@ interface IProps {
  */
 type ITrackById = string;
 
-export class ArticlesListV2 extends React.Component<IProps, IState> {
+export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
     private monitoringState: any;
     private lazyLoaderRef: LazyLoader<IArticle>;
-    private handleContentChanges: (resource: string, itemId: string, fields?: {[key: string]: 1}) => void;
-    private removeResourceCreatedListener: () => void;
-    private removeContentUpdateListener: () => void;
-    private removeResourceDeletedListener: () => void;
+    private handleContentChanges: (changes: Array<IResourceChange>) => void;
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
     private services: {search: any};
 
@@ -64,36 +72,91 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         this.state = {
             initialized: false,
             selected: undefined,
+            relatedEntities: {},
         };
 
         this.monitoringState = ng.get('monitoringState');
 
+        this.fetchRelatedEntities = this.fetchRelatedEntities.bind(this);
         this.loadMore = this.loadMore.bind(this);
+        this.getItemsByIds = this.getItemsByIds.bind(this);
 
-        this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
-            if (ARTICLE_RELATED_RESOURCE_NAMES.includes(resource)) {
-                const reloadTheList = this.props?.shouldReloadTheList(
-                    new Set(Object.keys(fields ?? {})),
-                ) ?? false;
+        this.handleContentChanges = throttleAndCombineArray(
+            (changes) => {
+                if (this.lazyLoaderRef == null) {
+                    return;
+                }
 
-                if (reloadTheList || fields == null) {
-                    this.lazyLoaderRef.reset();
-                    this.idMap.clear();
-                } else {
-                    const trackById = this.idMap.get(itemId);
+                const articlesResourceChanges = changes.filter(
+                    ({resource}) => ARTICLE_RELATED_RESOURCE_NAMES.includes(resource),
+                );
 
-                    if (trackById != null) {
-                        this.lazyLoaderRef.updateItems(new Set([trackById]));
+                // update articles in the list
+                if (articlesResourceChanges.length > 0) {
+                    const fields = articlesResourceChanges.reduce((acc, item) => {
+                        Object.keys(item.fields ?? {}).forEach((field) => {
+                            acc.add(field);
+                        });
+
+                        return acc;
+                    }, new Set<string>());
+
+                    const reloadTheList = this.props?.shouldReloadTheList(fields) ?? false;
+
+                    if (reloadTheList || fields == null) {
+                        this.lazyLoaderRef.reset();
+                        this.idMap.clear();
+                    } else {
+                        const trackByIds: Array<string> = articlesResourceChanges
+                            .map(({itemId}) => this.idMap.get(itemId))
+                            .filter(notNullOrUndefined);
+
+                        if (trackByIds.length > 0) {
+                            this.lazyLoaderRef.updateItems(new Set<string>(trackByIds));
+                        }
                     }
                 }
-            }
-        };
+
+                getAndMergeRelatedEntitiesUpdated(
+                    this.state.relatedEntities,
+                    changes,
+                    this.abortController.signal,
+                ).then((relatedEntities) => {
+                    this.setState({relatedEntities});
+                });
+            },
+            300,
+        );
 
         this.idMap = new Map<IArticle['_id'], ITrackById>();
 
         this.services = {
             search: ng.get('search'),
         };
+
+        this.eventListenersToRemoveBeforeUnmounting = [];
+    }
+
+    fetchRelatedEntities(items: OrderedMap<ITrackById, IArticle>): Promise<OrderedMap<ITrackById, IArticle>> {
+        const articles: Array<IArticle> = [];
+
+        items.forEach((item) => {
+            articles.push(item);
+        });
+
+        return new Promise((resolve) => {
+            getAndMergeRelatedEntitiesForArticles(
+                articles,
+                this.state.relatedEntities,
+                this.abortController.signal,
+            ).then((relatedEntities) => {
+                this.setState({
+                    relatedEntities,
+                }, () => {
+                    resolve(items);
+                });
+            });
+        });
     }
 
     loadMore(from: number, to: number): Promise<OrderedMap<ITrackById, IArticle>> {
@@ -113,7 +176,28 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
 
                 resolve(result);
             });
-        });
+        }).then(this.fetchRelatedEntities);
+    }
+
+    getItemsByIds(trackByIds: Array<string>): Promise<OrderedMap<ITrackById, IArticle>> {
+        const {services} = this;
+        const ids = trackByIds.map((x) => services.search.extractIdFromTrackByIndentifier(x));
+
+        return Promise.all(
+            ids.map((id) => dataApi.findOne<IArticle>('search', id)),
+        ).then((items) => {
+            let result = OrderedMap<ITrackById, IArticle>();
+
+            items.forEach((item) => {
+                const trackById = services.search.generateTrackByIdentifier(item);
+
+                this.idMap.set(item._id, trackById);
+
+                result = result.set(trackById, item);
+            });
+
+            return result;
+        }).then(this.fetchRelatedEntities);
     }
 
     componentDidMount() {
@@ -124,18 +208,47 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 this.setState({initialized: true});
             }
         });
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:created',
+                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:updated',
+                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                    const {resource, _id, fields} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:deleted',
+                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
     }
 
     componentWillUnmount() {
         this._mounted = false;
 
-        /**
-         * Conditional calls are used because sometimes the component is unmounted quicker
-         * than initialization is complete.
-         */
-        this.removeResourceCreatedListener?.();
-        this.removeContentUpdateListener?.();
-        this.removeResourceDeletedListener?.();
+        this.eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
+            removeListener();
+        });
     }
 
     render() {
@@ -151,59 +264,9 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 itemCount={itemCount}
                 loadMoreItems={this.loadMore}
                 pageSize={pageSize}
-                getItemsByIds={(trackByIds) => {
-                    const ids = trackByIds.map((x) => services.search.extractIdFromTrackByIndentifier(x));
-
-                    return Promise.all(
-                        ids.map((id) => dataApi.findOne<IArticle>('search', id)),
-                    ).then((items) => {
-                        let result = OrderedMap<ITrackById, IArticle>();
-
-                        items.forEach((item) => {
-                            const trackById = services.search.generateTrackByIdentifier(item);
-
-                            this.idMap.set(item._id, trackById);
-
-                            result = result.set(trackById, item);
-                        });
-
-                        return result;
-                    });
-                }}
+                getItemsByIds={this.getItemsByIds}
                 ref={(component) => {
                     this.lazyLoaderRef = component;
-
-                    if (this.lazyLoaderRef != null && this.removeContentUpdateListener == null) {
-                        // wouldn't work in componentDidMount, because this.state.loading would be true
-                        // and LazyLoader wouldn't be mounted at that point yet.
-
-                        this.removeResourceCreatedListener = addWebsocketEventListener(
-                            'resource:created',
-                            (event: IWebsocketMessage<IResourceCreatedEvent>) => {
-                                const {resource, _id} = event.extra;
-
-                                this.handleContentChanges(resource, _id);
-                            },
-                        );
-
-                        this.removeContentUpdateListener = addWebsocketEventListener(
-                            'resource:updated',
-                            (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                                const {resource, _id, fields} = event.extra;
-
-                                this.handleContentChanges(resource, _id, fields);
-                            },
-                        );
-
-                        this.removeResourceDeletedListener = addWebsocketEventListener(
-                            'resource:deleted',
-                            (event: IWebsocketMessage<IResourceDeletedEvent>) => {
-                                const {resource, _id} = event.extra;
-
-                                this.handleContentChanges(resource, _id);
-                            },
-                        );
-                    }
                 }}
                 padding={this.props.padding}
                 data-test-id="articles-list"
@@ -213,6 +276,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                         <ItemList
                             itemsList={items.keySeq().toJS()}
                             itemsById={items.toJS()}
+                            relatedEntities={this.state.relatedEntities}
                             profilesById={this.monitoringState.state.profilesById}
                             highlightsById={this.monitoringState.state.highlightsById}
                             markedDesksById={this.monitoringState.state.markedDesksById}

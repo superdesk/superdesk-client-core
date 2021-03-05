@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import {closeActionsMenu} from '../helpers';
 import {ItemListAngularWrapper} from '../components/ItemListAngularWrapper';
+import {getAndMergeRelatedEntitiesForArticles} from 'core/getRelatedEntities';
 
 ItemList.$inject = [
     '$timeout',
@@ -26,6 +27,7 @@ export function ItemList(
 ) {
     return {
         link: function(scope, elem) {
+            const abortController = new AbortController();
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
 
@@ -162,13 +164,20 @@ export function ItemList(
                         }
                     });
 
-                    listComponent.setState({
-                        itemsList: itemsList,
-                        itemsById: itemsById,
-                        view: scope.view,
-                        loading: false,
-                    }, () => {
-                        scope.rendering = scope.loading = false;
+                    getAndMergeRelatedEntitiesForArticles(
+                        items._items,
+                        listComponent.state.relatedEntities,
+                        abortController.signal,
+                    ).then((relatedEntities) => {
+                        listComponent.setState({
+                            itemsList: itemsList,
+                            itemsById: itemsById,
+                            relatedEntities,
+                            view: scope.view,
+                            loading: false,
+                        }, () => {
+                            scope.rendering = scope.loading = false;
+                        });
                     });
                 }, true);
 
@@ -343,6 +352,7 @@ export function ItemList(
 
                 // remove react elem on destroy
                 scope.$on('$destroy', () => {
+                    abortController.abort();
                     elem.off();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });

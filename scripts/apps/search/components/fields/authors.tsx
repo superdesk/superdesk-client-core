@@ -2,104 +2,93 @@
 
 import React from 'react';
 
-import {IUser, IRestApiResponse, IVocabulary, IVocabularyItem, IAuthorsFieldOptions} from 'superdesk-api';
+import {IUser, IVocabulary, IVocabularyItem, IArticle} from 'superdesk-api';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 import {getVocabularyItemNameTranslated, gettext} from 'core/utils';
 import {Popover} from 'superdesk-ui-framework/react';
-
-interface IProps {
-    authors: Array<{userId: IUser['_id'], roleId: string}>;
-    options: IAuthorsFieldOptions;
-}
-
-interface IState {
-    authors?: Array<{user: IUser, roleQcode: string}>;
-    vocabularyItems?: Map<string, IVocabularyItem>; // indexed by qcode
-}
+import {IRelatedEntitiesToFetch} from '.';
 
 const SEPARATOR = <span style={{opacity: 0.5}}> / </span>;
 const AUTHORS_TO_SHOW_AT_ONCE: number = 2;
 
-export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
-    constructor(props: IProps) {
+export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
+    public static getRelatedEntities(item: IArticle): IRelatedEntitiesToFetch {
+        if (item.authors == null) {
+            return [];
+        } else {
+            const userIds = item.authors.map((author) => ({collection: 'users', id: author._id[0]}));
+
+            return [
+                ...userIds,
+                {collection: 'vocabularies', id: 'author_roles'},
+            ];
+        }
+    }
+
+    private related: {
+        getUser: (id: string) => IUser;
+        getAuthorRole: (id: string) => IVocabularyItem;
+    };
+
+    constructor(props: IPropsItemListInfo) {
         super(props);
 
-        this.state = {};
+        this.related = {
+            getUser: (id) => this.props.relatedEntities['users'].get(id),
+            getAuthorRole: (qcode: string) => {
+                const authorRoles: IVocabulary = this.props.relatedEntities['vocabularies'].get('author_roles');
+
+                return authorRoles.items.find((role) => role.qcode === qcode);
+            },
+        };
     }
-    componentDidMount() {
-        const {authors} = this.props;
 
-        const rolesByUserId = authors.reduce((acc, item) => {
-            acc[item.userId] = item.roleId;
-
-            return acc;
-        }, {});
-
-        const userIds = authors.map(({userId}) => userId);
-
-        const getUsers = () => this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IUser>>({
-            method: 'GET',
-            path: `/users?where=${JSON.stringify({_id: {$in: userIds}})}`,
-        });
-
-        const getAuthorRolesVocabulary = () => this.asyncHelpers.httpRequestJsonLocal<IVocabulary>({
-            method: 'GET',
-            path: '/vocabularies/author_roles',
-        });
-
-        Promise.all([
-            getUsers(),
-            getAuthorRolesVocabulary(),
-        ]).then(([usersResponse, authorRolesVocabulary]) => {
-            const vocabularyItems = new Map<string, IVocabularyItem>();
-
-            authorRolesVocabulary?.items?.forEach((item) => {
-                vocabularyItems.set(item.qcode, item);
-            });
-
-            this.setState({
-                vocabularyItems,
-                authors: usersResponse._items.map((user) => ({user, roleQcode: rolesByUserId[user._id]})),
-            });
-        });
-    }
     render() {
-        if (this.state.authors == null) {
+        const {options} = this.props;
+
+        if (this.props.item.authors == null || options == null) {
             return null;
         }
 
-        const {vocabularyItems} = this.state;
-        const {options} = this.props;
+        const authors = this.props.item.authors
+            .map(({_id}) => ({userId: _id[0], roleId: _id[1]}))
+            .filter(({roleId}) => options.includeRoles.includes(roleId));
 
-        function renderAuthorRole(roleQcode: string) {
-            return (
-                <em style={{opacity: 0.85, fontWeight: 'normal'}}>
-                    {getVocabularyItemNameTranslated(vocabularyItems.get(roleQcode))}:{' '}
-                </em>
-            );
+        if (authors.length < 1) {
+            return null;
         }
 
-        function renderUser(user: IUser) {
+        const renderAuthorRole = (roleQcode: string) => {
+            return (
+                <em style={{opacity: 0.85, fontWeight: 'normal'}}>
+                    {getVocabularyItemNameTranslated(this.related.getAuthorRole(roleQcode))}:{' '}
+                </em>
+            );
+        };
+
+        const renderUser = (userId: string) => {
+            const user = this.related.getUser(userId);
+
             return (
                 <strong>{user[options.displayField] ?? user.display_name}</strong>
             );
-        }
+        };
 
         return (
             <span className="container" style={{marginRight: '1.2rem'}}>
                 {
-                    this.state.authors.slice(0, AUTHORS_TO_SHOW_AT_ONCE).map(({user, roleQcode}, index) => (
-                        <span key={user._id}>
+                    authors.slice(0, AUTHORS_TO_SHOW_AT_ONCE).map(({userId, roleId}, index) => (
+                        <span key={userId}>
                             {index > 0 && SEPARATOR}
-                            <span>{renderAuthorRole(roleQcode)}</span>
-                            <span>{renderUser(user)}</span>{' '}
+                            <span>{renderAuthorRole(roleId)}</span>
+                            <span>{renderUser(userId)}</span>{' '}
                         </span>
                     ))
                 }
 
                 {
-                    this.state.authors.length > AUTHORS_TO_SHOW_AT_ONCE && (
+                    authors.length > AUTHORS_TO_SHOW_AT_ONCE && (
                         <span>
                             {SEPARATOR}
 
@@ -120,12 +109,12 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
                                 <table style={{lineHeight: 1.5}}>
                                     <tbody>
                                         {
-                                            this.state.authors.map(({user, roleQcode}) => (
-                                                <tr key={user._id}>
+                                            authors.map(({userId, roleId}) => (
+                                                <tr key={userId}>
                                                     <td style={{paddingRight: 4, opacity: 0.6}}>
-                                                        {renderAuthorRole(roleQcode)}
+                                                        {renderAuthorRole(roleId)}
                                                     </td>
-                                                    <td>{renderUser(user)}</td>
+                                                    <td>{renderUser(userId)}</td>
                                                 </tr>
                                             ))
                                         }
@@ -136,31 +125,6 @@ export class AuthorsComponent extends SuperdeskReactComponent<IProps, IState> {
                     )
                 }
             </span>
-        );
-    }
-}
-
-export class Authors extends React.PureComponent<IPropsItemListInfo> {
-    render() {
-        const options: IAuthorsFieldOptions = this.props.options;
-
-        if ((this.props.item.authors) == null || options == null) {
-            return null;
-        }
-
-        const allAuthors = this.props.item.authors.map(({_id}) => ({userId: _id[0], roleId: _id[1]}));
-        const authors = allAuthors.filter(({roleId}) => options.includeRoles.includes(roleId));
-
-        if (authors.length < 1) {
-            return null;
-        }
-
-        return (
-            <AuthorsComponent
-                key={JSON.stringify(this.props.item.authors)} // force component to remount and re-initialize state
-                authors={authors}
-                options={options}
-            />
         );
     }
 }
