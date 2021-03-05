@@ -30,6 +30,7 @@ function getEditVideoAction(superdesk: ISuperdesk) {
 }
 
 const extension: IExtension = {
+    id: 'videoEditor',
     activate: (superdesk: ISuperdesk) => {
         const result: IExtensionActivationResult = {
             contributions: {

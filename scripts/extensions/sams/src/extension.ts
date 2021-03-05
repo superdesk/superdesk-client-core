@@ -6,6 +6,7 @@ import {SamsWorkspaceApp} from './apps/samsWorkspace';
 import {superdeskApi} from './apis';
 
 const extension: IExtension = {
+    id: 'sams',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
