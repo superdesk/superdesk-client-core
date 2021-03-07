@@ -10,6 +10,7 @@ interface IInternalEvents {
     changeUserPreferences: {[preferenceId: string]: any};
     openFullPreview: Array<IArticle>;
     openExportView: Array<IArticle['_id']>;
+    extensionsHaveLoaded: true;
 }
 
 export function addInternalEventListener<T extends keyof IInternalEvents>(
