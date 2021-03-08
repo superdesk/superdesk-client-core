@@ -9,7 +9,7 @@ import {getVocabularyItemNameTranslated, gettext} from 'core/utils';
 import {Popover} from 'superdesk-ui-framework/react';
 import {IRelatedEntitiesToFetch} from '.';
 
-const SEPARATOR = <span style={{opacity: 0.5}}> / </span>;
+const SEPARATOR = <span style={{opacity: 0.5, marginLeft: 4, marginRight: 4}}>/</span>;
 const AUTHORS_TO_SHOW_AT_ONCE: number = 2;
 
 export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
@@ -76,17 +76,20 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
         };
 
         return (
-            <span className="container" style={{marginRight: '1.2rem'}}>
-                {
-                    authors.slice(0, AUTHORS_TO_SHOW_AT_ONCE).map(({userId, roleId}, index) => (
-                        <span key={userId}>
-                            {index > 0 && SEPARATOR}
-                            <span>{renderAuthorRole(roleId)}</span>
-                            <span>{renderUser(userId)}</span>{' '}
-                        </span>
-                    ))
-                }
+            <React.Fragment>
+                <span className="container" style={{marginRight: 0}}>
+                    {
+                        authors.slice(0, AUTHORS_TO_SHOW_AT_ONCE).map(({userId, roleId}, index) => (
+                            <span key={userId}>
+                                {index > 0 && SEPARATOR}
+                                <span>{renderAuthorRole(roleId)}</span>
+                                <span>{renderUser(userId)}</span>{' '}
+                            </span>
+                        ))
+                    }
+                </span>
 
+                {/** rendering outside of .container in order to prevent ellipsis hiding "All authors" button */}
                 {
                     authors.length > AUTHORS_TO_SHOW_AT_ONCE && (
                         <span>
@@ -124,7 +127,9 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
                         </span>
                     )
                 }
-            </span>
+
+                <span style={{marginRight: '1.2rem'}} />
+            </React.Fragment>
         );
     }
 }
