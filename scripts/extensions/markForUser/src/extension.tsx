@@ -25,80 +25,79 @@ const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
-        const result: IExtensionActivationResult = {
-            contributions: {
-                globalMenuHorizontal: [getMarkedForMeComponent(superdesk)],
-                articleListItemWidgets: [getDisplayMarkedUserComponent(superdesk)],
-                authoringTopbarWidgets: [getDisplayMarkedUserComponent(superdesk)],
-                personalSpace: {
-                    getSections: () => superdesk.session.getCurrentUser().then((user) => {
-                        const items: Array<IPersonalSpaceSection> = [
-                            {
-                                type: 'markedForMe',
-                                label: gettext('Marked for me'),
-                                query: {
-                                    term: {
-                                        marked_for_user: user._id,
+        return superdesk.session.getCurrentUser().then((user) => {
+            const personalSpaceSections: Array<IPersonalSpaceSection> = [
+                {
+                    id: 'markedForMe',
+                    label: gettext('Marked for me'),
+                    query: {
+                        term: {
+                            marked_for_user: user._id,
+                        },
+                    },
+                },
+            ];
+            const result: IExtensionActivationResult = {
+                contributions: {
+                    globalMenuHorizontal: [getMarkedForMeComponent(superdesk)],
+                    articleListItemWidgets: [getDisplayMarkedUserComponent(superdesk)],
+                    authoringTopbarWidgets: [getDisplayMarkedUserComponent(superdesk)],
+                    personalSpace: {
+                        getSections: () => personalSpaceSections,
+                    },
+                    notifications: {
+                        'item:marked': (notification: IMarkForUserNotification) => {
+                            return {
+                                body: notification.message,
+                                actions: [
+                                    {
+                                        label: gettext('open item'),
+                                        onClick: () => superdesk.ui.article.view(notification.item),
+                                    },
+                                ],
+                            };
+                        },
+                        'item:unmarked': (notification: IMarkForUserNotification) => {
+                            return {
+                                body: notification.message,
+                                actions: [
+                                    {
+                                        label: gettext('open item'),
+                                        onClick: () => superdesk.ui.article.view(notification.item),
+                                    },
+                                ],
+                            };
+                        },
+                    },
+                    entities: {
+                        article: {
+                            getActions: getActionsInitialize(superdesk),
+                            getActionsBulk: getActionsBulkInitialize(superdesk),
+                        },
+                    },
+                    monitoring: {
+                        getFilteringButtons: (deskId: string) => {
+                            const items: Array<IMonitoringFilter> = [
+                                {
+                                    label: gettext('Marked for me'),
+                                    query: {
+                                        marked_for_user: [user._id],
+                                        'task.desk': [deskId],
+                                    },
+                                    displayOptions: {
+                                        ignoreMatchesInSavedSearchMonitoringGroups: true,
                                     },
                                 },
-                            },
-                        ];
+                            ];
 
-                        return items;
-                    }),
-                },
-                notifications: {
-                    'item:marked': (notification: IMarkForUserNotification) => {
-                        return {
-                            body: notification.message,
-                            actions: [
-                                {
-                                    label: gettext('open item'),
-                                    onClick: () => superdesk.ui.article.view(notification.item),
-                                },
-                            ],
-                        };
-                    },
-                    'item:unmarked': (notification: IMarkForUserNotification) => {
-                        return {
-                            body: notification.message,
-                            actions: [
-                                {
-                                    label: gettext('open item'),
-                                    onClick: () => superdesk.ui.article.view(notification.item),
-                                },
-                            ],
-                        };
+                            return items;
+                        },
                     },
                 },
-                entities: {
-                    article: {
-                        getActions: getActionsInitialize(superdesk),
-                        getActionsBulk: getActionsBulkInitialize(superdesk),
-                    },
-                },
-                monitoring: {
-                    getFilteringButtons: (deskId: string) => superdesk.session.getCurrentUser().then((user) => {
-                        const items: Array<IMonitoringFilter> = [
-                            {
-                                label: gettext('Marked for me'),
-                                query: {
-                                    marked_for_user: [user._id],
-                                    'task.desk': [deskId],
-                                },
-                                displayOptions: {
-                                    ignoreMatchesInSavedSearchMonitoringGroups: true,
-                                },
-                            },
-                        ];
+            };
 
-                        return items;
-                    }),
-                },
-            },
-        };
-
-        return Promise.resolve(result);
+            return Promise.resolve(result);
+        });
     },
 };
 

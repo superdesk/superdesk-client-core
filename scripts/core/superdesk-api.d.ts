@@ -61,7 +61,7 @@ declare module 'superdesk-api' {
 
     export interface IPersonalSpaceSection {
         label: string;
-        type: string,
+        id: string,
         query: {[key: string]: any};
     }
 
@@ -121,10 +121,10 @@ declare module 'superdesk-api' {
                 onUpdateAfter?(previous: IArticle, current: IArticle): void;
             };
             monitoring?: {
-                getFilteringButtons?(deskId: string): Promise<Array<IMonitoringFilter>>;
+                getFilteringButtons?(deskId: string): Array<IMonitoringFilter>;
             };
             personalSpace?: {
-                getSections?(): Promise<Array<IPersonalSpaceSection>>;
+                getSections?(): Array<IPersonalSpaceSection>;
             };
         }
     }

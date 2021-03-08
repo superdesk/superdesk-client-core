@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {flattenDeep, includes, isNil} from 'lodash';
 import {setFilters, IQueryParams} from 'apps/search/services/SearchService';
 import {PUBLISHED_STATES} from 'apps/archive/constants';
 import {ITEM_STATE} from 'apps/archive/constants';
@@ -7,8 +7,24 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
-import {appConfig} from 'appConfig';
-import {IMonitoringFilter} from 'superdesk-api';
+import {appConfig, extensions} from 'appConfig';
+import {IMonitoringFilter, IPersonalSpaceSection} from 'superdesk-api';
+
+export function getExtensionSections() {
+    const section = Promise.all(
+        Object.values(extensions)
+            .map(
+                (extension) =>
+                    extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? [],
+            ),
+    );
+
+    return section.then((res) => {
+        const response = flattenDeep(res);
+
+        return response;
+    });
+}
 
 export interface ICard {
     _id: string;
@@ -78,6 +94,15 @@ export function CardsService(search, session, desks, $location) {
 
     function filterQueryByCardType(query, queryParam, card: ICard) {
         let deskId;
+        const extensionSection = getExtensionSections();
+
+        extensionSection.then((response) => {
+            const data = response.find((res: IPersonalSpaceSection) => res?.id === card.type);
+
+            if (data) {
+                query.filter(data.query);
+            }
+        });
 
         switch (card.type) {
         case 'search':
@@ -105,10 +130,6 @@ export function CardsService(search, session, desks, $location) {
                     {exists: {field: 'task.desk'}},
                 ],
             }});
-            break;
-
-        case 'markedForMe':
-            query.filter(card.queryParams);
             break;
 
         case 'spike':
@@ -142,9 +163,9 @@ export function CardsService(search, session, desks, $location) {
             break;
 
         default:
-            if (!_.isNil(card.singleViewType) && card.singleViewType === 'desk') {
+            if (!isNil(card.singleViewType) && card.singleViewType === 'desk') {
                 query.filter({term: {'task.desk': card.deskId}});
-            } else {
+            } else if (card._id) {
                 query.filter({term: {'task.stage': card._id}});
             }
             break;
@@ -191,14 +212,14 @@ export function CardsService(search, session, desks, $location) {
             var termsFileType: any = {terms: {type: JSON.parse(card.fileType)}};
 
             // Normal package
-            if (_.includes(JSON.parse(card.fileType), 'composite')) {
+            if (includes(JSON.parse(card.fileType), 'composite')) {
                 termsFileType = {and: [
                     {bool: {must_not: {exists: {field: 'highlight'}}}},
                     {terms: {type: JSON.parse(card.fileType)}},
                 ]};
             }
 
-            if (_.includes(JSON.parse(card.fileType), 'highlight-pack')) {
+            if (includes(JSON.parse(card.fileType), 'highlight-pack')) {
                 query.filter({or: [
                     termsHighlightsPackage,
                     termsFileType,

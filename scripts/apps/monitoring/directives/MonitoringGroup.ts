@@ -719,7 +719,9 @@ export function MonitoringGroup(
                             searchCriteria.source.size = PAGE_SIZE;
                         }
                     }
-                } else if (scope.group != null && scope.group.type === 'personal') {
+                } else if (scope.group != null
+                    && (scope.group.type === 'personal'
+                        || scope.group.type === 'markedForMe')) {
                     provider = 'news';
                 } else {
                     provider = 'archive';

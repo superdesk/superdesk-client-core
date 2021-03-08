@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {flattenDeep, each, forEach, isNil} from 'lodash';
 import {gettext} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig, extensions} from 'appConfig';
@@ -56,14 +56,14 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         Object.values(extensions)
             .map(
                 (extension) =>
-                    extension.activationResult?.contributions?.personalSpace?.getSections?.(),
+                    extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? [],
             ),
     ).then((res) => {
-        const response = _.flattenDeep(res);
+        const response = flattenDeep(res);
 
         response.forEach((resp) => {
-            if (resp?.type === 'markedForMe') {
-                self.personalGroups[resp.type] = {type: resp.type, header: resp.label, query: resp.query};
+            if (resp != null) {
+                self.personalGroups[resp.id] = {type: resp.id, header: resp.label, query: resp.query};
             }
         });
     });
@@ -74,7 +74,6 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
 
     this.togglePersonalGroup = (id, group) => {
         self.defaultPersonalGroup.type = id;
-        self.defaultPersonalGroup.queryParams = group.query;
     };
 
     desks.initialize()
@@ -82,8 +81,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             this.desks = desks.desks._items;
             this.deskLookup = desks.deskLookup;
             this.deskStages = desks.deskStages;
-            _.each(this.desks, (desk) => {
-                _.each(self.deskStages[desk._id], (stage) => {
+            each(this.desks, (desk) => {
+                each(self.deskStages[desk._id], (stage) => {
                     self.stageLookup[stage._id] = stage;
                 });
             });
@@ -91,7 +90,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         .then(angular.bind(this, function() {
             return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
                 this.searches = searchesList;
-                _.each(this.searches, (item) => {
+                each(this.searches, (item) => {
                     self.searchLookup[item._id] = item;
                 });
             }));
@@ -131,7 +130,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         }
 
         return workspaces.getActiveId().then((activeWorkspace) => {
-            if (!_.isNil(self.settings) && self.settings.desk) {
+            if (!isNil(self.settings) && self.settings.desk) {
                 // when viewing in desk's monitoring settings
                 return deskSettingsMonitoringConfig(self.settings.desk);
             }
@@ -219,7 +218,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             let groups = [];
 
             self.widget.configuration = objWidget.configuration || {groups: [], label: ''};
-            _.each(workspace.widgets, (widget) => {
+            each(workspace.widgets, (widget) => {
                 if (widget.configuration && self.widget._id === widget._id
                     && self.widget.multiple_id === widget.multiple_id) {
                     groups = widget.configuration.groups || groups;
@@ -255,7 +254,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             self.groups.length = 0;
         }
         if (settings && settings.groups.length > 0) {
-            _.each(settings.groups, (item) => {
+            each(settings.groups, (item) => {
                 if (item.type === 'stage' && !self.stageLookup[item._id]) {
                     return;
                 }
@@ -264,8 +263,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                 }
                 self.groups.push(item);
             });
-        } else if (settings && settings.groups.length === 0 && settings.type === 'desk' && _.isNil(settings.desk)) {
-            _.each(self.stageLookup, (item) => {
+        } else if (settings && settings.groups.length === 0 && settings.type === 'desk' && isNil(settings.desk)) {
+            each(self.stageLookup, (item) => {
                 if (item.desk === desks.getCurrentDeskId()) {
                     self.groups.push({_id: item._id, type: 'stage', header: item.name});
                 }
@@ -283,8 +282,8 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                     });
                 }
             }
-        } else if (settings && settings.groups.length === 0 && !_.isNil(settings.desk)) {
-            _.each(self.stageLookup, (item) => {
+        } else if (settings && settings.groups.length === 0 && !isNil(settings.desk)) {
+            each(self.stageLookup, (item) => {
                 if (item.desk === settings.desk._id) {
                     self.groups.push({_id: item._id, type: 'stage', header: item.name});
                 }
@@ -329,7 +328,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             return;
         }
 
-        _.each(self.groups, (item, index) => {
+        each(self.groups, (item, index) => {
             if (item.type === 'stage') {
                 var stage = self.stageLookup[item._id];
 
@@ -339,7 +338,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             }
         });
 
-        _.each(spikeDesks, (item: any) => {
+        each(spikeDesks, (item: any) => {
             if (item._id === 'personal') {
                 self.spikeGroups.push({_id: item._id, type: 'spike-personal', header: item.name});
             } else {
@@ -393,13 +392,13 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     };
 
     function updateFilteringCriteria() {
-        _.forEach(self.activeFilters, (filterValue, filterType) => {
+        forEach(self.activeFilters, (filterValue, filterType) => {
             var value = filterValue.length === 0 ? null : JSON.stringify(filterValue);
 
-            _.each(self.groups, (item) => {
+            each(self.groups, (item) => {
                 item[filterType] = value;
             });
-            _.each(self.spikeGroups, (item) => {
+            each(self.spikeGroups, (item) => {
                 item[filterType] = value;
             });
 
@@ -542,7 +541,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         var _groups = this.groups;
 
         this.refreshGroups().then(() => {
-            _.each(_groups, (item, index) => {
+            each(_groups, (item, index) => {
                 self.editGroups[item._id] = {
                     _id: item._id,
                     selected: true,
@@ -592,10 +591,10 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      */
     this.search = function(query) {
         this.searchQuery = query;
-        _.each(this.groups, (item) => {
+        each(this.groups, (item) => {
             item.query = query;
         });
-        _.each(this.spikeGroups, (item) => {
+        each(this.spikeGroups, (item) => {
             item.query = query;
         });
         self.defaultPersonalGroup.query = query;
