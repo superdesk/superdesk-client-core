@@ -1,5 +1,4 @@
 import React from 'react';
-import {WidgetItemList} from 'apps/search/components';
 import {IArticle, IUser, IStage} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 import ng from 'core/services/ng';
@@ -8,10 +7,11 @@ import {SelectUser} from 'core/ui/components/SelectUser';
 import {logger} from 'core/services/logger';
 import {extensions} from 'appConfig';
 import {Loader} from 'core/ui/components/Loader';
+import {GroupComponent} from './Group';
 
 type FetchFunction = (repo: string, criteria: any) => Promise<any>;
 
-interface IGroup {
+export interface IGroup {
     id: string;
     label: string;
     precondition?: () => boolean;
@@ -19,6 +19,13 @@ interface IGroup {
         {repo: string, query: object}
         | ((f: FetchFunction) => Promise<any>);
     collapsed?: boolean;
+}
+
+export interface IGroupData {
+    id: any;
+    itemIds: any;
+    itemsById: any;
+    total: number;
 }
 
 interface IProps {
@@ -30,7 +37,7 @@ interface IProps {
 interface IState {
     userSearchField: string;
     groups: Array<IGroup> | null;
-    groupsData: Array<{ id; itemIds; itemsById }> | null;
+    groupsData: Array<IGroupData> | null;
     loading: boolean;
 }
 
@@ -38,11 +45,13 @@ function genericFetch({search, api}, repo, filters) {
     let query = search.query();
 
     query.clear_filters();
-    query.size(1).filter(filters);
+    query.size(200).filter(filters);
 
     let criteria = query.getCriteria(true);
 
     criteria.repo = repo;
+    criteria.source.from = 0;
+    criteria.source.size = 200;
 
     return api.query('search', criteria);
 }
@@ -71,17 +80,6 @@ function getQueryCreatedByUser(userId) {
     return {
         terms: {
             original_creator: [userId],
-        },
-    };
-}
-
-function getQueryMovedByUser(userId) {
-    return {
-        bool: {
-            must: [
-                {match: {'task.user': userId}},
-                {term: {operation: 'move'}},
-            ],
         },
     };
 }
@@ -126,14 +124,28 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
                     mustQuery.push({...markedQuery});
                 }
 
-                return fetchFn('archive', {
-                    bool: {
-                        must: mustQuery,
-                    },
-                }).then((res) => {
-                    res._items = res._items.filter(filterOutItemsInIncomingStage(services));
+                return ng.get('desks').fetchStages().then((stages) => {
+                    const incomingStages = stages._items
+                        .filter(({default_incoming}) => default_incoming === true)
+                        .map(({_id}) => _id);
 
-                    return res;
+                    const isNotOnIncomingStage: any = {
+                        bool: {
+                            must_not: {
+                                terms: {
+                                    'task.stage': incomingStages,
+                                },
+                            },
+                        },
+                    };
+
+                    mustQuery.push({...isNotOnIncomingStage});
+
+                    return fetchFn('archive', {
+                        bool: {
+                            must: mustQuery,
+                        },
+                    });
                 });
             },
         },
@@ -141,48 +153,38 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
             id: 'moved',
             label: gettext('Moved to a working stage by this user'),
             dataSource(fetchFn) {
-                return fetchFn('archive_history', {...getQueryMovedByUser(userId)})
-                    .then((res) => {
-                        res._items = res._items.filter(onlyHistoryItemsInWorkingStage(services));
+                return ng.get('desks').fetchStages().then((stages) => {
+                    const workingStages = stages._items
+                        .filter(({working_stage}) => working_stage === true)
+                        .map(({_id}) => _id);
 
-                        return res;
-                    });
+                    const inOnWorkingStage: any = {
+                        terms: {
+                            'task.stage': workingStages,
+                        },
+                    };
+
+                    const movedByUser = [
+                        {match: {'task.user': userId}},
+                        {term: {operation: 'move'}},
+                    ];
+
+                    return fetchFn(
+                        'archive_history',
+                        {
+                            bool: {
+                                must: [
+                                    ...movedByUser,
+                                    inOnWorkingStage,
+                                ],
+                            },
+                        },
+                    );
+                });
             },
         },
     ];
 };
-
-function onlyHistoryItemsInWorkingStage({desks}) {
-    return (historyItem) => {
-        const stage = getStageForItem(historyItem, {desks});
-
-        return stage.working_stage === true;
-    };
-}
-
-function filterOutItemsInIncomingStage({desks}) {
-    return (item) => {
-        const stage = getStageForItem(item, {desks});
-
-        return stage.default_incoming === false;
-    };
-}
-
-function getStageForItem(item, {desks}) {
-    const stageId = item.task?.stage;
-
-    if (!stageId) {
-        return false;
-    }
-
-    const stage = desks.stageLookup[stageId] || null;
-
-    if (!stage) {
-        console.warn('Tried to find a stage with an invalid id', stageId);
-    }
-
-    return stage;
-}
 
 export default class UserActivityWidget extends React.Component<IProps, IState> {
     services: any;
@@ -219,6 +221,7 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
         };
 
         this.refreshItems = this.refreshItems.bind(this);
+        this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
         this.updateGroupDataOnUserChange = this.updateGroupDataOnUserChange.bind(this);
     }
 
@@ -236,6 +239,20 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
 
     componentWillUnmount() {
         this.removeListeners.forEach((remove) => remove());
+    }
+
+    toggleCollapseExpand(group: IGroup) {
+        const newGroups = this.state.groups.map((g) => {
+            if (g.id === group.id) {
+                return {...g, collapsed: !g.collapsed};
+            }
+
+            return g;
+        });
+
+        this.setState({
+            groups: newGroups,
+        });
     }
 
     addListeners() {
@@ -257,30 +274,29 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
         }
     }
 
-    fetchItems(group: IGroup): Promise<{
-        id: string,
-        itemIds: Array<string>,
-        itemsById: Array<{[id: string]: IArticle}>
-    }> {
+    fetchItems(group: IGroup): Promise<IGroupData> {
         const {api, search} = this.services;
         const promise = typeof group.dataSource === 'function'
             ? group.dataSource((repo, filters) => genericFetch({search, api}, repo, filters))
             : genericFetch({search, api}, group.dataSource.repo, group.dataSource.query);
 
-        return promise.then(({_items}) => {
+        return promise.then((res) => {
             const itemIds = [];
             const itemsById = {};
 
-            for (const item of _items) {
+            for (const item of res._items) {
                 itemIds.push(item._id);
                 itemsById[item._id] = item;
             }
 
-            return {
+            const groupData: IGroupData = {
                 id: group.id,
                 itemIds,
                 itemsById,
+                total: res._meta.total,
             };
+
+            return groupData;
         });
     }
 
@@ -301,81 +317,6 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
         Promise.all(promises).then((data) => {
             this.setState({groupsData: data, loading: false});
         });
-    }
-
-    renderGroup(group: IGroup) {
-        const {groups, groupsData} = this.state;
-        const data = groupsData.find((g) => g.id === group.id);
-
-        if (!data) {
-            logger.warn(
-                `Tried to render group '${group.id}' but no data was found`,
-            );
-            return null;
-        }
-
-        return (
-            <div className="stage">
-                <div className="stage-header">
-                    <button
-                        className={`stage-header__toggle ${group.collapsed ? 'closed' : ''}`}
-                        onClick={() => {
-                            const newGroups = groups.map((g) => {
-                                if (g.id === group.id) {
-                                    return {...g, collapsed: !g.collapsed};
-                                }
-
-                                return g;
-                            });
-
-                            this.setState({
-                                groups: newGroups,
-                            });
-                        }}
-                    >
-                        <i className="icon-chevron-down-thin" />
-                    </button>
-                    <span className="stage-header__name">
-                        {group.label}
-                    </span>
-                    <div className="stage-header__line" />
-                    <span className="label-total stage-header__number">
-                        {data.itemIds.length}
-                    </span>
-                </div>
-                {group.collapsed === true ? null : (
-                    <div className="stage-content">
-                        <WidgetItemList
-                            customUIMessages={{
-                                empty: gettext('No results for this user'),
-                            }}
-                            canEdit={true}
-                            svc={this.services}
-                            preview={(item: IArticle) => {
-                                this.services.superdesk.intent(
-                                    'preview',
-                                    'item',
-                                    item,
-                                );
-                            }}
-                            select={(item: IArticle) => {
-                                this.services.superdesk.intent(
-                                    'preview',
-                                    'item',
-                                    item,
-                                );
-                            }}
-                            edit={(item: IArticle) => {
-                                this.services.authoringWorkspace.edit(item);
-                            }}
-                            itemIds={data.itemIds}
-                            itemsById={data.itemsById}
-                            loading={false}
-                        />
-                    </div>
-                )}
-            </div>
-        );
     }
 
     updateGroupDataOnUserChange(user: IUser) {
@@ -420,11 +361,29 @@ export default class UserActivityWidget extends React.Component<IProps, IState> 
                                 <div className="content-list-holder">
                                     <div className="shadow-list-holder">
                                         <div className="content-list">
-                                            {this.state.groups.map((group) => (
-                                                <div key={`user-activity-${group.id}`}>
-                                                    {this.renderGroup(group)}
-                                                </div>
-                                            ))}
+                                            {
+                                                this.state.groups.map((group) => {
+                                                    const {groupsData} = this.state;
+                                                    const data = groupsData.find((g) => g.id === group.id);
+
+                                                    if (!data) {
+                                                        logger.warn(
+                                                            `Tried to render group '${group.id}' but no data was found`,
+                                                        );
+                                                        return null;
+                                                    }
+
+                                                    return (
+                                                        <div key={`user-activity-${group.id}`}>
+                                                            <GroupComponent
+                                                                group={group}
+                                                                data={data}
+                                                                toggleCollapseExpand={this.toggleCollapseExpand}
+                                                            />
+                                                        </div>
+                                                    );
+                                                })
+                                            }
                                         </div>
                                     </div>
                                 </div>

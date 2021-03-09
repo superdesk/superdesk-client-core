@@ -5,7 +5,7 @@ import {noop} from 'lodash';
 /**
  * Wraps a promise in order to ignore AbortError and break the promise chain when it occurs.
  */
-function ignoreAbortError<T>(promise: Promise<T>): Promise<T> {
+export function ignoreAbortError<T>(promise: Promise<T>): Promise<T> {
     return new Promise((resolve, reject) => {
         promise
             .then(resolve)
@@ -18,7 +18,7 @@ function ignoreAbortError<T>(promise: Promise<T>): Promise<T> {
 }
 
 export class SuperdeskReactComponent<IProps = {}, IState = {}> extends React.PureComponent<IProps, IState> {
-    private abortControllers: Array<AbortController>;
+    public abortController: AbortController;
 
     /**
      * Will automatically abort in-progress asynchronous operations(only those in asyncHelpers) when unmounting.
@@ -31,25 +31,17 @@ export class SuperdeskReactComponent<IProps = {}, IState = {}> extends React.Pur
     constructor(props: IProps) {
         super(props);
 
-        this.abortControllers = [];
+        this.abortController = new AbortController();
 
         this.asyncHelpers = {
             fetch: (input: RequestInfo, init?: RequestInit): Promise<Response> => {
-                const controller = new AbortController();
-
-                this.abortControllers.push(controller);
-
                 return ignoreAbortError(
-                    fetch(input, {...(init ?? {}), signal: controller.signal}),
+                    fetch(input, {...(init ?? {}), signal: this.abortController.signal}),
                 );
             },
             httpRequestJsonLocal: (options: Parameters<typeof httpRequestJsonLocal>[0]) => {
-                const controller = new AbortController();
-
-                this.abortControllers.push(controller);
-
                 return ignoreAbortError(
-                    httpRequestJsonLocal({...options, abortSignal: controller.signal}),
+                    httpRequestJsonLocal({...options, abortSignal: this.abortController.signal}),
                 );
             },
         };
@@ -58,9 +50,7 @@ export class SuperdeskReactComponent<IProps = {}, IState = {}> extends React.Pur
         const componentWillUnmountChild = this.componentWillUnmount?.bind(this) ?? noop;
 
         this.componentWillUnmount = () => {
-            this.abortControllers.forEach((controller) => {
-                controller.abort();
-            });
+            this.abortController.abort();
 
             componentWillUnmountChild();
         };

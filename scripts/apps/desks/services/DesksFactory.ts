@@ -144,6 +144,8 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                     _.each(items, (item) => {
                         self.stageLookup[item._id] = item;
                     });
+
+                    return self.stages;
                 });
         },
         fetchDeskStages: function(desk, refresh) {

@@ -6,6 +6,7 @@ import ng from '../../core/services/ng';
 import {isKilled} from 'apps/archive/utils';
 import {IArticle, IPublishedArticle, IListViewFieldWithOptions} from 'superdesk-api';
 import {getVocabularyItemNameTranslated} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -154,7 +155,7 @@ export function renderArea(
     }
 
     /* globals __SUPERDESK_CONFIG__: true */
-    const listConfig = itemProps.listConfig || __SUPERDESK_CONFIG__.list || DEFAULT_LIST_CONFIG;
+    const listConfig = itemProps.listConfig || appConfig.list || DEFAULT_LIST_CONFIG;
 
     let specs = listConfig[area] || [];
 

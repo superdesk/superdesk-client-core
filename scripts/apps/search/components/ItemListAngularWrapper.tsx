@@ -1,8 +1,24 @@
 import React from 'react';
-import {forOwn, startsWith} from 'lodash';
+import {forOwn, startsWith, indexOf} from 'lodash';
 import ng from 'core/services/ng';
 import {ItemList} from 'apps/search/components';
-import {IArticle} from 'superdesk-api';
+import {
+    IArticle,
+    IWebsocketMessage,
+    IResourceCreatedEvent,
+    IResourceUpdateEvent,
+    IResourceDeletedEvent,
+} from 'superdesk-api';
+import {
+    IRelatedEntities,
+    getAndMergeRelatedEntitiesForArticles,
+    IResourceChange,
+    getAndMergeRelatedEntitiesUpdated,
+} from 'core/getRelatedEntities';
+import {addWebsocketEventListener} from 'core/notification/notification';
+import {throttleAndCombineArray} from 'core/itemList/throttleAndCombine';
+import {isCheckAllowed} from '../helpers';
+import {SmoothLoader} from './SmoothLoader';
 
 interface IProps {
     scope: any;
@@ -14,6 +30,7 @@ interface IState {
     view: 'compact' | 'mgrid' | 'photogrid';
     itemsList: Array<string>;
     itemsById: any;
+    relatedEntities: IRelatedEntities;
     selected: string;
     swimlane: any;
     actioning: {};
@@ -22,6 +39,9 @@ interface IState {
 
 export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     componentRef: ItemList;
+    private abortController: AbortController;
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+    private handleContentChanges: (changes: Array<IResourceChange>) => void;
 
     constructor(props: IProps) {
         super(props);
@@ -29,6 +49,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.state = {
             itemsList: [],
             itemsById: {},
+            relatedEntities: {},
             selected: null,
             view: 'compact',
             narrow: false,
@@ -44,6 +65,23 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.updateItem = this.updateItem.bind(this);
         this.updateAllItems = this.updateAllItems.bind(this);
         this.multiSelect = this.multiSelect.bind(this);
+        this.selectMultipleItems = this.selectMultipleItems.bind(this);
+
+        this.abortController = new AbortController();
+        this.eventListenersToRemoveBeforeUnmounting = [];
+
+        this.handleContentChanges = throttleAndCombineArray(
+            (changes) => {
+                getAndMergeRelatedEntitiesUpdated(
+                    this.state.relatedEntities,
+                    changes,
+                    this.abortController.signal,
+                ).then((relatedEntities) => {
+                    this.setState({relatedEntities});
+                });
+            },
+            300,
+        );
     }
 
     focus() {
@@ -75,22 +113,71 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
 
         if (item) {
             const itemsById = angular.extend({}, this.state.itemsById);
+            const updatedItem: IArticle = angular.extend({}, item, changes);
 
-            itemsById[itemId] = angular.extend({}, item, changes);
-            this.setState({itemsById: itemsById});
+            itemsById[itemId] = updatedItem;
+
+            getAndMergeRelatedEntitiesForArticles(
+                [updatedItem],
+                this.state.relatedEntities,
+                this.abortController.signal,
+            ).then((relatedEntities) => {
+                this.setState({
+                    itemsById,
+                    relatedEntities,
+                });
+            });
         }
     }
 
     updateAllItems(itemId, changes) {
         const itemsById = angular.extend({}, this.state.itemsById);
+        const updatedItems = [];
 
         forOwn(itemsById, (value, key) => {
             if (startsWith(key, itemId)) {
                 itemsById[key] = angular.extend({}, value, changes);
+                updatedItems.push(itemsById[key]);
             }
         });
 
-        this.setState({itemsById: itemsById});
+        getAndMergeRelatedEntitiesForArticles(
+            updatedItems,
+            this.state.relatedEntities,
+            this.abortController.signal,
+        ).then((relatedEntities) => {
+            this.setState({
+                itemsById,
+                relatedEntities,
+            });
+        });
+    }
+
+    selectMultipleItems(lastItem: IArticle) {
+        const {itemsList, itemsById, selected} = this.state;
+
+        const search = ng.get('search');
+        const itemId = search.generateTrackByIdentifier(lastItem);
+        let positionStart = 0;
+        const positionEnd = indexOf(itemsList, itemId);
+        const selectedItems = [];
+
+        if (selected) {
+            positionStart = indexOf(itemsList, selected);
+        }
+
+        const start = Math.min(positionStart, positionEnd);
+        const end = Math.max(positionStart, positionEnd);
+
+        for (let i = start; i <= end; i++) {
+            const item = itemsById[itemsList[i]];
+
+            if (isCheckAllowed(item)) {
+                selectedItems.push(item);
+            }
+        }
+
+        this.multiSelect(selectedItems, true);
     }
 
     multiSelect(items: Array<IArticle>, selected: boolean) {
@@ -117,51 +204,105 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
         this.setState({itemsById, selected: selectedId});
     }
 
+    componentDidMount() {
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:created',
+                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:updated',
+                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                    const {resource, _id, fields} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:deleted',
+                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
+    }
+
+    componentWillUnmount() {
+        this.abortController.abort();
+
+        this.eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
+            removeListener();
+        });
+    }
+
     render() {
         const {scope, monitoringState} = this.props;
 
         return (
-            <ItemList
-                itemsList={this.state.itemsList}
-                itemsById={this.state.itemsById}
-                profilesById={monitoringState.state.profilesById}
-                highlightsById={monitoringState.state.highlightsById}
-                markedDesksById={monitoringState.state.markedDesksById}
-                desksById={monitoringState.state.desksById}
-                ingestProvidersById={monitoringState.state.ingestProvidersById}
-                usersById={monitoringState.state.usersById}
-                onMonitoringItemSelect={scope.onMonitoringItemSelect}
-                onMonitoringItemDoubleClick={scope.onMonitoringItemDoubleClick}
-                hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
-                singleLine={scope.singleLine}
-                customRender={scope.customRender}
-                flags={scope.flags}
-                loading={this.state.loading}
-                viewColumn={scope.viewColumn}
-                groupId={scope.$id}
-                edit={scope.edit}
-                preview={scope.preview}
-                multiSelect={scope.disableMonitoringMultiSelect ? undefined : {
-                    kind: 'legacy',
-                    multiSelect: this.multiSelect,
-                    setSelectedItem: (itemId) => {
-                        this.setState({selected: itemId});
-                    },
-                }}
-                narrow={this.state.narrow}
-                view={this.state.view}
-                selected={this.state.selected}
-                swimlane={this.state.swimlane}
-                scopeApply={(callback) => {
-                    scope.$apply(callback);
-                }}
-                scopeApplyAsync={(callback) => {
-                    scope.$applyAsync(callback);
-                }}
-                ref={(component) => {
-                    this.componentRef = component;
-                }}
-            />
+            <SmoothLoader loading={this.state.loading}>
+                <div style={scope.style ?? {}}>
+                    <ItemList
+                        itemsList={this.state.itemsList}
+                        itemsById={this.state.itemsById}
+                        relatedEntities={this.state.relatedEntities}
+                        profilesById={monitoringState.state.profilesById}
+                        highlightsById={monitoringState.state.highlightsById}
+                        markedDesksById={monitoringState.state.markedDesksById}
+                        desksById={monitoringState.state.desksById}
+                        ingestProvidersById={monitoringState.state.ingestProvidersById}
+                        usersById={monitoringState.state.usersById}
+                        onMonitoringItemSelect={scope.onMonitoringItemSelect}
+                        onMonitoringItemDoubleClick={scope.onMonitoringItemDoubleClick}
+                        hideActionsForMonitoringItems={scope.hideActionsForMonitoringItems}
+                        singleLine={scope.singleLine}
+                        customRender={scope.customRender}
+                        flags={scope.flags}
+                        loading={this.state.loading}
+                        viewColumn={scope.viewColumn}
+                        groupId={scope.$id}
+                        edit={scope.edit}
+                        preview={scope.preview}
+                        multiSelect={scope.disableMonitoringMultiSelect ? undefined : {
+                            kind: 'legacy',
+                            multiSelect: (item: IArticle, selected: boolean, multiSelectMode: boolean) => {
+                                if (multiSelectMode) {
+                                    this.selectMultipleItems(item);
+                                } else {
+                                    this.multiSelect([item], selected);
+                                }
+                            },
+                            setSelectedItem: (itemId) => {
+                                this.setState({selected: itemId});
+                            },
+                        }}
+                        narrow={this.state.narrow}
+                        view={this.state.view}
+                        selected={this.state.selected}
+                        swimlane={this.state.swimlane}
+                        scopeApply={(callback) => {
+                            scope.$apply(callback);
+                        }}
+                        scopeApplyAsync={(callback) => {
+                            scope.$applyAsync(callback);
+                        }}
+                        ref={(component) => {
+                            this.componentRef = component;
+                        }}
+                    />
+                </div>
+            </SmoothLoader>
         );
     }
 }

@@ -10,7 +10,6 @@ export {FetchedDesksInfo} from './FetchedDesksInfo';
 export {DesksDropdown} from './DesksDropdown';
 export {TypeIcon} from './TypeIcon';
 export {GridTypeIcon} from './GridTypeIcon';
-export {ListTypeIcon} from './ListTypeIcon';
 export {ListPriority} from './ListPriority';
 export {HighlightsInfo} from './HighlightsInfo';
 export {HighlightsList} from './HighlightsList';

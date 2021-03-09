@@ -41,7 +41,7 @@ interface IScope extends ng.IScope {
     cachePreviousItems: Array<any>;
     viewColumn: any;
     labelForStage: typeof getLabelForStage;
-    style: any;
+    styleProperties: any;
     edit: any;
     select: any;
     preview: any;
@@ -178,7 +178,7 @@ export function MonitoringGroup(
 
             scope.labelForStage = getLabelForStage;
 
-            scope.style = {};
+            scope.styleProperties = {};
 
             scope.edit = edit;
             scope.select = select;
@@ -388,7 +388,7 @@ export function MonitoringGroup(
             };
 
             function updateGroupStyle() {
-                scope.style.maxHeight = null;
+                scope.styleProperties.maxHeight = null;
                 if (scope.viewColumn) {
                     // maxHeight is not applicable for swimlane/column view, as each stages/column
                     // don't need to have scroll bars because container scroll bar of monitoring
@@ -402,7 +402,7 @@ export function MonitoringGroup(
                         scrollOffset = Math.round(ITEM_HEIGHT / 2);
                     }
 
-                    scope.style.maxHeight = groupItems * ITEM_HEIGHT - scrollOffset;
+                    scope.styleProperties.maxHeight = groupItems * ITEM_HEIGHT - scrollOffset;
                 }
             }
 

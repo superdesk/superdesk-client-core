@@ -1,13 +1,10 @@
 import React from 'react';
-import {get} from 'lodash';
 import {gettext} from 'core/utils';
-import {appConfig} from 'appConfig';
-import {removeLodash} from 'core/filters';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {longFormat} from 'core/datetime/datetime';
-import {IArticle} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/search/interfaces';
+import {openArticle} from 'core/get-superdesk-api-implementation';
 
 export function getStateLabel(itemState: ITEM_STATE) {
     switch (itemState) {
@@ -30,43 +27,44 @@ export function getStateLabel(itemState: ITEM_STATE) {
     }
 }
 
-interface IProps {
-    item: IArticle;
-    openAuthoringView(_id): void;
+class StateComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
+    render() {
+        const props = this.props;
+
+        if (props.item.state != null) {
+            let title = getStateLabel(props.item.state);
+            const text = title;
+            const openItem = function(event) {
+                event.stopPropagation();
+                openArticle(props.item.archive_item._id, 'view');
+            };
+
+            if (props.item.state === 'scheduled') {
+                const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
+
+                if (scheduled != null) {
+                    title = gettext('Scheduled for {{date}}', {date: longFormat(scheduled)});
+                }
+            }
+
+            return (
+                <span
+                    title={title}
+                    className={props.item.state === 'correction'
+                        ? 'label pink--500'
+                        : (props.item.state === 'being_corrected'
+                            ? 'label label--hollow hollow-pink--500'
+                            : 'state-label state-' + props.item.state)}
+                    key="state"
+                    onClick={props.item.state === 'being_corrected' ? openItem : null}
+                >
+                    {text}
+                </span>
+            );
+        } else {
+            return null;
+        }
+    }
 }
 
-export const state: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props: IProps) => {
-    if (props.item.state != null) {
-        let title = getStateLabel(props.item.state);
-        const text = title;
-        const openItem = function(event) {
-            event.stopPropagation();
-            props.openAuthoringView(props.item.archive_item._id);
-        };
-
-        if (props.item.state === 'scheduled') {
-            const scheduled = props.item.archive_item?.schedule_settings?.utc_publish_schedule;
-
-            if (scheduled != null) {
-                title = gettext('Scheduled for {{date}}', {date: longFormat(scheduled)});
-            }
-        }
-
-        return (
-            <span
-                title={title}
-                className={props.item.state === 'correction'
-                    ? 'label pink--500'
-                    : (props.item.state === 'being_corrected'
-                        ? 'label label--hollow hollow-pink--500'
-                        : 'state-label state-' + props.item.state)}
-                key="state"
-                onClick={props.item.state === 'being_corrected' ? openItem : null}
-            >
-                {text}
-            </span>
-        );
-    } else {
-        return null;
-    }
-};
+export const state = StateComponent;
