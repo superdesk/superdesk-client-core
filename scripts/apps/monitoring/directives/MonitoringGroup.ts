@@ -5,8 +5,9 @@ import {GET_LABEL_MAP, getLabelForStage} from '../../workspace/content/constants
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter, IRestApiResponse, IArticle} from 'superdesk-api';
+import {getExtensionSections} from '../services/CardsService';
 
 function translateCustomSorts(customSorts: GroupSortOptions) {
     const translated = {};
@@ -710,7 +711,17 @@ export function MonitoringGroup(
              * return {promise} list of items
              */
             function apiquery(searchCriteria, applyProjections) {
+                const personalGroup = ['personal', 'sent'];
                 var provider = 'search';
+                const personalSectionIds = [];
+
+                const extensionSection = getExtensionSections();
+
+                extensionSection.forEach((response) => {
+                    if (response.id) {
+                        personalSectionIds.push(response.id);
+                    }
+                });
 
                 if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
                     if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
@@ -720,8 +731,8 @@ export function MonitoringGroup(
                         }
                     }
                 } else if (scope.group != null
-                    && (scope.group.type === 'personal'
-                        || scope.group.type === 'markedForMe')) {
+                    && (personalGroup.includes(scope.group.type)
+                        || personalSectionIds.includes(scope.group.type))) {
                     provider = 'news';
                 } else {
                     provider = 'archive';

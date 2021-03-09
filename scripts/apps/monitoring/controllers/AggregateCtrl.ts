@@ -1,9 +1,10 @@
-import {flattenDeep, each, forEach, isNil} from 'lodash';
+import {each, forEach, isNil} from 'lodash';
 import {gettext} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter} from 'superdesk-api';
 import {getLabelForStage} from 'apps/workspace/content/constants';
+import {getExtensionSections} from '../services/CardsService';
 
 AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
     'savedSearch', 'content'];
@@ -52,20 +53,10 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     };
     this.activeFilterTags = {};
 
-    Promise.all(
-        Object.values(extensions)
-            .map(
-                (extension) =>
-                    extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? [],
-            ),
-    ).then((res) => {
-        const response = flattenDeep(res);
+    const extensionSection = getExtensionSections();
 
-        response.forEach((resp) => {
-            if (resp != null) {
-                self.personalGroups[resp.id] = {type: resp.id, header: resp.label, query: resp.query};
-            }
-        });
+    extensionSection.forEach((response) => {
+        self.personalGroups[response.id] = {type: response.id, header: response.label, query: response.query};
     });
 
     function initPersonalGroup() {

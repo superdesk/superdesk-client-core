@@ -1,4 +1,4 @@
-import {flattenDeep, includes, isNil} from 'lodash';
+import {flatMap, flattenDeep, includes, isNil} from 'lodash';
 import {setFilters, IQueryParams} from 'apps/search/services/SearchService';
 import {PUBLISHED_STATES} from 'apps/archive/constants';
 import {ITEM_STATE} from 'apps/archive/constants';
@@ -11,19 +11,14 @@ import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter, IPersonalSpaceSection} from 'superdesk-api';
 
 export function getExtensionSections() {
-    const section = Promise.all(
+    const section = flatMap(
         Object.values(extensions)
             .map(
                 (extension) =>
-                    extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? [],
-            ),
+                    extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? []),
     );
 
-    return section.then((res) => {
-        const response = flattenDeep(res);
-
-        return response;
-    });
+    return section;
 }
 
 export interface ICard {
@@ -96,11 +91,9 @@ export function CardsService(search, session, desks, $location) {
         let deskId;
         const extensionSection = getExtensionSections();
 
-        extensionSection.then((response) => {
-            const data = response.find((res: IPersonalSpaceSection) => res?.id === card.type);
-
-            if (data) {
-                query.filter(data.query);
+        extensionSection.forEach((response) => {
+            if (response.id === card.type) {
+                query.filter(response.query);
             }
         });
 
