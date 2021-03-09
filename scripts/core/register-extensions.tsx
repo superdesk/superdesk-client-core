@@ -3,6 +3,7 @@ import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation'
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
+import {dispatchInternalEvent} from './internal-events';
 
 export function registerExtensions(
     extensionLoaders: Array<{id: string; load(): Promise<IExtension>}>,
@@ -88,30 +89,34 @@ export function registerExtensions(
                 });
             },
         ),
-    ).then(() => {
-        return Promise.all(
-            Object.keys(extensionsWithActivationResult).map((extensionId) => {
-                const extensionObject = extensionsWithActivationResult[extensionId];
+    )
+        .then(() => {
+            return Promise.all(
+                Object.keys(extensionsWithActivationResult).map((extensionId) => {
+                    const extensionObject = extensionsWithActivationResult[extensionId];
 
-                return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
-                    .then((activationResult) => {
-                        extensionObject.activationResult = activationResult;
+                    return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
+                        .then((activationResult) => {
+                            extensionObject.activationResult = activationResult;
 
-                        return activationResult;
-                    });
-            }),
-        ).then((activationResults: Array<IExtensionActivationResult>) => {
-            flatMap(
-                activationResults,
-                (activationResult) => activationResult.contributions?.pages ?? [],
-            )
-                .forEach(registerPage);
+                            return activationResult;
+                        });
+                }),
+            ).then((activationResults: Array<IExtensionActivationResult>) => {
+                flatMap(
+                    activationResults,
+                    (activationResult) => activationResult.contributions?.pages ?? [],
+                )
+                    .forEach(registerPage);
 
-            flatMap(
-                activationResults,
-                (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
-            )
-                .forEach(registerWorkspaceMenu);
+                flatMap(
+                    activationResults,
+                    (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
+                )
+                    .forEach(registerWorkspaceMenu);
+            });
+        })
+        .then(() => {
+            dispatchInternalEvent('extensionsHaveLoaded', true);
         });
-    });
 }
