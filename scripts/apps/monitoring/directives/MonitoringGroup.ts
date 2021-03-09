@@ -711,17 +711,9 @@ export function MonitoringGroup(
              * return {promise} list of items
              */
             function apiquery(searchCriteria, applyProjections) {
-                const personalGroup = ['personal', 'sent'];
+                const personalGroups = ['personal', 'sent'];
                 var provider = 'search';
-                const personalSectionIds = [];
-
-                const extensionSection = getExtensionSections();
-
-                extensionSection.forEach((response) => {
-                    if (response.id) {
-                        personalSectionIds.push(response.id);
-                    }
-                });
+                const personalSectionIds = getExtensionSections().map(({id}) => id);
 
                 if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
                     if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
@@ -731,7 +723,7 @@ export function MonitoringGroup(
                         }
                     }
                 } else if (scope.group != null
-                    && (personalGroup.includes(scope.group.type)
+                    && (personalGroups.includes(scope.group.type)
                         || personalSectionIds.includes(scope.group.type))) {
                     provider = 'news';
                 } else {

@@ -11,14 +11,12 @@ import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter, IPersonalSpaceSection} from 'superdesk-api';
 
 export function getExtensionSections() {
-    const section = flatMap(
+    return flatMap(
         Object.values(extensions)
             .map(
                 (extension) =>
                     extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? []),
     );
-
-    return section;
 }
 
 export interface ICard {
@@ -90,12 +88,11 @@ export function CardsService(search, session, desks, $location) {
     function filterQueryByCardType(query, queryParam, card: ICard) {
         let deskId;
         const extensionSection = getExtensionSections();
+        const section = extensionSection.find((response) => response.id === card.type);
 
-        extensionSection.forEach((response) => {
-            if (response.id === card.type) {
-                query.filter(response.query);
-            }
-        });
+        if (section) {
+            query.filter(section.query);
+        }
 
         switch (card.type) {
         case 'search':
