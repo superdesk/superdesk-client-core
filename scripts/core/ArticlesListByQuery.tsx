@@ -61,19 +61,9 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                 },
             }).then((res) => {
                 return new Promise((resolve) => {
-                    const firstLoad = this.state.itemCount === 'loading';
-
                     // update item count
                     this.setState({itemCount: res._meta.total}, () => {
                         resolve(res);
-
-                        if (!firstLoad) {
-                            // Add a delay to allow child components to re-render.
-                            // Avoids a state with loader no longer displayed, but items list still empty.
-                            setTimeout(() => {
-                                this.props.setLoading(false);
-                            });
-                        }
                     });
                 });
             });
@@ -131,6 +121,9 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                         onItemDoubleClick={this.props.onItemDoubleClick}
                         padding={this.props.padding}
                         getMultiSelect={this.props.getMultiSelect}
+                        onLoadingEnd={() => {
+                            this.props.setLoading(false);
+                        }}
                     />
                 </div>
             </div>

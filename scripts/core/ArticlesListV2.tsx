@@ -45,6 +45,8 @@ interface IProps {
     onItemClick(item: IArticle): void;
     onItemDoubleClick?(item: IArticle): void;
     getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
+
+    onLoadingEnd(): void;
 }
 
 /**
@@ -153,6 +155,7 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
                 this.setState({
                     relatedEntities,
                 }, () => {
+                    this.props.onLoadingEnd();
                     resolve(items);
                 });
             });
