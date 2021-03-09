@@ -10,7 +10,7 @@ import {
     IResourceDeletedEvent,
 } from 'superdesk-api';
 
-import {noop} from 'lodash';
+import {noop, once} from 'lodash';
 import {LazyLoader} from './itemList/LazyLoader';
 import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
@@ -46,7 +46,7 @@ interface IProps {
     onItemDoubleClick?(item: IArticle): void;
     getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
 
-    onLoadingEnd(): void;
+    onInitialize(): void;
 }
 
 /**
@@ -67,6 +67,7 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
     // required for updating the list after receiving a websocket notification
     // notifications return real _id, but LazyLoader works with ITrackById
     private idMap: Map<IArticle['_id'], ITrackById>;
+    private onInitializeOnce: () => void;
 
     constructor(props: any) {
         super(props);
@@ -82,6 +83,10 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         this.fetchRelatedEntities = this.fetchRelatedEntities.bind(this);
         this.loadMore = this.loadMore.bind(this);
         this.getItemsByIds = this.getItemsByIds.bind(this);
+
+        this.onInitializeOnce = once(() => {
+            this.props.onInitialize();
+        });
 
         this.handleContentChanges = throttleAndCombineArray(
             (changes) => {
@@ -155,7 +160,7 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
                 this.setState({
                     relatedEntities,
                 }, () => {
-                    this.props.onLoadingEnd();
+                    this.onInitializeOnce();
                     resolve(items);
                 });
             });

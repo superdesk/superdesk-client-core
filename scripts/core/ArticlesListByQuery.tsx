@@ -25,7 +25,7 @@ interface IState {
 }
 
 interface IPropsInner extends IProps {
-    setLoading(value: boolean): Promise<void>;
+    onInitialize(): void;
 }
 
 class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, IState> {
@@ -49,22 +49,20 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
 
         const query = toElasticQuery(withPagination);
 
-        return this.props.setLoading(true).then(() => {
-            return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
-                method: 'GET',
-                path: '/search',
-                urlParams: {
-                    aggregations: 0,
-                    es_highlight: 1,
-                    projections: JSON.stringify(ng.get('search').getProjectedFields()),
-                    source: JSON.stringify(query),
-                },
-            }).then((res) => {
-                return new Promise((resolve) => {
-                    // update item count
-                    this.setState({itemCount: res._meta.total}, () => {
-                        resolve(res);
-                    });
+        return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+            method: 'GET',
+            path: '/search',
+            urlParams: {
+                aggregations: 0,
+                es_highlight: 1,
+                projections: JSON.stringify(ng.get('search').getProjectedFields()),
+                source: JSON.stringify(query),
+            },
+        }).then((res) => {
+            return new Promise((resolve) => {
+                // update item count
+                this.setState({itemCount: res._meta.total}, () => {
+                    resolve(res);
                 });
             });
         });
@@ -121,9 +119,7 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                         onItemDoubleClick={this.props.onItemDoubleClick}
                         padding={this.props.padding}
                         getMultiSelect={this.props.getMultiSelect}
-                        onLoadingEnd={() => {
-                            this.props.setLoading(false);
-                        }}
+                        onInitialize={this.props.onInitialize}
                     />
                 </div>
             </div>
@@ -131,9 +127,7 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
     }
 }
 
-export class ArticlesListByQuery extends React.PureComponent<IProps, {loading: boolean}> {
-    private prevKey: string;
-
+class ArticlesListByQueryWithLoader extends React.PureComponent<IProps, {loading: boolean}> {
     constructor(props: IProps) {
         super(props);
 
@@ -143,6 +137,7 @@ export class ArticlesListByQuery extends React.PureComponent<IProps, {loading: b
 
         this.setLoading = this.setLoading.bind(this);
     }
+
     setLoading(loading: boolean): Promise<void> {
         return new Promise((resolve) => {
             this.setState({loading}, () => {
@@ -152,20 +147,27 @@ export class ArticlesListByQuery extends React.PureComponent<IProps, {loading: b
     }
 
     render() {
-        // re-mount the component when the query changes
-        const key = JSON.stringify(this.props.query);
-        const keyHasChanged = this.prevKey !== key;
-
-        this.prevKey = key;
-
         return (
-            <SmoothLoader loading={this.state.loading || keyHasChanged}>
+            <SmoothLoader loading={this.state.loading}>
                 <ArticlesListByQueryComponent
                     {...this.props}
-                    setLoading={this.setLoading}
-                    key={key}
+                    onInitialize={() => {
+                        this.setLoading(false);
+                    }}
                 />
             </SmoothLoader>
+        );
+    }
+}
+
+// re-mount loader when query changes
+export class ArticlesListByQuery extends React.PureComponent<IProps> {
+    render() {
+        return (
+            <ArticlesListByQueryWithLoader
+                {...this.props}
+                key={JSON.stringify(this.props.query)}
+            />
         );
     }
 }
