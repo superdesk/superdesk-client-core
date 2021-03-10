@@ -5,8 +5,9 @@ import {GET_LABEL_MAP, getLabelForStage} from '../../workspace/content/constants
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter, IRestApiResponse, IArticle} from 'superdesk-api';
+import {getExtensionSections} from '../services/CardsService';
 
 function translateCustomSorts(customSorts: GroupSortOptions) {
     const translated = {};
@@ -710,7 +711,9 @@ export function MonitoringGroup(
              * return {promise} list of items
              */
             function apiquery(searchCriteria, applyProjections) {
+                const personalGroups = ['personal', 'sent'];
                 var provider = 'search';
+                const personalSectionIds = getExtensionSections().map(({id}) => id);
 
                 if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
                     if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
@@ -719,7 +722,9 @@ export function MonitoringGroup(
                             searchCriteria.source.size = PAGE_SIZE;
                         }
                     }
-                } else if (scope.group != null && scope.group.type === 'personal') {
+                } else if (scope.group != null
+                    && (personalGroups.includes(scope.group.type)
+                        || personalSectionIds.includes(scope.group.type))) {
                     provider = 'news';
                 } else {
                     provider = 'archive';

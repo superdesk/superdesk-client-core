@@ -59,6 +59,12 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface IPersonalSpaceSection {
+        label: string;
+        id: string,
+        query: {[key: string]: any};
+    }
+
     export interface IAuthoringSideWidget {
         _id: string; // required for configuring widget visibility in content profile
         label: string;
@@ -115,7 +121,10 @@ declare module 'superdesk-api' {
                 onUpdateAfter?(previous: IArticle, current: IArticle): void;
             };
             monitoring?: {
-                getFilteringButtons?(deskId: string): Promise<Array<IMonitoringFilter>>;
+                getFilteringButtons?(deskId: string): Array<IMonitoringFilter>;
+            };
+            personalSpace?: {
+                getSections?(): Array<IPersonalSpaceSection>;
             };
         }
     }
