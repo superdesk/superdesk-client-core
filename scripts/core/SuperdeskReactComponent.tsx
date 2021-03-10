@@ -31,17 +31,19 @@ export class SuperdeskReactComponent<IProps = {}, IState = {}> extends React.Pur
     constructor(props: IProps) {
         super(props);
 
-        this.abortController = new AbortController();
+        const abortController = new AbortController();
+
+        this.abortController = abortController;
 
         this.asyncHelpers = {
             fetch: (input: RequestInfo, init?: RequestInit): Promise<Response> => {
                 return ignoreAbortError(
-                    fetch(input, {...(init ?? {}), signal: this.abortController.signal}),
+                    fetch(input, {...(init ?? {}), signal: abortController.signal}),
                 );
             },
             httpRequestJsonLocal: (options: Parameters<typeof httpRequestJsonLocal>[0]) => {
                 return ignoreAbortError(
-                    httpRequestJsonLocal({...options, abortSignal: this.abortController.signal}),
+                    httpRequestJsonLocal({...options, abortSignal: abortController.signal}),
                 );
             },
         };
@@ -50,7 +52,7 @@ export class SuperdeskReactComponent<IProps = {}, IState = {}> extends React.Pur
         const componentWillUnmountChild = this.componentWillUnmount?.bind(this) ?? noop;
 
         this.componentWillUnmount = () => {
-            this.abortController.abort();
+            abortController.abort();
 
             componentWillUnmountChild();
         };
