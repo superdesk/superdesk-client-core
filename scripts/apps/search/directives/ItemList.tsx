@@ -29,6 +29,8 @@ export function ItemList(
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
 
+            let firstLoad = true;
+
             monitoringState.setState({
                 groups: groups.concat(scope.$id),
                 activeGroup: monitoringState.state.activeGroup || groupId,
@@ -135,10 +137,20 @@ export function ItemList(
 
                 scope.$watch('items', (items) => {
                     if (!items || !items._items) {
-                        listComponent.setState({
-                            loading: true,
-                        });
-
+                        /**
+                         * The list is being reloaded.
+                         *
+                         * listComponent.loading is not updated here to avoid
+                         * loading screens being displayed too frequently.
+                         *
+                         * Due to implementation of `scheduleIfShouldUpdate` in `MonitoringGroup.ts`
+                         * reloading lists is triggered more frequently when it should be.
+                         * For example, spiking one item triggers reloading for all monitoring groups.
+                         *
+                         * Articles list code is being rewritten and the old code will be deleted
+                         * so instead of doing a proper fix I'm restoring the old behavior
+                         * which is not displaying a loading indicator at all.
+                         */
                         return;
                     }
 

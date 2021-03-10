@@ -10,13 +10,14 @@ import {
     IResourceDeletedEvent,
 } from 'superdesk-api';
 
-import {noop} from 'lodash';
+import {noop, once} from 'lodash';
 import {LazyLoader} from './itemList/LazyLoader';
 import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
 import {dataApi} from './helpers/CrudManager';
 import {IScope} from 'angular';
 import {OrderedMap} from 'immutable';
+import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 
 interface IState {
     initialized: boolean;
@@ -32,15 +33,26 @@ interface IProps {
     onItemClick(item: IArticle): void;
     onItemDoubleClick?(item: IArticle): void;
     getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
+
+    onInitialize(): void;
 }
 
-export class ArticlesListV2 extends React.Component<IProps, IState> {
-    monitoringState: any;
-    lazyLoaderRef: LazyLoader<IArticle>;
+/**
+ * "Track By" ids are a workaround to published items having _id set
+ * to a an _id of the original story (_id from archive endpoint). If an update is created,
+ * /search endpoint will return 2 items with the same _id
+ */
+type ITrackById = string;
+
+export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
+    private monitoringState: any;
+    private lazyLoaderRef: LazyLoader<IArticle>;
     handleContentChanges: (resource: string, itemId: string, fields?: {[key: string]: 1}) => void;
     removeResourceCreatedListener: () => void;
     removeContentUpdateListener: () => void;
     removeResourceDeletedListener: () => void;
+
+    private onInitializeOnce: () => void;
 
     constructor(props: any) {
         super(props);
@@ -52,6 +64,10 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         this.monitoringState = ng.get('monitoringState');
 
         this.loadMore = this.loadMore.bind(this);
+
+        this.onInitializeOnce = once(() => {
+            this.props.onInitialize();
+        });
 
         this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
             if (
@@ -72,7 +88,7 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         };
     }
 
-    loadMore(from: number, to: number) {
+    loadMore(from: number, to: number): Promise<Dictionary<string, IArticle>> {
         const {loadItems} = this.props;
 
         return new Promise<Dictionary<string, IArticle>>((resolve) => {
@@ -82,6 +98,8 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
 
                     return acc;
                 }, {});
+
+                this.onInitializeOnce();
 
                 resolve(patch);
             });
