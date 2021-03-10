@@ -36,7 +36,7 @@ export class SmoothLoader extends React.Component<IProps> {
         const {loading, children} = this.props;
         const style: CSSProperties = loading
             ? {position: 'absolute', left: -9999, top: -9999, visibility: 'hidden'}
-            : {};
+            : {height: '100%'};
 
         return (
             <div
