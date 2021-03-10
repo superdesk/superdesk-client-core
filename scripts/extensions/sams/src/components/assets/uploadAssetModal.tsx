@@ -177,6 +177,12 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
                 asset={this.state.assets[item.id]}
                 disabled={submitting}
                 onChange={this.onFieldChanged[item.id]}
+                fields={[
+                    'name',
+                    'description',
+                    'state',
+                    'set_id',
+                ]}
             />
         );
     }

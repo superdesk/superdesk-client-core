@@ -1,6 +1,9 @@
 // External modules
 import * as React from 'react';
 import {connect} from 'react-redux';
+import {OrderedMap} from 'immutable';
+import nextId from 'react-id-generator';
+import {noop} from 'lodash';
 
 // Types
 import {ASSET_STATE, IAssetItem, ISetItem} from '../../interfaces';
@@ -11,7 +14,7 @@ import {superdeskApi} from '../../apis';
 import {getActiveSets} from '../../store/sets/selectors';
 
 // UI
-import {FormLabel, Input, Option, Select} from 'superdesk-ui-framework/react';
+import {FormLabel, Input, Option, Select, Autocomplete} from 'superdesk-ui-framework/react';
 import {FormGroup, FormRow} from '../../ui';
 
 // Utils
@@ -24,10 +27,33 @@ interface IProps {
     sets: Array<ISetItem>;
     fields?: Array<keyof IAssetItem>;
 }
+interface ITagUi {
+    name: string;
+    code: string;
+}
+
+interface IAutoTaggingSearchResult {
+        tags: Array<string>;
+}
 
 const mapStateToProps = (state: IApplicationState) => ({
     sets: getActiveSets(state),
 });
+
+export function toClientFormat(response: IAutoTaggingSearchResult): OrderedMap<string, ITagUi> {
+    let tags = OrderedMap<string, ITagUi>();
+
+    response.tags.forEach((item: string) => {
+        const tag: ITagUi = {
+            name: item,
+            code: item,
+        };
+
+        tags = tags.set(tag.name!, tag);
+        tags = tags.set(tag.code!, tag);
+    });
+    return tags;
+}
 
 class AssetEditorComponent extends React.PureComponent<IProps> {
     onChange: Dictionary<string, (value: string) => void>;
@@ -41,6 +67,7 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
             filename: (value: string) => this.props.onChange('filename', value.trim()),
             state: (value: string) => this.props.onChange('state', value),
             set_id: (value: string) => this.props.onChange('set_id', value),
+            tags: (value: string) => this.props.onChange('tags', value),
         };
     }
 
@@ -52,6 +79,7 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
 
     render() {
         const {gettext} = superdeskApi.localization;
+        const {httpRequestJsonLocal} = superdeskApi;
 
         return (
             <React.Fragment>
@@ -141,6 +169,42 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
                         </FormRow>
                     </FormGroup>
                 )}
+                {this.fieldEnabled('tags') && (
+                    <FormGroup>
+                        <FormRow>
+                            <Autocomplete
+                                key={nextId.name}
+                                label={gettext('Tags')}
+                                value={''}
+                                keyValue="name"
+                                items={[]}
+                                search={(searchString, callback) => {
+                                    let cancelled = false;
+
+                                    httpRequestJsonLocal<IAutoTaggingSearchResult>({
+                                        method: 'GET',
+                                        path: '/sams/assets/tags/' + searchString + '*',
+                                    }).then((res) => {
+                                        if (cancelled !== true) {
+                                            const result = toClientFormat(res).toArray();
+
+                                            callback(result);
+                                        }
+                                    });
+
+                                    return {
+                                        cancel: () => {
+                                            cancelled = true;
+                                        },
+                                    };
+                                }}
+                                onSelect={this.onChange.tags}
+                                onChange={noop}
+                            />
+                        </FormRow>
+                    </FormGroup>
+                )}
+
             </React.Fragment>
         );
     }
