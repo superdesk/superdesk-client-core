@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import _ from 'lodash';
+import _, {throttle} from 'lodash';
 import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
 import {GET_LABEL_MAP, getLabelForStage} from '../../workspace/content/constants';
 import {isPublished} from 'apps/archive/utils';
@@ -142,6 +142,15 @@ export function MonitoringGroup(
                 );
             }
 
+            function scheduleQueryFn(event, data) {
+                queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
+                    .finally(() => {
+                        scope.$apply();
+                    });
+            }
+
+            const scheduleQuery = throttle(scheduleQueryFn, 1000);
+
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
 
@@ -199,6 +208,7 @@ export function MonitoringGroup(
             scope.$on('item:duplicate', scheduleQuery);
             scope.$on('item:translate', scheduleQuery);
             scope.$on('item:move', scheduleQuery);
+            scope.$on('item:unlock', scheduleQuery);
             scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
                 queryItems();
@@ -404,25 +414,6 @@ export function MonitoringGroup(
                     }
 
                     scope.styleProperties.maxHeight = groupItems * ITEM_HEIGHT - scrollOffset;
-                }
-            }
-
-            var queryTimeout;
-
-            /**
-             * Schedule content reload after some delay
-             */
-            function scheduleQuery(event, data) {
-                if (!queryTimeout) {
-                    queryTimeout = $timeout(() => {
-                        queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
-                            .finally(() => {
-                                scope.$applyAsync(() => {
-                                    // ignore any updates requested in current $digest
-                                    queryTimeout = null;
-                                });
-                            });
-                    }, 1000, false);
                 }
             }
 
