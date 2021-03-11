@@ -1,63 +1,28 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticle, ISortOption} from 'superdesk-api';
-import {ISuperdeskQuery, IOrOperator, IAndOperator} from './query-formatting';
+import {IArticle, ISortOption, IRestApiResponse} from 'superdesk-api';
+import {ISuperdeskQuery, IOrOperator, IAndOperator, toElasticQuery} from './query-formatting';
 import {ArticlesListByQuery} from './ArticlesListByQuery';
 import {Set, Map} from 'immutable';
 import classNames from 'classnames';
 import {gettext, gettextPlural} from './utils';
-import {getArticleSortOptions} from 'apps/search/services/SearchService';
+import {getArticleSortOptions, generateTrackByIdentifier} from 'apps/search/services/SearchService';
 import {SearchBar} from './ui/components';
 import {SortBar} from './ui/components/SortBar';
 import {Badge} from './ui/components/Badge';
-import {IMultiSelectOptions, MultiSelectHoc} from './MultiSelectHoc';
-import {SelectBoxWithoutMutation} from 'apps/search/components/SelectBox';
-import {TypeIcon} from 'apps/search/components';
+import {MultiSelectHoc} from './MultiSelectHoc';
 import {IArticleActionBulkExtended, MultiActionBarReact} from 'apps/monitoring/MultiActionBarReact';
 import {getMultiActions} from 'apps/search/controllers/get-multi-actions';
 import {Button} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
+import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
+import {ResizeObserverComponent} from './components/resize-observer-component';
+import {httpRequestJsonLocal} from './helpers/network';
+import {MultiSelect} from './ArticlesListV2MultiSelect';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 
-class MultiSelect extends React.Component<{item: IArticle; options: IMultiSelectOptions}> {
-    render() {
-        const {item, options} = this.props;
-
-        const checkbox = (
-            <SelectBoxWithoutMutation
-                item={item}
-                onSelect={(id) => {
-                    options.toggle(item);
-                }}
-                selected={options.selected.has(item._id)}
-                className="hover-AB--B"
-            />
-        );
-
-        return (
-            <div
-                className="list-field type-icon"
-                data-test-id="multi-select-checkbox"
-            >
-                {
-                    options.selected.has(item._id)
-                        ? checkbox
-                        : (
-                            <div className="hover-AB">
-                                <div className="hover-AB--A" style={{display: 'flex'}}>
-                                    <TypeIcon
-                                        type={item.type}
-                                        highlight={item.highlight}
-                                    />
-                                </div>
-                                {checkbox}
-                            </div>
-                        )
-                }
-            </div>
-        );
-    }
-}
+const COMPACT_WIDTH = 700;
 
 type IFilterValue = string | number;
 
@@ -66,6 +31,7 @@ interface IProps {
     query: ISuperdeskQuery;
     onItemClick(item: IArticle): void;
     onItemDoubleClick(item: IArticle): void;
+    getExtraButtons?(): Array<{label: string; onClick: () => void}>;
 }
 
 interface IState {
@@ -195,6 +161,14 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
     }
     render() {
         const padding = 20;
+        const extraButtons = this.props.getExtraButtons?.() ?? null;
+
+        const query: ISuperdeskQuery = getQueryWithFilters(
+            this.props.query,
+            this.state.activeFilters,
+            this.state.fullTextSearch,
+            this.state.sortOption,
+        );
 
         /**
          * When multi-select is started, filter/sort bar disappears and multi-select toolbar appears.
@@ -202,128 +176,201 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
          */
         const toolbar2Height = 50;
 
-        const sortFilterToolbar = (
-            <div
-                style={{
-                    display: 'flex',
-                    height: toolbar2Height,
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    borderTop: '1px solid #d5d5d5',
-                    borderBottom: '1px solid #d5d5d5',
-                    paddingTop: 8,
-                    paddingBottom: 8,
-                    paddingLeft: padding,
-                    paddingRight: padding,
-                }}
-            >
+        const getTypeFilteringComponent = (compact: boolean) => {
+            interface IFileTypeOption {
+                label: string;
+                icon?: string;
+                selected: boolean;
+                onSelect: () => void;
+            }
+
+            const filterAll: IFileTypeOption = {
+                label: gettext('All'),
+                selected: this.hasFilter('type') === false,
+                onSelect: () => {
+                    this.removeFilter('type');
+                },
+            };
+
+            const options: Array<IFileTypeOption> = [
+                filterAll,
+                ...getItemTypes().map((itemType) => {
+                    return {
+                        label: itemType.label,
+                        icon: `filetype-icon-${itemType.type}`,
+                        selected: this.hasFilter('type', itemType.type),
+                        onSelect: () => {
+                            this.toggleFilter('type', itemType.type);
+                        },
+                    };
+                }),
+            ];
+
+            // TODO: Implement compact mode when multi select component is available in UI framework.
+
+            return (
                 <div>
                     <div className="button-list">
-                        <button
-                            className={classNames(
-                                'toggle-button',
-                                {'toggle-button--active': this.hasFilter('type') === false},
-                            )}
-                            onClick={() => {
-                                this.removeFilter('type');
-                            }}
-                        >
-                            {gettext('All')}
-                        </button>
-                        {getItemTypes().map(({type, label}) => (
+                        {options.map(({label, icon, selected, onSelect}) => (
                             <button
-                                key={type}
+                                key={label}
                                 className={classNames(
                                     'toggle-button',
-                                    {'toggle-button--active': this.hasFilter('type', type)},
+                                    {'toggle-button--active': selected},
                                 )}
                                 onClick={() => {
-                                    this.toggleFilter('type', type);
+                                    onSelect();
                                 }}
                                 aria-label={label}
                             >
-                                <i className={`toggle-button__icon filetype-icon-${type}`} />
+                                {
+                                    icon != null
+                                        ? <i className={`toggle-button__icon ${icon}`} />
+                                        : label
+                                }
                             </button>
                         ))}
                     </div>
                 </div>
-                <SortBar
-                    sortOptions={getArticleSortOptions()}
-                    selected={this.state.sortOption}
-                    onSortOptionChange={(sortOption) => {
-                        this.setState({sortOption});
-                    }}
-                />
-            </div>
+            );
+        };
+
+        const sortFilterToolbar = (
+            <ResizeObserverComponent>
+                {(dimensions) => (
+                    <div
+                        style={{
+                            display: 'flex',
+                            height: toolbar2Height,
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            borderTop: '1px solid #d5d5d5',
+                            borderBottom: '1px solid #d5d5d5',
+                            paddingTop: 8,
+                            paddingBottom: 8,
+                            paddingLeft: padding,
+                            paddingRight: padding,
+                        }}
+                    >
+                        {getTypeFilteringComponent(dimensions.width < COMPACT_WIDTH)}
+
+                        <SortBar
+                            sortOptions={getArticleSortOptions()}
+                            selected={this.state.sortOption}
+                            onSortOptionChange={(sortOption) => {
+                                this.setState({sortOption});
+                            }}
+                        />
+                    </div>
+                )}
+            </ResizeObserverComponent>
         );
 
         return (
-            <MultiSelectHoc>
+            <MultiSelectHoc
+                resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
+                getId={(item: IArticle) => generateTrackByIdentifier(item)}
+                shouldUnselect={(ids) => {
+                    // Use the same query except only for selected items.
+                    const queryForSpecificItems: ISuperdeskQuery = {
+                        ...query,
+                        page: 0,
+                        max_results: 200,
+                        filter: {
+                            $and: [
+                                query.filter,
+                                {'_id': {$in: ids.toJS()}},
+                            ],
+                        },
+                    };
+
+                    const elasticQuery = toElasticQuery(queryForSpecificItems);
+
+                    return httpRequestJsonLocal<IRestApiResponse<Pick<IArticle, '_id' | 'state' | '_current_version'>>>(
+                        {
+                            method: 'GET',
+                            path: '/search',
+                            urlParams: {
+                                aggregations: 0,
+                                es_highlight: 1,
+                                projections: JSON.stringify(['_id', 'state', '_current_version']),
+                                source: JSON.stringify(elasticQuery),
+                            },
+                        },
+                    ).then((res) => {
+                        var stillMatchQuery = Set(res._items.map((item) => generateTrackByIdentifier(item)));
+
+                        return ids.filter((id) => stillMatchQuery.has(id) !== true).toSet();
+                    });
+                }}
+            >
                 {(multiSelectOptions) => {
                     const getMultiSelectToolbar = (articles: Array<IArticle>) => {
+                        const getSelectedItems = () => articles;
+                        const unselectAll = () => multiSelectOptions.unselectAll();
+
                         const multiActions = getMultiActions(
-                            () => articles,
-                            () => multiSelectOptions.unselectAll(),
+                            getSelectedItems,
+                            unselectAll,
                         );
 
-                        // TODO: Port everything from MultiActionBar.ts to react.
-                        const actions: Array<IArticleActionBulkExtended> = [];
-
-                        if (articles.every(({state}) => state === 'spiked')) {
-                            actions.push({
-                                label: gettext('Unspike'),
-                                icon: 'icon-unspike',
-                                onTrigger: () => {
-                                    multiActions.unspikeItems();
-                                    ng.get('$rootScope').$apply();
-                                },
-                                canAutocloseMultiActionBar: false,
-                            });
-                        }
+                        const actions: Array<IArticleActionBulkExtended> = getBulkActions(
+                            articles,
+                            multiActions,
+                            getSelectedItems,
+                            unselectAll,
+                            () => {
+                                ng.get('$rootScope').$apply();
+                            },
+                        );
 
                         return (
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    height: toolbar2Height,
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    backgroundColor: '#d2e5ed',
-                                    paddingLeft: padding,
-                                    paddingRight: padding,
-                                }}
-                            >
-                                <div style={{display: 'flex', alignItems: 'center'}}>
-                                    <Button
-                                        text={gettext('Cancel')}
-                                        onClick={() => {
-                                            multiSelectOptions.unselectAll();
+                            <ResizeObserverComponent>
+                                {(dimensions) => (
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            height: toolbar2Height,
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            backgroundColor: '#d2e5ed',
+                                            paddingLeft: padding,
+                                            paddingRight: padding,
                                         }}
-                                    />
-                                    <h4 style={{marginLeft: 20}}>
-                                        {gettextPlural(
-                                            articles.length,
-                                            '1 item selected',
-                                            '{{number}} items selected',
-                                            {number: articles.length},
-                                        )}
-                                    </h4>
-                                </div>
-                                <div>
-                                    <MultiActionBarReact
-                                        articles={multiSelectOptions.selected.toArray()}
-                                        getCoreActions={() => actions}
-                                        compact={false}
-                                        hideMultiActionBar={() => multiSelectOptions.unselectAll()}
-                                    />
-                                </div>
-                            </div>
+                                    >
+                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                            <Button
+                                                text={gettext('Cancel')}
+                                                onClick={() => {
+                                                    multiSelectOptions.unselectAll();
+                                                }}
+                                            />
+                                            <h4 style={{marginLeft: 20}}>
+                                                {gettextPlural(
+                                                    articles.length,
+                                                    '1 item selected',
+                                                    '{{number}} items selected',
+                                                    {number: articles.length},
+                                                )}
+                                            </h4>
+                                        </div>
+                                        <div>
+                                            <MultiActionBarReact
+                                                articles={multiSelectOptions.selected.toArray()}
+                                                getCoreActions={() => actions}
+                                                compact={dimensions.width < COMPACT_WIDTH}
+                                                hideMultiActionBar={() => multiSelectOptions.unselectAll()}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </ResizeObserverComponent>
                         );
                     };
 
                     const header = (itemsCount: number): JSX.Element => {
                         return (
-                            <div>
+                            <div data-test-id="articles-list--toolbar">
                                 <div
                                     style={{
                                         display: 'flex',
@@ -336,6 +383,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                         <h3
                                             className="subnav__page-title sd-flex-no-grow"
                                             style={{padding: 0, marginRight: 10}}
+                                            data-test-id="articles-list--heading"
                                         >
                                             {this.props.heading}
                                         </h3>
@@ -351,6 +399,23 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                                             initialValue={this.state.fullTextSearch}
                                         />
                                     </div>
+
+                                    {
+                                        extraButtons == null ? null : (
+                                            <div style={{marginLeft: 10}}>
+                                                {
+                                                    extraButtons.map(({label, onClick}) => (
+                                                        <Button
+                                                            key={label}
+                                                            text={label}
+                                                            type="primary"
+                                                            onClick={onClick}
+                                                        />
+                                                    ))
+                                                }
+                                            </div>
+                                        )
+                                    }
                                 </div>
 
                                 {(() => {
@@ -368,21 +433,17 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
                     return (
                         <ArticlesListByQuery
-                            query={getQueryWithFilters(
-                                this.props.query,
-                                this.state.activeFilters,
-                                this.state.fullTextSearch,
-                                this.state.sortOption,
-                            )}
+                            query={query}
                             onItemClick={this.props.onItemClick}
                             onItemDoubleClick={this.props.onItemDoubleClick}
                             header={header}
                             padding={`${3 / 4 * padding}px ${padding}px`}
-                            multiSelect={{
+                            getMultiSelect={(items) => ({
                                 kind: 'new',
                                 options: multiSelectOptions,
+                                items,
                                 MultiSelectComponent: MultiSelect,
-                            }}
+                            })}
                         />
                     );
                 }}

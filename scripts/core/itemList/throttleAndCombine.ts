@@ -1,12 +1,24 @@
+import {throttle, ThrottleSettings} from 'lodash';
+
 type IHandler<T> = (items: T) => void;
 
 export function throttleAndCombine<T>(
     fn: IHandler<T>,
     combine: (a: T, b: T) => T,
     wait: number,
+    options?: ThrottleSettings,
 ): IHandler<T> {
-    let lastCall = Date.now();
     let queue: T | null = null;
+
+    const callbackThrottled = throttle(
+        () => {
+            fn(queue);
+
+            queue = null;
+        },
+        wait,
+        options,
+    );
 
     return (items: T) => {
         if (queue == null) {
@@ -15,31 +27,33 @@ export function throttleAndCombine<T>(
             queue = combine(queue, items);
         }
 
-        const milisecondsSinceLastCall = Date.now() - lastCall;
-
-        if (milisecondsSinceLastCall >= wait) {
-            fn(queue);
-
-            queue = null;
-            lastCall = Date.now();
-        }
+        callbackThrottled();
     };
 }
 
 export function throttleAndCombineArray<T>(
     fn: IHandler<Array<T>>,
     wait: number,
+    options?: ThrottleSettings,
 ) {
     return throttleAndCombine(
         fn,
         (a, b) => a.concat(b),
         wait,
+        options,
     );
 }
 
+/**
+ * When throttled function is called more frequently than specified via `wait` param,
+ * it keeps the set in memory and after the wait threshold "times out"
+ * it then invokes the handler function with a combined set which has items from previous calls
+ * where due to throttling, the handler wasn't called.
+ */
 export function throttleAndCombineSet<T>(
     fn: IHandler<Set<T>>,
     wait: number,
+    options?: ThrottleSettings,
 ) {
     return throttleAndCombine(
         fn,
@@ -57,5 +71,6 @@ export function throttleAndCombineSet<T>(
             return result;
         },
         wait,
+        options,
     );
 }

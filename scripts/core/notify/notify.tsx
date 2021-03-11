@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import React from 'react';
 import {find, matches} from 'lodash';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 
 interface IMessageDisplayDurationByType {
     info: number;
@@ -132,3 +133,20 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
         // eslint-disable-next-line
         return ReactDOM.render(<NotifyComponent />, targetEl); // returns instance of NotifyComponent
     }]);
+
+export const notify = {
+    info: (text: string, displayDuration?: number, options?: any) => {
+        ng.get('notify').info(text, displayDuration, options);
+    },
+    success: (text: string, displayDuration?: number, options?: any) => {
+        // eslint-disable-next-line angular/no-http-callback
+        ng.get('notify').success(text, displayDuration, options);
+    },
+    warning: (text: string, displayDuration?: number, options?: any) => {
+        ng.get('notify').warning(text, displayDuration, options);
+    },
+    error: (text: string, displayDuration?: number, options?: any) => {
+        // eslint-disable-next-line angular/no-http-callback
+        ng.get('notify').error(text, displayDuration, options);
+    },
+};

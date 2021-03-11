@@ -81,15 +81,17 @@ describe('content', () => {
                 [
                     {
                         id: 'test-extension',
-                        activate: () => {
-                            return Promise.resolve({
-                                contributions: {
-                                    entities: {
-                                        article: articleEntities,
+                        load: () => Promise.resolve({
+                            activate: () => {
+                                return Promise.resolve({
+                                    contributions: {
+                                        entities: {
+                                            article: articleEntities,
+                                        },
                                     },
-                                },
-                            });
-                        },
+                                });
+                            },
+                        }),
                     },
                 ],
                 superdesk,
@@ -100,6 +102,7 @@ describe('content', () => {
                 authoringWorkspace,
                 config,
                 metadata,
+                {item: () => false},
                 preferencesService,
             ).then(() => {
                 activityService.start(superdesk.activities.spike, {data: {item: {_id: '0'}}});

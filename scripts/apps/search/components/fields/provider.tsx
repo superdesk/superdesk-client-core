@@ -1,21 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const provider: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    let _provider = props.ingestProvider ? props.ingestProvider.source : '';
+class ProviderComponent extends React.Component<IPropsItemListInfo> {
+    render() {
+        const props = this.props;
 
-    if (props.item.source) {
-        _provider = props.item.source;
-    }
-    if (_provider) {
-        return React.createElement('span', {className: 'provider', key: 'provider'}, _provider);
-    } else {
-        return null;
-    }
-};
+        let _provider = props.ingestProvider ? props.ingestProvider.source : '';
 
-provider.propTypes = {
-    item: PropTypes.any,
-    ingestProvider: PropTypes.any,
-};
+        if (props.item.source) {
+            _provider = props.item.source;
+        }
+        if (_provider) {
+            return React.createElement('span', {className: 'provider', key: 'provider'}, _provider);
+        } else {
+            return null;
+        }
+    }
+}
+
+export const provider = ProviderComponent;

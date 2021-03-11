@@ -6,7 +6,7 @@ import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {nav} from './helpers/utils';
-import {ECE, els, el} from 'end-to-end-testing-helpers';
+import {ECE, els, el} from '@superdesk/end-to-end-testing-helpers';
 
 describe('spike', () => {
     beforeEach((done) => {

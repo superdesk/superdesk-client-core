@@ -12,10 +12,10 @@ describe('saved_search', () => {
     });
 
     it('can save a private search', () => {
-        expect(globalSearch.getItems().count()).toBe(14);
+        expect(globalSearch.getItems().count()).toBe(16);
         globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
-        expect(globalSearch.getItems().count()).toBe(14);
+        expect(globalSearch.getItems().count()).toBe(16);
         expect(globalSearch.getPriorityElements().count()).toBe(3);
         var priority = globalSearch.getPriorityElementByIndex(0);
 
@@ -34,10 +34,10 @@ describe('saved_search', () => {
     });
 
     it('can save a global search and another user sees it', () => {
-        expect(globalSearch.getItems().count()).toBe(14);
+        expect(globalSearch.getItems().count()).toBe(16);
         globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
-        expect(globalSearch.getItems().count()).toBe(14);
+        expect(globalSearch.getItems().count()).toBe(16);
         expect(globalSearch.getPriorityElements().count()).toBe(3);
         var priority = globalSearch.getPriorityElementByIndex(0);
 

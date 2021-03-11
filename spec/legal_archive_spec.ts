@@ -1,10 +1,10 @@
-import {element, by} from 'protractor';
+import {element, by, browser} from 'protractor';
 
 import {workspace} from './helpers/workspace';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {legalArchive} from './helpers/legal_archive';
-import {hover} from './helpers/utils';
+import {el} from '@superdesk/end-to-end-testing-helpers';
 
 describe('legal_archive', () => {
     it('can display Legal Archive option in hamburger menu', () => {
@@ -21,9 +21,12 @@ describe('legal_archive', () => {
     it('can display only OPEN option in the Actions Menu for items in Legal Archive', () => {
         legalArchive.open();
         var menu = content.openItemMenu('item1 in legal archive');
-        var menuItems = menu.all(by.css('li a'));
+        var menuItems = menu.all(by.css('li button'));
 
-        expect(menuItems.count()).toBe(2); // open + open in new window
+        expect(el(['close'], null, menu).isDisplayed()).toBe(true);
+        expect(menu.element(by.buttonText('Open')).isDisplayed()).toBe(true);
+        expect(menu.element(by.buttonText('Open in new Window')).isDisplayed()).toBe(true);
+        expect(menuItems.count()).toBe(3);
     });
 
     it('on open item close preview in a Legal Archive', () => {
@@ -31,8 +34,7 @@ describe('legal_archive', () => {
 
         content.previewItem('item1 in legal archive');
         expect(element(by.id('item-preview')).isDisplayed()).toBe(true);
-
-        content.actionOnItem('Open', 'item1 in legal archive');
+        element(by.className('close-preview')).click();
         expect(element(by.id('item-preview')).isDisplayed()).toBe(false);
     });
 

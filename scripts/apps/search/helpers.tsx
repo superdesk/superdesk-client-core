@@ -4,8 +4,9 @@ import {DEFAULT_LIST_CONFIG} from './constants';
 import {fields} from './components/fields';
 import ng from '../../core/services/ng';
 import {isKilled} from 'apps/archive/utils';
-import {IArticle, IPublishedArticle} from 'superdesk-api';
+import {IArticle, IPublishedArticle, IListViewFieldWithOptions} from 'superdesk-api';
 import {getVocabularyItemNameTranslated} from 'core/utils';
+import {appConfig} from 'appConfig';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -154,7 +155,7 @@ export function renderArea(
     }
 
     /* globals __SUPERDESK_CONFIG__: true */
-    const listConfig = itemProps.listConfig || __SUPERDESK_CONFIG__.list || DEFAULT_LIST_CONFIG;
+    const listConfig = itemProps.listConfig || appConfig.list || DEFAULT_LIST_CONFIG;
 
     let specs = listConfig[area] || [];
 
@@ -164,7 +165,17 @@ export function renderArea(
     }
 
     const elemProps = angular.extend({key: area}, props);
-    const components = specs.map((field, i) => {
+    const components = specs.map((value: string | IListViewFieldWithOptions, i) => {
+        let field;
+        let options: IListViewFieldWithOptions['options'] | undefined;
+
+        if (typeof value === 'string') {
+            field = value;
+        } else {
+            field = value.field;
+            options = value.options;
+        }
+
         if (customRender.fields && field in customRender.fields) {
             return customRender.fields[field](itemProps);
         }
@@ -172,7 +183,7 @@ export function renderArea(
         const Component = fields[field];
 
         if (Component != null) {
-            return <Component key={i} {...itemProps} />;
+            return <Component key={i} {...itemProps} options={options} />;
         }
 
         return null;
@@ -194,31 +205,33 @@ export function renderArea(
  * @param {String} label - activity label
  */
 export function bindMarkItemShortcut(label) {
+    const currentActiveElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const keyboardManager = ng.get('keyboardManager');
 
     angular.element('.active .more-activity-toggle-ref').click();
 
     setTimeout(() => {
         let markDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
+        let option = markDropdown.find('[title="' + label + '"]').parent();
 
-        if (markDropdown.find('[title="' + label + '"]').length > 0) {
-            markDropdown.find('[title="' + label + '"]')[0].click();
+        if (option.length > 0) {
+            option.click();
         }
 
-        if (markDropdown.find('button').length > 0) {
-            markDropdown.find('button:not([disabled])')
-                .first()
-                .focus();
+        let moreOptions = option.find('button:not([disabled])').parents('ul').first();
+
+        if (moreOptions.find('button:not([disabled])').length > 0) {
+            moreOptions.find('button:not([disabled])').first().focus();
 
             keyboardManager.push('up', () => {
-                markDropdown.find('button:focus')
+                option.find('button:focus')
                     .parent('li')
                     .prev()
                     .children('button')
                     .focus();
             });
             keyboardManager.push('down', () => {
-                markDropdown.find('button:focus')
+                option.find('button:focus')
                     .parent('li')
                     .next()
                     .children('button')
@@ -228,6 +241,8 @@ export function bindMarkItemShortcut(label) {
                 let actionMenu = angular.element('.more-activity-menu.open');
 
                 actionMenu.find('button.dropdown__menu-close').click();
+
+                currentActiveElement?.focus(); // return focus to where it was before invoking the keybinding
             });
         }
     });

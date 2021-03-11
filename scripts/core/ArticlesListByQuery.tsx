@@ -3,12 +3,13 @@
 import React from 'react';
 import {ArticlesListV2} from './ArticlesListV2';
 import {IRestApiResponse, IArticle} from 'superdesk-api';
-import {httpRequestJsonLocal} from './helpers/network';
-import {flatMap, once} from 'lodash';
+import {flatMap} from 'lodash';
 import ng from 'core/services/ng';
 import {ISuperdeskQuery, toElasticQuery, getQueryFieldsRecursive} from './query-formatting';
-import {Loader} from 'superdesk-ui-framework/react/components/Loader';
+import {SmoothLoader} from 'apps/search/components/SmoothLoader';
 import {IMultiSelectNew} from 'apps/search/components/ItemList';
+import {SuperdeskReactComponent} from './SuperdeskReactComponent';
+import {OrderedMap} from 'immutable';
 
 interface IProps {
     query: ISuperdeskQuery;
@@ -16,21 +17,18 @@ interface IProps {
     onItemDoubleClick(item: IArticle): void;
     header?(itemCount: number): JSX.Element;
     padding?: string;
-    multiSelect?: IMultiSelectNew;
-}
-
-interface IPropsInner extends IProps {
-    beforeUnmount(): void;
-    afterInitialized(): void;
+    getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
 }
 
 interface IState {
     itemCount: number | 'loading';
 }
 
-class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, IState> {
-    markAsInitializedOnce: () => void;
+interface IPropsInner extends IProps {
+    onInitialize(): void;
+}
 
+class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, IState> {
     constructor(props: IPropsInner) {
         super(props);
 
@@ -39,9 +37,6 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
         };
 
         this.loadItems = this.loadItems.bind(this);
-        this.markAsInitializedOnce = once(() => {
-            this.props.afterInitialized();
-        });
     }
     loadItems(from, to): Promise<IRestApiResponse<any>> {
         const pageSize = to - from;
@@ -54,7 +49,7 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
 
         const query = toElasticQuery(withPagination);
 
-        return httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+        return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
             method: 'GET',
             path: '/search',
             urlParams: {
@@ -66,7 +61,6 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
         }).then((res) => {
             return new Promise((resolve) => {
                 // update item count
-
                 this.setState({itemCount: res._meta.total}, () => {
                     resolve(res);
                 });
@@ -82,9 +76,7 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
             });
         });
     }
-    componentWillUnmount() {
-        this.props.beforeUnmount();
-    }
+
     render() {
         if (this.state.itemCount === 'loading') {
             return null;
@@ -106,11 +98,7 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
                     <ArticlesListV2
                         itemCount={itemCount}
                         pageSize={this.props.query.max_results}
-                        loadItems={(from, to) => this.loadItems(from, to).then(({_items}) => {
-                            this.markAsInitializedOnce();
-
-                            return _items;
-                        })}
+                        loadItems={(from, to) => this.loadItems(from, to).then(({_items}) => _items)}
                         shouldReloadTheList={(changedFields) => {
                             /** TODO: Have websockets transmit the diff.
                              * The component should not update when field value changes do not affect the query -
@@ -130,7 +118,8 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
                         onItemClick={this.props.onItemClick}
                         onItemDoubleClick={this.props.onItemDoubleClick}
                         padding={this.props.padding}
-                        multiSelect={this.props.multiSelect}
+                        getMultiSelect={this.props.getMultiSelect}
+                        onInitialize={this.props.onInitialize}
                     />
                 </div>
             </div>
@@ -138,70 +127,47 @@ class ArticlesListByQueryComponent extends React.PureComponent<IPropsInner, ISta
     }
 }
 
-/** Wrapper component for:
- * 1. Re-mounting when query changes.
- * 2. Better loading experience - capture generated HTML of the component before it unmounts and display it
- * until the component with the new data is mounted.
- */
-export class ArticlesListByQuery extends React.PureComponent<IProps, {lastHtml: string}> {
-    elementRef: HTMLDivElement;
-
+class ArticlesListByQueryWithLoader extends React.PureComponent<IProps, {loading: boolean}> {
     constructor(props: IProps) {
         super(props);
 
-        this.handleUnmount = this.handleUnmount.bind(this);
-        this.handleInitialized = this.handleInitialized.bind(this);
-
         this.state = {
-            // Display loading indicator on first load too.
-            lastHtml: '<div></div>',
+            loading: true,
         };
+
+        this.setLoading = this.setLoading.bind(this);
     }
 
-    handleUnmount() {
-        this.setState({lastHtml: this.elementRef.innerHTML});
-    }
-
-    handleInitialized() {
-        this.setState({lastHtml: null});
+    setLoading(loading: boolean): Promise<void> {
+        return new Promise((resolve) => {
+            this.setState({loading}, () => {
+                resolve();
+            });
+        });
     }
 
     render() {
-        // re-mount the component when the query changes
-        const key = JSON.stringify(this.props.query);
-
-        const {lastHtml} = this.state;
-        const style: React.CSSProperties = lastHtml == null
-            ? {height: '100%'}
-            : {height: '100%', position: 'absolute', left: -9999, top: -9999};
-
         return (
-            <div
-                style={{height: '100%'}}
-                ref={(component) => {
-                    if (component != null) {
-                        this.elementRef = component;
-                    }
-                }}
-            >
-                {
-                    lastHtml == null ? null : (
-                        <div style={{height: '100%', position: 'relative'}}>
-                            <Loader overlay />
-                            <div dangerouslySetInnerHTML={{__html: lastHtml}} style={{height: '100%'}} />
-                        </div>
-                    )
-                }
+            <SmoothLoader loading={this.state.loading}>
+                <ArticlesListByQueryComponent
+                    {...this.props}
+                    onInitialize={() => {
+                        this.setLoading(false);
+                    }}
+                />
+            </SmoothLoader>
+        );
+    }
+}
 
-                <div style={style}>
-                    <ArticlesListByQueryComponent
-                        {...this.props}
-                        key={key}
-                        beforeUnmount={this.handleUnmount}
-                        afterInitialized={this.handleInitialized}
-                    />
-                </div>
-            </div>
+// re-mount loader when query changes
+export class ArticlesListByQuery extends React.PureComponent<IProps> {
+    render() {
+        return (
+            <ArticlesListByQueryWithLoader
+                {...this.props}
+                key={JSON.stringify(this.props.query)}
+            />
         );
     }
 }

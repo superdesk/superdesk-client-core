@@ -71,12 +71,10 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
         'marginTop',
         'marginRight',
         'marginBottom',
-        'marginTop',
         'padding',
         'paddingTop',
         'paddingRight',
         'paddingBottom',
-        'paddingTop',
     );
 
     const propertiesShallowCopy = {...properties};
@@ -93,6 +91,21 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
 // will throw an exception if non-JSON object is passed
 export function copyJson(obj) {
     return JSON.parse(JSON.stringify(obj));
+}
+
+// will help downloading binary file
+export function downloadBlob(data: BinaryType, mimetype: string, filename: string): void {
+    const a = document.createElement('a');
+
+    document.body.appendChild(a);
+    const blob = new Blob([data], {type: mimetype}),
+        url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
 }
 
 export function copyString(data) {

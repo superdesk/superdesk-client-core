@@ -10,15 +10,29 @@ import {
     IResourceDeletedEvent,
 } from 'superdesk-api';
 
-import {noop} from 'lodash';
+import {noop, once} from 'lodash';
 import {LazyLoader} from './itemList/LazyLoader';
 import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
 import {dataApi} from './helpers/CrudManager';
 import {IScope} from 'angular';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
+import {OrderedMap} from 'immutable';
+import {openArticle} from './get-superdesk-api-implementation';
+import {
+    getAndMergeRelatedEntitiesForArticles,
+    IRelatedEntities,
+    IResourceChange,
+    getAndMergeRelatedEntitiesUpdated,
+} from './getRelatedEntities';
+import {SuperdeskReactComponent} from './SuperdeskReactComponent';
+import {notNullOrUndefined} from './helpers/typescript-helpers';
+import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 
 interface IState {
     initialized: boolean;
+    selected: IArticle['_id'] | undefined;
+    relatedEntities: IRelatedEntities;
 }
 
 interface IProps {
@@ -30,73 +44,219 @@ interface IProps {
 
     onItemClick(item: IArticle): void;
     onItemDoubleClick?(item: IArticle): void;
-    multiSelect?: IMultiSelectNew;
+    getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
+
+    onInitialize(): void;
 }
 
-export class ArticlesListV2 extends React.Component<IProps, IState> {
-    monitoringState: any;
-    lazyLoaderRef: LazyLoader<IArticle>;
-    handleContentChanges: (resource: string, itemId: string, fields?: {[key: string]: 1}) => void;
-    removeResourceCreatedListener: () => void;
-    removeContentUpdateListener: () => void;
-    removeResourceDeletedListener: () => void;
+/**
+ * "Track By" ids are a workaround to published items having _id set
+ * to a an _id of the original story (_id from archive endpoint). If an update is created,
+ * /search endpoint will return 2 items with the same _id
+ */
+type ITrackById = string;
+
+export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
+    private monitoringState: any;
+    private lazyLoaderRef: LazyLoader<IArticle>;
+    private handleContentChanges: (changes: Array<IResourceChange>) => void;
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+    private _mounted: boolean;
+    private services: {search: any};
+
+    // required for updating the list after receiving a websocket notification
+    // notifications return real _id, but LazyLoader works with ITrackById
+    private idMap: Map<IArticle['_id'], ITrackById>;
+    private onInitializeOnce: () => void;
 
     constructor(props: any) {
         super(props);
 
         this.state = {
             initialized: false,
+            selected: undefined,
+            relatedEntities: {},
         };
 
         this.monitoringState = ng.get('monitoringState');
 
+        this.fetchRelatedEntities = this.fetchRelatedEntities.bind(this);
         this.loadMore = this.loadMore.bind(this);
+        this.getItemsByIds = this.getItemsByIds.bind(this);
 
-        this.handleContentChanges = (resource: string, itemId: string, fields?: {[key: string]: 1}) => {
-            if (
-                resource === 'archive'
-                || resource === 'archive_spike'
-                || resource === 'archive_unspike'
-            ) {
-                const reloadTheList = this.props?.shouldReloadTheList(
-                    new Set(Array.from(Object.keys(fields ?? {}))),
-                ) ?? false;
+        this.onInitializeOnce = once(() => {
+            this.props.onInitialize();
+        });
 
-                if (reloadTheList) {
-                    this.lazyLoaderRef.reset();
-                } else {
-                    this.lazyLoaderRef.updateItems(new Set([itemId]));
+        this.handleContentChanges = throttleAndCombineArray(
+            (changes) => {
+                if (this.lazyLoaderRef == null) {
+                    return;
                 }
-            }
+
+                const articlesResourceChanges = changes.filter(
+                    ({resource}) => ARTICLE_RELATED_RESOURCE_NAMES.includes(resource),
+                );
+
+                // update articles in the list
+                if (articlesResourceChanges.length > 0) {
+                    const fields = articlesResourceChanges.reduce((acc, item) => {
+                        Object.keys(item.fields ?? {}).forEach((field) => {
+                            acc.add(field);
+                        });
+
+                        return acc;
+                    }, new Set<string>());
+
+                    const reloadTheList = this.props?.shouldReloadTheList(fields) ?? false;
+
+                    if (reloadTheList || fields == null) {
+                        this.lazyLoaderRef.reset();
+                        this.idMap.clear();
+                    } else {
+                        const trackByIds: Array<string> = articlesResourceChanges
+                            .map(({itemId}) => this.idMap.get(itemId))
+                            .filter(notNullOrUndefined);
+
+                        if (trackByIds.length > 0) {
+                            this.lazyLoaderRef.updateItems(new Set<string>(trackByIds));
+                        }
+                    }
+                }
+
+                getAndMergeRelatedEntitiesUpdated(
+                    this.state.relatedEntities,
+                    changes,
+                    this.abortController.signal,
+                ).then((relatedEntities) => {
+                    this.setState({relatedEntities});
+                });
+            },
+            300,
+        );
+
+        this.idMap = new Map<IArticle['_id'], ITrackById>();
+
+        this.services = {
+            search: ng.get('search'),
         };
+
+        this.eventListenersToRemoveBeforeUnmounting = [];
     }
 
-    loadMore(from: number, to: number) {
-        const {loadItems} = this.props;
+    fetchRelatedEntities(items: OrderedMap<ITrackById, IArticle>): Promise<OrderedMap<ITrackById, IArticle>> {
+        const articles: Array<IArticle> = [];
 
-        return new Promise<Dictionary<string, IArticle>>((resolve) => {
-            loadItems(from, to).then((items) => {
-                const patch = items.reduce<{[key: string]: IArticle}>((acc, item, index) => {
-                    acc[from + index] = item;
+        items.forEach((item) => {
+            articles.push(item);
+        });
 
-                    return acc;
-                }, {});
-
-                resolve(patch);
+        return new Promise((resolve) => {
+            getAndMergeRelatedEntitiesForArticles(
+                articles,
+                this.state.relatedEntities,
+                this.abortController.signal,
+            ).then((relatedEntities) => {
+                this.setState({
+                    relatedEntities,
+                }, () => {
+                    this.onInitializeOnce();
+                    resolve(items);
+                });
             });
         });
     }
 
+    loadMore(from: number, to: number): Promise<OrderedMap<ITrackById, IArticle>> {
+        const {loadItems} = this.props;
+
+        return new Promise<OrderedMap<ITrackById, IArticle>>((resolve) => {
+            loadItems(from, to).then((items) => {
+                let result = OrderedMap<ITrackById, IArticle>();
+
+                items.forEach((item) => {
+                    const trackById: ITrackById = this.services.search.generateTrackByIdentifier(item);
+
+                    this.idMap.set(item._id, trackById);
+
+                    result = result.set(trackById, item);
+                });
+
+                resolve(result);
+            });
+        }).then(this.fetchRelatedEntities);
+    }
+
+    getItemsByIds(trackByIds: Array<string>): Promise<OrderedMap<ITrackById, IArticle>> {
+        const {services} = this;
+        const ids = trackByIds.map((x) => services.search.extractIdFromTrackByIndentifier(x));
+
+        return Promise.all(
+            ids.map((id) => dataApi.findOne<IArticle>('search', id)),
+        ).then((items) => {
+            let result = OrderedMap<ITrackById, IArticle>();
+
+            items.forEach((item) => {
+                const trackById = services.search.generateTrackByIdentifier(item);
+
+                this.idMap.set(item._id, trackById);
+
+                result = result.set(trackById, item);
+            });
+
+            return result;
+        }).then(this.fetchRelatedEntities);
+    }
+
     componentDidMount() {
+        this._mounted = true;
+
         this.monitoringState.init().then(() => {
-            this.setState({initialized: true});
+            if (this._mounted) {
+                this.setState({initialized: true});
+            }
         });
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:created',
+                (event: IWebsocketMessage<IResourceCreatedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'created', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:updated',
+                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                    const {resource, _id, fields} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'updated', resource: resource, itemId: _id, fields}]);
+                },
+            ),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener(
+                'resource:deleted',
+                (event: IWebsocketMessage<IResourceDeletedEvent>) => {
+                    const {resource, _id} = event.extra;
+
+                    this.handleContentChanges([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                },
+            ),
+        );
     }
 
     componentWillUnmount() {
-        this.removeResourceCreatedListener();
-        this.removeContentUpdateListener();
-        this.removeResourceDeletedListener();
+        this._mounted = false;
+
+        this.eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
+            removeListener();
+        });
     }
 
     render() {
@@ -105,52 +265,16 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
         }
 
         const {itemCount, pageSize} = this.props;
+        const {services} = this;
 
         return (
             <LazyLoader
                 itemCount={itemCount}
                 loadMoreItems={this.loadMore}
                 pageSize={pageSize}
-                getId={(item) => item._id}
-                getItemsByIds={(ids) => {
-                    return Promise.all(
-                        ids.map((id) => dataApi.findOne<IArticle>('search', id)),
-                    );
-                }}
+                getItemsByIds={this.getItemsByIds}
                 ref={(component) => {
                     this.lazyLoaderRef = component;
-
-                    if (this.lazyLoaderRef != null && this.removeContentUpdateListener == null) {
-                        // wouldn't work in componentDidMount, because this.state.loading would be true
-                        // and LazyLoader wouldn't be mounted at that point yet.
-
-                        this.removeResourceCreatedListener = addWebsocketEventListener(
-                            'resource:created',
-                            (event: IWebsocketMessage<IResourceCreatedEvent>) => {
-                                const {resource, _id} = event.extra;
-
-                                this.handleContentChanges(resource, _id);
-                            },
-                        );
-
-                        this.removeContentUpdateListener = addWebsocketEventListener(
-                            'resource:updated',
-                            (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                                const {resource, _id, fields} = event.extra;
-
-                                this.handleContentChanges(resource, _id, fields);
-                            },
-                        );
-
-                        this.removeResourceDeletedListener = addWebsocketEventListener(
-                            'resource:deleted',
-                            (event: IWebsocketMessage<IResourceDeletedEvent>) => {
-                                const {resource, _id} = event.extra;
-
-                                this.handleContentChanges(resource, _id);
-                            },
-                        );
-                    }
                 }}
                 padding={this.props.padding}
                 data-test-id="articles-list"
@@ -158,30 +282,35 @@ export class ArticlesListV2 extends React.Component<IProps, IState> {
                 {(items) => {
                     return (
                         <ItemList
-                            itemsList={Object.keys(items)}
-                            itemsById={items}
+                            itemsList={items.keySeq().toJS()}
+                            itemsById={items.toJS()}
+                            relatedEntities={this.state.relatedEntities}
                             profilesById={this.monitoringState.state.profilesById}
                             highlightsById={this.monitoringState.state.highlightsById}
                             markedDesksById={this.monitoringState.state.markedDesksById}
                             desksById={this.monitoringState.state.desksById}
                             ingestProvidersById={this.monitoringState.state.ingestProvidersById}
                             usersById={this.monitoringState.state.usersById}
-                            onMonitoringItemSelect={this.props.onItemClick}
+                            onMonitoringItemSelect={(item) => {
+                                this.setState({selected: services.search.generateTrackByIdentifier(item)});
+                                this.props.onItemClick(item);
+                            }}
                             onMonitoringItemDoubleClick={this.props.onItemDoubleClick ?? noop}
                             hideActionsForMonitoringItems={false}
                             singleLine={false}
                             customRender={undefined}
-                            viewType={undefined}
                             flags={{hideActions: false}}
                             loading={false}
                             viewColumn={undefined}
                             groupId={undefined}
-                            edit={noop}
+                            edit={(item) => {
+                                openArticle(item._id, 'edit');
+                            }}
                             preview={noop}
-                            multiSelect={this.props.multiSelect}
+                            multiSelect={this.props.getMultiSelect(items)}
                             narrow={false}
                             view={undefined}
-                            selected={undefined}
+                            selected={this.state.selected}
                             swimlane={false}
                             scopeApply={(fn) => {
                                 const $rootScope: IScope = ng.get('$rootScope');

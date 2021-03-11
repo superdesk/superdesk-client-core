@@ -37,12 +37,20 @@ import {associatedItems} from './associatedItems';
 import {Translations} from './translations';
 import {Used} from './used';
 import {LinesCount} from './linesCount';
+import {Authors} from './authors';
+import {IArticle} from 'superdesk-api';
 
 interface IFieldProps extends Partial<IPropsItemListInfo> {
     item: IPropsItemListInfo['item']; // this one not nullable
 }
 
-export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {
+export type IRelatedEntitiesToFetch = Array<{collection: string; id: string}>;
+
+interface IReactFieldComponentClass<P> extends React.ComponentClass<P> {
+    getRelatedEntities?(item: IArticle): IRelatedEntitiesToFetch;
+}
+
+export const fields: {[key: string]: IReactFieldComponentClass<IFieldProps>} = {
     type,
     headline,
     slugline,
@@ -79,4 +87,5 @@ export const fields: {[key: string]: React.ComponentType<IFieldProps>} = {
     associatedItems,
     translations: Translations,
     used: Used,
+    authors: Authors,
 };

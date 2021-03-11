@@ -1,13 +1,11 @@
 /* eslint-disable react/no-multi-comp */
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 import classNames from 'classnames';
 
-import ng from 'core/services/ng';
 import {FileiconFilter, FilesizeFilter} from 'core/ui/ui';
 import {gettext} from 'core/utils';
-import {IAttachment} from 'apps/authoring/attachments';
-import {IArticle} from 'superdesk-api';
+import {IAttachment, IAttachmentsWrapperProps} from 'superdesk-api';
+import {withAttachments} from 'apps/authoring/attachments/AttachmentsWrapper';
 
 interface IAttachmentItemProps {
     attachment: IAttachment;
@@ -15,7 +13,7 @@ interface IAttachmentItemProps {
     onClick: (attachment: IAttachment) => void;
 }
 
-export class AttachmentItem extends React.Component<IAttachmentItemProps> {
+export class AttachmentItem extends React.PureComponent<IAttachmentItemProps> {
     render() {
         const {attachment} = this.props;
         const fileicon = 'big-icon--' + FileiconFilter()(attachment.mimetype);
@@ -46,35 +44,18 @@ export class AttachmentItem extends React.Component<IAttachmentItemProps> {
     }
 }
 
-interface IProps {
-    item: IArticle;
+interface IProps extends IAttachmentsWrapperProps {
     selected: string;
     onClick: (attachment: IAttachment) => void;
 }
 
-interface IState {
-    attachments?: Array<IAttachment>;
-}
-
-export class AttachmentList extends React.Component<IProps, IState> {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
-    componentDidMount() {
-        ng.get('attachments').byItem(this.props.item)
-            .then((attachments) => {
-                this.setState({attachments: attachments});
-            });
-    }
-
+export class AttachmentListComponent extends React.PureComponent<IProps> {
     render() {
-        if (!this.state.attachments) {
+        if (this.props.attachments.length === 0) {
             return null; // wait for attachments
         }
 
-        const publicAttachments = this.state.attachments.filter(({internal}) => !internal);
+        const publicAttachments = this.props.attachments.filter(({internal}) => !internal);
 
         const attachments = publicAttachments
             .map((attachement) => (
@@ -97,3 +78,5 @@ export class AttachmentList extends React.Component<IProps, IState> {
         );
     }
 }
+
+export const AttachmentList = withAttachments(AttachmentListComponent);

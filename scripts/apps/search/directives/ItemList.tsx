@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 import {closeActionsMenu} from '../helpers';
 import {ItemListAngularWrapper} from '../components/ItemListAngularWrapper';
+import {getAndMergeRelatedEntitiesForArticles} from 'core/getRelatedEntities';
 
 ItemList.$inject = [
     '$timeout',
@@ -26,8 +27,11 @@ export function ItemList(
 ) {
     return {
         link: function(scope, elem) {
+            const abortController = new AbortController();
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
+
+            let firstLoad = true;
 
             monitoringState.setState({
                 groups: groups.concat(scope.$id),
@@ -135,10 +139,20 @@ export function ItemList(
 
                 scope.$watch('items', (items) => {
                     if (!items || !items._items) {
-                        listComponent.setState({
-                            loading: true,
-                        });
-
+                        /**
+                         * The list is being reloaded.
+                         *
+                         * listComponent.loading is not updated here to avoid
+                         * loading screens being displayed too frequently.
+                         *
+                         * Due to implementation of `scheduleIfShouldUpdate` in `MonitoringGroup.ts`
+                         * reloading lists is triggered more frequently when it should be.
+                         * For example, spiking one item triggers reloading for all monitoring groups.
+                         *
+                         * Articles list code is being rewritten and the old code will be deleted
+                         * so instead of doing a proper fix I'm restoring the old behavior
+                         * which is not displaying a loading indicator at all.
+                         */
                         return;
                     }
 
@@ -162,13 +176,20 @@ export function ItemList(
                         }
                     });
 
-                    listComponent.setState({
-                        itemsList: itemsList,
-                        itemsById: itemsById,
-                        view: scope.view,
-                        loading: false,
-                    }, () => {
-                        scope.rendering = scope.loading = false;
+                    getAndMergeRelatedEntitiesForArticles(
+                        items._items,
+                        listComponent.state.relatedEntities,
+                        abortController.signal,
+                    ).then((relatedEntities) => {
+                        listComponent.setState({
+                            itemsList: itemsList,
+                            itemsById: itemsById,
+                            relatedEntities,
+                            view: scope.view,
+                            loading: false,
+                        }, () => {
+                            scope.rendering = scope.loading = false;
+                        });
                     });
                 }, true);
 
@@ -343,6 +364,7 @@ export function ItemList(
 
                 // remove react elem on destroy
                 scope.$on('$destroy', () => {
+                    abortController.abort();
                     elem.off();
                     ReactDOM.unmountComponentAtNode(elem[0]);
                 });

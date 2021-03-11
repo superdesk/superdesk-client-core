@@ -611,7 +611,7 @@ export class ProfileDetail extends React.PureComponent<IProps, IState> {
                                 <Label text={gettext('State/Province or Region')} />
                                 <Input
                                     field="contact_state"
-                                    value={get(contact, 'contact_state', '')}
+                                    value={contact?.contact_state?.name || contact.contact_state}
                                     onChange={onChange}
                                     type="text"
                                     placeholder="State/Province or Region"

@@ -2,7 +2,7 @@
 
 import {element, by, browser, ElementFinder} from 'protractor';
 import {nav, waitFor, scrollToView, scrollRelative} from './utils';
-import {el, ECE, els} from 'end-to-end-testing-helpers';
+import {el, ECE, els} from '@superdesk/end-to-end-testing-helpers';
 
 class GlobalSearch {
     ingestRepo: ElementFinder;
@@ -126,7 +126,14 @@ class GlobalSearch {
          * @return {promise} element
          */
         this.getItem = function(index) {
-            return this.getItems().get(index);
+            if (typeof index === 'number') {
+                return this.getItems().get(index);
+            } else {
+                return this.getItems().filter(
+                    (item) => item.element(by.className('item-heading')).getText()
+                        .then((itemText) => itemText === index),
+                ).get(0);
+            }
         };
 
         this.itemClick = function(index) {
@@ -198,18 +205,13 @@ class GlobalSearch {
         this.actionOnItem = function(action, index, useFullLinkText) {
             var menu = this.openItemMenu(index);
 
-            if (useFullLinkText) {
-                menu.element(by.linkText(action)).waitReady()
-                    .then((elem) => {
-                        elem.click();
-                    });
-                return;
-            }
+            const elem = useFullLinkText
+                ? menu.element(by.buttonText(action))
+                : menu.element(by.partialButtonText(action));
 
-            menu.element(by.partialLinkText(action)).waitReady()
-                .then((elem) => {
-                    elem.click();
-                });
+            browser.wait(ECE.visibilityOf(elem));
+
+            elem.click();
         };
 
         /**
@@ -221,9 +223,9 @@ class GlobalSearch {
          */
         this.actionOnSubmenuItem = function(action, submenu, index, linkTypeBtn) {
             var menu = this.openItemMenu(index);
-            var header = menu.element(by.partialLinkText(action));
+            var header = menu.element(by.buttonText(action));
             var btn = linkTypeBtn ?
-                menu.element(by.partialLinkText(submenu)) :
+                menu.element(by.partialButtonText(submenu)) :
                 menu.element(by.partialButtonText(submenu));
 
             browser.actions()
@@ -421,7 +423,9 @@ class GlobalSearch {
             const toggleButton = markedDesks.element(by.className('dropdown-toggle'));
 
             scrollToView(toggleButton);
+            browser.sleep(1000);
             scrollRelative(advancedSearchPanel, 'up', 60); // account for sticky tabs
+            browser.sleep(1000);
 
             toggleButton.click();
             markedDesks.all(el(['dropdown__item']).locator()).get(index).click();

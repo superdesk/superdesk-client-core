@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {browser, element, by} from 'protractor';
-import {el, els, s, ECE, hover} from 'end-to-end-testing-helpers';
+import {el, els, s, ECE, hover} from '@superdesk/end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
 
 describe('internal destinations & generic-page-list', () => {

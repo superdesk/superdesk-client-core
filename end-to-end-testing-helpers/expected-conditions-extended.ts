@@ -5,6 +5,8 @@ import {
     ElementArrayFinder,
     promise as wdpromise,
     ElementFinder,
+    WebElementPromise,
+    WebElement,
 } from 'protractor';
 
 interface IExpectedConditionsExtended extends ProtractorExpectedConditions {
@@ -19,6 +21,10 @@ interface IExpectedConditionsExtended extends ProtractorExpectedConditions {
         attribute: string,
         expectedValue: string,
     ): () => wdpromise.Promise<boolean>;
+    elementsEqual(
+        a: ElementFinder | WebElementPromise,
+        b: ElementFinder | WebElementPromise,
+    ): wdpromise.Promise<boolean>;
 }
 
 // Extended version of protractor's default expected conditions
@@ -56,5 +62,12 @@ export const ECE: IExpectedConditionsExtended = {
 
     attributeEquals: (finder, attribute, expectedValue) => {
         return () => finder.getAttribute(attribute).then((result) => result === expectedValue);
+    },
+
+    elementsEqual: (a: ElementFinder | WebElementPromise, b: ElementFinder | WebElementPromise) => {
+        const webElementPromiseA: WebElementPromise = a instanceof WebElementPromise ? a : a.getWebElement();
+        const webElementPromiseB: WebElementPromise = b instanceof WebElementPromise ? b : b.getWebElement();
+
+        return WebElement.equals(webElementPromiseA, webElementPromiseB);
     },
 };

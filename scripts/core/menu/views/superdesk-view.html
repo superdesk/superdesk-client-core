@@ -1,4 +1,5 @@
-<div ng-if="!loading">
+
+<div ng-if="!loading"> <!-- variable managed in scripts/core/loading.ts -->
     <!--
         Render top menu only after a user is logged in.
         Otherwise, the extensions will initialize too soon and will be unable to access HTTP API.
@@ -23,6 +24,16 @@
     <div id="authoring-container" ng-show="superdesk.flags.authoring" ng-if="superdesk.flags.workspace" sd-authoring-container></div>
     <div id="superdesk-workqueue" ng-if="superdesk.flags.workspace === true && superdesk.flags.workqueue === true" sd-workqueue></div>
     <div sd-item-preview-container></div>
+
+    <div ng-if="itemsForExport != null" sd-export></div>
+
+    <div
+        ng-if="fullPreviewItems.length > 0"
+        sd-full-preview
+        data-items="fullPreviewItems"
+        data-close-action="closeFullPreview"
+    ></div>
+
 </div>
 
 <div id="main-container" ng-class="superdesk.flags" ng-if="popup">

@@ -3,19 +3,23 @@ import React from 'react';
 import classNames from 'classnames';
 import {Item} from './index';
 import {isCheckAllowed, closeActionsMenu, bindMarkItemShortcut} from '../helpers';
-import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {isMediaEditable} from 'core/config';
 import {gettext, IScopeApply} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {CHECKBOX_PARENT_CLASS} from './constants';
 import ng from 'core/services/ng';
 import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 import {IActivityService} from 'core/activity/activity';
+import {isButtonClicked} from './Item';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {IRelatedEntities} from 'core/getRelatedEntities';
+import {OrderedMap} from 'immutable';
+import {MultiSelect} from 'core/ArticlesListV2MultiSelect';
 
 interface IProps {
     itemsList: Array<string>;
     itemsById: any;
+    relatedEntities: IRelatedEntities;
     narrow: boolean;
     view: 'compact' | 'mgrid' | 'photogrid';
     selected: string;
@@ -30,7 +34,6 @@ interface IProps {
     onMonitoringItemDoubleClick: any;
     singleLine: any;
     customRender: any;
-    viewType: any;
     flags: {
         hideActions: any;
     };
@@ -47,14 +50,15 @@ interface IProps {
 
 export interface ILegacyMultiSelect {
     kind: 'legacy';
-    multiSelect(items: Array<IArticle>, selected: boolean): void;
+    multiSelect(item: IArticle, selected: boolean, multiSelectMode: boolean): void;
     setSelectedItem(itemId: string): void;
 }
 
 export interface IMultiSelectNew {
     kind: 'new';
-    options: IMultiSelectOptions;
-    MultiSelectComponent: React.ComponentType<{item: IArticle; options: IMultiSelectOptions}>;
+    options: IMultiSelectOptions<IArticle>;
+    items: OrderedMap<string, IArticle>;
+    MultiSelectComponent: typeof MultiSelect;
 }
 
 interface IState {
@@ -96,7 +100,6 @@ export class ItemList extends React.Component<IProps, IState> {
 
         this.select = this.select.bind(this);
         this.selectItem = this.selectItem.bind(this);
-        this.selectMultipleItems = this.selectMultipleItems.bind(this);
         this.dbClick = this.dbClick.bind(this);
         this.edit = this.edit.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
@@ -135,21 +138,23 @@ export class ItemList extends React.Component<IProps, IState> {
         const selectedItem = this.getSelectedItem();
 
         if (selectedItem) {
-            this.props.multiSelect.multiSelect([selectedItem], !selectedItem.selected);
+            this.props.multiSelect.multiSelect(selectedItem, !selectedItem.selected, false);
         }
     }
 
-    select(item, event) {
+    select(item: IArticle, event) {
+        // Don't select item / open preview when a button is clicked.
+        // The button can be three dots menu, bulk actions checkbox, a button to preview existing highlights etc.
+        if (isButtonClicked(event)) {
+            return;
+        }
+
         if (typeof this.props.onMonitoringItemSelect === 'function') {
             this.props.onMonitoringItemSelect(item, event);
             return;
         }
 
         const {$timeout} = this.angularservices;
-
-        if (event && event.shiftKey) {
-            return this.selectMultipleItems(item);
-        }
 
         this.setSelectedItem(item);
 
@@ -159,15 +164,9 @@ export class ItemList extends React.Component<IProps, IState> {
 
         $timeout.cancel(this.updateTimeout);
 
-        const showPreview = event == null || event.target == null ||
-            (querySelectorParent(event.target, '.' + CHECKBOX_PARENT_CLASS) == null &&
-            event.target.classList.contains(CHECKBOX_PARENT_CLASS) === false);
-
         if (item && this.props.preview != null) {
             this.props.scopeApply(() => {
-                if (showPreview) {
-                    this.props.preview(item);
-                }
+                this.props.preview(item);
                 this.bindActionKeyShortcuts(item);
             });
         }
@@ -176,13 +175,13 @@ export class ItemList extends React.Component<IProps, IState> {
     /*
      * Unbind all item actions
      */
-    unbindActionKeyShortcuts() {
+    unbindActionKeyShortcuts(callback?) {
         const {keyboardManager} = this.angularservices;
 
         this.state.bindedShortcuts.forEach((shortcut) => {
             keyboardManager.unbind(shortcut);
         });
-        this.setState({bindedShortcuts: []});
+        this.setState({bindedShortcuts: []}, callback);
     }
 
     /*
@@ -200,26 +199,32 @@ export class ItemList extends React.Component<IProps, IState> {
             workflowService,
         } = this.angularservices;
 
+        const doBind = () => {
+            const intent = {action: 'list', type: archiveService.getType(selectedItem)};
+
+            superdesk.findActivities(intent, selectedItem).forEach((activity) => {
+                if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
+                    this.state.bindedShortcuts.push(activity.keyboardShortcut);
+
+                    keyboardManager.bind(activity.keyboardShortcut, () => {
+                        if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
+                            bindMarkItemShortcut(activity.label);
+                        } else {
+                            activityService.start(activity, {data: {item: selectedItem}});
+                        }
+                    });
+                }
+            });
+        };
+
         // First unbind all binded shortcuts
         if (this.state.bindedShortcuts.length) {
-            this.unbindActionKeyShortcuts();
+            this.unbindActionKeyShortcuts(() => {
+                doBind();
+            });
+        } else {
+            doBind();
         }
-
-        const intent = {action: 'list', type: archiveService.getType(selectedItem)};
-
-        superdesk.findActivities(intent, selectedItem).forEach((activity) => {
-            if (activity.keyboardShortcut && workflowService.isActionAllowed(selectedItem, activity.action)) {
-                this.state.bindedShortcuts.push(activity.keyboardShortcut);
-
-                keyboardManager.bind(activity.keyboardShortcut, () => {
-                    if (_.includes(['mark.item', 'mark.desk'], activity._id)) {
-                        bindMarkItemShortcut(activity.label);
-                    } else {
-                        activityService.start(activity, {data: {item: selectedItem}});
-                    }
-                });
-            }
-        });
     }
 
     selectItem(item) {
@@ -230,37 +235,8 @@ export class ItemList extends React.Component<IProps, IState> {
         if (isCheckAllowed(item)) {
             const selected = !item.selected;
 
-            this.props.multiSelect.multiSelect([item], selected);
+            this.props.multiSelect.multiSelect(item, selected, false);
         }
-    }
-
-    selectMultipleItems(lastItem) {
-        if (this.props.multiSelect.kind !== 'legacy') {
-            throw new Error('Legacy multiselect API expected.');
-        }
-
-        const {search} = this.angularservices;
-        const itemId = search.generateTrackByIdentifier(lastItem);
-        let positionStart = 0;
-        const positionEnd = _.indexOf(this.props.itemsList, itemId);
-        const selectedItems = [];
-
-        if (this.props.selected) {
-            positionStart = _.indexOf(this.props.itemsList, this.props.selected);
-        }
-
-        const start = Math.min(positionStart, positionEnd);
-        const end = Math.max(positionStart, positionEnd);
-
-        for (let i = start; i <= end; i++) {
-            const item = this.props.itemsById[this.props.itemsList[i]];
-
-            if (isCheckAllowed(item)) {
-                selectedItems.push(item);
-            }
-        }
-
-        this.props.multiSelect.multiSelect(selectedItems, true);
     }
 
     setActioning(item: IArticle, isActioning: boolean) {
@@ -321,11 +297,14 @@ export class ItemList extends React.Component<IProps, IState> {
         }
     }
 
-    edit(item) {
+    edit(item: IArticle, event) {
         const {authoringWorkspace} = this.angularservices;
         const {$timeout} = this.angularservices;
 
-        this.setSelectedItem(item);
+        if (this.props.selected !== item._id) {
+            this.select(item, event);
+        }
+
         $timeout.cancel(this.updateTimeout);
 
         if (this.props.flags?.hideActions || item == null) {
@@ -375,6 +354,11 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     handleKey(event) {
+        if (querySelectorParent(event.target, 'button', {self: true}) != null) {
+            // don't execute key bindings when a button inside the list item is focused.
+            return;
+        }
+
         // don't do anything when modifier key is pressed
         // this allows shortcuts defined in activities to work without two actions firing for one shortcut
         if (event.ctrlKey || event.altKey || event.shiftKey) {
@@ -400,9 +384,9 @@ export class ItemList extends React.Component<IProps, IState> {
             });
         };
 
-        const openItem = () => {
+        const openItem = (_event) => {
             if (this.props.selected) {
-                this.edit(this.getSelectedItem());
+                this.edit(this.getSelectedItem(), _event);
             }
 
             event.stopPropagation();
@@ -428,7 +412,7 @@ export class ItemList extends React.Component<IProps, IState> {
             break;
 
         case Keys.enter:
-            openItem();
+            openItem(event);
             closeActionsMenu();
             break;
 
@@ -444,52 +428,28 @@ export class ItemList extends React.Component<IProps, IState> {
             break;
         }
 
-        const highlightSelected = (_event) => {
-            for (let i = 0; i < this.props.itemsList.length; i++) {
-                if (this.props.itemsList[i] === this.props.selected) {
-                    const next = Math.min(this.props.itemsList.length - 1, Math.max(0, i + diff));
+        if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+            const nextEl = document.activeElement.nextElementSibling;
 
-                    this.select(this.props.itemsById[this.props.itemsList[next]], _event);
-                    return;
-                }
+            if (nextEl instanceof HTMLElement) {
+                // Don't scroll the list. The list will be scrolled automatically
+                // when an item is focued that is outside of the viewport.
+                event.preventDefault();
+
+                nextEl.focus();
             }
-        };
+        }
 
-        const checkRemaining = (_event) => {
-            event.preventDefault();
-            event.stopPropagation();
+        if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+            const prevEl = document.activeElement.previousElementSibling;
 
-            if (this.props.selected) {
-                highlightSelected(_event);
-            } else {
-                this.select(this.props.itemsById[this.props.itemsList[0]], _event);
+            if (prevEl instanceof HTMLElement) {
+                // Don't scroll the list. The list will be scrolled automatically
+                // when an item is focued that is outside of the viewport.
+                event.preventDefault();
+
+                prevEl.focus();
             }
-        };
-
-        // This function is to bring the selected item (by key press) into view if it is out of container boundary.
-        const scrollSelectedItemIfRequired = (_event) => {
-            const container = this.props.viewColumn ? $(document).find('.content-list') : $(_event.currentTarget);
-
-            const selectedItemElem = $(_event.currentTarget.firstChild).children('.list-item-view.active');
-
-            if (selectedItemElem.length > 0) {
-                // The following line translated to: top_Of_Selected_Item (minus) top_Of_Scrollable_Div
-
-                const distanceOfSelItemFromVisibleTop = $(selectedItemElem[0]).offset().top - $(document).scrollTop() -
-                $(container[0]).offset().top - $(document).scrollTop();
-
-                // If the selected item goes beyond container view, scroll it to middle.
-                if (distanceOfSelItemFromVisibleTop >= container[0].clientHeight ||
-                    distanceOfSelItemFromVisibleTop < 0) {
-                    container.scrollTop(container.scrollTop() + distanceOfSelItemFromVisibleTop -
-                    container[0].offsetHeight * 0.5);
-                }
-            }
-        };
-
-        if (!_.isNil(diff)) {
-            checkRemaining(event);
-            scrollSelectedItemIfRequired(event);
         }
     }
 
@@ -508,7 +468,16 @@ export class ItemList extends React.Component<IProps, IState> {
     }
 
     focus() {
-        this.focusableElement?.focus();
+        if (this.focusableElement == null) {
+            return;
+        }
+
+        // Focus only if a child item doesn't already have focus.
+        // Otherwise, it always re-focuses the entire list after clicking a particular item
+        // and user is unable to use keyboard shortcuts on an item that was clicked.
+        if (this.focusableElement.contains(document.activeElement) === false) {
+            this.focusableElement.focus();
+        }
     }
 
     render() {
@@ -568,6 +537,7 @@ export class ItemList extends React.Component<IProps, IState> {
                                 key={itemId}
                                 isNested={false}
                                 item={item}
+                                relatedEntities={this.props.relatedEntities}
                                 view={this.props.view}
                                 swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
                                 flags={{selected: this.props.selected === itemId}}
@@ -588,7 +558,6 @@ export class ItemList extends React.Component<IProps, IState> {
                                 actioning={!!this.state.actioning[itemId]}
                                 singleLine={this.props.singleLine}
                                 customRender={this.props.customRender}
-                                viewType={this.props.viewType}
                                 scopeApply={this.props.scopeApply}
                                 multiSelect={this.props.multiSelect ?? {
                                     kind: 'legacy',

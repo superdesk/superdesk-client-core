@@ -1,5 +1,5 @@
 import {element} from 'protractor';
-import {el, s} from 'end-to-end-testing-helpers';
+import {el, s} from '@superdesk/end-to-end-testing-helpers';
 
 export function multiAction(name: string) {
     const dropdown = element(s(['multi-actions-dropdown']));

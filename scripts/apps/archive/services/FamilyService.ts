@@ -1,4 +1,4 @@
-import _, {get} from 'lodash';
+import _ from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
 
@@ -139,10 +139,6 @@ export function FamilyService(api, desks) {
             {not: {term: {last_published_version: 'false'}}},
             {term: {type: item.type}},
         ];
-
-        if (get(item, 'genre[0].qcode')) {
-            filter.push({term: {'genre.qcode': get(item, 'genre[0].qcode')}});
-        }
 
         let queryString = null;
         let queryRelatedItem = [];

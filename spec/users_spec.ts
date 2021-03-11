@@ -1,7 +1,7 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, browser, protractor, by, $} from 'protractor';
-import {el, els, ECE} from 'end-to-end-testing-helpers';
+import {el, els, ECE} from '@superdesk/end-to-end-testing-helpers';
 
 import {monitoring} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
@@ -47,9 +47,11 @@ describe('users', () => {
             element(by.css('.modal__dialog .btn--primary')).click();
             browser.sleep(2000); // wait for reload
 
-            element(by.css('[ng-hide="currentRoute.topTemplateUrl"]')).getText().then((text) => {
-                expect(text).toEqual('Mein Profil');
-            });
+            const header = element(by.css('[ng-hide="currentRoute.topTemplateUrl"]'));
+
+            browser.wait(ECE.presenceOf(header), 1000);
+            expect(header.getText()).toEqual('Mein Profil');
+
             browser.sleep(500);
             // go back to original lanuages
             userPreferences.setLang('English');
@@ -100,16 +102,7 @@ describe('users', () => {
 
         it('list online users', () => {
             el(['user-filter'], by.cssContainingText('option', 'Online')).click();
-
-            expect(element.all(by.repeater('user in users')).count()).toBe(3);
-
-            const row1: any = by.repeater('user in users').row(0);
-            const row2: any = by.repeater('user in users').row(1);
-
-            expect(element(row1.column('username')).getText())
-                .toBe('test_user');
-            expect(element(row2.column('username')).getText())
-                .toBe('admin');
+            expect(element.all(by.repeater('user in users')).count()).toBe(1);
         });
 
         it('can disable user', () => {

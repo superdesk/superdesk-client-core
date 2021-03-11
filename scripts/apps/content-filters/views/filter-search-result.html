@@ -1,7 +1,7 @@
 <div class="flex-grid flex-grid--wrap-items flex-grid--small-4">
 
 <div ng-if="searchResult.filter_conditions.length > 0 && !loading" class="flex-grid__item padded--sides10">
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th translate>Filter Conditions</th>
@@ -18,7 +18,7 @@
 </div>
 
 <div ng-if="searchResult.content_filters.length > 0 && !loading" class="flex-grid__item padded--sides10">
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th translate>Content Filters</th>
@@ -36,7 +36,7 @@
 </div>
 
 <div ng-if="searchResult.selected_subscribers.length > 0 && !loading" class="flex-grid__item padded--sides10">
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th translate>Subscribers</th>

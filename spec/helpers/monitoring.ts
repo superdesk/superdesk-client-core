@@ -1,8 +1,8 @@
 /* eslint-disable newline-per-chained-call */
 
 import {element, by, browser, protractor, ElementFinder, promise as wdpromise} from 'protractor';
-import {nav, waitFor, acceptConfirm} from './utils';
-import {s, ECE, el, els} from 'end-to-end-testing-helpers';
+import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
+import {s, ECE, el, els, articleList} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Monitoring {
@@ -46,15 +46,15 @@ class Monitoring {
     openAction: (group: any, item: any) => void;
     tabAction: (tab: any) => void;
     openRelatedItem: (index: any) => void;
-    actionOnItem: (action: any, group: any, item: any, useFullLinkText?: any, confirm?: any) => void;
+    actionOnItem: (action: any, group: any, item: any, useFullButtonText?: any, confirm?: any) => void;
     getMenuActionElement: (action: any, group: any, item: any) => any;
-    actionOnItemSubmenu: (action: any, submenu: any, group: any, item: any, linkTypeBtn?: any) => void;
+    actionOnItemSubmenu: (action: any, submenu: any, group: any, item: any) => void;
     selectItem: (group: any, item: any) => any;
     selectSpikedItem: (item: any) => any;
     selectGivenItem: (item: any) => any;
     spikeMultipleItems: () => void;
     unspikeMultipleItems: any;
-    unspikeItem: (item, desk?, stage?) => wdpromise.Promise<void>;
+    unspikeItem: (item, stage?: string) => wdpromise.Promise<void>;
     openItemMenu: (group: any, item: any) => ElementFinder;
     showMonitoringSettings: () => void;
     setLabel: (label: any) => void;
@@ -400,18 +400,18 @@ class Monitoring {
          * @param {string} action
          * @param {number} group
          * @param {number} item
-         * @param {boolean} useFullLinkText
+         * @param {boolean} useFullButtonText
          * @param {boolean} confirm Accept confirmation dialog.
          */
-        this.actionOnItem = function(action, group, item, useFullLinkText, confirm) {
+        this.actionOnItem = function(action, group, item, useFullButtonText, confirm) {
             var menu = this.openItemMenu(group, item);
 
             browser.wait(() => menu.isPresent(), 3000);
 
-            if (useFullLinkText) {
-                menu.element(by.linkText(action)).click();
+            if (useFullButtonText) {
+                menu.element(by.buttonText(action)).click();
             } else {
-                menu.all(by.partialLinkText(action)).first().click();
+                menu.all(by.partialButtonText(action)).first().click();
             }
 
             if (confirm) {
@@ -422,7 +422,7 @@ class Monitoring {
         this.getMenuActionElement = function(action, group, item) {
             var menu = this.openItemMenu(group, item);
 
-            return menu.all(by.partialLinkText(action)).first();
+            return menu.all(by.partialButtonText(action)).first();
         };
 
         /**
@@ -434,12 +434,10 @@ class Monitoring {
          * @param {number} group
          * @param {number} item
          */
-        this.actionOnItemSubmenu = function(action, submenu, group, item, linkTypeBtn) {
+        this.actionOnItemSubmenu = function(action, submenu, group, item) {
             var menu = this.openItemMenu(group, item);
-            var header = menu.element(by.partialLinkText(action));
-            var btn = linkTypeBtn ?
-                menu.all(by.partialLinkText(submenu)).first() :
-                menu.all(by.partialButtonText(submenu)).first();
+            var header = menu.element(by.partialButtonText(action));
+            var btn = menu.all(by.partialButtonText(submenu)).first();
 
             browser.actions()
                 .mouseMove(header, {x: -50, y: -50})
@@ -458,12 +456,19 @@ class Monitoring {
         };
 
         this.selectGivenItem = function(item) {
-            var itemTypeIcon = item.element(by.css('.type-icon'));
+            var itemTypeAndMultiSelect = el(['item-type-and-multi-select'], null, item);
 
-            browser.actions().mouseMove(itemTypeIcon, {x: -100, y: -100}).mouseMove(itemTypeIcon).perform();
-            var checkbox = item.element(by.className('sd-checkbox'));
+            scrollToView(itemTypeAndMultiSelect);
 
-            browser.wait(ECE.presenceOf(checkbox));
+            browser.actions()
+                .mouseMove(itemTypeAndMultiSelect, {x: -100, y: -100})
+                .mouseMove(itemTypeAndMultiSelect)
+                .perform();
+
+            var checkbox = el(['multi-select-checkbox'], null, item);
+
+            browser.wait(ECE.visibilityOf(checkbox));
+
             return checkbox.click();
         };
 
@@ -477,14 +482,8 @@ class Monitoring {
             return element(by.buttonText('send')).click();
         };
 
-        this.unspikeItem = function(item, desk?, stage?) {
-            var itemElem = this.getSpikedItem(item);
-
-            browser.actions().mouseMove(itemElem).perform();
-            el(['context-menu-button']).click();
-            var menu = element(by.css('.dropdown__menu.open'));
-
-            menu.element(by.partialLinkText('Unspike')).click();
+        this.unspikeItem = function(item, stage?: string) {
+            articleList.executeContextMenuAction(this.getSpikedItem(item), 'Unspike Item');
 
             var sidebar = element.all(by.css('.side-panel')).last();
 
@@ -498,15 +497,16 @@ class Monitoring {
         this.openItemMenu = function(group, item) {
             var itemElem = this.getItem(group, item);
 
+            scrollToView(itemElem);
+
             browser.actions()
                 .mouseMove(itemElem, {x: -50, y: -50}) // first move out
                 .mouseMove(itemElem) // now it can mouseover for sure
                 .perform();
-            var dotsElem = itemElem.element(by.className('icon-dots-vertical'));
 
-            waitFor(dotsElem, 1000);
-            dotsElem.click();
-            return element(by.css('.dropdown__menu.open'));
+            el(['context-menu-button'], null, itemElem).click();
+
+            return el(['context-menu']);
         };
 
         this.showMonitoringSettings = function() {
@@ -751,13 +751,16 @@ class Monitoring {
          * @param {number} item
          */
         this.checkMarkedForHighlight = function(highlight, group, item) {
-            var crtItem = this.getItem(group, item);
+            const crtItem = this.getItem(group, item);
+            const highlightsPreviewTriggerButton = el(['highlights-indicator'], null, crtItem);
 
-            el(['highlights-indicator'], null, crtItem).click();
+            browser.wait(ECE.visibilityOf(highlightsPreviewTriggerButton));
+
+            highlightsPreviewTriggerButton.click();
 
             var highlightList = el(['highlights-list']);
 
-            browser.wait(ECE.presenceOf(highlightList));
+            browser.wait(ECE.visibilityOf(highlightList));
 
             expect(highlightList.getText()).toContain(highlight);
         };
@@ -780,7 +783,11 @@ class Monitoring {
         this.checkMarkedForDesk = function(desk, group, item) {
             var crtItem = this.getItem(group, item);
 
-            crtItem.element(by.className('icon-bell')).click();
+            const bellIcon = crtItem.element(by.className('icon-bell'));
+
+            browser.wait(ECE.visibilityOf(bellIcon));
+
+            bellIcon.click();
             var deskList = element(by.className('highlights-list-menu'));
 
             waitFor(deskList);
@@ -895,12 +902,22 @@ class Monitoring {
         };
 
         this.expectIsChecked = function(group, item) {
-            return expect(this.getItem(group, item).element(by.className('sd-checkbox')).getAttribute('class'))
-                .toContain('checked');
+            return expect(
+                el(['multi-select-checkbox'], null, this.getItem(group, item))
+                    .getAttribute('aria-checked'),
+            ).toBe('true');
         };
 
         this.expectIsNotChecked = function(group, item) {
-            return expect(this.getItem(group, item).element(by.className('sd-checkbox')).isPresent()).toBeFalsy();
+            const checkboxEl = el(['multi-select-checkbox'], null, this.getItem(group, item));
+
+            return checkboxEl.isPresent().then((present) => {
+                if (present) {
+                    expect(checkboxEl.getAttribute('aria-checked')).toBe('false');
+                } else {
+                    expect(present).toBe(false);
+                }
+            });
         };
 
         this.turnOffDeskWorkingStage = function(deskIndex, canCloseSettingsModal) {

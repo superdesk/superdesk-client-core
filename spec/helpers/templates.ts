@@ -2,6 +2,7 @@
 
 import {nav} from './utils';
 import {element, by, browser} from 'protractor';
+import {el} from '@superdesk/end-to-end-testing-helpers';
 
 class Templates {
     list: any;
@@ -108,11 +109,7 @@ class Templates {
          * @returns {ElementFinder} desk selection element
          **/
         this.getDeskElement = function(deskName) {
-            return element.all(by.css('[ng-click="onDeskToggle(desk)"]'))
-                .filter((elem, index) => elem.getText().then((text) => text.toUpperCase() === deskName.toUpperCase()))
-                .first()
-                .element(by.xpath('..'))
-                .element(by.model('desk.selected'));
+            return el(['template-edit-view', 'desks', 'desk--' + deskName]);
         };
 
         /**
@@ -279,6 +276,7 @@ class Templates {
          * @return {promise} template element
          **/
         this.getRow = function(name) {
+            browser.sleep(200);
             return this.list.filter((elem, index) =>
                 elem.element(by.binding('template.template_name'))
                     .getText()

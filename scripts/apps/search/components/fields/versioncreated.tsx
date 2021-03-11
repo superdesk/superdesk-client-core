@@ -2,6 +2,14 @@ import React from 'react';
 import {TimeElem} from '../TimeElem';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const versioncreated: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props) => (
-    <TimeElem key={'versioncreated'} date={props.item.versioncreated} />
-);
+class VersionCreatedComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
+    render() {
+        const props = this.props;
+
+        return (
+            <TimeElem key={'versioncreated'} date={props.item.versioncreated} />
+        );
+    }
+}
+
+export const versioncreated = VersionCreatedComponent;

@@ -2,7 +2,7 @@
 
 import {element, by, browser, protractor} from 'protractor';
 import {nav} from './utils';
-import {el} from 'end-to-end-testing-helpers';
+import {el} from '@superdesk/end-to-end-testing-helpers';
 
 class Desks {
     list: any;

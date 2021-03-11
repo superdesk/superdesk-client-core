@@ -107,15 +107,19 @@ describe('Multi Action Bar', () => {
                 [
                     {
                         id: 'test-extension',
-                        activate: () => {
-                            return Promise.resolve({
-                                contributions: {
-                                    entities: {
-                                        article: articleEntities,
-                                    },
+                        load: () => Promise.resolve(
+                            {
+                                activate: () => {
+                                    return Promise.resolve({
+                                        contributions: {
+                                            entities: {
+                                                article: articleEntities,
+                                            },
+                                        },
+                                    });
                                 },
-                            });
-                        },
+                            },
+                        ),
                     },
                 ],
                 superdesk,
@@ -126,6 +130,7 @@ describe('Multi Action Bar', () => {
                 authoringWorkspace,
                 appConfig,
                 metadata,
+                {item: () => false},
                 preferencesService,
             ).then(() => {
                 const actions = getMultiActions(

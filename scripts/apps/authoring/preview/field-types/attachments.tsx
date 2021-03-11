@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAttachment} from '../../attachments';
+import {IAttachment} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
 import {AttachmentItem} from 'core/editor3/components/links/AttachmentList';
 import {noop} from 'lodash';

@@ -2,7 +2,7 @@
 
 import {element, by, browser} from 'protractor';
 import {waitFor, nav} from './utils';
-import {el} from 'end-to-end-testing-helpers';
+import {el, ECE, s} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
 class Highlights {
@@ -97,7 +97,7 @@ class Highlights {
         };
 
         this.getHighlightTitle = function() {
-            return element.all(by.css('[data-test-id="highlightTitle"')).get(0).getText();
+            return el(['articles-list--heading']).getText();
         };
 
         this.getDesk = function(name) {
@@ -207,7 +207,12 @@ class Highlights {
         this.createHighlightsPackage = function(highlight) {
             element(by.className('big-icon--marked-star')).click();
             this.selectHighlight(element(by.id('highlightPackage')), highlight);
-            element(by.id('create')).click();
+
+            const createButton = element(s(['articles-list--toolbar'])).element(by.buttonText('Create'));
+
+            browser.wait(ECE.elementToBeClickable(createButton));
+
+            createButton.click();
         };
 
         this.exportHighlights = function() {

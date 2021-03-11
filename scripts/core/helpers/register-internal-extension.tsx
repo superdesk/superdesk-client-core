@@ -7,7 +7,7 @@ const prefix = '__internal__';
 
 export function registerInternalExtension(name: string, activationResult: IExtensionActivationResult) {
     extensions[prefix + name] = {
-        extension: {id: prefix + name, activate: () => Promise.resolve({})},
+        extension: {activate: () => Promise.resolve({})},
         activationResult,
     };
 }
