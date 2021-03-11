@@ -271,7 +271,7 @@ describe('monitoring', () => {
 
     describe('monitoring group directive', () => {
         it('can update items on item:move event',
-            inject(($rootScope, $compile, $q, api, $timeout, session) => {
+            (done) => inject(($rootScope, $compile, $q, api, $timeout, session) => {
                 session.identity = {_id: 'foo'};
                 var scope = $rootScope.$new();
 
@@ -282,13 +282,16 @@ describe('monitoring', () => {
 
                 scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'bar'});
                 scope.$digest();
-                $timeout.flush(500);
+
                 expect(api.query).not.toHaveBeenCalled();
 
                 scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'foo'});
                 scope.$digest();
-                $timeout.flush(2000);
-                expect(api.query).toHaveBeenCalled();
+
+                setTimeout(() => {
+                    expect(api.query).toHaveBeenCalled();
+                    done();
+                }, 2000);
             }));
 
         it('updates custom search on item preview',
