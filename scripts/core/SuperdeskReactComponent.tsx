@@ -18,7 +18,7 @@ function ignoreAbortError<T>(promise: Promise<T>): Promise<T> {
 }
 
 export class SuperdeskReactComponent<IProps = {}, IState = {}> extends React.PureComponent<IProps, IState> {
-    private abortController: AbortController;
+    public abortController: AbortController;
 
     /**
      * Will automatically abort in-progress asynchronous operations(only those in asyncHelpers) when unmounting.
