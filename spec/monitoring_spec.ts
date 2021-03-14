@@ -391,7 +391,7 @@ describe('monitoring', () => {
             .perform();
         authoring.save();
         authoring.close();
-        expect(monitoring.getAllItems().count()).toBe(3);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 3));
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();

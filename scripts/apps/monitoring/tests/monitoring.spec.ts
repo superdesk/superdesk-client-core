@@ -295,7 +295,7 @@ describe('monitoring', () => {
             }));
 
         it('updates custom search on item preview',
-            inject(($rootScope, $compile, search, api, session, $q, $timeout, $templateCache) => {
+            (done) => inject(($rootScope, $compile, search, api, session, $q, $timeout, $templateCache) => {
                 $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
                     '<div id="group" sd-monitoring-group ' +
                     'data-group="{type: \'search\', search: {filter: {query: \'\'}}}"></div>');
@@ -306,16 +306,20 @@ describe('monitoring', () => {
 
                 session.identity = {_id: 'foo'};
                 scope.$digest();
-                $timeout.flush(2000);
 
                 spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
                 spyOn(search, 'mergeItems');
 
                 session.identity = {_id: 'foo'};
                 scope.$broadcast('ingest:update', {});
-                scope.$digest();
-                $timeout.flush(2000);
-                expect(search.mergeItems).toHaveBeenCalled();
+
+                setTimeout(() => {
+                    scope.$digest();
+
+                    expect(search.mergeItems).toHaveBeenCalled();
+
+                    done();
+                }, 2000);
             }),
         );
 

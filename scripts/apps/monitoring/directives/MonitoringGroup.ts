@@ -145,7 +145,7 @@ export function MonitoringGroup(
             function scheduleQueryFn(event, data) {
                 queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
                     .finally(() => {
-                        scope.$apply();
+                        scope.$applyAsync();
                     });
             }
 
