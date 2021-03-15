@@ -1,22 +1,34 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {IPropsItemListInfo} from '../ListItemInfo';
+import {IContentProfile, IArticle} from 'superdesk-api';
+import {IRelatedEntitiesToFetch} from '.';
 
-export const profile: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    if (props.item.profile && props.profilesById?.[props.item.profile]) {
-        return React.createElement(
-            'div',
-            {className: 'profile-label profile-label--' + props.item.profile, key: 'profile'},
-            props.profilesById[props.item.profile] ?
-                props.profilesById[props.item.profile].label :
-                props.item.profile,
-        );
-    } else {
-        return null;
+class ProfileComponent extends React.Component<IPropsItemListInfo> {
+    public static getRelatedEntities(item: IArticle): IRelatedEntitiesToFetch {
+        if (item.profile == null) {
+            return [];
+        } else {
+            return [
+                {collection: 'content_types', id: item.profile},
+            ];
+        }
     }
-};
 
-profile.propTypes = {
-    item: PropTypes.any,
-    profilesById: PropTypes.any,
-};
+    render() {
+        const {relatedEntities, item} = this.props;
+
+        if (item.profile == null) {
+            return null;
+        }
+
+        const contentProfile: IContentProfile = relatedEntities['content_types'].get(item.profile);
+
+        return (
+            <div className="profile-label">
+                {contentProfile.label}
+            </div>
+        );
+    }
+}
+
+export const profile = ProfileComponent;

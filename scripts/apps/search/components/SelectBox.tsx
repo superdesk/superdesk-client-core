@@ -7,7 +7,11 @@ import {IArticle} from 'superdesk-api';
 
 interface IPropsSelectBox {
     item: IArticle;
-    onMultiSelect(items: Array<IArticle>, selected: boolean): void;
+    onMultiSelect(
+        item: IArticle,
+        value: boolean,
+        multiSelectMode: boolean,
+    ): void;
 }
 
 export class SelectBox extends React.Component<IPropsSelectBox> {
@@ -20,8 +24,8 @@ export class SelectBox extends React.Component<IPropsSelectBox> {
             <SelectBoxWithoutMutation
                 item={this.props.item}
                 selected={this.props.item.selected === true}
-                onSelect={(selected) => {
-                    this.props.onMultiSelect([this.props.item], selected);
+                onSelect={(selected, multiSelectMode) => {
+                    this.props.onMultiSelect(this.props.item, selected, multiSelectMode);
                 }}
                 data-test-id="multi-select-checkbox"
             />
@@ -32,7 +36,7 @@ export class SelectBox extends React.Component<IPropsSelectBox> {
 interface IPropsSelectBoxWithoutMutation {
     item: IArticle;
     selected: boolean;
-    onSelect(selected: boolean): void;
+    onSelect(selected: boolean, multiSelectMode: boolean): void;
     className?: string;
     'data-test-id'?: string;
 }
@@ -45,14 +49,11 @@ export class SelectBoxWithoutMutation extends React.PureComponent<IPropsSelectBo
     }
 
     toggle(event) {
-        if (event && (event.ctrlKey || event.shiftKey)) {
-            return false;
-        }
-
         if (isCheckAllowed(this.props.item)) {
             const selected = !this.props.selected;
+            const multiSelect = event.shiftKey;
 
-            this.props.onSelect(selected);
+            this.props.onSelect(selected, multiSelect);
         }
     }
 

@@ -1,7 +1,7 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {ListTypeIcon} from '.';
+import {ListTypeIcon} from './ListTypeIcon';
 import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 
 interface IProps {
@@ -21,7 +21,6 @@ export class MultiSelectCheckbox extends React.PureComponent<IProps> {
                     itemSelected={itemSelected}
                     onMultiSelect={multiSelect.multiSelect}
                 />
-
             );
         } else if (multiSelect.kind === 'new') {
             const {MultiSelectComponent} = multiSelect;
@@ -29,6 +28,7 @@ export class MultiSelectCheckbox extends React.PureComponent<IProps> {
             return (
                 <MultiSelectComponent
                     item={item}
+                    allItems={multiSelect.items}
                     options={multiSelect.options}
                 />
             );

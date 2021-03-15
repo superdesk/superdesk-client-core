@@ -1,15 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const signal: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    if (props.item.signal) {
-        return React.createElement('span', {className: 'signal', key: 'signal'}, props.item.signal);
-    } else {
-        return null;
-    }
-};
+class SignalComponent extends React.Component<IPropsItemListInfo> {
+    render() {
+        const props = this.props;
 
-signal.propTypes = {
-    item: PropTypes.any,
-};
+        if (props.item.signal) {
+            return React.createElement('span', {className: 'signal', key: 'signal'}, props.item.signal);
+        } else {
+            return null;
+        }
+    }
+}
+
+export const signal = SignalComponent;

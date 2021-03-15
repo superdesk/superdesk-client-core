@@ -30,6 +30,7 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                 }
                 <ListItemInfo
                     item={item}
+                    relatedEntities={this.props.relatedEntities}
                     openAuthoringView={this.props.openAuthoringView}
                     desk={this.props.desk}
                     ingestProvider={this.props.ingestProvider}

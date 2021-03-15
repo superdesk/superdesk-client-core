@@ -3,6 +3,7 @@ import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation'
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
+import {dispatchInternalEvent} from './internal-events';
 
 export function registerExtensions(
     extensions: Array<IExtension>,
@@ -102,5 +103,7 @@ export function registerExtensions(
             (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
         )
             .forEach(registerWorkspaceMenu);
+    }).then(() => {
+        dispatchInternalEvent('extensionsHaveLoaded', true);
     });
 }

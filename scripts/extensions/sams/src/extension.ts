@@ -1,5 +1,5 @@
 // Types
-import {ISuperdesk, IExtension} from 'superdesk-api';
+import {ISuperdesk, IExtension, IExtensionActivationResult} from 'superdesk-api';
 
 // Apps
 import {SamsWorkspaceApp} from './apps/samsWorkspace';
@@ -12,7 +12,7 @@ const extension: IExtension = {
 
         Object.assign(superdeskApi, superdesk);
 
-        return Promise.resolve({
+        const result: IExtensionActivationResult = {
             contributions: {
                 pages: [{
                     title: gettext('SAMS'),
@@ -22,6 +22,7 @@ const extension: IExtension = {
                     showSideMenu: true,
                     addToMainMenu: false,
                 }],
+
                 workspaceMenuItems: [{
                     label: gettext('SAMS'),
                     href: '/workspace/sams',
@@ -31,7 +32,9 @@ const extension: IExtension = {
                     privileges: ['sams'],
                 }],
             },
-        });
+        };
+
+        return Promise.resolve(result);
     },
 };
 

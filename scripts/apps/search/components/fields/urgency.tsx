@@ -1,14 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {ItemUrgency} from '../index';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const urgency: React.StatelessComponent<IPropsItemListInfo> = (props) => props.item.urgency ?
-    React.createElement(
-        ItemUrgency,
-        angular.extend({key: 'urgency'}, props.item),
-    ) : null;
+class UrgencyComponent extends React.Component<IPropsItemListInfo> {
+    render() {
+        const props = this.props;
 
-urgency.propTypes = {
-    item: PropTypes.any,
-};
+        return props.item.urgency
+            ? React.createElement(
+                ItemUrgency,
+                angular.extend({key: 'urgency'}, props.item),
+            )
+            : null;
+    }
+}
+
+export const urgency = UrgencyComponent;

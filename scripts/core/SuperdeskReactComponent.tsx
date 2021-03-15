@@ -5,7 +5,7 @@ import {noop} from 'lodash';
 /**
  * Wraps a promise in order to ignore AbortError and break the promise chain when it occurs.
  */
-function ignoreAbortError<T>(promise: Promise<T>): Promise<T> {
+export function ignoreAbortError<T>(promise: Promise<T>): Promise<T> {
     return new Promise((resolve, reject) => {
         promise
             .then(resolve)
