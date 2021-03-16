@@ -12,7 +12,6 @@ class SluglineComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>
                     key="slugline"
                     className="field--slugline"
                     data-test-id="field--slugline"
-                    tabIndex={0}
                 >
                     <h6 className="a11y-only">{gettext('slugline')}</h6>
                     <span dangerouslySetInnerHTML={{__html: props.item.slugline}} />
