@@ -422,7 +422,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 return (
                                                     <ToggleBoxNext
                                                         key={groupId}
-                                                        title={this.iMatricsFields[groupId].name ?? vocabularyLabels.get(groupId) ?? groupId}
+                                                        title={
+                                                            this.iMatricsFields[groupId].name ??
+                                                            vocabularyLabels.get(groupId) ??
+                                                            groupId
+                                                        }
                                                         style="circle"
                                                         isOpen={true}
                                                     >
