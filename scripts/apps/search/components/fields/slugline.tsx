@@ -1,5 +1,6 @@
 import React from 'react';
 import {IPropsItemListInfo} from '../ListItemInfo';
+import {gettext} from 'core/utils';
 
 class SluglineComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
     render() {
@@ -10,9 +11,12 @@ class SluglineComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>
                 <span
                     key="slugline"
                     className="field--slugline"
-                    dangerouslySetInnerHTML={{__html: props.item.slugline}}
                     data-test-id="field--slugline"
-                />
+                    tabIndex={0}
+                >
+                    <h6 className="a11y-only">{gettext('slugline')}</h6>
+                    <span dangerouslySetInnerHTML={{__html: props.item.slugline}} />
+                </span>
             );
         } else {
             return null;
