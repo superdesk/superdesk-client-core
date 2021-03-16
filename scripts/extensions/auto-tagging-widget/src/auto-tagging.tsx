@@ -61,6 +61,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
         private _mounted: boolean;
+        private iMatricsFields = superdesk.instance.config.iMatricsFields ?? [];
 
         constructor(props: IProps) {
             super(props);
@@ -388,8 +389,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 const others = items.filter((tag) => isEntity(tag) === false);
                                 const othersGrouped = others.groupBy((tag) => tag.group.value);
                                 const othersGroupedAndSorted = othersGrouped.sortBy(
-                                    (_, key) => key!.toString().toLocaleLowerCase(),
-                                    (a, b) => a.localeCompare(b),
+                                    (_, key) => this.iMatricsFields[key].order ?? -1,
                                 );
 
                                 return (
@@ -422,7 +422,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 return (
                                                     <ToggleBoxNext
                                                         key={groupId}
-                                                        title={vocabularyLabels.get(groupId) ?? groupId}
+                                                        title={this.iMatricsFields[groupId].name ?? vocabularyLabels.get(groupId) ?? groupId}
                                                         style="circle"
                                                         isOpen={true}
                                                     >
