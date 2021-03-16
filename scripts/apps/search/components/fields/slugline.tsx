@@ -13,7 +13,7 @@ class SluglineComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>
                     className="field--slugline"
                     data-test-id="field--slugline"
                 >
-                    <h6 className="a11y-only">{gettext('slugline')}</h6>
+                    <span className="a11y-only">{gettext('slugline')}</span>
                     <span dangerouslySetInnerHTML={{__html: props.item.slugline}} />
                 </span>
             );
