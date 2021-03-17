@@ -138,35 +138,46 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
     }
 }
 
-export class ArticlesListByQuery extends React.PureComponent<IProps, {loading: boolean}> {
-    private prevKey: string;
-
+export class ArticlesListByQuery extends React.PureComponent<IProps, {initialized: boolean}> {
     constructor(props: IProps) {
         super(props);
 
         this.state = {
-            loading: true,
+            initialized: false,
         };
 
         this.setLoading = this.setLoading.bind(this);
     }
-    setLoading(loading: boolean): Promise<void> {
+
+    private setLoading(loading: boolean): Promise<void> {
         return new Promise((resolve) => {
-            this.setState({loading}, () => {
+            const callback = () => {
                 resolve();
-            });
+            };
+
+            if (this.state.initialized !== true && loading === false) {
+                this.setState({initialized: true}, callback);
+            } else {
+                callback();
+            }
         });
     }
 
-    render() {
-        // re-mount the component when the query changes
-        const key = JSON.stringify(this.props.query);
-        const keyHasChanged = this.prevKey !== key;
+    componentWillReceiveProps(nextProps: IProps) {
+        const currentKey = JSON.stringify(this.props.query);
+        const nextKey = JSON.stringify(nextProps.query);
 
-        this.prevKey = key;
+        if (currentKey !== nextKey) {
+            this.setState({initialized: false});
+        }
+    }
+
+    render() {
+        // // re-mount the component when the query changes
+        const key = JSON.stringify(this.props.query);
 
         return (
-            <SmoothLoader loading={this.state.loading || keyHasChanged}>
+            <SmoothLoader loading={this.state.initialized !== true}>
                 <ArticlesListByQueryComponent
                     {...this.props}
                     setLoading={this.setLoading}
