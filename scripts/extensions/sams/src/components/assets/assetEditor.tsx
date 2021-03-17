@@ -79,7 +79,6 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
 
     render() {
         const {gettext} = superdeskApi.localization;
-        const {httpRequestJsonLocal} = superdeskApi;
 
         return (
             <React.Fragment>
@@ -181,10 +180,9 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
                                 search={(searchString, callback) => {
                                     let cancelled = false;
 
-                                    httpRequestJsonLocal<IAutoTaggingSearchResult>({
-                                        method: 'GET',
-                                        path: '/sams/assets/tags/' + searchString + '*',
-                                    }).then((res) => {
+                                    superdeskApi.dataApi.searchTags('sams/assets/tags', {
+                                        query: searchString + '*',
+                                    }).then((res: IAutoTaggingSearchResult) => {
                                         if (cancelled !== true) {
                                             const result = toClientFormat(res).toArray();
 
