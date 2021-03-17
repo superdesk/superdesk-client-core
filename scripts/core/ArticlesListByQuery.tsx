@@ -25,7 +25,7 @@ interface IState {
 }
 
 interface IPropsInner extends IProps {
-    onInitialize(): void;
+    setLoading(value: boolean): Promise<void>;
 }
 
 class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, IState> {
@@ -49,20 +49,32 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
 
         const query = toElasticQuery(withPagination);
 
-        return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
-            method: 'GET',
-            path: '/search',
-            urlParams: {
-                aggregations: 0,
-                es_highlight: 1,
-                projections: JSON.stringify(ng.get('search').getProjectedFields()),
-                source: JSON.stringify(query),
-            },
-        }).then((res) => {
-            return new Promise((resolve) => {
-                // update item count
-                this.setState({itemCount: res._meta.total}, () => {
-                    resolve(res);
+        return this.props.setLoading(true).then(() => {
+            return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+                method: 'GET',
+                path: '/search',
+                urlParams: {
+                    aggregations: 0,
+                    es_highlight: 1,
+                    projections: JSON.stringify(ng.get('search').getProjectedFields()),
+                    source: JSON.stringify(query),
+                },
+            }).then((res) => {
+                return new Promise((resolve) => {
+                    const firstLoad = this.state.itemCount === 'loading';
+
+                    // update item count
+                    this.setState({itemCount: res._meta.total}, () => {
+                        resolve(res);
+
+                        if (!firstLoad) {
+                            // Add a delay to allow child components to re-render.
+                            // Avoids a state with loader no longer displayed, but items list still empty.
+                            setTimeout(() => {
+                                this.props.setLoading(false);
+                            });
+                        }
+                    });
                 });
             });
         });
@@ -119,7 +131,6 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                         onItemDoubleClick={this.props.onItemDoubleClick}
                         padding={this.props.padding}
                         getMultiSelect={this.props.getMultiSelect}
-                        onInitialize={this.props.onInitialize}
                     />
                 </div>
             </div>
@@ -127,7 +138,9 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
     }
 }
 
-class ArticlesListByQueryWithLoader extends React.PureComponent<IProps, {loading: boolean}> {
+export class ArticlesListByQuery extends React.PureComponent<IProps, {loading: boolean}> {
+    private prevKey: string;
+
     constructor(props: IProps) {
         super(props);
 
@@ -137,7 +150,6 @@ class ArticlesListByQueryWithLoader extends React.PureComponent<IProps, {loading
 
         this.setLoading = this.setLoading.bind(this);
     }
-
     setLoading(loading: boolean): Promise<void> {
         return new Promise((resolve) => {
             this.setState({loading}, () => {
@@ -147,27 +159,20 @@ class ArticlesListByQueryWithLoader extends React.PureComponent<IProps, {loading
     }
 
     render() {
+        // re-mount the component when the query changes
+        const key = JSON.stringify(this.props.query);
+        const keyHasChanged = this.prevKey !== key;
+
+        this.prevKey = key;
+
         return (
-            <SmoothLoader loading={this.state.loading}>
+            <SmoothLoader loading={this.state.loading || keyHasChanged}>
                 <ArticlesListByQueryComponent
                     {...this.props}
-                    onInitialize={() => {
-                        this.setLoading(false);
-                    }}
+                    setLoading={this.setLoading}
+                    key={key}
                 />
             </SmoothLoader>
-        );
-    }
-}
-
-// re-mount loader when query changes
-export class ArticlesListByQuery extends React.PureComponent<IProps> {
-    render() {
-        return (
-            <ArticlesListByQueryWithLoader
-                {...this.props}
-                key={JSON.stringify(this.props.query)}
-            />
         );
     }
 }
