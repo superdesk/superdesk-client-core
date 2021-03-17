@@ -86,8 +86,9 @@ interface IState {
 }
 
 export class Item extends React.Component<IProps, IState> {
-    clickTimeout: number;
+    private clickTimeout: number;
     private _mounted: boolean;
+    private mouseDown: boolean;
 
     constructor(props) {
         super(props);
@@ -101,9 +102,9 @@ export class Item extends React.Component<IProps, IState> {
             nested: [],
         };
 
-        this.select = this.select.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         this.edit = this.edit.bind(this);
-        this.dbClick = this.dbClick.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.setActioningState = this.setActioningState.bind(this);
         this.setHoverState = this.setHoverState.bind(this);
         this.unsetHoverState = this.unsetHoverState.bind(this);
@@ -187,7 +188,7 @@ export class Item extends React.Component<IProps, IState> {
             nextState !== this.state;
     }
 
-    select(event) {
+    handleClick(event) {
         if (isButtonClicked(event)) {
             return;
         }
@@ -217,7 +218,7 @@ export class Item extends React.Component<IProps, IState> {
         }
     }
 
-    dbClick(event) {
+    handleDoubleClick(event) {
         if (isButtonClicked(event)) {
             return;
         }
@@ -449,15 +450,25 @@ export class Item extends React.Component<IProps, IState> {
                 onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
-                onFocus: getCallback(() => {
-                    // not using this.select in order to avoid the timeout
-                    // that is used to enable double-click
-                    if (!this.props.item.gone) {
-                        this.props.onSelect(this.props.item, event);
+                onFocus: getCallback((event) => {
+                    // Only open preview on focus when it is triggered via keyboard.
+                    // When mouse is used, preview will open on click.
+                    if (this.mouseDown !== true) {
+                        // not using this.select in order to avoid the timeout
+                        // that is used to enable double-click
+                        if (!this.props.item.gone) {
+                            this.props.onSelect(this.props.item, event);
+                        }
                     }
                 }),
-                onClick: getCallback(this.select),
-                onDoubleClick: getCallback(this.dbClick),
+                onMouseDown: () => {
+                    this.mouseDown = true;
+                },
+                onMouseUp: () => {
+                    this.mouseDown = false;
+                },
+                onClick: getCallback(this.handleClick),
+                onDoubleClick: getCallback(this.handleDoubleClick),
                 onKeyDown: (event) => {
                     if (event.key === ' ') { // display item actions when space is clicked
                         const el = event.target?.querySelector('.more-activity-toggle-ref');

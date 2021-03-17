@@ -921,6 +921,11 @@ describe('navigation using a keyboard', () => {
         firstItem.click();
 
         browser.wait(ECE.elementsEqual(getFocusedElement(), firstItem));
+
+        // Because list item has double click functionality, a delay is used
+        // for click handler function and it takes a few hundred ms
+        // until it gets executed and item is re-rendered as selected.
+        browser.wait(ECE.visibilityOf(el(['multi-select-checkbox'], null, firstItem)));
     });
 
     it('can focus the next or previous item using arrow keys', () => {
