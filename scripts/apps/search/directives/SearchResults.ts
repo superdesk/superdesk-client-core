@@ -21,7 +21,7 @@ SearchResults.$inject = [
 const HEX_REG_EXP = /[a-f0-9]{24}/;
 
 function isObjectId(value) {
-    return value.length === 24 && HEX_REG_EXP.test(value);
+    return value != null && value.length === 24 && HEX_REG_EXP.test(value);
 }
 
 /**
@@ -171,6 +171,11 @@ export function SearchResults(
              * Schedule an update if it's not there yet
              */
             function queryItems(event?, data?) {
+                if (isObjectId(scope.search.repo.search)) {
+                    // external provider, don't refresh on any event
+                    return;
+                }
+
                 if (!nextUpdate) {
                     if (scope.search.repo.search !== 'local' && !getSearch().q && !(data && data.force)) {
                         return; // ignore updates with external content
