@@ -77,7 +77,6 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
             this.setState({
                 loading: true,
             }, () => {
-
                 Promise.all(
                     pages.map(({from, to}) => this.props.loadMoreItems(from, to)),
                 ).then((res) => {
