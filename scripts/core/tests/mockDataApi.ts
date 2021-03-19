@@ -52,7 +52,6 @@ const dataApiForTesting: IDataApi = {
     patchRaw: <T>(endpoint, id, etag, patch) => Promise.resolve({} as T),
     delete: (endpoint, item) => Promise.resolve(),
     uploadFileWithProgress: <T>(endpoint, data, onProgress) => Promise.resolve({} as T),
-    searchTags: <IAutoTaggingSearchResult>(endpoint, params) => Promise.resolve({} as IAutoTaggingSearchResult),
 };
 
 export function mockDataApi() {
@@ -65,5 +64,4 @@ export function mockDataApi() {
     spyOn(dataApi, 'patchRaw').and.callFake(dataApiForTesting.patchRaw);
     spyOn(dataApi, 'delete').and.callFake(dataApiForTesting.delete);
     spyOn(dataApi, 'uploadFileWithProgress').and.callFake(dataApiForTesting.uploadFileWithProgress);
-    spyOn(dataApi, 'searchTags').and.callFake(dataApiForTesting.searchTags);
 }

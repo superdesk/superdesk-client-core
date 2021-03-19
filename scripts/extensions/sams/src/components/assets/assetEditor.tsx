@@ -6,9 +6,9 @@ import nextId from 'react-id-generator';
 import {noop} from 'lodash';
 
 // Types
-import {ASSET_STATE, IAssetItem, ISetItem} from '../../interfaces';
+import {ASSET_STATE, IAssetItem, ISetItem, IAssetTag, IAutoTaggingSearchResult} from '../../interfaces';
 import {IApplicationState} from '../../store';
-import {superdeskApi} from '../../apis';
+import {superdeskApi, samsApi} from '../../apis';
 
 // Redux Actions & Selectors
 import {getActiveSets} from '../../store/sets/selectors';
@@ -27,24 +27,16 @@ interface IProps {
     sets: Array<ISetItem>;
     fields?: Array<keyof IAssetItem>;
 }
-interface ITagUi {
-    name: string;
-    code: string;
-}
-
-interface IAutoTaggingSearchResult {
-        tags: Array<string>;
-}
 
 const mapStateToProps = (state: IApplicationState) => ({
     sets: getActiveSets(state),
 });
 
-export function toClientFormat(response: IAutoTaggingSearchResult): OrderedMap<string, ITagUi> {
-    let tags = OrderedMap<string, ITagUi>();
+export function toClientFormat(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {
+    let tags = OrderedMap<string, IAssetTag>();
 
     response.tags.forEach((item: string) => {
-        const tag: ITagUi = {
+        const tag: IAssetTag = {
             name: item,
             code: item,
         };
@@ -180,15 +172,14 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
                                 search={(searchString, callback) => {
                                     let cancelled = false;
 
-                                    superdeskApi.dataApi.searchTags('sams/assets/tags', {
-                                        query: searchString + '*',
-                                    }).then((res: IAutoTaggingSearchResult) => {
-                                        if (cancelled !== true) {
-                                            const result = toClientFormat(res).toArray();
+                                    samsApi.assets.searchTags(searchString + '*')
+                                        .then((res: IAutoTaggingSearchResult) => {
+                                            if (cancelled !== true) {
+                                                const result = toClientFormat(res).toArray();
 
-                                            callback(result);
-                                        }
-                                    });
+                                                callback(result);
+                                            }
+                                        });
 
                                     return {
                                         cancel: () => {

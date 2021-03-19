@@ -101,10 +101,6 @@ export const dataApiByEntity = {
     },
 };
 
-interface IAutoTaggingSearchResult {
-    tags: Array<string>;
-}
-
 export function generatePatch<T extends IBaseRestApiResponse>(item1: T, item2: Partial<T>): Partial<T> {
     const patch = (generate(item1, item2) ?? {}) as Partial<T>;
 
@@ -225,13 +221,6 @@ export const dataApi: IDataApi = {
         },
     }),
     uploadFileWithProgress: uploadFileWithProgress,
-    searchTags: (endpoint, params?: Dictionary<string, any>) => {
-        return httpRequestJsonLocal<IAutoTaggingSearchResult>({
-            method: 'POST',
-            path: '/' + endpoint,
-            urlParams: params,
-        });
-    },
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
