@@ -107,14 +107,15 @@ export default function SearchMenuController(
                 this.providers = $filter('sortByName')(result._items, 'search_provider');
 
                 const defaultProvider = this.providers.find((provider) => provider.is_default);
+                const hasGlobalSearchPrivilege = privileges.privileges.use_global_saved_searches;
 
                 if (defaultProvider) {
                     this.providers = this.providers.filter((provider) => provider !== defaultProvider);
-                    if (privileges.use_global_saved_searches) {
+                    if (hasGlobalSearchPrivilege) {
                         this.providers.unshift(SUPERDESK_PROVIDER);
                     }
                     this.providers.unshift(defaultProvider);
-                } else if (privileges.use_global_saved_searches) {
+                } else if (hasGlobalSearchPrivilege) {
                     this.providers.unshift(SUPERDESK_PROVIDER);
                 }
             })
