@@ -110,11 +110,11 @@ export default function SearchMenuController(
 
                 if (defaultProvider) {
                     this.providers = this.providers.filter((provider) => provider !== defaultProvider);
-                    if (privileges.use_global_saved_search) {
+                    if (privileges.use_global_saved_searches) {
                         this.providers.unshift(SUPERDESK_PROVIDER);
                     }
                     this.providers.unshift(defaultProvider);
-                } else if (privileges.use_global_saved_search) {
+                } else if (privileges.use_global_saved_searches) {
                     this.providers.unshift(SUPERDESK_PROVIDER);
                 }
             })
