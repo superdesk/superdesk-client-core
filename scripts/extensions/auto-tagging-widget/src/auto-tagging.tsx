@@ -402,14 +402,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 const othersGroupedAndSortedByConfig = othersGrouped
                                     .filter((_, key) => !!this.iMatricsFields[key])
-                                    .sortBy((_, key) => this.iMatricsFields[key].order,
-                                );
+                                    .sortBy((_, key) => this.iMatricsFields[key].order);
 
                                 const othersGroupedAndSortedNotInConfig = othersGrouped
                                     .filter((item) => !othersGroupedAndSortedByConfig.includes(item))
                                     .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
-                                        (a, b) => a.localeCompare(b),
-                                );
+                                        (a, b) => a.localeCompare(b));
 
                                 const othersGroupedAndSorted = othersGroupedAndSortedByConfig
                                     .concat(othersGroupedAndSortedNotInConfig);
