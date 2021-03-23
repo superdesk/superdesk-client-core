@@ -22,7 +22,7 @@ import {getHumanReadableFileSize} from '../../utils/ui';
 interface IProps {
     asset: Partial<IAssetItem>;
     disabled?: boolean;
-    onChange(field: string, value: string): void;
+    onChange(field: string, value: string, method?: string): void;
     sets: Array<ISetItem>;
     fields?: Array<keyof IAssetItem>;
     updates?: Partial<IAssetItem>;
@@ -59,7 +59,7 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
             filename: (value: string) => this.props.onChange('filename', value.trim()),
             state: (value: string) => this.props.onChange('state', value),
             set_id: (value: string) => this.props.onChange('set_id', value),
-            tags: (value: string) => this.props.onChange('tags', value),
+            tags: (value: string) => this.props.onChange('tags', value, 'add'),
         };
     }
 

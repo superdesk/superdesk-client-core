@@ -75,9 +75,13 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
         this.addTag = this.addTag.bind(this);
     }
 
-    onChange<K extends keyof IAssetItem>(field: K, value: IAssetItem[K]) {
+    onChange<K extends keyof IAssetItem>(field: K, value: IAssetItem[K], method?: string) {
         if (field === 'tags') {
-            this.addTag(value);
+            if (method === 'add') {
+                this.addTag(value);
+            } else if (method === 'remove') {
+                this.removeTag(value);
+            }
         } else {
             this.setState((prevState: IState) => ({
                 updates: {
@@ -113,8 +117,10 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
         });
     }
 
-    removeTag(index: number) {
+    removeTag<K extends keyof IAssetItem>(value: IAssetItem[K]) {
         this.setState((preState: IState) => {
+            const newTag: any = value!;
+            const index = this.state.updates?.tags?.indexOf(newTag)!;
             const oldStateUpdates = preState.updates;
             const tags: Array<{name: string, code: string}> = oldStateUpdates.tags!;
 
@@ -209,7 +215,7 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
                                         key={this.state.updates?.tags?.indexOf(tag)}
                                         text={tag.name}
                                         onClick={() => {
-                                            this.removeTag(this.state.updates?.tags?.indexOf(tag)!);
+                                            this.onChange('tags', [tag!], 'remove');
                                         }}
                                     />
                                 ))}
