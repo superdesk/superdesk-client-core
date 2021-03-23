@@ -939,9 +939,15 @@ declare module 'superdesk-api' {
 
     export interface IPropsListItemColumn {
         ellipsisAndGrow?: boolean;
+        grow?: boolean;
         noBorder?: boolean;
+        noPadding?: boolean;
         justifyContent?: string;
         bold?: boolean;
+    }
+
+    export interface IPropsListItemRow {
+        justifyContent?: string;
     }
 
     export interface IGridComponentProps {
@@ -1035,6 +1041,10 @@ declare module 'superdesk-api' {
     export interface IPropsIcon {
         className: string;
         size?: number;
+    }
+
+    export interface IPropsIconBig {
+        name: string;
     }
 
     export interface IPropsSpacer {
@@ -1432,6 +1442,7 @@ declare module 'superdesk-api' {
             ): React.ComponentType<Props>;
             ListItem: React.ComponentType<IListItemProps>;
             ListItemColumn: React.ComponentType<IPropsListItemColumn>;
+            ListItemRow: React.ComponentType<IPropsListItemRow>;
             ListItemActionsMenu: React.ComponentType;
             List: {
                 Item: React.ComponentType<{onClick: any}>;
@@ -1452,6 +1463,7 @@ declare module 'superdesk-api' {
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
+            IconBig: React.ComponentType<IPropsIconBig>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             Spacer: React.ComponentType<IPropsSpacer>;
