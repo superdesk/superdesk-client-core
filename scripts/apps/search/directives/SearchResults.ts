@@ -171,8 +171,8 @@ export function SearchResults(
              * Schedule an update if it's not there yet
              */
             function queryItems(event?, data?) {
-                if (isObjectId(scope.search.repo.search)) {
-                    // external provider, don't refresh on any event
+                if (isObjectId(scope.search.repo.search) && event != null) {
+                    // external provider, don't refresh on events
                     return;
                 }
 
