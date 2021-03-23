@@ -63,6 +63,25 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
         };
     }
 
+    searchTags(searchString: string, callback: (result: Array<any>) => void) {
+        let cancelled = false;
+
+        samsApi.assets.searchTags(searchString + '*')
+            .then((res: IAutoTaggingSearchResult) => {
+                if (cancelled !== true) {
+                    const result = toClientFormat(res).toArray();
+
+                    callback(result);
+                }
+            });
+
+        return {
+            cancel: () => {
+                cancelled = true;
+            },
+        };
+    }
+
     fieldEnabled(field: keyof IAssetItem) {
         return (this.props.fields == null || this.props.fields.includes(field)) ?
             true :
@@ -169,24 +188,7 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
                                 value={''}
                                 keyValue="name"
                                 items={[]}
-                                search={(searchString, callback) => {
-                                    let cancelled = false;
-
-                                    samsApi.assets.searchTags(searchString + '*')
-                                        .then((res: IAutoTaggingSearchResult) => {
-                                            if (cancelled !== true) {
-                                                const result = toClientFormat(res).toArray();
-
-                                                callback(result);
-                                            }
-                                        });
-
-                                    return {
-                                        cancel: () => {
-                                            cancelled = true;
-                                        },
-                                    };
-                                }}
+                                search={(searchString, callback) => this.searchTags(searchString, callback)}
                                 onSelect={this.onChange.tags}
                                 onChange={noop}
                             />
