@@ -171,6 +171,17 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 data,
             );
         }
+        getGroupName(group: string) {
+            const {vocabularyLabels} = this.state;
+
+            if (this.iMatricsFields[group]) {
+                return this.iMatricsFields[group].name;
+            } else if (vocabularyLabels && vocabularyLabels.get(group)) {
+                return vocabularyLabels.get(group);
+            }
+
+            return group;
+        }
         reload() {
             this.setState({data: 'not-initialized'});
 
@@ -388,9 +399,19 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 const others = items.filter((tag) => isEntity(tag) === false);
                                 const othersGrouped = others.groupBy((tag) => tag.group.value);
-                                const othersGroupedAndSorted = othersGrouped.sortBy(
-                                    (_, key) => this.iMatricsFields[key].order ?? -1,
+
+                                const othersGroupedAndSortedByConfig = othersGrouped
+                                    .filter((_, key) => !!this.iMatricsFields[key])
+                                    .sortBy((_, key) => this.iMatricsFields[key].order,
                                 );
+
+                                const othersGroupedAndSortedNotInConfig = othersGrouped
+                                    .filter(item => !othersGroupedAndSortedByConfig.includes(item))
+                                    .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
+                                        (a, b) => a.localeCompare(b)
+                                );
+
+                                const othersGroupedAndSorted = othersGroupedAndSortedByConfig.concat(othersGroupedAndSortedNotInConfig);
 
                                 return (
                                     <React.Fragment>
@@ -422,11 +443,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 return (
                                                     <ToggleBoxNext
                                                         key={groupId}
-                                                        title={
-                                                            this.iMatricsFields[groupId].name ??
-                                                            vocabularyLabels.get(groupId) ??
-                                                            groupId
-                                                        }
+                                                        title={this.getGroupName(groupId)}
                                                         style="circle"
                                                         isOpen={true}
                                                     >
