@@ -194,6 +194,7 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
                             key={this.props.original?._id}
                             asset={this.props.original!}
                             onChange={this.onChange}
+                            updates={this.state.updates}
                             fields={[
                                 'name',
                                 'description',

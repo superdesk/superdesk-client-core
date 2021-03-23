@@ -2,7 +2,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {OrderedMap} from 'immutable';
-import nextId from 'react-id-generator';
 import {noop} from 'lodash';
 
 // Types
@@ -26,6 +25,7 @@ interface IProps {
     onChange(field: string, value: string): void;
     sets: Array<ISetItem>;
     fields?: Array<keyof IAssetItem>;
+    updates?: Partial<IAssetItem>;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
@@ -164,7 +164,7 @@ class AssetEditorComponent extends React.PureComponent<IProps> {
                     <FormGroup>
                         <FormRow>
                             <Autocomplete
-                                key={nextId.name}
+                                key={(this.props.updates?.tags || []).length}
                                 label={gettext('Tags')}
                                 value={''}
                                 keyValue="name"
