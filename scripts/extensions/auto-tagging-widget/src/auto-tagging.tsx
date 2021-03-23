@@ -406,12 +406,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 );
 
                                 const othersGroupedAndSortedNotInConfig = othersGrouped
-                                    .filter(item => !othersGroupedAndSortedByConfig.includes(item))
+                                    .filter((item) => !othersGroupedAndSortedByConfig.includes(item))
                                     .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
-                                        (a, b) => a.localeCompare(b)
+                                        (a, b) => a.localeCompare(b),
                                 );
 
-                                const othersGroupedAndSorted = othersGroupedAndSortedByConfig.concat(othersGroupedAndSortedNotInConfig);
+                                const othersGroupedAndSorted = othersGroupedAndSortedByConfig
+                                    .concat(othersGroupedAndSortedNotInConfig);
 
                                 return (
                                     <React.Fragment>
