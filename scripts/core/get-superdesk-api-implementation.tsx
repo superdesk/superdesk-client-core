@@ -10,7 +10,7 @@ import {
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
-import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
+import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
     isIFormGroupCollapsible,
@@ -72,6 +72,7 @@ import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
 import {notify} from './notify/notify';
 import {sdApi} from 'api';
+import {IconBig} from './ui/components/IconBig';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -298,6 +299,7 @@ export function getSuperdeskApiImplementation(
             connectCrudManager,
             ListItem,
             ListItemColumn,
+            ListItemRow,
             ListItemActionsMenu,
             List: {
                 // there's no full React implementation of ListItem component
@@ -323,6 +325,7 @@ export function getSuperdeskApiImplementation(
             GroupLabel,
             TopMenuDropdownButton,
             Icon,
+            IconBig,
             getDropdownTree: () => DropdownTree,
             Spacer,
         },
