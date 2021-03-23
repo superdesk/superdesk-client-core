@@ -839,7 +839,7 @@ splitterWidget.$inject = ['superdesk', '$timeout', '$rootScope'];
 function splitterWidget(superdesk, $timeout, $rootScope) {
     return {
         link: function(scope, element) {
-            const MONITORING_MIN_WIDTH = 400;
+            const MONITORING_MIN_WIDTH = 532;
             const AUTHORING_MIN_WIDTH = 730;
 
             let workspace, authoring, container;
