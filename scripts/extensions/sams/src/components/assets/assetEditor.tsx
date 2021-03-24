@@ -22,7 +22,7 @@ import {getHumanReadableFileSize} from '../../utils/ui';
 interface IProps {
     asset: Partial<IAssetItem>;
     disabled?: boolean;
-    onChange/* <K extends keyof IAssetItem> */(field: string, value: any): void;
+    onChange<K extends keyof IAssetItem>(field: string, value: IAssetItem[K]): void;
     sets: Array<ISetItem>;
     fields?: Array<keyof IAssetItem>;
     updates?: Partial<IAssetItem>;
