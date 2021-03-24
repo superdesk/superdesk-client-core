@@ -129,7 +129,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
         for (field in asset) {
             if (['_id', 'length'].includes(field) === false) {
                 if (typeof asset[field] === 'object') {
-                    data.append(field, JSON.stringify([asset[field]]));
+                    data.append(field, JSON.stringify(asset[field]));
                 } else {
                     data.append(field, asset[field] as string);
                 }
@@ -190,7 +190,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
 
         return (
             <FileUploadModal
-                dark={true}
+                dark={false}
                 modalSize="fill"
                 initialFiles={this.props.initialFiles}
                 multiple={true}

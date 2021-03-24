@@ -14,14 +14,12 @@ import {previewAsset, updateAsset, unlockAsset} from '../../store/assets/actions
 import {getSelectedAsset} from '../../store/assets/selectors';
 
 // UI
-import {Button, ButtonGroup, Tag} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {
     PanelHeader,
     PanelHeaderSlidingToolbar,
     PanelContentBlock,
     PanelContentBlockInner,
-    FormGroup,
-    FormRow,
 } from '../../ui';
 import {AssetEditor} from './assetEditor';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
@@ -71,65 +69,16 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
         this.onChange = this.onChange.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onCancel = this.onCancel.bind(this);
-        this.removeTag = this.removeTag.bind(this);
-        this.addTag = this.addTag.bind(this);
     }
 
-    onChange<K extends keyof IAssetItem>(field: K, value: IAssetItem[K], method?: string) {
-        if (field === 'tags') {
-            if (method === 'add') {
-                this.addTag(value);
-            } else if (method === 'remove') {
-                this.removeTag(value);
-            }
-        } else {
-            this.setState((prevState: IState) => ({
-                updates: {
-                    ...prevState.updates,
-                    [field]: value,
-                },
-                isDirty: true,
-            }));
-        }
-    }
-
-    addTag<K extends keyof IAssetItem>(value: IAssetItem[K]) {
-        this.setState((preState: IState) => {
-            const oldStateUpdates = preState.updates;
-            const tags: Array<any> = oldStateUpdates.tags ? oldStateUpdates.tags! : [];
-            const newTag: any = value!;
-            const index = tags.findIndex((tag) => {
-                return tag.code === newTag.code;
-            });
-
-            if (index === -1) {
-                tags.push(value!);
-                return {
-                    updates: {...oldStateUpdates, tags},
-                    isDirty: true,
-                };
-            }
-
-            return {
-                updates: oldStateUpdates,
-                isDirty: preState.isDirty,
-            };
-        });
-    }
-
-    removeTag<K extends keyof IAssetItem>(value: IAssetItem[K]) {
-        this.setState((preState: IState) => {
-            const newTag: any = value!;
-            const index = this.state.updates?.tags?.indexOf(newTag)!;
-            const oldStateUpdates = preState.updates;
-            const tags: Array<{name: string, code: string}> = oldStateUpdates.tags!;
-
-            tags.splice(index, 1);
-            return {
-                updates: {...oldStateUpdates, tags},
-                isDirty: true,
-            };
-        });
+    onChange<K extends keyof IAssetItem>(field: K, value: IAssetItem[K]) {
+        this.setState((prevState: IState) => ({
+            updates: {
+                ...prevState.updates,
+                [field]: value,
+            },
+            isDirty: true,
+        }));
     }
 
     onSave() {
@@ -208,19 +157,6 @@ export class AssetEditorPanelComponent extends React.PureComponent<IProps, IStat
                                 'tags',
                             ]}
                         />
-                        <FormGroup>
-                            <FormRow>
-                                {this.state.updates?.tags?.map((tag) => (
-                                    <Tag
-                                        key={this.state.updates?.tags?.indexOf(tag)}
-                                        text={tag.name}
-                                        onClick={() => {
-                                            this.onChange('tags', [tag!], 'remove');
-                                        }}
-                                    />
-                                ))}
-                            </FormRow>
-                        </FormGroup>
                     </PanelContentBlockInner>
                 </PanelContentBlock>
             </React.Fragment>
