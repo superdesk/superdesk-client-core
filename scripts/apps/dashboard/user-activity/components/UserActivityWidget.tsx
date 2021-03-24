@@ -42,16 +42,17 @@ interface IState {
 }
 
 function genericFetch({search, api}, repo, filters) {
+    const PAGE_SIZE = 10;
     let query = search.query();
 
     query.clear_filters();
-    query.size(200).filter(filters);
+    query.size(PAGE_SIZE).filter(filters);
 
     let criteria = query.getCriteria(true);
 
     criteria.repo = repo;
     criteria.source.from = 0;
-    criteria.source.size = 200;
+    criteria.source.size = PAGE_SIZE;
 
     return api.query('search', criteria);
 }
