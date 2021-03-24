@@ -29,7 +29,7 @@ const mapStateToProps = (state: IApplicationState) => ({
 });
 
 export class UploadAssetModalComponent extends React.Component<IUploadAssetModalProps, IState> {
-    onFieldChanged: Dictionary<string, (field: keyof IAssetItem, value: string) => void>;
+    onFieldChanged: Dictionary<string, (field: keyof IAssetItem, value: any) => void>;
 
     constructor(props: IUploadAssetModalProps) {
         super(props);
@@ -128,7 +128,11 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
 
         for (field in asset) {
             if (['_id', 'length'].includes(field) === false) {
-                data.append(field, asset[field] as string);
+                if (typeof asset[field] === 'object') {
+                    data.append(field, JSON.stringify(asset[field]));
+                } else {
+                    data.append(field, asset[field] as string);
+                }
             }
         }
 

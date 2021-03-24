@@ -127,6 +127,15 @@ export interface ISAMSBaseEvent {
 
 export type ISAMSWebsocketEvent = CustomEvent<IWebsocketMessage<ISAMSBaseEvent>>;
 
+export interface IAutoTaggingSearchResult {
+    tags: Array<string>;
+}
+
+export interface IAssetTag {
+    name: string;
+    code: string;
+}
+
 export interface IAssetItem extends IVersionInformation {
     set_id: string;
     parent_id: string;
@@ -139,10 +148,7 @@ export interface IAssetItem extends IVersionInformation {
     lock_action: string;
     lock_user: string;
     lock_session: string;
-    tags: Array<{
-        code: string;
-        name: string;
-    }>;
+    tags: Array<IAssetTag>;
     extra: Dictionary<string, any>;
 }
 
@@ -215,5 +221,6 @@ export interface ISamsAPI {
         deleteAsset(asset: IAssetItem): Promise<void>;
         lockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
         unlockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
+        searchTags(searchTags: string): Promise<IAutoTaggingSearchResult>;
     };
 }
