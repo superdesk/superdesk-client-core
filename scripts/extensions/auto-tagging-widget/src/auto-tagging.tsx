@@ -33,6 +33,13 @@ interface IProps {
     article: IArticle;
 }
 
+interface IIMatricsFields {
+    [key: string]: {
+        name: string;
+        order: number;
+    };
+}
+
 type IEditableData = {original: IAutoTaggingResponse; changes: IAutoTaggingResponse};
 
 interface IState {
@@ -48,6 +55,10 @@ function tagAlreadyExists(data: IEditableData, qcode: string): boolean {
     return data.changes.analysis.has(qcode);
 }
 
+function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
+    return iMatricsFields[key] != null;
+}
+
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
     const {httpRequestJsonLocal} = superdesk;
@@ -61,7 +72,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
         private _mounted: boolean;
-        private iMatricsFields = superdesk.instance.config.iMatricsFields ?? [];
+        private iMatricsFields = superdesk.instance.config.iMatricsFields ?? {};
 
         constructor(props: IProps) {
             super(props);
@@ -171,16 +182,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                 data,
             );
         }
-        getGroupName(group: string) {
-            const {vocabularyLabels} = this.state;
-
-            if (this.iMatricsFields[group]) {
-                return this.iMatricsFields[group].name;
-            } else if (vocabularyLabels && vocabularyLabels.get(group)) {
-                return vocabularyLabels.get(group);
-            }
-
-            return group;
+        getGroupName(group: string, vocabularyLabels: Map<string, string>) {
+            return this.iMatricsFields[group]?.name ?? vocabularyLabels?.get(group) ?? group;
         }
         reload() {
             this.setState({data: 'not-initialized'});
@@ -401,12 +404,13 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 const othersGrouped = others.groupBy((tag) => tag.group.value);
 
                                 const othersGroupedAndSortedByConfig = othersGrouped
-                                    .filter((_, key) => !!this.iMatricsFields[key])
-                                    .sortBy((_, key) => this.iMatricsFields[key].order);
+                                    .filter((_, key) => hasConfig(key, this.iMatricsFields))
+                                    .sortBy((_, key) => this.iMatricsFields[key].order,
+                                        (a, b) => a - b);
 
                                 const othersGroupedAndSortedNotInConfig = othersGrouped
-                                    .filter((item) => !othersGroupedAndSortedByConfig.includes(item))
-                                    .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
+                                    .filter((_, key) => !hasConfig(key, this.iMatricsFields))
+                                    .sortBy((_, key) => key.toString().toLocaleLowerCase(),
                                         (a, b) => a.localeCompare(b));
 
                                 const othersGroupedAndSorted = othersGroupedAndSortedByConfig
@@ -442,7 +446,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 return (
                                                     <ToggleBoxNext
                                                         key={groupId}
-                                                        title={this.getGroupName(groupId)}
+                                                        title={this.getGroupName(groupId, vocabularyLabels)}
                                                         style="circle"
                                                         isOpen={true}
                                                     >
