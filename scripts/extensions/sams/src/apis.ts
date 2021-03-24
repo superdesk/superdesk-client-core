@@ -19,6 +19,7 @@ import {
     deleteAsset,
     lockAsset,
     unlockAsset,
+    searchTags,
 } from './api/assets';
 
 // will be set asynchronously on SAMS extension start
@@ -52,5 +53,6 @@ export const samsApi: ISamsAPI = {
         deleteAsset: deleteAsset,
         lockAsset: lockAsset,
         unlockAsset: unlockAsset,
+        searchTags: searchTags,
     },
 };
