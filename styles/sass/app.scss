@@ -63,3 +63,11 @@
 
 // Application components
 @import 'saved-searches';
+
+
+// fix SelectWithTemplate component that is on ui-framework side
+// it is already fixed in the next version of UI framework
+// I'm putting this here too to avoid upgrading UI framework before a release.
+.TEMP-WIDTH-FIX > .p-dropdown {
+    width: 100%;
+}
