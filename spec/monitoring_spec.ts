@@ -906,15 +906,11 @@ describe('monitoring', () => {
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
 
-        const templatesGroupFirst = els(['templates-list']).get(1);
+        const templatesListFirst = els(['templates-list']).get(1);
 
-        browser.wait(ECE.visibilityOf(templatesGroupFirst));
+        browser.wait(ECE.visibilityOf(templatesListFirst));
 
-        const templateItem = templatesGroupFirst.element(by.buttonText(slugline));
-
-        browser.wait(ECE.visibilityOf(templateItem));
-
-        templateItem.click();
+        templatesListFirst.element(by.buttonText(slugline)).click();
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
