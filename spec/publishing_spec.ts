@@ -84,11 +84,15 @@ describe('publishing', () => {
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
 
-        const templatesListFirst = els(['templates-list']).get(0);
+        const templatesGroupFirst = els(['templates-list']).get(0);
 
-        browser.wait(ECE.visibilityOf(templatesListFirst));
+        browser.wait(ECE.visibilityOf(templatesGroupFirst));
 
-        templatesListFirst.element(by.buttonText('testing')).click();
+        const templateItem = templatesGroupFirst.element(by.buttonText('testing'));
+
+        browser.wait(ECE.visibilityOf(templateItem));
+
+        templateItem.click();
 
         const slugline = 'testing-send-and-publish';
 
