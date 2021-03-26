@@ -895,7 +895,7 @@ describe('monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        els(['templates-list']).get(1).element(by.buttonText(slugline)).click();
+        el(['select-template'], by.buttonText(slugline)).click();
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
@@ -1082,7 +1082,7 @@ xdescribe('marked for me filter in monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown'], by.buttonText('More templates...')).click();
-        el(['templates-list'], by.buttonText('testing')).click();
+        el(['select-template'], by.buttonText('testing')).click();
 
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
@@ -1108,7 +1108,7 @@ xdescribe('marked for me filter in monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown'], by.buttonText('More templates...')).click();
-        el(['templates-list'], by.buttonText('testing')).click();
+        el(['select-template'], by.buttonText('testing')).click();
 
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
