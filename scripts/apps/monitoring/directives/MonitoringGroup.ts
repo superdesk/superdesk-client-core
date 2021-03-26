@@ -141,21 +141,21 @@ export function MonitoringGroup(
                 );
             }
 
-            function scheduleQueryFn(event?, data?) {
-                return queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
-                    .finally(() => {
-                        scope.$applyAsync();
-                    });
-            }
-
             let queryPromise = null;
+            // Using debounce to run it only once for multiple events
+            // happening at around same time, plus wait for query to finish
+            // before sending another query so if server is slow to respond
+            // it will slow down requests.
             const scheduleQuery = debounce((event, data) => {
                 if (queryPromise == null) {
-                    queryPromise = scheduleQueryFn(event, data)
-                        .then(() => {
+                    queryPromise = queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
+                        .finally(() => {
                             queryPromise = null;
+                            scope.$applyAsync();
                         });
                 } else {
+                    // There is already request pending so queue another one to run when it finishes.
+                    // It's using debounce inside so if there are more those will be ingored.
                     queryPromise.then(() => scheduleQuery(event, data));
                 }
             }, 500, {maxWait: 2000});
