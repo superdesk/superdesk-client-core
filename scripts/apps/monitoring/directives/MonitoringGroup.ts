@@ -207,7 +207,6 @@ export function MonitoringGroup(
             scope.$on('item:duplicate', scheduleQuery);
             scope.$on('item:translate', scheduleQuery);
             scope.$on('item:move', scheduleQuery);
-            scope.$on('item:unlock', scheduleQuery);
             scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
                 queryItems();
