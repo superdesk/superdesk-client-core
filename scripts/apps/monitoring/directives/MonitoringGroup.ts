@@ -149,21 +149,16 @@ export function MonitoringGroup(
             }
 
             let queryPromise = null;
-            let updateRequested = false;
             const scheduleQuery = debounce((event, data) => {
                 if (queryPromise == null) {
-                    updateRequested = false;
                     queryPromise = scheduleQueryFn(event, data)
                         .then(() => {
                             queryPromise = null;
-                            if (updateRequested) {
-                                scheduleQuery(event, data);
-                            }
                         });
-                } else if (!updateRequested) {
-                    updateRequested = true;
+                } else {
+                    queryPromise.then(() => scheduleQuery(event, data));
                 }
-            }, 1000);
+            }, 500, {maxWait: 1000});
 
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
