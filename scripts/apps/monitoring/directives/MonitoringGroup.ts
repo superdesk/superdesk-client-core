@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import _, {throttle} from 'lodash';
+import _, {debounce} from 'lodash';
 import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
 import {GET_LABEL_MAP, getLabelForStage} from '../../workspace/content/constants';
 import {isPublished} from 'apps/archive/utils';
@@ -141,14 +141,29 @@ export function MonitoringGroup(
                 );
             }
 
-            function scheduleQueryFn(event, data) {
-                queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
+            function scheduleQueryFn(event?, data?) {
+                return queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
                     .finally(() => {
                         scope.$applyAsync();
                     });
             }
 
-            const scheduleQuery = throttle(scheduleQueryFn, 1000);
+            let queryPromise = null;
+            let updateRequested = false;
+            const scheduleQuery = debounce((event, data) => {
+                if (queryPromise == null) {
+                    updateRequested = false;
+                    queryPromise = scheduleQueryFn(event, data)
+                        .then(() => {
+                            queryPromise = null;
+                            if (updateRequested) {
+                                scheduleQuery(event, data);
+                            }
+                        });
+                } else if (!updateRequested) {
+                    updateRequested = true;
+                }
+            }, 1000);
 
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
