@@ -1794,6 +1794,13 @@ declare module 'superdesk-api' {
         }>;
 
         userOnlineMinutes: number;
+
+        iMatricsFields: {
+            [key: string]: {
+                name: string;
+                order: number;
+            };
+        };
     }
 
 
