@@ -158,7 +158,7 @@ export function MonitoringGroup(
                 } else {
                     queryPromise.then(() => scheduleQuery(event, data));
                 }
-            }, 500, {maxWait: 1000});
+            }, 500, {maxWait: 2000});
 
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
