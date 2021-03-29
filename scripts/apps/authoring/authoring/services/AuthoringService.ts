@@ -405,8 +405,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         }
 
         return api.update(endpoint, orig, extDiff, params)
-            .then(
-                (result) => lock.unlock(result).catch(() => result), // ignore unlock err
+            .catch(
                 (reason) => {
                     const issues = reason?.data?._issues;
 
