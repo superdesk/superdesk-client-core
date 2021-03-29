@@ -271,7 +271,7 @@ describe('monitoring', () => {
 
     describe('monitoring group directive', () => {
         it('can update items on item:move event',
-            (done) => inject(($rootScope, $compile, $q, api, $timeout, session) => {
+            inject(($rootScope, $compile, $q, api, $timeout, session) => {
                 session.identity = {_id: 'foo'};
                 var scope = $rootScope.$new();
 
@@ -282,20 +282,17 @@ describe('monitoring', () => {
 
                 scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'bar'});
                 scope.$digest();
-
+                $timeout.flush(500);
                 expect(api.query).not.toHaveBeenCalled();
 
                 scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'foo'});
                 scope.$digest();
-
-                setTimeout(() => {
-                    expect(api.query).toHaveBeenCalled();
-                    done();
-                }, 2000);
+                $timeout.flush(2000);
+                expect(api.query).toHaveBeenCalled();
             }));
 
         it('updates custom search on item preview',
-            (done) => inject(($rootScope, $compile, search, api, session, $q, $timeout, $templateCache) => {
+            inject(($rootScope, $compile, search, api, session, $q, $timeout, $templateCache) => {
                 $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
                     '<div id="group" sd-monitoring-group ' +
                     'data-group="{type: \'search\', search: {filter: {query: \'\'}}}"></div>');
@@ -306,20 +303,16 @@ describe('monitoring', () => {
 
                 session.identity = {_id: 'foo'};
                 scope.$digest();
+                $timeout.flush(2000);
 
                 spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
                 spyOn(search, 'mergeItems');
 
                 session.identity = {_id: 'foo'};
                 scope.$broadcast('ingest:update', {});
-
-                setTimeout(() => {
-                    scope.$digest();
-
-                    expect(search.mergeItems).toHaveBeenCalled();
-
-                    done();
-                }, 2000);
+                scope.$digest();
+                $timeout.flush(2000);
+                expect(search.mergeItems).toHaveBeenCalled();
             }),
         );
 

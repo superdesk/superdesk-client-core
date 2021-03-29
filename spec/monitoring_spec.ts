@@ -391,11 +391,11 @@ describe('monitoring', () => {
             .perform();
         authoring.save();
         authoring.close();
-        browser.wait(ECE.hasElementCount(els(['article-item']), 3));
+        expect(monitoring.getAllItems().count()).toBe(3);
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
-        browser.wait(ECE.hasElementCount(els(['article-item']), 1));
+        expect(monitoring.getAllItems().count()).toBe(1);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
