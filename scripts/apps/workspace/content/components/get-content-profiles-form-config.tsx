@@ -180,6 +180,7 @@ export function getContentProfileFormConfig(
                 {id: 'half', label: gettext('Half')},
                 {id: 'quarter', label: gettext('Quarter')},
             ],
+            className: 'sd-input__select',
         },
         field: 'sdWidth',
         required: true,
@@ -200,9 +201,9 @@ export function getContentProfileFormConfig(
     };
 
     const fields: Array<IFormField | IFormGroup> = [
-        sdWidthField,
         requiredField,
         readonlyField,
+        sdWidthField,
     ];
 
     if (

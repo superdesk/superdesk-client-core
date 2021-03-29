@@ -17,6 +17,7 @@ const allContentProfileTypes: Array<IContentProfileType> =
     Object.keys(IContentProfileType).map((key) => IContentProfileType[key]);
 
 interface IScope extends ng.IScope {
+    showInfoBubble: boolean;
     creating: boolean;
     editing: {[key: string]: any};
     new: {[key: string]: any};
@@ -49,7 +50,7 @@ function getContentProfileIcon(type: IContentProfileType): string {
     case IContentProfileType.package:
         return 'icon-composite';
     default:
-        return assertNever(type);
+        return 'icon-text';
     }
 }
 
@@ -73,6 +74,9 @@ function getLabelForContentProfileType(type: IContentProfileType): string {
 ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q'];
 export function ContentProfilesController($scope: IScope, $location, notify, content, modal, $q) {
     var self = this;
+
+    // info bubble
+    $scope.showInfoBubble = true;
 
     // creating will be true while the modal for creating a new content
     // profile is visible.

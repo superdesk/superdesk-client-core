@@ -16,7 +16,7 @@ import {IContentProfileType} from '../controllers/ContentProfilesController';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, IconButton, Dropdown} from 'superdesk-ui-framework/react';
 import {groupBy} from 'lodash';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import ng from 'core/services/ng';
@@ -97,9 +97,9 @@ function getTabs(): Array<{label: string, value: IState['activeTab']}> {
 
 function getLabelForSection(section: IContentProfileSection) {
     if (section === IContentProfileSection.header) {
-        return gettext('Header');
+        return gettext('Header fields');
     } else if (section === IContentProfileSection.content) {
-        return gettext('Content');
+        return gettext('Content fields');
     } else {
         return assertNever(section);
     }
@@ -115,45 +115,29 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
         const isLast = index === page.getItemsCount() - 1;
 
         const newFieldSelect = (newItemIndex) => (
-            <select
-                onChange={(event) => {
-                    if (event.target.value === '') {
-                        return; // placeholder selected
-                    }
-
-                    const fieldId = event.target.value;
-
-                    setIndexForNewItem(newItemIndex);
-                    page.openNewItemForm({_id: fieldId});
-                }}
-                style={{width: 100}}
+            <Dropdown
+                items={availableIds.map(({id, label}) => ({
+                    label: label,
+                    onSelect: () => {
+                        setIndexForNewItem(newItemIndex);
+                        page.openNewItemForm({_id: id});
+                    },
+                }))}
             >
-                <option value="">{gettext('Add field')}</option>
-                {
-                    availableIds.map(({id, label}) => (
-                        <option key={id} value={id}>{label}</option>
-                    ))
-                }
-            </select>
+                <Button
+                    type="primary"
+                    icon="plus-large"
+                    text="plus-large"
+                    shape="round"
+                    iconOnly={true}
+                    onClick={() => false}
+                />
+            </Dropdown>
         );
 
         return (
             <div
-                style={{
-                    position: 'relative',
-
-                    // a clone of the element gets appended to the body when sorting is in progress
-                    // in order to be visible, it has to have a higher zIndex than the modal
-                    zIndex: 1051,
-
-                    border: `1px solid ${inEditMode ? 'red' : 'blue'}`,
-                    marginTop: 10,
-                    marginBottom: 10,
-                    paddingTop: 5,
-                    paddingBottom: 5,
-                    cursor: 'pointer',
-                    userSelect: 'none',
-                }}
+                className={'sd-list-item sd-shadow--z1' + (inEditMode ? ' sd-list-item--activated' : '')}
                 onClick={(e: any) => {
                     if (
                         querySelectorParent(e.target, 'select', {self: true}) == null
@@ -181,12 +165,23 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                         : null
                 }
 
-                {getLabel(item.id)}
-                <button onClick={() => page.deleteItem(item)}>{gettext('Delete')}</button>
+                <div className="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
+                    <span className="sd-overflow-ellipsis sd-list-item__text-strong">
+                        {getLabel(item.id)}
+                    </span>
+                </div>
 
                 {
-                    item.required === true ? (<strong>{gettext('required')}</strong>) : null
+                    item.required === true ? (
+                        <div className="sd-list-item__column sd-list-item__column--no-border">
+                            <span className="label label--alert label--hollow">{gettext('required')}</span>
+                        </div>
+                    ) : null
                 }
+
+                <div className="sd-list-item__action-menu">
+                    <IconButton icon="trash" ariaValue={gettext('Delete')} onClick={() => page.deleteItem(item)} />
+                </div>
 
                 {
                     !sortingInProgress && isLast
@@ -226,7 +221,7 @@ class ItemComponent extends React.PureComponent<IPropsItem> {
 class ItemsContainerBase extends React.PureComponent {
     render() {
         return (
-            <div style={{background: 'beige'}}>
+            <div className="sd-list-item-group sd-list-item-group--space-between-items sd-padding-x--2 sd-padding-y--3">
                 {this.props.children}
             </div>
         );
@@ -460,12 +455,14 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
         }
 
         const tabs = (
-            <div>
+            <div className="sd-nav-tabs">
                 {
                     getTabs().map((tab) => (
-                        <Button
+                        <button
+                            className={'sd-nav-tabs__tab ' +
+                                (this.state.activeTab === tab.value ? 'sd-nav-tabs__tab--active' : '')}
+                            role="tab"
                             key={tab.value}
-                            text={tab.label}
                             onClick={() => {
                                 if (tab.value === 'widgets') {
                                     this.setState({
@@ -478,8 +475,8 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                                     });
                                 }
                             }}
-                            type={this.state.activeTab === tab.value ? 'primary' : 'default'}
-                        />
+                            aria-selected={this.state.activeTab === tab.value}
+                        >{tab.label}</button>
                     ))
                 }
             </div>
@@ -487,18 +484,20 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
 
         if (this.state.activeTab === 'widgets') {
             return (
-                <div>
+                <React.Fragment>
                     {tabs}
 
-                    <WidgetsConfig
-                        initialWidgetsConfig={this.props.profile.widgets_config}
-                        onUpdate={(widgets_config) => {
-                            this.props.patchContentProfile({
-                                widgets_config,
-                            });
-                        }}
-                    />
-                </div>
+                    <div className="sd-padding-x--2 sd-padding-b--2">
+                        <WidgetsConfig
+                            initialWidgetsConfig={this.props.profile.widgets_config}
+                            onUpdate={(widgets_config) => {
+                                this.props.patchContentProfile({
+                                    widgets_config,
+                                });
+                            }}
+                        />
+                    </div>
+                </React.Fragment>
             );
         } else {
             const {sortingInProgress} = this.state;
