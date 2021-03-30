@@ -233,8 +233,13 @@ export function getContentProfileFormConfig(
             },
         };
 
-        fields.push(minimumLengthField);
-        fields.push(maximumLengthField);
+        const minMax: IFormGroup = {
+            direction: 'horizontal',
+            type: 'inline',
+            form: [minimumLengthField, maximumLengthField],
+        };
+
+        fields.push(minMax);
     }
 
     if (field?.id === 'dateline') {
