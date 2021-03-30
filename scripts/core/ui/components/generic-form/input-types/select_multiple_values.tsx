@@ -33,6 +33,7 @@ export class SelectMultipleValues extends React.Component<IProps> {
                     {
                         'sd-line-input--invalid': this.props.issues.length > 0,
                         'sd-line-input--required': this.props.formField.required === true,
+                        'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
                     },
                 )}
             >

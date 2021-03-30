@@ -180,7 +180,7 @@ export function getContentProfileFormConfig(
                 {id: 'half', label: gettext('Half')},
                 {id: 'quarter', label: gettext('Quarter')},
             ],
-            className: 'sd-input__select',
+            style: {boxed: true},
         },
         field: 'sdWidth',
         required: true,
@@ -218,6 +218,9 @@ export function getContentProfileFormConfig(
             type: FormFieldType.number,
             field: 'minlength',
             required: false,
+            component_parameters: {
+                style: {boxed: true},
+            },
         };
 
         const maximumLengthField: IFormField = {
@@ -225,6 +228,9 @@ export function getContentProfileFormConfig(
             type: FormFieldType.number,
             field: 'maxlength',
             required: false,
+            component_parameters: {
+                style: {boxed: true},
+            },
         };
 
         fields.push(minimumLengthField);

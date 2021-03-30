@@ -27,11 +27,13 @@ export class SelectSingleValue extends React.Component<IProps> {
                     {
                         'sd-line-input--invalid': this.props.issues.length > 0,
                         'sd-line-input--required': this.props.formField.required === true,
+                        'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
                     },
                 )}
             >
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
                 <select
+                    className="sd-line-input__select"
                     disabled={this.props.disabled || items == null || items.length < 1}
                     value={this.props.value ?? ''}
                     onChange={(event) => {

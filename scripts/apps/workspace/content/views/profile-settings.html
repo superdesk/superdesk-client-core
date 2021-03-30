@@ -6,7 +6,7 @@
         <div class="sd-page__header">
             <sd-search-handler ng-model="query.label" data-debounce="200"></sd-search-handler>
             
-            <div class="button-group">
+            <div class="sd-check-button__group sd-check-button__group--left">
                 <div class="sd-check__wrapper" ng-repeat="type in contentProfileTypes track by type.value">
                     <button class="sd-checkbox sd-checkbox--button-style sd-checkbox--radio"
                         ng-click="toggleContentProfileFilter(type.value)"
@@ -92,15 +92,17 @@
                 <div class="form__row sd-padding--0">
                     <div class="sd-line-input sd-line-input--boxed">
                         <label class="sd-line-input__label" translate>Content Type</label>
-                        <sd-check
-                            ng-model="new.type"
-                            type="radio"
-                            ng-repeat="type in contentProfileTypes track by type.value"
-                            ng-value="{{type.value}}"
-                            ng-disabled="type.disabled"
-                            label-position="inside">
-                            <i class="{{getContentProfileIconByProfileType(type.value)}}"></i>
-                        </sd-check>
+                        <div class="sd-check-button__group sd-check-button__group--left">
+                            <sd-check
+                                ng-model="new.type"
+                                type="radio"
+                                ng-repeat="type in contentProfileTypes track by type.value"
+                                ng-value="{{type.value}}"
+                                ng-disabled="type.disabled"
+                                label-position="inside">
+                                <i class="{{getContentProfileIconByProfileType(type.value)}}"></i>
+                            </sd-check>
+                        </div>
                     </div>
                 </div>
                 <div class="form__row sd-padding--0">

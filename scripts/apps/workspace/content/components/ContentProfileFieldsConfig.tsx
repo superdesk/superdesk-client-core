@@ -125,7 +125,6 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                 }))}
             >
                 <Button
-                    type="primary"
                     icon="plus-large"
                     text="plus-large"
                     shape="round"
