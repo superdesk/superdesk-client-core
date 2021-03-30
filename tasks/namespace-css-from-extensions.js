@@ -43,20 +43,18 @@ function namespace() {
 
     let finalCss = '';
 
-    directories.forEach((dir) => {
-        var cssFilePath = dir.absolutePath + `/${dir.extensionName}/src/index.css`;
-
-        if (fs.existsSync(cssFilePath)) {
-            const cssString = fs.readFileSync(cssFilePath).toString();
+    directories.forEach(({extensionName, extensionCssFilePath}) => {
+        if (fs.existsSync(extensionCssFilePath)) {
+            const cssString = fs.readFileSync(extensionCssFilePath).toString();
 
             finalCss +=
-`/* EXTENSION STYLES START FOR '${dir.extensionName}' */
+`/* EXTENSION STYLES START FOR '${extensionName}' */
 
 
-${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, dir.extensionName))}
+${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, extensionName))}
 
 
-/* EXTENSION STYLES END FOR '${dir.extensionName}' */
+/* EXTENSION STYLES END FOR '${extensionName}' */
 
 
 
@@ -71,11 +69,9 @@ if (process.argv[2] === '--watch') {
     const processDebouced = debounce(namespace, 100);
     const directories = getExtensionDirectoriesSync();
 
-    directories.forEach((dir) => {
-        var cssFilePath = dir.absolutePath + `/${dir.extensionName}/src/index.css`;
-
-        if (fs.existsSync(cssFilePath)) {
-            fs.watch(cssFilePath, () => {
+    directories.forEach(({extensionCssFilePath}) => {
+        if (fs.existsSync(extensionCssFilePath)) {
+            fs.watch(extensionCssFilePath, () => {
                 processDebouced();
             });
         }

@@ -1634,6 +1634,9 @@ declare module 'superdesk-api' {
         },
 
         // FROM CLIENT
+
+        importApps: Array<string>; // paths are relative to client/dist
+
         server: {
             url: string;
             ws: any;
