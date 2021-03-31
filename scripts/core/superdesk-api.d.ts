@@ -1078,6 +1078,7 @@ declare module 'superdesk-api' {
 
     // EDITOR3
 
+
     export interface IEditor3AnnotationInputTab {
         label: string;
         selectedByDefault(annotationText: string, mode: 'create' | 'edit'): Promise<boolean>;
@@ -1813,6 +1814,13 @@ declare module 'superdesk-api' {
         }>;
 
         userOnlineMinutes: number;
+
+        iMatricsFields: {
+            [key: string]: {
+                name: string;
+                order: number;
+            };
+        };
     }
 
 
