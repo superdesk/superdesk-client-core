@@ -21,6 +21,20 @@ function getPaths(distRelative) {
     };
 }
 
+function getIndexFilePath(indexFilePathRelative) {
+    const base = path.join(process.cwd(), 'dist', indexFilePathRelative);
+
+    for (const extension of ['.js', '.jsx', '.ts', '.tsx']) {
+        const filePath = base + extension;
+
+        if (fs.existsSync(filePath)) {
+            return filePath;
+        }
+    }
+
+    throw new Error('Index file not found');
+}
+
 function getExtensionDirectoriesSync() {
     const config = getConfig();
     const paths = config.importApps || config.apps || [];
@@ -32,9 +46,7 @@ function getExtensionDirectoriesSync() {
         return [];
     }
 
-    const indexFilePathAbsolute = require.resolve(path.join(process.cwd(), 'dist', indexFilePathRelative));
-
-    var indexFile = fs.readFileSync(indexFilePathAbsolute, 'utf-8');
+    var indexFile = fs.readFileSync(getIndexFilePath(indexFilePathRelative), 'utf-8');
 
     /**
      * Regex for extracting extension id and import path(there is a capturing group for each)
