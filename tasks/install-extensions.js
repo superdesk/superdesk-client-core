@@ -7,7 +7,7 @@ const directories = getExtensionDirectoriesSync();
 directories.forEach(({extensionRootPath}) => {
     execSync(
         `cd ${extensionRootPath} && npm install --no-audit && npm run compile --if-present`,
-        {stdio: 'inherit'},
+        {stdio: 'inherit'}
     );
 });
 

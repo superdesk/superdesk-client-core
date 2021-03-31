@@ -17,14 +17,14 @@ try {
 if (protractorInstalled) {
     execSync(
         'npm run e2e-compile',
-        {stdio: 'inherit'},
+        {stdio: 'inherit'}
     );
 
     directories.forEach(({extensionRootPath}) => {
         try {
             execSync(
                 `cd ${extensionRootPath} && npm run compile-e2e`,
-                {stdio: 'inherit'},
+                {stdio: 'inherit'}
             );
         } catch (e) {
             console.error('Failed to compile extensions e2e tests');
