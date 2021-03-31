@@ -83,7 +83,7 @@ describe('publishing', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        els(['templates-list']).get(0).element(by.buttonText('testing')).click();
+        el(['select-template'], by.buttonText('testing')).click();
 
         const slugline = 'testing-send-and-publish';
 
