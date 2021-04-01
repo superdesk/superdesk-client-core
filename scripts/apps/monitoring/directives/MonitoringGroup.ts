@@ -158,7 +158,7 @@ export function MonitoringGroup(
                     // It's using debounce inside so if there are more those will be ingored.
                     queryPromise.then(() => scheduleQuery(event, data));
                 }
-            }, 500, {maxWait: 2000});
+            }, 1000, {maxWait: 3000});
 
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
@@ -216,7 +216,6 @@ export function MonitoringGroup(
             scope.$on('item:correction', scheduleQuery);
             scope.$on('item:duplicate', scheduleQuery);
             scope.$on('item:translate', scheduleQuery);
-            scope.$on('item:move', scheduleQuery);
             scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
                 queryItems();

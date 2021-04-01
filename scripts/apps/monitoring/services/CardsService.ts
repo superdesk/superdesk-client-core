@@ -276,8 +276,13 @@ export function CardsService(search, session, desks, $location) {
             var deskId = card._id.substring(0, card._id.indexOf(':'));
 
             if (deskId) {
-                return data.desks && !!data.desks[deskId];
+                return (
+                    data.desks && !!data.desks[deskId]
+                ) || (
+                    data.from_desk && data.from_desk === deskId
+                );
             }
+
             return false;
         default:
             // no way to determine if item should be visible, refresh
