@@ -124,6 +124,7 @@ class Authoring {
     getSignoffText: () => any;
     writeSignoffText: (text: any) => void;
     getEditorWordCount: () => any;
+    expectEditorWordCount: (wordCount: string) => void;
     getBodyText: () => any;
     getBodyInnerHtml: () => any;
     focusBodyHtmlElement: () => void;
@@ -793,6 +794,10 @@ class Authoring {
         };
 
         this.getEditorWordCount = () => element.all(by.className('char-count words')).last().getText();
+
+        this.expectEditorWordCount = (expected: string) => {
+            browser.wait(() => this.getEditorWordCount().then((wordCount) => wordCount === expected), 500);
+        };
 
         this.getBodyText = function() {
             return getBodyHtml().then((bodyHtml) => {

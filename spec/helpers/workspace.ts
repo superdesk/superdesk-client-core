@@ -1,5 +1,5 @@
 import {content} from './content';
-import {monitoring} from './monitoring';
+import {monitoring, MONITORING_DEBOUNCE_MAX_WAIT} from './monitoring';
 import {nav, waitFor} from './utils';
 import {element, by, browser} from 'protractor';
 import {el, ECE} from '@superdesk/end-to-end-testing-helpers';
@@ -167,7 +167,11 @@ class Workspace {
          * @return {promise} element
          */
         this.getItem = function(index) {
-            return this.getItems().get(index);
+            const item = this.getItems().get(index);
+
+            browser.wait(ECE.presenceOf(item), MONITORING_DEBOUNCE_MAX_WAIT);
+
+            return item;
         };
 
         /** Get the title of the 'index' element
