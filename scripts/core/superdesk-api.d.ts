@@ -143,6 +143,7 @@ declare module 'superdesk-api' {
     export type IExtensionObject = {
         extension: IExtension;
         activationResult: IExtensionActivationResult;
+        configuration: {[key: string]: {}};
     };
 
     export type IExtensions = {[key: string]: IExtensionObject};
@@ -1367,6 +1368,7 @@ declare module 'superdesk-api' {
         instance: {
             config: ISuperdeskGlobalConfig
         };
+        getExtensionConfig(): {[key: string]: any};
         ui: {
             article: {
                 view(id: IArticle['_id']): void;

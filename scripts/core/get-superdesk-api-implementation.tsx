@@ -184,6 +184,7 @@ export function getSuperdeskApiImplementation(
             notNullOrUndefined,
         },
         httpRequestJsonLocal,
+        getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
                 isPersonal: sdApi.article.isPersonal,
