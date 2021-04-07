@@ -23,6 +23,10 @@ class ProfileComponent extends React.Component<IPropsItemListInfo> {
 
         const contentProfile: IContentProfile = relatedEntities['content_types'].get(item.profile);
 
+        if (contentProfile == null || contentProfile.label == null) {
+            return null;
+        }
+
         return (
             <div className="profile-label">
                 {contentProfile.label}
