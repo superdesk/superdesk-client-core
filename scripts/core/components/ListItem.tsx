@@ -61,7 +61,10 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn> {
 
         if (ellipsisAndGrow) {
             return (
-                <div className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')} style={styles}>
+                <div
+                    className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}
+                    style={styles}
+                >
                     <ListItemRow justifyContent={justifyContent}>
                         <span className="sd-overflow-ellipsis">{children}</span>
                     </ListItemRow>
