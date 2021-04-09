@@ -10,6 +10,7 @@ import {SuggestionPopup} from './suggestions/SuggestionPopup';
 import {AnnotationPopup} from './annotations';
 import {getSuggestionsTypes} from '../highlightsConfig';
 import * as Highlights from '../helpers/highlights';
+import {EditorStore} from '../directive';
 
 /**
  * @ngdoc react
@@ -23,7 +24,9 @@ import * as Highlights from '../helpers/highlights';
 export class HighlightsPopup extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
-    static contextTypes: any;
+    static contextType = EditorStore;
+
+    context: React.ContextType<typeof EditorStore>;
 
     rendered: any;
 
@@ -41,7 +44,6 @@ export class HighlightsPopup extends React.Component<any, any> {
      * @returns {JSX}
      */
     component() {
-        const {store} = this.context;
         let highlightsAndSuggestions = [];
         let data;
 
@@ -70,7 +72,7 @@ export class HighlightsPopup extends React.Component<any, any> {
         // We need to create a new provider here because this component gets rendered
         // outside the editor tree and loses context.
         return (
-            <Provider store={store}>
+            <Provider store={this.context}>
                 <div>
                     {
                         highlightsAndSuggestions
@@ -249,10 +251,6 @@ export class HighlightsPopup extends React.Component<any, any> {
         return null;
     }
 }
-
-HighlightsPopup.contextTypes = {
-    store: PropTypes.object,
-};
 
 HighlightsPopup.propTypes = {
     editorState: PropTypes.instanceOf(EditorState),
