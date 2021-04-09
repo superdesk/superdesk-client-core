@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
 import {EditorState} from 'draft-js';
+import {Store} from 'redux';
 
 import {Editor3} from './components';
 import createEditorStore from './store';
@@ -28,6 +29,8 @@ import {
  * @description integrates react Editor3 component with superdesk app.
  */
 export const sdEditor3 = () => new Editor3Directive();
+
+export const EditorStore = React.createContext<Store>(null);
 
 class Editor3Directive {
     scope: any;
@@ -338,11 +341,13 @@ class Editor3Directive {
                 const render = () => {
                     ReactDOM.render(
                         <Provider store={store}>
-                            <Editor3
-                                scrollContainer={this.scrollContainer}
-                                singleLine={this.singleLine}
-                                cleanPastedHtml={this.cleanPastedHtml}
-                            />
+                            <EditorStore.Provider value={store}>
+                                <Editor3
+                                    scrollContainer={this.scrollContainer}
+                                    singleLine={this.singleLine}
+                                    cleanPastedHtml={this.cleanPastedHtml}
+                                />
+                            </EditorStore.Provider>
                         </Provider>,
                         $element.get(0),
                     );
