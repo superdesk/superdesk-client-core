@@ -21,7 +21,7 @@ class ScheduledDateTime extends React.PureComponent<IProps> {
         const scheduledState = ['scheduled'];
 
         if (appConfig?.features?.showPublishSchedule) {
-            scheduledState.push('in_progress', 'submitted');
+            scheduledState.push('in_progress', 'submitted', 'draft');
         }
 
         if (this.props.item.state != null && scheduledState.includes(this.props.item.state) && scheduled != null) {
