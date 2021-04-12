@@ -63,6 +63,8 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
     private reloadAllItems() {
         const MAX_PAGE_SIZE = 200; // back-end limit
 
+        // The size doesn't contain the new items.
+        // so we need to reload the items and for that we need a default value as 1.
         const loadedItemsCount = this.state.items.size > 0 ? this.state.items.size : 1;
 
         const pages = new Array(Math.ceil(loadedItemsCount / MAX_PAGE_SIZE)).fill(null).map((_, i) => {
