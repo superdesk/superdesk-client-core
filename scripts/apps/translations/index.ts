@@ -11,6 +11,7 @@
 import * as directive from './directives';
 import * as svc from './services';
 import {gettext} from 'core/utils';
+import {SESSION_EVENTS} from 'core/auth/auth';
 
 /**
  * @ngdoc module
@@ -26,6 +27,12 @@ angular.module('superdesk.apps.translations', [
     .service('TranslationService', svc.TranslationService)
 
     .directive('sdTranslationDropdown', directive.TranslationDropdown)
+
+    .run(['TranslationService', '$rootScope', (service, $rootScope) => {
+        // trigger loading of languages to make them available
+        // for the check in translate activity
+        $rootScope.$on(SESSION_EVENTS.IDENTITY_LOADED, service.init);
+    }])
 
     .config(['superdeskProvider', function(superdesk) {
         superdesk
