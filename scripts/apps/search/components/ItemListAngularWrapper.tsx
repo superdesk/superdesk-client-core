@@ -250,6 +250,12 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     render() {
         const {scope, monitoringState} = this.props;
 
+        const style = scope.style == null
+            ? null
+
+            // styleProperties will be modified on the angular side so it can not be directly used as a react prop.
+            : Object.assign({}, scope.style);
+
         return (
             <SmoothLoader loading={this.state.loading}>
                 <div style={scope.styleProperties ?? {}}>

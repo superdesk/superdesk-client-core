@@ -138,7 +138,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                         }
 
                         const {scrollHeight, offsetHeight, scrollTop} = (event.target as any);
-                        const reachedBottom = scrollHeight === offsetHeight + scrollTop;
+                        const reachedBottom = scrollHeight === Math.round(offsetHeight + scrollTop);
 
                         if (reachedBottom) {
                             this.loadMore();

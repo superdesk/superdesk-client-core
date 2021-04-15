@@ -1,5 +1,30 @@
 # Superdesk Client Changelog
 
+## [2.1.2] 2021-02-24
+
+### Fixed
+
+- Fix user activity widget.
+
+## [2.1.1] 2021-02-15
+
+### Fixed
+
+- Fix user online status detection.
+- Avoid filtering of related items using genre.
+- Fix media contacts cannot be saved when country is set.
+- Don't assign `url_id` if it already exists in ingest settings.
+
+## [2.1.0] 2021-02-10
+
+[Changes](https://github.com/superdesk/superdesk-client-core/milestone/82?closed=1)
+
+## [2.0.2] 2020-12-11
+
+### Changed
+
+- Update `fr_CA` translation.
+
 ## [2.0.1] 2020-10-07
 
 ### Fixed

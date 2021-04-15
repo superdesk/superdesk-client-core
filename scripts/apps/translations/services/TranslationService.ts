@@ -106,7 +106,7 @@ export function TranslationService(
     };
 
     // Fetch languages from database on service initialization
-    service.fetch().then((languages) => {
+    service.init = () => service.fetch().then((languages) => {
         service.languages = languages;
     });
 
