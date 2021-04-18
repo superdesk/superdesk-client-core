@@ -141,7 +141,7 @@ export function AuthoringDirective(
 
             function checkShortcutButtonAvailability(personal = false) {
                 if (personal && appConfig?.features?.publishFromPersonal) {
-                    return $scope.item.state !== 'draft' || $scope.dirty;
+                    return $scope.item.state !== 'draft' && $scope.dirty;
                 }
                 return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
             }
