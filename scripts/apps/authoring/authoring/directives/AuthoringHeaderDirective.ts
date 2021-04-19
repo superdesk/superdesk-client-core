@@ -174,7 +174,9 @@ export function AuthoringHeaderDirective(
                             if (items && items._items.length && !getNoMissingLink()) {
                                 // if takes package is missing or not rewrite of.
                                 scope.missing_link = !scope.item.rewrite_of &&
-                                    !scope.item.rewritten_by;
+                                    !scope.item.rewritten_by
+                                    && scope.action !== 'correct' && !scope.isCorrection
+                                    && !scope.item.correction_sequence;
                             }
                         });
                 }
