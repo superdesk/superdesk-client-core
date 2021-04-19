@@ -1,5 +1,20 @@
 # Superdesk Client Changelog
 
+## [2.1.3] 2021-04-19
+
+### Fixed
+
+- Fix translate action missing in the list.
+- Fix spike view issues.
+- Fix monitoring group doing too many requests.
+- Only open preview on focus when it is triggered via keyboard.
+- Avoid refreshing lists for external search providers.
+- Improve monitoring lists loading behaviour.
+- Fix item count in user activity widget.
+- Keep old visual state while loading data in monitoring.
+- Fix multi selection for bulk actions.
+- Fix master desk assignment page issue with states.
+
 ## [2.1.2] 2021-02-24
 
 ### Fixed
