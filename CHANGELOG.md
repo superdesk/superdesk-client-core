@@ -4,6 +4,7 @@
 
 ### Fixed
 
+- Fix publish shortcut visible in personal space.
 - Fix translate action missing in the list.
 - Fix spike view issues.
 - Fix monitoring group doing too many requests.
