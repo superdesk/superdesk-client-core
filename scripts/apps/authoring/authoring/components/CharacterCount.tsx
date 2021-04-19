@@ -12,7 +12,7 @@ interface IProps {
 export function getEditorFieldCharactersCount(text: string, html?: boolean) {
     let input = text || '';
 
-    input = html ? cleanHtml(input) : input;
+    input = html ? cleanHtml(input, false) : input;
     input = input.replace(/\r?\n|\r/g, '');
 
     return input.length;

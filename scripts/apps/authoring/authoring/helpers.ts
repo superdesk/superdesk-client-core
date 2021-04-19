@@ -158,15 +158,15 @@ export function forcedExtend(dest, src) {
 /**
 * Clean the given html by removing tags and embeds, in order to count words and characters later
 */
-export function cleanHtml(data) {
-    return data
-    // remove embeds by using the comments around them. Embeds don't matter for word counters
+export function cleanHtml(data, do_trim=true) {
+    let cleaned =  data
+        // remove embeds by using the comments around them. Embeds don't matter for word counters
         .replace(/<!-- EMBED START [\s\S]+?<!-- EMBED END .* -->/g, '')
         .replace(/<br[^>]*>/gi, '&nbsp;')
         .replace(/<\/?[^>]+><\/?[^>]+>/gi, ' ')
         .replace(/<\/?[^>]+>/gi, '')
-        .trim()
         .replace(/&nbsp;/g, ' ');
+    return do_trim ? cleaned.trim() : cleaned;
 }
 
 /**
