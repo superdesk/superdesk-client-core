@@ -83,7 +83,7 @@ class ToolbarComponent extends React.Component<any, IState> {
         if (nextProps.popup.type === 'NONE' && this.props.popup.type !== 'NONE') {
             // restoring editor focus after closing the popup
 
-            const scrollableElement = document.querySelector('.page-content-container');
+            const scrollableElement = document.querySelector('.page-content-container--scrollable');
 
             setTimeout(() => { // wait for render
                 const {editorWrapperElement} = this.props;
