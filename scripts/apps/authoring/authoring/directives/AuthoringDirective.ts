@@ -140,8 +140,8 @@ export function AuthoringDirective(
             }, true);
 
             function checkShortcutButtonAvailability(personal = false) {
-                if (personal && appConfig?.features?.publishFromPersonal) {
-                    return $scope.item.state !== 'draft' || $scope.dirty;
+                if (personal) {
+                    return appConfig?.features?.publishFromPersonal && $scope.item.state !== 'draft';
                 }
                 return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
             }
