@@ -421,6 +421,7 @@ declare module 'superdesk-api' {
         _status: any;
         _fetchable?: boolean;
         last_published_version?: any;
+        publish_schedule?: string;
 
         /**
          * Wrapper for different renditions of non-textual content of the news object
@@ -1681,6 +1682,7 @@ declare module 'superdesk-api' {
                 closeAndContinue?: boolean;
                 publishAndContinue?: boolean;
             },
+            showPublishSchedule?: boolean
         };
         auth: {
             google: boolean
