@@ -209,7 +209,7 @@ export function getSuperdeskApiImplementation(
                             if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
                                 dispatchInternalEvent(
                                     'dangerouslyOverwriteAuthoringData',
-                                    {...patch, _etag: res._etag},
+                                    {...patch, _etag: res._etag, _id: res._id},
                                 );
                             }
                         });
