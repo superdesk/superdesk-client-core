@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.33.7] 2021-04-20
+
+### Fixed
+
+- Fix invisible values in authoring header dropdown.
+
 ## [1.33.6] 2021-02-24
 
 ### Fixed
