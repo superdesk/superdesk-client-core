@@ -9,6 +9,7 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {publishQueue} from './helpers/publish_queue';
 import {assertToastMsg} from './helpers/utils';
+import {ECE, el} from '@superdesk/end-to-end-testing-helpers';
 
 describe('content filters', () => {
     it('can manage filter conditions', () => {
@@ -40,6 +41,7 @@ describe('content filters', () => {
         filterConditions.save();
         assertToastMsg('error', 'Error: Filter condition:Test Filter Condition has identical settings');
         filterConditions.cancel();
+        browser.wait(ECE.stalenessOf(el(['notifications'])));
 
         // referenced filter condition cannot be deleted
         contentFilters.openContentFilterSettings(false);
