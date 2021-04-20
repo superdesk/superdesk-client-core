@@ -258,7 +258,6 @@ export function AuthoringHeaderDirective(
                 });
             });
 
-
             scope.setCustomValue = (field, value) => {
                 const extra = Object.assign({}, scope.item.extra);
 
@@ -266,7 +265,7 @@ export function AuthoringHeaderDirective(
                 scope.item.extra = extra;
 
                 scope.autosave(scope.item, 200);
-                scope.$apply()
+                scope.$apply();
             };
 
             // If correction set focus to the ednote to encourage user to fill it in
