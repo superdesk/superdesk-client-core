@@ -26,9 +26,9 @@
         <li ng-repeat="term in list" ng-click="select(term)" ng-if="field !== 'place'" data-test-id="dropdown__item">
             <button ng-disabled="disabled">
                 <span ng-if="icon"
-                    class="{{icon}}-{{item.name}}"
-                    ng-style="{backgroundColor: item.color}">{{item.short || item.name}}</span>
-                {{::item.name}}
+                    class="{{icon}}-{{term.name}}"
+                    ng-style="{backgroundColor: term.color}">{{term.short || term.name}}</span>
+                {{::term.name}}
             </button>
         </li>
 
