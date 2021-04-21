@@ -3,18 +3,20 @@ import ng from 'core/services/ng';
 import {IDesk} from 'superdesk-api';
 
 import {CheckButtonGroup, RadioButton, Switch} from 'superdesk-ui-framework/react';
-import {IMasterDeskTab, getLabelForMasterDeskTab, USER_PREFERENCE_SETTINGS} from '../MasterDesk';
+import {IMasterDeskTab, IMasterDeskViews, getLabelForMasterDeskTab, USER_PREFERENCE_SETTINGS} from '../MasterDesk';
 import {gettext} from 'core/utils';
 
 interface IProps {
     desks: Array<IDesk>;
     activeTab: string;
+    currentView: IMasterDeskViews;
     isFilterAllowed?: boolean;
     isFilterOpened: boolean;
     isPlaningActive?: boolean;
     onTabChange(tab: IMasterDeskTab): void;
     onUpdateDeskList(desks: Array<string>, showAllDesks: boolean): void;
     onFilterOpen(filter: boolean): void;
+    onViewChange(view: IMasterDeskViews): void;
 }
 
 interface IState {
@@ -44,6 +46,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
         this.changeTab.bind(this);
         this.openFilter.bind(this);
+        this.changeView.bind(this);
     }
 
     componentDidMount() {
@@ -71,6 +74,10 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
     openFilter() {
         this.props.onFilterOpen(!this.props.isFilterOpened);
+    }
+
+    changeView(newView: IMasterDeskViews) {
+        this.props.onViewChange(newView);
     }
 
     toggleDesk(desk: IDesk) {
@@ -128,6 +135,16 @@ export class HeaderComponent extends React.Component<IProps, IState> {
         return (
             <div className="sd-main-content-grid__header">
                 <div className="subnav">
+                    {this.props.currentView === 'single-view' ? (
+                        <div className="flat-searchbar">
+                            <button
+                                className="navbtn navbtn--left"
+                                onClick={() => this.changeView(IMasterDeskViews.card)}
+                            >
+                                <i className="icon-arrow-left" />
+                            </button>
+                        </div>
+                    ) : null}
                     {this.props.isFilterAllowed ? (
                         <button
                             className={'sd-navbtn sd-navbtn--left sd-navbtn--darker' +

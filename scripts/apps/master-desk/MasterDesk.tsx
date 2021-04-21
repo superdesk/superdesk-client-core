@@ -22,6 +22,12 @@ export enum IMasterDeskTab {
     assignments = 'assignments',
 }
 
+export enum IMasterDeskViews {
+    card = 'overview',
+    detailed = 'users',
+    singleView = 'single-view',
+}
+
 export const USER_PREFERENCE_SETTINGS = 'masterdesk:desks';
 
 export function getLabelForMasterDeskTab(tab: IMasterDeskTab): string {
@@ -46,6 +52,7 @@ interface IState {
     planning: boolean;
     deskFilter: string;
     filters: any;
+    currentView: IMasterDeskViews;
 }
 
 export class MasterDesk extends React.Component<{}, IState> {
@@ -63,6 +70,7 @@ export class MasterDesk extends React.Component<{}, IState> {
             planning: false,
             deskFilter: '',
             filters: {},
+            currentView: IMasterDeskViews.card,
         };
 
         this.services = {
@@ -109,12 +117,14 @@ export class MasterDesk extends React.Component<{}, IState> {
                 <HeaderComponent
                     activeTab={this.state.currentTab}
                     desks={this.state.desks}
+                    currentView={this.state.currentView}
                     isPlaningActive={this.state.planning}
                     isFilterAllowed={this.isFilterAllowed()}
                     isFilterOpened={this.state.filterOpen}
                     onTabChange={(tab) => this.setState({currentTab: tab})}
                     onUpdateDeskList={(desks, showAll) => this.getDeskList(desks, showAll)}
                     onFilterOpen={(filter) => this.setState({filterOpen: filter})}
+                    onViewChange={(view) => this.setState({currentView: view})}
                 />
 
                 {this.isFilterAllowed() ? (
@@ -145,6 +155,8 @@ export class MasterDesk extends React.Component<{}, IState> {
                                         stages={this.state.stages}
                                         deskFilter={this.state.deskFilter}
                                         filters={this.state.filters}
+                                        currentView={this.state.currentView}
+                                        onViewChange={(view) => this.setState({currentView: view})}
                                         onFilterChange={(filters) => this.setState({filters: filters})}
                                     />
                                 );
