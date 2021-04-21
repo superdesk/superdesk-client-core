@@ -22,7 +22,11 @@ function getPaths(distRelative) {
     const extensionRootPath = path.join(getClientDir(), 'node_modules', distRelative.slice(from, to));
     const extensionSrcPath = path.join(extensionRootPath, 'src');
     const extensionDistPath = path.join(getClientDir(), 'node_modules', distRelative);
-    const extensionCssFilePath = path.join(extensionRootPath, 'src/index.css');
+
+    const cssInDist = path.join(extensionRootPath, 'dist/index.css');
+    const cssInSrc = path.join(extensionRootPath, 'src/index.css');
+
+    const extensionCssFilePath = fs.existsSync(cssInDist) ? cssInDist : cssInSrc;
 
     return {
         extensionRootPath,
