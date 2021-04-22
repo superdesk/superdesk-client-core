@@ -72,10 +72,10 @@ describe('authoring', () => {
         var body2 = generateLines(8, 15);
         var body3 = generateLines(15, 20);
 
-        authoring.writeText(body1 + body2 + body3);
+        authoring.writeText(body1 + body2 + body3.trim());
         authoring.writeText(
             protractor.Key.HOME +
-            protractor.Key.UP.repeat(5) +
+            protractor.Key.UP.repeat(4) +
             protractor.Key.ENTER +
             protractor.Key.UP,
         );
