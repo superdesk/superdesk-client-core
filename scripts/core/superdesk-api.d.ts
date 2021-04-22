@@ -158,7 +158,9 @@ declare module 'superdesk-api' {
     // ENTITIES
 
     export interface IAuthor {
-        _id: Array<string, string>; // user id, role
+        // !!! _id is optional. It will not be present in ingested items.
+        _id?: Array<string, string>; // user id, role
+
         name: string;
         scheme: any | null;
         user: IUser;
