@@ -11,7 +11,7 @@ interface IProps {
 
 export class GridItem extends React.PureComponent<IProps> {
     clickCount: number = 0;
-    singleClickTimer: any;
+    singleClickTimer: number;
 
     constructor(props: IProps) {
         super(props);
@@ -20,14 +20,24 @@ export class GridItem extends React.PureComponent<IProps> {
     }
 
     handleClicks() {
+        if (this.props.onDoubleClick == null) {
+            if (this.clickCount > 0) {
+                window.clearTimeout(this.singleClickTimer);
+                this.clickCount = 0;
+            }
+
+            this.props.onClick!();
+            return;
+        }
+
         this.clickCount++;
         if (this.clickCount === 1) {
-            this.singleClickTimer = setTimeout(() => {
+            this.singleClickTimer = window.setTimeout(() => {
                 this.clickCount = 0;
                 this.props.onClick!();
             }, 300);
         } else if (this.clickCount === 2) {
-            clearTimeout(this.singleClickTimer);
+            window.clearTimeout(this.singleClickTimer);
             this.clickCount = 0;
             this.props.onDoubleClick!();
         }
