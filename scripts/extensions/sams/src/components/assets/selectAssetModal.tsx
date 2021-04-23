@@ -15,7 +15,6 @@ import {
     getAssetSearchParams,
     getAssetSearchResults,
     getAssetSetFilter,
-    getSelectedAssetIds,
 } from '../../store/assets/selectors';
 import {
     loadNextAssetsPage,
@@ -28,7 +27,7 @@ import {toggleFilterPanelState} from '../../store/workspace/actions';
 
 // UI
 import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
-import {Modal, ModalBody, ModalHeader} from '../../ui/modal';
+import {Modal, ModalBody, ModalHeader} from '../../ui';
 import {PageLayout} from '../../containers/PageLayout';
 import {WorkspaceSubnav} from '../workspaceSubnav';
 import {AssetFilterPanel} from './assetFilterPanel';
@@ -46,7 +45,6 @@ interface IProps {
     filterPanelOpen: boolean;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
-    selectedAssetIds: Array<string>;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
@@ -68,7 +66,6 @@ const mapStateToProps = (state: IApplicationState) => ({
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
     currentSet: getAssetSetFilter(state),
-    selectedAssetIds: getSelectedAssetIds(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
