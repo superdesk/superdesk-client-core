@@ -44,6 +44,7 @@ export class Modal extends React.PureComponent<IProps> {
             {
                 [`modal--${this.props.size}`]: this.props.size,
                 'modal--dark-ui': this.props.darkUI,
+                'dark-ui': this.props.darkUI,
             },
         );
 
