@@ -75,7 +75,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
         return (
             <ListItem
                 onClick={this.onItemClick}
-                onDoubleClick={this.onItemDoubleClick}
+                onDoubleClick={this.props.onDoubleClick && this.onItemDoubleClick}
                 selected={this.props.selected || this.props.itemSelected}
                 shadow={1}
             >
