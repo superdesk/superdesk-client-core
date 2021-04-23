@@ -3,9 +3,10 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 
 import {dataApi} from 'core/helpers/CrudManager';
+import {addWebsocketEventListener} from 'core/notification/notification';
 
 import {UserListComponent, IUserExtra} from './UserListComponent';
-import {IDesk, IUserRole} from 'superdesk-api';
+import {IDesk, IResourceUpdateEvent, IUserRole, IWebsocketMessage} from 'superdesk-api';
 
 interface IProps {
     desks: Array<IDesk>;
@@ -15,10 +16,12 @@ interface IProps {
 interface IState {
     roles: Array<IUserRole>;
     users: Array<IUserExtra>;
+    deskMembers: {[id: string]: Array<IUserExtra>};
 }
 
 export class UsersComponent extends React.Component<IProps, IState> {
     services: any;
+    eventListeners: Array<any> = [];
 
     constructor(props: IProps) {
         super(props);
@@ -26,10 +29,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
         this.state = {
             roles: [],
             users: [],
-        };
-
-        this.services = {
-            desks: ng.get('desks'),
+            deskMembers: ng.get('desks').deskMembers,
         };
 
         this.selectUser.bind(this);
@@ -51,10 +51,45 @@ export class UsersComponent extends React.Component<IProps, IState> {
                 users: users._items,
             });
         });
+
+        this.eventListeners.push(
+            addWebsocketEventListener(
+                'resource:updated',
+                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                    const {resource, fields, _id} = event.extra;
+
+                    if (resource === 'users' && fields.last_activity_at) {
+                        if (Object.values(this.state.deskMembers).some(
+                            (users) => users.find((user) => user._id === _id),
+                        )) {
+                            this.reloadUser(_id);
+                        }
+                    }
+                },
+            ),
+        );
+    }
+
+    componentWillUnmount() {
+        this.eventListeners.forEach((remove) => remove());
+    }
+
+    reloadUser(id) {
+        dataApi.findOne('users', id).then((updatedUser) => {
+            const deskMembers = {};
+
+            Object.keys(this.state.deskMembers).forEach((deskId) => {
+                deskMembers[deskId] = this.state.deskMembers[deskId].map(
+                    (user) => user._id === id ? updatedUser : user,
+                );
+            });
+
+            this.setState({deskMembers});
+        });
     }
 
     getUsers(desk: IDesk, role: IUserRole): Array<any> {
-        const deskMembers = this.services.desks.deskMembers[desk._id];
+        const deskMembers = this.state.deskMembers[desk._id];
         const authors = this.state.users.find((item) => item.role === role._id);
 
         let users: Array<IUserExtra> = [];
@@ -90,7 +125,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
                                 ) : null
                             ))}
 
-                            {!this.services.desks.deskMembers[desk._id].length ? (
+                            {!this.state.deskMembers[desk._id].length ? (
                                 <div className="sd-board__subheader">
                                     <h5 className="sd-board__subheader-title">
                                         {gettext('There are no users assigned to this desk')}
