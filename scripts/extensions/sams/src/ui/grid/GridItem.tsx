@@ -21,11 +21,6 @@ export class GridItem extends React.PureComponent<IProps> {
 
     handleClicks() {
         if (this.props.onDoubleClick == null) {
-            if (this.clickCount > 0) {
-                window.clearTimeout(this.singleClickTimer);
-                this.clickCount = 0;
-            }
-
             this.props.onClick!();
             return;
         }
@@ -54,7 +49,7 @@ export class GridItem extends React.PureComponent<IProps> {
         );
 
         return (
-            <div className={classes} onClick={() => this.handleClicks()}>
+            <div className={classes} onClick={this.handleClicks}>
                 {this.props.children}
             </div>
         );
