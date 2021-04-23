@@ -69,7 +69,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                                 this.onItemClick
                             }
                             onClick={this.onItemClick}
-                            onDoubleClick={this.onItemDoubleClick}
+                            onDoubleClick={this.props.onItemDoubleClicked && this.onItemDoubleClick}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
                             updateSelectedAssetIds={this.onUpdateSelectedAssetIds}

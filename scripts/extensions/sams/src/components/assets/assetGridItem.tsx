@@ -93,7 +93,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         return (
             <GridItem
                 onClick={this.onItemClick}
-                onDoubleClick={this.onItemDoubleClick}
+                onDoubleClick={this.props.onDoubleClick && this.onItemDoubleClick}
                 selected={this.props.selected || this.props.itemSelected}
                 locked={isAssetLocked(this.props.asset)}
             >
