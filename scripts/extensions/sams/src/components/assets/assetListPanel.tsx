@@ -23,27 +23,6 @@ interface IProps {
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
-    constructor(props: IProps) {
-        super(props);
-        this.onItemClick = this.onItemClick.bind(this);
-        this.onItemDoubleClick = this.onItemDoubleClick.bind(this);
-        this.onUpdateSelectedAssetIds = this.onUpdateSelectedAssetIds.bind(this);
-    }
-
-    onItemClick(asset: IAssetItem) {
-        this.props.onItemClicked(asset);
-    }
-
-    onItemDoubleClick(asset: IAssetItem) {
-        if (this.props.onItemDoubleClicked != null) {
-            this.props.onItemDoubleClicked(asset);
-        }
-    }
-
-    onUpdateSelectedAssetIds(asset: IAssetItem) {
-        this.props.updateSelectedAssetIds(asset);
-    }
-
     render() {
         const {gettext} = superdeskApi.localization;
         const {assertNever} = superdeskApi.helpers;
@@ -64,15 +43,12 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             key={asset._id}
                             asset={asset}
                             selected={this.props.selectedItems?.includes(asset._id) ?? false}
-                            toggleSelected={this.props.onItemClicked == null ?
-                                undefined :
-                                this.onItemClick
-                            }
-                            onClick={this.onItemClick}
-                            onDoubleClick={this.props.onItemDoubleClicked && this.onItemDoubleClick}
+                            toggleSelected={this.props.onItemClicked}
+                            onClick={this.props.onItemClicked}
+                            onDoubleClick={this.props.onItemDoubleClicked}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
-                            updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
+                            updateSelectedAssetIds={this.props.updateSelectedAssetIds}
                         />
                     ))}
                 </GridList>
@@ -85,11 +61,11 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             key={asset._id}
                             asset={asset}
                             selected={this.props.selectedItems?.includes(asset._id) ?? false}
-                            onClick={this.onItemClick}
-                            onDoubleClick={this.onItemDoubleClick}
+                            onClick={this.props.onItemClicked}
+                            onDoubleClick={this.props.onItemDoubleClicked}
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
-                            updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
+                            updateSelectedAssetIds={this.props.updateSelectedAssetIds}
                         />
                     ))}
                 </ListItemGroup>
