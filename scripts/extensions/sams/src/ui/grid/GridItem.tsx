@@ -11,7 +11,7 @@ interface IProps {
 
 export class GridItem extends React.PureComponent<IProps> {
     clickCount: number = 0;
-    singleClickTimer: number;
+    singleClickTimer?: number;
 
     constructor(props: IProps) {
         super(props);
