@@ -1154,6 +1154,8 @@ declare module 'superdesk-api' {
         attachmentsAdded: Array<IAttachment>;
         attachmentRemoved: IAttachment;
         attachmentUpdated: IAttachment;
+
+        menuItemBadgeValueChange: {menuId: string; badgeValue: string};
     }
 
     export interface IWebsocketMessage<T> {
@@ -1571,6 +1573,7 @@ declare module 'superdesk-api' {
         ): () => void; // returns a function to remove event listener
         addEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
         removeEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
+        dispatchEvent<T extends keyof IEvents>(eventName: T, payload: IEvents[T]): void;
     }>;
 
     export interface IAuthorsFieldOptions {

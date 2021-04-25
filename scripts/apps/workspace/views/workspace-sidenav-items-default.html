@@ -7,8 +7,16 @@
     ng-class="{'sd-sidebar-menu__btn--active': item.href === activeMenuItemPath}"
     data-test-id="{{item.label}}"
 >
-    <span class="sd-sidebar-menu__main-icon">
+    <span class="sd-sidebar-menu__main-icon element-with-badge">
         <i class="big-icon--{{ item.icon }}"></i>
+
+        <span
+            ng-if="badges[item.id] != null"
+            class="badge badge--highlight"
+            
+        >
+            {{badges[item.id]}}
+        </span>
     </span>
 
     <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>

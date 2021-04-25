@@ -49,6 +49,7 @@ import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
 import {
+    dispatchCustomEvent,
     getCustomEventNamePrefixed,
     getWebsocketMessageEventName,
     isWebsocketEventPublic,
@@ -420,5 +421,6 @@ export function getSuperdeskApiImplementation(
         },
         addEventListener,
         removeEventListener,
+        dispatchEvent: dispatchCustomEvent,
     };
 }
