@@ -408,7 +408,6 @@
     }
     li {
       text-align: center;
-      line-height: $sidebar-width;
     }
     a, .dropdown__toggle {
       display: block;
@@ -456,6 +455,23 @@
 
 }
 #side-menu {
+  > ul > li {
+    overflow: hidden;
+  }
+
+  a {
+    overflow: visible!important;
+  }
+
+  .sd-sidebar-menu__helper-icon {
+    left: 4rem;
+  }
+
+  .sd-sidebar-menu__main-icon {
+    width: 26px;
+    height: 26px;
+  }
+
   .authoring-active {
     .active {
         .sd-sidebar-menu__main-icon, .sd-sidebar-menu__helper-icon {
@@ -463,7 +479,7 @@
         }
         &:hover {
             .sd-sidebar-menu__main-icon {
-                left: -3rem;
+                left: -4rem;
             }
             .sd-sidebar-menu__helper-icon {
                 left: 0.5rem;

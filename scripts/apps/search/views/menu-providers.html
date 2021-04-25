@@ -2,8 +2,12 @@
     <a href="" class="dropdown__toggle sd-sidebar-menu__btn"
         title="{{ :: 'Search' | translate }}"
         aria-label="{{ :: 'Search' | translate }}"
-        ng-click="hideMonitoring(currentRoute.href === '/search_providers', $event)">
-        <i class="sd-sidebar-menu__main-icon big-icon--global-search"></i>
+        ng-click="hideMonitoring(currentRoute.href === '/search_providers', $event)"
+    >
+        <span class="sd-sidebar-menu__main-icon">
+            <i class="big-icon--global-search"></i>
+        </span>
+
         <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
     </a>
     <ul ng-if="search.providers.length > 0" class="dropdown__menu pull-left">

@@ -3,8 +3,11 @@
         title="{{ :: 'Search' | translate }}"
         aria-label="{{ :: 'Search' | translate }}"
         sd-hotkey="ctrl+alt+f" sd-hotkey-options="{global: true}"
-        ng-click="hideMonitoring(currentRoute.href === '/search', $event)">
-        <i class="sd-sidebar-menu__main-icon big-icon--global-search"></i>
+        ng-click="hideMonitoring(currentRoute.href === '/search', $event)"
+    >
+        <span class="sd-sidebar-menu__main-icon">
+            <i class="big-icon--global-search"></i>
+        </span>
         <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
     </a>
     <ul ng-if="search.providers.length > 1" class="dropdown__menu pull-left">
