@@ -19,6 +19,7 @@ import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isMediaType} from 'core/helpers/item';
+import {confirmQuickPublish} from '../services/quick-publish-modal';
 
 /**
  * @ngdoc directive
@@ -751,13 +752,13 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     showConfirm ?
                         $scope.saveTopbar()
-                            .then(confirm.confirmQuickPublish)
+                            .then(() => confirmQuickPublish(1))
                             .then(customButtonAction) :
                         $scope.saveTopbar()
                             .then(customButtonAction);
                 } else {
                     showConfirm ?
-                        confirm.confirmQuickPublish().then(customButtonAction) :
+                        confirmQuickPublish(1).then(customButtonAction) :
                         customButtonAction();
                 }
                 initMedia();
