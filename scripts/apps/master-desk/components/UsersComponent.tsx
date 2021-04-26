@@ -20,8 +20,7 @@ interface IState {
 }
 
 export class UsersComponent extends React.Component<IProps, IState> {
-    services: any;
-    eventListeners: Array<any> = [];
+    eventListeners: Array<CallableFunction> = [];
 
     constructor(props: IProps) {
         super(props);
@@ -59,11 +58,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
                     const {resource, fields, _id} = event.extra;
 
                     if (resource === 'users' && fields.last_activity_at) {
-                        if (Object.values(this.state.deskMembers).some(
-                            (users) => users.find((user) => user._id === _id),
-                        )) {
-                            this.reloadUser(_id);
-                        }
+                        this.reloadUser(_id);
                     }
                 },
             ),
@@ -88,11 +83,10 @@ export class UsersComponent extends React.Component<IProps, IState> {
         });
     }
 
-    getUsers(desk: IDesk, role: IUserRole): Array<any> {
+    getUsers(desk: IDesk, role: IUserRole): Array<IUserExtra> {
         const deskMembers = this.state.deskMembers[desk._id];
         const authors = this.state.users.find((item) => item.role === role._id);
-
-        let users: Array<IUserExtra> = [];
+        const users: Array<IUserExtra> = [];
 
         deskMembers.forEach((user) => {
             if (role._id === user.role) {
@@ -101,7 +95,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
             }
         });
 
-        return users ? users : [];
+        return users;
     }
 
     render() {
