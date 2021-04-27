@@ -77,6 +77,39 @@ function ShortDateDirective() {
     };
 }
 
+function isSameDay(a, b) {
+    return a.format(ISO_DATE_FORMAT) === b.format(ISO_DATE_FORMAT);
+}
+
+function isSameWeek(a, b) {
+    return a.format(ISO_WEEK_FORMAT) === b.format(ISO_WEEK_FORMAT);
+}
+
+function isArchiveYear(a, b) {
+    return (appConfig.ArchivedDateOnCalendarYear === 1) ?
+        a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
+}
+
+/**
+ * Get date and time format for scheduled datetime
+ * Returns time for current day, date and time otherwise
+ *
+ * @param {String} d iso format datetime
+ * @return {String}
+ */
+export function scheduledFormat(d: string): string {
+    var m = moment(d);
+    var now = moment();
+    const _date = m.format(appConfig.view.dateformat || 'MM/DD'),
+        _time = m.format(appConfig.view.timeformat || 'hh:mm');
+
+    if (isSameDay(m, now)) {
+        return '@ '.concat(_time);
+    }
+
+    return _date.concat(' @ ', _time);
+}
+
 DateTimeService.$inject = [];
 function DateTimeService() {
     /**
@@ -103,39 +136,7 @@ function DateTimeService() {
     };
 
     this.longFormat = longFormat;
-
-    /**
-     * Get date and time format for scheduled datetime
-     * Returns time for current day, date and time otherwise
-     *
-     * @param {String} d iso format datetime
-     * @return {String}
-     */
-    this.scheduledFormat = function(d) {
-        var m = moment(d);
-        var now = moment();
-        const _date = m.format(appConfig.view.dateformat || 'MM/DD'),
-            _time = m.format(appConfig.view.timeformat || 'hh:mm');
-
-        if (isSameDay(m, now)) {
-            return '@ '.concat(_time);
-        }
-
-        return _date.concat(' @ ', _time);
-    };
-
-    function isSameDay(a, b) {
-        return a.format(ISO_DATE_FORMAT) === b.format(ISO_DATE_FORMAT);
-    }
-
-    function isSameWeek(a, b) {
-        return a.format(ISO_WEEK_FORMAT) === b.format(ISO_WEEK_FORMAT);
-    }
-
-    function isArchiveYear(a, b) {
-        return (appConfig.ArchivedDateOnCalendarYear === 1) ?
-            a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
-    }
+    this.scheduledFormat = scheduledFormat;
 }
 
 DateTimeHelperService.$inject = [];

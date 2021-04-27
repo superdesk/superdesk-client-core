@@ -758,7 +758,7 @@ export function AuthoringDirective(
                             .then(customButtonAction);
                 } else {
                     showConfirm ?
-                        confirmQuickPublish(1).then(customButtonAction) :
+                        confirmQuickPublish([$scope.item]).then(customButtonAction) :
                         customButtonAction();
                 }
                 initMedia();

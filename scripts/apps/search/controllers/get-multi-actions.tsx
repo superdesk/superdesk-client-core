@@ -287,7 +287,7 @@ export function getMultiActions(
 
         const selectedItems = getSelectedItems();
 
-        confirmQuickPublish(selectedItems.length).then(() => {
+        confirmQuickPublish(selectedItems).then(() => {
             Promise.all(
                 selectedItems.map((item) => new Promise((resolve) => {
                     authoring.publish(item, item)

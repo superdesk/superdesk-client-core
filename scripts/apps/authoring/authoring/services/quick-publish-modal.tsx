@@ -8,6 +8,8 @@ import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Button} from 'core/ui/components';
+import {IArticle} from 'superdesk-api';
+import {scheduledFormat} from 'core/datetime/datetime';
 
 interface IProps {
     closeModal(): void;
@@ -16,7 +18,7 @@ interface IProps {
 /**
  * In case publish is triggered by quick buttons, show confirmation dialog
  */
-export function confirmQuickPublish(itemCount): Promise<void> {
+export function confirmQuickPublish(items: Array<IArticle>): Promise<void> {
     return new Promise((resolve) => {
         class ConfirmQuickPublishModal extends React.PureComponent<IProps> {
             render() {
@@ -26,7 +28,43 @@ export function confirmQuickPublish(itemCount): Promise<void> {
                             {gettext('Publishing')}
                         </ModalHeader>
                         <ModalBody>
-                            {gettextPlural(itemCount, 'Do you want to publish the article?', 'Do you want to publish the articles?')}
+                            <p>
+                                <strong>
+                                    {
+                                        gettextPlural(
+                                            items.length,
+                                            'Do you want to publish the article?',
+                                            'Do you want to publish {{number}} articles?',
+                                            {number: items.length},
+                                        )
+                                    }
+                                </strong>
+                            </p>
+
+                            <div>
+                                {
+                                    items.map((item) => {
+                                        return (
+                                            <div key={item._id} className="quick-publish--item">
+                                                <div className="quick-publish--line">
+                                                    <div className="field--slugline">{item.slugline}</div>
+                                                    <div>{item.headline}</div>
+                                                </div>
+
+                                                {
+                                                    item.publish_schedule == null ? null : (
+                                                        <span className="quick-publish--scheduled">
+                                                            <strong>{gettext('Scheduled:')}</strong>
+                                                            {' '}
+                                                            {scheduledFormat(item.publish_schedule)}
+                                                        </span>
+                                                    )
+                                                }
+                                            </div>
+                                        );
+                                    })
+                                }
+                            </div>
                         </ModalBody>
                         <ModalFooter>
                             <Button color="default" onClick={this.props.closeModal}>
