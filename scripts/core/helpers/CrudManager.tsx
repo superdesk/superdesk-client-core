@@ -2,7 +2,7 @@
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
 import {generate} from 'json-merge-patch';
-import {isObject} from 'lodash';
+import {isObject, omit, partition} from 'lodash';
 import React from 'react';
 import {
     IBaseRestApiResponse,
@@ -16,6 +16,7 @@ import {
     IArticleQueryResult,
     IArticleQuery,
     IArticle,
+    IResourceChange,
 } from 'superdesk-api';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
@@ -132,11 +133,44 @@ export function generatePatchIArticle(a: IArticle, b: IArticle) {
     return patch;
 }
 
-export const dataApi: IDataApi = {
-    findOne: (endpoint, id) => httpRequestJsonLocal({
+function findOne<T>(endpoint: string, id: string): Promise<T> {
+    return httpRequestJsonLocal({
         method: 'GET',
         path: '/' + endpoint + '/' + id,
-    }),
+    });
+}
+
+function refetchChangedResources<T extends IBaseRestApiResponse>(
+    resource: string,
+    changes: Array<IResourceChange>,
+    currentItems: {[key: string]: T},
+): Promise<{[key: string]: T}> {
+    const changesToResource = changes.filter((change) => change.resource === resource);
+
+    if (changesToResource.length < 1) {
+        return Promise.resolve(currentItems);
+    }
+
+    const [changesDeleted, changesCreatedUpdated] =
+        partition(changesToResource, (change) => change.changeType === 'deleted');
+
+    const currentItemsWithoutDeleted = omit(currentItems, changesDeleted.map(({itemId}) => itemId));
+
+    return Promise.all(
+        changesCreatedUpdated.map(({itemId}) => findOne<T>(resource, itemId)),
+    ).then((items) => {
+        const currentResourcesUpdated = {...currentItemsWithoutDeleted};
+
+        for (const item of items) {
+            currentResourcesUpdated[item._id] = item;
+        }
+
+        return currentResourcesUpdated;
+    });
+}
+
+export const dataApi: IDataApi = {
+    findOne: findOne,
     create: (endpoint, item, urlParams) => httpRequestJsonLocal({
         'method': 'POST',
         path: '/' + endpoint,
@@ -221,6 +255,7 @@ export const dataApi: IDataApi = {
         },
     }),
     uploadFileWithProgress: uploadFileWithProgress,
+    refetchChangedResources: refetchChangedResources,
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
