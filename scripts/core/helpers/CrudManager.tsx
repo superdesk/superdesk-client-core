@@ -255,7 +255,7 @@ export const dataApi: IDataApi = {
         },
     }),
     uploadFileWithProgress: uploadFileWithProgress,
-    refetchChangedResources: refetchChangedResources,
+    fetchChangedResources: refetchChangedResources,
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(

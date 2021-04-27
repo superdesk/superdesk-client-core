@@ -1117,7 +1117,7 @@ declare module 'superdesk-api' {
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
         uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress: (event: ProgressEvent) => void): Promise<T>;
-        refetchChangedResources<T extends IBaseRestApiResponse>(
+        fetchChangedResources<T extends IBaseRestApiResponse>(
             resource: string,
             changes: Array<IResourceChange>,
             currentItems: {[key: string]: T},
