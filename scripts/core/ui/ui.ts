@@ -616,9 +616,6 @@ function TimezoneDirective(tzdata, $timeout) {
 
             tzdata.$promise.then(() => {
                 scope.timeZones = tzdata.getTzNames();
-                if (!scope.timezone && appConfig.defaultTimezone) {
-                    scope.selectTimeZone(appConfig.defaultTimezone);
-                }
             });
 
             /**
@@ -658,6 +655,7 @@ function TimezoneDirective(tzdata, $timeout) {
              * @param {string} tz - name of the time zone to select
              */
             scope.selectTimeZone = function(tz) {
+                debugger;
                 scope.timezone = tz;
                 scope.tzSearchTerm = '';
             };
