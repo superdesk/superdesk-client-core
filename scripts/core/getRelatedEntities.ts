@@ -1,4 +1,4 @@
-import {IArticle, IListViewFieldWithOptions, IRestApiResponse, IBaseRestApiResponse} from 'superdesk-api';
+import {IArticle, IListViewFieldWithOptions, IRestApiResponse, IResourceChange} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {DEFAULT_LIST_CONFIG} from 'apps/search/constants';
 import {flatMap} from 'lodash';
@@ -67,13 +67,6 @@ export function getAndMergeRelatedEntitiesForArticles(
 
     return fetchRelatedEntities(entitiesToFetch, abortSignal)
         .then((result) => mergeRelatedEntities(alreadyFetched, result));
-}
-
-export interface IResourceChange {
-    changeType: 'created' | 'updated' | 'deleted';
-    resource: string;
-    itemId: string;
-    fields?: {[key: string]: 1};
 }
 
 export function getAndMergeRelatedEntitiesUpdated(

@@ -1136,6 +1136,13 @@ declare module 'superdesk-api' {
         _id: string;
     }
 
+    export interface IResourceChange {
+        changeType: 'created' | 'updated' | 'deleted';
+        resource: string;
+        itemId: string;
+        fields?: {[key: string]: 1};
+    }
+
     export interface IResourceCreatedEvent {
         resource: string;
         _id: string;
