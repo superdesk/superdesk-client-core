@@ -9,7 +9,7 @@ import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Button} from 'core/ui/components';
 import {IArticle} from 'superdesk-api';
-import {scheduledFormat} from 'core/datetime/datetime';
+import {isScheduled, scheduledFormat} from 'core/datetime/datetime';
 
 interface IProps {
     closeModal(): void;
@@ -52,13 +52,13 @@ export function confirmQuickPublish(items: Array<IArticle>): Promise<void> {
                                                 </div>
 
                                                 {
-                                                    item.publish_schedule == null ? null : (
+                                                    isScheduled(item) ? (
                                                         <span className="quick-publish--scheduled">
                                                             <strong>{gettext('Scheduled:')}</strong>
                                                             {' '}
-                                                            {scheduledFormat(item.publish_schedule)}
+                                                            {scheduledFormat(item).short}
                                                         </span>
-                                                    )
+                                                    ) : null
                                                 }
                                             </div>
                                         );

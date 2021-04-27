@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import moment from 'moment-timezone';
 import {appConfig} from 'appConfig';
+import {IArticle} from 'superdesk-api';
 
 const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
@@ -90,24 +91,39 @@ function isArchiveYear(a, b) {
         a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
 }
 
+export function isScheduled(__item: IArticle) {
+    const item = __item.archive_item ?? __item;
+
+    return item.publish_schedule != null;
+}
+
 /**
  * Get date and time format for scheduled datetime
  * Returns time for current day, date and time otherwise
- *
- * @param {String} d iso format datetime
- * @return {String}
  */
-export function scheduledFormat(d: string): string {
-    var m = moment(d);
+export function scheduledFormat(__item: IArticle): {short: string, long: string} {
+    const browserTimezone = moment.tz.guess();
+
+    const item = __item.archive_item ?? __item;
+
+    const datetime = item?.schedule_settings?.time_zone == null
+        ? moment(item.publish_schedule).tz(browserTimezone)
+        : moment.tz(
+            item.publish_schedule.replace('+0000', ''),
+            item.schedule_settings.time_zone,
+        ).tz(browserTimezone);
+
     var now = moment();
-    const _date = m.format(appConfig.view.dateformat || 'MM/DD'),
-        _time = m.format(appConfig.view.timeformat || 'hh:mm');
 
-    if (isSameDay(m, now)) {
-        return '@ '.concat(_time);
-    }
+    const _date = datetime.format(appConfig.view.dateformat || 'MM/DD'),
+        _time = datetime.format(appConfig.view.timeformat || 'hh:mm');
 
-    return _date.concat(' @ ', _time);
+    let short = isSameDay(datetime, now) ? '@ '.concat(_time) : _date.concat(' @ ', _time);
+
+    return {
+        short: short,
+        long: longFormat(datetime),
+    };
 }
 
 DateTimeService.$inject = [];
@@ -136,7 +152,6 @@ function DateTimeService() {
     };
 
     this.longFormat = longFormat;
-    this.scheduledFormat = scheduledFormat;
 }
 
 DateTimeHelperService.$inject = [];
