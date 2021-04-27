@@ -662,7 +662,6 @@ function TimezoneDirective(tzdata, $timeout) {
              * @param {string} tz - name of the time zone to select
              */
             scope.selectTimeZone = function(tz) {
-                debugger;
                 scope.timezone = tz;
                 scope.tzSearchTerm = '';
             };

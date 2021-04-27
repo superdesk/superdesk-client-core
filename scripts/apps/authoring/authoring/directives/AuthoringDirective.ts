@@ -752,7 +752,7 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     showConfirm ?
                         $scope.saveTopbar()
-                            .then(() => confirmQuickPublish(1))
+                            .then(() => confirmQuickPublish([$scope.item]))
                             .then(customButtonAction) :
                         $scope.saveTopbar()
                             .then(customButtonAction);
