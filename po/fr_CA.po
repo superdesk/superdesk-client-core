@@ -13,7 +13,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-01-22 21:26+0000\n"
+"PO-Revision-Date: 2021-04-21 14:20+0000\n"
 "Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgstr "Une valeur nulle pour le champ VERSION n'est pas autorisée"
 msgid ""
 "'' is currently managing featured stories. This feature can only be accessed"
 " by one user at a time."
-msgstr "'' gère actuellement les articles en vedette. Cette fonctionnalité n'est accessible qu'à un seul utilisateur à la fois."
+msgstr "'' gère actuellement les articles à la une. Cette fonctionnalité n'est accessible qu'à un seul utilisateur à la fois."
 
 #: scripts/core/lang/missing-translations-strings.ts:23
 msgid "'ABSTRACT is a required field'"
@@ -120,7 +120,7 @@ msgstr "(aucun résultat)"
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:181
 msgid "({{ count }}) {{ action }} planning item(s)"
-msgstr "({{ count }}) {{ action }} élément(s) de planification"
+msgstr "({{ count }}) {{ action }} couverture(s)"
 
 #: scripts/apps/authoring/compare-versions/views/compare-versions.html:17
 msgid "* choose article version from dropdown menu"
@@ -484,7 +484,7 @@ msgstr "Widget de flux d'activité"
 #: ../superdesk-planning/client/components/fields/editor/AdHocPlanning.tsx:14
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/AdHocPlanning.tsx:21
 msgid "Ad Hoc Planning"
-msgstr ""
+msgstr "Planification ad hoc"
 
 #: scripts/apps/authoring/metadata/views/metadata-target-publishing.html:14
 #: scripts/apps/content-filters/views/manage-filters.html:81
@@ -744,7 +744,7 @@ msgstr "Ajouter aux articles en vedette"
 
 #: ../superdesk-planning/index.ts:45
 msgid "Add to Planning"
-msgstr ""
+msgstr "Ajouter à la planification"
 
 #: scripts/apps/packaging/index.ts:73
 msgid "Add to current"
@@ -757,7 +757,7 @@ msgstr "Ajouter au dictionnaire"
 
 #: ../superdesk-planning/client/constants/planning.js:80
 msgid "Add to featured stories"
-msgstr "Ajouter aux articles en vedette"
+msgstr "Ajouter aux articles à la une"
 
 #: scripts/apps/search/directives/MultiActionBar.ts:244
 msgid "Add to highlight"
@@ -774,7 +774,7 @@ msgstr "Ajouter un widget"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:77
 msgid "Added to featured stories"
-msgstr "Ajouté aux articles en vedette"
+msgstr "Ajouté aux articles à la une"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.jsx:115
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:196
@@ -892,11 +892,11 @@ msgstr "Agenda"
 
 #: ../superdesk-planning/client/components/Agendas/EditAgenda.jsx:67
 msgid "Agenda '{{ name }}' has planning items associated with it. Continue ?"
-msgstr "Des éléments de planification sont associés à l'agenda '{{ name }}' . Continuer?"
+msgstr "Des couvertures sont associées à l'agenda '{{ name }}' . Continuer?"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:190
 msgid "Agenda assigned to the planning item."
-msgstr "Agenda affecté à l'élément de planification"
+msgstr "Agenda affecté à la couverture"
 
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:72
 msgid "Agenda: {{ name }}"
@@ -949,7 +949,7 @@ msgstr "Tous les événements et la planfication"
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:20
 #: ../superdesk-planning/client/components/Main/AgendaSubnavDropdown.jsx:60
 msgid "All Planning Items"
-msgstr "Tous les éléments de planification"
+msgstr "Toutes les couvertures"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:137
 msgid "All coverages cancelled:"
@@ -961,7 +961,7 @@ msgstr "Toute la journée"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.jsx:364
 msgid "All featured planning items are currently selected"
-msgstr "Tous les éléments de planification sont actuellement sélectionnés."
+msgstr "Toutes les couvertures sont actuellement sélectionnées."
 
 #: scripts/core/menu/notifications/views/notifications.html:66
 msgid "All good so far."
@@ -1270,11 +1270,7 @@ msgstr "Êtes-vous sur de vouloir supprimer l'ensemble de règles?"
 msgid "Are you sure you want to delete saved search?"
 msgstr "Êtes-vous certain de vouloir supprimer la recherche enregistrée?"
 
-#: scripts/extensions/sams/dist/src/store/sets/actions.js:69
-msgid "Are you sure you want to delete the Set \"{{name}}\"?"
-msgstr "Êtes-vous certain de vouloir supprimer l'ensemble \"{{name}}\"?"
-
-#: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:122
+#: ../superdesk-analytics/client/saved_reports/directives/SavedReportList.js:123
 msgid "Are you sure you want to delete the saved report?"
 msgstr "Êtes-vous certain de vouloir supprimer le rapport enregistré?"
 
@@ -2917,7 +2913,7 @@ msgstr "Échec du verrouillage de l'événement."
 
 #: ../superdesk-planning/client/actions/planning/ui.js:195
 msgid "Could not obtain lock on the planning item."
-msgstr "Échec du verrouillage de l'élément de planification."
+msgstr "Échec du verrouillage de la couverture."
 
 #: ../superdesk-planning/client/actions/main.ts:1480
 msgid "Could not save the item."
@@ -3044,7 +3040,7 @@ msgstr "Couverture retirée"
 #: ../superdesk-planning/client/components/Planning/PlanningMenuPanel/index.jsx:54
 #: ../superdesk-planning/client/components/Planning/PlanningPreviewContent.tsx:299
 msgid "Coverages"
-msgstr "Couvertures"
+msgstr "Type de couverture"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:440
 #: ../superdesk-analytics/client/utils.js:148
@@ -3085,7 +3081,7 @@ msgstr "Créer un assemblage"
 
 #: ../superdesk-planning/client/constants/events.js:46
 msgid "Create Planning Item"
-msgstr "Créer un élément de planification"
+msgstr "Créer une couverture"
 
 #: scripts/apps/monitoring/index.ts:101
 msgid "Create a broadcast"
@@ -3097,7 +3093,7 @@ msgstr "Créer un endroit"
 
 #: ../superdesk-planning/client/constants/events.js:51
 msgid "Create and Open Planning Item"
-msgstr "Créer et ouvrir un élément de planification"
+msgstr "Créer et ouvrir une couverture"
 
 #: scripts/apps/highlights/views/settings.html:11
 msgid "Create configuration"
@@ -3142,11 +3138,11 @@ msgstr "Créer un nouvel élément"
 
 #: ../superdesk-planning/client/components/Main/ListPanel.jsx:222
 msgid "Create new items or change your search filters"
-msgstr "Créer de nouveaux éléments ou modifier vos filtres de recherche"
+msgstr "Créez de nouveaux éléments ou modifiez vos filtres de recherche"
 
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.jsx:55
 msgid "Create new planning item"
-msgstr "Créer un nouvel élément de planification"
+msgstr "Créer une nouvelle couverture"
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:55
 msgid "Create new schedule"
@@ -3205,7 +3201,7 @@ msgstr "Créé à partir de 'répétitions de mise à jour'"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:104
 msgid "Created from a planning item"
-msgstr "Créé à partir d'un élément de planification"
+msgstr "Créé à partir d'une couverture"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:24
 msgid "Created from content"
@@ -3438,7 +3434,6 @@ msgstr "Date prévue"
 msgid "Date/Time"
 msgstr "Date/heure"
 
-#: scripts/apps/archive/views/metadata-view.html:69
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:151
 #: scripts/apps/users/views/user-preferences.html:54
 #: scripts/apps/workspace/content/constants.ts:83
@@ -3553,10 +3548,6 @@ msgstr "Supprimer la règle"
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:33
 msgid "Delete Saved Report"
 msgstr "Supprimer le rapport enregistré"
-
-#: scripts/extensions/sams/dist/src/store/sets/actions.js:69
-msgid "Delete Set?"
-msgstr "Supprimer l'ensemble?"
 
 #: scripts/core/editor3/highlightsConfig.ts:116
 msgid "Delete empty paragraphs"
@@ -3861,11 +3852,7 @@ msgstr "Désactiver l'utilisateur"
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:57
-msgid "Disabled Sets"
-msgstr "Ensembles désactivés"
-
-#: scripts/core/notification/notification.ts:139
+#: scripts/core/notification/notification.ts:158
 msgid "Disconnected from Notification Server!"
 msgstr "Déconnecté du serveur de notifications!"
 
@@ -4079,11 +4066,11 @@ msgstr "Dupliquer un élément"
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:96
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:65
 msgid "Duplicate created"
-msgstr "Doublon créé"
+msgstr "Double créé"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:52
 msgid "Duplicate created by"
-msgstr "Doublon créé par"
+msgstr "Double créé par"
 
 #: scripts/apps/archive/index.tsx:159
 msgid "Duplicate in place"
@@ -4108,7 +4095,7 @@ msgstr "Dupliqué par"
 
 #: scripts/apps/search/views/item-preview.html:15
 msgid "Duplicates"
-msgstr "Doublons"
+msgstr "Doubles"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:60
 msgid "Duration"
@@ -5153,7 +5140,7 @@ msgstr "Le calendrier n'a pas pu être ajouté à l'événement"
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:308
 #: ../superdesk-planning/client/actions/planning/ui.js:318
 msgid "Failed to add planning item added as featured story"
-msgstr "Échec de l'ajout d'un élément de planification en tant qu'article en vedette"
+msgstr "Échec de l'ajout d'une couverture en tant qu'article à la une"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.ts:33
 #: scripts/apps/authoring/authoring/directives/AuthoringEmbeddedDirective.ts:56
@@ -5174,7 +5161,7 @@ msgstr "L'événement n'a pas pu être annulé!"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:238
 msgid "Failed to cancel the Planning Item!"
-msgstr "L'élément de planification n'a pas pu être annulé!"
+msgstr "La couverture n'a pas pu être annulée!"
 
 #: scripts/core/auth/login-modal-directive.ts:78
 msgid "Failed to change the password."
@@ -5188,19 +5175,11 @@ msgstr "L'élément d'archive n'a pas pu être créé."
 msgid "Failed to create the Report Schedule!"
 msgstr "L'horaire de rapport n'a pas pu être créé!"
 
-#: scripts/extensions/sams/dist/src/api/sets.js:27
-msgid "Failed to create the Set"
-msgstr "L'ensemble n'a pas pu être créé"
-
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:196
 msgid "Failed to create/update Events and Planning view filter"
 msgstr "Le filtre d'événements et de planification n'a pas pu être créé ou mis à jour"
 
-#: scripts/extensions/sams/dist/src/api/sets.js:54
-msgid "Failed to delete the Set"
-msgstr "L'ensemble n'a pas pu être supprimé"
-
-#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:194
+#: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:196
 msgid "Failed to delete the saved report"
 msgstr "Le rapport enregistré n'a pas pu être supprimé"
 
@@ -5224,7 +5203,7 @@ msgstr "L'information sur l'affectation n'a pas pu être extraite."
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:151
 msgid "Failed to fetch featured stories!"
-msgstr "Les articles en vedette n'ont pas pu être extraits!"
+msgstr "Les articles à la une n'ont pas pu être extraits!"
 
 #: ../superdesk-planning/client/services/AssignmentsService.js:81
 msgid "Failed to fetch item from archive"
@@ -5232,7 +5211,7 @@ msgstr "L'élément n'a pas pu être extrait dans l'archive"
 
 #: ../superdesk-planning/client/actions/assignments/ui.js:566
 msgid "Failed to fetch planning item."
-msgstr "L'élément de planification n'a pas pu être extrait."
+msgstr "La couverture n'a pas pu être extraite."
 
 #: ../superdesk-planning/client/services/AssignmentsService.js:124
 #: ../superdesk-planning/client/services/AssignmentsService.js:74
@@ -5270,15 +5249,7 @@ msgstr "L'élément de la file d'attente n'a pas pu être obtenu"
 msgid "Failed to link to requested assignment!"
 msgstr "Le lien avec l'affectation demandée n'a pas pu être créé!"
 
-#: scripts/extensions/sams/dist/src/api/sets.js:13
-msgid "Failed to load all sets"
-msgstr "Tous les ensembles n'ont pas pu être chargés"
-
-#: scripts/extensions/sams/dist/src/api/storageDestinations.js:15
-msgid "Failed to load all storage destinations"
-msgstr ""
-
-#: ../superdesk-planning/client/actions/events/ui.js:349
+#: ../superdesk-planning/client/actions/events/ui.ts:350
 msgid "Failed to load duplicated Event."
 msgstr "L'événement dupliqué n'a pas pu être chargé."
 
@@ -5334,7 +5305,7 @@ msgstr "Le lien n'a pas pu être retiré: {{message}}"
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:307
 #: ../superdesk-planning/client/actions/planning/ui.js:317
 msgid "Failed to remove planning item as featured story"
-msgstr ""
+msgstr "Échec du retrait de la couverture du registre des articles à la une."
 
 #: ../superdesk-planning/client/actions/events/api.ts:825
 msgid "Failed to remove the file from event."
@@ -5372,7 +5343,7 @@ msgstr "L'élément d'enregistrement automatique n'a pas pu être enregistré."
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:342
 msgid "Failed to save featured story record!"
-msgstr "L'article en vedette n'a pas pu être enregistré!"
+msgstr "Le registre des articles à la une n'a pas pu être enregistré!"
 
 #: ../superdesk-analytics/client/saved_reports/services/SavedReportsService.js:171
 msgid "Failed to save report"
@@ -5452,10 +5423,6 @@ msgstr "Les répétitions d'événements n'ont pas pu être mises à jour"
 msgid "Failed to update the Event time!"
 msgstr "L'heure de l'événement n'a pas pu être mise à jour!"
 
-#: scripts/extensions/sams/dist/src/api/sets.js:41
-msgid "Failed to update the Set"
-msgstr "L'ensemble n'a pas pu être mis à jour"
-
 #: ../superdesk-planning/client/actions/locations.js:28
 msgid "Failed to updated location!"
 msgstr "L'endroit n'a pas pu être mis à jour!"
@@ -5488,7 +5455,7 @@ msgstr "Fonctionnalités à venir"
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeatureLabel.jsx:9
 #: ../superdesk-planning/client/components/fields/editor/Featured.tsx:14
 msgid "Featured"
-msgstr "En vedette"
+msgstr "À la une"
 
 #: scripts/apps/authoring/views/confirm-media-associated.html:8
 msgid "Featured Media"
@@ -5496,28 +5463,28 @@ msgstr "Contenu multimédia"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.jsx:69
 msgid "Featured Stories Locked"
-msgstr "Articles en vedette verrouillés"
+msgstr "Articles à la une verrouillés"
 
 #: ../superdesk-planning/client/actions/planning/notifications.js:356
 msgid "Featured Stories Unlocked"
-msgstr "Articles en vedette déverrouillés"
+msgstr "Articles à la une déverrouillés"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningModal.jsx:406
 msgid "Featured Stories based on timezone: {{tz}}"
-msgstr "Articles en vedette selon le fuseau horaire: {{tz}}"
+msgstr "Articles à la une selon le fuseau horaire: {{tz}}"
 
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:39
 msgid "Featured stories"
-msgstr "Articles en vedette"
+msgstr "Articles à la une"
 
 #: ../superdesk-planning/client/actions/planning/notifications.js:357
 msgid "Featured stories you were managing was unlocked by"
-msgstr "Les articles en vedette que vous gériez ont été déverrouillées par"
+msgstr "Les articles à la une que vous gériez ont été déverrouillées par"
 
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/Featured.tsx:21
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/NoCoverage.tsx:21
 msgid "Featured:"
-msgstr ""
+msgstr "À la une:"
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:20
 msgid "Featuremedia History"
@@ -6148,10 +6115,6 @@ msgstr "Cacher les éléments envoyés ou en file d'attente"
 msgid "High priority"
 msgstr "Priorité élevée"
 
-#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:35
-msgid "Highcharts {{licenseType}} License"
-msgstr "Licence Highcharts {{licenseType}}"
-
 #: scripts/apps/packaging/views/sd-package-items-edit.html:21
 msgid "Highlight Preview"
 msgstr "Aperçu du budget"
@@ -6637,7 +6600,7 @@ msgstr ""
 #: ../superdesk-planning/client/controllers/AddToPlanningController.js:205
 #: ../superdesk-planning/client/controllers/FulfilAssignmentController.js:177
 msgid "Item already linked to a Planning item"
-msgstr "Élément déjà lié à un élément de planification"
+msgstr "Élément déjà lié à une couverture"
 
 #: ../superdesk-planning/client/controllers/AddToPlanningController.js:228
 #: ../superdesk-planning/client/controllers/FulfilAssignmentController.js:185
@@ -6697,7 +6660,7 @@ msgstr "Élément introuvable..."
 
 #: ../superdesk-planning/client/controllers/UnlinkAssignmentController.js:27
 msgid "Item not linked to a Planning item."
-msgstr "Élément non lié à un élément de planification."
+msgstr "Élément non lié à une couverture."
 
 #: scripts/apps/search/views/item-preview.html:2
 msgid "Item preview"
@@ -7040,7 +7003,7 @@ msgstr "Gris plus pâle"
 
 #: scripts/apps/authoring/authoring/components/CharacterCountConfigButton.tsx:147
 msgid "Limit further typing"
-msgstr ""
+msgstr "Empêcher de taper au-delà de la limite"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:103
 msgid "Line"
@@ -7282,11 +7245,6 @@ msgstr "Gestion des endroits"
 #: scripts/core/lang/missing-translations-strings.ts:18
 msgid "Manage Search Providers"
 msgstr "Gestion des fournisseurs de recherche"
-
-#: scripts/extensions/sams/dist/src/apps/samsWorkspace.js:48
-#: scripts/extensions/sams/dist/src/components/sets/manageSetsModal.js:81
-msgid "Manage Sets"
-msgstr "Gérer les ensembles"
 
 #: ../superdesk-planning/client/components/Main/ActionsSubnavDropdown.jsx:16
 msgid "Manage agendas"
@@ -7880,7 +7838,7 @@ msgstr "Aucun pupitre"
 
 #: ../superdesk-planning/client/components/Main/ListPanel.jsx:221
 msgid "No Event or Planning items found"
-msgstr "Aucun élément d'événement ou de planification trouvé"
+msgstr "Aucun événement ou couverture trouvé"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-action.html:7
 msgid "No Fetch actions defined"
@@ -8055,7 +8013,7 @@ msgstr "Pas de gabarits récents."
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:260
 msgid "No related planning items."
-msgstr "Aucun élément de planification associé."
+msgstr "Aucune couverture associée."
 
 #: ../superdesk-planning/client/components/Locations/LocationsList.jsx:45
 msgid "No result"
@@ -8084,7 +8042,7 @@ msgstr "Aucune règle n'a été définie pour l'instant"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningSelectedList.jsx:19
 msgid "No selected featured stories"
-msgstr "Aucun article en vedette n'a été sélectionné"
+msgstr "Aucun article à la une n'a été sélectionné"
 
 #: scripts/core/auth/login-modal.html:50
 #: scripts/core/auth/reset-password.html:33
@@ -8291,10 +8249,6 @@ msgstr "Nombre"
 msgid "Number of items"
 msgstr "Nombre d'éléments"
 
-#: ../superdesk-analytics/client/components/HighchartsLicense.tsx:27
-msgid "OEM"
-msgstr "Ensemblier"
-
 #: ../superdesk-planning/client/components/Assignments/AssignmentPopup/index.jsx:72
 #: ../superdesk-planning/client/components/Assignments/EditCoverageAssignmentModal.jsx:106
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:131
@@ -8323,7 +8277,7 @@ msgstr "Objets"
 #: ../superdesk-planning/client/components/Events/EventMetadata/index.jsx:154
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:135
 msgid "Occurrence Status"
-msgstr "Statut d'occurrence"
+msgstr "Projection de déroulement"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:41
 msgid "Off"
@@ -8935,17 +8889,17 @@ msgstr "Détails de la planification"
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.jsx:18
 #: ../superdesk-planning/client/utils/index.ts:651
 msgid "Planning Item"
-msgstr "Élément de planification"
+msgstr "Couverture"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:232
 msgid "Planning Item has been cancelled"
-msgstr "L'élément de planification a été annulé"
+msgstr "La couverture a été annulée"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelEventForm.jsx:141
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.jsx:108
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:212
 msgid "Planning Items"
-msgstr "Éléments de planification"
+msgstr "Couvertures"
 
 #: scripts/core/lang/missing-translations-strings.ts:19
 msgid "Planning Management"
@@ -8984,16 +8938,16 @@ msgstr "Planification dupliquée"
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:304
 #: ../superdesk-planning/client/actions/planning/ui.js:314
 msgid "Planning item added as featured story"
-msgstr "Élément de planification ajouté en tant qu'histoire en vedette"
+msgstr "Couverture ajoutée en tant qu'article à la une"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:72
 msgid "Planning item created"
-msgstr "Élément de planification créé"
+msgstr "Couverture créée"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:303
 #: ../superdesk-planning/client/actions/planning/ui.js:313
 msgid "Planning item removed as featured story"
-msgstr "Élément de planification supprimé comme article en vedette"
+msgstr "Couverture supprimée en tant qu'article à la une"
 
 #: ../superdesk-planning/client/components/Main/FiltersBox.jsx:40
 msgid "Planning only"
@@ -9098,7 +9052,7 @@ msgstr "Créer un aperçu"
 #: ../superdesk-planning/client/constants/events.js:91
 #: scripts/apps/authoring/comments/views/comments-widget.html:38
 msgid "Post"
-msgstr "Message"
+msgstr "Publier"
 
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:225
 #: ../superdesk-planning/client/components/Locations/LocationsList.jsx:86
@@ -9126,15 +9080,15 @@ msgstr "'Retour' pour envoyer"
 #: ../superdesk-planning/client/utils/index.ts:486
 #: scripts/core/ui/components/List/PubStatus.tsx:19
 msgid "Posted"
-msgstr "Affiché"
+msgstr "Publié"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:325
 msgid "Posted Featured Stories record"
-msgstr ""
+msgstr "Registre des articles à la une publié"
 
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/OnlyPosted.tsx:21
 msgid "Posted:"
-msgstr "Affiché:"
+msgstr "Publié:"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:101
 msgid "Postpone"
@@ -9685,7 +9639,7 @@ msgstr "Raison de l'annulation de la couverture"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelPlanningCoveragesForm.tsx:96
 msgid "Reason for cancelling the planning item:"
-msgstr "Raison de l'annulation de l'élément de planification:"
+msgstr "Raison de l'annulation de la couverture:"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelCoverageForm.jsx:80
 msgid "Reason for cancelling the scheduled update"
@@ -9814,7 +9768,7 @@ msgstr "Éléments associés"
 #: ../superdesk-planning/client/components/Events/EventEditor/index.tsx:579
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:245
 msgid "Related Planning Items"
-msgstr "Éléments de planification associés"
+msgstr "Couvertures associées"
 
 #: ../superdesk-planning/client/components/Events/EventMenuPanel/index.jsx:55
 msgid "Related Plannings"
@@ -9954,7 +9908,7 @@ msgstr "Retirer des articles en vedettes"
 
 #: ../superdesk-planning/client/constants/planning.js:85
 msgid "Remove from featured stories"
-msgstr "Retirer des articles en vedette"
+msgstr "Retirer des articles à la une"
 
 #: scripts/apps/authoring/metadata/views/meta-place-directive.html:33
 #: scripts/apps/authoring/metadata/views/metadata-target-publishing.html:20
@@ -10008,7 +9962,7 @@ msgstr "Affectation retirée de la couverture."
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:73
 msgid "Removed from featured stories"
-msgstr "Retiré des articles en vedette"
+msgstr "Retiré des articles à la une"
 
 #: scripts/apps/workspace/views/edit-workspace-modal.html:4
 msgid "Rename Workspace"
@@ -10573,7 +10527,7 @@ msgstr "Enregistrer les modifications avant d'annuler l'événement?"
 
 #: ../superdesk-planning/client/actions/events/ui.ts:894
 msgid "Save changes before creating a planning item ?"
-msgstr "Enregistrer les modifications avant de créer un élément de planification?"
+msgstr "Enregistrer les modifications avant de créer une couverture?"
 
 #: ../superdesk-planning/client/components/Main/ItemEditor/EditorItemActions.jsx:89
 msgid "Save changes before creating a template?"
@@ -10621,7 +10575,7 @@ msgstr "Enregistrer l'élément actuel"
 
 #: ../superdesk-planning/client/constants/events.js:111
 msgid "Save event as a template"
-msgstr "Enregistrer l'événement en tant que gabarit"
+msgstr "Enregistrer en tant que gabarit"
 
 #: scripts/apps/users/views/edit-form.html:332
 msgid "Save password"
@@ -10645,7 +10599,7 @@ msgstr "Enregistré"
 
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:327
 msgid "Saved Featured Stories record"
-msgstr ""
+msgstr "Registre des articles à la une enregistré"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-list.html:71
 #: ../superdesk-analytics/client/scheduled_reports/views/scheduled-reports-modal.html:83
@@ -11000,7 +10954,7 @@ msgstr "Sélectionner une affectation"
 
 #: ../superdesk-planning/client/components/AddToPlanningModal/index.jsx:68
 msgid "Select an existing Planning Item or create a new one"
-msgstr "Sélectionnez un élément de planification existant ou créez-en un"
+msgstr "Sélectionnez une couverture existante ou créez-en une"
 
 #: scripts/apps/authoring/authoring/directives/ItemAssociationDirective.ts:69
 msgid "Select at most 1 file to upload."
@@ -11206,21 +11160,9 @@ msgstr "Service"
 msgid "Sessions cleared"
 msgstr "Séances fermées"
 
-#: scripts/extensions/sams/dist/src/components/sets/setPreviewPanel.js:85
-msgid "Set Details"
-msgstr "Détails de l'ensemble"
-
 #: scripts/apps/users/views/settings-roles.html:49
 msgid "Set as default"
 msgstr "Définir par défault"
-
-#: scripts/extensions/sams/dist/src/api/sets.js:23
-msgid "Set created successfully"
-msgstr "Ensemble créé"
-
-#: scripts/extensions/sams/dist/src/api/sets.js:51
-msgid "Set deleted successfully"
-msgstr "Ensemble supprimé"
 
 #: scripts/apps/highlights/components/SetHighlightsForMultipleArticlesModal.tsx:80
 msgid "Set highlights"
@@ -11242,10 +11184,6 @@ msgid ""
 " anything, anywhere, anytime. You can have as many Monitor widgets as you "
 "wish."
 msgstr "Configurez différents moniteurs pour suivre un sujet depuis son ingestion ou sa production, sa publication dans un pupitre, ou n'importe quelle étape du flux de travail. Il suffit de lui donner un nom approprié, puis de sélectionner une recherche enregistrée, un pupitre ou une étape du flux de travail. Il est possible de suivre n'importe quoi, n'importe où à n'importe quel moment. Il n'y a pas de limite quant au nombre de moniteurs."
-
-#: scripts/extensions/sams/dist/src/api/sets.js:37
-msgid "Set updated successfully"
-msgstr "Ensemble mis à jour"
 
 #: scripts/apps/settings/index.ts:19 scripts/apps/settings/settings.tsx:32
 #: scripts/core/menu/views/menu.html:13
@@ -11589,7 +11527,7 @@ msgstr "Suivi des éléments dans la corbeille"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:135
 msgid "Spike Planning Item"
-msgstr "Placer l'élément de planification dans la corbeille"
+msgstr "Placer la couverture dans la corbeille"
 
 #: ../superdesk-planning/client/components/fields/editor/SpikeState.tsx:16
 msgid "Spike State"
@@ -11617,7 +11555,7 @@ msgstr "Placer la planification dans la corbeille"
 
 #: ../superdesk-planning/client/components/Tooltips.jsx:5
 msgid "Spike planning item"
-msgstr "Placer l'élément de planification dans la corbeille"
+msgstr "Placer la couverture dans la corbeille"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:69
 msgid "Spike {{event}}"
@@ -12004,7 +11942,7 @@ msgstr "A P"
 
 #: ../superdesk-planning/client/constants/index.js:26
 msgid "TBC"
-msgstr ""
+msgstr "À CONFIRMER"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:99
 msgid "TH"
@@ -12210,19 +12148,19 @@ msgstr "Un filtre de visualisation d'événements et de planification avec ce no
 
 #: ../superdesk-planning/client/actions/planning/ui.js:32
 msgid "The Planning Item(s) has been spiked."
-msgstr "L'/les élément(s) de planification a/ont été placé(s) dans la corbeille."
+msgstr "La/les couverture(s) a/ont été placée(s) dans la corbeille."
 
 #: ../superdesk-planning/client/actions/planning/ui.js:54
 msgid "The Planning Item(s) has been unspiked."
-msgstr "L'/les élément(s) de planification a/ont été sorti(s) de la corbeille."
+msgstr "La/les couverture(s) a/ont été sortie(s) de la corbeille."
 
 #: ../superdesk-planning/client/actions/planning/notifications.js:195
 msgid "The Planning item was spiked"
-msgstr "L'élément de planification a été placé dans la corbeille"
+msgstr "La couverture a été placée dans la corbeille"
 
 #: ../superdesk-planning/client/actions/planning/notifications.js:228
 msgid "The Planning item was unspiked"
-msgstr "L'élément de planification a été sorti de la corbeille"
+msgstr "La couverture a été sortie de la corbeille"
 
 #: scripts/apps/products/views/products-config-modal.html:28
 msgid ""
@@ -12398,7 +12336,7 @@ msgstr "L'index est utilisé dans les types de contenu suivants:"
 
 #: ../superdesk-planning/client/actions/main.ts:372
 msgid "The {{ itemType }} has been posted"
-msgstr "Le {{itemType}} a été publié"
+msgstr "{{itemType}} publié"
 
 #: ../superdesk-planning/client/actions/main.ts:231
 msgid "The {{ itemType }} has been saved"
@@ -12508,7 +12446,7 @@ msgstr "Certains changements qui n'ont pas été enregistrés vont être perdus.
 msgid ""
 "There are unsaved changes. Are you sure you want to exit Manging Featured "
 "Stories?"
-msgstr ""
+msgstr "Certains changements n'ont pas été enregistrés. Êtes-vous certain de vouloir quitter la gestion des articles à la une?"
 
 #: scripts/apps/authoring/authoring/services/ConfirmDirtyService.ts:28
 msgid ""
@@ -12538,11 +12476,11 @@ msgstr "Un problème est survenu avec le téléversement"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:37
 msgid "There was a problem, Planning item not spiked!"
-msgstr "Un problème est survenu, l'élément de planification n'a pas été placé dans la corbeille!"
+msgstr "Un problème est survenu, la couverture n'a pas été placée dans la corbeille!"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:58
 msgid "There was a problem, Planning item not unspiked!"
-msgstr "Un problème est survenu, l'élément de planification n'a pas été sorti de la corbeille!"
+msgstr "Un problème est survenu, la couverture n'a pas été sortie de la corbeille!"
 
 #: scripts/apps/desks/directives/DeskeditBasic.ts:61
 msgid "There was a problem, desk not created/updated."
@@ -12759,9 +12697,9 @@ msgstr "Ceci va également publier toute les séries récurrentes de l'événeme
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postponeEventForm.jsx:115
 msgid "This will also postpone the following planning items"
-msgstr "Cela reportera également les éléments de planification suivants"
+msgstr "Ceci reportera également la couverture suivante"
 
-#: ../superdesk-planning/client/actions/assignments/ui.js:842
+#: ../superdesk-planning/client/actions/assignments/ui.js:839
 msgid ""
 "This will also remove other linked assignments (if any, for story updates). "
 "Are you sure?"
@@ -12773,7 +12711,7 @@ msgstr "Ceci va également {{action}} les événements suivants"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/UpdateMethodSelection.jsx:38
 msgid "This will also {{action}} the following planning items"
-msgstr "Ceci va également {{action}} les éléments de planification suivants"
+msgstr "Ceci va également {{action}} les couvertures suivantes"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:105
 msgid ""
@@ -12791,7 +12729,7 @@ msgstr "Ceci créera le nouvel événement dans le fuseau horaire ({{timeZone}})
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:220
 msgid "This will mark as rescheduled the following planning items"
-msgstr "Ceci marquera comme reprogrammés les éléments de planification suivants"
+msgstr "Ceci marquera comme reprogrammées les couvertures suivantes"
 
 #: ../superdesk-planning/client/actions/assignments/ui.js:489
 msgid ""
@@ -13361,7 +13299,7 @@ msgstr "Sortir l'élément de la corbeille"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:140
 msgid "Unspike Planning Item"
-msgstr "Sortir l'élément de planification de la corbeille"
+msgstr "Sortir la couverture de la corbeille"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/unspikeEventForm.jsx:95
 msgid "Unspike all recurring events or just this one?"
@@ -13377,7 +13315,7 @@ msgstr "Sortir la planification de la corbeille"
 
 #: ../superdesk-planning/client/components/Tooltips.jsx:6
 msgid "Unspike planning item"
-msgstr "Sortir l'élément de planification de la corbeille"
+msgstr "Sortir la couverture de la corbeille"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:75
 msgid "Unspike {{event}}"
@@ -13597,10 +13535,6 @@ msgstr "Statistiques de priorités"
 msgid "Urgency:"
 msgstr "Priorité:"
 
-#: scripts/extensions/sams/dist/src/components/sets/setListPanel.js:56
-msgid "Usable Sets"
-msgstr "Ensembles utilisables"
-
 #: scripts/apps/workspace/content/constants.ts:112
 msgid "Usage Terms"
 msgstr "Conditions d'utilisation"
@@ -13653,7 +13587,6 @@ msgstr "Utilisé"
 #: ../superdesk-planning/client/components/Assignments/AssignmentEditor.jsx:303
 #: scripts/apps/authoring/metadata/views/metadata-terms.html:46
 #: scripts/apps/users/views/user-privileges.html:16
-#: scripts/extensions/markForUser/dist/get-authoring-actions.js:8
 msgid "User"
 msgstr "Utilisateur"
 
@@ -13837,11 +13770,11 @@ msgstr "Afficher l'événement associé"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:155
 msgid "View duplicate event"
-msgstr "Afficher le doublon de l'événement"
+msgstr "Afficher le double de l'événement"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:126
 msgid "View duplicate planning item"
-msgstr "Afficher le doublon de l'élément de planification"
+msgstr "Afficher le double de la couverture"
 
 #: scripts/apps/users/views/list.html:67
 msgid "View full profile"
@@ -13863,12 +13796,12 @@ msgstr "Voir l'événement original"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:138
 msgid "View original planning item"
-msgstr "Afficher l'élément de planification original"
+msgstr "Afficher la couverture originale"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:143
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:204
 msgid "View planning item"
-msgstr "Afficher l'élément de planification"
+msgstr "Afficher la couverture"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:177
 msgid "View rescheduled event"
@@ -13973,11 +13906,11 @@ msgstr "Quand"
 msgid ""
 "When active, assigned coverages for the Planning item will not be "
 "automatically added to workflow"
-msgstr "Lorsqu'elles sont activées, les couvertures affectées pour l'élément de planification ne seront pas automatiquement ajoutées au flux de travail"
+msgstr "Lorsqu'elles sont actives, les couvertures affectées ne sont pas automatiquement ajoutées au flux de travail"
 
 #: ../superdesk-planning/client/components/Planning/PlanningEditor/index.tsx:817
 msgid "When active, the Planning item will not be publishable"
-msgstr "Lorsqu'il est activé, l'élément de planification ne peut pas être publié"
+msgstr "Lorsqu'elle est active, la couverture ne peut pas être publiée"
 
 #: scripts/apps/highlights/views/highlights_config_modal.html:38
 #: scripts/apps/highlights/views/highlights_config_modal.html:47
@@ -14108,7 +14041,7 @@ msgstr "Hier"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/UnlockFeaturedPlanning.jsx:73
 msgid "You are currently managing featured story in another session"
-msgstr "Vous gérez actuellement l'article en vedette dans une autre session."
+msgstr "Vous gérez actuellement l'article à la une dans une autre session."
 
 #: scripts/apps/workspace/content/services/ContentService.ts:72
 msgid "You are not allowed to create an article there."
@@ -14133,7 +14066,7 @@ msgstr "Vous pouvez choisir l'affichage par défaut du contenu de votre pupitre.
 msgid ""
 "You can either completely block further writing after the characterlimit is "
 "reached or highlight exceeding characters in red."
-msgstr ""
+msgstr "Vous pouvez choisir de surligner en rouge les caractères excédentaires ou d'empêcher de taper au-delà de la limite de caractères. "
 
 #: scripts/apps/monitoring/views/item-actions-menu.html:44
 msgid "You don't have the privileges to perform any action"
@@ -14432,11 +14365,11 @@ msgstr "créé"
 
 #: ../superdesk-planning/client/actions/agenda.ts:232
 msgid "created  planning item."
-msgstr "élément de planification créé."
+msgstr "couverture créée."
 
 #: ../superdesk-planning/client/actions/agenda.ts:221
 msgid "created / planning item(s)"
-msgstr "créé / élément(s) de planification"
+msgstr "créée(s) / couverture(s)"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentHistory.jsx:42
 #: ../superdesk-planning/client/components/RelatedPlannings/index.jsx:100
@@ -15119,11 +15052,11 @@ msgstr "photo"
 
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:45
 msgid "planning item"
-msgstr "élément de planification"
+msgstr "couverture"
 
 #: ../superdesk-planning/client/components/MultiSelectActions.jsx:45
 msgid "planning items"
-msgstr "éléments de planification"
+msgstr "couvertures"
 
 #: scripts/apps/users/views/edit-form.html:133
 msgid "please provide a valid email address"
@@ -15137,7 +15070,7 @@ msgstr "Veuillez utiliser uniquement des lettres (a-z), des chiffres (0-9), des 
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/postEventsForm.jsx:120
 msgid "post"
-msgstr "message"
+msgstr "publier"
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:570
 msgid "postcode"
@@ -15145,7 +15078,7 @@ msgstr "code postal"
 
 #: ../superdesk-planning/client/utils/history.js:112
 msgid "posted"
-msgstr "affiché"
+msgstr "publié"
 
 #: scripts/core/editor3/helpers/highlights.ts:68 scripts/core/utils.ts:133
 msgid "preformatted"
