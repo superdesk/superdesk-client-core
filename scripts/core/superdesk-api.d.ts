@@ -1816,6 +1816,15 @@ declare module 'superdesk-api' {
         config: IConfig;
     }
 
+    export interface ITemplateEditorComponentProps<IValue, IConfig> {
+        item: IArticle;
+        value: IValue;
+        setValue: (value: IValue) => void;
+        readOnly: boolean;
+        config: IConfig;
+        radioValue?: string,
+    }
+
     export interface IPreviewComponentProps {
         item: IArticle;
         value: any;
@@ -1833,6 +1842,7 @@ declare module 'superdesk-api' {
         editorComponent: React.ComponentType<IEditorComponentProps<IConfig>>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
+        templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
     }
 
 

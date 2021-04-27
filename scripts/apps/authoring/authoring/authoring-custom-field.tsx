@@ -9,6 +9,7 @@ interface IProps {
     field: IArticleField;
     editable: boolean;
     onChange: (field: IArticleField, value: any) => any;
+    template: any;
 }
 
 // IProps['onChange'] updates the item asynchronously
@@ -46,8 +47,9 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
         this.setValue = this.setValue.bind(this);
     }
     setValue(value) {
-        this.setState({value});
-        this.onChangeThrottled(this.props.field, value);
+        this.setState({value}, () => {
+            this.onChangeThrottled(this.props.field, value);
+        });
     }
     componentDidUpdate() {
         const propsValue = getValue(this.props);
@@ -67,16 +69,22 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
         if (FieldType == null) {
             return null;
         }
-
         return (
             <div>
-                <FieldType.editorComponent
+                {this.props.template == null ? (<FieldType.editorComponent
                     item={item}
                     value={this.state.value}
                     setValue={(value) => this.setValue(value)}
                     readOnly={!editable}
                     config={field.custom_field_config}
-                />
+                />) :
+                <FieldType.templateEditorComponent
+                    item={item}
+                    value={this.state.value}
+                    setValue={(value) => this.setValue(value)}
+                    readOnly={!editable}
+                    config={field.custom_field_config}
+                />}
             </div>
         );
     }

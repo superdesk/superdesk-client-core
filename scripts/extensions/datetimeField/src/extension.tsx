@@ -7,6 +7,7 @@ import {
     IPreviewComponentProps,
 } from 'superdesk-api';
 import {getDateTimeField} from './getDateTimeField';
+import {getTemplateDateTimeField} from './getTemplateDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
 
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {
@@ -46,6 +47,7 @@ const extension: IExtension = {
                         editorComponent: getDateTimeField(superdesk),
                         previewComponent: getDateTimePreviewComponent(superdesk),
                         configComponent: getConfigComponent(superdesk),
+                        templateEditorComponent: getTemplateDateTimeField(superdesk),
                     },
                 ],
             },
