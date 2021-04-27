@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import handleError from '../helpers';
 import {gettext} from 'core/utils';
+import {IUserRole} from 'superdesk-api';
 
 RolesPrivilegesDirective.$inject = ['api', 'notify', '$q', '$filter'];
 export function RolesPrivilegesDirective(api, notify, $q, $filter) {
@@ -37,7 +38,11 @@ export function RolesPrivilegesDirective(api, notify, $q, $filter) {
                 });
             };
 
-            scope.toggleAll = (role, value) => {
+            scope.toggleAll = (role: IUserRole, value: number) => {
+                if (role.privileges == null) {
+                    role.privileges = {};
+                }
+
                 scope.privileges.forEach((privilege) => {
                     role.privileges[privilege.name] = value;
                 });
