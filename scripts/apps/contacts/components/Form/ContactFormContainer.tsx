@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} from 'lodash';
+import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil, isObject} from 'lodash';
 
 import {gettext} from 'core/utils';
 import {StretchBar} from 'core/ui/components/SubNav';
@@ -144,6 +144,10 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
 
         if (diff.instagram) {
             diff.instagram = IG_URL + this.state.currentContact.instagram;
+        }
+
+        if (diff?.contact_state != null && !isObject(diff?.contact_state)) {
+            diff.contact_state = {name: diff.contact_state};
         }
 
         // clean diff

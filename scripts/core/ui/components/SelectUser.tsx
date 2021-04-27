@@ -47,6 +47,9 @@ export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState
             this.state.selectedUser === 'loading'
             || this.state.selectedUser?._id !== this.props.selectedUserId
         ) {
+            // eslint-disable-next-line react/no-did-update-set-state
+            this.setState({selectedUser: 'loading'});
+
             this.asyncHelpers.httpRequestJsonLocal<IUser>({
                 method: 'GET',
                 path: `/users/${this.props.selectedUserId}`,

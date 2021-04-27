@@ -2,18 +2,24 @@ import React from 'react';
 import {gettext} from 'core/utils';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const assignment: React.StatelessComponent<IPropsItemListInfo> = ({item}) => {
-    if (item.assignment_id == null) {
-        return null;
-    }
+class AssignmentComponent extends React.Component<IPropsItemListInfo> {
+    render() {
+        const {item} = this.props;
 
-    return (
-        <span
-            key="assignment"
-            className="assignment-icon"
-            title={gettext('Coverage')}
-        >
-            <i className="icon-calendar" />
-        </span>
-    );
-};
+        if (item.assignment_id == null) {
+            return null;
+        }
+
+        return (
+            <span
+                key="assignment"
+                className="assignment-icon"
+                title={gettext('Coverage')}
+            >
+                <i className="icon-calendar" />
+            </span>
+        );
+    }
+}
+
+export const assignment = AssignmentComponent;

@@ -21,7 +21,7 @@ export function getEditorFieldCharactersCount(text: string, html?: boolean) {
 export function CharacterCount(props: IProps) {
     const {limit} = props;
     const numChars = getEditorFieldCharactersCount(props.item, props.html);
-    const highlightLimit = limit && numChars >= limit;
+    const highlightLimit = limit && numChars > limit;
 
     return (
         <>

@@ -31,9 +31,15 @@ export interface IContact {
     contact_address?: Array<string>;
     locality?: string;
     city?: string;
-    contact_state?: string;
+    contact_state?: {
+        name?: string,
+        qcode?: string,
+    };
     postcode?: string;
-    country?: string;
+    country?: {
+        name?: string,
+        qcode?: string,
+    };
     notes?: string;
     contact_type?: string;
 }

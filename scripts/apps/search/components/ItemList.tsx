@@ -12,10 +12,14 @@ import {IMultiSelectOptions} from 'core/MultiSelectHoc';
 import {IActivityService} from 'core/activity/activity';
 import {isButtonClicked} from './Item';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
+import {IRelatedEntities} from 'core/getRelatedEntities';
+import {OrderedMap} from 'immutable';
+import {MultiSelect} from 'core/ArticlesListV2MultiSelect';
 
 interface IProps {
     itemsList: Array<string>;
     itemsById: any;
+    relatedEntities: IRelatedEntities;
     narrow: boolean;
     view: 'compact' | 'mgrid' | 'photogrid';
     selected: string;
@@ -46,14 +50,15 @@ interface IProps {
 
 export interface ILegacyMultiSelect {
     kind: 'legacy';
-    multiSelect(items: Array<IArticle>, selected: boolean): void;
+    multiSelect(item: IArticle, selected: boolean, multiSelectMode: boolean): void;
     setSelectedItem(itemId: string): void;
 }
 
 export interface IMultiSelectNew {
     kind: 'new';
-    options: IMultiSelectOptions;
-    MultiSelectComponent: React.ComponentType<{item: IArticle; options: IMultiSelectOptions}>;
+    options: IMultiSelectOptions<IArticle>;
+    items: OrderedMap<string, IArticle>;
+    MultiSelectComponent: typeof MultiSelect;
 }
 
 interface IState {
@@ -95,7 +100,6 @@ export class ItemList extends React.Component<IProps, IState> {
 
         this.select = this.select.bind(this);
         this.selectItem = this.selectItem.bind(this);
-        this.selectMultipleItems = this.selectMultipleItems.bind(this);
         this.dbClick = this.dbClick.bind(this);
         this.edit = this.edit.bind(this);
         this.deselectAll = this.deselectAll.bind(this);
@@ -134,7 +138,7 @@ export class ItemList extends React.Component<IProps, IState> {
         const selectedItem = this.getSelectedItem();
 
         if (selectedItem) {
-            this.props.multiSelect.multiSelect([selectedItem], !selectedItem.selected);
+            this.props.multiSelect.multiSelect(selectedItem, !selectedItem.selected, false);
         }
     }
 
@@ -151,10 +155,6 @@ export class ItemList extends React.Component<IProps, IState> {
         }
 
         const {$timeout} = this.angularservices;
-
-        if (event && event.shiftKey) {
-            return this.selectMultipleItems(item);
-        }
 
         this.setSelectedItem(item);
 
@@ -235,37 +235,8 @@ export class ItemList extends React.Component<IProps, IState> {
         if (isCheckAllowed(item)) {
             const selected = !item.selected;
 
-            this.props.multiSelect.multiSelect([item], selected);
+            this.props.multiSelect.multiSelect(item, selected, false);
         }
-    }
-
-    selectMultipleItems(lastItem) {
-        if (this.props.multiSelect.kind !== 'legacy') {
-            throw new Error('Legacy multiselect API expected.');
-        }
-
-        const {search} = this.angularservices;
-        const itemId = search.generateTrackByIdentifier(lastItem);
-        let positionStart = 0;
-        const positionEnd = _.indexOf(this.props.itemsList, itemId);
-        const selectedItems = [];
-
-        if (this.props.selected) {
-            positionStart = _.indexOf(this.props.itemsList, this.props.selected);
-        }
-
-        const start = Math.min(positionStart, positionEnd);
-        const end = Math.max(positionStart, positionEnd);
-
-        for (let i = start; i <= end; i++) {
-            const item = this.props.itemsById[this.props.itemsList[i]];
-
-            if (isCheckAllowed(item)) {
-                selectedItems.push(item);
-            }
-        }
-
-        this.props.multiSelect.multiSelect(selectedItems, true);
     }
 
     setActioning(item: IArticle, isActioning: boolean) {
@@ -326,12 +297,12 @@ export class ItemList extends React.Component<IProps, IState> {
         }
     }
 
-    edit(item: IArticle) {
+    edit(item: IArticle, event) {
         const {authoringWorkspace} = this.angularservices;
         const {$timeout} = this.angularservices;
 
         if (this.props.selected !== item._id) {
-            this.select(item, null);
+            this.select(item, event);
         }
 
         $timeout.cancel(this.updateTimeout);
@@ -413,9 +384,9 @@ export class ItemList extends React.Component<IProps, IState> {
             });
         };
 
-        const openItem = () => {
+        const openItem = (_event) => {
             if (this.props.selected) {
-                this.edit(this.getSelectedItem());
+                this.edit(this.getSelectedItem(), _event);
             }
 
             event.stopPropagation();
@@ -441,7 +412,7 @@ export class ItemList extends React.Component<IProps, IState> {
             break;
 
         case Keys.enter:
-            openItem();
+            openItem(event);
             closeActionsMenu();
             break;
 
@@ -517,7 +488,7 @@ export class ItemList extends React.Component<IProps, IState> {
             return (
                 <ul
                     className="list-view list-without-items"
-                    tabIndex={0}
+                    tabIndex={-1}
                     ref={(el) => {
                         this.focusableElement = el;
                     }}
@@ -530,7 +501,7 @@ export class ItemList extends React.Component<IProps, IState> {
             return (
                 <ul
                     className="list-view list-without-items"
-                    tabIndex={0}
+                    tabIndex={-1}
                     ref={(el) => {
                         this.focusableElement = el;
                     }}
@@ -551,7 +522,7 @@ export class ItemList extends React.Component<IProps, IState> {
                 onKeyDown={(event) => {
                     this.handleKey(event);
                 }}
-                tabIndex={0}
+                tabIndex={-1}
                 ref={(el) => {
                     this.focusableElement = el;
                 }}
@@ -566,6 +537,7 @@ export class ItemList extends React.Component<IProps, IState> {
                                 key={itemId}
                                 isNested={false}
                                 item={item}
+                                relatedEntities={this.props.relatedEntities}
                                 view={this.props.view}
                                 swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
                                 flags={{selected: this.props.selected === itemId}}

@@ -94,3 +94,63 @@ export function httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): 
             }));
         });
 }
+
+export function httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promise<Response> {
+    return ng.getService('session')
+        .then((session) => {
+            return httpRequestBase({
+                ...options,
+                url: appConfig.server.url + options.path,
+                headers: {
+                    ...(options.headers || {}),
+                    'Authorization': session.token,
+                },
+            }).then((res) => {
+                if (res.ok) {
+                    return res;
+                } else {
+                    return Promise.reject(res);
+                }
+            });
+        });
+}
+
+export function uploadFileWithProgress<T>(
+    endpoint: string,
+    data: FormData,
+    onProgress: (event: ProgressEvent) => void,
+    method?: 'POST' | 'PATCH',
+    etag?: string,
+): Promise<T> {
+    return ng.getService('session')
+        .then((session) => {
+            return new Promise<T>((resolve, reject) => {
+                // Using `XMLHttpRequest` over `fetch` so we can get `onprogress` reporting
+                const request = new XMLHttpRequest();
+                const url = appConfig.server.url + endpoint;
+
+                request.open(method ?? 'POST', url);
+                request.setRequestHeader('Authorization', session.token);
+
+                if (method === 'PATCH' && etag != null) {
+                    request.setRequestHeader('If-Match', etag);
+                }
+
+                request.upload.onprogress = onProgress;
+
+                request.onload = function() {
+                    if (this.status >= 200 && this.status < 300) {
+                        resolve(JSON.parse(this.responseText));
+                    } else {
+                        reject(JSON.parse(this.responseText));
+                    }
+                };
+
+                request.onerror = function(e: ProgressEvent) {
+                    reject(e);
+                };
+
+                request.send(data);
+            });
+        });
+}

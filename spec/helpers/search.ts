@@ -126,7 +126,14 @@ class GlobalSearch {
          * @return {promise} element
          */
         this.getItem = function(index) {
-            return this.getItems().get(index);
+            if (typeof index === 'number') {
+                return this.getItems().get(index);
+            } else {
+                return this.getItems().filter(
+                    (item) => item.element(by.className('item-heading')).getText()
+                        .then((itemText) => itemText === index),
+                ).get(0);
+            }
         };
 
         this.itemClick = function(index) {

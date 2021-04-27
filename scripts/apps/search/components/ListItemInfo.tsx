@@ -4,10 +4,12 @@ import classNames from 'classnames';
 import {renderArea} from '../helpers';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
-import {IDesk, IArticle} from 'superdesk-api';
+import {IDesk, IArticle, IListViewFieldWithOptions} from 'superdesk-api';
+import {IRelatedEntities} from 'core/getRelatedEntities';
 
 export interface IPropsItemListInfo {
     item: IArticle;
+    relatedEntities: IRelatedEntities;
     desk: IDesk;
     ingestProvider: any;
     profilesById: any;
@@ -22,6 +24,7 @@ export interface IPropsItemListInfo {
     toggleNested: (event) => void;
     singleLine: boolean;
     customRender: any;
+    options?: IListViewFieldWithOptions['options'];
 }
 
 export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {

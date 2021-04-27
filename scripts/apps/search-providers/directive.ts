@@ -41,6 +41,12 @@ export default function SearchProviderConfigDirective(searchProviderService, not
              * Upserts the selected search provider.
              */
             $scope.save = function() {
+                Object.keys($scope.provider).forEach((key) => {
+                    if (typeof $scope.provider[key] === 'object' && $scope.provider[key] !== null) {
+                        $scope.provider[key] = {...$scope.origProvider[key], ...$scope.provider[key]};
+                    }
+                });
+
                 api.search_providers.save($scope.origProvider, $scope.provider)
                     .then(
                         () => {

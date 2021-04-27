@@ -228,9 +228,9 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        expect(monitoring.getTextItem(0, 0)).toBe('item5');
-        expect(monitoring.getTextItem(0, 1)).toBe('item9');
-        expect(monitoring.getTextItem(0, 3)).toBe('ingest1');
+        expect(monitoring.getTextItem(0, 0)).toBe('item1');
+        expect(monitoring.getTextItem(0, 1)).toBe('item2');
+        expect(monitoring.getTextItem(0, 5)).toBe('ingest1');
     });
 
     it('configure a saved search from other user', () => {
@@ -246,8 +246,9 @@ describe('monitoring', () => {
         monitoring.nextReorder();
         monitoring.saveSettings();
 
-        expect(monitoring.getTextItem(0, 0)).toBe('item5');
-        expect(monitoring.getTextItem(0, 1)).toBe('item9');
+        expect(monitoring.getTextItem(0, 0)).toBe('item1');
+        expect(monitoring.getTextItem(0, 1)).toBe('item2');
+
         monitoring.showMonitoringSettings();
         monitoring.nextStages();
         expect(monitoring.getGlobalSearchText(0)).toBe('global saved search ingest1 by first name last name');
@@ -390,11 +391,11 @@ describe('monitoring', () => {
             .perform();
         authoring.save();
         authoring.close();
-        expect(monitoring.getAllItems().count()).toBe(3);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 3));
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
-        expect(monitoring.getAllItems().count()).toBe(1);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 1));
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
@@ -599,10 +600,10 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        monitoring.openAction(0, 3); // creates new item
+        monitoring.openAction(0, 5); // creates new item
 
         expect(monitoring.getTextItem(0, 0)).toBe('ingest1');
-        expect(monitoring.getTextItem(0, 4)).toBe('ingest1');
+        expect(monitoring.getTextItem(0, 6)).toBe('ingest1');
     });
 
     it('can fetch as item', () => {
@@ -617,7 +618,7 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        monitoring.openFetchAsOptions(0, 3);
+        monitoring.openFetchAsOptions(0, 5);
 
         expect(element(by.id('publishScheduleTimestamp')).isPresent()).toBe(false);
         expect(element(by.id('embargoScheduleTimestamp')).isPresent()).toBe(false);
@@ -651,7 +652,7 @@ describe('monitoring', () => {
 
         monitoring.openMonitoring();
 
-        monitoring.fetchAndOpen(0, 3);
+        monitoring.fetchAndOpen(0, 5);
 
         expect(authoring.save_button.isDisplayed()).toBe(true);
     });
@@ -904,7 +905,7 @@ describe('monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        els(['templates-list']).get(1).element(by.buttonText(slugline)).click();
+        el(['select-template'], by.buttonText(slugline)).click();
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
@@ -930,6 +931,11 @@ describe('navigation using a keyboard', () => {
         firstItem.click();
 
         browser.wait(ECE.elementsEqual(getFocusedElement(), firstItem));
+
+        // Because list item has double click functionality, a delay is used
+        // for click handler function and it takes a few hundred ms
+        // until it gets executed and item is re-rendered as selected.
+        browser.wait(ECE.visibilityOf(el(['multi-select-checkbox'], null, firstItem)));
     });
 
     it('can focus the next or previous item using arrow keys', () => {
@@ -1086,7 +1092,7 @@ xdescribe('marked for me filter in monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown'], by.buttonText('More templates...')).click();
-        el(['templates-list'], by.buttonText('testing')).click();
+        el(['select-template'], by.buttonText('testing')).click();
 
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
@@ -1112,7 +1118,7 @@ xdescribe('marked for me filter in monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown'], by.buttonText('More templates...')).click();
-        el(['templates-list'], by.buttonText('testing')).click();
+        el(['select-template'], by.buttonText('testing')).click();
 
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 

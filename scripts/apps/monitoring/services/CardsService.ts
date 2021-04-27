@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import {flatMap, flattenDeep, includes, isNil} from 'lodash';
 import {setFilters, IQueryParams} from 'apps/search/services/SearchService';
 import {PUBLISHED_STATES} from 'apps/archive/constants';
 import {ITEM_STATE} from 'apps/archive/constants';
@@ -7,8 +7,17 @@ import {
     SENT_OUTPUT,
     SCHEDULED_OUTPUT,
 } from 'apps/desks/constants';
-import {appConfig} from 'appConfig';
-import {IMonitoringFilter} from 'superdesk-api';
+import {appConfig, extensions} from 'appConfig';
+import {IMonitoringFilter, IPersonalSpaceSection} from 'superdesk-api';
+
+export function getExtensionSections() {
+    return flatMap(
+        Object.values(extensions)
+            .map(
+                (extension) =>
+                    extension.activationResult?.contributions?.personalSpace?.getSections?.() ?? []),
+    );
+}
 
 export interface ICard {
     _id: string;
@@ -40,6 +49,8 @@ export interface ICard {
     singleViewType?: 'desk' | 'stage' | any;
     query: any;
     sent?: boolean;
+    markedForMe?: boolean;
+    queryParams?: any;
 }
 
 CardsService.$inject = ['search', 'session', 'desks', '$location'];
@@ -76,6 +87,12 @@ export function CardsService(search, session, desks, $location) {
 
     function filterQueryByCardType(query, queryParam, card: ICard) {
         let deskId;
+        const extensionSection = getExtensionSections();
+        const section = extensionSection.find((response) => response.id === card.type);
+
+        if (section) {
+            query.filter(section.query);
+        }
 
         switch (card.type) {
         case 'search':
@@ -83,26 +100,26 @@ export function CardsService(search, session, desks, $location) {
 
         case 'spike-personal':
         case 'personal':
-            if (card.sent) {
-                query.filter({bool: {
-                    must: [
-                        {term: {original_creator: session.identity._id}},
-                        {exists: {field: 'task.desk'}},
-                    ],
-                }});
-            } else {
-                query.filter({bool: {
-                    must_not: {exists: {field: 'task.desk'}},
-                    should: [
-                        {term: {'task.user': session.identity._id}}, // sent to personal
-                        {bool: { // just created in personal
-                            must: {term: {original_creator: session.identity._id}},
-                            must_not: {exists: {field: 'task.user'}},
-                        }},
-                    ],
-                    minimum_should_match: 1,
-                }});
-            }
+            query.filter({bool: {
+                must_not: {exists: {field: 'task.desk'}},
+                should: [
+                    {term: {'task.user': session.identity._id}}, // sent to personal
+                    {bool: { // just created in personal
+                        must: {term: {original_creator: session.identity._id}},
+                        must_not: {exists: {field: 'task.user'}},
+                    }},
+                ],
+                minimum_should_match: 1,
+            }});
+            break;
+
+        case 'sent':
+            query.filter({bool: {
+                must: [
+                    {term: {original_creator: session.identity._id}},
+                    {exists: {field: 'task.desk'}},
+                ],
+            }});
             break;
 
         case 'spike':
@@ -136,9 +153,9 @@ export function CardsService(search, session, desks, $location) {
             break;
 
         default:
-            if (!_.isNil(card.singleViewType) && card.singleViewType === 'desk') {
+            if (!isNil(card.singleViewType) && card.singleViewType === 'desk') {
                 query.filter({term: {'task.desk': card.deskId}});
-            } else {
+            } else if (card._id) {
                 query.filter({term: {'task.stage': card._id}});
             }
             break;
@@ -185,14 +202,14 @@ export function CardsService(search, session, desks, $location) {
             var termsFileType: any = {terms: {type: JSON.parse(card.fileType)}};
 
             // Normal package
-            if (_.includes(JSON.parse(card.fileType), 'composite')) {
+            if (includes(JSON.parse(card.fileType), 'composite')) {
                 termsFileType = {and: [
                     {bool: {must_not: {exists: {field: 'highlight'}}}},
                     {terms: {type: JSON.parse(card.fileType)}},
                 ]};
             }
 
-            if (_.includes(JSON.parse(card.fileType), 'highlight-pack')) {
+            if (includes(JSON.parse(card.fileType), 'highlight-pack')) {
                 query.filter({or: [
                     termsHighlightsPackage,
                     termsFileType,

@@ -1,7 +1,5 @@
 import React from 'react';
 import {gettext} from 'core/utils';
-import {throttle} from 'lodash';
-import {throttleAndCombineSet} from './throttleAndCombine';
 import {OrderedMap} from 'immutable';
 
 interface IProps<T> {
@@ -34,12 +32,6 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
     private containerRef: any;
     private _mounted: boolean;
 
-    // throttled
-    public reset: () => void;
-
-    // throttled
-    public updateItems: (items: Set<string>) => void;
-
     constructor(props: IProps<T>) {
         super(props);
 
@@ -52,15 +44,12 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         this.allItemsLoaded = this.allItemsLoaded.bind(this);
         this.getLoadedItemsCount = this.getLoadedItemsCount.bind(this);
 
-        this.reset = throttle(() => {
-            if (this._mounted) {
-                this._reset();
-            }
-        }, 500);
-        this.updateItems = throttleAndCombineSet(this._updateItems.bind(this), 500);
+        this.reset = this.reset.bind(this);
+        this.reloadAllItems = this.reloadAllItems.bind(this);
+        this.updateItems = this.updateItems.bind(this);
     }
 
-    private _updateItems(ids: Set<string>): void {
+    public updateItems(ids: Set<string>): void {
         const {items} = this.state;
         const onlyLoadedIds = Array.from(ids).filter((id) => items.has(id));
 
@@ -71,13 +60,40 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         });
     }
 
-    private _reset() {
-        this.setState({
-            items: OrderedMap(),
-            loading: true,
-        }, () => {
-            this.loadMore();
-        });
+    private reloadAllItems() {
+        const MAX_PAGE_SIZE = 200; // back-end limit
+
+        const loadedItemsCount = this.state.items.size;
+
+        const pages = loadedItemsCount > 0 ?
+            new Array(Math.ceil(loadedItemsCount / MAX_PAGE_SIZE)).fill(null).map((_, i) => {
+                const to = (i + 1) * MAX_PAGE_SIZE;
+                const to_limited = Math.min(to, loadedItemsCount);
+                const from = to - MAX_PAGE_SIZE;
+
+                return {from: from, to: to_limited};
+            }) : (
+                [{from: this.state.items.size, to: this.state.items.size + this.props.pageSize}]
+            );
+
+        if (this._mounted) {
+            this.setState({
+                loading: true,
+            }, () => {
+                Promise.all(
+                    pages.map(({from, to}) => this.props.loadMoreItems(from, to)),
+                ).then((res) => {
+                    this.setState({
+                        items: res.reduce((acc, item) => acc.merge(item)),
+                        loading: false,
+                    });
+                });
+            });
+        }
+    }
+
+    public reset(): void {
+        this.reloadAllItems();
     }
 
     private loadMore() {
@@ -148,7 +164,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                         }
 
                         const {scrollHeight, offsetHeight, scrollTop} = (event.target as any);
-                        const reachedBottom = scrollHeight === offsetHeight + scrollTop;
+                        const reachedBottom = scrollHeight === Math.round(offsetHeight + scrollTop);
 
                         if (reachedBottom) {
                             this.loadMore();

@@ -4,8 +4,6 @@ import React from 'react';
 import classNames from 'classnames';
 import {get} from 'lodash';
 
-import {broadcast} from './fields/broadcast';
-
 import {ActionsMenu} from './actions-menu/ActionsMenu';
 import {closeActionsMenu, isIPublishedArticle} from '../helpers';
 import {gettext} from 'core/utils';
@@ -23,6 +21,7 @@ import {IScopeApply} from 'core/utils';
 import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 import {IActivityService} from 'core/activity/activity';
 import {IActivity} from 'superdesk-interfaces/Activity';
+import {IRelatedEntities} from 'core/getRelatedEntities';
 
 export function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
@@ -53,6 +52,7 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
 interface IProps {
     swimlane: any;
     item: IArticle | IPublishedArticle;
+    relatedEntities: IRelatedEntities;
     profilesById: any;
     highlightsById: any;
     markedDesksById: any;
@@ -64,7 +64,7 @@ interface IProps {
     view: any;
     onDbClick: any;
     onEdit: any;
-    onSelect: any;
+    onSelect(item: IArticle, event): void;
     narrow: any;
     hideActions: boolean;
     multiSelectDisabled: boolean;
@@ -85,8 +85,9 @@ interface IState {
 }
 
 export class Item extends React.Component<IProps, IState> {
-    clickTimeout: number;
+    private clickTimeout: number;
     private _mounted: boolean;
+    private mouseDown: boolean;
 
     constructor(props) {
         super(props);
@@ -100,9 +101,9 @@ export class Item extends React.Component<IProps, IState> {
             nested: [],
         };
 
-        this.select = this.select.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         this.edit = this.edit.bind(this);
-        this.dbClick = this.dbClick.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.setActioningState = this.setActioningState.bind(this);
         this.setHoverState = this.setHoverState.bind(this);
         this.unsetHoverState = this.unsetHoverState.bind(this);
@@ -186,7 +187,7 @@ export class Item extends React.Component<IProps, IState> {
             nextState !== this.state;
     }
 
-    select(event) {
+    handleClick(event) {
         if (isButtonClicked(event)) {
             return;
         }
@@ -216,7 +217,7 @@ export class Item extends React.Component<IProps, IState> {
         }
     }
 
-    dbClick(event) {
+    handleDoubleClick(event) {
         if (isButtonClicked(event)) {
             return;
         }
@@ -336,7 +337,6 @@ export class Item extends React.Component<IProps, IState> {
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
                         ingestProvider={this.props.ingestProvider}
-                        broadcast={broadcast}
                         getActionsMenu={getActionsMenu}
                         multiSelect={this.props.multiSelect}
                     />
@@ -356,6 +356,7 @@ export class Item extends React.Component<IProps, IState> {
                 return (
                     <ListItemTemplate
                         item={item}
+                        relatedEntities={this.props.relatedEntities}
                         itemSelected={itemSelected}
                         desk={this.props.desk}
                         openAuthoringView={this.openAuthoringView}
@@ -395,6 +396,7 @@ export class Item extends React.Component<IProps, IState> {
                         {this.state.nested.map((childItem) => (
                             <Item
                                 item={childItem}
+                                relatedEntities={this.props.relatedEntities}
                                 key={childItem._id + childItem._current_version}
                                 flags={{}}
                                 profilesById={this.props.profilesById}
@@ -446,15 +448,25 @@ export class Item extends React.Component<IProps, IState> {
                 onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
-                onFocus: getCallback(() => {
-                    // not using this.select in order to avoid the timeout
-                    // that is used to enable double-click
-                    if (!this.props.item.gone) {
-                        this.props.onSelect(this.props.item, event);
+                onFocus: getCallback((event) => {
+                    // Only open preview on focus when it is triggered via keyboard.
+                    // When mouse is used, preview will open on click.
+                    if (this.mouseDown !== true) {
+                        // not using this.select in order to avoid the timeout
+                        // that is used to enable double-click
+                        if (!this.props.item.gone) {
+                            this.props.onSelect(this.props.item, event);
+                        }
                     }
                 }),
-                onClick: getCallback(this.select),
-                onDoubleClick: getCallback(this.dbClick),
+                onMouseDown: () => {
+                    this.mouseDown = true;
+                },
+                onMouseUp: () => {
+                    this.mouseDown = false;
+                },
+                onClick: getCallback(this.handleClick),
+                onDoubleClick: getCallback(this.handleDoubleClick),
                 onKeyDown: (event) => {
                     if (event.key === ' ') { // display item actions when space is clicked
                         const el = event.target?.querySelector('.more-activity-toggle-ref');

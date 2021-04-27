@@ -6,7 +6,6 @@ import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
-import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {getArticleSchemaMiddleware} from '..';
 import {isPublished} from 'apps/archive/utils';
@@ -141,8 +140,8 @@ export function AuthoringDirective(
             }, true);
 
             function checkShortcutButtonAvailability(personal = false) {
-                if (personal && appConfig?.features?.publishFromPersonal) {
-                    return $scope.item.state !== 'draft' || $scope.dirty;
+                if (personal) {
+                    return appConfig?.features?.publishFromPersonal && $scope.item.state !== 'draft';
                 }
                 return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
             }
@@ -1160,10 +1159,12 @@ export function AuthoringDirective(
 
             const removeListener = addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
-                (partialItem) => {
-                    angular.extend($scope.item, partialItem.detail);
-                    angular.extend($scope.origItem, partialItem.detail);
-                    $scope.$apply();
+                (event) => {
+                    if (event.detail._id === $scope.item._id) {
+                        angular.extend($scope.item, event.detail);
+                        angular.extend($scope.origItem, event.detail);
+                        $scope.$apply();
+                    }
                 },
             );
 
@@ -1330,7 +1331,7 @@ export function AuthoringDirective(
                 return state;
             }
 
-            const reducer = combineReducers({attachments, editor});
+            const reducer = combineReducers({editor});
 
             $scope.store = createStore(reducer, applyMiddleware(thunk.withExtraArgument({
                 $scope: $scope,
@@ -1338,10 +1339,7 @@ export function AuthoringDirective(
                 urls: $injector.get('urls'),
                 notify: notify,
                 superdesk: superdesk,
-                attachments: $injector.get('attachments'),
             })));
-
-            $scope.store.dispatch(initAttachments($scope.item));
 
             $scope.$watch('item.profile', (profile) => {
                 content.setupAuthoring(profile, $scope, $scope.item)

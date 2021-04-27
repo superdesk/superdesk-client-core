@@ -130,6 +130,7 @@ describe('Multi Action Bar', () => {
                 authoringWorkspace,
                 appConfig,
                 metadata,
+                {item: () => false},
                 preferencesService,
             ).then(() => {
                 const actions = getMultiActions(
