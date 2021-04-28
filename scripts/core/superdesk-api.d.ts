@@ -1141,6 +1141,9 @@ declare module 'superdesk-api' {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
 
+        articlePreviewStart: IArticle;
+        articlePreviewEnd: IArticle;
+
         // Attachments
         attachmentsAdded: Array<IAttachment>;
         attachmentRemoved: IAttachment;

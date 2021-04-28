@@ -9,7 +9,7 @@ import {getAuthoringField} from './getAuthoringField';
 import {authoringFieldHasValue} from './authoringFieldHasValue';
 import {isMediaField} from './isMediaField';
 import {gettext} from 'core/utils';
-import {formatDate} from 'core/get-superdesk-api-implementation';
+import {formatDate, dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {MediaMetadataView} from '../media/MediaMetadataView';
 import {appConfig} from 'appConfig';
 
@@ -38,6 +38,8 @@ export class FullPreview extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
+        dispatchCustomEvent('articlePreviewStart', this.props.item);
+
         Promise.all([
             dataApi.query<IVocabulary>(
                 'vocabularies',
@@ -59,6 +61,17 @@ export class FullPreview extends React.Component<IProps, IState> {
                 loading: false,
             });
         });
+    }
+
+    componentWillUnmount() {
+        dispatchCustomEvent('articlePreviewEnd', this.props.item);
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (prevProps.item._id !== this.props.item._id) {
+            dispatchCustomEvent('articlePreviewEnd', prevProps.item);
+            dispatchCustomEvent('articlePreviewStart', this.props.item);
+        }
     }
 
     render() {
