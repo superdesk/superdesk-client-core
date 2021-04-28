@@ -523,7 +523,9 @@ declare module 'superdesk-api' {
     export interface IUserRole extends IBaseRestApiResponse {
         _id: string;
         name: string;
-        privileges: any;
+        privileges?: {
+            [privilege: string]: 1 | 0;
+        };
         author_role: string;
         editor_role: string;
     }
