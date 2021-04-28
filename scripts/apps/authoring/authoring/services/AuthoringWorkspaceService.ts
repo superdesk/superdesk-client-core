@@ -1,6 +1,5 @@
-import {get, includes} from 'lodash';
+import {includes} from 'lodash';
 import {IArticle} from 'superdesk-api';
-import {getCustomEventNamePrefixed} from 'core/notification/notification';
 import {appConfig} from 'appConfig';
 
 export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
@@ -167,12 +166,6 @@ export class AuthoringWorkspaceService {
             window.close();
         }
 
-        if (this.action === 'edit') {
-            window.dispatchEvent(
-                new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: this.item}),
-            );
-        }
-
         this.suggest.setActive(false);
         this.item = null;
         this.action = null;
@@ -310,20 +303,8 @@ export class AuthoringWorkspaceService {
     private authoringOpen(itemId, action: IAuthoringAction, repo?, state?) {
         return this.authoring.open(itemId, action === 'view', repo, action, state)
             .then((item: IArticle) => {
-                if (this.item != null) { // action isn't relevant
-                    window.dispatchEvent(
-                        new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: this.item}),
-                    );
-                }
-
                 this.item = item;
                 this.action = action !== 'view' && item._editable ? action : 'view';
-
-                if (action === 'edit') {
-                    window.dispatchEvent(
-                        new CustomEvent(getCustomEventNamePrefixed('articleEditStart'), {detail: item}),
-                    );
-                }
 
                 this.saveState();
                 // closes preview if already opened
