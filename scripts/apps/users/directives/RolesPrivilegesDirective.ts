@@ -38,7 +38,7 @@ export function RolesPrivilegesDirective(api, notify, $q, $filter) {
                 });
             };
 
-            scope.toggleAll = (role: IUserRole, value: number) => {
+            scope.toggleAll = (role: IUserRole, value: 1 | 0) => {
                 if (role.privileges == null) {
                     role.privileges = {};
                 }

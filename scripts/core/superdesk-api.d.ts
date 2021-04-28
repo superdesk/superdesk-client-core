@@ -524,7 +524,7 @@ declare module 'superdesk-api' {
         _id: string;
         name: string;
         privileges?: {
-            [privilege: string]: number;
+            [privilege: string]: 1 | 0;
         };
         author_role: string;
         editor_role: string;
