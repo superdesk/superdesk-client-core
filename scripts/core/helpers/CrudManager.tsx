@@ -2,7 +2,7 @@
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
 import {generate} from 'json-merge-patch';
-import {isObject, omit, partition} from 'lodash';
+import {isObject, keyBy, partition} from 'lodash';
 import React from 'react';
 import {
     IBaseRestApiResponse,
@@ -140,33 +140,50 @@ function findOne<T>(endpoint: string, id: string): Promise<T> {
     });
 }
 
-function refetchChangedResources<T extends IBaseRestApiResponse>(
+function fetchChangedResources<T extends IBaseRestApiResponse>(
     resource: string,
     changes: Array<IResourceChange>,
-    currentItems: {[key: string]: T},
-): Promise<{[key: string]: T}> {
+    currentItems: Array<T>,
+    neverRefetchAll?: boolean,
+): Promise<Array<T> | 'requires-refetching-all'> {
     const changesToResource = changes.filter((change) => change.resource === resource);
 
     if (changesToResource.length < 1) {
         return Promise.resolve(currentItems);
     }
 
-    const [changesDeleted, changesCreatedUpdated] =
-        partition(changesToResource, (change) => change.changeType === 'deleted');
+    const [changesCreated, changesUpdatedDeleted] =
+        partition(changesToResource, (change) => change.changeType === 'created');
 
-    const currentItemsWithoutDeleted = omit(currentItems, changesDeleted.map(({itemId}) => itemId));
+    if (changesCreated.length > 0 && neverRefetchAll !== true) {
+        return Promise.resolve('requires-refetching-all');
+    }
 
-    return Promise.all(
-        changesCreatedUpdated.map(({itemId}) => findOne<T>(resource, itemId)),
-    ).then((items) => {
-        const currentResourcesUpdated = {...currentItemsWithoutDeleted};
+    const [changesDeleted, changesUpdated] =
+        partition(changesUpdatedDeleted, (change) => change.changeType === 'deleted');
 
-        for (const item of items) {
-            currentResourcesUpdated[item._id] = item;
-        }
+    const deletedIds = new Set(changesDeleted.map(({itemId}) => itemId));
+    const currentItemsWithoutDeleted = currentItems.filter(({_id}) => deletedIds.has(_id) === false);
 
-        return currentResourcesUpdated;
+    return Promise.all([
+        Promise.all(changesCreated.map(({itemId}) => findOne<T>(resource, itemId))),
+        Promise.all(changesUpdated.map(({itemId}) => findOne<T>(resource, itemId))),
+    ]).then(([itemsCreated, itemsUpdated]) => {
+        const updatedKeyed = keyBy(itemsUpdated, ({_id}) => _id);
+
+        return currentItemsWithoutDeleted.map((item) => updatedKeyed[item._id] ?? item).concat(itemsCreated);
     });
+}
+
+function fetchChangedResourcesObj<T extends IBaseRestApiResponse>(
+    resource: string,
+    changes: Array<IResourceChange>,
+    currentItems: {[id: string]: T},
+): Promise<{[id: string]: T}> {
+    return fetchChangedResources(resource, changes, Object.values(currentItems), true)
+        .then((res) => {
+            return keyBy(res as Array<T>, ({_id}) => _id);
+        });
 }
 
 export const dataApi: IDataApi = {
@@ -255,7 +272,8 @@ export const dataApi: IDataApi = {
         },
     }),
     uploadFileWithProgress: uploadFileWithProgress,
-    fetchChangedResources: refetchChangedResources,
+    fetchChangedResources: fetchChangedResources,
+    fetchChangedResourcesObj: fetchChangedResourcesObj,
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(

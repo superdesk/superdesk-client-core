@@ -1120,8 +1120,14 @@ declare module 'superdesk-api' {
         fetchChangedResources<T extends IBaseRestApiResponse>(
             resource: string,
             changes: Array<IResourceChange>,
-            currentItems: {[key: string]: T},
-        ): Promise<{[key: string]: T}>;
+            currentItems: Array<T>,
+            neverRefetchAll?: boolean,
+        ): Promise<Array<T> | 'requires-refetching-all'>
+        fetchChangedResourcesObj<T extends IBaseRestApiResponse>(
+            resource: string,
+            changes: Array<IResourceChange>,
+            currentItems: {[id: string]: T},
+        ): Promise<{[id: string]: T}>;
     }
 
 
