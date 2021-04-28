@@ -176,7 +176,10 @@ export function altKey(key) {
 }
 
 export function assertToastMsg(type: 'info' | 'success' | 'error', msg: string) {
-    browser.wait(ECE.visibilityOf(element(s([`notification--${type}`], msg))), 2000);
+    const elem = element(s([`notification--${type}`], msg));
+
+    browser.wait(ECE.elementToBeClickable(elem), 2000);
+    elem.click();
 }
 
 // Don't expect message to appear
