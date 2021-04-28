@@ -74,6 +74,7 @@ import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
 import {notify} from './notify/notify';
 import {sdApi} from 'api';
 import {IconBig} from './ui/components/IconBig';
+import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -406,6 +407,7 @@ export function getSuperdeskApiImplementation(
             stripHtmlTags,
             getLinesCount,
             downloadBlob,
+            throttleAndCombineArray,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

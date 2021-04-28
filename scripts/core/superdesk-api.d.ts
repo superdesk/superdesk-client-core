@@ -1581,6 +1581,17 @@ declare module 'superdesk-api' {
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
             downloadBlob(data: BinaryType, mimetype: string, filename: string): void;
+
+            /**
+             * When throttled function is called more frequently than specified via `wait` param,
+             * it stores the arrays in memory and after the wait times out
+             * it then invokes the handler function with all stored values.
+             */
+            throttleAndCombineArray<T>(
+                fn: IHandler<Array<T>>,
+                wait: number,
+                options?: ThrottleSettings,
+            );
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
