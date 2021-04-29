@@ -144,7 +144,7 @@ export function fetchChangedResources<T extends IBaseRestApiResponse>(
     resource: string,
     changes: Array<IResourceChange>,
     currentItems: Array<T>,
-    refreshAllOnFieldsChange: Set<string>,
+    refreshAllOnFieldsChange: Set<string> = new Set(),
     dontRefetchForNewItems?: boolean,
 ): Promise<Array<T> | 'requires-refetching-all'> {
     const changesToResource = changes.filter((change) => change.resource === resource);
@@ -174,11 +174,12 @@ export function fetchChangedResources<T extends IBaseRestApiResponse>(
     }
 
     const deletedIds = new Set(changesDeleted.map(({itemId}) => itemId));
+    const updatedIds = new Set(changesUpdated.map(({itemId}) => itemId));
+
     const currentItemsWithoutDeleted = currentItems.filter(({_id}) => deletedIds.has(_id) === false);
 
     return Promise.all([
-        Promise.all(changesCreated.map(({itemId}) => findOne<T>(resource, itemId))),
-        Promise.all(changesUpdated.map(({itemId}) => findOne<T>(resource, itemId))),
+        Promise.all(changesUpdated.filter(({itemId}) => updatedIds.has(itemId)).map(({itemId}) => findOne<T>(resource, itemId))),
     ]).then(([itemsCreated, itemsUpdated]) => {
         const updatedKeyed = keyBy(itemsUpdated, ({_id}) => _id);
 
