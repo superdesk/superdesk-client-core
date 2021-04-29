@@ -1086,6 +1086,11 @@ declare module 'superdesk-api' {
         children: (result: IRestApiResponse<T>) => JSX.Element;
     }
 
+    export interface ILiveResourcesProps {
+        resources: Array<{resource: string, ids?: Array<string>}>;
+        children: (result: Array<IRestApiResponse<unknown>>) => JSX.Element;
+    }
+
     export interface IAttachmentsWrapperProps {
         item: IArticle;
         attachments: Array<IAttachment>;
@@ -1525,6 +1530,7 @@ declare module 'superdesk-api' {
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
+            WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
         };
         forms: {

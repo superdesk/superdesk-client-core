@@ -76,6 +76,7 @@ import {sdApi} from 'api';
 import {IconBig} from './ui/components/IconBig';
 import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {WithLiveQuery} from './with-live-query';
+import {WithLiveResources} from './with-resources';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -333,6 +334,7 @@ export function getSuperdeskApiImplementation(
             getDropdownTree: () => DropdownTree,
             Spacer,
             getLiveQueryHOC: () => WithLiveQuery,
+            WithLiveResources,
         },
         forms: {
             FormFieldType,
