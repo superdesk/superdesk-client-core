@@ -8,7 +8,12 @@ import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/
 import {Radio, CheckGroup} from 'superdesk-ui-framework';
 
 interface ITemplateDateTimeFieldState {
-    radioValue: string;
+    radioValue: string | null;
+    previousValue: any;
+}
+
+function isDateValue(value: any) {
+    return !!Date.parse(value);
 }
 
 export function getTemplateDateTimeField(superdesk: ISuperdesk) {
@@ -16,23 +21,28 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
     const {getLocaleForDatePicker} = superdesk.ui.framework;
     const {Spacer} = superdesk.components;
     const {dateToServerString} = superdesk.utilities;
+    const currentDateTime = '{{ now }}';
 
     return class TemplateDateTimeField extends
-    React.PureComponent<ITemplateEditorComponentProps<string | boolean | null,
-    IDateTimeFieldConfig>, ITemplateDateTimeFieldState> {
+        React.PureComponent<ITemplateEditorComponentProps<string | null, IDateTimeFieldConfig>,
+        ITemplateDateTimeFieldState> {
         constructor(props: any) {
             super(props);
 
             this.state = {
-                radioValue: "setCurrentDate",
+                radioValue: isDateValue(this.props.value) ? this.props.value : 'setCurrentDate',
+                previousValue: new Date(),
             };
+
             this.onRadioValueChange = this.onRadioValueChange.bind(this);
         }
 
         onRadioValueChange(radioValue: any) {
             this.setState({radioValue});
-            if (radioValue === "setCurrentDate") {
-                this.props.setValue(this.state.radioValue);
+            if (radioValue === 'setCurrentDate') {
+                this.props.setValue(currentDateTime);
+            } else {
+                this.props.setValue(this.state.previousValue);
             }
         }
 
@@ -42,7 +52,10 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
                     value={this.props.value != null}
                     onChange={(value) => {
                         if (value) {
-                            this.props.setValue(true);
+                            this.props.setValue(
+                                dateToServerString(addMinutes(new Date(), this.props.config.initial_offset_minutes),
+                                ));
+                            this.onRadioValueChange('setCurrentDate');
                         } else {
                             this.props.setValue(null);
                         }
@@ -57,7 +70,12 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
                     </div>
                 );
             } else {
-                const date = new Date();
+                let isDate = isDateValue(this.props.value);
+                let date = new Date();
+
+                if (isDate) {
+                    date = new Date(this.props.value);
+                }
 
                 const day = format(date, 'yyyy-MM-dd'); // ISO8601
                 const hour = format(date, 'HH:mm'); // ISO8601
@@ -72,76 +90,86 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
                     <Spacer type="horizontal" align="center" spacing="medium">
                         {checkbox}
                         {this.props.value &&
-                            <CheckGroup>
-                                <Radio
-                                value={this.state.radioValue}
-                                options={[
-                                    {
-                                        value: "setCurrentDate",
-                                        label: "Always choose current date",
-                                    },
-                                    {
-                                        value: "showDate",
-                                        label: "Choose a date",
-                                    },
-                                ]}
-                                onChange={this.onRadioValueChange}/>
-                            </CheckGroup>
+                            (
+                                <CheckGroup>
+                                    {this.state.radioValue}
+                                    <Radio
+                                        value={this.state.radioValue || undefined}
+                                        options={[
+                                            {
+                                                value: 'setCurrentDate',
+                                                label: 'Always choose current date',
+                                            },
+                                            {
+                                                value: 'showDate',
+                                                label: 'Choose a date',
+                                            },
+                                        ]}
+                                        onChange={(val) => this.onRadioValueChange(val)}
+                                    />
+                                </CheckGroup>
+                            )
                         }
-                        {this.state.radioValue === "showDate"
-                        && <Spacer type="horizontal" align="stretch" spacing="medium">
-                            <DatePickerISO
-                                dateFormat={superdesk.instance.config.view.dateformat}
-                                locale={datePickerLocale}
-                                value={day}
-                                onChange={(dateString) => {
-                                    if (dateString === '') {
-                                        this.props.setValue(null);
-                                        return;
-                                    }
+                        {this.state.radioValue === 'showDate' &&
+                        (
+                            <Spacer type="horizontal" align="stretch" spacing="medium">
+                                <DatePickerISO
+                                    dateFormat={superdesk.instance.config.view.dateformat}
+                                    locale={datePickerLocale}
+                                    value={day}
+                                    onChange={(dateString) => {
+                                        if (dateString === '') {
+                                            this.props.setValue(null);
+                                            return;
+                                        }
 
-                                    const [yearStr, monthStr, dayStr] = dateString.split('-');
+                                        const [yearStr, monthStr, dayStr] = dateString.split('-');
 
-                                    this.props.setValue(
-                                        dateToServerString(
-                                            set(
-                                                date,
-                                                {
-                                                    year: parseInt(yearStr, 10),
-                                                    month: parseInt(monthStr, 10) - 1,
-                                                    date: parseInt(dayStr, 10),
-                                                },
+                                        this.props.setValue(
+                                            dateToServerString(
+                                                set(
+                                                    date,
+                                                    {
+                                                        year: parseInt(yearStr, 10),
+                                                        month: parseInt(monthStr, 10) - 1,
+                                                        date: parseInt(dayStr, 10),
+                                                    },
+                                                ),
                                             ),
-                                        ),
-                                    );
-                                }}
-                            />
+                                        );
+                                        this.setState({previousValue: this.props.value});
+                                    }}
+                                />
 
-                            <div style={{display: 'flex', alignItems: 'center', height: '100%'}}><span>@</span></div>
+                                <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
+                                    <span>@</span>
+                                </div>
 
-                            <TimePicker
-                                required // because it's a part of the date-time
-                                value={hour}
-                                onChange={(value) => {
-                                    const [hours, minutes] = value.split(':');
+                                <TimePicker
+                                    required // because it's a part of the date-time
+                                    value={hour}
+                                    onChange={(value) => {
+                                        const [hours, minutes] = value.split(':');
 
-                                    this.props.setValue(
-                                        dateToServerString(
-                                            set(
-                                                date,
-                                                {
-                                                    hours: parseInt(hours, 10),
-                                                    minutes: parseInt(minutes, 10),
-                                                },
+                                        this.props.setValue(
+                                            dateToServerString(
+                                                set(
+                                                    date,
+                                                    {
+                                                        hours: parseInt(hours, 10),
+                                                        minutes: parseInt(minutes, 10),
+                                                    },
+                                                ),
                                             ),
-                                        ),
-                                    );
-                                }}
-                            />
-                        </Spacer>
+                                        );
+                                        this.setState({previousValue: this.props.value});
+                                    }}
+                                />
+                            </Spacer>
+                        )
                         }
                         {
-                            steps.length < 1 || this.state.radioValue !== "showDate"
+                            steps.length < 1 || this.state.radioValue !== 'showDate'
                                 ? null
                                 : (
                                     <div>
@@ -182,6 +210,7 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
                                                                     dateToServerString(addMinutes(date, step)),
                                                                 );
                                                             }
+                                                            this.setState({previousValue: this.props.value});
                                                         }}
                                                         text={buttonText}
                                                         style="hollow"
