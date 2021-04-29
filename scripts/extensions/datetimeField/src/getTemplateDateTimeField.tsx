@@ -21,7 +21,7 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
     const {getLocaleForDatePicker} = superdesk.ui.framework;
     const {Spacer} = superdesk.components;
     const {dateToServerString} = superdesk.utilities;
-    const currentDateTime = '{{ now }}';
+    const currentDateTime = '{{ now|iso_datetime }}';
 
     return class TemplateDateTimeField extends
         React.PureComponent<ITemplateEditorComponentProps<string | null, IDateTimeFieldConfig>,
