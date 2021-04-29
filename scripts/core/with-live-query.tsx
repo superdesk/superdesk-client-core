@@ -32,7 +32,7 @@ export class WithLiveQuery
             (changes: Array<IResourceChange>) => {
                 this.handleContentChanges(changes);
             },
-            300,
+            1000,
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
@@ -94,6 +94,7 @@ export class WithLiveQuery
 
     handleContentChanges(changes: Array<IResourceChange>) {
         if (this.state.loading === true) {
+            this.handleContentChangesThrottled(changes);
             return;
         }
 
