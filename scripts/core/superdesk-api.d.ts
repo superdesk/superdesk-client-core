@@ -726,6 +726,30 @@ declare module 'superdesk-api' {
     }>;
 
 
+    // SUPERDESK QUERY FORMAT
+
+    export type IComparisonOptions =
+        {$eq: any}
+        | {$ne: any}
+        | {$gt: any}
+        | {$gte: any}
+        | {$lt: any}
+        | {$lte: any}
+        | {$in: any};
+
+    export type IComparison = {[field: string]: IComparisonOptions};
+    export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
+    export type IOrOperator = {$or: Array<IComparison | ILogicalOperator>};
+    export type ILogicalOperator = IAndOperator | IOrOperator;
+
+    export interface ISuperdeskQuery {
+        filter: ILogicalOperator;
+        fullTextSearch?: string;
+        sort: Array<{[field: string]: 'asc' | 'desc'}>;
+        page: number;
+        max_results: number;
+    }
+
 
     // REST API
 
@@ -1056,6 +1080,12 @@ declare module 'superdesk-api' {
         children: Array<React.ReactNode>;
     }
 
+    export interface ILiveQueryProps<T extends IBaseRestApiResponse> {
+        resource: string;
+        query: ISuperdeskQuery;
+        children: (result: IRestApiResponse<T>) => JSX.Element;
+    }
+
     export interface IAttachmentsWrapperProps {
         item: IArticle;
         attachments: Array<IAttachment>;
@@ -1121,7 +1151,8 @@ declare module 'superdesk-api' {
             resource: string,
             changes: Array<IResourceChange>,
             currentItems: Array<T>,
-            neverRefetchAll?: boolean,
+            fields: Set<string>,
+            dontRefetchForNewItems?: boolean,
         ): Promise<Array<T> | 'requires-refetching-all'>
         fetchChangedResourcesObj<T extends IBaseRestApiResponse>(
             resource: string,
@@ -1493,6 +1524,7 @@ declare module 'superdesk-api' {
             IconBig: React.ComponentType<IPropsIconBig>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
+            getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             Spacer: React.ComponentType<IPropsSpacer>;
         };
         forms: {

@@ -140,11 +140,12 @@ function findOne<T>(endpoint: string, id: string): Promise<T> {
     });
 }
 
-function fetchChangedResources<T extends IBaseRestApiResponse>(
+export function fetchChangedResources<T extends IBaseRestApiResponse>(
     resource: string,
     changes: Array<IResourceChange>,
     currentItems: Array<T>,
-    neverRefetchAll?: boolean,
+    refreshAllOnFieldsChange: Set<string>,
+    dontRefetchForNewItems?: boolean,
 ): Promise<Array<T> | 'requires-refetching-all'> {
     const changesToResource = changes.filter((change) => change.resource === resource);
 
@@ -155,12 +156,22 @@ function fetchChangedResources<T extends IBaseRestApiResponse>(
     const [changesCreated, changesUpdatedDeleted] =
         partition(changesToResource, (change) => change.changeType === 'created');
 
-    if (changesCreated.length > 0 && neverRefetchAll !== true) {
+    if (changesCreated.length > 0 && dontRefetchForNewItems !== true) {
         return Promise.resolve('requires-refetching-all');
     }
 
     const [changesDeleted, changesUpdated] =
         partition(changesUpdatedDeleted, (change) => change.changeType === 'deleted');
+
+    if (
+        changesUpdated.some(
+            ({fields}) => (fields == null ? [] : Object.keys(fields)).some(
+                (field) => refreshAllOnFieldsChange.has(field),
+            ),
+        )
+    ) {
+        return Promise.resolve('requires-refetching-all');
+    }
 
     const deletedIds = new Set(changesDeleted.map(({itemId}) => itemId));
     const currentItemsWithoutDeleted = currentItems.filter(({_id}) => deletedIds.has(_id) === false);
@@ -180,9 +191,15 @@ function fetchChangedResourcesObj<T extends IBaseRestApiResponse>(
     changes: Array<IResourceChange>,
     currentItems: {[id: string]: T},
 ): Promise<{[id: string]: T}> {
-    return fetchChangedResources(resource, changes, Object.values(currentItems), true)
-        .then((res) => {
-            return keyBy(res as Array<T>, ({_id}) => _id);
+    const itemsArray = Object.values(currentItems);
+
+    return fetchChangedResources(resource, changes, Object.values(itemsArray), new Set(), true)
+        .then((res: Array<T>) => {
+            if (res === itemsArray) {
+                return currentItems; // keep the same reference if there were no changes.
+            } else {
+                return keyBy(res, ({_id}) => _id);
+            }
         });
 }
 
