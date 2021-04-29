@@ -13,7 +13,8 @@ interface IStateReady<T extends IBaseRestApiResponse> {
     loading: false;
 }
 
-export class WithLiveQuery<T extends IBaseRestApiResponse> extends SuperdeskReactComponent<ILiveQueryProps<T>, IState<T>> {
+export class WithLiveQuery
+    <T extends IBaseRestApiResponse> extends SuperdeskReactComponent<ILiveQueryProps<T>, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
 
