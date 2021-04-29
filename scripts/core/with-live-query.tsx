@@ -1,10 +1,10 @@
-import React from 'react';
 import {IBaseRestApiResponse, ILiveQueryProps, IResourceChange, IRestApiResponse} from 'superdesk-api';
 import {fetchChangedResources} from './helpers/CrudManager';
 import {httpRequestJsonLocal} from './helpers/network';
 import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {addWebsocketEventListener} from './notification/notification';
 import {getQueryFieldsRecursive, toElasticQuery} from './query-formatting';
+import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 
 type IState<T extends IBaseRestApiResponse> = {loading: true} | IStateReady<T>;
 
@@ -13,7 +13,7 @@ interface IStateReady<T extends IBaseRestApiResponse> {
     loading: false;
 }
 
-export class WithLiveQuery<T extends IBaseRestApiResponse> extends React.PureComponent<ILiveQueryProps<T>, IState<T>> {
+export class WithLiveQuery<T extends IBaseRestApiResponse> extends SuperdeskReactComponent<ILiveQueryProps<T>, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
 
@@ -101,6 +101,7 @@ export class WithLiveQuery<T extends IBaseRestApiResponse> extends React.PureCom
             changes,
             this.state.data._items,
             getQueryFieldsRecursive(this.props.query.filter),
+            this.abortController.signal,
         ).then((res) => {
             if (this.state.loading === true) {
                 return false;

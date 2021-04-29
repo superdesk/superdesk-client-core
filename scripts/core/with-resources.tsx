@@ -116,6 +116,8 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
                     resource,
                     changesByResource[resource],
                     state.data[resource]._items,
+                    new Set(),
+                    this.abortController.signal,
                 ).then((res: Array<IBaseRestApiResponse>) => {
                     const currentItemsResponse = state.data[resource];
                     const diff: number = currentItemsResponse._items.length - res.length;

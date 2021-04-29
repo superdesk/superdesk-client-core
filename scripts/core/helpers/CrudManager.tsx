@@ -145,6 +145,7 @@ export function fetchChangedResources<T extends IBaseRestApiResponse>(
     changes: Array<IResourceChange>,
     currentItems: Array<T>,
     refreshAllOnFieldsChange: Set<string> = new Set(),
+    abortSignal?: AbortSignal,
     dontRefetchForNewItems?: boolean,
 ): Promise<Array<T> | 'requires-refetching-all'> {
     const changesToResource = changes.filter((change) => change.resource === resource);
@@ -179,7 +180,17 @@ export function fetchChangedResources<T extends IBaseRestApiResponse>(
     const currentItemsWithoutDeleted = currentItems.filter(({_id}) => deletedIds.has(_id) === false);
 
     return Promise.all([
-        Promise.all(changesUpdated.filter(({itemId}) => updatedIds.has(itemId)).map(({itemId}) => findOne<T>(resource, itemId))),
+        Promise.all(
+            changesUpdated.filter(({itemId}) => updatedIds.has(itemId))
+                .map(
+                    ({itemId}) => httpRequestJsonLocal({
+                        method: 'GET',
+                        path: `/${resource}/${itemId}`,
+                        abortSignal: abortSignal,
+                    })
+                        .then((res: T) => res),
+                ),
+        ),
     ]).then(([itemsCreated, itemsUpdated]) => {
         const updatedKeyed = keyBy(itemsUpdated, ({_id}) => _id);
 
@@ -191,10 +202,11 @@ function fetchChangedResourcesObj<T extends IBaseRestApiResponse>(
     resource: string,
     changes: Array<IResourceChange>,
     currentItems: {[id: string]: T},
+    abortSignal?: AbortSignal,
 ): Promise<{[id: string]: T}> {
     const itemsArray = Object.values(currentItems);
 
-    return fetchChangedResources(resource, changes, Object.values(itemsArray), new Set(), true)
+    return fetchChangedResources(resource, changes, Object.values(itemsArray), new Set(), abortSignal, true)
         .then((res: Array<T>) => {
             if (res === itemsArray) {
                 return currentItems; // keep the same reference if there were no changes.
