@@ -1159,10 +1159,12 @@ export function AuthoringDirective(
 
             const removeListener = addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
-                (partialItem) => {
-                    angular.extend($scope.item, partialItem.detail);
-                    angular.extend($scope.origItem, partialItem.detail);
-                    $scope.$apply();
+                (event) => {
+                    if (event.detail._id === $scope.item._id) {
+                        angular.extend($scope.item, event.detail);
+                        angular.extend($scope.origItem, event.detail);
+                        $scope.$apply();
+                    }
                 },
             );
 

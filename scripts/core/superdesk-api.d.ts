@@ -158,7 +158,9 @@ declare module 'superdesk-api' {
     // ENTITIES
 
     export interface IAuthor {
-        _id: Array<string, string>; // user id, role
+        // !!! _id is optional. It will not be present in ingested items.
+        _id?: Array<string, string>; // user id, role
+
         name: string;
         scheme: any | null;
         user: IUser;
@@ -522,7 +524,9 @@ declare module 'superdesk-api' {
     export interface IUserRole extends IBaseRestApiResponse {
         _id: string;
         name: string;
-        privileges: any;
+        privileges?: {
+            [privilege: string]: 1 | 0;
+        };
         author_role: string;
         editor_role: string;
     }
@@ -1191,6 +1195,9 @@ declare module 'superdesk-api' {
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
+
+        articlePreviewStart: IArticle;
+        articlePreviewEnd: IArticle;
 
         // Attachments
         attachmentsAdded: Array<IAttachment>;

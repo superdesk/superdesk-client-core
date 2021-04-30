@@ -24,7 +24,7 @@
 
     <label for="title" class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength">
-        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+        <sd-character-count data-item="item.headline" data-html="false" data-limit="schema.headline.maxlength"></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
@@ -51,7 +51,7 @@
     <label for="title" class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength">
         <sd-character-count-config-button data-field="'headline'"></sd-character-count-config-button>
-        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+        <sd-character-count data-item="item.headline" data-html="false" data-limit="schema.headline.maxlength"></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
@@ -63,7 +63,7 @@
          data-editor-format="editor.headline.formatOptions"
          data-single-line="true"
          data-bind-to-value="compareView"
-         data-scroll-container=".page-content-container"
+         data-scroll-container=".page-content-container--scrollable"
          data-language="item.language"
          data-value="item.headline"
          data-on-change="autosave(item)"
@@ -197,7 +197,7 @@
          sd-editor3
          data-path-to-value="'abstract'"
          data-editor-format="editor.abstract.formatOptions"
-         data-scroll-container=".page-content-container"
+         data-scroll-container=".page-content-container--scrollable"
          data-bind-to-value="compareView"
          data-language="item.language"
          data-value="item.abstract"
@@ -342,7 +342,7 @@
          data-path-to-value="'body_html'"
          data-find-replace-target
          data-bind-to-value="compareView"
-         data-scroll-container=".page-content-container"
+         data-scroll-container=".page-content-container--scrollable"
          data-editor-format="editor.body_html.formatOptions"
          data-value="item.body_html"
          data-read-only="!_editable || schema.body_html.readonly === true"
@@ -470,7 +470,7 @@
          sd-editor3
          data-path-to-value="'description_text'"
          data-editor-format="editor.description_text.formatOptions"
-         data-scroll-container=".page-content-container"
+         data-scroll-container=".page-content-container--scrollable"
          data-bind-to-value="compareView"
          data-value="item.description_text"
          data-read-only="!_editable || schema.description_text.readonly === true"
@@ -541,7 +541,7 @@
          data-path-to-value="'body_footer'"
          data-bind-to-value="compareView"
          data-editor-format="editor.body_footer.formatOptions"
-         data-scroll-container=".page-content-container"
+         data-scroll-container=".page-content-container--scrollable"
          data-value="item.body_footer"
          data-read-only="!_editable || schema.body_footer.readonly === true"
          data-on-change="autosave(item)"
@@ -641,7 +641,7 @@
         data-single-line="field.field_options.single"
         data-value="item.extra[field._id]"
         data-bind-to-value="compareView"
-        data-scroll-container=".page-content-container"
+        data-scroll-container=".page-content-container--scrollable"
         data-language="item.language"
         data-on-change="autosave(item)"
         data-read-only="!_editable || schema[field._id].readonly === true"
@@ -884,7 +884,7 @@
          data-path-to-value="'slugline'"
          data-single-line="true"
          data-bind-to-value="compareView"
-         data-scroll-container=".page-content-container"
+         data-scroll-container=".page-content-container--scrollable"
          data-language="item.language"
          data-value="item.slugline"
          data-on-change="autosave(item)"

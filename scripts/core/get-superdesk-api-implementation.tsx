@@ -119,6 +119,12 @@ export const removeEventListener = <T extends keyof IEvents>(eventName: T, callb
     }
 };
 
+export const dispatchCustomEvent = <T extends keyof IEvents>(eventName: T, payload: IEvents[T]) => {
+    window.dispatchEvent(
+        new CustomEvent(getCustomEventNamePrefixed(eventName), {detail: payload}),
+    );
+};
+
 let applicationState: Writeable<ISuperdesk['state']> = {
     articleInEditMode: undefined,
 };
@@ -215,7 +221,7 @@ export function getSuperdeskApiImplementation(
                             if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
                                 dispatchInternalEvent(
                                     'dangerouslyOverwriteAuthoringData',
-                                    {...patch, _etag: res._etag},
+                                    {...patch, _etag: res._etag, _id: res._id},
                                 );
                             }
                         });
