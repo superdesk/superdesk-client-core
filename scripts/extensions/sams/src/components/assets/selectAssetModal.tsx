@@ -15,7 +15,6 @@ import {
     getAssetSearchParams,
     getAssetSearchResults,
     getAssetSetFilter,
-    getSelectedAssetIds,
 } from '../../store/assets/selectors';
 import {
     loadNextAssetsPage,
@@ -28,7 +27,7 @@ import {toggleFilterPanelState} from '../../store/workspace/actions';
 
 // UI
 import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
-import {Modal, ModalBody, ModalHeader} from '../../ui/modal';
+import {Modal, ModalBody, ModalHeader} from '../../ui';
 import {PageLayout} from '../../containers/PageLayout';
 import {WorkspaceSubnav} from '../workspaceSubnav';
 import {AssetFilterPanel} from './assetFilterPanel';
@@ -46,7 +45,6 @@ interface IProps {
     filterPanelOpen: boolean;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
-    selectedAssetIds: Array<string>;
     updateAssetSearchParamsAndListItems(
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
@@ -68,7 +66,6 @@ const mapStateToProps = (state: IApplicationState) => ({
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
     currentSet: getAssetSetFilter(state),
-    selectedAssetIds: getSelectedAssetIds(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -119,10 +116,6 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
         this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
     }
 
-    onMultiActionBar(asset: IAssetItem) {
-        this.props.updateSelectedAssetIds(asset);
-    }
-
     onScroll(event: React.UIEvent<HTMLDivElement>) {
         const node = event.currentTarget;
 
@@ -159,6 +152,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
 
     render() {
         const {gettext} = superdeskApi.localization;
+        const selectedAssetIds = Object.keys(this.state.selectedItems);
 
         return (
             <Modal
@@ -207,10 +201,10 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                             <AssetListPanel
                                 assets={this.props.assets}
                                 listStyle={this.props.listStyle}
-                                selectedItems={Object.keys(this.state.selectedItems)}
+                                selectedItems={selectedAssetIds}
                                 onItemClicked={this.toggleItemSelected}
-                                selectedAssetIds={this.props.selectedAssetIds}
-                                updateSelectedAssetIds={this.onMultiActionBar}
+                                selectedAssetIds={selectedAssetIds}
+                                updateSelectedAssetIds={this.toggleItemSelected}
                             />
                         )}
                     />
