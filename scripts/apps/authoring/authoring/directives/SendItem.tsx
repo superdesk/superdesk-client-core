@@ -101,7 +101,7 @@ export function SendItem($q,
 
             // Only initialize when it's being set for the first time.
             // If time zone was removed manually, it should not be automatically re-added.
-            scope.initializePublishScheduleWithDefaultTimeZone = scope.item.publish_schedule == null;
+            scope.initializePublishScheduleWithDefaultTimeZone = scope.item?.publish_schedule == null;
 
             // if authoring:publish extension point is not defined
             // then publish pane is single column
