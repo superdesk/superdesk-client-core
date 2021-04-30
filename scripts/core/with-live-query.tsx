@@ -6,22 +6,22 @@ import {addWebsocketEventListener} from './notification/notification';
 import {getQueryFieldsRecursive, toElasticQuery} from './query-formatting';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 
-type IState<T extends IBaseRestApiResponse> = {loading: true} | IStateReady<T>;
-
-interface IStateReady<T extends IBaseRestApiResponse> {
-    data: IRestApiResponse<T>;
-    loading: false;
+interface IState<T extends IBaseRestApiResponse> {
+    data?: IRestApiResponse<T>; // undefined until initialized
 }
 
 export class WithLiveQuery
     <T extends IBaseRestApiResponse> extends SuperdeskReactComponent<ILiveQueryProps<T>, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
+    private updatingRequestInProgress: boolean;
 
     constructor(props: ILiveQueryProps<T>) {
         super(props);
 
-        this.state = {loading: true};
+        this.state = {};
+
+        this.updatingRequestInProgress = false;
 
         this.eventListenersToRemoveBeforeUnmounting = [];
 
@@ -41,7 +41,9 @@ export class WithLiveQuery
                 (event) => {
                     const {resource, _id} = event.extra;
 
-                    this.handleContentChangesThrottled([{changeType: 'created', resource: resource, itemId: _id}]);
+                    if (resource === this.props.resource) {
+                        this.handleContentChangesThrottled([{changeType: 'created', resource: resource, itemId: _id}]);
+                    }
                 },
             ),
         );
@@ -52,12 +54,14 @@ export class WithLiveQuery
                 (event) => {
                     const {resource, _id, fields} = event.extra;
 
-                    this.handleContentChangesThrottled([{
-                        changeType: 'updated',
-                        resource: resource,
-                        itemId: _id,
-                        fields: fields,
-                    }]);
+                    if (resource === this.props.resource) {
+                        this.handleContentChangesThrottled([{
+                            changeType: 'updated',
+                            resource: resource,
+                            itemId: _id,
+                            fields: fields,
+                        }]);
+                    }
                 },
             ),
         );
@@ -68,16 +72,18 @@ export class WithLiveQuery
                 (event) => {
                     const {resource, _id} = event.extra;
 
-                    this.handleContentChangesThrottled([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                    if (resource === this.props.resource) {
+                        this.handleContentChangesThrottled([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                    }
                 },
             ),
         );
     }
 
-    fetchItems() {
+    fetchItems(): void {
         const {resource, query} = this.props;
 
-        return httpRequestJsonLocal<IRestApiResponse<T>>(
+        httpRequestJsonLocal<IRestApiResponse<T>>(
             {
                 method: 'GET',
                 path: '/' + resource,
@@ -88,15 +94,20 @@ export class WithLiveQuery
                 },
             },
         ).then((data) => {
-            this.setState({data: data, loading: false});
+            this.setState({data: data});
         });
     }
 
     handleContentChanges(changes: Array<IResourceChange>) {
-        if (this.state.loading === true) {
+        const {data} = this.state;
+        const dataInitialized = data != null;
+
+        if (this.updatingRequestInProgress || dataInitialized !== true) {
             this.handleContentChangesThrottled(changes);
             return;
         }
+
+        this.updatingRequestInProgress = true;
 
         fetchChangedResources(
             this.props.resource,
@@ -105,12 +116,6 @@ export class WithLiveQuery
             getQueryFieldsRecursive(this.props.query.filter),
             this.abortController.signal,
         ).then((res) => {
-            if (this.state.loading === true) {
-                return false;
-            }
-
-            const {data} = this.state;
-
             if (res === 'requires-refetching-all') {
                 this.fetchItems();
             } else {
@@ -125,8 +130,9 @@ export class WithLiveQuery
                             total: data._meta.total - diff,
                         },
                     },
-                    loading: false,
                 });
+
+                this.updatingRequestInProgress = false;
             }
         });
     }
@@ -142,10 +148,12 @@ export class WithLiveQuery
     }
 
     render() {
-        if (this.state.loading === true) {
+        const {data} = this.state;
+
+        if (data == null) {
             return null;
         } else {
-            return this.props.children(this.state.data);
+            return this.props.children(data);
         }
     }
 }

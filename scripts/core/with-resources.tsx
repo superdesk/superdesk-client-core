@@ -5,22 +5,21 @@ import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {addWebsocketEventListener} from './notification/notification';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 
-type IState = {loading: true} | IStateReady;
-
-interface IStateReady {
-    data: {[resource: string]: IRestApiResponse<unknown>};
-    loading: false;
+interface IState {
+    data?: {[resource: string]: IRestApiResponse<unknown>};
 }
 
 export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesProps, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
+    private updatingRequestInProgress: boolean;
 
     constructor(props: ILiveResourcesProps) {
         super(props);
 
-        this.state = {loading: true};
+        this.state = {};
 
+        this.updatingRequestInProgress = false;
         this.eventListenersToRemoveBeforeUnmounting = [];
 
         this.fetchItems = this.fetchItems.bind(this);
@@ -39,7 +38,9 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
                 (event) => {
                     const {resource, _id} = event.extra;
 
-                    this.handleContentChangesThrottled([{changeType: 'created', resource: resource, itemId: _id}]);
+                    if (this.props.resources.find((r) => r.resource === resource) != null) {
+                        this.handleContentChangesThrottled([{changeType: 'created', resource: resource, itemId: _id}]);
+                    }
                 },
             ),
         );
@@ -50,12 +51,14 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
                 (event) => {
                     const {resource, _id, fields} = event.extra;
 
-                    this.handleContentChangesThrottled([{
-                        changeType: 'updated',
-                        resource: resource,
-                        itemId: _id,
-                        fields: fields,
-                    }]);
+                    if (this.props.resources.find((r) => r.resource === resource) != null) {
+                        this.handleContentChangesThrottled([{
+                            changeType: 'updated',
+                            resource: resource,
+                            itemId: _id,
+                            fields: fields,
+                        }]);
+                    }
                 },
             ),
         );
@@ -66,13 +69,15 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
                 (event) => {
                     const {resource, _id} = event.extra;
 
-                    this.handleContentChangesThrottled([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                    if (this.props.resources.find((r) => r.resource === resource) != null) {
+                        this.handleContentChangesThrottled([{changeType: 'deleted', resource: resource, itemId: _id}]);
+                    }
                 },
             ),
         );
     }
 
-    fetchItems() {
+    fetchItems(): void {
         const {resources} = this.props;
 
         function toPair(resource: string, res: unknown): [string, unknown] {
@@ -95,14 +100,15 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
                 data[resource] = res;
             }
 
-            this.setState({data, loading: false});
+            this.setState({data});
         });
     }
 
     handleContentChanges(_changes: Array<IResourceChange>) {
         const state = this.state;
+        const dataInitialized = state.data != null;
 
-        if (state.loading === true) {
+        if (this.updatingRequestInProgress || dataInitialized !== true) {
             this.handleContentChangesThrottled(_changes);
             return;
         }
@@ -141,7 +147,9 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
                 return acc;
             }, {});
 
-            this.setState({data: {...state.data, ...updates}, loading: false});
+            this.setState({data: {...state.data, ...updates}});
+
+            this.updatingRequestInProgress = false;
         });
     }
 
@@ -158,7 +166,7 @@ export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesPro
     render() {
         const state = this.state;
 
-        if (state.loading === true) {
+        if (state.data == null) {
             return null;
         } else {
             return this.props.children(this.props.resources.map(({resource}) => state.data[resource]));
