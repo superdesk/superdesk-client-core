@@ -205,7 +205,7 @@ class Highlights {
         };
 
         this.createHighlightsPackage = function(highlight) {
-            element(by.className('big-icon--marked-star')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Highlights"]')).click();
             this.selectHighlight(element(by.id('highlightPackage')), highlight);
 
             const createButton = element(s(['articles-list--toolbar'])).element(by.buttonText('Create'));
