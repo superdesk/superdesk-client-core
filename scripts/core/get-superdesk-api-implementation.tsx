@@ -49,8 +49,6 @@ import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
 import {
-    dispatchCustomEvent,
-    getCustomEventNamePrefixed,
     getWebsocketMessageEventName,
     isWebsocketEventPublic,
 } from './notification/notification';
@@ -97,6 +95,8 @@ export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise
 
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
+
+export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-event--' + name;
 
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
