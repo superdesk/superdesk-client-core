@@ -6,7 +6,7 @@ import {CC} from 'core/ui/configurable-ui-components';
 import {isUserLoggedIn} from '../services/UsersService';
 import {gettext} from 'core/utils';
 import {AvatarWrapper, AvatarContentText, AvatarContentImage} from 'superdesk-ui-framework/react';
-import LazyLoad, {forceVisible} from 'react-lazyload';
+import LazyLoad from 'react-lazyload';
 
 export enum AvatarSize {
     small = 24,
@@ -85,6 +85,7 @@ export class UserAvatar extends React.PureComponent<IProps> {
         return (
             <LazyOrNot {...this.props}>
                 <AvatarWrapper
+                    key={user._id}
                     size={this.props.size}
                     administratorIndicator={
                         displayAdministratorIndicator && user.user_type === 'administrator'
