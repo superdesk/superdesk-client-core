@@ -13,8 +13,7 @@ class ScheduledDateTime extends React.PureComponent<IProps> {
         this.datetime = ng.get('datetime');
     }
     render() {
-        const scheduled = this.props.item.archive_item
-            ? this.props.item.archive_item.schedule_settings.utc_publish_schedule : null;
+        const scheduled = this.props.item.archive_item?.schedule_settings?.utc_publish_schedule;
 
         if (this.props.item.state != null && this.props.item.state === 'scheduled' && scheduled != null) {
             const datetime = this.datetime;

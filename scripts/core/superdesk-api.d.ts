@@ -378,7 +378,7 @@ declare module 'superdesk-api' {
         fetch_endpoint?: any;
         task_id?: any;
         ingest_provider?: any;
-        archive_item?: any;
+        archive_item?: IArticle;
         item_id?: string; // id of corresponding item in 'published' collection
         marked_desks?: Array<{
             date_marked: string;
