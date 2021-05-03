@@ -135,27 +135,25 @@ class Monitoring {
         };
 
         this.showMonitoring = function() {
-            element(by.className('big-icon--view')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Monitoring"]')).click();
         };
 
         this.showSpiked = function() {
-            element(by.className('big-icon--spike')).click();
-
-            browser.wait(ECE.presenceOf(els(['article-item']).get(0)));
+            el(['workspace-navigation'], by.css('[aria-label="Spiked Items"]')).click();
         };
 
         /**
          * Open personal monitoring view
          */
         this.showPersonal = function() {
-            element(by.className('big-icon--personal')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Personal space"]')).click();
         };
 
         /**
          * Open global search view
          */
         this.showSearch = function() {
-            element(by.className('big-icon--global-search')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Search"]')).click();
         };
 
         /**
