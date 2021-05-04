@@ -17,7 +17,9 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
             scope.badges = {};
 
             function handleBadgeValueChange(event: IEvents['menuItemBadgeValueChange']) {
-                scope.badges[event.menuId] = event.badgeValue;
+                scope.$applyAsync(() => {
+                    scope.badges[event.menuId] = event.badgeValue;
+                });
             }
 
             addEventListener('menuItemBadgeValueChange', handleBadgeValueChange);
