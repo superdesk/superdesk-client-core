@@ -26,7 +26,8 @@ export function getBulkActions(
 
     const {isLocked, isLockedByOtherUser, isPublished} = sdApi.article;
 
-    const noneLocked = articles.every((article) => !isLocked(article));
+    const noneLocked = articles.some((article) => isLocked(article)) !== true;
+    const nonePublished = articles.some((article) => isPublished(article)) !== true;
 
     if (articles.every(({state}) => state === ITEM_STATE.INGESTED)) {
         actions.push({
@@ -141,7 +142,7 @@ export function getBulkActions(
             });
         }
 
-        if (noneLocked) {
+        if (noneLocked && nonePublished) {
             actions.push({
                 label: gettext('Send to'),
                 icon: 'icon-expand-thin',
@@ -163,7 +164,9 @@ export function getBulkActions(
                     canAutocloseMultiActionBar: false,
                 });
             }
+        }
 
+        if (noneLocked) {
             actions.push({
                 label: gettext('Duplicate To'),
                 icon: 'icon-copy',
