@@ -6,15 +6,15 @@
 # ducseb <ducseb@gmail.com>, 2017
 # Gideon Lehmann <gideon.lehmann@sourcefabric.org>, 2020
 # Gidze Lehmann <info@gldk.de>, 2020
-# Marie-Eve Ouellette <marie-eve.ouellette@lapressecanadienne.com>, 2020
+# Marie-Eve Ouellette <marie-eve.ouellette@lapressecanadienne.com>, 2020-2021
 # Petr Jašek <petr.jasek@sourcefabric.org>, 2020
 # Simon Peacock <simon.peacock@gmail.com>, 2019-2020
 # Tomas Kikutis <tomas.kikutis@sourcefabric.org>, 2021
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-04-21 14:20+0000\n"
-"Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
+"PO-Revision-Date: 2021-04-30 14:11+0000\n"
+"Last-Translator: Marie-Eve Ouellette <marie-eve.ouellette@lapressecanadienne.com>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4340,7 +4340,7 @@ msgstr "Modifier dans une nouvelle fenêtre"
 #: ../superdesk-planning/client/constants/planning.js:64
 #: ../superdesk-planning/client/constants/tooltips.js:13
 msgid "Edit in popup"
-msgstr "Modifier dans une fenêtre surgissante"
+msgstr "Modifier dans une autre fenêtre"
 
 #: scripts/core/editor3/highlightsConfig.ts:136
 msgid "Edit link"
@@ -5014,7 +5014,7 @@ msgstr "Exclure"
 #: ../superdesk-planning/client/components/fields/editor/ExcludeRescheduledAndCancelled.tsx:14
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/ExcludeRescheduledAndCancelled.tsx:21
 msgid "Exclude Rescheduled And Cancelled"
-msgstr ""
+msgstr "Exclure les éléments reprogrammés et annulés"
 
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:275
 msgid "Exclude Rewrites"
@@ -5031,7 +5031,7 @@ msgstr "Exclure les réécritures"
 
 #: scripts/apps/search/views/search-parameters.html:151
 msgid "Exclude spiked content"
-msgstr "Exclure le contenu dans la corbeille"
+msgstr "Exclure le contenu de la corbeille"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/AddGeoLookupResultsPopUp.jsx:126
 msgid "Existing locations"
@@ -5268,7 +5268,7 @@ msgstr "Les enregistrements automatiques {{ itemType }} n'ont pas pu être charg
 #: ../superdesk-planning/client/actions/planning/featuredPlanning.js:252
 #: ../superdesk-planning/client/actions/planning/ui.js:279
 msgid "Failed to lock featured story action!"
-msgstr ""
+msgstr "Impossible de verrouiller l'article à la une!"
 
 #: ../superdesk-planning/client/actions/locks.js:126
 msgid "Failed to lock the item, could not determine item type!"
@@ -5397,7 +5397,7 @@ msgstr "L'/les événement(s) n'a/n'ont pas pu être placé(s) dans la corbeille
 
 #: ../superdesk-planning/client/actions/planning/api.ts:688
 msgid "Failed to unlock featured story action!"
-msgstr ""
+msgstr "Impossible de déverrouiller l'article à la une!"
 
 #: ../superdesk-planning/client/actions/assignments/ui.js:776
 msgid "Failed to unlock the Assignment"
@@ -6168,7 +6168,7 @@ msgstr "Hôte"
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:30
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:61
 msgid "Hourly"
-msgstr "Horaire"
+msgstr "Toutes les heures"
 
 #: ../superdesk-planning/client/components/UI/Form/TimeInput/TimeInputPopup.jsx:123
 #: scripts/core/ui/views/sd-timepicker-popup.html:15
@@ -6326,11 +6326,11 @@ msgstr "Inclure le contenu multimédia"
 
 #: ../superdesk-planning/client/components/fields/editor/IncludeKilled.tsx:14
 msgid "Include Killed"
-msgstr ""
+msgstr "Inclure les éléments supprimés"
 
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/IncludeKilled.tsx:21
 msgid "Include Killed:"
-msgstr ""
+msgstr "Inclure les éléments supprimés:"
 
 #: ../superdesk-analytics/client/search/views/source-fitlers.html:274
 msgid "Include Rewrites"
@@ -6352,7 +6352,7 @@ msgstr "Inclure les réécritures"
 
 #: scripts/apps/search/views/search-parameters.html:152
 msgid "Include spiked content"
-msgstr "Inclure le contenu dans la corbeille"
+msgstr "Inclure le contenu de la corbeille"
 
 #: ../superdesk-analytics/client/production_time_report/views/production-time-report-parameters.html:15
 msgid "Included Statistics"
@@ -8159,7 +8159,7 @@ msgstr "Pas légal"
 #: ../superdesk-planning/client/components/fields/editor/LockState.tsx:20
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/LockState.tsx:21
 msgid "Not Locked"
-msgstr ""
+msgstr "Non verrouillé"
 
 #: scripts/apps/search/constants.ts:38
 msgid "Not Priority"
@@ -8325,7 +8325,7 @@ msgstr[1] "Seulement {{number}} photos sont permises dans ce champ"
 
 #: ../superdesk-planning/client/components/fields/editor/OnlyPosted.tsx:14
 msgid "Only Posted"
-msgstr "Seulement affiché"
+msgstr "Seulement les éléments publiés"
 
 #: scripts/apps/vocabularies/views/vocabulary-config-modal.html:241
 msgid ""
@@ -13887,11 +13887,11 @@ msgstr "Semaine(s)"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:36
 msgid "Weekly"
-msgstr "Chaque semaine"
+msgstr "Hebdomadairement"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:70
 msgid "Weekly on"
-msgstr "Chaque semaine le "
+msgstr "Hebdomadairement le "
 
 #: scripts/core/directives/views/phone-home-modal-directive.html:4
 msgid "Welcome to Superdesk"
@@ -14453,7 +14453,7 @@ msgstr "brouillon"
 
 #: ../superdesk-planning/client/components/Assignments/AssignmentItem/fields/DueDate.tsx:43
 msgid "due"
-msgstr ""
+msgstr "dû"
 
 #: scripts/apps/authoring/views/send-item.html:252
 msgid "duplicate"
@@ -14974,7 +14974,7 @@ msgstr "en affectation par"
 
 #: ../superdesk-analytics/client/scheduled_reports/views/report-schedule-input.html:23
 msgid "on the"
-msgstr ""
+msgstr "le"
 
 #: ../superdesk-planning/client/utils/events.ts:985
 msgid "on week days"
