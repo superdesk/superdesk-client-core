@@ -4,14 +4,15 @@ var fs = require('fs');
 var path = require('path');
 
 function getClientDir() {
-    try {
-        const packageJsonLocation = require.resolve('superdesk-core/package.json');
-        const clientCoreRoot = path.join(packageJsonLocation, '../');
+    const clientCoreRoot = path.join(__dirname, '../');
+    const maybeParentModulePath = path.join(clientCoreRoot, '../../');
 
-        return clientCoreRoot;
-    } catch {
-        return path.join(__dirname, '../'); // not installed as a module
-    }
+    // If node_modules exists in `maybeParentModulePath` set it as mainDirectory
+    const mainDirectory = fs.existsSync(path.join(maybeParentModulePath, 'node_modules'))
+        ? maybeParentModulePath
+        : clientCoreRoot;
+
+    return mainDirectory;
 }
 
 function getPaths(distRelative) {
