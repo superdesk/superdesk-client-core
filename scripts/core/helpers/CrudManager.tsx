@@ -179,22 +179,20 @@ export function fetchChangedResources<T extends IBaseRestApiResponse>(
 
     const currentItemsWithoutDeleted = currentItems.filter(({_id}) => deletedIds.has(_id) === false);
 
-    return Promise.all([
-        Promise.all(
-            changesUpdated.filter(({itemId}) => updatedIds.has(itemId))
-                .map(
-                    ({itemId}) => httpRequestJsonLocal({
-                        method: 'GET',
-                        path: `/${resource}/${itemId}`,
-                        abortSignal: abortSignal,
-                    })
-                        .then((res: T) => res),
-                ),
-        ),
-    ]).then(([itemsCreated, itemsUpdated]) => {
+    return Promise.all(
+        changesUpdated.filter(({itemId}) => updatedIds.has(itemId))
+            .map(
+                ({itemId}) => httpRequestJsonLocal({
+                    method: 'GET',
+                    path: `/${resource}/${itemId}`,
+                    abortSignal: abortSignal,
+                })
+                    .then((res: T) => res),
+            ),
+    ).then((itemsUpdated) => {
         const updatedKeyed = keyBy(itemsUpdated, ({_id}) => _id);
 
-        return currentItemsWithoutDeleted.map((item) => updatedKeyed[item._id] ?? item).concat(itemsCreated);
+        return currentItemsWithoutDeleted.map((item) => updatedKeyed[item._id] ?? item);
     });
 }
 
