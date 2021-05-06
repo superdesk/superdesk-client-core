@@ -65,10 +65,16 @@ function getIndexFilePath(indexFilePathRelative) {
     }
 
     for (const ext of fileExtensions) {
-        const filePath = base + ext;
+        const file = base + ext;
 
-        if (fs.existsSync(filePath)) {
-            return filePath;
+        if (fs.existsSync(file)) {
+            return file;
+        }
+
+        const indexFileInDirectory = base + '/index' + ext;
+
+        if (fs.existsSync(indexFileInDirectory)) {
+            return indexFileInDirectory;
         }
     }
 
