@@ -6,7 +6,7 @@ const _ = require('lodash');
 const {trimEnd} = _;
 
 function getAbsoluteModuleDirectory(modulePathRelative) {
-    return path.join(require.resolve(path.join(modulePathRelative, 'package.json')), '../')
+    return path.join(require.resolve(path.join(modulePathRelative, 'package.json')), '../');
 }
 
 function getPaths(distRelative) {
