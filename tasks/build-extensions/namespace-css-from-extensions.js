@@ -71,7 +71,7 @@ ${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, 
         }
     });
 
-    fs.writeFileSync(require.resolve(`superdesk-core/styles/extension-styles.generated.css`), finalCss);
+    fs.writeFileSync(require.resolve('superdesk-core/styles/extension-styles.generated.css'), finalCss);
 }
 
 if (process.argv[2] === '--watch') {

@@ -166,7 +166,7 @@
     "watch-css-from-extensions": "node tasks/namespace-css-from-extensions.js --watch",
     "watch-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
     "postinstall": "node ./tasks/patch-package.js && node ./tasks/compile-e2e-tests.js",
-    "test": "grunt ci:travis && npm run lint",
+    "test": "npm run lint && grunt ci:travis && node tasks/verify-client-api-changes.js",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
     "build": "grunt build",

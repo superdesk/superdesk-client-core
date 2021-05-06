@@ -136,7 +136,6 @@ declare module 'superdesk-api' {
     };
 
     export type IExtension = DeepReadonly<{
-        id: string;
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
         exposes?: {[key: string]: any};
     }>;
