@@ -7,6 +7,7 @@ function getModule(name) {
 }
 
 const fs = require('fs');
+const path = require('path');
 var css = getModule('css');
 var debounce = require('lodash').debounce;
 var selectorTokenizer = getModule('css-selector-tokenizer');
@@ -71,7 +72,10 @@ ${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, 
         }
     });
 
-    fs.writeFileSync(require.resolve('superdesk-core/styles/extension-styles.generated.css'), finalCss);
+    fs.writeFileSync(
+        path.join(require.resolve('superdesk-core/package.json'), '../styles/extension-styles.generated.css'),
+        finalCss
+    );
 }
 
 if (process.argv[2] === '--watch') {
