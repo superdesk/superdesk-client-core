@@ -3,39 +3,46 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 
 import {dataApi} from 'core/helpers/CrudManager';
+import {addWebsocketEventListener} from 'core/notification/notification';
 
 import {UserListComponent, IUserExtra} from './UserListComponent';
-import {IDesk, IUserRole} from 'superdesk-api';
+import {IDesk, IResourceUpdateEvent, IUser, IUserRole, IWebsocketMessage} from 'superdesk-api';
 
 interface IProps {
     desks: Array<IDesk>;
-    onUserSelect(user: IUserExtra): void;
+    onUserSelect(user: IUser): void;
+}
+
+interface IUserByRole {
+    role?: IUserRole['_id'];
+    authors: {[userId: string]: {
+        assigned: number;
+        locked: number;
+    }};
 }
 
 interface IState {
     roles: Array<IUserRole>;
-    users: Array<IUserExtra>;
+    usersByRole: Array<IUserByRole>;
+    deskMembers: {[id: string]: Array<IUser>};
 }
 
 export class UsersComponent extends React.Component<IProps, IState> {
-    services: any;
+    eventListeners: Array<CallableFunction> = [];
 
     constructor(props: IProps) {
         super(props);
 
         this.state = {
             roles: [],
-            users: [],
-        };
-
-        this.services = {
-            desks: ng.get('desks'),
+            usersByRole: [],
+            deskMembers: ng.get('desks').deskMembers,
         };
 
         this.selectUser.bind(this);
     }
 
-    selectUser(user: IUserExtra) {
+    selectUser(user: IUser) {
         this.props.onUserSelect(user);
     }
 
@@ -48,25 +55,54 @@ export class UsersComponent extends React.Component<IProps, IState> {
 
             this.setState({
                 roles: roles._items,
-                users: users._items,
+                usersByRole: users._items,
             });
+        });
+
+        this.eventListeners.push(
+            addWebsocketEventListener(
+                'resource:updated',
+                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
+                    const {resource, fields, _id} = event.extra;
+
+                    if (resource === 'users' && fields.last_activity_at) {
+                        this.reloadUser(_id);
+                    }
+                },
+            ),
+        );
+    }
+
+    componentWillUnmount() {
+        this.eventListeners.forEach((remove) => remove());
+    }
+
+    reloadUser(id) {
+        dataApi.findOne('users', id).then((updatedUser) => {
+            const deskMembers = {};
+
+            Object.keys(this.state.deskMembers).forEach((deskId) => {
+                deskMembers[deskId] = this.state.deskMembers[deskId].map(
+                    (user) => user._id === id ? updatedUser : user,
+                );
+            });
+
+            this.setState({deskMembers});
         });
     }
 
-    getUsers(desk: IDesk, role: IUserRole): Array<any> {
-        const deskMembers = this.services.desks.deskMembers[desk._id];
-        const authors = this.state.users.find((item) => item.role === role._id);
-
-        let users: Array<IUserExtra> = [];
+    getUsers(desk: IDesk, role: IUserRole): Array<IUserExtra> {
+        const deskMembers = this.state.deskMembers[desk._id];
+        const roleUsers = this.state.usersByRole.find((item) => item.role === role._id);
+        const users: Array<IUserExtra> = [];
 
         deskMembers.forEach((user) => {
             if (role._id === user.role) {
-                user.data = authors.authors[user._id];
-                users.push(user);
+                users.push({user, data: roleUsers.authors[user._id]});
             }
         });
 
-        return users ? users : [];
+        return users;
     }
 
     render() {
@@ -90,7 +126,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
                                 ) : null
                             ))}
 
-                            {!this.services.desks.deskMembers[desk._id].length ? (
+                            {!this.state.deskMembers[desk._id].length ? (
                                 <div className="sd-board__subheader">
                                     <h5 className="sd-board__subheader-title">
                                         {gettext('There are no users assigned to this desk')}

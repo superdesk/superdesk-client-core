@@ -5,6 +5,8 @@ import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
 import {s, ECE, el, els, articleList} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
+export const MONITORING_DEBOUNCE_MAX_WAIT = 3000;
+
 class Monitoring {
     config: ElementFinder;
     label: ElementFinder;
@@ -29,6 +31,7 @@ class Monitoring {
     getSpikedItems: () => any;
     getAllItems: any;
     getMonitoringWordCount: any;
+    expectWordCount: (itemId: string, expectedCount: number) => void;
     getPersonalItem: (index: any) => any;
     getPersonalItemText: (index: any) => any;
     getSpikedItem: (item: any) => any;
@@ -272,6 +275,13 @@ class Monitoring {
         this.getMonitoringWordCount = (itemId) =>
             element(by.id(itemId)).all(by.className('word-count')).first().getText();
 
+        this.expectWordCount = (itemId, expectedCount) => {
+            browser.wait(
+                () => this.getMonitoringWordCount(itemId).then((count) => parseInt(count, 10) === expectedCount),
+                MONITORING_DEBOUNCE_MAX_WAIT,
+            );
+        };
+
         /**
          * Get the personal element at 'index' row
          *
@@ -289,6 +299,7 @@ class Monitoring {
          * @return {string}
          */
         this.getPersonalItemText = function(index) {
+            browser.wait(ECE.visibilityOf(this.getPersonalItem(index)), MONITORING_DEBOUNCE_MAX_WAIT);
             return this.getPersonalItem(index).element(by.className('item-heading')).getText();
         };
 

@@ -2,6 +2,7 @@ import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle} from 'supe
 import {getAutoTaggingComponent} from './auto-tagging';
 
 const extension: IExtension = {
+    id: 'autoTagging',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 

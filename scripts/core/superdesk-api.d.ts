@@ -136,6 +136,7 @@ declare module 'superdesk-api' {
     };
 
     export type IExtension = DeepReadonly<{
+        id: string;
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
         exposes?: {[key: string]: any};
     }>;
@@ -378,7 +379,7 @@ declare module 'superdesk-api' {
         fetch_endpoint?: any;
         task_id?: any;
         ingest_provider?: any;
-        archive_item?: any;
+        archive_item?: IArticle;
         item_id?: string; // id of corresponding item in 'published' collection
         marked_desks?: Array<{
             date_marked: string;
@@ -405,7 +406,11 @@ declare module 'superdesk-api' {
 
         unique_name: any;
         pubstatus: any;
-        schedule_settings: any;
+        schedule_settings?: {
+            time_zone?: string;
+            utc_embargo?: any
+            utc_publish_schedule?: any
+        };
         format: any;
         fields_meta?: {
             [key: string]: {
@@ -423,7 +428,7 @@ declare module 'superdesk-api' {
         _status: any;
         _fetchable?: boolean;
         last_published_version?: any;
-        publish_schedule?: string;
+        publish_schedule?: string; // Stores local time. Timezone is stored in schedule_settings.time_zone
 
         /**
          * Wrapper for different renditions of non-textual content of the news object
