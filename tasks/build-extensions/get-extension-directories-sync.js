@@ -18,10 +18,6 @@ function getPaths(distRelative) {
         path.join(extensionRootPath, 'src'),
         '/',
     );
-    const extensionDistPath = trimEnd(
-        path.join(require.resolve(distRelative), '../'),
-        '/',
-    );
 
     const cssInDist = trimEnd(
         path.join(extensionRootPath, 'dist/index.css'),
@@ -37,7 +33,6 @@ function getPaths(distRelative) {
     return {
         extensionRootPath,
         extensionSrcPath,
-        extensionDistPath,
         extensionCssFilePath,
     };
 }
@@ -113,9 +108,9 @@ function getExtensionDirectoriesSync() {
 
     while ((_match = extensionRegistrationPattern.exec(indexFile)) !== null) {
         const extensionName = _match[1];
-        const {extensionRootPath, extensionSrcPath, extensionDistPath, extensionCssFilePath} = getPaths(_match[2]);
+        const {extensionRootPath, extensionSrcPath, extensionCssFilePath} = getPaths(_match[2]);
 
-        matches.push({extensionName, extensionRootPath, extensionSrcPath, extensionDistPath, extensionCssFilePath});
+        matches.push({extensionName, extensionRootPath, extensionSrcPath, extensionCssFilePath});
     }
 
     return matches;
