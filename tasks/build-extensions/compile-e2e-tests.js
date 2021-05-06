@@ -15,11 +15,6 @@ try {
 }
 
 if (protractorInstalled) {
-    execSync(
-        'npm run e2e-compile',
-        {stdio: 'inherit'}
-    );
-
     directories.forEach(({extensionRootPath}) => {
         try {
             execSync(

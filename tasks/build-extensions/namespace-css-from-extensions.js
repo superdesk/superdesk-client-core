@@ -1,10 +1,9 @@
 const fs = require('fs');
-var path = require('path');
-var css = require('css');
+var css = require('superdesk-core/node_modules/css');
 var debounce = require('lodash').debounce;
-var selectorTokenizer = require('css-selector-tokenizer');
+var selectorTokenizer = require('superdesk-core/node_modules/css-selector-tokenizer');
 var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
-var getCssNameForExtension = require('../scripts/core/get-css-name-for-extension').getCssNameForExtension;
+var getCssNameForExtension = require('superdesk-core/scripts/core/get-css-name-for-extension').getCssNameForExtension;
 
 function handleToken(token, prefixFn) {
     if (token.type === 'selectors') {
@@ -43,18 +42,20 @@ function namespace() {
 
     let finalCss = '';
 
-    directories.forEach(({extensionName, extensionCssFilePath}) => {
-        if (fs.existsSync(extensionCssFilePath)) {
-            const cssString = fs.readFileSync(extensionCssFilePath).toString();
+    directories.forEach((dir) => {
+        var cssFilePath = dir.extensionCssFilePath;
+
+        if (fs.existsSync(cssFilePath)) {
+            const cssString = fs.readFileSync(cssFilePath).toString();
 
             finalCss +=
-`/* EXTENSION STYLES START FOR '${extensionName}' */
+`/* EXTENSION STYLES START FOR '${dir.extensionName}' */
 
 
-${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, extensionName))}
+${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, dir.extensionName))}
 
 
-/* EXTENSION STYLES END FOR '${extensionName}' */
+/* EXTENSION STYLES END FOR '${dir.extensionName}' */
 
 
 
@@ -62,16 +63,18 @@ ${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, 
         }
     });
 
-    fs.writeFileSync(path.resolve(`${__dirname}/../styles/extension-styles.generated.css`), finalCss);
+    fs.writeFileSync(require.resolve(`superdesk-core/styles/extension-styles.generated.css`), finalCss);
 }
 
 if (process.argv[2] === '--watch') {
     const processDebouced = debounce(namespace, 100);
     const directories = getExtensionDirectoriesSync();
 
-    directories.forEach(({extensionCssFilePath}) => {
-        if (fs.existsSync(extensionCssFilePath)) {
-            fs.watch(extensionCssFilePath, () => {
+    directories.forEach((dir) => {
+        var cssFilePath = dir.extensionCssFilePath;
+
+        if (fs.existsSync(cssFilePath)) {
+            fs.watch(cssFilePath, () => {
                 processDebouced();
             });
         }

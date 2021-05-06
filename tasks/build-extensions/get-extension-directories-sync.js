@@ -1,30 +1,36 @@
 /* eslint-disable comma-dangle */
 
-var fs = require('fs');
-var path = require('path');
+const fs = require('fs');
+const path = require('path');
+const _ = require('lodash');
+const {trimEnd} = _;
 
-function getClientDir() {
-    const clientCoreRoot = path.join(__dirname, '../');
-    const maybeParentModulePath = path.join(clientCoreRoot, '../../');
-
-    // If node_modules exists in `maybeParentModulePath` set it as mainDirectory
-    const mainDirectory = fs.existsSync(path.join(maybeParentModulePath, 'node_modules'))
-        ? maybeParentModulePath
-        : clientCoreRoot;
-
-    return mainDirectory;
+function getAbsoluteModuleDirectory(modulePathRelative) {
+    return path.join(require.resolve(path.join(modulePathRelative, 'package.json')), '../')
 }
 
 function getPaths(distRelative) {
-    const from = 0;
-    const to = distRelative.lastIndexOf('/dist/');
+    const extensionRootPath = trimEnd(
+        getAbsoluteModuleDirectory(distRelative.slice(0, distRelative.indexOf('/dist/'))),
+        '/',
+    );
+    const extensionSrcPath = trimEnd(
+        path.join(extensionRootPath, 'src'),
+        '/',
+    );
+    const extensionDistPath = trimEnd(
+        path.join(require.resolve(distRelative), '../'),
+        '/',
+    );
 
-    const extensionRootPath = path.join(getClientDir(), 'node_modules', distRelative.slice(from, to));
-    const extensionSrcPath = path.join(extensionRootPath, 'src');
-    const extensionDistPath = path.join(getClientDir(), 'node_modules', distRelative);
-
-    const cssInDist = path.join(extensionRootPath, 'dist/index.css');
-    const cssInSrc = path.join(extensionRootPath, 'src/index.css');
+    const cssInDist = trimEnd(
+        path.join(extensionRootPath, 'dist/index.css'),
+        '/',
+    );
+    const cssInSrc = trimEnd(
+        path.join(extensionRootPath, 'src/index.css'),
+        '/',
+    );
 
     const extensionCssFilePath = fs.existsSync(cssInDist) ? cssInDist : cssInSrc;
 
@@ -50,7 +56,7 @@ function getIndexFilePath(indexFilePathRelative) {
     const fileExtensions = ['.js', '.jsx', '.ts', '.tsx'];
 
     // paths in `importApps` are relative client/dist
-    const base = path.join(getClientDir(), 'dist', indexFilePathRelative);
+    const base = path.join('dist', indexFilePathRelative);
 
     const maybeExtension = getFileExtension(base);
 
@@ -59,7 +65,7 @@ function getIndexFilePath(indexFilePathRelative) {
     }
 
     for (const ext of fileExtensions) {
-        const filePath = path.join(base, `index${ext}`);
+        const filePath = base + ext;
 
         if (fs.existsSync(filePath)) {
             return filePath;
@@ -70,7 +76,7 @@ function getIndexFilePath(indexFilePathRelative) {
 }
 
 function getExtensionDirectoriesSync() {
-    const config = require(path.join(getClientDir(), 'superdesk.config.js'))();
+    const config = require('../superdesk.config.js')();
 
     const paths = config.importApps || config.apps || [];
 
