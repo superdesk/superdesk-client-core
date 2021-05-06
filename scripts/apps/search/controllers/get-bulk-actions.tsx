@@ -26,8 +26,8 @@ export function getBulkActions(
 
     const {isLocked, isLockedByOtherUser, isPublished} = sdApi.article;
 
-    const noneLocked = articles.some((article) => isLocked(article)) !== true;
-    const nonePublished = articles.some((article) => isPublished(article)) !== true;
+    const noneLocked = articles.every((article) => !isLocked(article));
+    const nonePublished = articles.every((article) => !isPublished(article));
 
     if (articles.every(({state}) => state === ITEM_STATE.INGESTED)) {
         actions.push({
