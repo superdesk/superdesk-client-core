@@ -1,7 +1,15 @@
+function getModule(name) {
+    try {
+        return require(name);
+    } catch {
+        return require(`superdesk-core/node_modules/${name}`);
+    }
+}
+
 const fs = require('fs');
-var css = require('superdesk-core/node_modules/css');
+var css = getModule('css');
 var debounce = require('lodash').debounce;
-var selectorTokenizer = require('superdesk-core/node_modules/css-selector-tokenizer');
+var selectorTokenizer = getModule('css-selector-tokenizer');
 var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 var getCssNameForExtension = require('superdesk-core/scripts/core/get-css-name-for-extension').getCssNameForExtension;
 
