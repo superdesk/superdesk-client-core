@@ -1,8 +1,8 @@
+import {nav} from './utils';
 import {content} from './content';
-import {monitoring} from './monitoring';
-import {nav, waitFor} from './utils';
 import {element, by, browser} from 'protractor';
 import {el, ECE} from '@superdesk/end-to-end-testing-helpers';
+import {monitoring, MONITORING_DEBOUNCE_MAX_WAIT} from './monitoring';
 
 class Workspace {
     sideMenu: any;
@@ -130,10 +130,10 @@ class Workspace {
         this.showHighlightList = function(name) {
             var item = this.getHighlightListItem(name);
 
-            waitFor(item);
+            browser.wait(ECE.elementToBeClickable(item), 1000);
             item.click();
 
-            browser.wait(ECE.visibilityOf(el(['articles-list'])));
+            browser.wait(ECE.visibilityOf(el(['articles-list'])), MONITORING_DEBOUNCE_MAX_WAIT);
         };
 
         /**
@@ -150,7 +150,7 @@ class Workspace {
                 .mouseMove(menu)
                 .perform();
 
-            return menu.element(by.css('[option="' + name + '"]'));
+            return menu.element(by.partialButtonText(name));
         };
 
         /**
@@ -169,7 +169,11 @@ class Workspace {
          * @return {promise} element
          */
         this.getItem = function(index) {
-            return this.getItems().get(index);
+            const item = this.getItems().get(index);
+
+            browser.wait(ECE.presenceOf(item), MONITORING_DEBOUNCE_MAX_WAIT);
+
+            return item;
         };
 
         /** Get the title of the 'index' element

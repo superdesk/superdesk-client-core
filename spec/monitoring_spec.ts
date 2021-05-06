@@ -391,7 +391,7 @@ describe('monitoring', () => {
             .perform();
         authoring.save();
         authoring.close();
-        browser.wait(ECE.hasElementCount(els(['article-item']), 3));
+        browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
@@ -402,7 +402,7 @@ describe('monitoring', () => {
 
         browser.wait(ECE.elementToBeClickable(el(['remove-filter'])));
         el(['remove-filter']).click();
-        expect(monitoring.getAllItems().count()).toBe(3);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
@@ -410,14 +410,14 @@ describe('monitoring', () => {
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
-        expect(monitoring.getAllItems().count()).toBe(1);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 1), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
         browser.wait(ECE.elementToBeClickable(el(['clear-filters'])));
         el(['clear-filters']).click();
-        expect(monitoring.getAllItems().count()).toBe(3);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
@@ -679,7 +679,7 @@ describe('monitoring', () => {
 
         // view all items in desk single view
         monitoring.actionOnDeskSingleView();
-        expect(monitoring.getSingleViewItemCount()).toBe(8);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 8), 2000);
         expect(monitoring.getDeskSingleViewTitle()).toBe('Politic Desk desk 8');
 
         // Monitoring Home
@@ -688,7 +688,7 @@ describe('monitoring', () => {
 
         // Stage single view
         monitoring.actionOnStageSingleView();
-        expect(monitoring.getSingleViewItemCount()).toBe(0);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 0), 2000);
         expect(monitoring.getStageSingleViewTitle()).toBe('Politic Desk / Working Stage');
     });
 

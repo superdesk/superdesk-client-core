@@ -6,7 +6,7 @@ import {extensions as extensionsWithActivationResult} from 'appConfig';
 import {dispatchInternalEvent} from './internal-events';
 
 export function registerExtensions(
-    extensionLoaders: Array<{id: string; load(): Promise<IExtension>}>,
+    extensions: Array<IExtension>,
     superdesk,
     modal,
     privileges,
@@ -18,7 +18,12 @@ export function registerExtensions(
     workspaceMenuProvider,
     preferencesService,
 ): Promise<void> {
-    window['extensionsApiInstances'] = {};
+    extensions.forEach((extension) => {
+        extensionsWithActivationResult[extension.id] = {
+            extension,
+            activationResult: {},
+        };
+    });
 
     function registerPage(page: IPage) {
         const params: any = {
@@ -64,59 +69,41 @@ export function registerExtensions(
     }
 
     return Promise.all(
-        extensionLoaders.map(
-            ({id, load}) => {
-                const apiInstance: ISuperdesk = getSuperdeskApiImplementation(
-                    id,
-                    extensionsWithActivationResult,
-                    modal,
-                    privileges,
-                    lock,
-                    session,
-                    authoringWorkspace,
-                    config,
-                    metadata,
-                    preferencesService,
-                );
+        Object.keys(extensionsWithActivationResult).map((extensionId) => {
+            const extensionObject = extensionsWithActivationResult[extensionId];
 
-                window['extensionsApiInstances'][id] = apiInstance;
+            const superdeskApi = getSuperdeskApiImplementation(
+                extensionId,
+                extensionsWithActivationResult,
+                modal,
+                privileges,
+                lock,
+                session,
+                authoringWorkspace,
+                config,
+                metadata,
+                preferencesService,
+            );
 
-                return load().then((extension) => {
-                    extensionsWithActivationResult[id] = {
-                        extension,
-                        activationResult: {},
-                    };
-                });
-            },
-        ),
-    )
-        .then(() => {
-            return Promise.all(
-                Object.keys(extensionsWithActivationResult).map((extensionId) => {
-                    const extensionObject = extensionsWithActivationResult[extensionId];
+            return extensionObject.extension.activate(superdeskApi).then((activationResult) => {
+                extensionObject.activationResult = activationResult;
 
-                    return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
-                        .then((activationResult) => {
-                            extensionObject.activationResult = activationResult;
-
-                            return activationResult;
-                        });
-                }),
-            ).then((activationResults: Array<IExtensionActivationResult>) => {
-                flatMap(
-                    activationResults,
-                    (activationResult) => activationResult.contributions?.pages ?? [],
-                )
-                    .forEach(registerPage);
-
-                flatMap(
-                    activationResults,
-                    (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
-                )
-                    .forEach(registerWorkspaceMenu);
+                return activationResult;
             });
-        })
-        .then(() => {
-            dispatchInternalEvent('extensionsHaveLoaded', true);
-        });
+        }),
+    ).then((activationResults: Array<IExtensionActivationResult>) => {
+        flatMap(
+            activationResults,
+            (activationResult) => activationResult.contributions?.pages ?? [],
+        )
+            .forEach(registerPage);
+
+        flatMap(
+            activationResults,
+            (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
+        )
+            .forEach(registerWorkspaceMenu);
+    }).then(() => {
+        dispatchInternalEvent('extensionsHaveLoaded', true);
+    });
 }
