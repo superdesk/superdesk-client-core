@@ -72,10 +72,10 @@ describe('authoring', () => {
         var body2 = generateLines(8, 15);
         var body3 = generateLines(15, 20);
 
-        authoring.writeText(body1 + body2 + body3);
+        authoring.writeText(body1 + body2 + body3.trim());
         authoring.writeText(
             protractor.Key.HOME +
-            protractor.Key.UP.repeat(5) +
+            protractor.Key.UP.repeat(4) +
             protractor.Key.ENTER +
             protractor.Key.UP,
         );
@@ -367,16 +367,16 @@ describe('authoring', () => {
         authoring.writeText(' ');
         authoring.writeText(protractor.Key.ENTER);
         authoring.writeText('There are nine words, in this   final last sentence.\n');
-        expect(authoring.getEditorWordCount()).toBe('24 words');
+        authoring.expectEditorWordCount('24 words');
         authoring.save();
         authoring.close();
-        expect(monitoring.getMonitoringWordCount('item5')).toBe('24');
+        monitoring.expectWordCount('item5', 24);
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();
-        expect(authoring.getEditorWordCount()).toBe('0 words');
+        authoring.expectEditorWordCount('0 words');
         authoring.save();
         authoring.close();
-        expect(monitoring.getMonitoringWordCount('item5')).toBe('0');
+        monitoring.expectWordCount('item5', 0);
     });
 
     it('can update sign off manually', () => {

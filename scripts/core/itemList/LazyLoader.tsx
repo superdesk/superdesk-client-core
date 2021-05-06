@@ -65,13 +65,16 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
         const loadedItemsCount = this.state.items.size;
 
-        const pages = new Array(Math.ceil(loadedItemsCount / MAX_PAGE_SIZE)).fill(null).map((_, i) => {
-            const to = (i + 1) * MAX_PAGE_SIZE;
-            const to_limited = Math.min(to, loadedItemsCount);
-            const from = to - MAX_PAGE_SIZE;
+        const pages = loadedItemsCount > 0 ?
+            new Array(Math.ceil(loadedItemsCount / MAX_PAGE_SIZE)).fill(null).map((_, i) => {
+                const to = (i + 1) * MAX_PAGE_SIZE;
+                const to_limited = Math.min(to, loadedItemsCount);
+                const from = to - MAX_PAGE_SIZE;
 
-            return {from: from, to: to_limited};
-        });
+                return {from: from, to: to_limited};
+            }) : (
+                [{from: this.state.items.size, to: this.state.items.size + this.props.pageSize}]
+            );
 
         if (this._mounted) {
             this.setState({

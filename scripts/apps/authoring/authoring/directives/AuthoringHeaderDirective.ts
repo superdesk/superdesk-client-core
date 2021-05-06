@@ -160,6 +160,14 @@ export function AuthoringHeaderDirective(
                 return appConfig.features != null && appConfig.features.noMissingLink;
             }
 
+            function isMissingLink() {
+                const isUpdated = !scope.item.rewrite_of && !scope.item.rewritten_by;
+                const isCorrection = scope.action !== 'correct' && !scope.isCorrection
+                    && !scope.item.correction_sequence;
+
+                return isUpdated && isCorrection;
+            }
+
             function getRelatedItems() {
                 // Related Items
                 scope.missing_link = false;
@@ -173,8 +181,7 @@ export function AuthoringHeaderDirective(
                             scope.relatedItems = items;
                             if (items && items._items.length && !getNoMissingLink()) {
                                 // if takes package is missing or not rewrite of.
-                                scope.missing_link = !scope.item.rewrite_of &&
-                                    !scope.item.rewritten_by;
+                                scope.missing_link = isMissingLink();
                             }
                         });
                 }

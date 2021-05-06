@@ -1,6 +1,6 @@
 import React from 'react';
-import {Provider} from 'react-redux';
 import {Store} from 'redux';
+import {Provider} from 'react-redux';
 import {shallow, mount} from 'enzyme';
 import {Editor3Component, getValidMediaType} from '../Editor3Component';
 import {EditorState, ContentBlock} from 'draft-js';

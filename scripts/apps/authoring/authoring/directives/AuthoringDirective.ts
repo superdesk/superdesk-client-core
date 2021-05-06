@@ -19,6 +19,7 @@ import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isMediaType} from 'core/helpers/item';
+import {confirmQuickPublish} from '../services/quick-publish-modal';
 
 /**
  * @ngdoc directive
@@ -140,8 +141,8 @@ export function AuthoringDirective(
             }, true);
 
             function checkShortcutButtonAvailability(personal = false) {
-                if (personal && appConfig?.features?.publishFromPersonal) {
-                    return $scope.item.state !== 'draft' || $scope.dirty;
+                if (personal) {
+                    return appConfig?.features?.publishFromPersonal && $scope.item.state !== 'draft';
                 }
                 return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
             }
@@ -751,13 +752,13 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     showConfirm ?
                         $scope.saveTopbar()
-                            .then(confirm.confirmQuickPublish)
+                            .then(() => confirmQuickPublish([$scope.item]))
                             .then(customButtonAction) :
                         $scope.saveTopbar()
                             .then(customButtonAction);
                 } else {
                     showConfirm ?
-                        confirm.confirmQuickPublish().then(customButtonAction) :
+                        confirmQuickPublish([$scope.item]).then(customButtonAction) :
                         customButtonAction();
                 }
                 initMedia();
@@ -1159,10 +1160,12 @@ export function AuthoringDirective(
 
             const removeListener = addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
-                (partialItem) => {
-                    angular.extend($scope.item, partialItem.detail);
-                    angular.extend($scope.origItem, partialItem.detail);
-                    $scope.$apply();
+                (event) => {
+                    if (event.detail._id === $scope.item._id) {
+                        angular.extend($scope.item, event.detail);
+                        angular.extend($scope.origItem, event.detail);
+                        $scope.$apply();
+                    }
                 },
             );
 

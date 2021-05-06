@@ -1,0 +1,22 @@
+.quick-publish--item {
+    border-bottom: 1px dotted #A7A7A7;
+    padding-top: 7px;
+    padding-bottom: 7px;
+
+    &:first-child {
+        border-top: 1px dotted #A7A7A7;
+    }
+}
+
+.quick-publish--line {
+    display: flex;
+}
+
+.quick-publish--scheduled {
+    display: inline-block;
+    background: #F4E8DA;
+    color: #DC780A;
+    padding: 3px 13px;
+    margin-top: 3px;
+    border-radius: 40px;
+}

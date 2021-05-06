@@ -102,7 +102,7 @@ describe('users', () => {
 
         it('list online users', () => {
             el(['user-filter'], by.cssContainingText('option', 'Online')).click();
-            expect(element.all(by.repeater('user in users')).count()).toBe(1);
+            expect(element.all(by.repeater('user in users')).count()).toBeGreaterThan(0);
         });
 
         it('can disable user', () => {

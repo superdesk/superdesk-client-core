@@ -136,6 +136,7 @@ declare module 'superdesk-api' {
     };
 
     export type IExtension = DeepReadonly<{
+        id: string;
         activate: (superdesk: ISuperdesk) => Promise<IExtensionActivationResult>;
         exposes?: {[key: string]: any};
     }>;
@@ -157,7 +158,9 @@ declare module 'superdesk-api' {
     // ENTITIES
 
     export interface IAuthor {
-        _id: Array<string, string>; // user id, role
+        // !!! _id is optional. It will not be present in ingested items.
+        _id?: Array<string, string>; // user id, role
+
         name: string;
         scheme: any | null;
         user: IUser;
@@ -375,7 +378,7 @@ declare module 'superdesk-api' {
         fetch_endpoint?: any;
         task_id?: any;
         ingest_provider?: any;
-        archive_item?: any;
+        archive_item?: IArticle;
         item_id?: string; // id of corresponding item in 'published' collection
         marked_desks?: Array<{
             date_marked: string;
@@ -402,7 +405,11 @@ declare module 'superdesk-api' {
 
         unique_name: any;
         pubstatus: any;
-        schedule_settings: any;
+        schedule_settings?: {
+            time_zone?: string;
+            utc_embargo?: any
+            utc_publish_schedule?: any
+        };
         format: any;
         fields_meta?: {
             [key: string]: {
@@ -420,7 +427,7 @@ declare module 'superdesk-api' {
         _status: any;
         _fetchable?: boolean;
         last_published_version?: any;
-        publish_schedule?: string;
+        publish_schedule?: string; // Stores local time. Timezone is stored in schedule_settings.time_zone
 
         /**
          * Wrapper for different renditions of non-textual content of the news object
@@ -521,7 +528,9 @@ declare module 'superdesk-api' {
     export interface IUserRole extends IBaseRestApiResponse {
         _id: string;
         name: string;
-        privileges: any;
+        privileges?: {
+            [privilege: string]: 1 | 0;
+        };
         author_role: string;
         editor_role: string;
     }
@@ -1138,6 +1147,9 @@ declare module 'superdesk-api' {
     export interface IEvents {
         articleEditStart: IArticle;
         articleEditEnd: IArticle;
+
+        articlePreviewStart: IArticle;
+        articlePreviewEnd: IArticle;
 
         // Attachments
         attachmentsAdded: Array<IAttachment>;
