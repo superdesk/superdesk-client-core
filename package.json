@@ -163,7 +163,6 @@
     "e2e-compile": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
     "e2e-compile-watch": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
     "protractor": "node run-end-to-end-tests.js",
-    "watch-css-from-extensions": "node tasks/namespace-css-from-extensions.js --watch",
     "watch-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
     "postinstall": "node ./tasks/patch-package.js && node ./tasks/compile-e2e-tests.js && node tasks/generate-placeholder-file-for-extension-styles.js",
     "test": "npm run lint && grunt ci:travis && node tasks/verify-client-api-changes.js",
