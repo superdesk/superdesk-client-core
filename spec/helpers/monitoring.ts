@@ -5,7 +5,7 @@ import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
 import {s, ECE, el, els, articleList} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
-export const MONITORING_DEBOUNCE_MAX_WAIT = 3000;
+export const MONITORING_DEBOUNCE_MAX_WAIT = 5000;
 
 class Monitoring {
     config: ElementFinder;
@@ -273,7 +273,7 @@ class Monitoring {
         };
 
         this.getMonitoringWordCount = (itemId) =>
-            element(by.id(itemId)).all(by.className('word-count')).first().getText();
+            element(by.css(`[id="${itemId}"] .word-count`)).getText();
 
         this.expectWordCount = (itemId, expectedCount) => {
             browser.wait(
