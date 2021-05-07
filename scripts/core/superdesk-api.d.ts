@@ -882,9 +882,10 @@ declare module 'superdesk-api' {
         checkbox = 'checkbox',
         contentFilterSingleValue = 'contentFilterSingleValue',
         deskSingleValue = 'deskSingleValue',
-        stageSingleValue = 'stage_singstageSingleValuele_value',
+        stageSingleValue = 'stageSingleValue',
         macroSingleValue = 'macroSingleValue',
         yesNo = 'yesNo',
+        select = 'select',
     }
 
     export interface IFormField { // don't forget to update runtime type checks
@@ -896,6 +897,9 @@ declare module 'superdesk-api' {
         label?: string;
 
         field: string;
+
+        /** default value */
+        value?: string;
 
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this

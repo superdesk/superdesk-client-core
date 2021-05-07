@@ -24,6 +24,8 @@ function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
         return FormFieldType.macroSingleValue;
     case FormFieldType.yesNo:
         return FormFieldType.yesNo;
+    case FormFieldType.select:
+        return FormFieldType.select;
     default:
         assertNever(type);
     }

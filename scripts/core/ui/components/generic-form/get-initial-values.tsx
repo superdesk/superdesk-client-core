@@ -3,7 +3,7 @@ import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
 import {IFormField, IFormGroup} from 'superdesk-api';
 
 function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field: string]: any} {
-    const {field} = fieldConfig;
+    const {field, value} = fieldConfig;
 
     const type: FormFieldType = fieldConfig.type;
 
@@ -17,6 +17,7 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     case FormFieldType.stageSingleValue:
     case FormFieldType.macroSingleValue:
     case FormFieldType.yesNo:
+    case FormFieldType.select:
         return {[field]: undefined};
     case FormFieldType.checkbox:
         return {[field]: false};

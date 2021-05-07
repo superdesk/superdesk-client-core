@@ -37,6 +37,10 @@ export class FormViewEdit extends React.Component<IProps> {
                         } else if (isIFormField(item)) {
                             const FieldComponent = getFormFieldComponent(item.type);
 
+                            if (FieldComponent == null) {
+                                return null;
+                            }
+
                             return (
                                 <FieldComponent
                                     key={i}
