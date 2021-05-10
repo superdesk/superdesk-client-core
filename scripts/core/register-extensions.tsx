@@ -113,6 +113,8 @@ export function registerExtensions(
                 (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
             )
                 .forEach(registerWorkspaceMenu);
+        }).then(() => {
+            dispatchInternalEvent('extensionsHaveLoaded', true);
         });
     });
 }
