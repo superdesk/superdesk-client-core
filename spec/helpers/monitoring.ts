@@ -283,7 +283,8 @@ class Monitoring {
         };
 
         this.expectWordCount = (itemId, expectedCount) => {
-            browser.wait(() => this.getMonitoringWordCount(itemId).then((count) => count === expectedCount), MONITORING_DEBOUNCE_MAX_WAIT);
+            browser.wait(() => this.getMonitoringWordCount(itemId)
+                .then((count) => count === expectedCount), MONITORING_DEBOUNCE_MAX_WAIT);
         };
 
         /**
