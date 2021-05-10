@@ -5,8 +5,12 @@ import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISupe
 import {extensions as extensionsWithActivationResult} from 'appConfig';
 import {dispatchInternalEvent} from './internal-events';
 
+interface IExtensionModule {
+    default: IExtension;
+}
+
 export function registerExtensions(
-    extensionLoaders: Array<{id: string; load(): Promise<IExtension>}>,
+    extensionLoaders: Array<{id: string; load(): Promise<IExtensionModule>}>,
     superdesk,
     modal,
     privileges,
@@ -81,12 +85,14 @@ export function registerExtensions(
 
                 window['extensionsApiInstances'][id] = apiInstance;
 
-                return load().then((extension) => {
-                    extensionsWithActivationResult[id] = {
-                        extension,
-                        activationResult: {},
-                    };
-                });
+                return load()
+                    .then((module) => module.default)
+                    .then((extension) => {
+                        extensionsWithActivationResult[id] = {
+                            extension,
+                            activationResult: {},
+                        };
+                    });
             },
         ),
     ).then(() => {
