@@ -1,13 +1,13 @@
 import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
+import {IExtensionModule, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
 import {dispatchInternalEvent} from './internal-events';
 
 export interface IExtensionLoader {
     id: string;
-    load(): Promise<IExtension>;
+    load(): Promise<IExtensionModule>;
     configuration?: {[key: string]: any};
 }
 
@@ -36,7 +36,7 @@ export function registerExtensions(
         };
 
         if (page.addToMainMenu ?? true) {
-            params.category = superdesk.MENU_MAIN;
+            params.category = superdesk.MAIN_MENU;
         }
 
         if (page.showTopMenu === true) {
@@ -87,13 +87,15 @@ export function registerExtensions(
 
                 window['extensionsApiInstances'][id] = apiInstance;
 
-                return load().then((extension) => {
-                    extensionsWithActivationResult[id] = {
-                        extension,
-                        activationResult: {},
-                        configuration: configuration ?? {},
-                    };
-                });
+                return load()
+                    .then((module) => module.default)
+                    .then((extension) => {
+                        extensionsWithActivationResult[id] = {
+                            extension,
+                            activationResult: {},
+                            configuration: configuration ?? {},
+                        };
+                    });
             },
         ),
     )

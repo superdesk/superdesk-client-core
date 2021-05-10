@@ -30,7 +30,7 @@ class Monitoring {
     getMonitoringHomeTitle: any;
     getSpikedItems: () => any;
     getAllItems: any;
-    getMonitoringWordCount: any;
+    getMonitoringWordCount: (itemId: string) => wdpromise.Promise<number>;
     expectWordCount: (itemId: string, expectedCount: number) => void;
     getPersonalItem: (index: any) => any;
     getPersonalItemText: (index: any) => any;
@@ -272,14 +272,17 @@ class Monitoring {
             return element.all(by.className('media-box'));
         };
 
-        this.getMonitoringWordCount = (itemId) =>
-            element(by.css(`[id="${itemId}"] .word-count`)).getText();
+        this.getMonitoringWordCount = (itemId: string) => {
+            const countElem = element(by.id(itemId)).element(by.className('word-count'));
+
+            browser.wait(ECE.presenceOf(countElem), MONITORING_DEBOUNCE_MAX_WAIT);
+
+            return countElem.getText().then((value) => value ? parseInt(value, 10) : 0);
+        };
 
         this.expectWordCount = (itemId, expectedCount) => {
-            browser.wait(
-                () => this.getMonitoringWordCount(itemId).then((count) => parseInt(count, 10) === expectedCount),
-                MONITORING_DEBOUNCE_MAX_WAIT,
-            );
+            browser.wait(() => this.getMonitoringWordCount(itemId)
+                .then((count) => count === expectedCount), MONITORING_DEBOUNCE_MAX_WAIT);
         };
 
         /**
