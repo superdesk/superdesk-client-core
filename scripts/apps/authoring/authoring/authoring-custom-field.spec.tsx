@@ -79,7 +79,6 @@ describe('custom authoring field', () => {
                 field={vocabulary}
                 editable={true}
                 onChange={onChange}
-                template={template}
             />,
         );
 
@@ -112,7 +111,6 @@ describe('custom authoring field', () => {
                 field={vocabulary}
                 editable={true}
                 onChange={onChange}
-                template={template}
             />,
         );
 

@@ -1817,6 +1817,14 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface ITemplate extends IBaseRestApiResponse {
+        template_name: string,
+        is_public: boolean,
+        data: IArticle,
+        template_type: string,
+        template_desks: Array<IDesk['_id']>,
+        user: IUser['_id']
+    }
 
     // CUSTOM FIELD TYPES
 
@@ -1826,6 +1834,7 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
+        template?: ITemplate;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {
@@ -1834,7 +1843,8 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
-        radioValue?: string,
+        radioValue?: string;
+        template?: ITemplate;
     }
 
     export interface IPreviewComponentProps {

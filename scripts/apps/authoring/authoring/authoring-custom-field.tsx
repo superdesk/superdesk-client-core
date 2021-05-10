@@ -2,14 +2,14 @@ import React from 'react';
 import {get, throttle, Cancelable} from 'lodash';
 
 import {getField} from 'apps/fields';
-import {IArticle, IArticleField} from 'superdesk-api';
+import {IArticle, IArticleField, ITemplate} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
     field: IArticleField;
     editable: boolean;
     onChange: (field: IArticleField, value: any) => any;
-    template: any;
+    template?: ITemplate;
 }
 
 // IProps['onChange'] updates the item asynchronously
@@ -72,18 +72,19 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         return (
             <div>
-                {this.props.template == null ?
+                {this.props.template != null && FieldType.templateEditorComponent != null ?
                     (
-                        <FieldType.editorComponent
+                        <FieldType.templateEditorComponent
                             item={item}
                             value={this.state.value}
                             setValue={(value) => this.setValue(value)}
                             readOnly={!editable}
                             config={field.custom_field_config}
+                            template={this.props.template}
                         />
                     ) :
                     (
-                        <FieldType.templateEditorComponent
+                        <FieldType.editorComponent
                             item={item}
                             value={this.state.value}
                             setValue={(value) => this.setValue(value)}
