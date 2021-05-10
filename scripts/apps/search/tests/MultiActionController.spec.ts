@@ -107,7 +107,7 @@ describe('Multi Action Bar', () => {
                 [
                     {
                         id: 'test-extension',
-                        load: () => Promise.resolve(
+                        load: () => Promise.resolve({default:
                             {
                                 activate: () => {
                                     return Promise.resolve({
@@ -119,7 +119,7 @@ describe('Multi Action Bar', () => {
                                     });
                                 },
                             },
-                        ),
+                        }),
                     },
                 ],
                 superdesk,

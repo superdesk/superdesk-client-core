@@ -145,6 +145,10 @@ declare module 'superdesk-api' {
         activationResult: IExtensionActivationResult;
     };
 
+    export interface IExtensionModule {
+        default: IExtension;
+    };
+
     export type IExtensions = {[key: string]: IExtensionObject};
 
     export type ISideMenuItem = DeepReadonly<{

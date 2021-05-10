@@ -81,7 +81,7 @@ describe('content', () => {
                 [
                     {
                         id: 'test-extension',
-                        load: () => Promise.resolve({
+                        load: () => Promise.resolve({default: {
                             activate: () => {
                                 return Promise.resolve({
                                     contributions: {
@@ -91,7 +91,7 @@ describe('content', () => {
                                     },
                                 });
                             },
-                        }),
+                        }}),
                     },
                 ],
                 superdesk,
