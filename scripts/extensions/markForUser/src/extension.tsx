@@ -18,7 +18,6 @@ interface IMarkForUserNotification {
 }
 
 const extension: IExtension = {
-    id: 'markForUser',
     exposes: {
         getQueryNotMarkedForAnyoneOrMarkedForMe,
         getQueryMarkedForUser,
