@@ -82,13 +82,13 @@ export class UserAvatar extends React.PureComponent<IProps> {
     render() {
         const {user, displayStatus, displayAdministratorIndicator} = this.props;
 
-        return (
+        return user?._id == null ? null : (
             <LazyOrNot {...this.props}>
                 <AvatarWrapper
-                    key={user?._id}
+                    key={user._id}
                     size={this.props.size}
                     administratorIndicator={
-                        displayAdministratorIndicator && user?.user_type === 'administrator'
+                        displayAdministratorIndicator && user.user_type === 'administrator'
                             ? {enabled: true, tooltipText: gettext('Administrator')}
                             : undefined
                     }
