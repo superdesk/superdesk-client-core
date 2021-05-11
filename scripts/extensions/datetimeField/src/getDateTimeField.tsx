@@ -6,15 +6,20 @@ import addMinutes from 'date-fns/addMinutes';
 import {IDateTimeFieldConfig, isDateValue} from './extension';
 import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/react';
 
+interface IPropsAdditional {
+    hideToggle?: boolean;
+}
+
 export function getDateTimeField(superdesk: ISuperdesk) {
     const {gettext, gettextPlural} = superdesk.localization;
     const {getLocaleForDatePicker} = superdesk.ui.framework;
     const {Spacer} = superdesk.components;
     const {dateToServerString} = superdesk.utilities;
 
-    return class DateTimeField extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig>> {
+    return class DateTimeField
+    extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig> & IPropsAdditional> {
         render() {
-            const checkbox = (
+            const checkbox = this.props.hideToggle !== true ? (
                 <Switch
                     value={this.props.value != null}
                     onChange={(value) => {
@@ -27,7 +32,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                         }
                     }}
                 />
-            );
+            ) : null;
 
             if (this.props.value == null) {
                 return (
@@ -55,7 +60,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                 return (
                     <Spacer type="horizontal" align="center" spacing="medium">
-                        {!this.props.template && checkbox}
+                        {checkbox}
 
                         <Spacer type="horizontal" align="stretch" spacing="medium">
                             <DatePickerISO

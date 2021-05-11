@@ -14,7 +14,7 @@ interface IState {
 export function getTemplateDateTimeField(superdesk: ISuperdesk) {
     const {Spacer} = superdesk.components;
     const currentDateTime = '{{ now|iso_datetime }}';
-    const DateTimeField: any = getDateTimeField(superdesk);
+    const DateTimeField = getDateTimeField(superdesk);
     const {dateToServerString} = superdesk.utilities;
 
     return class TemplateDateTimeField extends
@@ -89,7 +89,7 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
                                 setValue={this.props.setValue}
                                 readOnly={readOnly}
                                 config={config}
-                                template={template}
+                                hideToggle={true}
                             />
                         )
                     }
