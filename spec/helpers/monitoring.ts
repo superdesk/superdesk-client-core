@@ -261,6 +261,8 @@ class Monitoring {
         this.getSpikedItems = function() {
             const wrapper = el(['articles-list']);
 
+            browser.wait(ECE.visibilityOf(wrapper));
+
             browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)));
 
             const items = els(['article-item'], null, wrapper);
