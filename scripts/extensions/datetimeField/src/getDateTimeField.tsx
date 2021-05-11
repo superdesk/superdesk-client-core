@@ -3,7 +3,7 @@ import * as React from 'react';
 import set from 'date-fns/set';
 import format from 'date-fns/format';
 import addMinutes from 'date-fns/addMinutes';
-import {IDateTimeFieldConfig, isDateValue} from './extension';
+import {IDateTimeFieldConfig} from './extension';
 import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/react';
 
 interface IPropsAdditional {
@@ -41,13 +41,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                     </div>
                 );
             } else {
-                let isDate = isDateValue(this.props.value);
-
-                let date = new Date();
-
-                if (isDate) {
-                    date = new Date(this.props.value);
-                }
+                const date = new Date(this.props.value);
 
                 const day = format(date, 'yyyy-MM-dd'); // ISO8601
                 const hour = format(date, 'HH:mm'); // ISO8601

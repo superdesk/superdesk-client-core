@@ -10,10 +10,6 @@ import {getDateTimeField} from './getDateTimeField';
 import {getTemplateDateTimeField} from './getTemplateDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
 
-export function isDateValue(value: any) {
-    return isNaN(Date.parse(value)) !== true;
-}
-
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {
     const {formatDateTime} = superdesk.localization;
 
