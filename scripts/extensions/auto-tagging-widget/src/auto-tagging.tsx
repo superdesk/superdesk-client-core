@@ -413,7 +413,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 const othersGrouped = others.groupBy((tag) => tag.group.value);
 
                                 let allGrouped = OrderedMap<string, any>();
-                                othersGrouped.map((tags, groupId) => {
+
+                                othersGrouped.map((tags, groupId) =>
                                     allGrouped = allGrouped.set(groupId,
                                         <ToggleBoxNext
                                             key={groupId}
@@ -432,12 +433,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     );
                                                 }}
                                             />
-                                        </ToggleBoxNext>
-                                    )
-                                })
+                                        </ToggleBoxNext>,
+                                    ),
+                                );
 
                                 if (entitiesGroupedAndSorted.size > 0) {
-                                    allGrouped = allGrouped.set('entities', 
+                                    allGrouped = allGrouped.set('entities',
                                         <ToggleBoxNext
                                             title={this.getGroupName('entities', vocabularyLabels)}
                                             style="circle"
@@ -465,7 +466,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     />
                                                 </div>
                                             )).toArray()}
-                                        </ToggleBoxNext>
+                                        </ToggleBoxNext>,
                                     );
                                 }
 
@@ -477,7 +478,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 const allGroupedAndSortedNotInConfig = allGrouped
                                     .filter((_, key) => !hasConfig(key, this.iMatricsFields.others));
 
-                                const allGroupedAndSorted = allGroupedAndSortedByConfig.concat(allGroupedAndSortedNotInConfig);
+                                const allGroupedAndSorted = allGroupedAndSortedByConfig
+                                    .concat(allGroupedAndSortedNotInConfig);
 
                                 return (
                                     <React.Fragment>
