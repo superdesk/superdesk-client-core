@@ -1,6 +1,6 @@
 import {ISuperdesk, ITemplateEditorComponentProps} from 'superdesk-api';
 import * as React from 'react';
-import {IDateTimeFieldConfig} from './extension';
+import {IDateTimeFieldConfig, isDateValue} from './extension';
 import {Radio, CheckGroup} from 'superdesk-ui-framework';
 import {getDateTimeField} from './getDateTimeField';
 import {Switch} from 'superdesk-ui-framework/react';
@@ -24,7 +24,7 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
             super(props);
 
             this.state = {
-                radioValue: this.props.value ? 'showDate' : 'setCurrentDate',
+                radioValue: isDateValue(this.props.value) ? 'showDate' : 'setCurrentDate',
                 previousValue: new Date(),
             };
 
