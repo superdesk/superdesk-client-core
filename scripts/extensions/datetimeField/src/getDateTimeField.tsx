@@ -17,7 +17,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
     const {dateToServerString} = superdesk.utilities;
 
     return class DateTimeField
-    extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig> & IPropsAdditional> {
+        extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig> & IPropsAdditional> {
         render() {
             const checkbox = this.props.hideToggle !== true ? (
                 <Switch

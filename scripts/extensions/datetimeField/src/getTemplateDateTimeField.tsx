@@ -8,7 +8,6 @@ import addMinutes from 'date-fns/addMinutes';
 
 interface IState {
     radioValue: 'setCurrentDate' | 'showDate' | null;
-    previousValue: any;
 }
 
 export function getTemplateDateTimeField(superdesk: ISuperdesk) {
@@ -25,7 +24,6 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
 
             this.state = {
                 radioValue: isDateValue(this.props.value) ? 'showDate' : 'setCurrentDate',
-                previousValue: new Date(),
             };
 
             this.onRadioValueChange = this.onRadioValueChange.bind(this);
@@ -35,13 +33,11 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
             this.setState({radioValue});
             if (radioValue === 'setCurrentDate') {
                 this.props.setValue(currentDateTime);
-            } else {
-                this.props.setValue(this.state.previousValue);
             }
         }
 
         render() {
-            const {item, value, readOnly, config, template} = this.props;
+            const {item, value, readOnly, config} = this.props;
 
             const checkbox = (
                 <Switch
