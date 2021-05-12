@@ -86,25 +86,27 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                             <div style={{display: 'flex', alignItems: 'center', height: '100%'}}><span>@</span></div>
 
-                            <TimePicker
-                                required // because it's a part of the date-time
-                                value={hour}
-                                onChange={(value) => {
-                                    const [hours, minutes] = value.split(':');
+                            <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
+                                <TimePicker
+                                    required // because it's a part of the date-time
+                                    value={hour}
+                                    onChange={(value) => {
+                                        const [hours, minutes] = value.split(':');
 
-                                    this.props.setValue(
-                                        dateToServerString(
-                                            set(
-                                                date,
-                                                {
-                                                    hours: parseInt(hours, 10),
-                                                    minutes: parseInt(minutes, 10),
-                                                },
+                                        this.props.setValue(
+                                            dateToServerString(
+                                                set(
+                                                    date,
+                                                    {
+                                                        hours: parseInt(hours, 10),
+                                                        minutes: parseInt(minutes, 10),
+                                                    },
+                                                ),
                                             ),
-                                        ),
-                                    );
-                                }}
-                            />
+                                        );
+                                    }}
+                                />
+                            </div>
                         </Spacer>
 
                         {
