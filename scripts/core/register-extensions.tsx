@@ -30,7 +30,7 @@ export function registerExtensions(
         };
 
         if (page.addToMainMenu ?? true) {
-            params.category = superdesk.MAIN_MENU;
+            params.category = superdesk.MENU_MAIN;
         }
 
         if (page.showTopMenu === true) {
