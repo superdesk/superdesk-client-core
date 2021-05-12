@@ -13,7 +13,7 @@ try {
 
 if (protractorInstalled) {
     execSync(
-        'npm run e2e-compile',
+        'npm run e2e-compile --if-present',
         {stdio: 'inherit'}
     );
 }
