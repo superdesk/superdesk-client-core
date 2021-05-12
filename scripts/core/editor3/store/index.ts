@@ -37,7 +37,10 @@ import {
     ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
-import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {
+    RICH_FORMATTING_OPTION,
+    formattingOptionsUnsafeToParseFromHTML,
+} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -314,18 +317,28 @@ export function getInitialContent(props): ContentState {
         ).getCurrentContent();
     }
 
-    const draftjsRawState = getFieldMetadata(
-        props.item,
-        props.pathToValue,
-        fieldsMetaKeys.draftjsState,
+    const hasUnsafeFormattingOptions = props.editorFormat.some(
+        (option: RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
     );
 
-    if (draftjsRawState != null) {
-        let initialContent = convertFromRaw(draftjsRawState);
+    /**
+     * To avoid synchronisation issues between html/plaintext values and draftjs object,
+     * draftjs object is only used when there are formatting options enabled that can't be parsed from HTML.
+     */
+    if (hasUnsafeFormattingOptions) {
+        const draftjsRawState = getFieldMetadata(
+            props.item,
+            props.pathToValue,
+            fieldsMetaKeys.draftjsState,
+        );
 
-        return initializeHighlights(
-            EditorState.createWithContent(initialContent),
-        ).getCurrentContent();
+        if (draftjsRawState != null) {
+            let initialContent = convertFromRaw(draftjsRawState);
+
+            return initializeHighlights(
+                EditorState.createWithContent(initialContent),
+            ).getCurrentContent();
+        }
     }
 
     const value =
