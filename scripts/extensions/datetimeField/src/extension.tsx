@@ -10,8 +10,12 @@ import {getDateTimeField} from './getDateTimeField';
 import {getTemplateDateTimeField} from './getTemplateDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
 
-export function isDateValue(value: any) {
-    return isNaN(Date.parse(value)) !== true;
+export function isDateValue(value: string | undefined | null) {
+    if (value == null) {
+        return false;
+    } else {
+        return isNaN(Date.parse(value)) !== true;
+    }
 }
 
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {

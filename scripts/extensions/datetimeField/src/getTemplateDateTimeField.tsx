@@ -6,21 +6,24 @@ import {getDateTimeField} from './getDateTimeField';
 import {Switch} from 'superdesk-ui-framework/react';
 import addMinutes from 'date-fns/addMinutes';
 
+type IMode = 'setCurrentDate' | 'showDate';
+
 interface IState {
-    radioValue: 'setCurrentDate' | 'showDate' | null;
-    previousValue: any;
+    radioValue: IMode;
+    previousValue: Date;
 }
+
+type IProps = ITemplateEditorComponentProps<string | null, IDateTimeFieldConfig>;
 
 export function getTemplateDateTimeField(superdesk: ISuperdesk) {
     const {Spacer} = superdesk.components;
     const currentDateTime = '{{ now|iso_datetime }}';
     const DateTimeField = getDateTimeField(superdesk);
     const {dateToServerString} = superdesk.utilities;
+    const {assertNever} = superdesk.helpers;
 
-    return class TemplateDateTimeField extends
-        React.PureComponent<ITemplateEditorComponentProps<string | null, IDateTimeFieldConfig>,
-        IState> {
-        constructor(props: any) {
+    return class TemplateDateTimeField extends React.PureComponent<IProps, IState> {
+        constructor(props: IProps) {
             super(props);
 
             this.state = {
@@ -31,12 +34,14 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
             this.onRadioValueChange = this.onRadioValueChange.bind(this);
         }
 
-        onRadioValueChange(radioValue: any) {
+        onRadioValueChange(radioValue: IMode) {
             this.setState({radioValue});
             if (radioValue === 'setCurrentDate') {
                 this.props.setValue(currentDateTime);
+            } else if (radioValue === 'showDate') {
+                this.props.setValue(dateToServerString(this.state.previousValue));
             } else {
-                this.props.setValue(this.state.previousValue);
+                assertNever(radioValue);
             }
         }
 
@@ -72,7 +77,7 @@ export function getTemplateDateTimeField(superdesk: ISuperdesk) {
                                 label: 'Choose a date',
                             },
                         ]}
-                        onChange={(val) => this.onRadioValueChange(val)}
+                        onChange={(val: IMode) => this.onRadioValueChange(val)}
                     />
                 </CheckGroup>
             );
