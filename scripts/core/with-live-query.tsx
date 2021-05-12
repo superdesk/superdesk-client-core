@@ -131,9 +131,9 @@ export class WithLiveQuery
                         },
                     },
                 });
-
-                this.updatingRequestInProgress = false;
             }
+        }).finally(() => {
+            this.updatingRequestInProgress = false;
         });
     }
 
