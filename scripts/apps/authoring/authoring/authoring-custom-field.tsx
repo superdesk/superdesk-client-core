@@ -2,13 +2,14 @@ import React from 'react';
 import {get, throttle, Cancelable} from 'lodash';
 
 import {getField} from 'apps/fields';
-import {IArticle, IArticleField} from 'superdesk-api';
+import {IArticle, IArticleField, ITemplate} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
     field: IArticleField;
     editable: boolean;
     onChange: (field: IArticleField, value: any) => any;
+    template?: ITemplate;
 }
 
 // IProps['onChange'] updates the item asynchronously
@@ -46,8 +47,9 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
         this.setValue = this.setValue.bind(this);
     }
     setValue(value) {
-        this.setState({value});
-        this.onChangeThrottled(this.props.field, value);
+        this.setState({value}, () => {
+            this.onChangeThrottled(this.props.field, value);
+        });
     }
     componentDidUpdate() {
         const propsValue = getValue(this.props);
@@ -70,13 +72,27 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         return (
             <div>
-                <FieldType.editorComponent
-                    item={item}
-                    value={this.state.value}
-                    setValue={(value) => this.setValue(value)}
-                    readOnly={!editable}
-                    config={field.custom_field_config}
-                />
+                {this.props.template != null && FieldType.templateEditorComponent != null ?
+                    (
+                        <FieldType.templateEditorComponent
+                            item={item}
+                            value={this.state.value}
+                            setValue={(value) => this.setValue(value)}
+                            readOnly={!editable}
+                            config={field.custom_field_config}
+                            template={this.props.template}
+                        />
+                    ) :
+                    (
+                        <FieldType.editorComponent
+                            item={item}
+                            value={this.state.value}
+                            setValue={(value) => this.setValue(value)}
+                            readOnly={!editable}
+                            config={field.custom_field_config}
+                        />
+                    )
+                }
             </div>
         );
     }
