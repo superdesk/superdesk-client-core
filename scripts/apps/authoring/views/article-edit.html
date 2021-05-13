@@ -632,7 +632,12 @@
     <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
         <sd-character-count-config-button data-field="field._id"></sd-character-count-config-button>
-        <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
+
+        <sd-character-count
+            data-item="item.extra[field._id]"
+            data-html="field.field_options != null && field.field_options.single === true ? false: true"
+            data-limit="schema[field._id].maxlength"
+        ></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema[field._id].validate_characters"
         class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>

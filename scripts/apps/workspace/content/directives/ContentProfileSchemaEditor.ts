@@ -133,6 +133,21 @@ export type RICH_FORMATTING_OPTION =
     'undo' |
     'redo';
 
+export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTION> = [
+    // these aren't outputted to HTML at all
+    'comments',
+    'suggestions',
+
+    // no standard in HTML, parsing according to our output format is not implemented
+    'annotation',
+
+    // may not be parsed well
+    'pre',
+    'embed',
+    'media',
+    'table',
+];
+
 const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
     ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
     'h1',
