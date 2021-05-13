@@ -93,7 +93,7 @@ export function getBulkActions(
     return actions
         .filter((action) => (
             assets.every(
-                (asset) => isActionAllowed[action.action](asset)
+                (asset) => isActionAllowed[action.action](asset),
             )
         ))
         .map((action) => ({
