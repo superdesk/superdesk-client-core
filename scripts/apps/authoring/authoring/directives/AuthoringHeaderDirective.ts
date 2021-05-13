@@ -265,6 +265,16 @@ export function AuthoringHeaderDirective(
                 });
             });
 
+            scope.setCustomValue = (field, value) => {
+                const extra = Object.assign({}, scope.item.extra);
+
+                extra[field._id] = value || null;
+                scope.item.extra = extra;
+
+                scope.autosave(scope.item, 200);
+                scope.$apply();
+            };
+
             // If correction set focus to the ednote to encourage user to fill it in
             defer(() => {
                 if (scope.action === 'correct') {

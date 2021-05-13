@@ -1362,15 +1362,6 @@ export function AuthoringDirective(
                     });
             };
 
-            $scope.setCustomValue = (field, value) => {
-                const extra = Object.assign({}, $scope.item.extra);
-
-                extra[field._id] = value || null;
-                $scope.item.extra = extra;
-
-                $scope.autosave($scope.item, 200);
-            };
-
             $scope.refresh = () => $scope.refreshTrigger++;
         },
     };
