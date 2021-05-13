@@ -2,7 +2,7 @@
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
 import {generate} from 'json-merge-patch';
-import {isObject} from 'lodash';
+import {isObject, keyBy, partition} from 'lodash';
 import React from 'react';
 import {
     IBaseRestApiResponse,
@@ -16,6 +16,7 @@ import {
     IArticleQueryResult,
     IArticleQuery,
     IArticle,
+    IResourceChange,
 } from 'superdesk-api';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
@@ -132,11 +133,89 @@ export function generatePatchIArticle(a: IArticle, b: IArticle) {
     return patch;
 }
 
-export const dataApi: IDataApi = {
-    findOne: (endpoint, id) => httpRequestJsonLocal({
+function findOne<T>(endpoint: string, id: string): Promise<T> {
+    return httpRequestJsonLocal({
         method: 'GET',
         path: '/' + endpoint + '/' + id,
-    }),
+    });
+}
+
+export function fetchChangedResources<T extends IBaseRestApiResponse>(
+    resource: string,
+    changes: Array<IResourceChange>,
+    currentItems: Array<T>,
+    refreshAllOnFieldsChange: Set<string> = new Set(),
+    abortSignal?: AbortSignal,
+    dontRefetchForNewItems?: boolean,
+): Promise<Array<T> | 'requires-refetching-all'> {
+    const changesToResource = changes.filter((change) => change.resource === resource);
+
+    if (changesToResource.length < 1) {
+        return Promise.resolve(currentItems);
+    }
+
+    const [changesCreated, changesUpdatedDeleted] =
+        partition(changesToResource, (change) => change.changeType === 'created');
+
+    if (changesCreated.length > 0 && dontRefetchForNewItems !== true) {
+        return Promise.resolve('requires-refetching-all');
+    }
+
+    const [changesDeleted, changesUpdated] =
+        partition(changesUpdatedDeleted, (change) => change.changeType === 'deleted');
+
+    if (
+        changesUpdated.some(
+            ({fields}) => (fields == null ? [] : Object.keys(fields)).some(
+                (field) => refreshAllOnFieldsChange.has(field),
+            ),
+        )
+    ) {
+        return Promise.resolve('requires-refetching-all');
+    }
+
+    const deletedIds = new Set(changesDeleted.map(({itemId}) => itemId));
+    const updatedIds = new Set(changesUpdated.map(({itemId}) => itemId));
+
+    const currentItemsWithoutDeleted = currentItems.filter(({_id}) => deletedIds.has(_id) === false);
+
+    return Promise.all(
+        changesUpdated.filter(({itemId}) => updatedIds.has(itemId))
+            .map(
+                ({itemId}) => httpRequestJsonLocal({
+                    method: 'GET',
+                    path: `/${resource}/${itemId}`,
+                    abortSignal: abortSignal,
+                })
+                    .then((res: T) => res),
+            ),
+    ).then((itemsUpdated) => {
+        const updatedKeyed = keyBy(itemsUpdated, ({_id}) => _id);
+
+        return currentItemsWithoutDeleted.map((item) => updatedKeyed[item._id] ?? item);
+    });
+}
+
+function fetchChangedResourcesObj<T extends IBaseRestApiResponse>(
+    resource: string,
+    changes: Array<IResourceChange>,
+    currentItems: {[id: string]: T},
+    abortSignal?: AbortSignal,
+): Promise<{[id: string]: T}> {
+    const itemsArray = Object.values(currentItems);
+
+    return fetchChangedResources(resource, changes, Object.values(itemsArray), new Set(), abortSignal, true)
+        .then((res: Array<T>) => {
+            if (res === itemsArray) {
+                return currentItems; // keep the same reference if there were no changes.
+            } else {
+                return keyBy(res, ({_id}) => _id);
+            }
+        });
+}
+
+export const dataApi: IDataApi = {
+    findOne: findOne,
     create: (endpoint, item, urlParams) => httpRequestJsonLocal({
         'method': 'POST',
         path: '/' + endpoint,

@@ -1,7 +1,20 @@
 <div id="highlightPackage">
     <button class="dropdown__toggle sd-sidebar-menu__btn" ng-click="hideMonitoring(currentRoute.href === '/workspace/highlights', $event)" dropdown__toggle aria-label="{{ 'Highlights' | translate }}">
-        <i class="sd-sidebar-menu__main-icon big-icon--marked-star"></i>
-        <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+        <span class="sd-sidebar-menu__main-icon element-with-badge">
+            <i class="big-icon--marked-star"></i>
+    
+            <span
+                ng-if="badges[item.id] != null"
+                class="badge badge--highlight"
+                
+            >
+                {{badges[item.id]}}
+            </span>
+        </span>
+
+        <span class="sd-sidebar-menu__chevron_wrapper">
+            <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+        </span>
     </button>
     <ul class="dropdown__menu pull-left">
         <li><div class="dropdown__menu-label" translate>Choose highlight list</div></li>

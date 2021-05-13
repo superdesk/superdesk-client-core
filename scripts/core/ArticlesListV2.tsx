@@ -8,6 +8,7 @@ import {
     IWebsocketMessage,
     IResourceCreatedEvent,
     IResourceDeletedEvent,
+    IResourceChange,
 } from 'superdesk-api';
 
 import {noop} from 'lodash';
@@ -22,7 +23,6 @@ import {openArticle} from './get-superdesk-api-implementation';
 import {
     getAndMergeRelatedEntitiesForArticles,
     IRelatedEntities,
-    IResourceChange,
     getAndMergeRelatedEntitiesUpdated,
 } from './getRelatedEntities';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';

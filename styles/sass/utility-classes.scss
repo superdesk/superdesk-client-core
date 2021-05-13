@@ -224,3 +224,9 @@ ul.list-view.list-without-items {
         }
     }
 }
+
+.icon-big--inherit-color {
+    &[class^="big-icon--"], &[class*=" big-icon--"] {
+        color: inherit;
+    }
+}

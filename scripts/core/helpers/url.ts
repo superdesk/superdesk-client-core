@@ -12,8 +12,10 @@ export function getUrlPage(): string {
 
 export function setUrlPage(page: string) {
     const $location = ng.get('$location');
+    const $rootScope = ng.get('$rootScope');
 
     $location.url(page);
+    $rootScope.$applyAsync();
 }
 
 function getAllUrlParameters(): URLSearchParams {

@@ -5,7 +5,7 @@ import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
 import {s, ECE, el, els, articleList} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
-export const MONITORING_DEBOUNCE_MAX_WAIT = 3000;
+export const MONITORING_DEBOUNCE_MAX_WAIT = 5000;
 
 class Monitoring {
     config: ElementFinder;
@@ -138,27 +138,25 @@ class Monitoring {
         };
 
         this.showMonitoring = function() {
-            element(by.className('big-icon--view')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Monitoring"]')).click();
         };
 
         this.showSpiked = function() {
-            element(by.className('big-icon--spike')).click();
-
-            browser.wait(ECE.presenceOf(els(['article-item']).get(0)));
+            el(['workspace-navigation'], by.css('[aria-label="Spiked Items"]')).click();
         };
 
         /**
          * Open personal monitoring view
          */
         this.showPersonal = function() {
-            element(by.className('big-icon--personal')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Personal space"]')).click();
         };
 
         /**
          * Open global search view
          */
         this.showSearch = function() {
-            element(by.className('big-icon--global-search')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Search"]')).click();
         };
 
         /**
@@ -262,6 +260,8 @@ class Monitoring {
 
         this.getSpikedItems = function() {
             const wrapper = el(['articles-list']);
+
+            browser.wait(ECE.visibilityOf(wrapper));
 
             browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)));
 

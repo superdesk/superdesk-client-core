@@ -1940,6 +1940,7 @@ describe('authoring workspace', () => {
 
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($q, authoring) => {
         spyOn(authoring, 'open').and.returnValue($q.when(lockedItem));
