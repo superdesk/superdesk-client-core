@@ -414,8 +414,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 let allGrouped = OrderedMap<string, JSX.Element>();
 
-                                othersGrouped.map((tags, groupId) =>
-                                    allGrouped = allGrouped.set(groupId,
+                                othersGrouped.forEach((tags, groupId) =>
+                                    tags && groupId ? allGrouped = allGrouped.set(groupId,
                                         <ToggleBoxNext
                                             key={groupId}
                                             title={this.getGroupName(groupId, vocabularyLabels)}
@@ -434,7 +434,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 }}
                                             />
                                         </ToggleBoxNext>,
-                                    ),
+                                    ) : false,
                                 );
 
                                 if (entitiesGroupedAndSorted.size > 0) {
