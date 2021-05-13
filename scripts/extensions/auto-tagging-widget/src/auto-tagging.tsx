@@ -412,7 +412,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 const others = items.filter((tag) => isEntity(tag) === false);
                                 const othersGrouped = others.groupBy((tag) => tag.group.value);
 
-                                let allGrouped = OrderedMap<string, any>();
+                                let allGrouped = OrderedMap<string, JSX.Element>();
 
                                 othersGrouped.map((tags, groupId) =>
                                     allGrouped = allGrouped.set(groupId,
