@@ -1820,6 +1820,14 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface ITemplate extends IBaseRestApiResponse {
+        template_name: string,
+        is_public: boolean,
+        data: IArticle,
+        template_type: string,
+        template_desks: Array<IDesk['_id']>,
+        user: IUser['_id']
+    }
 
     // CUSTOM FIELD TYPES
 
@@ -1829,6 +1837,15 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
+    }
+
+    export interface ITemplateEditorComponentProps<IValue, IConfig> {
+        item: IArticle;
+        value: IValue;
+        setValue: (value: IValue) => void;
+        readOnly: boolean;
+        config: IConfig;
+        template?: ITemplate;
     }
 
     export interface IPreviewComponentProps {
@@ -1848,6 +1865,7 @@ declare module 'superdesk-api' {
         editorComponent: React.ComponentType<IEditorComponentProps<IConfig>>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
+        templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
     }
 
 
