@@ -196,8 +196,9 @@ export default angular.module('superdesk.core.auth', [
             modal,
         ) {
             $rootScope.logout = function() {
-                function replace() {
-                    session.clear();
+                function doLogout() {
+                    $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
+                    localStorage.clear();
                     $window.location.replace('/'); // reset page for new user
                 }
 
@@ -215,7 +216,7 @@ export default angular.module('superdesk.core.auth', [
 
                 if (canLogout) {
                     api.auth.getById(session.sessionId).then((sessionData) => {
-                        api.auth.remove(sessionData).then(replace, replace);
+                        api.auth.remove(sessionData).then(doLogout, doLogout);
                     });
                 }
             };
