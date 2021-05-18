@@ -78,7 +78,13 @@ angular.module('superdesk.core.auth.session').service('session', [
             }
         }
 
-        // SESSION_EVENTS.LOGOUT
+        this.expire = function() {
+            this.token = null;
+            this.sessionId = null;
+            setToken(null);
+            setSessionId(null);
+            $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
+        };
 
         /**
      * Return session url for delete
