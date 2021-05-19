@@ -9,9 +9,9 @@ function getAbsoluteModuleDirectory(modulePathRelative) {
     return path.join(require.resolve(path.join(modulePathRelative, 'package.json')), '../');
 }
 
-function getPaths(distRelative) {
+function getPaths(extensionRootRelative) {
     const extensionRootPath = trimEnd(
-        getAbsoluteModuleDirectory(distRelative.slice(0, distRelative.indexOf('/dist/'))),
+        getAbsoluteModuleDirectory(extensionRootRelative),
         '/',
     );
     const extensionSrcPath = trimEnd(
@@ -102,7 +102,7 @@ function getExtensionDirectoriesSync() {
                     .then((res) => res.default),
         }
      */
-    var extensionRegistrationPattern = /id:\W*'(.*)',\W*load:\W*import\('(.*\/dist.+)'/g;
+    var extensionRegistrationPattern = /id:\W*'(.*)',\W*load:\W*import\('(.+?)'/g;
 
     const matches = [];
 

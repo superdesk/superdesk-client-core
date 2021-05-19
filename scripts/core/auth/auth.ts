@@ -196,11 +196,6 @@ export default angular.module('superdesk.core.auth', [
             modal,
         ) {
             $rootScope.logout = function() {
-                function replace() {
-                    session.clear();
-                    $window.location.replace('/'); // reset page for new user
-                }
-
                 var canLogout = true;
 
                 if (superdeskFlags.flags.authoring) {
@@ -215,7 +210,13 @@ export default angular.module('superdesk.core.auth', [
 
                 if (canLogout) {
                     api.auth.getById(session.sessionId).then((sessionData) => {
-                        api.auth.remove(sessionData).then(replace, replace);
+                        api.auth
+                            .remove(sessionData)
+                            .finally(() => {
+                                $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
+                                localStorage.clear();
+                                $window.location.replace('/'); // reset page for new user
+                            });
                     });
                 }
             };
