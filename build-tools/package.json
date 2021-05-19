@@ -1,6 +1,6 @@
 {
   "name": "@superdesk/build-tools",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publishConfig": {
     "access": "public"
   },
@@ -8,6 +8,7 @@
     "@superdesk/build-tools": "./src/index.js"
   },
   "dependencies": {
+    "commander": "^7.2.0",
     "gettext.js": "^0.9.0",
     "lodash": "^4.17.19"
   }
