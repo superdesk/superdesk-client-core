@@ -22,7 +22,6 @@ var css = getModule('css');
 var debounce = require('lodash').debounce;
 var selectorTokenizer = getModule('css-selector-tokenizer');
 var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
-var getCssNameForExtension = require('superdesk-core/scripts/core/get-css-name-for-extension').getCssNameForExtension;
 
 function handleToken(token, prefixFn) {
     if (token.type === 'selectors') {
@@ -56,8 +55,12 @@ function addPrefixes(cssString, prefixFn) {
     return css.stringify(ast);
 }
 
-function namespace() {
-    const directories = getExtensionDirectoriesSync();
+function namespace(clientDir) {
+    var getCssNameForExtension = require(
+        path.join(clientDir, 'node_modules/superdesk-core/scripts/core/get-css-name-for-extension')
+    ).getCssNameForExtension;
+
+    const directories = getExtensionDirectoriesSync(clientDir);
 
     let finalCss = '';
 
@@ -83,24 +86,31 @@ ${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, 
     });
 
     fs.writeFileSync(
-        path.join(require.resolve('superdesk-core/package.json'), '../styles/extension-styles.generated.css'),
+        path.join(
+            require.resolve(path.join(clientDir, 'node_modules/superdesk-core/package.json')),
+            '../styles/extension-styles.generated.css'
+        ),
         finalCss
     );
 }
 
-if (process.argv[2] === '--watch') {
-    const processDebouced = debounce(namespace, 100);
-    const directories = getExtensionDirectoriesSync();
+module.exports = {
+    namespaceCSS: namespace,
+    watchCSS: (clientDir) => {
+        const processDebouced = debounce(() => {
+            namespace(clientDir);
+            console.info(`CSS recompiled at ${new Date().toISOString().slice(11, 19)}`);
+        }, 100);
+        const directories = getExtensionDirectoriesSync(clientDir);
 
-    directories.forEach((dir) => {
-        var cssFilePath = dir.extensionCssFilePath;
+        directories.forEach((dir) => {
+            var cssFilePath = dir.extensionCssFilePath;
 
-        if (fs.existsSync(cssFilePath)) {
-            fs.watch(cssFilePath, () => {
-                processDebouced();
-            });
-        }
-    });
-} else {
-    namespace();
-}
+            if (fs.existsSync(cssFilePath)) {
+                fs.watch(cssFilePath, () => {
+                    processDebouced();
+                });
+            }
+        });
+    },
+};
