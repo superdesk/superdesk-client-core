@@ -29,6 +29,7 @@
   "main": "scripts/index.js",
   "dependencies": {
     "@metadata/exif": "github:superdesk/exif#431066d",
+    "@superdesk/build-tools": "^1.0.1",
     "@superdesk/end-to-end-testing-helpers": "1.0.8",
     "@types/angular": "1.6.50",
     "@types/draft-js": "0.10.29",

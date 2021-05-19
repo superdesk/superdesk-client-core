@@ -1,5 +1,5 @@
 var path = require('path');
-var compileTranslationsPoToJson = require('./tasks/compile-translations-po-to-json');
+var execSync = require('child_process').execSync;
 
 module.exports = function(grunt) {
     var config = {
@@ -41,7 +41,10 @@ module.exports = function(grunt) {
     grunt.registerTask('bamboo', ['karma:bamboo']);
 
     grunt.registerTask('gettext:compile', 'Compile .po translation files to .json', () => {
-        compileTranslationsPoToJson(grunt);
+        execSync(
+            'npx @superdesk/build-tools po-to-json ./po ./dist/languages/',
+            {stdio: 'inherit'}
+        );
     });
 
     // UI styling documentation
