@@ -5,6 +5,7 @@ const currentDir = process.cwd();
 
 const poToJson = require('./po-to-json/index');
 const installExtensions = require('./extensions/install-extensions');
+const mergeTranslations = require('./extensions/translations');
 const {namespaceCSS, watchCSS} = require('./extensions/css');
 
 const {Command} = require('commander');
@@ -45,6 +46,15 @@ extensions
         } else {
             namespaceCSS(clientDirAbs);
         }
+    });
+
+extensions
+    .command('merge-translations <main-client-dir>')
+    .description('read .po files from extensions, generate .json and merge with main translations')
+    .action((clientDir) => {
+        const clientDirAbs = path.join(currentDir, clientDir);
+
+        mergeTranslations(clientDirAbs);
     });
 
 program.addCommand(extensions);

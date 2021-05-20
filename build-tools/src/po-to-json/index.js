@@ -2,17 +2,10 @@ var fs = require('fs');
 var path = require('path');
 var execSync = require('child_process').execSync;
 var _ = require('lodash');
+const {isDirectory} = require('../utils');
 
 function getModuleDir(moduleName) {
     return path.join(require.resolve(moduleName + '/package.json'), '../');
-}
-
-function isDirectory(path) {
-    try {
-        return fs.lstatSync(path).isDirectory();
-    } catch (e) {
-        return false;
-    }
 }
 
 function escapeRegExp(string) {
