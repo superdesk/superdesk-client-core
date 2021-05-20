@@ -11,6 +11,19 @@ const {namespaceCSS, watchCSS} = require('./extensions/css');
 const {Command} = require('commander');
 const program = new Command();
 
+program.configureHelp({
+    subcommandDescription: (cmd) => {
+        const descr = cmd.description();
+
+        if ((descr == null || descr === '') && cmd.commands.length > 0) {
+            return `sub-commands: ${cmd.commands.map((cmd) => `"${cmd.name()}"`).join(', ')}. `
+                + 'Execute without arguments or with --help flag to see details';
+        } else {
+            return cmd.description();
+        }
+    },
+});
+
 program.command('po-to-json <source-dir-po> <output-dir-json>')
     .description('convert .po files in the directory to .json format that is used by Superdesk')
     .action((sourcePo, outputJson) => {
