@@ -15,6 +15,7 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 import UserActivityWidget from 'apps/dashboard/user-activity/components/UserActivityWidget';
+import {IUserMap} from 'core/data/UserStore';
 
 export enum IMasterDeskTab {
     overview = 'overview',
@@ -37,6 +38,10 @@ export function getLabelForMasterDeskTab(tab: IMasterDeskTab): string {
     }
 }
 
+interface IProps {
+    users: IUserMap;
+}
+
 interface IState {
     desks: Array<IDesk>;
     stages: Array<IStage>;
@@ -48,10 +53,10 @@ interface IState {
     filters: any;
 }
 
-export class MasterDesk extends React.Component<{}, IState> {
+export class MasterDesk extends React.Component<IProps, IState> {
     services: any;
 
-    constructor(props: {}) {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -151,6 +156,7 @@ export class MasterDesk extends React.Component<{}, IState> {
                             case IMasterDeskTab.users:
                                 return (
                                     <UsersComponent
+                                        users={this.props.users}
                                         desks={this.state.desks}
                                         onUserSelect={(user) => this.setState({activeUser: user})}
                                     />
