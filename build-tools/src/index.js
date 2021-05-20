@@ -20,6 +20,14 @@ program.command('po-to-json <source-dir-po> <output-dir-json>')
         poToJson(poDir, jsonDir);
     });
 
+program.command('prepare-root-repo <main-client-dir>')
+    .description('executes all actions required to prepare the main repo for usage')
+    .action((mainClientDir) => {
+        const poDir = path.join(currentDir, mainClientDir, 'node_modules/superdesk-core/po');
+        const translationsDir = path.join(currentDir, mainClientDir, 'dist/languages');
+
+        poToJson(poDir, translationsDir);
+    });
 
 const extensions = new Command('extensions');
 
