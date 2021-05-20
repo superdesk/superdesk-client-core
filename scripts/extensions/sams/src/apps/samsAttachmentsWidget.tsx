@@ -7,7 +7,7 @@ import classNames from 'classnames';
 import {connect} from 'react-redux';
 
 // Types
-import {IAttachment, IAttachmentsWidgetProps} from 'superdesk-api';
+import {IAttachment, IAttachmentsWidgetProps, IMedia} from 'superdesk-api';
 import {ASSET_STATE, IAssetItem, IAssetSearchParams, ISetItem, IUploadAssetModalProps} from '../interfaces';
 import {IApplicationState} from '../store';
 import {superdeskApi, samsApi} from '../apis';
@@ -108,10 +108,17 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
     }
 
     showSelectAssetModal() {
+        let attachmentMediaIds: Array<string> = [];
+        this.props.attachments.forEach((attachment) => {
+            let media = attachment.media as IMedia;
+            attachmentMediaIds = attachmentMediaIds.concat(media._id);
+        });
+
         this.props.setAssetSearchParams({
             sizeTo: superdeskApi.instance.config.attachments_max_size / 1048576, // bytes -> MB
             states: [ASSET_STATE.PUBLIC, ASSET_STATE.INTERNAL],
             setIds: this.props.activeSets.map((set) => set._id),
+            assetIds: attachmentMediaIds,
         });
 
         showSelectAssetModal()
