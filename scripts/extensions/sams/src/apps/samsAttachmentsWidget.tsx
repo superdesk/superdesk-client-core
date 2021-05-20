@@ -109,8 +109,10 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
 
     showSelectAssetModal() {
         let attachmentMediaIds: Array<string> = [];
+
         this.props.attachments.forEach((attachment) => {
             let media = attachment.media as IMedia;
+
             attachmentMediaIds = attachmentMediaIds.concat(media._id);
         });
 
