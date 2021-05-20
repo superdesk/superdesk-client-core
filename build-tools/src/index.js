@@ -25,12 +25,13 @@ const extensions = new Command('extensions');
 
 extensions
     .command('build <main-client-dir>')
-    .description('prepares extensions for usage')
+    .description('executes all actions required to prepare extensions for usage')
     .action((clientDir) => {
         const clientDirAbs = path.join(currentDir, clientDir);
 
         installExtensions(clientDirAbs);
         namespaceCSS(clientDirAbs);
+        mergeTranslations(clientDirAbs);
     });
 
 extensions
