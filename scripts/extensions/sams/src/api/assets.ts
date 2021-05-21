@@ -158,6 +158,22 @@ function queryDescription(source: IRootElasticQuery, params: IAssetSearchParams)
     }
 }
 
+function queryTags(source: IRootElasticQuery, params: IAssetSearchParams) {
+    if (params.tags != null && params.tags.length > 0) {
+        let taglist: Array<string> = [];
+
+        params.tags.forEach((tag) => {
+            taglist.push(tag.code);
+        });
+        source.query.bool.must.push(
+            superdeskApi.elasticsearch.terms({
+                field: 'tags.code',
+                value: taglist,
+            }),
+        );
+    }
+}
+
 function queryMimetypes(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.mimetypes === ASSET_TYPE_FILTER.DOCUMENTS) {
         source.query.bool.must_not.push(
@@ -257,6 +273,7 @@ export function queryAssets(
         querySetIds,
         queryName,
         queryDescription,
+        queryTags,
         queryFilename,
         queryMimetypes,
         queryState,

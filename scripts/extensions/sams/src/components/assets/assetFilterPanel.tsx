@@ -1,19 +1,23 @@
 // External Modules
 import * as React from 'react';
+import {noop} from 'lodash';
 
 // Types
-import {ASSET_STATE, IAssetSearchParams, LIST_ACTION} from '../../interfaces';
+import {ASSET_STATE, IAssetSearchParams, LIST_ACTION, IAutoTaggingSearchResult, IAssetTag} from '../../interfaces';
 import {DatePickerLocaleSettings} from 'superdesk-api';
-import {superdeskApi} from '../../apis';
+import {superdeskApi, samsApi} from '../../apis';
+import {toClientFormat} from '../../utils/assets';
 
 // UI
 import {
+    Autocomplete,
     Button,
     DatePicker,
     FormLabel,
     Input,
     Option,
     Select,
+    Tag,
 } from 'superdesk-ui-framework/react';
 
 import {
@@ -53,6 +57,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                 'name',
                 'filename',
                 'description',
+                'tags',
                 'state',
                 'sizeFrom',
                 'sizeTo',
@@ -71,12 +76,61 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
             name: (value: string) => this.setLocalAssetSearchParams({name: value}),
             filename: (value: string) => this.setLocalAssetSearchParams({filename: value}),
             description: (value: string) => this.setLocalAssetSearchParams({description: value}),
+            tags: (value: IAssetTag) => this.setLocalAssetTagSearchParams(value, 'add'),
             state: (value: ASSET_STATE) => this.setLocalAssetSearchParams({state: value}),
             sizeFrom: (value: string) => this.setLocalAssetSearchParams({sizeFrom: stringToNumber(value)}),
             sizeTo: (value: string) => this.setLocalAssetSearchParams({sizeTo: stringToNumber(value)}),
             dateFrom: (value: Date) => this.setLocalAssetSearchParams({dateFrom: value}),
             dateTo: (value: Date) => this.setLocalAssetSearchParams({dateTo: value}),
         };
+    }
+
+    setLocalAssetTagSearchParams(tag: IAssetTag, method?: string) {
+        if (method === 'add') {
+            this.addTag(tag);
+        } else if (method === 'remove') {
+            this.removeTag(tag);
+        }
+    }
+
+    addTag(value: IAssetTag) {
+        this.setState((preState) => {
+            const oldState = preState;
+            const tags: Array<IAssetTag> = preState.localSearchParams.tags! || [];
+            const index = tags.findIndex((tag) => {
+                return tag.code === value.code;
+            });
+
+            if (index === -1) {
+                tags!.push(value);
+                return {
+                    localSearchParams: {
+                        tags: tags,
+                    },
+                };
+            }
+
+            return {
+                localSearchParams: {
+                    tags: oldState.localSearchParams.tags,
+
+                },
+            };
+        });
+    }
+
+    removeTag(value: IAssetTag) {
+        this.setState((preState) => {
+            const tags: Array<IAssetTag> = preState.localSearchParams.tags!;
+            const index = this.state.localSearchParams.tags?.indexOf(value)!;
+
+            tags.splice(index, 1);
+            return {
+                localSearchParams: {
+                    tags: tags,
+                },
+            };
+        });
     }
 
     setLocalAssetSearchParams(updates: Partial<IAssetSearchParams>) {
@@ -143,6 +197,25 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
         );
     }
 
+    searchTags(searchString: string, callback: (result: Array<any>) => void) {
+        let cancelled = false;
+
+        samsApi.assets.searchTags(searchString + '*')
+            .then((res: IAutoTaggingSearchResult) => {
+                if (cancelled !== true) {
+                    const result = toClientFormat(res).toArray();
+
+                    callback(result);
+                }
+            });
+
+        return {
+            cancel: () => {
+                cancelled = true;
+            },
+        };
+    }
+
     render() {
         const {gettext} = superdeskApi.localization;
         const {config} = superdeskApi.instance;
@@ -186,6 +259,33 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                                         onChange={this.onChange.description}
                                     />
                                 </FormItem>
+                            </FormGroup>
+                            <FormGroup>
+                                <FormRow>
+                                    <Autocomplete
+                                        key={(this.state.localSearchParams.tags?.length)}
+                                        label={gettext('Tags')}
+                                        value={''}
+                                        keyValue="name"
+                                        items={[]}
+                                        search={(searchString, callback) => this.searchTags(searchString, callback)}
+                                        onSelect={this.onChange.tags}
+                                        onChange={noop}
+                                    />
+                                </FormRow>
+                            </FormGroup>
+                            <FormGroup>
+                                <FormRow>
+                                    {this.state.localSearchParams.tags?.map((tag) => (
+                                        <Tag
+                                            key={this.state.localSearchParams.tags?.indexOf(tag)}
+                                            text={tag.name}
+                                            onClick={() => {
+                                                this.setLocalAssetTagSearchParams(tag, 'remove');
+                                            }}
+                                        />
+                                    ))}
+                                </FormRow>
                             </FormGroup>
                             <FormGroup>
                                 <FormRow>

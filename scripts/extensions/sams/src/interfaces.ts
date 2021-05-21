@@ -158,6 +158,7 @@ export interface IAssetSearchParams {
     setIds?: Array<string>;
     name?: string;
     description?: string;
+    tags?: Array<IAssetTag>;
     state?: ASSET_STATE;
     states?: Array<ASSET_STATE>;
     filename?: string;
