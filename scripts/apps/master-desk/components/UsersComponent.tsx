@@ -1,16 +1,17 @@
 import React from 'react';
+import {connect} from 'react-redux';
+
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-
 import {dataApi} from 'core/helpers/CrudManager';
 
-import {IUserMap} from 'core/data/UserStore';
+import {StoreState} from 'core/data';
 import {IDesk, IUser, IUserRole} from 'superdesk-api';
 import {UserListComponent, IUserExtra} from './UserListComponent';
 
 interface IProps {
-    users: IUserMap;
     desks: Array<IDesk>;
+    usersById: StoreState['users']['entities'];
     onUserSelect(user: IUser): void;
 }
 
@@ -28,7 +29,7 @@ interface IState {
     deskMembers: {[id: string]: Array<IUser['_id']>};
 }
 
-export class UsersComponent extends React.Component<IProps, IState> {
+class UsersComponent extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -71,7 +72,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
         const users: Array<IUserExtra> = [];
 
         deskMembers.forEach((userId) => {
-            const user = this.props.users.get(userId);
+            const user = this.props.usersById[userId];
 
             if (role._id === user.role) {
                 users.push({user, data: roleUsers.authors[user._id]});
@@ -117,3 +118,9 @@ export class UsersComponent extends React.Component<IProps, IState> {
         );
     }
 }
+
+const mapStateToProps = (state: StoreState) => ({
+    usersById: state.users.entities,
+});
+
+export default connect(mapStateToProps)(UsersComponent);

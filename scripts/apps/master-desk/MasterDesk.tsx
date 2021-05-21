@@ -4,7 +4,7 @@ import {IDesk, IStage, IUser} from 'superdesk-api';
 
 import {HeaderComponent} from './components/HeaderComponent';
 import {OverviewComponent} from './components/OverviewComponent';
-import {UsersComponent} from './components/UsersComponent';
+import UsersComponent from './components/UsersComponent';
 import {AssignmentsComponent} from './components/AssignmentsComponent';
 import {PreviewComponent} from './components/PreviewComponent';
 import {FilterPanelComponent} from './components/FilterPanelComponent';
@@ -15,7 +15,6 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 import UserActivityWidget from 'apps/dashboard/user-activity/components/UserActivityWidget';
-import {IUserMap} from 'core/data/UserStore';
 
 export enum IMasterDeskTab {
     overview = 'overview',
@@ -38,10 +37,6 @@ export function getLabelForMasterDeskTab(tab: IMasterDeskTab): string {
     }
 }
 
-interface IProps {
-    users: IUserMap;
-}
-
 interface IState {
     desks: Array<IDesk>;
     stages: Array<IStage>;
@@ -53,7 +48,7 @@ interface IState {
     filters: any;
 }
 
-export class MasterDesk extends React.Component<IProps, IState> {
+export class MasterDesk extends React.Component<{}, IState> {
     services: any;
 
     constructor(props) {
@@ -156,7 +151,6 @@ export class MasterDesk extends React.Component<IProps, IState> {
                             case IMasterDeskTab.users:
                                 return (
                                     <UsersComponent
-                                        users={this.props.users}
                                         desks={this.state.desks}
                                         onUserSelect={(user) => this.setState({activeUser: user})}
                                     />

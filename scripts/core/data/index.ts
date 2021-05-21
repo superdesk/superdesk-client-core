@@ -1,14 +1,20 @@
-import {Dispatcher} from 'flux';
+import loggerMiddleware from 'redux-logger';
+import {combineReducers, createStore, applyMiddleware, compose} from 'redux';
 import {IResourceUpdateEvent, IWebsocketMessage} from 'superdesk-api';
 import {addWebsocketEventListener} from 'core/notification/notification';
 import {dataApi} from 'core/helpers/CrudManager';
+import users from './users';
 
-export interface IActionPayload {
+export interface IAction {
     type: string;
     payload: any;
 }
 
-const superdeskDispatcher = new Dispatcher<IActionPayload>();
+const store = createStore(combineReducers({
+    users,
+}), compose(applyMiddleware(loggerMiddleware)));
+
+export type StoreState = ReturnType<typeof store.getState>;
 
 const RESOURCE_BLACKLIST = [
     'auth',
@@ -25,7 +31,7 @@ addWebsocketEventListener(
         }
 
         dataApi.findOne(resource, _id).then((updated) => {
-            superdeskDispatcher.dispatch({
+            store.dispatch({
                 type: `UPDATE_${resource.toUpperCase()}`,
                 payload: updated,
             });
@@ -35,4 +41,4 @@ addWebsocketEventListener(
     },
 );
 
-export default superdeskDispatcher;
+export default store;
