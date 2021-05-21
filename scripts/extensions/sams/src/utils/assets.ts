@@ -1,65 +1,105 @@
-import {ASSET_ACTIONS, IAssetAction, IAssetItem, IAssetCallback} from '../interfaces';
+import {
+    ASSET_ACTIONS,
+    IAssetAction,
+    IAssetCallback,
+    IAssetItem,
+    IBaseAssetAction,
+    IBulkActionAssetCallback,
+    IBulkAction,
+} from '../interfaces';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
 
 import {superdeskApi} from '../apis';
 import {getSetsSync} from '../api/assets';
 
-export function getAction(assetCallback: IAssetCallback): IAssetAction {
+const isActionAllowed: {[key: string]: (asset: Partial<IAssetItem>) => boolean} = {
+    [ASSET_ACTIONS.PREVIEW]: (asset) => (
+        asset._created != null
+    ),
+    [ASSET_ACTIONS.DOWNLOAD]: (asset) => (
+        asset._created != null
+    ),
+    [ASSET_ACTIONS.DELETE]: (asset) => (
+        asset._created != null &&
+        !isAssetLocked(asset)
+    ),
+    [ASSET_ACTIONS.EDIT]: (asset) => (
+        asset._created != null &&
+        isSetDisabled(asset) &&
+        isAssetLockedInCurrentSession(asset)
+    ),
+    [ASSET_ACTIONS.FORCE_UNLOCK]: (asset) => (
+        asset._created != null &&
+        isAssetLocked(asset)
+    ),
+};
+
+function getBaseAssetAction(action: ASSET_ACTIONS): IBaseAssetAction {
     const {gettext} = superdeskApi.localization;
     const {assertNever} = superdeskApi.helpers;
 
-    switch (assetCallback.action) {
+    switch (action) {
     case ASSET_ACTIONS.PREVIEW:
         return {
             id: ASSET_ACTIONS.PREVIEW,
             label: gettext('Preview'),
             icon: 'eye-open',
-            onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null,
         };
     case ASSET_ACTIONS.DOWNLOAD:
         return {
             id: ASSET_ACTIONS.DOWNLOAD,
             label: gettext('Download'),
             icon: 'download',
-            onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null,
         };
     case ASSET_ACTIONS.DELETE:
         return {
             id: ASSET_ACTIONS.DELETE,
             label: gettext('Delete'),
             icon: 'trash',
-            onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null && isAssetLockedByCurrentUser(asset),
         };
     case ASSET_ACTIONS.EDIT:
         return {
             id: ASSET_ACTIONS.EDIT,
             label: gettext('Edit'),
             icon: 'pencil',
-            onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null && isSetDisabled(asset) && isAssetLockedByCurrentUser(asset),
         };
     case ASSET_ACTIONS.FORCE_UNLOCK:
         return {
             id: ASSET_ACTIONS.FORCE_UNLOCK,
             label: gettext('Force Unlock'),
             icon: 'unlocked',
-            onSelect: assetCallback.onSelect,
-            isAllowed: (asset) => asset._created != null && isAssetLocked(asset),
         };
     }
 
-    assertNever(assetCallback.action);
+    assertNever(action);
 }
 
 export function getActions(asset: Partial<IAssetItem>, actions?: Array<IAssetCallback>): Array<IAssetAction> {
     return actions == null || actions.length === 0 ?
         [] :
         actions
-            .map((actionCallback) => getAction(actionCallback))
+            .map((actionCallback) => ({
+                ...getBaseAssetAction(actionCallback.action),
+                onSelect: actionCallback.onSelect,
+                isAllowed: isActionAllowed[actionCallback.action],
+            }))
             .filter((action) => action.isAllowed(asset));
+}
+
+export function getBulkActions(
+    assets: Array<IAssetItem>,
+    actions: Array<IBulkActionAssetCallback>,
+): Array<IBulkAction> {
+    return actions
+        .filter((action) => (
+            assets.every(
+                (asset) => isActionAllowed[action.action](asset),
+            )
+        ))
+        .map((action) => ({
+            ...getBaseAssetAction(action.action),
+            onSelect: action.onSelect,
+        }));
 }
 
 export function getDropdownItemsForActions(
@@ -132,12 +172,12 @@ export function isSetDisabled(asset: Partial<IAssetItem>): boolean {
     }
 }
 
-export function isAssetLockedByCurrentUser(asset: Partial<IAssetItem>): boolean {
-    const user_id = superdeskApi.session.getCurrentUserId();
+export function isAssetLockedInCurrentSession(asset: Partial<IAssetItem>): boolean {
+    const userId = superdeskApi.session.getCurrentUserId();
+    const sessionId = superdeskApi.session.getSessionId();
 
-    if (asset.lock_user === user_id || !isAssetLocked(asset)) {
-        return true;
-    } else {
-        return false;
-    }
+    return !isAssetLocked(asset) || (
+        asset.lock_session === sessionId &&
+        asset.lock_user === userId
+    );
 }
