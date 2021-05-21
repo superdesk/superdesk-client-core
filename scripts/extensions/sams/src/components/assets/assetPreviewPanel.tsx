@@ -2,7 +2,6 @@
 import * as React from 'react';
 import {Dispatch} from 'redux';
 import {connect} from 'react-redux';
-import {noop} from 'lodash';
 
 // Types
 import {ASSET_ACTIONS, IAssetCallback, IAssetItem, LIST_ACTION} from '../../interfaces';
@@ -20,7 +19,7 @@ import {
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 
 // UI
-import {Dropdown, FormLabel, IconButton, Tag} from 'superdesk-ui-framework/react';
+import {Dropdown, FormLabel, IconButton, Label} from 'superdesk-ui-framework/react';
 import {
     FormRow,
     PanelContent,
@@ -186,7 +185,12 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                             <FormRow>
                                 <FormLabel text={gettext('Tags')} style="light" />
                                 {this.props.asset.tags?.map((tag) => (
-                                    <Tag key={this.props.asset?.tags.indexOf(tag)} text={tag.name} onClick={noop} />
+                                    <Label
+                                        key={this.props.asset?.tags.indexOf(tag)}
+                                        text={tag.name}
+                                        style="translucent"
+                                        size="large"
+                                    />
                                 ))}
                             </FormRow>
                         </PanelContentBlockInner>
