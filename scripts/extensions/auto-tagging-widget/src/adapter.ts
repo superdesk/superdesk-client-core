@@ -8,6 +8,8 @@ export interface ITagBase {
     qcode: string;
     source?: string;
     altids: {[key: string]: string};
+    aliases?: Array<string>;
+    original_source?: string;
 }
 
 export interface ISubjectTag extends ITagBase {
@@ -40,13 +42,15 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     let tags = OrderedMap<string, ITagUi>();
 
     response.subject?.forEach((item) => {
-        const {name, description, qcode, source, altids} = item;
+        const {name, description, qcode, source, altids, aliases, original_source} = item;
 
         const tag: ITagUi = {
             name,
             description,
             qcode,
             source,
+            original_source,
+            aliases,
             altids,
             group: {
                 kind: 'scheme',
@@ -81,7 +85,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
 
     others.forEach(({group, items}) => {
         items.forEach((item) => {
-            const {name, description, qcode, source, altids} = item;
+            const {name, description, qcode, source, altids, aliases, original_source} = item;
 
             const tag: ITagUi = {
                 name,
@@ -89,6 +93,8 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
                 qcode,
                 source,
                 altids,
+                aliases,
+                original_source,
                 group: {
                     kind: 'visual',
                     value: group,

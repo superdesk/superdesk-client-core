@@ -1,6 +1,11 @@
 {
     "extends": "superdesk-code-style/tsconfig-strict",
     "compilerOptions": {
-        "outDir": "../dist/src"
-    }
+        "outDir": "../dist/src",
+        "skipLibCheck": true,
+        "types": []
+    },
+    "exclude": [
+        "../node_modules"
+    ]
 }
