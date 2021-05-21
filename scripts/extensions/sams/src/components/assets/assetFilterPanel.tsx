@@ -147,6 +147,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
             name: undefined,
             filename: undefined,
             description: undefined,
+            tags: undefined,
             state: undefined,
             sizeFrom: undefined,
             sizeTo: undefined,
