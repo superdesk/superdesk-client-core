@@ -1,5 +1,13 @@
-import {ASSET_ACTIONS, IAssetAction, IAssetItem, IAssetCallback} from '../interfaces';
+import {
+    ASSET_ACTIONS,
+    IAssetAction,
+    IAssetItem,
+    IAssetCallback,
+    IAutoTaggingSearchResult,
+    IAssetTag,
+} from '../interfaces';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
+import {OrderedMap} from 'immutable';
 
 import {superdeskApi} from '../apis';
 import {getSetsSync} from '../api/assets';
@@ -140,4 +148,19 @@ export function isAssetLockedByCurrentUser(asset: Partial<IAssetItem>): boolean 
     } else {
         return false;
     }
+}
+
+export function toClientFormat(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {
+    let tags = OrderedMap<string, IAssetTag>();
+
+    response.tags.forEach((item: string) => {
+        const tag: IAssetTag = {
+            name: item,
+            code: item,
+        };
+
+        tags = tags.set(tag.name!, tag);
+        tags = tags.set(tag.code!, tag);
+    });
+    return tags;
 }

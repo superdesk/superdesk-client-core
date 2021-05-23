@@ -6,7 +6,6 @@ import {noop} from 'lodash';
 import {ASSET_STATE, IAssetSearchParams, LIST_ACTION, IAutoTaggingSearchResult, IAssetTag} from '../../interfaces';
 import {DatePickerLocaleSettings} from 'superdesk-api';
 import {superdeskApi, samsApi} from '../../apis';
-import {toClientFormat} from '../../utils/assets';
 
 // UI
 import {
@@ -29,6 +28,9 @@ import {
     PanelFooter,
     PanelHeader,
 } from '../../ui';
+
+// Utils
+import {toClientFormat} from '../../utils/assets';
 
 interface IProps {
     searchParams: IAssetSearchParams;

@@ -1,7 +1,6 @@
 // External modules
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {OrderedMap} from 'immutable';
 import {noop, cloneDeep} from 'lodash';
 
 // Types
@@ -18,6 +17,7 @@ import {FormGroup, FormRow} from '../../ui';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
+import {toClientFormat} from '../../utils/assets';
 
 interface IProps {
     asset: Partial<IAssetItem>;
@@ -35,21 +35,6 @@ interface IState {
 const mapStateToProps = (state: IApplicationState) => ({
     sets: getActiveSets(state),
 });
-
-export function toClientFormat(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {
-    let tags = OrderedMap<string, IAssetTag>();
-
-    response.tags.forEach((item: string) => {
-        const tag: IAssetTag = {
-            name: item,
-            code: item,
-        };
-
-        tags = tags.set(tag.name!, tag);
-        tags = tags.set(tag.code!, tag);
-    });
-    return tags;
-}
 
 class AssetEditorComponent extends React.PureComponent<IProps, IState> {
     onChange: Dictionary<string, (value: any) => void>;
