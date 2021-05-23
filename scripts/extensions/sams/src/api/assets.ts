@@ -100,12 +100,12 @@ function querySetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
     }
 }
 
-function queryAssetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
-    if (params.assetIds != null && params.assetIds.length > 0) {
+function queryExcludedAssetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
+    if (params.excludedAssetIds != null && params.excludedAssetIds.length > 0) {
         source.query.bool.must_not.push(
             superdeskApi.elasticsearch.terms({
                 field: '_id',
-                value: params.assetIds,
+                value: params.excludedAssetIds,
             }),
         );
     }
@@ -266,7 +266,7 @@ export function queryAssets(
         querySearchString,
         querySetId,
         querySetIds,
-        queryAssetIds,
+        queryExcludedAssetIds,
         queryName,
         queryDescription,
         queryFilename,
