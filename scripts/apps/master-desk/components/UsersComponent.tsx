@@ -5,13 +5,13 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 
-import {StoreState} from 'core/data';
+import {IStoreState} from 'core/data';
 import {IDesk, IUser, IUserRole} from 'superdesk-api';
 import {UserListComponent, IUserExtra} from './UserListComponent';
 
 interface IProps {
     desks: Array<IDesk>;
-    usersById: StoreState['users']['entities'];
+    usersById: IStoreState['users']['entities'];
     onUserSelect(user: IUser): void;
 }
 
@@ -119,7 +119,7 @@ class UsersComponent extends React.Component<IProps, IState> {
     }
 }
 
-const mapStateToProps = (state: StoreState) => ({
+const mapStateToProps = (state: IStoreState) => ({
     usersById: state.users.entities,
 });
 

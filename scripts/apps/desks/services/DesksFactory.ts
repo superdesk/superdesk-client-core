@@ -9,7 +9,7 @@ import {
     SCHEDULED_OUTPUT,
     HIGHLIGHTS,
 } from '../constants';
-import UserActions from 'core/data/users/UserActions';
+import {UserActions} from 'core/data/users/UserActions';
 
 const OUTPUT_TYPES = [
     DESK_OUTPUT,

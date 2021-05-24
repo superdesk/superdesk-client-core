@@ -1,21 +1,11 @@
 import {IUser} from 'superdesk-api';
-import SuperdeskDispatcher from '..';
-import UserActionTypes from './UserActionTypes';
+import {store} from '..';
 
-const Actions = {
-    updateUser(data: IUser) {
-        SuperdeskDispatcher.dispatch({
-            type: UserActionTypes.UPDATE_USERS,
-            payload: data,
-        });
-    },
-
+export const UserActions = {
     initUsers(data: Array<IUser>) {
-        SuperdeskDispatcher.dispatch({
-            type: UserActionTypes.INIT_USERS,
+        store.dispatch({
+            type: 'INIT_USERS',
             payload: data,
         });
     },
 };
-
-export default Actions;

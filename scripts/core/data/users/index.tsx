@@ -1,18 +1,22 @@
 import {IUser} from 'superdesk-api';
-import {IAction} from '..';
-import UserActionTypes from './UserActionTypes';
+import {IEntityAction} from '..';
 
-interface IUserState {
+export interface IUserState {
     entities: {[id: string]: IUser};
 }
+
+export type IUserAction = {
+    type: 'INIT_USERS';
+    payload: Array<IUser>;
+} | IEntityAction;
 
 const initialState: IUserState = {
     entities: {},
 };
 
-export default function(state = initialState, action: IAction): IUserState {
+export function users(state = initialState, action: IUserAction): IUserState {
     switch (action.type) {
-    case UserActionTypes.INIT_USERS: {
+    case 'INIT_USERS': {
         const entities = action.payload.reduce((_entities, user) => {
             _entities[user._id] = user;
             return _entities;
@@ -21,15 +25,15 @@ export default function(state = initialState, action: IAction): IUserState {
         return {...state, entities};
     }
 
-    case UserActionTypes.UPDATE_USERS: {
-        const entities = {...state.entities};
+    case 'UPDATE_ENTITY':
+        if (action.payload.resource === 'users') {
+            const entities = {...state.entities};
 
-        entities[action.payload._id] = action.payload;
+            entities[action.payload._id] = action.payload.data as IUser;
 
-        return {...state, entities};
+            return {...state, entities};
+        }
     }
 
-    default:
-        return state;
-    }
+    return state;
 }
