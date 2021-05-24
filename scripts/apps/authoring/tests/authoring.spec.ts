@@ -355,22 +355,6 @@ describe('authoring', () => {
         expect(error).toHaveBeenCalledWith('err');
     }));
 
-    it('can continue publishing on unlock error', inject((api, $q, $rootScope, authoring, lock) => {
-        let success = jasmine.createSpy('success');
-        let error = jasmine.createSpy('error');
-        let item = {};
-
-        spyOn(api, 'update').and.returnValue($q.when(item));
-        spyOn(lock, 'unlock').and.returnValue($q.reject({}));
-
-        authoring.publish({}, {}).then(success, error);
-        $rootScope.$digest();
-
-        expect(lock.unlock).toHaveBeenCalledWith(item);
-        expect(success).toHaveBeenCalledWith(item);
-        expect(error).not.toHaveBeenCalled();
-    }));
-
     /**
      * Start authoring ctrl for given item.
      *
@@ -516,7 +500,6 @@ describe('authoring', () => {
 
                 expect(api.update).toHaveBeenCalledWith('archive_publish', edit, {},
                     {publishing_warnings_confirmed: false});
-                expect(lock.unlock).toHaveBeenCalled();
             }));
 
         it('confirms if an item is dirty and save work in personal',
@@ -1965,6 +1948,7 @@ describe('authoring workspace', () => {
 
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($q, authoring) => {
         spyOn(authoring, 'open').and.returnValue($q.when(lockedItem));

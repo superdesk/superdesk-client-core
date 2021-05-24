@@ -11,8 +11,6 @@ interface IState {
 }
 
 export class SelectUser extends SuperdeskReactComponent<IPropsSelectUser, IState> {
-    abortController: AbortController | null;
-
     constructor(props: IPropsSelectUser) {
         super(props);
 

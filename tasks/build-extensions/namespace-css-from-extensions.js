@@ -1,10 +1,28 @@
+/**
+ * All code that is in tasks/build-extensions/ is copied to the main repo before execution.
+
+ * It is done in order to be able to resolve installation paths of extensions.
+
+ * The scripts depend on a few modules like lodash, css, css-selector-tokenizer
+ * that are kept in this repo in order to manage them in one place.
+ * The location of where modules get installed depends on dependency tree.
+ * The module might be installed in client/node_modules or client/node_modules/superdesk-core/node_modules
+ */
+function getModule(name) {
+    try {
+        return require(name);
+    } catch {
+        return require(`superdesk-core/node_modules/${name}`);
+    }
+}
+
 const fs = require('fs');
-var path = require('path');
-var css = require('css');
+const path = require('path');
+var css = getModule('css');
 var debounce = require('lodash').debounce;
-var selectorTokenizer = require('css-selector-tokenizer');
+var selectorTokenizer = getModule('css-selector-tokenizer');
 var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
-var getCssNameForExtension = require('../scripts/core/get-css-name-for-extension').getCssNameForExtension;
+var getCssNameForExtension = require('superdesk-core/scripts/core/get-css-name-for-extension').getCssNameForExtension;
 
 function handleToken(token, prefixFn) {
     if (token.type === 'selectors') {
@@ -44,7 +62,7 @@ function namespace() {
     let finalCss = '';
 
     directories.forEach((dir) => {
-        var cssFilePath = dir.absolutePath + `/${dir.extensionName}/src/index.css`;
+        var cssFilePath = dir.extensionCssFilePath;
 
         if (fs.existsSync(cssFilePath)) {
             const cssString = fs.readFileSync(cssFilePath).toString();
@@ -64,7 +82,10 @@ ${addPrefixes(cssString, (originalName) => getCssNameForExtension(originalName, 
         }
     });
 
-    fs.writeFileSync(path.resolve(`${__dirname}/../styles/extension-styles.generated.css`), finalCss);
+    fs.writeFileSync(
+        path.join(require.resolve('superdesk-core/package.json'), '../styles/extension-styles.generated.css'),
+        finalCss
+    );
 }
 
 if (process.argv[2] === '--watch') {
@@ -72,7 +93,7 @@ if (process.argv[2] === '--watch') {
     const directories = getExtensionDirectoriesSync();
 
     directories.forEach((dir) => {
-        var cssFilePath = dir.absolutePath + `/${dir.extensionName}/src/index.css`;
+        var cssFilePath = dir.extensionCssFilePath;
 
         if (fs.existsSync(cssFilePath)) {
             fs.watch(cssFilePath, () => {

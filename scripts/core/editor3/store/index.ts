@@ -37,11 +37,15 @@ import {
     ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
-import {IEDITOR3_RICH_FORMATTING_OPTION} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {
+    IEDITOR3_RICH_FORMATTING_OPTION,
+    formattingOptionsUnsafeToParseFromHTML,
+} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {handleOverflowHighlights} from '../helpers/characters-limit';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -144,20 +148,31 @@ export default function createEditorStore(
     const reduxLoggerEnabled =
         devtools == null
             ? false
-            : JSON.stringify(devtools).includes('redux-logger');
+            : JSON.parse(devtools).includes('redux-logger');
 
     if (reduxLoggerEnabled) {
         // (this should always be the last middleware)
         middlewares.push(createLogger());
     }
 
+    const limitConfig: EditorLimit | null = !props.limit
+        ? null
+        : {
+            ui: props.limitBehavior || DEFAULT_UI_FOR_EDITOR_LIMIT,
+            chars: props.limit,
+        };
+
+    let editorState = EditorState.createWithContent(
+        content,
+        getCustomDecorator(),
+    );
+
+    editorState = handleOverflowHighlights(editorState, limitConfig?.chars);
+
     const store = createStore<IEditorStore, any, any, any>(
         reducers,
         {
-            editorState: EditorState.createWithContent(
-                content,
-                getCustomDecorator(),
-            ),
+            editorState,
             searchTerm: {pattern: '', index: -1, caseSensitive: false},
             popup: {type: PopupTypes.Hidden},
             readOnly: props.readOnly,
@@ -184,12 +199,7 @@ export default function createEditorStore(
             svc: props.svc,
             abbreviations: {},
             loading: false,
-            limitConfig: !props.limit
-                ? null
-                : {
-                    ui: props.limitBehavior || DEFAULT_UI_FOR_EDITOR_LIMIT,
-                    chars: props.limit,
-                },
+            limitConfig,
         },
         applyMiddleware(...middlewares),
     );
@@ -289,12 +299,11 @@ export function onChange(contentState, {plainText = false} = {}) {
 /**
  * @name getInitialContent
  * @param {Object} props Controller hosting the editor
- * @returns {ContentState} DraftJS ContentState object.
  * @description Gets the initial content state of the editor based on available information.
  * If an editor state is available as saved in the DB, we use that, otherwise we attempt to
  * use available HTML. If none are available, an empty ContentState is created.
  */
-export function getInitialContent(props) {
+export function getInitialContent(props): ContentState {
     // support standalone instance of editor3 which is not connected to item field
     if (props.editorState != null) {
         var contentState = convertFromRaw(
@@ -308,18 +317,28 @@ export function getInitialContent(props) {
         ).getCurrentContent();
     }
 
-    const draftjsRawState = getFieldMetadata(
-        props.item,
-        props.pathToValue,
-        fieldsMetaKeys.draftjsState,
+    const hasUnsafeFormattingOptions = props.editorFormat.some(
+        (option: IEDITOR3_RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
     );
 
-    if (draftjsRawState != null) {
-        let initialContent = convertFromRaw(draftjsRawState);
+    /**
+     * To avoid synchronisation issues between html/plaintext values and draftjs object,
+     * draftjs object is only used when there are formatting options enabled that can't be parsed from HTML.
+     */
+    if (hasUnsafeFormattingOptions) {
+        const draftjsRawState = getFieldMetadata(
+            props.item,
+            props.pathToValue,
+            fieldsMetaKeys.draftjsState,
+        );
 
-        return initializeHighlights(
-            EditorState.createWithContent(initialContent),
-        ).getCurrentContent();
+        if (draftjsRawState != null) {
+            let initialContent = convertFromRaw(draftjsRawState);
+
+            return initializeHighlights(
+                EditorState.createWithContent(initialContent),
+            ).getCurrentContent();
+        }
     }
 
     const value =

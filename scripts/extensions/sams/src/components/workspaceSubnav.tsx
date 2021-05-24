@@ -5,31 +5,36 @@ import {connect} from 'react-redux';
 
 // Types
 import {
+    ASSET_ACTIONS,
     ASSET_LIST_STYLE,
     ASSET_SORT_FIELD,
+    IAssetItem,
     IAssetSearchParams,
     ISetItem,
     LIST_ACTION,
     SET_STATE,
     SORT_ORDER,
 } from '../interfaces';
-import {superdeskApi, samsApi} from '../apis';
+import {samsApi, superdeskApi} from '../apis';
 import {IApplicationState} from '../store';
 
 // Redux Actions & Selectors
 import {isFilterPanelOpen} from '../store/workspace/selectors';
-import {getAssetListStyle,
+import {
+    getAssetListStyle,
     getAssetListTotal,
     getAssetSearchParams,
     getAssetSetFilter,
     getSelectedAssetIds,
+    getSelectedAssetItems,
 } from '../store/assets/selectors';
 import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
-import {toggleAssetListStyle,
-    updateAssetSearchParamsAndListItems,
+import {
     closeMultiActionBar,
     deleteAssets,
+    toggleAssetListStyle,
+    updateAssetSearchParamsAndListItems,
 } from '../store/assets/actions';
 
 // UI
@@ -38,18 +43,19 @@ import {
     Button,
     ButtonGroup,
     Dropdown,
+    IconButton,
     NavButton,
     SubNav,
-    IconButton,
     Tooltip,
 } from 'superdesk-ui-framework/react';
-import {IMenuGroup, IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
+import {IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 import {ContentBar, SearchBar, SubNavSpacer} from '../ui';
 import {showManageSetsModal} from './sets/manageSetsModal';
 import {AssetTypeFilterButtons} from './assets/assetTypeFilterButtons';
 
 // Utils
 import {getAssetListSortFieldText} from '../utils/ui';
+import {getBulkActions} from '../utils/assets';
 
 interface IProps {
     filterPanelOpen: boolean;
@@ -60,6 +66,7 @@ interface IProps {
     disabledSets: Array<ISetItem>;
     currentSet?: ISetItem;
     selectedAssetIds: Array<string> | [];
+    selectedAssets: Array<IAssetItem>;
     toggleFilterPanel(): void;
     toggleListStyle(): void;
     closeMultiActionBar(): void;
@@ -79,6 +86,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     disabledSets: getDisabledSets(state),
     currentSet: getAssetSetFilter(state),
     selectedAssetIds: getSelectedAssetIds(state),
+    selectedAssets: getSelectedAssetItems(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -106,7 +114,7 @@ export function downloadCompressedBinary(asset_ids: Array<string>): void {
 
 export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
     subNavMenuActions: Array<IMenuGroup>;
-    sortFieldOptions: Array<IMenuItem>;
+    sortFieldOptions: Array<IMenuGroup>;
 
     constructor(props: IProps) {
         super(props);
@@ -145,24 +153,28 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
             }];
     }
 
-    getSortFieldOptions(): Array<IMenuItem> {
+    getSortFieldOptions(): Array<IMenuGroup> {
         const {gettext} = superdeskApi.localization;
 
         return [{
-            label: gettext('Name'),
-            onSelect: () => this.setSortField(ASSET_SORT_FIELD.NAME),
-        }, {
-            label: gettext('Filename'),
-            onSelect: () => this.setSortField(ASSET_SORT_FIELD.FILENAME),
-        }, {
-            label: gettext('Created'),
-            onSelect: () => this.setSortField(ASSET_SORT_FIELD.CREATED),
-        }, {
-            label: gettext('Updated'),
-            onSelect: () => this.setSortField(ASSET_SORT_FIELD.UPDATED),
-        }, {
-            label: gettext('Size'),
-            onSelect: () => this.setSortField(ASSET_SORT_FIELD.SIZE),
+            type: 'group',
+            label: gettext('Sort By'),
+            items: [{
+                label: gettext('Name'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.NAME),
+            }, {
+                label: gettext('Filename'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.FILENAME),
+            }, {
+                label: gettext('Created'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.CREATED),
+            }, {
+                label: gettext('Updated'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.UPDATED),
+            }, {
+                label: gettext('Size'),
+                onSelect: () => this.setSortField(ASSET_SORT_FIELD.SIZE),
+            }],
         }];
     }
 
@@ -275,14 +287,25 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                 )}
                             </span>
                             <div className="pull-right">
-                                <NavButton
-                                    icon="trash"
-                                    onClick={this.onDeleteMultipleAssets}
-                                />
-                                <NavButton
-                                    icon="download"
-                                    onClick={this.onDownloadMultipleAssetsCompressedBinary}
-                                />
+                                {getBulkActions(this.props.selectedAssets, [{
+                                    action: ASSET_ACTIONS.DELETE,
+                                    onSelect: this.onDeleteMultipleAssets,
+                                }, {
+                                    action: ASSET_ACTIONS.DOWNLOAD,
+                                    onSelect: this.onDownloadMultipleAssetsCompressedBinary,
+                                }]).map((action) => (
+                                    <Tooltip
+                                        key={action.id}
+                                        text={action.label}
+                                        flow="down"
+                                    >
+                                        <NavButton
+                                            icon={action.icon}
+                                            text={action.label}
+                                            onClick={action.onSelect}
+                                        />
+                                    </Tooltip>
+                                ))}
                             </div>
                         </div>
                     </SubNav>
@@ -290,11 +313,18 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                     <SubNav zIndex={2}>
                         <ButtonGroup align="inline">
                             <Dropdown items={items}>
-                                <NavButton
-                                    text={buttonLabel}
-                                    onClick={() => false}
-                                    icon={buttonIcon}
-                                />
+                                <button
+                                    className="sd-navbtn sd-navbtn--textual"
+                                    data-sd-tooltip={gettext('Change Set filter')}
+                                    data-flow="right"
+                                >
+                                    {!buttonIcon ? null : (
+                                        <i className={`icon-${buttonIcon}`} />
+                                    )}
+                                    <span className="sd-navbtn__text">
+                                        {buttonLabel}
+                                    </span>
+                                </button>
                             </Dropdown>
                         </ButtonGroup>
                         <SearchBar
@@ -309,13 +339,20 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                                 null :
                                 (
                                     <Dropdown items={this.subNavMenuActions}>
-                                        <button className="sd-navbtn">
+                                        <button
+                                            className="sd-navbtn"
+                                            data-sd-tooltip={gettext('Manage SAMS')}
+                                            data-flow="down"
+                                        >
                                             <i className="icon-dots-vertical" />
                                         </button>
                                     </Dropdown>
                                 )
                             }
-                            <Tooltip text={gettext('Upload New Asset(s)')} flow="left">
+                            <Tooltip
+                                text={gettext('Upload New Asset(s)')}
+                                flow="left"
+                            >
                                 <Button
                                     type="primary"
                                     icon="upload"
@@ -330,41 +367,82 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
                 )}
                 <SubNav zIndex={1}>
                     <ButtonGroup align="inline">
-                        <NavButton
-                            icon="filter-large"
-                            onClick={this.props.toggleFilterPanel}
-                            type={this.props.filterPanelOpen === true ?
-                                'primary' :
-                                'default'
-                            }
-                        />
+                        <Tooltip
+                            text={gettext('Toggle filters')}
+                            flow="right"
+                        >
+                            <NavButton
+                                icon="filter-large"
+                                onClick={this.props.toggleFilterPanel}
+                                type={this.props.filterPanelOpen === true ?
+                                    'primary' :
+                                    'default'
+                                }
+                            />
+                        </Tooltip>
                     </ButtonGroup>
                     <AssetTypeFilterButtons />
                     <ButtonGroup align="right">
                         <SubNavSpacer noMargin={true} />
                         <ContentBar>
-                            <span className="sd-margin-r--1">
+                            <Tooltip
+                                text={gettext(
+                                    'Total Assets: {{ total }}',
+                                    {total: this.props.totalAssets},
+                                )}
+                                flow="down"
+                            >
                                 <span className="sd-margin-r--1">
-                                    {gettext('Total:')}
+                                    <span className="sd-margin-r--1">
+                                        {gettext('Total:')}
+                                    </span>
+                                    <Badge text={numberToString(this.props.totalAssets)} />
                                 </span>
-                                <Badge text={numberToString(this.props.totalAssets)} />
-                            </span>
+                            </Tooltip>
                             <Dropdown items={this.sortFieldOptions}>
-                                {sortFieldText}
+                                <button
+                                    className="dropdown__toggle dropdown-toggle"
+                                    data-sd-tooltip={gettext(
+                                        'Sort by: {{ field }}',
+                                        {field: sortFieldText},
+                                    )}
+                                    data-flow="down"
+                                >
+                                    {sortFieldText}
+                                    <span className="dropdown__caret" />
+                                </button>
+
                             </Dropdown>
-                            <IconButton
-                                ariaValue={this.props.searchParams.sortOrder}
-                                onClick={this.toggleSortOrder}
-                                icon={this.props.searchParams.sortOrder}
-                            />
+                            <Tooltip
+                                key={this.props.searchParams.sortOrder}
+                                text={this.props.searchParams.sortOrder === 'ascending' ?
+                                    gettext('Sort order: Ascending') :
+                                    gettext('Sort order: Descending')
+                                }
+                                flow="down"
+                            >
+                                <IconButton
+                                    ariaValue={this.props.searchParams.sortOrder}
+                                    onClick={this.toggleSortOrder}
+                                    icon={this.props.searchParams.sortOrder}
+                                />
+                            </Tooltip>
                         </ContentBar>
-                        <NavButton
-                            icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
-                                'list-view' :
-                                'grid-view'
-                            }
-                            onClick={this.props.toggleListStyle}
-                        />
+                        <Tooltip
+                            key={this.props.listStyle}
+                            text={this.props.listStyle === 'list' ?
+                                gettext('Switch to grid view') :
+                                gettext('Switch to list view')}
+                            flow="left"
+                        >
+                            <NavButton
+                                icon={this.props.listStyle === ASSET_LIST_STYLE.GRID ?
+                                    'list-view' :
+                                    'grid-view'
+                                }
+                                onClick={this.props.toggleListStyle}
+                            />
+                        </Tooltip>
                     </ButtonGroup>
                 </SubNav>
             </React.Fragment>

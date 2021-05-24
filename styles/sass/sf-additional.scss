@@ -1730,6 +1730,14 @@
     }
 }
 
+// Fix for large tag labels inside toggle-box
+.toggle-box {
+    .tag-label {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
 
 // Animations
 // ---------------------------------------------

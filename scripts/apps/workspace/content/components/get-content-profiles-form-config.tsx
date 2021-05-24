@@ -144,6 +144,21 @@ const EDITOR3_RICH_FORMATTING_OPTIONS: Array<IEDITOR3_RICH_FORMATTING_OPTION> = 
     'redo',
 ];
 
+export const formattingOptionsUnsafeToParseFromHTML: Array<IEDITOR3_RICH_FORMATTING_OPTION> = [
+    // these aren't outputted to HTML at all
+    'comments',
+    'suggestions',
+
+    // no standard in HTML, parsing according to our output format is not implemented
+    'annotation',
+
+    // may not be parsed well
+    'pre',
+    'embed',
+    'media',
+    'table',
+];
+
 function hasFormattingOptions(fieldId: string, editor, customFields: Array<any>) {
     return Object.keys(HAS_RICH_FORMATTING_OPTIONS).includes(fieldId)
         || (

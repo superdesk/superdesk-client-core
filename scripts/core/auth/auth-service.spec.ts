@@ -23,7 +23,6 @@ describe('auth service', () => {
     });
 
     beforeEach(inject((session, preferencesService, authAdapter, urls, api, $q) => {
-        session.clear();
         spyOn(preferencesService, 'get').and.returnValue($q.when({}));
         spyOn(urls, 'resource').and.returnValue($q.when('http://localhost:5000/api/auth'));
         spyOn(session, 'start').and.returnValue(true);

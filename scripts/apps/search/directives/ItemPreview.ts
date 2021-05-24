@@ -1,3 +1,8 @@
+import {IArticle} from 'superdesk-api';
+import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
+
+let itemInPreviewMode: IArticle | null = null;
+
 /**
  * @ngdoc directive
  * @module superdesk.apps.ItemPreview
@@ -63,6 +68,18 @@ export function ItemPreview(asset, storage, desks, _, familyService, privileges)
             scope.$watch('item', (newItem, oldItem) => {
                 scope.selected = {preview: newItem || null};
                 scope.links = [];
+
+                if (itemInPreviewMode != null) {
+                    dispatchCustomEvent('articlePreviewEnd', itemInPreviewMode);
+
+                    itemInPreviewMode = null;
+                }
+
+                if (newItem != null) {
+                    itemInPreviewMode = newItem;
+
+                    dispatchCustomEvent('articlePreviewStart', itemInPreviewMode);
+                }
 
                 if (newItem !== oldItem) {
                     const isMedia = newItem?.type != null &&

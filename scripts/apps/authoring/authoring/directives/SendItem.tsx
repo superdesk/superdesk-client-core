@@ -99,6 +99,10 @@ export function SendItem($q,
             scope.isCorrection = appConfig?.corrections_workflow
                 && scope.item?.state === ITEM_STATE.CORRECTION;
 
+            // Only initialize when it's being set for the first time.
+            // If time zone was removed manually, it should not be automatically re-added.
+            scope.initializePublishScheduleWithDefaultTimeZone = scope.item?.publish_schedule == null;
+
             // if authoring:publish extension point is not defined
             // then publish pane is single column
             ctrl.userActions.publish_pane_two_columns = !_.isEmpty(extensionPoints.get('authoring:publish'));

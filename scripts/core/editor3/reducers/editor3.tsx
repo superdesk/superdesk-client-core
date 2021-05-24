@@ -104,7 +104,7 @@ function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: E
     }
 }
 
-function editorStateChangeMiddlewares(state, editorState: EditorState, contentChanged: boolean) {
+export function editorStateChangeMiddlewares(state, editorState: EditorState, contentChanged: boolean) {
     let newState = state;
 
     newState = applyAbbreviations({

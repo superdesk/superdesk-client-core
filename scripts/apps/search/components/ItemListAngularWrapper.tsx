@@ -8,11 +8,11 @@ import {
     IResourceCreatedEvent,
     IResourceUpdateEvent,
     IResourceDeletedEvent,
+    IResourceChange,
 } from 'superdesk-api';
 import {
     IRelatedEntities,
     getAndMergeRelatedEntitiesForArticles,
-    IResourceChange,
     getAndMergeRelatedEntitiesUpdated,
 } from 'core/getRelatedEntities';
 import {addWebsocketEventListener} from 'core/notification/notification';
@@ -250,9 +250,15 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     render() {
         const {scope, monitoringState} = this.props;
 
+        const style = scope.styleProperties == null
+            ? null
+
+            // styleProperties will be modified on the angular side so it can not be directly used as a react prop.
+            : Object.assign({}, scope.styleProperties);
+
         return (
             <SmoothLoader loading={this.state.loading}>
-                <div style={scope.styleProperties ?? {}}>
+                <div style={style}>
                     <ItemList
                         itemsList={this.state.itemsList}
                         itemsById={this.state.itemsById}

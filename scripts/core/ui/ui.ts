@@ -604,6 +604,7 @@ function TimezoneDirective(tzdata, $timeout) {
         scope: {
             timezone: '=',
             style: '@',
+            initializeWithDefault: '=',
         },
         link: function(scope, el) {
             scope.timeZones = []; // all time zones to choose from
@@ -614,9 +615,12 @@ function TimezoneDirective(tzdata, $timeout) {
             // user-provided search term
             scope.matchingTimeZones = [];
 
+            const initializeWithDefault = scope.initializeWithDefault ?? true;
+
             tzdata.$promise.then(() => {
                 scope.timeZones = tzdata.getTzNames();
-                if (!scope.timezone && appConfig.defaultTimezone) {
+
+                if (initializeWithDefault && (!scope.timezone && appConfig.defaultTimezone)) {
                     scope.selectTimeZone(appConfig.defaultTimezone);
                 }
             });
@@ -839,7 +843,7 @@ splitterWidget.$inject = ['superdesk', '$timeout', '$rootScope'];
 function splitterWidget(superdesk, $timeout, $rootScope) {
     return {
         link: function(scope, element) {
-            const MONITORING_MIN_WIDTH = 400;
+            const MONITORING_MIN_WIDTH = 532;
             const AUTHORING_MIN_WIDTH = 730;
 
             let workspace, authoring, container;

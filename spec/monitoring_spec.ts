@@ -391,18 +391,18 @@ describe('monitoring', () => {
             .perform();
         authoring.save();
         authoring.close();
-        expect(monitoring.getAllItems().count()).toBe(3);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
-        expect(monitoring.getAllItems().count()).toBe(1);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 1));
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
         browser.wait(ECE.elementToBeClickable(el(['remove-filter'])));
         el(['remove-filter']).click();
-        expect(monitoring.getAllItems().count()).toBe(3);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
@@ -410,14 +410,14 @@ describe('monitoring', () => {
         el(['content-profile-dropdown']).click();
         browser.wait(ECE.hasElementCount(els(['content-profiles']), 2));
         el(['content-profile-dropdown'], by.buttonText('testing')).click();
-        expect(monitoring.getAllItems().count()).toBe(1);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 1), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.isGroupEmpty(2)).toBe(true);
         expect(monitoring.isGroupEmpty(4)).toBe(true);
 
         browser.wait(ECE.elementToBeClickable(el(['clear-filters'])));
         el(['clear-filters']).click();
-        expect(monitoring.getAllItems().count()).toBe(3);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 3), 2000);
         expect(monitoring.getTextItemBySlugline(0, 0)).toBe('TESTING1 SLUGLINE');
         expect(monitoring.getTextItem(2, 0)).toBe('item3');
         expect(monitoring.getTextItem(4, 0)).toBe('item4');
@@ -679,7 +679,7 @@ describe('monitoring', () => {
 
         // view all items in desk single view
         monitoring.actionOnDeskSingleView();
-        expect(monitoring.getSingleViewItemCount()).toBe(8);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 8), 2000);
         expect(monitoring.getDeskSingleViewTitle()).toBe('Politic Desk desk 8');
 
         // Monitoring Home
@@ -688,7 +688,7 @@ describe('monitoring', () => {
 
         // Stage single view
         monitoring.actionOnStageSingleView();
-        expect(monitoring.getSingleViewItemCount()).toBe(0);
+        browser.wait(ECE.hasElementCount(els(['article-item']), 0), 2000);
         expect(monitoring.getStageSingleViewTitle()).toBe('Politic Desk / Working Stage');
     });
 
@@ -905,7 +905,7 @@ describe('monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
-        els(['templates-list']).get(1).element(by.buttonText(slugline)).click();
+        el(['select-template'], by.buttonText(slugline)).click();
 
         browser.sleep(500); // animation
         expect(browser.isElementPresent(element(s(['authoring'])))).toBe(true);
@@ -931,6 +931,11 @@ describe('navigation using a keyboard', () => {
         firstItem.click();
 
         browser.wait(ECE.elementsEqual(getFocusedElement(), firstItem));
+
+        // Because list item has double click functionality, a delay is used
+        // for click handler function and it takes a few hundred ms
+        // until it gets executed and item is re-rendered as selected.
+        browser.wait(ECE.visibilityOf(el(['multi-select-checkbox'], null, firstItem)));
     });
 
     it('can focus the next or previous item using arrow keys', () => {
@@ -1087,7 +1092,7 @@ xdescribe('marked for me filter in monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown'], by.buttonText('More templates...')).click();
-        el(['templates-list'], by.buttonText('testing')).click();
+        el(['select-template'], by.buttonText('testing')).click();
 
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 
@@ -1113,7 +1118,7 @@ xdescribe('marked for me filter in monitoring', () => {
 
         el(['content-create']).click();
         el(['content-create-dropdown'], by.buttonText('More templates...')).click();
-        el(['templates-list'], by.buttonText('testing')).click();
+        el(['select-template'], by.buttonText('testing')).click();
 
         browser.wait(ECE.visibilityOf(element(s(['authoring']))));
 

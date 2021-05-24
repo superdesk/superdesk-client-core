@@ -46,9 +46,8 @@ export function throttleAndCombineArray<T>(
 
 /**
  * When throttled function is called more frequently than specified via `wait` param,
- * it keeps the set in memory and after the wait threshold "times out"
- * it then invokes the handler function with a combined set which has items from previous calls
- * where due to throttling, the handler wasn't called.
+ * it stores the sets in memory and after the wait times out
+ * it then invokes the handler function with all stored values.
  */
 export function throttleAndCombineSet<T>(
     fn: IHandler<Set<T>>,

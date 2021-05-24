@@ -4,19 +4,19 @@ import classNames from 'classnames';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {IDesk, IUserRole, IUser} from 'superdesk-api';
 
-export interface IUserExtra extends IUser {
+export interface IUserExtra {
+    user: IUser;
     data: {
         assigned: number;
         locked: number;
     };
-    authors: Array<string>;
 }
 
 interface IProps {
     desk: IDesk;
     role: IUserRole;
     users: Array<IUserExtra>;
-    onUserSelect(user: IUserExtra): void;
+    onUserSelect(user: IUser): void;
 }
 
 export class UserListComponent extends React.Component<IProps, {}> {
@@ -27,7 +27,7 @@ export class UserListComponent extends React.Component<IProps, {}> {
     }
 
     selectUser(user: IUserExtra) {
-        this.props.onUserSelect(user);
+        this.props.onUserSelect(user.user);
     }
 
     render() {
@@ -48,7 +48,7 @@ export class UserListComponent extends React.Component<IProps, {}> {
                                         'sd-padding-x--0-5',
                                     )}
                                 >
-                                    <UserAvatar user={user} displayStatus={true} />
+                                    <UserAvatar user={user.user} displayStatus={true} />
                                 </div>
                                 <div
                                     className={classNames(
@@ -59,7 +59,7 @@ export class UserListComponent extends React.Component<IProps, {}> {
                                 >
                                     <div className="sd-list-item__row">
                                         <span className="sd-overflow-ellipsis sd-list-item--element-grow">
-                                            {user.display_name}
+                                            {user.user.display_name}
                                         </span>
                                         {user.data.locked > 0 ? (
                                             <span className="sd-text-icon sd-text-icon--aligned-r user-items--locked">

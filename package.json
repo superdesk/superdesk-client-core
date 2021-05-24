@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "2.0.1",
+  "version": "2.3.0-dev.0",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -122,7 +122,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.3.5",
+    "superdesk-ui-framework": "2.3.8",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.9.7",
@@ -161,14 +161,12 @@
   },
   "scripts": {
     "gettext-extract": "grunt gettext:extract",
-    "setup-extensions": "node ./tasks/namespace-css-from-extensions.js && node ./tasks/install-extensions.js",
     "e2e-compile": "find spec/ -name '*.js' -type f -delete && tsc -p spec",
     "e2e-compile-watch": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
     "protractor": "node run-end-to-end-tests.js",
-    "watch-css-from-extensions": "node tasks/namespace-css-from-extensions.js --watch",
     "watch-end-to-end-tests": "find spec/ -name '*.js' -type f -delete && tsc -p spec -w",
-    "postinstall": "node ./tasks/patch-package.js && npm run setup-extensions && node ./tasks/compile-e2e-tests.js",
-    "test": "grunt ci:travis && npm run lint",
+    "postinstall": "node ./tasks/patch-package.js && node ./tasks/compile-e2e-tests.js && node tasks/generate-placeholder-file-for-extension-styles.js",
+    "test": "npm run lint && grunt ci:travis && node tasks/verify-client-api-changes.js",
     "debug-unit-tests": "karma start karma.conf.js --browsers=Chrome",
     "unit": "grunt unit",
     "build": "grunt build",

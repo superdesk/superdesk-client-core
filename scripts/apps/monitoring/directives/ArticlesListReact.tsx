@@ -2,9 +2,8 @@
 
 import React from 'react';
 import {openArticle} from 'core/get-superdesk-api-implementation';
-import {ISuperdeskQuery} from 'core/query-formatting';
 import {dataApi} from 'core/helpers/CrudManager';
-import {IArticle, IDesk, IUser} from 'superdesk-api';
+import {IArticle, ISuperdeskQuery, IUser} from 'superdesk-api';
 import {ArticlesListByQueryWithFilters} from 'core/ArticlesListByQueryWithFilters';
 
 interface IProps {

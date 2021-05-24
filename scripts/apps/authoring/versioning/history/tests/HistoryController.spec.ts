@@ -5,6 +5,7 @@ describe('archive-history', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.apps.authoring.versioning.history'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((highlightsService, desks, $q, api, archiveService) => {
         const deskList = {
@@ -71,7 +72,7 @@ describe('archive-history', () => {
         expect(api.query).not.toHaveBeenCalledWith('archive_history');
     }));
 
-    it('calls versions if no history', inject(($controller, $rootScope, api, $q, archiveService) => {
+    it('calls versions if no history', inject(($controller, $rootScope, api, $q) => {
         spyOn(api, 'query').and.returnValue($q.when({_items: []}));
 
         var scope = $rootScope.$new();
@@ -85,7 +86,7 @@ describe('archive-history', () => {
     }));
 
     it('merges history into versions if no history',
-        inject(($controller, $rootScope, api, $q, archiveService, desks) => {
+        inject(($controller, $rootScope, api, $q) => {
             const historyItem = {
                 version: 2,
                 user_id: 2,
@@ -106,7 +107,7 @@ describe('archive-history', () => {
         }));
 
     it('returns history if history starts from version 1',
-        inject(($controller, $rootScope, api, $q, archiveService, desks) => {
+        inject(($controller, $rootScope, api, $q) => {
             const historyItem = {
                 version: 1,
                 user_id: 2,
@@ -126,7 +127,7 @@ describe('archive-history', () => {
         }));
 
     it('returns System as user if no user in history',
-        inject(($controller, $rootScope, api, $q, archiveService, desks) => {
+        inject(($controller, $rootScope, api, $q) => {
             const historyItem = {
                 version: 1,
                 item_id: 123,
@@ -145,7 +146,7 @@ describe('archive-history', () => {
         }));
 
     it('ignores lock history entries',
-        inject(($controller, $rootScope, api, $q, archiveService, desks) => {
+        inject(($controller, $rootScope, api, $q) => {
             const historyItems = [{
                 version: 1,
                 item_id: 123,

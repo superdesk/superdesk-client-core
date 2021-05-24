@@ -8,9 +8,10 @@ import {
     IWebsocketMessage,
     IResourceCreatedEvent,
     IResourceDeletedEvent,
+    IResourceChange,
 } from 'superdesk-api';
 
-import {noop, once} from 'lodash';
+import {noop} from 'lodash';
 import {LazyLoader} from './itemList/LazyLoader';
 import {IMultiSelectNew, ItemList} from 'apps/search/components/ItemList';
 import {addWebsocketEventListener} from './notification/notification';
@@ -22,7 +23,6 @@ import {openArticle} from './get-superdesk-api-implementation';
 import {
     getAndMergeRelatedEntitiesForArticles,
     IRelatedEntities,
-    IResourceChange,
     getAndMergeRelatedEntitiesUpdated,
 } from './getRelatedEntities';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
@@ -45,8 +45,6 @@ interface IProps {
     onItemClick(item: IArticle): void;
     onItemDoubleClick?(item: IArticle): void;
     getMultiSelect?: (items: OrderedMap<string, IArticle>) => IMultiSelectNew;
-
-    onInitialize(): void;
 }
 
 /**
@@ -67,7 +65,6 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
     // required for updating the list after receiving a websocket notification
     // notifications return real _id, but LazyLoader works with ITrackById
     private idMap: Map<IArticle['_id'], ITrackById>;
-    private onInitializeOnce: () => void;
 
     constructor(props: any) {
         super(props);
@@ -83,10 +80,6 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         this.fetchRelatedEntities = this.fetchRelatedEntities.bind(this);
         this.loadMore = this.loadMore.bind(this);
         this.getItemsByIds = this.getItemsByIds.bind(this);
-
-        this.onInitializeOnce = once(() => {
-            this.props.onInitialize();
-        });
 
         this.handleContentChanges = throttleAndCombineArray(
             (changes) => {
@@ -160,7 +153,6 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
                 this.setState({
                     relatedEntities,
                 }, () => {
-                    this.onInitializeOnce();
                     resolve(items);
                 });
             });

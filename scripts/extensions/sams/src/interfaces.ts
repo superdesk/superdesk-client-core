@@ -80,10 +80,13 @@ export enum DATA_UNIT {
     GB = 'gb',
 }
 
-export interface IAssetAction {
-    id: string;
+export interface IBaseAssetAction {
+    id: ASSET_ACTIONS;
     label: string;
     icon: string;
+}
+
+export interface IAssetAction extends IBaseAssetAction {
     onSelect(asset: Partial<IAssetItem>): void;
     isAllowed(asset: Partial<IAssetItem>): boolean;
 }
@@ -91,6 +94,15 @@ export interface IAssetAction {
 export interface IAssetCallback {
     action: ASSET_ACTIONS;
     onSelect(asset: Partial<IAssetItem>): void;
+}
+
+export interface IBulkAction extends IBaseAssetAction {
+    onSelect(): void;
+}
+
+export interface IBulkActionAssetCallback {
+    action: ASSET_ACTIONS;
+    onSelect(): void;
 }
 
 export interface IVersionInformation extends IBaseRestApiResponse{
@@ -127,6 +139,15 @@ export interface ISAMSBaseEvent {
 
 export type ISAMSWebsocketEvent = CustomEvent<IWebsocketMessage<ISAMSBaseEvent>>;
 
+export interface IAutoTaggingSearchResult {
+    tags: Array<string>;
+}
+
+export interface IAssetTag {
+    name: string;
+    code: string;
+}
+
 export interface IAssetItem extends IVersionInformation {
     set_id: string;
     parent_id: string;
@@ -139,10 +160,7 @@ export interface IAssetItem extends IVersionInformation {
     lock_action: string;
     lock_user: string;
     lock_session: string;
-    tags: Array<{
-        code: string;
-        name: string;
-    }>;
+    tags: Array<IAssetTag>;
     extra: Dictionary<string, any>;
 }
 
@@ -215,5 +233,6 @@ export interface ISamsAPI {
         deleteAsset(asset: IAssetItem): Promise<void>;
         lockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
         unlockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
+        searchTags(searchTags: string): Promise<IAutoTaggingSearchResult>;
     };
 }

@@ -16,6 +16,7 @@ import {
     IUploadAssetModalProps,
     ISetItem,
     SET_STATE,
+    IAutoTaggingSearchResult,
 } from '../interfaces';
 import {superdeskApi} from '../apis';
 
@@ -596,4 +597,23 @@ export function getSetsSync(): Dictionary<string, ISetItem> {
     }
 
     return getSetsById(store.getState());
+}
+
+export function searchTags(searchString: string): Promise<IAutoTaggingSearchResult> {
+    const {gettext} = superdeskApi.localization;
+    const {notify} = superdeskApi.ui;
+
+    return superdeskApi.dataApi.queryRawJson<IAutoTaggingSearchResult>('sams/assets/tags', {'query': searchString})
+        .then((res: IAutoTaggingSearchResult) => {
+            return res;
+        })
+        .catch((error: any) => {
+            if (isSamsApiError(error)) {
+                notify.error(getApiErrorMessage(error));
+            } else {
+                notify.error(gettext('Failed to get tags'));
+            }
+
+            return Promise.reject(error);
+        });
 }

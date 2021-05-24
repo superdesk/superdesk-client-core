@@ -1,4 +1,6 @@
 import {appConfig} from 'appConfig';
+import {addEventListener, removeEventListener} from 'core/get-superdesk-api-implementation';
+import {IEvents} from 'superdesk-api';
 
 const HR_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-hr.html';
 const DEFAULT_TEMPLATE = 'scripts/apps/workspace/views/workspace-sidenav-items-default.html';
@@ -11,6 +13,16 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
         template: require('../views/workspace-sidenav-items.html'),
         link: function(scope, elem) {
             scope.workspaceConfig = appConfig.workspace || {}; // it's used in workspaceMenu.filter
+
+            scope.badges = {};
+
+            function handleBadgeValueChange(event: IEvents['menuItemBadgeValueChange']) {
+                scope.$applyAsync(() => {
+                    scope.badges[event.menuId] = event.badgeValue;
+                });
+            }
+
+            addEventListener('menuItemBadgeValueChange', handleBadgeValueChange);
 
             scope.getTemplateUrl = (item) => item.hr ? HR_TEMPLATE : (item.templateUrl || DEFAULT_TEMPLATE);
 
@@ -75,6 +87,10 @@ export function WorkspaceSidenavDirective(superdeskFlags, Keys,
             if ($rootScope.popup) {
                 superdeskFlags.flags.hideMonitoring = true;
             }
+
+            scope.$on('$destroy', () => {
+                removeEventListener('menuItemBadgeValueChange', handleBadgeValueChange);
+            });
         },
     };
 }

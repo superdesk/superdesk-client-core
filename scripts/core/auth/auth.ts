@@ -2,6 +2,12 @@ import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 
+export const SESSION_EVENTS = {
+    LOGIN: 'login',
+    LOGOUT: 'logout',
+    IDENTITY_LOADED: 'identity_loaded',
+};
+
 /**
  * Expire session on 401 server response
  */
@@ -124,11 +130,7 @@ function SecureLoginController(scope, auth, $route, $window) {
 }
 
 angular.module('superdesk.core.auth.session', [])
-    .constant('SESSION_EVENTS', {
-        LOGIN: 'login',
-        LOGOUT: 'logout',
-        IDENTITY_LOADED: 'identity_loaded',
-    });
+    .constant('SESSION_EVENTS', SESSION_EVENTS);
 
 /**
  * @ngdoc module
@@ -182,7 +184,7 @@ export default angular.module('superdesk.core.auth', [
 
     // watch session token, identity
     .run(['$rootScope', '$http', '$window', 'session', 'api', 'superdeskFlags', 'authoringWorkspace',
-        'modal', 'SESSION_EVENTS',
+        'modal',
         function(
             $rootScope,
             $http,
@@ -192,14 +194,8 @@ export default angular.module('superdesk.core.auth', [
             superdeskFlags,
             authoringWorkspace: AuthoringWorkspaceService,
             modal,
-            SESSION_EVENTS,
         ) {
             $rootScope.logout = function() {
-                function replace() {
-                    session.clear();
-                    $window.location.replace('/'); // reset page for new user
-                }
-
                 var canLogout = true;
 
                 if (superdeskFlags.flags.authoring) {
@@ -214,7 +210,13 @@ export default angular.module('superdesk.core.auth', [
 
                 if (canLogout) {
                     api.auth.getById(session.sessionId).then((sessionData) => {
-                        api.auth.remove(sessionData).then(replace, replace);
+                        api.auth
+                            .remove(sessionData)
+                            .finally(() => {
+                                $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
+                                localStorage.clear();
+                                $window.location.replace('/'); // reset page for new user
+                            });
                     });
                 }
             };

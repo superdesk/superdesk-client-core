@@ -359,7 +359,7 @@
     &--active {
         color: $sd-text;
         background-color: rgba(255,255,255,1);
-        &:hover {
+        &:not([disabled]):hover {
             background-color: rgba(255,255,255,1);
         }
     }
@@ -408,7 +408,6 @@
     }
     li {
       text-align: center;
-      line-height: $sidebar-width;
     }
     a, .dropdown__toggle {
       display: block;
@@ -456,6 +455,28 @@
 
 }
 #side-menu {
+  a {
+    overflow: visible!important;
+  }
+
+  .sd-sidebar-menu__helper-icon {
+    left: 4rem;
+  }
+
+  .sd-sidebar-menu__main-icon {
+    width: 26px;
+    height: 26px;
+  }
+
+  .sd-sidebar-menu__chevron_wrapper {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 100px;
+      overflow: hidden;
+  }
+
   .authoring-active {
     .active {
         .sd-sidebar-menu__main-icon, .sd-sidebar-menu__helper-icon {
@@ -463,7 +484,7 @@
         }
         &:hover {
             .sd-sidebar-menu__main-icon {
-                left: -3rem;
+                left: -5rem;
             }
             .sd-sidebar-menu__helper-icon {
                 left: 0.5rem;

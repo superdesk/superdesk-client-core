@@ -1,12 +1,18 @@
 import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IExtension, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
+import {IExtensionModule, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
 import {dispatchInternalEvent} from './internal-events';
 
+export interface IExtensionLoader {
+    id: string;
+    load(): Promise<IExtensionModule>;
+    configuration?: {[key: string]: any};
+}
+
 export function registerExtensions(
-    extensionLoaders: Array<{id: string; load(): Promise<IExtension>}>,
+    extensionLoaders: Array<IExtensionLoader>,
     superdesk,
     modal,
     privileges,
@@ -65,7 +71,7 @@ export function registerExtensions(
 
     return Promise.all(
         extensionLoaders.map(
-            ({id, load}) => {
+            ({id, load, configuration}) => {
                 const apiInstance: ISuperdesk = getSuperdeskApiImplementation(
                     id,
                     extensionsWithActivationResult,
@@ -81,12 +87,15 @@ export function registerExtensions(
 
                 window['extensionsApiInstances'][id] = apiInstance;
 
-                return load().then((extension) => {
-                    extensionsWithActivationResult[id] = {
-                        extension,
-                        activationResult: {},
-                    };
-                });
+                return load()
+                    .then((module) => module.default)
+                    .then((extension) => {
+                        extensionsWithActivationResult[id] = {
+                            extension,
+                            activationResult: {},
+                            configuration: configuration ?? {},
+                        };
+                    });
             },
         ),
     )

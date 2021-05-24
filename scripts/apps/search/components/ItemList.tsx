@@ -488,7 +488,7 @@ export class ItemList extends React.Component<IProps, IState> {
             return (
                 <ul
                     className="list-view list-without-items"
-                    tabIndex={0}
+                    tabIndex={-1}
                     ref={(el) => {
                         this.focusableElement = el;
                     }}
@@ -501,7 +501,7 @@ export class ItemList extends React.Component<IProps, IState> {
             return (
                 <ul
                     className="list-view list-without-items"
-                    tabIndex={0}
+                    tabIndex={-1}
                     ref={(el) => {
                         this.focusableElement = el;
                     }}
@@ -522,7 +522,7 @@ export class ItemList extends React.Component<IProps, IState> {
                 onKeyDown={(event) => {
                     this.handleKey(event);
                 }}
-                tabIndex={0}
+                tabIndex={-1}
                 ref={(el) => {
                     this.focusableElement = el;
                 }}

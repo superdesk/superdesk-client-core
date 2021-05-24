@@ -19,7 +19,7 @@ import {
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 
 // UI
-import {Dropdown, FormLabel, IconButton} from 'superdesk-ui-framework/react';
+import {Dropdown, FormLabel, IconButton, Label} from 'superdesk-ui-framework/react';
 import {
     FormRow,
     PanelContent,
@@ -181,6 +181,17 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                             <FormRow>
                                 <FormLabel text={gettext('Set')} style="light" />
                                 <Text>{this.props.setName}</Text>
+                            </FormRow>
+                            <FormRow>
+                                <FormLabel text={gettext('Tags')} style="light" />
+                                {this.props.asset.tags?.map((tag) => (
+                                    <Label
+                                        key={this.props.asset?.tags.indexOf(tag)}
+                                        text={tag.name}
+                                        style="translucent"
+                                        size="large"
+                                    />
+                                ))}
                             </FormRow>
                         </PanelContentBlockInner>
                     </PanelContentBlock>
