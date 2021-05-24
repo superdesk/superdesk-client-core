@@ -61,6 +61,7 @@ describe('generic form', () => {
     beforeEach(mockDataApi);
 
     getAllInputTypes()
+        .filter((type) => type !== FormFieldType.checkbox) // checkbox doesn't have error messages
         .forEach((type: FormFieldType) => {
             it(`${type} should render error messages`, (done) => {
                 const Component = getFormFieldComponent(type);
@@ -90,6 +91,7 @@ describe('generic form', () => {
         });
 
     getAllInputTypes()
+        .filter((type) => type !== FormFieldType.checkbox) // checkbox can't be required
         .forEach((type: FormFieldType) => {
             it(`${type} should add a classname for required fields`, (done) => {
                 const Component = getFormFieldComponent(type);
