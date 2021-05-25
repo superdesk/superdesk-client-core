@@ -66,7 +66,7 @@ jobs:
       working-directory: test-server
 
     - name: Build client
-      run: npm run build && npm run start-client-server
+      run: npm run build-e2e && npm run start-client-server
 
     - name: Protractor
       run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
