@@ -7,7 +7,7 @@ const getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 const {isDirectory} = require('../utils');
 const compileTranslationsPoToJson = require('../po-to-json/index');
 
-function mergeTranslations(clientDir) {
+function mergeTranslationsFromExtensions(clientDir) {
     const translationsJsonTemp = path.join(clientDir, 'translations-json-temp');
     const mainTranslationsDir = path.join(clientDir, 'dist/languages');
 
@@ -74,4 +74,6 @@ function mergeTranslations(clientDir) {
     fs.rmdirSync(translationsJsonTemp, {recursive: true});
 }
 
-module.exports = mergeTranslations;
+module.exports = {
+    mergeTranslationsFromExtensions,
+};
