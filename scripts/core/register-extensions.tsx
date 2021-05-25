@@ -5,8 +5,14 @@ import {IExtensionModule, IPage, IWorkspaceMenuItem, IExtensionActivationResult,
 import {extensions as extensionsWithActivationResult} from 'appConfig';
 import {dispatchInternalEvent} from './internal-events';
 
+export interface IExtensionLoader {
+    id: string;
+    load(): Promise<IExtensionModule>;
+    configuration?: {[key: string]: any};
+}
+
 export function registerExtensions(
-    extensionLoaders: Array<{id: string; load(): Promise<IExtensionModule>}>,
+    extensionLoaders: Array<IExtensionLoader>,
     superdesk,
     modal,
     privileges,
@@ -30,7 +36,7 @@ export function registerExtensions(
         };
 
         if (page.addToMainMenu ?? true) {
-            params.category = superdesk.MAIN_MENU;
+            params.category = superdesk.MENU_MAIN;
         }
 
         if (page.showTopMenu === true) {
@@ -65,7 +71,7 @@ export function registerExtensions(
 
     return Promise.all(
         extensionLoaders.map(
-            ({id, load}) => {
+            ({id, load, configuration}) => {
                 const apiInstance: ISuperdesk = getSuperdeskApiImplementation(
                     id,
                     extensionsWithActivationResult,
@@ -87,36 +93,39 @@ export function registerExtensions(
                         extensionsWithActivationResult[id] = {
                             extension,
                             activationResult: {},
+                            configuration: configuration ?? {},
                         };
                     });
             },
         ),
-    ).then(() => {
-        return Promise.all(
-            Object.keys(extensionsWithActivationResult).map((extensionId) => {
-                const extensionObject = extensionsWithActivationResult[extensionId];
+    )
+        .then(() => {
+            return Promise.all(
+                Object.keys(extensionsWithActivationResult).map((extensionId) => {
+                    const extensionObject = extensionsWithActivationResult[extensionId];
 
-                return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
-                    .then((activationResult) => {
-                        extensionObject.activationResult = activationResult;
+                    return extensionObject.extension.activate(window['extensionsApiInstances'][extensionId])
+                        .then((activationResult) => {
+                            extensionObject.activationResult = activationResult;
 
-                        return activationResult;
-                    });
-            }),
-        ).then((activationResults: Array<IExtensionActivationResult>) => {
-            flatMap(
-                activationResults,
-                (activationResult) => activationResult.contributions?.pages ?? [],
-            )
-                .forEach(registerPage);
+                            return activationResult;
+                        });
+                }),
+            ).then((activationResults: Array<IExtensionActivationResult>) => {
+                flatMap(
+                    activationResults,
+                    (activationResult) => activationResult.contributions?.pages ?? [],
+                )
+                    .forEach(registerPage);
 
-            flatMap(
-                activationResults,
-                (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
-            )
-                .forEach(registerWorkspaceMenu);
-        }).then(() => {
+                flatMap(
+                    activationResults,
+                    (activationResult) => activationResult.contributions?.workspaceMenuItems ?? [],
+                )
+                    .forEach(registerWorkspaceMenu);
+            });
+        })
+        .then(() => {
             dispatchInternalEvent('extensionsHaveLoaded', true);
         });
-    });
 }

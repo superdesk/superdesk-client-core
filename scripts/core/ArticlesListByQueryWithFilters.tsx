@@ -1,8 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IArticle, ISortOption, IRestApiResponse} from 'superdesk-api';
-import {ISuperdeskQuery, IOrOperator, IAndOperator, toElasticQuery} from './query-formatting';
+import {IArticle, ISortOption, IRestApiResponse, ISuperdeskQuery, IAndOperator, IOrOperator} from 'superdesk-api';
+import {toElasticQuery} from './query-formatting';
 import {ArticlesListByQuery} from './ArticlesListByQuery';
 import {Set, Map} from 'immutable';
 import classNames from 'classnames';

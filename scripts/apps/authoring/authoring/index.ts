@@ -147,7 +147,7 @@ angular.module('superdesk.apps.authoring', [
     .component('sdAuthoringCustomField',
         reactToAngular1(
             AuthoringCustomField,
-            ['item', 'field', 'editable', 'onChange'],
+            ['item', 'field', 'editable', 'onChange', 'template'],
         ),
     )
 

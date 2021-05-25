@@ -78,26 +78,12 @@ angular.module('superdesk.core.auth.session').service('session', [
             }
         }
 
-        /**
-     * Set current session expired
-     */
         this.expire = function() {
             this.token = null;
             this.sessionId = null;
             setToken(null);
             setSessionId(null);
             $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
-        };
-
-        /**
-     * Clear session info
-     */
-        this.clear = function() {
-            this.expire();
-            this.identity = null;
-            setSessionHref(null);
-            setSessionId(null);
-            storage.clear();
         };
 
         /**

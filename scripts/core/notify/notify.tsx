@@ -84,8 +84,12 @@ class NotifyComponent extends React.Component<any, IState> {
     }
 
     render() {
+        if (this.state.messages.length < 1) {
+            return null;
+        }
+
         return (
-            <div className="notification-holder">
+            <div className="notification-holder" data-test-id="notifications">
                 {
                     this.state.messages.map((msg, i) => (
                         <div

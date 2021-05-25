@@ -80,10 +80,13 @@ export enum DATA_UNIT {
     GB = 'gb',
 }
 
-export interface IAssetAction {
-    id: string;
+export interface IBaseAssetAction {
+    id: ASSET_ACTIONS;
     label: string;
     icon: string;
+}
+
+export interface IAssetAction extends IBaseAssetAction {
     onSelect(asset: Partial<IAssetItem>): void;
     isAllowed(asset: Partial<IAssetItem>): boolean;
 }
@@ -91,6 +94,15 @@ export interface IAssetAction {
 export interface IAssetCallback {
     action: ASSET_ACTIONS;
     onSelect(asset: Partial<IAssetItem>): void;
+}
+
+export interface IBulkAction extends IBaseAssetAction {
+    onSelect(): void;
+}
+
+export interface IBulkActionAssetCallback {
+    action: ASSET_ACTIONS;
+    onSelect(): void;
 }
 
 export interface IVersionInformation extends IBaseRestApiResponse{
@@ -156,6 +168,7 @@ export interface IAssetSearchParams {
     textSearch?: string;
     setId?: string;
     setIds?: Array<string>;
+    excludedAssetIds?: Array<string>;
     name?: string;
     description?: string;
     tags?: Array<IAssetTag>;
