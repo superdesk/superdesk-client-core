@@ -121,7 +121,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.3.8",
+    "superdesk-ui-framework": "2.4.0",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.9.7",
@@ -130,7 +130,7 @@
     "webpack-dev-server": "2.11.1"
   },
   "devDependencies": {
-    "@types/classnames": "^2.2.10",
+    "@types/classnames": "^2.3.1",
     "@types/moment": "^2.13.0",
     "@types/moment-timezone": "^0.5.13",
     "@types/webpack-env": "^1.13.9",
@@ -140,7 +140,7 @@
     "grunt-karma": "^2.0.0",
     "http-server": "^0.12.1",
     "jasmine-core": "^2.99.1",
-    "jasmine-reporters": "^2.3.0",
+    "jasmine-reporters": "^2.4.0",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.1",
