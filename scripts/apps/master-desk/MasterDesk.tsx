@@ -46,6 +46,7 @@ interface IState {
     planning: boolean;
     deskFilter: string;
     filters: any;
+    clearFilterDisplay: boolean;
 }
 
 export class MasterDesk extends React.Component<{}, IState> {
@@ -63,6 +64,7 @@ export class MasterDesk extends React.Component<{}, IState> {
             planning: false,
             deskFilter: '',
             filters: {},
+            clearFilterDisplay: false,
         };
 
         this.services = {
@@ -122,6 +124,10 @@ export class MasterDesk extends React.Component<{}, IState> {
                         open={this.state.filterOpen}
                         onDeskFilterChange={(desk) => this.setState({deskFilter: desk})}
                         onFilterChange={(filters) => this.setState({filters: filters})}
+                        setClearFilterDisplay={(clearFilterDisplayValue) =>
+                            this.setState({clearFilterDisplay:
+                                clearFilterDisplayValue})}
+                        clearFilterDisplayValue = {this.state.clearFilterDisplay}
                     />
                 )
                     : null}
@@ -131,6 +137,10 @@ export class MasterDesk extends React.Component<{}, IState> {
                         <FilterBarComponent
                             filters={this.state.filters}
                             onFilterChange={(filters) => this.setState({filters: filters})}
+                            setClearFilterDisplay={(clearFilterDisplayValue) =>
+                                this.setState({clearFilterDisplay:
+                                    clearFilterDisplayValue})}
+                            clearFilterDisplayValue = {this.state.clearFilterDisplay}
                         />
                     )
                         : null}

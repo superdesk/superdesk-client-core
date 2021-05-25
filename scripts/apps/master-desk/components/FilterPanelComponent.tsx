@@ -1,10 +1,13 @@
 import React from 'react';
 import {gettext} from 'core/utils';
+import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
 
 interface IProps {
     open: boolean;
     onDeskFilterChange(desk: string): void;
     onFilterChange(filters: object): void;
+    clearFilterDisplayValue: boolean;
+    setClearFilterDisplay(clearFilterDisplayValue: boolean): void;
 }
 
 interface IState {
@@ -34,6 +37,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.addFilter = this.addFilter.bind(this);
         this.clearDeskFilter = this.clearDeskFilter.bind(this);
+        this.clearFilter = this.clearFilter.bind(this);
     }
 
     handleDeskChange(event) {
@@ -64,11 +68,27 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
         this.setState({filter: filter});
 
         this.props.onFilterChange(filter);
+
+        this.props.setClearFilterDisplay(true);
     }
 
     clearDeskFilter() {
         this.setState({desk: ''});
         this.props.onDeskFilterChange('');
+    }
+
+    clearFilter() {
+        const filter = {
+            slugline: [],
+            headline: [],
+            byline: [],
+        };
+
+        this.setState({filter: filter});
+
+        this.props.onFilterChange(filter);
+
+        this.props.setClearFilterDisplay(!this.props.clearFilterDisplayValue);
     }
 
     render() {
@@ -148,9 +168,19 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                             </div>
                         </div>
                         <div className="side-panel__footer side-panel__footer--button-box">
-                            <a className="btn btn--primary btn--expanded" onClick={this.addFilter}>
-                                {gettext('Apply Filters')}
-                            </a>
+                            <ButtonGroup orientation="vertical">
+                                <Button type="primary" onClick={this.addFilter} text={gettext('Apply Filters')} />
+
+                                {
+                                    this.props.clearFilterDisplayValue &&
+                                    (
+                                        <Button
+                                            onClick={this.clearFilter}
+                                            text={gettext('Clear Filters')}
+                                        />
+                                    )
+                                }
+                            </ButtonGroup>
                         </div>
                     </div>
                 </div>
