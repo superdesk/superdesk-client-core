@@ -112,6 +112,11 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
             sizeTo: superdeskApi.instance.config.attachments_max_size / 1048576, // bytes -> MB
             states: [ASSET_STATE.PUBLIC, ASSET_STATE.INTERNAL],
             setIds: this.props.activeSets.map((set) => set._id),
+            excludedAssetIds: this.props.attachments.map((attachment) => (
+                typeof attachment.media === 'string' ?
+                    attachment.media :
+                    attachment.media._id
+            )),
         });
 
         showSelectAssetModal()

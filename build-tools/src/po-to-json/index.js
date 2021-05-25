@@ -2,14 +2,10 @@ var fs = require('fs');
 var path = require('path');
 var execSync = require('child_process').execSync;
 var _ = require('lodash');
-var {getModuleDir} = require('./get-module-directory');
+const {isDirectory} = require('../utils');
 
-function isDirectory(path) {
-    try {
-        return fs.lstatSync(path).isDirectory();
-    } catch (e) {
-        return false;
-    }
+function getModuleDir(moduleName) {
+    return path.join(require.resolve(moduleName + '/package.json'), '../');
 }
 
 function escapeRegExp(string) {
@@ -40,7 +36,7 @@ the translation is considered invalid and will not be outputted to JSON.
 
 */
 
-function removeInvalidTranslations(grunt, jsonFilePath, filename) {
+function removeInvalidTranslations(jsonFilePath, filename) {
     var translations = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'));
 
     const KEY_REGEX = /{{ ?(.+?) ?}}/g;
@@ -63,7 +59,7 @@ function removeInvalidTranslations(grunt, jsonFilePath, filename) {
                 const valid = translatedStringWithoutPlaceholders.match(/{{.+?}}/) == null;
 
                 if (valid !== true) {
-                    grunt.log.error(
+                    console.error(
                         `Invalid translation string encountered in "${filename}"`
                         + ` and will be ommited from JSON: "${translatedString}"`
                         + ` for key: "${key}"`
@@ -82,12 +78,7 @@ function removeInvalidTranslations(grunt, jsonFilePath, filename) {
     fs.writeFileSync(jsonFilePath, JSON.stringify(validTranslations), 'utf8');
 }
 
-function compileTranslationsPoToJson(grunt) {
-    const currentDir = process.cwd();
-    const clientCoreRoot = path.join(__dirname, '../');
-    const translationsPoDir = path.join(clientCoreRoot, 'po');
-    const translationsJsonDir = path.join(currentDir, 'dist', 'languages');
-
+function compileTranslationsPoToJson(translationsPoDir, translationsJsonDir) {
     if (fs.existsSync(translationsJsonDir) !== true) {
         fs.mkdirSync(translationsJsonDir);
     }
@@ -112,7 +103,7 @@ function compileTranslationsPoToJson(grunt) {
             {stdio: 'inherit'}
         );
 
-        removeInvalidTranslations(grunt, jsonFile, filename);
+        removeInvalidTranslations(jsonFile, filename);
     });
 }
 

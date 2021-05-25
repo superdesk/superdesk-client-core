@@ -25,9 +25,9 @@ jobs:
         - script: npm run test
           name: "unit"
           env: SKIP_SERVER_INSTALL=true
-        - script: npm run build && npm run start-client-server && npm run protractor -- --suite=a
+        - script: npm run build-e2e && npm run start-client-server && npm run protractor -- --suite=a
           name: "e2e vol. 1"
-        - script: npm run build && npm run start-client-server && npm run protractor -- --suite=b
+        - script: npm run build-e2e && npm run start-client-server && npm run protractor -- --suite=b
           name: "e2e vol. 2"
         - script: npm audit
           name: "audit"

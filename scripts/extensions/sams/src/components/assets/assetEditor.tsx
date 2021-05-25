@@ -13,7 +13,7 @@ import {superdeskApi, samsApi} from '../../apis';
 import {getActiveSets} from '../../store/sets/selectors';
 
 // UI
-import {FormLabel, Input, Option, Select, Autocomplete, Tag} from 'superdesk-ui-framework/react';
+import {FormLabel, Input, Option, Select, Autocomplete, Tag, Label} from 'superdesk-ui-framework/react';
 import {FormGroup, FormRow} from '../../ui';
 
 // Utils
@@ -35,6 +35,8 @@ interface IState {
 const mapStateToProps = (state: IApplicationState) => ({
     sets: getActiveSets(state),
 });
+
+const NEW_CODE_PREFIX = '_new:';
 
 export function toClientFormat(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {
     let tags = OrderedMap<string, IAssetTag>();
@@ -89,6 +91,14 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
             const oldState = preState;
             const tags: Array<IAssetTag> = preState.tags! || [];
             const newTag: IAssetTag = value!;
+
+            if (newTag.code.startsWith(NEW_CODE_PREFIX)) {
+                const tag = newTag.code.split(':')[1];
+
+                newTag.code = tag;
+                newTag.name = tag;
+            }
+
             const index = tags.findIndex((tag) => {
                 return tag.code === newTag.code;
             });
@@ -121,13 +131,26 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
 
     searchTags(searchString: string, callback: (result: Array<any>) => void) {
         let cancelled = false;
+        const searchPrefix = searchString.startsWith('*') ? '' : '*';
+        const searchSuffix = searchString.endsWith('*') ? '' : '*';
 
-        samsApi.assets.searchTags(searchString + '*')
+        samsApi.assets.searchTags(`${searchPrefix}${searchString}${searchSuffix}`)
             .then((res: IAutoTaggingSearchResult) => {
                 if (cancelled !== true) {
+                    const {gettext} = superdeskApi.localization;
                     const result = toClientFormat(res).toArray();
+                    const currentTagCodes = this.state.tags.map(
+                        (tag) => tag.code,
+                    );
 
-                    callback(result);
+                    result.unshift({
+                        code: `${NEW_CODE_PREFIX}${searchString}`,
+                        name: gettext('Create new tag: "{{ tag }}"', {tag: searchString}),
+                    });
+
+                    callback(result.filter(
+                        (tag) => !currentTagCodes.includes(tag.code),
+                    ));
                 }
             });
 
@@ -247,6 +270,7 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                                 search={(searchString, callback) => this.searchTags(searchString, callback)}
                                 onSelect={this.onChange.tags}
                                 onChange={noop}
+                                disabled={this.props.disabled === true}
                             />
                         </FormRow>
                     </FormGroup>
@@ -255,13 +279,22 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                     <FormGroup>
                         <FormRow>
                             {this.state.tags?.map((tag) => (
-                                <Tag
-                                    key={this.state.tags.indexOf(tag)}
-                                    text={tag.name}
-                                    onClick={() => {
-                                        this.changeTag('tags', tag, 'remove');
-                                    }}
-                                />
+                                this.props.disabled ? (
+                                    <Label
+                                        key={this.state.tags.indexOf(tag)}
+                                        text={tag.name}
+                                        style="translucent"
+                                        size="large"
+                                    />
+                                ) : (
+                                    <Tag
+                                        key={this.state.tags.indexOf(tag)}
+                                        text={tag.name}
+                                        onClick={() => {
+                                            this.changeTag('tags', tag, 'remove');
+                                        }}
+                                    />
+                                )
                             ))}
                         </FormRow>
                     </FormGroup>
