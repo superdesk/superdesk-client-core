@@ -1,26 +1,8 @@
-/**
- * All code that is in tasks/build-extensions/ is copied to the main repo before execution.
-
- * It is done in order to be able to resolve installation paths of extensions.
-
- * The scripts depend on a few modules like lodash, css, css-selector-tokenizer
- * that are kept in this repo in order to manage them in one place.
- * The location of where modules get installed depends on dependency tree.
- * The module might be installed in client/node_modules or client/node_modules/superdesk-core/node_modules
- */
-function getModule(name) {
-    try {
-        return require(name);
-    } catch {
-        return require(`superdesk-core/node_modules/${name}`);
-    }
-}
-
 const fs = require('fs');
 const path = require('path');
-var css = getModule('css');
+var css = require('css');
 var debounce = require('lodash').debounce;
-var selectorTokenizer = getModule('css-selector-tokenizer');
+var selectorTokenizer = require('css-selector-tokenizer');
 var getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 
 function handleToken(token, prefixFn) {
