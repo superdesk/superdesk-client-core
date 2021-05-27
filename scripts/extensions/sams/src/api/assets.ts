@@ -17,7 +17,6 @@ import {
     ISetItem,
     SET_STATE,
     IAutoTaggingSearchResult,
-    IAssetTag,
 } from '../interfaces';
 import {superdeskApi} from '../apis';
 
@@ -332,19 +331,13 @@ export function queryAssets(
 export function getAssetSearchUrlParams(): Partial<IAssetSearchParams> {
     const {urlParams} = superdeskApi.browser.location;
     const {filterUndefined} = superdeskApi.helpers;
-    let commaSperatedtags: Array<string> = urlParams.getString('tags')?.split(',')!;
-    let tags: Array<IAssetTag> = [];
-
-    commaSperatedtags?.forEach((tag) => {
-        tags.push({'code': tag, 'name': tag});
-    });
 
     return filterUndefined<IAssetSearchParams>({
         textSearch: urlParams.getString('textSearch'),
         setId: urlParams.getString('setId'),
         name: urlParams.getString('name'),
         description: urlParams.getString('description'),
-        tags: tags,
+        tags: urlParams.getStringArray('tags'),
         state: urlParams.getString('state') as ASSET_STATE,
         filename: urlParams.getString('filename'),
         mimetypes: urlParams.getString('mimetypes', ASSET_TYPE_FILTER.ALL) as ASSET_TYPE_FILTER,
@@ -359,16 +352,12 @@ export function getAssetSearchUrlParams(): Partial<IAssetSearchParams> {
 
 export function setAssetSearchUrlParams(params: Partial<IAssetSearchParams>) {
     const {urlParams} = superdeskApi.browser.location;
-    let tags = params.tags;
-
-    let tagCodesList: Array<string> = tags?.map((tag) => tag.code)!;
-    let tagCodesString: string = tagCodesList?.join(',');
 
     urlParams.setString('textSearch', params.textSearch);
     urlParams.setString('setId', params.setId);
     urlParams.setString('name', params.name);
     urlParams.setString('description', params.description);
-    urlParams.setString('tags', tagCodesString);
+    urlParams.setStringArray('tags', params.tags);
     urlParams.setString('state', params.state);
     urlParams.setString('filename', params.filename);
     urlParams.setString('mimetypes', params.mimetypes);

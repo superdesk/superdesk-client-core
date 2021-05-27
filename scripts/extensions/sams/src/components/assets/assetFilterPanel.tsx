@@ -30,7 +30,7 @@ import {
 } from '../../ui';
 
 // Utils
-import {toClientFormat} from '../../utils/assets';
+import {convertTagSearchResultToAssetTags} from '../../utils/assets';
 
 interface IProps {
     searchParams: IAssetSearchParams;
@@ -206,7 +206,7 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
         samsApi.assets.searchTags(searchString + '*')
             .then((res: IAutoTaggingSearchResult) => {
                 if (cancelled !== true) {
-                    const result = toClientFormat(res).toArray();
+                    const result = convertTagSearchResultToAssetTags(res).toArray();
 
                     callback(result);
                 }

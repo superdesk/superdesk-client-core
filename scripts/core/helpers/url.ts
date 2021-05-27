@@ -1,5 +1,5 @@
 import ng from 'core/services/ng';
-import {ISuperdesk} from 'superdesk-api';
+import {ISuperdesk, IAssetTag} from 'superdesk-api';
 
 export function getUrlPage(): string {
     const hash = window.location.hash;
@@ -52,7 +52,22 @@ export const urlParams: ISuperdesk['browser']['location']['urlParams'] = {
     setString: (field, value) => {
         setUrlParameter(field, value?.length > 0 ? value : null);
     },
+    // Tags
+    getStringArray: (field) => {
+        let commaSperatedtags: Array<string> = urlParams.getString(field)?.split(',')!;
+        let tags: Array<IAssetTag> = [];
 
+        commaSperatedtags?.forEach((tag) => {
+            tags.push({'code': tag, 'name': tag});
+        });
+        return tags;
+    },
+    setStringArray: (field, value) => {
+        let tagCodesList: Array<string> = value?.map((tag) => tag.code)!;
+        let tagCodesString: string = tagCodesList?.join(',');
+
+        setUrlParameter(field, tagCodesString?.length > 0 ? tagCodesString : null);
+    },
     // Numbers
     getNumber: (field, defaultValue) => {
         return getUrlParameter<number>(

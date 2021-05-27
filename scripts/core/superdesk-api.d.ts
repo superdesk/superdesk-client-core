@@ -1413,6 +1413,11 @@ declare module 'superdesk-api' {
         getMediaId(attachment: IAttachment): IMedia['_id'];
     }
 
+    export interface IAssetTag {
+        name: string;
+        code: string;
+    }
+    
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {
@@ -1588,6 +1593,10 @@ declare module 'superdesk-api' {
                     // Strings
                     getString(field: string, defaultValue?: string): string | undefined;
                     setString(field: string, value?: string);
+
+                    // Tags
+                    getStringArray(field: string): Array<IAssetTag> | undefined;
+                    setStringArray(field: string, value?: Array<IAssetTag>);
 
                     // Numbers
                     getNumber(field: string, defaultValue?: number): number | undefined;

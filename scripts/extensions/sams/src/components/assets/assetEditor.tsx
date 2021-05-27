@@ -17,7 +17,7 @@ import {FormGroup, FormRow} from '../../ui';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
-import {toClientFormat} from '../../utils/assets';
+import {convertTagSearchResultToAssetTags} from '../../utils/assets';
 
 interface IProps {
     asset: Partial<IAssetItem>;
@@ -123,7 +123,7 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
             .then((res: IAutoTaggingSearchResult) => {
                 if (cancelled !== true) {
                     const {gettext} = superdeskApi.localization;
-                    const result = toClientFormat(res).toArray();
+                    const result = convertTagSearchResultToAssetTags(res).toArray();
                     const currentTagCodes = this.state.tags.map(
                         (tag) => tag.code,
                     );

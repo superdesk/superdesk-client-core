@@ -185,7 +185,7 @@ export function isAssetLockedInCurrentSession(asset: Partial<IAssetItem>): boole
     );
 }
 
-export function toClientFormat(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {
+export function convertTagSearchResultToAssetTags(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {
     let tags = OrderedMap<string, IAssetTag>();
 
     response.tags.forEach((item: string) => {
