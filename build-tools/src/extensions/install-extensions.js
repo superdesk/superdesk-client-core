@@ -50,7 +50,7 @@ function correctMainPathInPackageJson(extensionRootPath) {
  * but if the extension is installed using build-tools rather than from npm,
  * that relative path is no longer correct, so it's overwritten here.
  */
-function correctApiDefinitionsPath(extensionRootPath) {
+function correctApiDefinitionsPath(extensionRootPath, clientDir) {
     const apiDefinitionsDestPath = path.join(extensionRootPath, 'src/typings/refs.d.ts');
 
     const apiDefinitionsSrcPath = require.resolve(
@@ -72,7 +72,7 @@ module.exports = function installExtensions(clientDir) {
     directories.forEach(({extensionRootPath, extensionSrcPath}) => {
         // if src dir doesn't exist, assume that the extension is already built (e.g. when installed from npm)
         if (fs.existsSync(extensionSrcPath)) {
-            correctApiDefinitionsPath(extensionRootPath);
+            correctApiDefinitionsPath(extensionRootPath, clientDir);
             correctMainPathInPackageJson(extensionRootPath);
 
             execSync(
