@@ -53,6 +53,10 @@ function correctMainPathInPackageJson(extensionRootPath) {
 function correctApiDefinitionsPath(extensionRootPath) {
     const apiDefinitionsDestPath = path.join(extensionRootPath, 'src/typings/refs.d.ts');
 
+    const apiDefinitionsSrcPath = require.resolve(
+        path.join(clientDir, 'node_modules/superdesk-core/scripts/core/superdesk-api.d.ts')
+    );
+
     if (fs.existsSync(apiDefinitionsDestPath)) {
         fs.writeFileSync(
             apiDefinitionsDestPath,
@@ -64,10 +68,6 @@ function correctApiDefinitionsPath(extensionRootPath) {
 
 module.exports = function installExtensions(clientDir) {
     const directories = getExtensionDirectoriesSync(clientDir);
-
-    const apiDefinitionsSrcPath = require.resolve(
-        path.join(clientDir, 'node_modules/superdesk-core/scripts/core/superdesk-api.d.ts')
-    );
 
     directories.forEach(({extensionRootPath, extensionSrcPath}) => {
         // if src dir doesn't exist, assume that the extension is already built (e.g. when installed from npm)
