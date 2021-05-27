@@ -24,6 +24,8 @@ export const store = createStore<IStoreState, IAction, {}, {}>(combineReducers({
     users,
 }), getMiddlewares());
 
+const pendingUpdates: {[key: string]: Promise<any>} = {};
+
 addWebsocketEventListener(
     'resource:updated',
     (event: IWebsocketMessage<IResourceUpdateEvent>) => {
@@ -38,17 +40,27 @@ addWebsocketEventListener(
             return;
         }
 
-        dataApi.findOne(resource, _id).then((data: IBaseRestApiResponse) => {
-            store.dispatch({
-                type: 'UPDATE_ENTITY',
-                payload: {
-                    resource,
-                    _id,
-                    data,
-                },
+        const updateKey = `${resource}/${_id}`;
+
+        if (pendingUpdates[updateKey]) {
+            return;
+        }
+
+        pendingUpdates[updateKey] = dataApi.findOne(resource, _id)
+            .then((data: IBaseRestApiResponse) => {
+                store.dispatch({
+                    type: 'UPDATE_ENTITY',
+                    payload: {
+                        resource,
+                        _id,
+                        data,
+                    },
+                });
+            }, (reason) => {
+                console.error(`got error when fetching ${resource}/${_id}: ${reason}`);
+            })
+            .finally(() => {
+                pendingUpdates[updateKey] = null;
             });
-        }, (reason) => {
-            console.error(`got error when fetching ${resource}/${_id}: ${reason}`);
-        });
     },
 );

@@ -26,7 +26,7 @@ export function users(state = initialState, action: IUserAction): IUserState {
     }
 
     case 'UPDATE_ENTITY':
-        if (action.payload.resource === 'users' && state.entities[action.payload._id] !== action.payload.data) {
+        if (action.payload.resource === 'users') {
             const entities = {...state.entities};
 
             entities[action.payload._id] = action.payload.data as IUser;
