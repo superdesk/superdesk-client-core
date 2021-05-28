@@ -9,6 +9,7 @@ interface IProps {
     onFilterChange(filters: any): void;
     clearFilterDisplayValue: boolean;
     setClearFilterDisplay(clearFilterDisplayValue: boolean): void;
+    setClearAllFilters(): void;
 }
 
 export class FilterBarComponent extends React.Component<IProps, {}> {
@@ -17,18 +18,7 @@ export class FilterBarComponent extends React.Component<IProps, {}> {
     }
 
     clearFilters(): void {
-        this.props.onFilterChange([]);
-        const filters = this.props.filters;
-
-        for (const key in filters) {
-            if (Array.isArray(filters[key])) {
-                filters[key] = [];
-            } else if (_.isObject(filters[key])) {
-                filters[key] = {};
-            } else {
-                filters[key] = null;
-            }
-        }
+        this.props.setClearAllFilters();
         this.props.setClearFilterDisplay(!this.props.clearFilterDisplayValue);
     }
 
