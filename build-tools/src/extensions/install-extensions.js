@@ -73,12 +73,13 @@ module.exports = function installExtensions(clientDir) {
         // if src dir doesn't exist, assume that the extension is already built (e.g. when installed from npm)
         if (fs.existsSync(extensionSrcPath)) {
             correctApiDefinitionsPath(extensionRootPath, clientDir);
-            correctMainPathInPackageJson(extensionRootPath);
 
             execSync(
                 `cd ${extensionRootPath} && npm install --no-audit && npm run compile --if-present`,
                 {stdio: 'inherit'}
             );
+
+            correctMainPathInPackageJson(extensionRootPath);
         }
     });
 };
