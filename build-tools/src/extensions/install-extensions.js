@@ -51,19 +51,30 @@ function correctMainPathInPackageJson(extensionRootPath) {
  * that relative path is no longer correct, so it's overwritten here.
  */
 function correctApiDefinitionsPath(extensionRootPath, clientDir) {
+    const apiDefinitionsDestDir = path.join(extensionRootPath, 'src/typings');
     const apiDefinitionsDestPath = path.join(extensionRootPath, 'src/typings/refs.d.ts');
+
+    if (fs.existsSync(apiDefinitionsDestPath) !== true) {
+        return;
+    }
+
+    const definitionsFileContents = fs.readFileSync(apiDefinitionsDestPath, 'utf-8');
+    const referencePath = definitionsFileContents.match(/reference path=("|')(.+?)("|')/)[2];
+    const definitionsExistAtSpecifiedPath = fs.existsSync(path.join(apiDefinitionsDestDir, referencePath));
+
+    if (definitionsExistAtSpecifiedPath) {
+        return;
+    }
 
     const apiDefinitionsSrcPath = require.resolve(
         path.join(clientDir, 'node_modules/superdesk-core/scripts/core/superdesk-api.d.ts')
     );
 
-    if (fs.existsSync(apiDefinitionsDestPath)) {
-        fs.writeFileSync(
-            apiDefinitionsDestPath,
-            `/// <reference path='${apiDefinitionsSrcPath}' />`,
-            'utf-8'
-        );
-    }
+    fs.writeFileSync(
+        apiDefinitionsDestPath,
+        `/// <reference path='${apiDefinitionsSrcPath}' />`,
+        'utf-8'
+    );
 }
 
 module.exports = function installExtensions(clientDir) {
