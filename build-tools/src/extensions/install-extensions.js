@@ -69,19 +69,17 @@ function correctApiDefinitionsPath(extensionRootPath, clientDir) {
 module.exports = function installExtensions(clientDir) {
     const directories = getExtensionDirectoriesSync(clientDir);
 
-    console.log('d');
+    directories.forEach(({extensionRootPath, extensionSrcPath}) => {
+        // if src dir doesn't exist, assume that the extension is already built (e.g. when installed from npm)
+        if (fs.existsSync(extensionSrcPath)) {
+            correctApiDefinitionsPath(extensionRootPath, clientDir);
 
-    // directories.forEach(({extensionRootPath, extensionSrcPath}) => {
-    //     // if src dir doesn't exist, assume that the extension is already built (e.g. when installed from npm)
-    //     if (fs.existsSync(extensionSrcPath)) {
-    //         correctApiDefinitionsPath(extensionRootPath, clientDir);
+            execSync(
+                `cd ${extensionRootPath} && npm install --no-audit && npm run compile --if-present`,
+                {stdio: 'inherit'}
+            );
 
-    //         execSync(
-    //             `cd ${extensionRootPath} && npm install --no-audit && npm run compile --if-present`,
-    //             {stdio: 'inherit'}
-    //         );
-
-    //         correctMainPathInPackageJson(extensionRootPath);
-    //     }
-    // });
+            correctMainPathInPackageJson(extensionRootPath);
+        }
+    });
 };
