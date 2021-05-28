@@ -54,19 +54,14 @@ export const urlParams: ISuperdesk['browser']['location']['urlParams'] = {
     },
     // Tags
     getStringArray: (field) => {
-        let commaSperatedtags: Array<string> = urlParams.getString(field)?.split(',')!;
-        let tags: Array<IAssetTag> = [];
+        let commaSperatedtags: Array<string> = urlParams.getString(field)?.split(',');
 
-        commaSperatedtags?.forEach((tag) => {
-            tags.push({'code': tag, 'name': tag});
-        });
-        return tags;
+        return commaSperatedtags;
     },
     setStringArray: (field, value) => {
-        let tagCodesList: Array<string> = value?.map((tag) => tag.code)!;
-        let tagCodesString: string = tagCodesList?.join(',');
+        let tagCodesString: string = value?.join(',');
 
-        setUrlParameter(field, tagCodesString?.length > 0 ? tagCodesString : null);
+        urlParams.setString(field, tagCodesString);
     },
     // Numbers
     getNumber: (field, defaultValue) => {

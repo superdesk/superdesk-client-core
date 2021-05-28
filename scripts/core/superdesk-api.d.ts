@@ -1595,8 +1595,8 @@ declare module 'superdesk-api' {
                     setString(field: string, value?: string);
 
                     // Tags
-                    getStringArray(field: string): Array<IAssetTag> | undefined;
-                    setStringArray(field: string, value?: Array<IAssetTag>);
+                    getStringArray(field: string): Array<string> | undefined;
+                    setStringArray(field: string, value: Array<string>): void;
 
                     // Numbers
                     getNumber(field: string, defaultValue?: number): number | undefined;
