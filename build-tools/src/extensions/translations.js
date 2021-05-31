@@ -71,7 +71,9 @@ function mergeTranslationsFromExtensions(clientDir) {
         }
     }
 
-    fs.rmdirSync(translationsJsonTemp, {recursive: true});
+    if (fs.existsSync(translationsJsonTemp)) {
+        fs.rmdirSync(translationsJsonTemp, {recursive: true});
+    }
 }
 
 module.exports = {
