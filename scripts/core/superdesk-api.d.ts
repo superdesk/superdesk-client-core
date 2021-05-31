@@ -1413,11 +1413,6 @@ declare module 'superdesk-api' {
         getMediaId(attachment: IAttachment): IMedia['_id'];
     }
 
-    export interface IAssetTag {
-        name: string;
-        code: string;
-    }
-    
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {

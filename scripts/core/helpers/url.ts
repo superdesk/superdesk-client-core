@@ -1,5 +1,5 @@
 import ng from 'core/services/ng';
-import {ISuperdesk, IAssetTag} from 'superdesk-api';
+import {ISuperdesk} from 'superdesk-api';
 
 export function getUrlPage(): string {
     const hash = window.location.hash;
