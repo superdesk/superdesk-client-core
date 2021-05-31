@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
 const path = require('path');
+var execSync = require('child_process').execSync;
 const currentDir = process.cwd();
 
 const poToJson = require('./po-to-json/index');
 const installExtensions = require('./extensions/install-extensions');
-const mergeTranslations = require('./extensions/translations');
+const {mergeTranslationsFromExtensions} = require('./extensions/translations');
 const {namespaceCSS, watchCSS} = require('./extensions/css');
 
 const {Command} = require('commander');
@@ -33,13 +34,25 @@ program.command('po-to-json <source-dir-po> <output-dir-json>')
         poToJson(poDir, jsonDir);
     });
 
-program.command('prepare-root-repo <main-client-dir>')
+program.command('build-root-repo <main-client-dir>')
     .description('executes all actions required to prepare the main repo for usage')
     .action((mainClientDir) => {
-        const poDir = path.join(currentDir, mainClientDir, 'node_modules/superdesk-core/po');
+        const clientDirAbs = path.join(currentDir, mainClientDir);
+        const poDir = path.join(clientDirAbs, 'node_modules/superdesk-core/po');
         const translationsDir = path.join(currentDir, mainClientDir, 'dist/languages');
 
+        // build will fail if extensions are not installed
+        installExtensions(clientDirAbs);
+        namespaceCSS(clientDirAbs);
+
+        execSync(
+            `cd ${clientDirAbs} && node --max-old-space-size=8192 ./node_modules/.bin/grunt build`,
+            {stdio: 'inherit'}
+        );
+
+        // translationsDir is only created after the build and would get removed if created before build
         poToJson(poDir, translationsDir);
+        mergeTranslationsFromExtensions(clientDirAbs);
     });
 
 const extensions = new Command('extensions');
@@ -52,7 +65,7 @@ extensions
 
         installExtensions(clientDirAbs);
         namespaceCSS(clientDirAbs);
-        mergeTranslations(clientDirAbs);
+        mergeTranslationsFromExtensions(clientDirAbs);
     });
 
 extensions
@@ -76,7 +89,7 @@ extensions
     .action((clientDir) => {
         const clientDirAbs = path.join(currentDir, clientDir);
 
-        mergeTranslations(clientDirAbs);
+        mergeTranslationsFromExtensions(clientDirAbs);
     });
 
 program.addCommand(extensions);

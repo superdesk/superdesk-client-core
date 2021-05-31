@@ -1,11 +1,11 @@
 import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
-import {MasterDesk} from './MasterDesk';
+import {MasterDeskApp} from './MasterDeskApp';
 
 const styles = 'margin-top: 48px';
 
 angular.module('superdesk.apps.master-desk', [])
-    .component('sdMasterDesk', reactToAngular1(MasterDesk, [], [], styles))
+    .component('sdMasterDesk', reactToAngular1(MasterDeskApp, [], [], styles))
     .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenuProvider) => {
         superdesk
             .activity('/master-desk', {

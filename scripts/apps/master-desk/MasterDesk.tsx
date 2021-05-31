@@ -4,7 +4,7 @@ import {IDesk, IStage, IUser} from 'superdesk-api';
 
 import {HeaderComponent} from './components/HeaderComponent';
 import {OverviewComponent} from './components/OverviewComponent';
-import {UsersComponent} from './components/UsersComponent';
+import UsersComponent from './components/UsersComponent';
 import {AssignmentsComponent} from './components/AssignmentsComponent';
 import {PreviewComponent} from './components/PreviewComponent';
 import {FilterPanelComponent} from './components/FilterPanelComponent';
@@ -51,7 +51,7 @@ interface IState {
 export class MasterDesk extends React.Component<{}, IState> {
     services: any;
 
-    constructor(props: {}) {
+    constructor(props) {
         super(props);
 
         this.state = {
