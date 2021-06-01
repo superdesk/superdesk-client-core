@@ -1,15 +1,17 @@
 import React from 'react';
+import {connect} from 'react-redux';
+
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-
 import {dataApi} from 'core/helpers/CrudManager';
-import {addWebsocketEventListener} from 'core/notification/notification';
 
+import {IStoreState} from 'core/data';
+import {IDesk, IUser, IUserRole} from 'superdesk-api';
 import {UserListComponent, IUserExtra} from './UserListComponent';
-import {IDesk, IResourceUpdateEvent, IUser, IUserRole, IWebsocketMessage} from 'superdesk-api';
 
 interface IProps {
     desks: Array<IDesk>;
+    usersById: IStoreState['users']['entities'];
     onUserSelect(user: IUser): void;
 }
 
@@ -24,19 +26,23 @@ interface IUserByRole {
 interface IState {
     roles: Array<IUserRole>;
     usersByRole: Array<IUserByRole>;
-    deskMembers: {[id: string]: Array<IUser>};
+    deskMembers: {[id: string]: Array<IUser['_id']>};
 }
 
-export class UsersComponent extends React.Component<IProps, IState> {
-    eventListeners: Array<CallableFunction> = [];
-
+class UsersComponent extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
+
+        const deskMembers = {};
+
+        Object.keys(ng.get('desks').deskMembers).forEach((deskId) => {
+            deskMembers[deskId] = ng.get('desks').deskMembers[deskId].map((user) => user._id);
+        });
 
         this.state = {
             roles: [],
             usersByRole: [],
-            deskMembers: ng.get('desks').deskMembers,
+            deskMembers,
         };
 
         this.selectUser.bind(this);
@@ -58,37 +64,6 @@ export class UsersComponent extends React.Component<IProps, IState> {
                 usersByRole: users._items,
             });
         });
-
-        this.eventListeners.push(
-            addWebsocketEventListener(
-                'resource:updated',
-                (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-                    const {resource, fields, _id} = event.extra;
-
-                    if (resource === 'users' && fields.last_activity_at) {
-                        this.reloadUser(_id);
-                    }
-                },
-            ),
-        );
-    }
-
-    componentWillUnmount() {
-        this.eventListeners.forEach((remove) => remove());
-    }
-
-    reloadUser(id) {
-        dataApi.findOne('users', id).then((updatedUser) => {
-            const deskMembers = {};
-
-            Object.keys(this.state.deskMembers).forEach((deskId) => {
-                deskMembers[deskId] = this.state.deskMembers[deskId].map(
-                    (user) => user._id === id ? updatedUser : user,
-                );
-            });
-
-            this.setState({deskMembers});
-        });
     }
 
     getUsers(desk: IDesk, role: IUserRole): Array<IUserExtra> {
@@ -96,7 +71,9 @@ export class UsersComponent extends React.Component<IProps, IState> {
         const roleUsers = this.state.usersByRole.find((item) => item.role === role._id);
         const users: Array<IUserExtra> = [];
 
-        deskMembers.forEach((user) => {
+        deskMembers.forEach((userId) => {
+            const user = this.props.usersById[userId];
+
             if (role._id === user.role) {
                 users.push({user, data: roleUsers.authors[user._id]});
             }
@@ -141,3 +118,9 @@ export class UsersComponent extends React.Component<IProps, IState> {
         );
     }
 }
+
+const mapStateToProps = (state: IStoreState) => ({
+    usersById: state.users.entities,
+});
+
+export default connect(mapStateToProps)(UsersComponent);

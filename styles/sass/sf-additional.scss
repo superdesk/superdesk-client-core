@@ -2225,3 +2225,8 @@ sd-multi-image-edit {
         } 
     }
 }
+
+.sd-line-input input.sd-line-input__input,
+.sd-line-input textarea.sd-line-input__input {
+    display: block !important;
+}

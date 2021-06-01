@@ -169,6 +169,7 @@ export interface IAssetSearchParams {
     textSearch?: string;
     setId?: string;
     setIds?: Array<string>;
+    excludedAssetIds?: Array<string>;
     name?: string;
     description?: string;
     state?: ASSET_STATE;
