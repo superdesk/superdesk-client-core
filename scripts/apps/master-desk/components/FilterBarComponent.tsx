@@ -7,8 +7,6 @@ import {IFilter} from './FilterPanelComponent';
 interface IProps {
     filters: IFilter;
     onFilterChange(filters: any): void;
-    clearFilterDisplayValue: boolean;
-    setClearFilterDisplay(clearFilterDisplayValue: boolean): void;
     setClearAllFilters(): void;
 }
 
@@ -19,7 +17,7 @@ export class FilterBarComponent extends React.Component<IProps, {}> {
 
     clearFilters(): void {
         this.props.setClearAllFilters();
-        this.props.setClearFilterDisplay(!this.props.clearFilterDisplayValue);
+        this.props.onFilterChange({});
     }
 
     checkIfIsNotEmpty(): boolean {

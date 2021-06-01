@@ -6,8 +6,7 @@ interface IProps {
     open: boolean;
     onDeskFilterChange(desk: string): void;
     onFilterChange(filters: object): void;
-    clearFilterDisplayValue: boolean;
-    setClearFilterDisplay(clearFilterDisplayValue: boolean): void;
+    filters: IFilter;
 }
 
 interface IState {
@@ -68,8 +67,6 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
         this.setState({filter: filter});
 
         this.props.onFilterChange(filter);
-
-        this.props.setClearFilterDisplay(true);
     }
 
     clearDeskFilter() {
@@ -86,9 +83,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
 
         this.setState({filter: filter});
 
-        this.props.onFilterChange(filter);
-
-        this.props.setClearFilterDisplay(!this.props.clearFilterDisplayValue);
+        this.props.onFilterChange({});
     }
 
     render() {
@@ -172,7 +167,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                                 <Button type="primary" onClick={this.addFilter} text={gettext('Apply Filters')} />
 
                                 {
-                                    this.props.clearFilterDisplayValue &&
+                                    Object.keys(this.props.filters).length !== 0 &&
                                     (
                                         <Button
                                             onClick={this.clearFilter}
