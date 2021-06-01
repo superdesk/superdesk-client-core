@@ -1,4 +1,5 @@
 import {article} from './article';
+import {desks} from './desks';
 
 /**
  * This is core API, not extensions API.
@@ -7,4 +8,5 @@ import {article} from './article';
  */
 export const sdApi = {
     article,
+    desks,
 };

@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IDesk} from 'superdesk-api';
 import {logger} from 'core/services/logger';
+import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 
 import {
     DESK_OUTPUT,
@@ -88,6 +89,11 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             desk: desks.activeDeskId,
             stage: desks.activeStageId,
         };
+
+        dispatchCustomEvent('activeDeskChanged', {
+            desk: desks.activeDeskId,
+            stage: desks.activeStageId,
+        });
     }
 
     var desksService = {
