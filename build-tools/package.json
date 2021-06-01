@@ -1,6 +1,6 @@
 {
   "name": "@superdesk/build-tools",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "publishConfig": {
     "access": "public"
   },
@@ -13,6 +13,7 @@
     "css-selector-tokenizer": "0.7.1",
     "gettext.js": "^0.9.0",
     "glob": "^7.1.7",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.19",
+    "rimraf": "^3.0.2"
   }
 }
