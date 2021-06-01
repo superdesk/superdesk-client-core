@@ -275,11 +275,19 @@ class Monitoring {
         };
 
         this.getMonitoringWordCount = (itemId: string) => {
-            const countElem = element(by.id(itemId)).element(by.className('word-count'));
+            /**
+             * List view element might update between `browser.wait` and `getText` calls.
+             * If `.getText` was called on `countElem`, it might fail due to `countElem`
+             * referencing to an element that is no longer attached in the DOM(due to list view update).
+             * Because of this, the element is re-queried using the same selector before calling `.getText`.
+             */
+            const getCountElement = () => element(by.id(itemId)).element(by.className('word-count'));
+
+            const countElem = getCountElement();
 
             browser.wait(ECE.presenceOf(countElem), MONITORING_DEBOUNCE_MAX_WAIT);
 
-            return countElem.getText().then((value) => value ? parseInt(value, 10) : 0);
+            return getCountElement().getText().then((value) => value ? parseInt(value, 10) : 0);
         };
 
         this.expectWordCount = (itemId, expectedCount) => {
