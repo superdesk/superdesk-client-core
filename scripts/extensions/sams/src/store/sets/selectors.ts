@@ -2,6 +2,7 @@
 import {createSelector} from 'reselect';
 
 // Types
+import {IDesk} from 'superdesk-api';
 import {IApplicationState} from '../index';
 import {
     CONTENT_PANEL_STATE,
@@ -12,6 +13,7 @@ import {
 
 // Redux Selectors
 import {getStorageDestinationsById} from '../storageDestinations/selectors';
+import {getCurrentDeskId, getDesksAllowedSets} from '../workspace/selectors';
 
 // Utils
 import {assertNever} from '../../utils/typescript';
@@ -144,4 +146,27 @@ export const getSelectedSetCount = createSelector<
             counts?.[setId] :
             undefined
     ),
+);
+
+export const getAvailableSetsForDesk = createSelector<
+    IApplicationState,
+    IDesk['_id'] | null,
+    Dictionary<ISetItem['_id'], ISetItem>,
+    Dictionary<ISetItem['_id'], Array<IDesk['_id']>>,
+    Array<ISetItem['_id']>
+>(
+    [getCurrentDeskId, getSetsById, getDesksAllowedSets],
+    (currentDeskId, sets, deskRestrictions) => {
+        return Object.keys(sets)
+            .filter((setId) => (
+                // if in custom workspace
+                currentDeskId == null ||
+
+                // if the Set has no Desk restrictions
+                deskRestrictions[setId] == null ||
+
+                // if the Set has Desk restrictions, and current desk is available
+                deskRestrictions[setId].includes(currentDeskId)
+            ));
+    },
 );
