@@ -303,7 +303,7 @@ export function getInitialContent(props): ContentState {
         ).getCurrentContent();
     }
 
-    const hasUnsafeFormattingOptions = props.editorFormat.some(
+    const hasUnsafeFormattingOptions = props.editorFormat != null && props.editorFormat.some(
         (option: RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
     );
 
