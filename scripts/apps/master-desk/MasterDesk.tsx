@@ -104,7 +104,7 @@ export class MasterDesk extends React.Component<{}, IState> {
         return this.state.currentTab === IMasterDeskTab.overview;
     }
 
-    clearAllFilters() {
+    removeAllFilters() {
         const filters = this.state.filters;
 
         for (const key in filters) {
@@ -116,6 +116,7 @@ export class MasterDesk extends React.Component<{}, IState> {
                 filters[key] = null;
             }
         }
+        this.setState({filters: {}});
     }
 
     render() {
@@ -146,8 +147,8 @@ export class MasterDesk extends React.Component<{}, IState> {
                     {this.isFilterAllowed() ? (
                         <FilterBarComponent
                             filters={this.state.filters}
-                            onFilterChange={(filters) => this.setState({filters: filters})}
-                            setClearAllFilters = {() => this.clearAllFilters()}
+                            removeFilter={(id) => this.setState({filters: {...this.state.filters, [id]: []}})}
+                            removeAllFilters = {() => this.removeAllFilters()}
                         />
                     )
                         : null}

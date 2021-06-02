@@ -6,18 +6,17 @@ import {IFilter} from './FilterPanelComponent';
 
 interface IProps {
     filters: IFilter;
-    onFilterChange(filters: any): void;
-    setClearAllFilters(): void;
+    removeFilter(id: string): void;
+    removeAllFilters(): void;
 }
 
 export class FilterBarComponent extends React.Component<IProps, {}> {
-    removeFilter(item: any): void {
-        this.props.onFilterChange({...this.props.filters, [item]: []});
+    removeFilter(id: string): void {
+        this.props.removeFilter(id);
     }
 
     clearFilters(): void {
-        this.props.setClearAllFilters();
-        this.props.onFilterChange({});
+        this.props.removeAllFilters();
     }
 
     checkIfIsNotEmpty(): boolean {
