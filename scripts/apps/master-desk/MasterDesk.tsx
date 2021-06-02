@@ -15,7 +15,7 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 import UserActivityWidget from 'apps/dashboard/user-activity/components/UserActivityWidget';
-import _ from 'lodash';
+import {isObject} from 'lodash';
 
 export enum IMasterDeskTab {
     overview = 'overview',
@@ -110,7 +110,7 @@ export class MasterDesk extends React.Component<{}, IState> {
         for (const key in filters) {
             if (Array.isArray(filters[key])) {
                 filters[key] = [];
-            } else if (_.isObject(filters[key])) {
+            } else if (isObject(filters[key])) {
                 filters[key] = {};
             } else {
                 filters[key] = null;

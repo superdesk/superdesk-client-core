@@ -1,5 +1,4 @@
 import {gettext} from 'core/utils';
-import _ from 'lodash';
 import React from 'react';
 
 import {IFilter} from './FilterPanelComponent';
