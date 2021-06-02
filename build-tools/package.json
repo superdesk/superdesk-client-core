@@ -1,0 +1,18 @@
+{
+  "name": "@superdesk/build-tools",
+  "version": "1.0.14",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "@superdesk/build-tools": "./src/index.js"
+  },
+  "dependencies": {
+    "commander": "^7.2.0",
+    "css": "2.2.4",
+    "css-selector-tokenizer": "0.7.1",
+    "gettext.js": "^0.9.0",
+    "glob": "^7.1.7",
+    "lodash": "^4.17.19"
+  }
+}
