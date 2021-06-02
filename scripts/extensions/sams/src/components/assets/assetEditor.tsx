@@ -1,7 +1,6 @@
 // External modules
 import * as React from 'react';
 import {connect} from 'react-redux';
-import {OrderedMap} from 'immutable';
 import {noop, cloneDeep} from 'lodash';
 
 // Types
@@ -18,6 +17,7 @@ import {FormGroup, FormRow} from '../../ui';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
+import {convertTagSearchResultToAssetTags} from '../../utils/assets';
 
 interface IProps {
     asset: Partial<IAssetItem>;
@@ -37,21 +37,6 @@ const mapStateToProps = (state: IApplicationState) => ({
 });
 
 const NEW_CODE_PREFIX = '_new:';
-
-export function toClientFormat(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {
-    let tags = OrderedMap<string, IAssetTag>();
-
-    response.tags.forEach((item: string) => {
-        const tag: IAssetTag = {
-            name: item,
-            code: item,
-        };
-
-        tags = tags.set(tag.name!, tag);
-        tags = tags.set(tag.code!, tag);
-    });
-    return tags;
-}
 
 class AssetEditorComponent extends React.PureComponent<IProps, IState> {
     onChange: Dictionary<string, (value: any) => void>;
@@ -138,7 +123,7 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
             .then((res: IAutoTaggingSearchResult) => {
                 if (cancelled !== true) {
                     const {gettext} = superdeskApi.localization;
-                    const result = toClientFormat(res).toArray();
+                    const result = convertTagSearchResultToAssetTags(res).toArray();
                     const currentTagCodes = this.state.tags.map(
                         (tag) => tag.code,
                     );

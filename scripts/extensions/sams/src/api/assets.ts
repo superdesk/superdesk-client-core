@@ -169,6 +169,22 @@ function queryDescription(source: IRootElasticQuery, params: IAssetSearchParams)
     }
 }
 
+function queryTags(source: IRootElasticQuery, params: IAssetSearchParams) {
+    if (params.tags != null && params.tags.length > 0) {
+        let taglist: Array<string> = [];
+
+        params.tags.forEach((tag) => {
+            taglist.push(tag.code);
+        });
+        source.query.bool.must.push(
+            superdeskApi.elasticsearch.terms({
+                field: 'tags.code',
+                value: taglist,
+            }),
+        );
+    }
+}
+
 function queryMimetypes(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.mimetypes === ASSET_TYPE_FILTER.DOCUMENTS) {
         source.query.bool.must_not.push(
@@ -269,6 +285,7 @@ export function queryAssets(
         queryExcludedAssetIds,
         queryName,
         queryDescription,
+        queryTags,
         queryFilename,
         queryMimetypes,
         queryState,
@@ -320,6 +337,7 @@ export function getAssetSearchUrlParams(): Partial<IAssetSearchParams> {
         setId: urlParams.getString('setId'),
         name: urlParams.getString('name'),
         description: urlParams.getString('description'),
+        tags: urlParams.getStringArray('tags')?.map((tag) => ({'code': tag, 'name': tag})),
         state: urlParams.getString('state') as ASSET_STATE,
         filename: urlParams.getString('filename'),
         mimetypes: urlParams.getString('mimetypes', ASSET_TYPE_FILTER.ALL) as ASSET_TYPE_FILTER,
@@ -339,6 +357,7 @@ export function setAssetSearchUrlParams(params: Partial<IAssetSearchParams>) {
     urlParams.setString('setId', params.setId);
     urlParams.setString('name', params.name);
     urlParams.setString('description', params.description);
+    urlParams.setStringArray('tags', params.tags!.map((tag) => (tag.code)));
     urlParams.setString('state', params.state);
     urlParams.setString('filename', params.filename);
     urlParams.setString('mimetypes', params.mimetypes);

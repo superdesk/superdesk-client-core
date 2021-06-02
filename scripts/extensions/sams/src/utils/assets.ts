@@ -1,6 +1,8 @@
 import {
     ASSET_ACTIONS,
     IAssetAction,
+    IAutoTaggingSearchResult,
+    IAssetTag,
     IAssetCallback,
     IAssetItem,
     IBaseAssetAction,
@@ -8,6 +10,7 @@ import {
     IBulkAction,
 } from '../interfaces';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
+import {OrderedMap} from 'immutable';
 
 import {superdeskApi} from '../apis';
 import {getSetsSync} from '../api/assets';
@@ -180,4 +183,19 @@ export function isAssetLockedInCurrentSession(asset: Partial<IAssetItem>): boole
         asset.lock_session === sessionId &&
         asset.lock_user === userId
     );
+}
+
+export function convertTagSearchResultToAssetTags(response: IAutoTaggingSearchResult): OrderedMap<string, IAssetTag> {
+    let tags = OrderedMap<string, IAssetTag>();
+
+    response.tags.forEach((item: string) => {
+        const tag: IAssetTag = {
+            name: item,
+            code: item,
+        };
+
+        tags = tags.set(tag.name!, tag);
+        tags = tags.set(tag.code!, tag);
+    });
+    return tags;
 }

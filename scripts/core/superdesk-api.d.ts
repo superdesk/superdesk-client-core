@@ -1589,6 +1589,10 @@ declare module 'superdesk-api' {
                     getString(field: string, defaultValue?: string): string | undefined;
                     setString(field: string, value?: string);
 
+                    // Tags
+                    getStringArray(field: string): Array<string> | undefined;
+                    setStringArray(field: string, value: Array<string>): void;
+
                     // Numbers
                     getNumber(field: string, defaultValue?: number): number | undefined;
                     setNumber(field: string, value?: number);
