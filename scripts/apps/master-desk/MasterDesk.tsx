@@ -104,21 +104,6 @@ export class MasterDesk extends React.Component<{}, IState> {
         return this.state.currentTab === IMasterDeskTab.overview;
     }
 
-    removeAllFilters() {
-        const filters = this.state.filters;
-
-        for (const key in filters) {
-            if (Array.isArray(filters[key])) {
-                filters[key] = [];
-            } else if (isObject(filters[key])) {
-                filters[key] = {};
-            } else {
-                filters[key] = null;
-            }
-        }
-        this.setState({filters: {}});
-    }
-
     render() {
         return (
             <div className="sd-content-wrapper__main-content-area sd-main-content-grid">
@@ -148,7 +133,7 @@ export class MasterDesk extends React.Component<{}, IState> {
                         <FilterBarComponent
                             filters={this.state.filters}
                             removeFilter={(id) => this.setState({filters: {...this.state.filters, [id]: []}})}
-                            removeAllFilters = {() => this.removeAllFilters()}
+                            removeAllFilters = {() => this.setState({filters: {}})}
                         />
                     )
                         : null}

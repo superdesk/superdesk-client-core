@@ -36,7 +36,26 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.addFilter = this.addFilter.bind(this);
         this.clearDeskFilter = this.clearDeskFilter.bind(this);
-        this.clearFilter = this.clearFilter.bind(this);
+        this.clearFilters = this.clearFilters.bind(this);
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (prevProps.filters !== this.props.filters) {
+            let filter = {
+                slugline: this.state.filter.slugline,
+                headline: this.state.filter.headline,
+                byline: this.state.filter.byline,
+            };
+
+            Object.keys(prevProps.filters).forEach((ele) => {
+                filter[ele] = this.props.filters[ele] ?? [];
+            });
+
+            if (this.state.filter !== filter) {
+                // eslint-disable-next-line react/no-did-update-set-state
+                this.setState({filter: filter});
+            }
+        }
     }
 
     handleDeskChange(event) {
@@ -74,7 +93,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
         this.props.onDeskFilterChange('');
     }
 
-    clearFilter() {
+    clearFilters() {
         const filter = {
             slugline: [],
             headline: [],
@@ -87,6 +106,19 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
     }
 
     render() {
+        const isDisplayClearFilters = () => {
+            let isDisplay = false;
+
+            if (this.props.filters) {
+                Object.keys(this.props.filters).forEach((ele) => {
+                    if (this.props.filters[ele].length !== 0) {
+                        isDisplay = true;
+                    }
+                });
+            }
+            return isDisplay;
+        };
+
         return (
             <div className={'sd-main-content-grid__filter' + (this.props.open ? ' open-filters' : '')}>
                 <div className="side-panel__container side-panel__container--small">
@@ -167,10 +199,10 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                                 <Button type="primary" onClick={this.addFilter} text={gettext('Apply Filters')} />
 
                                 {
-                                    Object.keys(this.props.filters).length !== 0 &&
+                                    isDisplayClearFilters() &&
                                     (
                                         <Button
-                                            onClick={this.clearFilter}
+                                            onClick={this.clearFilters}
                                             text={gettext('Clear Filters')}
                                         />
                                     )
