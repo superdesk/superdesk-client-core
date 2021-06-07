@@ -187,7 +187,7 @@ export function AuthoringDirective(
                                 $scope.stage = result;
                             });
 
-                        getDesk();
+                        setDesk();
                     }
                 }
             }
@@ -209,7 +209,7 @@ export function AuthoringDirective(
             /**
             * Get the desk name and desk type.
             */
-            function getDesk() {
+            function setDesk() {
                 if (!$scope.item.task.desk) {
                     return false;
                 }
