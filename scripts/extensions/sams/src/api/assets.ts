@@ -357,7 +357,7 @@ export function setAssetSearchUrlParams(params: Partial<IAssetSearchParams>) {
     urlParams.setString('setId', params.setId);
     urlParams.setString('name', params.name);
     urlParams.setString('description', params.description);
-    urlParams.setStringArray('tags', params.tags!.map((tag) => (tag.code)));
+    urlParams.setStringArray('tags', (params.tags ?? []).map((tag) => (tag.code)));
     urlParams.setString('state', params.state);
     urlParams.setString('filename', params.filename);
     urlParams.setString('mimetypes', params.mimetypes);
