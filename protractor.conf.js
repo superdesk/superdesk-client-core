@@ -51,7 +51,9 @@ var config = {
     },
 
     directConnect: true,
-    chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER + '/chromedriver') : null,
+
+    // workaround for https://github.com/angular/protractor/issues/5519
+    //chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER + '/chromedriver') : null,
 
     onPrepare: function() {
         require('./spec/helpers/setup').setup({fixture_profile: 'app_prepopulate_data'});
