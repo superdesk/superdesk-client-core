@@ -120,6 +120,7 @@ export class MasterDesk extends React.Component<{}, IState> {
 
                 {this.isFilterAllowed() ? (
                     <FilterPanelComponent
+                        key={JSON.stringify(this.state.filters)}
                         open={this.state.filterOpen}
                         onDeskFilterChange={(desk) => this.setState({deskFilter: desk})}
                         onFilterChange={(filters) => this.setState({filters: filters})}
