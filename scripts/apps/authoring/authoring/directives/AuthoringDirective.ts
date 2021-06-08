@@ -106,6 +106,7 @@ export function AuthoringDirective(
                 userDesks = desksList;
                 $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
             });
+
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
             $scope.views = {send: false};
@@ -186,10 +187,7 @@ export function AuthoringDirective(
                                 $scope.stage = result;
                             });
 
-                        desks.fetchDeskById($scope.origItem.task.desk).then((desk) => {
-                            $scope.deskName = desk.name;
-                            $scope.deskType = desk.desk_type;
-                        });
+                        setDesk();
                     }
                 }
             }
@@ -206,6 +204,21 @@ export function AuthoringDirective(
                     .then((result) => {
                         $scope.currentTemplate = result;
                     });
+            }
+
+            /**
+            * Get the desk name and desk type.
+            */
+            function setDesk() {
+                if (!$scope.item.task.desk) {
+                    return false;
+                }
+                const desk = desks.getItemDesk($scope.item);
+
+                if (desk) {
+                    $scope.deskName = desk.name;
+                    $scope.deskType = desk.desk_type;
+                }
             }
 
             /**
