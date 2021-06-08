@@ -7,8 +7,6 @@ import {
     CompositeDecorator,
 } from 'draft-js';
 import {createStore, applyMiddleware} from 'redux';
-import {createLogger} from 'redux-logger';
-import thunk from 'redux-thunk';
 import {pick, get, debounce} from 'lodash';
 import {
     PopupTypes,
@@ -46,6 +44,7 @@ import {
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {handleOverflowHighlights} from '../helpers/characters-limit';
+import {getMiddlewares} from 'core/redux-utils';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -142,19 +141,6 @@ export default function createEditorStore(
         ? props.onChange
         : debounce(onChange.bind(props), props.debounce);
 
-    const middlewares = [thunk];
-
-    const devtools = localStorage.getItem('devtools');
-    const reduxLoggerEnabled =
-        devtools == null
-            ? false
-            : JSON.parse(devtools).includes('redux-logger');
-
-    if (reduxLoggerEnabled) {
-        // (this should always be the last middleware)
-        middlewares.push(createLogger());
-    }
-
     const limitConfig: EditorLimit | null = !props.limit
         ? null
         : {
@@ -201,7 +187,7 @@ export default function createEditorStore(
             loading: false,
             limitConfig,
         },
-        applyMiddleware(...middlewares),
+        getMiddlewares(),
     );
 
     if (spellcheck != null) {
@@ -317,7 +303,7 @@ export function getInitialContent(props): ContentState {
         ).getCurrentContent();
     }
 
-    const hasUnsafeFormattingOptions = props.editorFormat.some(
+    const hasUnsafeFormattingOptions = props.editorFormat != null && props.editorFormat.some(
         (option: RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
     );
 

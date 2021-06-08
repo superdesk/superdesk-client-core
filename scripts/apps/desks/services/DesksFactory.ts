@@ -9,6 +9,7 @@ import {
     SCHEDULED_OUTPUT,
     HIGHLIGHTS,
 } from '../constants';
+import {UserActions} from 'core/data/users/UserActions';
 
 const OUTPUT_TYPES = [
     DESK_OUTPUT,
@@ -133,6 +134,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                     _.each(result, (user) => {
                         self.userLookup[user._id] = user;
                     });
+                    UserActions.initUsers(self.users._items);
                 });
         },
         fetchStages: function(refresh = false) {

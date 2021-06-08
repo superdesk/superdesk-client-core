@@ -5,13 +5,21 @@ const path = require('path');
 const _ = require('lodash');
 const {trimEnd} = _;
 
-function getAbsoluteModuleDirectory(modulePathRelative) {
-    return path.join(require.resolve(path.join(modulePathRelative, 'package.json')), '../');
+function getAbsoluteModuleDirectory(clientPath, modulePathRelative) {
+    // if module path starts with a dot, don't look into node_modules
+    if (modulePathRelative.startsWith('.')) {
+        return path.join(clientPath, modulePathRelative);
+    } else {
+        return path.join(
+            require.resolve(path.join(`${clientPath}/node_modules`, modulePathRelative, 'package.json')),
+            '../'
+        );
+    }
 }
 
-function getPaths(extensionRootRelative) {
+function getPaths(clientPath, extensionRootRelative) {
     const extensionRootPath = trimEnd(
-        getAbsoluteModuleDirectory(extensionRootRelative),
+        getAbsoluteModuleDirectory(clientPath, extensionRootRelative),
         '/',
     );
     const extensionSrcPath = trimEnd(
@@ -47,11 +55,11 @@ function getFileExtension(path) {
     }
 }
 
-function getIndexFilePath(indexFilePathRelative) {
+function getIndexFilePath(clientPath, indexFilePathRelative) {
     const fileExtensions = ['.js', '.jsx', '.ts', '.tsx'];
 
     // paths in `importApps` are relative client/dist
-    const base = path.join('dist', indexFilePathRelative);
+    const base = path.join(clientPath, 'dist', indexFilePathRelative);
 
     const maybeExtension = getFileExtension(base);
 
@@ -76,8 +84,8 @@ function getIndexFilePath(indexFilePathRelative) {
     throw new Error('Index file not found');
 }
 
-function getExtensionDirectoriesSync() {
-    const config = require('../superdesk.config.js')();
+function getExtensionDirectoriesSync(clientPath) {
+    const config = require(path.join(clientPath, 'superdesk.config.js'))();
 
     const paths = config.importApps || config.apps || [];
 
@@ -88,7 +96,7 @@ function getExtensionDirectoriesSync() {
         return [];
     }
 
-    var indexFile = fs.readFileSync(getIndexFilePath(indexFilePathRelative), 'utf-8');
+    var indexFile = fs.readFileSync(getIndexFilePath(clientPath, indexFilePathRelative), 'utf-8');
 
     /**
      * Regex for extracting extension id and import path(there is a capturing group for each)
@@ -108,7 +116,7 @@ function getExtensionDirectoriesSync() {
 
     while ((_match = extensionRegistrationPattern.exec(indexFile)) !== null) {
         const extensionName = _match[1];
-        const {extensionRootPath, extensionSrcPath, extensionCssFilePath} = getPaths(_match[2]);
+        const {extensionRootPath, extensionSrcPath, extensionCssFilePath} = getPaths(clientPath, _match[2]);
 
         matches.push({extensionName, extensionRootPath, extensionSrcPath, extensionCssFilePath});
     }

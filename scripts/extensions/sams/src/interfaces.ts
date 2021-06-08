@@ -168,8 +168,10 @@ export interface IAssetSearchParams {
     textSearch?: string;
     setId?: string;
     setIds?: Array<string>;
+    excludedAssetIds?: Array<string>;
     name?: string;
     description?: string;
+    tags?: Array<IAssetTag>;
     state?: ASSET_STATE;
     states?: Array<ASSET_STATE>;
     filename?: string;
