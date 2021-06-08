@@ -15,6 +15,7 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 import UserActivityWidget from 'apps/dashboard/user-activity/components/UserActivityWidget';
+import {isObject} from 'lodash';
 
 export enum IMasterDeskTab {
     overview = 'overview',
@@ -119,9 +120,11 @@ export class MasterDesk extends React.Component<{}, IState> {
 
                 {this.isFilterAllowed() ? (
                     <FilterPanelComponent
+                        key={JSON.stringify(this.state.filters)}
                         open={this.state.filterOpen}
                         onDeskFilterChange={(desk) => this.setState({deskFilter: desk})}
                         onFilterChange={(filters) => this.setState({filters: filters})}
+                        filters={this.state.filters}
                     />
                 )
                     : null}
@@ -130,7 +133,8 @@ export class MasterDesk extends React.Component<{}, IState> {
                     {this.isFilterAllowed() ? (
                         <FilterBarComponent
                             filters={this.state.filters}
-                            onFilterChange={(filters) => this.setState({filters: filters})}
+                            removeFilter={(id) => this.setState({filters: {...this.state.filters, [id]: []}})}
+                            removeAllFilters = {() => this.setState({filters: {}})}
                         />
                     )
                         : null}
