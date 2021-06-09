@@ -18,10 +18,6 @@ import {
 import {IApplicationState} from '../store';
 import {samsApi, superdeskApi} from '../apis';
 
-// Redux Actions & Selectors
-import {loadStorageDestinations} from '../store/storageDestinations/actions';
-import {loadSets} from '../store/sets/actions';
-
 import {
     loadNextAssetsPage,
     previewAsset,
@@ -124,16 +120,12 @@ export function downloadAssetBinary(asset: IAssetItem): void {
 
 export class SamsWorkspaceApp extends React.PureComponent {
     onStoreInit(store: Store) {
-        return Promise.all([
-            store.dispatch<any>(loadStorageDestinations()),
-            store.dispatch<any>(loadSets()),
-            store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
-                .catch(() => {
-                    // Catch errors here so `Promise.all` still returns on fetching error
-                    // This can happen when invalid search params are stored in the URL
-                    return Promise.resolve();
-                }),
-        ]);
+        return store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
+            .catch(() => {
+                // Catch errors here so `Promise.all` still returns on fetching error
+                // This can happen when invalid search params are stored in the URL
+                return Promise.resolve();
+            });
     }
 
     render() {

@@ -5,6 +5,7 @@ interface IProps {
     children: React.ReactNode;
     noPadding?: boolean;
     addMinHeight?: boolean;
+    fullHeight?: boolean;
 }
 
 export class ModalBody extends React.PureComponent<IProps> {
@@ -16,9 +17,10 @@ export class ModalBody extends React.PureComponent<IProps> {
                 'modal__body--no-padding': this.props.noPadding,
             },
         );
+        const style = !this.props.fullHeight ? {} : {height: '100%'};
 
         return (
-            <div className={classes}>
+            <div className={classes} style={style}>
                 {this.props.children}
             </div>
         );

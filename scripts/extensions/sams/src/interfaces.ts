@@ -2,6 +2,7 @@
 import {
     IAttachment,
     IBaseRestApiResponse,
+    IDesk,
     IRestApiResponse,
     IUser,
     IWebsocketMessage,
@@ -208,8 +209,12 @@ export interface IUploadAssetModalProps {
 export interface ISamsAPI {
     sets: {
         getAll(): Promise<Array<ISetItem>>;
-        create(set: Partial<ISetItem>): Promise<ISetItem>;
-        update(original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem>;
+        create(set: Partial<ISetItem>, deskRestrictions?: Array<IDesk['_id']>): Promise<ISetItem>;
+        update(
+            original: ISetItem,
+            updates: Partial<ISetItem>,
+            deskRestrictions?: Array<IDesk['_id']>,
+        ): Promise<ISetItem>;
         delete(set: ISetItem): Promise<void>;
     };
     storageDestinations: {
@@ -236,5 +241,10 @@ export interface ISamsAPI {
         lockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
         unlockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
         searchTags(searchTags: string): Promise<IAutoTaggingSearchResult>;
+    };
+    workspace: {
+        getDesksSamsSettings(): Promise<Dictionary<IDesk['_id'], IDesk['sams_settings']>>;
+        getSingleDeskSamsSettings(deskId: IDesk['_id']): Promise<IDesk['sams_settings']>;
+        updateSetsAllowedDesks(setId: ISetItem['_id'], allowedDesks: Array<IDesk['_id']>): Promise<void>;
     };
 }

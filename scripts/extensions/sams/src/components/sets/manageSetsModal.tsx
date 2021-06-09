@@ -88,12 +88,16 @@ export class ManageSetsModalComponent extends React.PureComponent<IProps> {
                 size="x-large"
                 closeModal={this.closeModal}
                 closeOnEsc={true}
+                fullHeight={true}
             >
                 <ModalHeader
                     text={gettext('Manage Sets')}
                     onClose={this.closeModal}
                 />
-                <ModalBody noPadding={true}>
+                <ModalBody
+                    noPadding={true}
+                    fullHeight={true}
+                >
                     <PageLayout
                         header={(
                             <SubNav zIndex={2}>

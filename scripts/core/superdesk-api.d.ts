@@ -562,6 +562,9 @@ declare module 'superdesk-api' {
         slack_channel_name?: string;
         preferred_cv_items: {[key: string]: any};
         preserve_published_content: boolean;
+        sams_settings?: {
+            allowed_sets?: Array<string>;
+        };
     }
 
     export interface IStage extends IBaseRestApiResponse {
@@ -1213,6 +1216,9 @@ declare module 'superdesk-api' {
         attachmentUpdated: IAttachment;
 
         menuItemBadgeValueChange: {menuId: string; badgeValue: string};
+
+        // Desks
+        activeDeskChanged: {desk: IDesk['_id']; stage: IStage['_id'];}
     }
 
     export interface IWebsocketMessage<T> {
@@ -1483,6 +1489,8 @@ declare module 'superdesk-api' {
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
+                getActiveDeskId(): IDesk['_id'] | null;
+                waitTilReady(): Promise<void>;
             };
             attachment: IAttachmentsApi;
             users: {
