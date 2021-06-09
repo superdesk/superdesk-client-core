@@ -898,9 +898,6 @@ declare module 'superdesk-api' {
 
         field: string;
 
-        /** default value */
-        value?: string;
-
         // can be used to pass read-only fields or display specific flags
         // component theme, variant or initial state could be set using this
         component_parameters?: {[key: string]: any};

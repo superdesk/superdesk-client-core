@@ -46,12 +46,8 @@ export function getFormFieldPreviewComponent(
     item: {readonly [key: string]: any},
     formFieldConfig: IFormField,
     options: { showAsPlainText?: boolean } = {},
-): JSX.Element | null {
+): JSX.Element {
     const Component = getFormFieldComponent(formFieldConfig.type);
-
-    if (Component == null) {
-        return null;
-    }
 
     return (
         <Component

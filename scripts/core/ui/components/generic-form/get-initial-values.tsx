@@ -3,7 +3,7 @@ import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
 import {IFormField, IFormGroup} from 'superdesk-api';
 
 function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field: string]: any} {
-    const {field, value} = fieldConfig;
+    const {field} = fieldConfig;
 
     const type: FormFieldType = fieldConfig.type;
 
