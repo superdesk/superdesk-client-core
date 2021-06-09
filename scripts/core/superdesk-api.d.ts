@@ -885,9 +885,10 @@ declare module 'superdesk-api' {
         checkbox = 'checkbox',
         contentFilterSingleValue = 'contentFilterSingleValue',
         deskSingleValue = 'deskSingleValue',
-        stageSingleValue = 'stage_singstageSingleValuele_value',
+        stageSingleValue = 'stageSingleValue',
         macroSingleValue = 'macroSingleValue',
         yesNo = 'yesNo',
+        select = 'select',
     }
 
     export interface IFormField { // don't forget to update runtime type checks
