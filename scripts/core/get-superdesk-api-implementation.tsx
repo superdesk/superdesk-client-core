@@ -75,6 +75,7 @@ import {IconBig} from './ui/components/IconBig';
 import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {WithLiveQuery} from './with-live-query';
 import {WithLiveResources} from './with-resources';
+import {querySelectorParent} from './helpers/dom/querySelectorParent';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -420,6 +421,7 @@ export function getSuperdeskApiImplementation(
             getLinesCount,
             downloadBlob,
             throttleAndCombineArray,
+            querySelectorParent,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(
