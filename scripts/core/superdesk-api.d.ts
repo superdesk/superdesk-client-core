@@ -1637,6 +1637,14 @@ declare module 'superdesk-api' {
                 wait: number,
                 options?: ThrottleSettings,
             );
+
+            querySelectorParent(
+                element: HTMLElement,
+                selector: string,
+                options?: {
+                    self: boolean; // will check the current element too if set to true
+                },
+            ): HTMLElement | null;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
