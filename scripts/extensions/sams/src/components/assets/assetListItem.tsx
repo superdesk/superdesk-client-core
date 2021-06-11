@@ -88,6 +88,7 @@ export class AssetListItem extends React.PureComponent<IProps> {
                 <ListItemColumn hasCheck={true} checked={this.props.itemSelected}>
                     <div className="sd-list-item__checkbox-container" onClick={this.onCheckboxClick}>
                         <Checkbox
+                            label={{text: this.props.asset.mimetype, hidden: true}}
                             checked={this.props.itemSelected}
                             onChange={() => this.onCheckboxClick}
                         />
