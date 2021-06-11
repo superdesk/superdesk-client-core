@@ -164,6 +164,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             const tag: ITagUi = {
                 qcode: Math.random().toString(),
                 name: _title,
+                description: newItem.description,
                 source: SOURCE_IMATRICS,
                 altids: {},
                 group: newItem.group,
