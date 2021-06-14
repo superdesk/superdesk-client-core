@@ -6,7 +6,7 @@ import {
     RawDraftContentState,
     CompositeDecorator,
 } from 'draft-js';
-import {createStore, applyMiddleware} from 'redux';
+import {createStore} from 'redux';
 import {pick, get, debounce} from 'lodash';
 import {
     PopupTypes,
@@ -29,7 +29,7 @@ import {
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
-import {LinkDecorator} from '../components/links';
+import {LinkDecorator} from '../components/links/LinkDecorator';
 import {
     getSpellcheckingDecorator,
     ISpellcheckWarningsByBlock,
@@ -99,7 +99,7 @@ export const getCustomDecorator = (
     language?: string,
     spellcheckWarnings: ISpellcheckWarningsByBlock = null,
 ) => {
-    const decorators: Array<any> = [LinkDecorator];
+    const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
     if (spellcheckWarnings != null && language != null) {
         decorators.push(
