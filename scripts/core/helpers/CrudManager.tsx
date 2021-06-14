@@ -24,21 +24,26 @@ import {connectServices} from './ReactRenderAsync';
 export function queryElastic(
     parameters: IQueryElasticParameters,
 ) {
-    const {endpoint, page, sort, filterValues, aggregations} = parameters;
+    const {endpoint, page, sort, aggregations} = parameters;
 
     return ng.getServices(['session', 'api'])
         .then((res: any) => {
             const [session] = res;
+
+            function toElasticFilter(filterValues) {
+                return Object.keys(filterValues ?? {}).map((key) => ({terms: {[key]: filterValues[key]}}));
+            }
 
             const source = {
                 query: {
                     filtered: {
                         filter: {
                             bool: {
-                                must: Object.keys(filterValues).map((key) => ({terms: {[key]: filterValues[key]}})),
+                                must: toElasticFilter(parameters.filterValues),
                                 must_not: [
                                     {term: {state: 'spiked'}},
                                     {term: {package_type: 'takes'}},
+                                    ...toElasticFilter(parameters.filterValuesNegative),
                                 ],
                                 should: [
                                     {
