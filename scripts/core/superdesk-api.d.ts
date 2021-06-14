@@ -795,6 +795,10 @@ declare module 'superdesk-api' {
         // can use deep references like {'a.b.c': []}
         filterValues: {[fieldName: string]: Array<string>};
 
+        // can use deep references like {'a.b.c': []}
+        // generates must_not statements
+        filterValuesNegative?: {[fieldName: string]: Array<string>};
+
         aggregations: boolean;
     }
 
