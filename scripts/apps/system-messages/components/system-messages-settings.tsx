@@ -1,5 +1,4 @@
-import React from 'react';
-import ng from 'core/services/ng';
+import * as React from 'react';
 
 import {gettext} from 'core/utils';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
@@ -46,6 +45,7 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
                     field: 'type',
                     label: gettext('Style'),
                     type: FormFieldType.select,
+                    required: true,
                     component_parameters: {
                         options: [
                             {id: 'primary', label: getTypeLabel('primary')},
@@ -59,11 +59,13 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
                     field: 'message_title',
                     label: gettext('Title'),
                     type: FormFieldType.textSingleLine,
+                    required: true,
                 },
                 {
                     field: 'message',
                     label: gettext('Message'),
                     type: FormFieldType.textEditor3,
+                    required: true,
                 },
             ],
         };
