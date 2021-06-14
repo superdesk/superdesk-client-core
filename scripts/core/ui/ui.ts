@@ -911,8 +911,12 @@ function splitterWidget(superdesk, $timeout, $rootScope) {
              * If custom sizes are defined, preload them
              */
             if (superdesk.monitoringWidth && superdesk.authoringWidth) {
-                workspace.css({width: superdesk.monitoringWidth});
-                authoring.css({width: superdesk.authoringWidth});
+                $timeout(() => {
+                    initializeContainers();
+
+                    workspace.css({width: superdesk.monitoringWidth});
+                    authoring.css({width: superdesk.authoringWidth});
+                }, 0, false);
             }
 
             /*
