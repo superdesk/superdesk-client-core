@@ -21,9 +21,9 @@ import {
 import {superdeskApi} from '../apis';
 
 // Redux Actions & Selectors
-import {getStore} from '../store';
+import {getStoreSync} from '../store';
 import {loadSets} from '../store/sets/actions';
-import {getSetsById} from '../store/sets/selectors';
+import {getSetsById, getAvailableSetsForDesk} from '../store/sets/selectors';
 
 // Utils
 import {fixItemResponseVersionDates, fixItemVersionDates} from './common';
@@ -100,6 +100,32 @@ function querySetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
     }
 }
 
+function queryAllAvailableSets(source: IRootElasticQuery, params: IAssetSearchParams) {
+    if (!params.setId?.length && !params.setIds?.length) {
+        // Construct the list of Set IDs to use (based on the currently selected Desk)
+        const store = getStoreSync();
+        const setIds = getAvailableSetsForDesk(store.getState());
+
+        source.query.bool.must.push(
+            superdeskApi.elasticsearch.terms({
+                field: 'set_id',
+                value: setIds,
+            }),
+        );
+    }
+}
+
+function queryExcludedAssetIds(source: IRootElasticQuery, params: IAssetSearchParams) {
+    if (params.excludedAssetIds != null && params.excludedAssetIds.length > 0) {
+        source.query.bool.must_not.push(
+            superdeskApi.elasticsearch.terms({
+                field: '_id',
+                value: params.excludedAssetIds,
+            }),
+        );
+    }
+}
+
 function queryState(source: IRootElasticQuery, params: IAssetSearchParams) {
     if (params.state != null && params.state.length > 0) {
         source.query.bool.must.push(
@@ -153,6 +179,22 @@ function queryDescription(source: IRootElasticQuery, params: IAssetSearchParams)
                 query: `description:(${params.description})`,
                 lenient: false,
                 default_operator: 'AND',
+            }),
+        );
+    }
+}
+
+function queryTags(source: IRootElasticQuery, params: IAssetSearchParams) {
+    if (params.tags != null && params.tags.length > 0) {
+        let taglist: Array<string> = [];
+
+        params.tags.forEach((tag) => {
+            taglist.push(tag.code);
+        });
+        source.query.bool.must.push(
+            superdeskApi.elasticsearch.terms({
+                field: 'tags.code',
+                value: taglist,
             }),
         );
     }
@@ -255,8 +297,11 @@ export function queryAssets(
         querySearchString,
         querySetId,
         querySetIds,
+        queryAllAvailableSets,
+        queryExcludedAssetIds,
         queryName,
         queryDescription,
+        queryTags,
         queryFilename,
         queryMimetypes,
         queryState,
@@ -308,6 +353,7 @@ export function getAssetSearchUrlParams(): Partial<IAssetSearchParams> {
         setId: urlParams.getString('setId'),
         name: urlParams.getString('name'),
         description: urlParams.getString('description'),
+        tags: urlParams.getStringArray('tags')?.map((tag) => ({'code': tag, 'name': tag})),
         state: urlParams.getString('state') as ASSET_STATE,
         filename: urlParams.getString('filename'),
         mimetypes: urlParams.getString('mimetypes', ASSET_TYPE_FILTER.ALL) as ASSET_TYPE_FILTER,
@@ -327,6 +373,7 @@ export function setAssetSearchUrlParams(params: Partial<IAssetSearchParams>) {
     urlParams.setString('setId', params.setId);
     urlParams.setString('name', params.name);
     urlParams.setString('description', params.description);
+    urlParams.setStringArray('tags', (params.tags ?? []).map((tag) => (tag.code)));
     urlParams.setString('state', params.state);
     urlParams.setString('filename', params.filename);
     urlParams.setString('mimetypes', params.mimetypes);
@@ -435,11 +482,7 @@ export function updateAssetMetadata(
 export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): void {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
-    const store = getStore();
-
-    if (store === undefined) {
-        throw new Error('SAMS store has not been initialised');
-    }
+    const store = getStoreSync();
 
     // (re)load all the Sets into the Redux store
     store.dispatch<any>(loadSets())
@@ -590,11 +633,7 @@ export function unlockAsset(original: IAssetItem, updates: Dictionary<string, an
 }
 
 export function getSetsSync(): Dictionary<string, ISetItem> {
-    const store = getStore();
-
-    if (store === undefined) {
-        throw new Error('SAMS store has not been initialised');
-    }
+    const store = getStoreSync();
 
     return getSetsById(store.getState());
 }

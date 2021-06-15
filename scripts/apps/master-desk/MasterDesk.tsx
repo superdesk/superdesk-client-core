@@ -4,7 +4,7 @@ import {IDesk, IStage, IUser} from 'superdesk-api';
 
 import {HeaderComponent} from './components/HeaderComponent';
 import {OverviewComponent} from './components/OverviewComponent';
-import {UsersComponent} from './components/UsersComponent';
+import UsersComponent from './components/UsersComponent';
 import {AssignmentsComponent} from './components/AssignmentsComponent';
 import {PreviewComponent} from './components/PreviewComponent';
 import {FilterPanelComponent} from './components/FilterPanelComponent';
@@ -15,6 +15,7 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 import UserActivityWidget from 'apps/dashboard/user-activity/components/UserActivityWidget';
+import {isObject} from 'lodash';
 
 export enum IMasterDeskTab {
     overview = 'overview',
@@ -58,7 +59,7 @@ interface IState {
 export class MasterDesk extends React.Component<{}, IState> {
     services: any;
 
-    constructor(props: {}) {
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -129,9 +130,11 @@ export class MasterDesk extends React.Component<{}, IState> {
 
                 {this.isFilterAllowed() ? (
                     <FilterPanelComponent
+                        key={JSON.stringify(this.state.filters)}
                         open={this.state.filterOpen}
                         onDeskFilterChange={(desk) => this.setState({deskFilter: desk})}
                         onFilterChange={(filters) => this.setState({filters: filters})}
+                        filters={this.state.filters}
                     />
                 )
                     : null}
@@ -140,7 +143,8 @@ export class MasterDesk extends React.Component<{}, IState> {
                     {this.isFilterAllowed() ? (
                         <FilterBarComponent
                             filters={this.state.filters}
-                            onFilterChange={(filters) => this.setState({filters: filters})}
+                            removeFilter={(id) => this.setState({filters: {...this.state.filters, [id]: []}})}
+                            removeAllFilters = {() => this.setState({filters: {}})}
                         />
                     )
                         : null}

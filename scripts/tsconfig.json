@@ -2,6 +2,9 @@
     "include": [
         "."
     ],
+    "exclude": [
+        "extensions"
+    ],
     "compilerOptions": {
         "baseUrl": ".",
         "sourceMap": false,

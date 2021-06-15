@@ -1,13 +1,36 @@
-<li ng-repeat="item in items track by $index"
+<li
+    ng-repeat="item in items track by $index"
     ng-class="{active: item.href === activeMenuItemPath}"
-    ng-include="getTemplateUrl(item)">
-</li>
+    ng-include="getTemplateUrl(item)"
+></li>
 
 <!-- this should be avoided, not sure where it's used -->
-<li ng-if="extraItems.length > 0"><hr></li>
+<li ng-if="extraItems.length > 0">
+    <hr>
+</li>
 <li ng-repeat="item in extraItems" ng-class="{active: '/' + item.route === activeMenuItemPath}">
-    <a href="#/{{ item.route }}" title="{{ item.title }}" aria-label="{{ :: item.title }}" ng-click="item.onClick && item.onClick($event)" class="sd-sidebar-menu__btn">
-      <i class="sd-sidebar-menu__main-icon {{ item.iconClass }}"></i>
-      <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+    <a
+        href="#/{{ item.route }}"
+        title="{{ item.title }}"
+        aria-label="{{ :: item.title }}"
+        ng-click="item.onClick && item.onClick($event)"
+        class="sd-sidebar-menu__btn"
+    >
+
+        <span class="sd-sidebar-menu__main-icon element-with-badge">
+            <i class="{{ item.iconClass }}"></i>
+        
+            <span
+                ng-if="badges[item.id] != null"
+                class="badge badge--highlight"
+                
+            >
+                {{badges[item.id]}}
+            </span>
+        </span>
+
+        <span class="sd-sidebar-menu__chevron_wrapper">
+            <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+        </span>
     </a>
 </li>

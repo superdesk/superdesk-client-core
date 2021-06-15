@@ -92,13 +92,6 @@ describe('session service', () => {
         expect(session.identity.allowed_actions).toBeUndefined();
     }));
 
-    it('can clear session', inject((session) => {
-        session.start(SESSION, {name: 'bar'});
-        session.clear();
-        expect(session.token).toBe(null);
-        expect(session.identity).toBe(null);
-    }));
-
     it('can persist session delete href', inject((session) => {
         session.start(SESSION, {name: 'bar'});
         expect(session.getSessionHref()).toBe(SESSION._links.self.href);

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IArticle, IAttachment, IAttachmentsWidgetProps, IAttachmentsWrapperProps} from 'superdesk-api';
-import {isLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
+import {isLockedInCurrentSession, dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
 import {notify} from 'core/notify/notify';
@@ -9,7 +9,6 @@ import {filesize} from 'core/ui/ui';
 import {CC} from 'core/ui/configurable-ui-components';
 import {AttachmentsWidgetComponent} from './AttachmentsWidgetComponent';
 import {withAttachments} from './AttachmentsWrapper';
-import {dispatchCustomEvent} from 'core/notification/notification';
 
 interface IProps extends IAttachmentsWrapperProps {
     updateItem(updates: Partial<IArticle>): void;

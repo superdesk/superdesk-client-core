@@ -8,11 +8,11 @@ import {
     IResourceCreatedEvent,
     IResourceUpdateEvent,
     IResourceDeletedEvent,
+    IResourceChange,
 } from 'superdesk-api';
 import {
     IRelatedEntities,
     getAndMergeRelatedEntitiesForArticles,
-    IResourceChange,
     getAndMergeRelatedEntitiesUpdated,
 } from 'core/getRelatedEntities';
 import {addWebsocketEventListener} from 'core/notification/notification';

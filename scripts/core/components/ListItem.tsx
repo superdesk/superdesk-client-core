@@ -1,8 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 
-import React from 'react';
+import React, {CSSProperties} from 'react';
 import classNames from 'classnames';
-import {IListItemProps, IPropsListItemColumn} from 'superdesk-api';
+import {IListItemProps, IPropsListItemColumn, IPropsListItemRow} from 'superdesk-api';
 
 export class ListItem extends React.Component<IListItemProps> {
     render() {
@@ -43,8 +43,13 @@ export class ListItem extends React.Component<IListItemProps> {
 
 export class ListItemColumn extends React.Component<IPropsListItemColumn> {
     render() {
-        const {noBorder, justifyContent, ellipsisAndGrow, children, bold = false} = this.props;
+        const {noBorder, noPadding, grow, justifyContent, ellipsisAndGrow, children, bold = false} = this.props;
         const cssClasses = [];
+        var styles: CSSProperties = {};
+
+        if (noPadding) {
+            styles.padding = 0;
+        }
 
         if (noBorder) {
             cssClasses.push('sd-list-item__column--no-border');
@@ -56,15 +61,22 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn> {
 
         if (ellipsisAndGrow) {
             return (
-                <div className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}>
+                <div
+                    className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}
+                    style={styles}
+                >
                     <ListItemRow justifyContent={justifyContent}>
                         <span className="sd-overflow-ellipsis">{children}</span>
                     </ListItemRow>
                 </div>
             );
         } else {
+            if (grow) { // only when ellipsis is not used
+                styles.flexGrow = 1;
+            }
+
             return (
-                <div className={cssClasses.concat(['sd-list-item__column']).join(' ')}>
+                <div className={cssClasses.concat(['sd-list-item__column']).join(' ')} style={styles}>
                     {children}
                 </div>
             );
@@ -82,7 +94,7 @@ export class ListItemActionsMenu extends React.Component {
     }
 }
 
-export class ListItemRow extends React.Component<{justifyContent?: string}> {
+export class ListItemRow extends React.Component<IPropsListItemRow> {
     render() {
         const {justifyContent} = this.props;
 

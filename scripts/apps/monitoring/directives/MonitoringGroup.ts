@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import _, {throttle} from 'lodash';
+import _, {debounce} from 'lodash';
 import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
 import {GET_LABEL_MAP, getLabelForStage} from '../../workspace/content/constants';
 import {isPublished} from 'apps/archive/utils';
@@ -142,14 +142,24 @@ export function MonitoringGroup(
                 );
             }
 
-            function scheduleQueryFn(event, data) {
-                queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
-                    .finally(() => {
-                        scope.$applyAsync();
-                    });
-            }
-
-            const scheduleQuery = throttle(scheduleQueryFn, 1000);
+            let queryPromise = null;
+            // Using debounce to run it only once for multiple events
+            // happening at around same time, plus wait for query to finish
+            // before sending another query so if server is slow to respond
+            // it will slow down requests.
+            const scheduleQuery = debounce((event, data) => {
+                if (queryPromise == null) {
+                    queryPromise = queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
+                        .finally(() => {
+                            queryPromise = null;
+                            scope.$applyAsync();
+                        });
+                } else {
+                    // There is already request pending so queue another one to run when it finishes.
+                    // It's using debounce inside so if there are more those will be ingored.
+                    queryPromise.then(() => scheduleQuery(event, data));
+                }
+            }, 1000, {maxWait: 3000});
 
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
@@ -207,8 +217,6 @@ export function MonitoringGroup(
             scope.$on('item:correction', scheduleQuery);
             scope.$on('item:duplicate', scheduleQuery);
             scope.$on('item:translate', scheduleQuery);
-            scope.$on('item:move', scheduleQuery);
-            scope.$on('item:unlock', scheduleQuery);
             scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
                 queryItems();

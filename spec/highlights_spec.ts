@@ -55,8 +55,6 @@ describe('highlights', () => {
             highlights.save();
             expect(highlights.getRow('highlight no desk').count()).toBe(1);
             monitoring.openMonitoring();
-            workspace.selectDesk('Sports Desk');
-            workspace.showHighlightList('highlight no desk');
             workspace.selectDesk('Politic Desk');
             workspace.showHighlightList('highlight no desk');
 

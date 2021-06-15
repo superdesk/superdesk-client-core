@@ -2,10 +2,10 @@
 
 import React from 'react';
 import {ArticlesListV2} from './ArticlesListV2';
-import {IRestApiResponse, IArticle} from 'superdesk-api';
+import {IRestApiResponse, IArticle, ISuperdeskQuery} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import ng from 'core/services/ng';
-import {ISuperdeskQuery, toElasticQuery, getQueryFieldsRecursive} from './query-formatting';
+import {toElasticQuery, getQueryFieldsRecursive} from './query-formatting';
 import {SmoothLoader} from 'apps/search/components/SmoothLoader';
 import {IMultiSelectNew} from 'apps/search/components/ItemList';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';

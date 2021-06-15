@@ -13,6 +13,7 @@ import {StageSingleValue} from './input-types/stage_single_value';
 import {getMacroSingleValue} from './input-types/macro_single_value';
 import {YesNo} from './input-types/yes-no';
 import {IFormField, IFormGroup} from 'superdesk-api';
+import {Select} from './input-types/select';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
@@ -34,6 +35,8 @@ export function getFormFieldComponent(type: FormFieldType): React.ComponentType<
         return getMacroSingleValue();
     case FormFieldType.yesNo:
         return YesNo;
+    case FormFieldType.select:
+        return Select;
     default:
         assertNever(type);
     }

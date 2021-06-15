@@ -10,7 +10,7 @@ import {
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
-import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
+import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
     isIFormGroupCollapsible,
@@ -49,7 +49,6 @@ import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
 import {
-    getCustomEventNamePrefixed,
     getWebsocketMessageEventName,
     isWebsocketEventPublic,
 } from './notification/notification';
@@ -72,6 +71,11 @@ import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
 import {notify} from './notify/notify';
 import {sdApi} from 'api';
+import {IconBig} from './ui/components/IconBig';
+import {throttleAndCombineArray} from './itemList/throttleAndCombine';
+import {WithLiveQuery} from './with-live-query';
+import {WithLiveResources} from './with-resources';
+import {querySelectorParent} from './helpers/dom/querySelectorParent';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -93,6 +97,8 @@ export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
 
+export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-event--' + name;
+
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
 const customEventMap = new Map();
@@ -112,6 +118,12 @@ export const removeEventListener = <T extends keyof IEvents>(eventName: T, callb
         window.removeEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
         customEventMap.delete(callback);
     }
+};
+
+export const dispatchCustomEvent = <T extends keyof IEvents>(eventName: T, payload: IEvents[T]) => {
+    window.dispatchEvent(
+        new CustomEvent(getCustomEventNamePrefixed(eventName), {detail: payload}),
+    );
 };
 
 let applicationState: Writeable<ISuperdesk['state']> = {
@@ -183,6 +195,7 @@ export function getSuperdeskApiImplementation(
             notNullOrUndefined,
         },
         httpRequestJsonLocal,
+        getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
                 isPersonal: sdApi.article.isPersonal,
@@ -226,6 +239,8 @@ export function getSuperdeskApiImplementation(
                 getStagesOrdered: (deskId: string) =>
                     dataApi.query<IStage>('stages', 1, {field: '_id', direction: 'ascending'}, {desk: deskId}, 200)
                         .then((response) => response._items),
+                getActiveDeskId: sdApi.desks.getActiveDeskId,
+                waitTilReady: sdApi.desks.waitTilReady,
             },
             contentProfile: {
                 get: (id) => {
@@ -298,6 +313,7 @@ export function getSuperdeskApiImplementation(
             connectCrudManager,
             ListItem,
             ListItemColumn,
+            ListItemRow,
             ListItemActionsMenu,
             List: {
                 // there's no full React implementation of ListItem component
@@ -323,8 +339,11 @@ export function getSuperdeskApiImplementation(
             GroupLabel,
             TopMenuDropdownButton,
             Icon,
+            IconBig,
             getDropdownTree: () => DropdownTree,
             Spacer,
+            getLiveQueryHOC: () => WithLiveQuery,
+            WithLiveResources,
         },
         forms: {
             FormFieldType,
@@ -401,6 +420,8 @@ export function getSuperdeskApiImplementation(
             stripHtmlTags,
             getLinesCount,
             downloadBlob,
+            throttleAndCombineArray,
+            querySelectorParent,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(
@@ -416,5 +437,6 @@ export function getSuperdeskApiImplementation(
         },
         addEventListener,
         removeEventListener,
+        dispatchEvent: dispatchCustomEvent,
     };
 }

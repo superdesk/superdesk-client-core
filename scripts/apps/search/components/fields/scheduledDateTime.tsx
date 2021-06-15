@@ -3,6 +3,7 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {IPropsItemListInfo} from '../ListItemInfo';
 import {appConfig} from 'appConfig';
+import {isScheduled, scheduledFormat} from 'core/datetime/datetime';
 
 type IProps = Pick<IPropsItemListInfo, 'item'>;
 
@@ -15,18 +16,16 @@ class ScheduledDateTime extends React.PureComponent<IProps> {
         this.datetime = ng.get('datetime');
     }
     render() {
-        const scheduled = this.props.item.archive_item
-            ? this.props.item.archive_item.schedule_settings.utc_publish_schedule
-            : this.props.item?.schedule_settings?.utc_publish_schedule || null;
+        const {item} = this.props;
         const scheduledState = ['scheduled'];
 
         if (appConfig?.features?.showPublishSchedule) {
             scheduledState.push('in_progress', 'submitted', 'draft');
         }
 
-        if (this.props.item.state != null && scheduledState.includes(this.props.item.state) && scheduled != null) {
-            const datetime = this.datetime;
-            const title = gettext('Article is scheduled for {{schedule}}', {schedule: datetime.longFormat(scheduled)});
+        if (this.props.item.state != null && scheduledState.includes(this.props.item.state) && isScheduled(item)) {
+            const datetimeFormatted = scheduledFormat(item);
+            const title = gettext('Article is scheduled for {{schedule}}', {schedule: datetimeFormatted.long});
 
             return (
                 <span
@@ -34,7 +33,7 @@ class ScheduledDateTime extends React.PureComponent<IProps> {
                     style={{color: '#da7200', marginRight: 4}}
                     title={title}
                 >
-                    { datetime.scheduledFormat(scheduled) }
+                    {datetimeFormatted.short}
                 </span>
             );
         } else {

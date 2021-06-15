@@ -92,6 +92,14 @@ export function getStore(): Store | undefined {
     return store;
 }
 
+export function getStoreSync(): Store {
+    if (store === undefined) {
+        throw new Error('SAMS store has not been initialised');
+    }
+
+    return store;
+}
+
 export function unsetStore() {
     storeReferenceCount -= 1;
 

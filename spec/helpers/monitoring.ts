@@ -5,6 +5,8 @@ import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
 import {s, ECE, el, els, articleList} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
+export const MONITORING_DEBOUNCE_MAX_WAIT = 5000;
+
 class Monitoring {
     config: ElementFinder;
     label: ElementFinder;
@@ -28,7 +30,8 @@ class Monitoring {
     getMonitoringHomeTitle: any;
     getSpikedItems: () => any;
     getAllItems: any;
-    getMonitoringWordCount: any;
+    getMonitoringWordCount: (itemId: string) => wdpromise.Promise<number>;
+    expectWordCount: (itemId: string, expectedCount: number) => void;
     getPersonalItem: (index: any) => any;
     getPersonalItemText: (index: any) => any;
     getSpikedItem: (item: any) => any;
@@ -135,27 +138,25 @@ class Monitoring {
         };
 
         this.showMonitoring = function() {
-            element(by.className('big-icon--view')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Monitoring"]')).click();
         };
 
         this.showSpiked = function() {
-            element(by.className('big-icon--spike')).click();
-
-            browser.wait(ECE.presenceOf(els(['article-item']).get(0)));
+            el(['workspace-navigation'], by.css('[aria-label="Spiked Items"]')).click();
         };
 
         /**
          * Open personal monitoring view
          */
         this.showPersonal = function() {
-            element(by.className('big-icon--personal')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Personal space"]')).click();
         };
 
         /**
          * Open global search view
          */
         this.showSearch = function() {
-            element(by.className('big-icon--global-search')).click();
+            el(['workspace-navigation'], by.css('[aria-label="Search"]')).click();
         };
 
         /**
@@ -260,6 +261,8 @@ class Monitoring {
         this.getSpikedItems = function() {
             const wrapper = el(['articles-list']);
 
+            browser.wait(ECE.visibilityOf(wrapper));
+
             browser.wait(ECE.stalenessOf(el(['loading'], null, wrapper)));
 
             const items = els(['article-item'], null, wrapper);
@@ -271,8 +274,26 @@ class Monitoring {
             return element.all(by.className('media-box'));
         };
 
-        this.getMonitoringWordCount = (itemId) =>
-            element(by.id(itemId)).all(by.className('word-count')).first().getText();
+        this.getMonitoringWordCount = (itemId: string) => {
+            /**
+             * List view element might update between `browser.wait` and `getText` calls.
+             * If `.getText` was called on `countElem`, it might fail due to `countElem`
+             * referencing to an element that is no longer attached in the DOM(due to list view update).
+             * Because of this, the element is re-queried using the same selector before calling `.getText`.
+             */
+            const getCountElement = () => element(by.id(itemId)).element(by.className('word-count'));
+
+            const countElem = getCountElement();
+
+            browser.wait(ECE.presenceOf(countElem), MONITORING_DEBOUNCE_MAX_WAIT);
+
+            return getCountElement().getText().then((value) => value ? parseInt(value, 10) : 0);
+        };
+
+        this.expectWordCount = (itemId, expectedCount) => {
+            browser.wait(() => this.getMonitoringWordCount(itemId)
+                .then((count) => count === expectedCount), MONITORING_DEBOUNCE_MAX_WAIT);
+        };
 
         /**
          * Get the personal element at 'index' row
@@ -291,6 +312,7 @@ class Monitoring {
          * @return {string}
          */
         this.getPersonalItemText = function(index) {
+            browser.wait(ECE.visibilityOf(this.getPersonalItem(index)), MONITORING_DEBOUNCE_MAX_WAIT);
             return this.getPersonalItem(index).element(by.className('item-heading')).getText();
         };
 

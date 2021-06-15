@@ -1,8 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IDesk, IUser} from 'superdesk-api';
-import {ISuperdeskQuery} from 'core/query-formatting';
+import {IDesk, ISuperdeskQuery, IUser} from 'superdesk-api';
 
 const PAGE_SIZE = 50;
 
@@ -170,7 +169,6 @@ export function MonitoringView(
                                     {'state': {$ne: 'draft'}},
                                 ]},
                                 {'package_type': {$ne: 'takes'}},
-                                {'task.desk': {$eq: scope.activeDeskId}},
                                 {'highlights': {$eq: $location.search().highlight}},
                             ]},
                             sort: [{'versioncreated': 'desc'}],

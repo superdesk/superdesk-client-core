@@ -4,7 +4,7 @@ import {element, by, browser} from 'protractor';
 import {
     assertToastMsg,
 } from './helpers/utils';
-import {monitoring} from './helpers/monitoring';
+import {monitoring, MONITORING_DEBOUNCE_MAX_WAIT} from './helpers/monitoring';
 import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 import {el, els, ECE} from '@superdesk/end-to-end-testing-helpers';
@@ -48,15 +48,15 @@ describe('publishing', () => {
         const thirdStage = els(['monitoring-group']).get(2);
         const output = els(['monitoring-group']).get(5);
 
-        expect(ECE.hasElementCount(
+        browser.wait(ECE.hasElementCount(
             els(['article-item'], null, output),
             0,
-        )()).toBe(true);
+        ), MONITORING_DEBOUNCE_MAX_WAIT);
 
-        expect(ECE.hasElementCount(
+        browser.wait(ECE.hasElementCount(
             els(['article-item'], null, thirdStage),
             1,
-        )()).toBe(true);
+        ), MONITORING_DEBOUNCE_MAX_WAIT);
 
         executeContextMenuAction(els(['article-item'], null, thirdStage).get(0), 'Edit');
 
@@ -67,15 +67,15 @@ describe('publishing', () => {
         assertToastMsg('error', 'SUBJECT is a required field');
         assertToastMsg('error', 'BODY HTML is a required field');
 
-        expect(ECE.hasElementCount(
+        browser.wait(ECE.hasElementCount(
             els(['article-item'], null, output),
             0,
-        )()).toBe(true);
+        ), MONITORING_DEBOUNCE_MAX_WAIT);
 
-        expect(ECE.hasElementCount(
+        browser.wait(ECE.hasElementCount(
             els(['article-item'], null, thirdStage),
             1,
-        )()).toBe(true);
+        ), MONITORING_DEBOUNCE_MAX_WAIT);
     });
 
     it('can send and publish', () => {
@@ -103,20 +103,18 @@ describe('publishing', () => {
 
         assertToastMsg('success', 'Item published.');
 
-        browser.sleep(3000); // wait for monitoring list to update
-
-        expect(ECE.stalenessOf(element(by.cssContainingText(
+        browser.wait(ECE.stalenessOf(element(by.cssContainingText(
             '[data-test-id="article-item"] [data-test-id="field--slugline"]',
             slugline,
-        )))()).toBe(true);
+        ))), MONITORING_DEBOUNCE_MAX_WAIT);
 
         workspace.selectDesk('Sports Desk');
 
         const output = els(['monitoring-group']).get(5);
 
-        expect(ECE.presenceOf(output.element(by.cssContainingText(
+        browser.wait(ECE.presenceOf(output.element(by.cssContainingText(
             '[data-test-id="article-item"] [data-test-id="field--slugline"]',
             slugline,
-        )))()).toBe(true);
+        ))), MONITORING_DEBOUNCE_MAX_WAIT);
     });
 });

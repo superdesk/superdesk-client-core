@@ -1,15 +1,15 @@
 # 
 # Translators:
 # Helen Vogt <helen.vogt@ntb.no>, 2016-2018
-# Karel Petrak <karel.petrak@sourcefabric.org>, 2016,2018-2019
+# Karel Petrak <karel.petrak@sourcefabric.org>, 2016,2018-2019,2021
 # Karel Petrak <karel.petrak@sourcefabric.org>, 2016-2017
 # Magnus Aabech <magnus.aabech@ntb.no>, 2018-2019
 # Rune Wikstøl <rune.wikstol@ntb.no>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-01-14 17:35+0000\n"
-"Last-Translator: Helen Vogt <helen.vogt@ntb.no>\n"
+"PO-Revision-Date: 2021-03-05 16:25+0000\n"
+"Last-Translator: Karel Petrak <karel.petrak@sourcefabric.org>\n"
 "Language-Team: Norwegian Bokmål (http://www.transifex.com/sourcefabric/superdesk/language/nb/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -739,7 +739,7 @@ msgstr ""
 
 #: ../superdesk-planning/index.ts:45
 msgid "Add to Planning"
-msgstr ""
+msgstr "Legg til i planer"
 
 #: scripts/apps/packaging/index.ts:73
 msgid "Add to current"
@@ -899,7 +899,7 @@ msgstr "Arbeidsliste: {{ name }}"
 
 #: ../superdesk-planning/client/components/fields/editor/Agendas.tsx:41
 msgid "Agendas"
-msgstr ""
+msgstr "Arbeidslister"
 
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/Agendas.tsx:23
 msgid "Agendas:"
@@ -972,7 +972,7 @@ msgstr "Alle elementer ble publisert"
 
 #: scripts/apps/authoring/views/opened-articles.html:2
 msgid "All opened items"
-msgstr ""
+msgstr "Alle åpnede saker"
 
 #: scripts/apps/users/views/list.html:14
 msgid "All user types"
@@ -1760,7 +1760,7 @@ msgstr "Tilbake/Avbryt"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:11
 msgid "Back to original view"
-msgstr ""
+msgstr "Tilbake til opprinnelig visning"
 
 #: scripts/extensions/annotationsLibrary/dist/src/AnnotationSelectSingleItem.js:13
 #: scripts/extensions/annotationsLibrary/src/AnnotationSelectSingleItem.tsx:30
@@ -2893,7 +2893,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:579
 msgid "Corrections"
-msgstr ""
+msgstr "Oppdateringer"
 
 #: ../superdesk-planning/client/components/UI/Form/LinkInput.jsx:24
 #: scripts/core/ui/components/Form/LinkInput.tsx:27
@@ -3337,7 +3337,7 @@ msgstr "FERDIG"
 #: ../superdesk-analytics/client/desk_activity_report/views/desk-activity-report-preview.html:11
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:33
 msgid "Daily"
-msgstr ""
+msgstr "Daglig"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:66
 msgid "Daily at"
@@ -3437,7 +3437,7 @@ msgstr "Dateline"
 
 #: ../superdesk-planning/client/components/fields/index.tsx:154
 msgid "Dates"
-msgstr ""
+msgstr "Datoer"
 
 #: scripts/extensions/datetimeField/dist/src/extension.js:33
 #: scripts/extensions/datetimeField/src/extension.tsx:46
@@ -4835,7 +4835,7 @@ msgstr ""
 #: ../superdesk-planning/client/utils/index.ts:649
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:16
 msgid "Event"
-msgstr ""
+msgstr "Nyhetskalender"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:43
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:44
@@ -5581,7 +5581,7 @@ msgstr "Filnavn"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:166
 msgid "File types"
-msgstr ""
+msgstr "Filtyper"
 
 #: ../superdesk-planning/client/components/Events/EventMenuPanel/EventFiles.jsx:20
 msgid "Files"
@@ -5621,7 +5621,7 @@ msgstr "Filtreringserklæring"
 
 #: scripts/apps/content-filters/views/manage-filters.html:133
 msgid "Filter Test"
-msgstr ""
+msgstr "Filtertest"
 
 #: scripts/apps/content-filters/views/production-test.html:4
 msgid "Filter Test Results"
@@ -5915,7 +5915,7 @@ msgstr "Få kode."
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:15
 msgid "Global"
-msgstr ""
+msgstr "Global"
 
 #: scripts/apps/content-filters/views/manage-filters.html:51
 msgid "Global Block"
@@ -6530,7 +6530,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:41
 msgid "Is Default"
-msgstr ""
+msgstr "er default"
 
 #: scripts/apps/archive/views/metadata-view.html:164
 msgid "Iso"
@@ -7125,7 +7125,7 @@ msgstr ""
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/LockState.tsx:20
 #: scripts/apps/authoring/views/article-edit.html:578
 msgid "Locked"
-msgstr ""
+msgstr "Låst"
 
 #: scripts/apps/archive/views/item-lock.html:4
 #: scripts/apps/authoring/views/authoring-topbar.html:20
@@ -7521,7 +7521,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:39
 msgid "Monthly"
-msgstr ""
+msgstr "Månedlig"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:74
 msgid "Monthly on the"
@@ -7797,7 +7797,7 @@ msgstr "Neste bruker"
 #: scripts/core/ui/components/generic-form/input-types/checkbox.tsx:10
 #: scripts/core/ui/components/generic-form/input-types/yes-no.tsx:7
 msgid "No"
-msgstr ""
+msgstr "Nei"
 
 #: ../superdesk-planning/client/components/fields/calendars.tsx:57
 msgid "No  calendar assigned"
@@ -8004,7 +8004,7 @@ msgstr ""
 
 #: scripts/apps/workspace/content/views/sd-content-create.html:34
 msgid "No recent templates."
-msgstr ""
+msgstr "Ingen nylig brukte maler"
 
 #: ../superdesk-planning/client/components/Events/EventPreviewContent.tsx:260
 msgid "No related planning items."
@@ -8215,7 +8215,7 @@ msgstr "Ikke satt"
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.jsx:156
 #: ../superdesk-planning/client/components/Locations/LocationsEditor.jsx:263
 msgid "Notes"
-msgstr ""
+msgstr "Notater"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:224
 msgid "Notification"
@@ -8379,7 +8379,7 @@ msgstr "Åpen dekning"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:47
 msgid "Open advanced search panel by default"
-msgstr ""
+msgstr "Åpne avansert søk automatisk"
 
 #: scripts/apps/desks/views/desk-tasks.html:3
 #: scripts/apps/desks/views/desk.html:3
@@ -8586,7 +8586,7 @@ msgstr "Oversikt"
 
 #: scripts/apps/templates/views/templates.html:48
 msgid "Owner"
-msgstr ""
+msgstr "Eier"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:77
 msgid "P"
@@ -8748,7 +8748,7 @@ msgstr "Tillater"
 
 #: scripts/extensions/auto-tagging-widget/dist/src/groups.js:12
 msgid "Person"
-msgstr ""
+msgstr "Person"
 
 #: scripts/apps/contacts/services/ContactsService.ts:37
 msgid "Person (Last Name)"
@@ -8884,7 +8884,7 @@ msgstr "Planleggingsdetaljer"
 #: ../superdesk-planning/client/components/Main/CreateNewSubnavDropdown.jsx:18
 #: ../superdesk-planning/client/utils/index.ts:651
 msgid "Planning Item"
-msgstr ""
+msgstr "NTB-planer"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:232
 msgid "Planning Item has been cancelled"
@@ -9336,7 +9336,7 @@ msgstr "Leverandørnavn"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:72
 msgid "Provider Type"
-msgstr ""
+msgstr "Leverandørtype"
 
 #: scripts/apps/ingest/directives/IngestSourcesContent.ts:504
 msgid "Provider saved!"
@@ -9384,7 +9384,7 @@ msgstr "Publisering"
 
 #: scripts/apps/authoring/views/authoring-topbar.html:85
 msgid "Publish & Continue"
-msgstr ""
+msgstr "Publiser & fortsett"
 
 #: ../superdesk-analytics/client/desk_activity_report/controllers/DeskActivityReportController.js:452
 #: ../superdesk-analytics/client/utils.js:155
@@ -9610,7 +9610,7 @@ msgstr "Kun påsyn"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:219
 msgid "Rearrange Groups"
-msgstr ""
+msgstr "Omarranger grupper"
 
 #: scripts/apps/dashboard/views/workspace.html:5
 msgid "Rearrange widgets"
@@ -9702,11 +9702,11 @@ msgstr ""
 
 #: scripts/core/editor3/components/toolbar/index.tsx:293
 msgid "Redo"
-msgstr ""
+msgstr "Utfør likevel"
 
 #: ../superdesk-planning/client/components/fields/editor/Reference.tsx:14
 msgid "Reference"
-msgstr ""
+msgstr "Referanser"
 
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/Reference.tsx:21
 msgid "Reference:"
@@ -9859,7 +9859,7 @@ msgstr ""
 
 #: scripts/apps/search-providers/views/search-provider-config.html:17
 msgid "Remove Search Provider"
-msgstr ""
+msgstr "Fjern databasesøk"
 
 #: scripts/apps/templates/views/templates.html:37
 msgid "Remove Template"
@@ -9895,7 +9895,7 @@ msgstr "Fjern filter"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:205
 msgid "Remove formatting"
-msgstr ""
+msgstr "Fjern formatering"
 
 #: ../superdesk-planning/client/components/Planning/FeaturedPlanning/FeaturedPlanningItem.jsx:61
 msgid "Remove from Feature Stories"
@@ -11286,7 +11286,7 @@ msgstr "Signatur"
 
 #: scripts/apps/search/views/search-parameters.html:22
 msgid "Sign-off"
-msgstr ""
+msgstr "Signatur"
 
 #: scripts/apps/archive/views/metadata-view.html:45
 #: scripts/apps/authoring/metadata/views/metadata-widget.html:124
@@ -11852,7 +11852,7 @@ msgstr ""
 #: ../superdesk-analytics/client/publishing_performance_report/views/publishing-performance-report-preview.html:15
 #: ../superdesk-analytics/client/update_time_report/views/update-time-report-preview.html:6
 msgid "Subtitle"
-msgstr ""
+msgstr "Undertittel"
 
 #: scripts/apps/authoring/track-changes/suggestions.ts:91
 #: scripts/core/editor3/components/spellchecker/SpellcheckerContextMenu.tsx:67
@@ -12111,7 +12111,7 @@ msgstr ""
 
 #: ../superdesk-planning/client/actions/assignments/notifications.js:16
 msgid "The Assignment you were viewing was removed."
-msgstr ""
+msgstr "Oppdraget du ser på er fjernet"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/notifications.js:39
 msgid "The Event and Planning filter you were viewing is deleted!"
@@ -13139,7 +13139,7 @@ msgstr "Understreking (Ctrl+U)"
 
 #: scripts/core/editor3/components/toolbar/index.tsx:283
 msgid "Undo"
-msgstr ""
+msgstr "Angre"
 
 #: scripts/apps/archive/views/metadata-view.html:202
 #: scripts/apps/content-filters/views/production-test-view.html:19
@@ -13164,7 +13164,7 @@ msgstr ""
 
 #: scripts/apps/search/services/TagService.ts:193
 msgid "Unknown"
-msgstr ""
+msgstr "Ukjent"
 
 #: scripts/apps/archive/directives/ArchivedItemKill.ts:39
 msgid "Unknown Error: Cannot kill the item"
@@ -13193,7 +13193,7 @@ msgstr ""
 
 #: ../superdesk-planning/index.ts:107
 msgid "Unlink as Coverage"
-msgstr ""
+msgstr "Kutt forbindelse til dekning"
 
 #: scripts/apps/archive/index.tsx:314
 msgid "Unlink update"
@@ -13258,7 +13258,7 @@ msgstr "Avpubliser alle repetisjoner eller bare denne?"
 #: scripts/apps/authoring/views/authoring-topbar.html:132
 #: scripts/apps/authoring/views/authoring-topbar.html:133
 msgid "Unpublish"
-msgstr ""
+msgstr "Avpubliser"
 
 #: scripts/apps/authoring/authoring/components/unpublish-confirm-modal.tsx:49
 msgid "Unpublish related items:"
@@ -13459,7 +13459,7 @@ msgstr "Oppdatert"
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:580
 msgid "Updates"
-msgstr ""
+msgstr "Oppdateringer"
 
 #: scripts/apps/authoring/authoring/services/AuthoringService.ts:65
 msgid ""
@@ -13745,7 +13745,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/featuremedia_updates_report/views/featuremedia-updates-table.html:33
 msgid "View Original Image"
-msgstr ""
+msgstr "Se originalbilde"
 
 #: ../superdesk-analytics/client/update_time_report/directives/UpdateTimeTable.js:135
 msgid "View Update"
@@ -13882,7 +13882,7 @@ msgstr ""
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:36
 msgid "Weekly"
-msgstr ""
+msgstr "Ukentlig"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:70
 msgid "Weekly on"
@@ -14027,7 +14027,7 @@ msgstr ""
 #: scripts/core/ui/components/generic-form/input-types/checkbox.tsx:10
 #: scripts/core/ui/components/generic-form/input-types/yes-no.tsx:6
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:17
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:8
@@ -14356,7 +14356,7 @@ msgstr "lag ny"
 
 #: ../superdesk-planning/client/actions/eventsPlanning/ui.js:188
 msgid "created"
-msgstr ""
+msgstr "opprettet"
 
 #: ../superdesk-planning/client/actions/agenda.ts:232
 msgid "created  planning item."
@@ -14594,7 +14594,7 @@ msgstr "fornavn"
 
 #: ../superdesk-planning/client/utils/tests/index_test.js:207
 msgid "foo"
-msgstr ""
+msgstr "foo"
 
 #: ../superdesk-planning/client/utils/events.ts:973
 msgid "for"
@@ -15199,11 +15199,11 @@ msgstr "søk"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:118
 msgid "search provider password"
-msgstr ""
+msgstr "Passord for databasesøk"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:110
 msgid "search provider username"
-msgstr ""
+msgstr "brukernavn for databasesøk"
 
 #: scripts/apps/ingest/views/settings/ingest-sources-content.html:144
 msgid "sec"
@@ -15268,7 +15268,7 @@ msgstr "kilde"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:90
 msgid "source of the search provider"
-msgstr ""
+msgstr "kilde for databasesøk"
 
 #: scripts/core/lang/missing-translations-strings.ts:12
 msgid "spiked"
@@ -15597,7 +15597,7 @@ msgstr[1] "{{ $count}} ord"
 
 #: scripts/apps/monitoring/views/monitoring-view.html:42
 msgid "{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}"
-msgstr ""
+msgstr "{{:: monitoring.getGroupLabel(card, aggregate.settings.type)}}"
 
 #: scripts/apps/authoring/views/item-actions-by-intent.html:5
 msgid "{{::group._id}}"
@@ -15697,11 +15697,11 @@ msgstr ""
 
 #: scripts/apps/desks/views/desk-config-modal.html:305
 msgid "{{selected.is_visible ? 'ON' : 'OFF'}}"
-msgstr "{{selected.is_visible ? 'PÅ' : 'AV'}}"
+msgstr "{{selected.is_visible ? 'ON' : 'OFF'}}"
 
 #: scripts/apps/desks/views/desk-config-modal.html:309
 msgid "{{selected.local_readonly ? 'ON' : 'OFF'}}"
-msgstr "{{selected.local_readonly ? 'PÅ' : 'AV'}}"
+msgstr "{{selected.local_readonly ? 'ON' : 'OFF'}}"
 
 #: scripts/core/lang/missing-translations-strings.ts:40
 msgid "{{status}} Ingest Channel {{name}}"

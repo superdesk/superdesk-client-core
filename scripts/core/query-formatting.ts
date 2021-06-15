@@ -1,27 +1,7 @@
-type IComparisonOptions =
-    {$eq: any}
-    | {$ne: any}
-    | {$gt: any}
-    | {$gte: any}
-    | {$lt: any}
-    | {$lte: any}
-    | {$in: any};
-
-export type IComparison = {[field: string]: IComparisonOptions};
-export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
-export type IOrOperator = {$or: Array<IComparison | ILogicalOperator>};
-export type ILogicalOperator = IAndOperator | IOrOperator;
+import {IComparison, ILogicalOperator, ISuperdeskQuery} from 'superdesk-api';
 
 function isLogicalOperator(x: ILogicalOperator | IComparison): x is ILogicalOperator {
     return x['$and'] != null || x['$or'] != null;
-}
-
-export interface ISuperdeskQuery {
-    filter: ILogicalOperator;
-    fullTextSearch?: string;
-    sort: Array<{[field: string]: 'asc' | 'desc'}>;
-    page: number;
-    max_results: number;
 }
 
 function toElasticFilter(q: ILogicalOperator | IComparison) {

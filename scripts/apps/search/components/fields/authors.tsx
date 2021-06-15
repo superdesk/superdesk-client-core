@@ -17,7 +17,9 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
         if (item.authors == null) {
             return [];
         } else {
-            const userIds = item.authors.map((author) => ({collection: 'users', id: author._id[0]}));
+            const userIds = item.authors
+                .filter(({_id}) => _id != null) // _id is not present in ingested items
+                .map((author) => ({collection: 'users', id: author._id[0]}));
 
             return [
                 ...userIds,
@@ -52,6 +54,7 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
         }
 
         const authors = this.props.item.authors
+            .filter(({_id}) => _id != null) // _id is not present in ingested items
             .map(({_id}) => ({userId: _id[0], roleId: _id[1]}))
             .filter(({roleId}) => options.includeRoles.includes(roleId));
 

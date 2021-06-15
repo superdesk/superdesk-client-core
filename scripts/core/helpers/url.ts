@@ -12,8 +12,10 @@ export function getUrlPage(): string {
 
 export function setUrlPage(page: string) {
     const $location = ng.get('$location');
+    const $rootScope = ng.get('$rootScope');
 
     $location.url(page);
+    $rootScope.$applyAsync();
 }
 
 function getAllUrlParameters(): URLSearchParams {
@@ -50,7 +52,17 @@ export const urlParams: ISuperdesk['browser']['location']['urlParams'] = {
     setString: (field, value) => {
         setUrlParameter(field, value?.length > 0 ? value : null);
     },
+    // Tags
+    getStringArray: (field) => {
+        let commaSperatedtags: Array<string> = urlParams.getString(field)?.split(',');
 
+        return commaSperatedtags;
+    },
+    setStringArray: (field, value) => {
+        let tagCodesString: string = value?.join(',');
+
+        urlParams.setString(field, tagCodesString);
+    },
     // Numbers
     getNumber: (field, defaultValue) => {
         return getUrlParameter<number>(

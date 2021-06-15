@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IDesk} from 'superdesk-api';
 import {logger} from 'core/services/logger';
+import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 
 import {
     DESK_OUTPUT,
@@ -9,6 +10,7 @@ import {
     SCHEDULED_OUTPUT,
     HIGHLIGHTS,
 } from '../constants';
+import {UserActions} from 'core/data/users/UserActions';
 
 const OUTPUT_TYPES = [
     DESK_OUTPUT,
@@ -88,6 +90,11 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             desk: desks.activeDeskId,
             stage: desks.activeStageId,
         };
+
+        dispatchCustomEvent('activeDeskChanged', {
+            desk: desks.activeDeskId,
+            stage: desks.activeStageId,
+        });
     }
 
     var desksService = {
@@ -133,6 +140,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                     _.each(result, (user) => {
                         self.userLookup[user._id] = user;
                     });
+                    UserActions.initUsers(self.users._items);
                 });
         },
         fetchStages: function(refresh = false) {

@@ -72,7 +72,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     return class AutoTagging extends React.PureComponent<IProps, IState> {
         private isDirty: (a: IAutoTaggingResponse, b: Partial<IAutoTaggingResponse>) => boolean;
         private _mounted: boolean;
-        private iMatricsFields = superdesk.instance.config.iMatricsFields ?? {};
+        private iMatricsFields = superdesk.instance.config.iMatricsFields ?? {entities: {}, others: {}};
 
         constructor(props: IProps) {
             super(props);
@@ -183,7 +183,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             );
         }
         getGroupName(group: string, vocabularyLabels: Map<string, string>) {
-            return this.iMatricsFields[group]?.name ?? vocabularyLabels?.get(group) ?? group;
+            return this.iMatricsFields.others[group]?.name ?? vocabularyLabels?.get(group) ?? group;
         }
         reload() {
             this.setState({data: 'not-initialized'});
@@ -395,26 +395,91 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 const entities = items.filter((tag) => isEntity(tag));
                                 const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
-                                const entitiesGroupedAndSorted = entitiesGrouped.sortBy(
-                                    (_, key) => key!.toString().toLocaleLowerCase(),
-                                    (a, b) => a.localeCompare(b),
-                                );
+
+                                const entitiesGroupedAndSortedByConfig = entitiesGrouped
+                                    .filter((_, key) => hasConfig(key, this.iMatricsFields.entities))
+                                    .sortBy((_, key) => this.iMatricsFields.entities[key].order,
+                                        (a, b) => a - b);
+
+                                const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
+                                    .filter((_, key) => !hasConfig(key, this.iMatricsFields.entities))
+                                    .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
+                                        (a, b) => a.localeCompare(b));
+
+                                const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
+                                    .concat(entitiesGroupedAndSortedNotInConfig);
 
                                 const others = items.filter((tag) => isEntity(tag) === false);
                                 const othersGrouped = others.groupBy((tag) => tag.group.value);
 
-                                const othersGroupedAndSortedByConfig = othersGrouped
-                                    .filter((_, key) => hasConfig(key, this.iMatricsFields))
-                                    .sortBy((_, key) => this.iMatricsFields[key].order,
+                                let allGrouped = OrderedMap<string, JSX.Element>();
+
+                                othersGrouped.forEach((tags, groupId) =>
+                                    tags && groupId ? allGrouped = allGrouped.set(groupId,
+                                        <ToggleBoxNext
+                                            key={groupId}
+                                            title={this.getGroupName(groupId, vocabularyLabels)}
+                                            style="circle"
+                                            isOpen={true}
+                                        >
+                                            <TagListComponent
+                                                savedTags={savedTags}
+                                                tags={tags.toMap()}
+                                                readOnly={readOnly}
+                                                onRemove={(id) => {
+                                                    this.updateTags(
+                                                        data.changes.analysis.remove(id),
+                                                        data,
+                                                    );
+                                                }}
+                                            />
+                                        </ToggleBoxNext>,
+                                    ) : false,
+                                );
+
+                                if (entitiesGroupedAndSorted.size > 0) {
+                                    allGrouped = allGrouped.set('entities',
+                                        <ToggleBoxNext
+                                            title={this.getGroupName('entities', vocabularyLabels)}
+                                            style="circle"
+                                            isOpen={true}
+                                            key="entities"
+                                        >
+                                            {entitiesGroupedAndSorted.map((tags, key) => (
+                                                <div key={key}>
+                                                    <div
+                                                        className="form-label"
+                                                        style={{display: 'block'}}
+                                                    >
+                                                        {groupLabels.get(key).plural}
+                                                    </div>
+                                                    <TagListComponent
+                                                        savedTags={savedTags}
+                                                        tags={tags.toMap()}
+                                                        readOnly={readOnly}
+                                                        onRemove={(id) => {
+                                                            this.updateTags(
+                                                                data.changes.analysis.remove(id),
+                                                                data,
+                                                            );
+                                                        }}
+                                                    />
+                                                </div>
+                                            )).toArray()}
+                                        </ToggleBoxNext>,
+                                    );
+                                }
+
+                                const allGroupedAndSortedByConfig = allGrouped
+                                    .filter((_, key) => hasConfig(key, this.iMatricsFields.others))
+                                    .sortBy((_, key) => this.iMatricsFields.others[key].order,
                                         (a, b) => a - b);
 
-                                const othersGroupedAndSortedNotInConfig = othersGrouped
-                                    .filter((_, key) => !hasConfig(key, this.iMatricsFields))
-                                    .sortBy((_, key) => key.toString().toLocaleLowerCase(),
-                                        (a, b) => a.localeCompare(b));
+                                const allGroupedAndSortedNotInConfig = allGrouped
+                                    .filter((_, key) => !hasConfig(key, this.iMatricsFields.others));
 
-                                const othersGroupedAndSorted = othersGroupedAndSortedByConfig
-                                    .concat(othersGroupedAndSortedNotInConfig);
+                                const allGroupedAndSorted = allGroupedAndSortedByConfig
+                                    .concat(allGroupedAndSortedNotInConfig);
 
                                 return (
                                     <React.Fragment>
@@ -442,60 +507,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         }
 
                                         <div className="widget-content__main">
-                                            {othersGroupedAndSorted.map((tags, groupId) => {
-                                                return (
-                                                    <ToggleBoxNext
-                                                        key={groupId}
-                                                        title={this.getGroupName(groupId, vocabularyLabels)}
-                                                        style="circle"
-                                                        isOpen={true}
-                                                    >
-                                                        <TagListComponent
-                                                            savedTags={savedTags}
-                                                            tags={tags.toMap()}
-                                                            readOnly={readOnly}
-                                                            onRemove={(id) => {
-                                                                this.updateTags(
-                                                                    data.changes.analysis.remove(id),
-                                                                    data,
-                                                                );
-                                                            }}
-                                                        />
-                                                    </ToggleBoxNext>
-                                                );
-                                            }).toArray()}
-
-                                            {
-                                                entitiesGroupedAndSorted.size < 1 ? null : (
-                                                    <ToggleBoxNext
-                                                        title={gettext('Entities')}
-                                                        style="circle"
-                                                        isOpen={true}
-                                                    >
-                                                        {entitiesGroupedAndSorted.map((tags, key) => (
-                                                            <div key={key}>
-                                                                <div
-                                                                    className="form-label"
-                                                                    style={{display: 'block'}}
-                                                                >
-                                                                    {groupLabels.get(key).plural}
-                                                                </div>
-                                                                <TagListComponent
-                                                                    savedTags={savedTags}
-                                                                    tags={tags.toMap()}
-                                                                    readOnly={readOnly}
-                                                                    onRemove={(id) => {
-                                                                        this.updateTags(
-                                                                            data.changes.analysis.remove(id),
-                                                                            data,
-                                                                        );
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                        )).toArray()}
-                                                    </ToggleBoxNext>
-                                                )
-                                            }
+                                            {allGroupedAndSorted.map((item) => item).toArray()}
                                         </div>
                                     </React.Fragment>
                                 );

@@ -1,6 +1,20 @@
 <a href="#{{ :: item.href }}" ng-click="hideMonitoring(currentRoute.href === item.href, $event)"
     title="{{ :: item.label }}" aria-label="{{ :: item.label }}" sd-hotkey="{{ item.hotkey }}" sd-hotkey-options="{global: true}"
-    class="sd-sidebar-menu__btn" ng-class="{'sd-sidebar-menu__btn--active': currentRoute.href === item.href}">
-    <i class="sd-sidebar-menu__main-icon big-icon--{{ item.icon }}"></i>
-    <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+    class="sd-sidebar-menu__btn" ng-class="{'sd-sidebar-menu__btn--active': currentRoute.href === item.href}"
+>
+    <span class="sd-sidebar-menu__main-icon element-with-badge">
+        <i class="big-icon--{{ item.icon }}"></i>
+    
+        <span
+            ng-if="badges[item.id] != null"
+            class="badge badge--highlight"
+            
+        >
+            {{badges[item.id]}}
+        </span>
+    </span>
+
+    <span class="sd-sidebar-menu__chevron_wrapper">
+        <i class="sd-sidebar-menu__helper-icon big-icon--chevron-left"></i>
+    </span>
 </a>

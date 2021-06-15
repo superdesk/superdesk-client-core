@@ -2,6 +2,7 @@
 import {
     IAttachment,
     IBaseRestApiResponse,
+    IDesk,
     IRestApiResponse,
     IUser,
     IWebsocketMessage,
@@ -80,10 +81,13 @@ export enum DATA_UNIT {
     GB = 'gb',
 }
 
-export interface IAssetAction {
-    id: string;
+export interface IBaseAssetAction {
+    id: ASSET_ACTIONS;
     label: string;
     icon: string;
+}
+
+export interface IAssetAction extends IBaseAssetAction {
     onSelect(asset: Partial<IAssetItem>): void;
     isAllowed(asset: Partial<IAssetItem>): boolean;
 }
@@ -91,6 +95,15 @@ export interface IAssetAction {
 export interface IAssetCallback {
     action: ASSET_ACTIONS;
     onSelect(asset: Partial<IAssetItem>): void;
+}
+
+export interface IBulkAction extends IBaseAssetAction {
+    onSelect(): void;
+}
+
+export interface IBulkActionAssetCallback {
+    action: ASSET_ACTIONS;
+    onSelect(): void;
 }
 
 export interface IVersionInformation extends IBaseRestApiResponse{
@@ -156,8 +169,10 @@ export interface IAssetSearchParams {
     textSearch?: string;
     setId?: string;
     setIds?: Array<string>;
+    excludedAssetIds?: Array<string>;
     name?: string;
     description?: string;
+    tags?: Array<IAssetTag>;
     state?: ASSET_STATE;
     states?: Array<ASSET_STATE>;
     filename?: string;
@@ -194,8 +209,12 @@ export interface IUploadAssetModalProps {
 export interface ISamsAPI {
     sets: {
         getAll(): Promise<Array<ISetItem>>;
-        create(set: Partial<ISetItem>): Promise<ISetItem>;
-        update(original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem>;
+        create(set: Partial<ISetItem>, deskRestrictions?: Array<IDesk['_id']>): Promise<ISetItem>;
+        update(
+            original: ISetItem,
+            updates: Partial<ISetItem>,
+            deskRestrictions?: Array<IDesk['_id']>,
+        ): Promise<ISetItem>;
         delete(set: ISetItem): Promise<void>;
     };
     storageDestinations: {
@@ -222,5 +241,10 @@ export interface ISamsAPI {
         lockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
         unlockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
         searchTags(searchTags: string): Promise<IAutoTaggingSearchResult>;
+    };
+    workspace: {
+        getDesksSamsSettings(): Promise<Dictionary<IDesk['_id'], IDesk['sams_settings']>>;
+        getSingleDeskSamsSettings(deskId: IDesk['_id']): Promise<IDesk['sams_settings']>;
+        updateSetsAllowedDesks(setId: ISetItem['_id'], allowedDesks: Array<IDesk['_id']>): Promise<void>;
     };
 }

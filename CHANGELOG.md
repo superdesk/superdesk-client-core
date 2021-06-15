@@ -1,5 +1,50 @@
 # Superdesk Client Changelog
 
+## [2.2.0] 2021-05-04
+
+[Changes](https://github.com/superdesk/superdesk-client-core/milestone/87?closed=1)
+
+## [2.1.3] 2021-04-19
+
+### Fixed
+
+- Fix publish shortcut visible in personal space.
+- Fix translate action missing in the list.
+- Fix spike view issues.
+- Fix monitoring group doing too many requests.
+- Only open preview on focus when it is triggered via keyboard.
+- Avoid refreshing lists for external search providers.
+- Improve monitoring lists loading behaviour.
+- Fix item count in user activity widget.
+- Keep old visual state while loading data in monitoring.
+- Fix multi selection for bulk actions.
+- Fix master desk assignment page issue with states.
+
+## [2.1.2] 2021-02-24
+
+### Fixed
+
+- Fix user activity widget.
+
+## [2.1.1] 2021-02-15
+
+### Fixed
+
+- Fix user online status detection.
+- Avoid filtering of related items using genre.
+- Fix media contacts cannot be saved when country is set.
+- Don't assign `url_id` if it already exists in ingest settings.
+
+## [2.1.0] 2021-02-10
+
+[Changes](https://github.com/superdesk/superdesk-client-core/milestone/82?closed=1)
+
+## [2.0.2] 2020-12-11
+
+### Changed
+
+- Update `fr_CA` translation.
+
 ## [2.0.1] 2020-10-07
 
 ### Fixed

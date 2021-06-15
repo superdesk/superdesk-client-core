@@ -6,15 +6,20 @@ import addMinutes from 'date-fns/addMinutes';
 import {IDateTimeFieldConfig} from './extension';
 import {DatePickerISO, TimePicker, Button, Switch} from 'superdesk-ui-framework/react';
 
+interface IPropsAdditional {
+    hideToggle?: boolean;
+}
+
 export function getDateTimeField(superdesk: ISuperdesk) {
     const {gettext, gettextPlural} = superdesk.localization;
     const {getLocaleForDatePicker} = superdesk.ui.framework;
     const {Spacer} = superdesk.components;
     const {dateToServerString} = superdesk.utilities;
 
-    return class DateTimeField extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig>> {
+    return class DateTimeField
+        extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig> & IPropsAdditional> {
         render() {
-            const checkbox = (
+            const checkbox = this.props.hideToggle !== true ? (
                 <Switch
                     value={this.props.value != null}
                     onChange={(value) => {
@@ -27,7 +32,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                         }
                     }}
                 />
-            );
+            ) : null;
 
             if (this.props.value == null) {
                 return (
@@ -81,25 +86,27 @@ export function getDateTimeField(superdesk: ISuperdesk) {
 
                             <div style={{display: 'flex', alignItems: 'center', height: '100%'}}><span>@</span></div>
 
-                            <TimePicker
-                                required // because it's a part of the date-time
-                                value={hour}
-                                onChange={(value) => {
-                                    const [hours, minutes] = value.split(':');
+                            <div style={{display: 'flex', alignItems: 'center', height: '100%'}}>
+                                <TimePicker
+                                    required // because it's a part of the date-time
+                                    value={hour}
+                                    onChange={(value) => {
+                                        const [hours, minutes] = value.split(':');
 
-                                    this.props.setValue(
-                                        dateToServerString(
-                                            set(
-                                                date,
-                                                {
-                                                    hours: parseInt(hours, 10),
-                                                    minutes: parseInt(minutes, 10),
-                                                },
+                                        this.props.setValue(
+                                            dateToServerString(
+                                                set(
+                                                    date,
+                                                    {
+                                                        hours: parseInt(hours, 10),
+                                                        minutes: parseInt(minutes, 10),
+                                                    },
+                                                ),
                                             ),
-                                        ),
-                                    );
-                                }}
-                            />
+                                        );
+                                    }}
+                                />
+                            </div>
                         </Spacer>
 
                         {

@@ -1,41 +1,54 @@
 import React from 'react';
+import {connect} from 'react-redux';
+
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
-
 import {dataApi} from 'core/helpers/CrudManager';
 
+import {IStoreState} from 'core/data';
+import {IDesk, IUser, IUserRole} from 'superdesk-api';
 import {UserListComponent, IUserExtra} from './UserListComponent';
-import {IDesk, IUserRole} from 'superdesk-api';
 
 interface IProps {
     desks: Array<IDesk>;
-    onUserSelect(user: IUserExtra): void;
+    usersById: IStoreState['users']['entities'];
+    onUserSelect(user: IUser): void;
+}
+
+interface IUserByRole {
+    role?: IUserRole['_id'];
+    authors: {[userId: string]: {
+        assigned: number;
+        locked: number;
+    }};
 }
 
 interface IState {
     roles: Array<IUserRole>;
-    users: Array<IUserExtra>;
+    usersByRole: Array<IUserByRole>;
+    deskMembers: {[id: string]: Array<IUser['_id']>};
 }
 
-export class UsersComponent extends React.Component<IProps, IState> {
-    services: any;
-
+class UsersComponent extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
+        const deskMembers = {};
+
+        Object.keys(ng.get('desks').deskMembers).forEach((deskId) => {
+            deskMembers[deskId] = ng.get('desks').deskMembers[deskId].map((user) => user._id);
+        });
+
         this.state = {
             roles: [],
-            users: [],
-        };
-
-        this.services = {
-            desks: ng.get('desks'),
+            usersByRole: [],
+            deskMembers,
         };
 
         this.selectUser.bind(this);
     }
 
-    selectUser(user: IUserExtra) {
+    selectUser(user: IUser) {
         this.props.onUserSelect(user);
     }
 
@@ -48,25 +61,25 @@ export class UsersComponent extends React.Component<IProps, IState> {
 
             this.setState({
                 roles: roles._items,
-                users: users._items,
+                usersByRole: users._items,
             });
         });
     }
 
-    getUsers(desk: IDesk, role: IUserRole): Array<any> {
-        const deskMembers = this.services.desks.deskMembers[desk._id];
-        const authors = this.state.users.find((item) => item.role === role._id);
+    getUsers(desk: IDesk, role: IUserRole): Array<IUserExtra> {
+        const deskMembers = this.state.deskMembers[desk._id];
+        const roleUsers = this.state.usersByRole.find((item) => item.role === role._id);
+        const users: Array<IUserExtra> = [];
 
-        let users: Array<IUserExtra> = [];
+        deskMembers.forEach((userId) => {
+            const user = this.props.usersById[userId];
 
-        deskMembers.forEach((user) => {
             if (role._id === user.role) {
-                user.data = authors.authors[user._id];
-                users.push(user);
+                users.push({user, data: roleUsers.authors[user._id]});
             }
         });
 
-        return users ? users : [];
+        return users;
     }
 
     render() {
@@ -90,7 +103,7 @@ export class UsersComponent extends React.Component<IProps, IState> {
                                 ) : null
                             ))}
 
-                            {!this.services.desks.deskMembers[desk._id].length ? (
+                            {!this.state.deskMembers[desk._id].length ? (
                                 <div className="sd-board__subheader">
                                     <h5 className="sd-board__subheader-title">
                                         {gettext('There are no users assigned to this desk')}
@@ -105,3 +118,9 @@ export class UsersComponent extends React.Component<IProps, IState> {
         );
     }
 }
+
+const mapStateToProps = (state: IStoreState) => ({
+    usersById: state.users.entities,
+});
+
+export default connect(mapStateToProps)(UsersComponent);

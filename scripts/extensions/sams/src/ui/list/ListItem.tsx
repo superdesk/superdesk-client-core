@@ -20,7 +20,7 @@ interface IProps {
 
 export class ListItem extends React.PureComponent<IProps> {
     clickCount: number = 0;
-    singleClickTimer: any;
+    singleClickTimer?: number;
 
     constructor(props: IProps) {
         super(props);
@@ -29,15 +29,20 @@ export class ListItem extends React.PureComponent<IProps> {
     }
 
     handleClicks(event: React.MouseEvent<HTMLDivElement>) {
+        if (this.props.onDoubleClick == null) {
+            this.props.onClick!(event);
+            return;
+        }
+
         this.clickCount++;
         if (this.clickCount === 1) {
             event.persist();
-            this.singleClickTimer = setTimeout(() => {
+            this.singleClickTimer = window.setTimeout(() => {
                 this.clickCount = 0;
                 this.props.onClick!(event);
             }, 300);
         } else if (this.clickCount === 2) {
-            clearTimeout(this.singleClickTimer);
+            window.clearTimeout(this.singleClickTimer);
             this.clickCount = 0;
             this.props.onDoubleClick!(event);
         }

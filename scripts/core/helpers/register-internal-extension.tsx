@@ -9,6 +9,7 @@ export function registerInternalExtension(name: string, activationResult: IExten
     extensions[prefix + name] = {
         extension: {activate: () => Promise.resolve({})},
         activationResult,
+        configuration: {},
     };
 }
 

@@ -5,18 +5,11 @@ import {IFilter} from './FilterPanelComponent';
 
 interface IProps {
     filters: IFilter;
-    onFilterChange(filters: any): void;
+    removeFilter(id: string): void;
+    removeAllFilters(): void;
 }
 
 export class FilterBarComponent extends React.Component<IProps, {}> {
-    removeFilter(item: any): void {
-        this.props.onFilterChange({...this.props.filters, [item]: []});
-    }
-
-    clearFilters(): void {
-        this.props.onFilterChange([]);
-    }
-
     checkIfIsNotEmpty(): boolean {
         return Object.keys(this.props.filters).some((item: any) =>
             this.props.filters[item] && this.props.filters[item].length);
@@ -31,13 +24,13 @@ export class FilterBarComponent extends React.Component<IProps, {}> {
                             this.props.filters[item] && this.props.filters[item].length ? (
                                 <li className="sd-search-tags__tag tag-label tag-label--highlight1" key={item}>
                                     {item}: ({this.props.filters[item]})
-                                    <button className="tag-label__remove" onClick={() => this.removeFilter(item)}>
+                                    <button className="tag-label__remove" onClick={() => this.props.removeFilter(item)}>
                                         <i className="icon-close-small" /></button>
                                 </li>
                             ) : null,
                         )}
                     </ul>
-                    <a className="text-link sd-margin-l--auto" onClick={() => this.clearFilters()}>
+                    <a className="text-link sd-margin-l--auto" onClick={() => this.props.removeAllFilters()}>
                         {gettext('Clear all filters')}
                     </a>
                 </div>

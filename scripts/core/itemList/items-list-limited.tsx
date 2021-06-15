@@ -10,12 +10,12 @@ import {
     IResourceCreatedEvent,
     IResourceUpdateEvent,
     IResourceDeletedEvent,
+    IResourceChange,
 } from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
 import {
     IRelatedEntities,
     getAndMergeRelatedEntitiesForArticles,
-    IResourceChange,
     getAndMergeRelatedEntitiesUpdated,
 } from 'core/getRelatedEntities';
 import {throttleAndCombineArray} from './throttleAndCombine';

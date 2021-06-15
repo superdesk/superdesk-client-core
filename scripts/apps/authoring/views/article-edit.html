@@ -24,7 +24,7 @@
 
     <label for="title" class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength">
-        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+        <sd-character-count data-item="item.headline" data-html="false" data-limit="schema.headline.maxlength"></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
@@ -51,7 +51,7 @@
     <label for="title" class="field__label">{{label('headline')}}</label>
     <span ng-if="schema.headline.maxlength">
         <sd-character-count-config-button data-field="'headline'"></sd-character-count-config-button>
-        <sd-character-count data-item="item.headline" data-html="true" data-limit="schema.headline.maxlength"></sd-character-count>
+        <sd-character-count data-item="item.headline" data-html="false" data-limit="schema.headline.maxlength"></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema.headline.validate_characters"
         class="disallowed-char-error"
@@ -632,7 +632,12 @@
     <label class="field__label">{{field.display_name}}</label>
     <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
         <sd-character-count-config-button data-field="field._id"></sd-character-count-config-button>
-        <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
+
+        <sd-character-count
+            data-item="item.extra[field._id]"
+            data-html="field.field_options != null && field.field_options.single === true ? false: true"
+            data-limit="schema[field._id].maxlength"
+        ></sd-character-count>
     </span>
     <sd-validate-characters ng-if="schema[field._id].validate_characters"
         class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
@@ -641,7 +646,7 @@
         data-single-line="field.field_options.single"
         data-value="item.extra[field._id]"
         data-bind-to-value="compareView"
-        data-scroll-container=".ppage-content-container--scrollable"
+        data-scroll-container=".page-content-container--scrollable"
         data-language="item.language"
         data-on-change="autosave(item)"
         data-read-only="!_editable || schema[field._id].readonly === true"
