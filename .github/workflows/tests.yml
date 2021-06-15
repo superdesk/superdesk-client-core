@@ -71,6 +71,9 @@ jobs:
     - name: Workaround for webdriver version (https://github.com/angular/protractor/issues/5519)
       run: node ./node_modules/.bin/webdriver-manager update --versions.chrome=90.0.4430.24
 
+    - name: Workaround for webdriver version (https://github.com/angular/protractor/issues/5519)
+      run: node ./node_modules/.bin/webdriver-manager update --versions.chrome=90.0.4430.24
+
     - name: Protractor
       run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
       env:
