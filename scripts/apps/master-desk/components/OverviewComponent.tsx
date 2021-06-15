@@ -1,8 +1,5 @@
 import React from 'react';
 
-import {ItemUrgency, TypeIcon} from 'apps/search/components';
-import {TimeElem} from 'apps/search/components/TimeElem';
-
 import {IDesk, IStage} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
@@ -10,6 +7,8 @@ import {IMasterDeskViews} from '../MasterDesk';
 
 import {CardComponent} from './CardComponent';
 import {CardListComponent} from './CardListComponent';
+import {assertNever} from 'core/helpers/typescript-helpers';
+import {ListItemsComponent} from './ListItemsComponent';
 
 interface IProps {
     desks: Array<IDesk>;
@@ -17,15 +16,16 @@ interface IProps {
     deskFilter: string;
     filters: object;
     currentView: IMasterDeskViews;
-    onViewChange(newView: any): void;
+    selectedDesk: IDesk;
+    onViewChange(newView: IMasterDeskViews): void;
     onFilterChange(filters: any): void;
+    onDeskChange(desk: IDesk): void;
 }
 
 interface IState {
     stagesCount: Array<any>;
     filteredDesks: Array<IDesk>;
     selectedDesk: IDesk;
-    view: IMasterDeskViews;
 }
 
 export class OverviewComponent extends React.Component<IProps, IState> {
@@ -39,16 +39,11 @@ export class OverviewComponent extends React.Component<IProps, IState> {
             stagesCount: null,
             filteredDesks: [],
             selectedDesk: null,
-            view: IMasterDeskViews.card,
         };
     }
 
     componentDidMount() {
-        dataApi.query('desks/all/overview/stages', 1, {field: '_id', direction: 'ascending'}, {})
-            .then((res) => this.setState({
-                stagesCount: res._items,
-                filteredDesks: this.props.desks,
-            }));
+        this.fetchStages();
     }
 
     componentDidUpdate(prevProps: IProps) {
@@ -61,11 +56,8 @@ export class OverviewComponent extends React.Component<IProps, IState> {
 
             if (this.props.currentView === IMasterDeskViews.card) {
                 this.props.onFilterChange([]);
-                this.componentDidMount();
+                this.fetchStages();
             }
-
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({view: this.props.currentView});
         }
 
         if (hasFilters) {
@@ -76,13 +68,14 @@ export class OverviewComponent extends React.Component<IProps, IState> {
             dataApi.create('desks/all/overview/stages', {
                 filters: this.props.filters,
             }).then((res) => {
+                 // eslint-disable-next-line react/no-did-update-set-state
                 this.setState({stagesCount: res['_items']});
 
                 if (this.props.currentView === IMasterDeskViews.card) {
                     this.setView(IMasterDeskViews.detailed);
                 }
             });
-        } else if (this.state.view === IMasterDeskViews.detailed) {
+        } else if (this.props.currentView === IMasterDeskViews.detailed) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setView(IMasterDeskViews.card);
         }
@@ -106,14 +99,26 @@ export class OverviewComponent extends React.Component<IProps, IState> {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({filteredDesks: this.props.desks});
         }
+
+        // If desk is changes
+        if (this.props.selectedDesk !== prevProps.selectedDesk) {
+            this.setState({selectedDesk: this.props.selectedDesk});
+        }
     }
 
     componentWillUnmount() {
         this.props.onFilterChange([]);
     }
 
+    fetchStages() {
+        dataApi.query('desks/all/overview/stages', 1, {field: '_id', direction: 'ascending'}, {})
+            .then((res) => this.setState({
+                stagesCount: res._items,
+                filteredDesks: this.props.desks,
+            }));
+    }
+
     setView(view: IMasterDeskViews) {
-        this.setState({view});
         this.props.onViewChange(view);
     }
 
@@ -181,53 +186,26 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                 stagesCount: res['_items'],
             });
 
+            this.props.onDeskChange(desk);
+
             this.setView(IMasterDeskViews.singleView);
         });
     }
 
-    listStageItems(stage: IStage) {
-        return (
-            this.getStageItems(stage).map((item, key) => (
-                <li className="content-item" key={key}>
-                    <div className="content-item__type">
-                        <TypeIcon
-                            type={item.type}
-                            highlight={item.highlight}
-                        />
-                    </div>
-                    <div className="content-item__urgency-field">
-                        <ItemUrgency
-                            urgency={item.urgency}
-                            language={item.language}
-                        />
-                    </div>
-                    <div className="content-item__text">
-                        <span className="keywords">{item.slugline}</span>
-                        <span id="title" className="headline">
-                            {item.headline}
-                        </span>
-                    </div>
-                    <div className="content-item__date">
-                        <TimeElem date={item.versioncreated} />
-                    </div>
-                </li>
-            ))
-        );
-    }
-
     render() {
-        if (this.state.view === IMasterDeskViews.detailed) {
+        switch (this.props.currentView) {
+        case IMasterDeskViews.detailed:
             return (
                 <div className="sd-kanban-list sd-padding-x--2 sd-padding-t--2">
                     {this.state.filteredDesks.map((desk, index) =>
                         this.getDeskTotal(desk) > 0 ? (
                             <div className="sd-board" key={index}>
-                                <div
+                                <a
                                     className="sd-board__header sd-board__header--clickable"
                                     onClick={() => this.getSingleDesk(desk)}
                                 >
                                     <h3 className="sd-board__header-title">{desk.name}</h3>
-                                </div>
+                                </a>
                                 <div className="sd-board__content sd-padding-t--1">
                                     {(this.props.stages?.[desk._id] ?? []).map((stage) => (
                                         <React.Fragment key={stage._id}>
@@ -235,7 +213,10 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                                                 <h5 className="sd-board__subheader-title">{stage.name}</h5>
                                             </div>
                                             <ul className="sd-list-item-group sd-shadow--z2 inline-content-items">
-                                                {this.listStageItems(stage)}
+                                                <ListItemsComponent
+                                                    items={this.getStageItems(stage)}
+                                                    total={this.getStageTotal(stage)}
+                                                />
                                             </ul>
                                         </React.Fragment>
                                     ),
@@ -246,26 +227,29 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                     )}
                 </div>
             );
-        } else if (this.state.view === 'single-view') {
+
+        case IMasterDeskViews.singleView:
             return (
                 <div className="sd-kanban-list sd-padding-x--2 sd-padding-t--2">
-                    {(this.props.stages?.[this.state.selectedDesk._id] ?? []).map((stage, index) =>
-                        this.getStageTotal(stage) > 0 ? (
-                            <div className="sd-board" key={index}>
-                                <div className="sd-board__header">
-                                    <h3 className="sd-board__header-title">{stage.name}</h3>
-                                </div>
-                                <div className="sd-board__content sd-padding-t--1">
-                                    <ul className="sd-list-item-group sd-shadow--z2 inline-content-items">
-                                        {this.listStageItems(stage)}
-                                    </ul>
-                                </div>
+                    {(this.props.stages?.[this.state.selectedDesk._id] ?? []).map((stage, index) => (
+                        <div className="sd-board" key={index}>
+                            <div className="sd-board__header">
+                                <h3 className="sd-board__header-title">{stage.name}</h3>
                             </div>
-                        ) : null,
-                    )}
+                            <div className="sd-board__content sd-padding-t--1">
+                                <ul className="sd-list-item-group sd-shadow--z2 inline-content-items">
+                                    <ListItemsComponent
+                                        items={this.getStageItems(stage)}
+                                        total={this.getStageTotal(stage)}
+                                    />
+                                </ul>
+                            </div>
+                        </div>
+                    ))}
                 </div>
             );
-        } else {
+
+        case IMasterDeskViews.card:
             return (
                 <div className="sd-grid-list sd-grid-list--medium sd-grid-list--gap-xl sd-margin-x--5">
                     {this.state.filteredDesks.map((desk, index) => (
@@ -291,6 +275,9 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                     ))}
                 </div>
             );
+
+        default:
+            return assertNever(this.props.currentView);
         }
     }
 }

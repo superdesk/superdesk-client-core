@@ -15,7 +15,6 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 import UserActivityWidget from 'apps/dashboard/user-activity/components/UserActivityWidget';
-import {isObject} from 'lodash';
 
 export enum IMasterDeskTab {
     overview = 'overview',
@@ -48,6 +47,7 @@ interface IState {
     desks: Array<IDesk>;
     stages: Array<IStage>;
     currentTab: IMasterDeskTab;
+    selectedDesk: IDesk;
     filterOpen: boolean;
     activeUser: IUser;
     planning: boolean;
@@ -64,6 +64,7 @@ export class MasterDesk extends React.Component<{}, IState> {
 
         this.state = {
             currentTab: IMasterDeskTab.overview,
+            selectedDesk: null,
             filterOpen: false,
             desks: [],
             stages: [],
@@ -119,10 +120,12 @@ export class MasterDesk extends React.Component<{}, IState> {
                     activeTab={this.state.currentTab}
                     desks={this.state.desks}
                     currentView={this.state.currentView}
+                    selectedDesk={this.state.selectedDesk}
                     isPlaningActive={this.state.planning}
                     isFilterAllowed={this.isFilterAllowed()}
                     isFilterOpened={this.state.filterOpen}
                     onTabChange={(tab) => this.setState({currentTab: tab})}
+                    onDeskChange={(desk) => this.setState({selectedDesk: desk})}
                     onUpdateDeskList={(desks, showAll) => this.getDeskList(desks, showAll)}
                     onFilterOpen={(filter) => this.setState({filterOpen: filter})}
                     onViewChange={(view) => this.setState({currentView: view})}
@@ -158,10 +161,12 @@ export class MasterDesk extends React.Component<{}, IState> {
                                         desks={this.state.desks}
                                         stages={this.state.stages}
                                         deskFilter={this.state.deskFilter}
+                                        selectedDesk={this.state.selectedDesk}
                                         filters={this.state.filters}
                                         currentView={this.state.currentView}
                                         onViewChange={(view) => this.setState({currentView: view})}
                                         onFilterChange={(filters) => this.setState({filters: filters})}
+                                        onDeskChange={(desk) => this.setState({selectedDesk: desk})}
                                     />
                                 );
                             case IMasterDeskTab.users:
