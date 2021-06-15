@@ -68,7 +68,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
             dataApi.create('desks/all/overview/stages', {
                 filters: this.props.filters,
             }).then((res) => {
-                 // eslint-disable-next-line react/no-did-update-set-state
+                // eslint-disable-next-line react/no-did-update-set-state
                 this.setState({stagesCount: res['_items']});
 
                 if (this.props.currentView === IMasterDeskViews.card) {
@@ -102,6 +102,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
 
         // If desk is changes
         if (this.props.selectedDesk !== prevProps.selectedDesk) {
+            // eslint-disable-next-line react/no-did-update-set-state
             this.setState({selectedDesk: this.props.selectedDesk});
         }
     }
