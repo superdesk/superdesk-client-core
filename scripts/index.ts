@@ -211,6 +211,8 @@ export function startApp(
 
             window['superdeskIsReady'] = true;
 
+            body.attr('data-theme', 'dark-ui');
+
             if (appConfig.features.useTansaProofing) {
                 setupTansa();
             }
