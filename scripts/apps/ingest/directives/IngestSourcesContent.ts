@@ -2,7 +2,7 @@ import _ from 'lodash';
 import {cloneDeep} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
-import {v4 as uuidv4} from 'uuid';
+import {IBaseRestApiResponse} from 'superdesk-api';
 
 interface IFeedingServiceField {
     id?: string;
@@ -15,7 +15,7 @@ interface IFeedingServiceField {
     url?: string;
 }
 
-interface IProvider {
+interface IProvider extends IBaseRestApiResponse {
     name: string;
     source: string;
     feeding_service: string;
@@ -627,11 +627,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @param field url_request field metadata
                  */
                 $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
-                    if (provider.url_id == null) {
-                        provider.url_id = uuidv4();
-                    }
-
-                    window.open(field.url.replace('{URL_ID}', provider.url_id));
+                    window.open(field.url.replace('{URL_ID}', provider._id));
                 };
 
                 function getCurrentService() {
