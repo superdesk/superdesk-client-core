@@ -1,13 +1,13 @@
 import React from 'react';
 
-import {IStage} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 
 import {gettext} from 'core/utils';
 import {ItemUrgency, TypeIcon} from 'apps/search/components';
 import {TimeElem} from 'apps/search/components/TimeElem';
 
 interface IProps {
-    items: Array<IStage>;
+    items: Array<IArticle>;
     total: number;
 }
 
@@ -15,7 +15,7 @@ export class ListItemsComponent extends React.Component<IProps, {}> {
     render() {
         return (
             this.props.total > 0 ?
-                this.props.items.map((item: any, key) => (
+                this.props.items.map((item, key) => (
                     <li className="content-item" key={key}>
                         <div className="content-item__type">
                             <TypeIcon

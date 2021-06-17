@@ -10,6 +10,7 @@ import {
     ButtonGroup,
     Button,
 } from 'superdesk-ui-framework/react';
+import {IMenuItem} from 'superdesk-ui-framework/app-typescript/components/Dropdown';
 import {IMasterDeskTab, IMasterDeskViews, getLabelForMasterDeskTab, USER_PREFERENCE_SETTINGS} from '../MasterDesk';
 import {gettext} from 'core/utils';
 
@@ -37,7 +38,7 @@ interface IState {
 
 export class HeaderComponent extends React.Component<IProps, IState> {
     services: any;
-    deskDropdownItems: any = [];
+    deskDropdownItems: Array<IMenuItem> = [];
 
     constructor(props: IProps) {
         super(props);
@@ -56,9 +57,9 @@ export class HeaderComponent extends React.Component<IProps, IState> {
             location: ng.get('$location'),
         };
 
-        this.changeTab.bind(this);
-        this.openFilter.bind(this);
-        this.changeView.bind(this);
+        this.changeTab = this.changeTab.bind(this);
+        this.openFilter = this.openFilter.bind(this);
+        this.changeView = this.changeView.bind(this);
     }
 
     componentDidMount() {
@@ -86,7 +87,6 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
     changeTab(tab: IMasterDeskTab) {
         this.props.onTabChange(tab);
-        this.props.onViewChange(IMasterDeskViews.card);
     }
 
     openFilter() {

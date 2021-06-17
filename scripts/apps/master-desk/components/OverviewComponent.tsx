@@ -25,7 +25,6 @@ interface IProps {
 interface IState {
     stagesCount: Array<any>;
     filteredDesks: Array<IDesk>;
-    selectedDesk: IDesk;
 }
 
 export class OverviewComponent extends React.Component<IProps, IState> {
@@ -38,7 +37,6 @@ export class OverviewComponent extends React.Component<IProps, IState> {
         this.state = {
             stagesCount: null,
             filteredDesks: [],
-            selectedDesk: null,
         };
     }
 
@@ -50,10 +48,6 @@ export class OverviewComponent extends React.Component<IProps, IState> {
         const hasFilters = this.hasFilters();
 
         if (this.props.currentView !== prevProps.currentView) {
-            if (this.props.currentView === prevProps.currentView) {
-                return;
-            }
-
             if (this.props.currentView === IMasterDeskViews.card) {
                 this.props.onFilterChange([]);
                 this.fetchStages();
@@ -76,7 +70,6 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                 }
             });
         } else if (this.props.currentView === IMasterDeskViews.detailed) {
-            // eslint-disable-next-line react/no-did-update-set-state
             this.setView(IMasterDeskViews.card);
         }
 
@@ -98,12 +91,6 @@ export class OverviewComponent extends React.Component<IProps, IState> {
         if (this.props.desks !== prevProps.desks) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({filteredDesks: this.props.desks});
-        }
-
-        // If desk is changes
-        if (this.props.selectedDesk !== prevProps.selectedDesk) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.setState({selectedDesk: this.props.selectedDesk});
         }
     }
 
@@ -183,7 +170,6 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                 this.props.filters : {'slugline': []},
         }).then((res) => {
             this.setState({
-                selectedDesk: desk,
                 stagesCount: res['_items'],
             });
 
@@ -232,7 +218,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
         case IMasterDeskViews.singleView:
             return (
                 <div className="sd-kanban-list sd-padding-x--2 sd-padding-t--2">
-                    {(this.props.stages?.[this.state.selectedDesk._id] ?? []).map((stage, index) => (
+                    {(this.props.stages?.[this.props.selectedDesk._id] ?? []).map((stage, index) => (
                         <div className="sd-board" key={index}>
                             <div className="sd-board__header">
                                 <h3 className="sd-board__header-title">{stage.name}</h3>

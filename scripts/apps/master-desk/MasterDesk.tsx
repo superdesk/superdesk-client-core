@@ -113,6 +113,13 @@ export class MasterDesk extends React.Component<{}, IState> {
         return this.state.currentTab === IMasterDeskTab.overview;
     }
 
+    onTabChange(tab) {
+        this.setState({
+            currentTab: tab,
+            currentView: IMasterDeskViews.card,
+        });
+    }
+
     render() {
         return (
             <div className="sd-content-wrapper__main-content-area sd-main-content-grid">
@@ -124,7 +131,7 @@ export class MasterDesk extends React.Component<{}, IState> {
                     isPlaningActive={this.state.planning}
                     isFilterAllowed={this.isFilterAllowed()}
                     isFilterOpened={this.state.filterOpen}
-                    onTabChange={(tab) => this.setState({currentTab: tab})}
+                    onTabChange={(tab) => this.onTabChange(tab)}
                     onDeskChange={(desk) => this.setState({selectedDesk: desk})}
                     onUpdateDeskList={(desks, showAll) => this.getDeskList(desks, showAll)}
                     onFilterOpen={(filter) => this.setState({filterOpen: filter})}
