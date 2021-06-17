@@ -627,7 +627,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @param field url_request field metadata
                  */
                 $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
-                    window.open(field.url.replace('{URL_ID}', provider._id));
+                    window.open(field.url.replace('{PROVIDER_ID}', provider._id));
                 };
 
                 function getCurrentService() {
