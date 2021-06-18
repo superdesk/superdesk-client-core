@@ -1898,10 +1898,14 @@ declare module 'superdesk-api' {
         description?: string;
         qcode: string;
         scheme?: string;
-        source?: string;
         translations?: {};
         altids?: {[key: string]: string};
         aliases?: Array<string>;
+
+        /** provider name, eg. imatrics */
+        source?: string;
+
+        /** original source of the data, eg. wikidata */
         original_source?: string;
     }
 }
