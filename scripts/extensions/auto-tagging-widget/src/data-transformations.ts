@@ -53,6 +53,8 @@ export function getExistingTags(article: IArticle): IServerResponse {
                         source,
                         altids,
                         scheme,
+                        aliases,
+                        original_source,
                     } = subjectItem;
 
                     if (scheme == null) {
@@ -66,6 +68,8 @@ export function getExistingTags(article: IArticle): IServerResponse {
                         source,
                         altids: altids ?? {},
                         scheme,
+                        aliases,
+                        original_source,
                     };
 
                     return subjectTag;
@@ -79,6 +83,8 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     qcode,
                     source,
                     altids,
+                    aliases,
+                    original_source,
                 } = subjectItem;
 
                 const subjectTag: ITagBase = {
@@ -87,6 +93,8 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     qcode,
                     source,
                     altids: altids ?? {},
+                    aliases,
+                    original_source,
                 };
 
                 return subjectTag;

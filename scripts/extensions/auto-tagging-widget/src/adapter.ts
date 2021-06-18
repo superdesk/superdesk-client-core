@@ -122,7 +122,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 result.subject = [];
             }
 
-            const {name, description, qcode, source, altids} = item;
+            const {name, description, qcode, source, altids, aliases, original_source} = item;
 
             const subjectTag: ISubjectTag = {
                 name,
@@ -131,6 +131,8 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 source,
                 altids,
                 scheme: item.group.value,
+                aliases,
+                original_source,
             };
 
             result.subject.push(subjectTag);
@@ -141,7 +143,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 result[groupValue] = [];
             }
 
-            const {name, description, qcode, source, altids} = item;
+            const {name, description, qcode, source, altids, aliases, original_source} = item;
 
             const tagBase: ITagBase = {
                 name,
@@ -149,6 +151,8 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 qcode,
                 source,
                 altids,
+                aliases,
+                original_source,
             };
 
             result[groupValue]!.push(tagBase);

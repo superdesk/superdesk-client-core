@@ -1901,5 +1901,7 @@ declare module 'superdesk-api' {
         source?: string;
         translations?: {};
         altids?: {[key: string]: string};
+        aliases?: Array<string>;
+        original_source?: string;
     }
 }
