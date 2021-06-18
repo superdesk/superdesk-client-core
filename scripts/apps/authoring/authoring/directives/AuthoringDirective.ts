@@ -124,7 +124,7 @@ export function AuthoringDirective(
             $scope.mediaFieldVersions = {};
             $scope.refreshTrigger = 0;
             $scope.isPreview = false;
-            $scope.isCorrectionDisabled = false;
+            $scope.isCorrectionInProgress = false;
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -931,8 +931,8 @@ export function AuthoringDirective(
                 if (action === 'correct') {
                     if (appConfig?.corrections_workflow &&
                     [ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED].includes($scope.item.state)) {
-                        $scope.isCorrectionDisabled = true;
-                        authoring.correction($scope.item, () => $scope.isCorrectionDisabled = false);
+                        $scope.isCorrectionInProgress = true;
+                        authoring.correction($scope.item, () => $scope.isCorrectionInProgress = false);
                     } else {
                         authoringWorkspace.correct($scope.item);
                     }
