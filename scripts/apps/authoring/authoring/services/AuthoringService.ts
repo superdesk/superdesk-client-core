@@ -443,7 +443,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             );
     };
 
-    this.correction = function correction(item: IPublishedArticle, removeCorrection = false) {
+    this.correction = function correction(item: IPublishedArticle, handleIsCorrection, removeCorrection = false) {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
         let extDiff = {};
 
@@ -478,6 +478,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                         } else {
                             notify.error(gettext('There was an error. Failed to generate update.'));
                         }
+                        handleIsCorrection();
                     });
             });
     };
