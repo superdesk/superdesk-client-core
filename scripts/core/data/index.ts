@@ -32,6 +32,10 @@ addWebsocketEventListener(
         const RESOURCE_BLACKLIST = [
             'auth',
             'audit',
+
+            // these are not collections
+            'archive_spike',
+            'archive_unspike',
         ];
 
         if (RESOURCE_BLACKLIST.includes(resource)) {
