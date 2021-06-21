@@ -478,7 +478,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                         } else {
                             notify.error(gettext('There was an error. Failed to generate update.'));
                         }
-                        handleIsCorrection();
+                        if (handleIsCorrection) {
+                            handleIsCorrection()
+                        }
                     });
             });
     };
