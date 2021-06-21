@@ -479,7 +479,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                             notify.error(gettext('There was an error. Failed to generate update.'));
                         }
                         if (handleIsCorrection) {
-                            handleIsCorrection()
+                            handleIsCorrection();
                         }
                     });
             });
