@@ -14,6 +14,7 @@
     "gettext.js": "^0.9.0",
     "glob": "^7.1.7",
     "lodash": "^4.17.19",
-    "rimraf": "^3.0.2"
+    "rimraf": "^3.0.2",
+    "typescript-json-schema": "^0.50.1"
   }
 }

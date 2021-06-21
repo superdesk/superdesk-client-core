@@ -8,6 +8,7 @@ const poToJson = require('./po-to-json/index');
 const installExtensions = require('./extensions/install-extensions');
 const {mergeTranslationsFromExtensions} = require('./extensions/translations');
 const {namespaceCSS, watchCSS} = require('./extensions/css');
+const {generateInstanceConfigurationSchema} = require('./generate-instance-configuration-schema');
 
 const {Command} = require('commander');
 const program = new Command();
@@ -24,6 +25,12 @@ program.configureHelp({
         }
     },
 });
+
+program.command('generate-instance-configuration-schema <main-client-dir>')
+    .description('reads typescript interfaces and generates JSON schema that will be used to generate the UI')
+    .action((mainClientDir) => {
+        generateInstanceConfigurationSchema(mainClientDir, currentDir);
+    });
 
 program.command('po-to-json <source-dir-po> <output-dir-json>')
     .description('convert .po files in the directory to .json format that is used by Superdesk')
