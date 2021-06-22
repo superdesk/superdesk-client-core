@@ -13,6 +13,7 @@ interface IState {
 
 interface IJsonSchema {
     type: 'object' | 'boolean';
+    enum?: Array<string>;
     translations: Dictionary<string, string>;
     required?: Array<string>;
     properties?: Dictionary<string, IJsonSchema>;
@@ -62,6 +63,16 @@ function getFormConfig(
                 field: formField,
                 label: label,
                 required,
+            });
+        } else if (schema.enum != null) {
+            data.form.push({
+                type: FormFieldType.select,
+                field: formField,
+                label: label,
+                required,
+                component_parameters: {
+                    options: schema.enum.map((val) => ({id: val, label: val})),
+                },
             });
         } else {
             data.form.push({
