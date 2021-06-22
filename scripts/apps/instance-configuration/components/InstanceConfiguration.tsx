@@ -14,6 +14,7 @@ interface IState {
 interface IJsonSchema {
     type: 'object' | 'boolean';
     translations: Dictionary<string, string>;
+    required?: Array<string>;
     properties?: Dictionary<string, IJsonSchema>;
 }
 
@@ -52,6 +53,7 @@ function getFormConfig(
     } else {
         const formField = keys.join('.');
         const label = parent.translations[field];
+        const required = parent.required?.includes(field) === true;
 
         // eslint-disable-next-line no-lonely-if
         if (schema.type === 'boolean') {
@@ -59,12 +61,14 @@ function getFormConfig(
                 type: FormFieldType.yesNo,
                 field: formField,
                 label: label,
+                required,
             });
         } else {
             data.form.push({
                 type: FormFieldType.textSingleLine,
                 field: formField,
                 label: label,
+                required,
             });
         }
     }

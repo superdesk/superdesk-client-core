@@ -25,7 +25,9 @@ function generateInstanceConfigurationSchema(mainClientDir, currentDir) {
     const clientDirAbs = path.join(currentDir, mainClientDir);
     const file = path.join(clientDirAbs, 'node_modules/superdesk-core/scripts/core/core-config.ts');
     const configFile = path.join(currentDir, mainClientDir, 'node_modules/superdesk-core/scripts/instance-settings.ts');
-    const generatedSchema = JSON.parse(execSync(`npx typescript-json-schema "${file}" ICoreSettings`).toString());
+    const generatedSchema = JSON.parse(
+        execSync(`npx typescript-json-schema "${file}" ICoreSettings --strictNullChecks --required`).toString()
+    );
     const schemaWithTranslations = JSON.stringify(addTranslations(generatedSchema), null, 4)
         .replace(/"(gettext.+?)"/g, '$1');
 

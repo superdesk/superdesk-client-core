@@ -19,12 +19,19 @@ export const getInstanceConfigSchema = (gettext) => ({
                             "type": "string"
                         }
                     },
+                    "required": [
+                        "version"
+                    ],
                     "type": "object",
                     "translations": {
                         "version": gettext('version')
                     }
                 }
             },
+            "required": [
+                "customToolbar",
+                "editor"
+            ],
             "type": "object",
             "translations": {
                 "customToolbar": gettext('customToolbar'),
@@ -40,12 +47,19 @@ export const getInstanceConfigSchema = (gettext) => ({
                     "type": "array"
                 }
             },
+            "required": [
+                "stageCount"
+            ],
             "type": "object",
             "translations": {
                 "stageCount": gettext('stageCount')
             }
         }
     },
+    "required": [
+        "authoring",
+        "monitoring"
+    ],
     "type": "object",
     "translations": {
         "authoring": gettext('authoring'),
