@@ -2,7 +2,6 @@ import _ from 'lodash';
 import {getParameters, getExcludeFacets} from 'apps/search/constants';
 import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
-import {getUserInterfaceLanguage} from 'appConfig';
 
 /**
  * @ngdoc service
@@ -57,12 +56,12 @@ export function TagService($location, desks, userList, metadata, search,
         };
     }
 
-    function getParamObject(paramArray: Array<string>) {
+    function getParamObject(paramArray: Array<string>): [string, string] {
         const key = paramArray[0].trim();
         // remove parentheses ex: "(two)" becomes "two"
         const value = paramArray[1].replace(/^\(|\)$/g, '');
 
-        return {[key]: value};
+        return [key, value];
     }
 
     /**
@@ -100,8 +99,14 @@ export function TagService($location, desks, userList, metadata, search,
 
             if (!added) {
                 var paramArr = parameter.split(':');
+                const [key, value] = getParamObject(paramArr);
 
-                Object.assign(paramObject, getParamObject(paramArr));
+                if (Array.isArray(paramObject[key])) {
+                    paramObject[key] = paramObject[key].concat(value);
+                } else {
+                    paramObject[key] = [value];
+                }
+
                 var parameterTranslated = gettext(paramArr[0]) + ':' + paramArr[1];
 
                 selectedParameters.push(tag(parameterTranslated, paramArr.join(':')));

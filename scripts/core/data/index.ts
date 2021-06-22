@@ -29,12 +29,11 @@ addWebsocketEventListener(
     (event: IWebsocketMessage<IResourceUpdateEvent>) => {
         const {resource, _id} = event.extra;
 
-        const RESOURCE_BLACKLIST = [
-            'auth',
-            'audit',
+        const resourcesInStore = [
+            'users',
         ];
 
-        if (RESOURCE_BLACKLIST.includes(resource)) {
+        if (!resourcesInStore.includes(resource)) {
             return;
         }
 

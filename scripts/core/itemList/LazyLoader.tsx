@@ -65,8 +65,8 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
         const loadedItemsCount = this.state.items.size;
 
-        const pages = loadedItemsCount > 0 ?
-            new Array(Math.ceil(loadedItemsCount / MAX_PAGE_SIZE)).fill(null).map((_, i) => {
+        const pages = loadedItemsCount > 0
+            ? new Array(Math.ceil(loadedItemsCount / MAX_PAGE_SIZE)).fill(null).map((_, i) => {
                 const to = (i + 1) * MAX_PAGE_SIZE;
                 const to_limited = Math.min(to, loadedItemsCount);
                 const from = to - MAX_PAGE_SIZE;
@@ -176,22 +176,9 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                 >
                     {this.getLoadedItemsCount() === 0 ? null : this.props.children(items)}
                     {(() => {
-                        const loaderPosition: React.CSSProperties = this.getLoadedItemsCount() > 0
-                            ? {
-                                position: 'absolute',
-                                bottom: 0,
-                                left: 0,
-                                width: '100%',
-                            }
-                            : {};
-
                         if (loading === true) {
                             return (
-                                <div style={{position: 'relative', width: '100%'}}>
-                                    <div style={loaderPosition}>
-                                        <div style={messageStyles} data-test-id="loading">{gettext('Loading...')}</div>
-                                    </div>
-                                </div>
+                                <div style={messageStyles} data-test-id="loading">{gettext('Loading...')}</div>
                             );
                         } else if (this.allItemsLoaded()) {
                             if (this.getLoadedItemsCount() === 0) {
