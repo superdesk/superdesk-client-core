@@ -13,6 +13,7 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     case FormFieldType.textSingleLine:
     case FormFieldType.textEditor3:
         return {[field]: ''};
+    case FormFieldType.number:
     case FormFieldType.vocabularySingleValue:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:

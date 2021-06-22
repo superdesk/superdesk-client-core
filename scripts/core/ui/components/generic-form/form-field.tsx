@@ -15,6 +15,7 @@ import {YesNo} from './input-types/yes-no';
 import {IFormField, IFormGroup} from 'superdesk-api';
 import {Select} from './input-types/select';
 import {ArrayField} from './input-types/array';
+import {NumberField} from './input-types/number';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
@@ -24,6 +25,8 @@ export function getFormFieldComponent(type: FormFieldType): React.ComponentType<
         return TextSingleLine;
     case FormFieldType.textEditor3:
         return TextEditor3;
+    case FormFieldType.number:
+        return NumberField;
     case FormFieldType.vocabularySingleValue:
         return VocabularySingleValue;
     case FormFieldType.checkbox:
