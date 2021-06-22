@@ -101,27 +101,25 @@
     font-size: 14px;
     height: $nav-height;
     background: none;
-    color: #7c7c7c;
+    color: $sd-text-light;
     border:0;
     border-bottom: 3px solid transparent;
     &:hover {
-        border-bottom-color: #d8d8d8;
+        border-bottom-color: var(--sd-colour-line--strong);
         background: none;
         text-decoration: none;
     }
 }
-.nav-tabs > li > a {
-    @include box-sizing(border-box);
-}
+
 //Active state, and it's :hover to override normal :hover
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover,
 .nav-tabs > .active > button,
 .nav-tabs > .active > button:hover {
     background: none;
-    border-bottom-color: $sd-blue;
+    border-bottom-color: var(--sd-colour-interactive);
     cursor: default;
-    color: $grayDark;
+    color: $sd-text;
 }
 
 
@@ -134,14 +132,14 @@
     padding-bottom: 8px;
     margin-top: 2px;
     margin-bottom: 2px;
-    @include border-radius(5px);
+    border-radius: 5px;
 }
 
 // Active state
 .nav-pills > .active > a,
 .nav-pills > .active > a:hover {
     color: $white;
-    background-color: $linkColor;
+    background-color: var(--sd-colour-interactive);
 }
 
 

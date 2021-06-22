@@ -12,7 +12,7 @@
 .panel-search {
     padding: 3rem 2rem 0rem;
     border-radius: 4px;
-    background-color: $white;
+    background-color: var(--sd-item__main-Bg);
     min-width: 260px;
 }
 .panel-search-result {

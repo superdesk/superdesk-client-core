@@ -318,26 +318,30 @@ $split-modal-sidebar : 200px;
     }
 }
 
-$sd-leftNav-borderColor: #dedede;
-$sd-leftNavBtn-bgHoverColor: rgba(94,169,200,0.2);
-$sd-leftNavBtn-bgActiveColor: rgba(94,169,200,0.1);
-$sd-leftNavBtn-borderActive: 4px solid rgba(94,169,200,1);
+
+$sd-leftNav-bgColor: var(--sd-colour-panel-bg--100);
+$sd-leftNav-borderColor: var(--sd-colour-line--light);
+$sd-leftNavBtn-bgHoverColor: var(--sd-colour-interactive--alpha-20);
+$sd-leftNavBtn-bgActiveColor: var(--sd-colour-interactive--alpha-10);
+$sd-leftNavBtn-borderActive: 4px solid var(--sd-colour-interactive--active);
+$sd-leftNavBtn-transition: background-color 0.2s ease-out, color 0.1s ease-out;
 
 .modal__body--with-navigation {
     display: flex;
     padding: 0 !important;
 
     .modal__navigation {
-        background: $white;
+        background: $sd-leftNav-bgColor;
         border-right: 1px solid $sd-leftNav-borderColor;
 
         li {
             button {
                 font-size: 1.3rem;
-                color: $grayDark;
+                color: $sd-text;
                 padding: 1.6rem 3rem 1.6rem 3rem;
                 text-align: left;
                 min-width: 200px;
+                transition: $sd-leftNavBtn-transition;
             }
             &:hover {
                 background-color: $sd-leftNavBtn-bgHoverColor;

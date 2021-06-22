@@ -69,7 +69,6 @@
 
     &__parent {
 	    display: block;
-	    vertical-align: top;
         position: relative;
         font-size: 12px;
         color: #000;
@@ -95,7 +94,6 @@
     .search-handler {
         padding: 0;
         height: 47px;
-        box-shadow: inset 0px -7px 10px -7px rgba(0, 0, 0, 0.5) !important;
 
         .backlink {
             cursor: pointer;

@@ -1094,6 +1094,14 @@ $lightbox-composite-condensed : 100px;
 // Preview Header
 // ---------------------
 
+:root {
+    --previewHeaderBG: var(--sd-colour-panel-bg--000);
+
+}
+[data-theme="dark-ui"] {
+    --previewHeaderBG: var(--sd-colour-panel-bg--000);
+}
+
 .preview-header {
     position: relative;
     margin: 1px -20px 20px;
@@ -1101,8 +1109,8 @@ $lightbox-composite-condensed : 100px;
     border-top: 0;
     border-bottom: 0;
     z-index: 2;
-    @include box-sizing(border-box);
-    @include box-shadow(0px 1px 3px -1px rgba(0,0,0,0.2));
+    box-shadow: 0px 1px 3px -1px rgba(0,0,0,0.2);
+    border-bottom: 1px solid var(--sd-shadow-outline--2);
     @include transition(max-height .3s ease-in);
         &.active {
             @include transition(max-height .3s ease-in);
@@ -1118,49 +1126,68 @@ $lightbox-composite-condensed : 100px;
         }
     .preview-header__toggle {
         position: absolute;
-        width: 21px;
-        height: 21px;
+        width: 27px;
+        height: 20px;
         border: 0;
-        padding: 0;
+        padding: 0 0 4px;
         left: 50%;
         margin-left: -10.5px;
-        bottom: -11px;
-        background-color: $white;
+        bottom: -20px;
+        background-color: var(--previewHeaderBG);
         z-index: 3;
         line-height: 0;
-        @include border-radius(50%);
-        @include box-shadow(0px 0px 3px 0px rgba(0,0,0,0.4));
-        @include transition(transform 0.5s);
-        i { height: 15px; }
-        &.active { @include rotate(180deg); }
-    }
-        .preview-header__timestamp {
-            padding: 8px 16px 2px 0;
-            display: flex;
-            white-space: nowrap;
-            overflow: hidden;
-            label, time {
-                display: inline-block;
-                vertical-align: top;
-                font-size: 11px;
-                color: $sd-gray-text;
-                padding-right: .4em;
-                margin: 0;
-                font-weight: 300;
-            }
-            b {
-                color: #333;
-                font-size: 11px;
-                font-weight: 400;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                overflow: hidden;
+        border-radius: 0 0 18px 18px;
+        box-shadow: 0 -2px 0 0 var(--previewHeaderBG), 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--sd-shadow-outline--2);
+        border-top: none;
+        transition: all ease-in 0.12s;
+        i { 
+            height: 15px;
+            color: $sd-text;
+            opacity: 0.75;
+        }
+        &:hover {
+            height: 24px;
+            bottom: -24px;
+            padding-top: 2px;
+            i { 
+                opacity: 1;
             }
         }
+        &.active {
+            i { 
+                transform: rotate(180deg);
+            }
+        }
+    }
+    
+    .preview-header__timestamp {
+        padding: 8px 16px 2px 0;
+        display: flex;
+        white-space: nowrap;
+        overflow: hidden;
+        label, time {
+            display: inline-block;
+            vertical-align: top;
+            font-size: 11px;
+            color: $sd-text-light;
+            padding-right: .4em;
+            margin: 0;
+            font-weight: 300;
+        }
+    b {
+        color: $sd-text;
+        font-size: 11px;
+        font-weight: 400;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    }
         .preview-header__border-block {
             margin-left: 8px;
             padding-left: 8px;
-            border-left: 1px solid #e2e2e2;
+            border-left: 1px solid var(--sd-colour-line--medium);
 
         }
         .preview-header__flex-container {
@@ -1169,7 +1196,6 @@ $lightbox-composite-condensed : 100px;
             overflow: hidden;
             opacity: 0;
             @include transition(opacity 0.3s 0.4s);
-            @include box-sizing(border-box);
         }
         .preview-header__icon-block {
             width:25px;
@@ -1179,14 +1205,14 @@ $lightbox-composite-condensed : 100px;
             flex-direction: column;
             [class*=filetype-icon-],
             [class^=filetype-icon-] {
-                color: #999;
+                color: $sd-text-light;
             }
         }
         .preview-header__main-block,
         .preview-header__side-block {
             box-sizing: border-box;
             padding-left: 12px;
-            border-left: 1px solid #e2e2e2;
+            border-left: 1px solid var(--sd-colour-line--medium);
             //display: flex;
             //flex-direction: column;
             text-align: right;
@@ -1218,18 +1244,18 @@ $lightbox-composite-condensed : 100px;
             line-height: 16px;
             min-width: 0;
             margin: 0;
-            color: $sd-gray-text;
+            color: $sd-text-light;
             @include text-overflow();
             b {
                 font-size: 12px;
                 line-height: 12px;
-                color: #565656;
+                color: $sd-text-light;
                 padding-right: .2em;
             }
         }
         .data {
             font-size: 12px;
-            color: #686868;
+            color: $sd-text-light;
         }
         .inline-label {
             display: inline;
@@ -1237,14 +1263,14 @@ $lightbox-composite-condensed : 100px;
             text-transform: uppercase;
             font-size: 11px;
             margin: 0 6px 0 0;
-            color: $sd-gray-text;
+            color: $sd-text-light;
             line-height: 116.6%;
         }
         .takekey, company-codes {
             display: inline;
             //.text-overflow();
             font-size: 12px;
-            color: #333;
+            color: $sd-text;
             line-height: 116.6%;
         }
 
@@ -1257,10 +1283,10 @@ $lightbox-composite-condensed : 100px;
 
         .stage {
             font-size: 10px;
-            @include text-light();
+            font-weight: 300;
             letter-spacing: 0.035em;
             line-height: 29px;
-            color: $gray;
+            color: $sd-text-light;
             border: 0;
             background-color: transparent;
             text-transform: uppercase;
@@ -1270,8 +1296,8 @@ $lightbox-composite-condensed : 100px;
             white-space: nowrap;
             overflow: hidden;
             b {
-              color: $grayDark;
-              @include text-semibold();
+              color: $sd-text;
+              font-weight: 600;
             }
           }
         
@@ -1365,3 +1391,4 @@ figure.preview-overlay-on {
     overflow: auto;
     padding: 1px; // take border of the parent into account
 }
+

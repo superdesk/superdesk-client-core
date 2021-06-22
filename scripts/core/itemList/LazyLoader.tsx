@@ -20,8 +20,8 @@ interface IState<T> {
 const messageStyles: React.CSSProperties = {
     padding: 20,
     textAlign: 'center',
-    backgroundColor: 'white',
-    borderTop: '1px solid #ebebeb',
+    backgroundColor: 'transparent',
+    borderTop: '1px solid transparent',
 };
 
 function hasScrollbar(element: Element) {

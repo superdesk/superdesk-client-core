@@ -114,7 +114,7 @@
                 }
             }
             &.inactive .row-wrapper > div {
-                color: lighten($sd-text, 60%);
+                color: $sd-text-light;
                 &.email {
                     color: lighten($sd-blue-text, 30%);
                 }

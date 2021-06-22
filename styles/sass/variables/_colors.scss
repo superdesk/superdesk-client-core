@@ -26,7 +26,12 @@ $purple:                #9c5e96;
 
 $sd-background:         #f8f8f8;
 $sd-archived-bg:        #f1f1f1;
-$sd-text:               $grayDark;
+
+$sd-text:               var(--color-text);
+$sd-text-light:         var(--color-text-light);
+$sd-slugline:           var(--sd-slugline-color);
+$sd-slugline-darkUI:    hsl(196, 19%, 50%);
+
 $sd-gray-text:          $grayText;
 $sd-blue:               #5ea9c8;
 $sd-blue-text:          #3599b6;
@@ -132,8 +137,8 @@ $tablist-background:   #a1a1a1;
 $tabpane-background:   #f5f5f5;
 $tabpane-border:       #7c7c7c;
 
-$sidebar-background:   #dedede;
-$archive-sidebar-bg:   #ededed;
+$sidebar-background:   var(--sd-colour-sidebar-menu--00);
+$archive-sidebar-bg:   var(--sd-colour-sidebar-menu--00);
 
 //State colors
 $state-color-default:  rgb(140, 140, 140);

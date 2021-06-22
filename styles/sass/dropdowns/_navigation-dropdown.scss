@@ -41,7 +41,7 @@
     }
 
     .dropdown__menu {
-        @include border-radius(0px);
+        border-radius: 0px;
         border:0;
         z-index: 2;
         margin-top: -1px;

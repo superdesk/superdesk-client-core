@@ -1,5 +1,6 @@
-$toggleButtonTextColor: #5a5a5a;
-$toggleButtonBorderColor: #c6c6c6;
+$toggleButtonTextColor: $sd-text-light;
+$toggleButtonBorderColor: var(--sd-colour-line--medium);
+$toggleButtonBorderColorHover: var(--sd-colour-line--strong);
 
 .toggle-button {
     display: inline-block;
@@ -18,13 +19,13 @@ $toggleButtonBorderColor: #c6c6c6;
     @include transition(all 0.2s ease-out);
     &:hover {
         text-decoration: none;
-        color: darken($toggleButtonTextColor, 30%);
-        border-color: darken($toggleButtonBorderColor, 30%);
-        @include box-shadow(0 1px 4px rgba(0,0,0,0.20));
+        color: $sd-text;
+        border-color: $toggleButtonBorderColorHover;
+        box-shadow: 0 1px 4px hsla(0, 0%, 0%, 0.2);
     }
     &:active {
-        @include box-shadow(inset 0 2px 0 rgba(0,0,0,0.20));
-        border-color: darken($toggleButtonBorderColor, 30%);
+        box-shadow: inset 0 2px 0 hsla(0, 0%, 0%, 0.2);
+        border-color: $toggleButtonBorderColorHover;
     }
     .toggle-button__icon {
         color: $toggleButtonTextColor;
@@ -34,20 +35,19 @@ $toggleButtonBorderColor: #c6c6c6;
 
 .toggle-button--active {
     color: $white;
-    background-color: darken($sd-blue, 11%);
-    border-color: darken($sd-blue, 11%);
-    border-top-color: darken($sd-blue, 30%);
-    @include box-shadow(inset 0 2px 0 rgba(0,0,0,0.20));
+    background-color: var(--sd-colour-interactive--active);
+    border-color: var(--sd-colour-interactive--active);
+    border-top-color: var(--sd-colour-interactive-btn-border);
+    box-shadow: inset 0 2px 0 hsla(0, 0%, 0%, 0.2);
     &:hover {
         color: $white;
-        border-color: darken($sd-blue, 16%);
-        background-color: darken($sd-blue, 16%);
-        @include box-shadow(inset 0 2px 0 rgba(0,0,0,0.20));
+        background-color: var(--sd-colour-interactive);
+        box-shadow: inset 0 2px 0 hsla(0, 0%, 0%, 0.2);
     }
     &:active {
-        @include box-shadow(inset 0 2px 0 rgba(0,0,0,0.20));
-        border-color: darken($sd-blue, 11%);
-        background-color: darken($sd-blue, 1%);
+        box-shadow: inset 0 2px 0 hsla(0, 0%, 0%, 0.2);
+        //border-color: darken($sd-blue, 11%);
+        background-color: var(--sd-colour-interactive--hover);
     }
     .toggle-button__icon {
         color: $white;

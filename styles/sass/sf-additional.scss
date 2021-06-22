@@ -13,15 +13,15 @@
     right: 10px;
 }
 ::-webkit-scrollbar:hover {
-    background-color: #e8e8e8;
+    background-color: var(--sd-colour__webkit-scrollbar--hover);
     cursor: pointer;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #bbb;
+    background: var(--sd-colour__webkit-scrollbar-thumb);
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #777;
+    background: var(--sd-colour__webkit-scrollbar-thumb--hover);
     cursor: pointer;
 }
 
@@ -181,147 +181,147 @@
     }
 }
 
-.flat-searchbar {
-    flex-grow: 0;
-    .search-handler {
-        min-width: 48px;
-        height: $nav-height;
-        padding: 10px 10px 10px 14px;
-        @include box-sizing(border-box);
-        background: none;
-        display: flex;
-        white-space: nowrap;
-        @include transition(all 0.3s ease);
-        input {
-            height: 28px;
-            line-height: 100%;
-            font-size: 14px;
-            border: 0 !important;
-            width: 0;
-            padding: 0;
-            background-color: rgba(255,255,255,0);
-            @include transition(all 0.3s ease);
-            &:focus {
-                @include box-shadow(none !important);
-            }
-        }
-        .trigger-icon {
-            @include user-select(none);
-            width: 28px;
-            height: 28px;
-            display: block;
-            @include opacity(50);
-            &:hover {
-                cursor: pointer;
-                @include opacity(80);
-            }
-            i {
-                padding: 7px 3px 4px 6px;
-            }
-        }
-    }
-    .separator-handler {
-        margin: 9px 0 0 5px;
-        border-right: 2px dotted #bcbcbc;
-        height: 30px;
-        float: left;
-    }
+// .flat-searchbar {
+//     flex-grow: 0;
+//     .search-handler {
+//         min-width: 48px;
+//         height: $nav-height;
+//         padding: 10px 10px 10px 14px;
+//         @include box-sizing(border-box);
+//         background: none;
+//         display: flex;
+//         white-space: nowrap;
+//         @include transition(all 0.3s ease);
+//         input {
+//             height: 28px;
+//             line-height: 100%;
+//             font-size: 14px;
+//             border: 0 !important;
+//             width: 0;
+//             padding: 0;
+//             background-color: rgba(255,255,255,0);
+//             @include transition(all 0.3s ease);
+//             &:focus {
+//                 @include box-shadow(none !important);
+//             }
+//         }
+//         .trigger-icon {
+//             @include user-select(none);
+//             width: 28px;
+//             height: 28px;
+//             display: block;
+//             @include opacity(50);
+//             &:hover {
+//                 cursor: pointer;
+//                 @include opacity(80);
+//             }
+//             i {
+//                 padding: 7px 3px 4px 6px;
+//             }
+//         }
+//     }
+//     .separator-handler {
+//         margin: 9px 0 0 5px;
+//         border-right: 2px dotted #bcbcbc;
+//         height: 30px;
+//         float: left;
+//     }
 
-    .search-close {
-        border: 0;
-        background: none;
-        display: none;
-        height: 1.6rem;
-        width: 1.6rem;
-        align-self: center;
-        flex-grow: 0;
-        flex-shrink: 0;
-        margin: 0 1rem 0 0;
-        padding: 0;
-        opacity: 0.35;
-        transition: opacity 0.2s ease-out;
-        color: currentColor;
-        opacity: 0;
-        &.visible {
-            opacity: 0.35;
-            &:hover {
-                opacity: 0.7;
-            }
-            &:active {
-                opacity: 1;
-            }
-        }
-        i {
-            display: block;
-        }
-    }
+//     .search-close {
+//         border: 0;
+//         background: none;
+//         display: none;
+//         height: 1.6rem;
+//         width: 1.6rem;
+//         align-self: center;
+//         flex-grow: 0;
+//         flex-shrink: 0;
+//         margin: 0 1rem 0 0;
+//         padding: 0;
+//         opacity: 0.35;
+//         transition: opacity 0.2s ease-out;
+//         color: currentColor;
+//         opacity: 0;
+//         &.visible {
+//             opacity: 0.35;
+//             &:hover {
+//                 opacity: 0.7;
+//             }
+//             &:active {
+//                 opacity: 1;
+//             }
+//         }
+//         i {
+//             display: block;
+//         }
+//     }
 
-    .search-start {
-        height: 2.8rem;
-        width: 2.8rem;
-        flex-grow: 0;
-        flex-shrink: 0;
-        align-self: center;
-        margin: 0 0.8rem 0 0;
-        padding: 0;
-        transition: all 0.2s ease-out;
-        background-color: rgba(61,143,177,0.25);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        i {
-            transition: color 0.2s ease-out;
-            color: $sd-blue;
-        }
-        &.visible {
-            opacity: 1;
-            &:hover {
-                background-color: rgba(61,143,177,0.75);
-                i {
-                    color: $white;
-                }
-            }
-            &:active {
-                background-color: rgba(61,143,177,1);
-                i {
-                    color: $white;
-                }
-            }
-        }
-        &:hover {
-            background-color: rgba(61,143,177,0.75);
-            i {
-                color: $white;
-            }
-        }
-        &:active {
-            background-color: rgba(61,143,177,1);
-            i {
-                color: $white;
-            }
-        }
-    }
+//     .search-start {
+//         height: 2.8rem;
+//         width: 2.8rem;
+//         flex-grow: 0;
+//         flex-shrink: 0;
+//         align-self: center;
+//         margin: 0 0.8rem 0 0;
+//         padding: 0;
+//         transition: all 0.2s ease-out;
+//         background-color: rgba(61,143,177,0.25);
+//         border-radius: 50%;
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         opacity: 0;
+//         i {
+//             transition: color 0.2s ease-out;
+//             color: $sd-blue;
+//         }
+//         &.visible {
+//             opacity: 1;
+//             &:hover {
+//                 background-color: rgba(61,143,177,0.75);
+//                 i {
+//                     color: $white;
+//                 }
+//             }
+//             &:active {
+//                 background-color: rgba(61,143,177,1);
+//                 i {
+//                     color: $white;
+//                 }
+//             }
+//         }
+//         &:hover {
+//             background-color: rgba(61,143,177,0.75);
+//             i {
+//                 color: $white;
+//             }
+//         }
+//         &:active {
+//             background-color: rgba(61,143,177,1);
+//             i {
+//                 color: $white;
+//             }
+//         }
+//     }
 
 
 
-    &.extended {
-        flex-grow: 1;
-        .search-handler {
-            input {
-                width: auto;
-                padding: 0 6px;
-            }
-        }
-        .separator-handler {
-            margin-left: 14px;
-        }
-        .search-close {
-            display: inline-block;
-        }
-    }
-}
+//     &.extended {
+//         flex-grow: 1;
+//         .search-handler {
+//             input {
+//                 width: auto;
+//                 padding: 0 6px;
+//             }
+//         }
+//         .separator-handler {
+//             margin-left: 14px;
+//         }
+//         .search-close {
+//             display: inline-block;
+//         }
+//     }
+// }
 
 .monitoring-backlink{
     .separator-handler {
@@ -1452,7 +1452,7 @@
     max-width: 650px;
     > li {
         @include user-select(none);
-        background: #fff;
+        background-color: var(--sd-item__main-Bg);
         margin-bottom: 6px;
         margin-right: 2px;
         @include border-radius(2px);
@@ -1460,10 +1460,10 @@
         min-height: 18px;
         color: inherit;
         position: relative;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.16), 0 0 1px rgba(0, 0, 0, 0.1);
         transition: all ease-in-out 0.2s;
         &:hover {
-            box-shadow: 0 0px 3px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.2);
+            background-color: var(--sd-item__main-Bg--hover);
         }
         &.active {
             background: $sd-blue;
