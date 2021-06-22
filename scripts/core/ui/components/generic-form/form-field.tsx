@@ -14,9 +14,12 @@ import {getMacroSingleValue} from './input-types/macro_single_value';
 import {YesNo} from './input-types/yes-no';
 import {IFormField, IFormGroup} from 'superdesk-api';
 import {Select} from './input-types/select';
+import {ArrayField} from './input-types/array';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
+    case FormFieldType.arrayOf:
+        return ArrayField;
     case FormFieldType.textSingleLine:
         return TextSingleLine;
     case FormFieldType.textEditor3:

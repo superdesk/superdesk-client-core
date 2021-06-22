@@ -16,6 +16,7 @@ export function generateFilterForServer(type: FormFieldType, value: any): any {
     case FormFieldType.stageSingleValue:
     case FormFieldType.macroSingleValue:
     case FormFieldType.select:
+    case FormFieldType.arrayOf:
         return value;
 
     case FormFieldType.textEditor3:

@@ -26,6 +26,8 @@ function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
         return FormFieldType.yesNo;
     case FormFieldType.select:
         return FormFieldType.select;
+    case FormFieldType.arrayOf:
+        return FormFieldType.arrayOf;
     default:
         assertNever(type);
     }

@@ -50,6 +50,11 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
                 ],
             },
         };
+    case FormFieldType.arrayOf:
+        return {
+            type: type,
+            field: 'test-field',
+        };
     default:
         assertNever(type);
     }
