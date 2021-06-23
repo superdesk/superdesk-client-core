@@ -19,14 +19,15 @@ export class CardComponent extends React.Component<IProps, {}> {
     };
 
     selectDesk(desk: IDesk) {
-        this.props.onDeskSelect(desk);
+        this.props.onDeskSelect ?
+            this.props.onDeskSelect(desk) : null;
     }
 
     render() {
         return (
             <div className="sd-board" >
                 <div
-                    className="sd-board__header sd-board__header--clickable"
+                    className={"sd-board__header" + (this.props.onDeskSelect ? " sd-board__header--clickable" : "")}
                     onClick={() => this.selectDesk(this.props.desk)}
                 >
                     <h3 className="sd-board__header-title">{this.props.desk.name}</h3>

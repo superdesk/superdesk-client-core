@@ -79,6 +79,8 @@ export class MasterDesk extends React.Component<{}, IState> {
             desks: ng.get('desks'),
             preferences: ng.get('preferencesService'),
         };
+
+        this.onTabChange = this.onTabChange.bind(this);
     }
 
     componentDidMount() {
@@ -91,6 +93,7 @@ export class MasterDesk extends React.Component<{}, IState> {
         if (appConfig?.apps?.includes('superdesk-planning')) {
             this.setState({planning: true});
         }
+        this.setState({planning: true});
     }
 
     getDeskList(enabledDeskIds?: Array<string>, showAll?: boolean) {
