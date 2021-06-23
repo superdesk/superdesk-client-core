@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import {gettext} from 'core/utils';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
-import {ListItem, ListItemActionsMenu, ListItemColumn} from 'core/components/ListItem';
+import {ListItem, ListItemActionsMenu, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {getGenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {IFormField, IFormGroup, IGenericListPageComponent} from 'superdesk-api';
@@ -76,14 +76,30 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
             page: IGenericListPageComponent<ISystemMessage>,
         ) => (
             <ListItem key={key} onClick={() => page.openPreview(item._id)}>
-                <ListItemColumn bold noBorder>
-                    <b>{item.message_title}</b>
-                    {' '}
-                    <Label type={item.type} text={getTypeLabel(item.type)} />
-                </ListItemColumn>
                 <ListItemColumn ellipsisAndGrow noBorder>
-                    {getFormFieldPreviewComponent(item, formConfig.form[3] as IFormField, {showAsPlainText: true})}
+                    <ListItemRow>
+                        <ListItemColumn bold noBorder>
+                            <b>{item.message_title}</b>
+                        </ListItemColumn>
+
+                        <ListItemColumn>
+                            {
+                                getFormFieldPreviewComponent(
+                                    item,
+                                    formConfig.form[3] as IFormField,
+                                    {showAsPlainText: true},
+                                )
+                            }
+                        </ListItemColumn>
+                    </ListItemRow>
+
+                    <ListItemRow>
+                        <ListItemColumn>
+                            <Label type={item.type} text={getTypeLabel(item.type)} />
+                        </ListItemColumn>
+                    </ListItemRow>
                 </ListItemColumn>
+
                 <ListItemActionsMenu>
                     <div style={{display: 'flex'}}>
                         <button
