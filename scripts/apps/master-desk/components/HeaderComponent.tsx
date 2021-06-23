@@ -1,20 +1,32 @@
 import React from 'react';
 import ng from 'core/services/ng';
 import {IDesk} from 'superdesk-api';
-
-import {CheckButtonGroup, RadioButton, Switch} from 'superdesk-ui-framework/react';
-import {IMasterDeskTab, getLabelForMasterDeskTab, USER_PREFERENCE_SETTINGS} from '../MasterDesk';
+import {
+    CheckButtonGroup,
+    RadioButton,
+    Switch,
+    Dropdown,
+    NavButton,
+    ButtonGroup,
+    Button,
+} from 'superdesk-ui-framework/react';
+import {IMenuItem} from 'superdesk-ui-framework/app-typescript/components/Dropdown';
+import {IMasterDeskTab, IMasterDeskViews, getLabelForMasterDeskTab, USER_PREFERENCE_SETTINGS} from '../MasterDesk';
 import {gettext} from 'core/utils';
 
 interface IProps {
     desks: Array<IDesk>;
     activeTab: string;
+    currentView: IMasterDeskViews;
+    selectedDesk: IDesk;
     isFilterAllowed?: boolean;
     isFilterOpened: boolean;
     isPlaningActive?: boolean;
     onTabChange(tab: IMasterDeskTab): void;
+    onDeskChange(desk: IDesk): void;
     onUpdateDeskList(desks: Array<string>, showAllDesks: boolean): void;
     onFilterOpen(filter: boolean): void;
+    onViewChange(view: IMasterDeskViews): void;
 }
 
 interface IState {
@@ -26,6 +38,7 @@ interface IState {
 
 export class HeaderComponent extends React.Component<IProps, IState> {
     services: any;
+    deskDropdownItems: Array<IMenuItem> = [];
 
     constructor(props: IProps) {
         super(props);
@@ -40,10 +53,13 @@ export class HeaderComponent extends React.Component<IProps, IState> {
         this.services = {
             desks: ng.get('desks'),
             preferences: ng.get('preferencesService'),
+            session: ng.get('session'),
+            location: ng.get('$location'),
         };
 
-        this.changeTab.bind(this);
-        this.openFilter.bind(this);
+        this.changeTab = this.changeTab.bind(this);
+        this.openFilter = this.openFilter.bind(this);
+        this.changeView = this.changeView.bind(this);
     }
 
     componentDidMount() {
@@ -54,6 +70,10 @@ export class HeaderComponent extends React.Component<IProps, IState> {
             const [preferences] = res;
 
             this.setState({availableDesks: this.services.desks.desks._items});
+
+            this.services.desks.desks._items.map((item) => this.deskDropdownItems.push({
+                label: item.name, onSelect: () => this.props.onDeskChange(item),
+            }));
 
             if (preferences) {
                 this.setState({
@@ -71,6 +91,10 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
     openFilter() {
         this.props.onFilterOpen(!this.props.isFilterOpened);
+    }
+
+    changeView(newView: IMasterDeskViews) {
+        this.props.onViewChange(newView);
     }
 
     toggleDesk(desk: IDesk) {
@@ -112,8 +136,17 @@ export class HeaderComponent extends React.Component<IProps, IState> {
         });
     }
 
+    goToDesk(desk: IDesk) {
+        this.services.desks.setCurrentDeskId(desk._id);
+        this.services.location.url('/workspace/monitoring');
+    }
+
     isDeskActive(desk: IDesk) {
         return this.state.activeDesks.includes(desk._id);
+    }
+
+    isDeskMember(desk: IDesk) {
+        return desk ? !!desk.members.find((user: any) => user.user === this.services.session.identity._id) : false;
     }
 
     render() {
@@ -128,7 +161,29 @@ export class HeaderComponent extends React.Component<IProps, IState> {
         return (
             <div className="sd-main-content-grid__header">
                 <div className="subnav">
-                    {this.props.isFilterAllowed ? (
+                    {this.props.currentView === IMasterDeskViews.singleView ? (
+                        <React.Fragment>
+                            <div className="flat-searchbar">
+                                <button
+                                    className="navbtn navbtn--left"
+                                    onClick={() => this.changeView(IMasterDeskViews.card)}
+                                >
+                                    <i className="icon-arrow-left" />
+                                </button>
+                            </div>
+                            <ButtonGroup align="inline">
+                                <Dropdown items={this.deskDropdownItems}>
+                                    <NavButton
+                                        type="default"
+                                        text={this.props.selectedDesk.name}
+                                        onClick={() => false}
+                                    />
+                                </Dropdown>
+                            </ButtonGroup>
+                        </React.Fragment>
+                    ) : null}
+
+                    {this.props.isFilterAllowed && this.props.currentView !== IMasterDeskViews.singleView ? (
                         <button
                             className={'sd-navbtn sd-navbtn--left sd-navbtn--darker' +
                                 (this.props.isFilterOpened ? ' sd-navbtn--active' : '')}
@@ -138,7 +193,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                         </button>
                     ) : null}
 
-                    <div className="button-group button-group--left button-group--padded">
+                    <ButtonGroup align="left" padded={true}>
                         <CheckButtonGroup>
                             <RadioButton
                                 value={this.props.activeTab}
@@ -146,7 +201,19 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                 onChange={(value: IMasterDeskTab) => this.changeTab(value)}
                             />
                         </CheckButtonGroup>
-                    </div>
+                    </ButtonGroup>
+
+                    {this.props.currentView === IMasterDeskViews.singleView &&
+                        this.isDeskMember(this.props.selectedDesk) ? (
+                            <ButtonGroup align="right">
+                                <Button
+                                    text={gettext('Go To Desk')}
+                                    style="hollow"
+                                    onClick={() => this.goToDesk(this.props.selectedDesk)}
+                                />
+                            </ButtonGroup>
+                        ) : null}
+
                     <div className={'dropdown' + (this.state.openDeskDropdown ? ' open' : '')}>
                         <button
                             className="sd-navbtn"

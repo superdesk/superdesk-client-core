@@ -15,12 +15,17 @@ import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 import UserActivityWidget from 'apps/dashboard/user-activity/components/UserActivityWidget';
-import {isObject} from 'lodash';
 
 export enum IMasterDeskTab {
     overview = 'overview',
     users = 'users',
     assignments = 'assignments',
+}
+
+export enum IMasterDeskViews {
+    card = 'overview',
+    detailed = 'users',
+    singleView = 'single-view',
 }
 
 export const USER_PREFERENCE_SETTINGS = 'masterdesk:desks';
@@ -42,11 +47,13 @@ interface IState {
     desks: Array<IDesk>;
     stages: Array<IStage>;
     currentTab: IMasterDeskTab;
+    selectedDesk: IDesk;
     filterOpen: boolean;
     activeUser: IUser;
     planning: boolean;
     deskFilter: string;
     filters: any;
+    currentView: IMasterDeskViews;
 }
 
 export class MasterDesk extends React.Component<{}, IState> {
@@ -57,6 +64,7 @@ export class MasterDesk extends React.Component<{}, IState> {
 
         this.state = {
             currentTab: IMasterDeskTab.overview,
+            selectedDesk: null,
             filterOpen: false,
             desks: [],
             stages: [],
@@ -64,12 +72,15 @@ export class MasterDesk extends React.Component<{}, IState> {
             planning: false,
             deskFilter: '',
             filters: {},
+            currentView: IMasterDeskViews.card,
         };
 
         this.services = {
             desks: ng.get('desks'),
             preferences: ng.get('preferencesService'),
         };
+
+        this.onTabChange = this.onTabChange.bind(this);
     }
 
     componentDidMount() {
@@ -104,18 +115,29 @@ export class MasterDesk extends React.Component<{}, IState> {
         return this.state.currentTab === IMasterDeskTab.overview;
     }
 
+    onTabChange(tab) {
+        this.setState({
+            currentTab: tab,
+            currentView: IMasterDeskViews.card,
+        });
+    }
+
     render() {
         return (
             <div className="sd-content-wrapper__main-content-area sd-main-content-grid">
                 <HeaderComponent
                     activeTab={this.state.currentTab}
                     desks={this.state.desks}
+                    currentView={this.state.currentView}
+                    selectedDesk={this.state.selectedDesk}
                     isPlaningActive={this.state.planning}
                     isFilterAllowed={this.isFilterAllowed()}
                     isFilterOpened={this.state.filterOpen}
-                    onTabChange={(tab) => this.setState({currentTab: tab})}
+                    onTabChange={(tab) => this.onTabChange(tab)}
+                    onDeskChange={(desk) => this.setState({selectedDesk: desk})}
                     onUpdateDeskList={(desks, showAll) => this.getDeskList(desks, showAll)}
                     onFilterOpen={(filter) => this.setState({filterOpen: filter})}
+                    onViewChange={(view) => this.setState({currentView: view})}
                 />
 
                 {this.isFilterAllowed() ? (
@@ -148,8 +170,12 @@ export class MasterDesk extends React.Component<{}, IState> {
                                         desks={this.state.desks}
                                         stages={this.state.stages}
                                         deskFilter={this.state.deskFilter}
+                                        selectedDesk={this.state.selectedDesk}
                                         filters={this.state.filters}
+                                        currentView={this.state.currentView}
+                                        onViewChange={(view) => this.setState({currentView: view})}
                                         onFilterChange={(filters) => this.setState({filters: filters})}
+                                        onDeskChange={(desk) => this.setState({selectedDesk: desk})}
                                     />
                                 );
                             case IMasterDeskTab.users:
