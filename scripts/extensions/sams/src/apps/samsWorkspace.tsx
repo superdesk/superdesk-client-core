@@ -12,6 +12,8 @@ import {
     IAssetCallback,
     IAssetItem,
     IAssetSearchParams,
+    ISetItem,
+    IStorageDestinationItem,
     LIST_ACTION,
     ASSET_CONTENT_PANEL_STATE,
 } from '../interfaces';
@@ -124,16 +126,25 @@ export function downloadAssetBinary(asset: IAssetItem): void {
 
 export class SamsWorkspaceApp extends React.PureComponent {
     onStoreInit(store: Store) {
-        return Promise.all([
+        return Promise.all<Array<IStorageDestinationItem>, Array<ISetItem>>([
             store.dispatch<any>(loadStorageDestinations()),
             store.dispatch<any>(loadSets()),
-            store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
-                .catch(() => {
-                    // Catch errors here so `Promise.all` still returns on fetching error
-                    // This can happen when invalid search params are stored in the URL
-                    return Promise.resolve();
-                }),
-        ]);
+        ])
+            .then(([destinations, sets]) => {
+                if (destinations.length && sets.length) {
+                    // Only load Assets if we have both StorageDestinations and Sets configured
+                    return store.dispatch<any>(
+                        updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE),
+                    );
+                }
+
+                return Promise.resolve();
+            })
+            .catch(() => {
+                // Catch errors here so `Promise.all` still returns on fetching error
+                // This can happen when invalid search params are stored in the URL
+                return Promise.resolve();
+            });
     }
 
     render() {

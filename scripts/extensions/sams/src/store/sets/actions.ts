@@ -73,8 +73,12 @@ export function loadSets(): IThunkAction<Array<ISetItem>> {
                 });
 
                 dispatch(receiveSets(sets));
-                return dispatch(loadAssetsCount(setIds))
-                    .then(() => sets);
+
+                // Only load Set's Asset count if there are Sets configured
+                return !sets.length ?
+                    sets :
+                    dispatch(loadAssetsCount(setIds))
+                        .then(() => sets);
             });
     };
 }
@@ -85,7 +89,8 @@ export function loadAssetsCount(setIds: Array<string>): IThunkAction<Dictionary<
             .then((counts: Dictionary<string, number>) => {
                 dispatch(receiveAssetsCount(counts));
                 return Promise.resolve(counts);
-            });
+            })
+            .catch(() => ({}));
     };
 }
 
