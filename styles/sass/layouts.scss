@@ -81,7 +81,7 @@ a:hover, .link:hover {
             box-shadow: 2px 0 10px 0 rgba(0,0,0,0.3);
             right: 44%;
             z-index:100;
-            border-right: 3px solid #666;
+            border-right: 3px solid var(--sd-colour__splitter);
             @include transition(all .5s);
             @media only screen and (max-width : 1430px) {
                 right: 54%;
@@ -92,6 +92,9 @@ a:hover, .link:hover {
             }
             .ui-resizable-handle {
                 display: block;
+            }
+            &:hover {
+                border-right-color: var(--sd-colour-interactive);
             }
         }
 
@@ -132,8 +135,8 @@ a:hover, .link:hover {
     right: 0;
     @include box-sizing(border-box);
     bottom: $authoring-opened-articles;
-        left: $sidebar-width;
-        background-color: $sd-background;
+    left: $sidebar-width;
+    background-color: $sd-background;
 }
 
 #authoring-container {
@@ -754,19 +757,19 @@ $slide-pane-width: 400px;
 
 
 //color variables
-$main-item-color: #607d8b;
-$main-item-color-inactive: #aaa;
+$main-item-color:           hsl(200, 18%, 46%);
+$main-item-color-inactive:  hsl(0, 0%, 67%);
 
 .card-box {
-    @include box-sizing(border-box);
     position: relative;
-    @include border-radius(2px);
+    border-radius: 4px;
     box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
-    background-color: white;
+    background-color: var(--sd-item__main-Bg);
     font-size: 13px;
-    color: #333;
+    color: $sd-text;
     &--with-click {
         &:hover {
+            background-color: var(--sd-item__main-Bg--hover);
             box-shadow: 0 1px 8px 0 rgba(0, 0, 0, 0.5);
         }
     }
@@ -778,7 +781,7 @@ $main-item-color-inactive: #aaa;
     .card-box__header {
         background-color: $main-item-color;
         padding: 0;
-        @include border-radius (2px 2px 0 0);
+        border-radius: 4px 4px 0 0;
         color: white;
         @include box-sizing(border-box);
         &::before {
@@ -789,7 +792,7 @@ $main-item-color-inactive: #aaa;
             right: 0;
             height: 8px;
             background-color: rgba(0,0,0,.2);
-            @include border-radius (2px 2px 0 0);
+            border-radius: 4px 4px 0 0;
         }
         .dropdown {
             float: right;
@@ -811,7 +814,7 @@ $main-item-color-inactive: #aaa;
                 z-index: 2;
                 opacity: .4;
                 i {
-                    color: #fff;
+                    color: $white;
                 }
                 &:hover {
                     opacity: .7;
@@ -830,15 +833,21 @@ $main-item-color-inactive: #aaa;
             display:flex;
             padding: 14px 24px 6px 14px;
             i {
-                color: rgba(255,255,255, 0.8);
+                color: $white;
+                opacity: 0.7;
                 padding-right: 10px;
             }
+        }
+    }
+    &.inactive {
+        .card-box__header {
+            background-color: $main-item-color-inactive;
         }
     }
 
     &.active {
         .card-box__header {
-            background-color: $sd-blue;
+            background-color: var(--sd-item__main-Bg--activated);
         }
     }
 
@@ -847,7 +856,6 @@ $main-item-color-inactive: #aaa;
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.04em;
-        @include box-sizing(border-box);
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
@@ -867,14 +875,15 @@ $main-item-color-inactive: #aaa;
         }
     }
     .card-box__sub-heading {
-        background-color: #9daeb7;
+        background-color: var(--sd-colour-panel-bg--100);
         font-size: 11px;
         font-weight: 500;
-        color: white;
+        color: $sd-text;
         text-transform: uppercase;
         padding: 4px 16px;
         &.success {
             background-color: #8bc34a;
+            color: $white;
         }
     }
     .card-box__btn-group {
@@ -888,7 +897,7 @@ $main-item-color-inactive: #aaa;
             color: $white;
             opacity: 0.4;
             &:focus, &:hover {
-                @include box-shadow(none);
+                box-shadow: none;
                 opacity: 1;
             }
             [class^="icon-"],
@@ -901,21 +910,20 @@ $main-item-color-inactive: #aaa;
         padding-top: 8px;
         line-height: 0;
         & + .heading {
-            background-color: white;
+            background-color: var(--sd-colour-panel-bg--200);
             font-weight: 500;
             text-align: center;
-            color: #333;
+            color: $sd-text;
             padding: 10px 16px;
         }
     }
     .card-box__content {
         padding: 16px;
         flex-grow: 1;
-        @include box-sizing(border-box);
         h4 {
             text-transform: uppercase;
             font-size: 11px;
-            color: rgba(0,0,0,.5);
+            color: $sd-text-light;
             letter-spacing: 0.04em;
             margin-bottom: 4px;
             &.with-value {
@@ -927,9 +935,9 @@ $main-item-color-inactive: #aaa;
                 height: 15px;
                 margin: auto 0;
                 padding: 3px 5px 0;
-                border-radius: 8px;
-                color: rgba(255,255,255,1);
-                background: rgba(0,0,0,.25);
+                border-radius: 999px;
+                color: white;
+                background: hsla(0, 0%, 39%, 0.45);
                 font-size: 10px;
                 line-height: 100%;
                 letter-spacing: .06em;
@@ -938,7 +946,7 @@ $main-item-color-inactive: #aaa;
             .value-label {
                 float: right;
                 font-size: 13px;
-                color: #333;
+                color: $sd-text;
                 font-weight: 400;
                 text-transform: none;
                 letter-spacing: 0em;
@@ -957,12 +965,11 @@ $main-item-color-inactive: #aaa;
     .card-box__placeholder {
         padding: 16px;
         flex-grow: 1;
-        @include box-sizing(border-box);
         height: calc(100% - 48px);
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $grayLight;
+        color: $sd-text-light;
         font-weight: 300;
         font-size: 1.2rem;
 
@@ -978,7 +985,7 @@ $main-item-color-inactive: #aaa;
 
         li, .card-box__content-list-item {
             padding: 16px;
-            border-bottom: 1px solid #ebebeb;
+            border-bottom: 1px solid var(--sd-colour-line--light);
             &--inline {
                 display: flex;
                 h4 { flex: 1 1; }
@@ -995,7 +1002,7 @@ $main-item-color-inactive: #aaa;
             }
             &--border-bottom {
                 &:last-child {
-                    border-bottom: 1px solid #ebebeb;
+                    border-bottom: 1px solid var(--sd-colour-line--light);
                 }
             }
             &--small {
@@ -1008,7 +1015,7 @@ $main-item-color-inactive: #aaa;
         .creation-time {
             display: block;
             font-size: 12px;
-            color: #999;
+            color: $sd-text-light;
             i {
                 display: inline-block;
                 opacity: 0.5;
@@ -1027,7 +1034,7 @@ $main-item-color-inactive: #aaa;
     }
     .card-box__time-date {
         font-size: 11px;
-        color: #ababab;
+        color: $sd-text-lighter;
         font-weight: 300;
         &--reverse-color {
             color: rgba(255,255,255, 0.6);
@@ -1042,9 +1049,9 @@ $main-item-color-inactive: #aaa;
     }
     .card-box__footer {
         padding: 14px 16px;
-        border-top: 1px solid #ccc;
-        background-color: #f8f8f8;
-        @include border-radius (0 0 2px 2px);
+        border-top: 1px solid var(--sd-colour-line--medium);
+        background-color: var(--sd-item__main-Bg);
+        border-radius: 0 0 4px 4px;
         &--light {
             background-color: white;
         }
@@ -1070,7 +1077,6 @@ $main-item-color-inactive: #aaa;
 }
 
 $flex-grid-gap:          16px; // space between items is $flex-grid-gap*2
-$flex-grid-box-bg:       white;
 
 // grid
 
@@ -1082,14 +1088,7 @@ $flex-grid-box-bg:       white;
     overflow: hidden;
     overflow-x: auto;
     .flex-item {
-        @include box-sizing(border-box);
         position: relative;
-
-        &.inactive {
-            .card-box__header {
-                background-color: $main-item-color-inactive;
-            }
-        }
     }
     &.wrap-items {
         flex-wrap: wrap;
@@ -1105,7 +1104,6 @@ $flex-grid-box-bg:       white;
     &.box {
         .flex-item {
             margin: $flex-grid-gap;
-            background-color: $flex-grid-box-bg;
         }
     }
     // default grid setup (mobile first), calc for 1-6 columns

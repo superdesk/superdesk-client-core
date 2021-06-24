@@ -247,8 +247,9 @@ $priority-label-color-6 : #c0c9a1;
 
 .profile-label {
     @extend .state-label;
-    background-color: $state-color-default;
-    color: $white;
+    background-color: var(--sd-colour-bg-translucent--08);
+    color: $sd-text;
+    border: none !important;
 }
 
 .language-label {

@@ -187,7 +187,7 @@
             @include text-semibold();
             margin-top: 15px;
             margin-bottom: 20px;
-            color: #333;
+            color: $sd-text;
 
             &.condensed {
                 padding-right: 15px;
@@ -230,7 +230,7 @@
             }
             .description {
                 font-style: italic;
-                color: #656565;
+                color: $sd-text-light;
                 margin-top: 15px;
             }
             .picture-preview, .graphic-preview {
@@ -261,7 +261,7 @@
                 margin-bottom: 14px;
                 font-size: 15px;
                 font-weight: 400;
-                line-height: 140%;
+                line-height: 1.5;
                 p {
                     font-weight: 400;
                 }
@@ -282,7 +282,7 @@
             }
             p {
                 font-size: 15px;
-                line-height: 140%;
+                line-height: 1.5;
                 font-weight: 300;
                 word-wrap: break-word;
                 &.description-text {
@@ -291,16 +291,17 @@
                 }
             }
             .body-text {
-                line-height: 140%;
+                line-height: 1.5;
                 h1, h2, h3, h4, h5, h6 {
                     font-size: 16px;
+                    line-height: 1.4;
                     margin-bottom: 10px;
                 }
             }
             .body-footer {
                 font-size: 13px;
-                color: #ADADAD;
-                line-height: 140%;
+                color: $sd-text-light;
+                line-height: 1.5;
                 margin-top: 30px;
             }
             table {
@@ -308,10 +309,10 @@
                 border-collapse: collapse;
                 resize: both;
                 table-layout: auto;
-                border: 1px solid #dadada;
+                border: 1px solid var(--sd-colour-line--light);
                 margin: 16px 0;
                 td, th {
-                    border: 1px solid #dadada;
+                    border: 1px solid var(--sd-colour-line--light);
                     padding: 5px 8px;
                     font-size: 14px;
                     font-weight: 300;
@@ -349,7 +350,7 @@
                 @include text-semibold();
                 margin-top: 15px;
                 margin-bottom: 20px;
-                color: #333;
+                color: $sd-text;
 
                 &.condensed {
                     padding-right: 15px;
@@ -401,14 +402,14 @@
             font-size: 1.3rem;
             font-weight: 300;
             opacity: 0.75;
-            border-bottom: 1px dotted rgba(123,123,123,0.4);
+            border-bottom: 1px dotted var(--sd-colour-line--light);
         }
     }
 }
 
 .metadata-view {
     div {
-        border-bottom: 1px solid #e5e5e5;
+        border-bottom: 1px solid var(--sd-colour-line--light);
     }
     div:last-child {
         border: 0px;
@@ -425,9 +426,9 @@
             width: 140px;
             font-size: 11px;
             text-transform: uppercase;
-            color:#999;
+            color: $sd-text-lighter;
             line-height: 20px;
-            @include text-semibold();
+            font-weight: 500;
         }
         > dd {
             padding-left: 140px;
@@ -444,7 +445,7 @@
 .related-item-view, .mediaUsed {
     .related-item, .mediaUsed--Item {
         margin-top : 16px;
-        border-bottom: 1px solid #ebebeb;
+        border-bottom: 1px solid var(var(--sd-colour-line--light));
         padding-bottom: 16px;
 
         .item {
@@ -452,7 +453,7 @@
         }
         .container {
             @include text-semibold();
-            color: #444;
+            color: $sd-text;
             margin-right: 16px;
         }
         .keyword {
@@ -469,7 +470,7 @@
             margin-right: 12px;
         }
         .headline {
-            color: #686b6c;
+            color: $sd-text;
 
         }
     }
@@ -512,7 +513,7 @@
         .title {
             font-size: 17px;
             @include text-light();
-            color: #333;
+            color: $sd-text;
             padding: 10px 15px;
         }
         .context-list {

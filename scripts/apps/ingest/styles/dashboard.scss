@@ -40,9 +40,9 @@
                 @include text-semibold();
             }
             .sub-title {
-                color: $gray;
+                color: $sd-text;
                 .text {
-                    color: $grayLight;
+                    color: $sd-text-light;
                     @include text-semibold();
                 }
             }

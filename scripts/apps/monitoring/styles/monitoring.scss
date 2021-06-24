@@ -350,13 +350,13 @@
         @include text-semibold();
         text-transform: uppercase;
         font-size: 13px;
-        color: #666;
+        color: $sd-text;
     }
 
     li {
         display: block;
         padding: 5px 15px 5px 20px;
-        border-bottom: 1px solid #ddd;
+        border-bottom: 1px solid var(--sd-colour-line--light);
 
         .slugline {
             font-weight: 500;

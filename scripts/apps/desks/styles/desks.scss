@@ -205,7 +205,7 @@ $desk-width: 270px;
             vertical-align: middle;
         }
         time {
-            color:#999;
+            color: $sd-text-lighter;
             font-size: 11px;
         }
         .text {
@@ -589,13 +589,12 @@ $desk-width: 270px;
 
 .content-item {
     cursor: default;
-    background: $white;
+    background: var(--sd-item__main-Bg);
     height: 32px;
     line-height: 32px;
-    @include border-box();
-    border-left: 3px solid rgba(255,255,255,0);
-    border-right: 2px solid $white;
-    border-bottom: 1px solid #eee;
+    border-left: 3px solid transparent;
+    border-right: 2px solid var(--sd-item__main-Bg);
+    border-bottom: 1px solid var(--sd-colour-line--light);
     position: relative;
     display:flex;
     padding-right: 8px;
@@ -610,8 +609,8 @@ $desk-width: 270px;
         border-bottom: none;
     }
     &--active {
-        background: $sd-hover;
-        border-right-color: $sd-blue;
+        background: var(--sd-item__main-Bg--activated);
+        border-right-color: var(--sd-colour-interactive);
     }
     &--locked {
         border-left-color: #b70101;
@@ -648,7 +647,7 @@ $desk-width: 270px;
         flex-shrink: 0;
     }
     time {
-        color:#999;
+        color: $sd-text-lighter;
         font-size: 11px;
     }
     &__text {
@@ -712,7 +711,7 @@ $desk-width: 270px;
     padding: 0 8px;
     margin:0;
     display:block;
-    border-bottom: 1px #eee solid;
+    border-bottom: 1px var(--sd-colour-line--light);
     &:last-child {
         border-bottom: none;
     }
@@ -727,7 +726,7 @@ $desk-width: 270px;
     .place {
         font-size: 12px;
         text-transform: uppercase;
-        color: #777;
+        color: $sd-text-light;
         font-weight: 500;
     }
     .slugline {
@@ -736,17 +735,17 @@ $desk-width: 270px;
         text-transform: uppercase;
     }
     .oldslugline {
-        color: lighten($sd-keyword, 25%);
+        color: $sd-keyword;
         font-weight: 400;
+        opacity: 0.75;
         text-transform: uppercase;
     }
     .headline {
         font-weight: 400;
-        //color: $grayDark;
-        color: #555;
+        color: $sd-text-light;
     }
     time {
-        color:#999;
+        color:$sd-text-light;
         font-size: 11px;
     }
 }

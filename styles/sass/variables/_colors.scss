@@ -24,11 +24,12 @@ $yellow:                #ffc40d;
 $orange:                #f89406;
 $purple:                #9c5e96;
 
-$sd-background:         #f8f8f8;
-$sd-archived-bg:        #f1f1f1;
+$sd-background:         var(--sd-colour-panel-bg--100);
+$sd-archived-bg:        var(--sd-colour-panel-bg--100);
 
 $sd-text:               var(--color-text);
 $sd-text-light:         var(--color-text-light);
+$sd-text-lighter:       var(--color-text-lighter);
 $sd-slugline:           var(--sd-slugline-color);
 $sd-slugline-darkUI:    hsl(196, 19%, 50%);
 
@@ -36,7 +37,7 @@ $sd-gray-text:          $grayText;
 $sd-blue:               #5ea9c8;
 $sd-blue-text:          #3599b6;
 $sd-hover:              #eff7fa;
-$sd-keyword:            #216278;
+$sd-keyword:            var(--sd-slugline-color);
 $sd-highlight:          #9b59b6;
 
 $label-light:           #dedede;
@@ -169,11 +170,7 @@ $widget_ingest:        #673ab7;
 $widget_publish:       #AE44BE;
 
 // Monitoring view
-$subnav-authoring:     #dedede;
-$embeded-auth-shadow:  inset 7px 0px 9px -5px rgba(0,0,0,.25);
-
-// Monitoring view
-$subnav-authoring:     #dedede;
+$subnav-authoring:     var(--sd-colour-panel-bg--200);
 $embeded-auth-shadow:  inset 7px 0px 9px -5px rgba(0,0,0,.25);
 
 // Custom button colors
@@ -186,3 +183,10 @@ $btn-publish-plus-hover:   #392246;
 // Pulsating BG
 $pulsateBG-off: rgba(255,87,34,0.1);
 $pulsateBG-on: rgba(255,87,34,0.8);
+
+:root {
+    --authoringHeaderBG: var(--sd-colour-panel-bg--100);
+}
+[data-theme="dark-ui"] {
+    --authoringHeaderBG: var(--sd-colour-panel-bg--100);
+}

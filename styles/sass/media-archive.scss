@@ -137,10 +137,13 @@
         background: none;
         border: 0;
         padding: 15px 16px;
-        border-left: 1px solid #dfdfdf;
-        @include opacity(60);
+        border-left: 1px solid var(--sd-colour-line--medium) !important;
+        opacity: 0.6;
+        i {
+            color: $sd-text-light;
+        }
         &:hover {
-            @include opacity(80);
+            opacity: 0.8;
         }
     }
 }
@@ -1114,15 +1117,15 @@ $rightfield-width:60px;
 .mgrid-view {
     .active:not(.selected) {
         .media-box {
-            border-color: #787878;
+            //border-color: #787878;
             @include box-shadow-both(0 0px 6px 1px rgba(0,0,0,0.75), 0 0 0 1px rgba(0,0,0,0.12));
         }
     }
 }
-.mlist-view, .compact-view  {
+.mlist-view, .compact-view.list-view  {
     .active:not(.selected) {
         .media-box {
-            background-color: darken(#eff7fa, 10%) !important;
+            background-color: var(--sd-item__main-Bg--selected) !important;
             border-right: 2px solid rgba(94,169,200,0.75) !important;
             &:hover {
                 .item-functions {
@@ -1143,9 +1146,9 @@ $rightfield-width:60px;
     }
     .selected {
         .media-box {
-            background-color: darken(rgba(239,247,250,1), 3%);
+            background-color: var(--sd-item__main-Bg--selected) !important;
             &:hover {
-                background-color: rgba(239,247,250,0.60) !important;
+                background-color: var(--sd-item__main-Bg--selected) !important;
             }
         }
     }

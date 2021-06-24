@@ -172,7 +172,7 @@
             }
         }
         .dropdown__toggle {
-            background-color: var(--sd-colour-interactive);
+            background-color: hsla(160, 50%, 50%, 0.16);
             color: $white;
             padding: 0 15px;
             font-size: 12px;
@@ -181,7 +181,7 @@
                 border-top-color: $white;
             }
             &.workspace {
-                background-color: $purple;
+                background-color: hsla(306, 25%, 49%, 0.24);
             }
             &.desk--closed {
                 background-color: $red;
@@ -280,13 +280,13 @@
             .desk-item--closed {
                 button {
                     color: $red;
-                    background-color: rgba(229, 28, 35, 0.08);
+                    background-color: hsla(358, 79%, 50%, 0.08);
                     &::after {
                         content: "\e625";
                         color: $red;
                     }
                     &:hover {
-                        background-color: rgba(229, 28, 35, 0.16);
+                        background-color: hsla(358, 79%, 50%, 0.16);
                     }
                 }
             }

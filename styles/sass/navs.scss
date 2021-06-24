@@ -348,16 +348,17 @@
 .subnav__page-title,
 .page-nav-title {
     padding: 10px 20px;
-    color: #444;
+    color: $sd-text;
+    opacity: 0.8;
     font-size: 18px;
     line-height: 28px;
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    @include text-normal();
+    font-weight: 400;
     &--text-light {
-        @include text-light();
+        font-weight: 300;
     }
 
     .sd-checkbox {
