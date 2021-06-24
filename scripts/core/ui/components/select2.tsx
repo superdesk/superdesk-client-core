@@ -14,7 +14,7 @@ interface IProps<T> {
      * This is a lazy component and the object for value
      * might not always be present in `items`.
      */
-    valueT: T;
+    valueObject: T;
 
     placeholder?: JSX.Element;
     disabled?: boolean;
@@ -199,13 +199,13 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     renderInput={(propsAutocomplete: any) => {
                         let selectedItem = this.props.items[this.props.value];
 
-                        // use valueT when an object for selected `value` is not present in `this.props.items`
+                        // use valueObject when an object for selected `value` is not present in `this.props.items`
                         if (
                             selectedItem == null
-                            && this.props.valueT != null
-                            && this.props.value === this.props.getItemValue(this.props.valueT)
+                            && this.props.valueObject != null
+                            && this.props.value === this.props.getItemValue(this.props.valueObject)
                         ) {
-                            selectedItem = this.props.valueT;
+                            selectedItem = this.props.valueObject;
                         }
 
                         if (propsAutocomplete['aria-expanded'] === true) {

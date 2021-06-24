@@ -19,7 +19,7 @@ interface IProps<T extends IBaseRestApiResponse> {
 interface IState<T> {
     fetchedItems?: Array<T>;
     loading: boolean;
-    selectedT: T | null;
+    selectedItem: T | null;
 }
 
 export class AutoComplete<T extends IBaseRestApiResponse> extends React.Component<IProps<T>, IState<T>> {
@@ -29,7 +29,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
 
         this.state = {
             loading: true,
-            selectedT: null,
+            selectedItem: null,
         };
 
         this.queryItems = this.queryItems.bind(this);
@@ -62,15 +62,15 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
     }
 
     fetchSelected() {
-        this.props.queryById(this.props.selected).then((selectedT) => {
-            this.setState({selectedT, loading: false});
+        this.props.queryById(this.props.selected).then((selectedItem) => {
+            this.setState({selectedItem, loading: false});
         });
     }
 
     render() {
         const keyedItems: {[key: string]: T} = keyBy(this.state.fetchedItems, (item) => item._id);
 
-        if (this.state.loading && this.state.selectedT == null) {
+        if (this.state.loading && this.state.selectedItem == null) {
             return null;
         }
 
@@ -86,7 +86,7 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
                     </ListItem>
                 )}
                 value={this.props.selected == null ? undefined : this.props.selected}
-                valueT={this.state.selectedT}
+                valueObject={this.state.selectedItem}
                 items={keyedItems}
                 getItemValue={(item) => item._id}
                 onSelect={(value) => {
