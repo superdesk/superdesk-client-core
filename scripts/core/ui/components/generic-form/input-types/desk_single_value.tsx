@@ -22,7 +22,7 @@ export const DeskSingleValue = getSelectSingleValueAutoComplete({
                 }
                 : {}
         ),
-        50,
+        200,
     ),
     queryById: (id) => dataApi.findOne<IDesk>('desks', id),
     getPlaceholder: () => gettext('Select a desk'),
