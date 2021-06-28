@@ -92,6 +92,10 @@ export class OverviewComponent extends React.Component<IProps, IState> {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({filteredDesks: this.props.desks});
         }
+
+        if (this.props.selectedDesk !== prevProps.selectedDesk) {
+            this.getSingleDesk(this.props.selectedDesk);
+        }
     }
 
     componentWillUnmount() {
