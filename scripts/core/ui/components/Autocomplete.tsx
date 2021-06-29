@@ -62,17 +62,15 @@ export class AutoComplete<T extends IBaseRestApiResponse> extends React.Componen
     }
 
     fetchSelected() {
-        this.props.queryById(this.props.selected).then((selectedItem) => {
-            this.setState({selectedItem, loading: false});
-        });
+        if (this.props.selected != null) {
+            this.props.queryById(this.props.selected).then((selectedItem) => {
+                this.setState({selectedItem, loading: false});
+            });
+        }
     }
 
     render() {
         const keyedItems: {[key: string]: T} = keyBy(this.state.fetchedItems, (item) => item._id);
-
-        if (this.state.loading && this.state.selectedItem == null) {
-            return null;
-        }
 
         return (
             <Select2
