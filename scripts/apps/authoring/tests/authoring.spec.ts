@@ -2153,6 +2153,7 @@ describe('authoring themes', () => {
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($q, preferencesService) => {
         spyOn(preferencesService, 'get').and.returnValue($q.when({'editor:theme': ['theme:proofreadTheme']}));
