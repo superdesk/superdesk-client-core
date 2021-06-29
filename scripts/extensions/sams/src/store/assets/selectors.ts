@@ -22,6 +22,15 @@ export function getAssetSearchParams(state: IApplicationState): IAssetSearchPara
     return state.assets.searchParams;
 }
 
+export const getSelectedSetId = createSelector<
+    IApplicationState,
+    IAssetSearchParams,
+    ISetItem['_id'] | undefined
+>(
+    [getAssetSearchParams],
+    (searchParams) => searchParams?.setId,
+);
+
 export function getAssetListItemIds(state: IApplicationState): Array<string> {
     return state.assets.listItemIds;
 }

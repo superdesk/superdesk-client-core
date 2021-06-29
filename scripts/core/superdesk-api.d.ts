@@ -562,6 +562,9 @@ declare module 'superdesk-api' {
         slack_channel_name?: string;
         preferred_cv_items: {[key: string]: any};
         preserve_published_content: boolean;
+        sams_settings?: {
+            allowed_sets?: Array<string>;
+        };
     }
 
     export interface IStage extends IBaseRestApiResponse {
@@ -830,6 +833,10 @@ declare module 'superdesk-api' {
         // can use deep references like {'a.b.c': []}
         filterValues: {[fieldName: string]: Array<string>};
 
+        // can use deep references like {'a.b.c': []}
+        // generates must_not statements
+        filterValuesNegative?: {[fieldName: string]: Array<string>};
+
         aggregations: boolean;
     }
 
@@ -882,9 +889,10 @@ declare module 'superdesk-api' {
         checkbox = 'checkbox',
         contentFilterSingleValue = 'contentFilterSingleValue',
         deskSingleValue = 'deskSingleValue',
-        stageSingleValue = 'stage_singstageSingleValuele_value',
+        stageSingleValue = 'stageSingleValue',
         macroSingleValue = 'macroSingleValue',
         yesNo = 'yesNo',
+        select = 'select',
     }
 
     export interface IFormField { // don't forget to update runtime type checks
@@ -1213,6 +1221,9 @@ declare module 'superdesk-api' {
         attachmentUpdated: IAttachment;
 
         menuItemBadgeValueChange: {menuId: string; badgeValue: string};
+
+        // Desks
+        activeDeskChanged: {desk: IDesk['_id']; stage: IStage['_id'];}
     }
 
     export interface IWebsocketMessage<T> {
@@ -1483,6 +1494,8 @@ declare module 'superdesk-api' {
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
+                getActiveDeskId(): IDesk['_id'] | null;
+                waitTilReady(): Promise<void>;
             };
             attachment: IAttachmentsApi;
             users: {
@@ -1589,6 +1602,10 @@ declare module 'superdesk-api' {
                     getString(field: string, defaultValue?: string): string | undefined;
                     setString(field: string, value?: string);
 
+                    // Tags
+                    getStringArray(field: string): Array<string> | undefined;
+                    setStringArray(field: string, value: Array<string>): void;
+
                     // Numbers
                     getNumber(field: string, defaultValue?: number): number | undefined;
                     setNumber(field: string, value?: number);
@@ -1633,6 +1650,14 @@ declare module 'superdesk-api' {
                 wait: number,
                 options?: ThrottleSettings,
             );
+
+            querySelectorParent(
+                element: HTMLElement,
+                selector: string,
+                options?: {
+                    self: boolean; // will check the current element too if set to true
+                },
+            ): HTMLElement | null;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

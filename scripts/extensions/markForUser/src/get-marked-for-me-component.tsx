@@ -11,6 +11,18 @@ interface IState {
     user: IUser | null;
 }
 
+// copied from the PUBLISHED_STATES constant
+// since this is a temporary workaround, I'm not moving the constant to extensions API
+const publishedStates = [
+    'published',
+    'scheduled',
+    'corrected',
+    'killed',
+    'recalled',
+    'being_corrected',
+    'unpublished',
+];
+
 export function getMarkedForMeComponent(superdesk: ISuperdesk) {
     const {Badge, GroupLabel, TopMenuDropdownButton} = superdesk.components;
 
@@ -40,6 +52,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                     page: {from: 0, size: 300},
                     sort: [{'_updated': 'desc'}],
                     filterValues: {marked_for_user: [user._id]},
+                    filterValuesNegative: {state: publishedStates},
                     aggregations: true,
                 }).then((articles) => {
                     this.setState({articles});

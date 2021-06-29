@@ -1,10 +1,12 @@
 import React from 'react';
 import {gettext} from 'core/utils';
+import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
 
 interface IProps {
     open: boolean;
     onDeskFilterChange(desk: string): void;
     onFilterChange(filters: object): void;
+    filters: IFilter;
 }
 
 interface IState {
@@ -24,9 +26,9 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
         this.state = {
             desk: '',
             filter: {
-                slugline: [],
-                headline: [],
-                byline: [],
+                slugline: props.filters.slugline || [],
+                headline: props.filters.headline || [],
+                byline: props.filters.byline || [],
             },
         };
 
@@ -34,6 +36,7 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.addFilter = this.addFilter.bind(this);
         this.clearDeskFilter = this.clearDeskFilter.bind(this);
+        this.clearFilters = this.clearFilters.bind(this);
     }
 
     handleDeskChange(event) {
@@ -71,7 +74,22 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
         this.props.onDeskFilterChange('');
     }
 
+    clearFilters() {
+        const filter = {
+            slugline: [],
+            headline: [],
+            byline: [],
+        };
+
+        this.setState({filter: filter});
+
+        this.props.onFilterChange({});
+    }
+
     render() {
+        const showClearFiltersButton = Object.keys(this.props.filters)
+            .some((key) => this.props.filters[key].length !== 0);
+
         return (
             <div className={'sd-main-content-grid__filter' + (this.props.open ? ' open-filters' : '')}>
                 <div className="side-panel__container side-panel__container--small">
@@ -148,9 +166,19 @@ export class FilterPanelComponent extends React.Component<IProps, IState> {
                             </div>
                         </div>
                         <div className="side-panel__footer side-panel__footer--button-box">
-                            <a className="btn btn--primary btn--expanded" onClick={this.addFilter}>
-                                {gettext('Apply Filters')}
-                            </a>
+                            <ButtonGroup orientation="vertical">
+                                <Button type="primary" onClick={this.addFilter} text={gettext('Apply Filters')} />
+
+                                {
+                                    showClearFiltersButton &&
+                                    (
+                                        <Button
+                                            onClick={this.clearFilters}
+                                            text={gettext('Clear Filters')}
+                                        />
+                                    )
+                                }
+                            </ButtonGroup>
                         </div>
                     </div>
                 </div>

@@ -9,6 +9,7 @@ interface IProps {
     label: string;
     total: number;
     donutData: any;
+    onDeskSelect?(desk: IDesk): void;
 }
 
 export class CardComponent extends React.Component<IProps, {}> {
@@ -17,10 +18,19 @@ export class CardComponent extends React.Component<IProps, {}> {
         tooltips: false,
     };
 
+    selectDesk(desk: IDesk) {
+        if (this.props.onDeskSelect) {
+            this.props.onDeskSelect(desk);
+        }
+    }
+
     render() {
         return (
             <div className="sd-board" >
-                <div className="sd-board__header">
+                <div
+                    className={'sd-board__header' + (this.props.onDeskSelect ? ' sd-board__header--clickable' : '')}
+                    onClick={() => this.selectDesk(this.props.desk)}
+                >
                     <h3 className="sd-board__header-title">{this.props.desk.name}</h3>
                 </div>
                 <div className="sd-board__content sd-padding-t--1">
@@ -30,7 +40,7 @@ export class CardComponent extends React.Component<IProps, {}> {
                                 <span className="sd-board__item-count--large">
                                     {this.props.total}
                                 </span>
-                                <p className="sd-board__count-label">{this.props.label}</p>
+                                <p className="sd-board__count-label sd-margin-b--0">{this.props.label}</p>
                                 { this.props.donutData ? (
                                     <div className="sd-board__doughnut-chart">
                                         <DonutChart
@@ -42,8 +52,7 @@ export class CardComponent extends React.Component<IProps, {}> {
 
                                         <span className="sd-board__doughnut-chart-number">{this.props.total}</span>
                                     </div>
-                                )
-                                    : null }
+                                ) : null }
                             </li>
                             {this.props.children}
                         </ul>

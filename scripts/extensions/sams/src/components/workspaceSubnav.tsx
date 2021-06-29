@@ -28,7 +28,7 @@ import {
     getSelectedAssetIds,
     getSelectedAssetItems,
 } from '../store/assets/selectors';
-import {getActiveSets, getDisabledSets} from '../store/sets/selectors';
+import {getActiveSets, getDisabledSets, getAvailableSetsForDesk} from '../store/sets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
 import {
     closeMultiActionBar,
@@ -62,6 +62,7 @@ interface IProps {
     totalAssets: number;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
+    availableSetIds: Array<ISetItem['_id']>;
     activeSets: Array<ISetItem>;
     disabledSets: Array<ISetItem>;
     currentSet?: ISetItem;
@@ -87,6 +88,7 @@ const mapStateToProps = (state: IApplicationState) => ({
     currentSet: getAssetSetFilter(state),
     selectedAssetIds: getSelectedAssetIds(state),
     selectedAssets: getSelectedAssetItems(state),
+    availableSetIds: getAvailableSetsForDesk(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -180,21 +182,24 @@ export class WorkspaceSubnavComponent extends React.PureComponent<IProps> {
 
     getMenuItems(): Array<IMenuGroup> {
         const {gettext} = superdeskApi.localization;
-
-        const activeSets = this.props.activeSets.map(
-            (set) => ({
-                label: set.name,
-                onSelect: () => this.setSearchParamSetId(set._id),
-            }),
+        const filterActiveSets = (set: ISetItem) => (
+            this.props.availableSetIds.includes(set._id)
         );
 
-        const disabledSets = this.props.disabledSets.map(
-            (set) => ({
+        const activeSets = this.props.activeSets
+            .filter(filterActiveSets)
+            .map((set) => ({
+                label: set.name,
+                onSelect: () => this.setSearchParamSetId(set._id),
+            }));
+
+        const disabledSets = this.props.disabledSets
+            .filter(filterActiveSets)
+            .map((set) => ({
                 label: set.name + ' ' + gettext('(disabled)'),
                 icon: 'lock',
                 onSelect: () => this.setSearchParamSetId(set._id),
-            }),
-        );
+            }));
 
         return [{
             type: 'group',

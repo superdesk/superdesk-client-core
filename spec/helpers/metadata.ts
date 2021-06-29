@@ -1,5 +1,6 @@
-import {element, by} from 'protractor';
+import {element, by, browser} from 'protractor';
 import {nav} from './utils';
+import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 class MetadataHelper {
     open() {
@@ -7,7 +8,11 @@ class MetadataHelper {
     }
 
     openCustomTextFields() {
-        element(by.buttonText('Custom text fields')).click();
+        const el = element(by.buttonText('Custom text fields'));
+
+        browser.wait(ECE.elementToBeClickable(el));
+
+        el.click();
     }
 
     addNew(id, label, help) {

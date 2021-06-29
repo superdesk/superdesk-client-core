@@ -1,6 +1,7 @@
 /* eslint-disable max-depth */
 
 const _ = require('lodash');
+const rimraf = require('rimraf');
 const fs = require('fs');
 const path = require('path');
 const getExtensionDirectoriesSync = require('./get-extension-directories-sync');
@@ -71,7 +72,9 @@ function mergeTranslationsFromExtensions(clientDir) {
         }
     }
 
-    fs.rmdirSync(translationsJsonTemp, {recursive: true});
+    if (fs.existsSync(translationsJsonTemp)) {
+        rimraf.sync(translationsJsonTemp);
+    }
 }
 
 module.exports = {

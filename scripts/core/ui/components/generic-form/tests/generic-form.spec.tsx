@@ -40,6 +40,16 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
                 deskField: 'test-desk-field',
             },
         };
+    case FormFieldType.select:
+        return {
+            type: type,
+            field: 'test-field',
+            component_parameters: {
+                options: [
+                    {id: 'test', label: 'test'},
+                ],
+            },
+        };
     default:
         assertNever(type);
     }

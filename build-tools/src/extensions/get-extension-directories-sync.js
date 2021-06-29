@@ -6,7 +6,15 @@ const _ = require('lodash');
 const {trimEnd} = _;
 
 function getAbsoluteModuleDirectory(clientPath, modulePathRelative) {
-    return path.join(require.resolve(path.join(`${clientPath}/node_modules`, modulePathRelative, 'package.json')), '../');
+    // if module path starts with a dot, don't look into node_modules
+    if (modulePathRelative.startsWith('.')) {
+        return path.join(clientPath, modulePathRelative);
+    } else {
+        return path.join(
+            require.resolve(path.join(`${clientPath}/node_modules`, modulePathRelative, 'package.json')),
+            '../'
+        );
+    }
 }
 
 function getPaths(clientPath, extensionRootRelative) {
@@ -108,7 +116,7 @@ function getExtensionDirectoriesSync(clientPath) {
 
     while ((_match = extensionRegistrationPattern.exec(indexFile)) !== null) {
         const extensionName = _match[1];
-        const {extensionRootPath, extensionSrcPath, extensionCssFilePath} = getPaths(clientPath ,_match[2]);
+        const {extensionRootPath, extensionSrcPath, extensionCssFilePath} = getPaths(clientPath, _match[2]);
 
         matches.push({extensionName, extensionRootPath, extensionSrcPath, extensionCssFilePath});
     }

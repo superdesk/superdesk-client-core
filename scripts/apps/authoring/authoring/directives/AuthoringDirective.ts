@@ -106,6 +106,7 @@ export function AuthoringDirective(
                 userDesks = desksList;
                 $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
             });
+
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
             $scope.views = {send: false};
@@ -123,6 +124,7 @@ export function AuthoringDirective(
             $scope.mediaFieldVersions = {};
             $scope.refreshTrigger = 0;
             $scope.isPreview = false;
+            $scope.isCorrectionInProgress = false;
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -186,10 +188,7 @@ export function AuthoringDirective(
                                 $scope.stage = result;
                             });
 
-                        desks.fetchDeskById($scope.origItem.task.desk).then((desk) => {
-                            $scope.deskName = desk.name;
-                            $scope.deskType = desk.desk_type;
-                        });
+                        setDesk();
                     }
                 }
             }
@@ -206,6 +205,21 @@ export function AuthoringDirective(
                     .then((result) => {
                         $scope.currentTemplate = result;
                     });
+            }
+
+            /**
+            * Get the desk name and desk type.
+            */
+            function setDesk() {
+                if (!$scope.item.task.desk) {
+                    return false;
+                }
+                const desk = desks.getItemDesk($scope.item);
+
+                if (desk) {
+                    $scope.deskName = desk.name;
+                    $scope.deskType = desk.desk_type;
+                }
             }
 
             /**
@@ -917,7 +931,8 @@ export function AuthoringDirective(
                 if (action === 'correct') {
                     if (appConfig?.corrections_workflow &&
                     [ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED].includes($scope.item.state)) {
-                        authoring.correction($scope.item);
+                        $scope.isCorrectionInProgress = true;
+                        authoring.correction($scope.item, () => $scope.isCorrectionInProgress = false);
                     } else {
                         authoringWorkspace.correct($scope.item);
                     }

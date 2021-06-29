@@ -30,7 +30,7 @@ export const StageSingleValue = getSelectSingleValueAutoComplete({
                         }
                         : deskFilter
                 ),
-                50,
+                200,
             );
         }
     },

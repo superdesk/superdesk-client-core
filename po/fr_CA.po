@@ -13,8 +13,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Superdesk\n"
-"PO-Revision-Date: 2021-04-30 14:11+0000\n"
-"Last-Translator: Marie-Eve Ouellette <marie-eve.ouellette@lapressecanadienne.com>\n"
+"PO-Revision-Date: 2021-06-04 19:45+0000\n"
+"Last-Translator: Charles-Philippe Giroux <charles-philippe.giroux@lapressecanadienne.com>\n"
 "Language-Team: French (Canada) (http://www.transifex.com/sourcefabric/superdesk/language/fr_CA/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -513,7 +513,7 @@ msgstr "Ajouter le contact"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageAddAdvancedModal.tsx:175
 msgid "Add Coverages"
-msgstr "Ajouter couvertures"
+msgstr "Ajouter des couvertures"
 
 #: ../superdesk-analytics/client/utils.js:174
 msgid "Add Featuremedia"
@@ -579,7 +579,7 @@ msgstr "Ajouter une nouvelle destination"
 
 #: ../superdesk-planning/client/components/GeoLookupInput/CreateNewGeoLookup.jsx:99
 msgid "Add New Event Location"
-msgstr "'Ajouter un nouvel endroit pour l'événement'"
+msgstr "Ajouter un nouvel endroit pour l'événement"
 
 #: ../superdesk-planning/client/components/EventsPlanningFilters/ManageFiltersModal.tsx:153
 msgid "Add New Filter"
@@ -1317,7 +1317,7 @@ msgstr "Êtes-vous certain de vouloir annuler la publication de l'élément \"{{
 
 #: ../superdesk-analytics/client/charts/services/ChartConfig.js:100
 msgid "Area"
-msgstr "Zone"
+msgstr "Quartier"
 
 #: scripts/apps/users/views/user-preferences.html:53
 msgid "Article Defaults"
@@ -2122,7 +2122,7 @@ msgstr "Annuler la planification"
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:158
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:160
 msgid "Cancel Scheduled Update"
-msgstr "Annuler la mise à jour programmée"
+msgstr "Annuler la mise à jour planifiée"
 
 #: scripts/apps/publish/views/publish-queue.html:83
 msgid "Cancel Selection"
@@ -4066,11 +4066,11 @@ msgstr "Dupliquer un élément"
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:96
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:65
 msgid "Duplicate created"
-msgstr "Double créé"
+msgstr "Copie créée"
 
 #: scripts/apps/authoring/versioning/history/views/history.html:52
 msgid "Duplicate created by"
-msgstr "Double créé par"
+msgstr "Copie créée par"
 
 #: scripts/apps/archive/index.tsx:159
 msgid "Duplicate in place"
@@ -4095,7 +4095,7 @@ msgstr "Dupliqué par"
 
 #: scripts/apps/search/views/item-preview.html:15
 msgid "Duplicates"
-msgstr "Doubles"
+msgstr "Copies"
 
 #: scripts/apps/ingest/views/settings/ingest-routing-general.html:60
 msgid "Duration"
@@ -6339,7 +6339,7 @@ msgstr "Inclure les réécritures"
 #: ../superdesk-planning/client/components/fields/editor/IncludeScheduledUpdates.tsx:14
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/IncludeScheduledUpdates.tsx:21
 msgid "Include Scheduled Updates"
-msgstr ""
+msgstr "Inclure les mises à jour planifiées"
 
 #: ../superdesk-planning/client/components/fields/editor/SpikeState.tsx:23
 #: ../superdesk-planning/client/components/fields/preview/SimpleList/SpikeState.tsx:19
@@ -7526,7 +7526,7 @@ msgstr "Mois"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:39
 msgid "Monthly"
-msgstr "Mensuellement"
+msgstr "Chaque mois"
 
 #: ../superdesk-analytics/client/scheduled_reports/directives/ReportScheduleInput.js:74
 msgid "Monthly on the"
@@ -8204,13 +8204,13 @@ msgstr "Pas pour publication"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageHistory.jsx:134
 msgid "Not scheduled"
-msgstr "Pas programmé"
+msgstr "Pas planifié"
 
 #: ../superdesk-planning/client/components/Coverages/CoverageItem.jsx:111
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.tsx:69
 #: ../superdesk-planning/client/utils/planning.ts:1083
 msgid "Not scheduled yet"
-msgstr "Pas encore programmé"
+msgstr "Pas encore planifié"
 
 #: scripts/apps/workspace/content/views/schema-editor.html:44
 #: scripts/apps/workspace/content/views/schema-editor.html:46
@@ -9167,7 +9167,7 @@ msgstr "Précédent"
 
 #: ../superdesk-planning/client/actions/assignments/ui.js:592
 msgid "Previous scheduled update is not linked to a news item yet."
-msgstr "La mise à jour programmée précédente n'est pas encore liée à un élément de nouvelles."
+msgstr "La mise à jour planifiée précédente n'est pas encore liée à un élément de nouvelles."
 
 #: scripts/apps/users/config.ts:157
 msgid "Previous user"
@@ -9643,7 +9643,7 @@ msgstr "Raison de l'annulation de la couverture:"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/cancelCoverageForm.jsx:80
 msgid "Reason for cancelling the scheduled update"
-msgstr "Raison de l'annulation de la mise à jour programmée"
+msgstr "Raison de l'annulation de la mise à jour planifiée"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:177
 msgid "Reason for rescheduling this event:"
@@ -9860,7 +9860,7 @@ msgstr "Retirer l'endroit"
 
 #: ../superdesk-planning/client/components/Coverages/ScheduledUpdate/index.jsx:77
 msgid "Remove Scheduled Update"
-msgstr "Retirer la mise à jour programmée"
+msgstr "Retirer la mise à jour planifiée"
 
 #: scripts/apps/search-providers/views/search-provider-config.html:17
 msgid "Remove Search Provider"
@@ -10095,7 +10095,7 @@ msgstr "Reprogrammer"
 
 #: ../superdesk-planning/client/utils/planning.ts:310
 msgid "Reschedule Event"
-msgstr "Reprogrammer un événement"
+msgstr "Reprogrammer l'événement"
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/modal.jsx:93
 msgid "Reschedule {{event}}"
@@ -10323,7 +10323,7 @@ msgstr "SAM"
 #: ../superdesk-planning/client/components/Coverages/CoverageEditor/CoverageForm.tsx:595
 #: ../superdesk-planning/client/components/Coverages/CoveragePreview/index.tsx:235
 msgid "SCHEDULED UPDATES"
-msgstr "MISES À JOUR PROGRAMMÉES"
+msgstr "MISES À JOUR PLANIFIÉES"
 
 #: scripts/core/menu/notifications/views/notifications.html:12
 msgid "SIGN OUT"
@@ -10685,7 +10685,7 @@ msgstr "Programmer une mise à jour"
 #: ../superdesk-planning/client/utils/index.ts:430
 #: scripts/apps/search/components/fields/state.tsx:22
 msgid "Scheduled"
-msgstr "Programmé"
+msgstr "Planifié"
 
 #: scripts/apps/workspace/content/constants.ts:133
 msgid "Scheduled Desk Output"
@@ -10701,11 +10701,11 @@ msgstr "Heure(s) programmée(s)"
 
 #: ../superdesk-planning/client/validators/planning.js:193
 msgid "Scheduled Upates have to be after the previous updates."
-msgstr "Les mises à jour programmées doivent survenir après les mises à jour précédentes. "
+msgstr "Les mises à jour planifiées doivent survenir après les mises à jour précédentes. "
 
 #: ../superdesk-planning/client/validators/planning.js:197
 msgid "Scheduled Upates should have a date/time."
-msgstr "Les mises à jour programmées devraient avoir une date et une heure."
+msgstr "Les mises à jour planifiées devraient avoir une date et une heure."
 
 #: scripts/apps/publish/views/publish-queue.html:113
 #: scripts/apps/templates/views/template-editor-modal.html:161
@@ -10722,7 +10722,7 @@ msgstr "Programmé pour le {{date}}"
 
 #: ../superdesk-planning/client/actions/planning/ui.js:543
 msgid "Scheduled update added to workflow."
-msgstr "Mise à jour programmée ajoutée au flux de travail."
+msgstr "Mise à jour planifiée ajoutée au flux de travail."
 
 #: ../superdesk-analytics/client/saved_reports/views/saved-report-item.html:51
 msgid "Scheduling"
@@ -11205,7 +11205,7 @@ msgstr "Raccourcis"
 #: ../superdesk-planning/client/validators/planning.js:178
 #: ../superdesk-planning/client/validators/planning.js:180
 msgid "Should be after the previous scheduled update/coverage"
-msgstr "Devrait être postérieur à la mise à jour/couverture programmée précédente"
+msgstr "Devrait être postérieur à la mise à jour/couverture planifiée précédente"
 
 #: ../superdesk-planning/client/components/Events/EventItemWithPlanning.jsx:183
 #: scripts/apps/ingest/views/dashboard/ingest-dashboard-widget.html:56
@@ -12546,7 +12546,7 @@ msgstr "Une erreur est survenue. Impossible de retirer le lien."
 
 #: scripts/apps/authoring/authoring/controllers/ChangeImageController.ts:460
 msgid "There was an error. Failed to save the area of interest."
-msgstr "Une erreur est survenue. Échec de l'enregistrement du champ d'intérêt."
+msgstr "Une erreur est survenue. Échec de l'enregistrement de la zone d'intérêt."
 
 #: scripts/apps/content-filters/controllers/FilterConditionsController.ts:124
 msgid "There was an error. Filter condition cannot be deleted."
@@ -12571,7 +12571,7 @@ msgstr "Une erreur est survenue. Le modèle n'a pas pu être supprimé."
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:259
 msgid ""
 "This Event is scheduled to occur after the end date of its recurring cycle!"
-msgstr "Cet événement est programmé pour se produire après la date de fin de son cycle récurrent!"
+msgstr "Cet événement est planifié pour avoir lieu après la date de fin de son cycle récurrent!"
 
 #: ../superdesk-analytics/client/search/views/date-filters.html:28
 #: ../superdesk-analytics/client/search/views/preview-date-filter.html:21
@@ -12729,7 +12729,7 @@ msgstr "Ceci créera le nouvel événement dans le fuseau horaire ({{timeZone}})
 
 #: ../superdesk-planning/client/components/ItemActionConfirmation/forms/rescheduleEventForm.jsx:220
 msgid "This will mark as rescheduled the following planning items"
-msgstr "Ceci marquera comme reprogrammées les couvertures suivantes"
+msgstr "Ceci marquera comme replanifiées les couvertures suivantes"
 
 #: ../superdesk-planning/client/actions/assignments/ui.js:489
 msgid ""
@@ -13770,11 +13770,11 @@ msgstr "Afficher l'événement associé"
 
 #: ../superdesk-planning/client/components/Events/EventHistory.jsx:155
 msgid "View duplicate event"
-msgstr "Afficher le double de l'événement"
+msgstr "Afficher la copie de l'événement"
 
 #: ../superdesk-planning/client/components/Planning/PlanningHistory.jsx:126
 msgid "View duplicate planning item"
-msgstr "Afficher le double de la couverture"
+msgstr "Afficher la copie de la couverture"
 
 #: scripts/apps/users/views/list.html:67
 msgid "View full profile"
@@ -14846,7 +14846,7 @@ msgstr "chargement..."
 
 #: scripts/apps/contacts/components/Form/ProfileDetail.tsx:560
 msgid "locality"
-msgstr ""
+msgstr "localité"
 
 #: scripts/apps/search/components/ItemContainer.tsx:16
 msgid "location:"
