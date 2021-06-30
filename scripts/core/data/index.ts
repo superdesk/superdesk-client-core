@@ -24,18 +24,21 @@ export const store = createStore<IStoreState, IAction, {}, {}>(combineReducers({
     users,
 }), getMiddlewares());
 
+const updating = {};
+const resourcesInStore = [
+    'users',
+];
+
 addWebsocketEventListener(
     'resource:updated',
     (event: IWebsocketMessage<IResourceUpdateEvent>) => {
         const {resource, _id} = event.extra;
 
-        const resourcesInStore = [
-            'users',
-        ];
-
-        if (!resourcesInStore.includes(resource)) {
+        if (!resourcesInStore.includes(resource) || updating[_id] === true) {
             return;
         }
+
+        updating[_id] = true;
 
         dataApi.findOne(resource, _id)
             .then((data: IBaseRestApiResponse) => {
@@ -49,6 +52,9 @@ addWebsocketEventListener(
                 });
             }, (reason) => {
                 console.error(`got error when fetching ${resource}/${_id}: ${reason}`);
+            })
+            .finally(() => {
+                updating[_id] = null;
             });
     },
 );
