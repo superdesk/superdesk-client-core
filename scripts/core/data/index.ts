@@ -1,9 +1,10 @@
 import {combineReducers, createStore} from 'redux';
 import {IBaseRestApiResponse, IResourceUpdateEvent, IWebsocketMessage} from 'superdesk-api';
 import {addWebsocketEventListener} from 'core/notification/notification';
-import {dataApi} from 'core/helpers/CrudManager';
 import {users, IUserState, IUserAction} from './users';
 import {getMiddlewares} from 'core/redux-utils';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {debounceAsync, IDebounced} from 'core/helpers/debounce-async';
 
 export type IEntityAction = {
     type: 'UPDATE_ENTITY',
@@ -24,7 +25,8 @@ export const store = createStore<IStoreState, IAction, {}, {}>(combineReducers({
     users,
 }), getMiddlewares());
 
-const updating = {};
+const updating: {[key: string]: IDebounced} = {};
+
 const resourcesInStore = [
     'users',
 ];
@@ -34,27 +36,41 @@ addWebsocketEventListener(
     (event: IWebsocketMessage<IResourceUpdateEvent>) => {
         const {resource, _id} = event.extra;
 
-        if (!resourcesInStore.includes(resource) || updating[_id] === true) {
+        if (!resourcesInStore.includes(resource)) {
             return;
         }
 
-        updating[_id] = true;
+        const updateKey = resource + _id;
 
-        dataApi.findOne(resource, _id)
-            .then((data: IBaseRestApiResponse) => {
-                store.dispatch({
-                    type: 'UPDATE_ENTITY',
-                    payload: {
-                        resource,
-                        _id,
-                        data,
-                    },
-                });
-            }, (reason) => {
-                console.error(`got error when fetching ${resource}/${_id}: ${reason}`);
-            })
-            .finally(() => {
-                delete updating[_id];
-            });
+        if (updating[updateKey] != null) {
+            updating[updateKey]();
+        } else {
+            const requestDebounced = debounceAsync(
+                (abortController) => {
+                    return httpRequestJsonLocal({
+                        method: 'GET',
+                        path: `/${resource}/${_id}`,
+                        abortSignal: abortController.signal,
+                    })
+                        .then((data: IBaseRestApiResponse) => {
+                            store.dispatch({
+                                type: 'UPDATE_ENTITY',
+                                payload: {
+                                    resource,
+                                    _id,
+                                    data,
+                                },
+                            });
+                        }).finally(() => {
+                            delete updating[updateKey];
+                        });
+                },
+                1000,
+                3000,
+            );
+
+            updating[updateKey] = requestDebounced;
+            updating[updateKey]();
+        }
     },
 );
