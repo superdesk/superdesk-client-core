@@ -54,7 +54,7 @@ addWebsocketEventListener(
                 console.error(`got error when fetching ${resource}/${_id}: ${reason}`);
             })
             .finally(() => {
-                updating[_id] = null;
+                delete updating[_id];
             });
     },
 );
