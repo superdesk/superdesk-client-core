@@ -8,7 +8,7 @@ import {debounce, once} from 'lodash';
 SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService'];
 function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
     var PREFERENCES_KEY = 'spellchecker:status',
-        lang,
+        lang = 'en',
         dict = {} as any,
         ignored = {},
         abbreviationList = [],
