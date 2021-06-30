@@ -7,7 +7,7 @@ import {superdeskApi} from '../apis';
 // UI
 import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {PanelContent, PanelContentBlock, PanelContentBlockInner} from '../ui';
-import {IModalSize, Modal, ModalHeader} from '../ui/modal';
+import {IModalSize, Modal, ModalHeader, ModalFooter} from '../ui/modal';
 import {GridList} from '../ui/grid/GridList';
 import {PageLayout} from './PageLayout';
 
@@ -335,14 +335,16 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                         </PanelContent>
                     )}
                 />
-                <input
-                    type="file"
-                    ref={this.fileInputNode}
-                    onChange={this.addFiles}
-                    multiple={this.props.multiple}
-                    accept={(this.props.accept ?? []).join(',')}
-                    style={{visibility: 'hidden'}}
-                />
+                <ModalFooter>
+                    <input
+                        type="file"
+                        ref={this.fileInputNode}
+                        onChange={this.addFiles}
+                        multiple={this.props.multiple}
+                        accept={(this.props.accept ?? []).join(',')}
+                        style={{visibility: 'hidden'}}
+                    />
+                </ModalFooter>
             </Modal>
         );
     }
