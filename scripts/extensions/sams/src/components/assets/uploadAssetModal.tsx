@@ -190,7 +190,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
 
         return (
             <FileUploadModal
-                dark={true}
+                theme="dark-ui"
                 modalSize="fill"
                 initialFiles={this.props.initialFiles}
                 multiple={true}
