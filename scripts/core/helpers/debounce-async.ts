@@ -5,7 +5,7 @@ export interface IDebounced {
 
 /**
  * Promise returned by calling `fn` must use provided `abortController` to stop processing
- * on receiving abort signal and and reject with `{name: 'AbortError'}`.
+ * on receiving abort signal and reject with `{name: 'AbortError'}`.
  *
  * If .catch() is used on the promise returned by `fn`, it must rethrow if rejection is `{name: 'AbortError'}`.
  */
