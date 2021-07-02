@@ -327,7 +327,7 @@ angular.module('superdesk.apps.archive', [
                     return authoring.itemActions(item).cancelCorrection;
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {
-                    authoring.correction(data.item.archive_item || data.item, true);
+                    authoring.correction(data.item.archive_item || data.item, false, true);
                 }],
             })
             .activity('export', {

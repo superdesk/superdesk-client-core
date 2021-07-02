@@ -22,7 +22,7 @@ export const ContentFilterSingleValue = getSelectSingleValueAutoComplete({
                     }
                     : {}
             ),
-            50,
+            200,
         );
     },
     queryById: (id) => dataApi.findOne<IContentFilter>('content_filters', id),
