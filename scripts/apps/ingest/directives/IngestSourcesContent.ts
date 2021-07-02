@@ -74,6 +74,12 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 ]);
             };
 
+            $scope.getErrorMessage = (error) => {
+                const msg = error?._error?.message ?? error?.message;
+
+                return msg?.length > 0 ? msg : gettext('An error occured when testing config.');
+            };
+
             $scope.waitForDirectiveReady().then((waitForDirectiveReadyResult) => {
                 $scope.feedingServices = waitForDirectiveReadyResult[0];
 

@@ -190,8 +190,8 @@
                     </div>
 
                     <div class="form__row credentials">
-                        <div class="sd-alert sd-alert--hollow sd-alert--alert sd-alert--small" ng-show="error" translate>
-                            An error occured when testing config.
+                        <div class="sd-alert sd-alert--hollow sd-alert--alert sd-alert--small" ng-show="error">
+                            {{getErrorMessage(error)}}
                         </div>
 
                         <div sd-ingest-provider-config></div>
