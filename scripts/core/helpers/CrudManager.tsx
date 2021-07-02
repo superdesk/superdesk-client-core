@@ -141,7 +141,7 @@ export function generatePatchIArticle(a: IArticle, b: IArticle) {
 const cache = {};
 
 function findOne<T>(endpoint: string, id: string): Promise<T> {
-    const key = `${endpoint}:{$id}`;
+    const key = `${endpoint}:${id}`;
 
     if (cache[key] == null) {
         cache[key] = httpRequestJsonLocal({
