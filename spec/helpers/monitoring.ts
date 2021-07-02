@@ -5,7 +5,7 @@ import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
 import {s, ECE, el, els, articleList} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
-export const MONITORING_DEBOUNCE_MAX_WAIT = 5000;
+export const MONITORING_DEBOUNCE_MAX_WAIT = 10000;
 
 class Monitoring {
     config: ElementFinder;
