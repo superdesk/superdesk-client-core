@@ -13,6 +13,7 @@ export interface ITagBase {
 }
 
 export interface ISubjectTag extends ITagBase {
+    parent?: string;
     scheme: string;
 }
 
@@ -42,7 +43,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     let tags = OrderedMap<string, ITagUi>();
 
     response.subject?.forEach((item) => {
-        const {name, description, qcode, source, altids, aliases, original_source} = item;
+        const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
 
         const tag: ITagUi = {
             name,
@@ -52,6 +53,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
             original_source,
             aliases,
             altids,
+            parent,
             group: {
                 kind: 'scheme',
                 value: item.scheme,
@@ -122,7 +124,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 result.subject = [];
             }
 
-            const {name, description, qcode, source, altids, aliases, original_source} = item;
+            const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
 
             const subjectTag: ISubjectTag = {
                 name,
@@ -130,6 +132,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 qcode,
                 source,
                 altids,
+                parent,
                 scheme: item.group.value,
                 aliases,
                 original_source,

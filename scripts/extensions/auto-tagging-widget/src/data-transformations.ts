@@ -55,6 +55,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
                         scheme,
                         aliases,
                         original_source,
+                        parent,
                     } = subjectItem;
 
                     if (scheme == null) {
@@ -67,6 +68,7 @@ export function getExistingTags(article: IArticle): IServerResponse {
                         qcode,
                         source,
                         altids: altids ?? {},
+                        parent,
                         scheme,
                         aliases,
                         original_source,
