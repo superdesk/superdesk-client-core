@@ -148,7 +148,7 @@ function findOne<T>(endpoint: string, id: string): Promise<T> {
             method: 'GET',
             path: '/' + endpoint + '/' + id,
         }).finally(() => {
-            cache[key] = null;
+            delete cache[key];
         });
     }
 
