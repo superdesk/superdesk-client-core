@@ -1,8 +1,10 @@
-import _ from 'lodash';
+import _, {throttle} from 'lodash';
 import {cloneDeep} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {IBaseRestApiResponse} from 'superdesk-api';
+import {authenticateIngestProvider} from './authenticate-ingest-provider';
+import {addWebsocketEventListener} from 'core/notification/notification';
 
 interface IFeedingServiceField {
     id?: string;
@@ -228,18 +230,17 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 * @param {String} expression
                 * @return {Boolean}
                 */
-                function evalExpression(expression) {
-                    if (!$scope.currentFeedingService) {
+                function evalExpression(
+                    expression,
+                    feedingService,
+                    provider, // !!! provider is unused, but has to be present in order for eval to have it in context
+                ) {
+                    if (!feedingService) {
                         return false;
                     }
-                    let toEvaluate = expression;
 
-                    _.forEach($scope.currentFeedingService.fields, (field) => {
-                        let regExp = new RegExp('{' + field.id + '}');
-
-                        toEvaluate = toEvaluate.replace(regExp, $scope.provider.config[field.id]);
-                    });
-                    return $scope.$eval(toEvaluate);
+                    // eslint-disable-next-line no-eval
+                    return eval(expression);
                 }
 
                 /**
@@ -249,12 +250,16 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 * @param {Object} field
                 * @return {Boolean}
                 */
-                $scope.isConfigFieldRequired = (field) => {
+                $scope.isConfigFieldRequired = (
+                    field,
+                    feedingService = $scope.currentFeedingService,
+                    provider = $scope.provider,
+                ) => {
                     if (field.required) {
                         return true;
                     }
                     if (field.required_expression) {
-                        return evalExpression(field.required_expression);
+                        return evalExpression(field.required_expression, feedingService, provider);
                     }
                     return false;
                 };
@@ -266,11 +271,32 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 * @param {Object} field
                 * @return {Boolean}
                 */
-                $scope.isConfigFieldVisible = (field) => {
+                $scope.isConfigFieldVisible = (
+                    field,
+                    feedingService = $scope.currentFeedingService,
+                    provider = $scope.provider,
+                ) => {
                     if (!field.show_expression) {
                         return true;
                     }
-                    return evalExpression(field.show_expression);
+                    return evalExpression(field.show_expression, feedingService, provider);
+                };
+
+                /**
+                 * Should be skipped when adding a new ingest provider that
+                 * needs to be saved before it can be authenticated. (gmail ingest)
+                 */
+                $scope.shouldSkipConfigTest = () => {
+                    if ($scope.currentFeedingService == null) {
+                        return false;
+                    }
+
+                    const urlRequestFields = $scope.currentFeedingService.fields
+                        .filter((field) => field.type === 'url_request');
+
+                    const newItemBeingCreated = $scope?.provider?._id == null;
+
+                    return newItemBeingCreated && urlRequestFields.length > 0;
                 };
 
                 /**
@@ -374,13 +400,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     });
                 }
 
-                /**
-                 * Edit the given provider.
-                 *
-
-                * @method edit
-                */
-                $scope.edit = function(provider) {
+                $scope.edit = function(provider) { // also gets called when creating a new provider
                     $scope.provider = cloneDeep(provider || {});
 
                     $scope.provider.update_schedule = $scope.provider.update_schedule
@@ -505,12 +525,39 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     );
 
                     $scope.loading = true;
+
+                    const isItemBeingCreated: boolean = originalProvider == null;
+                    const urlRequestFields = $scope.currentFeedingService.fields
+                        .filter((field) => field.type === 'url_request');
+
+                    if (isItemBeingCreated && urlRequestFields.length > 0) {
+                        // See `shouldSkipConfigTest`
+                        $scope.provider.skip_config_test = true;
+                    }
+
                     api.ingestProviders.save(originalProvider || {}, $scope.provider)
-                        .then(() => {
+                        .then((provider) => {
+                            const authActions = urlRequestFields
+                                .filter((field) => $scope.isConfigFieldVisible(
+                                    field,
+                                    $scope.currentFeedingService,
+                                    provider,
+                                ))
+                                .map((field) => ({
+                                    label: field.label,
+                                    onClick: () => {
+                                        $scope.doUrlRequest(provider, field);
+                                    },
+                                }));
+
                             notify.success(gettext('Provider saved!'));
                             $scope.cancel();
                             $scope.error = null;
                             fetchProviders();
+
+                            if (isItemBeingCreated && urlRequestFields.length > 0 && authActions.length > 0) {
+                                authenticateIngestProvider(authActions);
+                            }
                         }, (error) => {
                             $scope.error = error.data;
                         })
@@ -628,7 +675,8 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 };
 
                 /**
-                 * Do URL request specified in url_request field
+                 * Do URL request specified in url_request field.
+                 * Used for gmail log-in / log-out.
                  * @param provider ingest provider metadata
                  * @param field url_request field metadata
                  */
@@ -641,6 +689,58 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                 }
 
                 $scope.$on('$locationChangeSuccess', fetchProviders);
+
+                const eventListenersToRemoveBeforeUnmounting = [];
+                const fetchProvidersThrottled = throttle(fetchProviders, 1000);
+
+                eventListenersToRemoveBeforeUnmounting.push(
+                    addWebsocketEventListener('resource:updated', (event) => {
+                        const {resource, fields} = event.extra;
+                        const itemBeingEditedOrCreated = $scope.provider != null && $scope.provider !== false;
+
+                        if (
+                            resource === 'ingest_providers'
+                            && Object.keys(fields).length > 0
+                            && !itemBeingEditedOrCreated
+                        ) {
+                            fetchProvidersThrottled();
+                        }
+                    }),
+                );
+
+                eventListenersToRemoveBeforeUnmounting.push(
+                    addWebsocketEventListener('resource:created', (event) => {
+                        const {resource} = event.extra;
+                        const itemBeingEditedOrCreated = $scope.provider != null && $scope.provider !== false;
+
+                        if (
+                            resource === 'ingest_providers'
+                            && !itemBeingEditedOrCreated
+                        ) {
+                            fetchProvidersThrottled();
+                        }
+                    }),
+                );
+
+                eventListenersToRemoveBeforeUnmounting.push(
+                    addWebsocketEventListener('resource:deleted', (event) => {
+                        const {resource} = event.extra;
+                        const itemBeingEditedOrCreated = $scope.provider != null && $scope.provider !== false;
+
+                        if (
+                            resource === 'ingest_providers'
+                            && !itemBeingEditedOrCreated
+                        ) {
+                            fetchProvidersThrottled();
+                        }
+                    }),
+                );
+
+                $scope.$on('$destroy', () => {
+                    eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
+                        removeListener();
+                    });
+                });
             });
         },
     };
