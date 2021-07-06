@@ -234,13 +234,17 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     expression,
                     feedingService,
                     provider, // !!! provider is unused, but has to be present in order for eval to have it in context
-                ) {
+                ): boolean {
                     if (!feedingService) {
                         return false;
                     }
 
-                    // eslint-disable-next-line no-eval
-                    return eval(expression);
+                    try {
+                        // eslint-disable-next-line no-eval
+                        return eval(expression);
+                    } catch {
+                        return false;
+                    }
                 }
 
                 /**

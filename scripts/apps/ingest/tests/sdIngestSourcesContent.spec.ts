@@ -58,7 +58,7 @@ describe('sdIngestSourcesContent directive', () => {
                     id: 'auth_required', type: 'boolean',
                 },
                 {
-                    id: 'username', type: 'text', show_expression: '{auth_required}',
+                    id: 'username', type: 'text', show_expression: 'provider.config.auth_required',
                 },
             ],
         }]));
@@ -160,13 +160,13 @@ describe('sdIngestSourcesContent directive', () => {
             found = directiveElement.find('input[id="rss-username"]');
             expect(found.length).toEqual(1);
             expect(found[0].type).toEqual('text');
-            expect(scope.isConfigFieldVisible({show_expression: '{auth_required}'})).toBeFalsy();
+            expect(scope.isConfigFieldVisible({show_expression: 'provider.config.auth_required'})).toBeFalsy();
 
             scope.provider.config.auth_required = true;
             scope.$digest();
             found = directiveElement.find('input[id="rss-username"]');
             expect(found.length).toEqual(1);
-            expect(scope.isConfigFieldVisible({show_expression: '{auth_required}'})).toBe(true);
+            expect(scope.isConfigFieldVisible({show_expression: 'provider.config.auth_required'})).toBe(true);
         });
     });
 
