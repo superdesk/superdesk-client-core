@@ -259,7 +259,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                     <div className="widget-content sd-padding-all--2">
                         <div>
-                            <div className="form__row form__row--flex" style={{padding: 0}}>
+                            <div className="form__row form__row--flex sd-padding-b--1">
                                 <ButtonGroup align="left">
                                     <Switch
                                         value={runAutomaticallyPreference}
@@ -275,8 +275,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 this.runAnalysis();
                                             }
                                         }}
+                                        label={{text: gettext('Run automatically')}}
                                     />
-                                    <label>{gettext('Run automatically')}</label>
                                 </ButtonGroup>
                             </div>
 
@@ -351,7 +351,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             />
                                         </div>
 
-                                        <div style={{marginLeft: 10}}>
+                                        <div style={{marginLeft: 10, marginTop: 14}}>
                                             <Button
                                                 type="primary"
                                                 icon="plus-large"

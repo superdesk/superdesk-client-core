@@ -6,6 +6,7 @@ export interface ITagBase {
     name: string;
     description?: string;
     qcode: string;
+    parent?: string;
     source?: string;
     altids: {[key: string]: string};
     aliases?: Array<string>;
