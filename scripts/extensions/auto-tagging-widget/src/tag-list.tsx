@@ -21,11 +21,9 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
             const {tags, onRemove, readOnly, savedTags} = this.props;
 
             const groupedByParent = tags.groupBy((tag) => tag.parent);
+            const rootTags = tags.filter((tag) => tag.parent == null);
 
-            // Remove child items from root array
-            const filteredTags = tags.filter((tag) => !tag.parent);
-
-            const tagListItem = (item: ITagUi, id?: string, parent = false) => (
+            const tagListItem = (item: ITagUi, id?: string, isParent: boolean = false) => (
                 <TagPopover
                     tag={item}
                     key={item.qcode}
@@ -35,8 +33,8 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                         key={item.qcode}
                         text={item.name}
                         shade={savedTags.has(item.qcode) ?
-                            (parent ? 'highlight2' : 'highlight1') :
-                            (parent ? 'darker' : 'light')}
+                            (isParent ? 'highlight2' : 'highlight1') :
+                            (isParent ? 'darker' : 'light')}
                         onClick={
                             readOnly
                                 ? noop
@@ -48,13 +46,28 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                 </TagPopover>
             );
 
-            return filteredTags.map((item, id) => (
-                <React.Fragment key={id}>
-                    {tagListItem(item, id, !!groupedByParent.get(id))}
-                    {groupedByParent.get(id) ? groupedByParent.get(id).map((tag) => tagListItem(tag)).toArray() : null}
-                    {groupedByParent.get(id) ? <br /> : ''}
-                </React.Fragment>
-            )).toArray();
+            return rootTags.map((item, id) => {
+                const childrenTags = groupedByParent.get(id);
+
+                return (
+                    <React.Fragment key={id}>
+                        {
+                            tagListItem(item, id, childrenTags != null)
+                        }
+
+                        {
+                            childrenTags != null && (
+                                <React.Fragment>
+                                    {
+                                        childrenTags.map((tag) => tagListItem(tag)).toArray()
+                                    }
+                                    <br />
+                                </React.Fragment>
+                            )
+                        }
+                    </React.Fragment>
+                );
+            }).toArray();
         }
     };
 }
