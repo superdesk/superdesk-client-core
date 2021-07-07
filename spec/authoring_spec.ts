@@ -7,7 +7,7 @@ import {
     ctrlShiftKey,
     assertToastMsg,
     assertToastMsgNotDisplayed,
-    waitForToastMsgDissapear,
+    waitForToastMsgDisappear,
     nav,
     shiftKey,
 } from './helpers/utils';
@@ -717,7 +717,7 @@ describe('authoring', () => {
         uploadMedia('image-big.jpg');
 
         assertToastMsg('success', 'Item updated.');
-        waitForToastMsgDissapear('success', 'Item updated.');
+        waitForToastMsgDisappear('success', 'Item updated.');
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
 
