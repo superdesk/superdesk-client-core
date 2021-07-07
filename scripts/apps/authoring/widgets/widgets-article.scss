@@ -61,6 +61,7 @@
         }
         .widget__sliding-toolbar {
             @include sliding-toolbar;
+            padding: 0 40px 0 16px;
         }
         .widget-actions {
             display: flex;

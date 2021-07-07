@@ -20,7 +20,12 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
         render() {
             const {tags, onRemove, readOnly, savedTags} = this.props;
 
-            return tags.map((item, id) => (
+            const groupedByParent = tags.groupBy((tag) => tag.parent);
+
+            // Remove child items from root array
+            const filteredTags = tags.filter(tag => tag.parent ? false : true);
+
+            const tagListItem = (item: ITagUi, id?: string, parent = false) => (
                 <TagPopover
                     tag={item}
                     key={item.qcode}
@@ -29,16 +34,26 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                     <Tag
                         key={item.qcode}
                         text={item.name}
-                        shade={savedTags.has(item.qcode) ? 'highlight1' : 'light'}
+                        shade={savedTags.has(item.qcode) ?
+                            (parent ? 'highlight2': 'highlight1') :
+                            (parent ? 'darker' : 'light')}
                         onClick={
                             readOnly
                                 ? noop
                                 : () => {
-                                    onRemove(id);
+                                    onRemove(id || item.qcode);
                                 }
                         }
                     />
                 </TagPopover>
+            );
+
+            return filteredTags.map((item, id) => (
+                <React.Fragment key={id}>
+                    {tagListItem(item, id, !!groupedByParent.get(id))}
+                    {groupedByParent.get(id) ? groupedByParent.get(id).map((tag) => tagListItem(tag)).toArray() : null}
+                    {!!groupedByParent.get(id) ? <br /> : ''}
+                </React.Fragment>
             )).toArray();
         }
     };
