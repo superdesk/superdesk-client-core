@@ -21,6 +21,7 @@ import {
     unlockAsset,
     searchTags,
 } from './api/assets';
+import {getDesksSamsSettings, getSingleDeskSamsSettings, updateSetsAllowedDesks} from './api/workspace';
 
 // will be set asynchronously on SAMS extension start
 // members can't be accessed in root module scope synchronously
@@ -54,5 +55,10 @@ export const samsApi: ISamsAPI = {
         lockAsset: lockAsset,
         unlockAsset: unlockAsset,
         searchTags: searchTags,
+    },
+    workspace: {
+        getDesksSamsSettings: getDesksSamsSettings,
+        getSingleDeskSamsSettings: getSingleDeskSamsSettings,
+        updateSetsAllowedDesks: updateSetsAllowedDesks,
     },
 };

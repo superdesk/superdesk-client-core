@@ -8,6 +8,14 @@ import {gettext} from 'core/utils';
 interface IProps<T> {
     items: {[key: string]: T};
     value?: string;
+
+    /**
+     * Required in order to render selected item.
+     * This is a lazy component and the object for value
+     * might not always be present in `items`.
+     */
+    valueObject: T;
+
     placeholder?: JSX.Element;
     disabled?: boolean;
     required?: boolean;
@@ -189,7 +197,16 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         );
                     }}
                     renderInput={(propsAutocomplete: any) => {
-                        const selectedItem = this.props.items[this.props.value];
+                        let selectedItem = this.props.items[this.props.value];
+
+                        // use valueObject when an object for selected `value` is not present in `this.props.items`
+                        if (
+                            selectedItem == null
+                            && this.props.valueObject != null
+                            && this.props.value === this.props.getItemValue(this.props.valueObject)
+                        ) {
+                            selectedItem = this.props.valueObject;
+                        }
 
                         if (propsAutocomplete['aria-expanded'] === true) {
                             return (

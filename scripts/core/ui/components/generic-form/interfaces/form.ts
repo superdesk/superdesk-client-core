@@ -8,7 +8,7 @@ export enum FormFieldType {
     checkbox = 'checkbox',
     contentFilterSingleValue = 'contentFilterSingleValue',
     deskSingleValue = 'deskSingleValue',
-    stageSingleValue = 'stage_singstageSingleValuele_value',
+    stageSingleValue = 'stageSingleValue',
     macroSingleValue = 'macroSingleValue',
     yesNo = 'yesNo',
     select = 'select',

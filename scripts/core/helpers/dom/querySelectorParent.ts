@@ -6,7 +6,7 @@ export const querySelectorParent = (
     options?: {
         self: boolean; // will check the current element too if set to true
     },
-) => {
+): HTMLElement | null => {
     return findParent(
         element,
         (el) => el.matches(selector),

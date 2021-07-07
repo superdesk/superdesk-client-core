@@ -2,9 +2,10 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
-import {cloneDeep} from 'lodash';
+import {cloneDeep, isEqual} from 'lodash';
 
 // Types
+import {IDesk} from 'superdesk-api';
 import {ISetItem, IStorageDestinationItem, SET_STATE, DATA_UNIT} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {superdeskApi, samsApi} from '../../apis';
@@ -13,6 +14,7 @@ import {superdeskApi, samsApi} from '../../apis';
 import {previewSet, closeSetContentPanel} from '../../store/sets/actions';
 import {getSelectedSet, getSelectedSetStorageDestination} from '../../store/sets/selectors';
 import {getStorageDestinations} from '../../store/storageDestinations/selectors';
+import {getDesksAllowedSets} from '../../store/workspace/selectors';
 
 // UI
 import {Button, ButtonGroup, Input, Option, Select, Switch, FormLabel} from 'superdesk-ui-framework/react';
@@ -28,6 +30,7 @@ import {
 } from '../../ui';
 import {getFileSizeFromHumanReadable} from '../../utils/ui';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
+import {DesksSelectInput} from '../common/DesksSelectInput';
 
 // Utils
 import {hasItemChanged} from '../../utils/api';
@@ -35,9 +38,10 @@ import {hasItemChanged} from '../../utils/api';
 interface IProps {
     original?: ISetItem;
     destinations: Array<IStorageDestinationItem>;
+    currentDestination?: IStorageDestinationItem;
+    allowedDesksForSet: Dictionary<ISetItem['_id'], Array<IDesk['_id']>>;
     closeEditor(): void;
     previewSet(set: ISetItem): void;
-    currentDestination?: IStorageDestinationItem;
 }
 
 interface IState {
@@ -45,12 +49,14 @@ interface IState {
     isDirty: boolean;
     submitting: boolean;
     storage_unit: DATA_UNIT;
+    desks: Array<IDesk['_id']>;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
     original: getSelectedSet(state),
     destinations: getStorageDestinations(state),
     currentDestination: getSelectedSetStorageDestination(state),
+    allowedDesksForSet: getDesksAllowedSets(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -72,6 +78,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                 isDirty: true,
                 submitting: false,
                 storage_unit: DATA_UNIT.BYTES,
+                desks: [],
             };
         } else {
             this.state = {
@@ -79,6 +86,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                 isDirty: false,
                 submitting: false,
                 storage_unit: DATA_UNIT.BYTES,
+                desks: this.props.allowedDesksForSet[this.props.original._id] ?? [],
             };
         }
 
@@ -95,7 +103,36 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
             maximum_asset_size: (value: number) => this.onMaxAssetSizeChange(+value, this.state.storage_unit),
             storage_unit: (value: DATA_UNIT) => this.updateStorageUnit(value),
             state: (value: boolean) => this.onStateChange(value),
+            desks: (value: Array<IDesk['_id']>) => this.onDesksChange(value),
         };
+    }
+
+    hasDeskRestrictionsChanged() {
+        if (this.props.original?._id == null) {
+            return false;
+        }
+
+        const original = this.props.allowedDesksForSet[this.props.original._id] ?? [];
+        const updates = this.state.desks;
+
+        return isEqual(original.sort(), updates.sort());
+    }
+
+    isFormDirty(newState: IState) {
+        let dirty = true;
+
+        if (this.props.original != null) {
+            dirty = hasItemChanged(this.props.original, newState.updates);
+
+            const original = this.props.allowedDesksForSet[this.props.original._id];
+            const updates = newState.desks;
+
+            if (isEqual(original.sort(), updates.sort())) {
+                dirty = false;
+            }
+        }
+
+        return dirty;
     }
 
     onFieldChange(field: keyof ISetItem, value: any): void {
@@ -105,7 +142,11 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
         (updates[field] as any) = value;
 
         if (this.props.original != null) {
-            dirty = hasItemChanged(this.props.original, this.state.updates);
+            dirty = hasItemChanged(this.props.original, updates);
+        }
+
+        if (this.hasDeskRestrictionsChanged()) {
+            dirty = true;
         }
 
         this.setState({
@@ -144,12 +185,21 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
         this.onFieldChange('state', newState);
     }
 
+    onDesksChange(deskIds: Array<IDesk['_id']>) {
+        this.setState((prevState: IState) => ({
+            desks: deskIds,
+            isDirty: this.hasDeskRestrictionsChanged() ?
+                true :
+                prevState.isDirty,
+        }));
+    }
+
     onSave() {
         this.setState({submitting: true});
 
         const promise = this.props.original != null ?
-            samsApi.sets.update(this.props.original, this.state.updates) :
-            samsApi.sets.create(this.state.updates);
+            samsApi.sets.update(this.props.original, this.state.updates, this.state.desks) :
+            samsApi.sets.create(this.state.updates, this.state.desks);
 
         promise
             .then((set: ISetItem) => {
@@ -298,6 +348,14 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                                     <Text>{currentDestination?.provider}</Text>
                                 </React.Fragment>
                             )}
+                            <DesksSelectInput
+                                label={gettext('Allowed Desks')}
+                                value={this.props.original?._id != null ?
+                                    this.props.allowedDesksForSet[this.props.original._id] ?? [] :
+                                    []
+                                }
+                                onChange={this.onChange.desks}
+                            />
                         </PanelContentBlockInner>
                     </PanelContentBlock>
                 </PanelContent>

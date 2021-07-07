@@ -266,7 +266,7 @@
                                 </div>
                             </div>
                             <!-- swimlane view -->
-                            <div ng-if="monitoring.viewColumn && type === 'monitoring'" class="sd-kanban-list-container">
+                            <div ng-if="monitoring.viewColumn && type === 'monitoring' && !monitoring.singleGroup" class="sd-kanban-list-container">
                                 <div class="sd-kanban-list" ng-if="(!monitoring.singleGroup || monitoring.isDeskChanged()) && type === 'monitoring'">
                                     <div ng-class="{active: isActiveGroup(group), inactive: !isActiveGroup(group)}"
                                         ng-repeat="group in aggregate.groups| limitTo:monitoring.columnsLimit track by group._id"

@@ -6,9 +6,7 @@ import {
     RawDraftContentState,
     CompositeDecorator,
 } from 'draft-js';
-import {createStore, applyMiddleware} from 'redux';
-import {createLogger} from 'redux-logger';
-import thunk from 'redux-thunk';
+import {createStore} from 'redux';
 import {pick, get, debounce} from 'lodash';
 import {
     PopupTypes,
@@ -31,7 +29,7 @@ import {
 import {removeInlineStyles} from '../helpers/removeFormat';
 import reducers from '../reducers';
 import {editor3StateToHtml} from '../html/to-html/editor3StateToHtml';
-import {LinkDecorator} from '../components/links';
+import {LinkDecorator} from '../components/links/LinkDecorator';
 import {
     getSpellcheckingDecorator,
     ISpellcheckWarningsByBlock,
@@ -46,6 +44,7 @@ import {
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {handleOverflowHighlights} from '../helpers/characters-limit';
+import {getMiddlewares} from 'core/redux-utils';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -100,7 +99,7 @@ export const getCustomDecorator = (
     language?: string,
     spellcheckWarnings: ISpellcheckWarningsByBlock = null,
 ) => {
-    const decorators: Array<any> = [LinkDecorator];
+    const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
     if (spellcheckWarnings != null && language != null) {
         decorators.push(
@@ -141,19 +140,6 @@ export default function createEditorStore(
     const onChangeValue = isReact
         ? props.onChange
         : debounce(onChange.bind(props), props.debounce);
-
-    const middlewares = [thunk];
-
-    const devtools = localStorage.getItem('devtools');
-    const reduxLoggerEnabled =
-        devtools == null
-            ? false
-            : JSON.parse(devtools).includes('redux-logger');
-
-    if (reduxLoggerEnabled) {
-        // (this should always be the last middleware)
-        middlewares.push(createLogger());
-    }
 
     const limitConfig: EditorLimit | null = !props.limit
         ? null
@@ -201,7 +187,7 @@ export default function createEditorStore(
             loading: false,
             limitConfig,
         },
-        applyMiddleware(...middlewares),
+        getMiddlewares(),
     );
 
     if (spellcheck != null) {
@@ -317,7 +303,7 @@ export function getInitialContent(props): ContentState {
         ).getCurrentContent();
     }
 
-    const hasUnsafeFormattingOptions = props.editorFormat.some(
+    const hasUnsafeFormattingOptions = props.editorFormat != null && props.editorFormat.some(
         (option: IEDITOR3_RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
     );
 

@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
 
 // Types
+import {IDesk} from 'superdesk-api';
 import {ISetItem, IStorageDestinationItem, SET_STATE} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {superdeskApi} from '../../apis';
@@ -11,9 +12,10 @@ import {superdeskApi} from '../../apis';
 // Redux Actions & Selectors
 import {editSet, confirmBeforeDeletingSet, closeSetContentPanel} from '../../store/sets/actions';
 import {getSelectedSet, getSelectedSetStorageDestination, getSelectedSetCount} from '../../store/sets/selectors';
+import {getDesksAllowedSets} from '../../store/workspace/selectors';
 
 // UI
-import {FormLabel} from 'superdesk-ui-framework/react';
+import {FormLabel, Label} from 'superdesk-ui-framework/react';
 import {
     FormRow,
     PanelContent,
@@ -31,15 +33,21 @@ interface IProps {
     set?: ISetItem;
     storageDestination?: IStorageDestinationItem;
     count?: number;
+    allowedDesksForSet: Dictionary<ISetItem['_id'], Array<IDesk['_id']>>;
     onEdit(set: ISetItem): void;
     onDelete(set: ISetItem): void;
     onClose(): void;
+}
+
+interface IState {
+    deskNames: Array<IDesk['name']>;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
     set: getSelectedSet(state),
     storageDestination: getSelectedSetStorageDestination(state),
     count: getSelectedSetCount(state),
+    allowedDesksForSet: getDesksAllowedSets(state),
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
@@ -48,7 +56,39 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     onClose: () => dispatch(closeSetContentPanel()),
 });
 
-export class SetPreviewPanelComponent extends React.PureComponent<IProps> {
+export class SetPreviewPanelComponent extends React.Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.state = {deskNames: []};
+    }
+
+    componentDidMount() {
+        this.reloadDeskNames();
+    }
+
+    reloadDeskNames() {
+        if (this.props.set?._id == null || !this.props.allowedDesksForSet[this.props.set._id]?.length) {
+            this.setState({deskNames: []});
+        } else {
+            superdeskApi.dataApi.query<IDesk>(
+                'desks',
+                1,
+                {field: '_id', direction: 'ascending'},
+                {
+                    _id: {
+                        $in: this.props.allowedDesksForSet[this.props.set._id],
+                    },
+                },
+            )
+                .then((response) => {
+                    this.setState({deskNames: response._items.map(
+                        (desk) => desk.name,
+                    )});
+                });
+        }
+    }
+
     render() {
         const {gettext} = superdeskApi.localization;
         const {set, storageDestination, count} = this.props;
@@ -117,6 +157,18 @@ export class SetPreviewPanelComponent extends React.PureComponent<IProps> {
                             <FormRow>
                                 <FormLabel text={gettext('Storage Provider')} style="light" />
                                 <Text>{storageDestination?.provider}</Text>
+                            </FormRow>
+
+                            <FormRow>
+                                <FormLabel text={gettext('Allowed Desks')} style="light" />
+                                {this.state.deskNames.map((deskName) => (
+                                    <Label
+                                        key={deskName}
+                                        text={deskName}
+                                        style="translucent"
+                                        size="large"
+                                    />
+                                ))}
                             </FormRow>
                         </PanelContentBlockInner>
                     </PanelContentBlock>

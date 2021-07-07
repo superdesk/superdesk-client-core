@@ -160,7 +160,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             let activePrefGroups = preference[activeWorkspace.id] ? preference[activeWorkspace.id].groups || [] : [];
 
             if (monitoringSettings == null) {
-                return {type: 'desk', groups: []};
+                return {type: 'desk', groups: activePrefGroups};
             }
 
             const monitoringSettingsIds: Array<string> = monitoringSettings.map(({_id}) => _id);

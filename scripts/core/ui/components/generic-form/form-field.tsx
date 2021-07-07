@@ -16,6 +16,7 @@ import {IFormField, IFormGroup} from 'superdesk-api';
 import {SelectMultipleValues} from './input-types/select_multiple_values';
 import {SelectSingleValue} from './input-types/select_single_value_static';
 import {NumberComponent} from './input-types/number';
+import {Select} from './input-types/select';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
@@ -40,7 +41,7 @@ export function getFormFieldComponent(type: FormFieldType): React.ComponentType<
     case FormFieldType.yesNo:
         return YesNo;
     case FormFieldType.select:
-        return SelectSingleValue;
+        return Select;
     case FormFieldType.selectMultiple:
         return SelectMultipleValues;
     default:

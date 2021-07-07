@@ -1,7 +1,7 @@
 // Types
-import {IRestApiResponse} from 'superdesk-api';
+import {IDesk, IRestApiResponse} from 'superdesk-api';
 import {ISetItem} from '../interfaces';
-import {superdeskApi} from '../apis';
+import {superdeskApi, samsApi} from '../apis';
 
 // Utils
 import {fixItemResponseVersionDates} from './common';
@@ -34,13 +34,21 @@ export function getAllSets(): Promise<Array<ISetItem>> {
         });
 }
 
-export function createSet(item: Partial<ISetItem>): Promise<ISetItem> {
+export function createSet(
+    item: Partial<ISetItem>,
+    deskRestrictions?: Array<IDesk['_id']>,
+): Promise<ISetItem> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
     return superdeskApi.dataApi.create<ISetItem>(RESOURCE, item)
         .then((set: ISetItem) => {
             notify.success(gettext('Set created successfully'));
+
+            if (deskRestrictions?.length) {
+                return samsApi.workspace.updateSetsAllowedDesks(set._id, deskRestrictions)
+                    .then(() => set);
+            }
 
             return set;
         })
@@ -55,7 +63,11 @@ export function createSet(item: Partial<ISetItem>): Promise<ISetItem> {
         });
 }
 
-export function updateSet(original: ISetItem, updates: Partial<ISetItem>): Promise<ISetItem> {
+export function updateSet(
+    original: ISetItem,
+    updates: Partial<ISetItem>,
+    deskRestrictions?: Array<IDesk['_id']>,
+): Promise<ISetItem> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
 
@@ -63,7 +75,8 @@ export function updateSet(original: ISetItem, updates: Partial<ISetItem>): Promi
         .then((set: ISetItem) => {
             notify.success(gettext('Set updated successfully'));
 
-            return set;
+            return samsApi.workspace.updateSetsAllowedDesks(set._id, deskRestrictions ?? [])
+                .then(() => set);
         })
         .catch((error: any) => {
             if (isSamsApiError(error)) {

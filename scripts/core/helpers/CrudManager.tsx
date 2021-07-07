@@ -24,21 +24,26 @@ import {connectServices} from './ReactRenderAsync';
 export function queryElastic(
     parameters: IQueryElasticParameters,
 ) {
-    const {endpoint, page, sort, filterValues, aggregations} = parameters;
+    const {endpoint, page, sort, aggregations} = parameters;
 
     return ng.getServices(['session', 'api'])
         .then((res: any) => {
             const [session] = res;
+
+            function toElasticFilter(filterValues) {
+                return Object.keys(filterValues ?? {}).map((key) => ({terms: {[key]: filterValues[key]}}));
+            }
 
             const source = {
                 query: {
                     filtered: {
                         filter: {
                             bool: {
-                                must: Object.keys(filterValues).map((key) => ({terms: {[key]: filterValues[key]}})),
+                                must: toElasticFilter(parameters.filterValues),
                                 must_not: [
                                     {term: {state: 'spiked'}},
                                     {term: {package_type: 'takes'}},
+                                    ...toElasticFilter(parameters.filterValuesNegative),
                                 ],
                                 should: [
                                     {
@@ -133,11 +138,21 @@ export function generatePatchIArticle(a: IArticle, b: IArticle) {
     return patch;
 }
 
+const cache = {};
+
 function findOne<T>(endpoint: string, id: string): Promise<T> {
-    return httpRequestJsonLocal({
-        method: 'GET',
-        path: '/' + endpoint + '/' + id,
-    });
+    const key = `${endpoint}:${id}`;
+
+    if (cache[key] == null) {
+        cache[key] = httpRequestJsonLocal({
+            method: 'GET',
+            path: '/' + endpoint + '/' + id,
+        }).finally(() => {
+            cache[key] = null;
+        });
+    }
+
+    return cache[key];
 }
 
 export function fetchChangedResources<T extends IBaseRestApiResponse>(

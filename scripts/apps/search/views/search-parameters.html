@@ -84,7 +84,7 @@
 
         <div class="field keywords" ng-if="search_config.keywords">
             <label for="search-keywords">
-                {{keywords.display_name}}
+                {{ keywords.display_name || 'Keywords' | translate }}
             </label>
             <div id="search-keywords"
                  sd-meta-words-list

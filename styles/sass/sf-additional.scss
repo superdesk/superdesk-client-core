@@ -2115,10 +2115,10 @@ sd-multi-image-edit {
 .main-section--pinned-tabs {
     .authoring-header,
     .main-article {
-        margin-right: 330px;
+        margin-right: 325px;
     }
     .authoring-sticky {
-        margin-right: 338px;
+        margin-right: 333px;
     }
     .pinned-tab__wrapper {
         width: 330px;
@@ -2224,4 +2224,9 @@ sd-multi-image-edit {
             color: rgba(255, 255, 255, 0.5) !important;
         } 
     }
+}
+
+.sd-line-input input.sd-line-input__input,
+.sd-line-input textarea.sd-line-input__input {
+    display: block !important;
 }
