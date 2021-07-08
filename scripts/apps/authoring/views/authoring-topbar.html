@@ -106,10 +106,11 @@
             <span class="btn__text" translate>Update</span>
             <span class="btn__text--short" translate>U</span>
       </button>
-
+      
       <button class="btn btn--primary" ng-if="item._type !== 'legal_archive' && userHasPrivileges({correct: 1}) === true"
         ng-show="(action === 'view' || !item._editable) && itemActions.correct"
         ng-click="openAction('correct')"
+        ng-disabled="isCorrectionInProgress"
         aria-label="{{ 'Correct' | translate }}"
         title="{{ 'Correct' | translate }}">
             <span class="btn__text" translate>Correct</span>

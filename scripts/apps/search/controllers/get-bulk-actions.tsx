@@ -23,6 +23,7 @@ export function getBulkActions(
 
     const authoring = ng.get('authoring');
     const desks = ng.get('desks');
+    const privileges = ng.get('privileges');
 
     const {isLocked, isLockedByOtherUser, isPublished} = sdApi.article;
 
@@ -79,15 +80,17 @@ export function getBulkActions(
             canAutocloseMultiActionBar: false,
         });
     } else if (noneLocked && articles.every((article) => article.state === ITEM_STATE.SPIKED)) {
-        actions.push({
-            label: gettext('Unspike'),
-            icon: 'icon-unspike',
-            onTrigger: () => {
-                multiActions.unspikeItems();
-                scopeApply?.();
-            },
-            canAutocloseMultiActionBar: false,
-        });
+        if (privileges.userHasPrivileges({unspike: 1})) {
+            actions.push({
+                label: gettext('Unspike'),
+                icon: 'icon-unspike',
+                onTrigger: () => {
+                    multiActions.unspikeItems();
+                    scopeApply?.();
+                },
+                canAutocloseMultiActionBar: false,
+            });
+        }
     } else {
         if (noneLocked && multiActions.canEditMetadata()) {
             actions.push({

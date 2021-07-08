@@ -46,7 +46,7 @@ export const getSuperdeskType = (event, supportExternalFiles = true) =>
 export const gettext = (
     text: string,
     params: {[key: string]: string | number} = {},
-) => {
+): string => {
     if (!text) {
         return '';
     }

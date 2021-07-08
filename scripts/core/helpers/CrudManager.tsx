@@ -138,11 +138,21 @@ export function generatePatchIArticle(a: IArticle, b: IArticle) {
     return patch;
 }
 
+const cache = {};
+
 function findOne<T>(endpoint: string, id: string): Promise<T> {
-    return httpRequestJsonLocal({
-        method: 'GET',
-        path: '/' + endpoint + '/' + id,
-    });
+    const key = `${endpoint}:${id}`;
+
+    if (cache[key] == null) {
+        cache[key] = httpRequestJsonLocal({
+            method: 'GET',
+            path: '/' + endpoint + '/' + id,
+        }).finally(() => {
+            cache[key] = null;
+        });
+    }
+
+    return cache[key];
 }
 
 export function fetchChangedResources<T extends IBaseRestApiResponse>(
