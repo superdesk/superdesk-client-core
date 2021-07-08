@@ -29,6 +29,12 @@ export function hasValue(fieldConfig: IFormField, value: any): boolean {
     case FormFieldType.checkbox:
         return value === true || value === false;
 
+    case FormFieldType.number:
+        return typeof value === 'number';
+
+    case FormFieldType.arrayOf:
+        return Array.isArray(value) && value.length > 0;
+
     default:
         assertNever(type);
     }
