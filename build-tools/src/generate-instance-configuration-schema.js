@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 var execSync = require('child_process').execSync;
+var _ = require('lodash');
 
 function addTranslations(branch) {
     if (branch.properties == null) {
@@ -9,7 +10,7 @@ function addTranslations(branch) {
 
     branch.translations = Object.keys(branch.properties).reduce((acc, property) => {
         // gettext call will be unwrapped from the string later with regex
-        acc[property] = `gettext('${property}')`;
+        acc[property] = `gettext('${_.lowerCase(property)}')`;
 
         return acc;
     }, {});

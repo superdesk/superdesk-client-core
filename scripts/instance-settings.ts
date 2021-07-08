@@ -34,7 +34,7 @@ export const getInstanceConfigSchema = (gettext) => ({
             ],
             "type": "object",
             "translations": {
-                "customToolbar": gettext('customToolbar'),
+                "customToolbar": gettext('custom toolbar'),
                 "editor": gettext('editor')
             }
         },
@@ -52,7 +52,7 @@ export const getInstanceConfigSchema = (gettext) => ({
             ],
             "type": "object",
             "translations": {
-                "stageCount": gettext('stageCount')
+                "stageCount": gettext('stage count')
             }
         }
     },
