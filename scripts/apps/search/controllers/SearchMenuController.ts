@@ -56,9 +56,7 @@ export default function SearchMenuController(
 
     const initActiveProvider = () => {
         if ($location.path() === '/search') {
-            if ($location.search()._id) {
-                this.activeProvider = this.activeProvider;
-            } else {
+            if (!$location.search()._id) {
                 this.activeProvider = this.providers.find(
                     (provider) => isEqual($location.search(), getSearchParams(provider)),
                 );
