@@ -6,16 +6,7 @@ import {FormFieldType} from '../interfaces/form';
 import {IFormField} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IconButton, Button} from 'superdesk-ui-framework/react';
-
-function arraymove<T>(arr: Array<T>, fromIndex: number, toIndex: number): Array<T> {
-    const copy = [...arr];
-    const element = copy[fromIndex];
-
-    copy.splice(fromIndex, 1);
-    copy.splice(toIndex, 0, element);
-
-    return copy;
-}
+import {arrayMove} from 'core/helpers/utils';
 
 export class ArrayField extends React.Component<IInputType<Array<string>>> {
     render() {
@@ -55,9 +46,9 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
                                 field: i.toString(),
 
                                 /**
-                                 * Setting to false in order to avoid red starts in the UI for every item.
-                                 * In reality it should be always false.
-                                 * If there's no value, there should not be an entry in the array too.
+                                 * Setting to `false` in order to avoid red stars in the UI for every item.
+                                 * In reality it should be always `true`, because it's being applied to array items.
+                                 * Array item should either be required or not be added to the array at all.
                                  */
                                 required: false,
                             };
@@ -83,7 +74,7 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
                                                         ariaValue={gettext('move up')}
                                                         onClick={() => {
                                                             this.props.onChange(
-                                                                arraymove(items, i, i - 1),
+                                                                arrayMove(items, i, i - 1),
                                                             );
                                                         }}
                                                     />
@@ -98,7 +89,7 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
                                                         ariaValue={gettext('move down')}
                                                         onClick={() => {
                                                             this.props.onChange(
-                                                                arraymove(items, i, i + 1),
+                                                                arrayMove(items, i, i + 1),
                                                             );
                                                         }}
                                                     />
