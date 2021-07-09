@@ -1,6 +1,8 @@
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {gettext} from 'core/utils';
 import {debounce, once} from 'lodash';
+import {getStores} from '../editor3/store';
+import {setAbbreviations} from 'core/editor3/actions';
 
 /**
  * Spellcheck module
@@ -8,7 +10,7 @@ import {debounce, once} from 'lodash';
 SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService'];
 function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
     var PREFERENCES_KEY = 'spellchecker:status',
-        lang = 'en',
+        lang,
         dict = {} as any,
         ignored = {},
         abbreviationList = [],
@@ -105,11 +107,10 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      *
      * @return {Promise}
      */
-    this.getAbbreviationsDict = function(force) {
+    this.getAbbreviationsDict = function(force, language = 'en') {
         if (!lang) {
-            // here it shouldn't reject like in getDict, where it would stop only spellchecking
-            // if there is no dictionary, while here it would stop scope commit in editor
-            return $q.when({});
+            // if lang is not specified set it to en
+            this.setLanguage(language);
         }
 
         var baseLang = getBaseLanguage(lang);
@@ -545,9 +546,16 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
 
     $scope.$watch('item.language', (newVal, oldVal) => {
         if (newVal != null && newVal !== oldVal) {
+            const stores = getStores();
+
             self.isAuto = true;
             spellcheck.setLanguage(newVal);
             setupSpellchecker();
+            spellcheck.getAbbreviationsDict(true, newVal).then((abbreviation) => {
+                stores.forEach((_store) => {
+                    _store.dispatch(setAbbreviations(abbreviation));
+                });
+            });
         }
     });
 
