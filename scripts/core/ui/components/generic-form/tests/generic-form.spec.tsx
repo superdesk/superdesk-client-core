@@ -15,6 +15,7 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
     case FormFieldType.textSingleLine:
     case FormFieldType.textEditor3:
+    case FormFieldType.number:
     case FormFieldType.checkbox:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
@@ -50,6 +51,14 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
                 ],
             },
         };
+    case FormFieldType.arrayOf:
+        return {
+            type: type,
+            field: 'test-field',
+            component_parameters: {
+                field_type: FormFieldType.number,
+            },
+        };
     default:
         assertNever(type);
     }
@@ -71,7 +80,7 @@ describe('generic form', () => {
                             formField={getTestFieldConfig(type)}
                             formValues={{}}
                             disabled={false}
-                            value=""
+                            value={undefined}
                             issues={[message]}
                             previewOutput={false}
                             onChange={noop}
@@ -85,11 +94,17 @@ describe('generic form', () => {
                     expect(wrapper.html()).toContain(message);
 
                     done();
-                });
+                }, 100);
             });
         });
 
     getAllInputTypes()
+        /**
+         * `arrayOf` can't add that classname, because due to current CSS,
+         * all children would be marked as required even if they are not.
+         */
+        .filter((type) => type !== FormFieldType.arrayOf)
+
         .forEach((type: FormFieldType) => {
             it(`${type} should add a classname for required fields`, (done) => {
                 const Component = getFormFieldComponent(type);
@@ -100,7 +115,7 @@ describe('generic form', () => {
                             formField={{...getTestFieldConfig(type), required: true}}
                             formValues={{}}
                             disabled={false}
-                            value=""
+                            value={undefined}
                             issues={[]}
                             previewOutput={false}
                             onChange={noop}
@@ -113,7 +128,7 @@ describe('generic form', () => {
                     expect(wrapper.find('.sd-line-input--required').length).toBe(1);
 
                     done();
-                });
+                }, 100);
             });
         });
 });

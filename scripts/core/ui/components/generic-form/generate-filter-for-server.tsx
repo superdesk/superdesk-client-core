@@ -9,6 +9,7 @@ export function generateFilterForServer(type: FormFieldType, value: any): any {
             $options: 'i',
         };
 
+    case FormFieldType.number:
     case FormFieldType.vocabularySingleValue:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.checkbox:
@@ -16,6 +17,7 @@ export function generateFilterForServer(type: FormFieldType, value: any): any {
     case FormFieldType.stageSingleValue:
     case FormFieldType.macroSingleValue:
     case FormFieldType.select:
+    case FormFieldType.arrayOf:
         return value;
 
     case FormFieldType.textEditor3:

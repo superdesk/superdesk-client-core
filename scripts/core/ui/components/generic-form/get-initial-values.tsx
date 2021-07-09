@@ -8,9 +8,12 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     const type: FormFieldType = fieldConfig.type;
 
     switch (type) {
+    case FormFieldType.arrayOf:
+        return {[field]: []};
     case FormFieldType.textSingleLine:
     case FormFieldType.textEditor3:
         return {[field]: ''};
+    case FormFieldType.number:
     case FormFieldType.vocabularySingleValue:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
