@@ -3,6 +3,7 @@ import {gettext} from 'core/utils';
 import {debounce, once} from 'lodash';
 import {getStores} from '../editor3/store';
 import {setAbbreviations} from 'core/editor3/actions';
+import {getUserInterfaceLanguage} from 'appConfig';
 
 /**
  * Spellcheck module
@@ -10,7 +11,7 @@ import {setAbbreviations} from 'core/editor3/actions';
 SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService'];
 function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
     var PREFERENCES_KEY = 'spellchecker:status',
-        lang,
+        lang = getUserInterfaceLanguage(),
         dict = {} as any,
         ignored = {},
         abbreviationList = [],
@@ -107,10 +108,10 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      *
      * @return {Promise}
      */
-    this.getAbbreviationsDict = function(force, language = 'en') {
+    this.getAbbreviationsDict = function(force) {
         if (!lang) {
             // if lang is not specified set it to en
-            this.setLanguage(language);
+            return $q.when({});
         }
 
         var baseLang = getBaseLanguage(lang);
@@ -544,17 +545,28 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
         return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
     }
 
+    function dispatchAbbreviation(abbreviation) {
+        const stores = getStores();
+
+        stores.forEach((_store) => {
+            return _store.dispatch(setAbbreviations(abbreviation));
+        });
+    }
+
     $scope.$watch('item.language', (newVal, oldVal) => {
         if (newVal != null && newVal !== oldVal) {
-            const stores = getStores();
-
             self.isAuto = true;
             spellcheck.setLanguage(newVal);
             setupSpellchecker();
-            spellcheck.getAbbreviationsDict(true, newVal).then((abbreviation) => {
-                stores.forEach((_store) => {
-                    _store.dispatch(setAbbreviations(abbreviation));
-                });
+            spellcheck.getAbbreviationsDict(true).then((abbreviation) => {
+                if (Object.keys(abbreviation).length !== 0) {
+                    dispatchAbbreviation(abbreviation);
+                } else {
+                    spellcheck.setLanguage(getUserInterfaceLanguage());
+                    spellcheck.getAbbreviationsDict(true).then((abbreviations) => {
+                        dispatchAbbreviation(abbreviations);
+                    });
+                }
             });
         }
     });

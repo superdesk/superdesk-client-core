@@ -235,15 +235,14 @@ describe('spellcheck', () => {
         expect(errors.length).toBe(2);
     }));
 
-    it('can resolve abbreviations without language specified', inject((spellcheck, $q) => {
-        var abbreviations = {
-            IMF: 'International Monetory Fund',
-            WHO: 'World Health Organisation',
-            UN: 'United Nations',
-        };
+    it('can resolve abbreviations without language specified', inject((spellcheck, $rootScope) => {
+        var spy = jasmine.createSpy('success');
 
         spellcheck.setLanguage('');
-        spyOn(spellcheck, 'getAbbreviationsDict').and.returnValue($q.when(abbreviations));
+        spellcheck.getAbbreviationsDict().then(spy);
+
+        $rootScope.$digest();
+        expect(spy).toHaveBeenCalled();
     }));
 
     it('can cache active dictionaries for a language', inject((spellcheck, dictionaries, $rootScope) => {
