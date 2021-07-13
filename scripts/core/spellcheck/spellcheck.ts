@@ -1,7 +1,7 @@
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {gettext} from 'core/utils';
 import {debounce, once} from 'lodash';
-import {getStores} from '../editor3/store';
+import {getStores, unsetStore} from '../editor3/store';
 import {setAbbreviations} from 'core/editor3/actions';
 import {getUserInterfaceLanguage} from 'appConfig';
 
@@ -599,6 +599,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
 
     $scope.$on('$destroy', () => {
         window.removeEventListener('editorInitialized', initializeSpellchecker);
+        unsetStore();
     });
 }
 

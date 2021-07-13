@@ -95,7 +95,7 @@ export interface IEditorStore {
     limitConfig?: EditorLimit;
 }
 
-const editor3Stores = [];
+let editor3Stores = [];
 
 export const getCustomDecorator = (
     language?: string,
@@ -207,6 +207,10 @@ export default function createEditorStore(
 
 export function getStores() {
     return editor3Stores;
+}
+
+export function unsetStore() {
+    return editor3Stores = [];
 }
 
 /**
