@@ -196,7 +196,6 @@ export interface IAPIError {
 export interface IUploadAssetModalProps {
     closeModal(): void;
     sets: Array<ISetItem>;
-    dark?: boolean;
     modalSize?: IModalSize;
     initialFiles?: Array<{
         id: string;

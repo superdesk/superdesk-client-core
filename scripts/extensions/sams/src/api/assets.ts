@@ -498,7 +498,6 @@ export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): v
             showModalConnectedToStore<Partial<IUploadAssetModalProps>>(
                 UploadAssetModal,
                 {
-                    dark: true,
                     modalSize: 'fill',
                     ...props ?? {},
                 },
