@@ -16,6 +16,8 @@ import {
     IAssetState,
     RECEIVE_ASSETS,
     SET_ASSET_SEARCH_PARAMS,
+    PUSH_ASSET_SEARCH_PARAMS,
+    POP_ASSET_SEARCH_PARAMS,
     MANAGE_ASSETS_PREVIEW,
     MANAGE_ASSETS_CLOSE_CONTENT_PANEL,
     UPDATE_SELECTED_ASSET_IDS,
@@ -32,6 +34,7 @@ const initialState: IAssetState = {
         sortField: ASSET_SORT_FIELD.NAME,
         sortOrder: SORT_ORDER.ASCENDING,
     },
+    prevSearchParams: undefined,
     listItemIds: [],
     searchResultTotal: 0,
     contentPanelState: ASSET_CONTENT_PANEL_STATE.CLOSED,
@@ -49,6 +52,10 @@ export function assetsReducer(
         return receiveAssets(state, action.payload);
     case SET_ASSET_SEARCH_PARAMS:
         return updateSearchParams(state, action.payload);
+    case PUSH_ASSET_SEARCH_PARAMS:
+        return pushSearchParams(state, action.payload);
+    case POP_ASSET_SEARCH_PARAMS:
+        return popSearchParams(state);
     case MANAGE_ASSETS_PREVIEW:
         return {
             ...state,
@@ -125,19 +132,47 @@ function receiveAssets(
     return newState;
 }
 
-function updateSearchParams(prevState: IAssetState, params: Partial<IAssetSearchParams>): IAssetState {
-    const newState = {...prevState};
-
-    newState.searchParams = {
-        ...prevState.searchParams,
+function setSearchParamDefaults(
+    params: Partial<IAssetSearchParams>,
+    prevParams?: Partial<IAssetSearchParams>,
+): IAssetSearchParams {
+    return {
+        ...prevParams,
         ...params,
-        page: params.page ?? prevState.searchParams.page ?? 1,
-        mimetypes: params.mimetypes ?? prevState.searchParams.mimetypes ?? ASSET_TYPE_FILTER.ALL,
-        sortField: params.sortField ?? prevState.searchParams.sortField ?? ASSET_SORT_FIELD.NAME,
-        sortOrder: params.sortOrder ?? prevState.searchParams.sortOrder ?? SORT_ORDER.ASCENDING,
+        page: params.page ?? prevParams?.page ?? initialState.searchParams.page,
+        mimetypes: params.mimetypes ?? prevParams?.mimetypes ?? initialState.searchParams.mimetypes,
+        sortField: params.sortField ?? prevParams?.sortField ?? initialState.searchParams.sortField,
+        sortOrder: params.sortOrder ?? prevParams?.sortOrder ?? initialState.searchParams.sortOrder,
     };
+}
 
-    return newState;
+function updateSearchParams(prevState: IAssetState, params: Partial<IAssetSearchParams>): IAssetState {
+    return {
+        ...prevState,
+        searchParams: setSearchParamDefaults(params, prevState.searchParams),
+    };
+}
+
+function pushSearchParams(prevState: IAssetState, params: Partial<IAssetSearchParams>): IAssetState {
+    return {
+        ...prevState,
+        searchParams: setSearchParamDefaults({
+            ...params,
+            page: 1,
+        }),
+        prevSearchParams: {...prevState.searchParams},
+    };
+}
+
+function popSearchParams(prevState: IAssetState): IAssetState {
+    return {
+        ...prevState,
+        searchParams: setSearchParamDefaults({
+            ...prevState.prevSearchParams,
+            page: 1,
+        }),
+        prevSearchParams: undefined,
+    };
 }
 
 function manageAssetsInSelectedAssetsArray(prevState: IAssetState, payload: string): IAssetState {

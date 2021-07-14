@@ -5,26 +5,28 @@ import {IThunkAction} from '../types';
 import {
     ASSET_SET_LIST_STYLE,
     IAssetActionTypes,
+    MANAGE_ASSET_UPDATE_IN_STORE,
+    MANAGE_ASSETS_CLOSE_CONTENT_PANEL,
+    MANAGE_ASSETS_EDIT,
+    MANAGE_ASSETS_PREVIEW,
+    MANAGE_MULTIACTIONBAR_CLOSE,
+    POP_ASSET_SEARCH_PARAMS,
+    PUSH_ASSET_SEARCH_PARAMS,
     RECEIVE_ASSETS,
     SET_ASSET_SEARCH_PARAMS,
-    MANAGE_ASSETS_PREVIEW,
-    MANAGE_ASSETS_CLOSE_CONTENT_PANEL,
     UPDATE_SELECTED_ASSET_IDS,
-    MANAGE_MULTIACTIONBAR_CLOSE,
-    MANAGE_ASSETS_EDIT,
-    MANAGE_ASSET_UPDATE_IN_STORE,
 } from './types';
-import {superdeskApi, samsApi} from '../../apis';
+import {samsApi, superdeskApi} from '../../apis';
 
 // Redux Selectors
 import {
+    getAssetListItemIds,
     getAssetListStyle,
+    getAssets,
     getAssetSearchParams,
     getSelectedAssetId,
     getSelectedAssetIds,
     getSelectedAssetItems,
-    getAssets,
-    getAssetListItemIds,
 } from './selectors';
 import {getDisabledSetIds} from '../sets/selectors';
 
@@ -48,6 +50,33 @@ export function setAssetSearchParams(params: Partial<IAssetSearchParams>): IAsse
     return {
         type: SET_ASSET_SEARCH_PARAMS,
         payload: params,
+    };
+}
+
+function _pushAssetSearchParams(params: Partial<IAssetSearchParams>): IAssetActionTypes {
+    return {
+        type: PUSH_ASSET_SEARCH_PARAMS,
+        payload: params,
+    };
+}
+
+export function pushAssetSearchParams(params: Partial<IAssetSearchParams>): IThunkAction<void> {
+    return (dispatch) => {
+        dispatch(_pushAssetSearchParams(params));
+
+        return dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
+    };
+}
+
+function _popAssetSearchParams(): IAssetActionTypes {
+    return {type: POP_ASSET_SEARCH_PARAMS};
+}
+
+export function popAssetSearchParams(): IThunkAction<void> {
+    return (dispatch) => {
+        dispatch(_popAssetSearchParams());
+
+        return dispatch(queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE));
     };
 }
 

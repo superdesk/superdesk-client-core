@@ -23,31 +23,21 @@ interface ISetAssetSearchParamsAction {
     payload: Partial<IAssetSearchParams>;
 }
 
+export const PUSH_ASSET_SEARCH_PARAMS = 'assets_push_search_params';
+interface IPushAssetSearchParamsAction {
+    type: typeof PUSH_ASSET_SEARCH_PARAMS;
+    payload: Partial<IAssetSearchParams>;
+}
+
+export const POP_ASSET_SEARCH_PARAMS = 'assets_pop_search_params';
+interface IPopAssetSearchParamsAction {
+    type: typeof POP_ASSET_SEARCH_PARAMS;
+}
+
 export const ASSET_SET_LIST_STYLE = 'assets__set_list_style';
 interface IAssetSetListStyleAction {
     type: typeof ASSET_SET_LIST_STYLE;
     payload: ASSET_LIST_STYLE;
-}
-
-export type IAssetActionTypes = IReceiveAssetsAction |
-    ISetAssetSearchParamsAction |
-    IAssetSetListStyleAction |
-    ICloseAssetContentPanelAction |
-    IPreviewAssetAction |
-    IUpdateSelectedAssetIds |
-    ICloseMultiActionBar |
-    IEditAssetAction |
-    IUpdateAssetInStore;
-
-export interface IAssetState {
-    assets: Dictionary<string, IAssetItem>;
-    searchParams: IAssetSearchParams;
-    selectedAssetId?: string;
-    selectedAssetIds: Array<string>;
-    listItemIds: Array<string>;
-    searchResultTotal: number;
-    listStyle: ASSET_LIST_STYLE;
-    contentPanelState: ASSET_CONTENT_PANEL_STATE;
 }
 
 export const MANAGE_ASSETS_PREVIEW = 'manage_assets__preview';
@@ -85,4 +75,28 @@ interface IUpdateAssetInStore {
         asset: Partial<IAssetItem>;
         assetId: string
     };
+}
+
+export type IAssetActionTypes = IReceiveAssetsAction |
+    ISetAssetSearchParamsAction |
+    IPushAssetSearchParamsAction |
+    IPopAssetSearchParamsAction |
+    IAssetSetListStyleAction |
+    ICloseAssetContentPanelAction |
+    IPreviewAssetAction |
+    IUpdateSelectedAssetIds |
+    ICloseMultiActionBar |
+    IEditAssetAction |
+    IUpdateAssetInStore;
+
+export interface IAssetState {
+    assets: Dictionary<string, IAssetItem>;
+    searchParams: IAssetSearchParams;
+    prevSearchParams?: IAssetSearchParams;
+    selectedAssetId?: string;
+    selectedAssetIds: Array<string>;
+    listItemIds: Array<string>;
+    searchResultTotal: number;
+    listStyle: ASSET_LIST_STYLE;
+    contentPanelState: ASSET_CONTENT_PANEL_STATE;
 }
