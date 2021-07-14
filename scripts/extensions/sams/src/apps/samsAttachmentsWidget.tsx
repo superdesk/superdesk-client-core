@@ -15,7 +15,7 @@ import {superdeskApi, samsApi} from '../apis';
 // Redux Actions & Selectors
 import {loadStorageDestinations} from '../store/storageDestinations/actions';
 import {loadSets} from '../store/sets/actions';
-import {setAssetSearchParams} from '../store/assets/actions';
+import {pushAssetSearchParams, popAssetSearchParams} from '../store/assets/actions';
 import {getActiveSets, getSetsById} from '../store/sets/selectors';
 
 // UI
@@ -43,9 +43,10 @@ export class SamsAttachmentsWidget<T extends IAttachmentsWidgetProps> extends Re
 }
 
 interface IProps extends IAttachmentsWidgetProps {
-    setAssetSearchParams(params: Partial<IAssetSearchParams>): void;
     activeSets: Array<ISetItem>;
     setsById: Dictionary<string, ISetItem>;
+    pushSearchParams(params: Partial<IAssetSearchParams>): void;
+    popSearchParams(): void;
 }
 
 const mapStateToProps = (state: IApplicationState) => ({
@@ -54,7 +55,8 @@ const mapStateToProps = (state: IApplicationState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    setAssetSearchParams: (params: Partial<IAssetSearchParams>) => dispatch(setAssetSearchParams(params)),
+    pushSearchParams: (params: Partial<IAssetSearchParams>) => dispatch<any>(pushAssetSearchParams(params)),
+    popSearchParams: () => dispatch<any>(popAssetSearchParams()),
 });
 
 class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
@@ -108,7 +110,7 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
     }
 
     showSelectAssetModal() {
-        this.props.setAssetSearchParams({
+        this.props.pushSearchParams({
             sizeTo: superdeskApi.instance.config.attachments_max_size / 1048576, // bytes -> MB
             states: [ASSET_STATE.PUBLIC, ASSET_STATE.INTERNAL],
             setIds: this.props.activeSets.map((set) => set._id),
@@ -129,6 +131,9 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
                     .then((attachments: Array<IAttachment>) => {
                         this.props.addAttachments(attachments);
                     });
+            })
+            .finally(() => {
+                this.props.popSearchParams();
             });
     }
 

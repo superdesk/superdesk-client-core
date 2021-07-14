@@ -18,7 +18,6 @@ import {
 } from '../../store/assets/selectors';
 import {
     loadNextAssetsPage,
-    queryAssetsFromCurrentSearch,
     updateAssetSearchParamsAndListItems,
     updateSelectedAssetIds,
 } from '../../store/assets/actions';
@@ -49,7 +48,6 @@ interface IProps {
         params: Partial<IAssetSearchParams>,
         listAction: LIST_ACTION,
     ): void;
-    queryAssetsFromCurrentSearch(listAction?: LIST_ACTION): void;
     onAssetsSelected(assets: Dictionary<string, IAssetItem>): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
 }
@@ -81,9 +79,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     toggleFilterPanel: () => {
         dispatch<any>(toggleFilterPanelState());
     },
-    queryAssetsFromCurrentSearch: (listAction?: LIST_ACTION) => {
-        dispatch<any>(queryAssetsFromCurrentSearch(listAction));
-    },
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
 
 });
@@ -110,10 +105,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
         this.onScroll = this.onScroll.bind(this);
         this.toggleItemSelected = this.toggleItemSelected.bind(this);
         this.attachAssets = this.attachAssets.bind(this);
-    }
-
-    componentDidMount() {
-        this.props.queryAssetsFromCurrentSearch(LIST_ACTION.REPLACE);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -150,6 +142,11 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
         this.props.closeModal();
     }
 
+    closeModal() {
+        this.props.onAssetsSelected({});
+        this.props.closeModal();
+    }
+
     render() {
         const {gettext} = superdeskApi.localization;
         const selectedAssetIds = Object.keys(this.state.selectedItems);
@@ -158,7 +155,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
             <Modal
                 id="SelectAssetModal"
                 size="fullscreen"
-                closeModal={this.props.closeModal}
+                closeModal={this.closeModal}
                 darkUI={true}
             >
                 <ModalHeader
@@ -168,7 +165,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                     <ButtonGroup align="right">
                         <Button
                             text={gettext('Cancel')}
-                            onClick={this.props.closeModal}
+                            onClick={this.closeModal}
                             style="hollow"
                         />
                         <Button
