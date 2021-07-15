@@ -87,6 +87,8 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
 
     showUploadAssetModal(props: Partial<IUploadAssetModalProps> = {}) {
         return samsApi.assets.showUploadModal({
+            defaultAssetState: ASSET_STATE.PUBLIC,
+            allowedStates: [ASSET_STATE.INTERNAL, ASSET_STATE.PUBLIC],
             onAssetUploaded: (asset: IAssetItem) => {
                 return superdeskApi.entities.attachment.create({
                     media: asset._id,
