@@ -15,6 +15,7 @@ import {PackagesService} from './services';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
+import {appConfig} from 'appConfig';
 
 /**
  * @ngdoc module
@@ -67,6 +68,9 @@ angular.module('superdesk.apps.packaging', [
                         && $rootScope.config.features.hideCreatePackage);
                 }],
                 group: 'packaging',
+                condition: function() {
+                    return !appConfig.features.packageDisable;
+                },
             })
 
             .activity('addtopackage', {

@@ -1781,6 +1781,7 @@ declare module 'superdesk-api' {
                 publishAndContinue?: boolean;
             },
             showPublishSchedule?: boolean
+            packageDisable?: boolean;
         };
         auth: {
             google: boolean
