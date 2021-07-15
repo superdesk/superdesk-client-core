@@ -181,6 +181,8 @@ export interface IUploadAssetModalProps {
         id: string;
         file: File;
     }>;
+    defaultAssetState?: ASSET_STATE;
+    allowedStates?: Array<ASSET_STATE>;
     onAssetUploaded?(asset: IAssetItem): Promise<void>;
     onModalClosed?(assets?: Dictionary<string, IAssetItem>): void;
 }

@@ -55,7 +55,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
                 (item) => {
                     assets[item.id] = {
                         _id: item.id,
-                        state: ASSET_STATE.DRAFT,
+                        state: this.props.defaultAssetState ?? ASSET_STATE.DRAFT,
                         filename: item.file.name,
                         length: item.file.size,
                         mimetype: item.file.type,
@@ -85,7 +85,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
                 ...state.assets,
                 [id]: {
                     _id: id,
-                    state: ASSET_STATE.DRAFT,
+                    state: this.props.defaultAssetState ?? ASSET_STATE.DRAFT,
                     filename: file.name,
                     length: file.size,
                     mimetype: file.type,
@@ -177,6 +177,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
                 asset={this.state.assets[item.id]}
                 disabled={submitting}
                 onChange={this.onFieldChanged[item.id]}
+                allowedStates={this.props.allowedStates}
             />
         );
     }
