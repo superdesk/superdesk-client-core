@@ -206,6 +206,22 @@
                 {{ item.renditions.original.width }} x {{ item.renditions.original.height }}
             </li>
 
+            <li sd-metadata-list-item data-label="'Advertising' | translate">
+                <span sd-switch ng-model="item.flags.advertising"></span>
+            </li>
+
+            <li sd-metadata-list-item data-label="'no follow' | translate">
+                <span sd-switch ng-model="item.flags.noFollow"></span>
+            </li>
+
+            <li sd-metadata-list-item data-label="'no index' | translate">
+                <span sd-switch ng-model="item.flags.noIndex"></span>
+            </li>
+
+            <li sd-metadata-list-item data-label="'Allow Comments' | translate">
+                <span sd-switch ng-model="item.flags.allowComments"></span>
+            </li>
+
             <li sd-metadata-list-item data-label="'Description' | translate" ng-if="item.type == 'picture' && item.archive_description && item.archive_description !== item.description_text">
                 <div sd-html-preview="item.archive_description"></div>
             </li>
