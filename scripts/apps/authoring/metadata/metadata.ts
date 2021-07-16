@@ -33,7 +33,9 @@ function MetadataCtrl(
         return preferencesService.get();
     })
         .then(setAvailableCategories)
-        .then(setAvailableCompanyCodes);
+        .then(setAvailableCompanyCodes)
+        .then(setChangeTypes);
+
 
     $scope.$watch(() => desks.active.desk, (activeDeskId) => {
         content.getDeskProfiles(activeDeskId ? desks.getCurrentDesk() : null, $scope.item.profile)
@@ -66,6 +68,14 @@ function MetadataCtrl(
         userPrefs = prefs['categories:preferred'].selected;
         filtered = _.filter(all, (cat) => _.isEmpty(userPrefs) || userPrefs[cat.qcode]);
         $scope.availableCategories = _.sortBy(filtered, 'name');
+    }
+
+    function setChangeTypes(){
+        //add type of changes
+        $scope.changeTypes = [
+            {name: "Grammar Correction", qcode: "1", scheme: "change_types"},
+            {name: "Republishing", qcode: "2", scheme: "change_types"}
+        ];
     }
 
     /**
