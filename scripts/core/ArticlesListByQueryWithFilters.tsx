@@ -20,7 +20,7 @@ import {getBulkActions} from 'apps/search/controllers/get-bulk-actions';
 import {ResizeObserverComponent} from './components/resize-observer-component';
 import {httpRequestJsonLocal} from './helpers/network';
 import {MultiSelect} from './ArticlesListV2MultiSelect';
-import {ARTICLE_RELATED_RESOURCE_NAMES, ITEM_TYPES} from './constants';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
 import {appConfig} from 'appConfig';
 
 const COMPACT_WIDTH = 700;
@@ -87,6 +87,16 @@ function getQueryWithFilters(
 }
 
 function getItemTypes() {
+    const ITEM_TYPES = [
+        {type: 'text', label: gettext('text')},
+        {type: 'picture', label: gettext('picture')},
+        {type: 'graphic', label: gettext('graphic')},
+        {type: 'composite', label: gettext('package')},
+        {type: 'highlight-pack', label: gettext('highlights package')},
+        {type: 'video', label: gettext('video')},
+        {type: 'audio', label: gettext('audio')},
+    ];
+
     if (appConfig.features.hideCreatePackage) {
         return ITEM_TYPES.filter((item) => item.type !== 'composite' && item.type !== 'highlight-pack');
     } else {

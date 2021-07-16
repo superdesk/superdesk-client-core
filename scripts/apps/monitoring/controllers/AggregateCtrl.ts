@@ -14,16 +14,6 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     var PREFERENCES_KEY = 'agg:view';
     var defaultMaxItems = 10;
     var self = this;
-    var availableFileTypes = [
-        {type: 'all', label: gettext('all')},
-        {type: 'text', label: gettext('text')},
-        {type: 'picture', label: gettext('picture')},
-        {type: 'graphic', label: gettext('graphic')},
-        {type: 'composite', label: gettext('package')},
-        {type: 'highlight-pack', label: gettext('highlights package')},
-        {type: 'video', label: gettext('video')},
-        {type: 'audio', label: gettext('audio')},
-    ];
 
     this.loading = true;
     this.selected = null;
@@ -41,7 +31,16 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.searchLookup = {};
     this.deskLookup = {};
     this.stageLookup = {};
-    this.fileTypes = [];
+    this.fileTypes = [
+        {type: 'all', label: gettext('all')},
+        {type: 'text', label: gettext('text')},
+        {type: 'picture', label: gettext('picture')},
+        {type: 'graphic', label: gettext('graphic')},
+        {type: 'composite', label: gettext('package')},
+        {type: 'highlight-pack', label: gettext('highlights package')},
+        {type: 'video', label: gettext('video')},
+        {type: 'audio', label: gettext('audio')},
+    ];
     this.monitoringSearch = false;
     this.searchQuery = null;
     this.isOutputType = desks.isOutputType;
@@ -54,15 +53,12 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     };
     this.activeFilterTags = {};
 
-    if (appConfig.features.hideCreatePackage) {
-        availableFileTypes.forEach((file) => {
-            if (file.type !== 'composite' && file.type !== 'highlight-pack') {
-                this.fileTypes.push(file);
-            }
-        });
-    } else {
-        this.fileTypes = availableFileTypes;
-    }
+    this.fileTypes = this.fileTypes.filter(
+        (fileType) => (
+            appConfig.features.hideCreatePackage ?
+                fileType.type !== 'composite' && fileType.type !== 'highlight-pack' :
+                fileType
+        ));
 
     const extensionSection = getExtensionSections();
 
