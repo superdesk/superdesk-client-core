@@ -202,7 +202,7 @@ export function getBulkActions(
     }
 
     if (multiActions.canPackageItems()) {
-        if (!appConfig.features.packageDisable) {
+        if (!appConfig.features.hideCreatePackage) {
             actions.push({
                 label: gettext('Create Package'),
                 icon: 'icon-package-create',

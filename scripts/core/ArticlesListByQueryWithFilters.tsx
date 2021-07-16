@@ -87,7 +87,7 @@ function getQueryWithFilters(
 }
 
 function getItemTypes() {
-    if (appConfig.features.packageDisable) {
+    if (appConfig.features.hideCreatePackage) {
         return ITEM_TYPES.filter((item) => item.type !== 'composite' && item.type !== 'highlight-pack');
     } else {
         return ITEM_TYPES;

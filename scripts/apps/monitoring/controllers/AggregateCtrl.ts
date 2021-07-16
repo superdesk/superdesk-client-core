@@ -54,7 +54,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     };
     this.activeFilterTags = {};
 
-    if (appConfig.features.packageDisable) {
+    if (appConfig.features.hideCreatePackage) {
         availableFileTypes.forEach((file) => {
             if (file.type !== 'composite' && file.type !== 'highlight-pack') {
                 this.fileTypes.push(file);
