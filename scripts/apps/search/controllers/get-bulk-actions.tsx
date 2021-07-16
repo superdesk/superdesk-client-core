@@ -11,6 +11,7 @@ import {isOpenItemType} from '../directives/MultiActionBar';
 import {showModal} from 'core/services/modalService';
 import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
 import {dataApi} from 'core/helpers/CrudManager';
+import {appConfig} from 'appConfig';
 
 export function getBulkActions(
     articles: Array<IArticle>,
@@ -201,26 +202,28 @@ export function getBulkActions(
     }
 
     if (multiActions.canPackageItems()) {
-        actions.push({
-            label: gettext('Create Package'),
-            icon: 'icon-package-create',
-            onTrigger: () => {
-                multiActions.createPackage();
-                scopeApply?.();
-            },
-            canAutocloseMultiActionBar: false,
-        });
-
-        if (isOpenItemType('composite')) {
+        if (!appConfig.features.hideCreatePackage) {
             actions.push({
-                label: gettext('Add to Current Package'),
-                icon: 'icon-package-plus',
+                label: gettext('Create Package'),
+                icon: 'icon-package-create',
                 onTrigger: () => {
-                    multiActions.addToPackage();
+                    multiActions.createPackage();
                     scopeApply?.();
                 },
                 canAutocloseMultiActionBar: false,
             });
+
+            if (isOpenItemType('composite')) {
+                actions.push({
+                    label: gettext('Add to Current Package'),
+                    icon: 'icon-package-plus',
+                    onTrigger: () => {
+                        multiActions.addToPackage();
+                        scopeApply?.();
+                    },
+                    canAutocloseMultiActionBar: false,
+                });
+            }
         }
 
         const currentDeskId = desks.getCurrentDeskId();

@@ -53,6 +53,13 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     };
     this.activeFilterTags = {};
 
+    this.fileTypes = this.fileTypes.filter(
+        (fileType) => (
+            appConfig.features.hideCreatePackage ?
+                fileType.type !== 'composite' && fileType.type !== 'highlight-pack' :
+                fileType
+        ));
+
     const extensionSection = getExtensionSections();
 
     extensionSection.forEach((response) => {
