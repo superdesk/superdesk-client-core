@@ -2,13 +2,13 @@ import React from 'react';
 import {get, throttle, Cancelable} from 'lodash';
 
 import {getField} from 'apps/fields';
-import {IArticle, IArticleField, ITemplate} from 'superdesk-api';
+import {IArticle, IVocabulary, ITemplate} from 'superdesk-api';
 
 interface IProps {
     item: IArticle;
-    field: IArticleField;
+    field: IVocabulary;
     editable: boolean;
-    onChange: (field: IArticleField, value: any) => any;
+    onChange: (field: IVocabulary, value: any) => any;
     template?: ITemplate;
 }
 
@@ -25,7 +25,7 @@ function getValue(props: IProps) {
 }
 
 export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
-    onChangeThrottled: ((field: IArticleField, value: any) => void) & Cancelable;
+    onChangeThrottled: ((field: IVocabulary, value: any) => void) & Cancelable;
 
     // IProps['item'] is mutated when updating so prevProps from `componentDidUpdate`
     // can't be used to compare the previous value. This property is used instead.
@@ -40,7 +40,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.lastPropsValue = this.state.value;
 
-        this.onChangeThrottled = throttle((field: IArticleField, value: any) => {
+        this.onChangeThrottled = throttle((field: IVocabulary, value: any) => {
             this.props.onChange(field, value);
         }, 300, {leading: false});
 

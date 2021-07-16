@@ -6,7 +6,7 @@ export function getFields(superdesk: ISuperdesk) {
 
     const nameField: IFormField = {
         label: gettext('Name'),
-        type: FormFieldType.textSingleLine,
+        type: FormFieldType.plainText,
         field: 'name',
         required: true,
     };

@@ -1,8 +1,10 @@
+/* eslint-disable react/no-multi-comp */
+
 import * as React from 'react';
 import {
     IFormGroup,
-    IGenericListPageComponent,
     ISuperdesk,
+    IPropsGenericFormItemComponent,
 } from 'superdesk-api';
 import {IKnowledgeBaseItem, IKnowledgeBaseItemBase} from './interfaces';
 import {getFields} from './GetFields';
@@ -36,53 +38,58 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
             };
 
             const AnnotationsLibraryPageComponent =
-                getGenericListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
+                getGenericListPageComponent<IKnowledgeBaseItem, never>(
+                    'concept_items',
+                    formConfig,
+                    {field: 'name', direction: 'ascending'},
+                );
 
-            const renderRow = (
-                key: string,
-                item: IKnowledgeBaseItem,
-                page: IGenericListPageComponent<IKnowledgeBaseItem>,
-            ) => (
-                <ListItem key={key} onClick={() => page.openPreview(item._id)}>
-                    <ListItemColumn bold noBorder>
-                        {getFormFieldPreviewComponent(item, nameField)}
-                    </ListItemColumn>
-                    <ListItemColumn ellipsisAndGrow noBorder>
-                        {getFormFieldPreviewComponent(item, definitionField, {showAsPlainText: true})}
-                    </ListItemColumn>
-                    <ListItemActionsMenu>
-                        <div style={{display: 'flex'}}>
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    page.startEditing(item._id);
-                                }}
-                                title={gettext('Edit')}
-                                aria-label={gettext('Edit')}
-                            >
-                                <i className="icon-pencil" />
-                            </button>
+            class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<IKnowledgeBaseItem>> {
+                render() {
+                    const {item, page} = this.props;
 
-                            <button
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    page.deleteItem(item);
-                                }}
-                                title={gettext('Remove')}
-                                aria-label={gettext('Remove')}
-                            >
-                                <i className="icon-trash" />
-                            </button>
-                        </div>
-                    </ListItemActionsMenu>
-                </ListItem>
-            );
+                    return (
+                        <ListItem onClick={() => page.openPreview(item._id)}>
+                            <ListItemColumn bold noBorder>
+                                {getFormFieldPreviewComponent(item, nameField)}
+                            </ListItemColumn>
+                            <ListItemColumn ellipsisAndGrow noBorder>
+                                {getFormFieldPreviewComponent(item, definitionField, {showAsPlainText: true})}
+                            </ListItemColumn>
+                            <ListItemActionsMenu>
+                                <div style={{display: 'flex'}}>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            page.startEditing(item._id);
+                                        }}
+                                        title={gettext('Edit')}
+                                        aria-label={gettext('Edit')}
+                                    >
+                                        <i className="icon-pencil" />
+                                    </button>
+
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            page.deleteItem(item);
+                                        }}
+                                        title={gettext('Remove')}
+                                        aria-label={gettext('Remove')}
+                                    >
+                                        <i className="icon-trash" />
+                                    </button>
+                                </div>
+                            </ListItemActionsMenu>
+                        </ListItem>
+                    );
+                }
+            }
 
             return (
                 <AnnotationsLibraryPageComponent
-                    defaultSortOption={{field: 'name', direction: 'ascending'}}
-                    formConfig={formConfig}
-                    renderRow={renderRow}
+                    getFormConfig={() => formConfig}
+                    ItemComponent={ItemComponent}
                     getNewItemTemplate={(page) => {
                         const baseTemplate: Partial<IKnowledgeBaseItemBase> = {
                             cpnat_type: 'cpnat:abstract',
@@ -109,6 +116,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                             ? {}
                             : {language: superdesk.instance.config.default_language}
                     }
+                    hiddenFields={['cpnat_type']}
                 />
             );
         }

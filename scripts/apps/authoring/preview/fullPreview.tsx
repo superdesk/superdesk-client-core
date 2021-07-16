@@ -1,7 +1,7 @@
 import React from 'react';
 import {IArticle, IVocabulary} from 'superdesk-api';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import {ARTICLE_HEADER_FIELDS, ARTICLE_COMMON_FIELDS} from 'apps/workspace/content/controllers/ContentProfileFields';
+import {ARTICLE_HEADER_FIELDS, ARTICLE_COMMON_FIELDS} from 'apps/workspace/content/components/get-editor-config';
 import {dataApi} from 'core/helpers/CrudManager';
 import {PreviewFieldType} from './previewFieldByType';
 import {IAuthoringField} from './types';

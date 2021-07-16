@@ -56,7 +56,7 @@ export function DeskConfigModal(metadata, content, templates, api) {
              * Initialize content types
              * @return {Object} profiles
              */
-            content.getTypes().then((profiles) => {
+            content.getTypes('text').then((profiles) => {
                 scope.profiles = profiles;
             });
 

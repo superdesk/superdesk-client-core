@@ -9,41 +9,50 @@ import {
     SidePanelContent,
     SidePanelContentBlock,
 } from 'core/components/SidePanel';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 import {hasValue} from '../generic-form/has-value';
 
-interface IProps {
+interface IProps<T> {
     operation: 'editing' | 'creation';
     editMode: boolean;
-    formConfig: IFormGroup;
-    item: {[key: string]: any};
+    hiddenFields: Array<string>;
+    getFormConfig(item?: Partial<T>): IFormGroup;
+    item: Partial<T>;
     onEditModeChange(nextValue: boolean): void;
     onClose: () => void;
     onCancel?: () => void;
     onSave: (nextItem) => Promise<any>;
-
-    // connected services
-    modal?: any;
 }
 
-interface IState {
-    nextItem: IProps['item'];
-    issues: {[field: string]: Array<string>};
+interface IIssues {
+    [field: string]: Array<string>;
 }
 
-const getInitialState = (props: IProps) => ({
-    nextItem: props.item,
-    issues: {},
-});
+interface IState<T> {
+    nextItem: IProps<T>['item'];
+    issues: IIssues;
+}
 
-class GenericListPageItemViewEditComponent extends React.Component<IProps, IState> {
+function getInitialState<T>(props: IProps<T>) {
+    return {
+        nextItem: props.item,
+        issues: {},
+    };
+}
+
+export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, IState<T>> {
+    _mounted: boolean;
+    modal: any;
+
     constructor(props) {
         super(props);
+
+        this.modal = ng.get('modal');
 
         this.state = getInitialState(props);
 
@@ -53,6 +62,12 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         this.isFormDirty = this.isFormDirty.bind(this);
         this.handleSave = this.handleSave.bind(this);
     }
+    componentDidMount() {
+        this._mounted = true;
+    }
+    componentWillUnmount() {
+        this._mounted = false;
+    }
     enableEditMode() {
         this.setState({
             nextItem: this.props.item,
@@ -60,7 +75,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
             this.props.onEditModeChange(true);
         });
     }
-    handleFieldChange(field: keyof IProps['item'], nextValue: valueof<IProps['item']>) {
+    handleFieldChange(field: string, nextValue: valueof<IProps<T>['item']>) {
         // using updater function to avoid race conditions
         this.setState((prevState) => ({
             ...prevState,
@@ -82,7 +97,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         (
             this.isFormDirty() === false
                 ? Promise.resolve()
-                : this.props.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
+                : this.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
         ).then(cancelFn)
             .catch(() => {
             // do nothing
@@ -92,33 +107,59 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
     }
     handleSave() {
-        const fieldsFlat = getFormFieldsFlat(this.props.formConfig);
-        const notFilled = fieldsFlat.filter(
-            (fieldConfig) => fieldConfig.required && !hasValue(fieldConfig, this.state.nextItem[fieldConfig.field]),
-        );
+        const formConfig = this.props.getFormConfig(this.state.nextItem);
+        const currentFields = getFormFieldsFlat(formConfig);
+        const currentFieldsIds = currentFields.map(({field}) => field).concat('_id').concat(this.props.hiddenFields);
 
-        if (notFilled.length > 0) {
+        /*
+            Form config is dynamic and can change during editing.
+            For example users can select a dropdown value
+            which would cause more fields specific to that option to appear or others to disappear.
+
+            There might be data in the state for fields which no longer exist in form config.
+            Only fields in form config at the time of saving will be sent.
+        */
+        const nextItemCleaned: Partial<T> = currentFieldsIds.reduce<Partial<T>>((acc, field) => {
+            const value = this.state.nextItem[field];
+
+            if (value != null) {
+                acc[field] = value;
+            }
+
+            return acc;
+        }, {});
+
+        const requiredValidationErrors = currentFields
+            .filter(
+                (fieldConfig) =>
+                    fieldConfig.required === true && hasValue(fieldConfig, nextItemCleaned[fieldConfig.field]) !== true,
+            )
+            .reduce<IIssues>((acc, fieldConfig) => {
+                acc[fieldConfig.field] = [gettext('Field is required')];
+
+                return acc;
+            }, {});
+
+        if (Object.keys(requiredValidationErrors).length > 0) {
             this.setState({
-                issues: notFilled.reduce<IState['issues']>((acc, fieldConfig) => {
-                    acc[fieldConfig.field] = [gettext('Field is required')];
-
-                    return acc;
-                }, {}),
+                issues: requiredValidationErrors,
             });
 
             return;
         }
 
-        this.props.onSave(this.state.nextItem).then(() => {
-            this.setState({
-                issues: {},
-            }, () => {
-                this.props.onEditModeChange(false);
-            });
+        this.props.onSave(nextItemCleaned).then(() => {
+            if (this._mounted) {
+                this.setState({
+                    issues: {},
+                }, () => {
+                    this.props.onEditModeChange(false);
+                });
+            }
         })
             .catch((res) => {
                 if (isHttpApiError(res)) {
-                    let issues = {};
+                    let issues: IIssues = {};
 
                     for (let fieldName in res._issues) {
                         let issuesForField = [];
@@ -204,7 +245,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
                     <SidePanelContentBlock>
                         <FormViewEdit
                             item={this.state.nextItem}
-                            formConfig={this.props.formConfig}
+                            formConfig={this.props.getFormConfig(this.state.nextItem)}
                             editMode={this.props.editMode}
                             issues={this.state.issues}
                             handleFieldChange={this.handleFieldChange}
@@ -215,8 +256,3 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         );
     }
 }
-
-export const GenericListPageItemViewEdit = connectServices<IProps>(
-    GenericListPageItemViewEditComponent,
-    ['modal'],
-);
