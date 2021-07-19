@@ -1,5 +1,5 @@
 import {each, forEach, isNil} from 'lodash';
-import {gettext} from 'core/utils';
+import {gettext, getItemTypes} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter} from 'superdesk-api';
@@ -53,12 +53,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     };
     this.activeFilterTags = {};
 
-    this.fileTypes = this.fileTypes.filter(
-        (fileType) => (
-            appConfig.features.hideCreatePackage ?
-                fileType.type !== 'composite' && fileType.type !== 'highlight-pack' :
-                fileType
-        ));
+    this.fileTypes = getItemTypes(this.fileTypes);
 
     const extensionSection = getExtensionSections();
 

@@ -6,7 +6,7 @@ import {toElasticQuery} from './query-formatting';
 import {ArticlesListByQuery} from './ArticlesListByQuery';
 import {Set, Map} from 'immutable';
 import classNames from 'classnames';
-import {gettext, gettextPlural} from './utils';
+import {gettext, gettextPlural, getItemTypes} from './utils';
 import {getArticleSortOptions, generateTrackByIdentifier} from 'apps/search/services/SearchService';
 import {SearchBar} from './ui/components';
 import {SortBar} from './ui/components/SortBar';
@@ -21,7 +21,6 @@ import {ResizeObserverComponent} from './components/resize-observer-component';
 import {httpRequestJsonLocal} from './helpers/network';
 import {MultiSelect} from './ArticlesListV2MultiSelect';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from './constants';
-import {appConfig} from 'appConfig';
 
 const COMPACT_WIDTH = 700;
 
@@ -84,24 +83,6 @@ function getQueryWithFilters(
         ...originalQuery,
         ...patch,
     };
-}
-
-function getItemTypes() {
-    const ITEM_TYPES = [
-        {type: 'text', label: gettext('text')},
-        {type: 'picture', label: gettext('picture')},
-        {type: 'graphic', label: gettext('graphic')},
-        {type: 'composite', label: gettext('package')},
-        {type: 'highlight-pack', label: gettext('highlights package')},
-        {type: 'video', label: gettext('video')},
-        {type: 'audio', label: gettext('audio')},
-    ];
-
-    if (appConfig.features.hideCreatePackage) {
-        return ITEM_TYPES.filter((item) => item.type !== 'composite' && item.type !== 'highlight-pack');
-    } else {
-        return ITEM_TYPES;
-    }
 }
 
 export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, IState> {
@@ -199,9 +180,19 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                 },
             };
 
+            const item_types = [
+                {type: 'text', label: gettext('text')},
+                {type: 'picture', label: gettext('picture')},
+                {type: 'graphic', label: gettext('graphic')},
+                {type: 'composite', label: gettext('package')},
+                {type: 'highlight-pack', label: gettext('highlights package')},
+                {type: 'video', label: gettext('video')},
+                {type: 'audio', label: gettext('audio')},
+            ];
+
             const options: Array<IFileTypeOption> = [
                 filterAll,
-                ...getItemTypes().map((itemType) => {
+                ...getItemTypes(item_types).map((itemType) => {
                     return {
                         label: itemType.label,
                         icon: `filetype-icon-${itemType.type}`,

@@ -2,6 +2,7 @@ import gettextjs from 'gettext.js';
 import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
+import {appConfig} from 'appConfig';
 
 export type IScopeApply = (fn: () => void) => void;
 
@@ -156,4 +157,13 @@ export function getUserSearchMongoQuery(searchString: string) {
             {email: {$regex: searchString, $options: '-i'}},
         ],
     };
+}
+
+export function getItemTypes(items: any) {
+    return items.filter(
+        (item) => (
+            appConfig.features.hideCreatePackage ?
+                item.type !== 'composite' && item.type !== 'highlight-pack' :
+                true
+        ));
 }
