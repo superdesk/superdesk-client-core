@@ -159,8 +159,19 @@ export function getUserSearchMongoQuery(searchString: string) {
     };
 }
 
-export function getItemTypes(items: any) {
-    return items.filter(
+export function getItemTypes() {
+    const item_types = [
+        {type: 'all', label: gettext('all')},
+        {type: 'text', label: gettext('text')},
+        {type: 'picture', label: gettext('picture')},
+        {type: 'graphic', label: gettext('graphic')},
+        {type: 'composite', label: gettext('package')},
+        {type: 'highlight-pack', label: gettext('highlights package')},
+        {type: 'video', label: gettext('video')},
+        {type: 'audio', label: gettext('audio')},
+    ];
+
+    return item_types.filter(
         (item) => (
             appConfig.features.hideCreatePackage ?
                 item.type !== 'composite' && item.type !== 'highlight-pack' :

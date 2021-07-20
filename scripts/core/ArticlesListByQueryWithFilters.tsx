@@ -180,29 +180,21 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                 },
             };
 
-            const item_types = [
-                {type: 'text', label: gettext('text')},
-                {type: 'picture', label: gettext('picture')},
-                {type: 'graphic', label: gettext('graphic')},
-                {type: 'composite', label: gettext('package')},
-                {type: 'highlight-pack', label: gettext('highlights package')},
-                {type: 'video', label: gettext('video')},
-                {type: 'audio', label: gettext('audio')},
-            ];
-
-            const options: Array<IFileTypeOption> = [
-                filterAll,
-                ...getItemTypes(item_types).map((itemType) => {
-                    return {
-                        label: itemType.label,
-                        icon: `filetype-icon-${itemType.type}`,
-                        selected: this.hasFilter('type', itemType.type),
-                        onSelect: () => {
-                            this.toggleFilter('type', itemType.type);
-                        },
-                    };
-                }),
-            ];
+            const options: Array<IFileTypeOption> =
+            getItemTypes().map((itemType) => {
+                return {
+                    label: itemType.label,
+                    icon: itemType.type !== 'all' ? `filetype-icon-${itemType.type}` : null,
+                    selected: itemType.type !== 'all' ?
+                        this.hasFilter('type', itemType.type) :
+                        this.hasFilter('type') === false,
+                    onSelect: () => {
+                        itemType.type !== 'all' ?
+                            this.toggleFilter('type', itemType.type) :
+                            this.removeFilter('type');
+                    },
+                };
+            });
 
             // TODO: Implement compact mode when multi select component is available in UI framework.
 
