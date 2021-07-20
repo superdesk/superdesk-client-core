@@ -916,7 +916,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var now = moment();
         var schedule = moment.tz(
             timestamp.replace('+0000', '').replace('Z', ''), // avoid timezone info here
-            timezone || appConfig.defaultTimezone,
+            timezone || appConfig.default_timezone,
         );
 
         if (!schedule.isValid()) {

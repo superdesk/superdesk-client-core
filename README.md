@@ -64,7 +64,6 @@ To configure the build, the `superdesk.config.js` file must export a function th
 
 ##### Date & Time
 
-- `defaultTimezone`: `'Europe/London'` - default timezone for date time pickers
 - `view.dateformat`: `'MM/DD/YYYY'` - presented date format for datepickers
 - `view.timeformat`: `'HH:mm'` - presented time format for timepickers
 - `shortTimeFormat`: `'hh:mm'` - format for current day in item list

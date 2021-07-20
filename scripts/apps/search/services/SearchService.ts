@@ -346,7 +346,7 @@ export function SearchService($location, session, multi,
 
         if (appConfig.search != null && appConfig.search.useDefaultTimezone) {
             // use the default timezone of the server.
-            local += moment.tz(appConfig.defaultTimezone).format('ZZ');
+            local += moment.tz(appConfig.default_timezone).format('ZZ');
         } else {
             // use the client timezone of the server.
             local += moment().format('ZZ');
