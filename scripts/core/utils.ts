@@ -2,6 +2,7 @@ import gettextjs from 'gettext.js';
 import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
+import {appConfig} from 'appConfig';
 
 export type IScopeApply = (fn: () => void) => void;
 
@@ -156,4 +157,24 @@ export function getUserSearchMongoQuery(searchString: string) {
             {email: {$regex: searchString, $options: '-i'}},
         ],
     };
+}
+
+export function getItemTypes() {
+    const item_types = [
+        {type: 'all', label: gettext('all')},
+        {type: 'text', label: gettext('text')},
+        {type: 'picture', label: gettext('picture')},
+        {type: 'graphic', label: gettext('graphic')},
+        {type: 'composite', label: gettext('package')},
+        {type: 'highlight-pack', label: gettext('highlights package')},
+        {type: 'video', label: gettext('video')},
+        {type: 'audio', label: gettext('audio')},
+    ];
+
+    return item_types.filter(
+        (item) => (
+            appConfig.features.hideCreatePackage ?
+                item.type !== 'composite' && item.type !== 'highlight-pack' :
+                true
+        ));
 }
