@@ -148,7 +148,7 @@ export function isLockedInOtherSession(article: IArticle): boolean {
 
 export const formatDate = (date: Date | string) => (
     moment(date)
-        .tz(appConfig.defaultTimezone)
+        .tz(appConfig.default_timezone)
         .format(appConfig.view.dateformat)
 );
 
@@ -165,7 +165,7 @@ export function getRelativeOrAbsoluteDateTime(
     }
 
     return datetime
-        .tz(appConfig.defaultTimezone)
+        .tz(appConfig.default_timezone)
         .format(format);
 }
 
@@ -359,12 +359,12 @@ export function getSuperdeskApiImplementation(
             formatDate: formatDate,
             formatDateTime: (date: Date) => {
                 return moment(date)
-                    .tz(appConfig.defaultTimezone)
+                    .tz(appConfig.default_timezone)
                     .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
             },
             longFormatDateTime: (date: Date | string) => {
                 return moment(date)
-                    .tz(appConfig.defaultTimezone)
+                    .tz(appConfig.default_timezone)
                     .format(appConfig.longDateFormat || 'LLL');
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,

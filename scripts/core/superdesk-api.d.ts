@@ -1727,6 +1727,8 @@ declare module 'superdesk-api' {
 
         corrections_workflow: boolean;
 
+        default_timezone: string;
+
         // TANSA SERVER CONFIG
         tansa?: {
             base_url: string;
@@ -1804,7 +1806,6 @@ declare module 'superdesk-api' {
             };
         };
         confirm_spike: boolean;
-        defaultTimezone: any;
         search: {
             useDefaultTimezone: any;
         };
