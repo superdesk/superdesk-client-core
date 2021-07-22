@@ -17,8 +17,9 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
 
         const selectedUserIds = uniq(
             articles
-                .map((item) => item.marked_for_user)
-                .filter((marked_for_user) => marked_for_user != null),
+                .map((item) => item.marked_for_user && item.marked_for_sign_off)
+                .filter((marked_for_user, marked_for_sign_off) =>
+                    marked_for_user != null && marked_for_sign_off !== null),
         );
 
         const message = selectedUserIds.length > 1
@@ -31,19 +32,21 @@ export function getActionsBulkInitialize(superdesk: ISuperdesk) {
             onTrigger: () => {
                 superdesk.ui.showModal(getMarkForUserModal({
                     superdesk: superdesk,
-                    markForUser: (selectedUserId) => {
+                    markForUser: (selectedUserId, selectedUserSignOff) => {
                         articles.forEach((article) => {
-                            updateMarkedUser(superdesk, article, {marked_for_user: selectedUserId});
+                            updateMarkedUser(superdesk, article,
+                                {marked_for_user: selectedUserId, marked_for_sign_off: selectedUserSignOff});
                         });
                     },
-                    markForUserAndSend: (selectedUserId) => {
+                    markForUserAndSend: (selectedUserId, selectedUserSignOff) => {
                         articles.forEach((article) => {
-                            markForUserAndSendToNextStage(superdesk, article, selectedUserId);
+                            markForUserAndSendToNextStage(superdesk, article, selectedUserId, selectedUserSignOff);
                         });
                     },
                     locked: someItemsLocked,
                     lockedInOtherSession: someItemsLockedInOtherSession,
                     markedForUserInitial: selectedUserIds[0] ?? undefined,
+                    markedForUserSignOffInitial: selectedUserIds[0] ?? undefined,
                     message: message,
                 }));
             },

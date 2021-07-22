@@ -36,6 +36,7 @@ export function markForUserAndSendToNextStage(
     superdesk: ISuperdesk,
     article: IArticle,
     selectedUserId: IUser['_id'] | null,
+    selectedUserSignOff: IUser['sign_off'] | null,
 ) {
     const {logger} = superdesk.utilities;
 
@@ -69,6 +70,7 @@ export function markForUserAndSendToNextStage(
     };
 
     return getTask().then((task) => {
-        updateMarkedUser(superdesk, article, {marked_for_user: selectedUserId, task});
+        updateMarkedUser(superdesk, article,
+            {marked_for_user: selectedUserId, marked_for_sign_off: selectedUserSignOff, task});
     });
 }

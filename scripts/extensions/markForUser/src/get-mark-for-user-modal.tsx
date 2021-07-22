@@ -9,15 +9,17 @@ interface IProps {
 interface IState {
     selectedUserId?: string;
     fetchedUsers?: Array<IUser>;
+    selectedUserSignOff?: string;
 }
 
 export function getMarkForUserModal(options: {
     superdesk: ISuperdesk,
-    markForUser: (markedForUserId: string | null) => void,
-    markForUserAndSend: (markedForUserId: string | null) => void,
+    markForUser: (markedForUserId: string | null, markedForUserSignOff: string | null) => void,
+    markForUserAndSend: (markedForUserId: string | null, markedForUserSignOff: string | null) => void,
     locked: boolean;
     lockedInOtherSession: boolean,
     markedForUserInitial?: string,
+    markedForUserSignOffInitial?: string,
     message?: string,
 }): React.ComponentType<IProps> {
     const {
@@ -27,6 +29,7 @@ export function getMarkForUserModal(options: {
         locked,
         lockedInOtherSession,
         markedForUserInitial,
+        markedForUserSignOffInitial,
         message,
     } = options;
 
@@ -46,6 +49,7 @@ export function getMarkForUserModal(options: {
 
             this.state = {
                 selectedUserId: markedForUserInitial,
+                selectedUserSignOff: markedForUserSignOffInitial,
             };
         }
         render() {
@@ -75,7 +79,11 @@ export function getMarkForUserModal(options: {
 
                         <SelectUser
                             disabled={lockedInOtherSession}
-                            onSelect={(selectedUser) => this.setState({selectedUserId: selectedUser._id})}
+                            onSelect={(selectedUser) =>
+                                this.setState({
+                                    selectedUserId: selectedUser._id,
+                                    selectedUserSignOff: selectedUser.sign_off,
+                                })}
                             selectedUserId={this.state.selectedUserId}
                             autoFocus={true}
                         />
@@ -90,13 +98,13 @@ export function getMarkForUserModal(options: {
                         </button>
 
                         {
-                            markedForUserInitial !== undefined ? (
+                            markedForUserInitial !== undefined && markedForUserSignOffInitial !== undefined ? (
                                 <button
                                     className="btn btn--warning"
                                     disabled={lockedInOtherSession}
                                     onClick={() => {
                                         this.props.closeModal();
-                                        markForUser(null);
+                                        markForUser(null, null);
                                     }}
                                     data-test-id="unmark"
                                 >
@@ -110,15 +118,20 @@ export function getMarkForUserModal(options: {
                             disabled={
                                 this.state.selectedUserId === undefined // no user selected
                                 || this.state.selectedUserId === markedForUserInitial // user hasn't changed
+                                || this.state.selectedUserSignOff === markedForUserSignOffInitial
                                 || lockedInOtherSession
                             }
                             onClick={() => {
                                 this.props.closeModal();
 
-                                if (this.state.selectedUserId !== undefined) {
-                                    markForUser(this.state.selectedUserId);
+                                if (
+                                    this.state.selectedUserId !== undefined &&
+                                    this.state.selectedUserSignOff !== undefined) {
+                                    markForUser(this.state.selectedUserId, this.state.selectedUserSignOff);
                                 } else {
-                                    logger.error(new Error('selectedUserId can not be undefined'));
+                                    logger.error(
+                                        new Error('selectedUserId and selectedUserSignOff can not be undefined'),
+                                    );
                                 }
                             }}
                             data-test-id="confirm"
@@ -131,15 +144,20 @@ export function getMarkForUserModal(options: {
                             disabled={
                                 this.state.selectedUserId === undefined // no user selected
                                 || this.state.selectedUserId === markedForUserInitial // user hasn't changed
+                                || this.state.selectedUserSignOff === markedForUserSignOffInitial
                                 || locked // can't send to another stage even if locked by current user
                             }
                             onClick={() => {
                                 this.props.closeModal();
 
-                                if (this.state.selectedUserId !== undefined) {
-                                    markForUserAndSend(this.state.selectedUserId);
+                                if (
+                                    this.state.selectedUserId !== undefined &&
+                                    this.state.selectedUserSignOff !== undefined) {
+                                    markForUserAndSend(this.state.selectedUserId, this.state.selectedUserSignOff);
                                 } else {
-                                    logger.error(new Error('selectedUserId can not be undefined'));
+                                    logger.error(
+                                        new Error('selectedUserId and selectedUserSignOff can not be undefined'),
+                                    );
                                 }
                             }}
                             data-test-id="mark-and-send"

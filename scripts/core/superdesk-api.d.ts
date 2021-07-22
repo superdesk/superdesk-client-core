@@ -478,6 +478,7 @@ declare module 'superdesk-api' {
 
         // markForUser extension
         marked_for_user?: string | null;
+        marked_for_sign_off?: string | null;
 
         // remove when SDESK-4343 is done.
         selected?: any;
@@ -1052,6 +1053,7 @@ declare module 'superdesk-api' {
         disabled?: boolean;
         autoFocus?: boolean;
         horizontalSpacing?: boolean;
+        selectedUserSignOff?: string;
     }
 
 
