@@ -7,7 +7,7 @@ import {OverviewComponent} from './components/OverviewComponent';
 import UsersComponent from './components/UsersComponent';
 import {AssignmentsComponent} from './components/AssignmentsComponent';
 import {PreviewComponent} from './components/PreviewComponent';
-import {FilterPanelComponent} from './components/FilterPanelComponent';
+import {FilterPanelComponent, IFilter} from './components/FilterPanelComponent';
 import {FilterBarComponent} from './components/FilterBarComponent';
 
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -52,8 +52,7 @@ interface IState {
     activeUser: IUser;
     planning: boolean;
     deskFilter: string;
-    filters: any;
-    currentView: IMasterDeskViews;
+    filters: IFilter;
 }
 
 export class MasterDesk extends React.Component<{}, IState> {
@@ -72,7 +71,6 @@ export class MasterDesk extends React.Component<{}, IState> {
             planning: false,
             deskFilter: '',
             filters: {},
-            currentView: IMasterDeskViews.card,
         };
 
         this.services = {
@@ -118,7 +116,6 @@ export class MasterDesk extends React.Component<{}, IState> {
     onTabChange(tab) {
         this.setState({
             currentTab: tab,
-            currentView: IMasterDeskViews.card,
         });
     }
 
@@ -128,7 +125,6 @@ export class MasterDesk extends React.Component<{}, IState> {
                 <HeaderComponent
                     activeTab={this.state.currentTab}
                     desks={this.state.desks}
-                    currentView={this.state.currentView}
                     selectedDesk={this.state.selectedDesk}
                     isPlaningActive={this.state.planning}
                     isFilterAllowed={this.isFilterAllowed()}
@@ -137,15 +133,14 @@ export class MasterDesk extends React.Component<{}, IState> {
                     onDeskChange={(desk) => this.setState({selectedDesk: desk})}
                     onUpdateDeskList={(desks, showAll) => this.getDeskList(desks, showAll)}
                     onFilterOpen={(filter) => this.setState({filterOpen: filter})}
-                    onViewChange={(view) => this.setState({currentView: view})}
                 />
 
                 {this.isFilterAllowed() ? (
                     <FilterPanelComponent
                         key={JSON.stringify(this.state.filters)}
                         open={this.state.filterOpen}
-                        onDeskFilterChange={(desk) => this.setState({deskFilter: desk})}
-                        onFilterChange={(filters) => this.setState({filters: filters})}
+                        onDeskFilterChange={(deskFilter) => this.setState({deskFilter})}
+                        onFilterChange={(filters) => this.setState({filters})}
                         filters={this.state.filters}
                     />
                 )
@@ -172,8 +167,6 @@ export class MasterDesk extends React.Component<{}, IState> {
                                         deskFilter={this.state.deskFilter}
                                         selectedDesk={this.state.selectedDesk}
                                         filters={this.state.filters}
-                                        currentView={this.state.currentView}
-                                        onViewChange={(view) => this.setState({currentView: view})}
                                         onFilterChange={(filters) => this.setState({filters: filters})}
                                         onDeskChange={(desk) => this.setState({selectedDesk: desk})}
                                     />
