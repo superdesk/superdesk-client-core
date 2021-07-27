@@ -1189,6 +1189,9 @@ input {
         text-align: center;
         width: 40px;
     }
+    textarea.sd-line-input__input {
+        resize: none;
+    }
 }
 .sd-line-input {
     select.sd-line-input__select.sd-line-input__select--mini {

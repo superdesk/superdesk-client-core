@@ -116,6 +116,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
 
         const newFieldSelect = (newItemIndex) => (
             <Dropdown
+                append={true}
                 items={availableIds.map(({id, label}) => ({
                     label: label,
                     onSelect: () => {
@@ -126,7 +127,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
             >
                 <Button
                     icon="plus-large"
-                    text="plus-large"
+                    text={gettext('Add new field')}
                     shape="round"
                     iconOnly={true}
                     onClick={() => false}
