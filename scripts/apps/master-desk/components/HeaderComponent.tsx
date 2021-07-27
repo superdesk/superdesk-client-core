@@ -55,6 +55,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
             preferences: ng.get('preferencesService'),
             session: ng.get('session'),
             location: ng.get('$location'),
+            route: ng.get('$route'),
         };
 
         this.changeTab = this.changeTab.bind(this);
@@ -137,8 +138,14 @@ export class HeaderComponent extends React.Component<IProps, IState> {
     }
 
     goToDesk(desk: IDesk) {
-        this.services.desks.setCurrentDeskId(desk._id);
+        let currentDesk = this.services.desks.getCurrentDeskId();
+
+        if (currentDesk !== desk._id) {
+            this.services.desks.setCurrentDeskId(desk._id);
+        }
+
         this.services.location.url('/workspace/monitoring');
+        this.services.route.reload();
     }
 
     isDeskActive(desk: IDesk) {
