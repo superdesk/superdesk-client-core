@@ -247,6 +247,8 @@ export function AuthoringDirective(
                 if ($scope.origItem.state === 'unpublished') {
                     api.update('archive', $scope.origItem, {state: 'in_progress'})
                         .then((updated) => {
+                            // for updating and refreshing the item everywhere,
+                            // close it first and then open it.
                             $scope.close().then(() => {
                                 authoringWorkspace.edit(updated);
                             });
