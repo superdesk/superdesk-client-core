@@ -226,6 +226,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                         <div className="sd-board" key={index}>
                             <div className="sd-board__header">
                                 <h3 className="sd-board__header-title">{stage.name}</h3>
+                                <span className="stage-header__number label-total">{this.getStageTotal(stage)}</span>
                             </div>
                             <div className="sd-board__content sd-padding-t--1">
                                 <ul className="sd-list-item-group sd-shadow--z2 inline-content-items">
