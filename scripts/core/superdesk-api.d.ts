@@ -1033,6 +1033,10 @@ declare module 'superdesk-api' {
         onClose?(): void;
     }
 
+    export interface IModalFooterProps {
+        flex?: boolean;
+    }
+
     export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -1130,6 +1134,16 @@ declare module 'superdesk-api' {
         isLockedByMe: boolean;
         isUploadValid(files: Array<File>): boolean;
     }
+
+    export interface IIgnoreCancelSaveProps {
+        title: string;
+        body: React.ReactNode;
+        hideIgnore?: boolean;
+        hideCancel?: boolean;
+        hideSave?: boolean;
+    }
+
+    export type IIgnoreCancelSaveResponse = 'ignore' | 'cancel' | 'save';
 
 
     // EDITOR3
@@ -1458,6 +1472,7 @@ declare module 'superdesk-api' {
             };
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
+            showIgnoreCancelSaveDialog(props: IIgnoreCancelSaveProps): Promise<IIgnoreCancelSaveResponse>;
             showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
             notify: {
                 info(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
@@ -1535,7 +1550,7 @@ declare module 'superdesk-api' {
             Modal: React.ComponentType<IModalProps>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
-            ModalFooter: React.ComponentType;
+            ModalFooter: React.ComponentType<IModalFooterProps>;
             Badge: React.ComponentType<IPropsBadge>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;

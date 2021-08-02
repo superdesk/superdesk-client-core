@@ -76,6 +76,7 @@ import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {WithLiveQuery} from './with-live-query';
 import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
+import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -301,6 +302,7 @@ export function getSuperdeskApiImplementation(
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
+            showIgnoreCancelSaveDialog,
             showModal,
             notify: notify,
             framework: {
