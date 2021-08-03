@@ -1169,6 +1169,30 @@ declare module 'superdesk-api' {
 
     // DATA API
 
+    export interface IDataRequestParams {
+        method: 'GET' | 'POST';
+        endpoint: string;
+        data?: any;
+        params?: any;
+    }
+
+    type IRequestFactory = () => IDataRequestParams;
+
+    type IResponseHandler = (res: IRestApiResponse<T>) => any;
+
+    export interface IDataProvider {
+        update: () => void;
+        stop: () => void;
+    }
+
+    export interface IListenTo {
+        [resource: string]: {
+            create?: true;
+            update?: true;
+            delete?: true;
+        } | true;
+    }
+
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
         create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
@@ -1186,9 +1210,8 @@ declare module 'superdesk-api' {
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
         uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress: (event: ProgressEvent) => void): Promise<T>;
+        createProvider: (requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo?: IListenTo) => IDataProvider;
     }
-
-
 
     // EVENTS
 

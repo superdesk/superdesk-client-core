@@ -18,6 +18,7 @@ import {
     IArticle,
     IResourceChange,
 } from 'superdesk-api';
+import {DataProvider} from './data-provider';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
 
@@ -315,6 +316,8 @@ export const dataApi: IDataApi = {
         },
     }),
     uploadFileWithProgress: uploadFileWithProgress,
+    createProvider: (requestFactory, responseHandler, listenTo) =>
+        new DataProvider(requestFactory, responseHandler, listenTo),
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
