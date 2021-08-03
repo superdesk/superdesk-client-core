@@ -34,7 +34,7 @@ describe('notifications', () => {
         expect(element(by.id('unread-count')).getText()).toBe('');
     });
 
-    it('create a new desk mention', () => {
+    xit('create a new desk mention', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
 
         desks.openDesksSettings();
