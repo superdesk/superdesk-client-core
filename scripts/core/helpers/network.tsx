@@ -48,7 +48,7 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
         method,
         headers: headers || {},
         mode: 'cors',
-        body: JSON.stringify(payload), // works when `payload` is `undefined`
+        body: JSON.stringify(payload || undefined), // works when `payload` is `undefined`
         signal: abortSignal,
     });
 }

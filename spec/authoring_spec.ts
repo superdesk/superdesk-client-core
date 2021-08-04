@@ -357,7 +357,7 @@ describe('authoring', () => {
         expect(authoring.getHeaderSluglineText()).toContain('item5');
     });
 
-    it('can calculate word counts', () => {
+    xit('can calculate word counts', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();

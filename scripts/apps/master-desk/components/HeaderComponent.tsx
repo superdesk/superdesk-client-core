@@ -17,7 +17,6 @@ import {gettext} from 'core/utils';
 interface IProps {
     desks: Array<IDesk>;
     activeTab: string;
-    currentView: IMasterDeskViews;
     selectedDesk: IDesk;
     isFilterAllowed?: boolean;
     isFilterOpened: boolean;
@@ -26,7 +25,6 @@ interface IProps {
     onDeskChange(desk: IDesk): void;
     onUpdateDeskList(desks: Array<string>, showAllDesks: boolean): void;
     onFilterOpen(filter: boolean): void;
-    onViewChange(view: IMasterDeskViews): void;
 }
 
 interface IState {
@@ -60,7 +58,6 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
         this.changeTab = this.changeTab.bind(this);
         this.openFilter = this.openFilter.bind(this);
-        this.changeView = this.changeView.bind(this);
     }
 
     componentDidMount() {
@@ -92,10 +89,6 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
     openFilter() {
         this.props.onFilterOpen(!this.props.isFilterOpened);
-    }
-
-    changeView(newView: IMasterDeskViews) {
-        this.props.onViewChange(newView);
     }
 
     toggleDesk(desk: IDesk) {
@@ -168,12 +161,12 @@ export class HeaderComponent extends React.Component<IProps, IState> {
         return (
             <div className="sd-main-content-grid__header">
                 <div className="subnav">
-                    {this.props.currentView === IMasterDeskViews.singleView ? (
+                    {this.props.selectedDesk != null ? (
                         <React.Fragment>
                             <div className="flat-searchbar">
                                 <button
                                     className="navbtn navbtn--left"
-                                    onClick={() => this.changeView(IMasterDeskViews.card)}
+                                    onClick={() => this.props.onDeskChange(null)}
                                 >
                                     <i className="icon-arrow-left" />
                                 </button>
@@ -190,7 +183,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                         </React.Fragment>
                     ) : null}
 
-                    {this.props.isFilterAllowed && this.props.currentView !== IMasterDeskViews.singleView ? (
+                    {this.props.isFilterAllowed && this.props.selectedDesk == null ? (
                         <button
                             className={'sd-navbtn sd-navbtn--left sd-navbtn--darker' +
                                 (this.props.isFilterOpened ? ' sd-navbtn--active' : '')}
@@ -210,7 +203,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                         </CheckButtonGroup>
                     </ButtonGroup>
 
-                    {this.props.currentView === IMasterDeskViews.singleView &&
+                    {this.props.selectedDesk != null &&
                         this.isDeskMember(this.props.selectedDesk) ? (
                             <ButtonGroup align="right">
                                 <Button
