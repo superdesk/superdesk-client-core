@@ -14,7 +14,7 @@ import {requestQueue, RequestPriority} from './request-queue';
 import {addWebsocketEventListener} from 'core/notification/notification';
 
 export class DataProvider implements IDataProvider {
-    updateTimeout = 500;
+    updateTimeout = 1000;
     requestFactory: IRequestFactory;
     responseHandler: IResponseHandler;
     listenTo: IListenTo;
@@ -74,7 +74,13 @@ export class DataProvider implements IDataProvider {
             (event: IWebsocketMessage<IResourceUpdateEvent>) => {
                 const specs = this.listenTo[event.extra.resource];
 
-                if (specs === true || specs?.update === true) {
+                if (specs == null) {
+                    return;
+                }
+
+                if (specs === true || specs.update === true ||
+                    specs.update.some((field) => event.extra.fields[field] === 1)
+                ) {
                     this.scheduleUpdate();
                 }
             },

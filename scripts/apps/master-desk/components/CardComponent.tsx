@@ -24,6 +24,11 @@ export class CardComponent extends React.Component<IProps, {}> {
         }
     }
 
+    shouldComponentUpdate(nextProps) {
+        // only update when donut data changes
+        return JSON.stringify(nextProps.donutData) !== JSON.stringify(this.props.donutData);
+    }
+
     render() {
         return (
             <div className="sd-board" >
@@ -46,7 +51,8 @@ export class CardComponent extends React.Component<IProps, {}> {
                                         <DonutChart
                                             width="40px"
                                             height="40px"
-                                            data={this.props.donutData}
+                                            // DonutChart modifies the prop which breaks JSON.stringify, use deep copy
+                                            data={JSON.parse(JSON.stringify(this.props.donutData))}
                                             options={this.chartOptions}
                                         />
 

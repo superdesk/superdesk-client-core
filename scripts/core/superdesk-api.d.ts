@@ -1188,8 +1188,8 @@ declare module 'superdesk-api' {
     export interface IListenTo {
         [resource: string]: {
             create?: true;
-            update?: true;
             delete?: true;
+            update?: true | Array<string>;
         } | true;
     }
 

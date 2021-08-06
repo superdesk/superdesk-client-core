@@ -55,7 +55,17 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                 this.setState({stagesCount: res['_items']});
             },
             {
-                archive: {create: true, update: true, delete: true},
+                archive: {
+                    update: [
+                        'task.desk',
+                        'task.stage',
+                        'slugline',
+                        'headline',
+                        'priority',
+                        'urgency',
+                        'versioncreated',
+                    ],
+                },
             },
         );
     }
@@ -181,7 +191,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                 <div className="sd-kanban-list sd-padding-x--2 sd-padding-t--2">
                     {desks.map((desk, index) =>
                         this.getDeskTotal(desk) > 0 ? (
-                            <div className="sd-board" key={index}>
+                            <div className="sd-board" key={desk._id}>
                                 <a
                                     className="sd-board__header sd-board__header--clickable"
                                     onClick={() => this.props.onDeskChange(desk)}
@@ -215,7 +225,7 @@ export class OverviewComponent extends React.Component<IProps, IState> {
                 <div className="sd-grid-list sd-grid-list--medium sd-grid-list--gap-xl sd-margin-x--5">
                     {desks.map((desk, index) => (
                         <CardComponent
-                            key={index}
+                            key={desk._id}
                             desk={desk}
                             total={this.getDeskTotal(desk)}
                             donutData={this.getDonutData(desk)}
