@@ -42,7 +42,6 @@ export function AuthoringHeaderDirective(
             scope.features = features;
             scope.translationService = TranslationService;
             scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
-            scope.metadata_with_no_items = appConfig?.metadata_with_no_items;
             scope.getArticleTypeLabel = (article: IArticle) =>
                 gettext('Article Type: {{type}}', {type: translateArticleType(article.type)});
 

@@ -1810,7 +1810,6 @@ declare module 'superdesk-api' {
             useDefaultTimezone: any;
         };
         search_cvs: any;
-        metadata_with_no_items: any;
         view: {
             dateformat: string; // a combination of YYYY, MM, and DD with a custom separator e.g. 'MM/DD/YYYY'
             timeformat: string;

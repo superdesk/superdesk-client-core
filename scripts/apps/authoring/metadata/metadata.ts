@@ -1131,7 +1131,6 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
             scheduled: 1, company_codes: 1, ingest_provider: 1, marked_desks: 1,
             featuremedia: 1,
         },
-        metdata_with_no_items: appConfig?.metadata_with_no_items,
         subjectScope: null,
         loaded: null,
         _urgencyByValue: {},
@@ -1311,9 +1310,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter(
-                        (cv) => (this.metadata_with_no_items?.includes(cv._id) || cv.items.length) &&
-                            (editor[cv._id] || schema[cv._id])),
+                    (cvs) => cvs.filter((cv) => (cv.terms.length || cv.read_only) &&
+                        (editor[cv._id] || schema[cv._id])),
                 );
         },
         /**
