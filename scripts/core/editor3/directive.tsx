@@ -18,7 +18,6 @@ import {
     CHARACTER_LIMIT_UI_PREF,
     CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
 
 /**
  * @ngdoc directive
@@ -192,8 +191,6 @@ class Editor3Directive {
             );
         }
 
-        const pathValue = this.pathToValue.split(FIELD_KEY_SEPARATOR)[1];
-
         ng.get('preferencesService')
             .get()
             .then((userPreferences) => {
@@ -213,7 +210,7 @@ class Editor3Directive {
                 this.svc = {};
                 this.limitBehavior =
                     userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
-                        pathValue || this.pathToValue
+                        this.pathToValue
                     ];
 
                 const store = createEditorStore(this, ng.get('spellcheck'));
@@ -310,7 +307,7 @@ class Editor3Directive {
                         (event) => {
                             const limitBehavior =
                                 event.detail?.[CHARACTER_LIMIT_UI_PREF]?.[
-                                    pathValue || this.pathToValue
+                                    this.pathToValue
                                 ];
 
                             if (limitBehavior) {
