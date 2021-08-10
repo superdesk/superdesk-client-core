@@ -6,7 +6,6 @@ import {Store} from 'redux';
 
 import {Editor3} from './components';
 import createEditorStore from './store';
-import {getInitialContent} from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
@@ -216,7 +215,26 @@ class Editor3Directive {
                         pathValue || this.pathToValue
                     ];
 
-                const store = createEditorStore(this, ng.get('spellcheck'));
+                let store = createEditorStore(this, ng.get('spellcheck'));
+
+                const renderEditor3 = () => {
+                    const element = $element.get(0);
+
+                    ReactDOM.unmountComponentAtNode(element);
+
+                    ReactDOM.render(
+                        <Provider store={store}>
+                            <EditorStore.Provider value={store}>
+                                <Editor3
+                                    scrollContainer={this.scrollContainer}
+                                    singleLine={this.singleLine}
+                                    cleanPastedHtml={this.cleanPastedHtml}
+                                />
+                            </EditorStore.Provider>
+                        </Provider>,
+                        element,
+                    );
+                };
 
                 window.dispatchEvent(new CustomEvent('editorInitialized'));
 
@@ -244,20 +262,9 @@ class Editor3Directive {
                         return;
                     }
 
-                    const props = {
-                        item: this.item,
-                        pathToValue: this.pathToValue,
-                    };
+                    store = createEditorStore(this, ng.get('spellcheck'));
 
-                    const content = getInitialContent(props);
-                    const state = store.getState();
-                    const editorState = EditorState.push(
-                        state.editorState,
-                        content,
-                        'change-block-data',
-                    );
-
-                    store.dispatch(changeEditorState(editorState, false, true));
+                    renderEditor3();
                 });
 
                 // this is triggered from MacrosController.call
@@ -342,22 +349,9 @@ class Editor3Directive {
                     removeListeners();
                 });
 
-                const render = () => {
-                    ReactDOM.render(
-                        <Provider store={store}>
-                            <EditorStore.Provider value={store}>
-                                <Editor3
-                                    scrollContainer={this.scrollContainer}
-                                    singleLine={this.singleLine}
-                                    cleanPastedHtml={this.cleanPastedHtml}
-                                />
-                            </EditorStore.Provider>
-                        </Provider>,
-                        $element.get(0),
-                    );
-                };
-
-                ng.waitForServicesToBeAvailable().then(render);
+                ng.waitForServicesToBeAvailable().then(() => {
+                    renderEditor3();
+                });
             });
     }
 }
