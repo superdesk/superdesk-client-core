@@ -207,9 +207,6 @@ function getDefaults(grunt) {
             browserSpellCheck: false,
         },
 
-        // default timezone for the app
-        defaultTimezone: grunt.option('defaultTimezone') || 'Europe/London',
-
         // model date and time formats
         model: {
             dateformat: 'DD/MM/YYYY',

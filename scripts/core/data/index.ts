@@ -3,8 +3,8 @@ import {IBaseRestApiResponse, IResourceUpdateEvent, IWebsocketMessage} from 'sup
 import {addWebsocketEventListener} from 'core/notification/notification';
 import {users, IUserState, IUserAction} from './users';
 import {getMiddlewares} from 'core/redux-utils';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 import {debounceAsync, IDebounced} from 'core/helpers/debounce-async';
+import {requestQueue} from 'core/helpers/request-queue';
 
 export type IEntityAction = {
     type: 'UPDATE_ENTITY',
@@ -47,11 +47,11 @@ addWebsocketEventListener(
         } else {
             const requestDebounced = debounceAsync(
                 (abortController) => {
-                    return httpRequestJsonLocal({
+                    return requestQueue.add({
                         method: 'GET',
-                        path: `/${resource}/${_id}`,
+                        endpoint: `/${resource}/${_id}`,
                         abortSignal: abortController.signal,
-                    })
+                    }, store)
                         .then((data: IBaseRestApiResponse) => {
                             store.dispatch({
                                 type: 'UPDATE_ENTITY',

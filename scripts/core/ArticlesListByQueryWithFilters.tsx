@@ -6,7 +6,7 @@ import {toElasticQuery} from './query-formatting';
 import {ArticlesListByQuery} from './ArticlesListByQuery';
 import {Set, Map} from 'immutable';
 import classNames from 'classnames';
-import {gettext, gettextPlural} from './utils';
+import {gettext, gettextPlural, getItemTypes} from './utils';
 import {getArticleSortOptions, generateTrackByIdentifier} from 'apps/search/services/SearchService';
 import {SearchBar} from './ui/components';
 import {SortBar} from './ui/components/SortBar';
@@ -83,18 +83,6 @@ function getQueryWithFilters(
         ...originalQuery,
         ...patch,
     };
-}
-
-function getItemTypes() {
-    return [
-        {type: 'text', label: gettext('text')},
-        {type: 'picture', label: gettext('picture')},
-        {type: 'graphic', label: gettext('graphic')},
-        {type: 'composite', label: gettext('package')},
-        {type: 'highlight-pack', label: gettext('highlights package')},
-        {type: 'video', label: gettext('video')},
-        {type: 'audio', label: gettext('audio')},
-    ];
 }
 
 export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, IState> {
@@ -192,19 +180,21 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                 },
             };
 
-            const options: Array<IFileTypeOption> = [
-                filterAll,
-                ...getItemTypes().map((itemType) => {
-                    return {
-                        label: itemType.label,
-                        icon: `filetype-icon-${itemType.type}`,
-                        selected: this.hasFilter('type', itemType.type),
-                        onSelect: () => {
-                            this.toggleFilter('type', itemType.type);
-                        },
-                    };
-                }),
-            ];
+            const options: Array<IFileTypeOption> =
+            getItemTypes().map((itemType) => {
+                return {
+                    label: itemType.label,
+                    icon: itemType.type !== 'all' ? `filetype-icon-${itemType.type}` : null,
+                    selected: itemType.type !== 'all' ?
+                        this.hasFilter('type', itemType.type) :
+                        this.hasFilter('type') === false,
+                    onSelect: () => {
+                        itemType.type !== 'all' ?
+                            this.toggleFilter('type', itemType.type) :
+                            this.removeFilter('type');
+                    },
+                };
+            });
 
             // TODO: Implement compact mode when multi select component is available in UI framework.
 

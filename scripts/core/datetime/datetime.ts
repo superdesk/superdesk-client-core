@@ -182,7 +182,7 @@ function DateTimeHelperService() {
     };
 
     this.mergeDateTime = function(dateStr, timeStr, timezone) {
-        var tz = timezone || appConfig.defaultTimezone;
+        var tz = timezone || appConfig.default_timezone;
         var mergeStr = dateStr + ' ' + timeStr;
         var formatter = appConfig.model.dateformat + ' ' + appConfig.model.timeformat;
 

@@ -1098,6 +1098,10 @@ declare module 'superdesk-api' {
         onClose?(): void;
     }
 
+    export interface IModalFooterProps {
+        flex?: boolean;
+    }
+
     export interface IGenericListPageComponent<T extends IItemWithId> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -1197,6 +1201,16 @@ declare module 'superdesk-api' {
         isUploadValid(files: Array<File>): boolean;
     }
 
+    export interface IIgnoreCancelSaveProps {
+        title: string;
+        body: React.ReactNode;
+        hideIgnore?: boolean;
+        hideCancel?: boolean;
+        hideSave?: boolean;
+    }
+
+    export type IIgnoreCancelSaveResponse = 'ignore' | 'cancel' | 'save';
+
 
     // EDITOR3
 
@@ -1221,6 +1235,30 @@ declare module 'superdesk-api' {
 
     // DATA API
 
+    export interface IDataRequestParams {
+        method: 'GET' | 'POST';
+        endpoint: string;
+        data?: any;
+        params?: any;
+    }
+
+    type IRequestFactory = () => IDataRequestParams;
+
+    type IResponseHandler = (res: IRestApiResponse<T>) => any;
+
+    export interface IDataProvider {
+        update: () => void;
+        stop: () => void;
+    }
+
+    export interface IListenTo {
+        [resource: string]: {
+            create?: true;
+            delete?: true;
+            update?: true | Array<string>;
+        } | true;
+    }
+
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
         create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
@@ -1238,9 +1276,8 @@ declare module 'superdesk-api' {
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
         uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress: (event: ProgressEvent) => void): Promise<T>;
+        createProvider: (requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo?: IListenTo) => IDataProvider;
     }
-
-
 
     // EVENTS
 
@@ -1524,6 +1561,7 @@ declare module 'superdesk-api' {
             };
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
+            showIgnoreCancelSaveDialog(props: IIgnoreCancelSaveProps): Promise<IIgnoreCancelSaveResponse>;
             showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
             notify: {
                 info(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
@@ -1607,7 +1645,7 @@ declare module 'superdesk-api' {
             Modal: React.ComponentType<IModalProps>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
-            ModalFooter: React.ComponentType;
+            ModalFooter: React.ComponentType<IModalFooterProps>;
             Badge: React.ComponentType<IPropsBadge>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
@@ -1799,6 +1837,8 @@ declare module 'superdesk-api' {
 
         corrections_workflow: boolean;
 
+        default_timezone: string;
+
         // TANSA SERVER CONFIG
         tansa?: {
             base_url: string;
@@ -1853,6 +1893,7 @@ declare module 'superdesk-api' {
                 publishAndContinue?: boolean;
             },
             showPublishSchedule?: boolean
+            hideCreatePackage?: boolean;
         };
         auth: {
             google: boolean
@@ -1875,7 +1916,6 @@ declare module 'superdesk-api' {
             };
         };
         confirm_spike: boolean;
-        defaultTimezone: any;
         search: {
             useDefaultTimezone: any;
         };

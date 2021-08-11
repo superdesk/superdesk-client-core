@@ -246,7 +246,13 @@ export function AuthoringDirective(
             $scope.edit = function edit() {
                 if ($scope.origItem.state === 'unpublished') {
                     api.update('archive', $scope.origItem, {state: 'in_progress'})
-                        .then((updated) => authoringWorkspace.edit(updated));
+                        .then((updated) => {
+                            // for updating and refreshing the item everywhere,
+                            // close it first and then open it.
+                            $scope.close().then(() => {
+                                authoringWorkspace.edit(updated);
+                            });
+                        });
                 } else if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {

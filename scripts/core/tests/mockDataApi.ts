@@ -52,6 +52,10 @@ const dataApiForTesting: IDataApi = {
     patchRaw: <T>(endpoint, id, etag, patch) => Promise.resolve({} as T),
     delete: (endpoint, item) => Promise.resolve(),
     uploadFileWithProgress: <T>(endpoint, data, onProgress) => Promise.resolve({} as T),
+    createProvider: (requestFactory, responseHandler, listenTo) => ({
+        stop: () => null,
+        update: () => null,
+    }),
 };
 
 export function mockDataApi() {

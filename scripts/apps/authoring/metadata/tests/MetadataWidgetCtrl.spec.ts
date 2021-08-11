@@ -26,7 +26,7 @@ describe('MetadataWidgetCtrl controller', () => {
                 timeformat: 'HH:mm',
                 dateformat: 'MM/DD/YYYY',
             },
-            defaultTimezone: 'Europe/London',
+            default_timezone: 'Europe/London',
             server: {url: undefined, ws: undefined},
         };
 

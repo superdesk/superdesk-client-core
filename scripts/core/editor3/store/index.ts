@@ -95,6 +95,8 @@ export interface IEditorStore {
     limitConfig?: EditorLimit;
 }
 
+let editor3Stores = [];
+
 export const getCustomDecorator = (
     language?: string,
     spellcheckWarnings: ISpellcheckWarningsByBlock = null,
@@ -193,13 +195,22 @@ export default function createEditorStore(
     if (spellcheck != null) {
         // after we have the dictionary, force update the editor to highlight typos
         spellcheck.getDict().finally(() => store.dispatch(forceUpdate()));
-
         spellcheck.getAbbreviationsDict().then((abbreviations) => {
             store.dispatch(setAbbreviations(abbreviations || {}));
         });
     }
 
+    editor3Stores.push(store);
+
     return store;
+}
+
+export function getStores() {
+    return editor3Stores;
+}
+
+export function unsetStore() {
+    return editor3Stores = [];
 }
 
 /**

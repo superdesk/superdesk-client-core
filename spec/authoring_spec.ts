@@ -7,7 +7,7 @@ import {
     ctrlShiftKey,
     assertToastMsg,
     assertToastMsgNotDisplayed,
-    waitForToastMsgDissapear,
+    waitForToastMsgDisappear,
     nav,
     shiftKey,
 } from './helpers/utils';
@@ -357,7 +357,7 @@ describe('authoring', () => {
         expect(authoring.getHeaderSluglineText()).toContain('item5');
     });
 
-    it('can calculate word counts', () => {
+    xit('can calculate word counts', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();
@@ -717,7 +717,7 @@ describe('authoring', () => {
         uploadMedia('image-big.jpg');
 
         assertToastMsg('success', 'Item updated.');
-        waitForToastMsgDissapear('success', 'Item updated.');
+        waitForToastMsgDisappear('success', 'Item updated.');
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
 

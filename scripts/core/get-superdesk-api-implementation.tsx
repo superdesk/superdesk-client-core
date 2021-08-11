@@ -76,6 +76,7 @@ import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {WithLiveQuery} from './with-live-query';
 import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
+import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -148,7 +149,7 @@ export function isLockedInOtherSession(article: IArticle): boolean {
 
 export const formatDate = (date: Date | string) => (
     moment(date)
-        .tz(appConfig.defaultTimezone)
+        .tz(appConfig.default_timezone)
         .format(appConfig.view.dateformat)
 );
 
@@ -165,7 +166,7 @@ export function getRelativeOrAbsoluteDateTime(
     }
 
     return datetime
-        .tz(appConfig.defaultTimezone)
+        .tz(appConfig.default_timezone)
         .format(format);
 }
 
@@ -301,6 +302,7 @@ export function getSuperdeskApiImplementation(
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
+            showIgnoreCancelSaveDialog,
             showModal,
             notify: notify,
             framework: {
@@ -359,12 +361,12 @@ export function getSuperdeskApiImplementation(
             formatDate: formatDate,
             formatDateTime: (date: Date) => {
                 return moment(date)
-                    .tz(appConfig.defaultTimezone)
+                    .tz(appConfig.default_timezone)
                     .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
             },
             longFormatDateTime: (date: Date | string) => {
                 return moment(date)
-                    .tz(appConfig.defaultTimezone)
+                    .tz(appConfig.default_timezone)
                     .format(appConfig.longDateFormat || 'LLL');
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,

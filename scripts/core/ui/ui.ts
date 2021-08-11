@@ -382,7 +382,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             ctrl.$render = function() {
                 element.val(ctrl.$viewValue.viewdate); // set the view
-                scope.date = ctrl.$viewValue.dpdate || moment().tz(appConfig.defaultTimezone); // set datepicker model
+                scope.date = ctrl.$viewValue.dpdate || moment().tz(appConfig.default_timezone); // set datepicker model
             };
 
             // handle model changes
@@ -620,8 +620,8 @@ function TimezoneDirective(tzdata, $timeout) {
             tzdata.$promise.then(() => {
                 scope.timeZones = tzdata.getTzNames();
 
-                if (initializeWithDefault && (!scope.timezone && appConfig.defaultTimezone)) {
-                    scope.selectTimeZone(appConfig.defaultTimezone);
+                if (initializeWithDefault && (!scope.timezone && appConfig.default_timezone)) {
+                    scope.selectTimeZone(appConfig.default_timezone);
                 }
             });
 

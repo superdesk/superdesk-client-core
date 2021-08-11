@@ -159,7 +159,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                 id="SelectAssetModal"
                 size="fullscreen"
                 closeModal={this.props.closeModal}
-                darkUI={true}
+                theme="dark-ui"
             >
                 <ModalHeader
                     text={gettext('Select Asset(s)')}
