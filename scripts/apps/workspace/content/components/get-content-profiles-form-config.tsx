@@ -190,7 +190,7 @@ export function getContentProfileFormConfig(
         label: gettext('Width'),
         type: FormFieldType.select,
         component_parameters: {
-            items: [
+            options: [
                 {id: 'full', label: gettext('Full')},
                 {id: 'half', label: gettext('Half')},
                 {id: 'quarter', label: gettext('Quarter')},
@@ -385,7 +385,7 @@ export function getContentProfileFormConfig(
             label: gettext('Prefill the field with text from:'),
             type: FormFieldType.select,
             component_parameters: {
-                items: [
+                options: [
                     {id: '', label: gettext('Abstract')},
                     {id: 'headline', label: gettext('Headline')},
                 ],
