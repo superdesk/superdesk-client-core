@@ -283,7 +283,8 @@ export function ItemCarouselDirective(notify) {
             scope.handleInputChange = (value: string, onChangeData) => {
                 const {association, field} = onChangeData;
 
-                if (typeof scope.item.associations?.[association]?.[field] === 'string') {
+                if (typeof scope.item.associations?.[association]?.[field] === 'string'
+                    || (scope.item.associations?.[association] && field && value && typeof value === 'string')) {
                     scope.item.associations[association][field] = value;
                     scope.onchange();
                     scope.$applyAsync();
