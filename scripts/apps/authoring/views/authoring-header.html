@@ -415,7 +415,7 @@
                         data-unique="qcode"
                         data-list="cv.terms"
                         data-cv="cv"
-                        ng-disabled="!_editable || editor[cv._id].readonly === true"
+                        ng-disabled="!_editable || editor[cv._id].readonly === true || cv.read_only"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
