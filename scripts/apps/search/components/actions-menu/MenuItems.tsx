@@ -88,10 +88,9 @@ export default class MenuItems extends React.Component<IProps, IState> {
     }
 
     handleClickOutside(event) {
-        // eslint-disable-next-line react/no-find-dom-node
-        const domNode = ReactDOM.findDOMNode(menuHolderElem());
+        const domNode = menuHolderElem();
 
-        if (!domNode || !domNode.contains(event.target)) {
+        if (domNode != null && !domNode.contains(event.target)) {
             closeActionsMenu(this.props.item._id);
         }
     }
@@ -244,9 +243,16 @@ export default class MenuItems extends React.Component<IProps, IState> {
     }
 
     render() {
-        if (this.state.actionsFromExtensions == null || this.renderMenu().length < 1) {
+        if (this.state.actionsFromExtensions == null) {
             return null;
         }
+
+        const renderMenuResult = this.renderMenu();
+
+        if (renderMenuResult.length < 1) {
+            return null;
+        }
+
 
         return (
             <ul
@@ -273,7 +279,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
                         this.previousFocusedElement?.focus();
                     }}
                 />
-                {this.renderMenu()}
+                {renderMenuResult}
             </ul>
         );
     }
