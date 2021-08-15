@@ -253,7 +253,6 @@ export default class MenuItems extends React.Component<IProps, IState> {
             return null;
         }
 
-
         return (
             <ul
                 className="dropdown dropdown__menu more-activity-menu open"
