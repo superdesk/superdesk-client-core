@@ -1310,7 +1310,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id])),
+                    (cvs) => cvs.filter((cv) => (cv.terms.length || cv.read_only) &&
+                        (editor[cv._id] || schema[cv._id])),
                 );
         },
         /**

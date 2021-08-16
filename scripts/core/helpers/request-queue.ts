@@ -1,4 +1,5 @@
 import {httpRequestJsonLocal} from './network';
+import {DEV_TOOLS} from 'core/constants';
 
 export interface IRequestParams {
     method: 'GET' | 'POST';
@@ -140,13 +141,19 @@ class RequestQueue {
     }
 
     private log(event: string) {
-        console.debug('queue', event, this.queue.length); // eslint-disable-line no-console
+        if (DEV_TOOLS.networkQueueLoggerEnabled) {
+            // eslint-disable-next-line no-console
+            console.debug('queue', event, this.queue.length);
+        }
     }
 
     private logTime(req: Request, event: string) {
-        const time = Date.now() - req.created;
+        if (DEV_TOOLS.networkQueueLoggerEnabled) {
+            const time = Date.now() - req.created;
 
-        console.debug('queue time', event, `${time} ms`); // eslint-disable-line no-console
+            // eslint-disable-next-line no-console
+            console.debug('queue time', event, `${time} ms`);
+        }
     }
 }
 
