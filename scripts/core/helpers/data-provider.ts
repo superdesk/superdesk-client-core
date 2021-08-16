@@ -8,18 +8,21 @@ import {
     IResourceCreatedEvent,
     IResourceDeletedEvent,
     IRestApiResponse,
+    IBaseRestApiResponse,
 } from 'superdesk-api';
 
 import {debounce, isEqual} from 'lodash';
 import {requestQueue, RequestPriority} from './request-queue';
 import {addWebsocketEventListener} from 'core/notification/notification';
 
-const isItemEqual = (a, b) =>
-    (a._etag != null && a._etag === b._etag) ||
-    (a._updated != null && a._updated === b._updated) ||
-    isEqual(a, b);
+const isItemEqual = (a: IBaseRestApiResponse, b: IBaseRestApiResponse) => (
+    (a._id != null && a._id === b._id && (
+        (a._etag != null && a._etag === b._etag) ||
+        (a._updated != null && a._updated === b._updated)
+    )) || isEqual(a, b)
+);
 
-export class DataProvider implements IDataProvider {
+export class DataProvider<T extends IRestApiResponse<T>> implements IDataProvider {
     updateTimeout = 1000;
     requestFactory: IRequestFactory;
     responseHandler: IResponseHandler;
@@ -27,7 +30,7 @@ export class DataProvider implements IDataProvider {
     listeners: Array<() => void> = [];
 
     private scheduleUpdate: () => void;
-    private cache: IRestApiResponse<any>;
+    private cache: IRestApiResponse<T>;
 
     constructor(requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo: IListenTo) {
         this.requestFactory = requestFactory;
@@ -62,7 +65,7 @@ export class DataProvider implements IDataProvider {
         }
 
         return requestQueue.add(requestParams, this, priority)
-            .then((res: IRestApiResponse<any>) => {
+            .then((res: IRestApiResponse<T>) => {
                 // it's returning list of items, try to look for previous data
                 // and in case there were no changes to it avoid calling the handler,
                 // otherwise call it but reuse previous items for not updated entities
@@ -97,7 +100,7 @@ export class DataProvider implements IDataProvider {
                     }
                 }
 
-                if (this.cache == null || isItemEqual(this.cache, res) === false) {
+                if (this.cache == null || isEqual(this.cache, res) === false) {
                     this.cache = res;
                     this.responseHandler(res);
                 }
