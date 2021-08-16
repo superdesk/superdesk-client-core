@@ -243,6 +243,7 @@ export function MultiImageEditController(
             ednote: compare('ednote'),
             sign_off: compare('sign_off'),
             authors: compare('authors'),
+            keywords: compare('keywords'),
         };
     }
 
