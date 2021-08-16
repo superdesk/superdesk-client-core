@@ -29,7 +29,7 @@ class RequestQueue {
 
     add(params: IRequestParams, provider: any, priority: RequestPriority = RequestPriority.LOW) {
         const req = new Request(params, provider, priority);
-        const prev = this.queue.find((_req) => _req.isEqual(req) && !_req.isFinished());
+        const prev = this.queue.find((_req) => _req.isEqual(req) && _req.status === RequestStatus.PENDING);
 
         if (prev != null) {
             return prev.promise;
