@@ -56,7 +56,9 @@ export class OverviewComponent extends React.Component<IProps, IState> {
             },
             {
                 archive: {
+                    create: true,
                     update: [
+                        'state',
                         'task.desk',
                         'task.stage',
                         'slugline',
