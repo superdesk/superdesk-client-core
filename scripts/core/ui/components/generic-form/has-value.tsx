@@ -1,6 +1,6 @@
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
-import {IFormField, IFormGroup} from 'superdesk-api';
+import {FormFieldType} from './interfaces/form';
+import {IFormField} from 'superdesk-api';
 import {stripHtmlTags} from 'core/utils';
 
 export function hasValue(fieldConfig: IFormField, value: any): boolean {

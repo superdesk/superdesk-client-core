@@ -3,95 +3,42 @@ import {gettext} from 'core/utils';
 import {getInstanceConfigSchema} from 'instance-settings';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
-import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import {Button} from 'superdesk-ui-framework';
+import {set} from 'lodash';
+import {ICoreSettings} from 'core/core-config';
+import {getValidationErrors, IGenericFormValidationErrors} from 'core/ui/components/generic-form/validation';
+import {jsonSchemaToFormConfig} from './adapter';
 
 type IProps = {};
 
 interface IState {
-    formData: any;
+    formData: Dictionary<string, any>;
+    issues: IGenericFormValidationErrors;
 }
 
-interface IJsonSchema {
-    type: 'object' | 'boolean';
-    enum?: Array<string>;
-    translations: Dictionary<string, string>;
-    required?: Array<string>;
-    properties?: Dictionary<string, IJsonSchema>;
+const INSTANCE_CONFIG = 'INSTANCE_CONFIG';
+
+function getConfigForEditing() {
+    const configInStorage = localStorage.getItem(INSTANCE_CONFIG);
+    const config = configInStorage == null ? {} : JSON.parse(configInStorage);
+
+    return config;
 }
 
-function getFormConfig(
-    schema: IJsonSchema,
-    keys: Array<string>,
-    parent?: IJsonSchema,
-    field?: string,
-): IFormGroup {
-    const hasChildren = schema.properties != null;
+function saveConfig(config) {
+    localStorage.setItem(INSTANCE_CONFIG, JSON.stringify(config));
+}
 
-    if (hasChildren) {
-        const type: IFormGroup['type'] = field == null
-            ? 'inline'
-            : {label: parent.translations[field], openByDefault: true};
+function getConfigUsable(): ICoreSettings {
+    const forEditing = getConfigForEditing();
 
-        const subgroup: IFormGroup = {
-            direction: 'vertical',
-            type: type,
-            form: [],
-        };
+    const obj = {};
 
-        for (const property of Object.keys(schema.properties)) {
-            const configsForProperty = getFormConfig(
-                schema.properties[property],
-                keys.concat(property), schema, property,
-            );
-
-            if (configsForProperty.type === 'inline') {
-                subgroup.form.push(...configsForProperty.form);
-            } else {
-                subgroup.form.push(configsForProperty);
-            }
-        }
-
-        return subgroup;
-    } else {
-        const formField = keys.join('.');
-        const label = parent.translations[field];
-        const required = parent.required?.includes(field) === true;
-
-        const inlineItemsGroup: IFormGroup = {
-            direction: 'vertical',
-            type: 'inline',
-            form: [],
-        };
-
-        // eslint-disable-next-line no-lonely-if
-        if (schema.type === 'boolean') {
-            inlineItemsGroup.form.push({
-                type: FormFieldType.yesNo,
-                field: formField,
-                label: label,
-                required,
-            });
-        } else if (schema.enum != null) {
-            inlineItemsGroup.form.push({
-                type: FormFieldType.select,
-                field: formField,
-                label: label,
-                required,
-                component_parameters: {
-                    options: schema.enum.map((val) => ({id: val, label: val})),
-                },
-            });
-        } else {
-            inlineItemsGroup.form.push({
-                type: FormFieldType.textSingleLine,
-                field: formField,
-                label: label,
-                required,
-            });
-        }
-
-        return inlineItemsGroup;
+    for (const key in forEditing) {
+        set(obj, key, forEditing[key]);
     }
+
+    return obj as ICoreSettings;
 }
 
 export class InstanceConfigurationSettings extends React.PureComponent <IProps, IState> {
@@ -99,12 +46,41 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
         super(props);
 
         this.state = {
-            formData: {},
+            formData: getConfigForEditing(),
+            issues: {},
         };
+
+        this.handleSaving = this.handleSaving.bind(this);
+        this.validateRequiredFields = this.validateRequiredFields.bind(this);
+    }
+
+    validateRequiredFields(formConfig: IFormGroup): boolean {
+        const validationErrors = getValidationErrors(formConfig, this.state.formData);
+
+        if (Object.keys(validationErrors).length > 0) {
+            this.setState({
+                issues: validationErrors,
+            });
+
+            return false;
+        } else {
+            if (Object.keys(this.state.issues).length > 0) {
+                this.setState({issues: {}});
+            }
+
+            return true;
+        }
+    }
+
+    handleSaving(formConfig: IFormGroup) {
+        if (this.validateRequiredFields(formConfig)) {
+            saveConfig(this.state.formData);
+        }
     }
 
     render() {
         const {formData} = this.state;
+        const formConfig = jsonSchemaToFormConfig(getInstanceConfigSchema(gettext) as any, [], {} as any, undefined);
 
         return (
             <div style={{padding: 40}}>
@@ -115,20 +91,45 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
                     {JSON.stringify(formData, null, 4)}
                 </pre>
 
-                <FormViewEdit
-                    formConfig={getFormConfig(getInstanceConfigSchema(gettext) as any, [], {} as any, undefined)}
-                    item={formData}
-                    handleFieldChange={(field, value) => {
-                        this.setState({
-                            formData: {
-                                ...formData,
-                                [field]: value,
-                            },
-                        });
+                <div
+                    onBlur={() => {
+                        if (Object.keys(this.state.issues).length > 0) {
+                            /**
+                             * After revalidating, error messages may appear or disappear
+                             * it can in turn alter the position of a button that caused the blur
+                             * and the click might not get registered.
+                             */
+                            setTimeout(() => {
+                                this.validateRequiredFields(formConfig);
+                            }, 200);
+                        }
                     }}
-                    issues={{}}
-                    editMode={true}
-                />
+                >
+                    <FormViewEdit
+                        formConfig={formConfig}
+                        item={formData}
+                        handleFieldChange={(field, value) => {
+                            this.setState({
+                                formData: {
+                                    ...formData,
+                                    [field]: value,
+                                },
+                            });
+                        }}
+                        issues={this.state.issues}
+                        editMode={true}
+                    />
+                </div>
+
+                <div>
+                    <Button
+                        text={gettext('Save')}
+                        onClick={() => {
+                            this.handleSaving(formConfig);
+                        }}
+                        type="primary"
+                    />
+                </div>
             </div>
         );
     }
