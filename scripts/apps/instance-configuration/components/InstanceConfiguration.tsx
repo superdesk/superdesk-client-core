@@ -25,12 +25,6 @@ function getFormConfig(
     parent?: IJsonSchema,
     field?: string,
 ): IFormGroup {
-    const data: IFormGroup = {
-        direction: 'vertical',
-        type: 'inline',
-        form: [],
-    };
-
     const hasChildren = schema.properties != null;
 
     if (hasChildren) {
@@ -45,27 +39,40 @@ function getFormConfig(
         };
 
         for (const property of Object.keys(schema.properties)) {
-            subgroup.form.push(
-                getFormConfig(schema.properties[property], keys.concat(property), schema, property),
+            const configsForProperty = getFormConfig(
+                schema.properties[property],
+                keys.concat(property), schema, property,
             );
+
+            if (configsForProperty.type === 'inline') {
+                subgroup.form.push(...configsForProperty.form);
+            } else {
+                subgroup.form.push(configsForProperty);
+            }
         }
 
-        data.form.push(subgroup);
+        return subgroup;
     } else {
         const formField = keys.join('.');
         const label = parent.translations[field];
         const required = parent.required?.includes(field) === true;
 
+        const inlineItemsGroup: IFormGroup = {
+            direction: 'vertical',
+            type: 'inline',
+            form: [],
+        };
+
         // eslint-disable-next-line no-lonely-if
         if (schema.type === 'boolean') {
-            data.form.push({
+            inlineItemsGroup.form.push({
                 type: FormFieldType.yesNo,
                 field: formField,
                 label: label,
                 required,
             });
         } else if (schema.enum != null) {
-            data.form.push({
+            inlineItemsGroup.form.push({
                 type: FormFieldType.select,
                 field: formField,
                 label: label,
@@ -75,16 +82,16 @@ function getFormConfig(
                 },
             });
         } else {
-            data.form.push({
+            inlineItemsGroup.form.push({
                 type: FormFieldType.textSingleLine,
                 field: formField,
                 label: label,
                 required,
             });
         }
-    }
 
-    return data;
+        return inlineItemsGroup;
+    }
 }
 
 export class InstanceConfigurationSettings extends React.PureComponent <IProps, IState> {
