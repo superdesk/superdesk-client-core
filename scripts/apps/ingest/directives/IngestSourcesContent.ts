@@ -684,8 +684,34 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @param provider ingest provider metadata
                  * @param field url_request field metadata
                  */
-                $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
-                    window.open(field.url.replace('{PROVIDER_ID}', provider._id));
+                $scope.doUrlRequest = (
+                    provider: IProvider,
+                    field: IFeedingServiceField,
+                    hasUnsavedChanges: boolean = false,
+                ): void => {
+                    if (hasUnsavedChanges) {
+                        modal.alert({
+                            headerText: gettext('Unsaved changes'),
+                            bodyText: gettext('Save all other changes before performing this action.'),
+                        });
+                    } else {
+                        window.open(field.url.replace('{PROVIDER_ID}', provider._id));
+
+                        setTimeout(() => {
+                            /**
+                             * If websocket message is received indicating a change,
+                             * items that are in edit mode are not updated
+                             * in order not to lose unsaved data.
+                             *
+                             * Because it's already checked that there are no unsaved changes,
+                             * editing modal is closed now, so after `doUrlRequest` changes the item on the back-end,
+                             * front-end will update the provider.
+                             *
+                             * Otherwise `_etag` wouldn't be updated and it wouldn't work to edit the item.
+                             */
+                            $scope.cancel();
+                        });
+                    }
                 };
 
                 function getCurrentService() {
