@@ -1,44 +1,24 @@
 import * as React from 'react';
+import flatten from 'flat';
+import {unflatten} from 'flat';
+import {Button} from 'superdesk-ui-framework';
+
 import {gettext} from 'core/utils';
 import {getInstanceConfigSchema} from 'instance-settings';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
-import {Button} from 'superdesk-ui-framework';
-import {set} from 'lodash';
-import {ICoreSettings} from 'core/core-config';
 import {getValidationErrors, IGenericFormValidationErrors} from 'core/ui/components/generic-form/validation';
 import {jsonSchemaToFormConfig} from './adapter';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {notify} from 'core/notify/notify';
 
 type IProps = {};
 
+type IFormData = Dictionary<string, any>;
+
 interface IState {
-    formData: Dictionary<string, any>;
+    formData: IFormData | 'loading';
     issues: IGenericFormValidationErrors;
-}
-
-const INSTANCE_CONFIG = 'INSTANCE_CONFIG';
-
-function getConfigForEditing() {
-    const configInStorage = localStorage.getItem(INSTANCE_CONFIG);
-    const config = configInStorage == null ? {} : JSON.parse(configInStorage);
-
-    return config;
-}
-
-function saveConfig(config) {
-    localStorage.setItem(INSTANCE_CONFIG, JSON.stringify(config));
-}
-
-function getConfigUsable(): ICoreSettings {
-    const forEditing = getConfigForEditing();
-
-    const obj = {};
-
-    for (const key in forEditing) {
-        set(obj, key, forEditing[key]);
-    }
-
-    return obj as ICoreSettings;
 }
 
 export class InstanceConfigurationSettings extends React.PureComponent <IProps, IState> {
@@ -46,7 +26,7 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
         super(props);
 
         this.state = {
-            formData: getConfigForEditing(),
+            formData: 'loading',
             issues: {},
         };
 
@@ -54,8 +34,8 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
         this.validateRequiredFields = this.validateRequiredFields.bind(this);
     }
 
-    validateRequiredFields(formConfig: IFormGroup): boolean {
-        const validationErrors = getValidationErrors(formConfig, this.state.formData);
+    validateRequiredFields(formConfig: IFormGroup, formData: IFormData): boolean {
+        const validationErrors = getValidationErrors(formConfig, formData);
 
         if (Object.keys(validationErrors).length > 0) {
             this.setState({
@@ -72,14 +52,37 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
         }
     }
 
-    handleSaving(formConfig: IFormGroup) {
-        if (this.validateRequiredFields(formConfig)) {
-            saveConfig(this.state.formData);
+    handleSaving(formConfig: IFormGroup, formData: IFormData) {
+        if (this.validateRequiredFields(formConfig, formData)) {
+            return httpRequestJsonLocal({
+                method: 'POST',
+                path: '/config',
+                payload: {
+                    _id: 'instance-settings',
+                    val: unflatten(this.state.formData),
+                },
+            }).then(() => {
+                notify.success(gettext('Saved successfully'));
+            });
         }
+    }
+
+    componentDidMount() {
+        httpRequestJsonLocal({
+            method: 'GET',
+            path: '/config/instance-settings',
+        }).then(({val}) => {
+            this.setState({formData: flatten(val)});
+        });
     }
 
     render() {
         const {formData} = this.state;
+
+        if (formData === 'loading') {
+            return null;
+        }
+
         const formConfig = jsonSchemaToFormConfig(getInstanceConfigSchema(gettext) as any, [], {} as any, undefined);
 
         return (
@@ -100,7 +103,7 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
                              * and the click might not get registered.
                              */
                             setTimeout(() => {
-                                this.validateRequiredFields(formConfig);
+                                this.validateRequiredFields(formConfig, formData);
                             }, 200);
                         }
                     }}
@@ -125,7 +128,7 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
                     <Button
                         text={gettext('Save')}
                         onClick={() => {
-                            this.handleSaving(formConfig);
+                            this.handleSaving(formConfig, formData);
                         }}
                         type="primary"
                     />
