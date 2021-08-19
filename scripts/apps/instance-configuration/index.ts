@@ -23,7 +23,8 @@ angular.module('superdesk.apps.instance-configuration', [
     .config(['superdeskProvider', function config(superdesk) {
         superdesk.activity('/settings/instance-configuration', {
             label: gettext('Instance configuration'),
-            template: '<sd-instance-configuration-settings></sd-instance-configuration-settings>',
+            // tslint:disable-next-line: max-line-length
+            template: '<div class="sd-scrollable-inside-absolute-container"><sd-instance-configuration-settings></sd-instance-configuration-settings></div>',
             category: superdesk.MENU_MAIN,
             priority: 1000,
             adminTools: true,
