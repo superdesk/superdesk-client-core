@@ -1,4 +1,4 @@
-export interface ICoreSettings {
+export interface IInstanceSettings {
     authoring: {
         editor: {
             version: '2' | '3';
