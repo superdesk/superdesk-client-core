@@ -1,3 +1,31 @@
+import {IInstanceSettings} from 'core/core-config';
+
+const instanceSettings: IInstanceSettings = {} as IInstanceSettings; // will be populated in loadInstanceSettings
+
+function loadInstanceSettings() {
+    const xhr = new XMLHttpRequest();
+
+    /**
+     * Instance settings must be available synchronously.
+     */
+    const synchronous = false;
+
+    xhr.addEventListener('load', function() {
+        const res = JSON.parse(this.responseText);
+
+        Object.assign(instanceSettings, res.val);
+    });
+
+    xhr.open('GET', `${__SUPERDESK_CONFIG__.server.url}/config/instance-settings`, synchronous);
+
+    // TODO: it should be possible to get instance settings without having to log in
+    xhr.setRequestHeader('Authorization', 'Basic NmE1YzlkYTQtZmM2Yy00MjU2LThmMTEtOGNlMWMyZGQ4NzI0Og==');
+
+    xhr.send();
+}
+
+loadInstanceSettings();
+
 // extract-text-webpack-plugin messes up the import order
 // when importing from SCSS files, but it works when importing from js
 // if you need some styles to go at the top/bottom, import it here
