@@ -6,6 +6,7 @@ interface IJsonSchema {
     enum?: Array<string>;
     translations: Dictionary<string, string>;
     required?: Array<string>;
+    description?: string;
     properties?: Dictionary<string, IJsonSchema>;
 }
 
@@ -45,6 +46,8 @@ export function jsonSchemaToFormConfig(
     } else {
         const formField = keys.join('.');
         const label = parent.translations[field];
+        const description = parent.properties[field].description;
+
         const required = parent.required?.includes(field) === true;
 
         const inlineItemsGroup: IFormGroup = {
@@ -58,6 +61,7 @@ export function jsonSchemaToFormConfig(
             inlineItemsGroup.form.push({
                 type: FormFieldType.yesNo,
                 field: formField,
+                description,
                 label: label,
                 required,
             });
@@ -66,6 +70,7 @@ export function jsonSchemaToFormConfig(
                 type: FormFieldType.select,
                 field: formField,
                 label: label,
+                description,
                 required,
                 component_parameters: {
                     options: schema.enum.map((val) => ({id: val, label: val})),
@@ -76,6 +81,7 @@ export function jsonSchemaToFormConfig(
                 type: FormFieldType.textSingleLine,
                 field: formField,
                 label: label,
+                description,
                 required,
             });
         }

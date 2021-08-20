@@ -17,6 +17,11 @@ function addTranslations(branch) {
 
     for (const property of Object.keys(branch.properties)) {
         branch.properties[property] = addTranslations(branch.properties[property]);
+
+        // translate description
+        if (typeof branch.properties[property].description === 'string') {
+            branch.properties[property].description = `gettext('${branch.properties[property].description}')`;
+        }
     }
 
     return branch;
@@ -24,7 +29,7 @@ function addTranslations(branch) {
 
 function generateInstanceConfigurationSchema(mainClientDir, currentDir) {
     const clientDirAbs = path.join(currentDir, mainClientDir);
-    const file = path.join(clientDirAbs, 'node_modules/superdesk-core/scripts/core/core-config.ts');
+    const file = path.join(clientDirAbs, 'node_modules/superdesk-core/scripts/core/instance-settings-interface.ts');
     const configFile = path.join(currentDir, mainClientDir, 'node_modules/superdesk-core/scripts/instance-settings.ts');
     const generatedSchema = JSON.parse(
         execSync(`npx typescript-json-schema "${file}" IInstanceSettings --strictNullChecks --required`).toString()
@@ -34,7 +39,7 @@ function generateInstanceConfigurationSchema(mainClientDir, currentDir) {
 
     const contents =
 `/* eslint-disable quotes, comma-dangle */
-/* tslint:disable: trailing-comma */
+/* tslint:disable: trailing-comma, max-line-length */
 
 export const getInstanceConfigSchema = (gettext) => (${schemaWithTranslations});
 `;

@@ -116,6 +116,13 @@ export function getSelectSingleValue(
                                 ))
                         }
                     </select>
+
+                    {
+                        this.props.formField.description && (
+                            <span className="sd-line-input__hint">{this.props.formField.description}</span>
+                        )
+                    }
+
                     {
                         this.props.issues.map((str, i) => (
                             <div key={i} className="sd-line-input__message">{str}</div>

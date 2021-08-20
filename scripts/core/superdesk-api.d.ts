@@ -905,6 +905,9 @@ declare module 'superdesk-api' {
         // custom components for some fields might not require a label or want include a custom one
         label?: string;
 
+        // helper text for field
+        description?: string;
+
         field: string;
 
         // can be used to pass read-only fields or display specific flags

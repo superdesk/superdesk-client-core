@@ -11,6 +11,8 @@ function getAllInputTypes(): Array<FormFieldType> {
     return Object.keys(FormFieldType).map((key) => FormFieldType[key]);
 }
 
+const testDescription = 'test description 943';
+
 function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
     case FormFieldType.textSingleLine:
@@ -23,11 +25,13 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
         };
     case FormFieldType.vocabularySingleValue:
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
             component_parameters: {
                 vocabulary_id: 'test_vocabulary_id',
             },
@@ -37,6 +41,7 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
             component_parameters: {
                 deskField: 'test-desk-field',
             },
@@ -45,6 +50,7 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
             component_parameters: {
                 options: [
                     {id: 'test', label: 'test'},
@@ -55,6 +61,7 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
             component_parameters: {
                 field_type: FormFieldType.number,
             },
@@ -92,6 +99,34 @@ describe('generic form', () => {
                     wrapper.update();
                     expect(wrapper.find('.sd-line-input--invalid').length).toBe(1);
                     expect(wrapper.html()).toContain(message);
+
+                    done();
+                }, 100);
+            });
+        });
+
+    getAllInputTypes()
+        .forEach((type: FormFieldType) => {
+            it(`${type} should render description`, (done) => {
+                const Component = getFormFieldComponent(type);
+
+                const wrapper = mount(
+                    <div>
+                        <Component
+                            formField={getTestFieldConfig(type)}
+                            formValues={{}}
+                            disabled={false}
+                            value={undefined}
+                            previewOutput={false}
+                            issues={[]}
+                            onChange={noop}
+                        />
+                    </div>,
+                );
+
+                setTimeout(() => { // wait for data fetching (only used by some input types)
+                    wrapper.update();
+                    expect(wrapper.html()).toContain(testDescription);
 
                     done();
                 }, 100);

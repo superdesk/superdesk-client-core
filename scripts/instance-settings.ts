@@ -1,5 +1,5 @@
 /* eslint-disable quotes, comma-dangle */
-/* tslint:disable: trailing-comma */
+/* tslint:disable: trailing-comma, max-line-length */
 
 export const getInstanceConfigSchema = (gettext) => ({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -12,6 +12,7 @@ export const getInstanceConfigSchema = (gettext) => ({
                 "editor": {
                     "properties": {
                         "version": {
+                            "description": gettext('Version 2 is deprecated.'),
                             "enum": [
                                 "2",
                                 "3"

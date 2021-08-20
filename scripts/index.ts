@@ -1,4 +1,4 @@
-import {IInstanceSettings} from 'core/core-config';
+import {IInstanceSettings} from 'core/instance-settings-interface';
 
 const instanceSettings: IInstanceSettings = {} as IInstanceSettings; // will be populated in loadInstanceSettings
 
