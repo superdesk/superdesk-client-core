@@ -39,7 +39,7 @@ function generateInstanceConfigurationSchema(mainClientDir, currentDir) {
 
     const contents =
 `/* eslint-disable quotes, comma-dangle */
-/* tslint:disable: trailing-comma, max-line-length */
+/* tslint:disable: trailing-comma max-line-length */
 
 export const getInstanceConfigSchema = (gettext) => (${schemaWithTranslations});
 `;

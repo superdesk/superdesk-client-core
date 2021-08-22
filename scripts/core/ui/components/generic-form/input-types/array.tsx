@@ -16,6 +16,7 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
 
         const items: Array<any> = this.props.value ?? [];
         const type: FormFieldType = this.props.formField.component_parameters.field_type;
+        const fieldParameters = this.props.formField.component_parameters.component_parameters;
         const FieldComponent = getFormFieldComponent(type);
 
         return (
@@ -43,6 +44,7 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
                         items.map((item, i) => {
                             const p: IFormField = {
                                 type: type,
+                                component_parameters: fieldParameters,
                                 field: i.toString(),
 
                                 /**

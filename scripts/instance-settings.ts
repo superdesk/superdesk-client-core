@@ -1,5 +1,5 @@
 /* eslint-disable quotes, comma-dangle */
-/* tslint:disable: trailing-comma, max-line-length */
+/* tslint:disable: trailing-comma max-line-length */
 
 export const getInstanceConfigSchema = (gettext) => ({
     "$schema": "http://json-schema.org/draft-07/schema#",
@@ -41,19 +41,48 @@ export const getInstanceConfigSchema = (gettext) => ({
         },
         "monitoring": {
             "properties": {
-                "stageCount": {
+                "listOfBooleans": {
                     "items": {
+                        "type": "boolean"
+                    },
+                    "type": "array"
+                },
+                "listOfNumbers": {
+                    "items": {
+                        "type": "number"
+                    },
+                    "type": "array"
+                },
+                "listOfStrings": {
+                    "items": {
+                        "type": "string"
+                    },
+                    "type": "array"
+                },
+                "listOfUnions": {
+                    "items": {
+                        "enum": [
+                            "item 1",
+                            "item 2",
+                            "item 3"
+                        ],
                         "type": "string"
                     },
                     "type": "array"
                 }
             },
             "required": [
-                "stageCount"
+                "listOfBooleans",
+                "listOfNumbers",
+                "listOfStrings",
+                "listOfUnions"
             ],
             "type": "object",
             "translations": {
-                "stageCount": gettext('stage count')
+                "listOfBooleans": gettext('list of booleans'),
+                "listOfNumbers": gettext('list of numbers'),
+                "listOfStrings": gettext('list of strings'),
+                "listOfUnions": gettext('list of unions')
             }
         }
     },

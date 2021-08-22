@@ -1,14 +1,28 @@
 import {IFormGroup} from 'superdesk-api';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
-interface IJsonSchema {
+interface ISchemaBase {
+    properties?: Dictionary<string, IJsonSchema>;
+    description?: string;
+    required?: Array<string>;
+    translations: Dictionary<string, string>;
+}
+
+interface IJsonSchemaArray extends ISchemaBase {
+    type: 'array';
+    items: {
+        type: 'string' | 'number' | 'boolean';
+        enum?: Array<string>; // only applicable for string type
+    };
+}
+
+interface IJsonSchemaOthers extends ISchemaBase {
     type: 'object' | 'boolean';
     enum?: Array<string>;
-    translations: Dictionary<string, string>;
-    required?: Array<string>;
-    description?: string;
-    properties?: Dictionary<string, IJsonSchema>;
 }
+
+type IJsonSchema = IJsonSchemaArray | IJsonSchemaOthers;
 
 export function jsonSchemaToFormConfig(
     schema: IJsonSchema,
@@ -56,8 +70,36 @@ export function jsonSchemaToFormConfig(
             form: [],
         };
 
-        // eslint-disable-next-line no-lonely-if
-        if (schema.type === 'boolean') {
+        if (schema.type === 'array') {
+            inlineItemsGroup.form.push({
+                type: FormFieldType.arrayOf,
+                field: formField,
+                description,
+                label: label,
+                required,
+                component_parameters: (() => {
+                    switch (schema.items.type) {
+                    case 'string':
+                        if (schema.items.enum != null) { // list of predefined options
+                            return {
+                                field_type: FormFieldType.select,
+                                component_parameters: {
+                                    options: schema.items.enum.map((value) => ({id: value, label: value})),
+                                },
+                            };
+                        } else { // free text input
+                            return {field_type: FormFieldType.textSingleLine};
+                        }
+                    case 'number':
+                        return {field_type: FormFieldType.number};
+                    case 'boolean':
+                        return {field_type: FormFieldType.yesNo};
+                    default:
+                        assertNever(schema.items.type);
+                    }
+                })(),
+            });
+        } else if (schema.type === 'boolean') {
             inlineItemsGroup.form.push({
                 type: FormFieldType.yesNo,
                 field: formField,

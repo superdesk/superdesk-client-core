@@ -59,7 +59,7 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
                 path: '/config',
                 payload: {
                     _id: 'instance-settings',
-                    val: unflatten(this.state.formData),
+                    val: unflatten(this.state.formData, {safe: true}), // `safe` option preserves arrays
                 },
             }).then(() => {
                 notify.success(gettext('Saved successfully'));
@@ -72,7 +72,7 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
             method: 'GET',
             path: '/config/instance-settings',
         }).then(({val}) => {
-            this.setState({formData: flatten(val)});
+            this.setState({formData: flatten(val, {safe: true})}); // `safe` option preserves arrays
         });
     }
 

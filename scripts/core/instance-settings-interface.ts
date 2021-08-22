@@ -19,6 +19,9 @@ export interface IInstanceSettings {
     };
 
     monitoring: {
-        stageCount: Array<string>;
+        listOfStrings: Array<string>;
+        listOfNumbers: Array<number>;
+        listOfBooleans: Array<boolean>;
+        listOfUnions: Array<'item 1' | 'item 2' | 'item 3'>;
     };
 }
