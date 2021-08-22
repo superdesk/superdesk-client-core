@@ -21,7 +21,7 @@ export function hasValue(fieldConfig: IFormField, value: any): boolean {
         return typeof value === 'string' && value.trim().length > 0;
 
     case FormFieldType.yesNo:
-        return value === 'true' || value === 'false';
+        return typeof value === 'boolean';
 
     case FormFieldType.select:
         return value != null && value !== '';
