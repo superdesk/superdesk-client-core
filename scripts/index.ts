@@ -8,7 +8,7 @@ function loadInstanceSettings() {
     /**
      * Instance settings must be available synchronously.
      */
-    const synchronous = false;
+    const asynchronous = false;
 
     xhr.addEventListener('load', function() {
         const res = JSON.parse(this.responseText);
@@ -16,7 +16,7 @@ function loadInstanceSettings() {
         Object.assign(instanceSettings, res.val);
     });
 
-    xhr.open('GET', `${__SUPERDESK_CONFIG__.server.url}/config/instance-settings`, synchronous);
+    xhr.open('GET', `${__SUPERDESK_CONFIG__.server.url}/config/instance-settings`, asynchronous);
 
     // TODO: it should be possible to get instance settings without having to log in
     xhr.setRequestHeader('Authorization', 'Basic NmE1YzlkYTQtZmM2Yy00MjU2LThmMTEtOGNlMWMyZGQ4NzI0Og==');
