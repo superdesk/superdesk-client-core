@@ -1,6 +1,14 @@
 import {IInstanceSettings} from 'core/instance-settings-interface';
+import {PartialDeep} from 'core/helpers/typescript-helpers';
+import {defaultsDeep} from 'lodash';
 
 const instanceSettings: IInstanceSettings = {} as IInstanceSettings; // will be populated in loadInstanceSettings
+
+const defaultInstanceSettings: PartialDeep<IInstanceSettings> = {
+    authoring: {
+        customToolbar: false,
+    },
+};
 
 function loadInstanceSettings() {
     const xhr = new XMLHttpRequest();
@@ -13,13 +21,13 @@ function loadInstanceSettings() {
     xhr.addEventListener('load', function() {
         const res = JSON.parse(this.responseText);
 
-        Object.assign(instanceSettings, res.val);
+        Object.assign(instanceSettings, defaultsDeep(res.val, defaultInstanceSettings));
     });
 
     xhr.open('GET', `${__SUPERDESK_CONFIG__.server.url}/config/instance-settings`, asynchronous);
 
     // TODO: it should be possible to get instance settings without having to log in
-    xhr.setRequestHeader('Authorization', 'Basic NmE1YzlkYTQtZmM2Yy00MjU2LThmMTEtOGNlMWMyZGQ4NzI0Og==');
+    xhr.setRequestHeader('Authorization', 'Basic OWM3OTRmN2UtZGEzYy00MzNkLWJjZGQtOTdjNWRiNjdiYjFiOg==');
 
     xhr.send();
 }
