@@ -1,14 +1,115 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {getFormFieldComponent} from '../form-field';
 import {FormFieldType} from '../interfaces/form';
-import {IFormField} from 'superdesk-api';
+import {IFormField, IFormGroup} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IconButton, Button} from 'superdesk-ui-framework/react';
 import {arrayMove} from 'core/helpers/utils';
+import {getInitialValueForFieldType} from '../get-initial-values';
+import {FormViewEdit} from '../from-group';
 
-export class ArrayField extends React.Component<IInputType<Array<string>>> {
+interface IPropsArrayFieldNestedForm {
+    formConfig: IFormGroup;
+    item: Dictionary<string, any>;
+    items: Array<Dictionary<string, any>>;
+    onChange(nextArray: Array<Dictionary<string, any>>): void;
+}
+
+class ArrayFieldNestedForm extends React.PureComponent<IPropsArrayFieldNestedForm> {
+    render() {
+        const {
+            formConfig,
+            items,
+            item,
+        } = this.props;
+
+        return (
+            <FormViewEdit
+                formConfig={formConfig}
+                item={item}
+                handleFieldChange={(field, value) => {
+                    const nextArray = [...items];
+                    const index = items.indexOf(item);
+
+                    nextArray[index] = {
+                        ...item,
+                        [field]: value,
+                    };
+
+                    this.props.onChange(nextArray);
+                }}
+                issues={{}}
+                editMode={true}
+            />
+        );
+    }
+}
+
+interface IPropsArrayFieldSingleTypeField {
+    arrayField: IFormField;
+    item: Dictionary<string, any>;
+    items: Array<Dictionary<string, any>>;
+    formValuesFromArray: any;
+    onChange(nextArray: Array<Dictionary<string, any>>): void;
+}
+
+class ArrayFieldSingleTypeField extends React.PureComponent<IPropsArrayFieldSingleTypeField> {
+    render() {
+        const {items, item, formValuesFromArray} = this.props;
+        const type: FormFieldType = this.props.arrayField.component_parameters.field_type;
+        const fieldParameters = this.props.arrayField.component_parameters.component_parameters;
+        const i = items.indexOf(item);
+
+        const formField: IFormField = {
+            type: type,
+            component_parameters: fieldParameters,
+            field: i.toString(),
+
+            /**
+             * Setting to `false` in order to avoid red stars in the UI for every item.
+             * In reality it should be always `true`, because it's being applied to array items.
+             * Array item should either be required or not be added to the array at all.
+             */
+            required: false,
+        };
+
+        const FieldComponent = getFormFieldComponent(type);
+
+        return (
+            <FieldComponent
+                formValues={formValuesFromArray}
+                formField={formField}
+                value={item}
+                disabled={false}
+                issues={[]}
+                previewOutput={false}
+                onChange={
+                    (nextValue, fieldName?: string) => {
+                        const nextArray = [...items];
+
+                        nextArray[i] = nextValue;
+
+                        this.props.onChange(nextArray);
+                    }
+                }
+            />
+        );
+    }
+}
+
+/**
+ * This field type can handle either:
+ *      an array of fields of the same type (anything in `FormFieldType`)
+ *      or an array of nested forms with the same schema, for example `Array<{firstName: string; lastName: string}>`
+ *
+ * If `props.formField.component_parameters.formConfig` is not `null`, it means it's an array of nested forms.
+ * Otherwise, it's an array of fields.
+ */
+export class ArrayField extends React.Component<IInputType<Array<any>>> {
     render() {
         if (this.props.previewOutput) {
             return <div data-test-id={`gform-output--${this.props.formField.field}`}>{this.props.value}</div>;
@@ -16,8 +117,7 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
 
         const items: Array<any> = this.props.value ?? [];
         const type: FormFieldType = this.props.formField.component_parameters.field_type;
-        const fieldParameters = this.props.formField.component_parameters.component_parameters;
-        const FieldComponent = getFormFieldComponent(type);
+        const formConfig: IFormGroup = this.props.formField.component_parameters.formConfig;
 
         return (
             <div
@@ -42,19 +142,6 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
                 <div>
                     {
                         items.map((item, i) => {
-                            const p: IFormField = {
-                                type: type,
-                                component_parameters: fieldParameters,
-                                field: i.toString(),
-
-                                /**
-                                 * Setting to `false` in order to avoid red stars in the UI for every item.
-                                 * In reality it should be always `true`, because it's being applied to array items.
-                                 * Array item should either be required or not be added to the array at all.
-                                 */
-                                required: false,
-                            };
-
                             const formValuesFromArray = items.reduce((acc, _item, index) => {
                                 acc[index] = _item;
 
@@ -125,23 +212,31 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
                                     </div>
 
                                     <div style={{flexGrow: 1, paddingLeft: 20}}>
-                                        <FieldComponent
-                                            formValues={formValuesFromArray}
-                                            formField={p}
-                                            value={item}
-                                            disabled={false}
-                                            issues={[]}
-                                            previewOutput={false}
-                                            onChange={
-                                                (nextValue, fieldName?: string) => {
-                                                    const nextArray = [...items];
+                                        {
+                                            formConfig != null
+                                                ? (
+                                                    <ArrayFieldNestedForm
+                                                        formConfig={formConfig}
+                                                        items={items}
+                                                        item={item}
+                                                        onChange={(val) => {
+                                                            this.props.onChange(val);
+                                                        }}
+                                                    />
+                                                )
+                                                : (
+                                                    <ArrayFieldSingleTypeField
+                                                        arrayField={this.props.formField}
+                                                        items={items}
+                                                        item={item}
+                                                        formValuesFromArray={formValuesFromArray}
+                                                        onChange={(val) => {
+                                                            this.props.onChange(val);
+                                                        }}
+                                                    />
+                                                )
+                                        }
 
-                                                    nextArray[i] = nextValue;
-
-                                                    this.props.onChange(nextArray);
-                                                }
-                                            }
-                                        />
                                     </div>
                                 </div>
                             );
@@ -152,7 +247,9 @@ export class ArrayField extends React.Component<IInputType<Array<string>>> {
                         <Button
                             text={gettext('Add')}
                             onClick={() => {
-                                this.props.onChange(items.concat(''));
+                                const newItem = formConfig != null ? {} : getInitialValueForFieldType(type);
+
+                                this.props.onChange(items.concat(newItem));
                             }}
                         />
                     </div>

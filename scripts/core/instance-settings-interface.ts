@@ -23,5 +23,6 @@ export interface IInstanceSettings {
         listOfNumbers: Array<number>;
         listOfBooleans: Array<boolean>;
         listOfUnions: Array<'item 1' | 'item 2' | 'item 3'>;
+        listOfObjects: Array<{firstName: string; age: number}>;
     };
 }

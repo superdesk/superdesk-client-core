@@ -2,17 +2,13 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {isIFormGroup, isIFormField, FormFieldType} from './interfaces/form';
 import {IFormField, IFormGroup} from 'superdesk-api';
 
-function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field: string]: any} {
-    const {field} = fieldConfig;
-
-    const type: FormFieldType = fieldConfig.type;
-
+export function getInitialValueForFieldType(type: FormFieldType): any {
     switch (type) {
     case FormFieldType.arrayOf:
-        return {[field]: []};
+        return [];
     case FormFieldType.textSingleLine:
     case FormFieldType.textEditor3:
-        return {[field]: ''};
+        return '';
     case FormFieldType.number:
     case FormFieldType.vocabularySingleValue:
     case FormFieldType.contentFilterSingleValue:
@@ -21,9 +17,9 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     case FormFieldType.macroSingleValue:
     case FormFieldType.yesNo:
     case FormFieldType.select:
-        return {[field]: undefined};
+        return undefined;
     case FormFieldType.checkbox:
-        return {[field]: false};
+        return false;
     default:
         assertNever(type);
     }
@@ -34,7 +30,7 @@ function getInitialValuesForForm(form: Array<IFormField | IFormGroup>): {readonl
         if (isIFormGroup(item)) {
             return getInitialValues(item);
         } else if (isIFormField(item)) {
-            return getInitialValueForFieldType(item);
+            return {[item.field]: getInitialValueForFieldType(item.type)};
         } else {
             return assertNever(item);
         }

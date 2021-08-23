@@ -2,27 +2,15 @@ import {IFormGroup} from 'superdesk-api';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {assertNever} from 'core/helpers/typescript-helpers';
 
-interface ISchemaBase {
+interface IJsonSchema {
+    type: 'string' | 'number' | 'boolean' | 'object' | 'array';
+    enum?: Array<string>;
     properties?: Dictionary<string, IJsonSchema>;
+    items?: IJsonSchema; // for arrays only
     description?: string;
     required?: Array<string>;
     translations: Dictionary<string, string>;
 }
-
-interface IJsonSchemaArray extends ISchemaBase {
-    type: 'array';
-    items: {
-        type: 'string' | 'number' | 'boolean';
-        enum?: Array<string>; // only applicable for string type
-    };
-}
-
-interface IJsonSchemaOthers extends ISchemaBase {
-    type: 'object' | 'boolean';
-    enum?: Array<string>;
-}
-
-type IJsonSchema = IJsonSchemaArray | IJsonSchemaOthers;
 
 export function jsonSchemaToFormConfig(
     schema: IJsonSchema,
@@ -46,7 +34,9 @@ export function jsonSchemaToFormConfig(
         for (const property of Object.keys(schema.properties)) {
             const configsForProperty = jsonSchemaToFormConfig(
                 schema.properties[property],
-                keys.concat(property), schema, property,
+                keys.concat(property),
+                schema,
+                property,
             );
 
             if (configsForProperty.type === 'inline') {
@@ -94,6 +84,17 @@ export function jsonSchemaToFormConfig(
                         return {field_type: FormFieldType.number};
                     case 'boolean':
                         return {field_type: FormFieldType.yesNo};
+                    case 'object':
+                        return {
+                            formConfig: jsonSchemaToFormConfig(
+                                schema.items,
+                                [],
+                                {} as any,
+                                undefined,
+                            ),
+                        };
+                    case 'array':
+                        throw new Error('Not implemented');
                     default:
                         assertNever(schema.items.type);
                     }
@@ -102,6 +103,14 @@ export function jsonSchemaToFormConfig(
         } else if (schema.type === 'boolean') {
             inlineItemsGroup.form.push({
                 type: FormFieldType.yesNo,
+                field: formField,
+                description,
+                label: label,
+                required,
+            });
+        } else if (schema.type === 'number') {
+            inlineItemsGroup.form.push({
+                type: FormFieldType.number,
                 field: formField,
                 description,
                 label: label,

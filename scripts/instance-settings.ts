@@ -53,6 +53,28 @@ export const getInstanceConfigSchema = (gettext) => ({
                     },
                     "type": "array"
                 },
+                "listOfObjects": {
+                    "items": {
+                        "properties": {
+                            "age": {
+                                "type": "number"
+                            },
+                            "firstName": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "age",
+                            "firstName"
+                        ],
+                        "type": "object",
+                        "translations": {
+                            "age": gettext('age'),
+                            "firstName": gettext('first name')
+                        }
+                    },
+                    "type": "array"
+                },
                 "listOfStrings": {
                     "items": {
                         "type": "string"
@@ -74,6 +96,7 @@ export const getInstanceConfigSchema = (gettext) => ({
             "required": [
                 "listOfBooleans",
                 "listOfNumbers",
+                "listOfObjects",
                 "listOfStrings",
                 "listOfUnions"
             ],
@@ -81,6 +104,7 @@ export const getInstanceConfigSchema = (gettext) => ({
             "translations": {
                 "listOfBooleans": gettext('list of booleans'),
                 "listOfNumbers": gettext('list of numbers'),
+                "listOfObjects": gettext('list of objects'),
                 "listOfStrings": gettext('list of strings'),
                 "listOfUnions": gettext('list of unions')
             }

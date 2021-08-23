@@ -16,7 +16,13 @@ function addTranslations(branch) {
     }, {});
 
     for (const property of Object.keys(branch.properties)) {
+        // handle nested properties
         branch.properties[property] = addTranslations(branch.properties[property]);
+
+        // handle nested properties inside arrays
+        if (branch.properties[property].items != null && branch.properties[property].items.properties != null) {
+            branch.properties[property].items = addTranslations(branch.properties[property].items);
+        }
 
         // translate description
         if (typeof branch.properties[property].description === 'string') {
