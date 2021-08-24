@@ -766,7 +766,22 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     }),
                 );
 
+                /**
+                 * Display an error message when gmail ingest fails to authenticate
+                 */
+                function windowMessageHandler(event) {
+                    const error = event?.data?.data?.error;
+
+                    if (error != null) {
+                        notify.error(error);
+                    }
+                }
+
+                window.addEventListener('message', windowMessageHandler);
+
                 $scope.$on('$destroy', () => {
+                    window.removeEventListener('message', windowMessageHandler);
+
                     eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
                         removeListener();
                     });
