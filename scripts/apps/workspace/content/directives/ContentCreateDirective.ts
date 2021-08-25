@@ -97,6 +97,8 @@ export function ContentCreateDirective(
 
                     if (action.kind !== 'upload-media' && !isArray(result)) {
                         authoringWorkspace.edit(result);
+                    } else {
+                        superdeskFlags.flags.authoring = false;
                     }
                 }).catch(() => {
                     superdeskFlags.flags.authoring = false;
