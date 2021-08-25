@@ -5,6 +5,7 @@ import {appConfig} from 'appConfig';
 import {IBaseRestApiResponse} from 'superdesk-api';
 import {authenticateIngestProvider} from './authenticate-ingest-provider';
 import {addWebsocketEventListener} from 'core/notification/notification';
+import {notify} from 'core/notify/notify';
 
 interface IFeedingServiceField {
     id?: string;
@@ -46,7 +47,7 @@ interface IProvider extends IBaseRestApiResponse {
     url_id?: string;
 }
 
-IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
+IngestSourcesContent.$inject = ['ingestSources', 'api', '$location',
     'modal', '$filter', 'privileges'];
 
 /**
@@ -65,7 +66,7 @@ IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
  *
  * @description Handles the management for Ingest Sources.
  */
-export function IngestSourcesContent(ingestSources, notify, api, $location,
+export function IngestSourcesContent(ingestSources, api, $location,
     modal, $filter, privileges) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
@@ -773,7 +774,7 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     const error = event?.data?.data?.error;
 
                     if (error != null) {
-                        notify.error(error);
+                        notify.error(error, 'manual');
                     }
                 }
 
