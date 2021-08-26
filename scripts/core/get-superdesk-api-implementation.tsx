@@ -72,6 +72,7 @@ import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
 import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
 import {notify} from './notify/notify';
 import {sdApi} from 'api';
+import {arrayToTree, treeToArray} from './helpers/tree';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -401,6 +402,8 @@ export function getSuperdeskApiImplementation(
             stripHtmlTags,
             getLinesCount,
             downloadBlob,
+            arrayToTree,
+            treeToArray,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

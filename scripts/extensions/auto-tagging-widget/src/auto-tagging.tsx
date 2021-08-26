@@ -415,28 +415,33 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 let allGrouped = OrderedMap<string, JSX.Element>();
 
-                                othersGrouped.forEach((tags, groupId) =>
-                                    tags && groupId ? allGrouped = allGrouped.set(groupId,
-                                        <ToggleBoxNext
-                                            key={groupId}
-                                            title={this.getGroupName(groupId, vocabularyLabels)}
-                                            style="circle"
-                                            isOpen={true}
-                                        >
-                                            <TagListComponent
-                                                savedTags={savedTags}
-                                                tags={tags.toMap()}
-                                                readOnly={readOnly}
-                                                onRemove={(id) => {
-                                                    this.updateTags(
-                                                        data.changes.analysis.remove(id),
-                                                        data,
-                                                    );
-                                                }}
-                                            />
-                                        </ToggleBoxNext>,
-                                    ) : false,
-                                );
+                                othersGrouped.forEach((tags, groupId) => {
+                                    if (tags != null && groupId != null) {
+                                        allGrouped = allGrouped.set(groupId,
+                                            <ToggleBoxNext
+                                                key={groupId}
+                                                title={this.getGroupName(groupId, vocabularyLabels)}
+                                                style="circle"
+                                                isOpen={true}
+                                            >
+                                                <TagListComponent
+                                                    savedTags={savedTags}
+                                                    tags={tags.toMap()}
+                                                    readOnly={readOnly}
+                                                    onRemove={(ids) => {
+                                                        this.updateTags(
+                                                            ids.reduce(
+                                                                (analysis, id) => analysis.remove(id),
+                                                                data.changes.analysis,
+                                                            ),
+                                                            data,
+                                                        );
+                                                    }}
+                                                />
+                                            </ToggleBoxNext>,
+                                        );
+                                    }
+                                });
 
                                 if (entitiesGroupedAndSorted.size > 0) {
                                     allGrouped = allGrouped.set('entities',
@@ -458,9 +463,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         savedTags={savedTags}
                                                         tags={tags.toMap()}
                                                         readOnly={readOnly}
-                                                        onRemove={(id) => {
+                                                        onRemove={(ids) => {
                                                             this.updateTags(
-                                                                data.changes.analysis.remove(id),
+                                                                ids.reduce(
+                                                                    (analysis, id) => analysis.remove(id),
+                                                                    data.changes.analysis,
+                                                                ),
                                                                 data,
                                                             );
                                                         }}

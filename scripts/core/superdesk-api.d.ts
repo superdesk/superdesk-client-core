@@ -1071,6 +1071,14 @@ declare module 'superdesk-api' {
         isUploadValid(files: Array<File>): boolean;
     }
 
+    // HELPERS
+
+    export interface ITreeNode<T> {
+        value: T;
+        parent?: ITreeNode<T>;
+        children?: Array<ITreeNode<T>>;
+    }
+
 
     // EDITOR3
 
@@ -1549,6 +1557,12 @@ declare module 'superdesk-api' {
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
             downloadBlob(data: BinaryType, mimetype: string, filename: string): void;
+            arrayToTree<T>(
+                itemsFlat: Array<T>,
+                getId: (item: T) => string,
+                getParentId: (item: T) => string | undefined | null,
+            ): Array<ITreeNode<T>>;
+            treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
