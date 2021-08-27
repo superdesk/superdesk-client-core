@@ -2,16 +2,9 @@ import {each, forEach, isNil, partition, keyBy} from 'lodash';
 import {gettext, getItemTypes} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig} from 'appConfig';
-import {IMonitoringFilter, IStage, IDesk} from 'superdesk-api';
+import {IMonitoringFilter, IStage, IDesk, IMonitoringGroup} from 'superdesk-api';
 import {getLabelForStage} from 'apps/workspace/content/constants';
 import {getExtensionSections} from '../services/CardsService';
-
-interface IMonitoringGroup {
-    _id: string;
-    type: 'stage' | string;
-    max_items?: number;
-    header?: string;
-}
 
 AggregateCtrl.$inject = ['$scope', 'desks', 'workspaces', 'preferencesService', 'storage',
     'savedSearch', 'content'];
