@@ -574,7 +574,7 @@ declare module 'superdesk-api' {
         default_incoming: boolean;
         task_status: 'todo' | 'in_progress' | 'done';
         desk_order: number;
-        desk: any;
+        desk: IDesk['_id'];
         content_expiry: number;
         is_visible: boolean;
         local_readonly: boolean;
