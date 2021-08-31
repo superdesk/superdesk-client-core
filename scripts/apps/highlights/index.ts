@@ -74,7 +74,7 @@ export default angular.module('superdesk.apps.highlights', [
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 privileges: {highlights_read: 1},
-                reloadOnSearch: true,
+                reloadOnSearch: false,
             });
 
         workspaceMenuProvider.item({

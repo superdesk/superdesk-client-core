@@ -49,13 +49,41 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
         this.updateItems = this.updateItems.bind(this);
     }
 
+    /**
+     * Items that are about to be updated need to be removed and updated items added at the same index
+     * because items use ITrackById as their ID, and ITrackById changes on every update
+     */
     public updateItems(ids: Set<string>): void {
-        const {items} = this.state;
-        const onlyLoadedIds = Array.from(ids).filter((id) => items.has(id));
+        const onlyLoadedIds = Array.from(ids).filter((id) => this.state.items.has(id));
 
-        this.props.getItemsByIds(onlyLoadedIds).then((updates) => {
+        let promise: Promise<IState<T>['items']> = Promise.resolve(this.state.items);
+
+        /**
+         * Chaining required in order to be able to apply updates one by one.
+         * Doing it one by one is required in order to be able to insert updated item at the same index.
+         * Since ITrackById changes on every update, it would otherwise be hard to determine
+         * which old item the new item is supposed to replace.
+         */
+        for (const id of Array.from(onlyLoadedIds)) {
+            promise = promise.then((items) => {
+                return this.props.getItemsByIds([id]).then((updates) => {
+                    const item = items.get(id);
+                    const index = items.toIndexedSeq().indexOf(item);
+
+                    const start = items.slice(0, index);
+                    const end = items.slice(index + 1, items.size);
+                    //                            ^ removing item at index
+
+                    const next = start.concat(updates).concat(end).toOrderedMap();
+
+                    return next;
+                });
+            });
+        }
+
+        promise.then((next) => {
             this.setState({
-                items: items.merge(updates),
+                items: next,
             });
         });
     }
