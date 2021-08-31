@@ -54,7 +54,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
      * because items use ITrackById as their ID, and ITrackById changes on every update
      */
     public updateItems(ids: Set<string>): void {
-        const onlyLoadedIds = Array.from(ids);
+        const onlyLoadedIds = Array.from(ids).filter((id) => this.state.items.has(id));
 
         let promise: Promise<IState<T>['items']> = Promise.resolve(this.state.items);
 
