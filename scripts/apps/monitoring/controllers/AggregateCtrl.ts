@@ -501,9 +501,10 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      */
     this.edit = function(currentStep, displayOnlyCurrentStep) {
         this.editGroups = {};
-        var _groups = this.groups;
 
         this.refreshGroups().then(() => {
+            var _groups = this.groups;
+
             each(_groups, (item, index) => {
                 self.editGroups[item._id] = {
                     _id: item._id,
