@@ -172,8 +172,8 @@ export function AuthoringHeaderDirective(
                 // Related Items
                 scope.missing_link = false;
                 if (scope.item.slugline && scope.item.type === 'text') {
-                    // get the midnight based on the defaultTimezone not the user timezone.
-                    var fromDateTime = moment().tz(appConfig.defaultTimezone)
+                    // get the midnight based on the default timezone not the user timezone.
+                    var fromDateTime = moment().tz(appConfig.default_timezone)
                         .format(appConfig.view.dateformat);
 
                     archiveService.getRelatedItems(scope.item, fromDateTime)

@@ -246,7 +246,13 @@ export function AuthoringDirective(
             $scope.edit = function edit() {
                 if ($scope.origItem.state === 'unpublished') {
                     api.update('archive', $scope.origItem, {state: 'in_progress'})
-                        .then((updated) => authoringWorkspace.edit(updated));
+                        .then((updated) => {
+                            // for updating and refreshing the item everywhere,
+                            // close it first and then open it.
+                            $scope.close().then(() => {
+                                authoringWorkspace.edit(updated);
+                            });
+                        });
                 } else if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {
@@ -872,6 +878,14 @@ export function AuthoringDirective(
             $scope.revert = function(version) {
                 $scope.isPreview = false;
                 helpers.forcedExtend($scope.item, version);
+
+                /**
+                 * Before restoring, a version can be previewed in read only mode.
+                 * For this to work, `_editable` is set to false.
+                 * It has to be set back to true so the story is editable after reverting.
+                 */
+                $scope._editable = true;
+
                 $scope.refreshTrigger++;
                 if ($scope.item.annotations == null) {
                     $scope.item.annotations = [];

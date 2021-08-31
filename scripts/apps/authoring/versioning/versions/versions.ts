@@ -62,7 +62,12 @@ function VersioningController($scope, authoring, desks, archiveService) {
      *
      * If the version is the last one and there is an autosave - drop autosave
      */
-    $scope.revert = function(version) {
+    $scope.revert = function(version, event) {
+        /**
+         * The button is nested in element that calls `openVersion` on click.
+         */
+        event.stopPropagation();
+
         $scope.$parent.revert(version).then(fetchVersions);
     };
 

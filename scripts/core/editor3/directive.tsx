@@ -6,7 +6,6 @@ import {Store} from 'redux';
 
 import {Editor3} from './components';
 import createEditorStore from './store';
-import {getInitialContent} from './store';
 import {getContentStateFromHtml} from './html/from-html';
 
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
@@ -18,6 +17,8 @@ import {
     CHARACTER_LIMIT_UI_PREF,
     CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
+
 /**
  * @ngdoc directive
  * @module superdesk.core.editor3
@@ -190,6 +191,8 @@ class Editor3Directive {
             );
         }
 
+        const pathValue = this.pathToValue.split(FIELD_KEY_SEPARATOR)[1];
+
         ng.get('preferencesService')
             .get()
             .then((userPreferences) => {
@@ -209,10 +212,29 @@ class Editor3Directive {
                 this.svc = {};
                 this.limitBehavior =
                     userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
-                        this.pathToValue
+                        pathValue || this.pathToValue
                     ];
 
-                const store = createEditorStore(this, ng.get('spellcheck'));
+                let store = createEditorStore(this, ng.get('spellcheck'));
+
+                const renderEditor3 = () => {
+                    const element = $element.get(0);
+
+                    ReactDOM.unmountComponentAtNode(element);
+
+                    ReactDOM.render(
+                        <Provider store={store}>
+                            <EditorStore.Provider value={store}>
+                                <Editor3
+                                    scrollContainer={this.scrollContainer}
+                                    singleLine={this.singleLine}
+                                    cleanPastedHtml={this.cleanPastedHtml}
+                                />
+                            </EditorStore.Provider>
+                        </Provider>,
+                        element,
+                    );
+                };
 
                 window.dispatchEvent(new CustomEvent('editorInitialized'));
 
@@ -240,20 +262,9 @@ class Editor3Directive {
                         return;
                     }
 
-                    const props = {
-                        item: this.item,
-                        pathToValue: this.pathToValue,
-                    };
+                    store = createEditorStore(this, ng.get('spellcheck'));
 
-                    const content = getInitialContent(props);
-                    const state = store.getState();
-                    const editorState = EditorState.push(
-                        state.editorState,
-                        content,
-                        'change-block-data',
-                    );
-
-                    store.dispatch(changeEditorState(editorState, false, true));
+                    renderEditor3();
                 });
 
                 // this is triggered from MacrosController.call
@@ -306,7 +317,7 @@ class Editor3Directive {
                         (event) => {
                             const limitBehavior =
                                 event.detail?.[CHARACTER_LIMIT_UI_PREF]?.[
-                                    this.pathToValue
+                                    pathValue || this.pathToValue
                                 ];
 
                             if (limitBehavior) {
@@ -338,22 +349,9 @@ class Editor3Directive {
                     removeListeners();
                 });
 
-                const render = () => {
-                    ReactDOM.render(
-                        <Provider store={store}>
-                            <EditorStore.Provider value={store}>
-                                <Editor3
-                                    scrollContainer={this.scrollContainer}
-                                    singleLine={this.singleLine}
-                                    cleanPastedHtml={this.cleanPastedHtml}
-                                />
-                            </EditorStore.Provider>
-                        </Provider>,
-                        $element.get(0),
-                    );
-                };
-
-                ng.waitForServicesToBeAvailable().then(render);
+                ng.waitForServicesToBeAvailable().then(() => {
+                    renderEditor3();
+                });
             });
     }
 }

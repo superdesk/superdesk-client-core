@@ -1,5 +1,5 @@
 import {each, forEach, isNil} from 'lodash';
-import {gettext} from 'core/utils';
+import {gettext, getItemTypes} from 'core/utils';
 import {SCHEDULED_OUTPUT, DESK_OUTPUT} from 'apps/desks/constants';
 import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter} from 'superdesk-api';
@@ -31,16 +31,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     this.searchLookup = {};
     this.deskLookup = {};
     this.stageLookup = {};
-    this.fileTypes = [
-        {type: 'all', label: gettext('all')},
-        {type: 'text', label: gettext('text')},
-        {type: 'picture', label: gettext('picture')},
-        {type: 'graphic', label: gettext('graphic')},
-        {type: 'composite', label: gettext('package')},
-        {type: 'highlight-pack', label: gettext('highlights package')},
-        {type: 'video', label: gettext('video')},
-        {type: 'audio', label: gettext('audio')},
-    ];
+    this.fileTypes = getItemTypes();
     this.monitoringSearch = false;
     this.searchQuery = null;
     this.isOutputType = desks.isOutputType;

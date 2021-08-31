@@ -13,10 +13,11 @@ interface IState {
     desk: string;
     filter: IFilter;
 }
+
 export interface IFilter {
-    slugline: Array<string>;
-    headline: Array<string>;
-    byline: Array<string>;
+    slugline?: Array<string>;
+    headline?: Array<string>;
+    byline?: Array<string>;
 }
 
 export class FilterPanelComponent extends React.Component<IProps, IState> {

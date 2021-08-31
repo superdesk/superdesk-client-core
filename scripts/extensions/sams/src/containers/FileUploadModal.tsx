@@ -7,7 +7,7 @@ import {superdeskApi} from '../apis';
 // UI
 import {Button, ButtonGroup} from 'superdesk-ui-framework/react';
 import {PanelContent, PanelContentBlock, PanelContentBlockInner} from '../ui';
-import {IModalSize, Modal, ModalHeader} from '../ui/modal';
+import {IModalSize, Modal, ModalHeader, ModalFooter} from '../ui/modal';
 import {GridList} from '../ui/grid/GridList';
 import {PageLayout} from './PageLayout';
 
@@ -33,7 +33,7 @@ export interface IContentPanelProps {
 }
 
 interface IProps<T> {
-    dark?: boolean;
+    theme?: 'dark-ui';
     modalSize?: IModalSize;
     multiple?: boolean;
     accept?: Array<string>;
@@ -264,7 +264,6 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
     render() {
         const {gettext} = superdeskApi.localization;
         const {ListItemComponent, RightPanelComponent} = this.props;
-        const headerButtonTheme = this.props.dark ? 'dark' : 'light';
         const currentItem = this.state.items[this.state.selectedIndex];
 
         return (
@@ -273,7 +272,7 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                 size={this.props.modalSize}
                 closeModal={this.props.closeModal}
                 closeOnEsc={true}
-                darkUI={this.props.dark}
+                theme={this.props.theme}
             >
                 <ModalHeader
                     text={this.props.title}
@@ -283,14 +282,11 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                         <Button
                             text={gettext('Close')}
                             onClick={this.props.closeModal}
-                            theme={headerButtonTheme}
-                            style="hollow"
                             disabled={this.state.submitting}
                         />
                         <Button
                             text={gettext('Add File')}
                             onClick={this.showFileUploadDialog}
-                            theme={headerButtonTheme}
                             icon="plus-sign"
                             type="sd-green"
                             disabled={this.state.submitting}
@@ -298,7 +294,6 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                         <Button
                             text={gettext('Upload')}
                             onClick={this.onSubmit}
-                            theme={headerButtonTheme}
                             type="primary"
                             disabled={this.state.submitting || this.state.items.length === 0}
                         />
@@ -307,7 +302,7 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                 <PageLayout
                     mainClassName="sd-padding--2"
                     main={(
-                        <GridList dark={this.props.dark}>
+                        <GridList>
                             {this.state.items.map((item, index) => (
                                 <ListItemComponent
                                     key={item.id}
@@ -340,14 +335,16 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                         </PanelContent>
                     )}
                 />
-                <input
-                    type="file"
-                    ref={this.fileInputNode}
-                    onChange={this.addFiles}
-                    multiple={this.props.multiple}
-                    accept={(this.props.accept ?? []).join(',')}
-                    style={{visibility: 'hidden'}}
-                />
+                <ModalFooter>
+                    <input
+                        type="file"
+                        ref={this.fileInputNode}
+                        onChange={this.addFiles}
+                        multiple={this.props.multiple}
+                        accept={(this.props.accept ?? []).join(',')}
+                        style={{visibility: 'hidden'}}
+                    />
+                </ModalFooter>
             </Modal>
         );
     }

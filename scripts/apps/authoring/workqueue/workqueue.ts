@@ -2,6 +2,8 @@ import {IArticle} from 'superdesk-api';
 import {find, each, without, keys, includes, get} from 'lodash';
 import {getGenericErrorMessage} from 'core/ui/constants';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
+import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/components/prompt-for-unsaved-changes';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 /**
  * This file is part of Superdesk.
@@ -199,21 +201,36 @@ function WorkqueueCtrl(
      * if there autosave version then open dialog to prompt the user to save.
      */
     $scope.closeItem = function(item) {
-        autosave.get(item)
-            .then((result) => confirm.reopen())
-            .then((reopen) => {
-                _reOpenItem(item);
-            }, (err) => {
-                if (angular.isDefined(err)) {
-                    // confirm dirty checking for current item just incase if it's before autosaved.
-                    if (confirm.dirty && $scope.articleInEditMode && $scope.articleInEditMode._id === item._id) {
-                        return confirm.reopen().then((reopen) => {
+        autosave.hasUnsavedChanges(item).then((hasUnsavedChanges) => {
+            if (hasUnsavedChanges) {
+                showUnsavedChangesPrompt().then(({action, closePromptFn}) => {
+                    autosave.settle(item).then(() => {
+                        switch (action) {
+                        case IUnsavedChangesAction.cancelAction:
+                            closePromptFn();
+                            break;
+
+                        case IUnsavedChangesAction.discardChanges:
+                            _closeItem(item).then(() => {
+                                closePromptFn();
+                            });
+
+                            break;
+
+                        case IUnsavedChangesAction.openItem:
                             _reOpenItem(item);
-                        });
-                    }
-                }
+                            closePromptFn();
+                            break;
+
+                        default:
+                            assertNever(action);
+                        }
+                    });
+                });
+            } else {
                 _closeItem(item);
-            });
+            }
+        });
     };
 
     function _reOpenItem(item) {
@@ -228,7 +245,7 @@ function WorkqueueCtrl(
     }
 
     function _closeItem(item) {
-        lock.unlock(item)
+        return lock.unlock(item)
             .then(() => {
                 if (authoringWorkspace.item && item._id === authoringWorkspace.item._id) {
                     authoringWorkspace.close(true);

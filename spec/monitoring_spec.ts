@@ -10,6 +10,19 @@ import {desks} from './helpers/desks';
 import {el, s, els, ECE, articleList, getFocusedElement} from '@superdesk/end-to-end-testing-helpers';
 import {nav} from './helpers/utils';
 
+function createItem(headline: string) {
+    el(['content-create']).click();
+    el(['content-create-dropdown']).element(by.buttonText('More templates...')).click();
+    el(['select-template'], by.buttonText('editor3 template')).click();
+    browser.wait(ECE.visibilityOf(element(s(['authoring']))));
+
+    el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys(headline);
+
+    browser.sleep(300); // wait for debouncing
+    el(['authoring-topbar', 'save']).click();
+    el(['authoring-topbar', 'close']).click();
+}
+
 describe('monitoring', () => {
     // Opens desk settings and configure monitoring settings for the named desk
     function setupDeskMonitoringSettings(name) {
@@ -1274,5 +1287,45 @@ xdescribe('marked for me filter in monitoring', () => {
                 ECE.textToBePresentInElement(el(['monitoring-filtering-item--Marked for me', 'badge-content']), '1'),
             );
         });
+    });
+});
+
+describe('unsaved changes', () => {
+    it('warns before spiking', () => {
+        monitoring.openMonitoring();
+
+        createItem('item 1');
+
+        monitoring.actionOnItem('Edit', 0, 0);
+
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys(' -edited-');
+
+        monitoring.actionOnItem('Spike Item', 0, 0);
+
+        browser.wait(ECE.textToBePresentInElement(el(['modal-header']), 'Save changes?'));
+    });
+
+    it('warns before closing article from open articles bar', () => {
+        monitoring.openMonitoring();
+
+        createItem('item 1');
+
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0));
+
+        monitoring.actionOnItem('Edit', 0, 0);
+
+        el(['authoring', 'field--headline'], by.css('[contenteditable]')).sendKeys(' -edited-');
+
+        browser.sleep(300); // wait for autosave
+
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 1));
+
+        el(['opened-articles-bar', 'item', 'close']).click();
+
+        browser.wait(ECE.textToBePresentInElement(el(['modal-header']), 'Save changes?'));
+
+        el(['modal-footer'], by.buttonText('Ignore')).click();
+
+        browser.wait(ECE.hasElementCount(els(['opened-articles-bar', 'item']), 0));
     });
 });

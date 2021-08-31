@@ -640,6 +640,12 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             setLanguage: '@',
             helperText: '@',
             disableEntireCategory: '@',
+
+            /**
+             * Placeholder is used in multi-editing.
+             * If items have different values, placeholder is shown instead of values.
+             */
+            placeholder: '=',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function MetaTermsDirectiveLink(scope, elem, attrs) {
@@ -1310,7 +1316,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id])),
+                    (cvs) => cvs.filter((cv) => (cv.terms.length || cv.read_only) &&
+                        (editor[cv._id] || schema[cv._id])),
                 );
         },
         /**

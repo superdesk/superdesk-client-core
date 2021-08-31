@@ -111,7 +111,7 @@ export function editorStateChangeMiddlewares(state, editorState: EditorState, co
         ...state, editorState,
     });
 
-    if (contentChanged && state.limitConfig?.ui === 'highlight') {
+    if (contentChanged && (state.limitConfig?.ui === 'highlight' || state.limitConfig?.ui === 'limit')) {
         newState = {
             ...state,
             editorState: handleOverflowHighlights(newState.editorState, state.limitConfig?.chars),

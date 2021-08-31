@@ -40,8 +40,23 @@ export function isCheckAllowed(item) {
     );
 }
 
-export function menuHolderElem() {
-    return document.getElementById('react-placeholder');
+const menuHolderEl = document.createElement('div');
+
+menuHolderEl.setAttribute('data-debug-info', 'menu holder');
+
+/**
+ * positionPopup algorithm expects these styles on a wrapper
+ */
+menuHolderEl.style['position'] = 'absolute';
+menuHolderEl.style['top'] = '0';
+menuHolderEl.style['left'] = '0';
+menuHolderEl.style['width'] = '1px';
+menuHolderEl.style['height'] = '1px';
+
+document.body.append(menuHolderEl);
+
+export function menuHolderElem(): HTMLDivElement {
+    return menuHolderEl;
 }
 
 export function closeActionsMenu(itemId?) {

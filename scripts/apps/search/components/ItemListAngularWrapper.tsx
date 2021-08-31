@@ -29,7 +29,7 @@ interface IState {
     narrow: boolean;
     view: 'compact' | 'mgrid' | 'photogrid';
     itemsList: Array<string>;
-    itemsById: any;
+    itemsById: {[key: string]: IArticle};
     relatedEntities: IRelatedEntities;
     selected: string;
     swimlane: any;
