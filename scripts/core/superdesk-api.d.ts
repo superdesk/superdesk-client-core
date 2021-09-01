@@ -539,6 +539,13 @@ declare module 'superdesk-api' {
         editor_role: string;
     }
 
+    export interface IMonitoringGroup {
+        _id: string;
+        type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+        max_items?: number;
+        header?: string;
+    }
+
     export interface IDesk extends IBaseRestApiResponse {
         name: string;
         description?: string;
@@ -547,11 +554,7 @@ declare module 'superdesk-api' {
         working_stage: IStage['_id'];
         content_expiry?: number;
         source: string;
-        monitoring_settings?: Array<{
-            _id: string;
-            type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
-            max_items: number;
-        }>;
+        monitoring_settings?: Array<IMonitoringGroup>;
         desk_type: 'authoring' | 'production';
         desk_metadata?: {[key: string]: any};
         content_profiles: {[key: IContentProfile['_id']]: any};
@@ -574,7 +577,7 @@ declare module 'superdesk-api' {
         default_incoming: boolean;
         task_status: 'todo' | 'in_progress' | 'done';
         desk_order: number;
-        desk: any;
+        desk: IDesk['_id'];
         content_expiry: number;
         is_visible: boolean;
         local_readonly: boolean;
