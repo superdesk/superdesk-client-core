@@ -1793,7 +1793,6 @@ declare module 'superdesk-api' {
         };
         apps: any;
         defaultRoute: string;
-        startingDay: any;
         features: {
             swimlane?: {
                 defaultNumberOfColumns: number;

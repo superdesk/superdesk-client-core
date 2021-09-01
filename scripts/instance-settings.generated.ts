@@ -4,6 +4,25 @@
 export const getInstanceConfigSchema = (gettext) => ({
     "$schema": "http://json-schema.org/draft-07/schema#",
     "properties": {
+        "locale": {
+            "properties": {
+                "firstDayOfWeek": {
+                    "enum": [
+                        "monday",
+                        "saturday",
+                        "sunday"
+                    ],
+                    "type": "string"
+                }
+            },
+            "required": [
+                "firstDayOfWeek"
+            ],
+            "type": "object",
+            "translations": {
+                "firstDayOfWeek": gettext('first day of week')
+            }
+        },
         "users": {
             "properties": {
                 "minutesOnline": {
@@ -21,10 +40,12 @@ export const getInstanceConfigSchema = (gettext) => ({
         }
     },
     "required": [
+        "locale",
         "users"
     ],
     "type": "object",
     "translations": {
+        "locale": gettext('locale'),
         "users": gettext('users')
     }
 });

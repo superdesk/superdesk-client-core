@@ -8,6 +8,9 @@
 // !!!
 
 export interface IInstanceSettings {
+    locale: {
+        firstDayOfWeek: 'sunday' | 'monday' | 'saturday';
+    };
     users: {
         /**
          * Time of inactivity in minutes until user is no longer considered online.
