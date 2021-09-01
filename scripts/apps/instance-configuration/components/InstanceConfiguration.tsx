@@ -11,6 +11,8 @@ import {getValidationErrors, IGenericFormValidationErrors} from 'core/ui/compone
 import {jsonSchemaToFormConfig} from './adapter';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {notify} from 'core/notify/notify';
+import {merge} from 'lodash';
+import {defaultInstanceSettings} from 'instance-settings';
 
 type IProps = {};
 
@@ -72,7 +74,7 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
             method: 'GET',
             path: '/config/instance-settings',
         }).then(({val}) => {
-            this.setState({formData: flatten(val, {safe: true})}); // `safe` option preserves arrays
+            this.setState({formData: flatten(merge(defaultInstanceSettings, val), {safe: true})}); // `safe` option preserves arrays
         });
     }
 
