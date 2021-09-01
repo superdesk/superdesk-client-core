@@ -3,6 +3,14 @@ const path = require('path');
 var execSync = require('child_process').execSync;
 var _ = require('lodash');
 
+function escapeSingleQuoteAsHtml(str) {
+    return str.replace(/'/g, '&apos;');
+}
+
+function unescapeSingleQuoteAsHtml(str) {
+    return str.replace(/&apos;/g, '\\\'');
+}
+
 function addTranslations(branch) {
     if (branch.properties == null) {
         return branch;
@@ -10,7 +18,7 @@ function addTranslations(branch) {
 
     branch.translations = Object.keys(branch.properties).reduce((acc, property) => {
         // gettext call will be unwrapped from the string later with regex
-        acc[property] = `gettext('${_.lowerCase(property)}')`;
+        acc[property] = `gettext('${_.lowerCase(escapeSingleQuoteAsHtml(property))}')`;
 
         return acc;
     }, {});
@@ -26,7 +34,7 @@ function addTranslations(branch) {
 
         // translate description
         if (typeof branch.properties[property].description === 'string') {
-            branch.properties[property].description = `gettext('${branch.properties[property].description}')`;
+            branch.properties[property].description = `gettext('${escapeSingleQuoteAsHtml(branch.properties[property].description)}')`;
         }
     }
 
@@ -44,8 +52,10 @@ function generateInstanceConfigurationSchema(mainClientDir, currentDir) {
     const generatedSchema = JSON.parse(
         execSync(`npx typescript-json-schema "${file}" IInstanceSettings --strictNullChecks --required`).toString()
     );
-    const schemaWithTranslations = JSON.stringify(addTranslations(generatedSchema), null, 4)
-        .replace(/"(gettext.+?)"/g, '$1');
+    const schemaWithTranslations = unescapeSingleQuoteAsHtml(
+        JSON.stringify(addTranslations(generatedSchema), null, 4)
+            .replace(/"(gettext.+?)"/g, '$1')
+    );
 
     const contents =
 `/* eslint-disable quotes, comma-dangle */
