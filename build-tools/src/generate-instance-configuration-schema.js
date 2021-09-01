@@ -36,7 +36,11 @@ function addTranslations(branch) {
 function generateInstanceConfigurationSchema(mainClientDir, currentDir) {
     const clientDirAbs = path.join(currentDir, mainClientDir);
     const file = path.join(clientDirAbs, 'node_modules/superdesk-core/scripts/core/instance-settings-interface.ts');
-    const configFile = path.join(currentDir, mainClientDir, 'node_modules/superdesk-core/scripts/instance-settings.ts');
+    const configFile = path.join(
+        currentDir,
+        mainClientDir,
+        'node_modules/superdesk-core/scripts/instance-settings.generated.ts'
+    );
     const generatedSchema = JSON.parse(
         execSync(`npx typescript-json-schema "${file}" IInstanceSettings --strictNullChecks --required`).toString()
     );

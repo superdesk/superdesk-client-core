@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {gettext, getUserSearchMongoQuery} from 'core/utils';
-import {appConfig} from 'appConfig';
 import {serverFormat} from 'core/datetime/datetime';
+import {instanceSettings} from 'instance-settings';
 
 UserListController.$inject = ['$scope', '$location', 'api', 'lodash', 'session', 'usersService'];
 export function UserListController($scope, $location, api, _, session, usersService) {
@@ -98,7 +98,7 @@ export function UserListController($scope, $location, api, _, session, usersServ
         switch (filter) {
         case 'online': {
             const lastActivity = moment()
-                .subtract(appConfig.userOnlineMinutes, 'minutes')
+                .subtract(instanceSettings.users.minutesOnline, 'minutes')
                 .second(0); // reset seconds to avoid re-triggering watch all the time
 
             query.last_activity_at = {$gte: serverFormat(lastActivity)};

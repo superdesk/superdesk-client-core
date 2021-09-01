@@ -4,7 +4,7 @@ import {unflatten} from 'flat';
 import {Button} from 'superdesk-ui-framework';
 
 import {gettext} from 'core/utils';
-import {getInstanceConfigSchema} from 'instance-settings';
+import {getInstanceConfigSchema} from 'instance-settings.generated';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
 import {getValidationErrors, IGenericFormValidationErrors} from 'core/ui/components/generic-form/validation';
@@ -86,13 +86,19 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
         const formConfig = jsonSchemaToFormConfig(getInstanceConfigSchema(gettext) as any, [], {} as any, undefined);
 
         return (
-            <div style={{padding: 40}}>
+            <div style={{padding: 40, maxWidth: 600}}>
 
                 <h1>{gettext('Instance configuration')}</h1>
 
-                <pre>
-                    {JSON.stringify(formData, null, 4)}
-                </pre>
+                <br />
+
+                { // for debugging only
+                    false && (
+                        <pre>
+                            {JSON.stringify(formData, null, 4)}
+                        </pre>
+                    )
+                }
 
                 <div
                     onBlur={() => {
@@ -123,6 +129,8 @@ export class InstanceConfigurationSettings extends React.PureComponent <IProps, 
                         editMode={true}
                     />
                 </div>
+
+                <br />
 
                 <div>
                     <Button

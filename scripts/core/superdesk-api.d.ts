@@ -1958,8 +1958,6 @@ declare module 'superdesk-api' {
             config: any;
         }>;
 
-        userOnlineMinutes: number;
-
         iMatricsFields: {
             entities: {
                 [key: string]: {
