@@ -259,8 +259,8 @@ describe('monitoring', () => {
         monitoring.nextReorder();
         monitoring.saveSettings();
 
-        expect(monitoring.getTextItem(0, 0)).toBe('item1');
-        expect(monitoring.getTextItem(0, 1)).toBe('item2');
+        expect(monitoring.getTextItem(6, 0)).toBe('item1');
+        expect(monitoring.getTextItem(6, 1)).toBe('item2');
 
         monitoring.showMonitoringSettings();
         monitoring.nextStages();
