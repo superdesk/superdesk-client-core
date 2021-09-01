@@ -38,7 +38,7 @@
     "@types/react-autocomplete": "1.8.5",
     "@types/react-dom": "16.8.0",
     "@types/react-redux": "7.1.9",
-    "@typescript-eslint/parser": "2.16.0",
+    "@typescript-eslint/parser": "4.30.0",
     "angular": "1.6.9",
     "angular-contenteditable": "0.3.9",
     "angular-dynamic-locale": "0.1.32",
@@ -152,7 +152,6 @@
     "react-test-renderer": "^16.13.1",
     "request": "^2.88.2",
     "superdesk-code-style": "1.5.0",
-    "typescript-eslint-parser": "^18.0.0",
     "webdriver-manager": "12.1.8"
   },
   "resolutions": {
