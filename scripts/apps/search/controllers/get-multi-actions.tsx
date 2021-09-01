@@ -289,7 +289,7 @@ export function getMultiActions(
 
         confirmQuickPublish(selectedItems).then(() => {
             Promise.all(
-                selectedItems.map((item) => new Promise((resolve) => {
+                selectedItems.map((item) => new Promise<void>((resolve) => {
                     authoring.publish(item, item)
                         .then((response) => {
                             if (response.status >= 400) {
