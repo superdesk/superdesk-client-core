@@ -17,7 +17,25 @@ function loadInstanceSettings() {
 
     xhr.open('GET', `${__SUPERDESK_CONFIG__.server.url}/config/instance-settings`, asynchronous);
 
-    xhr.send();
+    try {
+        xhr.send();
+    } catch {
+        /**
+         * Will throw an error when running unit tests
+         * because the server is not running.
+         */
+
+        const testInstanceSettings: IInstanceSettings = {
+            locale: {
+                firstDayOfWeek: 'sunday',
+            },
+            users: {
+                minutesOnline: 15,
+            },
+        };
+
+        Object.assign(instanceSettings, testInstanceSettings);
+    }
 }
 
 loadInstanceSettings();
@@ -47,6 +65,7 @@ import {IExtensionLoader, registerExtensions} from 'core/register-extensions';
 import {setupTansa} from 'apps/tansa';
 import {i18n} from 'core/utils';
 import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
+import {IInstanceSettings} from 'core/instance-settings-interface';
 
 let body = angular.element('body');
 
