@@ -29,6 +29,7 @@ import {
     Text,
 } from '../../ui';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
+import {getPreviewComponent} from './preview';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
@@ -84,6 +85,10 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
     }
 
     render() {
+        if (this.props.asset?._id == null) {
+            return null;
+        }
+
         const {gettext} = superdeskApi.localization;
         const actions: Array<IAssetCallback> =
             [{
@@ -108,10 +113,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
         }
 
         const newActions = getDropdownItemsForActions(this.props.asset!, actions);
-
-        if (this.props.asset?._id == null) {
-            return null;
-        }
+        const ContentPreview = getPreviewComponent(this.props.asset);
 
         return (
             <React.Fragment>
@@ -143,6 +145,13 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                             </Dropdown>
                         </PanelContentBlockInner>
                     </PanelContentBlock>
+                    {!ContentPreview ? null : (
+                        <PanelContentBlock flex={true}>
+                            <PanelContentBlockInner grow={true}>
+                                <ContentPreview asset={this.props.asset} />
+                            </PanelContentBlockInner>
+                        </PanelContentBlock>
+                    )}
                     <PanelContentBlock flex={true}>
                         <PanelContentBlockInner grow={true}>
                             <FormRow>
