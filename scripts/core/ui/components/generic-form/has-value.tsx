@@ -30,7 +30,7 @@ export function hasValue(fieldConfig: IFormField, value: any): boolean {
         return value === true || value === false;
 
     case FormFieldType.number:
-        return typeof value === 'number';
+        return typeof value === 'number' && !isNaN(value);
 
     case FormFieldType.arrayOf:
         return Array.isArray(value) && value.length > 0;

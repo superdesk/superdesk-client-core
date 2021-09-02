@@ -28,7 +28,9 @@ export class NumberField extends React.Component<IInputType<number>> {
                     type="number"
                     disabled={this.props.disabled}
                     value={valueWithDefaultValue}
-                    onChange={(event) => this.props.onChange(parseInt(event.target.value, 10))}
+                    onChange={(event) => {
+                        this.props.onChange(event.target.value === '' ? null : parseInt(event.target.value, 10));
+                    }}
                     className="sd-line-input__input"
                     data-test-id={`gform-input--${this.props.formField.field}`}
                 />
