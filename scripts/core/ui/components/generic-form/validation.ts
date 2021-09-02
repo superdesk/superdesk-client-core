@@ -1,7 +1,6 @@
 import {IFormGroup} from 'superdesk-api';
 import {getFormFieldsFlat} from './get-form-fields-flat';
-import {hasValue} from './has-value';
-import {gettext} from 'core/utils';
+import {getValidationErrorsForFieldValue} from './get-validation-errors-for-field-value';
 
 export type IGenericFormValidationErrors = {[field: string]: Array<string>};
 
@@ -10,17 +9,16 @@ export function getValidationErrors(
     item: Dictionary<string, any>,
 ): IGenericFormValidationErrors {
     const fieldsFlat = getFormFieldsFlat(formConfig);
-    const notFilled = fieldsFlat.filter(
-        (fieldConfig) => fieldConfig.required && !hasValue(fieldConfig, item[fieldConfig.field]),
-    );
 
-    if (notFilled.length > 0) {
-        return notFilled.reduce<IGenericFormValidationErrors>((acc, fieldConfig) => {
-            acc[fieldConfig.field] = [gettext('Field is required')];
+    const errorsForFields = fieldsFlat
+        .map((fieldConfig) => ({fieldConfig: fieldConfig, errors: getValidationErrorsForFieldValue(fieldConfig, item[fieldConfig.field])}))
+        .filter(({errors}) => errors.length > 0)
+        .reduce<IGenericFormValidationErrors>((acc, {fieldConfig, errors}) => {
+            acc[fieldConfig.field] = errors;
 
             return acc;
         }, {});
-    } else {
-        return {};
-    }
+
+
+    return errorsForFields;
 }
