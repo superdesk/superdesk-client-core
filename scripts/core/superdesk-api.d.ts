@@ -91,7 +91,7 @@ declare module 'superdesk-api' {
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
-            customFieldTypes?: Array<ICustomFieldType<unknown, unknown>>;
+            customFieldTypes?: Array<ICustomFieldType<any, any>>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;
@@ -1481,7 +1481,7 @@ declare module 'superdesk-api' {
         getMediaId(attachment: IAttachment): IMedia['_id'];
     }
 
-    export type ISuperdesk = DeepReadonly<{
+    export type ISuperdesk = {
         dataApi: IDataApi,
         dataApiByEntity: {
             article: {
@@ -1494,7 +1494,14 @@ declare module 'superdesk-api' {
             articleInEditMode?: IArticle['_id'];
         };
         instance: {
-            config: ISuperdeskGlobalConfig
+            /**
+             * Options in config are being moved to settings.
+             * Until it's finished, config has to be used for options
+             * not available in settings.
+             */
+
+            config: ISuperdeskGlobalConfig;
+            settings: IInstanceSettings;
         };
 
         /** Retrieves configuration options passed when registering an extension. */
@@ -1730,7 +1737,7 @@ declare module 'superdesk-api' {
         addEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
         removeEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
         dispatchEvent<T extends keyof IEvents>(eventName: T, payload: IEvents[T]): void;
-    }>;
+    };
 
     export interface IAuthorsFieldOptions {
         displayField: keyof IUser;
@@ -1745,6 +1752,39 @@ declare module 'superdesk-api' {
         };
 
 
+    // INSTANCE SETTINGS
+
+
+    // !!!
+    //
+    // Block comments (starting with a forward slash and star)
+    // in this typescript interface will be outputted to user interface.
+    //
+    // Multiple single line comments(like this line) won't be outputted.
+    //
+    // !!!
+    //
+    // `npx @superdesk/build-tools generate-instance-configuration-schema ./`
+    // ^ this command has to be run every time this interface is changed
+    // to re-generate JSON schema (scripts/instance-settings.generated.ts)
+    //
+    export interface IInstanceSettings {
+        locale: {
+            firstDayOfWeek: 'sunday' | 'monday' | 'saturday';
+        };
+
+        users: {
+            /**
+             * Time of inactivity in minutes until user is no longer considered online.
+             */
+            minutesOnline: number;
+        };
+    }
+
+
+    /**
+     * New options should be added to {@link IInstanceSettings}
+     */
     export interface ISuperdeskGlobalConfig {
         // FROM SERVER
         default_language: string;

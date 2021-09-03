@@ -1,4 +1,4 @@
-import {IInstanceSettings} from 'core/instance-settings-interface';
+import {IInstanceSettings} from 'superdesk-api';
 import {PartialDeep} from 'core/helpers/typescript-helpers';
 
 export const defaultInstanceSettings: PartialDeep<IInstanceSettings> = {

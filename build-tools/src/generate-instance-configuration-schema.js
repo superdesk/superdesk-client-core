@@ -43,7 +43,7 @@ function addTranslations(branch) {
 
 function generateInstanceConfigurationSchema(mainClientDir, currentDir) {
     const clientDirAbs = path.join(currentDir, mainClientDir);
-    const file = path.join(clientDirAbs, 'node_modules/superdesk-core/scripts/core/instance-settings-interface.ts');
+    const file = path.join(clientDirAbs, 'node_modules/superdesk-core/scripts/core/superdesk-api.d.ts');
     const configFile = path.join(
         currentDir,
         mainClientDir,

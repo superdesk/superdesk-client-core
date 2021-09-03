@@ -78,6 +78,7 @@ import {WithLiveQuery} from './with-live-query';
 import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
+import {instanceSettings} from 'instance-settings';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -284,6 +285,7 @@ export function getSuperdeskApiImplementation(
         state: applicationState,
         instance: {
             config,
+            settings: instanceSettings,
         },
         ui: {
             article: {
