@@ -1015,7 +1015,7 @@ export function AuthoringDirective(
             };
 
             $scope.sendToNextStage = function() {
-                var currentDeskId = desks.getCurrentDeskId();
+                var currentDeskId = $scope.item.task.desk;
 
                 if (currentDeskId == null) {
                     throw new Error('currentDeskId is null');
