@@ -17,6 +17,7 @@ import {
     IArticleQuery,
     IArticle,
     IResourceChange,
+    Dictionary,
 } from 'superdesk-api';
 import {DataProvider} from './data-provider';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';

@@ -1,16 +1,19 @@
-/* tslint:disable */
+/* eslint-disable no-multiple-empty-lines */
 
 declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 
-    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {};
+    type Dictionary<K, V> = {[key: string]: V};
+
+    // tslint:disable-next-line:interface-name
+    export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {}
 
     export type DeepReadonlyObject<T> = {
         readonly [P in keyof T]: DeepReadonly<T[P]>;
     }
 
     export type DeepReadonly<T> =
-        T extends Function
+        T extends (...args: any) => any
             ? T
             : T extends Array<infer U>
                 ? DeepReadonlyArray<U>
@@ -24,7 +27,7 @@ declare module 'superdesk-api' {
     // EXTENSIONS
 
     export type onSpikeMiddlewareResult = {warnings?: Array<{text: string}>};
-    export type onPublishMiddlewareResult= {warnings?: Array<{text: string}>};
+    export type onPublishMiddlewareResult = {warnings?: Array<{text: string}>};
 
     /**
      * float number 0 < x < 1. Larger the number, closer the component will be rendered to its side.
@@ -88,7 +91,7 @@ declare module 'superdesk-api' {
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
-            customFieldTypes?: Array<ICustomFieldType>;
+            customFieldTypes?: Array<ICustomFieldType<unknown, unknown>>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;
@@ -108,7 +111,7 @@ declare module 'superdesk-api' {
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
-            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
+            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps<unknown>>>;
             authoring?: {
                 /**
                  * Updates can be intercepted and modified. Return value will be used to compute a patch.
@@ -148,7 +151,7 @@ declare module 'superdesk-api' {
 
     export interface IExtensionModule {
         default: IExtension;
-    };
+    }
 
     export type IExtensions = {[key: string]: IExtensionObject};
 
@@ -163,7 +166,7 @@ declare module 'superdesk-api' {
 
     export interface IAuthor {
         // !!! _id is optional. It will not be present in ingested items.
-        _id?: Array<string, string>; // user id, role
+        _id?: [string, string]; // user id, role
 
         name: string;
         scheme: any | null;
@@ -270,7 +273,27 @@ declare module 'superdesk-api' {
 
         // video id, set when item is stored in video server
         video_editor_id?: string;
-    };
+    }
+
+    /** Original binary uploaded by user. */
+    type IRenditionOriginal = 'original';
+
+    /**
+     * Image rendition up to 220x120, used in lists.
+     *
+     * Could be bigger picture for video items, it's used as poster there.
+     */
+    type IRenditionThumbnail = 'thumbnail';
+
+    /** Image rendition up to 640x640, used in preview/grid view. */
+    type IRenditionViewImage = 'viewImage';
+
+    /** Image rendition up to 1400x1400, used for full screen preview. */
+    type IRenditionBaseImage = 'baseImage';
+
+    type IRenditionType = IRenditionOriginal | IRenditionThumbnail | IRenditionViewImage | IRenditionBaseImage | string;
+
+
 
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
@@ -449,23 +472,10 @@ declare module 'superdesk-api' {
          * it will use **thumbnail** for both.
          */
         renditions?: {
-            /** Original binary uploaded by user. */
-            original?: IRendition;
-
             /**
-             * Image rendition up to 220x120, used in lists.
-             *
-             * Could be bigger picture for video items, it's used as poster there.
-             */
-            thumbnail?: IRendition;
-
-            /** Image rendition up to 640x640, used in preview/grid view. */
-            viewImage?: IRendition;
-
-            /** Image rendition up to 1400x1400, used for full screen preview. */
-            baseImage?: IRendition;
-
-            /** Other renditions, could be custom, video, audio etc. */
+             * An index signature can't be a type alias.
+             * key should be {@link IRenditionType}
+            */
             [key: string]: IRendition;
         };
 
@@ -498,10 +508,6 @@ declare module 'superdesk-api' {
         };
         _autosave?: any;
         _locked?: boolean;
-
-        attachments?: Array<{
-            attachment: string;
-        }>;
     }
 
     export interface IDangerousArticlePatchingOptions {
@@ -554,7 +560,15 @@ declare module 'superdesk-api' {
         }>;
         desk_type: 'authoring' | 'production';
         desk_metadata?: {[key: string]: any};
-        content_profiles: {[key: IContentProfile['_id']]: any};
+
+        /**
+         * An index signature can't be a type alias.
+         * key should be {@link IContentProfile['_id']}
+        */
+        content_profiles: {
+            [key: string]: any;
+        };
+
         desk_language?: string;
         monitoring_default_view?: 'list' | 'swimlane' | 'photogrid';
         default_content_profile: string;
@@ -687,7 +701,7 @@ declare module 'superdesk-api' {
         _id: string;
         label: string;
         description: string;
-        schema: Object;
+        schema: object;
         editor: IContentProfileEditorConfig;
         widgets_config: Array<{widget_id: string; is_displayed: boolean}>;
         priority: number;
@@ -719,7 +733,7 @@ declare module 'superdesk-api' {
 
     // PAGE
 
-    export type IPage = DeepReadonly<{
+    export type IPage = Readonly<{
         title: string;
         url: string;
         component: React.ComponentType;
@@ -1183,7 +1197,7 @@ declare module 'superdesk-api' {
 
     type IRequestFactory = () => IDataRequestParams;
 
-    type IResponseHandler = (res: IRestApiResponse<T>) => any;
+    type IResponseHandler = <T>(res: IRestApiResponse<T>) => any;
 
     export interface IDataProvider {
         update: () => void;
@@ -1315,8 +1329,9 @@ declare module 'superdesk-api' {
 
     export interface IElasticTermsQuery {
         terms: {
-            [field: string]: IElasticTermsQuery['value'];
-            boost?: IElasticTermsQuery['boost'];
+            [field: string]: {
+                terms: {[field: string]: any};
+            } | any;
         };
     }
 
@@ -1444,13 +1459,13 @@ declare module 'superdesk-api' {
 
     // Copied from 'superdesk-ui-framework/react/components/DatePicker.tsx
     // Otherwise we have to import it here, which causes issues with extensions
-    export interface DatePickerLocaleSettings {
+    export interface IDatePickerLocaleSettings {
         firstDayOfWeek?: number;
-        dayNames: string[];
-        dayNamesShort: string[];
-        dayNamesMin: string[];
-        monthNames: string[];
-        monthNamesShort: string[];
+        dayNames: Array<string>;
+        dayNamesShort: Array<string>;
+        dayNamesMin: Array<string>;
+        monthNames: Array<string>;
+        monthNamesShort: Array<string>;
     }
 
     // APPLICATION API
@@ -1509,7 +1524,7 @@ declare module 'superdesk-api' {
                 error(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
             },
             framework: {
-                getLocaleForDatePicker(targetLocale?: string): DatePickerLocaleSettings;
+                getLocaleForDatePicker(targetLocale?: string): IDatePickerLocaleSettings;
             };
         };
         entities: {
@@ -1595,7 +1610,7 @@ declare module 'superdesk-api' {
         forms: {
             FormFieldType: typeof FormFieldType;
             generateFilterForServer(type: FormFieldType, value: any): any;
-            isIFormGroupCollapsible(x: "inline" | IFormGroupCollapsible): x is IFormGroupCollapsible;
+            isIFormGroupCollapsible(x: 'inline' | IFormGroupCollapsible): x is IFormGroupCollapsible;
             isIFormGroup(x: IFormGroup | IFormField): x is IFormGroup;
             isIFormField(x: IFormGroup | IFormField): x is IFormField;
             getFormFieldPreviewComponent(
@@ -1603,7 +1618,7 @@ declare module 'superdesk-api' {
                     readonly [key: string]: any;
                 },
                 formFieldConfig: any,
-                options: {showAsPlainText?: boolean} = {}
+                options?: {showAsPlainText?: boolean},
             ): JSX.Element;
         };
         localization: {
@@ -1615,8 +1630,8 @@ declare module 'superdesk-api' {
             getRelativeOrAbsoluteDateTime(
                 datetimeString: string,
                 format: string,
-                relativeDuration: number = 1,
-                relativeUnit: string = 'days'
+                relativeDuration?: number, // default 1
+                relativeUnit?: string, // default 'days'
             ): string;
         };
         privileges: {
@@ -1633,8 +1648,8 @@ declare module 'superdesk-api' {
         session: {
             getToken(): string;
             getCurrentUser(): Promise<IUser>;
-            getSessionId(): String;
-            getCurrentUserId(): String;
+            getSessionId(): string;
+            getCurrentUserId(): string;
         };
         browser: {
             location: {
@@ -1677,7 +1692,10 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
-            memoize<T extends ICallable>(func: T, maxCacheEntryCount = 1): T;
+            memoize<T extends ICallable>(
+                func: T,
+                maxCacheEntryCount?: number, // default 1
+            ): T;
             generatePatch<T>(a: Partial<T>, b: Partial<T>): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
@@ -1689,9 +1707,9 @@ declare module 'superdesk-api' {
              * it then invokes the handler function with all stored values.
              */
             throttleAndCombineArray<T>(
-                fn: IHandler<Array<T>>,
+                fn: IThrottleAndCombineHandlerFn<Array<T>>,
                 wait: number,
-                options?: ThrottleSettings,
+                options?: IThrottleSettings,
             );
 
             querySelectorParent(
@@ -1706,8 +1724,8 @@ declare module 'superdesk-api' {
             eventName: T,
             handler: (event: T extends keyof IPublicWebsocketMessages
                 ? CustomEvent<IPublicWebsocketMessages[T]>
-                : CustomEvent<IWebsocketMessage<any>>
-            ) => void
+                : CustomEvent<IWebsocketMessage<any>>,
+            ) => void,
         ): () => void; // returns a function to remove event listener
         addEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
         removeEventListener<T extends keyof IEvents>(eventName: T, fn: (arg: IEvents[T]) => void): void;
@@ -2012,13 +2030,13 @@ declare module 'superdesk-api' {
         onChange(config: IConfig): void;
     }
 
-    export interface ICustomFieldType<IConfig> {
+    export interface ICustomFieldType<IValue, IConfig> {
         id: string;
         label: string;
-        editorComponent: React.ComponentType<IEditorComponentProps<IConfig>>;
+        editorComponent: React.ComponentType<IEditorComponentProps<IValue, IConfig>>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
-        templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
+        templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IValue, IConfig>>;
     }
 
 
@@ -2076,4 +2094,13 @@ declare module 'superdesk-api' {
         translations?: {};
         altids?: {[key: string]: string};
     }
+
+    // UTILITIES
+
+    export interface IThrottleSettings {
+        leading?: boolean;
+        trailing?: boolean;
+    }
+
+    export type IThrottleAndCombineHandlerFn<T> = (items: T) => void;
 }

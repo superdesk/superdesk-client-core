@@ -1,4 +1,4 @@
-import {IFormGroup} from 'superdesk-api';
+import {Dictionary, IFormGroup} from 'superdesk-api';
 import {getFormFieldsFlat} from './get-form-fields-flat';
 import {getValidationErrorsForFieldValue} from './get-validation-errors-for-field-value';
 

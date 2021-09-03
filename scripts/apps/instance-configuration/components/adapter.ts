@@ -1,4 +1,4 @@
-import {IFormGroup} from 'superdesk-api';
+import {Dictionary, IFormGroup} from 'superdesk-api';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {assertNever} from 'core/helpers/typescript-helpers';
 

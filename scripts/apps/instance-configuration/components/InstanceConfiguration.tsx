@@ -6,7 +6,7 @@ import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {getInstanceConfigSchema} from 'instance-settings.generated';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
-import {IFormGroup} from 'superdesk-api';
+import {Dictionary, IFormGroup} from 'superdesk-api';
 import {getValidationErrors, IGenericFormValidationErrors} from 'core/ui/components/generic-form/validation';
 import {jsonSchemaToFormConfig} from './adapter';
 import {httpRequestJsonLocal} from 'core/helpers/network';

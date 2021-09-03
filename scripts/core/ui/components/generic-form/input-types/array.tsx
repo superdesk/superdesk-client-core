@@ -5,7 +5,7 @@ import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 import {getFormFieldComponent} from '../form-field';
 import {FormFieldType} from '../interfaces/form';
-import {IFormField, IFormGroup} from 'superdesk-api';
+import {Dictionary, IFormField, IFormGroup} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IconButton, Button} from 'superdesk-ui-framework/react';
 import {arrayMove} from 'core/helpers/utils';

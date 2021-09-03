@@ -7,6 +7,7 @@ import {
     IEvents,
     IStage,
     IUser,
+    Dictionary,
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
