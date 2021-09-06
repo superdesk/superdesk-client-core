@@ -317,6 +317,13 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         if (self.loading) {
             return null;
         }
+
+        /**
+         * When a new stage is added, it should appear in the list of desk stages
+         * in monitoring settings.
+         */
+        this.deskStages = desks.deskStages;
+
         return self.readSettings()
             .then((settings) => {
                 initGroups(settings);
