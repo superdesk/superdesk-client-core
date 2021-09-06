@@ -1196,6 +1196,11 @@ declare module 'superdesk-api' {
         } | true;
     }
 
+    export interface IAbortablePromise<T> {
+        response: Promise<T>;
+        abort(): void;
+    }
+
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
         create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
@@ -1209,6 +1214,7 @@ declare module 'superdesk-api' {
         ): Promise<IRestApiResponse<T>>;
         queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
         queryRaw<T>(endpoint, params?: Dictionary<string, any>): Promise<Response>;
+        abortableQueryRaw(endpoint, params?: Dictionary<string, any>): IAbortablePromise<Response>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
@@ -1477,7 +1483,7 @@ declare module 'superdesk-api' {
             articleInEditMode?: IArticle['_id'];
         };
         instance: {
-            config: ISuperdeskGlobalConfig
+            config: ISuperdeskGlobalConfig;
         };
 
         /** Retrieves configuration options passed when registering an extension. */
@@ -1971,6 +1977,17 @@ declare module 'superdesk-api' {
                     order: number;
                 };
             }
+        };
+
+        media: {
+            renditions: {
+                [media_type: string]: {
+                    [rendition_name: string]: {
+                        width: number;
+                        height: number;
+                    };
+                };
+            };
         };
     }
 

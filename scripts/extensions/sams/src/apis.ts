@@ -21,6 +21,7 @@ import {
     unlockAsset,
     searchTags,
 } from './api/assets';
+import {getAssetRendition} from './api/images';
 import {getDesksSamsSettings, getSingleDeskSamsSettings, updateSetsAllowedDesks} from './api/workspace';
 
 // will be set asynchronously on SAMS extension start
@@ -55,6 +56,9 @@ export const samsApi: ISamsAPI = {
         lockAsset: lockAsset,
         unlockAsset: unlockAsset,
         searchTags: searchTags,
+        images: {
+            getRendition: getAssetRendition,
+        },
     },
     workspace: {
         getDesksSamsSettings: getDesksSamsSettings,
