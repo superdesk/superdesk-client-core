@@ -7,6 +7,7 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {confirmQuickPublish} from '../services/quick-publish-modal';
 
 SendItem.$inject = [
     '$q',
@@ -119,6 +120,10 @@ export function SendItem($q,
             scope.metadata = metadata.values;
 
             scope.publish = function() {
+                confirmQuickPublish([scope.item]).then(publishButtonAction);
+            };
+
+            function publishButtonAction() {
                 scope.loading = true;
                 var result = scope._publish();
 
@@ -128,7 +133,7 @@ export function SendItem($q,
                     .finally(() => {
                         scope.loading = false;
                     });
-            };
+            }
 
             function activateConfig(_config, oldConfig) {
                 if (scope.mode !== 'authoring' && _config !== oldConfig) {
