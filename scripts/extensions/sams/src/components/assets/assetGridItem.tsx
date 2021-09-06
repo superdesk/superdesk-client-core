@@ -6,13 +6,14 @@ import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {/* Checkbox, */ Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
+import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
 import {GridItem} from '../../ui/grid/GridItem';
 import {GridItemFooter} from '../../ui/grid/GridItemFooter';
 import {GridItemFooterBlock} from '../../ui/grid/GridItemFooterBlock';
 import {GridItemThumb} from '../../ui/grid/GritItemThumb';
 import {GridItemContent} from '../../ui/grid/GridItemContent';
 import {GridItemProgressCircle} from '../../ui/grid/GridItemProgressCircle';
+import {getThumbnailComponent} from './list';
 
 // Utils
 import {
@@ -24,6 +25,7 @@ import {getDropdownItemsForActions, getMimetypeHumanReadable, isAssetLocked} fro
 
 interface IProps {
     asset: Partial<IAssetItem>;
+    file?: File;
     onClick(asset: Partial<IAssetItem>): void;
     onDoubleClick?(asset: Partial<IAssetItem>): void;
     remove?(): void;
@@ -89,6 +91,7 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         );
         const actions = getDropdownItemsForActions(this.props.asset, this.props.actions);
         const mimetype = getMimetypeHumanReadable(this.props.asset.mimetype);
+        const ContentThumbnail = getThumbnailComponent(this.props.asset);
 
         return (
             <GridItem
@@ -98,13 +101,18 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                 locked={isAssetLocked(this.props.asset)}
             >
                 <GridItemThumb
-                    uploading={true}
                     remove={this.props.remove && this.onRemove}
-                    icon={typeIcon}
+                    icon={ContentThumbnail != null ? undefined : typeIcon}
                     selected={this.props.itemSelected}
                     toggleSelected={this.props.toggleSelected && this.toggleSelected}
                     onCheckboxClick={this.onCheckboxClick}
                 >
+                    {ContentThumbnail == null ? null : (
+                        <ContentThumbnail
+                            asset={this.props.asset}
+                            file={this.props.file}
+                        />
+                    )}
                     {this.props.uploadProgress && (
                         <GridItemProgressCircle
                             value={this.props.uploadProgress ?? 0}

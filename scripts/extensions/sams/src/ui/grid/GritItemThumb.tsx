@@ -6,7 +6,7 @@ interface IProps {
     children: React.ReactNode;
     uploading?: boolean;
     remove?(event: React.MouseEvent<HTMLAnchorElement>): void;
-    icon: string;
+    icon?: string;
     selected?: boolean;
     toggleSelected?(): void;
     onCheckboxClick?(e: React.MouseEvent<HTMLDivElement>): void;
@@ -30,9 +30,11 @@ export class GridItemThumb extends React.PureComponent<IProps> {
 
         return (
             <div className={classes}>
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                    <i className={`icon--2x icon-${this.props.icon}`} />
-                </div>
+                {!this.props.icon ? null : (
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <i className={`icon--2x icon-${this.props.icon}`} />
+                    </div>
+                )}
                 {this.props.remove && (
                     <a className="icn-btn sd-grid-item__remove" onClick={this.props.remove}>
                         <i className="icon-close-small" />

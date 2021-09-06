@@ -10,7 +10,7 @@
 
 import _ from 'lodash';
 import {gettext} from 'core/utils';
-import {IEvents, IPublicWebsocketMessages} from 'superdesk-api';
+import {IPublicWebsocketMessages, IWebsocketMessage} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 
 // implementing interface to be able to get keys at runtime
@@ -21,14 +21,36 @@ const publicWebsocketMessageNames: IPublicWebsocketMessages = {
     'resource:deleted': undefined,
 };
 
+// implementing interface to be able to get keys at runtime
+const internalWebsocketMessageNames: IInternalWebsocketMessages = {
+    'item:spike': undefined,
+    'item:unspike': undefined,
+    'item:highlights': undefined,
+    'item:publish': undefined,
+};
+
 export const getWebsocketMessageEventName = (
     eventName: string,
     extensionName?: string,
 ) => 'websocket-event--' + eventName + (extensionName == null ? '' : '--' + extensionName);
 
+export const getInternalWebsocketMessageEventName = (eventName: string) =>
+    'websocket-event-internal--' + eventName;
+
 // can also be private, meaning it could only be accessed in extension the event is addressed to.
 export function isWebsocketEventPublic(eventName: string) {
     return Object.keys(publicWebsocketMessageNames).includes(eventName);
+}
+
+export function isWebsocketEventInternal(eventName: string) {
+    return Object.keys(internalWebsocketMessageNames).includes(eventName);
+}
+
+interface IInternalWebsocketMessages { // not exposed to client API
+    'item:spike': IWebsocketMessage<never>;
+    'item:unspike': IWebsocketMessage<never>;
+    'item:highlights': IWebsocketMessage<{item_id?: string; mark_id?: string; marked: number}>;
+    'item:publish': IWebsocketMessage<any>;
 }
 
 export function addWebsocketEventListener<T extends keyof IPublicWebsocketMessages>(
@@ -36,6 +58,18 @@ export function addWebsocketEventListener<T extends keyof IPublicWebsocketMessag
     handler: (message: IPublicWebsocketMessages[T]) => void,
 ): () => void {
     const eventName = getWebsocketMessageEventName(event);
+    const _handler = (e: CustomEvent) => handler(e.detail);
+
+    window.addEventListener(eventName, _handler);
+
+    return () => window.removeEventListener(eventName, _handler);
+}
+
+export function addInternalWebsocketEventListener<T extends keyof IInternalWebsocketMessages>(
+    event: T,
+    handler: (message: IInternalWebsocketMessages[T]) => void,
+): () => void {
+    const eventName = getInternalWebsocketMessageEventName(event);
     const _handler = (e: CustomEvent) => handler(e.detail);
 
     window.addEventListener(eventName, _handler);
@@ -103,6 +137,15 @@ function WebSocketProxy($rootScope, $interval, session, SESSION_EVENTS) {
                                 msg.event,
                                 isWebsocketEventPublic(msg.event) ? undefined : msg.extra.extension,
                             ),
+                            {detail: msg},
+                        ),
+                    );
+                }
+
+                if (isWebsocketEventInternal(msg.event)) {
+                    window.dispatchEvent(
+                        new CustomEvent(
+                            getInternalWebsocketMessageEventName(msg.event),
                             {detail: msg},
                         ),
                     );

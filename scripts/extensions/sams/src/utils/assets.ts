@@ -199,3 +199,7 @@ export function convertTagSearchResultToAssetTags(response: IAutoTaggingSearchRe
     });
     return tags;
 }
+
+export function isImageAsset(asset: Partial<IAssetItem>): boolean {
+    return asset.mimetype?.startsWith('image/') ?? false;
+}

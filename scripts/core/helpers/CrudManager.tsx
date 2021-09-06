@@ -22,6 +22,7 @@ import {
 import {DataProvider} from './data-provider';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
+import {ignoreAbortError} from '../SuperdeskReactComponent';
 
 export function queryElastic(
     parameters: IQueryElasticParameters,
@@ -286,6 +287,19 @@ export const dataApi: IDataApi = {
             path: '/' + endpoint,
             urlParams: params,
         });
+    },
+    abortableQueryRaw: (endpoint, params?: Dictionary<string, any>) => {
+        const abortController = new AbortController();
+
+        return {
+            response: ignoreAbortError(httpRequestRawLocal({
+                method: 'GET',
+                path: '/' + endpoint,
+                urlParams: params,
+                abortSignal: abortController.signal,
+            })),
+            abort: () => abortController.abort(),
+        };
     },
     patch: (endpoint, item1, item2) => {
         const patch = generatePatch(item1, item2);

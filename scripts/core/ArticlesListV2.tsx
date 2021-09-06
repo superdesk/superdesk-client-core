@@ -80,6 +80,7 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         this.fetchRelatedEntities = this.fetchRelatedEntities.bind(this);
         this.loadMore = this.loadMore.bind(this);
         this.getItemsByIds = this.getItemsByIds.bind(this);
+        this.reloadList = this.reloadList.bind(this);
 
         this.handleContentChanges = throttleAndCombineArray(
             (changes) => {
@@ -135,6 +136,10 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
         };
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+    }
+
+    public reloadList() {
+        this.lazyLoaderRef?.reset();
     }
 
     fetchRelatedEntities(items: OrderedMap<ITrackById, IArticle>): Promise<OrderedMap<ITrackById, IArticle>> {

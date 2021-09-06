@@ -545,6 +545,13 @@ declare module 'superdesk-api' {
         editor_role: string;
     }
 
+    export interface IMonitoringGroup {
+        _id: string;
+        type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+        max_items?: number;
+        header?: string;
+    }
+
     export interface IDesk extends IBaseRestApiResponse {
         name: string;
         description?: string;
@@ -553,11 +560,7 @@ declare module 'superdesk-api' {
         working_stage: IStage['_id'];
         content_expiry?: number;
         source: string;
-        monitoring_settings?: Array<{
-            _id: string;
-            type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
-            max_items: number;
-        }>;
+        monitoring_settings?: Array<IMonitoringGroup>;
         desk_type: 'authoring' | 'production';
         desk_metadata?: {[key: string]: any};
 
@@ -588,7 +591,7 @@ declare module 'superdesk-api' {
         default_incoming: boolean;
         task_status: 'todo' | 'in_progress' | 'done';
         desk_order: number;
-        desk: any;
+        desk: IDesk['_id'];
         content_expiry: number;
         is_visible: boolean;
         local_readonly: boolean;
@@ -1212,6 +1215,11 @@ declare module 'superdesk-api' {
         } | true;
     }
 
+    export interface IAbortablePromise<T> {
+        response: Promise<T>;
+        abort(): void;
+    }
+
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
         create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
@@ -1225,6 +1233,7 @@ declare module 'superdesk-api' {
         ): Promise<IRestApiResponse<T>>;
         queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
         queryRaw<T>(endpoint, params?: Dictionary<string, any>): Promise<Response>;
+        abortableQueryRaw(endpoint, params?: Dictionary<string, any>): IAbortablePromise<Response>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
@@ -2028,6 +2037,17 @@ declare module 'superdesk-api' {
                     order: number;
                 };
             }
+        };
+
+        media: {
+            renditions: {
+                [media_type: string]: {
+                    [rendition_name: string]: {
+                        width: number;
+                        height: number;
+                    };
+                };
+            };
         };
     }
 
