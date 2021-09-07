@@ -18,9 +18,9 @@ interface IProps {
 /**
  * In case publish is triggered by quick buttons, show confirmation dialog
  */
-export function confirmQuickPublish(items: Array<IArticle>): Promise<void> {
+export function confirmPublish(items: Array<IArticle>): Promise<void> {
     return new Promise((resolve) => {
-        class ConfirmQuickPublishModal extends React.PureComponent<IProps> {
+        class ConfirmPublishModal extends React.PureComponent<IProps> {
             render() {
                 return (
                     <Modal>
@@ -85,6 +85,6 @@ export function confirmQuickPublish(items: Array<IArticle>): Promise<void> {
             }
         }
 
-        showModal(ConfirmQuickPublishModal);
+        showModal(ConfirmPublishModal);
     });
 }
