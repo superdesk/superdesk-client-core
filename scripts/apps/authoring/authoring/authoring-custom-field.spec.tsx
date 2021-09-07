@@ -38,7 +38,7 @@ class TestEditorComponent extends React.PureComponent<IEditorComponentProps<stri
     }
 }
 
-const customField: ICustomFieldType<string, never> = {
+const customField: ICustomFieldType<string, any> = {
     id: 'test-custom-authoring-field',
     label: 'Test Field',
     editorComponent: TestEditorComponent,
@@ -49,7 +49,7 @@ describe('custom authoring field', () => {
     beforeEach(() => {
         registerInternalExtension('test-authoring-custom-field', {
             contributions: {
-                customFieldTypes: [customField],
+                customFieldTypes: [customField, null],
             },
         });
     });
