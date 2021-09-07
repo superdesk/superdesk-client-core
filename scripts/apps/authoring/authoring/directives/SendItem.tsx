@@ -7,7 +7,7 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {ITEM_STATE} from 'apps/archive/constants';
-import {confirmQuickPublish as confirmPublish} from '../services/quick-publish-modal';
+import {confirmPublish} from '../services/quick-publish-modal';
 
 SendItem.$inject = [
     '$q',
@@ -120,7 +120,7 @@ export function SendItem($q,
             scope.metadata = metadata.values;
 
             scope.publish = function() {
-                if (appConfig?.features?.confirmPublishModal) {
+                if (appConfig?.features?.confirmDueDate) {
                     return confirmPublish([scope.item]).then(publishItem);
                 } else {
                     return publishItem();
