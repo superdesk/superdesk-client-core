@@ -1782,6 +1782,7 @@ declare module 'superdesk-api' {
             },
             showPublishSchedule?: boolean
             hideCreatePackage?: boolean;
+            confirmDueDate?: boolean;
         };
         auth: {
             google: boolean
