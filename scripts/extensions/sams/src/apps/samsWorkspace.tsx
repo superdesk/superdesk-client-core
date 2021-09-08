@@ -29,6 +29,7 @@ import {
     onEditAsset,
     deleteAssets,
     forceUnlockAsset,
+    updateMultipleSelectedAssetIds,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
@@ -68,6 +69,7 @@ interface IProps {
     previewAsset(asset: IAssetItem): void;
     onEditAsset(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
+    updateMultipleSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
     updateAssetSearchParamsAndListItems(
@@ -110,6 +112,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
+    updateMultipleSelectedAssetIds: (asset: IAssetItem) => dispatch(updateMultipleSelectedAssetIds(asset._id)),
     onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAssets(asset)),
     forceUnlockAsset: (asset: IAssetItem) => dispatch<any>(forceUnlockAsset(asset)),
@@ -152,7 +155,8 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.onScroll = this.onScroll.bind(this);
         this.toggleListStyle = this.toggleListStyle.bind(this);
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
-        this.onMultiActionBar = this.onMultiActionBar.bind(this);
+        this.onUpdateSelectedAssetIds = this.onUpdateSelectedAssetIds.bind(this);
+        this.onUpdateMultipleSelectedAssetIds = this.onUpdateMultipleSelectedAssetIds.bind(this);
         this.onDeleteAsset = this.onDeleteAsset.bind(this);
         this.onEditAsset = this.onEditAsset.bind(this);
     }
@@ -169,8 +173,12 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         downloadAssetBinary(asset);
     }
 
-    onMultiActionBar(asset: IAssetItem) {
+    onUpdateSelectedAssetIds(asset: IAssetItem) {
         this.props.updateSelectedAssetIds(asset);
+    }
+
+    onUpdateMultipleSelectedAssetIds(asset: IAssetItem) {
+        this.props.updateMultipleSelectedAssetIds(asset);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -277,7 +285,8 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             onItemClicked={this.props.previewAsset}
                             onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
-                            updateSelectedAssetIds={this.onMultiActionBar}
+                            updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
+                            updateMultipleSelectedAssetIds={this.onUpdateMultipleSelectedAssetIds}
                             actions={actions}
                         />
                     )}
