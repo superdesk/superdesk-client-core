@@ -1,6 +1,7 @@
 import {get, isEqual, cloneDeep} from 'lodash';
 import {ISavedSearch, mapFiltersServerToClient} from '../SavedSearch';
 import {mapPredefinedDateFiltersServerToClient} from '../directives/DateFilters';
+import _ from 'lodash';
 
 const SUPERDESK_REPOS_REGEX = new RegExp('ingest|archive|archived|published');
 
@@ -56,11 +57,12 @@ export default function SearchMenuController(
 
     const initActiveProvider = () => {
         if ($location.path() === '/search') {
-            if (!$location.search()._id) {
-                this.activeProvider = this.providers.find(
-                    (provider) => isEqual($location.search(), getSearchParams(provider)),
-                );
-            }
+            this.activeProvider = this.providers.find(
+                (provider) => isEqual(
+                    _.omit($location.search(), ['_id', 'item', 'action']),
+                    getSearchParams(provider),
+                ),
+            );
 
             if (this.activeProvider == null && $location.search().repo) { // display search provider as active
                 this.activeProvider = this.providers.find((provider) => provider._id === $location.search().repo);
