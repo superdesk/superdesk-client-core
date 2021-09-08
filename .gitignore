@@ -11,7 +11,7 @@ e2e/server/__pycache__
 e2e-test-results
 templates-cache.generated.js
 styles/extension-styles.generated.css
-spec/**/*.js
+e2e/client/specs/**/*.js
 .env
 npm-debug.log
 index.html

@@ -8,17 +8,19 @@
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:../../build-tools",
+    "@superdesk/end-to-end-testing-helpers": "1.0.8",
+    "btoa": "1.1.2",
     "grunt": "1.3.0",
     "http-server": "0.12.1",
     "protractor": "7.0.0",
-    "typescript": "^3.9.7"
+    "typescript": "3.9.7"
   },
   "scripts": {
     "build": "npx @superdesk/build-tools build-root-repo ./",
     "start-client-server": "http-server dist -p 9000 -s &",
     "stop-client-server": "fuser -k 9000/tcp",
     "protractor": "node run-end-to-end-tests.js",
-    "specs--compile": "find ../../spec/ -name '*.js' -type f -delete && tsc -p ../../spec",
-    "specs--watch": "find ../../spec/ -name '*.js' -type f -delete && tsc -p ../../spec -w"
+    "specs--compile": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs",
+    "specs--watch": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs -w"
   }
 }
