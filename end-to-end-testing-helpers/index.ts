@@ -100,13 +100,13 @@ export function hover(elem: ElementFinder) {
 
 export function selectFilesForUpload(
     fileInput: ElementFinder,
-    fileNames: Array<string>, // relative to spec/test-files folder
+    fileNames: Array<string>, // relative to e2e/client/specs/test-files folder
 ) {
     fileInput.sendKeys(
         fileNames
             .map(
                 (relativePath) =>
-                    path.resolve(__dirname, '../../../../spec/test-files/' + relativePath),
+                    path.resolve(__dirname, '../../../../e2e/client/specs/test-files/' + relativePath),
             )
             .join('\n'),
     );
