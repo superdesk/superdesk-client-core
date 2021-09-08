@@ -137,7 +137,6 @@
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "grunt-karma": "^2.0.0",
-    "http-server": "^0.12.1",
     "jasmine-core": "^2.99.1",
     "jasmine-reporters": "^2.3.0",
     "karma": "^2.0.0",
