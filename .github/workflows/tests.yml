@@ -37,7 +37,6 @@ jobs:
       with:
         node-version: '12.x'
 
-    - run: npm ci
 
     - name: Start e2e server
       run: |
@@ -47,7 +46,7 @@ jobs:
       working-directory: e2e/server
 
     - name: Build client
-      run: npm run build && npm run start-client-server
+      run: npm install && npm run build && npm run start-client-server
       working-directory: e2e/client
     
     - name: Protractor
