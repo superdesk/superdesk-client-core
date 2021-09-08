@@ -54,6 +54,7 @@ jobs:
       env:
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp
+      working-directory: e2e/client
 
     - name: Upload screenshots
       if: ${{ failure() }}

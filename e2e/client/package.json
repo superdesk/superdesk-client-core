@@ -8,11 +8,13 @@
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:../../build-tools",
-    "grunt": "1.3.0"
+    "grunt": "1.3.0",
+    "protractor": "^7.0.0"
   },
   "scripts": {
     "build": "npx @superdesk/build-tools build-root-repo ./",
     "start-client-server": "http-server dist -p 9000 -s &",
-    "stop-client-server": "fuser -k 9000/tcp"
+    "stop-client-server": "fuser -k 9000/tcp",
+    "protractor": "node run-end-to-end-tests.js"
   }
 }
