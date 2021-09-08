@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "@superdesk/build-tools": "file:../../build-tools",
-    "@superdesk/end-to-end-testing-helpers": "1.0.9",
+    "@superdesk/end-to-end-testing-helpers": "1.0.10",
     "btoa": "1.1.2",
     "grunt": "1.3.0",
     "http-server": "0.12.1",
