@@ -31,7 +31,7 @@ var config = {
 
     suites: {
         a: path.join(__dirname, '../../spec/**/[a-k]*[Ss]pec.js'),
-        b: path.join(__dirname, '../..//spec/**/[l-z]*[Ss]pec.js'),
+        b: path.join(__dirname, '../../spec/**/[l-z]*[Ss]pec.js'),
 
         // disable running e2e tests from extensions until testing environment is reconfigured
         // to run start client from the main repo with all extensions enabled
