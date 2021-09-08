@@ -2,9 +2,6 @@
 
 var path = require('path');
 
-console.debug(`dir is ${__dirname}`);
-console.debug(`specs: ${path.join(__dirname, '../../spec/**/[a-k]*[Ss]pec.js')}`);
-
 function getChromeOptions() {
     var chromeOptions = {
         args: [
