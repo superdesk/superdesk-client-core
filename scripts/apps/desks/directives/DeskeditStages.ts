@@ -1,13 +1,45 @@
 import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
-import {gettext} from 'core/utils';
+import {gettext, arrayMove} from 'core/utils';
 import {appConfig} from 'appConfig';
 
 DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros'];
 export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros) {
     return {
-        link: function(scope) {
+        link: function(scope, elem) {
             var orig = null;
+
+            elem.find('.stages-list').sortable({
+                cursor: 'move',
+                start: function(event, ui) {
+                    ui.item.data('start', ui.item.index());
+                },
+                stop: function(event, ui) {
+                    const startIndex = ui.item.data('start') - 1;
+                    const endIndex = ui.item.index() - 1;
+
+                    /**
+                     * Timeout is added in order to wait for jQuery UI to finish with DOM operations
+                     * so it doesn't interfere with angular rendering.
+                     */
+                    setTimeout(() => {
+                        scope.stages = arrayMove(scope.stages, startIndex, endIndex);
+
+                        const orderOfStages = scope.stages.map(({_id}) => _id);
+
+                        // TODO: send orderOfStages to API, reload stages via fetchDeskStages() with refresh option
+                        // Server: add "order" property, ensure that /stages return ordered by that property by default
+
+                        scope.$apply();
+                    });
+
+                    /**
+                     * Returning false to tell jQuery UI not to apply sorting result to DOM.
+                     * This is done in order to maintain a single source of truth which is `scope.stages` array.
+                     */
+                    return false;
+                },
+            });
 
             scope.limits = limits;
             scope.saving = false;

@@ -218,14 +218,18 @@
                     <div class="grid__item grid__item--col-5">
                         <div class="heading" translate>Work stages</div>
                         <div class="column">
-                            <ul class="pills-list" ng-class="{'edit-mode': editStage}">
+                            <ul class="pills-list pills-list--draggable stages-list" ng-class="{'edit-mode': editStage}">
                                 <li class="stage editable addnew" ng-show="editStage && !editStage._id">
                                     <div class="sd-line-input">
                                         <input class="sd-line-input__input" type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" autofocus placeholder="{{ 'New stage' | translate }}">
                                         <sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></sd-character-count>
                                     </div>
                                 </li>
-                                <li ng-repeat="stage in stages track by stage._id" ng-click="select(stage)" ng-class="{active: selected === stage, editable: isActive(stage)}">
+                                <li
+                                    ng-repeat="stage in stages track by $index"
+                                    ng-click="select(stage)"
+                                    ng-class="{active: selected === stage, editable: isActive(stage)}"
+                                >
                                     <div ng-if="!isActive(stage)">
                                         <span data-test-id="stage-name">{{ labelForStage(stage) }}</span>
                                         <label class="global-label" ng-if="!stage.is_visible">
