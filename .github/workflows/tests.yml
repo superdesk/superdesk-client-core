@@ -16,18 +16,9 @@ jobs:
       with:
         node-version: '12.x'
 
-    - name: Cache NPM
-      uses: actions/cache@v2
-      with:
-        # npm cache files are stored in `~/.npm` on Linux/macOS
-        path: ~/.npm
-        key: ${{ runner.OS }}-node-${{ hashFiles('package-lock.json') }}
-        restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
-
     # avoid file watch limit error
     - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
     - run: npm ci
     - run: npm run test
 
@@ -46,16 +37,6 @@ jobs:
       with:
         node-version: '12.x'
 
-    - name: Cache NPM
-      uses: actions/cache@v2
-      with:
-        # npm cache files are stored in `~/.npm` on Linux/macOS
-        path: ~/.npm
-        key: ${{ runner.OS }}-node-${{ hashFiles('package-lock.json') }}
-        restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
-
     - run: npm ci
 
     - name: Start e2e server
@@ -67,9 +48,6 @@ jobs:
 
     - name: Build client
       run: npm run build && npm run start-client-server
-
-    - name: Workaround for webdriver version (https://github.com/angular/protractor/issues/5519)
-      run: node ./node_modules/.bin/webdriver-manager update --versions.chrome=90.0.4430.24
 
     - name: Protractor
       run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
