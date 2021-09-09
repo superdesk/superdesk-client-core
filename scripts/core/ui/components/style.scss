@@ -42,8 +42,7 @@ time.Datetime {
         li {
             cursor: not-allowed !important;
             &:hover {
-                color: $black;
-                background-color: rgba(0,0,0,0.05);
+                color: var(--color-text);
             }
         }
     }

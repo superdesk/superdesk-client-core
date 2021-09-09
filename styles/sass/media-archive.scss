@@ -198,8 +198,21 @@ $sfbox_mediaMaxWidth : 172px;
     @include box-shadow(0 1px 4px 0 rgba(0,0,0,0.2));
 
     &.archived {
-        background: #f2f2f2 url(~images/checkmark-big.png) no-repeat bottom right;
         @include box-shadow-both(0 1px 4px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.03));
+        background-color: var(--sd-item__main-Bg--alternate);
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 20%;
+            width: 10rem;
+            background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTYiIGhlaWdodD0iMTE2IiB2aWV3Qm94PSIwIDAgMTE2IDExNiI+PHBhdGggZmlsbD0iIzdCN0I3QiIgZD0iTTU4IDBDMjYgMCAwIDI2IDAgNThzMjYgNTggNTggNTggNTgtMjYgNTgtNThTOTAgMCA1OCAwem0zNy4xIDM4LjhMNDYuMyA4Ny42Yy0uNS41LTEuMi41LTEuNyAwTDE4LjkgNjEuOGMtLjUtLjUtLjUtMS4yIDAtMS43bDguMi04LjJjLjUtLjUgMS4yLS41IDEuNyAwTDQ1IDY4LjFjLjMuMy44LjMgMS4xIDBsMzkuMi0zOS4yYy41LS41IDEuMi0uNSAxLjcgMGw4LjIgOC4yYy40LjUuNCAxLjItLjEgMS43eiIvPjwvc3ZnPg==);
+            background-repeat: no-repeat;
+            background-size: 6rem;
+            background-position: center center;
+            opacity: 0.16;
+        }
     }
 
     &.error {
@@ -1061,9 +1074,21 @@ $rightfield-width:60px;
         }
 
         &.archived {
-            background: $sd-archived-bg url('~images/checkmark-big-full.png') no-repeat 70% 50%;
-            background-size: 36px;
+            background-color: var(--sd-item__main-Bg--alternate);
             border-right: 2px solid $sd-archived-bg;
+            &::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: 20%;
+                width: 10rem;
+                background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMTYiIGhlaWdodD0iMTE2IiB2aWV3Qm94PSIwIDAgMTE2IDExNiI+PHBhdGggZmlsbD0iIzdCN0I3QiIgZD0iTTU4IDBDMjYgMCAwIDI2IDAgNThzMjYgNTggNTggNTggNTgtMjYgNTgtNThTOTAgMCA1OCAwem0zNy4xIDM4LjhMNDYuMyA4Ny42Yy0uNS41LTEuMi41LTEuNyAwTDE4LjkgNjEuOGMtLjUtLjUtLjUtMS4yIDAtMS43bDguMi04LjJjLjUtLjUgMS4yLS41IDEuNyAwTDQ1IDY4LjFjLjMuMy44LjMgMS4xIDBsMzkuMi0zOS4yYy41LS41IDEuMi0uNSAxLjcgMGw4LjIgOC4yYy40LjUuNCAxLjItLjEgMS43eiIvPjwvc3ZnPg==);
+                background-repeat: no-repeat;
+                background-size: 4rem;
+                background-position: center center;
+                opacity: 0.16;
+            }
             &.active {
                 border-right: 2px solid rgba(94,169,200,0.75) !important;
             }

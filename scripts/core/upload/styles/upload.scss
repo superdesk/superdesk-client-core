@@ -10,10 +10,10 @@
     height: $height;
     top: 0; left: 0; right: 0;
     z-index: 1;
-    background: #f0f0f0;
+    background: var(--sd-item__main-Bg);
     .bar {
         height: $height;
-        background: $sd-blue;
+        background: var(--sd-colour-interactive);
     }
 }
 
@@ -319,9 +319,8 @@ media uploader
         .upload-thumbs {
             .flex-grid__item {
                 min-height: 350px;
-                background: #fff;
                 .thumb {
-                    @include border-radius(3px 3px 0 0);
+                    border-radius: 3px 3px 0 0;
                     overflow: hidden;
                     position: relative;
                     .holder {
@@ -331,9 +330,11 @@ media uploader
                         line-height: 205px;
                         i {
                             position: absolute;
-                            top: 50%; margin-top: -25px;
-                            left: 50%; margin-left: -30px;
-                            @include opacity(20);
+                            top: 50%;
+                            margin-top: -25px;
+                            left: 50%;
+                            margin-left: -30px;
+                            opacity: 0.2;
                             z-index: 1;
                         }
                         img {
@@ -357,15 +358,15 @@ media uploader
                         height: 20px;
                         width: 20px;
                         background: #fff;
-                        @include opacity(40);
+                        opacity: 0.4;
                         text-align: center;
                         line-height: 20px;
                         z-index: 2;
                         &:hover {
                             cursor: pointer;
-                            @include opacity(90);
+                            opacity: 0.9;
                             i {
-                                @include opacity(50);
+                                opacity: 0.5;
                             }
                         }
                     }
@@ -374,8 +375,8 @@ media uploader
                     position: relative;
                     padding-top: 2px;
                     padding-bottom: 3px;
-                    border-top: 1px solid #ebebeb;
-                    @include border-radius(0 0 3px 3px);
+                    border-top: 1px solid var(--sd-colour-line--medium);
+                    border-radius: 0 0 3px 3px;
 
                     .upload-progress {
                         @include generic-upload-progress();
@@ -383,24 +384,31 @@ media uploader
                     }
 
                     input[type="text"] {
-                        border: 0 !important;
-                        height: 26px !important;
-                        font-size: 13px;
-                        padding: 2px 0 8px 0;
-                        border-bottom: 1px solid #ebebeb !important;
-                        @include border-radius(0 !important);
+                        width: 100%;
+                        color: var(--color-text);
+                        border: 0;
+                        border-bottom: 1px solid var(--color-input-border);
+                        font-size: 1.4rem;
+                        background-color: var(--color-input-bg);
+                        transition: all 0.3s cubic-bezier(0.55, 0, 0.55, 0.2);
+                        padding: 0 0.8rem;
+                        height: 3.2rem;
+                        border-radius: var(--b-radius--x-small) var(--b-radius--x-small) 0 0;
+                        display: block;
                         &:hover {
-                            border-bottom: 1px solid #ccc !important;
+                            border-color: var(--color-input-border-hover);
+                            background-color: var(--color-input-bg--hover);
                         }
                         &:focus {
-                            @include box-shadow(none !important);
-                            border-bottom: 1px solid $sd-blue !important;
+                            box-shadow: 0 1px 0 0 var(--sd-colour-interactive);
+                            border-color: var(--sd-colour-interactive);
+                            background-color: var(--sd-colour-interactive--alpha-20);
                         }
                     }
                     label {
                         padding: 0;
                         line-height: 14px;
-                        color: #999;
+                        color: var(--color-text-light);
                     }
 
                     .btn--mini {

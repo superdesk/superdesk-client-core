@@ -9,13 +9,11 @@
     position: fixed;
     z-index: 9000;
     left: 0; right: 0; bottom: 0; top: 0;
-    background-color: #323232;
+    background-color: var(--sd-colour-bg--02);
     .logo-handler {
         margin-bottom: 60px;
     }
     .login-form-container {
-
-        @include box-sizing(border-box);
         width: 320px;
         height: 600px;
         padding: 0 15px;
@@ -30,10 +28,10 @@
             width: 240px;
             padding-top: 10px;
             padding-bottom: 10px;
-            @include border-radius(3px);
-            color: #fff;
-            font-size: 11px;
-            background-color: #bc7c0e;
+            border-radius: 3px;
+            color: $white;
+            font-size: 12px;
+            background-color: hsl(38, 86%, 40%);
             text-align: center;
             margin:0;
         }
@@ -43,13 +41,29 @@
             form {
                 .inputs {
                     input {
-                        margin-bottom: 18px;
-                        height: 38px;
-                        @include border-radius(4px !important);
-                        border: 1px solid #000 !important;
-                        @include box-shadow-both(inset 0 2px 0 0 #ccc, 0 1px 0 0 #656565 !important);
-                        font-size: 13px;
-                        line-height: 25px;
+                        margin-bottom: 16px;
+                        height: 40px;
+                        background-color: var(--sd-colour-bg--04);
+                        color: $white !important;
+                        border-radius: 4px;
+                        border: none;
+                        box-shadow: inset 0 1px 0 0 hsla(0, 0%, 0%, 0.8), 0 1px 0 0 hsla(214, 13%, 60%, 0.4);
+                        font-size: 14px;
+                        padding-left: 12px;
+                        &:autofill {
+                            color: var(--sd-colour-interactive--hover) !important;
+                            background-color: var(--sd-colour-bg--04) !important;
+                            border: 1px solid var(--sd-colour-line--light) !important;
+                        }
+                        &:focus {
+                            box-shadow: inset 0 0 0 1px var(--sd-colour-interactive--alpha-50), inset 0 0 0 4px var(--sd-colour-interactive--alpha-20) !important;
+                        }
+                    }
+                    input:-webkit-autofill,
+                    input:-webkit-autofill:hover {
+                        -webkit-text-fill-color: var(--sd-colour-interactive--hover) !important;
+                        //-webkit-box-shadow: 0 0 0px 1000px #000 inset;
+                        transition: background-color 5000s ease-in-out 0s;
                     }
                 }
                 .buttons {
@@ -60,11 +74,11 @@
                 }
             }
             .links {
-                border-top: 1px solid #484848;
+                border-top: 1px solid var(--sd-colour-line--light);
                 padding-top: 10px;
             }
             .text {
-                color: #898989;
+                color: hsl(214, 13%, 80%);
                 margin-bottom: 10px;
                 display: block;
                 &:hover {
@@ -73,14 +87,14 @@
                 }
             }
             .reset-info {
-                color: #ccc;
+                color: hsl(214, 13%, 80%);
                 margin-bottom: 20px;
                 i {
                     vertical-align: sub;
                 }
             }
             .transition-id {
-                color: #f5f5f5;
+                color: hsl(214, 13%, 80%);
                 margin-top: 20px;
                 margin-bottom: 20px;
                 display: block;
@@ -102,23 +116,23 @@
                     color:#fff;
                     font-size: 12px;
                     line-height: 18px;
-                    @include border-radius(4px);
+                    border-radius: 4px;
                 }
                 .network-error {
                     height: 44px;
-                    @include border-radius(3px);
+                    border-radius: 3px;
                     span {
                         width: 46px;
                         height: 44px;
                         float: left;
-                        @include border-radius(3px 0 0 3px);
+                        border-radius: 3px 0 0 3px;
                         background-repeat: no-repeat;
                         background-position: 8px 7px;
-                        @include opacity(60);
+                        opacity: 0.6;
                     }
                     p {
                         margin-left: 46px;
-                        color: #fff;
+                        color: $white;
                         padding: 6px;
                         line-height: 16px;
                         font-size: 12px;

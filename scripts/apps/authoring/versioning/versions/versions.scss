@@ -8,7 +8,7 @@
 .sd-widget.versioning {
 
     .widget-content {
-        background: $sd-background;
+        background: var(--sd-colour-panel-bg--100);
     }
 
     .article-versions {
@@ -23,7 +23,6 @@
                 margin-bottom: 12px;
                 .header {
                     font-size: 12px;
-                    time {}
                     .user {
                         float: right;
                         color: $sd-text-light;
@@ -37,7 +36,7 @@
                     display: flex;
                     align-items: center;
                     em {
-                        color: #888;
+                        color: $sd-text-lighter;
                     }
                     .state-label {
                         float: none;
@@ -48,20 +47,20 @@
                     @include text-semibold();
                     font-size: 15px;
                     height: 18px;
-                    color: #333;
+                    color: $sd-text;
                     overflow: hidden;
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     text-transform: none;
                     margin: 5px 0;
                     &.no-title {
-                        color: #888;
+                        color: $sd-text-lighter;
                         font-weight: normal;
                     }
                 }
                 .content {
                     font-size: 13px;
-                    color: #555;
+                    color: $sd-text-light;
                     line-height: 20px;
                     max-height: 40px;
                     overflow: hidden;
@@ -75,10 +74,10 @@
 
             &.draft {
                 background: none;
-                border-color: #dfdfdf;
+                border-color: var(--sd-colour-line--light);
 
                 &.selected {
-                    background: $sd-hover;
+                    background: hsla(0, 0%, 20%, 0.1);
                 }
 
                 .close {

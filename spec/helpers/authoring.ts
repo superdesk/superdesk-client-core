@@ -297,7 +297,7 @@ class Authoring {
             this.send_panel.click();
 
             var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
+                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
 
             dropdown.waitReady();
             dropdown.click();
@@ -317,7 +317,7 @@ class Authoring {
             let duplicateAndOpenButton = element(by.id('duplicate-open-btn'));
 
             var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle'));
+                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle'));
 
             dropdown.waitReady();
             dropdown.click();
@@ -334,7 +334,7 @@ class Authoring {
 
         this.selectDeskforSendTo = function(desk) {
             var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = element(by.css('.dropdown--dark .dropdown__toggle'));
+                dropdown = element(by.css('.dropdown--boxed .dropdown__toggle'));
 
             dropdown.waitReady();
             dropdown.click();

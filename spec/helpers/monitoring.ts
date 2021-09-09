@@ -972,7 +972,7 @@ class Monitoring {
          */
         this.getSendToDropdown = () => {
             var sidebar = element.all(by.css('.side-panel')).last(),
-                dropdown = sidebar.element(by.css('.dropdown--dark .dropdown__toggle')),
+                dropdown = sidebar.element(by.css('.dropdown--boxed .dropdown__toggle')),
                 dropdownSelected = dropdown.element(by.css('[ng-show="selectedDesk"]'));
 
             return dropdownSelected;

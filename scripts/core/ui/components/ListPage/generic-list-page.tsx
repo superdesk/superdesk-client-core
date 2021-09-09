@@ -14,6 +14,7 @@ import {
     SidePanelTools,
     SidePanelContent,
     SidePanelContentBlock,
+    SidePanelFooter,
 } from 'core/components/SidePanel';
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
@@ -444,7 +445,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                     {
                         this.state.filtersOpen ? (
                             <PageContainerItem data-test-id="list-page--filters-form">
-                                <SidePanel side="left" width={240}>
+                                <SidePanel side="left" width={320}>
                                     <SidePanelHeader>
                                         <SidePanelHeading>{gettext('Refine search')}</SidePanelHeading>
                                         <SidePanelTools>
@@ -471,16 +472,27 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                                     issues={{}}
                                                     handleFieldChange={this.handleFilterFieldChange}
                                                 />
-                                                <button
-                                                    className="btn btn--primary btn--expanded"
-                                                    type="submit"
-                                                    data-test-id="filters-submit"
-                                                >
-                                                    {gettext('Filter')}
-                                                </button>
+
                                             </form>
                                         </SidePanelContentBlock>
                                     </SidePanelContent>
+                                    <SidePanelFooter>
+                                        <form
+                                            onSubmit={(event) => {
+                                                event.preventDefault();
+                                                this.filter();
+                                            }}
+                                        >
+                                            <button
+                                                className="btn btn--primary btn--expanded"
+                                                type="submit"
+                                                data-test-id="filters-submit"
+                                            >
+                                                {gettext('Filter')}
+                                            </button>
+                                        </form>
+
+                                    </SidePanelFooter>
                                 </SidePanel>
                             </PageContainerItem>
                         ) : null

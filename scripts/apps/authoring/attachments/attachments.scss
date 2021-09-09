@@ -41,10 +41,10 @@
 				padding-top: 16px;
 				height: 90px;
 				width: 90px;
-				background-color: #fff;
-				border-radius: 50%;
+				background-color: var(--sd-item__main-Bg);
+				border-radius: var(--b-radius--full);
 				margin: 0 auto;
-				box-shadow: 0 0 6px 1px rgba(0,0,0,0.08);
+				box-shadow: 0 0 6px 1px rgba(0,0,0,0.12);
 
 				i.icon {
 					display: block;
@@ -52,12 +52,13 @@
 					height: 48px;
 					margin: 1.4rem auto 0 auto;
 					font-size: 5.2rem;
+					color: var(--color-text-light);
 				}
 			}
 
 			.subtext {
-				margin: 15px 0;
-				color: $sd-text-label;
+				margin: 16px 0;
+				color: var(--color-text-lighter);
 			}
 		}
 	}

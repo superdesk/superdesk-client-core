@@ -382,7 +382,7 @@ angular.module('superdesk.apps.authoring', [
             .activity('edit.crop', {
                 label: gettext('Details'),
                 modal: true,
-                cssClass: 'modal--fullscreen modal--dark-ui',
+                cssClass: 'modal--fullscreen',
                 controller: ctrl.ChangeImageController,
                 templateUrl: 'scripts/apps/authoring/views/change-image.html',
                 filters: [{action: 'edit', type: 'crop'}],

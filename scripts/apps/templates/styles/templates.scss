@@ -117,8 +117,7 @@
     }
 
     .template-editor {
-        border-top: 1px solid rgba(0,0,0,0.1);
-        background-color: $white;
+        border-top: 1px solid var(--sd-colour-line--medium);
         .authoring-header__general-info {
             display: none;
         }

@@ -28,35 +28,35 @@
 
 .users-table {    //main list styles
 
-    border-top: 2px solid #d7d7d7;
+    border-top: 2px solid var(--sd-colour-line--medium);
     .table-header {
-        background: #fff;
+        background: var(--sd-item__main-Bg);
     }
     .table-title {
         height: 30px;
         font-size: 11px;
-        color: #8a8a8a;
+        color: var(--color-text-light);
         line-height: 30px;
         @include text-light();
         text-transform: uppercase;
     }
     .table-newest {
         margin: 0 0 30px;
-        background: #fafdf6;
-        border-top: 1px solid #d7d7d7;
+        background: var(--sd-item__main-Bg--alternate);
+        border-top: 1px solid var(--sd-colour-line--medium);
     }
     .table-body {
         margin-top: -1px;
     }
     .table-body {
-        background: #fff;
-        border-top: 1px solid #d7d7d7;
+        background: var(--sd-item__main-Bg);
+        border-top: 1px solid var(--sd-colour-line--medium);
     }
     .table-header, .table-newest, .table-body {
 
         > li {
             height: 40px;
-            border-bottom: 1px solid #ebebeb;
+            border-bottom: 1px solid var(--sd-colour-line--medium);
             position: relative;
             clear: both;
 
@@ -81,30 +81,41 @@
                     right: $user-table-actions-width+10;
                     top: 5px;
                     padding: 0;
-                    @include box-sizing(border-box);
                     > div {
-                        color: $sd-text;
+                        color: var(--color-text);
                         float: left;
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
-                        @include box-sizing(border-box);
                         padding: 0 5px;
                         height: 30px;
                         &.name {
-                            @include text-semibold();
+                            font-weight: 500;
                         }
                         &.email {
-                            color: $sd-blue-text;
-                            @include text-light();
+                            color: var(--sd-colour-interactive);
+                            font-weight: 300;
                         }
-                        &.created {font-size: 11px; color: $grayLight;}
+                        &.created {
+                            font-size: 11px;
+                            color: var(--color-text-light);
+                        }
                         //user columns width
-                        &.name { width: 28%; }
-                        &.role { width: 16%; }
-                        &.username { width: 14%; }
-                        &.email { width: 30%; }
-                        &.created { width: 12%; }
+                        &.name {
+                            width: 28%;
+                        }
+                        &.role {
+                            width: 16%;
+                        }
+                        &.username {
+                            width: 14%;
+                        }
+                        &.email {
+                            width: 30%;
+                        }
+                        &.created {
+                            width: 12%;
+                        }
                     }
                 }
                 &.action {
@@ -114,18 +125,18 @@
                 }
             }
             &.inactive .row-wrapper > div {
-                color: $sd-text-light;
+                color: var(--color-text-light);
                 &.email {
-                    color: lighten($sd-blue-text, 30%);
+                    opacity: 0.75;
                 }
             }
         }
     }
     .table-header {
         > li > div, .name, .email, .created {
-            color: #000 !important;
+            color: var(--color-text) !important;
             font-size: 13px !important;
-            @include text-semibold();
+            font-weight: 500;
         }
         .sortable {
             i {
@@ -140,10 +151,10 @@
         > li {
 
             &.selected {
-                background: #eff7fa;
+                background: var(--sd-item__main-Bg--selected);
             }
             &:hover {
-                background: #f4f4f4;
+                background: var(--sd-item__main-Bg--hover);
                 cursor: pointer;
             }
 
@@ -158,12 +169,12 @@
                             width: 40px;
                             line-height: 40px;
                             text-align: center;
-                            border-left: 1px solid #d8d8d8;
+                            border-left: 1px solid var(--sd-item__main-Bg--hover);
                             span {
                                 display: none;
                             }
                             &:hover {
-                                background-color: #e8e8e8;
+                                background-color: var(--sd-item__main-Bg--hover);
                             }
                         }
                     }
@@ -180,13 +191,13 @@
     }
     .alert {
         height: auto !important;
-        @include border-radius(0px);
+        border-radius: 2px;
         border-width: 0 0 1px;
 
         &.alert-info {
-            border-color: #bce8f1;
+            border-color: var(--sd-colour-interactive--alpha-40);
             &:hover {
-                background: #d9edf7;
+                background: var(--sd-colour-interactive--alpha-20);
             }
         }
 
@@ -215,7 +226,7 @@
     }
 
     .header-info {
-        background-color: rgba(94, 169, 200, 0.11);
+        background-color: var(--sd-colour-interactive--alpha-10);
         padding: 20px 0 0;
 
         h2 { //used as user's full name
@@ -232,7 +243,7 @@
             line-height: 16px;
             padding: 0 20px;
             margin-bottom: 10px;
-            color: rgba(0, 0, 0, 0.75);
+            color: var(--color-text-light);
         }
 
         .active {
@@ -246,7 +257,7 @@
             padding: 0;
             li {
                 display: inline-block;
-                @include border-radius(3px);
+                border-radius: 3px;
                 padding: 2px 10px;
                 background: #b2b2b2;
                 color: #fff;
@@ -258,7 +269,7 @@
     }
 
     .date-time {
-        color: #999;
+        color: var(--color-text-light);
         font-weight: 300;
     }
     // .change-btn {
@@ -269,7 +280,6 @@
         flex-grow: 1;
         overflow: auto;
         padding: 20px;
-        // height: 100vh;
         position: relative;
     }
 
@@ -289,7 +299,7 @@
     }
     .validation-info {
         font-size: 11px;
-        color: #888;
+        color: var(--color-text-light);
     }
     .profile-pic {
         display: flex;
@@ -305,7 +315,7 @@
     }
 
     .alert {
-        @include border-radius(0px);
+        border-radius: 2px;
     }
 
 
@@ -322,15 +332,28 @@
 .modal.user-profile-page {
     .modal__body {
         height: calc(100vh - 180px);
-        @include border-radius(0 0 4px 4px);
+        border-radius: 0 0 4px 4px;
     }
     .user-details-pane {
         position: static;
         ::-webkit-scrollbar {
-            border-left: 9px solid #f8f8f8;
+            width: 8px;
+            height: 8px;
+            margin: -1px 0;
+            position: fixed;
+            right: 10px;
         }
+        ::-webkit-scrollbar:hover {
+            background-color: var(--sd-colour__webkit-scrollbar--hover);
+            cursor: pointer;
+        }
+        
         ::-webkit-scrollbar-thumb {
-            border-left: 8px solid #f8f8f8;
+            background: var(--sd-colour__webkit-scrollbar-thumb);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--sd-colour__webkit-scrollbar-thumb--hover);
+            cursor: pointer;
         }
     }
     .details-info {
@@ -339,7 +362,7 @@
     .action-bar {
         top: auto !important;
         bottom: 0;
-        border-top: 1px solid #e4e4e4;
+        border-top: 1px solid var(--sd-colour-line--light);
         border-bottom: 0;
     }
 }
@@ -362,11 +385,11 @@ Profile page styles
     left: 0px;
     right: 0;
     top: 0;
-    bottom: 20px;
-    padding: 10px 30px 0;
+    bottom: 0;
+    padding: 0;
     background-color: $background-main;
-    overflow-x: hidden;
-    overflow-y: auto;
+    //overflow-x: hidden;
+
 
     &::-webkit-scrollbar {
             width:10px;
@@ -383,29 +406,45 @@ Profile page styles
 
     .profile-activity {
         height: 100%;
-        @include box-sizing(border-box);
         overflow: auto;
         max-width: 500px;
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        border-right: 1px solid var(--sd-colour-line--light);
         .activity-header {
-            height: 40px;
-            border-bottom: 1px solid #ddd;
+            grid-column: 1/2;
+            grid-row: 1/2;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 1px 0 var(--sd-colour-line--light);
+            z-index: 1;
             h6 {
-                line-height: 40px;
+                line-height: 1;
                 font-weight: normal;
-                font-size: 20px;
-                color: #444;
+                font-size: 16px;
+                color: var(--color-text-light);
                 text-transform: none;
+                padding-left: 24px;
+                margin: 0;
             }
+        }
+        div[sd-activity] {
+            grid-column: 1/2;
+            grid-row: 2/2;
+            overflow-y: auto;
+            padding: $sd-base-increment * 2 $sd-base-increment * 3;
         }
 
         .group-date {
             margin-top: 20px;
             margin-bottom: 16px;
-            color: #888;
+            color: var(--color-text-light);
             font-size: 11px;
-            @include text-semibold();
+            font-weight: 500;
             height: 1px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--sd-colour-line--medium);
             position: relative;
             .day {
                 position: relative;
@@ -424,8 +463,8 @@ Profile page styles
             }
         }
         .activity-entry {
-            border-bottom: 1px solid #ddd;
-            background: #fff;
+            border-bottom: 1px solid var(--sd-colour-line--medium);
+            background: var(--sd-item__main-Bg);
             margin-top: 4px;
             clear: left;
 
@@ -434,9 +473,9 @@ Profile page styles
             }
 
             .activity-date {
-                color: #888;
+                color: var(--color-text-light);
                 font-size: 11px;
-                @include text-semibold();
+                font-weight: 500;
             }
         }
     }
@@ -454,12 +493,11 @@ Profile page styles
 
 .user-details-pane {
     .action-bar {
-
         background: scale-color($sd-blue, $lightness: 80%);
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,0);
+        box-shadow: 0 1px 2px 0 hsla(0, 0%, 0%, 0);
         border-bottom: none;
         &.show {
-            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.2);
+            box-shadow: 0 1px 2px 0 hsla(0, 0%, 0%, 0.2);
         }
     }
 }
@@ -470,18 +508,16 @@ Profile page styles
         position: absolute;
         top: 0; left: 0; bottom: 0;
         width: 600px;
-        background: #fff;
-        border-right: 1px solid #ddd;
-        @include box-sizing(border-box);
-        @include box-shadow(0 0 5px 0 #e0e0e0);
+        background: var(--sd-item__main-Bg);
+        border-right: 1px solid var(--sd-colour-line--light);
+        box-shadow: 0 0 5px 0 hsla(0, 0%, 0%, 0.12);
         z-index: 2;
     }
 
     .user-details-pane {
         > header {
             height: 48px;
-            @include border-box();
-            border-bottom: 1px solid #dfdfdf;
+            border-bottom: none;
             .nav-tabs {
                 padding: 0 10px;
             }
@@ -516,19 +552,18 @@ Profile page styles
 
         .tablist-container {
             width: 100%;
-            @include box-sizing(border-box);
             height: 38px;
-            border-bottom: 1px solid #e5e5e5;
-            background: #efefef;
+            border-bottom: 1px solid var(--sd-colour-line--light);
+            background: var(--sd-colour-panel-bg--100);
             ul li {
                 float: left;
                 height: 38px;
                 line-height: 38px;
                 padding: 0 20px;
-                border-right: 1px solid #dfdfdf;
-                color: #218baa;
+                border-right: 1px solid var(--sd-colour-line--light);
+                color: var(--sd-colour-interactive);
                 &.active {
-                    background: $background-main;
+                    background: var(--sd-colour-panel-bg--100);
                 }
             }
         }
@@ -542,7 +577,7 @@ Profile page styles
                 left: 0;
                 background: none;
                 .activity.with-date .date span {
-                    background-color: $background-main !important;
+                    background-color: var(--sd-colour-panel-bg--100) !important;
                 }
             }
         }

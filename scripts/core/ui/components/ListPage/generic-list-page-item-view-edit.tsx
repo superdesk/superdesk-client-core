@@ -141,7 +141,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         return (
             <SidePanel side="right" width={360} data-test-id="item-view-edit">
                 <SidePanelHeader>
-                    <SidePanelHeading>{gettext('Details:')}</SidePanelHeading>
+                    <SidePanelHeading>{gettext('Details')}</SidePanelHeading>
                     {
                         this.props.editMode
                             ? (

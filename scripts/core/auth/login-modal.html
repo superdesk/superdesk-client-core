@@ -16,7 +16,7 @@
                 </fieldset>
 
                 <fieldset class="buttons" ng-show="features.auth_db">
-                    <button ng-disabled="isLoading" id="login-btn" type="submit" class="btn btn--sd-green" data-test-id="submit">
+                    <button ng-disabled="isLoading" id="login-btn" type="submit" class="btn btn--large btn--sd-green" data-test-id="submit">
                         {{ 'Log In' | translate }}
                         <div class="spinner" ng-show="isLoading">
                           <div class="dot1"></div>
@@ -26,12 +26,12 @@
                 </fieldset>
 
                 <fieldset class="buttons" ng-if="methods.google">
-                    <button class="btn btn--sd-green"
+                    <button class="btn btn--large btn--hollow btn--sd-green"
                         ng-click="openLoginPopup('google')" translate>Log In with Google</button>
                 </fieldset>
 
                 <fieldset class="buttons" ng-if="methods.saml">
-                    <button class="btn btn--sd-green"
+                    <button class="btn btn--large btn--sd-green"
                         ng-click="openLoginPopup('saml')" translate>{{labels.saml}}</button>
                 </fieldset>
 

@@ -1,27 +1,27 @@
-<div ng-if="isUpload !== true" class="modal__header modal__header--flex">
+<div ng-if="isUpload !== true" class="modal__header modal__header--flex" data-theme="dark-ui">
     <h3 class="modal__heading modal__heading--grow" translate>Edit metadata</h3>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--ui-dark btn--hollow" ng-click="close()" translate>Close</button>
-        <button class="btn btn--primary btn--hollow" ng-click="save()" ng-disabled="!isDirty()" translate>Save</button>
-        <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()" translate>Save & Close</button>
+        <button class="btn btn--hollow" ng-click="close()" translate>Close</button>
+        <button class="btn btn--hollow" ng-click="save()" ng-disabled="!isDirty()" translate>Save</button>
+        <button class="btn btn--hollow" ng-click="save(true)" ng-disabled="!isDirty()" translate>Save & Close</button>
     </div>
 </div>
 
-<div ng-if="isUpload === true" class="modal__header modal__header--flex">
+<div ng-if="isUpload === true" class="modal__header modal__header--flex" data-theme="dark-ui">
     <h3 class="modal__heading modal__heading--grow" translate>Upload media</h3>
 
     <div class="modal__header-buttons modal__header-buttons--right">
-        <button class="btn btn--ui-dark btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
+        <button class="btn btn--hollow" ng-click="close()" ng-disabled="uploadInProgress" translate>Cancel</button>
         <div ng-transclude="select-desk"></div>
         <button class="btn btn--primary btn--hollow" ng-click="save(true)" ng-disabled="!images.length" translate data-test-id="multi-image-edit--start-upload">Upload</button>
     </div>
 </div>
 
-<div class="modal__body modal__body--no-padding">
+<div class="modal__body modal__body--no-padding" data-theme="dark-ui">
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview">
-            <div ng-if="images.length > 0" style="margin: 1.2rem 2.4rem">
+            <div class="sd-column-box__main-column-top-bar" ng-if="images.length > 0">
                 <button
                     ng-click="selectAll()"
                     ng-disabled="areAllSelected()"
@@ -42,7 +42,7 @@
 
             <div class="sd-photo-preview sd-photo-preview--grid-only">
                 <div class="sd-photo-preview__thumb-strip">
-                    <div class="sd-grid-list dark-ui">
+                    <div class="sd-grid-list">
                         <div class="sd-grid-item sd-grid-item--with-click"
                              ng-click="handleItemClick($event, image)"
                              ng-repeat="image in images track by image._id"
@@ -82,7 +82,7 @@
             </div>
         </div>
 
-        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large sd-column-box__slide-in-column--dark-ui">
+        <div class="sd-column-box__slide-in-column sd-column-box__slide-in-column--large">
             <div class="sd-column-box__slide-in-column-inner sd-slide-in-panel" ng-controller="MediaFieldsController as fields">
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" translate>Metadata</h3>

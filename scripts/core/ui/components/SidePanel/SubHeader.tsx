@@ -10,7 +10,7 @@ import classNames from 'classnames';
 export const SubHeader: React.StatelessComponent<any> = ({children, className}) => (
     <div
         className={classNames(
-            'side-panel__header',
+            'side-panel__header side-panel__header--border-b',
             className,
         )}
     >

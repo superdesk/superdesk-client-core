@@ -92,9 +92,13 @@ a:hover, .link:hover {
             }
             .ui-resizable-handle {
                 display: block;
-            }
-            &:hover {
-                border-right-color: var(--sd-colour-interactive);
+                &:hover {
+                    background-color: var(--sd-colour-interactive);
+                    margin-left: 2px;
+                    margin-right: 2px;
+                    width: 3px;
+                    box-shadow: 2px 0 0 0 var(--sd-colour-interactive--alpha-20), -2px 0 0 0 var(--sd-colour-interactive--alpha-20);
+                }
             }
         }
 
@@ -625,16 +629,15 @@ $slide-pane-width: 400px;
     width:$tabpane-width;
     top:0;
     bottom:0;
-    background: $tabpane-background;
+    background: var(--sd-colour-panel-bg--100);
     border-color:$tabpane-border;
     border-style: solid;
     z-index:15;
-    @include box-sizing(border-box);
-    @include transition( all 0.3s ease);
+    transition: all 0.3s ease;
     &.left-tabpane {
         left:-$tabpane-width;
         border-width: 0 3px 0 0;
-        @include box-shadow(2px 0px 8px 0px rgba(50,50,50,.35));
+        box-shadow: 2px 0px 8px 0px rgba(50,50,50,.35);
 
         &.open-tabpane {
             left:$tablist-width;
@@ -643,14 +646,13 @@ $slide-pane-width: 400px;
     &.right-tabpane {
         right:-$tabpane-width;
         border-width: 0 0 0 3px;
-        @include box-shadow(-2px 0px 8px 0px rgba(40,50,50,.35));
+        box-shadow:-2px 0px 8px 0px rgba(40,50,50,.35);
         &.open-tabpane {
             right:$tablist-width;
         }
     }
     .tabcontent {
-        padding:$tabcontent-padding;
-        @include box-sizing(border-box);
+        padding: $tabcontent-padding;
         position: absolute;
         bottom: 0;
         top: 0;
@@ -665,58 +667,68 @@ $slide-pane-width: 400px;
 // ---------------------------------------------
 
 .notification-pane {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
     position: fixed;
+    color: var(--color-text);
     top: $nav-height;
-    bottom: 0;
-    right: -$notification-pane-width;
+    bottom: 32px;
+    right: -$notification-pane-width - 16px;
     width: $notification-pane-width;
-    @include box-sizing(border-box);
-    background: #313131;
-    z-index: 2000;
-    @include transition(right ease 0.3s);
+    background: hsla(214, 13%, 12, 0.82);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 2px 12px hsla(0, 0%, 0%, 0.32), 0 1px 4px hsla(0, 0%, 0%, 0.32), 0 0 0 1px var(--sd-colour-line--light); 
+    z-index: 100;
+    transition: right 0.3s ease-in-out;
+    border-radius: var(--b-radius--x-large);
+    margin: 12px 0;
     &.show {
-        right: 0;
+        right: 12px;
     }
-    > .header {
-        height: 65px;
+    .notification-pane__header {
+        grid-row: 1 / 2;
+        grid-column: 1 / 2;
+        height: 48px;
         width: 100%;
-        background: #212121;
-        @include box-shadow(inset 0 4px 4px -2px #000);
-        border-bottom: 1px solid #313131;
+        border-bottom: 1px solid var(--sd-colour-line--light);
         padding-left: 10px;
         padding-right: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
 
         .user-info {
             height: 40px;
             padding-top: 12px;
             padding-bottom: 2px;
-            @include box-sizing(border-box);
             .name {
-                color: #c5c5c5;
+                color: var(--color-text-light);
                 font-size: 12px;
                 display: block;
                 line-height: 12px;
             }
             .displayname {
                 font-size: 11px;
-                color: #727272;
+                color: var(--color-text-light);
                 display: block;
                 line-height: 12px;
                 margin-top: 2px;
             }
         }
+        .icn-btn {
+            color: var(--color-text-light);
+        }
         .actions {
             height: 20px;
-            @include box-sizing(border-box);
             button {
                 @include reset-button();
             }
             a, button {
                 font-size: 10px;
-                color: #8d8d8d;
+                color: var(--color-text-light);
                 text-decoration: none;
                 text-transform: uppercase;
-                @include box-sizing(border-box);
                 line-height: 20px;
                 padding-right:16px;
                 padding-left: 0;
@@ -726,24 +738,29 @@ $slide-pane-width: 400px;
                     border:0;
                 }
                 &:hover {
-                    color: #ccc;
+                    color: var(--color-text);
                 }
             }
         }
 
     }
-    > .content {
-        position: absolute;
-        top: 65px;
-        left: 0; right: 0; bottom: 0;
-        border-top: 2px solid #464646;
-        overflow: auto;
-        @include box-shadow(inset 4px 0 4px -2px #202020);
+    .notification-pane__title {
+        font-size: 16px;
+        color: var(--color-text);
+        padding: 10px;
+        font-weight: 300;
+        margin-right: auto;
+    }
+    .notification-pane__content {
+        grid-row: 2 / 2;
+        grid-column: 1 / 2;
+        overflow-y: auto;
+        position: relative;
         .module {
             margin-top: 20px;
             .title {
                 font-size: 16px;
-                color:#f8f8f8;
+                color:var(--color-text);
                 padding: 10px;
                 @include text-light();
             }
@@ -1053,7 +1070,7 @@ $main-item-color-inactive:  hsl(0, 0%, 67%);
         background-color: var(--sd-item__main-Bg);
         border-radius: 0 0 4px 4px;
         &--light {
-            background-color: white;
+            background-color: var(--sd-item__main-Bg);
         }
     }
     .card-box__full-click {
@@ -1534,19 +1551,19 @@ body.prepare-print {
         font-weight: 500;
         line-height: 33px;
         text-transform: uppercase;
-        color: $gray;
+        color: $sd-text-light;
         background-color: transparent;
         border: 0;
-        border-bottom: 1px solid #c2c2c2;
-        border-right: 1px solid #c2c2c2;
+        border-bottom: 1px solid var(--sd-colour-line--medium);
+        border-right: 1px solid var(--sd-colour-line--medium);
 
         &:last-of-type {
             border-right: 0;
         }
 
         &--active {
-            color: $sd-blue;
-            border-top: 1px solid #c2c2c2;
+            color: var(--sd-colour-interactive);
+            border-top: 1px solid var(--sd-colour-line--medium);
             border-bottom: 0;
         }
     }

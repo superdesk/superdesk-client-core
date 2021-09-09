@@ -171,10 +171,12 @@
 
                             <div class="form__row form__row--inner form__row--flex">
                                 <div class="form__row-item form__row-item--no-grow">
-                                    <select class="input-medium" ng-model="vocabulary.field_type">
-                                        <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}
-                                        </option>
-                                    </select>
+                                    <div class="sd-line-input sd-line-input--is-select sd-line-input--no-label sd-line-input--no-margin">
+                                        <select class="input-medium sd-line-input__select" ng-model="vocabulary.field_type">
+                                            <option value="{{type.id}}" ng-repeat="type in mediaTypes">{{type.label}}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="form__row-item form__row-item--no-grow">
                                     <div class="form__row">

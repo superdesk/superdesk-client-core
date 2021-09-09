@@ -83,7 +83,7 @@
         cursor: pointer;
     }
     &--active {
-        background: $sd-blue-text;
+        background: var(--sd-colour-interactive--active);
         i {
             color:white;
         }
@@ -104,7 +104,6 @@
 }
 
 .multi-action-bar {
-    @include border-box();
     position: absolute;
     top: 0;
     bottom: 0;
@@ -112,10 +111,9 @@
     right: 0;
     z-index: 3;
     line-height: 48px;
-    background-color: #fff;
     padding: 0 16px;
     animation: dropOut2 .3s cubic-bezier(0.695, 0.105, 0.285, 1.275) 1;
-    background-color: #d2e5ed;
+    background-color: var(--sd-colour-bg__sliding-toolbar);
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2);
     .navbtn {
         border: none;
@@ -197,13 +195,15 @@
         font-size: 14px;
         border: 0 !important;
         padding: 0 $nav-height;
-
+        color: $sd-text;
         background: none;
         &:focus, &:active {
             @include box-shadow(none !important);
         }
-        &::-webkit-input-placeholder {
-            line-height: 17px;
+        &::-webkit-input-placeholder,
+        &::placeholder  {
+            font-style: italic;
+            color: $sd-text-lighter;
         }
     }
 
@@ -236,8 +236,8 @@
     position: relative;
     z-index: 2;
     padding: 0 0 0 20px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,0.12);
-    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 1px 0 var(--sd-colour-line--light), 0 1px 1px 0 rgba(0,0,0,0.1);
+    background-color: var(--sd-colour-panel-bg--000);
     .search-tags__list {
         flex-grow: 1;
         li {

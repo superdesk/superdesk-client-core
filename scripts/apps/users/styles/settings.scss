@@ -7,7 +7,7 @@
 // User roles
 // -------------------------------------
 
-$roles-border: 1px solid #f0f0f0;
+$roles-border: 1px solid $tableBorder;
 .user-roles-settings {
     // ROLES TAB
     .new-role-modal {
@@ -63,8 +63,8 @@ $roles-border: 1px solid #f0f0f0;
             text-align: center;
             border: $roles-border !important;
             border-right: 0 !important;
-            border-color: #e5e5e5 !important;
-            background: #f2f2f2;
+            border-color: $tableBorder !important;
+            background: $tableBackground;
             padding: 10px 16px;
             white-space: nowrap;
             z-index: 1; // ensure that relatively positioned items in tables aren't displayed on top of the sticky toolbar
@@ -72,6 +72,7 @@ $roles-border: 1px solid #f0f0f0;
         .name {
             min-width: 270px;
         }
+
         input[type="checkbox"] {
             display: inline-block;
             vertical-align: middle;
@@ -91,13 +92,21 @@ $roles-border: 1px solid #f0f0f0;
     .name {
         min-width: 270px;
         font-size: 11px;
+        line-height: 1.1;
         text-align: left;
         border-left: 0 !important;
         padding: 10px;
         text-transform: uppercase;
-        @include text-semibold();
+        font-weight: 500;
         max-width: 270px;
-        color: #666;
+        color: var(--color-text-light);
+        & > div {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+
+        }
     }
     .role-field {
         min-width: 90px;

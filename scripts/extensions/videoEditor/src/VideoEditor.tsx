@@ -672,7 +672,7 @@ export class VideoEditor extends React.Component<IProps, IState> {
         const isLoading = this.state.loading.video || this.state.loading.thumbnail;
 
         return (
-            <div className="modal modal--fullscreen modal--dark-ui in" style={{zIndex: 1050, display: 'block'}}>
+            <div className="modal modal--fullscreen in" style={{zIndex: 1050, display: 'block'}}>
                 <div className="modal__dialog">
                     <div className="modal__content">
                         <div className="modal__header modal__header--flex">

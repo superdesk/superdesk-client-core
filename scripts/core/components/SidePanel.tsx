@@ -36,7 +36,7 @@ export class SidePanel extends React.Component<IPropsSidePanel> {
 export class SidePanelHeader extends React.Component {
     render() {
         return (
-            <div className="side-panel__header">
+            <div className="side-panel__header side-panel__header--border-b">
                 {this.props.children}
             </div>
         );
@@ -77,6 +77,16 @@ export class SidePanelTools extends React.Component {
     render() {
         return (
             <div className="side-panel__tools">
+                {this.props.children}
+            </div>
+        );
+    }
+}
+
+export class SidePanelFooter extends React.Component {
+    render() {
+        return (
+            <div className="side-panel__footer side-panel__footer--button-box">
                 {this.props.children}
             </div>
         );

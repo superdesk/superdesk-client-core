@@ -22,7 +22,8 @@
             button:hover [class*=" big-icon-"],
             a:hover [class^="big-icon-"], 
             a:hover [class*=" big-icon-"] {
-            color: darken($sd-blue, 15%) !important;
+            color: var(--sd-colour-interactive--active) !important;
+            opacity: 1;
         }
     }
 }

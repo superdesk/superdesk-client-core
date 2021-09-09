@@ -80,6 +80,7 @@ div {
             margin-bottom: 10px;
             overflow: hidden;
             padding: 12px;
+            border: 1px solid var(--sd-colour-line--light);
             @include shadow-box;
         }
     }
