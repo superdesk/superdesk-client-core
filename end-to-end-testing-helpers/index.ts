@@ -2,7 +2,6 @@ import {element, by, ElementFinder, ElementArrayFinder, browser, Locator, promis
 import {ECE} from './expected-conditions-extended';
 import {executeContextMenuAction} from './articlesList';
 import {navigateTo} from './workspace';
-import * as path from 'path';
 
 const getTestSelector = (testIds: Array<string> | null = null, text: string | null = null): Locator => {
     const selector = (testIds == null ? [] : testIds)
@@ -100,16 +99,9 @@ export function hover(elem: ElementFinder) {
 
 export function selectFilesForUpload(
     fileInput: ElementFinder,
-    fileNames: Array<string>, // relative to e2e/client/specs/test-files folder
+    filePathsAbsolute: Array<string>,
 ) {
-    fileInput.sendKeys(
-        fileNames
-            .map(
-                (relativePath) =>
-                    path.resolve(__dirname, '../../../../../../e2e/client/specs/test-files/' + relativePath),
-            )
-            .join('\n'),
-    );
+    fileInput.sendKeys(filePathsAbsolute.join('\n'));
 }
 
 export function getFocusedElement(): WebElementPromise {
