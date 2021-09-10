@@ -1713,7 +1713,7 @@ declare module 'superdesk-api' {
             timeformat: string;
         };
         user: {
-            sign_off_mapping: any;
+            sign_off_mapping?: string;
             username_pattern?: string;
         };
         infoRemovedFields: {};
