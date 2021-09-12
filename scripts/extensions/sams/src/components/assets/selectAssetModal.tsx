@@ -205,7 +205,6 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                                 onItemClicked={this.toggleItemSelected}
                                 selectedAssetIds={selectedAssetIds}
                                 updateSelectedAssetIds={this.toggleItemSelected}
-                                updateMultipleSelectedAssetIds={this.toggleItemSelected}
                             />
                         )}
                     />

@@ -26,8 +26,8 @@ interface IProps {
     actions?: Array<IAssetCallback>;
     itemSelected: boolean;
     itemSelectedLocked?: boolean;
-    updateSelectedAssetIds(asset: IAssetItem): void;
-    updateMultipleSelectedAssetIds(asset: IAssetItem): void;
+    updateSelectedAssetIds?(asset: IAssetItem): void;
+    updateMultipleSelectedAssetIds?(asset: IAssetItem): void;
 }
 
 export class AssetListItem extends React.PureComponent<IProps> {
@@ -63,9 +63,9 @@ export class AssetListItem extends React.PureComponent<IProps> {
 
     onCheckboxClick(e: React.MouseEvent<HTMLDivElement>) {
         this.stopClickPropagation(e);
-        if (e.shiftKey) {
+        if (e.shiftKey && this.props.updateMultipleSelectedAssetIds) {
             this.props.updateMultipleSelectedAssetIds(this.props.asset);
-        } else {
+        } else if (this.props.updateSelectedAssetIds) {
             this.props.updateSelectedAssetIds(this.props.asset);
         }
     }

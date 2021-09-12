@@ -19,8 +19,8 @@ interface IProps {
     selectedAssetIds: Array<string> | undefined;
     onItemClicked(asset: IAssetItem): void;
     onItemDoubleClicked?(asset: IAssetItem): void;
-    updateSelectedAssetIds(asset: IAssetItem): void;
-    updateMultipleSelectedAssetIds(asset: IAssetItem): void;
+    updateSelectedAssetIds?(asset: IAssetItem): void;
+    updateMultipleSelectedAssetIds?(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
