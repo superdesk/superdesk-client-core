@@ -36,6 +36,7 @@ interface IProps {
     actions?: Array<IAssetCallback>;
     itemSelected?: boolean;
     updateSelectedAssetIds?(asset: Partial<IAssetItem>): void;
+    updateMultipleSelectedAssetIds?(asset: Partial<IAssetItem>): void;
 }
 
 export class AssetGridItem extends React.PureComponent<IProps> {
@@ -78,8 +79,10 @@ export class AssetGridItem extends React.PureComponent<IProps> {
     }
 
     onCheckboxClick(e: React.MouseEvent<HTMLDivElement>) {
-        if (this.props.updateSelectedAssetIds != null) {
-            e.stopPropagation();
+        this.stopClickPropagation(e);
+        if (e.shiftKey && this.props.updateMultipleSelectedAssetIds) {
+            this.props.updateMultipleSelectedAssetIds(this.props.asset);
+        } else if (this.props.updateSelectedAssetIds) {
             this.props.updateSelectedAssetIds(this.props.asset);
         }
     }
