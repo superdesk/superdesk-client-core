@@ -49,7 +49,7 @@ describe('custom authoring field', () => {
     beforeEach(() => {
         registerInternalExtension('test-authoring-custom-field', {
             contributions: {
-                customFieldTypes: [customField, null],
+                customFieldTypes: [customField],
             },
         });
     });
