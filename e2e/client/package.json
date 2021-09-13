@@ -20,6 +20,8 @@
     "stop-client-server": "fuser -k 9000/tcp",
     "protractor": "node run-end-to-end-tests.js",
     "specs--compile": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs",
-    "specs--watch": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs -w"
+    "specs--watch": "find ./specs/ -name '*.js' -type f -delete && tsc -p ./specs -w",
+    "start-test-server": "cd ../server && docker-compose build && docker-compose up -d",
+    "stop-test-server": "cd ../server && docker-compose stop"
   }
 }

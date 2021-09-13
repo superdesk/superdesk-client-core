@@ -159,8 +159,6 @@
     "unit": "grunt unit",
     "lint": "tsc -p scripts --noEmit && tslint -c tslint.json './**/*.{ts,tsx}' && eslint --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client/specs tasks *.js",
     "lint-fix": "tsc -p scripts --noEmit && tslint --fix -c tslint.json 'scripts/**/*.{ts,tsx}' && eslint --fix --parser=@typescript-eslint/parser --ext .js --ext .jsx --ext .ts --ext .tsx scripts e2e/client/specs tasks *.js",
-    "start-test-server": "cd e2e/server && docker-compose build && docker-compose up -d",
-    "stop-test-server": "cd e2e/server && docker-compose stop",
     "server": "grunt server",
     "dev": "npm run server"
   }
