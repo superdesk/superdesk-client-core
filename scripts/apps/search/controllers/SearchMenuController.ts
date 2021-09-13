@@ -57,7 +57,7 @@ export default function SearchMenuController(
 
     const initActiveProvider = () => {
         if ($location.path() === '/search') {
-            if (!$location.search()._id && !$location.search().item) { // prevent from changing active provider
+            if (!$location.search()._id && !$location.search().item) { // prevent from changing active provider during click on article
                 this.activeProvider = this.providers.find(
                     (provider) => isEqual($location.search(), getSearchParams(provider)),
                 );
