@@ -22,6 +22,7 @@ import {
     MANAGE_MULTIACTIONBAR_CLOSE,
     MANAGE_ASSETS_EDIT,
     MANAGE_ASSET_UPDATE_IN_STORE,
+    UPDATE_MULTIPLE_SELECTED_ASSET_IDS,
 } from './types';
 
 const initialState: IAssetState = {
@@ -63,6 +64,8 @@ export function assetsReducer(
         };
     case UPDATE_SELECTED_ASSET_IDS:
         return manageAssetsInSelectedAssetsArray(state, action.payload);
+    case UPDATE_MULTIPLE_SELECTED_ASSET_IDS:
+        return manageAssetsInMultipleSelectedAssetsArray(state, action.payload);
     case MANAGE_MULTIACTIONBAR_CLOSE:
         return {
             ...state,
@@ -167,4 +170,36 @@ function updateAssetInStore(prevState: IAssetState, payload: Dictionary<string, 
         ...prevState,
         assets: assets,
     };
+}
+
+function manageAssetsInMultipleSelectedAssetsArray(prevState: IAssetState, payload: string): IAssetState {
+    const newState = {...prevState};
+    const selectedAssetId = payload;
+    let selectedAssetIdsArray = [...prevState.selectedAssetIds];
+    const assetsIds = [...prevState.listItemIds];
+
+    if (newState.selectedAssetIds.length > 0) {
+        const indexOfFirstElement = assetsIds.indexOf(selectedAssetIdsArray[selectedAssetIdsArray.length - 1]);
+        const indexOfLastElement = assetsIds.indexOf(selectedAssetId);
+        let inBetweenAssetIds: Array<string> = [];
+
+        if (indexOfFirstElement < indexOfLastElement) {
+            inBetweenAssetIds = assetsIds.splice(indexOfFirstElement, indexOfLastElement - indexOfFirstElement + 1);
+        } else {
+            inBetweenAssetIds = assetsIds.reverse().splice(
+                assetsIds.length - indexOfFirstElement - 1, indexOfFirstElement - indexOfLastElement + 1).reverse();
+        }
+
+        inBetweenAssetIds.forEach((assetId) => {
+            if (!selectedAssetIdsArray.includes(assetId)) {
+                selectedAssetIdsArray = selectedAssetIdsArray.concat([assetId]);
+            }
+        });
+
+        newState.selectedAssetIds = selectedAssetIdsArray;
+    } else {
+        newState.selectedAssetIds = selectedAssetIdsArray.concat(payload);
+    }
+
+    return newState;
 }

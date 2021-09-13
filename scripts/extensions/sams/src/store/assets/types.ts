@@ -37,7 +37,8 @@ export type IAssetActionTypes = IReceiveAssetsAction |
     IUpdateSelectedAssetIds |
     ICloseMultiActionBar |
     IEditAssetAction |
-    IUpdateAssetInStore;
+    IUpdateAssetInStore |
+    IUpdateMultipleSelectedAssetIds;
 
 export interface IAssetState {
     assets: Dictionary<string, IAssetItem>;
@@ -59,6 +60,12 @@ interface IPreviewAssetAction {
 export const UPDATE_SELECTED_ASSET_IDS = 'update__selected_asset_ids';
 interface IUpdateSelectedAssetIds {
     type: typeof UPDATE_SELECTED_ASSET_IDS;
+    payload: string;
+}
+
+export const UPDATE_MULTIPLE_SELECTED_ASSET_IDS = 'update__multiple_selected_asset_ids';
+interface IUpdateMultipleSelectedAssetIds {
+    type: typeof UPDATE_MULTIPLE_SELECTED_ASSET_IDS;
     payload: string;
 }
 

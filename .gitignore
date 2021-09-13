@@ -6,12 +6,12 @@ bower
 dist
 templates-cache.generated.js
 .tmp
-test-server/env
-test-server/__pycache__
+e2e/server/env
+e2e/server/__pycache__
 e2e-test-results
 templates-cache.generated.js
 styles/extension-styles.generated.css
-spec/**/*.js
+e2e/client/specs/**/*.js
 .env
 npm-debug.log
 index.html
