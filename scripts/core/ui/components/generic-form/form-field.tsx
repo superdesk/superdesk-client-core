@@ -7,12 +7,11 @@ import {TextEditor3} from './input-types/text-editor3';
 import {noop} from 'lodash';
 import {CheckboxInput} from './input-types/checkbox';
 import {ContentFilterSingleValue} from './input-types/content-filter-single-value';
-import {IInputType} from './interfaces/input-types';
 import {DeskSingleValue} from './input-types/desk_single_value';
 import {StageSingleValue} from './input-types/stage_single_value';
 import {getMacroSingleValue} from './input-types/macro_single_value';
 import {YesNo} from './input-types/yes-no';
-import {IFormField, IFormGroup} from 'superdesk-api';
+import {IFormField, IFormGroup, IInputType} from 'superdesk-api';
 import {Select} from './input-types/select';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {

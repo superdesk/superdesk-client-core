@@ -77,6 +77,7 @@ import {WithLiveQuery} from './with-live-query';
 import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
+import {TextEditor3} from './ui/components/generic-form/input-types/text-editor3';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -346,6 +347,7 @@ export function getSuperdeskApiImplementation(
             Spacer,
             getLiveQueryHOC: () => WithLiveQuery,
             WithLiveResources,
+            TextEditor3,
         },
         forms: {
             FormFieldType,

@@ -11,7 +11,7 @@ import {getContentStateFromHtml} from './html/from-html';
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 
 import ng from 'core/services/ng';
-import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {
     CHARACTER_LIMIT_UI_PREF,

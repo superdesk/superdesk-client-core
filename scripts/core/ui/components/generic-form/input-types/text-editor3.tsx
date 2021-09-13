@@ -1,13 +1,17 @@
 import React from 'react';
 import classNames from 'classnames';
-import {IInputType} from '../interfaces/input-types';
 import {RawDraftContentState, convertFromRaw, ContentState, convertToRaw} from 'draft-js';
 import {Editor3Standalone} from 'core/editor3/react';
 import {UserHtmlSingleLine} from 'core/helpers/UserHtmlSingleLine';
 import {getContentStateFromHtml} from 'core/editor3/html/from-html';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
+import {RICH_FORMATTING_OPTION, IInputType} from 'superdesk-api';
 
-type IProps = IInputType<string>;
+interface IProps extends IInputType<string> {
+    // Editor format options that are enabled and should be displayed
+    // in the toolbar.
+    editorFormat?: Array<RICH_FORMATTING_OPTION>;
+}
 
 interface IState {
     rawDraftContentState: RawDraftContentState;
@@ -70,7 +74,7 @@ export class TextEditor3 extends React.Component<IProps, IState> {
                 <Editor3Standalone
                     scrollContainer={'window'}
                     onChange={this.handleChange}
-                    editorFormat={['bold', 'italic', 'underline', 'link']}
+                    editorFormat={this.props.editorFormat ?? ['bold', 'italic', 'underline', 'link']}
                     rawDraftContentState={this.state.rawDraftContentState}
                     readOnly={this.props.disabled}
                 />

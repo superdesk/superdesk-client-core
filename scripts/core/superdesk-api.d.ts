@@ -1061,6 +1061,31 @@ declare module 'superdesk-api' {
         horizontalSpacing?: boolean;
     }
 
+    export interface IInputType<T> {
+        // required for composite inputs operating on more than one field
+        readonly formValues: {readonly [key: string]: any};
+
+        readonly formField: IFormField;
+        readonly disabled: boolean;
+        readonly value: T;
+
+        // used to display html fields without formatting
+        readonly showAsPlainText?: boolean;
+
+        // below issues only apply to primary field defined in IFormField['field']
+        readonly issues: Array<string>;
+
+        // renders a minimal representation of the value without any editing controls
+        readonly previewOutput: boolean;
+
+        // fieldName is only passed by components which can change multiple fields
+        readonly onChange: (nextValue: T, fieldName?: string) => void;
+    }
+
+    export interface ITextEditor3Props extends IInputType<string> {
+        editorFormat?: Array<RICH_FORMATTING_OPTION>;
+    }
+
 
     export interface IDropdownTreeGroup<T> {
         render(): JSX.Element | null;
@@ -1167,6 +1192,68 @@ declare module 'superdesk-api' {
         onCancel(): void;
         onApplyAnnotation(html: string): void;
     }
+
+    export type FORMATTING_OPTION =
+        'h1' |
+        'h2' |
+        'h3' |
+        'h4' |
+        'h5' |
+        'h6' |
+        'justifyLeft' |
+        'justifyCenter' |
+        'justifyRight' |
+        'justifyFull' |
+        'outdent' |
+        'indent' |
+        'unordered list' |
+        'ordered list' |
+        'pre' |
+        'quote' |
+        'media' |
+        'link' |
+        'superscript' |
+        'subscript' |
+        'strikethrough' |
+        'underline' |
+        'italic' |
+        'bold' |
+        'table';
+
+    export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
+
+    export type RICH_FORMATTING_OPTION =
+        PLAINTEXT_FORMATTING_OPTION |
+        'h1' |
+        'h2' |
+        'h3' |
+        'h4' |
+        'h5' |
+        'h6' |
+        'ordered list' |
+        'unordered list' |
+        'quote' |
+        'media' |
+        'link' |
+        'embed' |
+        'underline' |
+        'italic' |
+        'bold' |
+        'table' |
+        'formatting marks' |
+        'remove format' |
+        'remove all format' |
+        'annotation' |
+        'comments' |
+        'suggestions' |
+        'pre' |
+        'superscript' |
+        'subscript' |
+        'strikethrough' |
+        'tab' |
+        'tab as spaces' |
+        'undo' |
+        'redo';
 
 
 
@@ -1595,6 +1682,7 @@ declare module 'superdesk-api' {
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
+            TextEditor3: React.ComponentType<ITextEditor3Props>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
