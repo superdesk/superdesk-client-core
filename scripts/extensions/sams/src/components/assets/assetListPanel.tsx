@@ -19,7 +19,8 @@ interface IProps {
     selectedAssetIds: Array<string> | undefined;
     onItemClicked(asset: IAssetItem): void;
     onItemDoubleClicked?(asset: IAssetItem): void;
-    updateSelectedAssetIds(asset: IAssetItem): void;
+    updateSelectedAssetIds?(asset: IAssetItem): void;
+    updateMultipleSelectedAssetIds?(asset: IAssetItem): void;
 }
 
 export class AssetListPanel extends React.PureComponent<IProps> {
@@ -49,6 +50,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
                             updateSelectedAssetIds={this.props.updateSelectedAssetIds}
+                            updateMultipleSelectedAssetIds={this.props.updateMultipleSelectedAssetIds}
                         />
                     ))}
                 </GridList>
@@ -66,6 +68,7 @@ export class AssetListPanel extends React.PureComponent<IProps> {
                             actions={this.props.actions}
                             itemSelected={this.props.selectedAssetIds?.indexOf(asset._id) !== -1}
                             updateSelectedAssetIds={this.props.updateSelectedAssetIds}
+                            updateMultipleSelectedAssetIds={this.props.updateMultipleSelectedAssetIds}
                         />
                     ))}
                 </ListItemGroup>
