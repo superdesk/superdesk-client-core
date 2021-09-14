@@ -1,7 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
+import {IInputType} from '../interfaces/input-types';
 import {AutoComplete} from '../../Autocomplete';
-import {IRestApiResponse, IInputType} from 'superdesk-api';
+import {IRestApiResponse} from 'superdesk-api';
 import {logger} from 'core/services/logger';
 
 type IProps = IInputType<string>;

@@ -1061,32 +1061,6 @@ declare module 'superdesk-api' {
         horizontalSpacing?: boolean;
     }
 
-    export interface IInputType<T> {
-        // required for composite inputs operating on more than one field
-        readonly formValues: {readonly [key: string]: any};
-
-        readonly formField: IFormField;
-        readonly disabled: boolean;
-        readonly value: T;
-
-        // used to display html fields without formatting
-        readonly showAsPlainText?: boolean;
-
-        // below issues only apply to primary field defined in IFormField['field']
-        readonly issues: Array<string>;
-
-        // renders a minimal representation of the value without any editing controls
-        readonly previewOutput: boolean;
-
-        // fieldName is only passed by components which can change multiple fields
-        readonly onChange: (nextValue: T, fieldName?: string) => void;
-    }
-
-    export interface ITextEditor3Props extends IInputType<string> {
-        editorFormat?: Array<RICH_FORMATTING_OPTION>;
-    }
-
-
     export interface IDropdownTreeGroup<T> {
         render(): JSX.Element | null;
         items: Array<T | IDropdownTreeGroup<T>>;
@@ -1175,8 +1149,6 @@ declare module 'superdesk-api' {
 
 
     // EDITOR3
-
-
     export interface IEditor3AnnotationInputTab {
         label: string;
         selectedByDefault(annotationText: string, mode: 'create' | 'edit'): Promise<boolean>;
@@ -1254,6 +1226,21 @@ declare module 'superdesk-api' {
         'tab as spaces' |
         'undo' |
         'redo';
+
+    export interface IEditor3HtmlProps {
+        value: string;
+        onChange(value: string): void;
+        readOnly: boolean;
+
+        // If set, it will be used to make sure the toolbar is always
+        // visible when scrolling. If not set, window object is used as reference.
+        // Any valid jQuery selector will do.
+        scrollContainer?: any;
+
+        // Editor format options that are enabled and should be displayed
+        // in the toolbar.
+        editorFormat?: Array<RICH_FORMATTING_OPTION>;
+    }
 
 
 
@@ -1682,7 +1669,7 @@ declare module 'superdesk-api' {
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
-            TextEditor3: React.ComponentType<ITextEditor3Props>;
+            Editor3Html: React.ComponentType<IEditor3HtmlProps>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;

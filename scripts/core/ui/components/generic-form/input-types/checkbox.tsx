@@ -1,6 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
-import {IInputType} from 'superdesk-api';
+import {IInputType} from '../interfaces/input-types';
 import {Checkbox} from '../../Form';
 import {gettext} from 'core/utils';
 
