@@ -6,7 +6,7 @@ import ng from 'core/services/ng';
 import {ContentState, RawDraftContentState, convertFromRaw, EditorState, convertToRaw} from 'draft-js';
 import {setReadOnly, changeEditorState} from './actions/editor3';
 import {isEqual} from 'lodash';
-import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 
 interface IProps {
     // If set, it will be used to make sure the toolbar is always
