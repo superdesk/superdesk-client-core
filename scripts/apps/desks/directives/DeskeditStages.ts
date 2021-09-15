@@ -2,9 +2,10 @@ import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
 import {gettext, arrayMove} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {httpRequestJsonLocal} from 'core/helpers/network';
 
-DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros'];
-export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros) {
+DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros', '$rootScope'];
+export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros, $rootScope) {
     return {
         link: function(scope, elem) {
             var orig = null;
@@ -18,19 +19,27 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                     const startIndex = ui.item.data('start') - 1;
                     const endIndex = ui.item.index() - 1;
 
+                    const stagesBeforeReordering = [...scope.stages];
+
                     /**
                      * Timeout is added in order to wait for jQuery UI to finish with DOM operations
                      * so it doesn't interfere with angular rendering.
                      */
                     setTimeout(() => {
                         scope.stages = arrayMove(scope.stages, startIndex, endIndex);
-
-                        const orderOfStages = scope.stages.map(({_id}) => _id);
-
-                        // TODO: send orderOfStages to API, reload stages via fetchDeskStages() with refresh option
-                        // Server: add "order" property, ensure that /stages return ordered by that property by default
-
                         scope.$apply();
+
+                        httpRequestJsonLocal({
+                            method: 'POST',
+                            path: '/stages_order',
+                            payload: {
+                                desk: scope.desk.edit._id,
+                                stages: scope.stages.map(({_id}) => _id),
+                            },
+                        }).catch(() => {
+                            scope.stages = stagesBeforeReordering;
+                            scope.$apply();
+                        });
                     });
 
                     /**
@@ -39,6 +48,16 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                      */
                     return false;
                 },
+            });
+
+            // update stages if re-ordered by other user
+            $rootScope.$on('resource:updated', (event, data) => {
+                if (data.resource === 'stages' && data.fields?.['desk_order'] === 1) {
+                    desks.fetchDeskStages(scope.desk.edit._id, true).then((stages) => {
+                        scope.stages = stages;
+                        scope.$applyAsync();
+                    });
+                }
             });
 
             scope.limits = limits;

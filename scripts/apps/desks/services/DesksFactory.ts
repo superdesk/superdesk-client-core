@@ -405,8 +405,10 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
 
     // re-fetch stages when order changes for any stage
     $rootScope.$on('resource:updated', (event, data) => {
-        if (data.resource === 'stages' && data.fields?.['order'] === 1) {
-            desksService.fetchStages(true);
+        if (data.resource === 'stages' && data.fields?.['desk_order'] === 1) {
+            desksService.fetchStages(true).then(() => {
+                desksService.generateDeskStages();
+            });
         }
     });
 
