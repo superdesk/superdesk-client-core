@@ -28,5 +28,6 @@ angular.module('superdesk.apps.instance-configuration', [
             category: superdesk.MENU_MAIN,
             priority: 1000,
             adminTools: true,
+            privileges: {users: 1},
         });
     }]);
