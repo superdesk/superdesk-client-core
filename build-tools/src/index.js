@@ -30,7 +30,9 @@ program.configureHelp({
 program.command('generate-instance-configuration-schema <main-client-dir>')
     .description('reads typescript interfaces and generates JSON schema that will be used to generate the UI')
     .action((mainClientDir) => {
-        generateInstanceConfigurationSchema(mainClientDir, currentDir);
+        const clientDirAbs = path.join(currentDir, mainClientDir);
+
+        generateInstanceConfigurationSchema(clientDirAbs);
     });
 
 program.command('po-to-json <source-dir-po> <output-dir-json>')
@@ -46,8 +48,8 @@ program.command('build-root-repo <main-client-dir>')
     .description('executes all actions required to prepare the main repo for usage')
     .action((mainClientDir) => {
         const clientDirAbs = path.join(currentDir, mainClientDir);
-        const poDir = path.join(clientDirAbs, 'node_modules/superdesk-core/po');
-        const translationsDir = path.join(currentDir, mainClientDir, 'dist/languages');
+
+        generateInstanceConfigurationSchema(clientDirAbs);
 
         // build will fail if extensions are not installed
         installExtensions(clientDirAbs);
@@ -57,6 +59,9 @@ program.command('build-root-repo <main-client-dir>')
             `cd ${clientDirAbs} && node --max-old-space-size=8192 ./node_modules/.bin/grunt build`,
             {stdio: 'inherit'}
         );
+
+        const poDir = path.join(clientDirAbs, 'node_modules/superdesk-core/po');
+        const translationsDir = path.join(currentDir, mainClientDir, 'dist/languages');
 
         // translationsDir is only created after the build and would get removed if created before build
         poToJson(poDir, translationsDir);

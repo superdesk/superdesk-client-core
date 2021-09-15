@@ -34,19 +34,18 @@ function addTranslations(branch) {
 
         // translate description
         if (typeof branch.properties[property].description === 'string') {
-            branch.properties[property].description = `gettext('${escapeSingleQuoteAsHtml(branch.properties[property].description)}')`;
+            branch.properties[property].description =
+                `gettext('${escapeSingleQuoteAsHtml(branch.properties[property].description)}')`;
         }
     }
 
     return branch;
 }
 
-function generateInstanceConfigurationSchema(mainClientDir, currentDir) {
-    const clientDirAbs = path.join(currentDir, mainClientDir);
+function generateInstanceConfigurationSchema(clientDirAbs) {
     const file = path.join(clientDirAbs, 'node_modules/superdesk-core/scripts/core/superdesk-api.d.ts');
     const configFile = path.join(
-        currentDir,
-        mainClientDir,
+        clientDirAbs,
         'node_modules/superdesk-core/scripts/instance-settings.generated.ts'
     );
     const generatedSchema = JSON.parse(
