@@ -58,17 +58,19 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         self.defaultPersonalGroup.type = id;
     };
 
-    desks.initialize()
-        .then(angular.bind(this, function() {
-            this.desks = desks.desks._items;
-            this.deskLookup = desks.deskLookup;
-            this.deskStages = desks.deskStages;
-            each(this.desks, (desk) => {
-                each(self.deskStages[desk._id], (stage) => {
-                    self.stageLookup[stage._id] = stage;
-                });
+    const initializeDesksAndStages = () => {
+        this.desks = desks.desks._items;
+        this.deskLookup = desks.deskLookup;
+        this.deskStages = desks.deskStages;
+        each(this.desks, (desk) => {
+            each(self.deskStages[desk._id], (stage) => {
+                self.stageLookup[stage._id] = stage;
             });
-        }))
+        });
+    };
+
+    desks.initialize()
+        .then(() => initializeDesksAndStages())
         .then(angular.bind(this, function() {
             return savedSearch.getAllSavedSearches().then(angular.bind(this, function(searchesList) {
                 this.searches = searchesList;
@@ -317,6 +319,13 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
         if (self.loading) {
             return null;
         }
+
+        /**
+         * When a new stage is added, it should appear in the list of desk stages
+         * in monitoring settings.
+         */
+        initializeDesksAndStages();
+
         return self.readSettings()
             .then((settings) => {
                 initGroups(settings);
