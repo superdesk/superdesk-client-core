@@ -49,8 +49,6 @@ program.command('build-root-repo <main-client-dir>')
     .action((mainClientDir) => {
         const clientDirAbs = path.join(currentDir, mainClientDir);
 
-        generateInstanceConfigurationSchema(clientDirAbs);
-
         // build will fail if extensions are not installed
         installExtensions(clientDirAbs);
         namespaceCSS(clientDirAbs);
