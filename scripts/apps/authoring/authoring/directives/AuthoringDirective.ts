@@ -1032,7 +1032,7 @@ export function AuthoringDirective(
                     }
                 }
 
-                if ($location.$$path == '/workspace') {
+                if ($location.$$path === '/workspace') {
                     api.save('move', {}, {
                         task: {desk: selectedDesk._id, stage: stageList[stageIndex]._id},
                     }, $scope.item).then(
