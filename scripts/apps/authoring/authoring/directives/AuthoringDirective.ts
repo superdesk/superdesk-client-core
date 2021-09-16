@@ -1032,13 +1032,26 @@ export function AuthoringDirective(
                     }
                 }
 
-                $rootScope.$broadcast('item:nextStage', {
-                    stage: stageList[stageIndex],
-                    itemId: $scope.item._id,
-                    selectedStage: selectedStage,
-                    selectedDesk: selectedDesk,
-                    item: $scope.item,
-                });
+                if ($location.$$path == '/workspace') {
+                    api.save('move', {}, {
+                        task: {desk: selectedDesk._id, stage: stageList[stageIndex]._id},
+                    }, $scope.item).then(
+                        (value) => {
+                            notify.success(gettext('Item sent.'));
+                        },
+                        (err) => {
+                            notify.error(err.data._error.message);
+                        },
+                    );
+                } else {
+                    $rootScope.$broadcast('item:nextStage', {
+                        stage: stageList[stageIndex],
+                        itemId: $scope.item._id,
+                        selectedStage: selectedStage,
+                        selectedDesk: selectedDesk,
+                        item: $scope.item,
+                    });
+                }
                 $scope.close();
             };
 
