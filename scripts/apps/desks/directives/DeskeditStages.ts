@@ -4,8 +4,8 @@ import {gettext, arrayMove} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 
-DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros', '$rootScope'];
-export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros, $rootScope) {
+DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros'];
+export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros) {
     return {
         link: function(scope, elem) {
             var orig = null;
@@ -51,7 +51,7 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros,
             });
 
             // update stages if re-ordered by other user
-            $rootScope.$on('resource:updated', (event, data) => {
+            scope.$on('resource:updated', (event, data) => {
                 if (data.resource === 'stages' && data.fields?.['desk_order'] === 1) {
                     desks.fetchDeskStages(scope.desk.edit._id, true).then((stages) => {
                         scope.stages = stages;
