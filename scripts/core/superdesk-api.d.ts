@@ -1561,7 +1561,7 @@ declare module 'superdesk-api' {
                 itemsFlat: Array<T>,
                 getId: (item: T) => string,
                 getParentId: (item: T) => string | undefined | null,
-            ): Array<ITreeNode<T>>;
+            ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
         };
         addWebsocketMessageListener<T extends string>(

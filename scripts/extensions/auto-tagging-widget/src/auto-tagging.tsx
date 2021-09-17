@@ -59,11 +59,66 @@ function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
     return iMatricsFields[key] != null;
 }
 
+function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
+    const {gettext} = superdesk.localization;
+    const {showModal} = superdesk.ui;
+    const {Modal, ModalHeader, ModalBody, ModalFooter} = superdesk.components;
+
+    showModal(({closeModal}) => (
+        <Modal>
+            <ModalHeader onClose={closeModal}>
+                {gettext('iMatrics service error')}
+            </ModalHeader>
+
+            <ModalBody>
+                <h3>{gettext('Some tags can not be displayed')}</h3>
+
+                <p>
+                    {
+                        gettext(
+                            'iMatrics service has returned tags referencing parents that do not exist in the response.',
+                        )
+                    }
+                </p>
+
+                <table className="table" style={{borderTop: 'none'}}>
+                    <thead>
+                        <th style={{borderTop: 'none'}}>{gettext('tag name')}</th>
+                        <th style={{borderTop: 'none'}}>{gettext('qcode')}</th>
+                        <th style={{borderTop: 'none'}}>{gettext('parent ID')}</th>
+                    </thead>
+
+                    <tbody>
+                        {
+                            errors.map((tag) => (
+                                <tr key={tag.qcode}>
+                                    <td>{tag.name}</td>
+                                    <td>{tag.qcode}</td>
+                                    <td>{tag.parent}</td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button
+                    text={gettext('close')}
+                    onClick={() => {
+                        closeModal();
+                    }}
+                />
+            </ModalFooter>
+        </Modal>
+    ));
+}
+
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
     const {httpRequestJsonLocal} = superdesk;
-    const {gettext} = superdesk.localization;
-    const {memoize, generatePatch} = superdesk.utilities;
+    const {gettext, gettextPlural} = superdesk.localization;
+    const {memoize, generatePatch, arrayToTree} = superdesk.utilities;
     const groupLabels = getGroups(superdesk);
 
     const TagListComponent = getTagsListComponent(superdesk);
@@ -224,6 +279,69 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             return (
                 <React.Fragment>
+                    {
+                        (() => {
+                            if (data === 'loading' || data === 'not-initialized') {
+                                return null;
+                            } else {
+                                const treeErrors = arrayToTree(
+                                    data.changes.analysis.toArray(),
+                                    (item) => item.qcode,
+                                    (item) => item.parent,
+                                ).errors;
+
+                                if (treeErrors.length < 1) {
+                                    return null;
+                                } else { {
+                                    return (
+                                        <div
+                                            className="sd-alert sd-alert--small sd-alert--warning"
+                                            style={{
+                                                paddingLeft: '1.2rem',
+                                                paddingRight: '1.2rem',
+                                                marginBottom: 0,
+                                            }}
+                                        >
+                                            <div
+                                                style={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    width: '100%',
+                                                }}
+                                            >
+                                                <div>
+                                                    <strong style={{fontSize: 14}}>
+                                                        {gettext('iMatrics service error')}
+                                                    </strong>
+
+                                                    <p style={{fontSize: 12}}>
+                                                        {
+                                                            gettextPlural(
+                                                                treeErrors.length,
+                                                                '1 tag can not be displayed',
+                                                                '{{n}} tags can not be displayed',
+                                                                {n: treeErrors.length},
+                                                            )
+                                                        }
+                                                    </p>
+                                                </div>
+
+                                                <Button
+                                                    text={gettext('details')}
+                                                    icon="info-sign"
+                                                    iconOnly
+                                                    onClick={() => {
+                                                        showImatricsServiceErrorModal(superdesk, treeErrors);
+                                                    }}
+                                                    size="small"
+                                                />
+                                            </div>
+                                        </div>
+                                    );
+                                }}
+                            }
+                        })()
+                    }
                     <div className="widget-header">
                         <div className="widget-title">{label}</div>
 

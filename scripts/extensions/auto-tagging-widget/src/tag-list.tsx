@@ -26,7 +26,7 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                 tagsJs,
                 (item) => item.qcode,
                 (item) => item.parent,
-            );
+            ).result;
 
             const tagListItem = (node: ITreeNode<ITagUi>) => {
                 const isRootNodeWithChildren = node.parent == null && node.children != null;
