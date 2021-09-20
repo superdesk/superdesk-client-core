@@ -10,6 +10,8 @@ function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
     case FormFieldType.textEditor3:
         // even though textEditor3 outputs HTML, plaintext has to be used for filtering
         return FormFieldType.textSingleLine;
+    case FormFieldType.number:
+        return FormFieldType.number;
     case FormFieldType.vocabularySingleValue:
         return FormFieldType.vocabularySingleValue;
     case FormFieldType.checkbox:
@@ -26,6 +28,8 @@ function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
         return FormFieldType.yesNo;
     case FormFieldType.select:
         return FormFieldType.select;
+    case FormFieldType.arrayOf:
+        return FormFieldType.arrayOf;
     default:
         assertNever(type);
     }

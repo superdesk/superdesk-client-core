@@ -1,14 +1,15 @@
 import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
-import {Checkbox} from '../../Form';
-import {gettext} from 'core/utils';
 
-export class CheckboxInput extends React.Component<IInputType<boolean>> {
+export class NumberField extends React.Component<IInputType<number>> {
     render() {
         if (this.props.previewOutput) {
-            return <div>{this.props.value ? gettext('Yes') : gettext('No')}</div>;
+            return <div data-test-id={`gform-output--${this.props.formField.field}`}>{this.props.value}</div>;
         }
+
+        // default value is required so React doesn't complain that uncontrolled component is changed to controlled.
+        const valueWithDefaultValue = this.props.value || '';
 
         return (
             <div
@@ -22,13 +23,16 @@ export class CheckboxInput extends React.Component<IInputType<boolean>> {
                     )
                 }
             >
-                <Checkbox
-                    value={this.props.value}
-                    label={this.props.formField.label}
-                    onChange={(field, value) => {
-                        this.props.onChange(value === true);
+                <label className="sd-line-input__label">{this.props.formField.label}</label>
+                <input
+                    type="number"
+                    disabled={this.props.disabled}
+                    value={valueWithDefaultValue}
+                    onChange={(event) => {
+                        this.props.onChange(event.target.value === '' ? null : parseInt(event.target.value, 10));
                     }}
-                    readOnly={this.props.disabled}
+                    className="sd-line-input__input"
+                    data-test-id={`gform-input--${this.props.formField.field}`}
                 />
 
                 {

@@ -7,6 +7,7 @@ import {
     ISortOption,
     ICrudManagerFilters,
     IVocabulary,
+    Dictionary,
 } from 'superdesk-api';
 
 const testBaseApiResponse: IBaseRestApiResponse = {

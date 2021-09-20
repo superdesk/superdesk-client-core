@@ -1,4 +1,4 @@
-export const waitUntil = (precondition, timeoutAt = 1000 * 60) => new Promise((resolve, reject) => {
+export const waitUntil = (precondition, timeoutAt = 1000 * 60) => new Promise<void>((resolve, reject) => {
     function checkNow() {
         if (precondition() === true) {
             window.clearInterval(interval);
