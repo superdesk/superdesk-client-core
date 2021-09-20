@@ -11,10 +11,13 @@ function getAllInputTypes(): Array<FormFieldType> {
     return Object.keys(FormFieldType).map((key) => FormFieldType[key]);
 }
 
+const testDescription = 'test description 943';
+
 function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
     case FormFieldType.textSingleLine:
     case FormFieldType.textEditor3:
+    case FormFieldType.number:
     case FormFieldType.checkbox:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
@@ -22,11 +25,13 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
         };
     case FormFieldType.vocabularySingleValue:
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
             component_parameters: {
                 vocabulary_id: 'test_vocabulary_id',
             },
@@ -36,6 +41,7 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
             component_parameters: {
                 deskField: 'test-desk-field',
             },
@@ -44,10 +50,20 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+            description: testDescription,
             component_parameters: {
                 options: [
                     {id: 'test', label: 'test'},
                 ],
+            },
+        };
+    case FormFieldType.arrayOf:
+        return {
+            type: type,
+            field: 'test-field',
+            description: testDescription,
+            component_parameters: {
+                field_type: FormFieldType.number,
             },
         };
     default:
@@ -71,7 +87,7 @@ describe('generic form', () => {
                             formField={getTestFieldConfig(type)}
                             formValues={{}}
                             disabled={false}
-                            value=""
+                            value={undefined}
                             issues={[message]}
                             previewOutput={false}
                             onChange={noop}
@@ -85,11 +101,45 @@ describe('generic form', () => {
                     expect(wrapper.html()).toContain(message);
 
                     done();
-                });
+                }, 100);
             });
         });
 
     getAllInputTypes()
+        .forEach((type: FormFieldType) => {
+            it(`${type} should render description`, (done) => {
+                const Component = getFormFieldComponent(type);
+
+                const wrapper = mount(
+                    <div>
+                        <Component
+                            formField={getTestFieldConfig(type)}
+                            formValues={{}}
+                            disabled={false}
+                            value={undefined}
+                            previewOutput={false}
+                            issues={[]}
+                            onChange={noop}
+                        />
+                    </div>,
+                );
+
+                setTimeout(() => { // wait for data fetching (only used by some input types)
+                    wrapper.update();
+                    expect(wrapper.html()).toContain(testDescription);
+
+                    done();
+                }, 100);
+            });
+        });
+
+    getAllInputTypes()
+        /**
+         * `arrayOf` can't add that classname, because due to current CSS,
+         * all children would be marked as required even if they are not.
+         */
+        .filter((type) => type !== FormFieldType.arrayOf)
+
         .forEach((type: FormFieldType) => {
             it(`${type} should add a classname for required fields`, (done) => {
                 const Component = getFormFieldComponent(type);
@@ -100,7 +150,7 @@ describe('generic form', () => {
                             formField={{...getTestFieldConfig(type), required: true}}
                             formValues={{}}
                             disabled={false}
-                            value=""
+                            value={undefined}
                             issues={[]}
                             previewOutput={false}
                             onChange={noop}
@@ -113,7 +163,7 @@ describe('generic form', () => {
                     expect(wrapper.find('.sd-line-input--required').length).toBe(1);
 
                     done();
-                });
+                }, 100);
             });
         });
 });

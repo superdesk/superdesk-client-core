@@ -1,7 +1,7 @@
 import {flatMap, noop} from 'lodash';
 import {getSuperdeskApiImplementation} from './get-superdesk-api-implementation';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
-import {IExtensionModule, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
+import {IExtensionModule, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk, Dictionary} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
 import {dispatchInternalEvent} from './internal-events';
 
