@@ -73,6 +73,7 @@ import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
 import {notify} from './notify/notify';
 import {sdApi} from 'api';
 import {arrayToTree, treeToArray} from './helpers/tree';
+import {WidgetHeading} from 'apps/dashboard/widget-heading';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -326,6 +327,7 @@ export function getSuperdeskApiImplementation(
             Icon,
             getDropdownTree: () => DropdownTree,
             Spacer,
+            WidgetHeading,
         },
         forms: {
             FormFieldType,

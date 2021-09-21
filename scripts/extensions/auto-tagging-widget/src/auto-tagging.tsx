@@ -119,6 +119,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {httpRequestJsonLocal} = superdesk;
     const {gettext, gettextPlural} = superdesk.localization;
     const {memoize, generatePatch, arrayToTree} = superdesk.utilities;
+    const {WidgetHeading} = superdesk.components;
     const groupLabels = getGroups(superdesk);
 
     const TagListComponent = getTagsListComponent(superdesk);
@@ -342,12 +343,14 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                             }
                         })()
                     }
-                    <div className="widget-header">
-                        <div className="widget-title">{label}</div>
 
+                    <WidgetHeading
+                        widgetName={label}
+                        editMode={dirty}
+                    >
                         {
                             data === 'loading' || data === 'not-initialized' || !dirty ? null : (
-                                <div className="widget__sliding-toolbar widget__sliding-toolbar--right">
+                                <div>
                                     <button
                                         className="btn btn--primary"
                                         onClick={() => {
@@ -373,7 +376,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 </div>
                             )
                         }
-                    </div>
+                    </WidgetHeading>
 
                     <div className="widget-content sd-padding-all--2">
                         <div>

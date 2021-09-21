@@ -951,6 +951,11 @@ declare module 'superdesk-api' {
         bold?: boolean;
     }
 
+    export interface IPropsWidgetHeading {
+        widgetName: string;
+        editMode: boolean;
+    }
+
     export interface IGridComponentProps {
         columns: number;
         boxed?: boolean;
@@ -1470,6 +1475,7 @@ declare module 'superdesk-api' {
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             Spacer: React.ComponentType<IPropsSpacer>;
+            WidgetHeading: React.ComponentType<IPropsWidgetHeading>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
