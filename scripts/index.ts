@@ -65,6 +65,7 @@ import {IExtensionLoader, registerExtensions} from 'core/register-extensions';
 import {setupTansa} from 'apps/tansa';
 import {i18n} from 'core/utils';
 import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
+import {merge} from 'lodash';
 
 let body = angular.element('body');
 
@@ -75,7 +76,7 @@ function loadConfigs() {
     })
         .then((res) => res.ok ? res.json() : Promise.reject())
         .then((json) => {
-            Object.assign(appConfig, json.config);
+            merge(appConfig, json.config);
         });
 }
 

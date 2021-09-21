@@ -1165,6 +1165,14 @@ declare module 'superdesk-api' {
     }
 
     export type IIgnoreCancelSaveResponse = 'ignore' | 'cancel' | 'save';
+    // HELPERS
+
+    export interface ITreeNode<T> {
+        value: T;
+        parent?: ITreeNode<T>;
+        children?: Array<ITreeNode<T>>;
+    }
+
 
 
     // EDITOR3
@@ -1810,6 +1818,14 @@ declare module 'superdesk-api' {
                     self: boolean; // will check the current element too if set to true
                 },
             ): HTMLElement | null;
+
+            arrayToTree<T>(
+                itemsFlat: Array<T>,
+                getId: (item: T) => string,
+                getParentId: (item: T) => string | undefined | null,
+            ): Array<ITreeNode<T>>;
+
+            treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -2000,7 +2016,7 @@ declare module 'superdesk-api' {
             timeformat: string;
         };
         user: {
-            sign_off_mapping: any;
+            sign_off_mapping?: string;
             username_pattern?: string;
         };
         infoRemovedFields: {};
@@ -2099,6 +2115,8 @@ declare module 'superdesk-api' {
             name: string;
             config: any;
         }>;
+
+        userOnlineMinutes: number;
 
         iMatricsFields: {
             entities: {
@@ -2226,9 +2244,16 @@ declare module 'superdesk-api' {
         description?: string;
         qcode: string;
         scheme?: string;
-        source?: string;
         translations?: {};
         altids?: {[key: string]: string};
+        aliases?: Array<string>;
+
+        /** provider name, eg. imatrics */
+        source?: string;
+
+        /** original source of the data, eg. wikidata */
+        original_source?: string;
+        parent?: string;
     }
 
     // UTILITIES

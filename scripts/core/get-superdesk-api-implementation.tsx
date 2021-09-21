@@ -80,6 +80,7 @@ import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 import {instanceSettings} from 'instance-settings';
 import {Editor3Html} from './editor3/Editor3Html';
+import {arrayToTree, treeToArray} from './helpers/tree';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -429,6 +430,8 @@ export function getSuperdeskApiImplementation(
             downloadBlob,
             throttleAndCombineArray,
             querySelectorParent,
+            arrayToTree,
+            treeToArray,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(
