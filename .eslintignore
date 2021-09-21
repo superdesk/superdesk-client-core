@@ -6,3 +6,5 @@ scripts/extensions/**/dist
 end-to-end-testing-helpers/dist
 end-to-end-testing-helpers/node_modules
 spec/**/*.js
+e2e/**
+build-tools/**

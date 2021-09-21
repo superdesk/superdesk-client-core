@@ -293,7 +293,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 if (treeErrors.length < 1) {
                                     return null;
-                                } else { {
+                                } else {
                                     return (
                                         <div
                                             className="sd-alert sd-alert--small sd-alert--warning"
@@ -339,7 +339,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             </div>
                                         </div>
                                     );
-                                }}
+                                }
                             }
                         })()
                     }
