@@ -291,9 +291,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     (item) => item.parent,
                                 ).errors;
 
-                                if (treeErrors.length < 1) {
-                                    return null;
-                                } else {
+                                // only show errors when there are unsaved changes
+                                if (treeErrors.length > 0 && dirty) {
                                     return (
                                         <div
                                             className="sd-alert sd-alert--small sd-alert--warning"
@@ -339,6 +338,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             </div>
                                         </div>
                                     );
+                                } else {
+                                    return null;
                                 }
                             }
                         })()
