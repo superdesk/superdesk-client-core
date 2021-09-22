@@ -1,12 +1,11 @@
 import moment from 'moment';
-import {IDatePickerLocaleSettings} from 'superdesk-api';
-import {instanceSettings} from 'instance-settings';
-import {getWeekDayIndex} from 'core/utils';
+import {DatePickerLocaleSettings} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
-export function getLocaleForDatePicker(targetLocale?: string): IDatePickerLocaleSettings {
+export function getLocaleForDatePicker(targetLocale?: string): DatePickerLocaleSettings {
     function getLocale() {
         return {
-            firstDayOfWeek: getWeekDayIndex(instanceSettings.locale.firstDayOfWeek),
+            firstDayOfWeek: appConfig.startingDay,
             dayNames: moment.weekdays(),
             dayNamesShort: moment.weekdaysShort(),
             dayNamesMin: moment.weekdaysMin(),

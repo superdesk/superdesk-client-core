@@ -1,6 +1,6 @@
 {
   "name": "@superdesk/build-tools",
-  "version": "2.0.1",
+  "version": "1.0.16",
   "publishConfig": {
     "access": "public"
   },
