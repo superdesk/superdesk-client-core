@@ -30,7 +30,10 @@ export class ListItem extends React.PureComponent<IProps> {
 
     handleClicks(event: React.MouseEvent<HTMLDivElement>) {
         if (this.props.onDoubleClick == null) {
-            this.props.onClick!(event);
+            if (this.props.onClick != null) {
+                this.props.onClick!(event);
+            }
+
             return;
         }
 
