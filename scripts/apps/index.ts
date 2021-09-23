@@ -28,7 +28,6 @@ import 'apps/extension-points';
 import 'apps/contacts';
 import 'apps/relations';
 import 'apps/system-messages';
-import 'apps/instance-configuration';
 
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
@@ -64,5 +63,4 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.contacts',
     'superdesk.apps.relations',
     'superdesk.apps.system-messages',
-    'superdesk.apps.instance-configuration',
 ]);

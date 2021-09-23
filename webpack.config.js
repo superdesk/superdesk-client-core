@@ -273,5 +273,7 @@ function getDefaults(grunt) {
             'pt_BR',
             'pl',
         ],
+
+        userOnlineMinutes: 15,
     };
 }

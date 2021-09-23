@@ -5,37 +5,24 @@
 declare const __SUPERDESK_CONFIG__: any;
 
 declare const $: any; // jquery
-
 declare const KV: any; // qumu widgets
 
 // angular
 declare const angular: IAngularStatic;
-
 declare const inject: any;
 
 // testing
 declare const jasmine: any;
-
 declare const spyOn: any;
-
 declare const describe: any;
-
 declare const fdescribe: any;
-
 declare const xdescribe: any;
-
 declare const beforeEach: any;
-
 declare const afterEach: any;
-
 declare const expect: any;
-
 declare const it: any;
-
 declare const fit: any;
-
 declare const xit: any;
-
 declare const fail: any;
 
 // Most browsers have it implemented, but the standard's state is still "Editor's Draft".
@@ -92,11 +79,12 @@ interface Window {
 }
 
 // Allow importing json/html files
-declare module '*.json';
-declare module '*.html';
+declare module "*.json";
+declare module "*.html";
 
 // ------------------------------------------------------------------------------------------------
 // TYPES
 // ------------------------------------------------------------------------------------------------
 
+type Dictionary<K, V> = {[key: string]: V};
 type valueof<T> = T[keyof T];

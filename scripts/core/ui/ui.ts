@@ -3,7 +3,7 @@
 
 import _, {mapValues} from 'lodash';
 import moment from 'moment-timezone';
-import {gettext, getWeekDayIndex} from 'core/utils';
+import {gettext} from 'core/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
@@ -11,7 +11,6 @@ import {VideoComponent} from './components/video';
 import {TextAreaInput} from './components/Form';
 import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
 import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
-import {instanceSettings} from 'instance-settings';
 
 /**
  * Gives top shadow for scroll elements
@@ -319,7 +318,7 @@ function DatepickerDirective($document) {
 DatepickerInnerDirective.$inject = ['$compile', '$document', 'popupService', 'datetimeHelper'];
 function DatepickerInnerDirective($compile, $document, popupService, datetimeHelper) {
     var popupTpl = '<div sd-datepicker-wrapper ng-model="date">' +
-        `<div datepicker format-day="d" starting-day="${getWeekDayIndex(instanceSettings.locale.firstDayOfWeek)}" show-weeks="false"></div>` +
+        '<div datepicker format-day="d" starting-day="' + appConfig.startingDay + '" show-weeks="false"></div>' +
     '</div>';
 
     return {

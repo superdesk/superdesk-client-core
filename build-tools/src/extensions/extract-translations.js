@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const getExtensionDirectoriesSync = require('./get-extension-directories-sync');
 
-const {GettextExtractor, JsExtractors, HtmlExtractors} = require('gettext-extractor');
+const {GettextExtractor, JsExtractors} = require('gettext-extractor');
 const extractor = new GettextExtractor();
 
 function extractTranslations(clientDir) {
@@ -11,9 +11,8 @@ function extractTranslations(clientDir) {
         const package = JSON.parse(fs.readFileSync(path.join(extensionRootPath, 'package.json'), 'utf-8'));
         const paths = _.get(package, 'superdeskExtension.translations-extract-paths');
 
-
         if (paths == null || !Array.isArray(paths)) {
-            continue;
+            return null;
         }
 
         const pathsAbsolute = paths.map((p) => path.join(extensionRootPath, p));
@@ -37,19 +36,6 @@ function extractTranslations(clientDir) {
 
         for (const _path of pathsAbsolute) {
             jsParser.parseFilesGlob(`${_path}/**/*.@(ts|js|tsx|jsx)`);
-        }
-
-        const htmlParser = extractor
-            .createHtmlParser([
-                HtmlExtractors.elementContent('[translate]', {
-                    attributes: {
-                        textPlural: 'translate-plural',
-                    },
-                }),
-            ]);
-
-        for (const _path of pathsAbsolute) {
-            htmlParser.parseFilesGlob(`${_path}/**/*.@(html)`);
         }
 
         extractor.savePotFile(`${extensionRootPath}/translations.generated.pot`);

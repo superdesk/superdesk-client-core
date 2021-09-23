@@ -104,17 +104,10 @@ export function getSelectSingleValueAutoComplete(
                         selected={this.props.value}
                         data-test-id={`gform-input--${this.props.formField.field}`}
                     />
-
                     {
                         this.props.issues.map((str, i) => (
                             <div key={i} className="sd-line-input__message">{str}</div>
                         ))
-                    }
-
-                    { // Design does not allow showing errors and description at the same
-                        this.props.issues.length < 1 && this.props.formField.description && (
-                            <span className="sd-line-input__hint">{this.props.formField.description}</span>
-                        )
                     }
                 </div>
             );

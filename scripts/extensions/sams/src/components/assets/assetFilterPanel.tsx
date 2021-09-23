@@ -4,7 +4,7 @@ import {noop} from 'lodash';
 
 // Types
 import {ASSET_STATE, IAssetSearchParams, LIST_ACTION, IAutoTaggingSearchResult, IAssetTag} from '../../interfaces';
-import {IDatePickerLocaleSettings} from 'superdesk-api';
+import {DatePickerLocaleSettings} from 'superdesk-api';
 import {superdeskApi, samsApi} from '../../apis';
 
 // UI
@@ -48,7 +48,7 @@ interface IState {
 
 export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
     onChange: Dictionary<string, (value: any) => void>;
-    datePickerLocale: IDatePickerLocaleSettings;
+    datePickerLocale: DatePickerLocaleSettings;
 
     constructor(props: IProps) {
         super(props);

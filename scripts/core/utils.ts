@@ -178,24 +178,3 @@ export function getItemTypes() {
                 true
         ));
 }
-
-type IWeekday =
-    'sunday'
-    | 'monday'
-    | 'tuesday'
-    | 'wednesday'
-    | 'thursday'
-    | 'friday'
-    | 'saturday'
-
-export function getWeekDayIndex(weekday: IWeekday): number {
-    return [
-        'sunday',
-        'monday',
-        'tuesday',
-        'wednesday',
-        'thursday',
-        'friday',
-        'saturday',
-    ].indexOf(weekday);
-}
