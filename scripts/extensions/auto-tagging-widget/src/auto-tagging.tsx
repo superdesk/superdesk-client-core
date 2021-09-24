@@ -62,6 +62,7 @@ function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
 function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
     const {gettext} = superdesk.localization;
     const {showModal} = superdesk.ui;
+    const {getClass} = superdesk.utilities.CSS;
     const {Modal, ModalHeader, ModalBody, ModalFooter} = superdesk.components;
 
     showModal(({closeModal}) => (
@@ -81,7 +82,7 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
                     }
                 </p>
 
-                <table className="table" style={{borderTop: 'none'}}>
+                <table className={`table ${getClass('service-error--table')}`}>
                     <thead>
                         <th style={{borderTop: 'none'}}>{gettext('tag name')}</th>
                         <th style={{borderTop: 'none'}}>{gettext('qcode')}</th>
@@ -119,6 +120,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {httpRequestJsonLocal} = superdesk;
     const {gettext, gettextPlural} = superdesk.localization;
     const {memoize, generatePatch, arrayToTree} = superdesk.utilities;
+    const {getClass} = superdesk.utilities.CSS;
     const {WidgetHeading} = superdesk.components;
     const groupLabels = getGroups(superdesk);
 
@@ -295,20 +297,15 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
                                         <div
-                                            className="sd-alert sd-alert--small sd-alert--warning"
-                                            style={{
-                                                paddingLeft: '1.2rem',
-                                                paddingRight: '1.2rem',
-                                                marginBottom: 0,
-                                            }}
+                                            className={
+                                                [
+                                                    'sd-alert sd-alert--small',
+                                                    'sd-alert--warning',
+                                                    getClass('service-error--message'),
+                                                ].join(' ')
+                                            }
                                         >
-                                            <div
-                                                style={{
-                                                    display: 'flex',
-                                                    justifyContent: 'space-between',
-                                                    width: '100%',
-                                                }}
-                                            >
+                                            <div className={getClass('service-error--message--inner')}>
                                                 <div>
                                                     <strong style={{fontSize: 14}}>
                                                         {gettext('iMatrics service error')}

@@ -27,3 +27,19 @@
     font-size: 13px;
     font-weight: 300;
 }
+
+.service-error--table {
+    border-top: 0!important;
+}
+
+.service-error--message {
+    padding-left: 1.2rem!important;
+    padding-right: 1.2rem!important;
+    margin-bottom: 0!important;
+}
+
+.service-error--message--inner {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
