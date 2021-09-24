@@ -37,6 +37,9 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                         tag={item}
                         key={item.qcode}
                         gettext={gettext}
+
+                        // root items with children have to be on a separate line
+                        display={isRootNodeWithChildren ? 'block' : undefined}
                     >
                         <Tag
                             key={item.qcode}
