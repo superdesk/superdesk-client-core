@@ -18,7 +18,7 @@ export class WidgetHeading extends React.PureComponent<IPropsWidgetHeading> {
 
         return (
             <div className="widget-header">
-                <div className="widget-title space-between" style={{width: '100%'}}>
+                <div className="widget-title widget-heading--title">
                     <span>{this.props.widgetName}</span>
                     <span>
                         <button
@@ -43,8 +43,7 @@ export class WidgetHeading extends React.PureComponent<IPropsWidgetHeading> {
                 {
                     this.props.editMode && (
                         <div
-                            className="widget__sliding-toolbar widget__sliding-toolbar--right"
-                            style={{paddingLeft: '1.2rem', paddingRight: '1.2rem'}}
+                            className="widget__sliding-toolbar widget__sliding-toolbar--right widget-heading--children"
                         >
                             {this.props.children}
                         </div>
