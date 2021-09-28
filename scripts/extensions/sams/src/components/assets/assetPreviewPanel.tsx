@@ -30,6 +30,7 @@ import {
 } from '../../ui';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
 import {getPreviewComponent} from './preview';
+import {showImagePreviewModal} from './assetImagePreviewFullScreen';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
@@ -84,6 +85,10 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
         downloadAssetBinary(this.props.asset!);
     }
 
+    onAssetImagePreview(asset: IAssetItem): void {
+        showImagePreviewModal(asset!);
+    }
+
     render() {
         if (this.props.asset?._id == null) {
             return null;
@@ -102,6 +107,10 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
             {
                 action: ASSET_ACTIONS.DELETE,
                 onSelect: this.onDeleteAsset,
+            },
+            {
+                action: ASSET_ACTIONS.VIEW_FULL_SCREEN,
+                onSelect: this.onAssetImagePreview,
             },
             ];
 

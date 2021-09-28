@@ -73,6 +73,7 @@ export enum ASSET_ACTIONS {
     DELETE = 'delete',
     EDIT = 'edit',
     FORCE_UNLOCK = 'force_unlock',
+    VIEW_FULL_SCREEN = 'view_full_screen',
 }
 
 export enum DATA_UNIT {
