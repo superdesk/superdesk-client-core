@@ -62,7 +62,6 @@ function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
 function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
     const {gettext} = superdesk.localization;
     const {showModal} = superdesk.ui;
-    const {getClass} = superdesk.utilities.CSS;
     const {Modal, ModalHeader, ModalBody, ModalFooter} = superdesk.components;
 
     showModal(({closeModal}) => (
