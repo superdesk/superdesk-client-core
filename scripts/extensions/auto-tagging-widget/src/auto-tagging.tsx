@@ -82,11 +82,11 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
                     }
                 </p>
 
-                <table className={`table ${getClass('service-error--table')}`}>
+                <table className={`table`}>
                     <thead>
-                        <th style={{borderTop: 'none'}}>{gettext('tag name')}</th>
-                        <th style={{borderTop: 'none'}}>{gettext('qcode')}</th>
-                        <th style={{borderTop: 'none'}}>{gettext('parent ID')}</th>
+                        <th>{gettext('tag name')}</th>
+                        <th>{gettext('qcode')}</th>
+                        <th>{gettext('parent ID')}</th>
                     </thead>
 
                     <tbody>
