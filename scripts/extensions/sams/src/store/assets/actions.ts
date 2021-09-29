@@ -13,6 +13,7 @@ import {
     MANAGE_MULTIACTIONBAR_CLOSE,
     MANAGE_ASSETS_EDIT,
     MANAGE_ASSET_UPDATE_IN_STORE,
+    UPDATE_MULTIPLE_SELECTED_ASSET_IDS,
 } from './types';
 import {superdeskApi, samsApi} from '../../apis';
 
@@ -101,6 +102,13 @@ export function closeAssetContentPanel(): IAssetActionTypes {
 export function updateSelectedAssetIds(asset_id: string): IAssetActionTypes {
     return {
         type: UPDATE_SELECTED_ASSET_IDS,
+        payload: asset_id,
+    };
+}
+
+export function updateMultipleSelectedAssetIds(asset_id: string): IAssetActionTypes {
+    return {
+        type: UPDATE_MULTIPLE_SELECTED_ASSET_IDS,
         payload: asset_id,
     };
 }

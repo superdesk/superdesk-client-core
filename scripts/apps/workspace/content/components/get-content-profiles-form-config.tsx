@@ -1,5 +1,12 @@
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
-import {IFormField, IFormGroup, IContentProfileEditorConfig} from 'superdesk-api';
+import {
+    IFormField,
+    IFormGroup,
+    IContentProfileEditorConfig,
+    FORMATTING_OPTION,
+    PLAINTEXT_FORMATTING_OPTION,
+    RICH_FORMATTING_OPTION,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
 import {appConfig} from 'appConfig';
@@ -14,33 +21,6 @@ const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
     footer: true,
     body_footer: true,
 });
-
-export type FORMATTING_OPTION =
-    'h1' |
-    'h2' |
-    'h3' |
-    'h4' |
-    'h5' |
-    'h6' |
-    'justifyLeft' |
-    'justifyCenter' |
-    'justifyRight' |
-    'justifyFull' |
-    'outdent' |
-    'indent' |
-    'unordered list' |
-    'ordered list' |
-    'pre' |
-    'quote' |
-    'media' |
-    'link' |
-    'superscript' |
-    'subscript' |
-    'strikethrough' |
-    'underline' |
-    'italic' |
-    'bold' |
-    'table';
 
 const FORMATTING_OPTIONS: Array<FORMATTING_OPTION> = [
     'h1',
@@ -70,47 +50,12 @@ const FORMATTING_OPTIONS: Array<FORMATTING_OPTION> = [
     'table',
 ];
 
-export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
-
 const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS: Array<PLAINTEXT_FORMATTING_OPTION> = [
     'uppercase',
     'lowercase',
 ];
 
-export type IEDITOR3_RICH_FORMATTING_OPTION =
-    PLAINTEXT_FORMATTING_OPTION |
-    'h1' |
-    'h2' |
-    'h3' |
-    'h4' |
-    'h5' |
-    'h6' |
-    'ordered list' |
-    'unordered list' |
-    'quote' |
-    'media' |
-    'link' |
-    'embed' |
-    'underline' |
-    'italic' |
-    'bold' |
-    'table' |
-    'formatting marks' |
-    'remove format' |
-    'remove all format' |
-    'annotation' |
-    'comments' |
-    'suggestions' |
-    'pre' |
-    'superscript' |
-    'subscript' |
-    'strikethrough' |
-    'tab' |
-    'tab as spaces' |
-    'undo' |
-    'redo';
-
-const EDITOR3_RICH_FORMATTING_OPTIONS: Array<IEDITOR3_RICH_FORMATTING_OPTION> = [
+const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
     ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
     'h1',
     'h2',
@@ -144,7 +89,7 @@ const EDITOR3_RICH_FORMATTING_OPTIONS: Array<IEDITOR3_RICH_FORMATTING_OPTION> = 
     'redo',
 ];
 
-export const formattingOptionsUnsafeToParseFromHTML: Array<IEDITOR3_RICH_FORMATTING_OPTION> = [
+export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTION> = [
     // these aren't outputted to HTML at all
     'comments',
     'suggestions',

@@ -6,7 +6,7 @@ import {IExtensionActivationResult} from 'superdesk-api';
 import {extensions, appConfig} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 import ng from 'core/services/ng';
-import {confirmQuickPublish} from 'apps/authoring/authoring/services/quick-publish-modal';
+import {confirmPublish} from 'apps/authoring/authoring/services/quick-publish-modal';
 
 export interface IMultiActions {
     send(): void;
@@ -287,7 +287,7 @@ export function getMultiActions(
 
         const selectedItems = getSelectedItems();
 
-        confirmQuickPublish(selectedItems).then(() => {
+        confirmPublish(selectedItems).then(() => {
             Promise.all(
                 selectedItems.map((item) => new Promise((resolve) => {
                     authoring.publish(item, item)

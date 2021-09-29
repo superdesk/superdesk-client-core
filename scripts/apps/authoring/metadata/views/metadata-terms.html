@@ -91,6 +91,22 @@
     </ul>
 </div>
 
+<!-- 
+    Placeholder is used in multi-editing.
+    If items have different values, placeholder is shown instead of values.
+-->
+<div
+    ng-if="placeholder.length > 0 && !selectedItems.length"
+    class="terms-list"
+    ng-if="selectedItems.length"
+    ng-attr-title="{{helperText}}"
+>
+    <ul>
+        <li data-disabled class="pull-left disabled">{{placeholder}}</li>
+    </ul>
+</div>
+
+
 <div class="terms-list" ng-if="selectedItems.length" ng-attr-title="{{helperText}}">
     <ul>
         <li ng-if="!disabled && !t.sub_label" class="pull-left"

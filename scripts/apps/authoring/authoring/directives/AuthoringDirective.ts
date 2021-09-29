@@ -19,7 +19,7 @@ import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isMediaType} from 'core/helpers/item';
-import {confirmQuickPublish} from '../services/quick-publish-modal';
+import {confirmPublish} from '../services/quick-publish-modal';
 
 /**
  * @ngdoc directive
@@ -772,13 +772,13 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     showConfirm ?
                         $scope.saveTopbar()
-                            .then(() => confirmQuickPublish([$scope.item]))
+                            .then(() => confirmPublish([$scope.item]))
                             .then(customButtonAction) :
                         $scope.saveTopbar()
                             .then(customButtonAction);
                 } else {
                     showConfirm ?
-                        confirmQuickPublish([$scope.item]).then(customButtonAction) :
+                        confirmPublish([$scope.item]).then(customButtonAction) :
                         customButtonAction();
                 }
                 initMedia();
@@ -878,6 +878,14 @@ export function AuthoringDirective(
             $scope.revert = function(version) {
                 $scope.isPreview = false;
                 helpers.forcedExtend($scope.item, version);
+
+                /**
+                 * Before restoring, a version can be previewed in read only mode.
+                 * For this to work, `_editable` is set to false.
+                 * It has to be set back to true so the story is editable after reverting.
+                 */
+                $scope._editable = true;
+
                 $scope.refreshTrigger++;
                 if ($scope.item.annotations == null) {
                     $scope.item.annotations = [];
@@ -1007,7 +1015,7 @@ export function AuthoringDirective(
             };
 
             $scope.sendToNextStage = function() {
-                var currentDeskId = desks.getCurrentDeskId();
+                var currentDeskId = $scope.item.task.desk;
 
                 if (currentDeskId == null) {
                     throw new Error('currentDeskId is null');

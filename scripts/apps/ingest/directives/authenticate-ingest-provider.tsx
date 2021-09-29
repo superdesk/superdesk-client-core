@@ -13,7 +13,7 @@ export function authenticateIngestProvider(actions: Array<{label: string; onClic
         closeModal(): void;
     }
 
-    class TestModal extends React.PureComponent<IProps> {
+    class IngestAuthenticationModal extends React.PureComponent<IProps> {
         render() {
             return (
                 <Modal>
@@ -49,6 +49,6 @@ export function authenticateIngestProvider(actions: Array<{label: string; onClic
     }
 
     setTimeout(() => { // timeout needed to prevent angular from closing the modal
-        showModal(TestModal);
+        showModal(IngestAuthenticationModal);
     }, 100);
 }

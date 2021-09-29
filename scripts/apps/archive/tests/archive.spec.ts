@@ -322,23 +322,4 @@ describe('content', () => {
             }, data.item);
         }));
     });
-
-    it('spike action prompts user if item has unsaved changes',
-        (done) => inject((activityService, superdesk, autosave, confirm, $q, $rootScope, spike, modal) => {
-            const itemObject = {_id: 'foo', lock_user: 'foo'};
-
-            spyOn(autosave, 'get').and.returnValue($q.when());
-            spyOn(confirm, 'reopen').and.returnValue($q.reject());
-            spyOn(modal, 'createCustomModal').and.returnValue($q.when());
-
-            activityService.start(superdesk.activities.spike, {data: {item: itemObject}});
-            $rootScope.$digest();
-
-            setTimeout(() => {
-                expect(autosave.get).toHaveBeenCalled();
-                expect(confirm.reopen).toHaveBeenCalled();
-                expect(modal.createCustomModal).toHaveBeenCalled();
-                done();
-            }, 1000);
-        }));
 });

@@ -164,6 +164,7 @@ export class UploadAssetModalComponent extends React.Component<IUploadAssetModal
         return (
             <AssetGridItem
                 asset={asset}
+                file={item.binary}
                 onClick={selectFile}
                 onDoubleClick={selectFile}
                 selected={selected}

@@ -7,13 +7,22 @@ import {
     IListenTo,
     IResourceCreatedEvent,
     IResourceDeletedEvent,
+    IRestApiResponse,
+    IBaseRestApiResponse,
 } from 'superdesk-api';
 
-import {debounce} from 'lodash';
+import {debounce, isEqual} from 'lodash';
 import {requestQueue, RequestPriority} from './request-queue';
 import {addWebsocketEventListener} from 'core/notification/notification';
 
-export class DataProvider implements IDataProvider {
+const isItemEqual = (a: IBaseRestApiResponse, b: IBaseRestApiResponse) => (
+    (a._id != null && a._id === b._id && (
+        (a._etag != null && a._etag === b._etag) ||
+        (a._updated != null && a._updated === b._updated)
+    )) || isEqual(a, b)
+);
+
+export class DataProvider<T extends IRestApiResponse<T>> implements IDataProvider {
     updateTimeout = 1000;
     requestFactory: IRequestFactory;
     responseHandler: IResponseHandler;
@@ -21,6 +30,7 @@ export class DataProvider implements IDataProvider {
     listeners: Array<() => void> = [];
 
     private scheduleUpdate: () => void;
+    private cache: IRestApiResponse<T>;
 
     constructor(requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo: IListenTo) {
         this.requestFactory = requestFactory;
@@ -54,7 +64,47 @@ export class DataProvider implements IDataProvider {
             requestParams.endpoint = '/' + requestParams.endpoint;
         }
 
-        return requestQueue.add(requestParams, this, priority).then(this.responseHandler);
+        return requestQueue.add(requestParams, this, priority)
+            .then((res: IRestApiResponse<T>) => {
+                // it's returning list of items, try to look for previous data
+                // and in case there were no changes to it avoid calling the handler,
+                // otherwise call it but reuse previous items for not updated entities
+                if (res._items != null) {
+                    let updated = false;
+                    const prev = this.cache?._items || [];
+                    const next = res._items.map((nextItem, index) => {
+                        // shortcut - test same position in the old list
+                        if (prev[index] != null && isItemEqual(prev[index], nextItem)) {
+                            return prev[index];
+                        }
+
+                        // look for it accross all the previous items
+                        const prevItem = prev.find((item) => isItemEqual(item, nextItem));
+
+                        if (prevItem != null) {
+                            // it's there, but the position changed
+                            updated = true;
+                            return prevItem;
+                        }
+
+                        // it's not there, new item
+                        updated = true;
+
+                        return nextItem;
+                    });
+
+                    if (updated || prev.length !== next.length) {
+                        this.cache = res;
+                        this.responseHandler({_items: next, _meta: res._meta, _links: res._links});
+                        return;
+                    }
+                }
+
+                if (this.cache == null || isEqual(this.cache, res) === false) {
+                    this.cache = res;
+                    this.responseHandler(res);
+                }
+            });
     }
 
     private startListeners() {

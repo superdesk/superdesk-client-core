@@ -6,7 +6,7 @@ import ng from 'core/services/ng';
 import {ContentState, RawDraftContentState, convertFromRaw, EditorState, convertToRaw} from 'draft-js';
 import {setReadOnly, changeEditorState} from './actions/editor3';
 import {isEqual} from 'lodash';
-import {IEDITOR3_RICH_FORMATTING_OPTION} from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 
 interface IProps {
     // If set, it will be used to make sure the toolbar is always
@@ -24,7 +24,7 @@ interface IProps {
 
     // Editor format options that are enabled and should be displayed
     // in the toolbar.
-    editorFormat: Array<IEDITOR3_RICH_FORMATTING_OPTION>;
+    editorFormat: Array<RICH_FORMATTING_OPTION>;
 
     rawDraftContentState: RawDraftContentState;
 

@@ -541,6 +541,13 @@ declare module 'superdesk-api' {
         editor_role: string;
     }
 
+    export interface IMonitoringGroup {
+        _id: string;
+        type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+        max_items?: number;
+        header?: string;
+    }
+
     export interface IDesk extends IBaseRestApiResponse {
         name: string;
         description?: string;
@@ -549,11 +556,7 @@ declare module 'superdesk-api' {
         working_stage: IStage['_id'];
         content_expiry?: number;
         source: string;
-        monitoring_settings?: Array<{
-            _id: string;
-            type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
-            max_items: number;
-        }>;
+        monitoring_settings?: Array<IMonitoringGroup>;
         desk_type: 'authoring' | 'production';
         desk_metadata?: {[key: string]: any};
         content_profiles: {[key: IContentProfile['_id']]: any};
@@ -576,7 +579,7 @@ declare module 'superdesk-api' {
         default_incoming: boolean;
         task_status: 'todo' | 'in_progress' | 'done';
         desk_order: number;
-        desk: any;
+        desk: IDesk['_id'];
         content_expiry: number;
         is_visible: boolean;
         local_readonly: boolean;
@@ -1124,7 +1127,6 @@ declare module 'superdesk-api' {
         horizontalSpacing?: boolean;
     }
 
-
     export interface IDropdownTreeGroup<T> {
         render(): JSX.Element | null;
         items: Array<T | IDropdownTreeGroup<T>>;
@@ -1213,8 +1215,6 @@ declare module 'superdesk-api' {
 
 
     // EDITOR3
-
-
     export interface IEditor3AnnotationInputTab {
         label: string;
         selectedByDefault(annotationText: string, mode: 'create' | 'edit'): Promise<boolean>;
@@ -1229,6 +1229,83 @@ declare module 'superdesk-api' {
         mode: 'create' | 'edit';
         onCancel(): void;
         onApplyAnnotation(html: string): void;
+    }
+
+    export type FORMATTING_OPTION =
+        'h1' |
+        'h2' |
+        'h3' |
+        'h4' |
+        'h5' |
+        'h6' |
+        'justifyLeft' |
+        'justifyCenter' |
+        'justifyRight' |
+        'justifyFull' |
+        'outdent' |
+        'indent' |
+        'unordered list' |
+        'ordered list' |
+        'pre' |
+        'quote' |
+        'media' |
+        'link' |
+        'superscript' |
+        'subscript' |
+        'strikethrough' |
+        'underline' |
+        'italic' |
+        'bold' |
+        'table';
+
+    export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
+
+    export type RICH_FORMATTING_OPTION =
+        PLAINTEXT_FORMATTING_OPTION |
+        'h1' |
+        'h2' |
+        'h3' |
+        'h4' |
+        'h5' |
+        'h6' |
+        'ordered list' |
+        'unordered list' |
+        'quote' |
+        'media' |
+        'link' |
+        'embed' |
+        'underline' |
+        'italic' |
+        'bold' |
+        'table' |
+        'formatting marks' |
+        'remove format' |
+        'remove all format' |
+        'annotation' |
+        'comments' |
+        'suggestions' |
+        'pre' |
+        'superscript' |
+        'subscript' |
+        'strikethrough' |
+        'tab' |
+        'tab as spaces' |
+        'undo' |
+        'redo';
+
+    export interface IEditor3HtmlProps {
+        value: string;
+        onChange(value: string): void;
+        readOnly: boolean;
+
+        // If set, it will be used to make sure the toolbar is always
+        // visible when scrolling. If not set, window object is used as reference.
+        // Any valid jQuery selector will do.
+        scrollContainer?: any;
+
+        // Editor format options that are enabled and should be displayed
+        // in the toolbar.
+        editorFormat?: Array<RICH_FORMATTING_OPTION>;
     }
 
 
@@ -1259,6 +1336,11 @@ declare module 'superdesk-api' {
         } | true;
     }
 
+    export interface IAbortablePromise<T> {
+        response: Promise<T>;
+        abort(): void;
+    }
+
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
         create<T>(endpoint: string, item: Partial<T>, urlParams?: Dictionary<string, any>): Promise<T>;
@@ -1272,6 +1354,7 @@ declare module 'superdesk-api' {
         ): Promise<IRestApiResponse<T>>;
         queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
         queryRaw<T>(endpoint, params?: Dictionary<string, any>): Promise<Response>;
+        abortableQueryRaw(endpoint, params?: Dictionary<string, any>): IAbortablePromise<Response>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
@@ -1540,7 +1623,7 @@ declare module 'superdesk-api' {
             articleInEditMode?: IArticle['_id'];
         };
         instance: {
-            config: ISuperdeskGlobalConfig
+            config: ISuperdeskGlobalConfig;
         };
 
         /** Retrieves configuration options passed when registering an extension. */
@@ -1658,6 +1741,7 @@ declare module 'superdesk-api' {
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
+            Editor3Html: React.ComponentType<IEditor3HtmlProps>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
@@ -1894,6 +1978,7 @@ declare module 'superdesk-api' {
             },
             showPublishSchedule?: boolean
             hideCreatePackage?: boolean;
+            confirmDueDate?: boolean;
         };
         auth: {
             google: boolean
@@ -2040,6 +2125,17 @@ declare module 'superdesk-api' {
                     order: number;
                 };
             }
+        };
+
+        media: {
+            renditions: {
+                [media_type: string]: {
+                    [rendition_name: string]: {
+                        width: number;
+                        height: number;
+                    };
+                };
+            };
         };
     }
 

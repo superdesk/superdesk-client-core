@@ -5,6 +5,7 @@ import {appConfig} from 'appConfig';
 import {IBaseRestApiResponse} from 'superdesk-api';
 import {authenticateIngestProvider} from './authenticate-ingest-provider';
 import {addWebsocketEventListener} from 'core/notification/notification';
+import {notify} from 'core/notify/notify';
 
 interface IFeedingServiceField {
     id?: string;
@@ -46,7 +47,7 @@ interface IProvider extends IBaseRestApiResponse {
     url_id?: string;
 }
 
-IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
+IngestSourcesContent.$inject = ['ingestSources', 'api', '$location',
     'modal', '$filter', 'privileges'];
 
 /**
@@ -65,7 +66,7 @@ IngestSourcesContent.$inject = ['ingestSources', 'notify', 'api', '$location',
  *
  * @description Handles the management for Ingest Sources.
  */
-export function IngestSourcesContent(ingestSources, notify, api, $location,
+export function IngestSourcesContent(ingestSources, api, $location,
     modal, $filter, privileges) {
     return {
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-sources-content.html',
@@ -684,8 +685,34 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                  * @param provider ingest provider metadata
                  * @param field url_request field metadata
                  */
-                $scope.doUrlRequest = (provider: IProvider, field: IFeedingServiceField): void => {
-                    window.open(field.url.replace('{PROVIDER_ID}', provider._id));
+                $scope.doUrlRequest = (
+                    provider: IProvider,
+                    field: IFeedingServiceField,
+                    hasUnsavedChanges: boolean = false,
+                ): void => {
+                    if (hasUnsavedChanges) {
+                        modal.alert({
+                            headerText: gettext('Unsaved changes'),
+                            bodyText: gettext('Save all other changes before performing this action.'),
+                        });
+                    } else {
+                        window.open(field.url.replace('{PROVIDER_ID}', provider._id));
+
+                        setTimeout(() => {
+                            /**
+                             * If websocket message is received indicating a change,
+                             * items that are in edit mode are not updated
+                             * in order not to lose unsaved data.
+                             *
+                             * Because it's already checked that there are no unsaved changes,
+                             * editing modal is closed now, so after `doUrlRequest` changes the item on the back-end,
+                             * front-end will update the provider.
+                             *
+                             * Otherwise `_etag` wouldn't be updated and it wouldn't work to edit the item.
+                             */
+                            $scope.cancel();
+                        });
+                    }
                 };
 
                 function getCurrentService() {
@@ -740,7 +767,22 @@ export function IngestSourcesContent(ingestSources, notify, api, $location,
                     }),
                 );
 
+                /**
+                 * Display an error message when gmail ingest fails to authenticate
+                 */
+                function windowMessageHandler(event) {
+                    const error = event?.data?.data?.error;
+
+                    if (error != null) {
+                        notify.error(error, 'manual');
+                    }
+                }
+
+                window.addEventListener('message', windowMessageHandler);
+
                 $scope.$on('$destroy', () => {
+                    window.removeEventListener('message', windowMessageHandler);
+
                     eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
                         removeListener();
                     });

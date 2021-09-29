@@ -36,9 +36,9 @@ import {
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
 import {
-    IEDITOR3_RICH_FORMATTING_OPTION,
     formattingOptionsUnsafeToParseFromHTML,
 } from 'apps/workspace/content/components/get-content-profiles-form-config';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -58,7 +58,7 @@ interface IProps {
     singleLine?: any;
     tabindex?: any;
     showTitle?: any;
-    editorFormat?: Array<IEDITOR3_RICH_FORMATTING_OPTION>;
+    editorFormat?: Array<RICH_FORMATTING_OPTION>;
     item?: any;
     svc?: any;
     trim?: any;
@@ -78,7 +78,7 @@ export interface IEditorStore {
     tabindex: any;
     showTitle: any;
     activeCell: any;
-    editorFormat: Array<IEDITOR3_RICH_FORMATTING_OPTION>;
+    editorFormat: Array<RICH_FORMATTING_OPTION>;
     onChangeValue: any;
     item: any;
     spellchecking: {
@@ -315,7 +315,7 @@ export function getInitialContent(props): ContentState {
     }
 
     const hasUnsafeFormattingOptions = props.editorFormat != null && props.editorFormat.some(
-        (option: IEDITOR3_RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
+        (option: RICH_FORMATTING_OPTION) => formattingOptionsUnsafeToParseFromHTML.includes(option),
     );
 
     /**
