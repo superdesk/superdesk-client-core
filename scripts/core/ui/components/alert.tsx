@@ -1,9 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {IAlertComponentProps} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {Button} from 'superdesk-ui-framework/react';
 
-function getClassName(alertType: IAlertComponentProps['type']) {
+function getTypeClassName(alertType: IAlertComponentProps['type']) {
     switch (alertType) {
     case 'info':
         return 'sd-alert--primary';
@@ -16,20 +16,61 @@ function getClassName(alertType: IAlertComponentProps['type']) {
     }
 }
 
-export const Alert: React.StatelessComponent<IAlertComponentProps> = (props) => {
-    const className = [
-        'sd-alert',
-        props.hollow ? 'sd-alert--hollow' : '',
-        getClassName(props.type),
-    ].join(' ');
+function getSizeClassName(alertType: IAlertComponentProps['size']) {
+    switch (alertType) {
+    case 'small':
+        return 'sd-alert--small';
+    default:
+        assertNever(alertType);
+    }
+}
 
-    return (
-        <div className={className}>{props.children}</div>
-    );
-};
+export class Alert extends React.PureComponent<IAlertComponentProps> {
+    render() {
+        const classNames = [
+            'sd-alert',
+            this.props.hollow ? 'sd-alert--hollow' : '',
+            getTypeClassName(this.props.type),
+            'alert-extended',
+        ];
 
-Alert.propTypes = {
-    type: PropTypes.oneOf(['info', 'warning', 'error']),
-    hollow: PropTypes.bool,
-    children: PropTypes.node,
-};
+        if (this.props.size != null) {
+            classNames.push(getSizeClassName(this.props.size));
+        }
+
+        return (
+            <div className={classNames.join(' ')}>
+                <div>
+                    {
+                        this.props.title != null && (
+                            <strong className="alert-extended--title">{this.props.title}</strong>
+                        )
+                    }
+
+                    <p className="alert-extended--message">{this.props.message}</p>
+                </div>
+
+                {
+                    this.props.actions != null && (
+                        <div>
+                            {
+                                this.props.actions.map((action) => (
+                                    <Button
+                                        key={action.label}
+                                        text={action.label}
+                                        icon={action.icon}
+                                        iconOnly={action.icon != null}
+                                        onClick={() => {
+                                            action.onClick();
+                                        }}
+                                        size="small"
+                                    />
+                                ))
+                            }
+                        </div>
+                    )
+                }
+            </div>
+        );
+    }
+}

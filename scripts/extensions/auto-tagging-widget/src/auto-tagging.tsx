@@ -120,8 +120,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {httpRequestJsonLocal} = superdesk;
     const {gettext, gettextPlural} = superdesk.localization;
     const {memoize, generatePatch, arrayToTree} = superdesk.utilities;
-    const {getClass} = superdesk.utilities.CSS;
-    const {WidgetHeading} = superdesk.components;
+    const {WidgetHeading, Alert} = superdesk.components;
     const groupLabels = getGroups(superdesk);
 
     const TagListComponent = getTagsListComponent(superdesk);
@@ -296,44 +295,28 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 // only show errors when there are unsaved changes
                                 if (treeErrors.length > 0 && dirty) {
                                     return (
-                                        <div
-                                            className={
-                                                [
-                                                    'sd-alert sd-alert--small',
-                                                    'sd-alert--warning',
-                                                    getClass('service-error--message'),
-                                                ].join(' ')
+                                        <Alert
+                                            type="warning"
+                                            size="small"
+                                            title={gettext('iMatrics service error')}
+                                            message={
+                                                gettextPlural(
+                                                    treeErrors.length,
+                                                    '1 tag can not be displayed',
+                                                    '{{n}} tags can not be displayed',
+                                                    {n: treeErrors.length},
+                                                )
                                             }
-                                        >
-                                            <div className={getClass('service-error--message--inner')}>
-                                                <div>
-                                                    <strong style={{fontSize: 14}}>
-                                                        {gettext('iMatrics service error')}
-                                                    </strong>
-
-                                                    <p style={{fontSize: 12}}>
-                                                        {
-                                                            gettextPlural(
-                                                                treeErrors.length,
-                                                                '1 tag can not be displayed',
-                                                                '{{n}} tags can not be displayed',
-                                                                {n: treeErrors.length},
-                                                            )
-                                                        }
-                                                    </p>
-                                                </div>
-
-                                                <Button
-                                                    text={gettext('details')}
-                                                    icon="info-sign"
-                                                    iconOnly
-                                                    onClick={() => {
+                                            actions={[
+                                                {
+                                                    label: gettext('details'),
+                                                    onClick: () => {
                                                         showImatricsServiceErrorModal(superdesk, treeErrors);
-                                                    }}
-                                                    size="small"
-                                                />
-                                            </div>
-                                        </div>
+                                                    },
+                                                    icon: 'info-sign',
+                                                },
+                                            ]}
+                                        />
                                     );
                                 } else {
                                     return null;

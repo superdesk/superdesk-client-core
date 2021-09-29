@@ -36,6 +36,7 @@
 @import 'buttons/toggle-buttons';
 @import 'button-groups';
 @import 'alerts'; // Note: alerts share common CSS with buttons and thus have styles in buttons.scss
+@import '../../scripts/core/ui/components/alert.scss';
 
 // Components: Nav
 @import 'navs';

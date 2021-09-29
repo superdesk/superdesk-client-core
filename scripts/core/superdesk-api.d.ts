@@ -964,8 +964,17 @@ declare module 'superdesk-api' {
 
     export interface IAlertComponentProps {
         type: 'info' | 'warning' | 'error';
+        message: string;
+        title?: string;
+
+        /** actions will be rendered as small icon-buttons on the right */
+        actions?: Array<{
+            label: string;
+            onClick(): void;
+            icon?: string;
+        }>;
+        size?: 'small';
         hollow?: boolean;
-        children?: React.ReactNode;
     }
 
     export interface IFigureComponentProps {

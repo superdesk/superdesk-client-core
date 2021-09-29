@@ -1,0 +1,17 @@
+.alert-extended {
+    display: flex!important;
+    width: 100%!important;
+    justify-content: space-between!important;
+    align-items: center!important;
+    padding-left: 1.2rem!important;
+    padding-right: 1.2rem!important;
+    margin-bottom: 0!important;
+}
+
+.alert-extended--title {
+    font-size: 1.1em!important;
+}
+
+.alert-extended--message {
+    font-size: 1em!important;
+}
