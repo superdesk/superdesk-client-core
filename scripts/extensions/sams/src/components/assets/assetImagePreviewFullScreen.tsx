@@ -132,7 +132,6 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
                         <span className="filetype-icon-picture" style={{color: '#a9a9a9'}} />
                     </header>
                     <div
-                        className="lightbox-media-data"
                         style={{
                             position: 'absolute',
                             top: '130px',
