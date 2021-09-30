@@ -40,17 +40,6 @@ interface IAssetSetListStyleAction {
     payload: ASSET_LIST_STYLE;
 }
 
-export type IAssetActionTypes = IReceiveAssetsAction |
-    ISetAssetSearchParamsAction |
-    IAssetSetListStyleAction |
-    ICloseAssetContentPanelAction |
-    IPreviewAssetAction |
-    IUpdateSelectedAssetIds |
-    ICloseMultiActionBar |
-    IEditAssetAction |
-    IUpdateAssetInStore |
-    IUpdateMultipleSelectedAssetIds;
-
 export interface IAssetState {
     assets: Dictionary<string, IAssetItem>;
     searchParams: IAssetSearchParams;
@@ -115,7 +104,8 @@ export type IAssetActionTypes = IReceiveAssetsAction |
     IUpdateSelectedAssetIds |
     ICloseMultiActionBar |
     IEditAssetAction |
-    IUpdateAssetInStore;
+    IUpdateAssetInStore |
+    IUpdateMultipleSelectedAssetIds;
 
 export interface IAssetState {
     assets: Dictionary<string, IAssetItem>;
