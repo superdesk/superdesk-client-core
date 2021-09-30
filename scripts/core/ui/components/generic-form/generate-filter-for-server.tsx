@@ -9,7 +9,6 @@ export function generateFilterForServer(type: FormFieldType, value: any): any {
             $options: 'i',
         };
 
-    case FormFieldType.number:
     case FormFieldType.vocabularySingleValue:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.checkbox:
@@ -17,14 +16,21 @@ export function generateFilterForServer(type: FormFieldType, value: any): any {
     case FormFieldType.stageSingleValue:
     case FormFieldType.macroSingleValue:
     case FormFieldType.select:
-    case FormFieldType.yesNo:
-    case FormFieldType.arrayOf:
         return value;
 
     case FormFieldType.textEditor3:
         throw new Error(
             'Operation not supported. Plaintext input has to be used to filter this component\'s output',
         );
+
+    case FormFieldType.yesNo:
+        if (value === 'true') {
+            return true;
+        } else if (value === 'false') {
+            return false;
+        } else {
+            return undefined;
+        }
 
     default:
         assertNever(type);

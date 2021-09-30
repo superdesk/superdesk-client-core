@@ -39,7 +39,7 @@ describe('users', () => {
 
         it('can save and use language preferences', () => {
             userPreferences.setLang('Deutsch');
-            browser.wait(ECE.elementToBeClickable(userPreferences.btnSave), 3000);
+            browser.wait(() => userPreferences.btnSave.isDisplayed(), 3000);
             userPreferences.btnSave.click();
 
             browser.sleep(500); // wait for modal

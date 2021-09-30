@@ -6,6 +6,21 @@ The main purpose of extensions is to reduce the complexity and interdependencies
 
 It's easiest to copy the `helloWorld` extension and change the directory name.
 
+# Registering an extension
+
+Pass the following registration object to `startApp`
+
+```javascript
+startApp([
+    {
+        id: 'planning-extension',
+        load: () => import('superdesk-planning/client/planning-extension'),
+    },
+]);
+
+IMPORTANT: extension `id` must match its directory name
+```
+
 # Writing end-to-end tests for extensions
 
 Not supported at the moment.

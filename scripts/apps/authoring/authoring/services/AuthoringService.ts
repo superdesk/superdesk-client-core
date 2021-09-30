@@ -98,7 +98,7 @@ interface IPublishOptions {
     notifyErrors: boolean;
 }
 
-interface IParams {
+interface Iparams {
     publishing_warnings_confirmed?: boolean;
     desk_id?: string;
 }
@@ -396,7 +396,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         helpers.filterDefaultValues(extDiff, orig);
         var endpoint = 'archive_' + action;
 
-        var params: IParams = {
+        var params: Iparams = {
             publishing_warnings_confirmed: publishingWarningsConfirmed,
         };
 

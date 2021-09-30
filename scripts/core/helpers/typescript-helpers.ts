@@ -5,10 +5,6 @@ export function nameof<T>(name: keyof T) {
 // eslint-disable-next-line space-infix-ops
 export type Writeable<T> = { -readonly [P in keyof T]-?: T[P] };
 
-export type PartialDeep<T> = {
-    [K in keyof T]?: T[K] extends object ? PartialDeep<T[K]> : T[K]
-};
-
 export function applyDefault<T>(value: T, defaultValue: T) {
     return value != null ? value : defaultValue;
 }

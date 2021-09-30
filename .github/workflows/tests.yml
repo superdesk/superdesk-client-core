@@ -20,12 +20,6 @@ jobs:
     - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
     - run: npm ci
-
-    # running @superdesk/build-tools is required to generate instance configuration schema
-    # otherwise imports would not be found and linting/unit tests would fail
-    - run: npm install && npm run build
-      working-directory: e2e/client
-
     - run: npm run test
 
   e2e:
