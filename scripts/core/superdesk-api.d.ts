@@ -951,6 +951,11 @@ declare module 'superdesk-api' {
         bold?: boolean;
     }
 
+    export interface IPropsWidgetHeading {
+        widgetName: string;
+        editMode: boolean;
+    }
+
     export interface IGridComponentProps {
         columns: number;
         boxed?: boolean;
@@ -959,8 +964,17 @@ declare module 'superdesk-api' {
 
     export interface IAlertComponentProps {
         type: 'info' | 'warning' | 'error';
+        message: string;
+        title?: string;
+
+        /** actions will be rendered as small icon-buttons on the right */
+        actions?: Array<{
+            label: string;
+            onClick(): void;
+            icon?: string;
+        }>;
+        size?: 'small';
         hollow?: boolean;
-        children?: React.ReactNode;
     }
 
     export interface IFigureComponentProps {
@@ -1470,6 +1484,7 @@ declare module 'superdesk-api' {
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             Spacer: React.ComponentType<IPropsSpacer>;
+            WidgetHeading: React.ComponentType<IPropsWidgetHeading>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
@@ -1561,7 +1576,7 @@ declare module 'superdesk-api' {
                 itemsFlat: Array<T>,
                 getId: (item: T) => string,
                 getParentId: (item: T) => string | undefined | null,
-            ): Array<ITreeNode<T>>;
+            ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
         };
         addWebsocketMessageListener<T extends string>(

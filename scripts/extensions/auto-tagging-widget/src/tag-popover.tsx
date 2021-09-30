@@ -6,6 +6,7 @@ interface IProps {
     tag: ITagUi;
     children: React.ReactNode;
     gettext: (text: string) => string;
+    display?: 'block' | 'inline-block';
 }
 
 export class TagPopover extends React.PureComponent<IProps> {
@@ -33,7 +34,8 @@ export class TagPopover extends React.PureComponent<IProps> {
 
         return (
             <OverlayTrigger overlay={overlay} trigger={['hover', 'focus']} placement={'bottom'} delay={500}>
-                <div style={{display: 'inline-block'}}>{/* need component here that can use refs */}
+                <div style={{display: this.props.display ?? 'inline-block'}}>
+                    {/* need component here that can use refs */}
                     {children}
                 </div>
             </OverlayTrigger>
