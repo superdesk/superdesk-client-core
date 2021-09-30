@@ -1,13 +1,28 @@
 <div class="pinned-tab__wrapper">
     <section class="tabcontent">
-        <div class="tabcontent-actions">
+        <!--
+            react based widgets use WidgetHeading component
+            that has pinning button already inside
+
+            this was done to prevent absolutely positioned pinning button
+            from covering other components
+        -->
+        <div
+            ng-if="pinnedWidget.component == null"
+            class="tabcontent-actions"
+        >
             <button class="icn-btn active" ng-click="pinWidget(widget)">
                 <i class="icon-pin"></i>
             </button>
         </div>
 
-        <div sd-widget data-widget="pinnedWidget" data-configurable="pinnedWidget.configurable"
-            data-save="pinnedWidget.save()" ng-if="pinnedWidget.component == null">
+        <div
+            ng-if="pinnedWidget.component == null"
+            sd-widget
+            data-widget="pinnedWidget"
+            data-configurable="pinnedWidget.configurable"
+            data-save="pinnedWidget.save()"
+        >
             <div ng-include="pinnedWidget.template" class="sd-wrap-helper"></div>
         </div>
 
@@ -50,7 +65,17 @@
     <div class="tabpane right-tabpane open-tabpane widget-{{active._id}}"
         ng-if="active && !isWidgetLocked(active) && !active.pinned">
         <section class="tabcontent" ng-init="widget=active">
-            <div class="tabcontent-actions">
+            <!--
+                react based widgets use WidgetHeading component
+                that has pinning button already inside
+
+                this was done to prevent absolutely positioned pinning button
+                from covering other components
+            -->
+            <div
+                ng-if="active.component == null"
+                class="tabcontent-actions"
+            >
                 <button class="icn-btn" ng-click="pinWidget(active)" ng-class="{'active': widget.pinned}">
                     <i class="icon-pin"></i>
                 </button>

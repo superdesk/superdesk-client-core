@@ -79,6 +79,7 @@ import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 import {Editor3Html} from './editor3/Editor3Html';
 import {arrayToTree, treeToArray} from './helpers/tree';
+import {WidgetHeading} from 'apps/dashboard/widget-heading';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -349,6 +350,7 @@ export function getSuperdeskApiImplementation(
             getLiveQueryHOC: () => WithLiveQuery,
             WithLiveResources,
             Editor3Html,
+            WidgetHeading,
         },
         forms: {
             FormFieldType,
