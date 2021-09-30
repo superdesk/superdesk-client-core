@@ -6,21 +6,28 @@ import {IAssetItem} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {ButtonGroup, Label} from 'superdesk-ui-framework/react';
+import {Icon, Label, FormLabel} from 'superdesk-ui-framework/react';
 import {
+    FormRow,
     Modal,
+    PanelContent,
     PanelContentBlock,
     PanelContentBlockInner,
+    PanelHeader,
+    Text,
 } from '../../ui';
 import {AssetImageRendition} from './AssetImageRendition';
 import {getPreviewComponent} from './preview';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
+import {PageLayout} from '../../containers/PageLayout';
 
 // Utils
 import {
-    showModalConnectedToStore,
+    getAssetStateLabel,
+    getIconTypeFromMimetype,
     getHumanReadableFileSize,
+    showModalConnectedToStore,
 } from '../../utils/ui';
 import {getMimetypeHumanReadable} from '../../utils/assets';
 
@@ -38,30 +45,20 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
         const {gettext} = superdeskApi.localization;
         const {config} = superdeskApi.instance;
         const ContentPreview = getPreviewComponent(this.props.asset!);
-        const mimetype = getMimetypeHumanReadable(this.props.asset?.mimetype);
+        const typeIcon = getIconTypeFromMimetype(
+            this.props.asset?.mimetype ?? 'text',
+        );
 
         return (
             <Modal
                 id="AssetImagePreviewFullscreenModal"
                 size="fullscreen"
                 closeModal={this.props.closeModal}
+                closeOnEsc={true}
             >
-                {/* Left section, containing image preview. */}
-
-                <section
-                    style={{
-                        position: 'absolute',
-                        left: 0,
-                        right: 0,
-                        top: 0,
-                        bottom: 0,
-                        width: '80%',
-                        justifyContent: 'space-around',
-                        display: 'flex',
-                        backgroundColor: 'black',
-                    }}
-                >
-                    {!ContentPreview ? null : (
+                <PageLayout
+                    mainClassName="sd-padding--2"
+                    main={!ContentPreview ? null : (
                         <AssetImageRendition
                             asset={this.props.asset!}
                             rendition={config.media?.renditions?.sams?.viewImage}
@@ -88,120 +85,83 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
                             )}
                         />
                     )}
-                </section>
-
-                {/* Right section, containing all the asset details. */}
-
-                <section style={{position: 'absolute', right: 0, width: '20%', top: 0, bottom: 0, padding: '15px'}}>
-                    <header>
-                        <h4
-                            style={{
-                                fontSize: '18px',
-                                fontWeight: 'normal',
-                                paddingRight: '40px',
-                                height: '24px',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                            }}
-                        >
-                            {gettext('Images')}
-                        </h4>
-                        <ButtonGroup align="right">
-                            <i
-                                className="icon-close-thick"
-                                onClick={this.props.closeModal}
-                                style={{
-                                    background: 'none',
-                                    padding: 0,
-                                    border: 0,
-                                    width: '16px',
-                                    height: '16px',
-                                    display: 'block',
-                                    position: 'absolute',
-                                    right: '12px',
-                                    top: '14px',
-                                    opacity: '0.7',
-                                }}
+                    rightPanelOpen={true}
+                    rightPanel={(
+                        <React.Fragment>
+                            <PanelHeader
+                                onClose={this.props.closeModal}
+                                borderB={true}
+                                title={gettext('Image Preview')}
                             />
-                        </ButtonGroup>
-                        <PanelContentBlock flex={true}>
-                            <PanelContentBlockInner grow={true}>
-                                <VersionUserDateLines item={this.props.asset!} />
-                            </PanelContentBlockInner>
-                        </PanelContentBlock>
-                        <span className="filetype-icon-picture" style={{color: '#a9a9a9'}} />
-                    </header>
-                    <div
-                        style={{
-                            position: 'absolute',
-                            top: '130px',
-                            left: '15px',
-                            right: '5px',
-                            bottom: '15px',
-                            overflow: 'auto',
-                            paddingRight: '10px',
-                        }}
-                    >
-                        <ToggleBoxNext title="Details" isOpen={true}>
-                            <div className="metadata-view">
-                                <div className="metadata-view__content-block">
-                                    <dl>
-                                        <dt>{gettext('Name:')}</dt>
-                                        <dd>{this.props.asset?.name}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>{gettext('Description:')}</dt>
-                                        <dd>{this.props.asset?.description}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>{gettext('Filename:')}</dt>
-                                        <dd>{this.props.asset?.filename}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>{gettext('Size:')}</dt>
-                                        <dd>
-                                            {this.props.asset?.length &&
-                                            getHumanReadableFileSize(this.props.asset.length)}
-                                        </dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>{gettext('Type:')}</dt>
-                                        <dd>{mimetype}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>{gettext('Dimensions:')}</dt>
-                                        <dd>{this.props.asset?.name}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>{gettext('State:')}</dt>
-                                        <dd>
-                                            <span className="state-label state-in_progress">
-                                                {this.props.asset?.state}
-                                            </span>
-                                        </dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>{gettext('Set:')}</dt>
-                                        <dd>{this.props.asset?.set_id}</dd>
-                                    </dl>
-                                    <dl>
-                                        <dt>{gettext('Tags:')}</dt>
-                                        <dd>
-                                            {this.props.asset?.tags?.map((tag) => (
-                                                <Label
-                                                    key={this.props.asset?.tags.indexOf(tag)}
-                                                    text={tag.name}
-                                                    style="translucent"
-                                                    size="large"
-                                                />
-                                            ))}
-                                        </dd>
-                                    </dl>
-                                </div>
-                            </div>
-                        </ToggleBoxNext>
-                    </div>
-                </section>
+                            <PanelContent>
+                                <PanelContentBlock flex={true}>
+                                    <PanelContentBlockInner grow={true}>
+                                        <VersionUserDateLines item={this.props.asset!} />
+                                        <Icon
+                                            name={typeIcon}
+                                            className="sd-grid-item__type-icn sd-grid-item__footer-block-item"
+                                        />
+                                        <ToggleBoxNext title="Details" isOpen={true}>
+                                            <FormRow>
+                                                <FormLabel text={gettext('Name')} style="light" />
+                                                <Text>{this.props.asset?.name}</Text>
+                                            </FormRow>
+
+                                            <FormRow>
+                                                <FormLabel text={gettext('Description')} style="light" />
+                                                <Text>{this.props.asset?.description || '-'}</Text>
+                                            </FormRow>
+
+                                            <FormRow>
+                                                <FormLabel text={gettext('Filename')} style="light" />
+                                                <Text>{this.props.asset?.filename}</Text>
+                                            </FormRow>
+
+                                            <FormRow>
+                                                <FormLabel text={gettext('Size')} style="light" />
+                                                <Text>{getHumanReadableFileSize(this.props.asset?.length!)}</Text>
+                                            </FormRow>
+
+                                            <FormRow>
+                                                <FormLabel text={gettext('Type')} style="light" />
+                                                <Text>
+                                                    {getMimetypeHumanReadable(this.props.asset?.mimetype)}
+                                                    ({this.props.asset?.mimetype})
+                                                </Text>
+                                            </FormRow>
+
+                                            <FormRow>
+                                                <FormLabel text={gettext('Image Dimensions')} style="light" />
+                                                <Text>{getAssetStateLabel(this.props.asset?.state!)}</Text>
+                                            </FormRow>
+
+                                            <FormRow>
+                                                <FormLabel text={gettext('State')} style="light" />
+                                                <Text>{getAssetStateLabel(this.props.asset?.state!)}</Text>
+                                            </FormRow>
+
+                                            <FormRow>
+                                                <FormLabel text={gettext('Set')} style="light" />
+                                                <Text>{this.props.asset?.name}</Text>
+                                            </FormRow>
+                                            <FormRow>
+                                                <FormLabel text={gettext('Tags')} style="light" />
+                                                {this.props.asset?.tags?.map((tag) => (
+                                                    <Label
+                                                        key={this.props.asset?.tags.indexOf(tag)}
+                                                        text={tag.name}
+                                                        style="translucent"
+                                                        size="large"
+                                                    />
+                                                ))}
+                                            </FormRow>
+                                        </ToggleBoxNext>
+                                    </PanelContentBlockInner>
+                                </PanelContentBlock>
+                            </PanelContent>
+                        </React.Fragment>
+                    )}
+                />
             </Modal>
         );
     }
