@@ -92,6 +92,6 @@ class VideoEditorToolsComponent extends React.PureComponent<IProps> {
     }
 }
 
-export const VideoEditorTools = React.forwardRef((props: IProps) =>
-    <VideoEditorToolsComponent {...props} />,
+export const VideoEditorTools = React.forwardRef((props: IProps, ref: React.Ref<HTMLDivElement>) =>
+    <VideoEditorToolsComponent wrapperRef={ref} {...props} />,
 );

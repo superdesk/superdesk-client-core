@@ -81,7 +81,7 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
                 const deskData: IDeskData = {};
 
                 res._items.forEach((bucket) => {
-                    deskData[bucket['desk']] = bucket['sub'].map((sub) => ({
+                    deskData[bucket.desk] = bucket.sub.map((sub) => ({
                         state: sub['key'],
                         count: sub['count'],
                     }));

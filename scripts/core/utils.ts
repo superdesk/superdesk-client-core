@@ -186,7 +186,7 @@ type IWeekday =
     | 'wednesday'
     | 'thursday'
     | 'friday'
-    | 'saturday'
+    | 'saturday';
 
 export function getWeekDayIndex(weekday: IWeekday): number {
     return [
