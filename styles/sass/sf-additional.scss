@@ -1461,7 +1461,7 @@
         color: inherit;
         position: relative;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.08);
-        transition: all ease-in-out 0.2s;
+
         &:hover {
             box-shadow: 0 0px 3px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.2);
         }
@@ -1566,6 +1566,10 @@
             }
         }
     }
+}
+
+.pills-list:not(.pills-list--draggable) > li {
+    transition: all ease-in-out 0.2s;
 }
 
 [class^="--dark-ui"],
