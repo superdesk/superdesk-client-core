@@ -81,7 +81,7 @@ function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITag
                     }
                 </p>
 
-                <table className={`table`}>
+                <table className="table">
                     <thead>
                         <th>{gettext('tag name')}</th>
                         <th>{gettext('qcode')}</th>

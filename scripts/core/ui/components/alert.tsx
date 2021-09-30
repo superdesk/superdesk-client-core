@@ -32,6 +32,8 @@ export class Alert extends React.PureComponent<IAlertComponentProps> {
             this.props.hollow ? 'sd-alert--hollow' : '',
             getTypeClassName(this.props.type),
             'alert-extended',
+            'sd-margin-b--0',
+            'sd-padding-x--1-5',
         ];
 
         if (this.props.size != null) {
