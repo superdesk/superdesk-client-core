@@ -33,11 +33,12 @@ import {getMimetypeHumanReadable} from '../../utils/assets';
 
 interface IProps {
     asset?: IAssetItem;
+    setName?: string;
     closeModal(): void;
 }
 
-export function showImagePreviewModal(asset: IAssetItem) {
-    return showModalConnectedToStore(AssetImagePreviewFullScreen, {asset: asset});
+export function showImagePreviewModal(asset: IAssetItem, setName: string) {
+    return showModalConnectedToStore(AssetImagePreviewFullScreen, {asset: asset, setName: setName});
 }
 
 export class AssetImagePreviewFullScreen extends React.Component<IProps> {
@@ -131,18 +132,13 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
                                             </FormRow>
 
                                             <FormRow>
-                                                <FormLabel text={gettext('Image Dimensions')} style="light" />
-                                                <Text>{getAssetStateLabel(this.props.asset?.state!)}</Text>
-                                            </FormRow>
-
-                                            <FormRow>
                                                 <FormLabel text={gettext('State')} style="light" />
                                                 <Text>{getAssetStateLabel(this.props.asset?.state!)}</Text>
                                             </FormRow>
 
                                             <FormRow>
                                                 <FormLabel text={gettext('Set')} style="light" />
-                                                <Text>{this.props.asset?.name}</Text>
+                                                <Text>{this.props.setName}</Text>
                                             </FormRow>
                                             <FormRow>
                                                 <FormLabel text={gettext('Tags')} style="light" />

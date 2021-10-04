@@ -14,6 +14,7 @@ import {
     IAssetSearchParams,
     LIST_ACTION,
     ASSET_CONTENT_PANEL_STATE,
+    ISetItem,
 } from '../interfaces';
 import {IApplicationState} from '../store';
 import {samsApi, superdeskApi} from '../apis';
@@ -58,6 +59,7 @@ import {showImagePreviewModal} from '../components/assets/assetImagePreviewFullS
 
 interface IProps {
     assets: Array<IAssetItem>;
+    sets: Array<ISetItem>;
     totalAssets: number;
     listStyle: ASSET_LIST_STYLE;
     searchParams: IAssetSearchParams;
@@ -89,6 +91,7 @@ interface IState {
 
 const mapStateToProps = (state: IApplicationState) => ({
     assets: getAssetSearchResults(state),
+    sets: getSets(state),
     totalAssets: getAssetListTotal(state),
     listStyle: getAssetListStyle(state),
     searchParams: getAssetSearchParams(state),
@@ -184,7 +187,14 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     }
 
     onAssetImagePreview(asset: IAssetItem): void {
-        showImagePreviewModal(asset!);
+        var setName: string = '';
+
+        this.props.sets.forEach((set) => {
+            if (asset.set_id === set._id) {
+                setName = set.name;
+            }
+        });
+        showImagePreviewModal(asset!, setName);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {

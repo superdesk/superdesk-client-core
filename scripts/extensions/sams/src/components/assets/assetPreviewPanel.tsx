@@ -4,7 +4,7 @@ import {Dispatch} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_ACTIONS, IAssetCallback, IAssetItem, LIST_ACTION} from '../../interfaces';
+import {ASSET_ACTIONS, IAssetCallback, IAssetItem, ISetItem, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {superdeskApi, samsApi} from '../../apis';
 
@@ -17,7 +17,7 @@ import {
     forceUnlockAsset,
 } from '../../store/assets/actions';
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
-
+import {getSets} from '../../store/sets/selectors';
 // UI
 import {Dropdown, FormLabel, IconButton, Label} from 'superdesk-ui-framework/react';
 import {
@@ -38,6 +38,7 @@ import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/
 
 interface IProps {
     asset?: IAssetItem;
+    sets: Array<ISetItem>;
     setName?: string;
     deleteAsset(asset: IAssetItem): void;
     onEditAsset(asset: IAssetItem): void;
@@ -49,6 +50,7 @@ interface IProps {
 
 const mapStateToProps = (state: IApplicationState) => ({
     asset: getSelectedAsset(state),
+    sets: getSets(state),
     setName: getSetNameForSelectedAsset(state),
 });
 
@@ -71,6 +73,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
         this.onEditAsset = this.onEditAsset.bind(this);
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onDeleteAsset = this.onDeleteAsset.bind(this);
+        this.onAssetImagePreview = this.onAssetImagePreview.bind(this);
     }
 
     onEditAsset(): void {
@@ -86,7 +89,14 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
     }
 
     onAssetImagePreview(asset: IAssetItem): void {
-        showImagePreviewModal(asset!);
+        var setName: string = '';
+
+        this.props.sets.forEach((set) => {
+            if (asset.set_id === set._id) {
+                setName = set.name;
+            }
+        });
+        showImagePreviewModal(asset!, setName);
     }
 
     render() {
