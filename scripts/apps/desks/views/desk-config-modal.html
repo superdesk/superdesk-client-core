@@ -218,7 +218,7 @@
                     <div class="grid__item grid__item--col-5">
                         <div class="heading" translate>Work stages</div>
                         <div class="column">
-                            <ul class="pills-list pills-list--draggable stages-list" ng-class="{'edit-mode': editStage}">
+                            <ul class="pills-list stages-list" ng-class="{'edit-mode': editStage, 'pills-list--draggable': !editStage}">
                                 <li class="stage editable addnew" ng-show="editStage && !editStage._id">
                                     <div class="sd-line-input">
                                         <input class="sd-line-input__input" type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" autofocus placeholder="{{ 'New stage' | translate }}">
