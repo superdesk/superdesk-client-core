@@ -265,11 +265,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
                     if (card.type === 'stage') { // filter out deleted stages
                         var stage = self.stageLookup[card._id];
 
-                        if (stage != null) {
-                            return true;
-                        } else {
-                            return false;
-                        }
+                        return stage != null;
                     } else {
                         return true;
                     }
