@@ -184,7 +184,7 @@ export function SearchService($location, session, multi,
         });
 
         // set the filters for parameters defined in the parameters panel.
-        _.each(PARAMETERS, (value, key) => {
+        _.each(PARAMETERS, (_param, key) => {
             var facetrange = {};
             const dateRangesByKey = getDateRangesByKey();
 
