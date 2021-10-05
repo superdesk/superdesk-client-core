@@ -505,6 +505,12 @@ export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): v
         });
 }
 
+export function getAssetDownloadUrl(assetId: IAssetItem['_id']): string {
+    const {server} = superdeskApi.instance.config;
+
+    return `${server.url}/${BINARY_RESOURCE}/${assetId}`;
+}
+
 export function getAssetBinary(asset: IAssetItem): Promise<void | Response> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
