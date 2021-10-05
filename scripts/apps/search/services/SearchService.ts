@@ -7,7 +7,7 @@ import {
 
 import _ from 'lodash';
 import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
-import {gettext} from 'core/utils';
+import {gettext, isElasticDateFormat} from 'core/utils';
 import {KILLED_STATES, ITEM_STATE} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
 import {ISortFields} from 'core/ui/components/SortBar';
@@ -233,17 +233,29 @@ export function SearchService($location, session, multi,
                     } else {
                         // handle manual ranges
 
+                        const value = params[key];
+
                         if (params[key] != null && key === fieldname + 'to') {
                             if (facetrange[key] == null) {
                                 facetrange[key] = {};
                             }
-                            facetrange[key].lte = formatDate(params[key], midnightSuffix);
+
+                            if (isElasticDateFormat(value)) {
+                                facetrange[key].lte = value;
+                            } else {
+                                facetrange[key].lte = formatDate(value, midnightSuffix);
+                            }
                         }
                         if (params[key] != null && key === fieldname + 'from') {
                             if (facetrange[key] == null) {
                                 facetrange[key] = {};
                             }
-                            facetrange[key].gte = formatDate(params[key], zeroHourSuffix);
+
+                            if (isElasticDateFormat(value)) {
+                                facetrange[key].gte = value;
+                            } else {
+                                facetrange[key].gte = formatDate(value, zeroHourSuffix);
+                            }
                         }
                     }
                 });
@@ -459,16 +471,30 @@ export function SearchService($location, session, multi,
                     // handle manual ranges
 
                     if (paramsObject[fieldname + 'to'] != null) {
+                        const value: string = paramsObject[fieldname + 'to'];
+
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
                         }
-                        facetrange[fieldname].lte = formatDate(paramsObject[fieldname + 'to'], midnightSuffix);
+
+                        if (isElasticDateFormat(value)) {
+                            facetrange[fieldname].lte = value;
+                        } else {
+                            facetrange[fieldname].lte = formatDate(value, midnightSuffix);
+                        }
                     }
                     if (paramsObject[fieldname + 'from'] != null) {
+                        const value = paramsObject[fieldname + 'from'];
+
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
                         }
-                        facetrange[fieldname].gte = formatDate(paramsObject[fieldname + 'from'], zeroHourSuffix);
+
+                        if (isElasticDateFormat(value)) {
+                            facetrange[fieldname].gte = value;
+                        } else {
+                            facetrange[fieldname].gte = formatDate(value, zeroHourSuffix);
+                        }
                     }
                 }
             });
