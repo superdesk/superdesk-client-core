@@ -80,4 +80,14 @@
         data-mode="authoring"
         data-test-id="send-publish-pane"
     ></div>
+
+    <!--
+        When "send to" sidebar is not rendered,
+        the directive still has to be rendered in order for "to desk" feature to work.
+    -->
+    <div sd-send-item
+        ng-if="!views.send"
+        data-item="null"
+    ></div>
+    
 </section>
