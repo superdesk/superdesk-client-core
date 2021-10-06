@@ -1,13 +1,12 @@
 import {throttle, ThrottleSettings} from 'lodash';
-
-type IHandler<T> = (items: T) => void;
+import {IThrottleAndCombineHandlerFn} from 'superdesk-api';
 
 export function throttleAndCombine<T>(
-    fn: IHandler<T>,
+    fn: IThrottleAndCombineHandlerFn<T>,
     combine: (a: T, b: T) => T,
     wait: number,
     options?: ThrottleSettings,
-): IHandler<T> {
+): IThrottleAndCombineHandlerFn<T> {
     let queue: T | null = null;
 
     const callbackThrottled = throttle(
@@ -32,7 +31,7 @@ export function throttleAndCombine<T>(
 }
 
 export function throttleAndCombineArray<T>(
-    fn: IHandler<Array<T>>,
+    fn: IThrottleAndCombineHandlerFn<Array<T>>,
     wait: number,
     options?: ThrottleSettings,
 ) {
@@ -50,7 +49,7 @@ export function throttleAndCombineArray<T>(
  * it then invokes the handler function with all stored values.
  */
 export function throttleAndCombineSet<T>(
-    fn: IHandler<Set<T>>,
+    fn: IThrottleAndCombineHandlerFn<Set<T>>,
     wait: number,
     options?: ThrottleSettings,
 ) {

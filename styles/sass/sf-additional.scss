@@ -2234,3 +2234,12 @@ sd-multi-image-edit {
 .sd-line-input textarea.sd-line-input__input {
     display: block !important;
 }
+
+.sd-scrollable-inside-absolute-container {
+    position: absolute;
+    top: 48px; // top toolbar
+    left: 0;
+    width: 100%;
+    height: calc(100% - 48px);
+    overflow: auto;
+}

@@ -1,4 +1,5 @@
 import {gettext} from 'core/utils';
+import {Dictionary} from 'superdesk-api';
 
 interface IDateRange {
     key: string;
