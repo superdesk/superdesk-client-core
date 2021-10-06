@@ -7,6 +7,7 @@ import {
     IEvents,
     IStage,
     IUser,
+    Dictionary,
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
@@ -77,6 +78,7 @@ import {WithLiveQuery} from './with-live-query';
 import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
+import {instanceSettings} from 'instance-settings';
 import {Editor3Html} from './editor3/Editor3Html';
 import {arrayToTree, treeToArray} from './helpers/tree';
 
@@ -285,6 +287,7 @@ export function getSuperdeskApiImplementation(
         state: applicationState,
         instance: {
             config,
+            settings: instanceSettings,
         },
         ui: {
             article: {

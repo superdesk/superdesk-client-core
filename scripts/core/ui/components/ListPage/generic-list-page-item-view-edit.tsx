@@ -14,8 +14,7 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
-import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
-import {hasValue} from '../generic-form/has-value';
+import {getValidationErrors} from '../generic-form/validation';
 
 interface IProps {
     operation: 'editing' | 'creation';
@@ -92,18 +91,11 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         return JSON.stringify(this.props.item) !== JSON.stringify(this.state.nextItem);
     }
     handleSave() {
-        const fieldsFlat = getFormFieldsFlat(this.props.formConfig);
-        const notFilled = fieldsFlat.filter(
-            (fieldConfig) => fieldConfig.required && !hasValue(fieldConfig, this.state.nextItem[fieldConfig.field]),
-        );
+        const validationErrors = getValidationErrors(this.props.formConfig, this.state.nextItem);
 
-        if (notFilled.length > 0) {
+        if (Object.keys(validationErrors).length > 0) {
             this.setState({
-                issues: notFilled.reduce<IState['issues']>((acc, fieldConfig) => {
-                    acc[fieldConfig.field] = [gettext('Field is required')];
-
-                    return acc;
-                }, {}),
+                issues: validationErrors,
             });
 
             return;
