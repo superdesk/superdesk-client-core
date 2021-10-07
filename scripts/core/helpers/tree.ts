@@ -11,7 +11,7 @@ export function arrayToTree<T>(
     itemsFlat: Array<T>,
     getId: (item: T) => string,
     getParentId: (item: T) => string | undefined | null,
-): Array<ITreeNode<T>> {
+): {result: Array<ITreeNode<T>>, errors: Array<T>} {
     const initialTree = itemsFlat.reduce<{[key: string]: ITreeNode<T>}>((acc, item) => {
         const id = getId(item);
 
@@ -20,6 +20,8 @@ export function arrayToTree<T>(
         return acc;
     }, {});
 
+    const errors: Array<T> = [];
+
     for (const itemFlat of itemsFlat) {
         const item = initialTree[getId(itemFlat)];
         const parentId = getParentId(itemFlat);
@@ -27,19 +29,26 @@ export function arrayToTree<T>(
         if (parentId != null) {
             const parent = initialTree[parentId];
 
-            item.parent = parent;
+            if (parent == null) {
+                errors.push(itemFlat);
+            } else {
+                item.parent = parent;
 
-            if (parent.children == null) {
-                parent.children = [];
+                // eslint-disable-next-line max-depth
+                if (parent.children == null) {
+                    parent.children = [];
+                }
+
+                parent.children.push(item);
+
+                initialTree[parentId] = parent;
             }
-
-            parent.children.push(item);
-
-            initialTree[parentId] = parent;
         }
     }
 
-    return Object.values(initialTree).filter((item) => item.parent == null);
+    const result = Object.values(initialTree).filter((item) => item.parent == null);
+
+    return {result, errors};
 }
 
 export function treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T> {
