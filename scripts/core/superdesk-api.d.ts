@@ -1012,7 +1012,7 @@ declare module 'superdesk-api' {
 
     export interface IAlertComponentProps {
         type: 'info' | 'warning' | 'error';
-        message: string;
+        message?: string;
         title?: string;
 
         /** actions will be rendered as small icon-buttons on the right */
