@@ -16,24 +16,8 @@ export class AssetImagePreview extends React.PureComponent<IAssetContentPreviewP
                     width: 640,
                     height: 640,
                 }}
-                style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%',
-                    height: 'auto',
-                    margin: 'auto',
-                    pointerEvents: 'none',
-                    transition: 'filter ease-in-out 0.3s',
-                }}
-                container={(loading, children) => (
-                    <div
-                        className="asset-preview__image"
-                        style={!loading ? undefined : {
-                            width: '100%',
-                            height: '250px',
-                            position: 'relative',
-                            backgroundColor: '#2c2c2c',
-                        }}
-                    >
+                container={(_loading, children) => (
+                    <div className="side-panel__content-block--image">
                         {children}
                     </div>
                 )}

@@ -219,6 +219,7 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 if (data.to_desk && data.from_desk !== data.to_desk ||
                     data.to_stage && data.from_stage !== data.to_stage) {
                     scope.updateItem(getItem(data.item), scope.stage._id !== data.to_stage, true);
+                    scheduleQuery(500);
                 }
             });
 

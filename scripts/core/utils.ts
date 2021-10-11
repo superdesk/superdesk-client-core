@@ -178,3 +178,28 @@ export function getItemTypes() {
                 true
         ));
 }
+
+type IWeekday =
+    'sunday'
+    | 'monday'
+    | 'tuesday'
+    | 'wednesday'
+    | 'thursday'
+    | 'friday'
+    | 'saturday';
+
+export function getWeekDayIndex(weekday: IWeekday): number {
+    return [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday',
+    ].indexOf(weekday);
+}
+
+export function isElasticDateFormat(date: string) {
+    return date.startsWith('now+') || date.startsWith('now-');
+}

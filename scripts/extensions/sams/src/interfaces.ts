@@ -6,7 +6,6 @@ import {
     IRestApiResponse,
     IUser,
     IWebsocketMessage,
-    IAbortablePromise,
     IRendition,
 } from 'superdesk-api';
 import {IModalSize} from './ui/modal';
@@ -205,6 +204,8 @@ export interface IUploadAssetModalProps {
         id: string;
         file: File;
     }>;
+    defaultAssetState?: ASSET_STATE;
+    allowedStates?: Array<ASSET_STATE>;
     onAssetUploaded?(asset: IAssetItem): Promise<void>;
     onModalClosed?(assets?: Dictionary<string, IAssetItem>): void;
 }
@@ -244,14 +245,15 @@ export interface ISamsAPI {
         lockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
         unlockAsset(asset: IAssetItem, updates: Dictionary<string, any>): Promise<Partial<IAssetItem>>;
         searchTags(searchTags: string): Promise<IAutoTaggingSearchResult>;
+        getDownloadUrl(assetId: IAssetItem['_id']): string;
 
         images: {
-            getRendition(
+            getRenditionUrl(
                 assetId: IAssetItem['_id'],
                 width?: number,
                 height?: number,
                 keepProportions?: boolean,
-            ): IAbortablePromise<Blob>;
+            ): string;
         };
     };
     workspace: {

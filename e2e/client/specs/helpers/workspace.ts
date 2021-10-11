@@ -95,6 +95,8 @@ class Workspace {
                     dropdownBtn.click();
                 }
             });
+
+            browser.sleep(1000);
         };
 
         this.createWorkspace = function(name) {
