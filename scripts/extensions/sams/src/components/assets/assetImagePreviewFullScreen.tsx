@@ -137,6 +137,15 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
                                             </FormRow>
 
                                             <FormRow>
+                                                <FormLabel text={gettext('Dimensiions')} style="light" />
+                                                <Text>{gettext('{{width}} * {{height}}', {
+                                                    width: this.props.asset?.renditions[0].params.width!,
+                                                    height: this.props.asset?.renditions[0].params.height!,
+                                                })}
+                                                </Text>
+                                            </FormRow>
+
+                                            <FormRow>
                                                 <FormLabel text={gettext('Set')} style="light" />
                                                 <Text>{this.props.setName}</Text>
                                             </FormRow>

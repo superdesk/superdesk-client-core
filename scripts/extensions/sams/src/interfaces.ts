@@ -7,6 +7,7 @@ import {
     IUser,
     IWebsocketMessage,
     IAbortablePromise,
+    IRendition,
 } from 'superdesk-api';
 import {IModalSize} from './ui/modal';
 
@@ -164,6 +165,7 @@ export interface IAssetItem extends IVersionInformation {
     lock_user: string;
     lock_session: string;
     tags: Array<IAssetTag>;
+    renditions: Array<IRendition>;
     extra: Dictionary<string, any>;
 }
 
