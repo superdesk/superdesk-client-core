@@ -6,7 +6,6 @@ import {
     IRestApiResponse,
     IUser,
     IWebsocketMessage,
-    IRendition,
 } from 'superdesk-api';
 import {IModalSize} from './ui/modal';
 
@@ -83,6 +82,12 @@ export enum DATA_UNIT {
     GB = 'gb',
 }
 
+export enum RENDITION {
+    ORIGINAL = 'original',
+    THUMBNAIL = 'thumbnail',
+    VIEW_IMAGE = 'viewImage',
+}
+
 export interface IBaseAssetAction {
     id: ASSET_ACTIONS;
     label: string;
@@ -151,6 +156,23 @@ export interface IAssetTag {
     code: string;
 }
 
+export interface IAssetRenditionArgs {
+    width: number;
+    height: number;
+    keep_proportions: boolean;
+}
+
+export interface IAssetRendition {
+    _media_id: string;
+    name: string;
+    width: number; // actual width
+    height: number; // actual height
+    params: IAssetRenditionArgs; // arguments used when the rendition was generated
+    versioncreated: string;
+    filename: string;
+    length: number;
+}
+
 export interface IAssetItem extends IVersionInformation {
     set_id: string;
     parent_id: string;
@@ -164,7 +186,7 @@ export interface IAssetItem extends IVersionInformation {
     lock_user: string;
     lock_session: string;
     tags: Array<IAssetTag>;
-    renditions: Array<IRendition>;
+    renditions: Array<IAssetRendition>;
     extra: Dictionary<string, any>;
 }
 

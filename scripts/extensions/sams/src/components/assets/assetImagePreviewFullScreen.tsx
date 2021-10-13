@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 // Types
-import {IAssetItem} from '../../interfaces';
+import {IAssetItem, RENDITION} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
@@ -28,6 +28,7 @@ import {
     getIconTypeFromMimetype,
     getHumanReadableFileSize,
     showModalConnectedToStore,
+    getAssetRenditionDimention,
 } from '../../utils/ui';
 import {getMimetypeHumanReadable} from '../../utils/assets';
 
@@ -138,10 +139,8 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
 
                                             <FormRow>
                                                 <FormLabel text={gettext('Dimensiions')} style="light" />
-                                                <Text>{gettext('{{width}} * {{height}}', {
-                                                    width: this.props.asset?.renditions[0].params.width!,
-                                                    height: this.props.asset?.renditions[0].params.height!,
-                                                })}
+                                                <Text>
+                                                    {getAssetRenditionDimention(this.props.asset!, RENDITION.ORIGINAL)}
                                                 </Text>
                                             </FormRow>
 

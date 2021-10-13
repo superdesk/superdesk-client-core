@@ -257,12 +257,6 @@ declare module 'superdesk-api' {
         order: number,
     }
 
-    export interface IDimension {
-        width: number;
-        height: number;
-        keep_proportions: Boolean;
-    }
-
     export interface IRendition {
         href: string;
         mimetype: string;
@@ -276,9 +270,6 @@ declare module 'superdesk-api' {
 
         // video id, set when item is stored in video server
         video_editor_id?: string;
-
-        // dimension, contains width and height of the image
-        params: IDimension;
     };
 
     export interface IArticle extends IBaseRestApiResponse {
