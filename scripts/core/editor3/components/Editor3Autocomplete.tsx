@@ -17,15 +17,9 @@ export class Editor3Autocomplete extends React.PureComponent<IProps> {
     render() {
         const editorText = this.props.editorState.getCurrentContent().getPlainText().toLowerCase().trim();
 
-        const suggestions = (() => {
-            if (editorText.length < 3) {
-                return [];
-            } else {
-                return (this.props.autocompleteSuggestions ?? []).filter(
-                    (name) => name.toLowerCase().includes(editorText) && name.toLowerCase() !== editorText,
-                );
-            }
-        })();
+        const suggestions = (this.props.autocompleteSuggestions ?? []).filter(
+            (name) => name.toLowerCase().includes(editorText) && name.toLowerCase() !== editorText,
+        );
 
         return (
             <div>
