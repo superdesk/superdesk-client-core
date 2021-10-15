@@ -14,6 +14,7 @@ import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
 import {insertEntity} from '../helpers/draftInsertEntity';
 import {handleOverflowHighlights} from '../helpers/characters-limit';
+import {logger} from 'core/services/logger';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -52,6 +53,8 @@ const editor3 = (state: IEditorStore, action) => {
         return setLoading(state, action.payload);
     case 'EDITOR_CHANGE_LIMIT_CONFIG':
         return changeLimitConfig(state, action.payload);
+    case 'EDITOR_AUTOCOMPLETE':
+        return autocomplete(state, action.payload);
     default:
         return state;
     }
@@ -502,4 +505,36 @@ const pushState = (state: IEditorStore, contentState: ContentState) => {
     const editorState = EditorState.push(state.editorState, contentState, 'insert-characters');
 
     return onChange(state, editorState, true, false, false);
+};
+
+/**
+ * Replaces entire editor content.
+ * Is only meant to be used in single line mode.
+ */
+const autocomplete = (state, {value}) => {
+    const editorState: EditorState = state.editorState;
+    const selection = editorState.getSelection();
+
+    if (!selection.isCollapsed()) {
+        logger.error(new Error('collapsed selection expected'));
+        return state;
+    }
+
+    const blockKey = selection.getStartKey();
+    const block = editorState.getCurrentContent().getBlockForKey(blockKey);
+
+    const replaceRange: SelectionState = new SelectionState({
+        anchorKey: block.getKey(),
+        anchorOffset: 0,
+        focusKey: block.getKey(),
+        focusOffset: block.getLength(),
+    });
+
+    const newContent: ContentState = Modifier.replaceText(
+        editorState.getCurrentContent(),
+        replaceRange,
+        value,
+    );
+
+    return onChange(state, EditorState.push(editorState, newContent, 'insert-characters'));
 };

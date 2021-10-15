@@ -241,3 +241,10 @@ export function changeLimitConfig(payload: EditorLimit) {
         payload,
     };
 }
+
+export function autocomplete(value: string) {
+    return {
+        type: 'EDITOR_AUTOCOMPLETE',
+        payload: {value},
+    };
+}

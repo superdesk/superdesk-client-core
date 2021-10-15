@@ -11,13 +11,33 @@ import {getContentStateFromHtml} from './html/from-html';
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 
 import ng from 'core/services/ng';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION, IRestApiResponse} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {
     CHARACTER_LIMIT_UI_PREF,
     CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {appConfig} from 'appConfig';
+
+function getAutocompleteSuggestions(field: string, language: string): Promise<Array<string>> {
+    const supportedFields = ['slugline'];
+
+    if (
+        appConfig.archive_autocomplete
+        && supportedFields.includes(field)
+    ) {
+        return httpRequestJsonLocal({
+            method: 'GET',
+            path: `/archive_autocomplete?field=${field}&language=${language}`,
+        }).then((res: IRestApiResponse<{value: string}>) => {
+            return res._items.map(({value}) => value);
+        });
+    } else {
+        return Promise.resolve([]);
+    }
+}
 
 /**
  * @ngdoc directive
@@ -193,9 +213,13 @@ class Editor3Directive {
 
         const pathValue = this.pathToValue.split(FIELD_KEY_SEPARATOR)[1];
 
-        ng.get('preferencesService')
-            .get()
-            .then((userPreferences) => {
+        Promise.all([
+            ng.get('preferencesService').get(),
+            getAutocompleteSuggestions(this.pathToValue, this.language),
+        ])
+            .then((res) => {
+                const [userPreferences, autocompleteSuggestions] = res;
+
                 // defaults
                 this.language = this.language || 'en';
                 this.readOnly = this.readOnly || false;
@@ -229,6 +253,7 @@ class Editor3Directive {
                                     scrollContainer={this.scrollContainer}
                                     singleLine={this.singleLine}
                                     cleanPastedHtml={this.cleanPastedHtml}
+                                    autocompleteSuggestions={autocompleteSuggestions}
                                 />
                             </EditorStore.Provider>
                         </Provider>,
