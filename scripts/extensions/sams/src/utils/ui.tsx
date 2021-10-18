@@ -118,7 +118,7 @@ export function getAssetListSortFieldText(field: ASSET_SORT_FIELD): string {
     superdeskApi.helpers.assertNever(field);
 }
 
-export function getAssetRenditionDimention(asset: IAssetItem, rendition: RENDITION) {
+export function getAssetRenditionDimension(asset: IAssetItem, rendition: RENDITION) {
     const {gettext} = superdeskApi.localization;
 
     const dimensions = asset.renditions.find((r) => r?.name === rendition)?.params!;

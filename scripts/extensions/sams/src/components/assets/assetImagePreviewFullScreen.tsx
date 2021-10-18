@@ -28,7 +28,7 @@ import {
     getIconTypeFromMimetype,
     getHumanReadableFileSize,
     showModalConnectedToStore,
-    getAssetRenditionDimention,
+    getAssetRenditionDimension,
 } from '../../utils/ui';
 import {getMimetypeHumanReadable} from '../../utils/assets';
 
@@ -45,7 +45,6 @@ export function showImagePreviewModal(asset: IAssetItem, setName: string) {
 export class AssetImagePreviewFullScreen extends React.Component<IProps> {
     render() {
         const {gettext} = superdeskApi.localization;
-        const {config} = superdeskApi.instance;
         const ContentPreview = getPreviewComponent(this.props.asset!);
         const typeIcon = getIconTypeFromMimetype(
             this.props.asset?.mimetype ?? 'text',
@@ -63,10 +62,11 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
                     main={!ContentPreview ? null : (
                         <AssetImageRendition
                             asset={this.props.asset!}
-                            rendition={config.media?.renditions?.sams?.viewImage}
+                            rendition={this.props.asset?.renditions.find((r) =>
+                                r?.name === RENDITION.ORIGINAL)?.params!}
                             style={{
-                                minWidth: '100%',
-                                minHeight: '100%',
+                                maxWidth: '100%',
+                                maxHeight: '100%',
                                 height: 'auto',
                                 margin: 'auto',
                                 pointerEvents: 'none',
@@ -138,9 +138,9 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
                                             </FormRow>
 
                                             <FormRow>
-                                                <FormLabel text={gettext('Dimensiions')} style="light" />
+                                                <FormLabel text={gettext('Dimensions')} style="light" />
                                                 <Text>
-                                                    {getAssetRenditionDimention(this.props.asset!, RENDITION.ORIGINAL)}
+                                                    {getAssetRenditionDimension(this.props.asset!, RENDITION.ORIGINAL)}
                                                 </Text>
                                             </FormRow>
 
