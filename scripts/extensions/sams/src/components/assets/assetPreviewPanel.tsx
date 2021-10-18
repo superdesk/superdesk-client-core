@@ -18,6 +18,7 @@ import {
 } from '../../store/assets/actions';
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 import {getSets} from '../../store/sets/selectors';
+
 // UI
 import {Dropdown, FormLabel, IconButton, Label} from 'superdesk-ui-framework/react';
 import {
@@ -89,14 +90,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
     }
 
     onAssetImagePreview(asset: IAssetItem): void {
-        var setName: string = '';
-
-        this.props.sets.forEach((set) => {
-            if (asset.set_id === set._id) {
-                setName = set.name;
-            }
-        });
-        showImagePreviewModal(asset!, setName);
+        showImagePreviewModal(asset!, this.props.sets);
     }
 
     render() {
@@ -210,6 +204,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                                 <FormLabel text={gettext('Set')} style="light" />
                                 <Text>{this.props.setName}</Text>
                             </FormRow>
+
                             <FormRow>
                                 <FormLabel text={gettext('Tags')} style="light" />
                                 {this.props.asset.tags?.map((tag) => (

@@ -187,14 +187,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
     }
 
     onAssetImagePreview(asset: IAssetItem): void {
-        var setName: string = '';
-
-        this.props.sets.forEach((set) => {
-            if (asset.set_id === set._id) {
-                setName = set.name;
-            }
-        });
-        showImagePreviewModal(asset!, setName);
+        showImagePreviewModal(asset!, this.props.sets);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {

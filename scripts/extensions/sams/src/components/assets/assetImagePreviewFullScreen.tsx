@@ -1,9 +1,14 @@
 // External Modules
 import * as React from 'react';
+import {connect} from 'react-redux';
 
 // Types
-import {IAssetItem, RENDITION} from '../../interfaces';
+import {IAssetItem, ISetItem, RENDITION} from '../../interfaces';
 import {superdeskApi} from '../../apis';
+import {IApplicationState} from '../../store';
+
+// Redux Actions & Selectors
+import {getSets} from '../../store/sets/selectors';
 
 // UI
 import {Icon, Label, FormLabel} from 'superdesk-ui-framework/react';
@@ -34,15 +39,25 @@ import {getMimetypeHumanReadable} from '../../utils/assets';
 
 interface IProps {
     asset?: IAssetItem;
+    sets: Array<ISetItem>;
     setName?: string;
     closeModal(): void;
 }
 
-export function showImagePreviewModal(asset: IAssetItem, setName: string) {
+const mapStateToProps = (state: IApplicationState) => ({
+    sets: getSets(state),
+});
+
+export function showImagePreviewModal(asset: Partial<IAssetItem>, sets?: Array<ISetItem>) {
+    var setName: string = '';
+
+    if (sets) {
+        setName = sets!.find((set) => set._id === asset.set_id)?.name!;
+    }
     return showModalConnectedToStore(AssetImagePreviewFullScreen, {asset: asset, setName: setName});
 }
 
-export class AssetImagePreviewFullScreen extends React.Component<IProps> {
+export class AssetImagePreviewFullScreenComponent extends React.Component<IProps> {
     render() {
         const {gettext} = superdeskApi.localization;
         const ContentPreview = getPreviewComponent(this.props.asset!);
@@ -170,3 +185,7 @@ export class AssetImagePreviewFullScreen extends React.Component<IProps> {
         );
     }
 }
+
+export const AssetImagePreviewFullScreen = connect(
+    mapStateToProps,
+)(AssetImagePreviewFullScreenComponent);
