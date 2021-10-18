@@ -7,6 +7,7 @@ import {isKilled} from 'apps/archive/utils';
 import {IArticle, IPublishedArticle, IListViewFieldWithOptions} from 'superdesk-api';
 import {getVocabularyItemNameTranslated} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {ErrorBoundary} from 'core/helpers/ErrorBoundary';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -198,7 +199,11 @@ export function renderArea(
         const Component = fields[field];
 
         if (Component != null) {
-            return <Component key={i} {...itemProps} options={options} />;
+            return (
+                <ErrorBoundary key={i}>
+                    <Component {...itemProps} options={options} />
+                </ErrorBoundary>
+            );
         }
 
         return null;

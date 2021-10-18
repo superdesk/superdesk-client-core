@@ -15,6 +15,7 @@ import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {IRelatedEntities} from 'core/getRelatedEntities';
 import {OrderedMap} from 'immutable';
 import {MultiSelect} from 'core/ArticlesListV2MultiSelect';
+import {ErrorBoundary} from 'core/helpers/ErrorBoundary';
 
 interface IProps {
     itemsList: Array<string>;
@@ -533,38 +534,39 @@ export class ItemList extends React.Component<IProps, IState> {
                         const task = item.task || {desk: null};
 
                         return (
-                            <Item
-                                key={itemId}
-                                isNested={false}
-                                item={item}
-                                relatedEntities={this.props.relatedEntities}
-                                view={this.props.view}
-                                swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
-                                flags={{selected: this.props.selected === itemId}}
-                                onEdit={this.edit}
-                                onDbClick={this.dbClick}
-                                onSelect={this.select}
-                                ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
-                                desk={this.props.desksById[task.desk] || null}
-                                highlightsById={this.props.highlightsById}
-                                markedDesksById={this.props.markedDesksById}
-                                profilesById={this.props.profilesById}
-                                versioncreator={this.modifiedUserName(item.version_creator)}
-                                narrow={this.props.narrow}
-                                hideActions={
-                                    this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
-                                }
-                                multiSelectDisabled={this.props.multiSelect == null}
-                                actioning={!!this.state.actioning[itemId]}
-                                singleLine={this.props.singleLine}
-                                customRender={this.props.customRender}
-                                scopeApply={this.props.scopeApply}
-                                multiSelect={this.props.multiSelect ?? {
-                                    kind: 'legacy',
-                                    multiSelect: noop,
-                                    setSelectedItem: noop,
-                                }}
-                            />
+                            <ErrorBoundary key={itemId}>
+                                <Item
+                                    isNested={false}
+                                    item={item}
+                                    relatedEntities={this.props.relatedEntities}
+                                    view={this.props.view}
+                                    swimlane={this.props.swimlane || storage.getItem('displaySwimlane')}
+                                    flags={{selected: this.props.selected === itemId}}
+                                    onEdit={this.edit}
+                                    onDbClick={this.dbClick}
+                                    onSelect={this.select}
+                                    ingestProvider={this.props.ingestProvidersById[item.ingest_provider] || null}
+                                    desk={this.props.desksById[task.desk] || null}
+                                    highlightsById={this.props.highlightsById}
+                                    markedDesksById={this.props.markedDesksById}
+                                    profilesById={this.props.profilesById}
+                                    versioncreator={this.modifiedUserName(item.version_creator)}
+                                    narrow={this.props.narrow}
+                                    hideActions={
+                                        this.props.hideActionsForMonitoringItems || this.props.flags?.hideActions
+                                    }
+                                    multiSelectDisabled={this.props.multiSelect == null}
+                                    actioning={!!this.state.actioning[itemId]}
+                                    singleLine={this.props.singleLine}
+                                    customRender={this.props.customRender}
+                                    scopeApply={this.props.scopeApply}
+                                    multiSelect={this.props.multiSelect ?? {
+                                        kind: 'legacy',
+                                        multiSelect: noop,
+                                        setSelectedItem: noop,
+                                    }}
+                                />
+                            </ErrorBoundary>
                         );
                     })
                 }
