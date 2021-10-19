@@ -499,9 +499,10 @@ export function SearchService($location, session, multi,
                 }
             });
 
-            if (Object.keys(facetrange).length > 0) {
-                query.post_filter({range: facetrange});
-            }
+            Object.keys(facetrange).forEach((key) => {
+                query.post_filter({range: {[key]: facetrange[key]}});
+            });
+
             // date filters end
 
             if (paramsObject.type) {
