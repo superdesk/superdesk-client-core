@@ -74,6 +74,12 @@ export class AssetImagePreviewFullScreenComponent extends React.Component<IProps
             >
                 <PageLayout
                     mainClassName="sd-padding--2"
+                    mainProps={{
+                        style: {
+                            justifyContent: 'space-around',
+                            display: 'flex',
+                        },
+                    }}
                     main={!ContentPreview ? null : (
                         <AssetImageRendition
                             asset={this.props.asset!}
