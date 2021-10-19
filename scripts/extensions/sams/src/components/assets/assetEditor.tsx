@@ -26,6 +26,7 @@ interface IProps {
     sets: Array<ISetItem>;
     fields?: Array<keyof IAssetItem>;
     updates?: Partial<IAssetItem>;
+    allowedStates?: Array<ASSET_STATE>;
 }
 
 interface IState {
@@ -154,6 +155,11 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
 
     render() {
         const {gettext} = superdeskApi.localization;
+        const allowedStates = this.props.allowedStates ?? [
+            ASSET_STATE.DRAFT,
+            ASSET_STATE.INTERNAL,
+            ASSET_STATE.PUBLIC,
+        ];
 
         return (
             <React.Fragment>
@@ -211,15 +217,21 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                                 onChange={this.onChange.state}
                                 disabled={this.props.disabled === true}
                             >
-                                <Option value={ASSET_STATE.DRAFT}>
-                                    {gettext('Draft')}
-                                </Option>
-                                <Option value={ASSET_STATE.INTERNAL}>
-                                    {gettext('Internal')}
-                                </Option>
-                                <Option value={ASSET_STATE.PUBLIC}>
-                                    {gettext('Public')}
-                                </Option>
+                                {!allowedStates.includes(ASSET_STATE.DRAFT) ? null : (
+                                    <Option value={ASSET_STATE.DRAFT}>
+                                        {gettext('Draft')}
+                                    </Option>
+                                )}
+                                {!allowedStates.includes(ASSET_STATE.INTERNAL) ? null : (
+                                    <Option value={ASSET_STATE.INTERNAL}>
+                                        {gettext('Internal')}
+                                    </Option>
+                                )}
+                                {!allowedStates.includes(ASSET_STATE.PUBLIC) ? null : (
+                                    <Option value={ASSET_STATE.PUBLIC}>
+                                        {gettext('Public')}
+                                    </Option>
+                                )}
                             </Select>
                         </FormRow>
                     </FormGroup>

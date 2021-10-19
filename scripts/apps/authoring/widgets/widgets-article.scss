@@ -156,6 +156,19 @@
     }
 }
 
+/*
+    Alternative styles for .tabcontent-actions
+    that are not using absolute positioning
+*/
+.sd-widget-pin {
+    transition: all .2s ease-in-out;
+
+    &.sd-widget-pinned i {
+        color: $sd-blue;
+        transform: rotate(90deg);
+    }
+}
+
 .sd-widget.macros {
     .macro-option {
         margin-bottom: 20px;

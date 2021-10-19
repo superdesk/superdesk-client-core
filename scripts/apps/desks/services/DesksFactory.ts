@@ -403,6 +403,15 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
     $rootScope.$on('desk', reset);
     $rootScope.$on('stage', reset);
 
+    // re-fetch stages when order changes for any stage
+    $rootScope.$on('resource:updated', (event, data) => {
+        if (data.resource === 'stages' && data.fields?.['desk_order'] === 1) {
+            desksService.fetchStages(true).then(() => {
+                desksService.generateDeskStages();
+            });
+        }
+    });
+
     return desksService;
 
     function reset(res) {

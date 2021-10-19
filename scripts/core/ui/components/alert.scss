@@ -1,0 +1,14 @@
+.alert-extended {
+    display: flex!important;
+    width: 100%!important;
+    justify-content: space-between!important;
+    align-items: center!important;
+}
+
+.alert-extended--title {
+    font-size: 1.1em!important;
+}
+
+.alert-extended--message {
+    font-size: 1em!important;
+}
