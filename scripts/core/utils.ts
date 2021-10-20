@@ -223,3 +223,7 @@ export function getWeekDayIndex(weekday: IWeekday): number {
         'saturday',
     ].indexOf(weekday);
 }
+
+export function isElasticDateFormat(date: string) {
+    return date.startsWith('now+') || date.startsWith('now-');
+}

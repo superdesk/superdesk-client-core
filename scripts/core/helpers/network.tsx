@@ -53,6 +53,7 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
         method,
         headers: headers || {},
         mode: 'cors',
+        credentials: 'include',
         body: JSON.stringify(payload || undefined), // works when `payload` is `undefined`
         signal: abortSignal,
     });

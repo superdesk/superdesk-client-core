@@ -203,3 +203,11 @@ export function convertTagSearchResultToAssetTags(response: IAutoTaggingSearchRe
 export function isImageAsset(asset: Partial<IAssetItem>): boolean {
     return asset.mimetype?.startsWith('image/') ?? false;
 }
+
+export function isVideoAsset(asset: Partial<IAssetItem>): boolean {
+    return asset.mimetype?.startsWith('video/') ?? false;
+}
+
+export function isAudioAsset(asset: Partial<IAssetItem>): boolean {
+    return asset.mimetype?.startsWith('audio/') ?? false;
+}

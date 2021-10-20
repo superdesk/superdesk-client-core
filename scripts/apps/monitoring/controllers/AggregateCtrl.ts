@@ -259,7 +259,18 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
      * stages for current desk if monitoring setting is not set
      **/
     function initGroups(settings) {
-        self.groups = settings.groups.length > 0 ? settings.groups : getDefaultGroups(settings);
+        self.groups =
+            (settings.groups.length > 0 ? settings.groups : getDefaultGroups(settings))
+                .filter((card) => {
+                    if (card.type === 'stage') { // filter out deleted stages
+                        var stage = self.stageLookup[card._id];
+
+                        return stage != null;
+                    } else {
+                        return true;
+                    }
+                });
+
         initSpikeGroups(settings.type === 'desk');
         initPersonalGroup();
         updateFilteringCriteria();

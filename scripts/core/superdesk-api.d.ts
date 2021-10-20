@@ -370,7 +370,10 @@ declare module 'superdesk-api' {
         version_creator: string;
         state: ITEM_STATE;
         embargo?: any;
-        signal?: any;
+        signal?: Array<{
+            name?: string;
+            qcode: string;
+        }>;
         broadcast?: {
             master_id?: any; // original story this broadcast version was created from
             status?: any;
