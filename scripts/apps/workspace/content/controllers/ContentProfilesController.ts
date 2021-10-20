@@ -242,6 +242,11 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
      * @description Creates a new content profile.
      */
     this.save = function() {
+        if ($scope.new?.type == null) {
+            notify.error(gettext('"{{x}}" field is required', {x: 'content type'}));
+            return;
+        }
+
         var onSuccess = function(resp) {
             refreshList(true);
             self.toggleCreate();

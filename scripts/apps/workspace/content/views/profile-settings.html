@@ -90,7 +90,7 @@
 
             <fieldset>
                 <div class="form__row sd-padding--0">
-                    <div class="sd-line-input sd-line-input--boxed">
+                    <div class="sd-line-input sd-line-input--boxed sd-line-input--required">
                         <label class="sd-line-input__label" translate>Content Type</label>
                         <div class="sd-check-button__group sd-check-button__group--left">
                             <sd-check
@@ -106,7 +106,7 @@
                     </div>
                 </div>
                 <div class="form__row sd-padding--0">
-                    <div class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--invalid': createForm.label.$error.maxlength}">
+                    <div class="sd-line-input sd-line-input--boxed sd-line-input--required" ng-class="{'sd-line-input--invalid': createForm.label.$error.maxlength}">
                         <label class="sd-line-input__label" translate>Label</label>
                         <input type="text" name="label" class="sd-line-input__input" ng-model="new.label" required ng-maxlength="40"/>
                         <div class="sd-line-input__message" ng-show="createForm.label.$error.maxlength" translate>Please use less than 40 characters</div>
