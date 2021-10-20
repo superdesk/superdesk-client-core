@@ -4,7 +4,7 @@ import {Dispatch} from 'redux';
 import {connect} from 'react-redux';
 
 // Types
-import {ASSET_ACTIONS, IAssetCallback, IAssetItem, ISetItem, LIST_ACTION} from '../../interfaces';
+import {ASSET_ACTIONS, IAssetCallback, IAssetItem, LIST_ACTION} from '../../interfaces';
 import {IApplicationState} from '../../store';
 import {superdeskApi, samsApi} from '../../apis';
 
@@ -17,7 +17,6 @@ import {
     forceUnlockAsset,
 } from '../../store/assets/actions';
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
-import {getSets} from '../../store/sets/selectors';
 
 // UI
 import {Dropdown, FormLabel, IconButton, Label} from 'superdesk-ui-framework/react';
@@ -39,7 +38,6 @@ import {getDropdownItemsForActions, getMimetypeHumanReadable} from '../../utils/
 
 interface IProps {
     asset?: IAssetItem;
-    sets: Array<ISetItem>;
     setName?: string;
     deleteAsset(asset: IAssetItem): void;
     onEditAsset(asset: IAssetItem): void;
@@ -51,7 +49,6 @@ interface IProps {
 
 const mapStateToProps = (state: IApplicationState) => ({
     asset: getSelectedAsset(state),
-    sets: getSets(state),
     setName: getSetNameForSelectedAsset(state),
 });
 
@@ -90,7 +87,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
     }
 
     onAssetImagePreview(asset: IAssetItem): void {
-        showImagePreviewModal(asset!, this.props.sets);
+        showImagePreviewModal(asset!);
     }
 
     render() {

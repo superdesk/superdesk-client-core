@@ -40,7 +40,6 @@ import {getMimetypeHumanReadable} from '../../utils/assets';
 interface IProps {
     asset?: IAssetItem;
     sets: Array<ISetItem>;
-    setName?: string;
     closeModal(): void;
 }
 
@@ -48,13 +47,8 @@ const mapStateToProps = (state: IApplicationState) => ({
     sets: getSets(state),
 });
 
-export function showImagePreviewModal(asset: Partial<IAssetItem>, sets?: Array<ISetItem>) {
-    var setName: string = '';
-
-    if (sets) {
-        setName = sets!.find((set) => set._id === asset.set_id)?.name!;
-    }
-    return showModalConnectedToStore(AssetImagePreviewFullScreen, {asset: asset, setName: setName});
+export function showImagePreviewModal(asset: Partial<IAssetItem>) {
+    return showModalConnectedToStore(AssetImagePreviewFullScreen, {asset: asset});
 }
 
 export class AssetImagePreviewFullScreenComponent extends React.Component<IProps> {
@@ -64,6 +58,7 @@ export class AssetImagePreviewFullScreenComponent extends React.Component<IProps
         const typeIcon = getIconTypeFromMimetype(
             this.props.asset?.mimetype ?? 'text',
         );
+        const setName = this.props.sets!.find((set) => set._id === this.props.asset!.set_id)?.name!;
 
         return (
             <Modal
@@ -167,8 +162,9 @@ export class AssetImagePreviewFullScreenComponent extends React.Component<IProps
 
                                             <FormRow>
                                                 <FormLabel text={gettext('Set')} style="light" />
-                                                <Text>{this.props.setName}</Text>
+                                                <Text>{setName}</Text>
                                             </FormRow>
+
                                             <FormRow>
                                                 <FormLabel text={gettext('Tags')} style="light" />
                                                 {this.props.asset?.tags?.map((tag) => (
@@ -180,6 +176,7 @@ export class AssetImagePreviewFullScreenComponent extends React.Component<IProps
                                                     />
                                                 ))}
                                             </FormRow>
+
                                         </ToggleBoxNext>
                                     </PanelContentBlockInner>
                                 </PanelContentBlock>
