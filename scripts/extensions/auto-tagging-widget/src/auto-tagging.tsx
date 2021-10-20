@@ -59,6 +59,33 @@ function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
     return iMatricsFields[key] != null;
 }
 
+export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
+    const items = data.changes.analysis;
+
+    const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
+
+    const entities = items.filter((tag) => isEntity(tag));
+    const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
+
+    const entitiesGroupedAndSortedByConfig = entitiesGrouped
+        .filter((_, key) => hasConfig(key, iMatricsConfig.entities))
+        .sortBy((_, key) => iMatricsConfig.entities[key].order,
+            (a, b) => a - b);
+
+    const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
+        .filter((_, key) => !hasConfig(key, iMatricsConfig.entities))
+        .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
+            (a, b) => a.localeCompare(b));
+
+    const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
+        .concat(entitiesGroupedAndSortedNotInConfig);
+
+    const others = items.filter((tag) => isEntity(tag) === false);
+    const othersGrouped = others.groupBy((tag) => tag.group.value);
+
+    return {entitiesGroupedAndSorted, othersGrouped};
+}
+
 function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
     const {gettext} = superdesk.localization;
     const {showModal} = superdesk.ui;
@@ -490,29 +517,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     />
                                 );
                             } else {
-                                const items = data.changes.analysis;
+                                const {
+                                    entitiesGroupedAndSorted,
+                                    othersGrouped,
+                                } = getAutoTaggingData(data, this.iMatricsFields);
+
                                 const savedTags = data.original.analysis.keySeq().toSet();
-
-                                const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
-
-                                const entities = items.filter((tag) => isEntity(tag));
-                                const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
-
-                                const entitiesGroupedAndSortedByConfig = entitiesGrouped
-                                    .filter((_, key) => hasConfig(key, this.iMatricsFields.entities))
-                                    .sortBy((_, key) => this.iMatricsFields.entities[key].order,
-                                        (a, b) => a - b);
-
-                                const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
-                                    .filter((_, key) => !hasConfig(key, this.iMatricsFields.entities))
-                                    .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
-                                        (a, b) => a.localeCompare(b));
-
-                                const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
-                                    .concat(entitiesGroupedAndSortedNotInConfig);
-
-                                const others = items.filter((tag) => isEntity(tag) === false);
-                                const othersGrouped = others.groupBy((tag) => tag.group.value);
 
                                 let allGrouped = OrderedMap<string, JSX.Element>();
 

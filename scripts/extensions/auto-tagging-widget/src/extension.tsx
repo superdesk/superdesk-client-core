@@ -20,6 +20,14 @@ const extension: IExtension = {
                         isAllowed: (item: IArticle) => item.type === 'text',
                     },
                 ],
+                authoringHeaderComponents: [
+                    {
+                        _id: 'imatrics-header-component',
+                        label: gettext('iMatrics'),
+                        order: 40,
+                        component: getHeaderAutoTaggingComponent(superdesk),
+                    },
+                ],
             },
         };
 

@@ -1,4 +1,6 @@
-import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
+import {
+    isNull, isUndefined, find, filter, keys, findIndex,
+    defer, sortBy, map, forEach, startsWith, flatMap} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
