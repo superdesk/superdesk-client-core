@@ -125,11 +125,46 @@ interface Iparams {
  *
  * @description Authoring Service is responsible for management of the actions on a story
  */
-AuthoringService.$inject = ['$q', '$location', 'api', 'lock', 'autosave', 'confirm', 'privileges', 'desks',
-    'superdeskFlags', 'notify', 'session', '$injector', 'moment', 'familyService', 'modal', 'archiveService'];
-export function AuthoringService($q, $location, api, lock, autosave, confirm, privileges, desks, superdeskFlags,
-    notify, session, $injector, moment, familyService, modal, archiveService) {
+AuthoringService.$inject = [
+    '$q',
+    '$location',
+    'api',
+    'lock',
+    'autosave',
+    'confirm',
+    'privileges',
+    'desks',
+    'superdeskFlags',
+    'notify',
+    'session',
+    '$injector',
+    'moment',
+    'familyService',
+    'modal',
+    'archiveService',
+];
+
+export function AuthoringService(
+    $q,
+    $location,
+    api,
+    lock,
+    autosave,
+    confirm,
+    privileges,
+    desks,
+    superdeskFlags,
+    notify,
+    session,
+    $injector,
+    moment,
+    familyService,
+    modal,
+    archiveService,
+) {
     var self = this;
+
+    const isEditable = (item: Readonly<Partial<IArticle>>) => lock.isLockedInCurrentSession(item);
 
     // TODO: have to trap desk update event for refereshing users desks.
     this.userDesks = [];
@@ -283,18 +318,24 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             });
 
     /**
-     * Close an item
-     *
-     *   and save it if dirty, unlock if editable, and remove from work queue at all times
+     * * close an item and save it if dirty
+     * * unlock if editable
+     * * remove from work queue at all times
+     * * (is called after publishing)
      *
      * @param {Object} diff
      * @param {Object} orig
      * @param {boolean} isDirty $scope dirty status.
      */
-    this.close = function closeAuthoring(diff, orig, isDirty, closeItem) {
+    this.close = function closeAuthoring(
+        diff: Readonly<Partial<IArticle>>,
+        orig: Readonly<IArticle>,
+        isDirty: boolean,
+        closeItem: boolean,
+    ): Promise<void> {
         var promise = $q.when();
 
-        if (this.isEditable(diff)) {
+        if (isEditable(diff)) {
             if (isDirty) {
                 if (!_.includes(['published', 'corrected'], orig.state)) {
                     promise = confirm.confirm()
@@ -333,7 +374,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
     this.publishConfirmation = function publishAuthoring(orig, diff, isDirty, action) {
         var promise = $q.when();
 
-        if (this.isEditable(diff) && isDirty) {
+        if (isEditable(diff) && isDirty) {
             promise = confirm.confirmPublish(action)
                 .then(angular.bind(this, function save() {
                     return true;
@@ -522,7 +563,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var promise = $q.when();
 
         if (isDirty) {
-            if (this.isEditable(diff)) {
+            if (isEditable(diff)) {
                 promise = confirm.confirmSaveWork(message)
                     .then(angular.bind(this, function save() {
                         return this.saveWork(orig, diff);
@@ -625,14 +666,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         });
     };
 
-    /**
-     * Test if an item is editable
-     *
-     * @param {Object} item
-     */
-    this.isEditable = function isEditable(item) {
-        return lock.isLockedInCurrentSession(item);
-    };
+    this.isEditable = isEditable;
 
     /**
      * Unlock an item - callback for item:unlock event
