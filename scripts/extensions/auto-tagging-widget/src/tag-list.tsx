@@ -76,13 +76,17 @@ export function getTagsListComponent(superdesk: ISuperdesk): React.ComponentType
                 ));
 
                 return (
-                    !inline ? <div style={{paddingLeft: level === 0 || inline ? 0 : 14}}>
-                        { treeNodesMap }
-                    </div> : <React.Fragment>
-                        {level === 0 ? '' : ' | '}
-                        { treeNodesMap }
-                    </React.Fragment>
-                   
+                    !inline ? (
+                        <div style={{paddingLeft: level === 0 || inline ? 0 : 14}}>
+                            { treeNodesMap }
+                        </div>
+                    ) : (
+                        <React.Fragment>
+                            {level === 0 ? '' : ' | '}
+                            { treeNodesMap }
+                        </React.Fragment>
+                    )
+
                 );
             }
 
