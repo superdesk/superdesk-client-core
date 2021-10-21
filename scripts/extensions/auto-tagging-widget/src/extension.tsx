@@ -1,5 +1,6 @@
 import {ISuperdesk, IExtension, IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {getAutoTaggingComponent} from './auto-tagging';
+import {getHeaderAutoTaggingComponent} from './header-auto-tagging';
 
 const extension: IExtension = {
     id: 'auto-tagging-widget',

@@ -55,7 +55,7 @@ function tagAlreadyExists(data: IEditableData, qcode: string): boolean {
     return data.changes.analysis.has(qcode);
 }
 
-function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
+export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
     return iMatricsFields[key] != null;
 }
 
