@@ -37,4 +37,6 @@ export const debugInfo = {
     translationsLoaded: false,
 };
 
+export const authoringReactViewEnabled = true;
+
 export const extensions: IExtensions = {};
