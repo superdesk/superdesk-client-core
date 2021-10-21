@@ -72,6 +72,7 @@ export enum ASSET_ACTIONS {
     DELETE = 'delete',
     EDIT = 'edit',
     FORCE_UNLOCK = 'force_unlock',
+    VIEW_FULL_SCREEN = 'view_full_screen',
 }
 
 export enum DATA_UNIT {
@@ -79,6 +80,12 @@ export enum DATA_UNIT {
     KB = 'kb',
     MB = 'mb',
     GB = 'gb',
+}
+
+export enum RENDITION {
+    ORIGINAL = 'original',
+    THUMBNAIL = 'thumbnail',
+    VIEW_IMAGE = 'viewImage',
 }
 
 export interface IBaseAssetAction {
@@ -149,6 +156,23 @@ export interface IAssetTag {
     code: string;
 }
 
+export interface IAssetRenditionArgs {
+    width: number;
+    height: number;
+    keep_proportions: boolean;
+}
+
+export interface IAssetRendition {
+    _media_id: string;
+    name: string;
+    width: number; // actual width
+    height: number; // actual height
+    params: IAssetRenditionArgs; // arguments used when the rendition was generated
+    versioncreated: string;
+    filename: string;
+    length: number;
+}
+
 export interface IAssetItem extends IVersionInformation {
     set_id: string;
     parent_id: string;
@@ -162,6 +186,7 @@ export interface IAssetItem extends IVersionInformation {
     lock_user: string;
     lock_session: string;
     tags: Array<IAssetTag>;
+    renditions: Array<IAssetRendition>;
     extra: Dictionary<string, any>;
 }
 
