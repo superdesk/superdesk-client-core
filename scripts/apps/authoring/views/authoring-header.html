@@ -522,6 +522,19 @@
                 </div>
             </div>
 
+            <!-- custom preview field from extensions API -->
+            <div class="authoring-header__item"
+                ng-repeat="field in previewFields track by field._id"
+                order="{{ field.order }}">
+                <label class="authoring-header__item-label">{{field.label}}</label>
+                <div class="authoring-header__input-holder">
+                    <sd-header-component-field
+                        item="item"
+                        component="field.component"
+                    ></sd-header-component-field>
+                </div>
+            </div>
+
             <div class="authoring-header__item"
                  sd-validation-error="error.company_codes"
                  data-required="schema.company_codes.required"
