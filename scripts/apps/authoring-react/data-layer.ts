@@ -17,7 +17,7 @@ export interface IContentProfileV2 {
 
 export function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
     interface IFakeScope {
-        schema: any,
+        schema: any;
         editor: any;
         fields: any;
     }

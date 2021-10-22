@@ -7,7 +7,9 @@ import {canPrintPreview} from 'apps/search/helpers';
 AuthoringEmbeddedDirective.$inject = ['api', 'notify', '$filter'];
 export function AuthoringEmbeddedDirective(api, notify, $filter) {
     return {
-        template: authoringReactViewEnabled ? '<div><sd-authoring-integration-wrapper data-item-id="item._id"></sd-authoring-integration-wrapper></div>' : undefined,
+        template: authoringReactViewEnabled
+            ? '<div><sd-authoring-integration-wrapper data-item-id="item._id"></sd-authoring-react></div>'
+            : undefined,
         templateUrl: authoringReactViewEnabled ? undefined : 'scripts/apps/authoring/views/authoring.html',
         scope: {
             item: '=',
