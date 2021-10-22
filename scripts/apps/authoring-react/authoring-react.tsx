@@ -1,17 +1,39 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import ng from 'core/services/ng';
 import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
-
-// TODO: how to get item by ID
+import {dataApi} from 'core/helpers/CrudManager';
+import {getContentProfile, IContentProfileV2} from './data-layer';
 
 interface IProps {
     itemId: IArticle['_id'];
+    onClose(): void;
 }
 
-interface IState {
-    cssOpeningAnimationCompleted: boolean;
+interface IStateLoaded {
+    loading: false;
+    item: IArticle;
+    profile: IContentProfileV2;
+}
+
+type IState = {loading: true} | IStateLoaded;
+
+function waitForCssAnimation(): Promise<void> {
+    return new Promise((resolve) => {
+        setTimeout(
+            () => {
+                resolve();
+            },
+
+            // transition time taken from styles/sass/layouts.scss #authoring-container
+            500,
+        );
+    });
+}
+
+function fetchArticle(id: IArticle['_id']): Promise<IArticle> {
+    // TODO: take published items into account
+    return dataApi.findOne<IArticle>('archive', id);
 }
 
 export class AuthoringReact extends React.PureComponent<IProps, IState> {
@@ -19,34 +41,78 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            cssOpeningAnimationCompleted: false,
+            loading: true,
         };
     }
 
     componentDidMount() {
-        setTimeout(() => {
-            this.setState({cssOpeningAnimationCompleted: true});
-        }, 500);
+        Promise.all(
+            [
+                fetchArticle(this.props.itemId).then((item) => {
+                    return getContentProfile(item).then((profile) => {
+                        return {
+                            item,
+                            profile,
+                        };
+                    });
+                }),
+                waitForCssAnimation(),
+            ],
+        ).then((res) => {
+            const [{item, profile}] = res;
+
+            this.setState({loading: false, item, profile});
+        });
     }
 
     render() {
-        if (this.state.cssOpeningAnimationCompleted !== true) {
+        const state = this.state;
+
+        if (state.loading === true) {
             return null;
         }
 
         return (
             <div className="sd-authoring-react">
-                <div>hello world</div>
+                <div>
+                    <h3>{gettext('Toolbar')}</h3>
 
-                <br />
+                    <Button
+                        text={gettext('Close')}
+                        onClick={() => {
+                            this.props.onClose();
+                        }}
+                    />
 
-                <Button
-                    text={gettext('Close')}
-                    onClick={() => {
-                        ng.get('authoringWorkspace').close();
-                        ng.get('$rootScope').$applyAsync();
-                    }}
-                />
+                    <br />
+                    <br />
+                </div>
+
+                <div>
+                    <h3>{gettext('Header')}</h3>
+
+                    {
+                        state.profile.header.map((field) => (
+                            <div key={field.name}>
+                                <label>{field.name}</label>
+                                <div>{state.item[field.name]}</div>
+                            </div>
+                        )).toArray()
+                    }
+                </div>
+
+                <div>
+                    <h3>{gettext('Content')}</h3>
+
+                    {
+                        state.profile.content.map((field) => (
+                            <div key={field.name}>
+                                <label>{field.name}</label>
+                                <div>{state.item[field.name]}</div>
+                            </div>
+                        )).toArray()
+                    }
+                </div>
 
             </div>
         );
