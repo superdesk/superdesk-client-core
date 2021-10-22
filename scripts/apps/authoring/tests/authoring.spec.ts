@@ -13,7 +13,6 @@ describe('authoring', () => {
         $provide.constant('lodash', _);
     }));
 
-    beforeEach(window.module('angular-embed'));
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.archive'));
@@ -27,7 +26,6 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.editor3'));
-    beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.apps.extension-points'));
     beforeEach(window.module('superdesk.apps.spellcheck'));
 
@@ -636,7 +634,6 @@ describe('Item Crops directive', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.editor3'));
-    beforeEach(window.module('superdesk.apps.editor2'));
 
     it('showCrops return true if image renditions are present',
         inject(($rootScope, $compile, $q, metadata, vocabularies) => {
@@ -2209,14 +2206,12 @@ describe('send item directive', () => {
             server: {url: undefined, ws: undefined},
             iframely: {key: '123'},
             editor: {},
-            features: {onlyEditor3: false},
         };
 
         Object.assign(appConfig, testConfig);
     });
 
     beforeEach(window.module('superdesk.core.editor3'));
-    beforeEach(window.module('superdesk.apps.editor2'));
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.templates-cache'));
@@ -2428,7 +2423,7 @@ describe('send item directive', () => {
             _id: 'New Stage', name: 'new stage',
         };
 
-        beforeEach(inject(($q, $compile, $rootScope, api, editor) => {
+        beforeEach(inject(($q, $compile, $rootScope, api) => {
             spyOn(api, 'find').and.returnValue($q.when({}));
             spyOn(api, 'save').and.returnValue($q.when({task: {desk: 'new', stage: 'new'}}));
 

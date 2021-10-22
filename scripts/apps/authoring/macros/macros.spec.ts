@@ -25,7 +25,6 @@ describe('macros', () => {
         },
     ];
 
-    beforeEach(window.module('angular-embed'));
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.archive'));
@@ -39,7 +38,6 @@ describe('macros', () => {
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
     beforeEach(window.module('superdesk.core.editor3'));
-    beforeEach(window.module('superdesk.apps.editor2'));
 
     beforeEach(window.module('superdesk.apps.authoring.macros'));
     beforeEach(window.module('superdesk.apps.authoring.autosave'));

@@ -13,7 +13,6 @@ import 'core/elastic';
 import 'core/filters';
 import 'core/services';
 import 'core/directives';
-import 'core/editor2';
 import 'core/spellcheck';
 import 'core/editor3';
 import 'core/features';

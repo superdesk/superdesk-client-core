@@ -6,8 +6,6 @@ import 'app.scss'; // styles
 
 import 'jquery-jcrop/css/jquery.Jcrop.css';
 import 'jquery-ui/themes/smoothness/jquery-ui.css';
-import 'medium-editor/dist/css/medium-editor.css';
-import 'medium-editor-tables/dist/css/medium-editor-tables.css';
 import 'owl.carousel/dist/assets/owl.carousel.min.css';
 import 'superdesk-ui-framework/dist/superdesk-ui.bundle.css';
 

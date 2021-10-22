@@ -87,16 +87,6 @@
                              data-change="setDirty()">
                         </div>
                     </div>
-                    <!-- ELSE IF EDITOR2 -->
-                    <div class="field" ng-if="hasFormatOptions(id) && model.editor.body_html.editor3 !== true">
-                        <label translate>Format options</label>
-                        <div class="controls" ng-if="!model.editor.body_html.editor3"
-                             sd-multi-select
-                             data-item="model.editor[id].formatOptions"
-                             data-list="formattingOptions"
-                             data-change="setDirty()">
-                        </div>
-                    </div>
                     <!-- END IF -->
 
                     <div class="field" ng-if="id === 'feature_media' && model.schema[id].type === 'media'">

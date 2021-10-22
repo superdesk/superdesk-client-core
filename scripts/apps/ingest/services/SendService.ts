@@ -27,7 +27,6 @@ export function SendService(
     this.getConfig = getConfig;
     this.startConfig = startConfig;
     this.getItemsFromPackages = getItemsFromPackages;
-    this.getValidItems = getValidItems;
 
     var self = this;
 

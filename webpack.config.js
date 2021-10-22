@@ -46,9 +46,6 @@ module.exports = function makeConfig(grunt) {
                 jQuery: jQueryModule,
                 'window.jQuery': jQueryModule,
                 moment: 'moment',
-                // MediumEditor needs to be globally available, because
-                // its plugins will not be able to find it otherwise.
-                MediumEditor: 'medium-editor',
             }),
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
@@ -68,7 +65,6 @@ module.exports = function makeConfig(grunt) {
             alias: {
                 'moment-timezone': 'moment-timezone/builds/moment-timezone-with-data-2012-2022',
                 'rangy-saverestore': 'rangy/lib/rangy-selectionsaverestore',
-                'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
             },
@@ -231,9 +227,6 @@ function getDefaults(grunt) {
         features: {
             // tansa spellchecker
             useTansaProofing: false,
-
-            // replace editor2
-            onlyEditor3: false,
         },
 
         // workspace defaults
