@@ -1925,7 +1925,6 @@ declare module 'superdesk-api' {
             hideRoutedDesks?: any;
             autorefreshContent?: any;
             elasticHighlight?: any;
-            onlyEditor3?: any;
             nestedItemsInOutputStage?: boolean;
             keepMetaTermsOpenedOnClick?: boolean;
             showCharacterLimit?: number;

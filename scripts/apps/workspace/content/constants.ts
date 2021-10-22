@@ -28,8 +28,7 @@ export const DEFAULT_SCHEMA = Object.freeze({
 });
 
 export function GET_DEFAULT_EDITOR() {
-    // editor2 is being deprecated, but many tests depend on it.
-    const editor3enabled = window['superdesk_e2e_tests_running'] !== true;
+    const editor3enabled = true;
 
     return Object.freeze({
         slugline: {order: 1, sdWidth: 'full', enabled: true},

@@ -26,8 +26,7 @@ const spellcheckerStores = [];
  * @module superdesk.core.editor3
  * @name editor3
  * @description editor3 is the service that allows interacting with the editor from
- * the outside. It uses the same interface as the editor service of core/editor2/editor.js
- * to allow plugging one or the other based on the editor of the item being edited.
+ * the outside.
  */
 export class EditorService {
     /**

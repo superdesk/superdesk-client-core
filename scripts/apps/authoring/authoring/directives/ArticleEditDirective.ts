@@ -147,15 +147,6 @@ export function ArticleEditDirective(
                     }
                 });
 
-                // watch item and save every change in history in order to perform undo/redo later
-                // ONLY for editor2 (with blocks)
-                try {
-                    angular.module('superdesk.apps.editor2');
-                    history.watch('item', mainEditScope || scope);
-                } catch (e) {
-                    // no-op
-                }
-
                 scope.$on('History.undone', triggerAutosave);
                 scope.$on('History.redone', triggerAutosave);
 
