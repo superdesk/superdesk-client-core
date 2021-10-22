@@ -41,7 +41,6 @@ class ToolbarComponent extends React.Component<any, IState> {
     constructor(props) {
         super(props);
 
-        this.scrollContainer = $(props.scrollContainer || window);
         this.onScroll = this.onScroll.bind(this);
 
         this.computeState = this.computeState.bind(this);
@@ -57,11 +56,11 @@ class ToolbarComponent extends React.Component<any, IState> {
             width: 'auto',
         };
 
-        if (this.props.editorNode?.current == null || this.toolbarNode?.current == null) {
+        if (!this.props.editorNode?.current || !this.toolbarNode.current) {
             return defaultState;
         }
 
-        const editorRect = this.props.editorNode.getBoundingClientRect();
+        const editorRect = this.props.editorNode.current.getBoundingClientRect();
         const pageRect = this.scrollContainer[0].getBoundingClientRect();
 
         if (!editorRect || !pageRect) {
@@ -71,7 +70,7 @@ class ToolbarComponent extends React.Component<any, IState> {
         const isToolbarOut = editorRect.top < pageRect.top + 80;
         const isBottomOut = editorRect.bottom < pageRect.top + 70;
 
-        const isContentLarger = this.props.editorNode.clientHeight < this.toolbarNode.current.clientHeight;
+        const isContentLarger = this.props.editorNode.current.clientHeight < this.toolbarNode.current.clientHeight;
 
         const floating = !isContentLarger && isToolbarOut && !isBottomOut;
         const width = floating ? editorRect.width : 'auto';
@@ -126,6 +125,7 @@ class ToolbarComponent extends React.Component<any, IState> {
     }
 
     componentDidMount() {
+        this.scrollContainer = $(this.props.scrollContainer || window);
         this.scrollContainer.on('scroll', this.onScroll);
     }
 
