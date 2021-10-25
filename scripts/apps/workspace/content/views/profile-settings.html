@@ -107,9 +107,6 @@
                 <div class="field">
                     <span ng-model="editing.form.enabled" sd-switch></span><label>{{:: 'Active' | translate }}</label>
                 </div>
-                <div class="field" ng-if="withEditor3">
-                    <span ng-model="editing.form.editor.body_html.editor3" sd-switch></span><label>{{:: 'Editor3' | translate }}</label>
-                </div>
 
                 <div class="field" ng-if="editing" ng-controller="ContentProfileFields as fields">
                     <div sd-wizard data-name="profile-settings-content-profiles" data-current-step="'header'" ng-if="fields.sections">

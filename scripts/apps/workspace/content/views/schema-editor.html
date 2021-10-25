@@ -78,9 +78,9 @@
                     </div>
 
                     <!-- IF EDITOR3 -->
-                    <div class="field" ng-if="hasFormatOptions(id) && model.editor.body_html.editor3 === true">
+                    <div class="field" ng-if="hasFormatOptions(id)">
                         <label translate>Format options</label>
-                        <div class="controls" ng-if="model.editor.body_html.editor3"
+                        <div class="controls"
                              sd-multi-select
                              data-item="model.editor[id].formatOptions"
                              data-list="getEditor3FormattingOptions(id)"

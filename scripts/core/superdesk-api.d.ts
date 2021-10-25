@@ -1910,7 +1910,6 @@ declare module 'superdesk-api' {
             swimlane?: {
                 defaultNumberOfColumns: number;
             };
-            editor3?: boolean;
             qumu?: boolean;
             editorAttachments?: boolean;
             editorInlineComments?: boolean;

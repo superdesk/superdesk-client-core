@@ -33,8 +33,6 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         });
     };
 
-    $scope.withEditor3 = appConfig.features != null && appConfig.features.editor3;
-
     /**
      * @description Refreshes the list of content profiles by fetching them.
      * @returns {Promise}
