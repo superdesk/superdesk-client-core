@@ -86,6 +86,7 @@ angular.module('superdesk.apps.authoring', [
     'contenteditable',
     'decipher.history',
     'superdesk.config',
+    'angular-embed',
     mediaModule.name,
 ])
 
@@ -423,7 +424,15 @@ angular.module('superdesk.apps.authoring', [
             },
         });
     }])
-    .run(['keyboardManager', 'gettext', function(keyboardManager) {
+    .config(['embedServiceProvider', 'iframelyServiceProvider',
+        function(embedServiceProvider, iframelyServiceProvider) {
+            iframelyServiceProvider.setKey(appConfig.iframely.key);
+            // don't use noembed as first choice
+            embedServiceProvider.setConfig('useOnlyFallback', true);
+            // iframely respect the original embed for more services than 'embedly'
+            embedServiceProvider.setConfig('fallbackService', 'iframely');
+        }])
+    .run(['keyboardManager', 'embedService', function(keyboardManager) {
         keyboardManager.register('Authoring', 'ctrl + shift + u', gettext('Unlock current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + e', gettext('Close current item'));
         keyboardManager.register('Authoring', 'ctrl + shift + s', gettext('Save current item'));

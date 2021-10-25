@@ -25,6 +25,7 @@ describe('macros', () => {
         },
     ];
 
+    beforeEach(window.module('angular-embed'));
     beforeEach(window.module('superdesk.apps.publish'));
     beforeEach(window.module('superdesk.core.preferences'));
     beforeEach(window.module('superdesk.apps.archive'));
