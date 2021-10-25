@@ -188,8 +188,13 @@ export function VocabularyEditController(
      * Discard changes and close modal.
      */
     $scope.cancel = function() {
+        const editing = origVocabulary?._id != null;
+
+        if (editing) {
+            $scope.updateVocabulary(origVocabulary);
+        }
+
         $scope.closeVocabulary();
-        $scope.updateVocabulary(origVocabulary);
     };
 
     // try to reproduce data model of vocabulary:
