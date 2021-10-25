@@ -4,10 +4,12 @@ import classNames from 'classnames';
 import {renderArea} from '../helpers';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
-import {IDesk, IArticle} from 'superdesk-api';
+import {IDesk, IArticle, IListViewFieldWithOptions} from 'superdesk-api';
+import {IRelatedEntities} from 'core/getRelatedEntities';
 
 export interface IPropsItemListInfo {
     item: IArticle;
+    relatedEntities: IRelatedEntities;
     desk: IDesk;
     ingestProvider: any;
     profilesById: any;
@@ -20,11 +22,9 @@ export interface IPropsItemListInfo {
     isNested: boolean;
     showNested: boolean;
     toggleNested: (event) => void;
-    svc: any;
-    scope: {
-        singleLine: boolean;
-        customRender: any;
-    };
+    singleLine: boolean;
+    customRender: any;
+    options?: IListViewFieldWithOptions['options'];
 }
 
 export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
@@ -41,29 +41,26 @@ export class ListItemInfo extends React.PureComponent<IPropsItemListInfo> {
                     : [],
         );
 
-        if (this.props.scope.singleLine) {
+        if (this.props.singleLine) {
             className = 'item-info item-info-reduced-rowheight';
             listItems = React.createElement(
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('singleLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
+                    singleLine: this.props.singleLine,
                 }, this.props), {className: 'line article-list-fields'}),
             );
         } else {
-            className = classNames('item-info', {'item-info-reduced-rowheight': this.props.scope.singleLine});
+            className = classNames('item-info', {'item-info-reduced-rowheight': this.props.singleLine});
             listItems = React.createElement(
                 'div',
                 {style: {flexGrow: 1, flexDirection: 'column', overflow: 'hidden'}},
                 renderArea('firstLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                }, this.props), {className: 'line'}, this.props.scope.customRender),
+                    singleLine: this.props.singleLine,
+                }, this.props), {className: 'line'}, this.props.customRender),
                 renderArea('secondLine', angular.extend({
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                }, this.props), {className: 'line'}, this.props.scope.customRender),
+                    singleLine: this.props.singleLine,
+                }, this.props), {className: 'line'}, this.props.customRender),
             );
         }
 

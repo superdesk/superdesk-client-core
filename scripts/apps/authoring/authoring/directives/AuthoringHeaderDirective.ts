@@ -3,6 +3,9 @@ import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig} from 'appConfig';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
+import {getReadOnlyLabel} from './ArticleEditDirective';
+import {translateArticleType, gettext} from 'core/utils';
+import {IArticle} from 'superdesk-api';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -39,6 +42,15 @@ export function AuthoringHeaderDirective(
             scope.features = features;
             scope.translationService = TranslationService;
             scope.FIELD_KEY_SEPARATOR = FIELD_KEY_SEPARATOR;
+            scope.getArticleTypeLabel = (article: IArticle) =>
+                gettext('Article Type: {{type}}', {type: translateArticleType(article.type)});
+
+            // Allow some single-selection fields to display the multi-selection
+            // dropdown (useful for searching through terms)
+            scope.showDropdownAsMultiTerms = [
+                'countries',
+                'label',
+            ];
 
             scope.isCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault == null
                 ? false :
@@ -47,6 +59,8 @@ export function AuthoringHeaderDirective(
             scope.toggleCollapsed = () => {
                 scope.isCollapsed = !scope.isCollapsed;
             };
+
+            scope.readOnlyLabel = getReadOnlyLabel();
 
             initVocabularies().then(() => {
                 scope.getLabelForFieldId = (fieldId) => getLabelForFieldId(fieldId, scope.vocabulariesCollection);
@@ -146,12 +160,20 @@ export function AuthoringHeaderDirective(
                 return appConfig.features != null && appConfig.features.noMissingLink;
             }
 
+            function isMissingLink() {
+                const isUpdated = !scope.item.rewrite_of && !scope.item.rewritten_by;
+                const isCorrection = scope.action !== 'correct' && !scope.isCorrection
+                    && !scope.item.correction_sequence;
+
+                return isUpdated && isCorrection;
+            }
+
             function getRelatedItems() {
                 // Related Items
                 scope.missing_link = false;
                 if (scope.item.slugline && scope.item.type === 'text') {
-                    // get the midnight based on the defaultTimezone not the user timezone.
-                    var fromDateTime = moment().tz(appConfig.defaultTimezone)
+                    // get the midnight based on the default timezone not the user timezone.
+                    var fromDateTime = moment().tz(appConfig.default_timezone)
                         .format(appConfig.view.dateformat);
 
                     archiveService.getRelatedItems(scope.item, fromDateTime)
@@ -159,8 +181,7 @@ export function AuthoringHeaderDirective(
                             scope.relatedItems = items;
                             if (items && items._items.length && !getNoMissingLink()) {
                                 // if takes package is missing or not rewrite of.
-                                scope.missing_link = !scope.item.rewrite_of &&
-                                    !scope.item.rewritten_by;
+                                scope.missing_link = isMissingLink();
                             }
                         });
                 }
@@ -176,6 +197,8 @@ export function AuthoringHeaderDirective(
                 if (scope.vocabulariesCollection == null) {
                     return vocabularies.getVocabularies().then(((vocabulariesCollection) => {
                         scope.vocabulariesCollection = vocabulariesCollection;
+
+                        scope.categoriesVocabulary = vocabulariesCollection.find(({_id}) => _id === 'categories');
                     }));
                 }
 
@@ -241,6 +264,16 @@ export function AuthoringHeaderDirective(
                     scope.shouldDisplayCompanyCodes();
                 });
             });
+
+            scope.setCustomValue = (field, value) => {
+                const extra = Object.assign({}, scope.item.extra);
+
+                extra[field._id] = value || null;
+                scope.item.extra = extra;
+
+                scope.autosave(scope.item, 200);
+                scope.$apply();
+            };
 
             // If correction set focus to the ednote to encourage user to fill it in
             defer(() => {

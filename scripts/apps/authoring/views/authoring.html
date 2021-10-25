@@ -1,6 +1,7 @@
-<div sd-authoring class="auth-screen" ng-if="origItem" data-test-id="authoring">
+<section sd-authoring class="auth-screen" ng-if="origItem" data-test-id="authoring" aria-labelledby="authoring-heading" >
+    <h2 id="authoring-heading"  class="a11y-only" translate>Authoring</h2>
     <div sd-authoring-topbar></div>
-    <section class="main-section" ng-class="{'auth-sendto': views.send, 'packaging-screen': item.type === 'composite'}">
+    <div ng-if="!loading" class="main-section" ng-class="{'auth-sendto': views.send, 'packaging-screen': item.type === 'composite', 'main-section--pinned-tabs': tabsPinned}">
         <div sd-authoring-widgets data-item="item">
             <div class="page-content-container" ng-click="views.send = false">
                 <div>
@@ -32,7 +33,7 @@
                                     <i class="icon-preview-mode"></i>
                                 </button>
                             </div>
-        
+
                             <button class="proofread-toggle icn-btn"
                                 ng-class="{active: proofread}"
                                 ng-click="proofread = !proofread"
@@ -49,7 +50,7 @@
                     </div>
                 </div>
 
-                <div style="overflow-y: scroll; flex: 1">
+                <div style="overflow-y: scroll; flex: 1" class="page-content-container--scrollable">
                     <header sd-authoring-header></header>
 
                     <article class="main-article theme-container " ng-class="{preview: !_editable}">
@@ -63,7 +64,7 @@
 
         <div sd-macros-replace></div>
 
-    </section>
+    </div>
 
     <div sd-send-item
         id="send-item-container"
@@ -76,6 +77,7 @@
         data-publish="publish()"
         data-action="action"
         data-autosave="autosave(item)"
-        data-mode="authoring">
-    </div>
-</div>
+        data-mode="authoring"
+        data-test-id="send-publish-pane"
+    ></div>
+</section>

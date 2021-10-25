@@ -34,10 +34,7 @@
         "variable-name": false,
         "forin": false,
         "member-ordering": false,
-        "member-access": [
-            true,
-            "no-public"
-        ],
+        "member-access": false,
         "no-string-literal": false,
         "jsdoc-format": false,
         "no-console": false,
@@ -58,9 +55,14 @@
     "linterOptions": {
         "exclude": [
             "node_modules/**",
+            "e2e/client/node_modules/**",
+            "e2e/client/dist/**",
+            "e2e/client/**/*.js",
+            "build-tools/**",
             "scripts/extensions/**/node_modules/**",
             "end-to-end-testing-helpers/dist/**",
-            "end-to-end-testing-helpers/node_modules/**"
+            "end-to-end-testing-helpers/node_modules/**",
+            "build-tools/**"
         ]
     }
 }

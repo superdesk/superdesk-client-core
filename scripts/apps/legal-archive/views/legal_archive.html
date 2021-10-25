@@ -1,8 +1,12 @@
 <div class="subnav legal-archive subnav--absolute" sd-media-query min-width="700">
-    <div class="filter-trigger" ng-click="openAdvanceSearch = !openAdvanceSearch"
+    <button class="filter-trigger" ng-click="openAdvanceSearch = !openAdvanceSearch"
+         title="{{ :: 'Filters' | translate }}"
+         aria-label="{{ :: 'Filters' | translate }}"
          ng-class="{'filter-trigger--active': openAdvanceSearch}">
         <i class="icon-filter-large"></i>
-    </div>
+    </button>
+
+    <div sd-searchbar></div>
 
     <div sd-searchbar></div>
 
@@ -39,7 +43,7 @@
             <ul>
                 <li translate>Search</li>
             </ul>
-            <div class="doopen" ng-click="openAdvanceSearch = false"><i class="icon-close-small"></i></div>
+            <button aria-label="{{ :: 'Close panel' | translate }}" class="doopen" ng-click="openAdvanceSearch = false"><i class="icon-close-small"></i></button>
         </div>
 
         <div class="content">

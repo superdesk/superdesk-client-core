@@ -1,31 +1,38 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {closeActionsMenu} from '../../helpers';
 import {gettext} from 'core/utils';
 
-const Label: React.StatelessComponent<any> = (props) =>
-    React.createElement(
-        'li',
-        null,
-        React.createElement('div', {
-            className: 'dropdown__menu-label',
-        }, gettext(props.label),
-        props.label === 'Actions' ? React.createElement(
-            'button',
-            {className: 'dropdown__menu-close', onClick: () => {
-                closeActionsMenu(props.item._id);
-            }},
-            React.createElement(
-                'i',
-                {className: 'icon-close-small'},
-            ),
-        ) : null,
-        ),
-    );
+interface IProps {
+    label: string;
+    onClose(): void;
+}
 
-Label.propTypes = {
-    label: PropTypes.any,
-    item: PropTypes.object,
-};
+class Label extends React.PureComponent<IProps> {
+    render() {
+        const {label} = this.props;
+
+        return (
+            <li>
+                <div className="dropdown__menu-label">
+                    {label}
+
+                    {
+                        label === 'Actions'
+                            ? (
+                                <button
+                                    className="dropdown__menu-close"
+                                    onClick={this.props.onClose}
+                                    aria-label={gettext('Close')}
+                                    data-test-id="close"
+                                >
+                                    <i className="icon-close-small" />
+                                </button>
+                            )
+                            : null
+                    }
+                </div>
+            </li>
+        );
+    }
+}
 
 export default Label;

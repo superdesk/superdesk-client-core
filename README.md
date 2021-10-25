@@ -1,10 +1,23 @@
 # Superdesk Client
 
-[![Build Status](https://travis-ci.org/superdesk/superdesk-client-core.svg?branch=master)](https://travis-ci.org/superdesk/superdesk-client-core)
+![CI](https://github.com/superdesk/superdesk-client-core/workflows/CI/badge.svg)
 [![Code Climate](https://codeclimate.com/github/superdesk/superdesk-client-core/badges/gpa.svg)](https://codeclimate.com/github/superdesk/superdesk-client-core)
+
 ### Installation
 
 For installation instructions, please refer to the README file at: [https://github.com/superdesk/superdesk/](https://github.com/superdesk/superdesk/ "")
+
+### Running end-to-end tests
+
+`npm run install` - Install dependencies.
+
+`npm run build && npm run start-client-server` - Build and serve the bundle. Alternatively `npm run server` can be used serve the bundle in watch mode.
+
+`npm run start-test-server`
+
+`npm run e2e-compile` OR `npm run e2e-compile-watch` - compiles tests from TypeScript to JavaScript.
+
+`npm run protractor` - starts the browser and runs the tests.
 
 ### Contributing
 
@@ -51,7 +64,6 @@ To configure the build, the `superdesk.config.js` file must export a function th
 
 ##### Date & Time
 
-- `defaultTimezone`: `'Europe/London'` - default timezone for date time pickers
 - `view.dateformat`: `'MM/DD/YYYY'` - presented date format for datepickers
 - `view.timeformat`: `'HH:mm'` - presented time format for timepickers
 - `shortTimeFormat`: `'hh:mm'` - format for current day in item list

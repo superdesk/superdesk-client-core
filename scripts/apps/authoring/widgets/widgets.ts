@@ -1,10 +1,65 @@
-import {debounce} from 'lodash';
+import {flatMap, noop} from 'lodash';
 import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/components/WidgetsConfig';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
-import {IContentProfile} from 'superdesk-api';
-import {appConfig} from 'appConfig';
+import {IArticle, IContentProfile} from 'superdesk-api';
+import {appConfig, extensions} from 'appConfig';
+
+const USER_PREFERENCE_SETTINGS = 'editor:pinned_widget';
+
+let PINNED_WIDGET_RESIZED = false;
+
+interface IWidget {
+    label?: string;
+    icon?: string;
+    side?: 'left' | 'right';
+    order?: number; // Integer. Lower is higher.
+    template?: string;
+    display?: {
+        archived: boolean;
+        authoring: boolean;
+        killedItem: boolean;
+        legalArchive: boolean;
+        packages: boolean;
+        personal: boolean;
+        picture: boolean;
+    };
+    needEditable?: boolean; // true if item must be editable.
+    needUnlock?: boolean; // true will make widget locked if item is locked.
+    configurable?: boolean;
+    configurationTemplate?: string;
+    isWidgetVisible?: any; // injectable function, gets single param `item`.
+    badge?: any; // injectable function to badge number for item.
+    badgeAsync: any; // injectable function to badge number for item. Returns a promise.
+    removeHeader?: boolean;
+    pinned?: boolean;
+    _id?: string;
+    feature?: string;
+    afterClose(): void;
+    configuration?: {
+        modificationDateAfter: 'today' | string;
+        sluglineMatch: 'EXACT' | string;
+    };
+
+    // extension-specific fields
+    component: React.ComponentType<{article: IArticle}>;
+    isAllowed?(article: IArticle): boolean;
+}
+
+interface IScope extends ng.IScope {
+    item: IArticle;
+    active: any;
+    widgets: any;
+    pinnedWidget: IWidget;
+    activate(widget: IWidget): void;
+    pinWidget(widget: IWidget): void;
+    closeWidget(): void;
+    isWidgetLocked(widget: IWidget): boolean;
+    isAssigned(item: IArticle): boolean;
+    autosave(): void;
+    updateItem(updates: Partial<IArticle>): void;
+}
 
 function AuthoringWidgetsProvider() {
     var widgets = [];
@@ -16,38 +71,40 @@ function AuthoringWidgetsProvider() {
      * @param {Object} config Widget configuration
      *
      *   Object properties:
-     *     - `label` - `{string}` - Widget label displayed on top
-     *     - `icon` - `{string}` - Icon to use from `big-icon` font.
-     *     - `side` - `{string}` - Side where to display it, can be `left` or `right`.
-     *     - `order` - `{number}` - Widget order in the list, lower number is higher.
-     *     - `template` - `{string}` - Widget template to include.
-     *     - `display` - `{Object}` - Controll when to display widget.
-     *     - `needEditable` - `{boolean}` - `True` if item must be editable.
-     *     - `needUnlock` - `{boolean}` - `True` will make widget locked if item is locked.
-     *     - `configurable` - `{boolean}` - `True` if widget is configurable.
-     *     - `configurationTemplate` - `{string}` - Template to use for configuration.
-     *     - `isWidgetVisible` - `{Function}` = Function which should return injectable
-     *       function and gets single param `item`.
+
      *     - `badge` - `{Function}` - Injectable function to get badge number for item,
      *       gets `item` injected.
      *     - `badgeAsync` - `{Function}` - Injectable function to get badge number
      *       returning a promise, gets `item` injected.
      */
-    this.widget = function(id, config) {
-        widgets = widgets.filter((widget) => widget._id !== id);
-        widgets.push(angular.extend({}, config, {_id: id})); // make a new instance for every widget
+    this.widget = function(id, widget: IWidget) {
+        widgets = widgets.filter((_widget) => _widget._id !== id);
+        widgets.push(angular.extend({}, widget, {_id: id})); // make a new instance for every widget
     };
 
     this.$get = function() {
-        return widgets;
+        const widgetsFromExtensions = flatMap(
+            Object.values(extensions),
+            (extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [],
+        );
+
+        return widgets.concat(widgetsFromExtensions);
     };
 }
 
+export const widgetReactIntegration = {
+    pinWidget: noop as any,
+    getActiveWidget: noop as any,
+    getPinnedWidget: noop as any,
+};
+
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
-    'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges', '$injector'];
-function WidgetsManagerCtrl($scope,
+    'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
+    '$injector', 'preferencesService', '$rootScope'];
+function WidgetsManagerCtrl(
+    $scope: IScope,
     $routeParams,
-    authoringWidgets,
+    authoringWidgets: Array<IWidget>,
     archiveService,
     authoringWorkspace: AuthoringWorkspaceService,
     keyboardManager,
@@ -58,10 +115,16 @@ function WidgetsManagerCtrl($scope,
     _,
     privileges,
     $injector,
+    preferencesService,
+    $rootScope,
 ) {
     $scope.active = null;
 
-    $scope.$watch('item', (item) => {
+    preferencesService.get(USER_PREFERENCE_SETTINGS).then((preferences) =>
+        this.widgetFromPreferences = preferences,
+    );
+
+    $scope.$watch('item', (item: IArticle) => {
         if (!item) {
             $scope.widgets = null;
             unbindAllShortcuts();
@@ -86,12 +149,16 @@ function WidgetsManagerCtrl($scope,
             }
         }
 
-        const widgets = authoringWidgets.filter((widget) => (
-            !!widget.display[display] &&
+        const widgets = authoringWidgets.filter((widget) => {
+            if (widget.component != null) { // widgets from extensions are themselves in control of widget visibility
+                return widget.isAllowed?.(item) ?? true;
+            } else {
+                return !!widget.display[display] &&
                 // If the widget requires a feature configured, then test this
                 // feature name against the config (defaulting to true)
-                (!widget.feature || !!_.get(appConfig.features, widget.feature, true))
-        ));
+                (!widget.feature || !!_.get(appConfig.features, widget.feature, true));
+            }
+        });
 
         content.getType(item.profile).then((contentProfile: IContentProfile) => {
             const promises = widgets.map(
@@ -118,6 +185,7 @@ function WidgetsManagerCtrl($scope,
 
             Promise.all(promises).then((result) => {
                 $scope.widgets = widgets.filter((__, i) => result[i] === true);
+
                 $scope.widgets.forEach((widget) => {
                     if (widget.badgeAsync != null) {
                         widget.badgeAsyncValue = null;
@@ -125,6 +193,16 @@ function WidgetsManagerCtrl($scope,
                             .then((value) => widget.badgeAsyncValue = value);
                     }
                 });
+
+                if (this.widgetFromPreferences) {
+                    let widgetFromPreferences = $scope.widgets.find((widget) =>
+                        widget._id === this.widgetFromPreferences._id);
+
+                    if (widgetFromPreferences) {
+                        $scope.pinWidget(widgetFromPreferences);
+                    }
+                }
+
                 $scope.$apply(); // tell angular to re-render
             });
         });
@@ -163,7 +241,7 @@ function WidgetsManagerCtrl($scope,
         });
     }
 
-    $scope.isWidgetLocked = function(widget) {
+    $scope.isWidgetLocked = function(widget: IWidget) {
         if (widget) {
             var locked = lock.isLocked($scope.item) && !lock.can_unlock($scope.item);
             var isReadOnlyStage = desks.isReadOnlyStage($scope.item.task.stage);
@@ -181,6 +259,54 @@ function WidgetsManagerCtrl($scope,
                 $scope.active = widget;
             }
         }
+    };
+
+    $scope.pinWidget = (widget: IWidget) => {
+        if ($scope.pinnedWidget) {
+            $scope.pinnedWidget.pinned = false;
+        }
+
+        if (!PINNED_WIDGET_RESIZED && widget && !$scope.pinnedWidget) {
+            $rootScope.$broadcast('resize:monitoring', -330);
+
+            PINNED_WIDGET_RESIZED = true;
+        }
+
+        if (!widget || $scope.pinnedWidget === widget) {
+            $rootScope.$broadcast('resize:monitoring', 330);
+
+            angular.element('body').removeClass('main-section--pinned-tabs');
+
+            $scope.pinnedWidget = null;
+            PINNED_WIDGET_RESIZED = false;
+
+            this.widgetFromPreferences = null;
+
+            if (widget) {
+                widget.pinned = false;
+            }
+
+            this.updateUserPreferences();
+        } else {
+            angular.element('body').addClass('main-section--pinned-tabs');
+            $scope.pinnedWidget = widget;
+            widget.pinned = true;
+
+            this.updateUserPreferences(widget);
+        }
+    };
+
+    widgetReactIntegration.pinWidget = $scope.pinWidget;
+    widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
+
+    this.updateUserPreferences = (widget?: IWidget) => {
+        let update = [];
+
+        update[USER_PREFERENCE_SETTINGS] = {
+            type: 'string',
+            _id: widget ? widget._id : null,
+        };
+        preferencesService.update(update);
     };
 
     // item is associated to an assignment
@@ -210,10 +336,17 @@ function WidgetsManagerCtrl($scope,
         if ($scope.active) {
             var widget = $scope.active;
 
-            $scope.closeWidget(widget);
+            $scope.closeWidget();
             $scope.activate(widget);
         }
     });
+
+    $scope.updateItem = (updates: Partial<IArticle>) => {
+        $scope.$applyAsync(() => {
+            angular.extend($scope.item, updates);
+            $scope.autosave();
+        });
+    };
 
     $scope.$on('$destroy', () => {
         unbindAllShortcuts();
@@ -225,7 +358,10 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
         controller: WidgetsManagerCtrl,
         templateUrl: 'scripts/apps/authoring/widgets/views/authoring-widgets.html',
         transclude: true,
-        link: function(scope, elem) {
+        link: function(scope) {
+            scope.widget = null;
+            scope.pinnedWidget = null;
+
             scope.userLookup = desks.userLookup;
 
             function reload() {
@@ -263,6 +399,14 @@ function AuthoringWidgetsDir(desks, commentsService, $injector) {
                     return tooltip ? `ctrl+shift+${order - 10}` : `ctrl+shift+${shiftNums[order - 10]}`;
                 }
             };
+
+            scope.$on('$destroy', () => {
+                angular.element('body').removeClass('main-section--pinned-tabs');
+
+                if (scope.pinnedWidget) {
+                    scope.pinnedWidget.pinned = false;
+                }
+            });
 
             reload();
         },

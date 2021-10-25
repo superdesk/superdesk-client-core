@@ -1,20 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {SelectBox} from './index';
-import {CHECKBOX_PARENT_CLASS} from './constants';
 import {IArticle} from 'superdesk-api';
 import {getViewImage} from 'core/helpers/item';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {MultiSelectCheckbox} from './MultiSelectCheckbox';
 
 interface IProps {
-    svc: any;
     item: IArticle;
-    onMultiSelect: () => void;
+    itemSelected: boolean;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
 /**
  * Media Preview - renders item thumbnail
  */
 export const PhotoDeskPreview: React.StatelessComponent<IProps> = (props) => {
+    const {multiSelect} = props;
     const item = props.item;
     const classType = 'sd-grid-item__type-icon filetype-icon-' + props.item.type;
 
@@ -28,14 +28,11 @@ export const PhotoDeskPreview: React.StatelessComponent<IProps> = (props) => {
     return (
         <div className="sd-grid-item__thumb">
             {preview}
-            <SelectBox item={item} classes={`sd-grid-item__checkbox ${CHECKBOX_PARENT_CLASS}`}
-                onMultiSelect={props.onMultiSelect} svc={props.svc}/>
+            <MultiSelectCheckbox
+                item={item}
+                itemSelected={props.itemSelected}
+                multiSelect={multiSelect}
+            />
         </div>
     );
-};
-
-PhotoDeskPreview.propTypes = {
-    svc: PropTypes.object.isRequired,
-    onMultiSelect: PropTypes.func,
-    item: PropTypes.any,
 };

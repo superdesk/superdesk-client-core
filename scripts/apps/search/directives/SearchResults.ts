@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {ISearchOptions} from '../services/SearchService';
+import {IPackagesService} from 'types/Services/Packages';
 
 SearchResults.$inject = [
     '$location',
@@ -20,7 +21,7 @@ SearchResults.$inject = [
 const HEX_REG_EXP = /[a-f0-9]{24}/;
 
 function isObjectId(value) {
-    return value.length === 24 && HEX_REG_EXP.test(value);
+    return value != null && value.length === 24 && HEX_REG_EXP.test(value);
 }
 
 /**
@@ -43,7 +44,7 @@ function isObjectId(value) {
 export function SearchResults(
     $location,
     preferencesService,
-    packages,
+    packages: IPackagesService,
     asset,
     $timeout,
     api,
@@ -107,6 +108,7 @@ export function SearchResults(
             scope.$on('item:unspike', scheduleIfShouldUpdate);
             scope.$on('item:duplicate', queryItems);
             scope.$on('item:translate', queryItems);
+            scope.$on('item:marked_desks', queryItems);
 
             // used by superdesk-fi
             scope.showtags = attr.showtags !== 'false';
@@ -169,6 +171,11 @@ export function SearchResults(
              * Schedule an update if it's not there yet
              */
             function queryItems(event?, data?) {
+                if (isObjectId(scope.search.repo.search) && event != null) {
+                    // external provider, don't refresh on events
+                    return;
+                }
+
                 if (!nextUpdate) {
                     if (scope.search.repo.search !== 'local' && !getSearch().q && !(data && data.force)) {
                         return; // ignore updates with external content

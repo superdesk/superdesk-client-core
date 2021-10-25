@@ -78,11 +78,10 @@ function onAnnotationCreate(
 }
 
 var extension: IExtension = {
-    id: 'annotationsLibrary',
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
-        return Promise.resolve({
+        return superdesk.privileges.getOwnPrivileges().then(() => ({
             contributions: {
                 editor3: {
                     annotationInputTabs: [
@@ -97,15 +96,16 @@ var extension: IExtension = {
                         },
                     ],
                 },
-                pages: [
+                pages: superdesk.privileges.hasPrivilege('concept_items') ? [
                     {
-                        title: gettext('Annotations library'),
+                        title: gettext('Annotations Library'),
                         url: '/annotations-library',
                         component: getAnnotationsLibraryPage(superdesk),
+                        privileges: ['concept_items'],
                     },
-                ],
+                ] : [],
             },
-        });
+        }));
     },
 };
 

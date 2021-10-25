@@ -1,5 +1,4 @@
 import React from 'react';
-import {noop} from 'lodash';
 
 import {IArticle} from 'superdesk-api';
 import {connectServices} from 'core/helpers/ReactRenderAsync';
@@ -9,7 +8,7 @@ import {headline as Headline} from 'apps/search/components/fields/headline';
 import {state as State} from 'apps/search/components/fields/state';
 import {versioncreated as VersionCreated} from 'apps/search/components/fields/versioncreated';
 
-import {ListTypeIcon} from 'apps/search/components';
+import {TypeIcon} from 'apps/search/components';
 import {ListItemColumn, ListItemRow, ListItem} from 'core/components/ListItem';
 
 interface IProps {
@@ -25,11 +24,12 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
             <div>
                 <ListItem>
                     <ListItemColumn>
-                        <ListTypeIcon
-                            item={article}
-                            onMultiSelect={noop}
-                            selectingDisabled={true}
-                        />
+                        <div className="list-field type-icon">
+                            <TypeIcon
+                                type={article.type}
+                                highlight={article.highlight}
+                            />
+                        </div>
                     </ListItemColumn>
 
                     <ListItemColumn noBorder ellipsisAndGrow>
@@ -57,7 +57,7 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                         </ListItemRow>
                         <ListItemRow justifyContent="flex-end">
                             <ListItemColumn>
-                                <State item={article} svc={{datetime: this.props.datetime}} />
+                                <State item={article} />
                             </ListItemColumn>
                         </ListItemRow>
                     </ListItemColumn>

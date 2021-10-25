@@ -1,5 +1,4 @@
 import React from 'react';
-import {WidgetItemList} from 'apps/search/components';
 import {IArticle, IUser, IStage} from 'superdesk-api';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 import ng from 'core/services/ng';
@@ -7,10 +6,12 @@ import {gettext} from 'core/utils';
 import {SelectUser} from 'core/ui/components/SelectUser';
 import {logger} from 'core/services/logger';
 import {extensions} from 'appConfig';
+import {Loader} from 'core/ui/components/Loader';
+import {GroupComponent} from './Group';
 
 type FetchFunction = (repo: string, criteria: any) => Promise<any>;
 
-interface IGroup {
+export interface IGroup {
     id: string;
     label: string;
     precondition?: () => boolean;
@@ -20,12 +21,23 @@ interface IGroup {
     collapsed?: boolean;
 }
 
+export interface IGroupData {
+    id: any;
+    itemIds: any;
+    itemsById: any;
+    total: number;
+}
+
+interface IProps {
+    header?: boolean;
+    user: IUser;
+    onUserChange(user: IUser): void;
+}
+
 interface IState {
-    searchOpen: boolean;
     userSearchField: string;
-    user?: IUser;
     groups: Array<IGroup> | null;
-    groupsData: Array<{ id; itemIds; itemsById }> | null;
+    groupsData: Array<IGroupData> | null;
     loading: boolean;
 }
 
@@ -33,11 +45,13 @@ function genericFetch({search, api}, repo, filters) {
     let query = search.query();
 
     query.clear_filters();
-    query.size(1).filter(filters);
+    query.size(200).filter(filters);
 
     let criteria = query.getCriteria(true);
 
     criteria.repo = repo;
+    criteria.source.from = 0;
+    criteria.source.size = 200;
 
     return api.query('search', criteria);
 }
@@ -50,21 +64,14 @@ function getQueryLockedByUser(userId) {
     };
 }
 
-function getQueryNotLockedOrLockedByMe(userId) {
+function getQueryNotLockedByMe(userId) {
     return {
         bool: {
-            should: [
-                {
-                    bool: {
-                        must_not: {
-                            exists: {
-                                field: 'lock_user',
-                            },
-                        },
-                    },
+            must_not: {
+                term: {
+                    lock_user: userId,
                 },
-                {...getQueryLockedByUser(userId)},
-            ],
+            },
         },
     };
 }
@@ -73,17 +80,6 @@ function getQueryCreatedByUser(userId) {
     return {
         terms: {
             original_creator: [userId],
-        },
-    };
-}
-
-function getQueryMovedByUser(userId) {
-    return {
-        bool: {
-            must: [
-                {match: {'task.user': userId}},
-                {term: {operation: 'move'}},
-            ],
         },
     };
 }
@@ -117,20 +113,39 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
                 const markedQuery = extensions['markForUser']
                     ?.extension
                     .exposes
-                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId) || {};
+                    .getQueryNotMarkedForAnyoneOrMarkedForMe(userId);
 
-                return fetchFn('archive', {
-                    bool: {
-                        must: [
-                            {...getQueryCreatedByUser(userId)},
-                            {...getQueryNotLockedOrLockedByMe(userId)},
-                            {...markedQuery},
-                        ],
-                    },
-                }).then((res) => {
-                    res._items = res._items.filter(filterOutItemsInIncomingStage(services));
+                const mustQuery = [
+                    {...getQueryCreatedByUser(userId)},
+                    {...getQueryNotLockedByMe(userId)},
+                ];
 
-                    return res;
+                if (markedQuery != null) {
+                    mustQuery.push({...markedQuery});
+                }
+
+                return ng.get('desks').fetchStages().then((stages) => {
+                    const incomingStages = stages._items
+                        .filter(({default_incoming}) => default_incoming === true)
+                        .map(({_id}) => _id);
+
+                    const isNotOnIncomingStage: any = {
+                        bool: {
+                            must_not: {
+                                terms: {
+                                    'task.stage': incomingStages,
+                                },
+                            },
+                        },
+                    };
+
+                    mustQuery.push({...isNotOnIncomingStage});
+
+                    return fetchFn('archive', {
+                        bool: {
+                            must: mustQuery,
+                        },
+                    });
                 });
             },
         },
@@ -138,50 +153,40 @@ const GET_GROUPS = (userId, services: any): Array<IGroup> => {
             id: 'moved',
             label: gettext('Moved to a working stage by this user'),
             dataSource(fetchFn) {
-                return fetchFn('archive_history', {...getQueryMovedByUser(userId)})
-                    .then((res) => {
-                        res._items = res._items.filter(onlyHistoryItemsInWorkingStage(services));
+                return ng.get('desks').fetchStages().then((stages) => {
+                    const workingStages = stages._items
+                        .filter(({working_stage}) => working_stage === true)
+                        .map(({_id}) => _id);
 
-                        return res;
-                    });
+                    const inOnWorkingStage: any = {
+                        terms: {
+                            'task.stage': workingStages,
+                        },
+                    };
+
+                    const movedByUser = [
+                        {match: {'task.user': userId}},
+                        {term: {operation: 'move'}},
+                    ];
+
+                    return fetchFn(
+                        'archive_history',
+                        {
+                            bool: {
+                                must: [
+                                    ...movedByUser,
+                                    inOnWorkingStage,
+                                ],
+                            },
+                        },
+                    );
+                });
             },
         },
     ];
 };
 
-function onlyHistoryItemsInWorkingStage({desks}) {
-    return (historyItem) => {
-        const stage = getStageForItem(historyItem, {desks});
-
-        return stage.working_stage === true;
-    };
-}
-
-function filterOutItemsInIncomingStage({desks}) {
-    return (item) => {
-        const stage = getStageForItem(item, {desks});
-
-        return stage.default_incoming === false;
-    };
-}
-
-function getStageForItem(item, {desks}) {
-    const stageId = item.task?.stage;
-
-    if (!stageId) {
-        return false;
-    }
-
-    const stage = desks.stageLookup[stageId] || null;
-
-    if (!stage) {
-        console.warn('Tried to find a stage with an invalid id', stageId);
-    }
-
-    return stage;
-}
-
-export default class UserActivityWidget extends React.Component<{}, IState> {
+export default class UserActivityWidget extends React.Component<IProps, IState> {
     services: any;
     removeListeners: Array<() => void>;
 
@@ -205,25 +210,49 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
             metadata: ng.get('metadata'),
             search: ng.get('search'),
             superdesk: ng.get('superdesk'),
+            session: ng.get('session'),
         };
 
         this.state = {
             userSearchField: '',
-            searchOpen: true,
             groups: null,
             groupsData: null,
             loading: false,
         };
 
         this.refreshItems = this.refreshItems.bind(this);
+        this.toggleCollapseExpand = this.toggleCollapseExpand.bind(this);
+        this.updateGroupDataOnUserChange = this.updateGroupDataOnUserChange.bind(this);
     }
 
     componentDidMount() {
         this.addListeners();
+
+        this.updateGroupDataOnUserChange(this.props.user);
+    }
+
+    componentDidUpdate(prevProps: IProps) {
+        if (this.props.user._id !== prevProps.user._id) {
+            this.updateGroupDataOnUserChange(this.props.user);
+        }
     }
 
     componentWillUnmount() {
         this.removeListeners.forEach((remove) => remove());
+    }
+
+    toggleCollapseExpand(group: IGroup) {
+        const newGroups = this.state.groups.map((g) => {
+            if (g.id === group.id) {
+                return {...g, collapsed: !g.collapsed};
+            }
+
+            return g;
+        });
+
+        this.setState({
+            groups: newGroups,
+        });
     }
 
     addListeners() {
@@ -240,35 +269,34 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
     }
 
     refreshItems() {
-        if (this.state.user) {
+        if (this.props.user) {
             this.fetchGroupsData();
         }
     }
 
-    fetchItems(group: IGroup): Promise<{
-        id: string,
-        itemIds: Array<string>,
-        itemsById: Array<{[id: string]: IArticle}>
-    }> {
+    fetchItems(group: IGroup): Promise<IGroupData> {
         const {api, search} = this.services;
         const promise = typeof group.dataSource === 'function'
             ? group.dataSource((repo, filters) => genericFetch({search, api}, repo, filters))
             : genericFetch({search, api}, group.dataSource.repo, group.dataSource.query);
 
-        return promise.then(({_items}) => {
+        return promise.then((res) => {
             const itemIds = [];
             const itemsById = {};
 
-            for (const item of _items) {
+            for (const item of res._items) {
                 itemIds.push(item._id);
                 itemsById[item._id] = item;
             }
 
-            return {
+            const groupData: IGroupData = {
                 id: group.id,
                 itemIds,
                 itemsById,
+                total: res._meta.total,
             };
+
+            return groupData;
         });
     }
 
@@ -291,72 +319,12 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         });
     }
 
-    renderGroup(group: IGroup) {
-        const {groups, groupsData} = this.state;
-        const data = groupsData.find((g) => g.id === group.id);
-
-        if (!data) {
-            logger.warn(
-                `Tried to render group '${group.id}' but no data was found`,
-            );
-            return null;
-        }
-
-        return (
-            <div className="stage">
-                <div className="stage-header">
-                    <button
-                        className={`stage-header__toggle ${group.collapsed ? 'closed' : ''}`}
-                        onClick={() => {
-                            const newGroups = groups.map((g) => {
-                                if (g.id === group.id) {
-                                    return {...g, collapsed: !g.collapsed};
-                                }
-
-                                return g;
-                            });
-
-                            this.setState({
-                                groups: newGroups,
-                            });
-                        }}
-                    >
-                        <i className="icon-chevron-down-thin" />
-                    </button>
-                    <span className="stage-header__name">
-                        {group.label}
-                    </span>
-                    <div className="stage-header__line" />
-                    <span className="label-total stage-header__number">
-                        {data.itemIds.length}
-                    </span>
-                </div>
-                {group.collapsed === true ? null : (
-                    <div className="stage-content">
-                        <WidgetItemList
-                            customUIMessages={{
-                                empty: gettext('No results for this user'),
-                            }}
-                            canEdit={true}
-                            svc={this.services}
-                            preview={(item: IArticle) => {
-                                this.services.superdesk.intent(
-                                    'preview',
-                                    'item',
-                                    item,
-                                );
-                            }}
-                            select={angular.noop}
-                            edit={(item: IArticle) => {
-                                this.services.authoringWorkspace.edit(item);
-                            }}
-                            itemIds={data.itemIds}
-                            itemsById={data.itemsById}
-                            loading={false}
-                        />
-                    </div>
-                )}
-            </div>
+    updateGroupDataOnUserChange(user: IUser) {
+        this.setState(
+            {groups: GET_GROUPS(user._id, this.services), loading: true},
+            () => {
+                this.fetchGroupsData();
+            },
         );
     }
 
@@ -366,52 +334,56 @@ export default class UserActivityWidget extends React.Component<{}, IState> {
         return (
             <div className="widget-container">
                 <div className="main-list" style={{top: 0}}>
-                    <div className="widget-header">
-                        <button
-                            className="widget-header__search-button"
-                            onClick={() =>
-                                this.setState({
-                                    searchOpen: !this.state.searchOpen,
-                                })
-                            }
-                        >
-                            <i className="icon-search" />
-                        </button>
-                        <div className="widget-title">
-                            {gettext('User Activity')}
+                    {this.props.header ? (
+                        <div className="widget-header">
+                            <h3 className="widget-title">
+                                {gettext('User Activity')}
+                            </h3>
                         </div>
-                    </div>
+                    ) : null}
                     <div
-                        className={`search-box search-box--no-shadow search-box--fluid-height ${
-                            this.state.searchOpen ? '' : 'search-box--hidden'
-                        }`}
+                        className="search-box search-box--no-shadow search-box--fluid-height"
                     >
-                        <form className="search-box__content">
+                        <form className="search-box__content TEMP-WIDTH-FIX">
                             <SelectUser
-                                selectedUserId={this.state.user?._id}
+                                selectedUserId={this.props.user?._id}
                                 autoFocus={false}
                                 onSelect={(user) => {
-                                    this.setState(
-                                        {user, groups: GET_GROUPS(user._id, this.services), loading: true},
-                                        () => {
-                                            this.fetchGroupsData();
-                                        },
-                                    );
+                                    this.props.onUserChange(user);
                                 }}
+                                horizontalSpacing={true}
                             />
                         </form>
                     </div>
                     {
-                        loading ? <div className="item-group__loading" /> :
-                            this.state.user && this.state.groupsData && (
+                        loading ? <Loader /> :
+                            this.state.groupsData && (
                                 <div className="content-list-holder">
                                     <div className="shadow-list-holder">
                                         <div className="content-list">
-                                            {this.state.groups.map((group) => (
-                                                <div key={`user-activity-${group.id}`}>
-                                                    {this.renderGroup(group)}
-                                                </div>
-                                            ))}
+                                            {
+                                                this.state.groups.map((group) => {
+                                                    const {groupsData} = this.state;
+                                                    const data = groupsData.find((g) => g.id === group.id);
+
+                                                    if (!data) {
+                                                        logger.warn(
+                                                            `Tried to render group '${group.id}' but no data was found`,
+                                                        );
+                                                        return null;
+                                                    }
+
+                                                    return (
+                                                        <div key={`user-activity-${group.id}`}>
+                                                            <GroupComponent
+                                                                group={group}
+                                                                data={data}
+                                                                toggleCollapseExpand={this.toggleCollapseExpand}
+                                                            />
+                                                        </div>
+                                                    );
+                                                })
+                                            }
                                         </div>
                                     </div>
                                 </div>

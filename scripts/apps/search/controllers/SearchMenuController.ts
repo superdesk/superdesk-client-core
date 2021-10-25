@@ -1,6 +1,7 @@
 import {get, isEqual, cloneDeep} from 'lodash';
 import {ISavedSearch, mapFiltersServerToClient} from '../SavedSearch';
 import {mapPredefinedDateFiltersServerToClient} from '../directives/DateFilters';
+import _ from 'lodash';
 
 const SUPERDESK_REPOS_REGEX = new RegExp('ingest|archive|archived|published');
 
@@ -13,9 +14,11 @@ const isSameRepo = (shortcut, provider) => {
 
 SearchMenuController.$inject = [
     '$rootScope', '$scope', '$filter', '$location', '$route', 'searchProviderService', 'api', 'savedSearch',
+    'privileges',
 ];
 export default function SearchMenuController(
     $rootScope, $scope, $filter, $location, $route, searchProviderService, api, savedSearch,
+    privileges,
 ) {
     let providerLabels = {};
 
@@ -53,11 +56,13 @@ export default function SearchMenuController(
     };
 
     const initActiveProvider = () => {
-        this.activeProvider = null;
         if ($location.path() === '/search') {
-            this.activeProvider = this.providers.find(
-                (provider) => isEqual($location.search(), getSearchParams(provider)),
-            );
+            // prevent from changing active provider during click on article
+            if (!$location.search()._id && !$location.search().item) {
+                this.activeProvider = this.providers.find(
+                    (provider) => isEqual($location.search(), getSearchParams(provider)),
+                );
+            }
 
             if (this.activeProvider == null && $location.search().repo) { // display search provider as active
                 this.activeProvider = this.providers.find((provider) => provider._id === $location.search().repo);
@@ -105,12 +110,15 @@ export default function SearchMenuController(
                 this.providers = $filter('sortByName')(result._items, 'search_provider');
 
                 const defaultProvider = this.providers.find((provider) => provider.is_default);
+                const hasGlobalSearchPrivilege = privileges.privileges.use_global_saved_searches;
 
                 if (defaultProvider) {
                     this.providers = this.providers.filter((provider) => provider !== defaultProvider);
-                    this.providers.unshift(SUPERDESK_PROVIDER);
+                    if (hasGlobalSearchPrivilege) {
+                        this.providers.unshift(SUPERDESK_PROVIDER);
+                    }
                     this.providers.unshift(defaultProvider);
-                } else {
+                } else if (hasGlobalSearchPrivilege) {
                     this.providers.unshift(SUPERDESK_PROVIDER);
                 }
             })

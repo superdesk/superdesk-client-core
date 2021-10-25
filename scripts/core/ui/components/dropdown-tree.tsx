@@ -47,15 +47,12 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
         }
     }
     render() {
-        const {groups, getToggleElement, inline} = this.props;
+        const {groups, getToggleElement} = this.props;
         const onClick = () => this.setState({open: !this.state.open});
 
         return (
             <div
-                style={inline ?
-                    {display: 'inline-flex', lineHeight: 'initial', verticalAlign: 'bottom'} :
-                    {display: 'flex', position: 'relative', lineHeight: 'initial'}
-                }
+                style={{display: 'flex', position: 'relative', lineHeight: 'initial'}}
                 data-test-id={this.props['data-test-id']}
             >
                 {getToggleElement(this.state.open, onClick)}
@@ -86,17 +83,20 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                             }}
                             style={{
                                 position: 'absolute',
+                                zIndex: 1,
                                 top: '100%',
                                 right: 0,
                             }}
                         >
-                            <div style={{
-                                background: '#F8F8F8',
-                                maxHeight: 400,
-                                overflow: 'auto',
-                                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.4), 0 3px 1px -2px rgba(0, 0, 0, 0.1)',
-                                ...(this.props.wrapperStyles || {}),
-                            }}>
+                            <div
+                                style={{
+                                    background: '#F8F8F8',
+                                    maxHeight: 400,
+                                    overflow: 'auto',
+                                    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.4), 0 3px 1px -2px rgba(0, 0, 0, 0.1)',
+                                    ...(this.props.wrapperStyles || {}),
+                                }}
+                            >
                                 {
                                     groups.map((group, i) => (
                                         <div key={i}>{this.renderGroupRecursive(group, 0, 0)}</div>

@@ -1,14 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import PropTypes from 'prop-types';
 import MenuItems from './MenuItems';
 
 import {closeActionsMenu, openActionsMenu} from '../../helpers';
+import {IScopeApply} from 'core/utils';
 
-export class ActionsMenu extends React.PureComponent<any, any> {
-    static propTypes: any;
-    static defaultProps: any;
+interface IProps {
+    item: any;
+    onActioning: any;
+    template: any;
+    scopeApply: IScopeApply;
+}
 
+export class ActionsMenu extends React.PureComponent<IProps> {
     constructor(props) {
         super(props);
 
@@ -19,13 +23,14 @@ export class ActionsMenu extends React.PureComponent<any, any> {
     toggle(event) {
         this.stopEvent(event);
         closeActionsMenu(this.props.item._id);
+
+        // eslint-disable-next-line react/no-find-dom-node
         const icon = (ReactDOM.findDOMNode(this) as HTMLElement)
             .getElementsByClassName('icon-dots-vertical')[0];
 
         openActionsMenu(
             <MenuItems
-                svc={this.props.svc}
-                scope={this.props.scope}
+                scopeApply={this.props.scopeApply}
                 item={this.props.item}
                 onActioning={this.props.onActioning}
                 target={icon}
@@ -43,11 +48,3 @@ export class ActionsMenu extends React.PureComponent<any, any> {
         return this.props.template(this.toggle, this.stopEvent);
     }
 }
-
-ActionsMenu.propTypes = {
-    svc: PropTypes.object.isRequired,
-    scope: PropTypes.any.isRequired,
-    item: PropTypes.any,
-    onActioning: PropTypes.func,
-    template: PropTypes.func.isRequired,
-};

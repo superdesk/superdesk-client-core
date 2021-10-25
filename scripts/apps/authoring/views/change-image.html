@@ -23,7 +23,7 @@
     <div ng-if="loading" class="sd-loader"></div>
     <div class="sd-column-box--2">
         <div class="sd-column-box__main-column sd-column-box__main-column--photo-preview" ng-class="{'toolbar-offset': crops.isDirty, 'sd-column-box__main-column--expanded' : !showMetadata}">
-            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="toggleShowMetadata(true)" data-sd-tooltip="Open metadata" data-flow="left">
+            <a class="sd-photo-preview__slide-in-button" ng-show="!showMetadata && nav !== 'crop'" ng-click="toggleShowMetadata(true)" sd-tooltip="{{'Open metadata' | translate}}" data-flow="left">
                 <i class="icon-backward-thin"></i>
             </a>
             <div ng-if="!nav || nav === 'view'">
@@ -152,7 +152,7 @@
                 <div class="sd-slide-in-panel__header">
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav !== 'image-edit'" translate>Metadata</h3>
                     <h3 class="sd-slide-in-panel__heading" ng-if="nav === 'image-edit'" translate>Controls</h3>
-                    <a class="icn-btn sd-slide-in-panel__close" data-sd-tooltip="Close details" data-flow="left" ng-click="toggleShowMetadata(false)"><i class="icon-close-small"></i></a>
+                    <a class="icn-btn sd-slide-in-panel__close" sd-tooltip="{{'Close details' | translate}}" data-flow="left" ng-click="toggleShowMetadata(false)"><i class="icon-close-small"></i></a>
                 </div>
                 <div class="sd-slide-in-panel__content" ng-if="nav !== 'image-edit'">
                     <div class="sd-slide-in-panel__content-block sd-slide-in-panel__content-block--first">
@@ -203,11 +203,11 @@
 
                         <h3 class="sd-slide-in-panel__heading sd-slide-in-panel__heading--marg-b16" translate>Change image settings</h3>
                         <div class="form__row">
-                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="showAreaOfInterestView()" ng-class="{'btn--active' : isAoISelectionModeEnabled}" sd-tooltip="Crop" ng-disabled="controls.isDirty"><i class="icon-crop icon--white"></i></button>
-                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateImage('left')" sd-tooltip="Rotate left" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-left icon--white"></i></button>
-                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateImage('right')" sd-tooltip="Rotate right" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-right icon--white"></i></button>
-                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('horizontal')" sd-tooltip="Flip horizontal" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-horizontal icon--white"></i></button>
-                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('vertical')" sd-tooltip="Flip vertical" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-vertical icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="showAreaOfInterestView()" ng-class="{'btn--active' : isAoISelectionModeEnabled}" sd-tooltip="{{ 'Crop' | translate }}" ng-disabled="controls.isDirty"><i class="icon-crop icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateImage('left')" sd-tooltip="{{ 'Rotate left' | translate }}" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-left icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="rotateImage('right')" sd-tooltip="{{ 'Rotate right' | translate }}" ng-disabled="isAoISelectionModeEnabled"><i class="icon-rotate-right icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('horizontal')" sd-tooltip="{{ 'Flip horizontal' | translate }}" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-horizontal icon--white"></i></button>
+                            <button class="btn btn--ui-dark btn--hollow btn--icon-only btn--large" ng-click="flipImage('vertical')" sd-tooltip="{{ 'Flip vertical' | translate }}" ng-disabled="isAoISelectionModeEnabled"><i class="icon-flip-vertical icon--white"></i></button>
                         </div>
                     </div>
                     <div class="sd-slide-in-panel__content-block" ng-if="isAoISelectionModeEnabled">

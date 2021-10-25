@@ -154,11 +154,10 @@ describe('family service', () => {
                                     {not: {term: {type: 'composite'}}},
                                     {not: {term: {last_published_version: 'false'}}},
                                     {term: {type: 'text'}},
-                                    {term: {'genre.qcode': 'Article'}},
                                 ],
                             },
                             query: {
-                                query_string: {query: 'slugline.phrase:("test")', lenient: false},
+                                query_string: {query: 'slugline.phrase:("test")', lenient: true},
                             },
                         },
                     },
@@ -187,7 +186,6 @@ describe('family service', () => {
                                     {not: {term: {type: 'composite'}}},
                                     {not: {term: {last_published_version: 'false'}}},
                                     {term: {type: 'text'}},
-                                    {term: {'genre.qcode': 'Article'}},
                                 ],
                             },
                             query: {
@@ -220,7 +218,6 @@ describe('family service', () => {
                                     {not: {term: {type: 'composite'}}},
                                     {not: {term: {last_published_version: 'false'}}},
                                     {term: {type: 'text'}},
-                                    {term: {'genre.qcode': 'Article'}},
                                     {range: {versioncreated: {gte: '48-h'}}},
                                 ],
                             },

@@ -26,7 +26,7 @@ describe('MetadataWidgetCtrl controller', () => {
                 timeformat: 'HH:mm',
                 dateformat: 'MM/DD/YYYY',
             },
-            defaultTimezone: 'Europe/London',
+            default_timezone: 'Europe/London',
             server: {url: undefined, ws: undefined},
         };
 
@@ -80,7 +80,7 @@ describe('MetadataWidgetCtrl controller', () => {
         scope.$digest();
 
         expect(scope.availableCategories).toEqual(
-            [{qcode: 'a'}, {qcode: 'c'}],
+            [{qcode: 'a'}, {qcode: 'c'}, {qcode: 'd'}],
         );
     });
 

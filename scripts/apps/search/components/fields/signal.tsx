@@ -1,15 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const signal: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    if (props.item.signal) {
-        return React.createElement('span', {className: 'signal', key: 'signal'}, props.item.signal);
-    } else {
-        return null;
-    }
-};
+class SignalComponent extends React.PureComponent<IPropsItemListInfo> {
+    render() {
+        const props = this.props;
 
-signal.propTypes = {
-    item: PropTypes.any,
-};
+        if (props.item.signal == null) {
+            return null;
+        }
+
+        return (
+            <React.Fragment>
+                {props.item.signal.map((_signal) => (
+                    <span className="signal" key={_signal.qcode}>{_signal.name || _signal.qcode}</span>
+                ))}
+            </React.Fragment>
+        );
+    }
+}
+
+export const signal = SignalComponent;

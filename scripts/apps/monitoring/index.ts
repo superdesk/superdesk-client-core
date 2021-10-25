@@ -21,6 +21,7 @@ import {MonitoringController} from './controllers/MonitoringController';
 import {gettext} from 'core/utils';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {MonitoringFilteringButtons} from './directives/MonitoringFilteringButtons';
+import {ArticlesList} from './directives/ArticlesListReact';
 
 /**
  * @ngdoc module
@@ -42,10 +43,30 @@ angular.module('superdesk.apps.monitoring', [
     .service('cards', svc.CardsService)
 
     .directive('sdMonitoringView', directive.MonitoringView)
+    .component('sdArticlesListReact',
+        reactToAngular1(
+            ArticlesList,
+            [
+                'heading',
+                'query',
+                'monitoringController',
+                'getExtraButtons',
+            ],
+            [],
+            'height: 100%',
+        ),
+    )
     .component('sdMonitoringFilteringButtons',
         reactToAngular1(
             MonitoringFilteringButtons,
-            ['deskId', 'toggleFilter', 'isFilterActive', 'activeFilters', 'addResourceUpdatedEventListener'],
+            [
+                'deskId',
+                'toggleFilter',
+                'setFilter',
+                'isFilterActive',
+                'activeFilters',
+                'addResourceUpdatedEventListener',
+            ],
         ),
     )
     .directive('sdMonitoringGroup', directive.MonitoringGroup)

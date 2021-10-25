@@ -1,19 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const headline: React.StatelessComponent<Pick<IPropsItemListInfo, 'item'>> = (props) => {
-    const _headline = typeof props.item.headline === 'string' && props.item.headline.length > 0
-        ? props.item.headline
-        : props.item.type;
+class HeadlineComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
+    render() {
+        const props = this.props;
 
-    return React.createElement(
-        'span',
-        {className: 'item-heading', key: 'headline',
-            dangerouslySetInnerHTML: {__html: _headline}},
-    );
-};
+        const _headline = typeof props.item.headline === 'string' && props.item.headline.length > 0
+            ? props.item.headline
+            : props.item.type;
 
-headline.propTypes = {
-    item: PropTypes.any,
-};
+        return React.createElement(
+            'span',
+            {className: 'item-heading', key: 'headline',
+                dangerouslySetInnerHTML: {__html: _headline}},
+        );
+    }
+}
+
+export const headline = HeadlineComponent;

@@ -4,10 +4,9 @@ import React from 'react';
 import classNames from 'classnames';
 import {get} from 'lodash';
 
-import {broadcast} from './fields/broadcast';
-
-import {ActionsMenu} from './index';
+import {ActionsMenu} from './actions-menu/ActionsMenu';
 import {closeActionsMenu, isIPublishedArticle} from '../helpers';
+import {gettext} from 'core/utils';
 import {ItemSwimlane} from './ItemSwimlane';
 import {ItemPhotoGrid} from './ItemPhotoGrid';
 import {ListItemTemplate} from './ItemListTemplate';
@@ -16,8 +15,15 @@ import {IArticle, IDesk, IPublishedArticle} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {httpRequestJsonLocal} from 'core/helpers/network';
+import {appConfig} from 'appConfig';
+import ng from 'core/services/ng';
+import {IScopeApply} from 'core/utils';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {IActivityService} from 'core/activity/activity';
+import {IActivity} from 'superdesk-interfaces/Activity';
+import {IRelatedEntities} from 'core/getRelatedEntities';
 
-function isButtonClicked(event): boolean {
+export function isButtonClicked(event): boolean {
     // don't trigger the action if a button inside a list view is clicked
     // if an extension registers a button, it should be able to totally control it.
     // target can be an image or an icon inside a button, so parents need to be checked too
@@ -35,6 +41,7 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
             onClick={toggle}
             onDoubleClick={stopEvent}
             className="more-activity-toggle-ref icn-btn dropdown__toggle dropdown-toggle"
+            aria-label={gettext('Item actions')}
             data-test-id="context-menu-button"
         >
             <i className="icon-dots-vertical" />
@@ -43,27 +50,29 @@ const actionsMenuDefaultTemplate = (toggle, stopEvent) => (
 );
 
 interface IProps {
-    svc: any;
-    scope: any;
     swimlane: any;
     item: IArticle | IPublishedArticle;
+    relatedEntities: IRelatedEntities;
     profilesById: any;
     highlightsById: any;
     markedDesksById: any;
     ingestProvider: any;
     versioncreator: any;
-    onMultiSelect: any;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
     desk: IDesk;
     flags: any;
     view: any;
     onDbClick: any;
     onEdit: any;
-    onSelect: any;
+    onSelect(item: IArticle, event): void;
     narrow: any;
     hideActions: boolean;
     multiSelectDisabled: boolean;
     isNested: boolean;
     actioning: boolean;
+    singleLine: any;
+    customRender: any;
+    scopeApply: IScopeApply;
 }
 
 interface IState {
@@ -76,10 +85,9 @@ interface IState {
 }
 
 export class Item extends React.Component<IProps, IState> {
-    static propTypes: any;
-    static defaultProps: any;
-
-    clickTimeout: number;
+    private clickTimeout: number;
+    private _mounted: boolean;
+    private mouseDown: boolean;
 
     constructor(props) {
         super(props);
@@ -93,9 +101,9 @@ export class Item extends React.Component<IProps, IState> {
             nested: [],
         };
 
-        this.select = this.select.bind(this);
+        this.handleClick = this.handleClick.bind(this);
         this.edit = this.edit.bind(this);
-        this.dbClick = this.dbClick.bind(this);
+        this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.setActioningState = this.setActioningState.bind(this);
         this.setHoverState = this.setHoverState.bind(this);
         this.unsetHoverState = this.unsetHoverState.bind(this);
@@ -105,12 +113,17 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     componentWillMount() {
-        if (get(this.props, 'svc.config.apps', []).includes('superdesk-planning')) {
+        if (appConfig?.apps?.includes('superdesk-planning')) {
             this.loadPlanningModals();
         }
     }
 
+    componentDidMount() {
+        this._mounted = true;
+    }
+
     componentWillUnmount() {
+        this._mounted = false;
         closeActionsMenu(this.props.item._id);
     }
 
@@ -118,10 +131,13 @@ export class Item extends React.Component<IProps, IState> {
         if (nextProps.item !== this.props.item) {
             closeActionsMenu(this.props.item._id);
         }
+        this.setActioningState(nextProps.actioning);
     }
 
     loadPlanningModals() {
-        const {session, superdesk, activityService} = this.props.svc;
+        const session = ng.get('session');
+        const superdesk = ng.get('superdesk');
+        const activityService: IActivityService = ng.get('activityService');
 
         if (!['add_to_planning', 'fulfil_assignment'].includes(get(this.props, 'item.lock_action')) ||
                 get(this.props, 'item.lock_user') !== session.identity._id ||
@@ -129,7 +145,7 @@ export class Item extends React.Component<IProps, IState> {
             return;
         }
 
-        let planningActivity;
+        let planningActivity: IActivity | null;
         const activities = superdesk.findActivities({action: 'list', type: 'archive'},
             this.props.item);
 
@@ -141,23 +157,37 @@ export class Item extends React.Component<IProps, IState> {
             planningActivity = activities.find((a) => a._id === 'planning.fulfil');
         }
 
+        const openActivities = activityService.activityStack || [];
+
+        // Item list is rerendered from planning on certain actions and this will trigger
+        // opening a modal that might be open already (without page refresh)
+        if (openActivities.find(({activity}) => activity._id === planningActivity._id) != null) {
+            // if activity is open already, don't do anything
+            return;
+        }
+
         if (planningActivity) {
             this.setActioningState(true);
             activityService.start(planningActivity, {data: {item: this.props.item}})
-                .finally(() => this.setActioningState(false));
+                .finally(() => {
+                    if (this._mounted) {
+                        this.setActioningState(false);
+                    }
+                });
         }
     }
 
-    shouldComponentUpdate(nextProps, nextState) {
+    shouldComponentUpdate(nextProps: IProps, nextState) {
         return nextProps.swimlane !== this.props.swimlane || nextProps.item !== this.props.item ||
             nextProps.view !== this.props.view ||
             nextProps.flags.selected !== this.props.flags.selected ||
             nextProps.narrow !== this.props.narrow ||
             nextProps.actioning !== this.props.actioning ||
+            nextProps.multiSelect !== this.props.multiSelect ||
             nextState !== this.state;
     }
 
-    select(event) {
+    handleClick(event) {
         if (isButtonClicked(event)) {
             return;
         }
@@ -176,7 +206,7 @@ export class Item extends React.Component<IProps, IState> {
      * @param {string} itemId Id of the document
      */
     openAuthoringView(itemId) {
-        const authoringWorkspace: AuthoringWorkspaceService = this.props.svc.authoringWorkspace;
+        const authoringWorkspace: AuthoringWorkspaceService = ng.get('authoringWorkspace');
 
         authoringWorkspace.edit({_id: itemId}, 'view');
     }
@@ -187,7 +217,7 @@ export class Item extends React.Component<IProps, IState> {
         }
     }
 
-    dbClick(event) {
+    handleDoubleClick(event) {
         if (isButtonClicked(event)) {
             return;
         }
@@ -211,7 +241,9 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     setHoverState() {
-        this.setState({hover: true});
+        if (this.state.hover !== true) {
+            this.setState({hover: true});
+        }
     }
 
     unsetHoverState() {
@@ -219,9 +251,7 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     onDragStart(event) {
-        const {dragitem} = this.props.svc;
-
-        dragitem.start(event, this.props.item);
+        ng.get('dragitem').start(event, this.props.item);
     }
 
     toggleNested(event) {
@@ -258,27 +288,34 @@ export class Item extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {item, scope} = this.props;
+        const {item} = this.props;
         let classes = this.props.view === 'photogrid' ?
             'sd-grid-item sd-grid-item--with-click' :
             'media-box media-' + item.type;
 
+        const selectedInSingleSelectMode = this.props.flags.selected;
+        const selectedInMultiSelectMode = this.props.item.selected;
+        const itemSelected = selectedInSingleSelectMode || selectedInMultiSelectMode;
+
         // Customize item class from its props
-        if (scope.customRender && typeof scope.customRender.getItemClass === 'function') {
-            classes = `${classes} ${scope.customRender.getItemClass(item)}`;
+        if (this.props.customRender && typeof this.props.customRender.getItemClass === 'function') {
+            classes = `${classes} ${this.props.customRender.getItemClass(item)}`;
         }
 
         const isLocked: boolean = (item.lock_user && item.lock_session) != null;
 
         const getActionsMenu = (template = actionsMenuDefaultTemplate) =>
-            this.props.hideActions !== true && this.state.hover && !item.gone ? React.createElement(
-                ActionsMenu, {
-                    item: item,
-                    svc: this.props.svc,
-                    scope: this.props.scope,
-                    onActioning: this.setActioningState,
-                    template: template,
-                }) : null;
+            this.props.hideActions !== true
+            && (this.state.hover || itemSelected)
+            && !item.gone
+                ? (
+                    <ActionsMenu
+                        item={item}
+                        onActioning={this.setActioningState}
+                        template={template}
+                        scopeApply={this.props.scopeApply}
+                    />
+                ) : null;
 
         const getTemplate = () => {
             switch (this.props.view) {
@@ -286,34 +323,32 @@ export class Item extends React.Component<IProps, IState> {
                 return (
                     <ItemSwimlane
                         item={item}
+                        itemSelected={itemSelected}
                         isLocked={isLocked}
                         getActionsMenu={getActionsMenu}
-                        onMultiSelect={this.props.onMultiSelect}
-                        svc={this.props.svc}
+                        multiSelect={this.props.multiSelect}
                     />
                 );
             case 'mgrid':
                 return (
                     <ItemMgridTemplate
                         item={item}
+                        itemSelected={itemSelected}
                         desk={this.props.desk}
                         swimlane={this.props.swimlane}
-                        svc={this.props.svc}
                         ingestProvider={this.props.ingestProvider}
-                        onMultiSelect={this.props.onMultiSelect}
-                        broadcast={broadcast}
                         getActionsMenu={getActionsMenu}
+                        multiSelect={this.props.multiSelect}
                     />
                 );
             case 'photogrid':
                 return (
                     <ItemPhotoGrid
                         item={item}
+                        itemSelected={itemSelected}
                         desk={this.props.desk}
-                        ingestProvider={this.props.ingestProvider}
-                        svc={this.props.svc}
                         swimlane={this.props.swimlane}
-                        onMultiSelect={this.props.onMultiSelect}
+                        multiSelect={this.props.multiSelect}
                         getActionsMenu={getActionsMenu}
                     />
                 );
@@ -321,8 +356,9 @@ export class Item extends React.Component<IProps, IState> {
                 return (
                     <ListItemTemplate
                         item={item}
+                        relatedEntities={this.props.relatedEntities}
+                        itemSelected={itemSelected}
                         desk={this.props.desk}
-                        svc={this.props.svc}
                         openAuthoringView={this.openAuthoringView}
                         ingestProvider={this.props.ingestProvider}
                         highlightsById={this.props.highlightsById}
@@ -331,13 +367,14 @@ export class Item extends React.Component<IProps, IState> {
                         swimlane={this.props.swimlane}
                         versioncreator={this.props.versioncreator}
                         narrow={this.props.narrow}
-                        onMultiSelect={this.props.onMultiSelect}
+                        multiSelect={this.props.multiSelect}
                         getActionsMenu={getActionsMenu}
-                        scope={this.props.scope}
                         selectingDisabled={this.props.multiSelectDisabled}
                         isNested={this.props.isNested}
                         showNested={this.state.showNested}
                         toggleNested={this.toggleNested}
+                        singleLine={this.props.singleLine}
+                        customRender={this.props.customRender}
                     />
                 );
             }
@@ -359,9 +396,8 @@ export class Item extends React.Component<IProps, IState> {
                         {this.state.nested.map((childItem) => (
                             <Item
                                 item={childItem}
+                                relatedEntities={this.props.relatedEntities}
                                 key={childItem._id + childItem._current_version}
-                                svc={this.props.svc}
-                                scope={this.props.scope}
                                 flags={{}}
                                 profilesById={this.props.profilesById}
                                 isNested={true}
@@ -378,8 +414,11 @@ export class Item extends React.Component<IProps, IState> {
                                 versioncreator={this.props.versioncreator}
                                 onEdit={this.props.onEdit}
                                 onDbClick={this.props.onDbClick}
-                                onMultiSelect={this.props.onMultiSelect}
+                                multiSelect={this.props.multiSelect}
                                 actioning={false}
+                                singleLine={this.props.singleLine}
+                                customRender={this.props.customRender}
+                                scopeApply={this.props.scopeApply}
                             />
                         ))}
                     </div>
@@ -399,31 +438,59 @@ export class Item extends React.Component<IProps, IState> {
                     'list-item-view',
                     {
                         'actions-visible': this.props.hideActions !== true,
-                        'active': this.props.flags.selected,
+                        'active': itemSelected,
                         'selected': this.props.item.selected && !this.props.flags.selected,
                         'sd-list-item-nested': this.state.nested.length,
                         'sd-list-item-nested--expanded': this.state.nested.length && this.state.showNested,
                         'sd-list-item-nested--collapsed': this.state.nested.length && this.state.showNested === false,
                     },
                 ),
-                onMouseEnter: getCallback(this.setHoverState),
+                onMouseOver: getCallback(this.setHoverState),
                 onMouseLeave: getCallback(this.unsetHoverState),
                 onDragStart: getCallback(this.onDragStart),
-                onClick: getCallback(this.select),
-                onDoubleClick: getCallback(this.dbClick),
+                onFocus: getCallback((event) => {
+                    // Only open preview on focus when it is triggered via keyboard.
+                    // When mouse is used, preview will open on click.
+                    if (this.mouseDown !== true) {
+                        // not using this.select in order to avoid the timeout
+                        // that is used to enable double-click
+                        if (!this.props.item.gone) {
+                            this.props.onSelect(this.props.item, event);
+                        }
+                    }
+                }),
+                onMouseDown: () => {
+                    this.mouseDown = true;
+                },
+                onMouseUp: () => {
+                    this.mouseDown = false;
+                },
+                onClick: getCallback(this.handleClick),
+                onDoubleClick: getCallback(this.handleDoubleClick),
+                onKeyDown: (event) => {
+                    if (event.key === ' ') { // display item actions when space is clicked
+                        const el = event.target?.querySelector('.more-activity-toggle-ref');
+
+                        if (typeof el?.click === 'function') {
+                            event.preventDefault();
+                            el.click();
+                        }
+                    }
+                },
                 draggable: !this.props.isNested,
+                tabIndex: 0,
+                'data-test-id': 'article-item',
             },
             (
                 <div
                     className={classNames(classes, {
-                        active: this.props.flags.selected,
+                        active: itemSelected,
                         locked: isLocked,
-                        selected: this.props.item.selected || this.props.flags.selected,
+                        selected: itemSelected,
                         archived: item.archived || item.created,
                         gone: item.gone,
                         actioning: this.state.actioning || this.props.actioning,
                     })}
-                    data-test-id="article-item"
                 >
                     {getTemplate()}
                 </div>

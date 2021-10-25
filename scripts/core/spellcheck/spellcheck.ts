@@ -1,6 +1,9 @@
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {gettext} from 'core/utils';
 import {debounce, once} from 'lodash';
+import {getStores, unsetStore} from '../editor3/store';
+import {setAbbreviations} from 'core/editor3/actions';
+import {getUserInterfaceLanguage} from 'appConfig';
 
 /**
  * Spellcheck module
@@ -8,7 +11,7 @@ import {debounce, once} from 'lodash';
 SpellcheckService.$inject = ['$q', 'api', 'dictionaries', '$rootScope', '$location', 'lodash', 'preferencesService'];
 function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, preferencesService) {
     var PREFERENCES_KEY = 'spellchecker:status',
-        lang,
+        lang = getUserInterfaceLanguage(),
         dict = {} as any,
         ignored = {},
         abbreviationList = [],
@@ -107,8 +110,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
      */
     this.getAbbreviationsDict = function(force) {
         if (!lang) {
-            // here it shouldn't reject like in getDict, where it would stop only spellchecking
-            // if there is no dictionary, while here it would stop scope commit in editor
+            // if lang is not specified set it to en
             return $q.when({});
         }
 
@@ -126,7 +128,7 @@ function SpellcheckService($q, api, dictionaries, $rootScope, $location, _, pref
                 }
 
                 angular.forEach(langItems, (item) => {
-                    angular.extend(self.abbreviationsDict.content, JSON.parse(item.content) || {});
+                    angular.extend(self.abbreviationsDict.content, JSON.parse(item.content ?? '{}') || {});
                 });
 
                 return self.abbreviationsDict.content;
@@ -543,11 +545,29 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
         return $rootScope.config.features && $rootScope.config.features.useTansaProofing;
     }
 
+    function dispatchAbbreviation(abbreviation) {
+        const stores = getStores();
+
+        stores.forEach((_store) => {
+            return _store.dispatch(setAbbreviations(abbreviation));
+        });
+    }
+
     $scope.$watch('item.language', (newVal, oldVal) => {
         if (newVal != null && newVal !== oldVal) {
             self.isAuto = true;
             spellcheck.setLanguage(newVal);
             setupSpellchecker();
+            spellcheck.getAbbreviationsDict(true).then((abbreviation) => {
+                if (Object.keys(abbreviation).length !== 0) {
+                    dispatchAbbreviation(abbreviation);
+                } else {
+                    spellcheck.setLanguage(getUserInterfaceLanguage());
+                    spellcheck.getAbbreviationsDict(true).then((abbreviations) => {
+                        dispatchAbbreviation(abbreviations);
+                    });
+                }
+            });
         }
     });
 
@@ -579,6 +599,7 @@ function SpellcheckMenuController($rootScope, editorResolver, spellcheck, notify
 
     $scope.$on('$destroy', () => {
         window.removeEventListener('editorInitialized', initializeSpellchecker);
+        unsetStore();
     });
 }
 

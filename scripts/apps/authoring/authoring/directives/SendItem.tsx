@@ -6,6 +6,8 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {ITEM_STATE} from 'apps/archive/constants';
+import {confirmPublish} from '../services/quick-publish-modal';
 
 SendItem.$inject = [
     '$q',
@@ -96,6 +98,12 @@ export function SendItem($q,
             scope.sendEmbargo = appConfig?.ui?.sendEmbargo ?? true;
             scope.allowPersonalSpace = false;
             scope.PERSONAL_SPACE = {label: gettext('Personal Space'), value: 'PERSONAL_SPACE'};
+            scope.isCorrection = appConfig?.corrections_workflow
+                && scope.item?.state === ITEM_STATE.CORRECTION;
+
+            // Only initialize when it's being set for the first time.
+            // If time zone was removed manually, it should not be automatically re-added.
+            scope.initializePublishScheduleWithDefaultTimeZone = scope.item?.publish_schedule == null;
 
             // if authoring:publish extension point is not defined
             // then publish pane is single column
@@ -113,6 +121,14 @@ export function SendItem($q,
             scope.metadata = metadata.values;
 
             scope.publish = function() {
+                if (appConfig?.features?.confirmDueDate) {
+                    return confirmPublish([scope.item]).then(publishItem);
+                } else {
+                    return publishItem();
+                }
+            };
+
+            function publishItem() {
                 scope.loading = true;
                 var result = scope._publish();
 
@@ -122,7 +138,7 @@ export function SendItem($q,
                     .finally(() => {
                         scope.loading = false;
                     });
-            };
+            }
 
             function activateConfig(_config, oldConfig) {
                 if (scope.mode !== 'authoring' && _config !== oldConfig) {
@@ -218,12 +234,8 @@ export function SendItem($q,
 
             scope.selectDesk = function(desk) {
                 scope.selectedDesk = desk ? _.cloneDeep(desk)
-                    : (
-                        appConfig?.features?.sendToPersonal &&
-                        privileges.userHasPrivileges({send_to_personal: 1}) &&
-                        scope.allowPersonalSpace
-                            ? scope.PERSONAL_SPACE : desk
-                    );
+                    : appConfig?.features?.sendToPersonal && privileges.userHasPrivileges({send_to_personal: 1})
+                        ? scope.PERSONAL_SPACE : desk;
                 scope.selectedStage = null;
                 fetchStages();
                 fetchMacros();
@@ -336,6 +348,7 @@ export function SendItem($q,
                     var preCondition = scope.mode === 'ingest' ||
                                         scope.mode === 'personal' ||
                                         scope.mode === 'monitoring' ||
+                                        scope.mode === 'highlights' ||
                                         scope.mode === 'authoring' &&
                                         scope.isSendEnabled() &&
                                         scope.itemActions.send ||
@@ -507,6 +520,7 @@ export function SendItem($q,
              * Send the current item to different desk or stage and publish the item from new location.
              */
             scope.sendAndPublish = function() {
+                scope.loading = true;
                 return runSendAndPublish();
             };
 
@@ -525,8 +539,14 @@ export function SendItem($q,
                     itemType = typesList.length === 1 ? typesList[0] : null;
                 }
 
-                return scope.mode === 'authoring' || itemType === 'archive' || scope.mode === 'spike' ||
-                    (scope.mode === 'monitoring' && _.get(scope, 'config.action') === scope.vm.userActions.send_to);
+                return scope.mode === 'authoring'
+                    || scope.mode === 'spike'
+                    || scope.mode === 'highlights'
+                    || itemType === 'archive'
+                    || (
+                        scope.mode === 'monitoring'
+                        && _.get(scope, 'config.action') === scope.vm.userActions.send_to
+                    );
             };
 
             /**
@@ -551,7 +571,7 @@ export function SendItem($q,
                     return scope.item ? !scope.item.flags.marked_for_not_publication && scope.itemActions.publish :
                         scope.itemActions.publish;
                 } else if (scope._action === 'correct') {
-                    return privileges.privileges.publish && scope.itemActions.correct;
+                    return privileges.privileges.publish && (scope.itemActions.correct || scope.isCorrection);
                 } else if (scope._action === 'kill') {
                     return privileges.privileges.publish && scope.itemActions.kill;
                 }
@@ -1037,6 +1057,12 @@ export function SendItem($q,
 
             // update actions on item save
             scope.$watch('orig._current_version', initializeItemActions);
+
+            scope.getPublishLabel = (action) => action === 'edit'
+                ? (scope.isCorrection
+                    ? gettext('Send correction')
+                    : gettext('publish'))
+                : gettext(action);
         },
     };
 }

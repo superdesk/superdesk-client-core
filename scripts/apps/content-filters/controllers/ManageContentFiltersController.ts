@@ -44,6 +44,14 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
 
         $scope.saveFilter = function() {
             delete $scope.contentFilter.article_id;
+
+            for (var i = 0; i < $scope.contentFilter.content_filter.length; i++) {
+                if (Object.keys($scope.contentFilter.content_filter[i].expression).length < 1) {
+                    notify.error(gettext('Filter statement {{id}} does not have a filter condition.', {id: i + 1}));
+                    return;
+                }
+            }
+
             contentFilters.saveContentFilter($scope.origContentFilter, $scope.contentFilter)
                 .then(
                     () => {
@@ -119,19 +127,26 @@ export function ManageContentFiltersController($scope, contentFilters, notify, m
         $scope.test = function() {
             if (!$scope.test.article_id) {
                 notify.error(gettext('Please provide an article GUID'));
+                $scope.test.error_response = gettext('Please provide an article GUID');
                 return;
             }
+
+            $scope.test.content_tested = false;
 
             contentFilters.testContentFilter({filter: $scope.contentFilter, article_id: $scope.test.article_id})
                 .then(
                     (result) => {
-                        $scope.test.test_result = result.match_results ? 'Does Match' : 'Doesn\'t Match';
+                        $scope.test.content_tested = true;
+                        $scope.test.match_results = result.match_results;
+                        $scope.test.error_response = null;
                     },
                     (response) => {
                         if (angular.isDefined(response.data._issues)) {
                             notify.error(gettext('Error: ' + response.data._issues));
+                            $scope.test.error_response = response.data._issues;
                         } else if (angular.isDefined(response.data._message)) {
                             notify.error(gettext('Error: ' + response.data._message));
+                            $scope.test.error_response = response.data._message;
                         } else {
                             notify.error(gettext('Error: Failed to save content filter.'));
                         }

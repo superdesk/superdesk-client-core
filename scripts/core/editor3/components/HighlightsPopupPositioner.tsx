@@ -5,6 +5,57 @@ interface IProps {
     editorNode: any;
 }
 
+// do calculations on a cloned element to avoid scroll position jumping to the top on chrome
+// when resetting `max-height` to an empty value
+function getNextPosition(originalElement, editorNode) {
+    const element = originalElement.cloneNode(true) as HTMLElement;
+    const mainFlexElement = element.firstElementChild as HTMLElement;
+
+    originalElement.insertAdjacentElement('beforebegin', element);
+
+    if (editorNode == null || element == null || mainFlexElement == null) {
+        return;
+    }
+
+    const selectionRect = JSON.parse(editorNode.dataset.editorSelectionRect);
+
+    if (selectionRect == null) {
+        return;
+    }
+
+    // reset calculated values so new calculation can be performed
+    element.style.bottom = '';
+    mainFlexElement.style['max-height'] = '';
+
+    element.style.left = (editorNode.getBoundingClientRect().left - 360) + 'px';
+
+    const paddingTop = 4;
+    const paddingBottom = 4;
+    const viewportHeight = $(window).innerHeight();
+    const remainingSpaceAtTheBottomOfSelectedText = viewportHeight - selectionRect.top;
+
+    element.style.bottom = (
+        remainingSpaceAtTheBottomOfSelectedText > element.offsetHeight
+            ? Math.max(remainingSpaceAtTheBottomOfSelectedText - element.offsetHeight, paddingBottom)
+            : paddingBottom
+    ) + 'px';
+    mainFlexElement.style['max-height'] = (
+        viewportHeight
+        - parseInt(element.style.bottom, 10)
+        - paddingTop
+    ) + 'px';
+
+    const result = {
+        left: element.style.left,
+        bottom: element.style.bottom,
+        maxHeight: mainFlexElement.style['max-height'],
+    };
+
+    element.remove();
+
+    return result;
+}
+
 export class HighlightsPopupPositioner extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
@@ -47,28 +98,11 @@ export class HighlightsPopupPositioner extends React.Component<IProps> {
             return;
         }
 
-        // reset calculated values so new calculation can be performed
-        element.style.top = '';
-        element.style.bottom = '';
-        mainFlexElement.style['max-height'] = '';
+        const nextPosition = getNextPosition(element, editorNode);
 
-        element.style.left = (this.props.editorNode.getBoundingClientRect().left - 360) + 'px';
-
-        const paddingTop = 4;
-        const paddingBottom = 4;
-        const viewportHeight = $(window).innerHeight();
-        const remainingSpaceAtTheBottomOfSelectedText = viewportHeight - selectionRect.top;
-
-        element.style.bottom = (
-            remainingSpaceAtTheBottomOfSelectedText > element.offsetHeight
-                ? Math.max(remainingSpaceAtTheBottomOfSelectedText - element.offsetHeight, paddingBottom)
-                : paddingBottom
-        ) + 'px';
-        mainFlexElement.style['max-height'] = (
-            viewportHeight
-            - parseInt(element.style.bottom, 10)
-            - paddingTop
-        ) + 'px';
+        element.style.left = nextPosition.left;
+        element.style.bottom = nextPosition.bottom;
+        mainFlexElement.style['max-height'] = nextPosition.maxHeight;
     }
     componentDidMount() {
         this.position();
@@ -87,12 +121,18 @@ export class HighlightsPopupPositioner extends React.Component<IProps> {
     }
     render() {
         return (
-            <div className={'editor-popup editor-popup--open '} ref={ (el) => {
-                this.highlightsPopupRootElement = el;
-            }}>
-                <div className="editor-popup__main editor-popup__main--floating" ref={(el) => {
-                    this.highlightsPopupMainFlexElement = el;
-                }}>
+            <div
+                className={'editor-popup editor-popup--open '}
+                ref={(el) => {
+                    this.highlightsPopupRootElement = el;
+                }}
+            >
+                <div
+                    className="editor-popup__main editor-popup__main--floating"
+                    ref={(el) => {
+                        this.highlightsPopupMainFlexElement = el;
+                    }}
+                >
                     {this.props.children}
                 </div>
             </div>

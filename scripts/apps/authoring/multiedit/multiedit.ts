@@ -10,8 +10,9 @@
 
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
-import _ from 'lodash';
+import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
+import {isMediaType} from 'core/helpers/item';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -189,9 +190,9 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             function openItem() {
                 authoring.open(scope.article).then((item) => {
                     scope.origItem = item;
-                    scope.item = _.create(item);
+                    scope.item = JSON.parse(JSON.stringify(item));
                     scope._editable = authoring.isEditable(item);
-                    scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], scope.item.type);
+                    scope.isMediaType = isMediaType(scope.item);
 
                     if (scope.focus) {
                         $timeout(() => {
@@ -199,6 +200,8 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                         }, 0, false);
                     }
                     scope.isLocked = lock.isLocked(item);
+
+                    content.setupAuthoring(scope.item.profile, scope, scope.item);
                 });
             }
 
@@ -206,26 +209,19 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
 
             scope.autosave = function(item) {
                 scope.dirty = true;
-                authoring.autosave(item, scope.origItem);
+                authoring.autosave(cloneDeep(item), scope.origItem);
             };
 
             scope.$watch('item.flags', (newValue, oldValue) => {
                 if (newValue !== oldValue) {
                     scope.item.flags = newValue;
                     scope.origItem.flags = oldValue;
-                    scope.dirty = true;
                 }
             }, true);
 
-            scope.$watch('item.profile', (profile) => {
-                content.setupAuthoring(profile, scope, scope.item);
-            });
-
-            scope.save = function(item, form) {
-                return authoring.save(scope.origItem, item).then((res) => {
-                    if (form) {
-                        form.$setPristine();
-                    }
+            scope.save = function(item) {
+                return authoring.save(scope.origItem, cloneDeep(item)).then((res) => {
+                    scope.dirty = false;
 
                     return res;
                 });

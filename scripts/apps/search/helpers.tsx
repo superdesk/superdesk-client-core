@@ -4,7 +4,10 @@ import {DEFAULT_LIST_CONFIG} from './constants';
 import {fields} from './components/fields';
 import ng from '../../core/services/ng';
 import {isKilled} from 'apps/archive/utils';
-import {IArticle, IPublishedArticle} from 'superdesk-api';
+import {IArticle, IPublishedArticle, IListViewFieldWithOptions} from 'superdesk-api';
+import {getVocabularyItemNameTranslated} from 'core/utils';
+import {appConfig} from 'appConfig';
+import {ErrorBoundary} from 'core/helpers/ErrorBoundary';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -16,8 +19,8 @@ export function getSpecStyle(spec) {
     return style;
 }
 
-export function getSpecTitle(spec, title) {
-    return spec.name ? `${title}: ${spec.name}` : title;
+export function getSpecTitle(spec, title, language: string) {
+    return spec.name ? `${title}: ${getVocabularyItemNameTranslated(spec, language)}` : title;
 }
 
 export function getSpecValue(spec, value) {
@@ -38,8 +41,23 @@ export function isCheckAllowed(item) {
     );
 }
 
-export function menuHolderElem() {
-    return document.getElementById('react-placeholder');
+const menuHolderEl = document.createElement('div');
+
+menuHolderEl.setAttribute('data-debug-info', 'menu holder');
+
+/**
+ * positionPopup algorithm expects these styles on a wrapper
+ */
+menuHolderEl.style['position'] = 'absolute';
+menuHolderEl.style['top'] = '0';
+menuHolderEl.style['left'] = '0';
+menuHolderEl.style['width'] = '1px';
+menuHolderEl.style['height'] = '1px';
+
+document.body.append(menuHolderEl);
+
+export function menuHolderElem(): HTMLDivElement {
+    return menuHolderEl;
 }
 
 export function closeActionsMenu(itemId?) {
@@ -72,6 +90,7 @@ export function openActionsMenu(elem, target, itemId) {
  * @param {integer} zIndex z-index styling to be applied to the elem
  */
 export function renderToBody(elem, target, zIndex = 1000) {
+    // eslint-disable-next-line react/no-find-dom-node
     ReactDOM.findDOMNode(ReactDOM.render(elem, menuHolderElem()));
     positionPopup(target, zIndex);
 }
@@ -133,24 +152,46 @@ export function positionPopup(target, zIndex = 1000) {
     menuHolderElem().style.zIndex = zIndex.toString();
 }
 
-export function renderArea(area: string, itemProps, props?: { className?: string }, customRender: any = {}) {
+interface IItemProps {
+    item: any;
+    listConfig?: any;
+    singleLine?: any;
+    narrow?: any;
+}
+
+export function renderArea(
+    area: 'firstLine' | 'secondLine' | 'singleLine' | 'priority',
+    itemProps: IItemProps,
+    props?: { className?: string },
+    customRender: any = {},
+) {
     // If singleline preference is set, don't show second line
-    if (itemProps.scope?.singleLine && area === 'secondLine') {
+    if (itemProps.singleLine && area === 'secondLine') {
         return;
     }
 
     /* globals __SUPERDESK_CONFIG__: true */
-    const listConfig = itemProps.listConfig || __SUPERDESK_CONFIG__.list || DEFAULT_LIST_CONFIG;
+    const listConfig = itemProps.listConfig || appConfig.list || DEFAULT_LIST_CONFIG;
 
     let specs = listConfig[area] || [];
 
     // If narrowView configuration is available and also singleline are active
-    if (itemProps.scope?.singleLine && itemProps.narrow && listConfig.narrowView) {
+    if (itemProps.singleLine && itemProps.narrow && listConfig.narrowView) {
         specs = listConfig.narrowView;
     }
 
     const elemProps = angular.extend({key: area}, props);
-    const components = specs.map((field, i) => {
+    const components = specs.map((value: string | IListViewFieldWithOptions, i) => {
+        let field;
+        let options: IListViewFieldWithOptions['options'] | undefined;
+
+        if (typeof value === 'string') {
+            field = value;
+        } else {
+            field = value.field;
+            options = value.options;
+        }
+
         if (customRender.fields && field in customRender.fields) {
             return customRender.fields[field](itemProps);
         }
@@ -158,16 +199,22 @@ export function renderArea(area: string, itemProps, props?: { className?: string
         const Component = fields[field];
 
         if (Component != null) {
-            return <Component key={i} {...itemProps} />;
+            return (
+                <ErrorBoundary key={i}>
+                    <Component {...itemProps} options={options} />
+                </ErrorBoundary>
+            );
         }
 
         return null;
     }).filter(Boolean);
 
     if (components.length > 0) {
-        return <div {...elemProps}>
-            {components}
-        </div>;
+        return (
+            <div {...elemProps}>
+                {components}
+            </div>
+        );
     }
 
     return null;
@@ -178,31 +225,33 @@ export function renderArea(area: string, itemProps, props?: { className?: string
  * @param {String} label - activity label
  */
 export function bindMarkItemShortcut(label) {
+    const currentActiveElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const keyboardManager = ng.get('keyboardManager');
 
     angular.element('.active .more-activity-toggle-ref').click();
 
     setTimeout(() => {
         let markDropdown = angular.element('.more-activity-menu.open .dropdown--noarrow');
+        let option = markDropdown.find('[title="' + label + '"]').parent();
 
-        if (markDropdown.find('[title="' + label + '"]').length > 0) {
-            markDropdown.find('[title="' + label + '"]')[0].click();
+        if (option.length > 0) {
+            option.click();
         }
 
-        if (markDropdown.find('button').length > 0) {
-            markDropdown.find('button:not([disabled])')
-                .first()
-                .focus();
+        let moreOptions = option.find('button:not([disabled])').parents('ul').first();
+
+        if (moreOptions.find('button:not([disabled])').length > 0) {
+            moreOptions.find('button:not([disabled])').first().focus();
 
             keyboardManager.push('up', () => {
-                markDropdown.find('button:focus')
+                option.find('button:focus')
                     .parent('li')
                     .prev()
                     .children('button')
                     .focus();
             });
             keyboardManager.push('down', () => {
-                markDropdown.find('button:focus')
+                option.find('button:focus')
                     .parent('li')
                     .next()
                     .children('button')
@@ -212,6 +261,8 @@ export function bindMarkItemShortcut(label) {
                 let actionMenu = angular.element('.more-activity-menu.open');
 
                 actionMenu.find('button.dropdown__menu-close').click();
+
+                currentActiveElement?.focus(); // return focus to where it was before invoking the keybinding
             });
         }
     });

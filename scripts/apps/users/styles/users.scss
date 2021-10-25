@@ -576,7 +576,6 @@ Profile page styles
         padding: 0 20px;
         font-size: 20px;
         text-align: center;
-        text-transform: capitalize;
         @include text-light();
     }
     .actions {
@@ -639,6 +638,7 @@ Profile page styles
             padding: 0 5px;
             width: auto;
             min-width: 100%;
+            min-height: 30px;
             &:hover {
                 border: 1px solid rgba(123, 123, 123, 0.8);
             }
@@ -706,5 +706,4 @@ Profile page styles
     color:#333;
     font-weight: 300;
     letter-spacing: 0.02em;
-    text-transform: capitalize;
 }

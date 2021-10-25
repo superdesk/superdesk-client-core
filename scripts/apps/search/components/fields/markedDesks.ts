@@ -1,16 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {MarkedDesksInfo} from '../index';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const markedDesks: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    return React.createElement(MarkedDesksInfo, angular.extend({
-        key: 'markedDesks',
-    }, props));
-};
+class MarkedDesksComponent extends React.Component<IPropsItemListInfo> {
+    render() {
+        const props = this.props;
 
-markedDesks['propTypes'] = {
-    // item is passed through to MarkedDesksInfo directly via props
-    // eslint-disable-next-line react/no-unused-prop-types
-    item: PropTypes.any,
-};
+        return React.createElement(MarkedDesksInfo, angular.extend({
+            key: 'markedDesks',
+        }, props));
+    }
+}
+
+export const markedDesks = MarkedDesksComponent;

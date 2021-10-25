@@ -23,12 +23,15 @@ import {AuthoringTopbarReact} from './authoring-topbar-react';
 import {CharacterCount} from './components/CharacterCount';
 import {CharacterCountConfigButton} from './components/CharacterCountConfigButton';
 import {AuthoringWorkspaceService} from './services';
+import {AuthoringMediaActions} from './authoring-media-actions';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
 import {FullPreviewDirective} from './directives/FullPreviewDirective';
 import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
+import {FullPreview} from '../preview/fullPreview';
+import {sdApi} from 'api';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -104,6 +107,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdWordCount', directive.WordCount)
     .directive('sdReadingTime', directive.ReadingTime)
     .directive('sdThemeSelect', directive.ThemeSelectDirective)
+    .component('sdAuthoringMediaActions', reactToAngular1(AuthoringMediaActions, ['article']))
     .directive('sdArticleEdit', directive.ArticleEditDirective)
     .directive('sdAuthoring', directive.AuthoringDirective)
     .directive('sdAuthoringTopbar', directive.AuthoringTopbarDirective)
@@ -118,6 +122,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdItemCarousel', directive.ItemCarouselDirective)
     .directive('sdFullPreview', FullPreviewDirective)
     .directive('sdFullPreviewItem', FullPreviewItemDirective)
+    .component('sdFullPreviewReact', reactToAngular1(FullPreview, ['item', 'editor', 'fields', 'hideMedia']))
     .directive('sdRemoveTags', directive.RemoveTagsDirective)
     .directive('tansaScopeSync', directive.TansaScopeSyncDirective)
     .directive('sdItemActionByIntent', directive.ItemActionsByIntentDirective)
@@ -142,7 +147,7 @@ angular.module('superdesk.apps.authoring', [
     .component('sdAuthoringCustomField',
         reactToAngular1(
             AuthoringCustomField,
-            ['item', 'field', 'editable', 'onChange'],
+            ['item', 'field', 'editable', 'onChange', 'template'],
         ),
     )
 
@@ -236,7 +241,9 @@ angular.module('superdesk.apps.authoring', [
                 additionalCondition: ['item', 'authoring', (item, authoring) => {
                     const mediaTypes = ['audio', 'picture', 'video'];
 
-                    return mediaTypes.includes(item.type) && authoring.itemActions(item).edit;
+                    return !sdApi.article.isLocked(item)
+                        && mediaTypes.includes(item.type)
+                        && authoring.itemActions(item).edit;
                 }],
             })
             .activity('move.item', {
@@ -317,11 +324,17 @@ angular.module('superdesk.apps.authoring', [
                 priority: 100,
                 icon: 'edit-line',
                 group: 'corrections',
-                controller: ['data', 'authoringWorkspace', function(
+                controller: ['data', 'authoringWorkspace', 'authoring', function(
                     data,
                     authoringWorkspace: AuthoringWorkspaceService,
+                    authoring,
                 ) {
-                    authoringWorkspace.correct(data.item);
+                    if (appConfig?.corrections_workflow
+                    && (data.item.state === 'published' || data.item.state === 'corrected')) {
+                        authoring.correction(data.item.archive_item);
+                    } else {
+                        authoringWorkspace.correct(data.item);
+                    }
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', function(authoring, item) {
@@ -380,29 +393,15 @@ angular.module('superdesk.apps.authoring', [
                 priority: 50,
                 icon: 'kill',
                 group: 'corrections',
-                controller: ['data', 'authoring',
-                    (data, authoring) => {
-                        return authoring.unpublish(data.item.archive_item);
+                controller: ['data', 'authoring', 'api',
+                    (data, authoring, api) => {
+                        return api.find('archive', data.item._id).then((updatedItem) => {
+                            return authoring.unpublish(updatedItem);
+                        });
                     },
                 ],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).unpublish],
-                privileges: {unpublish: 1},
-            })
-            .activity('edit.unpublished', {
-                label: gettext('Edit'),
-                priority: 100,
-                icon: 'edit-line',
-                group: 'corrections',
-                controller: ['data', 'authoringWorkspace', 'api',
-                    (data, authoringWorkspace: AuthoringWorkspaceService, api) => {
-                        api.update('archive', data.item.archive_item, {state: 'in_progress'})
-                            .then((updated) =>
-                                authoringWorkspace.edit(updated));
-                    },
-                ],
-                filters: [{action: 'list', type: 'archive'}],
-                additionalCondition: ['item', (item) => item.state === 'unpublished'],
                 privileges: {unpublish: 1},
             })
         ;

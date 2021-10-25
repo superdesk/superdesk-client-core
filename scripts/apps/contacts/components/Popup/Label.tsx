@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
 const Label: React.StatelessComponent<any> = ({text, children, centerText}) => (
-    <span className={classNames(
-        'popup__menu-label',
-        {'popup__menu-label--center': centerText},
-    )}>
+    <span
+        className={classNames(
+            'popup__menu-label',
+            {'popup__menu-label--center': centerText},
+        )}
+    >
         {text}
         {children}
     </span>

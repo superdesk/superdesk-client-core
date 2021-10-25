@@ -8,10 +8,19 @@ import {gettext} from 'core/utils';
 interface IProps<T> {
     items: {[key: string]: T};
     value?: string;
+
+    /**
+     * Required in order to render selected item.
+     * This is a lazy component and the object for value
+     * might not always be present in `items`.
+     */
+    valueObject: T;
+
     placeholder?: JSX.Element;
     disabled?: boolean;
     required?: boolean;
     loading?: boolean;
+    horizontalSpacing?: boolean;
     renderItem(item: T): JSX.Element;
     getItemValue(item: T): string;
     onSelect(value: string): void;
@@ -31,7 +40,8 @@ interface IState {
 
 const arrowDownStyles = {
     display: 'inline-block',
-    marginLeft: 10,
+    marginLeft: 8,
+    marginRight: 8,
     width: 0,
     height: 0,
     verticalAlign: 'middle',
@@ -52,7 +62,7 @@ const menuStyleDefault: React.CSSProperties = {
     overflow: 'auto',
 };
 
-const menuStyle = {
+const menuStyle: React.CSSProperties = {
     ...menuStyleDefault,
     zIndex: 3, // without z-index, items that have opacity set, appear on top of the menu
 };
@@ -128,9 +138,12 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
 
     render() {
         return (
-            <div ref={(el) => {
-                this.wrapper = el;
-            }}>
+            <div
+                ref={(el) => {
+                    this.wrapper = el;
+                }}
+                style={{width: '100%'}}
+            >
                 <Autocomplete.default
                     open={this.state.isOpen}
                     onMenuVisibilityChange={(isOpen) => {
@@ -162,7 +175,7 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                     items={Object.values(this.props.items)}
                     wrapperStyle={{width: '100%'}}
                     wrapperProps={{'data-test-id': this.props['data-test-id']} as any}
-                    renderMenu={ /* remove `any` when @types/react is fixed */
+                    renderMenu={/* remove `any` when @types/react is fixed */
                         (items, value, style: React.CSSProperties | any) => {
                         const hideOptions =
                             this.state.justInitialized
@@ -184,7 +197,16 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                         );
                     }}
                     renderInput={(propsAutocomplete: any) => {
-                        const selectedItem = this.props.items[this.props.value];
+                        let selectedItem = this.props.items[this.props.value];
+
+                        // use valueObject when an object for selected `value` is not present in `this.props.items`
+                        if (
+                            selectedItem == null
+                            && this.props.valueObject != null
+                            && this.props.value === this.props.getItemValue(this.props.valueObject)
+                        ) {
+                            selectedItem = this.props.valueObject;
+                        }
 
                         if (propsAutocomplete['aria-expanded'] === true) {
                             return (
@@ -239,17 +261,34 @@ export class Select2<T> extends React.Component<IProps<T>, IState> {
                                         {
                                             this.props.value === undefined || selectedItem == null
                                                 ? (
-                                                    <div style={{marginLeft: -8}}>
+                                                    <div
+                                                        style={
+                                                            this.props.horizontalSpacing === true
+                                                                ? {}
+                                                                : {marginLeft: -8}
+                                                        }
+                                                    >
                                                         {this.props.placeholder}
                                                     </div>
                                                 )
                                                 : (
-                                                    <div style={{marginLeft: -8}}>
+                                                    <div
+                                                        style={
+                                                            this.props.horizontalSpacing === true
+                                                                ? {}
+                                                                : {marginLeft: -8}
+                                                        }
+                                                    >
                                                         {this.props.renderItem(selectedItem)}
                                                     </div>
                                                 )
                                         }
-                                        <div style={arrowDownStyles} />
+                                        <div
+                                            style={{
+                                                ...arrowDownStyles,
+                                                ...(this.props.horizontalSpacing === true ? {} : {marginRight: 0}),
+                                            }}
+                                        />
                                     </button>
                                 </div>
 

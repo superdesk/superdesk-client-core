@@ -2,12 +2,64 @@ import {limits} from 'apps/desks/constants';
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {arrayMove} from 'core/helpers/utils';
 
 DeskeditStages.$inject = ['api', 'WizardHandler', 'tasks', 'desks', 'notify', 'macros'];
 export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros) {
     return {
-        link: function(scope) {
+        link: function(scope, elem) {
             var orig = null;
+
+            elem.find('.stages-list').sortable({
+                cursor: 'move',
+                start: function(event, ui) {
+                    ui.item.data('start', ui.item.index());
+                },
+                stop: function(event, ui) {
+                    const startIndex = ui.item.data('start') - 1;
+                    const endIndex = ui.item.index() - 1;
+
+                    const stagesBeforeReordering = [...scope.stages];
+
+                    /**
+                     * Timeout is added in order to wait for jQuery UI to finish with DOM operations
+                     * so it doesn't interfere with angular rendering.
+                     */
+                    setTimeout(() => {
+                        scope.stages = arrayMove(scope.stages, startIndex, endIndex);
+                        scope.$apply();
+
+                        httpRequestJsonLocal({
+                            method: 'POST',
+                            path: '/stages_order',
+                            payload: {
+                                desk: scope.desk.edit._id,
+                                stages: scope.stages.map(({_id}) => _id),
+                            },
+                        }).catch(() => {
+                            scope.stages = stagesBeforeReordering;
+                            scope.$apply();
+                        });
+                    });
+
+                    /**
+                     * Returning false to tell jQuery UI not to apply sorting result to DOM.
+                     * This is done in order to maintain a single source of truth which is `scope.stages` array.
+                     */
+                    return false;
+                },
+            });
+
+            // update stages if re-ordered by other user
+            scope.$on('resource:updated', (event, data) => {
+                if (data.resource === 'stages' && data.fields?.['desk_order'] === 1) {
+                    desks.fetchDeskStages(scope.desk.edit._id, true).then((stages) => {
+                        scope.stages = stages;
+                        scope.$applyAsync();
+                    });
+                }
+            });
 
             scope.limits = limits;
             scope.saving = false;
@@ -123,7 +175,7 @@ export function DeskeditStages(api, WizardHandler, tasks, desks, notify, macros)
                         return desks.fetchDeskById(item.desk);
                     })
                     .then((desk) => {
-                        scope.desk.edit = desk;
+                        scope.desk.edit = scope.desk.orig = desk;
                         scope.getstages();
                     }, errorMessage)
                     .finally(() => {

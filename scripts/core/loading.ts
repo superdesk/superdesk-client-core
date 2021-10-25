@@ -1,3 +1,15 @@
+import {values} from 'lodash';
+import {addInternalEventListener} from './internal-events';
+
+function waitForExtensionsToLoad(): Promise<void> {
+    return new Promise((resolve) => {
+        const removeListener = addInternalEventListener('extensionsHaveLoaded', () => {
+            removeListener();
+            resolve();
+        });
+    });
+}
+
 angular.module('superdesk.core.loading', [])
     // prevent routing before there is auth token
     .run(['$rootScope', '$route', '$location', '$http', 'session', 'preferencesService',
@@ -6,8 +18,14 @@ angular.module('superdesk.core.loading', [])
 
             $rootScope.loading = true;
 
-            // fetch preferences on load
-            preferencesService.get().then(() => {
+            Promise.all([
+                preferencesService.get(), // fetch preferences on load
+
+                // wait for extensions so menu is only rendered after all extensions
+                // have registered their custom pages.
+                waitForExtensionsToLoad(),
+
+            ]).then(() => {
                 stopListener();
                 $http.defaults.headers.common.Authorization = session.token;
                 $rootScope.loading = false;
@@ -30,7 +48,7 @@ angular.module('superdesk.core.loading', [])
          * @param {string} url
          */
             function requiresLogin(url) {
-                var routes = _.values($route.routes);
+                var routes = values($route.routes);
 
                 for (var i = routes.length - 1; i >= 0; i--) {
                     if (routes[i].regexp.test(url)) {

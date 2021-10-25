@@ -830,7 +830,7 @@ angular.module('superdesk.apps.editor2', [
         }])
     .directive('sdTextEditor', ['$timeout', function($timeout) {
         return {
-            scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?'},
+            scope: {type: '=', config: '=', editorformat: '=', language: '=', associations: '=?', readOnly: '=?'},
             require: ['sdTextEditor', 'ngModel'],
             templateUrl: 'scripts/core/editor2/views/editor.html',
             controllerAs: 'vm',
@@ -1089,7 +1089,7 @@ angular.module('superdesk.apps.editor2', [
             }
 
             return {
-                scope: {type: '=', config: '=', language: '=', sdTextEditorBlockText: '='},
+                scope: {type: '=', config: '=', language: '=', sdTextEditorBlockText: '=', readOnly: '=?'},
                 require: ['ngModel', '^sdTextEditor', 'sdTextEditorBlockText'],
                 templateUrl: 'scripts/core/editor2/views/block-text.html',
                 link: function(scope, elem, attrs, controllers) {
@@ -1112,7 +1112,11 @@ angular.module('superdesk.apps.editor2', [
                     ngModel.$viewChangeListeners.push(changeListener);
                     ngModel.$render = function() {
                         editor.registerScope(scope);
-                        var editorConfig = angular.merge({}, EDITOR_CONFIG, scope.config || {});
+                        var editorConfig = angular.merge(
+                            {},
+                            EDITOR_CONFIG, scope.config || {},
+                            {disableEditing: scope.readOnly},
+                        );
 
                         if (editorConfig.toolbar) {
                             editorConfig.toolbar.buttons = [];
@@ -1407,8 +1411,8 @@ angular.module('superdesk.apps.editor2', [
                         scope.node.parentNode.classList.remove(TYPING_CLASS);
                     }
                 },
-                controller: ['$scope', 'api', 'superdesk', 'renditions',
-                    function(scope, api, superdesk, renditions) {
+                controller: ['$scope', 'api', 'superdesk', 'renditions', 'send',
+                    function(scope, api, superdesk, renditions, send) {
                         var self = this;
 
                         angular.extend(self, {
@@ -1448,48 +1452,53 @@ angular.module('superdesk.apps.editor2', [
                                 editor.commitScope(scope);
                             },
                             insertMedia: function(media) {
-                                var mediaType = {
-                                    picture: 'Image',
-                                    graphic: 'Image',
-                                    video: 'Video',
-                                };
-                                var imageBlock = {
-                                    blockType: 'embed',
-                                    embedType: mediaType[media.type],
-                                    caption: media.description_text,
-                                    loading: true,
-                                    association: media,
-                                };
+                                const validItems = send.getValidItems([media]);
 
-                                self.sdEditorCtrl.splitAndInsert(self, imageBlock).then((block) => {
-                                    // load the media and update the block
-                                    $q.when((function() {
-                                        if (
-                                            appConfig.features != null
-                                            && appConfig.features.editFeaturedImage != null
-                                            && !appConfig.features.editFeaturedImage
-                                            && media._type === 'externalsource'
-                                        ) {
-                                            return media;
-                                        }
-                                        return renditions.ingest(media);
-                                    })()).then((mediaObject) => {
-                                        editor.generateMediaTag(mediaObject).then((imgTag) => {
-                                            angular.extend(block, {
-                                                body: imgTag,
-                                                association: mediaObject,
-                                                loading: false,
+                                if (validItems.length > 0) {
+                                    var mediaType = {
+                                        picture: 'Image',
+                                        graphic: 'Image',
+                                        video: 'Video',
+                                    };
+                                    var imageBlock = {
+                                        blockType: 'embed',
+                                        embedType: mediaType[media.type],
+                                        caption: media.description_text,
+                                        loading: true,
+                                        association: media,
+                                    };
+
+                                    self.sdEditorCtrl.splitAndInsert(self, imageBlock).then((block) => {
+                                        // load the media and update the block
+                                        $q.when((function() {
+                                            if (
+                                                appConfig.features != null
+                                                && appConfig.features.editFeaturedImage != null
+                                                && !appConfig.features.editFeaturedImage
+                                                && media._type === 'externalsource'
+                                            ) {
+                                                return media;
+                                            }
+                                            return renditions.ingest(media);
+                                        })()).then((mediaObject) => {
+                                            editor.generateMediaTag(mediaObject).then((imgTag) => {
+                                                angular.extend(block, {
+                                                    body: imgTag,
+                                                    association: mediaObject,
+                                                    loading: false,
+                                                });
+                                                $timeout(self.sdEditorCtrl.commitChanges);
                                             });
-                                            $timeout(self.sdEditorCtrl.commitChanges);
                                         });
                                     });
-                                });
+                                }
                             },
                         });
                     }],
             };
         }])
     .run(['embedService', 'iframelyService', function(embedService, iframelyService) {
+        // eslint-disable-next-line no-useless-escape
         var playBuzzPattern = 'https?:\/\/(?:www)\.playbuzz\.com(.*)$';
         var playBuzzlLoader = '//snappa.embed.pressassociation.io/playbuzz.js';
         var playBuzzEmbed = [

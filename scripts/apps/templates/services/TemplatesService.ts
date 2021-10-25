@@ -48,6 +48,7 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         'company_codes',
         'extra',
         'authors',
+        'fields_meta',
     ];
 
     /**
@@ -76,8 +77,6 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
      */
     this.fetchAllTemplates = function(page, pageSize, type, templateName) {
         var params: any = {
-            page: page || 1,
-            max_results: pageSize || PAGE_SIZE,
             sort: 'template_name',
             manage: true,
         };
@@ -107,7 +106,6 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
     this.fetchTemplatesByDesk = function(desk) {
         let params: any = {
             sort: 'template_name',
-            max_results: 200,
         };
 
         let criteria = {template_type: CREATE_TYPE};
@@ -127,8 +125,6 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
 
     this.fetchTemplatesByUserDesk = function(user, desk, page, pageSize, type, templateName) {
         var params: any = {
-            page: page || 1,
-            max_results: pageSize || PAGE_SIZE,
             sort: 'template_name',
         };
 
@@ -172,8 +168,6 @@ export function TemplatesService(api, session, $q, preferencesService, privilege
         }
 
         var params = {
-            max_results: PAGE_SIZE,
-            page: 1,
             where: JSON.stringify({_id: {$in: templateIds}}),
         };
 

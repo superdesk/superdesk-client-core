@@ -14,6 +14,7 @@ import * as ctrl from './controllers';
 import * as directive from './directives';
 import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
+import {MonitoringHighlightsController} from './controllers/MonitoringHighlightsController';
 
 /**
  * @ngdoc module
@@ -32,14 +33,12 @@ export default angular.module('superdesk.apps.highlights', [
 ])
     .service('highlightsService', HighlightsService)
 
-    .directive('sdCreateHighlightsButton', directive.CreateHighlightsButton)
     .directive('sdMarkHighlightsDropdown', directive.MarkHighlightsDropdown)
     .directive('sdPackageHighlightsDropdown', directive.PackageHighlightsDropdown)
     .directive('sdHighlightsInfo', directive.HighlightsInfo)
     .directive('sdSearchHighlights', directive.SearchHighlights)
     .directive('sdHighlightsConfig', () => ({controller: ctrl.HighlightsConfig}))
     .directive('sdHighlightsConfigModal', directive.HighlightsConfigModal)
-    .directive('sdHighlightLabel', directive.HighlightsLabel)
 
     .config(['superdeskProvider', 'workspaceMenuProvider', (superdesk, workspaceMenuProvider) => {
         superdesk
@@ -69,11 +68,13 @@ export default angular.module('superdesk.apps.highlights', [
             })
             .activity('/workspace/highlights', {
                 label: gettext('Highlights View'),
+                controller: MonitoringHighlightsController,
                 priority: 100,
                 templateUrl: 'scripts/apps/monitoring/views/highlights-view.html',
                 topTemplateUrl: 'scripts/apps/dashboard/views/workspace-topnav.html',
                 sideTemplateUrl: 'scripts/apps/workspace/views/workspace-sidenav.html',
                 privileges: {highlights_read: 1},
+                reloadOnSearch: false,
             });
 
         workspaceMenuProvider.item({

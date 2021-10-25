@@ -5,6 +5,8 @@ import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {dataApi} from 'core/helpers/CrudManager';
 import {IArticle, IContentProfileEditorConfig, IArticleField} from 'superdesk-api';
+import {IPackagesService} from 'types/Services/Packages';
+import {isMediaType} from 'core/helpers/item';
 
 /**
  * @ngdoc service
@@ -40,9 +42,10 @@ ContentService.$inject = [
     'session',
     'send',
     'renditions',
+    'modal',
 ];
-export function ContentService(api, templates, desks, packages, archiveService, notify,
-    $filter, $q, $rootScope, session, send, renditions) {
+export function ContentService(api, templates, desks, packages: IPackagesService, archiveService, notify,
+    $filter, $q, $rootScope, session, send, renditions, modal) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -244,7 +247,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
      */
     this.editor = function(profile, contentType) {
         const editor = get(profile, 'editor',
-            get(appConfig.editor, contentType, constant.DEFAULT_EDITOR));
+            get(appConfig.editor, contentType, constant.GET_DEFAULT_EDITOR()));
 
         return angular.extend({}, editor);
     };
@@ -283,7 +286,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
     };
 
     this.contentProfileSchema = angular.extend({}, constant.DEFAULT_SCHEMA, constant.EXTRA_SCHEMA_FIELDS);
-    this.contentProfileEditor = angular.extend({}, constant.DEFAULT_EDITOR, constant.EXTRA_EDITOR_FIELDS);
+    this.contentProfileEditor = angular.extend({}, constant.GET_DEFAULT_EDITOR(), constant.EXTRA_EDITOR_FIELDS);
 
     $rootScope.$on('vocabularies:updated', resetFields);
 
@@ -346,7 +349,7 @@ export function ContentService(api, templates, desks, packages, archiveService, 
     this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
         if (item._type !== 'externalsource') {
             if (item._type === 'ingest') {
-                return send.one(item);
+                return send.validateAndSend(item);
             }
 
             if (item.archive_item != null) {
@@ -357,7 +360,6 @@ export function ContentService(api, templates, desks, packages, archiveService, 
         } else if (isMediaEditable(item) && fetchExternal) {
             return renditions.ingest(item);
         }
-
         return $q.when(item);
     };
 
@@ -376,6 +378,16 @@ export function ContentService(api, templates, desks, packages, archiveService, 
             return this.getCustomFields().then(() => {
                 scope.schema = this.schema(null, get(item, 'type', 'text'));
                 scope.editor = this.editor(null, get(item, 'type', 'text'));
+
+                // sign_off field used to always be hidden for media items in authoring, but was visible in preview
+                // to fix the inconsistency, I am making it read only so it's displayed in both places,
+                // but not editable, to keep it similar to past behaviour.
+                // In the future when we drop support for default profiles, this setting should be applied to
+                // customer configurations and removed from here.
+                if (isMediaType(item) && scope.schema.sign_off != null) {
+                    scope.schema.sign_off.readonly = true;
+                }
+
                 scope.fields = this.fields({editor: scope.editor});
             });
         }

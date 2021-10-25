@@ -1,8 +1,24 @@
+<!--
+
+
+
+    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+    !!! IMPORTANT:
+
+    If you add a new field here in authoring,
+    do not forget to also map it to field types
+    for preview in preview/getAuthoringField.ts
+    * * * * * * * * * * * * * * * * * * * * * * * * * * *
+
+
+
+-->
+
 <div class="authoring-header" ng-class="{active: !isCollapsed}">
     <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
         <div class="authoring-header__general-info">
             <div>
-                <i class="filetype-icon-{{ :: item.type}}" title="{{'Article Type'| translate }}: {{ item.type}}"></i>
+                <i class="filetype-icon-{{ :: item.type}}" title="{{getArticleTypeLabel(item)}}"></i>
             </div>
             <div ng-if="item.profile && !change_profile">
                 <span class="authoring-header__label" translate>PROFILE</span>
@@ -76,8 +92,9 @@
                  data-required="schema.slugline.required"
                  ng-if="schema.slugline && editor['slugline'].section !== 'content'"
                  sd-width="{{editor.slugline.sdWidth}}"
+                 ng-attr-title="{{schema.slugline.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.slugline.order}}">
-                <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('slugline')}}</label>
+                <label for="slugline" class="authoring-header__item-label uppercase">{{getLabelForFieldId('slugline')}}</label>
                 <div class="authoring-header__input-holder"
                     sd-static-autocomplete
                     data-field="slugline"
@@ -88,12 +105,11 @@
                     <input type="text"
                         tansa-scope-sync
                         tabindex="{{editor.slugline.order}}"
-                        class="line-input slugline"
+                        class="boxed-input slugline"
                         id="slugline"
                         ng-model="item.slugline"
-                        ng-model-options="{debounce: 500}"
                         ng-change="autosave(item)"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.slugline.readonly === true"
                         ng-trim="false"
                         tabindex="{{editor.slugline.order}}"
                         data-test-id="field-slugline"
@@ -113,18 +129,20 @@
                  data-required="schema.keywords.required"
                  ng-if="schema.keywords"
                  sd-width="{{editor.keywords.sdWidth}}"
+                 ng-attr-title="{{schema.keywords.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.keywords.order}}">
-                <label class="authoring-header__item-label">{{getLabelForFieldId('keywords')}}</label>
+                <label class="authoring-header__item-label" for="a11y-keywords">{{getLabelForFieldId('keywords')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-words-list
-                        class="data terms-box"
+                        class="data terms-box boxed-input"
+                        id="a11y-keywords"
                         data-item="item"
                         data-field="keywords"
                         data-change="autosave(item)"
                         data-header="_editable"
                         data-list="metadata.keywords"
-                        data-disabled="!_editable"
-                        data-style="line-input"
+                        data-disabled="!_editable || schema.keywords.readonly === true"
+                        data-style="boxed-input"
                         tabindex="{{editor.keywords.order}}">
                     </div>
                     <div class="authoring-header__hint" ng-if="helper_text.keywords">{{helper_text.keywords}}</div>
@@ -136,16 +154,18 @@
                  data-required="schema.genre.required"
                  ng-if="schema.genre && editor.genre && !genreInCvs"
                  sd-width="{{editor.genre.sdWidth}}"
+                 ng-attr-title="{{schema.genre.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.genre.order}}">
-                <label class="authoring-header__item-label">{{getLabelForFieldId('genre')}}</label>
+                <label class="authoring-header__item-label" for="a11y-genre">{{getLabelForFieldId('genre')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
-                         class="data"
+                         class="boxed-input data"
+                         id="a11y-genre"
                          data-tabindex="editor.genre.order"
                          data-item="item"
                          data-field="genre"
                          data-list="metadata.genre"
-                         ng-disabled="!_editable || item.broadcast.master_id"
+                         ng-disabled="!_editable || item.broadcast.master_id || schema.genre.readonly === true"
                          data-change="autosave(item)"
                          tabindex="{{editor.genre.order}}">
                     </div>
@@ -158,16 +178,17 @@
                  data-required="schema.anpa_take_key.required"
                  ng-if="schema.anpa_take_key"
                  sd-width="{{editor.anpa_take_key.sdWidth}}"
+                 ng-attr-title="{{schema.anpa_take_key.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.anpa_take_key.order}}">
-                <label class="authoring-header__item-label">{{getLabelForFieldId('anpa_take_key')}}</label>
+                <label class="authoring-header__item-label" class="anpa_take_key">{{getLabelForFieldId('anpa_take_key')}}</label>
                 <div class="authoring-header__input-holder">
                     <input type="text"
                            tabindex="{{editor.anpa_take_key.order}}"
-                           class="line-input"
+                           class="boxed-input"
                            id="anpa_take_key"
                            ng-model="item.anpa_take_key"
                            ng-change="autosave(item)"
-                           ng-disabled="!_editable"
+                           ng-disabled="!_editable || schema.anpa_take_key.readonly === true"
                            ng-trim="false"
                            tabindex="{{editor.anpa_take_key.order}}">
                 </div>
@@ -178,39 +199,43 @@
                  data-required="schema.place.required"
                  ng-if="metadata.locators && schema.place && editor.place && !placeInCvs"
                  sd-width="{{editor.place.sdWidth}}"
+                 ng-attr-title="{{schema.place.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.place.order}}">
-                <label class="authoring-header__item-label">{{getLabelForFieldId('place')}}</label>
+                <label class="authoring-header__item-label" for="a11y-place">{{getLabelForFieldId('place')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms ng-if="!features.places_autocomplete && !single_value.locators"
-                         class="data"
+                         class="boxed-input data"
+                         id="a11y-place"
                          data-tabindex="editor.place.order"
                          data-item="item"
                          data-field="place"
                          data-unique="qcode"
                          data-header="true"
                          data-list="metadata.locators"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.place.readonly === true"
                          data-change="autosave(item)">
                     </div>
 
                     <div sd-meta-dropdown ng-if="!features.places_autocomplete && single_value.locators"
-                         class="data"
+                         class="boxed-input data"
+                         id="a11y-place"
                          data-tabindex="editor.place.order"
                          data-item="item"
                          data-field="place"
                          data-unique="qcode"
                          data-list="metadata.locators"
                          data-group="region"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.place.readonly === true"
                          data-change="autosave(item)">
                     </div>
 
                     <div sd-meta-place ng-if="features.places_autocomplete"
-                        class="data"
+                        class="boxed-input data"
+                        id="a11y-place"
                         data-tabindex="editor.place.order"
                         data-item="item"
                         data-field="place"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.place.readonly === true"
                         data-change="autosave(item)">
                     </div>
 
@@ -223,18 +248,20 @@
                  data-required="schema.language.required"
                  ng-if="metadata.languages && schema.language && editor.language"
                  sd-width="{{editor.language.sdWidth}}"
+                 ng-attr-title="{{schema.language.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.language.order}}">
 
-                <label class="authoring-header__item-label">{{getLabelForFieldId('language')}}</label>
+                <label class="authoring-header__item-label" for="a11y-language">{{getLabelForFieldId('language')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
-                         class="data"
+                         class="boxed-input data"
+                         id="a11y-language"
                          data-tabindex="editor.language.order"
                          data-item="item"
                          data-field="language"
                          data-key="qcode"
                          data-list="metadata.languages"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.language.readonly === true"
                          data-change="autosave(item)"
                          tabindex="{{editor.language.order}}">
                     </div>
@@ -246,17 +273,20 @@
                  data-required="schema.priority.required"
                  ng-if="schema.priority"
                  sd-width="{{editor.priority.sdWidth}}"
+                 ng-attr-title="{{schema.priority.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.priority.order}}">
-                <label class="authoring-header__item-label">{{getLabelForFieldId('priority')}}</label>
+                <label class="authoring-header__item-label" for="a11y-priority">{{getLabelForFieldId('priority')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
+                        class="boxed-input"
                          data-item="item"
+                         id="a11y-priority"
                          data-tabindex="editor.priority.order"
                          data-field="priority"
                          data-list="metadata.priority"
                          data-icon="priority-label priority-label-"
                          data-label="Priority"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.priority.readonly === true"
                          data-key="qcode"
                          data-change="autosave(item)"
                          tabindex="{{editor.priority.order}}">
@@ -269,17 +299,20 @@
                  data-required="schema.urgency.required"
                  ng-if="schema.urgency && shouldDisplayUrgency()"
                  sd-width="{{editor.urgency.sdWidth}}"
+                 ng-attr-title="{{schema.urgency.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.urgency.order}}">
-                <label class="authoring-header__item-label">{{getLabelForFieldId('urgency')}}</label>
+                <label class="authoring-header__item-label" for="a11y-urgency">{{getLabelForFieldId('urgency')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-dropdown
+                         class="boxed-input"
                          data-item="item"
+                         id="a11y-urgency"
                          data-tabindex="editor.urgency.order"
                          data-field="urgency"
                          data-list="metadata.urgency"
                          data-icon="urgency-label urgency-label-"
                          data-label= "{{ :: 'Urgency' | translate }}"
-                         ng-disabled="!_editable"
+                         ng-disabled="!_editable || schema.urgency.readonly === true"
                          data-key="qcode"
                          data-change="autosave(item)"
                          tabindex="{{editor.urgency.order}}">
@@ -291,26 +324,46 @@
             <div class="authoring-header__item" id="category-setting"
                  sd-validation-error="error.anpa_category"
                  data-required="schema.anpa_category.required"
-                 ng-if="metadata.categories && schema.anpa_category"
+                 ng-if="metadata.categories && schema.anpa_category && categoriesVocabulary != null"
                  sd-width="{{editor.anpa_category.sdWidth}}"
+                 ng-attr-title="{{schema.anpa_category.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.anpa_category.order}}">
-                <label class="authoring-header__item-label uppercase">{{getLabelForFieldId('anpa_category')}}</label>
+                <label class="authoring-header__item-label uppercase" for="anpa_category">{{getLabelForFieldId('anpa_category')}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
-                        class="data"
+                        ng-if="categoriesVocabulary.selection_type === 'multi selection'"
+                        class="data boxed-input"
+                        id="anpa_category"
                         data-tabindex="editor.anpa_category.order"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.anpa_category.readonly === true"
                         data-item="item"
                         data-field="anpa_category"
                         data-unique="qcode"
                         data-list="availableCategories"
                         data-header="true"
                         data-change="autosave(item)"
-                        data-reload-list="false"
-                        data-cv="{popup_width: popup_width.categories}"
+                        data-reload-list="true"
+                        data-cv="categoriesVocabulary"
                         data-set-language="true"
                         tabindex="{{editor.anpa_category.order}}">
                     </div>
+
+                    <div sd-meta-dropdown
+                        ng-if="categoriesVocabulary.selection_type !== 'multi selection'"
+                        data-tabindex="editor.anpa_category.order"
+                        data-item="item"
+                        data-field="anpa_category"
+                        data-list="availableCategories"
+                        data-cv="categoriesVocabulary"
+                        ng-disabled="!_editable || schema.anpa_category.readonly === true"
+                        data-header="true"
+                        data-change="autosave(item)"
+                        tabindex="{{editor.anpa_category.order}}"
+                        data-key="qcode"
+                        class="boxed-input"
+                        >
+                   </div>
+
                     <div class="authoring-header__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
                 </div>
             </div>
@@ -320,18 +373,20 @@
                  data-required="schema.subject.required"
                  ng-if="metadata.subjectcodes && schema.subject && editor.subject"
                  sd-width="{{editor.subject.sdWidth}}"
+                 ng-attr-title="{{schema.subject.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.subject.order}}">
-                <label class="authoring-header__item-label">{{getLabelForFieldId('subject')}}</label>
+                <label class="authoring-header__item-label" for="a11y-subject">{{getLabelForFieldId('subject')}}</label>
                 <div class="authoring-header__input-holder">
                     <div id="subjects"
                         sd-meta-terms
-                        class="data"
+                        class="data boxed-input"
+                        id="a11y-subject"
                         data-tabindex="editor.subject.order"
                         data-item="item"
                         data-field="subject"
                         data-unique="qcode"
                         data-list="metadata.subjectcodes"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.subject.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
@@ -345,21 +400,22 @@
                  sd-validation-error="error[cv.display_name.toLowerCase()]"
                  data-required="editor[cv._id].required"
                  sd-width="{{editor[cv._id].sdWidth}}"
+                 ng-attr-title="{{editor[cv._id].readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor[cv._id].order}}">
                 <label class="authoring-header__item-label">
                     <span>{{ cv.display_name | translate }}</span>
                 </label>
                 <div class="authoring-header__input-holder">
                     <div sd-meta-terms
-                        ng-if="cv.selection_type === 'multi selection'"
-                        class="data"
+                        ng-if="cv.selection_type === 'multi selection' || showDropdownAsMultiTerms.includes(cv._id)"
+                        class="data boxed-input"
                         data-tabindex="editor[cv._id].order"
                         data-item="item"
                         data-field="{{cv.schema_field || 'subject'}}"
                         data-unique="qcode"
                         data-list="cv.terms"
                         data-cv="cv"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || editor[cv._id].readonly === true || cv.read_only"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
@@ -368,17 +424,18 @@
                         tabindex="{{editor[cv._id].order}}">
                    </div>
                    <div sd-meta-dropdown
-                        ng-if="cv.selection_type !== 'multi selection'"
+                        ng-if="cv.selection_type !== 'multi selection' && !showDropdownAsMultiTerms.includes(cv._id)"
                         data-tabindex="editor[cv._id].order"
                         data-item="item"
                         data-field="{{cv.schema_field || 'subject'}}"
                         data-list="cv.terms"
                         data-cv="cv"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || editor[cv._id].readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         tabindex="{{editor[cv._id].order}}"
                         data-key="qcode"
+                        class="boxed-input"
                         >
                    </div>
                    <div class="authoring-header__hint" ng-if="helper_text[cv._id]">{{helper_text[cv._id]}}</div>
@@ -392,6 +449,7 @@
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
                 data-required="schema[field._id].required"
                 order="{{ editor[field._id].order }}"
+                ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
                 sd-validation-error="error[field._id.toLowerCase()]">
 
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
@@ -407,16 +465,33 @@
                         data-single-line="field.field_options.single"
                         data-value="item.extra[field._id]"
                         data-bind-to-value="compareView"
-                        data-scroll-container=".page-content-container"
+                        data-scroll-container=".page-content-container--scrollable"
                         data-language="item.language"
                         data-on-change="autosave(item)"
-                        data-read-only="!_editable"
+                        data-read-only="!_editable || schema[field._id].readonly === true"
                         data-editor-format="editor[field._id].formatOptions"
                         data-item="item"
                         data-refresh-trigger="refreshTrigger"
                         data-tabindex="editor[field._id].order">
                     </div>
-                    <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+
+                    <div style="display: flex; align-content: center; justify-content: space-between;">
+                        <div>
+                            <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
+                        </div>
+
+                        <div>
+                            <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
+                                <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
+                            </span>
+                            <sd-validate-characters
+                                ng-if="schema[field._id].validate_characters"
+                                item="item.extra[field._id]"
+                                field="field.display_name"
+                                class="disallowed-char-error"
+                            ></sd-validate-characters>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -427,11 +502,12 @@
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
                 data-required="schema[field._id].required"
                 order="{{ editor[field._id].order }}"
+                ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
                 sd-validation-error="error[field._id.toLowerCase()]">
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <div class="authoring-header__input-holder">
                     <div sd-datepicker
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema[field._id].readonly === true"
                         data-tabindex="editor[field._id].order"
                         ng-model="item.extra[field._id]"
                         data-format="YYYY-MM-DDT00:00:00+0000"
@@ -449,6 +525,7 @@
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
                 data-required="schema[field._id].required"
                 order="{{ editor[field._id].order }}"
+                ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
                 sd-validation-error="error[field._id.toLowerCase()]">
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <div class="authoring-header__input-holder">
@@ -457,7 +534,8 @@
                         item="item"
                         field="field"
                         on-change="setCustomValue"
-                        editable="_editable"
+                        editable="_editable && schema[field._id].readonly !== true"
+                        template="template"
                     ></sd-authoring-custom-field>
                 </div>
             </div>
@@ -467,6 +545,7 @@
                  data-required="schema.company_codes.required"
                  ng-if="displayCompanyCodes && schema.company_codes"
                  sd-width="{{editor.company_codes.sdWidth}}"
+                 ng-attr-title="{{schema.company_codes.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.company_codes.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('company_codes')}}</label>
                 <div class="authoring-header__input-holder">
@@ -477,7 +556,7 @@
                         data-field="company_codes"
                         data-unique="qcode"
                         data-list="availableCompanyCodes"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.company_codes.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="false"
@@ -492,15 +571,16 @@
                  data-required="schema.ednote.required"
                  ng-if="schema.ednote"
                  sd-width="{{editor.ednote.sdWidth}}"
+                 ng-attr-title="{{schema.ednote.readonly === true ? readOnlyLabel : ''}}"
                  order="{{editor.ednote.order}}">
                 <label class="authoring-header__item-label">{{getLabelForFieldId('ednote')}}</label>
                 <div class="authoring-header__input-holder">
-                    <textarea id="ednote" class="line-input ed-note"
+                    <textarea id="ednote" class="boxed-input ed-note"
                               sd-auto-height
                               tansa-scope-sync
                               tabindex="{{editor.ednote.order}}"
                               ng-model="item.ednote"
-                              ng-disabled="!_editable"
+                              ng-disabled="!_editable || schema.ednote.readonly === true"
                               ng-change="autosave(item)"
                               tabindex="{{editor.ednote.order}}"
                               data-test-id="field-editors-note"
@@ -516,19 +596,20 @@
                  sd-width="{{editor.authors.sdWidth}}"
                  order="{{editor.authors.order}}"
                  ng-controller="PopulateAuthorsController"
+                 ng-attr-title="{{schema.authors.readonly === true ? readOnlyLabel : ''}}"
             >
             <label class="authoring-header__item-label">{{getLabelForFieldId('authors')}}</label>
                 <div class="authoring-header__input-holder">
                     <div id="authors"
                         sd-meta-terms
-                        class="data"
+                        class="data boxed-input"
                         data-tabindex="editor.authors.order"
                         data-item="item"
                         data-field="authors"
                         data-unique="_id"
                         data-list="metadata.authors"
                         data-label= "{{ :: 'Add author' | translate }}"
-                        ng-disabled="!_editable"
+                        ng-disabled="!_editable || schema.authors.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
@@ -539,5 +620,5 @@
             </div>
         </div>
     </div>
-        <button class="authoring-header__toggle" ng-class="{active: !isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
+        <button class="authoring-header__toggle" ng-class="{active: isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
 </div>

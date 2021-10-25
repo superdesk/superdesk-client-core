@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 import {MediaBlockComponent as MediaBlock} from '../media/MediaBlock';
 import {imageBlockAndContent} from './utils';
-import Textarea from 'react-textarea-autosize';
+import {PlainTextEditor} from 'core/ui/components';
 
 describe('editor3.components.media-block', () => {
     it('should render', () => {
@@ -13,11 +13,13 @@ describe('editor3.components.media-block', () => {
                 changeCaption={() => ({})}
                 setLocked={() => ({})}
                 block={block}
-                contentState={contentState} />);
+                contentState={contentState}
+            />,
+        );
 
         expect(wrapper.find('img').props().src).toBe('image_href');
         expect(wrapper.find('img').props().alt).toBe('image_alt_text');
-        expect(wrapper.find(Textarea).prop('value')).toBe('image_description');
+        expect(wrapper.find(PlainTextEditor).prop('value')).toBe('image_description');
     });
 
     it('should trigger cropImage prop when clicked', () => {
@@ -29,7 +31,9 @@ describe('editor3.components.media-block', () => {
                 changeCaption={() => ({})}
                 setLocked={() => ({})}
                 block={block}
-                contentState={contentState} />);
+                contentState={contentState}
+            />,
+        );
 
         wrapper.find('.image-block__image-action').first()
             .simulate('click');

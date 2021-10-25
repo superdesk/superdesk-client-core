@@ -3,7 +3,7 @@
 import * as React from 'react';
 import {ISuperdesk, IConfigComponentProps} from 'superdesk-api';
 import {IDateTimeFieldConfig, defaultDateTimeConfig} from './extension';
-import {Button, FormLabel, IconButton} from 'superdesk-ui-framework';
+import {Button, FormLabel, IconButton} from 'superdesk-ui-framework/react';
 
 export function getConfigComponent(superdesk: ISuperdesk) {
     const gettext = superdesk.localization.gettext;
@@ -46,6 +46,7 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                                 <Spacer type="horizontal" spacing="medium" align="center" key={i}>
                                     <IconButton
                                         icon="remove-sign"
+                                        ariaValue={gettext('Remove')}
                                         onClick={() => {
                                             onChange({
                                                 ...config,

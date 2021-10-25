@@ -4,19 +4,20 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Label from './Label';
 import Divider from './Divider';
-import Item from './Item';
+import MenuItem from './Item';
 import SubmenuDropdown from './SubmenuDropdown';
-import {AUTHORING_MENU_GROUPS} from '../../../authoring/authoring/constants';
+import {getAuthoringMenuGroups} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem, positionPopup} from '../../helpers';
-import {gettext} from 'core/utils';
+import {gettext, IScopeApply} from 'core/utils';
 import {IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
+import ng from 'core/services/ng';
+import {once} from 'lodash';
 
 interface IProps {
     item: IArticle;
-    svc: any;
-    scope: any;
+    scopeApply: IScopeApply;
     onActioning: any;
     target?: Element;
 }
@@ -29,6 +30,12 @@ export default class MenuItems extends React.Component<IProps, IState> {
     static propTypes: any;
     static defaultProps: any;
 
+    superdesk: any;
+    workflowService: any;
+    archiveService: any;
+    private focus: (el: HTMLElement) => void;
+    private previousFocusedElement: HTMLElement | null;
+
     constructor(props) {
         super(props);
 
@@ -39,6 +46,18 @@ export default class MenuItems extends React.Component<IProps, IState> {
         this.state = {
             actionsFromExtensions: null,
         };
+
+        this.superdesk = ng.get('superdesk');
+        this.workflowService = ng.get('workflowService');
+        this.archiveService = ng.get('archiveService');
+
+        // using once to simulate componentDidMount.
+        // using componentDidMount doesn't work because el is only set after the first update.
+        this.focus = once((el) => {
+            this.previousFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+            el.focus();
+        });
     }
 
     componentDidMount() {
@@ -50,6 +69,10 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 this.setState({
                     actionsFromExtensions: actions,
                 });
+            });
+        } else {
+            this.setState({
+                actionsFromExtensions: [],
             });
         }
     }
@@ -65,9 +88,9 @@ export default class MenuItems extends React.Component<IProps, IState> {
     }
 
     handleClickOutside(event) {
-        const domNode = ReactDOM.findDOMNode(menuHolderElem());
+        const domNode = menuHolderElem();
 
-        if (!domNode || !domNode.contains(event.target)) {
+        if (domNode != null && !domNode.contains(event.target)) {
             closeActionsMenu(this.props.item._id);
         }
     }
@@ -78,10 +101,8 @@ export default class MenuItems extends React.Component<IProps, IState> {
         const intent = {action: 'list', type: type};
         const groups = {};
 
-        const {superdesk, workflowService} = this.props.svc;
-
-        superdesk.findActivities(intent, item).forEach((activity) => {
-            if (workflowService.isActionAllowed(item, activity.action) && activity.list !== false) {
+        this.superdesk.findActivities(intent, item).forEach((activity) => {
+            if (this.workflowService.isActionAllowed(item, activity.action) && activity.list !== false) {
                 const group = activity.group || 'default';
 
                 groups[group] = groups[group] || [];
@@ -92,9 +113,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
     }
 
     getType() {
-        const {archiveService} = this.props.svc;
-
-        return archiveService.getType(this.props.item);
+        return this.archiveService.getType(this.props.item);
     }
 
     renderMenu() {
@@ -103,11 +122,12 @@ export default class MenuItems extends React.Component<IProps, IState> {
         const createAction = (activity) => ({
             label: activity.label,
             element: (
-                <Item key={activity._id}
-                    svc={this.props.svc}
-                    scope={this.props.scope}
-                    item={item} activity={activity}
+                <MenuItem
+                    key={activity._id}
+                    item={item}
+                    activity={activity}
                     onActioning={this.props.onActioning}
+                    scopeApply={this.props.scopeApply}
                 />
             ),
         });
@@ -124,7 +144,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         const moveActionsToDefaultGroup = ['Planning', 'duplicate'];
 
-        AUTHORING_MENU_GROUPS.forEach((group) => {
+        getAuthoringMenuGroups().forEach((group) => {
             const realGroupId = group._id;
             const stackGroupId = moveActionsToDefaultGroup.includes(group._id) ? 'default' : group._id;
 
@@ -162,7 +182,7 @@ export default class MenuItems extends React.Component<IProps, IState> {
 
         // adding menu items for the groups that are not defined above
         Object.keys(actions).forEach((groupId) => {
-            const existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupId);
+            const existingGroup = getAuthoringMenuGroups().find((g) => g._id === groupId);
 
             if (!existingGroup) {
                 const finalGroupId = moveActionsToDefaultGroup.includes(groupId) ? 'default' : groupId;
@@ -180,10 +200,12 @@ export default class MenuItems extends React.Component<IProps, IState> {
         this.state.actionsFromExtensions.forEach((action, i) => {
             const element = (
                 <li key={`extension-item-${i}`}>
-                    <button onClick={() => {
-                        closeActionsMenu(this.props.item._id);
-                        action.onTrigger();
-                    }}>
+                    <button
+                        onClick={() => {
+                            closeActionsMenu(this.props.item._id);
+                            action.onTrigger();
+                        }}
+                    >
                         {action.icon == null ? null : <i className={action.icon} />}
                         {action.label}
                     </button>
@@ -221,7 +243,13 @@ export default class MenuItems extends React.Component<IProps, IState> {
     }
 
     render() {
-        if (this.state.actionsFromExtensions == null || this.renderMenu().length < 1) {
+        if (this.state.actionsFromExtensions == null) {
+            return null;
+        }
+
+        const renderMenuResult = this.renderMenu();
+
+        if (renderMenuResult.length < 1) {
             return null;
         }
 
@@ -230,12 +258,27 @@ export default class MenuItems extends React.Component<IProps, IState> {
                 className="dropdown dropdown__menu more-activity-menu open"
                 style={{display: 'block', minWidth: 200}}
                 data-test-id="context-menu"
+                ref={(el) => {
+                    if (el != null) {
+                        this.focus(el);
+                    }
+                }}
+                tabIndex={0}
+                onKeyUp={(event) => {
+                    if (event.key === 'Escape') {
+                        closeActionsMenu(this.props.item._id);
+                        this.previousFocusedElement?.focus();
+                    }
+                }}
             >
                 <Label
                     label={gettext('Actions')}
-                    item={this.props.item}
+                    onClose={() => {
+                        closeActionsMenu(this.props.item._id);
+                        this.previousFocusedElement?.focus();
+                    }}
                 />
-                {this.renderMenu()}
+                {renderMenuResult}
             </ul>
         );
     }

@@ -135,7 +135,7 @@ class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalS
                         )}
                     </p>
                     <CheckGroup orientation="vertical">
-                        <Radio<CharacterLimitUiBehavior>
+                        <Radio
                             value={this.state.radioValue}
                             options={[
                                 {

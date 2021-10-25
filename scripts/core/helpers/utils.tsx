@@ -71,12 +71,10 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
         'marginTop',
         'marginRight',
         'marginBottom',
-        'marginTop',
         'padding',
         'paddingTop',
         'paddingRight',
         'paddingBottom',
-        'paddingTop',
     );
 
     const propertiesShallowCopy = {...properties};
@@ -93,4 +91,48 @@ export function getSpacingProps<T extends ISpacingProps>(item: T): ISpacingProps
 // will throw an exception if non-JSON object is passed
 export function copyJson(obj) {
     return JSON.parse(JSON.stringify(obj));
+}
+
+// will help downloading binary file
+export function downloadBlob(data: BinaryType, mimetype: string, filename: string): void {
+    const a = document.createElement('a');
+
+    document.body.appendChild(a);
+    const blob = new Blob([data], {type: mimetype}),
+        url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+}
+
+export function copyString(data) {
+    var element = document.createElement('textarea');
+
+    document.body.appendChild(element);
+    element.value = data;
+    element.select();
+    document.execCommand('copy');
+    document.body.removeChild(element);
+}
+
+/** Does not mutate the original array. */
+export function arrayMove<T>(arr: Array<T>, from: number, to: number): Array<T> {
+    if (
+        from < 0 || from > arr.length - 1
+        || to < 0 || to > arr.length - 1
+    ) {
+        console.error('Out of range.');
+        return arr;
+    }
+
+    const copy = [...arr];
+
+    const item = copy.splice(from, 1)[0];
+
+    copy.splice(to, 0, item);
+
+    return copy;
 }

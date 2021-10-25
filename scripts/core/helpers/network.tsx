@@ -1,5 +1,4 @@
 import ng from 'core/services/ng';
-import {logger} from 'core/services/logger';
 import {appConfig} from '../../appConfig';
 
 interface IHttpRequestOptions {
@@ -8,6 +7,8 @@ interface IHttpRequestOptions {
     payload?: {};
     headers?: {[key: string]: any};
     urlParams?: {[key: string]: any};
+
+    abortSignal?: AbortSignal;
 }
 
 interface IHttpRequestOptionsLocal extends Omit<IHttpRequestOptions, 'url'> {
@@ -33,7 +34,7 @@ export function isHttpApiError(x): x is IHttpLocalApiErrorResponse {
 }
 
 function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
-    const {method, url, payload, headers} = options;
+    const {method, url, payload, headers, abortSignal} = options;
 
     const _url = new URL(url);
 
@@ -47,17 +48,9 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
         method,
         headers: headers || {},
         mode: 'cors',
-        body: JSON.stringify(payload), // works when `payload` is `undefined`
-    }).catch((res) => {
-        if (res instanceof Error) {
-            logger.error(res);
-        } else {
-            logger.error(new Error(res));
-        }
-
-        // unless a rejected Promise is returned or an error is thrown in the catch block
-        // the promise will become resolved and `.then chain` will get executed
-        return Promise.reject(res);
+        credentials: 'include',
+        body: JSON.stringify(payload || undefined), // works when `payload` is `undefined`
+        signal: abortSignal,
     });
 }
 
@@ -76,7 +69,16 @@ export function httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise
                 if (res.ok) {
                     return Promise.resolve();
                 } else {
-                    return Promise.reject();
+                    // Attempt to convert error response to JSON,
+                    // otherwise return body as text as returned from the server
+                    return res.text()
+                        .then((bodyText) => {
+                            try {
+                                return Promise.reject(JSON.parse(bodyText));
+                            } catch (_err) {
+                                return Promise.reject(bodyText);
+                            }
+                        });
                 }
             });
         });
@@ -100,5 +102,65 @@ export function httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): 
                     return Promise.reject(json);
                 }
             }));
+        });
+}
+
+export function httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promise<Response> {
+    return ng.getService('session')
+        .then((session) => {
+            return httpRequestBase({
+                ...options,
+                url: appConfig.server.url + options.path,
+                headers: {
+                    ...(options.headers || {}),
+                    'Authorization': session.token,
+                },
+            }).then((res) => {
+                if (res.ok) {
+                    return res;
+                } else {
+                    return Promise.reject(res);
+                }
+            });
+        });
+}
+
+export function uploadFileWithProgress<T>(
+    endpoint: string,
+    data: FormData,
+    onProgress: (event: ProgressEvent) => void,
+    method?: 'POST' | 'PATCH',
+    etag?: string,
+): Promise<T> {
+    return ng.getService('session')
+        .then((session) => {
+            return new Promise<T>((resolve, reject) => {
+                // Using `XMLHttpRequest` over `fetch` so we can get `onprogress` reporting
+                const request = new XMLHttpRequest();
+                const url = appConfig.server.url + endpoint;
+
+                request.open(method ?? 'POST', url);
+                request.setRequestHeader('Authorization', session.token);
+
+                if (method === 'PATCH' && etag != null) {
+                    request.setRequestHeader('If-Match', etag);
+                }
+
+                request.upload.onprogress = onProgress;
+
+                request.onload = function() {
+                    if (this.status >= 200 && this.status < 300) {
+                        resolve(JSON.parse(this.responseText));
+                    } else {
+                        reject(JSON.parse(this.responseText));
+                    }
+                };
+
+                request.onerror = function(e: ProgressEvent) {
+                    reject(e);
+                };
+
+                request.send(data);
+            });
         });
 }

@@ -4,10 +4,27 @@ import {
     browser,
     ElementArrayFinder,
     promise as wdpromise,
+    ElementFinder,
+    WebElementPromise,
+    WebElement,
 } from 'protractor';
 
 interface IExpectedConditionsExtended extends ProtractorExpectedConditions {
     hasElementCount(finder: ElementArrayFinder, expectedElementCount: number): () => wdpromise.Promise<boolean>;
+    attributeContains(
+        finder: ElementFinder,
+        attribute: string,
+        expectedValue: string,
+    ): () => wdpromise.Promise<boolean>;
+    attributeEquals(
+        finder: ElementFinder,
+        attribute: string,
+        expectedValue: string,
+    ): () => wdpromise.Promise<boolean>;
+    elementsEqual(
+        a: ElementFinder | WebElementPromise,
+        b: ElementFinder | WebElementPromise,
+    ): wdpromise.Promise<boolean>;
 }
 
 // Extended version of protractor's default expected conditions
@@ -36,5 +53,21 @@ export const ECE: IExpectedConditionsExtended = {
     // custom:
     hasElementCount: (finder, expectedElementCount) => {
         return () => finder.count().then((count) => count === expectedElementCount);
+    },
+
+    attributeContains: (finder, attribute, expectedValue) => {
+        return () => finder.getAttribute(attribute)
+            .then((result) => typeof result === 'string' && result.includes(expectedValue));
+    },
+
+    attributeEquals: (finder, attribute, expectedValue) => {
+        return () => finder.getAttribute(attribute).then((result) => result === expectedValue);
+    },
+
+    elementsEqual: (a: ElementFinder | WebElementPromise, b: ElementFinder | WebElementPromise) => {
+        const webElementPromiseA: WebElementPromise = a instanceof WebElementPromise ? a : a.getWebElement();
+        const webElementPromiseB: WebElementPromise = b instanceof WebElementPromise ? b : b.getWebElement();
+
+        return WebElement.equals(webElementPromiseA, webElementPromiseB);
     },
 };

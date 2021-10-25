@@ -1,10 +1,30 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 
-DashboardController.$inject = ['$scope', 'desks', 'dashboardWidgets', 'api', 'session', 'workspaces',
-    'modal', 'privileges', 'pageTitle'];
-export function DashboardController($scope, desks, dashboardWidgets, api, session, workspaces,
-    modal, privileges, pageTitle) {
+DashboardController.$inject = [
+    '$scope',
+    'desks',
+    'dashboardWidgets',
+    'api',
+    'session',
+    'workspaces',
+    'modal',
+    'privileges',
+    'pageTitle',
+    '$sce',
+];
+export function DashboardController(
+    $scope,
+    desks,
+    dashboardWidgets,
+    api,
+    session,
+    workspaces,
+    modal,
+    privileges,
+    pageTitle,
+    $sce,
+) {
     var self = this;
 
     $scope.edited = null;
@@ -22,7 +42,16 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
             $scope.$applyAsync(() => {
                 self.current = workspace;
                 self.widgets = extendWidgets(workspace.widgets || []);
-                self.availableWidgets = dashboardWidgets;
+                self.availableWidgets = dashboardWidgets
+                    .map((widget) => {
+                        if (widget.descriptionHtml) {
+                            return {
+                                ...widget,
+                                descriptionHtml: $sce.trustAsHtml(widget.descriptionHtml),
+                            };
+                        }
+                        return widget;
+                    });
             });
         }
     }
@@ -80,7 +109,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * @returns {boolean}
      */
     this.isSelected = function(widget) {
-        return widget && !_.find(getAvailableWidgets(this.widgets), widget);
+        return widget && this.selectWidget._id === widget._id;
     };
 
     function extendWidgets(currentWidgets) {
@@ -126,10 +155,7 @@ export function DashboardController($scope, desks, dashboardWidgets, api, sessio
      * Confirms and deletes current workspace
      */
     this.delete = function() {
-        modal.confirm(
-            gettext('Are you sure you want to delete current workspace?'),
-        )
-            .then(() => workspaces.delete(self.current));
+        workspaces.confirmAndDelete(self.current);
     };
 
     /*

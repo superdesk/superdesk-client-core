@@ -1,3 +1,6 @@
+import _ from 'lodash';
+import {IDENTITY_KEY} from 'appConfig';
+
 /**
  * Session Service stores current user data
  */
@@ -9,7 +12,6 @@ angular.module('superdesk.core.auth.session').service('session', [
     function($q, $rootScope, storage, SESSION_EVENTS) {
         var TOKEN_KEY = 'sess:token';
         var TOKEN_HREF = 'sess:href';
-        var IDENTITY_KEY = 'sess:user';
         var SESSION_ID = 'sess:id';
         var IDENTITY_BLACKLIST = [
             'session_preferences',
@@ -76,26 +78,12 @@ angular.module('superdesk.core.auth.session').service('session', [
             }
         }
 
-        /**
-     * Set current session expired
-     */
         this.expire = function() {
             this.token = null;
             this.sessionId = null;
             setToken(null);
             setSessionId(null);
             $rootScope.$broadcast(SESSION_EVENTS.LOGOUT);
-        };
-
-        /**
-     * Clear session info
-     */
-        this.clear = function() {
-            this.expire();
-            this.identity = null;
-            setSessionHref(null);
-            setSessionId(null);
-            storage.clear();
         };
 
         /**

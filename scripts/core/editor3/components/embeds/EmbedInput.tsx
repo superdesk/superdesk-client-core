@@ -8,7 +8,6 @@ import {appConfig} from 'appConfig';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 const fallbackAPIKey = '1d1728bf82b2ac8139453f'; // register to author's personal account
-const GenericError = gettext('This URL could not be embedded.');
 
 export const getEmbedObject = (url) => {
     const apiKey = appConfig.iframely.key || fallbackAPIKey;
@@ -83,7 +82,7 @@ export class EmbedInputComponent extends React.Component<any, any> {
         const hasMessage = responseJSON && responseJSON.error;
         const is404 = !hasMessage && data.status === 404;
 
-        let error = hasMessage ? responseJSON.error : GenericError;
+        let error = hasMessage ? responseJSON.error : gettext('This URL could not be embedded.');
 
         if (is404) {
             error = gettext('URL not found.');
@@ -131,19 +130,23 @@ export class EmbedInputComponent extends React.Component<any, any> {
 
         return (
             <form onSubmit={this.onSubmit} className="embed-dialog" onKeyUp={this.onKeyUp}>
-                <OverlayTrigger overlay={
-                    <Tooltip id="create_new_embed_tooltip">
-                        <p>{gettext('To get a responsive embed code, paste a URL.')}</p>
-                        <p>{gettext('If you paste an embed code, it will be used "as is".')}</p>
-                    </Tooltip>
-                }>
+                <OverlayTrigger
+                    overlay={(
+                        <Tooltip id="create_new_embed_tooltip">
+                            <p>{gettext('To get a responsive embed code, paste a URL.')}</p>
+                            <p>{gettext('If you paste an embed code, it will be used "as is".')}</p>
+                        </Tooltip>
+                    )}
+                >
                     <i className="icon-info-sign icon--blue sd-margin-x--1" />
                 </OverlayTrigger>
-                <input type="url"
+                <input
+                    type="url"
                     ref={(txt) => {
                         this.txt = txt;
                     }}
-                    placeholder={gettext('Enter URL or code to embed')} />
+                    placeholder={gettext('Enter URL or code to embed')}
+                />
                 <div className="input-controls">
                     <a className="icn-btn" onClick={this.onSubmit}>
                         <i className="icon-ok" />

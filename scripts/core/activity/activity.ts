@@ -352,8 +352,11 @@ function SuperdeskProvider($routeProvider, _) {
                         var menu = [];
 
                         angular.forEach(activities, (activity) => {
-                            if (activity.category === category && isAllowed(activity) &&
-                                (activity.beta === false || $rootScope.beta)) {
+                            if (activity.category === category &&
+                                isAllowed(activity) &&
+                                (activity.beta === false || $rootScope.beta) &&
+                                (activity.additionalCondition == null || $injector.invoke(activity.additionalCondition))
+                            ) {
                                 menu.push(activity);
                             }
                         });
@@ -403,7 +406,7 @@ angular.module('superdesk.core.activity', [
  * @description The service allows choosing activities to perform.
  */
     .service('activityService', ['$location', '$injector', '$q', 'modal', 'lodash',
-        function($location, $injector, $q, modal, _) {
+        function ActivityService($location, $injector, $q, modal, _) {
             var activityStack = [];
 
             this.activityStack = activityStack;
@@ -656,4 +659,10 @@ function ActivityItemDropdownDirective(asset) {
             scope.group = attr.group;
         },
     };
+}
+
+export interface IActivityService {
+    activityStack: Array<{activity: IActivity, defer: any, locals: any}>;
+    getLink(activity: IActivity, locals: any): string;
+    start(activity: IActivity, locals: any): Promise<any>;
 }

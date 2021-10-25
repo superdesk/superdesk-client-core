@@ -1,4 +1,6 @@
-// NOTE: file extension is not needed for importing .scss files
+// extract-text-webpack-plugin messes up the import order
+// when importing from SCSS files, but it works when importing from js
+// if you need some styles to go at the top/bottom, import it from index.ts
 
 // Roboto font import
 @import url(//fonts.googleapis.com/css?family=Roboto+Mono:400,300,500,700,300italic,400italic,500italic,700italic&subset=latin,latin-ext);
@@ -23,9 +25,6 @@
 @import 'tables';
 @import 'bootstrap-pagination';
 
-// Dropdowns
-@import 'dropdowns/input-dropdown';
-
 // Components: common
 @import 'sd-typeahead';
 @import 'sd-password-strength';
@@ -37,6 +36,7 @@
 @import 'buttons/toggle-buttons';
 @import 'button-groups';
 @import 'alerts'; // Note: alerts share common CSS with buttons and thus have styles in buttons.scss
+@import '../../scripts/core/ui/components/alert.scss';
 
 // Components: Nav
 @import 'navs';
@@ -52,21 +52,18 @@
 // Components: Misc
 @import 'labels';
 
-// Vendor
-@import '~jquery-jcrop/css/jquery.Jcrop.css';
-@import '~jquery-ui/themes/smoothness/jquery-ui.css';
-@import '~medium-editor/dist/css/medium-editor.css';
-@import '~medium-editor-tables/dist/css/medium-editor-tables.css';
-@import '~owl.carousel/dist/assets/owl.carousel.min.css';
-@import '~superdesk-ui-framework/dist/superdesk-ui.bundle.css';
-
 @import 'medium-editor'; // custom skin for medium-editor
 @import 'sf-additional';
 @import 'sf-icons';
 @import 'search-list';
+@import 'hamburger';
+
 
 // Jcrop overrides
 @import 'jcrop-custom';
 
 // Application components
 @import 'saved-searches';
+@import '../../scripts/apps/dashboard/widget-heading.scss';
+
+@import '../../scripts/apps/authoring/authoring/services/quick-publish-modal.scss'

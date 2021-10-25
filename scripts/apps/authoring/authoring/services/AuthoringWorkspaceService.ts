@@ -1,6 +1,5 @@
-import {get, includes} from 'lodash';
+import {includes} from 'lodash';
 import {IArticle} from 'superdesk-api';
-import {getCustomEventNamePrefixed} from 'core/notification/notification';
 import {appConfig} from 'appConfig';
 
 export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
@@ -100,7 +99,7 @@ export class AuthoringWorkspaceService {
      * Open item for editing
      */
     edit(
-        item: {_id: IArticle['_id'], _type?: IArticle['_type']},
+        item: {_id: IArticle['_id'], _type?: IArticle['_type'], state?: IArticle['state']},
         action?: IAuthoringAction,
     ) {
         if (item) {
@@ -111,7 +110,7 @@ export class AuthoringWorkspaceService {
             ) {
                 return;
             }
-            this.authoringOpen(item._id, action || 'edit', item._type || null);
+            this.authoringOpen(item._id, action || 'edit', item._type || null, item.state === 'being_corrected');
         } else {
             this.close();
         }
@@ -151,7 +150,7 @@ export class AuthoringWorkspaceService {
         }
 
         if (includes(['ingest', 'externalsource'], item._type) || item.state === 'ingested') {
-            this.send.one(item).then(_open);
+            this.send.validateAndSend(item).then(_open);
         } else {
             _open(item);
         }
@@ -165,12 +164,6 @@ export class AuthoringWorkspaceService {
     close(showMonitoring?) {
         if (this.$rootScope.popup) {
             window.close();
-        }
-
-        if (this.action === 'edit') {
-            window.dispatchEvent(
-                new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: this.item}),
-            );
         }
 
         this.suggest.setActive(false);
@@ -307,23 +300,11 @@ export class AuthoringWorkspaceService {
     /**
      * Fetch item by id and start editing it
      */
-    private authoringOpen(itemId, action: IAuthoringAction, repo?) {
-        return this.authoring.open(itemId, action === 'view', repo, action)
+    private authoringOpen(itemId, action: IAuthoringAction, repo?, state?) {
+        return this.authoring.open(itemId, action === 'view', repo, action, state)
             .then((item: IArticle) => {
-                if (this.item != null) { // action isn't relevant
-                    window.dispatchEvent(
-                        new CustomEvent(getCustomEventNamePrefixed('articleEditEnd'), {detail: this.item}),
-                    );
-                }
-
                 this.item = item;
                 this.action = action !== 'view' && item._editable ? action : 'view';
-
-                if (action === 'edit') {
-                    window.dispatchEvent(
-                        new CustomEvent(getCustomEventNamePrefixed('articleEditStart'), {detail: item}),
-                    );
-                }
 
                 this.saveState();
                 // closes preview if already opened

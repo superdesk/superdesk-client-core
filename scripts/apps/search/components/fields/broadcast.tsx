@@ -1,21 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {IPropsItemListInfo} from '../ListItemInfo';
 
-export const broadcast: React.StatelessComponent<IPropsItemListInfo> = (props) => {
-    const _broadcast = props.item.broadcast || {};
+export class BroadcastFieldComponent extends React.Component<Pick<IPropsItemListInfo, 'item'>> {
+    render() {
+        const props = this.props;
 
-    if (_broadcast.status == null) {
-        return null;
+        const status = props.item?.broadcast?.status;
+
+        if (status == null) {
+            return null;
+        }
+
+        return React.createElement(
+            'span',
+            {className: 'broadcast-status', title: status, key: 'broadcast'},
+            '!',
+        );
     }
+}
 
-    return React.createElement(
-        'span',
-        {className: 'broadcast-status', title: _broadcast.status, key: 'broadcast'},
-        '!',
-    );
-};
-
-broadcast.propTypes = {
-    item: PropTypes.any,
-};
+export const broadcast = BroadcastFieldComponent;

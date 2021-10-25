@@ -69,7 +69,9 @@ class LinkFunction {
         this.scope.loading = true;
         this.storage.setItem('selectedFormatter', formatterString);
         let formatter = JSON.parse(formatterString);
-        let itemIdList = this.scope.multi ? _.map(this.multi.getItems(), '_id') : [this.scope.item._id];
+
+        let itemIdList = this.scope.itemsForExport
+            ?? (this.scope.multi ? _.map(this.multi.getItems(), '_id') : [this.scope.item._id]);
 
         return this.api.save('export', {}, {item_ids: itemIdList, format_type: formatter.name, validate: validate})
             .then((item) => {

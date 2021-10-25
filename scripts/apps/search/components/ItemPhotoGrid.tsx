@@ -3,36 +3,33 @@ import {IArticle, IDesk} from 'superdesk-api';
 import {PhotoDeskPreview} from './PhotoDeskPreview';
 import {PhotoDeskInfo} from './PhotoDeskInfo';
 import {PhotoDeskFooter} from './PhotoDeskFooter';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
 
 interface IProps {
     item: IArticle;
+    itemSelected: boolean;
     desk: IDesk;
-    ingestProvider: any;
-    svc: any;
     swimlane: any;
-    onMultiSelect: () => any;
     getActionsMenu: () => any;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
-export class ItemPhotoGrid extends React.Component<IProps, never> {
+export class ItemPhotoGrid extends React.Component<IProps> {
     render() {
-        const {item} = this.props;
+        const {item, itemSelected, multiSelect} = this.props;
 
         return (
             <div className="sd-wrap-helper">
                 <PhotoDeskPreview
                     item={item}
-                    onMultiSelect={this.props.onMultiSelect}
-                    svc={this.props.svc}
+                    itemSelected={itemSelected}
+                    multiSelect={multiSelect}
                 />
                 <PhotoDeskInfo
                     item={item}
-                    ingestProvider={this.props.ingestProvider}
-                    svc={this.props.svc}
                 />
                 <PhotoDeskFooter
                     item={item}
-                    svc={this.props.svc}
                     getActionsMenu={this.props.getActionsMenu}
                 />
                 <div className="sd-grid-item__state-border" />

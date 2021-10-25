@@ -65,16 +65,16 @@ export class ItemContainer extends React.Component<any, any> {
             addressInfo.push(item.city);
         }
 
-        if (item.contact_state) {
-            addressInfo.push(item.contact_state);
+        if (item.contact_state?.name != null) {
+            addressInfo.push(item.contact_state.name);
         }
 
         if (item.postcode) {
             addressInfo.push(item.postcode);
         }
 
-        if (item.country) {
-            addressInfo.push(item.country);
+        if (item.country?.name != null) {
+            addressInfo.push(item.country.name);
         }
 
         const contactAddress = addressInfo.join(', ');
@@ -119,8 +119,15 @@ export class ItemContainer extends React.Component<any, any> {
             _class = _link;
             break;
         case 'location':
-            value = contactAddress ? (<a href={`${MAP_URL}${contactAddress}`} target="_blank" rel="noopener noreferrer">
-                {contactAddress}</a>) : null;
+            value = contactAddress ? (
+                <a
+                    href={`${MAP_URL}${contactAddress}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    {contactAddress}
+                </a>
+            ) : null;
             title = value && contactAddress;
             _class = _link;
             break;

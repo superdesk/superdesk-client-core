@@ -5,41 +5,40 @@ import {GridTypeIcon} from './GridTypeIcon';
 import {IArticle, IDesk} from 'superdesk-api';
 import {ItemPriority} from './ItemPriority';
 import {ItemUrgency} from './ItemUrgency';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {BroadcastFieldComponent} from './fields/broadcast';
 
 interface IProps {
     item: IArticle;
+    itemSelected: boolean;
     desk: IDesk;
     swimlane: any;
-    svc: any;
     ingestProvider: any;
-    onMultiSelect(): any;
-    broadcast(obj: any): any;
     getActionsMenu(): any;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
-export class ItemMgridTemplate extends React.Component<IProps, never> {
+export class ItemMgridTemplate extends React.Component<IProps> {
     render() {
-        const {item} = this.props;
+        const {item, itemSelected} = this.props;
 
         return (
             <div>
                 <MediaPreview
                     item={item}
+                    itemSelected={itemSelected}
                     desk={this.props.desk}
-                    onMultiSelect={this.props.onMultiSelect}
-                    swimlane={this.props.swimlane}
-                    svc={this.props.svc}
+                    multiSelect={this.props.multiSelect}
                 />
                 <MediaInfo
                     item={item}
                     ingestProvider={this.props.ingestProvider}
-                    svc={this.props.svc}
                 />
                 <div className="media-box__footer">
-                    <GridTypeIcon item={item} svc={this.props.svc} />
-                    {item.priority ? <ItemPriority {...angular.extend({svc: this.props.svc}, item)} /> : null}
-                    {item.urgency ? <ItemUrgency {...angular.extend({svc: this.props.svc}, item)} /> : null}
-                    {this.props.broadcast({item: item})}
+                    <GridTypeIcon item={item} />
+                    {item.priority ? <ItemPriority priority={item.priority} language={item.language} /> : null}
+                    {item.urgency ? <ItemUrgency urgency={item.urgency} language={item.language} /> : null}
+                    <BroadcastFieldComponent item={item} />
                     {this.props.getActionsMenu()}
                 </div>
             </div>

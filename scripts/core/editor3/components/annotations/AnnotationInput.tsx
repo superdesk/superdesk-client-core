@@ -4,7 +4,7 @@ import {Dropdown, NavTabs} from 'core/ui/components';
 import {connect} from 'react-redux';
 
 import {convertToRaw, ContentState, SelectionState, EditorState, RawDraftContentState, convertFromRaw} from 'draft-js';
-import {highlightsConfig} from '../../highlightsConfig';
+import {getHighlightsConfig} from '../../highlightsConfig';
 import {getAuthorInfo} from '../../actions';
 import {connectPromiseResults} from 'core/helpers/ReactRenderAsync';
 import {hidePopups} from '../../actions';
@@ -138,7 +138,7 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                 });
 
                 this.props.highlightsManager.addHighlight(
-                    highlightsConfig.ANNOTATION.type,
+                    getHighlightsConfig().ANNOTATION.type,
                     {
                         data: {
                             msg,
@@ -241,11 +241,11 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
             <div className="sd-line-input sd-line-input--is-select">
                 <label className="sd-line-input__label">{gettext('Annotation Type')}</label>
                 <select className="sd-line-input__select" onChange={this.onSelect} value={type}>
-                    {annotationTypes.map((annotationType) =>
+                    {annotationTypes.map((annotationType) => (
                         <option key={annotationType.qcode} value={annotationType.qcode}>
                             {annotationType.name}
-                        </option>,
-                    )}
+                        </option>
+                    ))}
                 </select>
             </div>
         );
@@ -264,12 +264,14 @@ class AnnotationInputBody extends React.Component<IProps, IState> {
                     />
                 </div>
                 <div className="pull-right">
-                    {typeof annotation === 'object' &&
+                    {typeof annotation === 'object' && (
                         <button
                             className="btn btn--cancel"
-                            onClick={this.deleteAnnotation}>
+                            onClick={this.deleteAnnotation}
+                        >
                             {gettext('Delete')}
-                        </button>}
+                        </button>
+                    )}
                     <button className="btn btn--cancel" onClick={_hidePopups}>
                         {gettext('Cancel')}
                     </button>

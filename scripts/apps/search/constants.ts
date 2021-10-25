@@ -1,4 +1,4 @@
-import {IArticle} from 'superdesk-api';
+import {IArticle, ISuperdeskGlobalConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 /**
@@ -45,7 +45,7 @@ export function getExcludeFacets() {
 /**
  * Default list of fields
  */
-export const DEFAULT_LIST_CONFIG = {
+export const DEFAULT_LIST_CONFIG: ISuperdeskGlobalConfig['list'] = {
     priority: [
         'priority',
         'urgency',
@@ -181,6 +181,7 @@ export const CORE_PROJECTED_FIELDS = {
 
         'translated_from',
         'translations',
+        'schedule_settings',
     ],
 };
 

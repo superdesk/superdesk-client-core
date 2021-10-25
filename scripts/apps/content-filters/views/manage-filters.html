@@ -28,9 +28,10 @@
 </div>
 <!-- Modal - -->
     <div sd-modal data-model="contentFilter" data-close="close()" class="modal--large content-filter-modal">
-        <div class="modal__header"> <a href="" class="close" ng-click="close()"><i class="icon-close-small"></i></a>
+        <div class="modal__header modal__header--flex">
             <h3 class="modal__heading" ng-show="contentFilter._id"><span translate>Edit Content Filter</span> <span>"{{:: origContentFilter.name }}"</span></h3>
             <h3 class="modal__heading" translate ng-hide="contentFilter._id">Add New Content Filter</h3>
+            <a href="" class="icn-btn" ng-click="close()"><i class="icon-close-small"></i></a>
         </div>
         <div class="modal__body">
             <form name="editForm" ng-submit="saveFilter()">
@@ -117,22 +118,36 @@
                 </fieldset>
             </form>
 
+            
+
             <div class="form__row">
                 <div class="sd-line-input sd-line-input--disabled">
                     <label class="sd-line-input__label">Filter Preview</label>
                     <textarea class="sd-line-input__input" id="contentFilter-preview" readonly ng-model="preview" sd-auto-height disabled></textarea>
                 </div>
             </div>
-            <div class="form__row form__row--flex">
-                <div class="sd-line-input" ng-class="{'sd-line-input--invalid': !test.article_id.$valid}">
-                    <label class="sd-line-input__label">Filter Test</label>
-                    <input class="sd-line-input__input" type="text" id="contentFilter-test" required ng-model="test.article_id" ng-change="test.test_result=null">
-                    <div class="sd-line-input__hint" translate>Use the article GUID for testing.</div>
+
+            <div class="sd-content-box sd-content-box--emphasise sd-padding--2 sd-shadow--z1">
+                <div class="form__row form__row--flex form__row--no-padding">
+                    <div class="sd-line-input" ng-class="{'sd-line-input--invalid' : test.error_response}">
+                        <label class="sd-line-input__label" translate>Filter Test</label>
+                        <input class="sd-line-input__input" type="text" id="contentFilter-test" required ng-model="test.article_id" ng-change="test.test_result=null">
+                        <div class="sd-line-input__hint" ng-if="!test.error_response" translate>Use the article GUID for testing.</div>
+                        <div class="sd-line-input__message" ng-if="test.error_response">{{test.error_response}}</div>
+                    </div>
+                    <button type="button" class="btn" ng-click="test()" translate>Test</button>
                 </div>
-                <button type="button" class="btn" ng-click="test()" translate>Test</button>
-            </div>
-            <div class="form__row">
-                <div id="test-result" class="sd-alert sd-alert--hollow" ng-if="test.test_result">{{test.test_result}}</div>
+                <div class="form__row form__row--no-padding">
+                    <div id="test-result"
+                        ng-class="{'sd-alert--alert': !test.match_results, 'sd-alert--success': test.match_results}"
+                        class="sd-alert sd-alert--hollow sd-alert--small sd-alert--no-margin sd-margin-t--2"
+                        ng-if="test.content_tested">
+                        <i ng-if="!test.match_results" class="icon-ban-circle sd-margin-r--1"></i>
+                        <i ng-if="test.match_results" class="icon-ok sd-margin-r--1"></i>
+                        <span ng-if="test.match_results" translate>Does match</span>
+                        <span ng-if="!test.match_results" translate>Doesn't match</span>
+                    </div>
+                </div>
             </div>
         </div>
 

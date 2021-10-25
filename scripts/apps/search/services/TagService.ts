@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import {getParameters, getExcludeFacets} from 'apps/search/constants';
-import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
+import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
 import {gettext} from 'core/utils';
 
 /**
@@ -49,19 +49,19 @@ export function TagService($location, desks, userList, metadata, search,
 
     var cvs = search.cvs;
 
-    function tag(label, value?) {
+    function tag(label: string, value: string) {
         return {
             label: label,
-            value: value || label,
+            value: value,
         };
     }
 
-    function getParamObject(paramArray: Array<string>) {
+    function getParamObject(paramArray: Array<string>): [string, string] {
         const key = paramArray[0].trim();
         // remove parentheses ex: "(two)" becomes "two"
         const value = paramArray[1].replace(/^\(|\)$/g, '');
 
-        return {[key]: value};
+        return [key, value];
     }
 
     /**
@@ -89,7 +89,9 @@ export function TagService($location, desks, userList, metadata, search,
                         name = _.result(_.find(codeList, {qcode: value}), 'name');
 
                     if (name) {
-                        selectedParameters.push(tag(cv.id + '.name:(' + name + ')'));
+                        const tagValue = cv.id + '.name:(' + name + ')';
+
+                        selectedParameters.push(tag(tagValue, tagValue));
                         added = true;
                     }
                 }
@@ -97,8 +99,14 @@ export function TagService($location, desks, userList, metadata, search,
 
             if (!added) {
                 var paramArr = parameter.split(':');
+                const [key, value] = getParamObject(paramArr);
 
-                Object.assign(paramObject, getParamObject(paramArr));
+                if (Array.isArray(paramObject[key])) {
+                    paramObject[key] = paramObject[key].concat(value);
+                } else {
+                    paramObject[key] = [value];
+                }
+
                 var parameterTranslated = gettext(paramArr[0]) + ':' + paramArr[1];
 
                 selectedParameters.push(tag(parameterTranslated, paramArr.join(':')));
@@ -123,17 +131,22 @@ export function TagService($location, desks, userList, metadata, search,
     }
 
     function processFromToDesk(index, value) {
-        tags.selectedParameters.push(tag(value + ':' +
-            desks.deskLookup[index.split('-')[0]].name));
+        const tagValue = value + ':' + desks.deskLookup[index.split('-')[0]].name;
+
+        tags.selectedParameters.push(tag(tagValue, tagValue));
     }
 
     function processMetadataFields(index, value, key) {
         var processSelectedItems = (selectedItems, codeList) => {
             _.forEach(selectedItems, (selecteditem) => {
-                var name = _.result(_.find(codeList, {qcode: selecteditem}), 'name');
+                const vocabularyItem = codeList.find(({qcode}) => qcode === selecteditem);
 
-                if (name) {
-                    tags.selectedParameters.push(tag(value + ':(' + name + ')'));
+                if (vocabularyItem?.name) {
+                    const vocabularyNameTranslated = metadata.getLocaleName(vocabularyItem, {});
+                    const tagLabel = `${value}:(${vocabularyNameTranslated})`;
+                    const tagValue = `${value}:(${vocabularyItem.name})`;
+
+                    tags.selectedParameters.push(tag(tagLabel, tagValue));
                 }
             });
         };
@@ -156,7 +169,17 @@ export function TagService($location, desks, userList, metadata, search,
         let predefinedLabel = dateFilterLabel?.predefinedFilters
             .find((predefinedFilter) => predefinedFilter.key === index);
 
-        return label && predefinedLabel ? tag(label + ': ' + predefinedLabel.label) : tag(label + ': ' + index);
+        return label && predefinedLabel
+            ? (() => {
+                const tagValue = label + ': ' + predefinedLabel.label;
+
+                return tag(tagValue, tagValue);
+            })()
+            : (() => {
+                const tagValue = label + ': ' + index;
+
+                return tag(tagValue, tagValue);
+            })();
     }
 
     /**
@@ -168,7 +191,9 @@ export function TagService($location, desks, userList, metadata, search,
     var fieldProcessors = {
         original_creator: (index, value) => {
             userList.getUser(index).then((user) => {
-                tags.selectedParameters.push(tag(value + ':' + user.display_name));
+                const tagValue = value + ':' + user.display_name;
+
+                tags.selectedParameters.push(tag(tagValue, tagValue));
             }, (error) => {
                 const tagLabel = `${value}:${gettext('Unknown')}`;
                 const tagValue = value + ':Unknown';
@@ -180,15 +205,24 @@ export function TagService($location, desks, userList, metadata, search,
         to_desk: processFromToDesk,
         marked_desks: (index, value) => {
             JSON.parse(index).forEach((id) => {
-                tags.selectedParameters.push(tag(value + ':' + desks.deskLookup[id].name));
+                const tagValue = value + ':' + desks.deskLookup[id].name;
+
+                tags.selectedParameters.push(tag(tagValue, tagValue));
             });
         },
         company_codes: processMetadataFields,
         subject: processMetadataFields,
-        spike: (index, value) => index !== 'exclude' ? tags.selectedParameters.push(tag(value + ':' + index)) : null,
+        spike: (index, value) => {
+            const tagValue = value + ':' + index;
+
+            return index !== 'exclude' ? tags.selectedParameters.push(tag(tagValue, tagValue)) : null;
+        },
         featuremedia: processBooleanTags,
-        ingest_provider: (index, value) => tags.selectedParameters.push(tag(value + ':' +
-            ingestSources.providersLookup[index].name)),
+        ingest_provider: (index, value) => {
+            const tagValue = value + ':' + ingestSources.providersLookup[index].name;
+
+            return tags.selectedParameters.push(tag(tagValue, tagValue));
+        },
         subscriber: (index, value) => {
             let subscriberName = _.get(subscribersService, 'subscribersLookup.' + index + '.name', ':Unknown');
 
@@ -206,7 +240,9 @@ export function TagService($location, desks, userList, metadata, search,
      */
     function processBooleanTags(value, label) {
         if (value) {
-            tags.selectedParameters.push(tag(label));
+            const tagValue = label;
+
+            tags.selectedParameters.push(tag(tagValue, tagValue));
         }
     }
 
@@ -238,7 +274,9 @@ export function TagService($location, desks, userList, metadata, search,
                     tags.selectedParameters.push(getDatePublishedFilter(params[key], key));
                 }
             } else {
-                tags.selectedParameters.push(tag(value + ':' + params[key]));
+                const tagValue = value + ':' + params[key];
+
+                tags.selectedParameters.push(tag(tagValue, tagValue));
             }
         });
 
@@ -409,7 +447,7 @@ export function TagService($location, desks, userList, metadata, search,
                     const dateFilter = dateFilters.find(({fieldname}) => fieldname === key);
 
                     if (!tags.commonTags.includes(key)) {
-                        tags.selectedFacets[dateFilter.labelBlock] = [dateRangesByKey[type].label];
+                        tags.selectedFacets[dateFilter.labelBlock] = [getDateRangesByKey()[type].label];
                     }
                 } else if (key === 'creditqcode') {
                     tags.selectedFacets.credit = JSON.parse(type);

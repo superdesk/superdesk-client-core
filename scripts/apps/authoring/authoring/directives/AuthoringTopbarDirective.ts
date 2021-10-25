@@ -2,6 +2,9 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {IArticleAction} from 'superdesk-api';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {addInternalEventListener} from 'core/internal-events';
+import {appConfig} from 'appConfig';
+import {ITEM_STATE} from 'apps/archive/constants';
 
 /**
  * @ngdoc directive
@@ -35,6 +38,9 @@ export function AuthoringTopbarDirective(
             scope.saveDisabled = false;
             scope.getSpellchecker = getSpellchecker;
             scope.userHasPrivileges = privileges.userHasPrivileges;
+
+            scope.isCorrection = (item) => appConfig?.corrections_workflow
+                && item.state === ITEM_STATE.CORRECTION && scope.action === 'correct';
 
             scope.handleArticleChange = (article) => {
                 Object.assign(scope.item, article);
@@ -86,6 +92,14 @@ export function AuthoringTopbarDirective(
             scope.$watch('item', () => {
                 setActionsFromExtensions();
             }, true);
+
+            const removeSaveEventListener = addInternalEventListener('saveArticleInEditMode', () => {
+                scope.saveTopbar();
+            });
+
+            scope.$on('$destroy', () => {
+                removeSaveEventListener();
+            });
         },
     };
 }

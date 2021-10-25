@@ -98,7 +98,7 @@ export class DayPicker extends React.Component<any, any> {
         const rows = chunk(this.state.dates, 7);
 
         return (
-            <table>
+            <table className="table">
                 <thead>
                     <tr>
                         {dayNames.map((day, index) => (

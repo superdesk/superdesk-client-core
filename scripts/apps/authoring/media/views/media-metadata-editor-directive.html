@@ -3,22 +3,23 @@
     ng-repeat="field in fields track by field.field"
     data-test-id="media-metadata-editor"
 >
-    <sd-line-input
+
+    <div
         ng-if="(!field.type && !field.cv) || (field.type === 'string' && !field.cv)"
-        ng-model="item[field.field]"
-        data-sync="true"
-        data-dark="dark"
-        data-boxed="boxed"
-        data-label="{{ field.label }}"
-        data-required="field.required"
-        data-disabled="isDisabled(field)"
-        data-onchange="onChange({key: field.field})"
-        data-onblur="onBlur()"
-        data-maxlength="field.maxlength"
-        data-placeholder="{{ placeholder[field.field] }}"
-        data-textarea="field.textarea"
+        class="sd-line-input sd-line-input--boxed"
+        ng-class="{'sd-line-input--required': field.required}"
         data-test-id="{{'field--' + field.field}}"
-    />
+    >
+        <label class="sd-line-input__label">{{field.label}}</label>
+        <sd-plain-text-editor
+            on-change="handleInputChange"
+            on-change-data="{field: field.field}"
+            value="item[field.field]"
+            classes="'sd-line-input__input'"
+            spellcheck="true"
+            language="item.language"
+        />
+    </div>
 
     <sd-line-input
         ng-if="field.cv && field.cv.field_type === 'text'"
@@ -103,7 +104,7 @@
     </div>
 
     <div ng-if="field.cv && field.cv.field_type === 'authors'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
-        <label class="authoring-header__item-label">{{ field.label }}</label>
+        <label class="sd-line-input__label">{{ field.label }}</label>
         <div class="authoring-header__input-holder">
             <div
                 sd-meta-terms
@@ -118,6 +119,7 @@
                 data-change="onChange({key: field})"
                 data-reload-list="true"
                 data-disable-entire-category="{{field.cv.disable_entire_category_selection}}"
+                data-placeholder="placeholder[field.field]"
             ></div>
         </div>
     </div>

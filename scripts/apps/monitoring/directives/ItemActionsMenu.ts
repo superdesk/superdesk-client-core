@@ -1,7 +1,8 @@
-import {AUTHORING_MENU_GROUPS} from '../../authoring/authoring/constants';
+import {getAuthoringMenuGroups} from '../../authoring/authoring/constants';
 import {IArticle, IArticleAction} from 'superdesk-api';
 import {IActivity} from 'superdesk-interfaces/Activity';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
+import {IActivityService} from 'core/activity/activity';
 
 type IAction =
     {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IArticleAction};
@@ -25,7 +26,13 @@ interface IScope extends ng.IScope {
 }
 
 ItemActionsMenu.$inject = ['superdesk', 'activityService', 'workflowService', 'archiveService', '$rootScope'];
-export function ItemActionsMenu(superdesk, activityService, workflowService, archiveService, $rootScope) {
+export function ItemActionsMenu(
+    superdesk,
+    activityService: IActivityService,
+    workflowService,
+    archiveService,
+    $rootScope,
+) {
     return {
         scope: {
             item: '=',
@@ -115,7 +122,7 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                         let menuGroups: Array<IAuthoringMenuGroup> = [];
 
                         // take default menu groups, add activities and push to `menuGroups`
-                        AUTHORING_MENU_GROUPS.forEach((group) => {
+                        getAuthoringMenuGroups().forEach((group) => {
                             if (activitiesByGroupName[group._id] && activitiesByGroupName[group._id].length > 0) {
                                 menuGroups.push({
                                     _id: group._id,
@@ -128,9 +135,9 @@ export function ItemActionsMenu(superdesk, activityService, workflowService, arc
                         });
 
                         // go over `activitiesByGroupName` and add groups not present
-                        // in default groups (AUTHORING_MENU_GROUPS)
+                        // in default groups (getAuthoringMenuGroups)
                         Object.keys(activitiesByGroupName).forEach((groupName) => {
-                            var existingGroup = AUTHORING_MENU_GROUPS.find((g) => g._id === groupName);
+                            var existingGroup = getAuthoringMenuGroups().find((g) => g._id === groupName);
 
                             if (!existingGroup) {
                                 menuGroups.push({

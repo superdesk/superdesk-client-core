@@ -1,6 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var lodash = require('lodash');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 var {getModuleDir} = require('./tasks/get-module-directory');
 
 function countOccurences(_string, substring) {
@@ -52,6 +53,9 @@ module.exports = function makeConfig(grunt) {
             new webpack.DefinePlugin({
                 __SUPERDESK_CONFIG__: JSON.stringify(sdConfig),
             }),
+            new ExtractTextPlugin({
+                filename: '[name].bundle.css',
+            }),
         ],
 
         resolve: {
@@ -67,8 +71,6 @@ module.exports = function makeConfig(grunt) {
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
-                // ensure that react is loaded only once (3rd party apps can load more...)
-                react: path.resolve('./node_modules/react'),
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
@@ -108,19 +110,29 @@ module.exports = function makeConfig(grunt) {
                     loader: 'html-loader',
                 },
                 {
-                    test: /\.css$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                    ],
-                },
-                {
-                    test: /\.scss$/,
-                    use: [
-                        'style-loader',
-                        'css-loader',
-                        'sass-loader',
-                    ],
+                    test: /\.(css|scss)$/i,
+                    use: ExtractTextPlugin.extract({
+                        fallback: [{
+                            loader: 'style-loader',
+                            options: {
+                                sourceMap: true,
+                            },
+                        }],
+                        use: [
+                            {
+                                loader: 'css-loader',
+                                options: {
+                                    sourceMap: true,
+                                },
+                            },
+                            {
+                                loader: 'sass-loader',
+                                options: {
+                                    sourceMap: true,
+                                },
+                            },
+                        ],
+                    }),
                 },
                 {
                     test: /\.json$/,
@@ -190,9 +202,6 @@ function getDefaults(grunt) {
         editor3: {
             browserSpellCheck: false,
         },
-
-        // default timezone for the app
-        defaultTimezone: grunt.option('defaultTimezone') || 'Europe/London',
 
         // model date and time formats
         model: {
@@ -264,5 +273,7 @@ function getDefaults(grunt) {
             'pt_BR',
             'pl',
         ],
+
+        userOnlineMinutes: 15,
     };
 }

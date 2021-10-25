@@ -26,7 +26,8 @@ class UnstyledBlock extends BaseUnstyledComponent {
         const propsToTransfer = omit(this.props, ['className', 'invisibles', 'dispatch', 'editorProps']);
 
         return (
-            <div ref={(div) => this.div = div}
+            <div
+                ref={(div) => this.div = div}
                 {...propsToTransfer}
                 className={className + (this.state.over ? ' unstyled__block--over' : ' unstyled__block')}
             >

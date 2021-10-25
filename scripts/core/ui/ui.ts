@@ -8,6 +8,9 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
 import {VideoComponent} from './components/video';
+import {TextAreaInput} from './components/Form';
+import {PlainTextEditor} from './components/PlainTextEditor/PlainTextEditor';
+import {getTimezoneLabel} from 'apps/dashboard/world-clock/timezones-all-labels';
 
 /**
  * Gives top shadow for scroll elements
@@ -62,20 +65,6 @@ function CreateButtonDirective() {
     return {
         restrict: 'C',
         template: '<i class="icon-plus-large"></i><span class="circle"></span>',
-    };
-}
-
-AutofocusDirective.$inject = [];
-function AutofocusDirective() {
-    return {
-        link: function(scope, element) {
-            _.defer(() => {
-                var value = element.val();
-
-                element.val('').focus();
-                element.val(value);
-            });
-        },
     };
 }
 
@@ -393,7 +382,7 @@ function DatepickerInnerDirective($compile, $document, popupService, datetimeHel
 
             ctrl.$render = function() {
                 element.val(ctrl.$viewValue.viewdate); // set the view
-                scope.date = ctrl.$viewValue.dpdate || moment().tz(appConfig.defaultTimezone); // set datepicker model
+                scope.date = ctrl.$viewValue.dpdate || moment().tz(appConfig.default_timezone); // set datepicker model
             };
 
             // handle model changes
@@ -615,19 +604,24 @@ function TimezoneDirective(tzdata, $timeout) {
         scope: {
             timezone: '=',
             style: '@',
+            initializeWithDefault: '=',
         },
         link: function(scope, el) {
             scope.timeZones = []; // all time zones to choose from
             scope.tzSearchTerm = ''; // the current time zone search term
+            scope.getTimezoneLabel = getTimezoneLabel;
 
             // filtered time zone list containing only those that match
             // user-provided search term
             scope.matchingTimeZones = [];
 
+            const initializeWithDefault = scope.initializeWithDefault ?? true;
+
             tzdata.$promise.then(() => {
                 scope.timeZones = tzdata.getTzNames();
-                if (!scope.timezone && appConfig.defaultTimezone) {
-                    scope.selectTimeZone(appConfig.defaultTimezone);
+
+                if (initializeWithDefault && (!scope.timezone && appConfig.default_timezone)) {
+                    scope.selectTimeZone(appConfig.default_timezone);
                 }
             });
 
@@ -652,7 +646,11 @@ function TimezoneDirective(tzdata, $timeout) {
                 termLower = searchTerm.toLowerCase();
                 scope.matchingTimeZones = _.filter(
                     scope.timeZones,
-                    (item) => item.toLowerCase().indexOf(termLower) >= 0,
+                    (item) =>
+                        item.toLowerCase().indexOf(termLower) >= 0 ||
+                           scope.getTimezoneLabel(item)
+                               .toLowerCase()
+                               .indexOf(termLower) >= 0,
                 );
             };
 
@@ -841,20 +839,106 @@ function WeekdayPickerDirective(weekdays) {
  * resize monitoring and authoring screen
  *
  */
-splitterWidget.$inject = ['superdesk', '$timeout'];
-function splitterWidget(superdesk, $timeout) {
+splitterWidget.$inject = ['superdesk', '$timeout', '$rootScope'];
+function splitterWidget(superdesk, $timeout, $rootScope) {
     return {
         link: function(scope, element) {
-            var workspace = element,
-                authoring = element.next('#authoring-container');
+            const MONITORING_MIN_WIDTH = 532;
+            const AUTHORING_MIN_WIDTH = 730;
+
+            let workspace, authoring, container;
+
+            const initializeContainers = () => {
+                workspace = element ? element :
+                    angular.element('#workspace-container');
+
+                authoring = angular.element('#authoring-container');
+                container = element.parent();
+            };
+
+            initializeContainers();
+
+            const resize = () => {
+                initializeContainers();
+
+                workspace.addClass('ui-resizable-resizing');
+
+                let remainingSpace = container.width() - workspace.outerWidth() - 48,
+                    authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
+
+                let stage = workspace.find('.stage.swimlane');
+                let header = stage.find('.column-header.swimlane');
+
+                if (workspace.outerWidth() < 655) {
+                    workspace.addClass('ui-responsive-medium');
+                } else {
+                    workspace.removeClass('ui-responsive-medium');
+                }
+
+                if (workspace.outerWidth() < 460) {
+                    workspace.addClass('ui-responsive-small');
+                } else {
+                    workspace.removeClass('ui-responsive-small');
+                }
+
+                workspace.next('#authoring-container').width(authoringWidth / container.width() * 100 + '%');
+
+                header.width(stage.outerWidth());
+            };
+
+            const afterResize = () => {
+                initializeContainers();
+
+                var stage = workspace.find('.stage.swimlane');
+                var header = stage.find('.column-header.swimlane');
+
+                superdesk.monitoringWidth = workspace.outerWidth() / container.width() * 100 + '%';
+                superdesk.authoringWidth = authoring.outerWidth() / container.width() * 100 + '%';
+
+                superdesk.headerWidth = superdesk.stageWidth = stage.outerWidth();
+
+                workspace.css({
+                    width: superdesk.monitoringWidth,
+                });
+
+                header.css({
+                    width: superdesk.headerWidth,
+                });
+
+                workspace.removeClass('ui-resizable-resizing');
+
+                // Trigger resize event to update elements
+                $timeout(() => window.dispatchEvent(new Event('resize')), 0, false);
+            };
 
             /*
              * If custom sizes are defined, preload them
              */
             if (superdesk.monitoringWidth && superdesk.authoringWidth) {
-                workspace.css({width: superdesk.monitoringWidth});
-                authoring.css({width: superdesk.authoringWidth});
+                $timeout(() => {
+                    initializeContainers();
+
+                    workspace.css({width: superdesk.monitoringWidth});
+                    authoring.css({width: superdesk.authoringWidth});
+                }, 0, false);
             }
+
+            /*
+             * Resize on request
+             */
+            $rootScope.$on('resize:monitoring', (e, value) => {
+                if ((workspace.outerWidth() + value) < MONITORING_MIN_WIDTH) {
+                    return;
+                }
+
+                workspace.width(workspace.outerWidth() + value);
+
+                resize();
+
+                $timeout(() => {
+                    afterResize();
+                }, 500, false);
+            });
 
             /*
              * If authoring is not initialized,
@@ -865,64 +949,30 @@ function splitterWidget(superdesk, $timeout) {
              */
             if (!authoring.length) {
                 $timeout(() => {
-                    authoring = element.next('#authoring-container');
                     authoring.width(superdesk.authoringWidth);
                 }, 0, false);
             }
 
             workspace.resizable({
                 handles: 'e',
-                minWidth: 400,
+                minWidth: MONITORING_MIN_WIDTH,
                 start: function(e, ui) {
-                    var container = ui.element.parent();
-
-                    workspace.resizable({maxWidth: container.width() - 730});
+                    workspace.resizable({maxWidth: container.width() - AUTHORING_MIN_WIDTH});
                 },
-                resize: function(e, ui) {
-                    var container = ui.element.parent(),
-                        remainingSpace = container.width() - workspace.outerWidth() - 48,
-                        authoringWidth = remainingSpace - (authoring.outerWidth() - authoring.width());
+                resize: resize,
+                stop: afterResize,
+                create: () => {
+                    // On double click handle, reset size to default
+                    angular.element('.ui-resizable-handle').dblclick(() => {
+                        workspace.css('width', '');
+                        authoring.css('width', '');
 
-                    var stage = ui.element.find('.stage.swimlane');
-                    var header = stage.find('.column-header.swimlane');
+                        resize();
 
-                    if (workspace.outerWidth() < 655) {
-                        workspace.addClass('ui-responsive-medium');
-                    } else {
-                        workspace.removeClass('ui-responsive-medium');
-                    }
-
-                    if (workspace.outerWidth() < 460) {
-                        workspace.addClass('ui-responsive-small');
-                    } else {
-                        workspace.removeClass('ui-responsive-small');
-                    }
-
-                    authoring.width(authoringWidth / container.width() * 100 + '%');
-
-                    header.width(stage.outerWidth());
-                },
-                stop: function(e, ui) {
-                    var container = ui.element.parent();
-
-                    var stage = ui.element.find('.stage.swimlane');
-                    var header = stage.find('.column-header.swimlane');
-
-                    superdesk.monitoringWidth = workspace.outerWidth() / container.width() * 100 + '%';
-                    superdesk.authoringWidth = authoring.outerWidth() / container.width() * 100 + '%';
-
-                    superdesk.headerWidth = superdesk.stageWidth = stage.outerWidth();
-
-                    ui.element.css({
-                        width: superdesk.monitoringWidth,
+                        $timeout(() => {
+                            afterResize();
+                        }, 500, false);
                     });
-
-                    header.css({
-                        width: superdesk.headerWidth,
-                    });
-
-                    // Trigger resize event to update elements
-                    $timeout(() => window.dispatchEvent(new Event('resize')), 0, false);
                 },
             });
         },
@@ -1078,6 +1128,7 @@ function MultipleEmailsValidation() {
         restrict: 'A',
         require: 'ngModel',
         link: function(scope, elem, attrs, ctrl) {
+            // eslint-disable-next-line no-useless-escape
             var EMAIL_REGEXP = /^(?=.{1,254}$)(?=.{1,64}@)[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+(\.[-!#$%&'*+\/0-9=?A-Z^_`a-z{|}~]+)*@[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
 
             ctrl.$validators.multipleEmails = function(modelValue, viewValue) {
@@ -1214,7 +1265,6 @@ export default angular.module('superdesk.core.ui', [
     .directive('sdShadow', ShadowDirective)
     .filter('nl2el', NewlineToElement)
     .directive('sdCreateBtn', CreateButtonDirective)
-    .directive('sdAutofocus', AutofocusDirective)
     .directive('sdAutoexpand', AutoexpandDirective)
     .directive('sdTimezone', TimezoneDirective)
     .directive('sdDatepickerInner', DatepickerInnerDirective)
@@ -1241,6 +1291,31 @@ export default angular.module('superdesk.core.ui', [
         reactToAngular1(
             VideoComponent,
             ['item'],
+        ),
+    )
+    .component('sdPlainTextEditor',
+        reactToAngular1(
+            PlainTextEditor,
+            ['value', 'onChange', 'classes', 'onChangeData', 'placeholder', 'spellcheck', 'language', 'onFocus'],
+        ))
+    .component('sdTextAreaInput',
+        reactToAngular1(
+            TextAreaInput,
+            [
+                'field',
+                'value',
+                'label',
+                'onChange',
+                'autoHeight',
+                'autoHeightTimeout',
+                'nativeOnChange',
+                'placeholder',
+                'readOnly',
+                'maxLength',
+                'onFocus',
+                'boxed',
+                'required',
+            ],
         ),
     )
 ;

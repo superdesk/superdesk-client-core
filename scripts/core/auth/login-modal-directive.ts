@@ -8,11 +8,12 @@ import {appConfig} from 'appConfig';
 angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
     'session',
     'auth',
+    'keycloak',
     'features',
     'usersService',
     'notify',
     '$route',
-    function(session, auth, features, usersService, notify, $route) {
+    function(session, auth, keycloak, features, usersService, notify, $route) {
         return {
             replace: true,
             // login template can be overriden (like on superdesk-fi)
@@ -30,6 +31,10 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                 scope.labels = {
                     saml: appConfig.saml_label,
                 };
+                // Keycloak auth
+                if (appConfig.oidc_auth) {
+                    keycloak.keycloakAuth();
+                }
 
                 scope.authenticate = function() {
                     scope.isLoading = true;
@@ -117,7 +122,9 @@ angular.module('superdesk.core.auth.login', []).directive('sdLoginModal', [
                     scope.sessionId = session.sessionId;
                     scope.username = session.identity ? session.identity.UserName : null;
                     scope.password = null;
-                    if (!triggerLogin[0] && triggerLogin[1] === true) {
+                    // when OIDC is enabled, user will always be redirected to Keycloak server to log in
+                    // showing login screen before redirect may cause flashing
+                    if (!triggerLogin[0] && triggerLogin[1] === true && !appConfig.oidc_auth) {
                         scope.active = true;
                         var focusElem = scope.username ? 'password' : 'username';
 

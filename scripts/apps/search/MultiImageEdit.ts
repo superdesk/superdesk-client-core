@@ -187,7 +187,7 @@ export function MultiImageEditController(
         const {imagesOriginal} = $scope;
 
         if (data.lock_session === session.sessionId) {
-            return; // ignore locking for the modal
+            return; // ignore locking in the session (from this modal)
         }
 
         // while editing metadata if any selected item is unlocked by another user remove that item from selected items
@@ -242,6 +242,8 @@ export function MultiImageEditController(
             source: compare('source'),
             ednote: compare('ednote'),
             sign_off: compare('sign_off'),
+            authors: compare('authors'),
+            keywords: compare('keywords'),
         };
     }
 

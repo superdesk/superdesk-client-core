@@ -35,7 +35,8 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             });
             scope.privileges = privileges.privileges;
             scope.features = features;
-            scope.usernamePattern = usersService.usernamePattern;
+            scope.usernamePattern = appConfig.user?.username_pattern != null ?
+                new RegExp(appConfig.user.username_pattern) : usersService.usernamePattern;
             scope.twitterPattern = usersService.twitterPattern;
             scope.phonePattern = usersService.phonePattern;
             scope.signOffPattern = usersService.signOffPattern;
@@ -109,7 +110,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             };
 
             function validateField(response, field) {
-                if (scope.userForm[field]) {
+                if (scope.userForm?.[field]) {
                     if (scope.error[field]) {
                         scope.error.message = null;
                     }
@@ -265,6 +266,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                                 scope.dirty = JSON.stringify(user) !== JSON.stringify(scope.origUser);
                             } else {
                                 userWatchInitialized = true;
+                                scope.userImmutable = {...scope.user};
                             }
                         });
 

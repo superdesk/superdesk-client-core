@@ -2,10 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {DesksDropdown} from './index';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 
 export class FetchedDesksInfo extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
+
+    familyService: any;
+    $location: any;
+    desks: any;
+    superdesk: any;
 
     constructor(props) {
         super(props);
@@ -13,22 +19,23 @@ export class FetchedDesksInfo extends React.Component<any, any> {
         this.state = {desks: []};
 
         this.openDesk = this.openDesk.bind(this);
+
+        this.familyService = ng.get('familyService');
+        this.$location = ng.get('$location');
+        this.desks = ng.get('desks');
+        this.superdesk = ng.get('superdesk');
     }
 
     componentDidMount() {
-        const {familyService} = this.props.svc;
-
-        familyService.fetchDesks(this.props.item, false)
+        this.familyService.fetchDesks(this.props.item, false)
             .then((fetchedDesks) => {
                 this.setState({desks: fetchedDesks});
             });
     }
 
     componentDidUpdate(prevProps, prevState) {
-        const {familyService} = this.props.svc;
-
         if (prevProps.item !== this.props.item) {
-            familyService.fetchDesks(this.props.item, false)
+            this.familyService.fetchDesks(this.props.item, false)
                 .then((fetchedDesks) => {
                     this.setState({desks: fetchedDesks});
                 });
@@ -40,15 +47,13 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     }
 
     openDesk(desk) {
-        const {$location, desks, superdesk} = this.props.svc;
-
-        return function(event) {
+        return (event) => {
             event.stopPropagation();
             if (desk.isUserDeskMember) {
-                desks.setCurrentDeskId(desk.desk._id);
-                $location.url('/workspace/monitoring');
+                this.desks.setCurrentDeskId(desk.desk._id);
+                this.$location.url('/workspace/monitoring');
                 if (desk.count === 1) {
-                    superdesk.intent('edit', 'item', desk.item);
+                    this.superdesk.intent('edit', 'item', desk.item);
                 }
             }
         };
@@ -57,37 +62,33 @@ export class FetchedDesksInfo extends React.Component<any, any> {
     render() {
         const items = [];
 
-        items.push(React.createElement('dt', {
-            key: 'dt',
-            style: {paddingRight: '5px'},
-        }, gettext('fetched in')));
-
-        if (this.state.desks.length) {
-            const desk = this.state.desks[0];
-            const name = this.formatDeskName(desk.desk.name);
-
-            items.push(React.createElement('dd', {key: 'dd1'}, desk.isUserDeskMember ?
-                React.createElement('a', {onClick: this.openDesk(desk)}, name) :
-                React.createElement('span', {className: 'container'}, name),
-            ));
-
-            if (this.state.desks.length > 1) {
-                items.push(React.createElement(DesksDropdown, {
-                    key: 'dd2',
-                    desks: this.state.desks,
-                    openDesk: this.openDesk,
-                    svc: this.props.svc,
-                }));
-            }
+        if (!this.state.desks?.length) {
+            return null;
         }
 
-        return React.createElement('div', {},
-            React.createElement('dl', {}, items),
+        const desk = this.state.desks[0];
+        const name = this.formatDeskName(desk.desk.name);
+
+        return (
+            <div>
+                <dl>
+                    <dt style={{paddingRight: '5px'}}>{gettext('fetched in')}</dt>
+                    <dd>
+                        {
+                            desk.isUserDeskMember
+                                ? <button className="link" onClick={this.openDesk(desk)}>{name}</button>
+                                : <span className="container">{name}</span>
+                        }
+                    </dd>
+                    {this.state.desks.length > 1 && (
+                        <DesksDropdown desks={this.state.desks} openDesk={this.openDesk} />
+                    )}
+                </dl>
+            </div>
         );
     }
 }
 
 FetchedDesksInfo.propTypes = {
-    svc: PropTypes.object,
     item: PropTypes.any,
 };

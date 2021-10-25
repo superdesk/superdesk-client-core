@@ -1,11 +1,28 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
+import {IPackagesService} from 'types/Services/Packages';
+import {IBaseRestApiResponse} from 'superdesk-api';
+
+export interface IHighlight extends IBaseRestApiResponse {
+    name: string;
+    desks: Array<string>;
+    auto_insert?: string;
+    groups?: Array<string>;
+}
+
+export function getHighlightsLabel(highlihgt: IHighlight): string {
+    if (highlihgt.desks.length < 1) {
+        return highlihgt.name + ' ' + gettext('(Global)');
+    } else {
+        return highlihgt.name;
+    }
+}
 
 /**
  * Service for highlights with caching.
  */
 HighlightsService.$inject = ['api', '$q', '$cacheFactory', 'packages', 'privileges'];
-export function HighlightsService(api, $q, $cacheFactory, packages, privileges) {
+export function HighlightsService(api, $q, $cacheFactory, packages: IPackagesService, privileges) {
     var service: any = {};
     var promise = {};
     var cache = $cacheFactory('highlightList');
@@ -59,7 +76,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
 
     function setLabel(objItems) {
         _.forEach(objItems, (item) => {
-            item.label = item.desks.length ? item.name : item.name + ' ' + gettext('(Global)');
+            item.label = getHighlightsLabel(item);
         });
     }
 
@@ -115,7 +132,7 @@ export function HighlightsService(api, $q, $cacheFactory, packages, privileges) 
             pkgDefaults.task = highlight.task;
         }
 
-        return packages.createEmptyPackage(pkgDefaults, false, group);
+        return packages.createEmptyPackage(pkgDefaults, null, group, null);
     };
 
     /**

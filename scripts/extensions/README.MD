@@ -6,9 +6,24 @@ The main purpose of extensions is to reduce the complexity and interdependencies
 
 It's easiest to copy the `helloWorld` extension and change the directory name.
 
+# Registering an extension
+
+Pass the following registration object to `startApp`
+
+```javascript
+startApp([
+    {
+        id: 'planning-extension',
+        load: () => import('superdesk-planning/client/planning-extension'),
+    },
+]);
+
+IMPORTANT: extension `id` must match its directory name
+```
+
 # Writing end-to-end tests for extensions
 
-Writing the tests is almost the same as in the core, typescript specific things and e2e helpers module are the only differences. Often stricter typescript compiler options are used for extensions, so you'll need to install `@types/jasmine` package. Ensure that `compile` npm script also compiles e2e tests which after compiling should end up in `extensions/extenstion-name/spec/dist`. See an example in `markForUser` extension. You can import e2e helpers from a local package `end-to-end-testing-helpers`.
+Not supported at the moment.
 
 # How extensions work
 
@@ -18,9 +33,7 @@ Extension may export other functions to enable other extensions to call them. In
 
 # How are extensions built and executed
 
-* `setup-extensions` npm script reads `package.json` of every extension, installs its dependencies and runs a `compile` script for every extension.
-* It then generates a file which imports all extensions.
-* The generated file is imported, extensions iterated and `activate` method is executed for every extension.
+* Extensions are built using a CLI tool by running the following command in the root repository `@superdesk/build-tools extensions build {root-client-dir}`. It installs dependencies, compiles, namespaces CSS and includes translations from each extension. When client-core starts, it executes `activate` method of each extension.
 
 
 # Styling
@@ -28,3 +41,35 @@ Extension may export other functions to enable other extensions to call them. In
 Extension specific styles can be added by creating a file in `extension-folder/src/index.css`. The classnames and ids are prefixed on build so extension styles don't conflict with main application styles. Due to prefixing, a `superdesk.utilities.CSS.getClass` has to be used to get the correct classname at runtime.
 
 There's an npm task - "watch-css-from-extensions" for rebuilding extension styles on file change.
+
+# Translations
+
+In order for translations to be accessible via `gettext` function that is exposed via the extensions API, it is required to put `.po` files in a directory, and add an the following entry to `package.json` of an extension(path relative to `package.json`):
+
+```json
+{
+    "superdeskExtension": {
+        "translations-directory": "./dir-name"
+    }
+}
+```
+
+# Extracting translation strings from code
+
+Set `superdeskExtension.translations-extract-paths` to an array of paths in `package.json` and `@superdesk/build-tools` will generate a .pot file in the root directory of the extension. Translations will be extracted from the following file types: `.ts`, `.tsx`, `.js`, `.jsx`
+
+`.pot` files are generated on every build or running a command explicitly. Run `npx @superdesk/build-tools --help` to see available commands.
+
+It is also possible to extract translation strings outside the extension as well e.g. `"translations-extract-paths": ["../any-dir"]`.
+
+Ensure that node_modules or any other external code is not a child directory of any translation paths.
+
+```json
+{
+    "superdeskExtension": {
+        "translations-extract-paths": [
+            "./src"
+        ]
+    }
+}
+```

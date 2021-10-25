@@ -67,14 +67,15 @@ export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
         return (
             <div className="authoring-sticky__detailed-wrapper">
                 {articleDisplayWidgets.map(
-                    (Component, i) =>
+                    (Component, i) => (
                         <div key={i} className="authoring-sticky__from-extensions">
                             <Component
                                 article={
                                     this.props.action === 'view' ? this.state.articleOriginal : articleUpdatedReference
                                 }
                             />
-                        </div>,
+                        </div>
+                    ),
                 )}
             </div>
         );

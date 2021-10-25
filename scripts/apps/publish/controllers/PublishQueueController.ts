@@ -148,7 +148,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     $scope.buildNewSchedule = function(item) {
         var pickFields = ['item_id', 'item_version', 'publishing_action', 'formatted_item', 'headline',
             'content_type', 'subscriber_id', 'unique_name', 'destination', 'ingest_provider',
-            'item_encoding', 'encoded_item_id'];
+            'item_encoding', 'encoded_item_id', 'associated_items'];
 
         var newItem = _.pick(item, pickFields);
 
@@ -300,8 +300,13 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         $scope.selected.extensionPoint = false;
 
         if (queueItem) {
+            let endpoint = 'archive';
+
             if (isSuperdeskContent(queueItem.content_type)) {
-                api.archive.getById(queueItem.item_id, {version: queueItem.item_version})
+                if (queueItem.publishing_action === 'being_corrected') {
+                    endpoint = 'published';
+                }
+                api.find(endpoint, queueItem.item_id, {version: queueItem.item_version})
                     .then((item) => {
                         $scope.selected.preview = item;
                     });

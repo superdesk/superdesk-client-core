@@ -25,6 +25,10 @@ declare const fit: any;
 declare const xit: any;
 declare const fail: any;
 
+// Most browsers have it implemented, but the standard's state is still "Editor's Draft".
+// https://github.com/Microsoft/TypeScript/issues/28502
+declare const ResizeObserver: any;
+
 // globals
 // tslint:disable-next-line: interface-name
 interface Window {

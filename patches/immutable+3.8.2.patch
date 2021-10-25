@@ -1,0 +1,52 @@
+# Fixing iterable types so keys/values in the callbacks are not always optional.
+# Now, it will be optional or not depending on actual types of passed object.
+
+diff --git a/node_modules/immutable/dist/immutable-nonambient.d.ts b/node_modules/immutable/dist/immutable-nonambient.d.ts
+index dc38000..ac0e993 100644
+--- a/node_modules/immutable/dist/immutable-nonambient.d.ts
++++ b/node_modules/immutable/dist/immutable-nonambient.d.ts
+@@ -1960,7 +1960,7 @@
+      *
+      */
+     map<M>(
+-      mapper: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => M,
++      mapper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => M,
+       context?: any
+     ): /*this*/Iterable<K, M>;
+ 
+@@ -1973,7 +1973,7 @@
+      *
+      */
+     filter(
+-      predicate: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => boolean,
++      predicate: (value: V, key: K, iter: /*this*/Iterable<K, V>) => boolean,
+       context?: any
+     ): /*this*/Iterable<K, V>;
+ 
+@@ -1986,7 +1986,7 @@
+      *
+      */
+     filterNot(
+-      predicate: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => boolean,
++      predicate: (value: V, key: K, iter: /*this*/Iterable<K, V>) => boolean,
+       context?: any
+     ): /*this*/Iterable<K, V>;
+ 
+@@ -2022,7 +2022,7 @@
+      *
+      */
+     sortBy<C>(
+-      comparatorValueMapper: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => C,
++      comparatorValueMapper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => C,
+       comparator?: (valueA: C, valueB: C) => number
+     ): /*this*/Iterable<K, V>;
+ 
+@@ -2033,7 +2033,7 @@
+      * Note: This is always an eager operation.
+      */
+     groupBy<G>(
+-      grouper: (value?: V, key?: K, iter?: /*this*/Iterable<K, V>) => G,
++      grouper: (value: V, key: K, iter: /*this*/Iterable<K, V>) => G,
+       context?: any
+     ): /*Map*/Seq.Keyed<G, /*this*/Iterable<K, V>>;
+ 

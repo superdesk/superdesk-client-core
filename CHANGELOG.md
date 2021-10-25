@@ -1,5 +1,78 @@
 # Superdesk Client Changelog
 
+## [2.2.0] 2021-05-05
+
+[Changes](https://github.com/superdesk/superdesk-client-core/milestone/87?closed=1)
+
+## [2.1.3] 2021-04-19
+
+### Fixed
+
+- Fix publish shortcut visible in personal space.
+- Fix translate action missing in the list.
+- Fix spike view issues.
+- Fix monitoring group doing too many requests.
+- Only open preview on focus when it is triggered via keyboard.
+- Avoid refreshing lists for external search providers.
+- Improve monitoring lists loading behaviour.
+- Fix item count in user activity widget.
+- Keep old visual state while loading data in monitoring.
+- Fix multi selection for bulk actions.
+- Fix master desk assignment page issue with states.
+
+## [2.1.2] 2021-02-24
+
+### Fixed
+
+- Fix user activity widget.
+
+## [2.1.1] 2021-02-15
+
+### Fixed
+
+- Fix user online status detection.
+- Avoid filtering of related items using genre.
+- Fix media contacts cannot be saved when country is set.
+- Don't assign `url_id` if it already exists in ingest settings.
+
+## [2.1.0] 2021-02-10
+
+[Changes](https://github.com/superdesk/superdesk-client-core/milestone/82?closed=1)
+
+## [2.0.2] 2020-12-11
+
+### Changed
+
+- Update `fr_CA` translation.
+
+## [2.0.1] 2020-10-07
+
+### Fixed
+
+- Fix accessibility issues.
+
+## [2.0] 2020-10-05
+
+[Changes](https://github.com/superdesk/superdesk-client-core/milestone/77?closed=1)
+
+## [1.33.4] 2020-09-29
+
+### Fixed
+
+- Fix copy-pasting links from MS Word on Mac
+- Fix translations in app config langOveride not being picked up
+
+## [1.33.3] 2020-07-21
+
+### Fixed
+
+- Fix CSS for associations.
+- Fix autosave getting called after correction is published.
+
+## [1.33.2] 2020-06-09
+
+https://github.com/superdesk/superdesk-client-core/milestone/81?closed=1
+
 ## [1.33.1] 2020-05-11
 
 https://github.com/superdesk/superdesk-client-core/milestone/79?closed=1
@@ -234,7 +307,7 @@ Listing some changes below, for full list go to [github](https://github.com/supe
 - Add abitlity to copy&paste media metadata.
 - Allow configuring article metadata header to open/collapsed.
 - Allow quickly fetching content without opening it.
-- Show field type in field dropdown when editing content profile. 
+- Show field type in field dropdown when editing content profile.
 - Add support for custom text/date fields in authoring header.
 - Allow nesting of items in output stage.
 - Add widgets config to content profile settings.
@@ -671,7 +744,7 @@ Listing some changes below, for full list go to [github](https://github.com/supe
 ### Fixed
 
 - On insert in editor mode don't split already existing suggestions.
-- Pasted text won't include disabled styles in editor3. 
+- Pasted text won't include disabled styles in editor3.
 - Disable autocompletion on password fields in feeding services config.
 - Video preview size is too big in the editor.
 - Fix editor3 freezing on del at the end of paragraph.
@@ -697,7 +770,7 @@ Listing some changes below, for full list go to [github](https://github.com/supe
 - Add missing format options to editor3 (subscript, superdeskcript, strikethrough, preformatted).
 - Warn user when publishing an item with unresolved comments.
 - Add button to remove all formating to editor3 toolbar.
-- Handle suggestions when using ctrl+i/b/u keys in suggestion mode. 
+- Handle suggestions when using ctrl+i/b/u keys in suggestion mode.
 - Only support users can see support users.
 - Support add link suggestion.
 - Support standalone editor3 not connected to an item.
@@ -940,7 +1013,7 @@ Listing some changes below, for full list go to [github](https://github.com/supe
 
 - Fix check spelling shortuct not working when body html has the focus.
 - Lists for ingest saved searches are not refreshed in monitoring when preview is open.
-- Siplay custom error message on item lock failure. 
+- Siplay custom error message on item lock failure.
 - Fix the refresh for monitoring widget when item is ingested/updated.
 - Load Tansa module in async mode when used.
 - Fix the need to save twice in upload form.
@@ -989,7 +1062,7 @@ Listing some changes below, for full list go to [github](https://github.com/supe
 - Add name for custom workspace to monitoring.
 - Allow new vocabulary creation.
 - Add SAML auth support.
-- Add Compare versions view. 
+- Add Compare versions view.
 - Support object type fields in vocabulary schema.
 - Add move path to FTP ingest settings.
 - Add editor3 option to content profiles.

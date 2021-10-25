@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
+import ng from 'core/services/ng';
 import {closeActionsMenu, renderToBody} from '../helpers';
 
 let closeTimeout;
@@ -9,6 +10,8 @@ export class DesksDropdown extends React.Component<any, any> {
     static propTypes: any;
     static defaultProps: any;
 
+    $timeout: any;
+
     constructor(props) {
         super(props);
         this.state = {open: false};
@@ -16,15 +19,15 @@ export class DesksDropdown extends React.Component<any, any> {
         this.close = this.close.bind(this);
         this.toggle = this.toggle.bind(this);
         this.renderDropdown = this.renderDropdown.bind(this);
+
+        this.$timeout = ng.get('$timeout');
     }
 
     close(cancel) {
-        const {$timeout} = this.props.svc;
-
         if (cancel === true && closeTimeout) {
-            $timeout.cancel(closeTimeout);
+            this.$timeout.cancel(closeTimeout);
         } else {
-            closeTimeout = $timeout(() => {
+            closeTimeout = this.$timeout(() => {
                 closeActionsMenu();
             }, 200, false);
         }
@@ -69,6 +72,7 @@ export class DesksDropdown extends React.Component<any, any> {
             onMouseLeave: this.close,
         }, React.createElement('ul', {}, desks));
 
+        // eslint-disable-next-line react/no-find-dom-node
         const thisNode = ReactDOM.findDOMNode(this) as HTMLElement;
         const icon = thisNode.getElementsByClassName('dropdown__toggle')[0];
 
@@ -77,7 +81,6 @@ export class DesksDropdown extends React.Component<any, any> {
 }
 
 DesksDropdown.propTypes = {
-    svc: PropTypes.object.isRequired,
     openDesk: PropTypes.func,
     desks: PropTypes.any,
 };

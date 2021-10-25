@@ -25,6 +25,9 @@
                             <div class="sd-line-input sd-line-input--boxed sd-line-input--disabled">
                                 <label class="sd-line-input__label" for="product-id" translate>Product ID</label>
                                 <input class="sd-line-input__input" id="product-id" type="text" ng-model="product._id" ng-disabled="true">
+                                <button class="icn-btn pull-right" ng-click="copy(product._id)" title="{{ :: 'Copy' | translate }}">
+                                    <i class="icon-copy"></i>
+                                </button>
                                 <span class="sd-line-input__hint" translate>The Product ID can be copied and used as Superdesk Newshub product query.</span>
                             </div>
                         </div>
@@ -55,7 +58,7 @@
 
                         <div class="sd-line-input  sd-line-input--is-select">
                             <label class="sd-line-input__label" translate>Content Filter</label>
-                            <select class="sd-line-input__select" ng-model="product.edit.content_filter.filter_id">
+                            <select class="sd-line-input__select" ng-model="product.edit.content_filter.filter_id" ng-change="handleContentFilterChange()">
                                 <option value=""></option>
                                 <option value="{{filter._id}}" ng-selected="filter._id === product.edit.content_filter.filter_id" ng-repeat="filter in contentFilters track by filter._id">{{:: filter.name}}</option>
                             </select>

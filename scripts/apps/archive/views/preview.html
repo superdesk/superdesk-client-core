@@ -35,7 +35,8 @@
               <span class="inline-label">company codes:</span><span class="company-codes">{{getCompanyCodes()}}</span>
             </div>
             <div class="preview-header__flex-row">
-              <span sd-item-state data-state=selected.preview.state data-embargo=item.embargo></span>
+              <span sd-item-state data-state=selected.preview.state data-embargo=item.embargo
+                data-is-correction-workflow-enabled="isCorrectionWorkflowEnabled"></span>
               <span class="state-label not-for-publication" ng-if="item.flags.marked_for_not_publication" translate>Not For Publication</span>
               <span class="state-label legal" ng-if="selected.preview.flags.marked_for_legal" translate>Legal</span>
               <span class="state-label sms" ng-if="selected.preview.flags.marked_for_sms" translate>Sms</span>
@@ -67,16 +68,19 @@
                 class="preview-header__toggle"
                 ng-class="{active: previewState.toggleHeader}"
                 ng-click="togglePreviewHeader()"
+                aria-label="{{:: 'Toggle header info' | translate}}"
                 tabindex="-1"><i class="icon-chevron-down-thin"></i></button>
       </header>
 
         <div class="composite-nav" ng-if="selected.preview.type === 'composite'">
           <i class="filetype-icon-large-composite"></i>
           <p class="title preview-headline"
-             ng-if="selected.preview.headline"
-             order="{{editor['headline'].order}}"
-             ng-class="{condensed: !lock}"
-             sd-html-preview="selected.preview.headline"></p>
+            order="{{editor['headline'].order}}"
+            ng-if="selected.preview.headline"
+            ng-class="{condensed: !lock}"
+            sd-html-preview="selected.preview.headline"
+            data-test-id="field--headline"
+          ></p>
         </div>
 
         <div ng-hide="hideActions()" class="action-menu">
@@ -88,16 +92,17 @@
         <div class="rewrite" ng-if="selected.preview.rewrite_id">{{ :: 'This story has been rewritten by: ' | translate }}<a ng-click="previewRewriteStory()"
             class="open-item"><i class="icon-external"></i></a></div>
 
-
         <p class="nav-space" ng-if="!selected.preview.headline && !lock"></p>
 
         <div class="core-content">
 
-          <p class="title preview-headline"
-            order="{{editor['headline'].order}}"
-            ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
-            ng-class="{condensed: !lock}"
-            sd-html-preview="selected.preview.headline"></p>
+            <p class="title preview-headline"
+              order="{{editor['headline'].order}}"
+              ng-if="selected.preview.headline && selected.preview.type !== 'composite'"
+              ng-class="{condensed: !lock}"
+              sd-html-preview="selected.preview.headline"
+              data-test-id="field--headline"
+            ></p>
 
             <p ng-if="selected.preview.is_spiked" class="alert alert-warning expires">
                 <span translate>expires</span> <time sd-datetime data-date="selected.preview.expiry"></time>
@@ -172,7 +177,7 @@
                 </div>
                 <div ng-if="field.field_type === 'media'" class="association">
                     <div ng-repeat="(mediaId, media) in getAssociatedItems(item.associations, field._id) track by mediaId">
-                        <img src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
+                        <img ng-src="{{media.renditions.viewImage.href}}" ng-if="media.type === 'picture'">
                         <sd-video ng-if="media.type === 'video'" item="media"></sd-video>
                         <audio controls="controls" ng-if="media.type === 'audio'">
                             <source vsrc="{{rendition.href}}"

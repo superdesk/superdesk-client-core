@@ -6,9 +6,8 @@ import thunk from 'redux-thunk';
 import {gettext} from 'core/utils';
 import {logger} from 'core/services/logger';
 import {combineReducers, createStore, applyMiddleware} from 'redux';
-import {attachments, initAttachments} from '../../attachments';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
-import {onChangeMiddleware, getArticleSchemaMiddleware} from '..';
+import {getArticleSchemaMiddleware} from '..';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
@@ -18,6 +17,9 @@ import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {ITEM_STATE} from 'apps/archive/constants';
+import {isMediaType} from 'core/helpers/item';
+import {confirmPublish} from '../services/quick-publish-modal';
 
 /**
  * @ngdoc directive
@@ -52,8 +54,8 @@ AuthoringDirective.$inject = [
     'editorResolver',
     'compareVersions',
     'embedService',
-    'relationsService',
     '$injector',
+    'autosave',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -79,11 +81,14 @@ export function AuthoringDirective(
     editorResolver,
     compareVersions,
     embedService,
-    relationsService,
     $injector,
+    autosave,
 ) {
     return {
         link: function($scope, elem, attrs) {
+            $scope.loading = false;
+            $scope.tabsPinned = false;
+
             var _closing;
             var mediaFields = {};
             var userDesks;
@@ -101,12 +106,13 @@ export function AuthoringDirective(
                 userDesks = desksList;
                 $scope.itemActions = authoring.itemActions($scope.origItem, userDesks);
             });
+
             $scope.privileges = privileges.privileges;
             $scope.dirty = false;
             $scope.views = {send: false};
             $scope.stage = null;
             $scope._editable = !!$scope.origItem._editable;
-            $scope.isMediaType = _.includes(['audio', 'video', 'picture', 'graphic'], $scope.origItem.type);
+            $scope.isMediaType = isMediaType($scope.origItem);
             $scope.action = $scope.action || ($scope._editable ? 'edit' : 'view');
 
             $scope.highlight = !!$scope.origItem.highlight;
@@ -118,6 +124,7 @@ export function AuthoringDirective(
             $scope.mediaFieldVersions = {};
             $scope.refreshTrigger = 0;
             $scope.isPreview = false;
+            $scope.isCorrectionInProgress = false;
 
             $scope.$watch('origItem', (newValue, oldValue) => {
                 $scope.itemActions = null;
@@ -136,8 +143,8 @@ export function AuthoringDirective(
             }, true);
 
             function checkShortcutButtonAvailability(personal = false) {
-                if (personal && appConfig?.features?.publishFromPersonal) {
-                    return $scope.item.state !== 'draft' || $scope.dirty;
+                if (personal) {
+                    return appConfig?.features?.publishFromPersonal && $scope.item.state !== 'draft';
                 }
                 return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
             }
@@ -181,10 +188,7 @@ export function AuthoringDirective(
                                 $scope.stage = result;
                             });
 
-                        desks.fetchDeskById($scope.origItem.task.desk).then((desk) => {
-                            $scope.deskName = desk.name;
-                            $scope.deskType = desk.desk_type;
-                        });
+                        setDesk();
                     }
                 }
             }
@@ -201,6 +205,21 @@ export function AuthoringDirective(
                     .then((result) => {
                         $scope.currentTemplate = result;
                     });
+            }
+
+            /**
+            * Get the desk name and desk type.
+            */
+            function setDesk() {
+                if (!$scope.item.task.desk) {
+                    return false;
+                }
+                const desk = desks.getItemDesk($scope.item);
+
+                if (desk) {
+                    $scope.deskName = desk.name;
+                    $scope.deskType = desk.desk_type;
+                }
             }
 
             /**
@@ -227,7 +246,13 @@ export function AuthoringDirective(
             $scope.edit = function edit() {
                 if ($scope.origItem.state === 'unpublished') {
                     api.update('archive', $scope.origItem, {state: 'in_progress'})
-                        .then((updated) => authoringWorkspace.edit(updated));
+                        .then((updated) => {
+                            // for updating and refreshing the item everywhere,
+                            // close it first and then open it.
+                            $scope.close().then(() => {
+                                authoringWorkspace.edit(updated);
+                            });
+                        });
                 } else if (isPublished($scope.origItem)) {
                     authoringWorkspace.view($scope.origItem);
                 } else {
@@ -461,6 +486,8 @@ export function AuthoringDirective(
             }
 
             function publishItem(orig, item) {
+                autosave.stop(item);
+
                 var action = $scope.action === 'edit' ? 'publish' : $scope.action;
                 const onPublishMiddlewares = getOnPublishMiddlewares();
                 let warnings: Array<{text: string}> = [];
@@ -624,6 +651,37 @@ export function AuthoringDirective(
                         window.tansa.settings.profileId = profiles[$scope.item.language];
                     }
 
+                    (function workAroundTansaSpellcheckerSelectionBug() {
+                        /**
+                         * The issue was that Tansa spell-checker would only check a single field, even if no input
+                         * field was focused at the time of initializing the spell-checker.
+                         *
+                         * If spell-checking was cancelled, that field would receive focus.
+                         *
+                         * If the page was reloaded, or an article reopened - all fields were spell-checked as expected.
+                         *
+                         * The issue was only happening if an expanded text selection was made in input[type="text"]
+                         * field at **any point** prior to initializing the spell-checker.
+                         * Such a selection is made every time when focusing a
+                         * non-empty input[type="text"] field using a tab key.
+                         * Even if other text fields received focus after that,
+                         * it would only spell-check the single field,
+                         * that last had an expanded text selection performed on it.
+                         *
+                         * I assume Tansa spell-checker has a feature to only spell-check a selected part of the text
+                         * and their JavaScript code has a bug where it can't differentiate between text that
+                         * was intentionally selected for spell-checking from text that was selected long before
+                         * initializing the spell-checker, even after multiple other input fields received focus.
+                         */
+
+                        Array.from(document.querySelectorAll('input[type="text"]')).forEach((el: HTMLInputElement) => {
+                            // Making sure there are no expanded selections.
+                            if (el !== document.activeElement) {
+                                el.setSelectionRange(0, 0);
+                            }
+                        });
+                    })();
+
                     window.RunTansaProofing();
                 } else {
                     notify.error(gettext('Tansa is not responding. You can continue editing or publish the story.'));
@@ -637,7 +695,7 @@ export function AuthoringDirective(
             function afterTansa(e, isCancelled) {
                 const _editor = editorResolver.get();
 
-                if (_editor && _editor.version() === '3') {
+                if (_editor && _editor.version() === '3' && !isCancelled) {
                     _editor.setHtmlFromTansa($('#editor3Tansa').html());
                 }
             }
@@ -682,6 +740,8 @@ export function AuthoringDirective(
 
                     if ($scope.action && $scope.action !== 'edit') {
                         message = $scope.action;
+                    } else if ($scope.action === 'edit' && $scope.item.state === ITEM_STATE.CORRECTION) {
+                        $scope.action = 'correct';
                     }
 
                     if ($scope.dirty && message === 'publish') {
@@ -712,13 +772,13 @@ export function AuthoringDirective(
                 if ($scope.dirty) {
                     showConfirm ?
                         $scope.saveTopbar()
-                            .then(confirm.confirmQuickPublish)
+                            .then(() => confirmPublish([$scope.item]))
                             .then(customButtonAction) :
                         $scope.saveTopbar()
                             .then(customButtonAction);
                 } else {
                     showConfirm ?
-                        confirm.confirmQuickPublish().then(customButtonAction) :
+                        confirmPublish([$scope.item]).then(customButtonAction) :
                         customButtonAction();
                 }
                 initMedia();
@@ -756,6 +816,7 @@ export function AuthoringDirective(
                 // returned promise used by superdesk-fi
                 return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
                     authoringWorkspace.close(true);
+                    $rootScope.$broadcast('item:close', $scope.origItem._id);
                 });
             };
 
@@ -817,6 +878,14 @@ export function AuthoringDirective(
             $scope.revert = function(version) {
                 $scope.isPreview = false;
                 helpers.forcedExtend($scope.item, version);
+
+                /**
+                 * Before restoring, a version can be previewed in read only mode.
+                 * For this to work, `_editable` is set to false.
+                 * It has to be set back to true so the story is editable after reverting.
+                 */
+                $scope._editable = true;
+
                 $scope.refreshTrigger++;
                 if ($scope.item.annotations == null) {
                     $scope.item.annotations = [];
@@ -837,10 +906,10 @@ export function AuthoringDirective(
                 }
 
                 // populate content fields so that it can undo to initial (empty) version later
-                var autosave = $scope.origItem._autosave || {};
+                var _autosave = $scope.origItem._autosave || {};
 
                 Object.keys(helpers.CONTENT_FIELDS_DEFAULTS).forEach((key) => {
-                    var value = autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
+                    var value = _autosave[key] || $scope.origItem[key] || helpers.CONTENT_FIELDS_DEFAULTS[key];
 
                     $scope.item[key] = angular.copy(value);
                 });
@@ -874,7 +943,13 @@ export function AuthoringDirective(
 
             $scope.openAction = function(action) {
                 if (action === 'correct') {
-                    authoringWorkspace.correct($scope.item);
+                    if (appConfig?.corrections_workflow &&
+                    [ITEM_STATE.PUBLISHED, ITEM_STATE.CORRECTED].includes($scope.item.state)) {
+                        $scope.isCorrectionInProgress = true;
+                        authoring.correction($scope.item, () => $scope.isCorrectionInProgress = false);
+                    } else {
+                        authoringWorkspace.correct($scope.item);
+                    }
                 } else if (action === 'kill') {
                     authoringWorkspace.kill($scope.item);
                 } else if (action === 'takedown') {
@@ -923,38 +998,24 @@ export function AuthoringDirective(
             $scope.autosave = function(item, timeout) {
                 $scope.dirty = true;
                 angular.extend($scope.item, item); // make sure all changes are available
-                return coreApplyMiddleware(onChangeMiddleware, {item: $scope.item, original: $scope.origItem}, 'item')
-                    .then(() => {
-                        const onUpdateFromExtensions = Object.values(extensions).map(
-                            (extension) => extension.activationResult?.contributions?.authoring?.onUpdate,
-                        ).filter((updates) => updates != null);
 
-                        const reducerFunc = (current, next) => current.then(
-                            (result) => next($scope.origItem._autosave ?? $scope.origItem, result),
-                        );
-
-                        return (
-                            onUpdateFromExtensions.length < 1
-                                ? Promise.resolve(item)
-                                : onUpdateFromExtensions
-                                    .reduce(reducerFunc, Promise.resolve($scope.item))
-                                    .then((nextItem) => angular.extend($scope.item, nextItem))
-                        ).then(() => {
-                            var autosavedItem = authoring.autosave($scope.item, $scope.origItem, timeout);
-
+                return authoring.autosave(
+                    $scope.item,
+                    $scope.origItem,
+                    timeout,
+                ).then(
+                    () => {
+                        $scope.$applyAsync(() => {
                             authoringWorkspace.addAutosave();
                             initMedia();
                             updateSchema();
-
-                            $scope.$apply();
-
-                            return autosavedItem;
                         });
-                    });
+                    },
+                );
             };
 
             $scope.sendToNextStage = function() {
-                var currentDeskId = desks.getCurrentDeskId();
+                var currentDeskId = $scope.item.task.desk;
 
                 if (currentDeskId == null) {
                     throw new Error('currentDeskId is null');
@@ -1079,8 +1140,11 @@ export function AuthoringDirective(
             });
 
             $scope.$on('item:unlock', (_e, data) => {
-                if ($scope.item._id === data.item && !_closing &&
-                    (session.sessionId !== data.lock_session || lock.previewUnlock)) {
+                if (
+                    $scope.item._id === data.item
+                    && !_closing
+                    && (session.sessionId !== data.lock_session || lock.previewUnlock)
+                ) {
                     if (lock.previewUnlock) {
                         $scope.edit($scope.item);
                         lock.previewUnlock = false;
@@ -1095,6 +1159,15 @@ export function AuthoringDirective(
                             $scope.item.state = data.state;
                             $scope.origItem.state = data.state;
                         }
+
+                        // Re-mount authoring view when item is locked by someone else
+                        // in order to clean up old UI elements
+                        $scope.loading = true;
+
+                        setTimeout(() => {
+                            $scope.loading = false;
+                            $scope.$apply();
+                        });
                     }
                 }
             });
@@ -1116,10 +1189,12 @@ export function AuthoringDirective(
 
             const removeListener = addInternalEventListener(
                 'dangerouslyOverwriteAuthoringData',
-                (partialItem) => {
-                    angular.extend($scope.item, partialItem.detail);
-                    angular.extend($scope.origItem, partialItem.detail);
-                    $scope.$apply();
+                (event) => {
+                    if (event.detail._id === $scope.item._id) {
+                        angular.extend($scope.item, event.detail);
+                        angular.extend($scope.origItem, event.detail);
+                        $scope.$apply();
+                    }
                 },
             );
 
@@ -1176,7 +1251,7 @@ export function AuthoringDirective(
                     var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
                     var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
 
-                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length < maxItems) {
+                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length <= maxItems) {
                         addMediaFieldVersion(fieldId, $scope.getNewMediaFieldId(fieldId));
                     }
                     _.forEach(mediaFields[fieldId], (version) => {
@@ -1286,7 +1361,7 @@ export function AuthoringDirective(
                 return state;
             }
 
-            const reducer = combineReducers({attachments, editor});
+            const reducer = combineReducers({editor});
 
             $scope.store = createStore(reducer, applyMiddleware(thunk.withExtraArgument({
                 $scope: $scope,
@@ -1294,10 +1369,7 @@ export function AuthoringDirective(
                 urls: $injector.get('urls'),
                 notify: notify,
                 superdesk: superdesk,
-                attachments: $injector.get('attachments'),
             })));
-
-            $scope.store.dispatch(initAttachments($scope.item));
 
             $scope.$watch('item.profile', (profile) => {
                 content.setupAuthoring(profile, $scope, $scope.item)
@@ -1317,15 +1389,6 @@ export function AuthoringDirective(
                     .then((_schema) => {
                         $scope.schema = _schema;
                     });
-            };
-
-            $scope.setCustomValue = (field, value) => {
-                const extra = Object.assign({}, $scope.item.extra);
-
-                extra[field._id] = value || null;
-                $scope.item.extra = extra;
-
-                $scope.autosave($scope.item, 200);
             };
 
             $scope.refresh = () => $scope.refreshTrigger++;

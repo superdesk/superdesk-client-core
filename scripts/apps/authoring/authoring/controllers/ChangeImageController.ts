@@ -45,6 +45,7 @@ export function validateMediaFieldsThrows(validator, metadata, schema, getLabelF
             value = metadata?.extra[key];
         }
 
+        // eslint-disable-next-line no-useless-escape
         const regex = new RegExp('^\<*br\/*\>*$', 'i');
 
         if (!value || value.match(regex)) {
@@ -268,7 +269,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     * modified crop information, point of interest and metadata changes.
     */
     $scope.done = () => {
-        if ($scope.data.isDirty) {
+        if ($scope.data.isDirty || $scope.data.isNew) {
             if (
                 $scope.data.item.type === 'picture'
                 && appConfig.features != null

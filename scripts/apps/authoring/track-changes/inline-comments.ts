@@ -11,7 +11,7 @@ import {
 import {
     getRangeAndTextForStyleInRawState,
 } from 'core/editor3/helpers/highlights';
-import {highlightsConfig} from 'core/editor3/highlightsConfig';
+import {getHighlightsConfig} from 'core/editor3/highlightsConfig';
 import {getCustomMetadata} from 'core/editor3/helpers/editor3CustomData';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {get} from 'lodash';
@@ -82,7 +82,7 @@ function InlineCommentsCtrl($scope, userList, metadata, content) {
                 fieldsMetaKeys.draftjsState,
             );
 
-            const comments = getCustomMetadata($scope.item, contentKey, highlightsConfig.COMMENT.type)
+            const comments = getCustomMetadata($scope.item, contentKey, getHighlightsConfig().COMMENT.type)
                 .map((highlight) => {
                     const highlightId = highlight.styleName;
                     const highlightWithCommentTextAdded = {

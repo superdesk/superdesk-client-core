@@ -2,14 +2,49 @@ import {forEach, get, startsWith, endsWith, some} from 'lodash';
 import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
-import {IArticle, IVocabulary} from 'superdesk-api';
+import {IArticle, IVocabulary, IRelatedArticle} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
+import {isLink} from 'apps/relations/services/RelationsService';
+
+function isRelatedArticle(x: IArticle | IRelatedArticle): x is IRelatedArticle {
+    return isLink(x);
+}
 
 export function getAssociationsByFieldId(associations: IArticle['associations'], fieldId: IVocabulary['_id']) {
     return Object.keys(associations ?? {})
         .filter((key) => key.startsWith(fieldId + '--') && associations[key] != null)
         .sort((key1, key2) => associations[key1].order - associations[key2].order)
         .map((key) => associations[key]);
+}
+
+export function getRelatedMedia(
+    associations: IArticle['associations'],
+    fieldId: IVocabulary['_id'],
+): Array<IArticle> {
+    const items: Array<IArticle> = [];
+
+    getAssociationsByFieldId(associations, fieldId).forEach((item) => {
+        if (!isRelatedArticle(item)) {
+            items.push(item);
+        }
+    });
+
+    return items;
+}
+
+export function getRelatedArticles(
+    associations: IArticle['associations'],
+    fieldId: IVocabulary['_id'],
+): Array<IRelatedArticle> {
+    const items: Array<IRelatedArticle> = [];
+
+    getAssociationsByFieldId(associations, fieldId).forEach((item) => {
+        if (isRelatedArticle(item)) {
+            items.push(item);
+        }
+    });
+
+    return items;
 }
 
 /**
@@ -21,21 +56,26 @@ export function getAssociationsByFieldId(associations: IArticle['associations'],
  *
  * @description Controller for handling adding/uploading images to association fields
  */
-AssociationController.$inject = ['content', 'superdesk', 'renditions', 'notify'];
-export function AssociationController(content, superdesk, renditions, notify) {
-    const self = this;
+export class AssociationController {
+    content: any;
+    superdesk: any;
+    renditions: any;
+    notify: any;
+    checkRenditions: typeof checkRenditions;
 
-    this.checkRenditions = checkRenditions;
+    constructor(content, superdesk, renditions, notify) {
+        this.content = content;
+        this.superdesk = superdesk;
+        this.renditions = renditions;
+        this.notify = notify;
 
-    /**
-     * @ngdoc method
-     * @name AssociationController#isMediaEditable
-     * @public
-     * @description Check if featured media can be edited or not. i.e. metadata/crops can be changed or not.
-     */
-    this.isMediaEditable = function(item?: IArticle) {
+        this.checkRenditions = checkRenditions;
+    }
+
+    // Check if featured media can be edited or not. i.e. metadata/crops can be changed or not.
+    isMediaEditable(item?: IArticle) {
         return isMediaEditable(item);
-    };
+    }
 
     /**
      * @ngdoc method
@@ -46,7 +86,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
      * @param {Object} scope Directive scope
      * @param {Array} files
      */
-    this.uploadAndCropImages = function(scope, files) {
+    uploadAndCropImages(scope, files): Promise<boolean> {
         // in case of feature media we dont have scope.field available as it is not a vocabulary.
         const maxUploadsRemaining = scope.maxUploads != null && scope.field != null
             ? scope.maxUploads - getAssociationsByFieldId(scope.item.associations, scope.field._id).length
@@ -62,37 +102,40 @@ export function AssociationController(content, superdesk, renditions, notify) {
             parent: scope.item,
         };
 
-        superdesk.intent('upload', 'media', uploadData).then((images) => {
-            // open the view to edit the point of interest and the cropping areas
-            if (images) {
-                scope.$applyAsync(() => {
-                    var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
-                    var imagesWithIds = [];
+        return new Promise<boolean>((resolve) => {
+            this.superdesk.intent('upload', 'media', uploadData).then((images) => {
+                // open the view to edit the point of interest and the cropping areas
+                if (images) {
+                    scope.$applyAsync(() => {
+                        var [rootField, index] = mediaIdGenerator.getFieldParts(scope.rel);
+                        var imagesWithIds = [];
 
-                    function editNextFile() {
-                        if (imagesWithIds.length > 0) {
-                            var imageWithId = imagesWithIds.shift();
+                        const editNextFile = () => {
+                            if (imagesWithIds.length > 0) {
+                                var imageWithId = imagesWithIds.shift();
 
-                            self.edit(scope, imageWithId.image, {
-                                customRel: imageWithId.id,
-                                isNew: true,
-                            }, editNextFile);
-                        }
-                    }
+                                this.edit(scope, imageWithId.image, {
+                                    customRel: imageWithId.id,
+                                    isNew: true,
+                                }, editNextFile);
+                            } else {
+                                resolve(true);
+                            }
+                        };
 
-                    forEach(images, (image) => {
-                        imagesWithIds.push({id: scope.rel, image: image});
-                        scope.rel = mediaIdGenerator.getFieldVersionName(rootField, (++index).toString());
+                        forEach(images, (image) => {
+                            imagesWithIds.push({id: scope.rel, image: image});
+                            scope.rel = mediaIdGenerator.getFieldVersionName(rootField, (++index).toString());
+                        });
+                        editNextFile();
                     });
-                    editNextFile();
-                });
-            }
+                }
+            });
         });
-    };
+    }
 
     /**
      * @ngdoc method
-     * @name AssociationController#updateItemAssociation
      * @private
      * @description If the item is not published then it saves the changes otherwise calls autosave.
      * @param {Object} scope Directive scope
@@ -100,7 +143,7 @@ export function AssociationController(content, superdesk, renditions, notify) {
      * @param {String} customRel association identifier
      * @param {Function} callback to call after save
      */
-    this.updateItemAssociation = function(scope, updated, customRel, callback = null, autosave = false) {
+    updateItemAssociation(scope, updated, customRel, callback = null, autosave = false): Promise<boolean> {
         let data = {};
         // if the media is of type media-gallery, update same association-key not the next one
         // as the scope.rel contains the next association-key of the new item
@@ -119,19 +162,19 @@ export function AssociationController(content, superdesk, renditions, notify) {
                 : 1;
 
             if (mediaItemsForCurrentField.length + 1 > allowedItemsCount) {
-                notify.error(gettextPlural(
+                this.notify.error(gettextPlural(
                     allowedItemsCount,
                     'Item was not added. Only 1 item is allowed for this field.',
                     'Item was not added. Only {{number}} items are allowed in this field.',
                     {number: allowedItemsCount},
                 ));
 
-                return;
+                return Promise.resolve(false);
             }
 
             if (mediaItemsForCurrentField.find((mediaItem) => mediaItem._id === updated._id) != null) {
-                notify.error(gettext('This item is already added.'));
-                return;
+                this.notify.error(gettext('This item is already added.'));
+                return Promise.resolve(false);
             }
         }
 
@@ -157,12 +200,12 @@ export function AssociationController(content, superdesk, renditions, notify) {
             promise = scope.onchange({item: scope.item, data: data});
         }
 
-        if (callback) {
-            return promise.then(callback);
-        }
+        return promise.then(() => {
+            callback?.();
 
-        return promise;
-    };
+            return true;
+        });
+    }
 
     /**
      * @ngdoc method
@@ -173,14 +216,14 @@ export function AssociationController(content, superdesk, renditions, notify) {
      * @param {Object} item Item to be edited
      * @param {Function} callback Callback function
      */
-    this.edit = function(
+    edit(
         scope,
         item,
         options: {isNew?: boolean, customRel?: string, defaultTab?: any, showMetadata?: boolean} = {},
         callback = null,
-    ) {
-        if (!self.isMediaEditable()) {
-            return;
+    ): Promise<boolean> {
+        if (!this.isMediaEditable()) {
+            return Promise.resolve(false);
         }
 
         const _isImage = checkRenditions.isImage(item.renditions.original);
@@ -196,48 +239,48 @@ export function AssociationController(content, superdesk, renditions, notify) {
 
         if (item.renditions && item.renditions.original) {
             scope.loading = true;
-            return renditions.crop(item, cropOptions)
+            return this.renditions.crop(item, cropOptions)
                 .then((rendition) => {
-                    self.updateItemAssociation(scope, rendition, options.customRel, callback);
+                    return this.updateItemAssociation(scope, rendition, options.customRel, callback);
                 })
                 .finally(() => {
                     scope.loading = false;
                 });
         } else {
             scope.loading = false;
+
+            return this.updateItemAssociation(scope, item, options.customRel, callback);
         }
+    }
 
-        self.updateItemAssociation(scope, item, options.customRel, callback);
-    };
-
-    this.addAssociation = function(scope, __item: IArticle): void {
+    addAssociation(scope, __item: IArticle): Promise<boolean> {
         if (!scope.editable) {
-            return;
+            return Promise.resolve(false);
         }
 
-        content.dropItem(__item)
-            .then((item) => {
+        return this.content.dropItem(__item)
+            .then((item: IArticle) => {
                 if (item.lock_user) {
-                    notify.error(gettext('Item is locked. Cannot associate media item.'));
-                    return;
+                    this.notify.error(gettext('Item is locked. Cannot associate media item.'));
+                    return false;
                 }
 
                 // save generated association id in order to be able to update the same item after editing.
                 const originalRel = scope.rel;
 
-                if (self.isMediaEditable(item) && get(item, '_type') === 'externalsource') {
-                    // if media is editable then association will be updated by self.edit method
-                    return renditions.ingest(item)
-                        .then((_item) => self.edit(scope, _item, {customRel: originalRel}));
+                if (this.isMediaEditable(item) && item._type === 'externalsource') {
+                    // if media is editable then association will be updated by this.edit method
+                    return this.renditions.ingest(item)
+                        .then((_item) => this.edit(scope, _item, {customRel: originalRel}));
                 } else {
                     // Update the association if media is not editable.
-                    self.updateItemAssociation(scope, item, null, null, true);
+                    return this.updateItemAssociation(scope, item, null, null, true);
                 }
             })
             .finally(() => {
                 scope.loading = false;
             });
-    };
+    }
 
     /**
      * @ngdoc method
@@ -246,30 +289,31 @@ export function AssociationController(content, superdesk, renditions, notify) {
      * @param {Object} scope Directive scope
      * @param {Object} event Drop event
      */
-    this.initializeUploadOnDrop = function(scope, event): void {
+    initializeUploadOnDrop(scope, event): Promise<boolean> {
         const superdeskType = getSuperdeskType(event);
 
         if (superdeskType === 'Files') {
             if (!scope.editable) {
-                return;
+                return Promise.resolve(false);
             }
 
-            if (self.isMediaEditable()) {
+            if (this.isMediaEditable()) {
                 const files = event.originalEvent.dataTransfer.files;
 
-                return self.uploadAndCropImages(scope, files);
+                return this.uploadAndCropImages(scope, files);
             }
 
-            return;
+            return Promise.resolve(false);
         }
 
         const __item: IArticle = JSON.parse(event.originalEvent.dataTransfer.getData(superdeskType));
 
         scope.loading = true;
-
-        this.addAssociation(scope, __item);
-    };
+        return this.addAssociation(scope, __item);
+    }
 }
+
+AssociationController.$inject = ['content', 'superdesk', 'renditions', 'notify'];
 
 const isImage = (rendition) => {
     return startsWith(rendition.mimetype, 'image');

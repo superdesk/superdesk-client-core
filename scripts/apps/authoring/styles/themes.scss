@@ -1,10 +1,9 @@
-// themes.scss
 // Styling for authoring screen editor
 // ----------------------------------------------------------------------------------------
 @import '~mixins.scss';
 @import '~variables.scss';
 
-$main-article-padding : 3.2rem 6.4rem $bottom-view-padding 6.4rem;
+$main-article-padding : 3.2rem 4rem $bottom-view-padding 4rem;
 
 // Themes color config
 //-----------------------------------------------------------
@@ -215,16 +214,12 @@ body, html {
 .main-article {
     width:auto;
     background: $white;
-    border: 1px solid #cacaca;
-    border-width:0 1px;
     position:relative;
     z-index: 1;
     padding: $main-article-padding;
     margin:0 auto;
     min-height:100%;
     @include box-sizing(border-box);
-    max-width: 900px;
-
     .field {
         max-width: 100%;
         margin-bottom: 20px;
@@ -235,9 +230,7 @@ body, html {
             display: flex;
             flex-direction: row;
             align-items: flex-end;
-            input {
-                text-transform: uppercase;
-            }
+
             input, select, option {
                 color: inherit;
                 font-size: 14px;
@@ -316,6 +309,8 @@ body, html {
         flex-direction: row;
         flex-wrap: wrap;
         align-content: flex-start;
+        max-width: 1000px;
+        margin: 0 auto;
     }
     .sd-validate .sd-required {
         color: inherit;
@@ -357,8 +352,14 @@ body, html {
     }
     .text-editor:hover, .headline:hover, .abstract:hover, .field__select:hover {
         border-bottom-color: rgba(123, 123, 123, 0.60) !important;
-        cursor: text;
     }
+
+    .text-editor, .headline, .abstract {
+        &:not([disabled]) {
+            cursor: text;
+        }
+    }
+
     .field__select:hover {
         -moz-appearance: menulist-button;
         -webkit-appearance: menulist-button;

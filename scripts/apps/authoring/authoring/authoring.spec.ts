@@ -9,9 +9,14 @@ describe('authoring', () => {
     beforeEach(window.module('superdesk.apps.archive'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module({
+        TranslationService: {
+            translationsEnabled: () => false,
+        },
+    }));
 
     it('set anpa category value for required subservice',
-        inject(($httpBackend, $q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) => {
+        inject(($q, $rootScope, $compile, vocabularies, archiveService, content, $templateCache) => {
             $templateCache.put(
                 'scripts/apps/authoring/views/authoring-header.html',
                 '<div>{{scope.item}}</div>',

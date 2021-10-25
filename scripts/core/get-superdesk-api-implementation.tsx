@@ -6,10 +6,11 @@ import {
     IContentProfile,
     IEvents,
     IStage,
+    IUser,
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
 import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
-import {ListItem, ListItemColumn, ListItemActionsMenu} from './components/ListItem';
+import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
     isIFormGroupCollapsible,
@@ -20,8 +21,20 @@ import {
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
 import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
+import {elasticsearchApi} from './helpers/elasticsearch';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
-import {assertNever, Writeable} from './helpers/typescript-helpers';
+import {
+    assertNever,
+    Writeable,
+    filterUndefined,
+    filterKeys,
+    stringToNumber,
+    numberToString,
+    notNullOrUndefined,
+} from './helpers/typescript-helpers';
+import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
+import {downloadBlob} from './helpers/utils';
+import {getLocaleForDatePicker} from './helpers/ui-framework';
 import {memoize} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
@@ -36,7 +49,6 @@ import {DropdownTree} from './ui/components/dropdown-tree';
 import {getCssNameForExtension} from './get-css-name-for-extension';
 import {Badge} from './ui/components/Badge';
 import {
-    getCustomEventNamePrefixed,
     getWebsocketMessageEventName,
     isWebsocketEventPublic,
 } from './notification/notification';
@@ -52,22 +64,50 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
+import {httpRequestJsonLocal} from './helpers/network';
+import {memoize as memoizeLocal} from './memoize';
+import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
+import {attachmentsApi} from 'apps/authoring/attachments/attachmentsService';
+import {notify} from './notify/notify';
+import {sdApi} from 'api';
+import {IconBig} from './ui/components/IconBig';
+import {throttleAndCombineArray} from './itemList/throttleAndCombine';
+import {WithLiveQuery} from './with-live-query';
+import {WithLiveResources} from './with-resources';
+import {querySelectorParent} from './helpers/dom/querySelectorParent';
+import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
+import {Editor3Html} from './editor3/Editor3Html';
+import {arrayToTree, treeToArray} from './helpers/tree';
+import {WidgetHeading} from 'apps/dashboard/widget-heading';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
 }
 
+export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise<void> {
+    const authoringWorkspace = ng.get('authoringWorkspace');
+
+    if (document.querySelector('[sd-monitoring-view]') == null) {
+        // redirect if outside monitoring view
+        setUrlPage('/workspace/monitoring');
+    }
+
+    authoringWorkspace.edit({_id: id}, mode);
+
+    return Promise.resolve();
+}
+
 const getContentTypeMemoized = memoize(getContentType);
 let getContentTypeMemoizedLastCall: number = 0; // unix time
 
-const isPublished = (article) => article.item_id != null;
+export const getCustomEventNamePrefixed = (name: keyof IEvents) => 'internal-event--' + name;
 
 // stores a map between custom callback & callback passed to DOM
 // so the original event listener can be removed later
 const customEventMap = new Map();
 
-const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
+export const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
     const handlerWrapper = (customEvent: CustomEvent) => callback(customEvent.detail);
 
     customEventMap.set(callback, handlerWrapper);
@@ -75,13 +115,19 @@ const addEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg:
     window.addEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
 };
 
-const removeEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
+export const removeEventListener = <T extends keyof IEvents>(eventName: T, callback: (arg: IEvents[T]) => void) => {
     const handlerWrapper = customEventMap.get(callback);
 
     if (handlerWrapper != null) {
         window.removeEventListener(getCustomEventNamePrefixed(eventName), handlerWrapper);
         customEventMap.delete(callback);
     }
+};
+
+export const dispatchCustomEvent = <T extends keyof IEvents>(eventName: T, payload: IEvents[T]) => {
+    window.dispatchEvent(
+        new CustomEvent(getCustomEventNamePrefixed(eventName), {detail: payload}),
+    );
 };
 
 let applicationState: Writeable<ISuperdesk['state']> = {
@@ -96,6 +142,37 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
+export function isLockedInCurrentSession(article: IArticle): boolean {
+    return ng.get('lock').isLockedInCurrentSession(article);
+}
+
+export function isLockedInOtherSession(article: IArticle): boolean {
+    return sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
+}
+
+export const formatDate = (date: Date | string) => (
+    moment(date)
+        .tz(appConfig.default_timezone)
+        .format(appConfig.view.dateformat)
+);
+
+export function getRelativeOrAbsoluteDateTime(
+    datetimeString: string,
+    format: string,
+    relativeDuration: number = 1,
+    relativeUnit: string = 'days',
+): string {
+    const datetime = moment(datetimeString);
+
+    if (datetime.isSameOrAfter(moment().subtract(relativeDuration, relativeUnit))) {
+        return datetime.fromNow();
+    }
+
+    return datetime
+        .tz(appConfig.default_timezone)
+        .format(format);
+}
+
 // imported from planning
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -107,33 +184,41 @@ export function getSuperdeskApiImplementation(
     authoringWorkspace: AuthoringWorkspaceService,
     config,
     metadata,
+    preferencesService,
 ): ISuperdesk {
     return {
         dataApi: dataApi,
         dataApiByEntity,
+        elasticsearch: elasticsearchApi,
         helpers: {
             assertNever,
+            filterUndefined,
+            filterKeys,
+            stringToNumber,
+            numberToString,
+            notNullOrUndefined,
         },
+        httpRequestJsonLocal,
+        getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
-                isPersonal: (article) => article.task == null
-                    || article.task.desk == null
-                    || article.task.stage == null,
-                isLocked: (article) => article['lock_session'] != null,
-                isLockedByCurrentUser: (article) => lock.isLockedInCurrentSession(article),
+                isPersonal: sdApi.article.isPersonal,
+                isLocked: sdApi.article.isLocked,
+                isLockedInCurrentSession: sdApi.article.isLockedInCurrentSession,
+                isLockedInOtherSession: sdApi.article.isLockedInOtherSession,
                 patch: (article, patch, dangerousOptions) => {
                     const onPatchBeforeMiddlewares = Object.values(extensions)
                         .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
                         .filter((middleware) => middleware != null);
 
-                    onPatchBeforeMiddlewares.reduce(
+                    return onPatchBeforeMiddlewares.reduce(
                         (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
                         Promise.resolve(patch),
                     ).then((patchFinal) => {
                         return dataApi.patchRaw<IArticle>(
                             // distinction between handling published and non-published items
                             // should be removed: SDESK-4687
-                            (isPublished(article) ? 'published' : 'archive'),
+                            (sdApi.article.isPublished(article) ? 'published' : 'archive'),
                             article._id,
                             article._etag,
                             patchFinal,
@@ -141,7 +226,7 @@ export function getSuperdeskApiImplementation(
                             if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
                                 dispatchInternalEvent(
                                     'dangerouslyOverwriteAuthoringData',
-                                    {...patch, _etag: res._etag},
+                                    {...patch, _etag: res._etag, _id: res._id},
                                 );
                             }
                         });
@@ -151,13 +236,15 @@ export function getSuperdeskApiImplementation(
                         }
                     });
                 },
-                isArchived: (article) => article._type === 'archived',
-                isPublished: (article) => isPublished(article),
+                isArchived: sdApi.article.isArchived,
+                isPublished: (article) => sdApi.article.isPublished(article),
             },
             desk: {
                 getStagesOrdered: (deskId: string) =>
                     dataApi.query<IStage>('stages', 1, {field: '_id', direction: 'ascending'}, {desk: deskId}, 200)
                         .then((response) => response._items),
+                getActiveDeskId: sdApi.desks.getActiveDeskId,
+                waitTilReady: sdApi.desks.waitTilReady,
             },
             contentProfile: {
                 get: (id) => {
@@ -182,6 +269,19 @@ export function getSuperdeskApiImplementation(
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
                 getVocabulary: (id: string) => metadata.initialize().then(() => metadata.values[id]),
             },
+            attachment: attachmentsApi,
+            users: {
+                getUsersByIds: (ids) => (
+                    dataApi.query<IUser>(
+                        'users',
+                        1,
+                        {field: 'display_name', direction: 'ascending'},
+                        {_id: {$in: ids}},
+                        200,
+                    )
+                        .then((response) => response._items)
+                ),
+            },
         },
         state: applicationState,
         instance: {
@@ -189,23 +289,28 @@ export function getSuperdeskApiImplementation(
         },
         ui: {
             article: {
-                view: (id: string) => {
-                    ng.getService('$location').then(($location) => {
-                        $location.url('/workspace/monitoring');
-                        authoringWorkspace.edit({_id: id}, 'view');
-                    });
+                view: (id: IArticle['_id']) => {
+                    openArticle(id, 'view');
                 },
                 addImage: (field: string, image: IArticle) => {
                     dispatchInternalEvent('addImage', {field, image});
                 },
+                save: () => {
+                    dispatchInternalEvent('saveArticleInEditMode', null);
+                },
             },
             alert: (message: string) => modal.alert({bodyText: message}),
-            confirm: (message: string) => new Promise((resolve) => {
-                modal.confirm(message, gettext('Cancel'))
+            confirm: (message: string, title?: string) => new Promise((resolve) => {
+                modal.confirm(message, title ?? gettext('Cancel'))
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
+            showIgnoreCancelSaveDialog,
             showModal,
+            notify: notify,
+            framework: {
+                getLocaleForDatePicker,
+            },
         },
         components: {
             UserHtmlSingleLine,
@@ -213,6 +318,7 @@ export function getSuperdeskApiImplementation(
             connectCrudManager,
             ListItem,
             ListItemColumn,
+            ListItemRow,
             ListItemActionsMenu,
             List: {
                 // there's no full React implementation of ListItem component
@@ -238,8 +344,13 @@ export function getSuperdeskApiImplementation(
             GroupLabel,
             TopMenuDropdownButton,
             Icon,
+            IconBig,
             getDropdownTree: () => DropdownTree,
             Spacer,
+            getLiveQueryHOC: () => WithLiveQuery,
+            WithLiveResources,
+            Editor3Html,
+            WidgetHeading,
         },
         forms: {
             FormFieldType,
@@ -252,20 +363,55 @@ export function getSuperdeskApiImplementation(
         localization: {
             gettext: (message, params) => gettext(message, params),
             gettextPlural: (count, singular, plural, params) => gettextPlural(count, singular, plural, params),
-            formatDate: (date: Date) => moment(date).tz(appConfig.defaultTimezone).format(appConfig.view.dateformat),
+            formatDate: formatDate,
             formatDateTime: (date: Date) => {
                 return moment(date)
-                    .tz(appConfig.defaultTimezone)
+                    .tz(appConfig.default_timezone)
                     .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
             },
+            longFormatDateTime: (date: Date | string) => {
+                return moment(date)
+                    .tz(appConfig.default_timezone)
+                    .format(appConfig.longDateFormat || 'LLL');
+            },
+            getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
             hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
         },
+        preferences: {
+            get: (key) => {
+                return preferencesService.get().then((res: Dictionary<string, any>) => {
+                    return res?.extensions?.[requestingExtensionId]?.[key] ?? null;
+                });
+            },
+            set: (key, value) => {
+                return preferencesService.get().then((res: Dictionary<string, any>) => {
+                    const extensionsPreferences = res.extensions ?? {};
+
+                    if (extensionsPreferences[requestingExtensionId] == null) {
+                        extensionsPreferences[requestingExtensionId] = {};
+                    }
+
+                    extensionsPreferences[requestingExtensionId][key] = value;
+
+                    return preferencesService.update({extensions: extensionsPreferences});
+                });
+            },
+        },
         session: {
             getToken: () => session.token,
             getCurrentUser: () => session.getIdentity(),
+            getSessionId: () => session.sessionId,
+            getCurrentUserId: () => session.identity._id,
+        },
+        browser: {
+            location: {
+                getPage: getUrlPage,
+                setPage: setUrlPage,
+                urlParams: urlParams,
+            },
         },
         utilities: {
             logger,
@@ -276,8 +422,15 @@ export function getSuperdeskApiImplementation(
             dateToServerString: (date: Date) => {
                 return date.toISOString().slice(0, 19) + '+0000';
             },
+            memoize: memoizeLocal,
+            generatePatch,
             stripHtmlTags,
             getLinesCount,
+            downloadBlob,
+            throttleAndCombineArray,
+            querySelectorParent,
+            arrayToTree,
+            treeToArray,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(
@@ -293,5 +446,6 @@ export function getSuperdeskApiImplementation(
         },
         addEventListener,
         removeEventListener,
+        dispatchEvent: dispatchCustomEvent,
     };
 }

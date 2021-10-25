@@ -12,7 +12,7 @@ describe('superdesk ui', () => {
                 timeformat: 'HH:mm',
                 dateformat: 'MM/DD/YYYY',
             },
-            defaultTimezone: 'Europe/London',
+            default_timezone: 'Europe/London',
             server: {url: undefined, ws: undefined},
         };
 
@@ -97,6 +97,7 @@ describe('superdesk ui', () => {
             element = $compile(html)(scope);
             scope.$digest();
             isoScope = element.isolateScope();
+            isoScope.getTimezoneLabel = (tz) => tz;
         }));
 
         it('initially clears the time zone search term', () => {
@@ -155,7 +156,7 @@ describe('superdesk ui', () => {
 
             isoScope.timeZones = [];
             delete isoScope.timezone;
-            appConfig.defaultTimezone = 'Europe/Rome';
+            appConfig.default_timezone = 'Europe/Rome';
 
             getTzDataDeferred.resolve(serverTzData);
             isoScope.$digest();

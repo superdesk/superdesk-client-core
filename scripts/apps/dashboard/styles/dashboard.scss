@@ -55,7 +55,8 @@
         .widget-title {
             color: #333;
             padding-left: 8px;
-
+            font-size: 1.3rem;
+            font-weight: 400;
         }
     }
     .widget-header__search-button {
@@ -654,6 +655,9 @@ Add new widget modal
             width: 100%;
             margin-bottom: 20px;
             flex-grow: 1;
+            ul {
+                list-style: circle;
+            }
         }
     }
 }

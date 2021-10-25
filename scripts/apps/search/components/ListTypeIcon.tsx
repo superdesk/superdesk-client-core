@@ -1,17 +1,23 @@
 import React from 'react';
-import {TypeIcon, SelectBox} from './index';
+import {TypeIcon} from './index';
 import {CHECKBOX_PARENT_CLASS} from './constants';
+import {IArticle} from 'superdesk-api';
+import {SelectBox} from './SelectBox';
+import {gettext, translateArticleType} from 'core/utils';
 
 interface IProps {
-    selectingDisabled?: boolean;
-    onMultiSelect: () => void;
-    item: any;
+    onMultiSelect: (item: IArticle, value: boolean, multiSelectMode: boolean) => void;
+    item: IArticle;
+    itemSelected: boolean;
 }
 
 interface IState {
     hover: boolean;
 }
 
+/**
+ * @deprecated Mutates item object.
+ */
 export class ListTypeIcon extends React.Component<IProps, IState> {
     constructor(props) {
         super(props);
@@ -32,29 +38,38 @@ export class ListTypeIcon extends React.Component<IProps, IState> {
     }
 
     render() {
-        const {selectingDisabled} = this.props;
-        const showSelect = selectingDisabled !== true && (this.state.hover || this.props.item.selected);
+        const showSelect = this.state.hover || this.props.itemSelected;
 
-        return React.createElement(
-            'div',
-            {
-                className: 'list-field type-icon ' + CHECKBOX_PARENT_CLASS,
-                onMouseEnter: selectingDisabled ? null : this.setHover,
-                onMouseLeave: selectingDisabled ? null : this.unsetHover,
-                style: {lineHeight: 0},
-            },
-            showSelect ?
-                React.createElement(SelectBox, {
-                    item: this.props.item,
-                    onMultiSelect: this.props.onMultiSelect,
-                }) :
-                React.createElement(
-                    TypeIcon,
-                    {
-                        type: this.props.item.type,
-                        highlight: this.props.item.highlight,
-                    },
-                ),
+        return (
+            <div
+                className={'list-field type-icon ' + CHECKBOX_PARENT_CLASS}
+                onMouseEnter={this.setHover}
+                onMouseLeave={this.unsetHover}
+                style={{lineHeight: 0}}
+                data-test-id="item-type-and-multi-select"
+            >
+                {/*
+                    When an item is focused with a keyboard, SelectBox is displayed and TypeIcon hidden.
+                    A separate always-visible label is required so it's accessible by screen readers.
+                */}
+                <span className="a11y-only">
+                    {gettext('Article Type: {{type}}', {type: translateArticleType(this.props.item.type)})}
+                </span>
+
+                {
+                    showSelect
+                        ? (
+                            <SelectBox item={this.props.item} onMultiSelect={this.props.onMultiSelect} />
+                        )
+                        : (
+                            <TypeIcon
+                                type={this.props.item.type}
+                                highlight={this.props.item.highlight}
+                                aria-hidden={true}
+                            />
+                        )
+                }
+            </div>
         );
     }
 }

@@ -1,22 +1,24 @@
 bower_components
 node_modules
-package-lock.json
+yarn.lock
 nbproject
 bower
 dist
 templates-cache.generated.js
 .tmp
-test-server/env
-test-server/__pycache__
+e2e/server/env
+e2e/server/__pycache__
 e2e-test-results
 templates-cache.generated.js
 styles/extension-styles.generated.css
-spec/**/*.js
+e2e/client/specs/**/*.js
 .env
 npm-debug.log
 index.html
 yarn-error.log
-yarn.lock
+
+.history/
+.github
 
 # VIM related files
 *.swo
@@ -27,3 +29,5 @@ yarn.lock
 
 .vscode
 .idea
+
+.DS_Store

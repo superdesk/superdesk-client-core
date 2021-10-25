@@ -1,3 +1,5 @@
+import {getUserSearchMongoQuery} from 'core/utils';
+
 /**
  * Service for fetching users with caching.
  * Ideally, should be used app-wide.
@@ -36,15 +38,7 @@ export function UserListService(api, $q, $cacheFactory) {
         var criteria: any = {max_results: page * perPage};
 
         if (search) {
-            criteria.where = JSON.stringify({
-                $or: [
-                    {display_name: {$regex: search, $options: '-i'}},
-                    {username: {$regex: search, $options: '-i'}},
-                    {first_name: {$regex: search, $options: '-i'}},
-                    {last_name: {$regex: search, $options: '-i'}},
-                    {email: {$regex: search, $options: '-i'}},
-                ],
-            });
+            criteria.where = JSON.stringify(getUserSearchMongoQuery(search));
         }
 
         return api('users').query(criteria)

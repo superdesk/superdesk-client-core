@@ -3,10 +3,10 @@
 
         <header class="subnav">
                 <div class="flat-searchbar" ng-class="{extended: queueSearch}">
-                    <div class="search-handler" >
+                    <div class="search-handler" role="search">
                         <label for="search-input" class="trigger-icon" ng-click="queueSearch = !queueSearch"><i class="icon-search"></i></label>
                         <input id="search-input" type="text" placeholder="{{ :: 'Search' | translate }}" ng-model="query" ng-model-options="{debounce: 500}" ng-change="search(query)">
-                        <button class="search-close" ng-click="search(query = null)" ng-class="{visible: query}"><i class="icon-close-small"></i></button>
+                        <button class="search-close" ng-click="search(query = null)" ng-class="{visible: query}" aria-label="{{ :: 'Clear search' | translate }}"><i class="icon-remove-sign"></i></button>
                     </div>
                 </div>
 

@@ -1,4 +1,11 @@
-import {RichUtils, EditorState, ContentState} from 'draft-js';
+import {
+    RichUtils,
+    EditorState,
+    ContentState,
+    Modifier,
+    SelectionState,
+    ContentBlock,
+} from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
 import {getCustomDecorator, IEditorStore} from '../store';
@@ -97,18 +104,17 @@ function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: E
     }
 }
 
-function editorStateChangeMiddlewares(state: IEditorStore, editorState: EditorState, contentChanged: boolean) {
-    let newState = {...state};
+export function editorStateChangeMiddlewares(state, editorState: EditorState, contentChanged: boolean) {
+    let newState = state;
 
-    // abbreviations
     newState = applyAbbreviations({
-        ...newState, editorState,
+        ...state, editorState,
     });
 
-    if (contentChanged) {
+    if (contentChanged && (state.limitConfig?.ui === 'highlight' || state.limitConfig?.ui === 'limit')) {
         newState = {
-            ...newState,
-            editorState: handleOverflowHighlights(newState.editorState, newState.limitConfig?.chars),
+            ...state,
+            editorState: handleOverflowHighlights(newState.editorState, state.limitConfig?.chars),
         };
     }
 
@@ -189,8 +195,13 @@ const setAbbreviations = (state, abbreviations) => ({
 const applyAbbreviations = (state) => {
     const {editorState, abbreviations} = state;
     const selection = editorState.getSelection();
+    const lastChangeType = editorState.getLastChangeType();
 
-    if (!selection.isCollapsed() || abbreviations == null || Object.keys(abbreviations).length === 0) {
+    if (!selection.isCollapsed()
+        || abbreviations == null
+        || Object.keys(abbreviations).length === 0
+        || lastChangeType === 'undo'
+        || lastChangeType === 'redo') {
         return state;
     }
 
@@ -276,6 +287,20 @@ function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+function replaceText(
+    editorState: EditorState,
+    selection: SelectionState,
+    text: string,
+) {
+    const newContent = Modifier.replaceText(
+        editorState.getCurrentContent(),
+        selection,
+        text,
+    );
+
+    return EditorState.push(editorState, newContent, 'insert-characters');
+}
+
 /**
  * @ngdoc method
  * @name onTab
@@ -283,9 +308,31 @@ function escapeRegExp(string) {
  * @return {Object} returns new state
  * @description Handle the editor tab key pressed event
  */
-const onTab = (state, e) => {
-    const {editorState} = state;
-    const newState = RichUtils.onTab(e, editorState, 4);
+const onTab = (state: IEditorStore, e) => {
+    const {editorState, editorFormat = []} = state;
+    const selection = editorState.getSelection() as SelectionState;
+    const moreThanOneBlockSelected =
+        selection.getStartKey() !== selection.getEndKey();
+    const block = editorState
+        .getCurrentContent()
+        .getBlockForKey(selection.getStartKey()) as ContentBlock;
+    const blockType = block.getType();
+    let newState = editorState;
+
+    if (['unordered-list-item', 'ordered-list-item'].includes(blockType)) {
+        // let draft-js handle the Tab event
+        newState = RichUtils.onTab(e, editorState, 4);
+    } else if (!moreThanOneBlockSelected) {
+        const tabOption = editorFormat.includes('tab') && !e.shiftKey;
+        const spacesOption =
+            editorFormat.includes('tab as spaces') && e.shiftKey;
+        let tabString = tabOption ? '\t' : spacesOption ? '        ' : null;
+
+        if (tabString) {
+            newState = replaceText(newState, selection, tabString);
+            e.preventDefault();
+        }
+    }
 
     return onChange(state, newState);
 };
@@ -392,11 +439,7 @@ const changeImageCaption = (state, {entityKey, newCaption, field}) => {
     const entity = contentState.getEntity(entityKey);
     const {media} = entity.getData();
 
-    if (field === 'Title') {
-        media.headline = newCaption;
-    } else {
-        media.description_text = newCaption;
-    }
+    media[field] = newCaption;
 
     const newContentState = contentState.replaceEntityData(entityKey, {media});
     const newEditorState = EditorState.push(editorState, newContentState, 'change-block-data');

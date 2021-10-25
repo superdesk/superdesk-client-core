@@ -1,37 +1,36 @@
 import React from 'react';
-import {ListTypeIcon} from './ListTypeIcon';
 import {ListPriority} from './ListPriority';
 import {ListItemInfo, IPropsItemListInfo} from './ListItemInfo';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {MultiSelectCheckbox} from './MultiSelectCheckbox';
 
 interface IPropsItemsListTemplate extends IPropsItemListInfo {
+    itemSelected: boolean;
     selectingDisabled: boolean;
     getActionsMenu: () => any;
-    onMultiSelect: () => any;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
 }
 
 export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
     render() {
-        const {item} = this.props;
+        const {item, itemSelected, multiSelect} = this.props;
 
         return (
             <div>
                 <span className="state-border" />
-                <ListTypeIcon
+                <MultiSelectCheckbox
                     item={item}
-                    onMultiSelect={this.props.onMultiSelect}
-                    selectingDisabled={this.props.selectingDisabled}
+                    itemSelected={itemSelected}
+                    multiSelect={multiSelect}
                 />
                 {
                     item.priority || item.urgency
-                        ? <ListPriority
-                            item={item}
-                            svc={this.props.svc}
-                            scope={this.props.scope}
-                        />
+                        ? <ListPriority item={item} singleLine={this.props.singleLine} />
                         : null
                 }
                 <ListItemInfo
                     item={item}
+                    relatedEntities={this.props.relatedEntities}
                     openAuthoringView={this.props.openAuthoringView}
                     desk={this.props.desk}
                     ingestProvider={this.props.ingestProvider}
@@ -41,11 +40,11 @@ export class ListItemTemplate extends React.Component<IPropsItemsListTemplate> {
                     swimlane={this.props.swimlane}
                     versioncreator={this.props.versioncreator}
                     narrow={this.props.narrow}
-                    svc={this.props.svc}
-                    scope={this.props.scope}
                     isNested={this.props.isNested}
                     showNested={this.props.showNested}
                     toggleNested={this.props.toggleNested}
+                    singleLine={this.props.singleLine}
+                    customRender={this.props.customRender}
                 />
                 {this.props.getActionsMenu()}
             </div>

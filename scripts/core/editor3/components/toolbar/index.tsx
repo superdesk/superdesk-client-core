@@ -11,8 +11,8 @@ import {connect} from 'react-redux';
 import {LinkToolbar} from '../links';
 import classNames from 'classnames';
 import * as actions from '../../actions';
-import {highlightsConfig} from '../../highlightsConfig';
 import {PopupTypes, changeCase, undo, redo} from '../../actions';
+import {getHighlightsConfig} from '../../highlightsConfig';
 import {gettext} from 'core/utils';
 
 interface IState {
@@ -41,7 +41,6 @@ class ToolbarComponent extends React.Component<any, IState> {
     constructor(props) {
         super(props);
 
-        this.scrollContainer = $(props.scrollContainer || window);
         this.onScroll = this.onScroll.bind(this);
 
         this.computeState = this.computeState.bind(this);
@@ -57,11 +56,11 @@ class ToolbarComponent extends React.Component<any, IState> {
             width: 'auto',
         };
 
-        if (!this.props.editorNode || !this.toolbarNode) {
+        if (!this.props.editorNode?.current || !this.toolbarNode.current) {
             return defaultState;
         }
 
-        const editorRect = this.props.editorNode.getBoundingClientRect();
+        const editorRect = this.props.editorNode.current.getBoundingClientRect();
         const pageRect = this.scrollContainer[0].getBoundingClientRect();
 
         if (!editorRect || !pageRect) {
@@ -71,7 +70,7 @@ class ToolbarComponent extends React.Component<any, IState> {
         const isToolbarOut = editorRect.top < pageRect.top + 80;
         const isBottomOut = editorRect.bottom < pageRect.top + 70;
 
-        const isContentLarger = this.props.editorNode.clientHeight < this.toolbarNode.current.clientHeight;
+        const isContentLarger = this.props.editorNode.current.clientHeight < this.toolbarNode.current.clientHeight;
 
         const floating = !isContentLarger && isToolbarOut && !isBottomOut;
         const width = floating ? editorRect.width : 'auto';
@@ -83,7 +82,7 @@ class ToolbarComponent extends React.Component<any, IState> {
         if (nextProps.popup.type === 'NONE' && this.props.popup.type !== 'NONE') {
             // restoring editor focus after closing the popup
 
-            const scrollableElement = document.querySelector('.page-content-container');
+            const scrollableElement = document.querySelector('.page-content-container--scrollable');
 
             setTimeout(() => { // wait for render
                 const {editorWrapperElement} = this.props;
@@ -126,6 +125,7 @@ class ToolbarComponent extends React.Component<any, IState> {
     }
 
     componentDidMount() {
+        this.scrollContainer = $(this.props.scrollContainer || window);
         this.scrollContainer.on('scroll', this.onScroll);
     }
 
@@ -161,41 +161,41 @@ class ToolbarComponent extends React.Component<any, IState> {
             disabled: disabled && activeCell === null,
         });
 
-        return activeCell !== null ? <TableControls className={cx} /> :
+        return activeCell !== null ? <TableControls className={cx} /> : (
             <div className={cx} style={{width: this.state.width}} ref={this.toolbarNode}>
                 {/* Styles */}
                 <BlockStyleButtons />
                 <InlineStyleButtons />
 
                 {/* Formatting options */}
-                {has('link') &&
+                {has('link') && (
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Link)}
                         iconName="link"
                         tooltip={gettext('Link')}
                     />
-                }
-                {has('embed') &&
+                )}
+                {has('embed') && (
                     <IconButton
                         onClick={showPopup(PopupTypes.Embed)}
                         iconName="code"
                         tooltip="Embed"
                     />
-                }
-                {has('media') &&
+                )}
+                {has('media') && (
                     <IconButton
                         onClick={insertMedia}
                         tooltip={gettext('Media')}
                         iconName="picture"
                     />
-                }
-                {has('table') &&
+                )}
+                {has('table') && (
                     <IconButton
                         onClick={addTable}
                         tooltip={gettext('Table')}
                         iconName="table"
                     />
-                }
+                )}
                 {has('remove format') && (
                     <SelectionButton
                         onClick={removeFormat}
@@ -214,48 +214,48 @@ class ToolbarComponent extends React.Component<any, IState> {
                         tooltip={gettext('Remove all formatting')}
                     />
                 )}
-                {has('comments') &&
+                {has('comments') && (
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Comment)}
                         precondition={
-                            this.props.highlightsManager.canAddHighlight(highlightsConfig.COMMENT.type)
+                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().COMMENT.type)
                         }
                         key="comment-button"
                         iconName="comment"
                         tooltip={gettext('Comment')}
                     />
-                }
-                {has('annotation') &&
+                )}
+                {has('annotation') && (
                     <SelectionButton
                         onClick={showPopup(PopupTypes.Annotation)}
                         precondition={
-                            this.props.highlightsManager.canAddHighlight(highlightsConfig.ANNOTATION.type)
+                            this.props.highlightsManager.canAddHighlight(getHighlightsConfig().ANNOTATION.type)
                         }
                         key="annotation-button"
                         iconName="edit-line"
                         tooltip={gettext('Annotation')}
                     />
-                }
+                )}
 
-                {has('suggestions') &&
+                {has('suggestions') && (
                     <StyleButton
                         active={suggestingMode}
                         label={'suggestions'}
                         style={'suggestions'}
                         onToggle={toggleSuggestingMode}
                     />
-                }
+                )}
 
-                {has('formatting marks') &&
+                {has('formatting marks') && (
                     <StyleButton
                         active={invisibles}
                         label={'invisibles'}
                         style={'invisibles'}
                         onToggle={toggleInvisibles}
                     />
-                }
+                )}
 
-                {has('uppercase') &&
+                {has('uppercase') && (
                     <SelectionButton
                         onClick={({selection}) => dispatch(changeCase('uppercase', selection))}
                         precondition={!suggestingMode}
@@ -263,9 +263,9 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="to-uppercase"
                         tooltip={gettext('Convert text to uppercase')}
                     />
-                }
+                )}
 
-                {has('lowercase') &&
+                {has('lowercase') && (
                     <SelectionButton
                         onClick={({selection}) => dispatch(changeCase('lowercase', selection))}
                         precondition={!suggestingMode}
@@ -273,7 +273,27 @@ class ToolbarComponent extends React.Component<any, IState> {
                         iconName="to-lowercase"
                         tooltip={gettext('Convert text to lowercase')}
                     />
-                }
+                )}
+
+                {has('undo') && (
+                    <IconButton
+                        onClick={() => {
+                            this.props.dispatch(undo());
+                        }}
+                        tooltip={gettext('Undo') + ' (ctrl + z)'}
+                        iconName="undo"
+                    />
+                )}
+
+                {has('redo') && (
+                    <IconButton
+                        onClick={() => {
+                            this.props.dispatch(redo());
+                        }}
+                        tooltip={gettext('Redo') + ' (ctrl + y)'}
+                        iconName="redo"
+                    />
+                )}
 
                 {has('undo') &&
                     <IconButton
@@ -304,7 +324,8 @@ class ToolbarComponent extends React.Component<any, IState> {
 
                 {/* LinkToolbar must be the last node. */}
                 <LinkToolbar onEdit={showPopup(PopupTypes.Link)} />
-            </div>;
+            </div>
+        );
     }
 }
 

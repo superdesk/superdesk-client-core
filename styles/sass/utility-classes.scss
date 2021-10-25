@@ -177,12 +177,56 @@ ul.list-view.list-without-items {
     margin-top: 10px;
 }
 
+.css-table {
+    display: table;
+
+    > .tr {
+        display: table-row;
+
+        > .td {
+            display: table-cell;
+        }
+    }
+}
+
+.small-tag {
+    font-size: 12px;
+    color: #000;
+    background-color: #f5f5f5;
+    padding: 3px 6px;
+    border-radius: 2px;
+}
+
 // SPACER END
+
+
+.hover-AB:hover .hover-AB--A,
+.hover-AB:not(:hover) .hover-AB--B {
+    display: none!important;
+}
 
 @media print
 {    
     .no-print
     {
         display: none!important;
+    }
+}
+
+.icon-button--small {
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+
+    &:hover, &:active {
+        [class^="icon-"], [class*=" icon-"] {
+            color: $sd-blue;
+        }
+    }
+}
+
+.icon-big--inherit-color {
+    &[class^="big-icon--"], &[class*=" big-icon--"] {
+        color: inherit;
     }
 }

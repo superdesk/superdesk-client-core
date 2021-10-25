@@ -1,5 +1,5 @@
 <div class="subnav subnav--absolute">
-    <h3 class="page-nav-title"><span translate>Dashboard</span> {{ dashboard.current.name | translate}}</h3>
+    <h2 class="page-nav-title"><span translate>Dashboard</span> {{ dashboard.current.name | translate}}</h2>
 
     <div class="subnav__button-stack--square-buttons">
         <button ng-if="configurable" class="navbtn" ng-click="dashboard.edit = true" ng-show="dashboard.widgets.length && !dashboard.edit" sd-tooltip="{{ :: 'Rearrange widgets' | translate }}" flow="left">
@@ -44,6 +44,12 @@
 <div sd-edit-workspace data-workspace="edited" data-done="afterRename"></div>
 
 <div class="dashboard-container" ng-if="dashboard.current">
+    <!-- has to be present for "to desk" function to work -->
+    <div
+        sd-send-item
+        data-item="null"
+    ></div>
+
     <div class="content clearfix">
         <div sd-grid
             data-status="dashboard.edit"
@@ -59,7 +65,7 @@
 <div sd-modal data-model="dashboard.add" class="modal--large modal--x-large modal--tabs">
     <div class="modal__header modal__header--flex">
         <h3 class="modal__heading" translate>Add new widget</h3>
-        <button class="modal__close icn-btn" ng-click="dashboard.add = false"><i class="icon-close-small"></i></button>        
+        <button class="modal__close icn-btn" ng-click="dashboard.add = false"><i class="icon-close-small"></i></button>
     </div>
 
     <div class="modal__body" ng-if="!dashboard.selectedWidget">
@@ -86,7 +92,8 @@
             </div>
             <div class="content-box">
                 <div class="title">{{ :: dashboard.selectedWidget.label | translate }}</div>
-                <div class="description">{{ :: dashboard.selectedWidget.description | translate }}</div>
+                <div class="description" ng-if="dashboard.selectedWidget.description">{{ :: dashboard.selectedWidget.description | translate }}</div>
+                <div class="description" ng-if="dashboard.selectedWidget.descriptionHtml" ng-bind-html="dashboard.selectedWidget.descriptionHtml"></div>
                 <button class="btn btn--primary btn--large"
                     ng-click="dashboard.addWidget(dashboard.selectedWidget)"
                     ng-disabled="!dashboard.selectedWidget"
@@ -94,5 +101,5 @@
             </div>
         </div>
         <div class="modal__body-footer" ng-if="dashboard.selectedWidget"></div>
-    </div>                                               
+    </div>
 </div>

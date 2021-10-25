@@ -4,7 +4,8 @@
 import './styles/related-item.scss';
 import './styles/assignment.scss';
 import './styles/html-preview.scss';
-import {get, includes, flatMap} from 'lodash';
+import {includes, flatMap} from 'lodash';
+import {reactToAngular1} from 'superdesk-ui-framework';
 
 // scripts
 import './related-item-widget/relatedItem';
@@ -21,6 +22,9 @@ import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {showSpikeDialog} from './show-spike-dialog';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 import * as actions from './actions';
+import {RelatedView} from './views/related-view';
+import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/components/prompt-for-unsaved-changes';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -36,7 +40,7 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdItemPreviewContainer', directive.ItemPreviewContainer)
     .directive('sdMediaView', directive.MediaView)
     .directive('sdMediaMetadata', directive.MediaMetadata)
-    .directive('sdMediaRelated', directive.MediaRelated)
+    .component('sdRelatedView', reactToAngular1(RelatedView, ['relatedItems'], []))
     .directive('sdFetchedDesks', directive.FetchedDesks)
     .directive('sdMetaIngest', directive.MetaIngest)
     .directive('sdSingleItem', directive.SingleItem)
@@ -45,7 +49,6 @@ angular.module('superdesk.apps.archive.directives', [
     .directive('sdItemRendition', directive.ItemRendition)
     .directive('sdRatioCalc', directive.RatioCalc)
     .directive('sdHtmlPreview', directive.HtmlPreview)
-    .directive('sdProviderMenu', directive.ProviderMenu)
     .directive('sdContentResults', directive.ContentResults)
     .directive('sdArchivedItemKill', directive.ArchivedItemKill)
     .directive('sdResendItem', directive.ResendItem)
@@ -82,7 +85,6 @@ angular.module('superdesk.apps.archive', [
     .service('archiveService', svc.ArchiveService)
 
     .controller('UploadController', ctrl.UploadController)
-    .controller('UploadAttachmentsController', ctrl.UploadAttachmentsController)
     .controller('ArchiveListController', ctrl.ArchiveListController)
 
     .config(['superdeskProvider', 'workspaceMenuProvider', function(superdesk, workspaceMenuProvider) {
@@ -111,17 +113,6 @@ angular.module('superdesk.apps.archive', [
                 additionalCondition: ['$location', function($location) {
                     return $location.path() !== '/planning';
                 }],
-                privileges: {archive: 1},
-            })
-            .activity('upload.attachments', {
-                label: gettext('Attach files'),
-                modal: true,
-                cssClass: 'upload-media edit-attachments modal--z-index-fix modal--fill',
-                controller: ctrl.UploadAttachmentsController,
-                templateUrl: 'scripts/apps/archive/views/upload-attachments.html',
-                filters: [
-                    {action: 'upload', type: 'attachments'},
-                ],
                 privileges: {archive: 1},
             })
             .activity('spike', {
@@ -209,7 +200,10 @@ angular.module('superdesk.apps.archive', [
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 condition: (item: IArticle) => item.lock_user == null && item.task?.desk != null,
-                additionalCondition: ['authoring', 'item', (authoring, item) => authoring.itemActions(item).copy],
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).copy
+                    && item.state !== 'correction' && item.state !== 'being_corrected';
+                }],
                 group: 'duplicate',
                 groupLabel: gettext('Duplicate'),
                 groupIcon: 'copy',
@@ -322,6 +316,22 @@ angular.module('superdesk.apps.archive', [
                     authoring.unlink(data.item);
                 }],
             })
+            .activity('cancelCorrection', {
+                label: gettext('Cancel correction'),
+                icon: 'remove-sign',
+                filters: [{action: 'list', type: 'archive'}],
+                group: 'corrections',
+                privileges: {correct: 1},
+                condition: function(item) {
+                    return item.lock_user === null || angular.isUndefined(item.lock_user);
+                },
+                additionalCondition: ['authoring', 'item', function(authoring, item) {
+                    return authoring.itemActions(item).cancelCorrection;
+                }],
+                controller: ['data', 'authoring', function(data, authoring) {
+                    authoring.correction(data.item.archive_item || data.item, false, true);
+                }],
+            })
             .activity('export', {
                 label: gettext('Export'),
                 icon: 'download',
@@ -409,14 +419,39 @@ function spikeActivity(spike, data, modal, $location, multi,
         return;
     }
 
-    if (data.item.lock_user) { // current user has the lock
-        return autosave.get(data.item)
-            .then(() => confirm.reopen())
-            .then(() => authoringWorkspace.edit(data.item))
-            .catch(_spike);
-    }
+    const checkIfHasUnsavedChanges = data.item.lock_user == null
+        ? Promise.resolve(false)
+        : autosave.hasUnsavedChanges(data.item);
 
-    _spike();
+    checkIfHasUnsavedChanges.then((hasUnsavedChanges) => {
+        if (hasUnsavedChanges) {
+            showUnsavedChangesPrompt().then(({action, closePromptFn}) => {
+                autosave.settle(data.item).then(() => {
+                    switch (action) {
+                    case IUnsavedChangesAction.cancelAction:
+                        closePromptFn();
+                        break;
+
+                    case IUnsavedChangesAction.discardChanges:
+                        closePromptFn();
+                        _spike();
+
+                        break;
+
+                    case IUnsavedChangesAction.openItem:
+                        closePromptFn();
+                        authoringWorkspace.edit(data.item);
+                        break;
+
+                    default:
+                        assertNever(action);
+                    }
+                });
+            });
+        } else {
+            _spike();
+        }
+    });
 
     function _spike() {
         if ($location.path() === '/workspace/personal') {

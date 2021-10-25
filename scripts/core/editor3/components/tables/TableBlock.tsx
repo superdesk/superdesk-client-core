@@ -123,7 +123,7 @@ export class TableBlockComponent extends React.Component<IProps> {
         const data = this.getData();
         const {numRows, numCols, withHeader} = data;
 
-        const cx = classNames({
+        const cx = classNames('table-inside', {
             'table-block': true,
             'table-header': withHeader,
         });
@@ -132,9 +132,9 @@ export class TableBlockComponent extends React.Component<IProps> {
             <div className={cx} onMouseDown={this.onMouseDown}>
                 <table>
                     <tbody>
-                        {Array.from(new Array(numRows)).map((_, i) =>
+                        {Array.from(new Array(numRows)).map((_, i) => (
                             <tr key={`col-${i}-${numRows}-${numCols}`}>
-                                {Array.from(new Array(numCols)).map((__, j) =>
+                                {Array.from(new Array(numCols)).map((__, j) => (
                                     <TableCell
                                         key={`cell-${i}-${j}-${numRows}-${numCols}`}
                                         readOnly={this.props.readOnly}
@@ -142,9 +142,12 @@ export class TableBlockComponent extends React.Component<IProps> {
                                         onChange={this.onCellChange.bind(this, i, j)}
                                         onUndo={this.onUndo.bind(this)}
                                         onRedo={this.onRedo.bind(this)}
-                                        onFocus={this.onFocus.bind(this, i, j)} />,
+                                        onFocus={this.onFocus.bind(this, i, j)}
+                                    />
+                                ),
                                 )}
-                            </tr>,
+                            </tr>
+                        ),
                         )}
                     </tbody>
                 </table>

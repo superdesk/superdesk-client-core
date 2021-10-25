@@ -2,6 +2,7 @@
 
 var path = require('path');
 var rootDir = path.dirname(path.dirname(__dirname));
+var getConfig = require('./get-config').getConfig;
 
 var src = [
     'scripts/**/*.html',
@@ -17,17 +18,12 @@ var options = {
         collapseBooleanAttributes: true,
     },
     bootstrap: function(module, script) {
-        return '"use strict";' +
+        return '/* eslint-disable */\n"use strict";' +
             'angular.module("superdesk.templates-cache")' +
             '.run([\'$templateCache\', function($templateCache) {' +
             script + ' }]);';
     },
 };
-
-// get the superdesk.config.js configuration object
-function getConfig() {
-    return require(path.join(process.cwd(), 'superdesk.config.js'))();
-}
 
 module.exports = {
     core: {

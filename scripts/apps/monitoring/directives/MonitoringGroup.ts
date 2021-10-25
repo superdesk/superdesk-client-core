@@ -1,17 +1,18 @@
 /* eslint-disable complexity */
-import _ from 'lodash';
+import _, {debounce} from 'lodash';
 import getCustomSortForGroup, {GroupSortOptions} from '../helpers/CustomSortOfGroups';
 import {GET_LABEL_MAP, getLabelForStage} from '../../workspace/content/constants';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {IMonitoringFilter, IRestApiResponse, IArticle} from 'superdesk-api';
-
-const translatedFields = GET_LABEL_MAP();
+import {getExtensionSections} from '../services/CardsService';
 
 function translateCustomSorts(customSorts: GroupSortOptions) {
     const translated = {};
+
+    const translatedFields = GET_LABEL_MAP();
 
     for (let field of customSorts) {
         translated[field] = {label: translatedFields[field]};
@@ -41,7 +42,7 @@ interface IScope extends ng.IScope {
     cachePreviousItems: Array<any>;
     viewColumn: any;
     labelForStage: typeof getLabelForStage;
-    style: any;
+    styleProperties: any;
     edit: any;
     select: any;
     preview: any;
@@ -141,6 +142,25 @@ export function MonitoringGroup(
                 );
             }
 
+            let queryPromise = null;
+            // Using debounce to run it only once for multiple events
+            // happening at around same time, plus wait for query to finish
+            // before sending another query so if server is slow to respond
+            // it will slow down requests.
+            const scheduleQuery = debounce((event, data) => {
+                if (queryPromise == null) {
+                    queryPromise = queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
+                        .finally(() => {
+                            queryPromise = null;
+                            scope.$applyAsync();
+                        });
+                } else {
+                    // There is already request pending so queue another one to run when it finishes.
+                    // It's using debounce inside so if there are more those will be ingored.
+                    queryPromise.then(() => scheduleQuery(event, data));
+                }
+            }, 1000, {maxWait: 3000});
+
             var monitoring = ctrls[0];
             var projections = search.getProjectedFields();
 
@@ -178,7 +198,7 @@ export function MonitoringGroup(
 
             scope.labelForStage = getLabelForStage;
 
-            scope.style = {};
+            scope.styleProperties = {};
 
             scope.edit = edit;
             scope.select = select;
@@ -194,6 +214,7 @@ export function MonitoringGroup(
             scope.$on('item:spike', scheduleIfShouldUpdate);
             scope.$on('item:copy', scheduleQuery);
             scope.$on('item:unlink', scheduleQuery);
+            scope.$on('item:correction', scheduleQuery);
             scope.$on('item:duplicate', scheduleQuery);
             scope.$on('item:translate', scheduleQuery);
             scope.$on('broadcast:created', (event, args) => {
@@ -272,7 +293,7 @@ export function MonitoringGroup(
                     scheduleQuery(event, data);
                 } else if (data && cards.shouldUpdate(scope.group, data)) {
                     scheduleQuery(event, data);
-                } else if (data.items) {
+                } else if (data?.items != null) {
                     for (const updatedItemGuid in data.items) {
                         // check if stage contains updated items
                         if (
@@ -386,7 +407,7 @@ export function MonitoringGroup(
             };
 
             function updateGroupStyle() {
-                scope.style.maxHeight = null;
+                scope.styleProperties.maxHeight = null;
                 if (scope.viewColumn) {
                     // maxHeight is not applicable for swimlane/column view, as each stages/column
                     // don't need to have scroll bars because container scroll bar of monitoring
@@ -400,26 +421,7 @@ export function MonitoringGroup(
                         scrollOffset = Math.round(ITEM_HEIGHT / 2);
                     }
 
-                    scope.style.maxHeight = groupItems * ITEM_HEIGHT - scrollOffset;
-                }
-            }
-
-            var queryTimeout;
-
-            /**
-             * Schedule content reload after some delay
-             */
-            function scheduleQuery(event, data) {
-                if (!queryTimeout) {
-                    queryTimeout = $timeout(() => {
-                        queryItems(event, data, {auto: (data && data.force) ? 0 : 1})
-                            .finally(() => {
-                                scope.$applyAsync(() => {
-                                    // ignore any updates requested in current $digest
-                                    queryTimeout = null;
-                                });
-                            });
-                    }, 1000, false);
+                    scope.styleProperties.maxHeight = groupItems * ITEM_HEIGHT - scrollOffset;
                 }
             }
 
@@ -539,6 +541,9 @@ export function MonitoringGroup(
                     monitoring.singleGroup = null;
                     multi.reset();
                 }
+
+                // reset in order to display loading indicator
+                scope.items = undefined;
 
                 return (function() {
                     const customFilters: {[key: string]: IMonitoringFilter} = JSON.parse(
@@ -705,7 +710,9 @@ export function MonitoringGroup(
              * return {promise} list of items
              */
             function apiquery(searchCriteria, applyProjections) {
+                const personalGroups = ['personal', 'sent'];
                 var provider = 'search';
+                const personalSectionIds = getExtensionSections().map(({id}) => id);
 
                 if (scope.group.type === 'search' || desks.isPublishType(scope.group.type)) {
                     if (searchCriteria.repo && searchCriteria.repo.indexOf(',') === -1) {
@@ -714,7 +721,9 @@ export function MonitoringGroup(
                             searchCriteria.source.size = PAGE_SIZE;
                         }
                     }
-                } else if (scope.group != null && scope.group.type === 'personal') {
+                } else if (scope.group != null
+                    && (personalGroups.includes(scope.group.type)
+                        || personalSectionIds.includes(scope.group.type))) {
                     provider = 'news';
                 } else {
                     provider = 'archive';

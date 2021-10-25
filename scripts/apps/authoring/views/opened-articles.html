@@ -1,13 +1,18 @@
-<div class="opened-articles-bar">
-    <button class="opened-articles-bar__quick-actions" ng-click="openDashboard()" title="{{gettext('All opened items')}}"><i class="icon-th-large icon--white"></i></button>
+<div class="opened-articles-bar" ng-class="{'menu-open': flags.menu}" data-test-id="opened-articles-bar">
+    <button class="opened-articles-bar__quick-actions" ng-click="openDashboard()" title="{{ 'All opened items' | translate }}"><i class="icon-th-large icon--white"></i></button>
 
     <ul ng-if="workqueue.items.length" class="opened-articles-bar__list">
-        <li class="opened-articles-bar__item" ng-repeat="article in workqueue.items track by article._id" ng-class="{'opened-articles-bar__item--active': article === articleInEditMode}">
+        <li
+            class="opened-articles-bar__item"
+            ng-repeat="article in workqueue.items track by article._id"
+            ng-class="{'opened-articles-bar__item--active': article === articleInEditMode}"
+            data-test-id="item"
+        >
             <a class="opened-articles-bar__item-title" ng-click="edit(article, $event)" ng-href="{{ :: link(article) }}">
                 <span ng-show="article.headline || article.slugline">{{ (article.headline || article.slugline) | stripHtmlTags }}</span>
                 <span ng-show="!article.headline && !article.slugline" translate>Untitled</span>
             </a>
-            <button class="opened-articles-bar__item-close" ng-click="closeItem(article)"><i class="icon-close-small icon--white"></i></button>
+            <button class="opened-articles-bar__item-close" ng-click="closeItem(article)" data-test-id="close"><i class="icon-close-small icon--white"></i></button>
         </li>
     </ul>
 
@@ -22,7 +27,7 @@
 
     <div class="opened-articles-bar__create-new dropdown dropdown--dropleft strict" dropdown ng-if="privileges.archive">
         <button class="btn btn--primary dropdown__toggle" dropdown__toggle>
-            <i class="icon-plus-sign"></i>{{gettext('Create new')}}
+            <i class="icon-plus-sign"></i>{{ 'Create new' | translate }}
         </button>
         <div class="dropdown__menu dropdown--dropup" sd-content-create></div>
     </div>

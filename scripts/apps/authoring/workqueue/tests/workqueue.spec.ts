@@ -1,4 +1,3 @@
-
 describe('workqueue', () => {
     var USER_ID = 'u1';
 
@@ -14,6 +13,7 @@ describe('workqueue', () => {
     beforeEach(window.module('superdesk.templates-cache'));
     beforeEach(window.module('superdesk.apps.authoring'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject((session, $q) => {
         spyOn(session, 'getIdentity').and.returnValue($q.when({_id: USER_ID}));
@@ -73,39 +73,5 @@ describe('workqueue', () => {
             $controller('Workqueue', {$scope: scope});
             $rootScope.$digest();
             expect(scope.articleInEditMode._id).toBe('foo');
-        }));
-
-    it('can confirm before closing autosaved or not autosaved, but dirty active item', inject(
-        (api, $location, $controller, $q, $rootScope, autosave, confirm) => {
-        // first get active item from url.
-            spyOn(api, 'query').and.returnValue($q.when({_items: [{_id: 'foo'}]}));
-            $location.path('/mock');
-            $location.search('item', 'foo');
-            $rootScope.$digest();
-
-            var scope = $rootScope.$new();
-
-            $controller('Workqueue', {$scope: scope});
-            $rootScope.$digest();
-            expect(scope.articleInEditMode._id).toBe('foo');
-
-            var confirmDefer;
-
-            confirmDefer = $q.defer();
-            // Spy On autosave.get(), testing first call would return with success and second with error.
-            spyOn(autosave, 'get')
-                .and.returnValues($q.when(scope.articleInEditMode), $q.reject({statusText: 'NOT FOUND'}));
-            spyOn(confirm, 'reopen').and.returnValue(confirmDefer.promise);
-
-            // call for success, i.e. gets autosaved.
-            scope.closeItem(scope.articleInEditMode);
-            $rootScope.$digest();
-            expect(confirm.reopen).toHaveBeenCalled();
-
-            // call for error, i.e. not gets autosaved.
-            confirm.dirty = true; // current item is dirty
-            scope.closeItem(scope.articleInEditMode);
-            $rootScope.$digest();
-            expect(confirm.reopen).toHaveBeenCalled();
         }));
 });

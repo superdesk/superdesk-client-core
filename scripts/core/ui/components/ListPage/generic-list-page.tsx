@@ -370,14 +370,16 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         };
 
         return (
-            <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%'}}>
                 <div className="subnav">
-                    <div style={{
-                        display: 'flex',
-                        width: '100%',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                    }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            width: '100%',
+                            flexDirection: 'row',
+                            justifyContent: 'space-between',
+                        }}
+                    >
                         {
                             this.props.disallowFiltering ? null : (
                                 <div>
@@ -456,10 +458,12 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                     </SidePanelHeader>
                                     <SidePanelContent>
                                         <SidePanelContentBlock>
-                                            <form onSubmit={(event) => {
-                                                event.preventDefault();
-                                                this.filter();
-                                            }}>
+                                            <form
+                                                onSubmit={(event) => {
+                                                    event.preventDefault();
+                                                    this.filter();
+                                                }}
+                                            >
                                                 <FormViewEdit
                                                     item={this.state.filterValues}
                                                     formConfig={formConfigForFilters}

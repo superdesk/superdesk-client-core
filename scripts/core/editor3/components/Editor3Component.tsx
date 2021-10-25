@@ -32,7 +32,8 @@ import {getSpellcheckWarningsByBlock} from './spellchecker/SpellcheckerDecorator
 import {getSpellchecker} from './spellchecker/default-spellcheckers';
 import {IEditorStore} from '../store';
 import {appConfig} from 'appConfig';
-import {RICH_FORMATTING_OPTION} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {EDITOR_BLOCK_TYPE} from '../constants';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
@@ -46,7 +47,7 @@ const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
 
 const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,
-    'superdesk/editor3-block',
+    EDITOR_BLOCK_TYPE,
     'Files',
 ];
 
@@ -133,7 +134,7 @@ interface IProps {
     onCreateChangeStyleSuggestion?(style, active): void;
     onChange?(editorState: EditorState): void;
     unlock?(): void;
-    onTab?(): void;
+    onTab?(event): void;
     dragDrop?(): void;
     dispatch?(action: any): void;
 }
@@ -159,7 +160,11 @@ export class Editor3Component extends React.Component<IProps, IState> {
     static defaultProps: any;
 
     editorKey: any;
-    editorNode: any;
+
+    // Use an object otherwise a second render will be required after mounting
+    // to use this reference in a render property to a component.
+    editorNode: React.MutableRefObject<HTMLDivElement>;
+
     div: any;
     editor: any;
     spellcheckCancelFn: () => void;
@@ -170,7 +175,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
         super(props);
 
         this.editorKey = null;
-        this.editorNode = undefined;
+        this.editorNode = React.createRef();
 
         this.focus = this.focus.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
@@ -202,10 +207,6 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     spellcheck() {
-        if (this.props.spellchecking.enabled !== true) {
-            return;
-        }
-
         this.spellcheckCancelFn();
 
         this.spellcheckCancelFn = (() => {
@@ -265,14 +266,19 @@ export class Editor3Component extends React.Component<IProps, IState> {
     }
 
     keyBindingFn(e) {
-        const {keyCode, shiftKey} = e;
+        const {key, shiftKey} = e;
 
-        if (keyCode === 13 && shiftKey) {
+        if (key === 'Enter' && shiftKey) {
             return 'soft-newline';
         }
 
+        if (key === 'Tab') {
+            this.props.onTab(e);
+            return '';
+        }
+
         // ctrl + X
-        if (keyCode === 88 && KeyBindingUtil.hasCommandModifier(e)) {
+        if (key === 'x' && KeyBindingUtil.hasCommandModifier(e)) {
             const {editorState} = this.props;
             const selection = editorState.getSelection();
 
@@ -284,9 +290,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         if (KeyBindingUtil.hasCommandModifier(e)) {
             const {editorFormat} = this.props;
-            const notAllowBold = keyCode === 66 && editorFormat.indexOf('bold') === -1;
-            const notAllowItalic = keyCode === 73 && editorFormat.indexOf('italic') === -1;
-            const notAllowUnderline = keyCode === 85 && editorFormat.indexOf('underline') === -1;
+            const notAllowBold = key === 'b' && editorFormat.indexOf('bold') === -1;
+            const notAllowItalic = key === 'i' && editorFormat.indexOf('italic') === -1;
+            const notAllowUnderline = key === 'u' && editorFormat.indexOf('underline') === -1;
 
             if (notAllowBold || notAllowItalic || notAllowUnderline) {
                 e.preventDefault();
@@ -477,14 +483,20 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 setProperty('--preCharacterLimit', appConfig.features.showCharacterLimit + 'ch');
         }
 
-        this.spellcheck();
+        if (this.props.spellchecking.enabled) {
+            this.spellcheck();
+        }
     }
 
     handleRefs(editor) {
         this.editor = editor;
 
         this.editorKey = this.editor === null ? null : this.editor._editorKey;
-        this.editorNode = this.editor === null ? undefined : ReactDOM.findDOMNode(this.editor);
+
+        // eslint-disable-next-line react/no-find-dom-node
+        this.editorNode.current = this.editor === null ?
+            undefined :
+            ReactDOM.findDOMNode(this.editor) as HTMLDivElement;
     }
 
     componentWillUnmount() {
@@ -498,17 +510,20 @@ export class Editor3Component extends React.Component<IProps, IState> {
             window.instgrm.Embeds.process();
         }
 
-        if (prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()) {
+        if (
+            this.props.spellchecking.enabled &&
+            prevProps.editorState.getCurrentContent() !== this.props.editorState.getCurrentContent()
+        ) {
             this.spellcheck();
         }
     }
+
     render() {
         const {
             readOnly,
             locked,
             showToolbar,
             onChange,
-            onTab,
             tabindex,
             scrollContainer,
             cleanPastedHtml,
@@ -582,7 +597,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
                     onChange={this.props.onChange}
                 />
                 <div className="focus-screen" onMouseDown={this.focus}>
-                    <Editor editorState={editorState}
+                    <Editor
+                        editorState={editorState}
                         handleDrop={this.handleDropOnEditor}
                         handleKeyCommand={this.handleKeyCommand}
                         keyBindingFn={this.keyBindingFn}
@@ -597,13 +613,12 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
                             const selectionRect = getVisibleSelectionRect(window);
 
-                            if (this.editorNode != null && selectionRect != null) {
-                                this.editorNode.dataset.editorSelectionRect = JSON.stringify(selectionRect);
+                            if (this.editorNode?.current != null && selectionRect != null) {
+                                this.editorNode.current.dataset.editorSelectionRect = JSON.stringify(selectionRect);
                             }
 
                             onChange(editorStateNext);
                         }}
-                        onTab={onTab}
                         tabIndex={tabindex}
                         handlePastedText={handlePastedText.bind(this)}
                         readOnly={locked || readOnly}

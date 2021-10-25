@@ -6,6 +6,7 @@ import 'apps/publish';
 import 'apps/templates';
 import 'apps/profiling';
 import 'apps/desks';
+import 'apps/master-desk';
 import 'apps/authoring';
 import 'apps/search';
 import 'apps/legal-archive';
@@ -26,6 +27,7 @@ import 'apps/content-api';
 import 'apps/extension-points';
 import 'apps/contacts';
 import 'apps/relations';
+import 'apps/system-messages';
 
 export default angular.module('superdesk.apps', [
     'superdesk.apps.settings',
@@ -37,6 +39,7 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.archive',
     'superdesk.apps.ingest',
     'superdesk.apps.desks',
+    'superdesk.apps.master-desk',
     'superdesk.apps.products',
     'superdesk.apps.authoring',
     'superdesk.apps.packaging',
@@ -59,4 +62,5 @@ export default angular.module('superdesk.apps', [
     'superdesk.apps.extension-points',
     'superdesk.apps.contacts',
     'superdesk.apps.relations',
+    'superdesk.apps.system-messages',
 ]);

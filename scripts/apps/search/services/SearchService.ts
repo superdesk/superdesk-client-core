@@ -2,15 +2,17 @@ import {
     getParameters,
     getExcludeFacets,
     CORE_PROJECTED_FIELDS,
-    UI_PROJECTED_FIELD_MAPPINGS,
     DEFAULT_LIST_CONFIG,
+    UI_PROJECTED_FIELD_MAPPINGS,
 } from 'apps/search/constants';
 
 import _ from 'lodash';
-import {getDateFilters, dateRangesByKey} from '../directives/DateFilters';
-import {gettext} from 'core/utils';
-import {KILLED_STATES} from 'apps/archive/constants';
+import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
+import {gettext, isElasticDateFormat} from 'core/utils';
+import {KILLED_STATES, ITEM_STATE} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
+import {ISortFields} from 'core/ui/components/SortBar';
+import {IListViewFieldWithOptions, IArticle} from 'superdesk-api';
 
 const DEFAULT_REPOS = ['ingest', 'archive', 'published', 'archived'];
 
@@ -62,6 +64,28 @@ export function setFilters(search) {
     return search;
 }
 
+export function getArticleSortOptions(): Array<ISortFields> {
+    return [
+        {field: 'versioncreated', label: gettext('Updated')},
+        {field: 'firstcreated', label: gettext('Created')},
+        {field: 'urgency', label: gettext('Urgency')},
+        {field: 'anpa_category.name', label: gettext('ANPA Category')},
+        {field: 'slugline.phrase', label: gettext('Slugline')},
+        {field: 'priority', label: gettext('Priority')},
+        {field: 'genre.name', label: gettext('Genre')},
+    ];
+}
+
+export function getTrackByIdentifier(id: string, version: string | number): string {
+    return version ? id + ':' + version : id;
+}
+
+export function generateTrackByIdentifier(
+    item: IArticle | Pick<IArticle, '_id' | 'state' | '_current_version'>,
+): string {
+    return getTrackByIdentifier(item._id, item.state !== ITEM_STATE.INGESTED ? item._current_version : null);
+}
+
 /**
  * @ngdoc service
  * @module superdesk.apps.search
@@ -90,15 +114,7 @@ export function SearchService($location, session, multi,
     const PARAMETERS = getParameters();
     const EXCLUDE_FACETS = getExcludeFacets();
 
-    var sortOptions = [
-        {field: 'versioncreated', label: gettext('Updated')},
-        {field: 'firstcreated', label: gettext('Created')},
-        {field: 'urgency', label: gettext('Urgency')},
-        {field: 'anpa_category.name', label: gettext('ANPA Category')},
-        {field: 'slugline.phrase', label: gettext('Slugline')},
-        {field: 'priority', label: gettext('Priority')},
-        {field: 'genre.name', label: gettext('Genre')},
-    ];
+    var sortOptions = getArticleSortOptions();
 
     var self = this;
 
@@ -169,8 +185,9 @@ export function SearchService($location, session, multi,
         });
 
         // set the filters for parameters defined in the parameters panel.
-        _.each(PARAMETERS, (value, key) => {
+        _.each(PARAMETERS, (_param, key) => {
             var facetrange = {};
+            const dateRangesByKey = getDateRangesByKey();
 
             if (!params[key]) {
                 return;
@@ -217,17 +234,29 @@ export function SearchService($location, session, multi,
                     } else {
                         // handle manual ranges
 
+                        const value = params[key];
+
                         if (params[key] != null && key === fieldname + 'to') {
                             if (facetrange[key] == null) {
                                 facetrange[key] = {};
                             }
-                            facetrange[key].lte = formatDate(params[key], midnightSuffix);
+
+                            if (isElasticDateFormat(value)) {
+                                facetrange[key].lte = value;
+                            } else {
+                                facetrange[key].lte = formatDate(value, midnightSuffix);
+                            }
                         }
                         if (params[key] != null && key === fieldname + 'from') {
                             if (facetrange[key] == null) {
                                 facetrange[key] = {};
                             }
-                            facetrange[key].gte = formatDate(params[key], zeroHourSuffix);
+
+                            if (isElasticDateFormat(value)) {
+                                facetrange[key].gte = value;
+                            } else {
+                                facetrange[key].gte = formatDate(value, zeroHourSuffix);
+                            }
                         }
                     }
                 });
@@ -330,7 +359,7 @@ export function SearchService($location, session, multi,
 
         if (appConfig.search != null && appConfig.search.useDefaultTimezone) {
             // use the default timezone of the server.
-            local += moment.tz(appConfig.defaultTimezone).format('ZZ');
+            local += moment.tz(appConfig.default_timezone).format('ZZ');
         } else {
             // use the client timezone of the server.
             local += moment().format('ZZ');
@@ -420,6 +449,8 @@ export function SearchService($location, session, multi,
             // date filters start
             var facetrange = {};
 
+            const dateRangesByKey = getDateRangesByKey();
+
             // inject custom date field filters { fieldname: 'string(IDateRange)' }
             if (typeof paramsObject.customFields !== 'undefined') {
                 for (let fieldname in paramsObject.customFields) {
@@ -441,23 +472,38 @@ export function SearchService($location, session, multi,
                     // handle manual ranges
 
                     if (paramsObject[fieldname + 'to'] != null) {
+                        const value: string = paramsObject[fieldname + 'to'];
+
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
                         }
-                        facetrange[fieldname].lte = formatDate(paramsObject[fieldname + 'to'], midnightSuffix);
+
+                        if (isElasticDateFormat(value)) {
+                            facetrange[fieldname].lte = value;
+                        } else {
+                            facetrange[fieldname].lte = formatDate(value, midnightSuffix);
+                        }
                     }
                     if (paramsObject[fieldname + 'from'] != null) {
+                        const value = paramsObject[fieldname + 'from'];
+
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
                         }
-                        facetrange[fieldname].gte = formatDate(paramsObject[fieldname + 'from'], zeroHourSuffix);
+
+                        if (isElasticDateFormat(value)) {
+                            facetrange[fieldname].gte = value;
+                        } else {
+                            facetrange[fieldname].gte = formatDate(value, zeroHourSuffix);
+                        }
                     }
                 }
             });
 
-            if (Object.keys(facetrange).length > 0) {
-                query.post_filter({range: facetrange});
-            }
+            Object.keys(facetrange).forEach((key) => {
+                query.post_filter({range: {[key]: facetrange[key]}});
+            });
+
             // date filters end
 
             if (paramsObject.type) {
@@ -521,7 +567,7 @@ export function SearchService($location, session, multi,
             if (queryString) {
                 criteria.query.filtered.query = {query_string: {
                     query: queryString,
-                    lenient: false,
+                    lenient: true,
                     default_operator: 'AND',
                 }};
             }
@@ -627,25 +673,12 @@ export function SearchService($location, session, multi,
         return new Query(params, this.cvs, options);
     };
 
-    /**
-     * Generate Track By Identifier for search results.
-     *
-     * @param {Object} item
-     * @return {String}
-     */
-    this.generateTrackByIdentifier = function(item) {
-        return this.getTrackByIdentifier(item._id, item.state !== 'ingested' ? item._current_version : null);
-    };
+    this.generateTrackByIdentifier = generateTrackByIdentifier;
 
-    /**
-     * Get unique id for an item
-     *
-     * @param {String} id
-     * @param {String} version
-     * @return {String}
-     */
-    this.getTrackByIdentifier = function(id, version) {
-        return version ? id + ':' + version : id;
+    this.getTrackByIdentifier = getTrackByIdentifier;
+
+    this.extractIdFromTrackByIndentifier = function(identifier: string) {
+        return identifier.slice(0, identifier.lastIndexOf(':'));
     };
 
     /*
@@ -857,21 +890,37 @@ export function SearchService($location, session, multi,
      * @description Returns the list of fields to be used in projections
      */
     this.getProjectedFields = function() {
-        var uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
-        var uiFields: any = _.union(uiConfig.priority, uiConfig.firstLine, uiConfig.secondLine);
+        
 
-        let projectedFields: Array<string> = [];
+        const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
-        uiFields.forEach((uiField) => {
-            if (uiField in UI_PROJECTED_FIELD_MAPPINGS) {
-                if (Array.isArray(UI_PROJECTED_FIELD_MAPPINGS[uiField])) {
-                    projectedFields.push(...UI_PROJECTED_FIELD_MAPPINGS[uiField]);
-                } else {
-                    projectedFields.push(UI_PROJECTED_FIELD_MAPPINGS[uiField]);
-                }
+        const uiFields = [
+            ...(uiConfig.priority ?? []),
+            ...(uiConfig.firstLine ?? []),
+            ...(uiConfig.secondLine ?? []),
+        ];
+
+        const projectedFields: Set<string> = new Set();
+
+        CORE_PROJECTED_FIELDS.fields.forEach((field) => {
+            projectedFields.add(field);
+        });
+
+        uiFields.forEach((_field: string | IListViewFieldWithOptions) => {
+            const field = typeof _field === 'string' ? _field : _field.field;
+
+            const adjustedField = UI_PROJECTED_FIELD_MAPPINGS[field] ?? field;
+
+            if (Array.isArray(adjustedField)) {
+                adjustedField.forEach((__field) => {
+                    projectedFields.add(__field);
+                });
+            } else {
+                projectedFields.add(adjustedField);
             }
         });
-        return _.union(CORE_PROJECTED_FIELDS.fields, projectedFields);
+
+        return Array.from(projectedFields);
     };
 
     /**

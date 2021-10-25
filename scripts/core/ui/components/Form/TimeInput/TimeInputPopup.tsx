@@ -112,7 +112,8 @@ export class TimeInputPopup extends React.Component<any, any> {
                                 <li
                                     key={index}
                                     className={index === this.state.selectedHourIndex ? 'active' : ''}
-                                    onClick={this.setselectedHourIndex.bind(this, index)}>
+                                    onClick={this.setselectedHourIndex.bind(this, index)}
+                                >
                                     {hour < 10 ? '0' + hour : hour}
                                 </li>
                             ))}
@@ -125,7 +126,8 @@ export class TimeInputPopup extends React.Component<any, any> {
                                 <li
                                     key={index}
                                     className={index === this.state.selectedMinuteIndex ? 'active' : ''}
-                                    onClick={this.setselectedMinuteIndex.bind(this, index)}>
+                                    onClick={this.setselectedMinuteIndex.bind(this, index)}
+                                >
                                     {minute < 10 ? '0' + minute : minute}
                                 </li>
                             ))}

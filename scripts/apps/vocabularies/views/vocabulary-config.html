@@ -54,17 +54,30 @@
             </div>
 
             <div class="sd-list-item-group sd-list-item-group--space-between-items" style="max-width: 1000px;">
-                <div class="sd-list-item sd-shadow--z1" ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: query track by vocabulary._id">
+                <div
+                  class="sd-list-item sd-shadow--z1"
+                  ng-repeat="vocabulary in getVocabulariesForTag(tag, tab) | orderBy:'display_name|translate' | filter: query track by vocabulary._id"
+                  data-test-id="vocabulary-item"
+                >
                     <div class="sd-list-item__column sd-list-item__column--grow sd-list-item__column--no-border">
                         <div class="sd-list-item__row">
-                            <span class="sd-list-item__text-strong sd-list-item__element-rm-10">{{ vocabulary.display_name | translate }}</span>
+                            <span
+                              class="sd-list-item__text-strong sd-list-item__element-rm-10"
+                              data-test-id="vocabulary-item--name"
+                            >
+                              {{vocabulary.display_name}}
+                            </span>
                             <span class="badge badge--light  sd-list-item__element-rm-10" ng-if="tab === 'vocabularies'">{{ vocabulary.items.length }}</span>
-                            <span class="sd-overflow-ellipsis">{{ vocabulary.description | translate }}</span>
+                            <span class="sd-overflow-ellipsis">{{vocabulary.description}}</span>
                         </div>
                     </div>
                     <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
-                        <button ng-click="openVocabulary(vocabulary)" sd-tooltip="{{:: 'Edit vocabulary' | translate }}">
-                            <i class="icon-pencil"></i>
+                        <button
+                          ng-click="openVocabulary(vocabulary)"
+                          sd-tooltip="{{:: 'Edit vocabulary' | translate }}"
+                          data-test-id="vocabulary-item--start-editing"
+                        >
+                          <i class="icon-pencil"></i>
                         </button>
                         <button ng-click="remove(vocabulary)" ng-if="tab !== 'vocabularies'" sd-tooltip="{{:: 'Remove vocabulary' | translate }}">
                             <i class="icon-trash"></i>

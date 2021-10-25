@@ -38,19 +38,6 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
     this.dirty = null;
 
     /**
-     * Called from workqueue in case of unsaved changes.
-     */
-    this.reopen = function() {
-        return modal.confirm(
-            gettext('There are some unsaved changes, go to the article to save changes?'),
-            gettext('Save changes?'),
-            gettext('Go-To'),
-            gettext('Ignore'),
-            gettext('Cancel'),
-        );
-    };
-
-    /**
      * In case $scope is dirty ask user if he want's to loose his changes.
      */
     this.confirm = function confirm() {

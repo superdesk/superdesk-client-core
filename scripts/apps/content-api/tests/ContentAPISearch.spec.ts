@@ -5,6 +5,7 @@ describe('Content API Search', () => {
     beforeEach(window.module('superdesk.core.api'));
     beforeEach(window.module('superdesk.apps.content-api'));
     beforeEach(window.module('superdesk.apps.search'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     /**
      * Mock some of the dependencies of the parent directives.
@@ -22,7 +23,7 @@ describe('Content API Search', () => {
             search: {
                 useDefaultTimezone: true,
             },
-            defaultTimezone: 'UTC',
+            default_timezone: 'UTC',
             server: {url: undefined, ws: undefined},
         };
 
@@ -56,12 +57,6 @@ describe('Content API Search', () => {
 
         expect(criteria.q).toEqual('foo bar');
         expect(criteria.default_operator).toEqual('AND');
-    }));
-
-    it('can search using category', inject((contentApiSearch) => {
-        const criteria = contentApiSearch.getCriteria({category: '["foo"]'});
-
-        expect(criteria.filter).toEqual('[{"terms":{"service.name":["foo"]}}]');
     }));
 
     it('can search using category', inject((contentApiSearch) => {

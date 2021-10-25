@@ -4,9 +4,21 @@ import {appConfig} from 'appConfig';
 
 describe('monitoring', () => {
     beforeEach(window.module('superdesk.apps.monitoring'));
-    beforeEach(window.module('superdesk.mocks'));
     beforeEach(window.module('superdesk.apps.vocabularies'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.core.services.pageTitle'));
+    beforeEach(window.module('superdesk.templates-cache'));
+    beforeEach(window.module('superdesk.mocks'));
+
+    beforeEach(inject(($templateCache) => {
+        // change template not to require aggregate config but rather render single group
+        $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
+            '<div id="group" sd-monitoring-group data-group="{type: \'stage\', _id: \'foo\'}"></div>');
+    }));
+
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
 
     it('can switch between list and swimlane view',
         inject(($controller, $rootScope, $q, preferencesService) => {
@@ -124,7 +136,7 @@ describe('monitoring', () => {
 
             criteria = cards.criteria(card, 'foo');
             expect(criteria.source.query.filtered.filter.and).toContain({
-                query: {query_string: {query: 'foo', lenient: false}},
+                query: {query_string: {query: 'foo', lenient: true}},
             });
         }));
 
@@ -136,8 +148,15 @@ describe('monitoring', () => {
 
             expect(criteria.source.query.filtered.filter.and).toContain({
                 bool: {
-                    must: {term: {original_creator: session.identity._id}},
                     must_not: {exists: {field: 'task.desk'}},
+                    should: [
+                        {term: {'task.user': session.identity._id}},
+                        {bool: {
+                            must: {term: {original_creator: session.identity._id}},
+                            must_not: {exists: {field: 'task.user'}},
+                        }},
+                    ],
+                    minimum_should_match: 1,
                 },
             });
         }));
@@ -221,7 +240,7 @@ describe('monitoring', () => {
         it('can get criteria for saved search with search', inject((cards, session) => {
             session.identity = {_id: 'foo'};
             var card = {_id: '123', type: 'search', query: 'test',
-                search: {filter: {query: {q: 'foo', type: '[\"picture\"]'}}},
+                search: {filter: {query: {q: 'foo', type: '["picture"]'}}},
             };
             var criteria = cards.criteria(card);
 
@@ -251,18 +270,8 @@ describe('monitoring', () => {
     });
 
     describe('monitoring group directive', () => {
-        beforeEach(window.module('superdesk.templates-cache'));
-        beforeEach(window.module('superdesk.apps.searchProviders'));
-        beforeEach(window.module('superdesk.core.services.pageTitle'));
-
-        beforeEach(inject(($templateCache) => {
-            // change template not to require aggregate config but rather render single group
-            $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
-                '<div id="group" sd-monitoring-group data-group="{type: \'stage\', _id: \'foo\'}"></div>');
-        }));
-
         it('can update items on item:move event',
-            inject(($rootScope, $compile, $q, api, $timeout, session) => {
+            (done) => inject(($rootScope, $compile, $q, api, $timeout, session) => {
                 session.identity = {_id: 'foo'};
                 var scope = $rootScope.$new();
 
@@ -273,17 +282,20 @@ describe('monitoring', () => {
 
                 scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'bar'});
                 scope.$digest();
-                $timeout.flush(500);
+
                 expect(api.query).not.toHaveBeenCalled();
 
                 scope.$broadcast('item:move', {from_stage: 'bar', to_stage: 'foo'});
                 scope.$digest();
-                $timeout.flush(2000);
-                expect(api.query).toHaveBeenCalled();
+
+                setTimeout(() => {
+                    expect(api.query).toHaveBeenCalled();
+                    done();
+                }, 2000);
             }));
 
         it('updates custom search on item preview',
-            inject(($rootScope, $compile, search, api, session, $q, $timeout, $templateCache) => {
+            (done) => inject(($rootScope, $compile, search, api, session, $q, $timeout, $templateCache) => {
                 $templateCache.put('scripts/apps/monitoring/views/monitoring-view.html',
                     '<div id="group" sd-monitoring-group ' +
                     'data-group="{type: \'search\', search: {filter: {query: \'\'}}}"></div>');
@@ -294,16 +306,20 @@ describe('monitoring', () => {
 
                 session.identity = {_id: 'foo'};
                 scope.$digest();
-                $timeout.flush(2000);
 
                 spyOn(api, 'query').and.returnValue($q.when({_items: [], _meta: {total: 0}}));
                 spyOn(search, 'mergeItems');
 
                 session.identity = {_id: 'foo'};
                 scope.$broadcast('ingest:update', {});
-                scope.$digest();
-                $timeout.flush(2000);
-                expect(search.mergeItems).toHaveBeenCalled();
+
+                setTimeout(() => {
+                    scope.$digest();
+
+                    expect(search.mergeItems).toHaveBeenCalled();
+
+                    done();
+                }, 2000);
             }),
         );
 
@@ -334,8 +350,6 @@ describe('monitoring', () => {
     });
 
     describe('desk notification directive', () => {
-        beforeEach(window.module('superdesk.templates-cache'));
-
         beforeEach(inject((desks, api, $q) => {
             desks.stageLookup = {1: {desk: 'desk1', default_incoming: true}};
             desks.userLookup = {1: {display_name: 'user1'}};

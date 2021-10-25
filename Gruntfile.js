@@ -1,4 +1,5 @@
 var path = require('path');
+var execSync = require('child_process').execSync;
 
 module.exports = function(grunt) {
     var config = {
@@ -36,7 +37,7 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['ngtemplates:dev', 'karma:unit']);
     grunt.registerTask('ci', ['test']);
     grunt.registerTask('unit', ['test']);
-    grunt.registerTask('ci:travis', ['ngtemplates:dev', 'karma:travis']);
+    grunt.registerTask('ci:travis', ['ngtemplates:gen-apps', 'ngtemplates:dev', 'karma:travis']);
     grunt.registerTask('bamboo', ['karma:bamboo']);
 
     // UI styling documentation
@@ -55,7 +56,6 @@ module.exports = function(grunt) {
         'copy:index',
         'copy:config',
         'copy:locales',
-        'nggettext_compile',
         'ngtemplates:gen-apps',
         'ngtemplates:dev',
         'webpack-dev-server:start',
@@ -63,7 +63,6 @@ module.exports = function(grunt) {
 
     // gettext
     grunt.registerTask('gettext:extract', ['nggettext_extract']);
-    grunt.registerTask('gettext:compile', ['nggettext_compile']);
 
     // Production build
     grunt.registerTask('build', '', () => {
@@ -74,7 +73,6 @@ module.exports = function(grunt) {
             'copy:config',
             'copy:assets',
             'copy:locales',
-            'nggettext_compile',
             'ngtemplates:gen-apps',
             'ngtemplates:core',
         ]);
@@ -87,7 +85,6 @@ module.exports = function(grunt) {
         if (grunt.file.expand('po/*.po').length && pkgName != 'superdesk-core') {
             grunt.task.run([
                 'nggettext_extract',
-                'nggettext_compile',
             ]);
         }
 

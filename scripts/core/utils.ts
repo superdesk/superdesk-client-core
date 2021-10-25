@@ -1,3 +1,13 @@
+import gettextjs from 'gettext.js';
+import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
+import {IVocabularyItem, IArticle} from 'superdesk-api';
+import {assertNever} from './helpers/typescript-helpers';
+import {appConfig} from 'appConfig';
+
+export type IScopeApply = (fn: () => void) => void;
+
+export const i18n = gettextjs();
+
 export function stripHtmlTags(value) {
     const el = document.createElement('div');
 
@@ -33,55 +43,65 @@ export const getSuperdeskType = (event, supportExternalFiles = true) =>
         name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
     );
 
-/**
- * @ngdoc method
- * @name gettext
- * @param {String} text - the text that will be translated, it supports parameters (see the example)
- * @param {Object} params - dictionary of parameters used in text and their value (see the example)
- * @description Used angular gettext service for displaying localised text on Browser
- *
- * gettext('This item was locked by {{username}}.', {username: 'John'});
- * result -> 'This item was locked by John'
- */
-export const gettext = (text, params = null) => {
+// example: gettext('Item was locked by {{user}}.', {user: 'John Doe'});
+export const gettext = (
+    text: string,
+    params: {[key: string]: string | number} = {},
+): string => {
     if (!text) {
         return '';
     }
 
-    const injector = angular.element(document.body).injector();
-
-    if (injector) { // in tests this will be empty
-        return injector.get('gettextCatalog').getString(text, params || {});
+    if (debugInfo.translationsLoaded !== true) {
+        console.warn(
+            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
+            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
+        );
     }
 
-    return text;
+    let translated = i18n.gettext(text);
+
+    Object.keys(params ?? {}).forEach((param) => {
+        translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`), params[param]);
+    });
+
+    return translated;
 };
 
-/**
- * @ngdoc method
- * @name gettextPlural
- * @param {Number} count
- * @param {String} text
- * @param {String} pluralText
- * @param {Object} params
- * @description Used angular gettext service for displaying plural localised text on Browser
- */
-export const gettextPlural = (count, text, pluralText, params = {}) => {
+/*
+    Example:
+
+    gettextPlural(
+        6,
+        'Item was locked by {{user}}.',
+        '{{count}} items were locked by multiple users.',
+        {count: 6, user: 'John Doe'},
+    );
+*/
+export const gettextPlural = (
+    count: number,
+    text: string,
+    pluralText: string,
+    params: {[key: string]: string | number} = {},
+) => {
     if (!text) {
         return '';
     }
 
-    const injector = angular.element(document.body).injector();
-
-    if (injector) { // in tests this will be empty
-        return injector.get('gettextCatalog').getPlural(count, text, pluralText, params);
+    if (debugInfo.translationsLoaded !== true) {
+        console.warn(
+            `Invalid translation attempt for string "${text}": translation strings haven't been loaded yet.`
+            + ' Original string will be displayed. \n' + new Error().stack.split('\n')[3].trim(),
+        );
     }
 
-    return text;
-};
+    let translated = i18n.ngettext(text, pluralText, count);
 
-export const gettextCatalog = {
-    getPlural: gettextPlural,
+    Object.keys(params ?? {}).forEach((param) => {
+        translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`), params[param]);
+    });
+
+    return translated;
 };
 
 /**
@@ -94,4 +114,92 @@ export const gettextCatalog = {
  */
 export function escapeRegExp(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+export function getVocabularyItemNameTranslated(term: IVocabularyItem, language?: string) {
+    const _language = language ?? getUserInterfaceLanguage();
+
+    // FIXME: Remove replacing _/- when language codes are normalized on the server.
+
+    return term.translations?.name?.[_language]
+        ?? term.translations?.name?.[_language.replace('_', '-')]
+        ?? term.name;
+}
+
+export function translateArticleType(type: IArticle['type']) {
+    switch (type) {
+    case 'audio':
+        return gettext('audio');
+    case 'composite':
+        return gettext('composite');
+    case 'graphic':
+        return gettext('graphic');
+    case 'picture':
+        return gettext('picture');
+    case 'preformatted':
+        return gettext('preformatted');
+    case 'text':
+        return gettext('text');
+    case 'video':
+        return gettext('video');
+    default:
+        assertNever(type);
+    }
+}
+
+export function getUserSearchMongoQuery(searchString: string) {
+    return {
+        $or: [
+            {username: {$regex: searchString, $options: '-i'}},
+            {display_name: {$regex: searchString, $options: '-i'}},
+            {first_name: {$regex: searchString, $options: '-i'}},
+            {last_name: {$regex: searchString, $options: '-i'}},
+            {email: {$regex: searchString, $options: '-i'}},
+        ],
+    };
+}
+
+export function getItemTypes() {
+    const item_types = [
+        {type: 'all', label: gettext('all')},
+        {type: 'text', label: gettext('text')},
+        {type: 'picture', label: gettext('picture')},
+        {type: 'graphic', label: gettext('graphic')},
+        {type: 'composite', label: gettext('package')},
+        {type: 'highlight-pack', label: gettext('highlights package')},
+        {type: 'video', label: gettext('video')},
+        {type: 'audio', label: gettext('audio')},
+    ];
+
+    return item_types.filter(
+        (item) => (
+            appConfig.features.hideCreatePackage ?
+                item.type !== 'composite' && item.type !== 'highlight-pack' :
+                true
+        ));
+}
+
+type IWeekday =
+    'sunday'
+    | 'monday'
+    | 'tuesday'
+    | 'wednesday'
+    | 'thursday'
+    | 'friday'
+    | 'saturday';
+
+export function getWeekDayIndex(weekday: IWeekday): number {
+    return [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday',
+    ].indexOf(weekday);
+}
+
+export function isElasticDateFormat(date: string) {
+    return date.startsWith('now+') || date.startsWith('now-');
 }

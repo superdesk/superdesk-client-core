@@ -1,74 +1,28 @@
-<div class="term-editor data visible" ng-if="!header" title="{{ helperText }}">
-    <div
-        sd-typeahead
-        items="terms"
-        term="selectedTerm"
-        search="searchTerms(term)"
-        select="selectTerm(item)"
-        data-disabled="disabled"
-    >
+<div class="term-editor data visible" ng-if="!header" ng-attr-title="{{helperText}}">
+    <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item)" data-disabled="disabled">
         <ul ng-if="activeTerm || activeList">
-            <li
-                typeahead-item="t"
-                ng-repeat="t in terms track by t[uniqueField]"
-            >
-                {{ getLocaleName(t) }}
-            </li>
+            <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">{{getLocaleName(t, item)}}</li>
         </ul>
     </div>
 </div>
 
-<div
-    class="dropdown dropdown-terms"
-    dropdown
-    sd-dropdown-focus
-    sd-dropdown-position
-    title="{{ allSelected ? 'All items selected' : (helperText | translate) }}"
->
-    <button
-        class="dropdown__toggle"
-        dropdown__toggle
-        tabindex="{{ tabindex }}"
-        ng-disabled="disabled"
-        ng-if="header && !disabled"
-    >
+<div class="dropdown dropdown-terms" dropdown sd-dropdown-focus sd-dropdown-position
+    ng-attr-title="{{ allSelected ? 'All items selected' : helperText  | translate }}">
+    <button class="dropdown__toggle" dropdown__toggle tabindex="{{tabindex}}" ng-disabled="disabled" ng-if="header && !disabled" aria-label="{{ 'Add new' | translate }}">
         <i class="icon--white icon-plus-large"></i>
     </button>
-    <ul
-        class="dropdown__menu nested-menu pull-right"
-        style="{{
-            cv.popup_width
-                ? 'min-width: 0; width: ' + cv.popup_width + 'px'
-                : ''
-        }}"
-    >
+    <ul class="dropdown__menu nested-menu pull-right" style="{{ cv.popup_width ? 'min-width: 0; width: ' + cv.popup_width + 'px' : ''}}" id="metadata-terms-dropdown-users">
         <li ng-show="!activeTerm && header">
-            <div
-                sd-typeahead
-                items="terms"
-                term="selectedTerm"
-                search="searchTerms(term)"
-                select="selectTerm(item, $event)"
-                always-visible="header"
-                data-disabled="disabled || allSelected"
-            >
-                <ul
-                    class="item-list"
-                    vs-repeat
-                    ng-if="!activeTree.length || activeList"
-                >
-                    <li
-                        typeahead-item="t"
-                        ng-repeat="t in terms track by t[uniqueField]"
-                    >
+            <div sd-typeahead items="terms" term="selectedTerm" search="searchTerms(term)" select="selectTerm(item, $event)" always-visible="header" data-disabled="disabled || allSelected">
+                <ul class="item-list" vs-repeat ng-if="!activeTree.length || activeList">
+                    <li typeahead-item="t" ng-repeat="t in terms track by t[uniqueField]">
                         <button
                             class="nested-toggle flex-row sibling-spacer-10"
                             style="display: flex;"
                             ng-click="selectTerm(t, $event)"
-                            title="{{ getLocaleName(t) }}"
                         >
-                            <sd-user-avatar ng-if="t.user != null" data-user="t.user"></sd-user-avatar>
-                            <span>{{ getLocaleName(t) }}</span>
+                            <sd-user-avatar ng-if="t.user != null" data-user="t.user" scroll-container="'#metadata-terms-dropdown-users'"></sd-user-avatar>
+                            <span>{{getLocaleName(t, item)}}</span>
                         </button>
                     </li>
                 </ul>
@@ -76,23 +30,13 @@
         </li>
 
         <li class="levelup" ng-if="activeTerm && !preferredView">
-            <i class="backlink" ng-click="openParent(activeTerm, $event)"></i>
-            <button
-                ng-click="selectTerm(activeTerm, $event)"
-                ng-if="allowEntireCat"
-                data-test-id="choose-entire-category"
-            >
-                <b class="category">{{ getLocaleName(activeTerm, item) }}</b>
-                <b
-                    class="category-hover"
-                    >{{ :: "Choose entire category" | translate }}</b
-                >
+            <i role="button" aria-label="{{'Back'| translate }}" class="backlink" ng-click="openParent(activeTerm, $event)"></i>
+            <button ng-click="selectTerm(activeTerm, $event)" ng-if="allowEntireCat" data-test-id="choose-entire-category">
+                <b class="category">{{getLocaleName(activeTerm, item)}}</b>
+                <b class="category-hover">{{ :: "Choose entire category" | translate }}</b>
             </button>
-            <button
-                ng-click="openParent(activeTerm, $event)"
-                ng-if="!allowEntireCat"
-            >
-                <b>{{ getLocaleName(activeTerm, item) }}</b>
+            <button ng-click="openParent(activeTerm, $event)" ng-if="!allowEntireCat">
+                <b>{{getLocaleName(activeTerm, item)}}</b>
             </button>
         </li>
 
@@ -108,16 +52,9 @@
                         <b translate>User</b>
                     </button>
                 </li>
-                <li
-                    ng-if="preferredView === 'user'"
-                    ng-repeat="term in userPreferredItems track by term[uniqueField]"
-                >
-                    <button
-                        ng-click="selectTerm(term, $event)"
-                        ng-class="{ greyout: isSelected(term) }"
-                        ng-disabled="isSelected(term)"
-                    >
-                        {{ getLocaleName(term) }}
+                <li ng-if="preferredView === 'user'" ng-repeat="term in userPreferredItems track by term[uniqueField]">
+                    <button ng-click="selectTerm(term, $event)" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
+                        {{ getLocaleName(term, item) }}
                     </button>
                 </li>
             </ul>
@@ -127,16 +64,9 @@
                         <b translate>Desk</b>
                     </button>
                 </li>
-                <li
-                    ng-if="preferredView === 'desk'"
-                    ng-repeat="term in deskPreferredItems track by term[uniqueField]"
-                >
-                    <button
-                        ng-click="selectTerm(term, $event)"
-                        ng-class="{ greyout: isSelected(term) }"
-                        ng-disabled="isSelected(term)"
-                    >
-                        {{ getLocaleName(term) }}
+                <li ng-if="preferredView === 'desk'" ng-repeat="term in deskPreferredItems track by term[uniqueField]">
+                    <button ng-click="selectTerm(term, $event)" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
+                        {{ getLocaleName(term, item) }}
                     </button>
                 </li>
             </ul>
@@ -147,31 +77,22 @@
                     </button>
                 </li>
             </ul>
-            <ul vs-repeat ng-if="!preferredView">
-                <li ng-repeat="term in activeTree track by term[uniqueField]">
+            <ul ng-if="!preferredView">
+                <li ng-repeat="term in activeTree track by term[uniqueField]" data-test-id="dropdown__item">
                     <button
                         ng-if="tree[term[uniqueField]]"
                         class="nested-toggle flex-row sibling-spacer-10"
                         style="display: flex;"
                         ng-click="openTree(term, $event)"
-                        title="{{ getLocaleName(term) }}"
+                        title="{{getLocaleName(term, item)}}"
                     >
                         <span ng-if="term.user">
-                            <sd-user-avatar
-                                data-user="term.user"
-                            ></sd-user-avatar>
+                            <sd-user-avatar data-user="term.user" scroll-container="'#metadata-terms-dropdown-users'"></sd-user-avatar>
                         </span>
-                        <span>{{ getLocaleName(term) }}</span>
-                        <i class="icon-chevron-right-thin"></i>
-                    </button>
-                    <button
-                        ng-if="!tree[term[uniqueField]]"
-                        ng-click="selectTerm(term, $event)"
-                        title="{{ getLocaleName(term) }}"
-                        ng-class="{ greyout: isSelected(term) }"
-                        ng-disabled="isSelected(term)"
-                    >
-                        {{ getLocaleName(term) }}
+                        <span>{{getLocaleName(term, item)}}</span>
+                        <i class="icon-chevron-right-thin sd-margin-l--auto nested-indicator"></i></button>
+                    <button ng-if="!tree[term[uniqueField]]" ng-click="selectTerm(term, $event)" title="{{getLocaleName(term, item)}}" ng-class="{'greyout': isSelected(term)}" ng-disabled="isSelected(term)">
+                        {{getLocaleName(term, item)}}
                     </button>
                 </li>
             </ul>
@@ -179,38 +100,36 @@
     </ul>
 </div>
 
-<div class="terms-list" ng-if="selectedItems.length" title="{{ helperText }}">
+<!-- 
+    Placeholder is used in multi-editing.
+    If items have different values, placeholder is shown instead of values.
+-->
+<div
+    ng-if="placeholder.length > 0 && !selectedItems.length"
+    class="terms-list"
+    ng-if="selectedItems.length"
+    ng-attr-title="{{helperText}}"
+>
+    <ul>
+        <li data-disabled class="pull-left disabled">{{placeholder}}</li>
+    </ul>
+</div>
+
+
+<div class="terms-list" ng-if="selectedItems.length" ng-attr-title="{{helperText}}">
     <ul>
         <li
             ng-if="!disabled && !t.sub_label"
             class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)"
-        >
-            {{ getLocaleName(t) }}<i class="icon-close-small"></i>
-        </li>
-        <li
-            ng-if="!disabled && t.sub_label"
-            class="pull-left"
+            ng-click="removeTerm(t)">{{getLocaleName(t, item)}}<i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
+        <li ng-if="!disabled && t.sub_label" class="pull-left"
             ng-repeat="t in selectedItems track by t[uniqueField]"
-            ng-click="removeTerm(t)"
-        >
-            <label>{{ getLocaleName(t) }}:</label>{{ t.sub_label
-            }}<i class="icon-close-small"></i>
-        </li>
-        <li
-            class="pull-left"
-            ng-if="disabled && t.sub_label"
-            ng-repeat="t in selectedItems track by t[uniqueField]"
-        >
-            <label>{{ getLocaleName(t) }}:</label>{{ t.sub_label }}
-        </li>
-        <li
-            ng-if="disabled && !t.sub_label"
-            class="pull-left disabled"
-            ng-repeat="t in selectedItems track by t[uniqueField]"
-        >
-            {{ getLocaleName(t) }}
-        </li>
+            ng-click="removeTerm(t)"><label>{{getLocaleName(t, item)}}:</label>{{t.sub_label}}<i role="button" aria-label="{{'Remove item'| translate }}" class="icon-close-small"></i></li>
+        <li class="pull-left" ng-if="disabled && t.sub_label"
+            ng-repeat="t in selectedItems track by t[uniqueField]">
+            <label>{{getLocaleName(t, item)}}:</label>{{t.sub_label}}</li>
+        <li ng-if="disabled && !t.sub_label" data-disabled class="pull-left disabled"
+            ng-repeat="t in selectedItems track by t[uniqueField]">{{getLocaleName(t, item)}}</li>
     </ul>
 </div>

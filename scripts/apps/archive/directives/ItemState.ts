@@ -4,6 +4,7 @@ export function ItemState() {
         scope: {
             state: '=',
             embargo: '=',
+            isCorrectionWorkflowEnabled: '=',
         },
     };
 }

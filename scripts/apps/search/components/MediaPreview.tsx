@@ -1,16 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import {ItemContainer, SelectBox} from './index';
+import {ItemContainer} from './index';
+import {ILegacyMultiSelect, IMultiSelectNew} from './ItemList';
+import {MultiSelectCheckbox} from './MultiSelectCheckbox';
 
 function hasThumbnail(item) {
     return item.renditions && item.renditions.thumbnail;
 }
 
+interface IProps {
+    desk: any;
+    item: any;
+    itemSelected: boolean;
+    multiSelect: IMultiSelectNew | ILegacyMultiSelect;
+}
+
 /**
  * Media Preview - renders item thumbnail
  */
-export const MediaPreview: React.StatelessComponent<any> = (props) => {
-    const item = props.item;
+export const MediaPreview: React.StatelessComponent<IProps> = (props) => {
+    const {item, multiSelect} = props;
     const headline = item.headline || item.slugline || item.type;
     // headline could contains html tags hence stripping for tooltips
     const headlineText = headline.replace(/(<([^>]+)>)/ig, '');
@@ -23,38 +31,25 @@ export const MediaPreview: React.StatelessComponent<any> = (props) => {
         );
     }
 
-    return React.createElement(
-        'div',
-        {className: 'media multi'},
-        preview ? React.createElement(
-            'figure',
-            null,
-            preview,
-        ) : null,
-        React.createElement(
-            'span',
-            {className: 'text'},
-            React.createElement(
-                'small',
-                {title: headlineText,
-                    dangerouslySetInnerHTML: {__html: headline}},
-            ),
-            React.createElement(ItemContainer, {
-                item: item,
-                desk: props.desk,
-            }),
-        ),
-        React.createElement(SelectBox, {
-            item: item,
-            onMultiSelect: props.onMultiSelect,
-            svc: props.svc,
-        }),
+    return (
+        <div className="media multi">
+            {
+                preview ?
+                    (<figure>{preview}</figure>)
+                    : null
+            }
+            <span className="text">
+                <small title={headlineText} dangerouslySetInnerHTML={{__html: headline}} />
+                <ItemContainer
+                    item={item}
+                    desk={props.desk}
+                />
+            </span>
+            <MultiSelectCheckbox
+                item={item}
+                itemSelected={props.itemSelected}
+                multiSelect={multiSelect}
+            />
+        </div>
     );
-};
-
-MediaPreview.propTypes = {
-    svc: PropTypes.object.isRequired,
-    onMultiSelect: PropTypes.func,
-    desk: PropTypes.any,
-    item: PropTypes.any,
 };

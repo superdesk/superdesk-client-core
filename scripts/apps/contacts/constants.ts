@@ -15,6 +15,7 @@ export const DEFAULT_LIST_CONFIG = {
         'OrgName',
         'ContactLocation',
         'SocialInfo',
+
     ],
     singleLine: [
         'ContactName',
@@ -42,13 +43,13 @@ export const KEYCODES = {
 /**
  * Lookup fields for at least one of them should be provided
  */
-export const LOOKUP_FIELDS = [
-    'mobile',
-    'contact_phone',
-    'contact_email',
-    'twitter',
-    'facebook',
-    'instagram',
+export const getLookupFields = () => [
+    {name: 'mobile', label: gettext('mobile')},
+    {name: 'contact_phone', label: gettext('phone')},
+    {name: 'contact_email', label: gettext('email')},
+    {name: 'twitter', label: gettext('twitter')},
+    {name: 'facebook', label: gettext('facebook')},
+    {name: 'instagram', label: gettext('instagram')},
 ];
 
 export const FB_URL = 'https://www.facebook.com/';
@@ -62,15 +63,17 @@ export const FILTER_FIELDS = {
     STATUS: 'is_active',
 };
 
-export const URL_PARAMETERS = {
-    first_name: gettext('First Name'),
-    last_name: gettext('Last Name'),
-    contact_email: gettext('Email'),
-    organisation: gettext('organisation'),
-    contact_type: gettext('Contact Type'),
-    job_title: gettext('Job Title'),
-    postcode: gettext('Post Code'),
-    city: gettext('City'),
-    contact_state: gettext('State'),
-    country: gettext('Country'),
-};
+export function getUrlParameters() {
+    return {
+        first_name: gettext('First Name'),
+        last_name: gettext('Last Name'),
+        contact_email: gettext('Email'),
+        organisation: gettext('organisation'),
+        contact_type: gettext('Contact Type'),
+        job_title: gettext('Job Title'),
+        postcode: gettext('Post Code'),
+        city: gettext('City'),
+        contact_state: gettext('State'),
+        country: gettext('Country'),
+    };
+}

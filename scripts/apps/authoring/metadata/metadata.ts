@@ -1,17 +1,24 @@
 import _ from 'lodash';
 import PreferedCvItemsConfigDirective from './PreferedCvItemsConfigDirective';
 import MetaPlaceDirective from './MetaPlaceDirective';
-import {VOCABULARY_SELECTION_TYPES} from '../../vocabularies/constants';
-import {gettext} from 'core/utils';
+import {getVocabularySelectionTypes} from '../../vocabularies/constants';
+import {gettext, getVocabularyItemNameTranslated} from 'core/utils';
 import PlacesServiceFactory from './PlacesService';
 import {appConfig} from 'appConfig';
-
-const SINGLE_SELECTION = VOCABULARY_SELECTION_TYPES.SINGLE_SELECTION.id;
+import {ISubject} from 'superdesk-api';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {MetaDataDropdownSingleSelectReact} from './views/MetaDataDropdownSingleSelectReact';
 
 MetadataCtrl.$inject = [
     '$scope', 'desks', 'metadata', 'privileges', 'datetimeHelper', 'userList',
     'preferencesService', 'archiveService', 'moment', 'content',
 ];
+
+function getSingleSelection() {
+    return getVocabularySelectionTypes().SINGLE_SELECTION.id;
+}
+
+const DISABLE_CHILDREN_SEARCH_FIELDS = ['authors'];
 
 function MetadataCtrl(
     $scope, desks, metadata, privileges, datetimeHelper, userList,
@@ -49,9 +56,7 @@ function MetadataCtrl(
     */
     function setAvailableCategories(prefs) {
         var all, // all available categories
-            assigned = {}, // category codes already assigned to the article
             filtered,
-            itemCategories, // existing categories assigned to the article
 
             // user's category preference settings , i.e. a map
             // object (<category_code> --> true/false)
@@ -59,16 +64,7 @@ function MetadataCtrl(
 
         all = metadata.values.categories || [];
         userPrefs = prefs['categories:preferred'].selected;
-
-        // gather article's existing category codes
-        itemCategories = $scope.item.anpa_category || [];
-
-        itemCategories.forEach((cat) => {
-            assigned[cat.qcode] = true;
-        });
-
-        filtered = _.filter(all, (cat) => !assigned[cat.qcode] && (_.isEmpty(userPrefs) || userPrefs[cat.qcode]));
-
+        filtered = _.filter(all, (cat) => _.isEmpty(userPrefs) || userPrefs[cat.qcode]);
         $scope.availableCategories = _.sortBy(filtered, 'name');
     }
 
@@ -341,8 +337,8 @@ function MetadropdownFocusDirective(keyboardManager) {
     };
 }
 
-MetaDropdownDirective.$inject = ['$filter'];
-function MetaDropdownDirective($filter) {
+MetaDropdownDirective.$inject = ['$filter', 'metadata'];
+function MetaDropdownDirective($filter, metadata) {
     return {
         scope: {
             list: '=',
@@ -360,6 +356,7 @@ function MetaDropdownDirective($filter) {
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-dropdown.html',
         link: function(scope, elem) {
             scope.multiInputFields = ['place', 'genre', 'anpa_category', 'subject', 'authors'];
+            scope.getLocaleName = metadata.getLocaleName;
 
             scope.select = function(item) {
                 var fieldObject: {[fieldId: string]: any} = {};
@@ -399,6 +396,9 @@ function MetaDropdownDirective($filter) {
                 if (scope.values) {
                     scope.selected = scope.values[fieldObject[scope.field]] || null;
                 }
+
+                // is needed when `select` is called from react component e.g. MetaDataDropdownSingleSelectReact
+                scope.$applyAsync();
             };
 
             scope.$watch(':: list', () => {
@@ -410,7 +410,11 @@ function MetaDropdownDirective($filter) {
                 scope.item[scope.field] = scope.item.default;
             }
 
-            scope.findItemByScheme = (item, scheme) => item.find((o) => o.scheme === scheme);
+            scope.findItemByScheme = (items: Array<ISubject>, scheme: string) => {
+                const term = items.find((item) => item.scheme === scheme);
+
+                return metadata.getLocaleName(term, scope.item);
+            };
 
             scope.$applyAsync(() => {
                 if (scope.list) {
@@ -636,13 +640,21 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             setLanguage: '@',
             helperText: '@',
             disableEntireCategory: '@',
+
+            /**
+             * Placeholder is used in multi-editing.
+             * If items have different values, placeholder is shown instead of values.
+             */
+            placeholder: '=',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
-        link: function(scope, elem, attrs) {
+        link: function MetaTermsDirectiveLink(scope, elem, attrs) {
             metadata.subjectScope = scope;
-            var reloadList = scope.reloadList === 'true';
-            var includeParent = scope.includeParent === 'true';
-            var searchUnique = scope.searchUnique === 'true';
+            scope.getLocaleName = metadata.getLocaleName;
+            const reloadList = scope.reloadList === 'true';
+            const includeParent = scope.includeParent === 'true';
+            const searchUnique = scope.searchUnique === 'true';
+            const disabledChildrenSearch = DISABLE_CHILDREN_SEARCH_FIELDS.includes(scope.field);
 
             scope.allowEntireCat = scope.disableEntireCategory !== 'true';
 
@@ -771,12 +783,12 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 } else {
                     let searchList;
 
-                    if (!scope.allowEntireCat) {
-                        searchList = scope.list.filter(
-                            (item) => !scope.tree.hasOwnProperty(item[scope.uniqueField]),
-                        );
+                    if (disabledChildrenSearch) {
+                        searchList = scope.list.filter((item) => !item.parent);
+                    } else if (reloadList) {
+                        searchList = scope.list;
                     } else {
-                        searchList = reloadList ? scope.list : scope.combinedList;
+                        searchList = scope.combinedList;
                     }
 
                     scope.terms = $filter('sortByName')(_.filter(filterSelected(searchList), (t) => {
@@ -840,11 +852,11 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                     // instead of simple push, extend the item[field] in order to trigger dirty $watch
                     var t = [];
 
-                    if (term.selection_type !== SINGLE_SELECTION) {
+                    if (term.selection_type !== getSingleSelection()) {
                         t = _.clone(scope.item[scope.field]) || [];
                     }
 
-                    if (scope.cv && scope.cv.selection_type === SINGLE_SELECTION) {
+                    if (scope.cv && scope.cv.selection_type === getSingleSelection()) {
                         t = _.filter(t, (_term) => _term.scheme !== scope.cv._id);
                     }
 
@@ -866,7 +878,10 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             }
 
             scope.selectTerm = function(term, $event) {
-                if (term) {
+                // while searching, allow to search for categories but don't select them
+                if (scope.tree?.[term?.[scope.uniqueField]] && !scope.allowEntireCat) {
+                    scope.openTree(term, $event);
+                } else if (term) {
                     addTerm(term);
 
                     if (includeParent) {
@@ -937,18 +952,6 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 scope.terms = $filter('sortByName')(scope.terms);
                 scope.change({item: scope.item, field: scope.field});
                 elem.find('.dropdown__toggle').focus(); // retain focus
-            };
-
-            scope.getLocaleName = function(term) {
-                if (!term) {
-                    return 'None';
-                }
-                if (term.translations && scope.item.language
-                    && term.translations.name[scope.item.language]) {
-                    return term.translations.name[scope.item.language];
-                }
-
-                return term.name;
             };
 
             scope.setPreferredView = (view, $event) => {
@@ -1078,8 +1081,9 @@ function MetaLocatorsDirective(places) {
                 let loc = locator;
 
                 if (!loc && scope.$ctrl.selectedTerm) {
-                    var previousLocator = scope.fieldprefix ? scope.item[scope.fieldprefix][scope.field] :
-                        scope.item[scope.field];
+                    var previousLocator = scope.fieldprefix && scope.item[scope.fieldprefix] != null
+                        ? scope.item[scope.fieldprefix][scope.field]
+                        : scope.item[scope.field];
 
                     if (previousLocator && scope.$ctrl.selectedTerm === previousLocator.city) {
                         loc = previousLocator;
@@ -1103,7 +1107,9 @@ function MetaLocatorsDirective(places) {
                     scope.$ctrl.selectedTerm = loc.city;
                     _.extend(scope.item, updates);
                 }
-
+                if (scope.item[scope.fieldprefix] != null && loc === null) {
+                    scope.item[scope.fieldprefix][scope.field] = null;
+                }
                 var selectedLocator = {item: scope.item, city: scope.$ctrl.selectedTerm};
 
                 scope.postprocessing(selectedLocator);
@@ -1148,7 +1154,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                         self.popup_width[vocabulary._id] = vocabulary.popup_width;
                     }
                     if (_.has(vocabulary, 'selection_type')) {
-                        self.single_value[vocabulary._id] = vocabulary.selection_type === SINGLE_SELECTION;
+                        self.single_value[vocabulary._id] = vocabulary.selection_type === getSingleSelection();
                     }
                 });
                 self.cvs = result;
@@ -1310,7 +1316,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id])),
+                    (cvs) => cvs.filter((cv) => (cv.terms.length || cv.read_only) &&
+                        (editor[cv._id] || schema[cv._id])),
                 );
         },
         /**
@@ -1351,6 +1358,19 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         },
         priorityByValue: function(value) {
             return this._priorityByValue[value] || null;
+        },
+        getLocaleName: function(term, item: any) {
+            if (!term) {
+                return 'None';
+            }
+
+            // Item can be anything here. It might be an article object or search filters object
+            // depending where the function is called from.
+            // It's checked if language is a string in order not to confuse it when language
+            // is an array when called from global search filters.
+            const language = typeof item.language === 'string' ? item.language : undefined;
+
+            return getVocabularyItemNameTranslated(term, language);
         },
     };
 
@@ -1420,6 +1440,20 @@ angular.module('superdesk.apps.authoring.metadata', [
     .directive('sdMetaTerms', MetaTermsDirective)
     .directive('sdMetaTags', MetaTagsDirective)
     .directive('sdMetaDropdown', MetaDropdownDirective)
+    .component(
+        'sdMetaDataDropdownSingleSelectReact',
+        reactToAngular1(
+            MetaDataDropdownSingleSelectReact,
+            [
+                'selectedItemLabel',
+                'options',
+                'onChange',
+                'tabIndex',
+                'disabled',
+                'language',
+            ],
+        ),
+    )
     .directive('sdMetaWordsList', MetaWordsListDirective)
     .directive('sdMetadropdownFocus', MetadropdownFocusDirective)
     .directive('sdMetaLocators', MetaLocatorsDirective)

@@ -37,7 +37,7 @@ export function SpikeMonitoring(superdesk, workspaceMenuProvider) {
     workspaceMenuProvider.item({
         if: 'privileges.spike_read',
         href: '/workspace/spike-monitoring',
-        label: gettext('Spike'),
+        label: gettext('Spiked Items'),
         shortcut: 'ctrl+alt+k',
         icon: 'spike',
         order: 600,
@@ -51,7 +51,7 @@ Personal.$inject = ['superdeskProvider', 'workspaceMenuProvider'];
 export function Personal(superdesk, workspaceMenuProvider) {
     superdesk
         .activity('/workspace/personal', {
-            label: gettext('Personal space'),
+            label: gettext('Personal Space'),
             priority: 100,
             adminTools: false,
             category: superdesk.MENU_MAIN,

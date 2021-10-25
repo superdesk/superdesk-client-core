@@ -8,13 +8,15 @@ import classNames from 'classnames';
  * @description Row Component in a list of item where each item is a row
  */
 export const Row: React.StatelessComponent<any> = ({children, classes, paddingBottom}) => (
-    <div className={classNames(
-        'sd-list-item__row',
-        classes,
-        {
-            'sd-list-item__row--padding-b5': paddingBottom,
-        },
-    )}>
+    <div
+        className={classNames(
+            'sd-list-item__row',
+            classes,
+            {
+                'sd-list-item__row--padding-b5': paddingBottom,
+            },
+        )}
+    >
         {children}
     </div>
 );

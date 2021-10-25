@@ -6,11 +6,11 @@
                 <li id="panel-send"
                     class="nav-tabs__tab {{currentUserAction === vm.userActions.send_to ? 'nav-tabs__tab--active' : ''}}"
                     ng-show="canSendItem() && isSendEnabled() && currentUserAction !== vm.userActions.duplicate_to">
-                    <button ng-click="setUserAction(vm.userActions.send_to)" class="nav-tabs__link" translate>Send to</button></li>
+                    <button ng-click="setUserAction(vm.userActions.send_to)" class="nav-tabs__link" translate data-test-id="tab--send-to">Send to</button></li>
                 <li id="panel-publish"
                     class="nav-tabs__tab {{currentUserAction === vm.userActions.publish ? 'nav-tabs__tab--active' : ''}}"
                     ng-show="canPublishItem()">
-                    <button ng-click="setUserAction(vm.userActions.publish)" class="nav-tabs__link" translate>Publish</button></li>
+                    <button ng-click="setUserAction(vm.userActions.publish)" class="nav-tabs__link" translate data-test-id="tab--publish">Publish</button></li>
                 <li id="panel-fetch"
                     class="nav-tabs__tab {{currentUserAction === vm.userActions.send_to ? 'nav-tabs__tab--active' : ''}}"
                     ng-show="!canSendItem() && !canPublishItem() && currentUserAction === vm.userActions.send_to">
@@ -34,7 +34,7 @@
             <div class="side-panel__content-block">
                 <div sd-toggle-box
                     ng-if="showSendButtonAndDestination()"
-                    data-title="{{ currentUserAction === vm.userActions.publish ? 'From' : 'Destination' | translate }}"
+                    data-title="{{ 'Destination' | translate }}"
                     data-open="true"
                     data-style="circle">
                     <div class="form__row form__row--no-padding form__row--desk-select">
@@ -47,18 +47,18 @@
                         ></div>
                     </div>
 
-                   <ul class="btn-list" ng-if="stages && !(vm.userActions.publish === currentUserAction)">
-                       <li ng-repeat="stage in stages track by stage._id"
-                           ng-if = "!disableFetchAndOpenButton() || stage.is_visible">
-                           <button class="btn__check"
-                                   ng-class="{active: stage._id === selectedStage._id}"
-                                   ng-disabled="mode !== 'spike' && stage._id === item.task.stage"
-                                   ng-click="selectStage(stage)">
-                               {{::stage.name}}
-                           </button>
-                       </li>
-                   </ul>
-               </div>
+                    <ul class="btn-list" ng-if="stages && !(vm.userActions.publish === currentUserAction)">
+                        <li ng-repeat="stage in stages track by stage._id"
+                            ng-if = "!disableFetchAndOpenButton() || stage.is_visible">
+                            <button class="btn__check"
+                                    ng-class="{active: stage._id === selectedStage._id}"
+                                    ng-disabled="mode !== 'spike' && stage._id === item.task.stage"
+                                    ng-click="selectStage(stage)">
+                                {{::stage.name}}
+                            </button>
+                        </li>
+                    </ul>
+                </div>
 
                <div sd-toggle-box
                     id="embargoTimestamp"
@@ -75,13 +75,13 @@
                         </li>
                     </ul>
                     <a class="toggle-box__button" ng-click="item.embargo_date=null; item.embargo_time=null;" sd-hotkey="ctrl+shift+x" ng-if="item.embargo_date || item.embargo_time">
-                        <i class="icon-remove-sign icon--white"></i>{{ :: 'Clear embargo' | translate }}
+                        <i class="icon-remove-sign icon--white"></i>{{ 'Clear embargo' | translate }}
                     </a>
                 </div>
 
                 <div sd-toggle-box
                     id="publishScheduleTimestamp"
-                    ng-if="mode === 'authoring' && showPublishSchedule() && sendPublishSchedule"
+                    ng-if="mode === 'authoring' && showPublishSchedule() && sendPublishSchedule && !isCorrection"
                     data-title="{{ 'Publishing Schedule' | translate }}"
                     data-open="true"
                     data-style="circle">
@@ -94,12 +94,12 @@
                         </li>
                     </ul>
                     <a class="toggle-box__button" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" sd-hotkey="ctrl+shift+x" ng-if="item.publish_schedule_date || item.publish_schedule_time">
-                        <i class="icon-remove-sign"></i>{{ :: 'Clear schedule' | translate }}
+                        <i class="icon-remove-sign"></i>{{ 'Clear schedule' | translate }}
                     </a>
                 </div>
 
-                <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="circle">
-                    <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
+                <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="{{ 'Timezone' | translate }}" data-open="true" data-style="circle">
+                    <div sd-timezone data-timezone="item.time_zone" data-initialize-with-default="initializePublishScheduleWithDefaultTimeZone" class="timezone-input--dark"></div>
                 </div>
             </div>
         </div>
@@ -109,19 +109,21 @@
              ng-if="currentUserAction === vm.userActions.publish"
              ng-class="{'side-panel__content--split': vm.userActions.publish_pane_two_columns}">
             <div class="side-panel__content-block side-panel__content-block--left">
-                <div sd-toggle-box
-                    ng-if="showSendButtonAndDestination()"
-                    data-title="{{ currentUserAction === vm.userActions.publish ? 'From' : 'Destination' | translate }}"
-                    data-open="true"
-                    data-style="circle">
-                    <div class="form__row form__row--no-padding form__row--desk-select">
-                        <div sd-desk-select
-                            data-desks="desks"
-                            data-selected-desk="selectedDesk"
-                            on-change="selectDesk(desk)">
+                <div ng-if="showSendButtonAndDestination() && !isCorrection" data-test-id="publish-from--options">
+                    <div sd-toggle-box
+                        data-title="{{ 'From' | translate }}"
+                        data-open="true"
+                        data-style="circle">
+                        <div class="form__row form__row--no-padding form__row--desk-select">
+                            <div sd-desk-select
+                                data-desks="desks"
+                                data-selected-desk="selectedDesk"
+                                on-change="selectDesk(desk)">
+                            </div>
                         </div>
                     </div>
-               </div>
+                </div>
+
                <div sd-toggle-box
                     id="embargoTimestamp"
                     ng-if="mode === 'authoring' && showEmbargo()"
@@ -137,13 +139,13 @@
                         </li>
                     </ul>
                     <a class="toggle-box__button" ng-click="item.embargo_date=null; item.embargo_time=null;" sd-hotkey="ctrl+shift+x" ng-if="item.embargo_date || item.embargo_time">
-                        <i class="icon-remove-sign"></i>{{ :: 'Clear embargo' | translate }}
+                        <i class="icon-remove-sign"></i>{{ 'Clear embargo' | translate }}
                     </a>
                 </div>
 
                 <div sd-toggle-box
                     id="publishScheduleTimestamp"
-                    ng-if="mode === 'authoring' && showPublishSchedule()"
+                    ng-if="mode === 'authoring' && showPublishSchedule() && !isCorrection"
                     data-title="{{ 'Publish Schedule' | translate }}"
                     data-open="true"
                     data-style="circle">
@@ -156,15 +158,15 @@
                         </li>
                     </ul>
                     <a class="toggle-box__button" ng-click="item.publish_schedule_date=null; item.publish_schedule_time=null;" sd-hotkey="ctrl+shift+x" ng-if="item.publish_schedule_date || item.publish_schedule_time">
-                        <i class="icon-remove-sign"></i>{{ :: 'Clear schedule' | translate }}
+                        <i class="icon-remove-sign"></i>{{ 'Clear schedule' | translate }}
                     </a>
                 </div>
 
-                <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="Timezone" data-open="true" data-style="circle">
+                <div sd-toggle-box id="timezoneTimestamp" ng-if="mode === 'authoring' && showTimezone()" data-title="{{ 'Timezone' | translate }}" data-open="true" data-style="circle">
                     <div sd-timezone data-timezone="item.time_zone" class="timezone-input--dark"></div>
                 </div>
 
-                <div sd-toggle-box id="target" data-title="Target" data-open="true" data-style="circle">
+                <div sd-toggle-box id="target" ng-if="!isCorrection" data-title="{{ 'Target' | translate }}" data-open="true" data-style="circle">
                     <div class="form__row">
                         <label class="form-label" translate>Target Subscribers</label>
                         <div class="term-editor"
@@ -214,7 +216,8 @@
                     ng-show="showSendButtonAndDestination() && mode !== 'spike' && mode !== 'authoring'"
                     ng-click="send(true)"
                     ng-disabled="disableFetchAndOpenButton()">
-                    {{!canSendItem() ? 'fetch and open' : 'send and open' | translate}}
+                    <span ng-if="canSendItem()" translate>send and open</span>
+                    <span ng-if="!canSendItem()" translate>fetch and open</span>
             </button>
 
             <button class="btn btn--large btn--primary btn--expanded"
@@ -222,7 +225,8 @@
                     ng-click="send()"
                     ng-disabled="disableSendButton()"
                     data-test-id="action--send">
-                    {{!canSendItem() ? 'fetch' : 'send' | translate}}
+                    <span ng-if="canSendItem()" translate>send</span>
+                    <span ng-if="!canSendItem()" translate>fetch</span>
             </button>
 
             <button class="btn btn--large btn--primary btn--expanded"
@@ -285,20 +289,24 @@
                 </button>
 
                 <button type="submit"
-                        class="btn btn--large btn--primary btn--hollow btn--expanded btn--ui-dark"
+                        class="btn btn--large btn--primary btn--hollow btn--expanded btn--ui-dark loading-overlay-for-tree-dot"
                         ng-show="isSendEnabled() && showSendButtonAndDestination() && _editable"
                         ng-click="sendAndPublish()"
-                        ng-disabled="!canSendAndPublish()"
+                        ng-disabled="!canSendAndPublish() || loading"
+                        data-test-id="publish-from--submit"
+                        ng-class="{active: loading && canSendAndPublish()} "
                         translate>
                         publish from
                 </button>
             </div>
             <button type="submit"
-                    class="btn btn--large btn--highlight btn--expanded"
+                    class="btn btn--large btn--highlight btn--expanded loading-overlay-for-tree-dot"
                     ng-show="canSendItem() && canPublishItem() && _editable"
                     ng-click="publish()"
-                    ng-disabled="canSendAndPublish()">
-                    {{_action === 'edit' ? 'publish' : _action | translate}}
+                    ng-disabled="canSendAndPublish() || loading"
+                    data-test-id="publish"
+                    ng-class="{active: loading && !canSendAndPublish()}">
+                    {{ getPublishLabel(_action) }}
             </button>
         </div>
     </div>

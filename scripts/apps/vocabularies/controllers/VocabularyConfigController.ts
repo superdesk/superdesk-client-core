@@ -1,10 +1,12 @@
-import {MEDIA_TYPES, MEDIA_TYPE_KEYS, DEFAULT_SCHEMA, VOCABULARY_SELECTION_TYPES} from '../constants';
+import {DEFAULT_SCHEMA, getVocabularySelectionTypes, getMediaTypeKeys, getMediaTypes} from '../constants';
 import {IVocabulary, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
 import {gettext} from 'core/utils';
 
-const OTHER = gettext('Other');
+function getOther() {
+    return gettext('Other');
+}
 
 export interface IScope extends IDirectiveScope<void> {
     vocabularies: Array<IVocabulary>;
@@ -28,7 +30,7 @@ export interface IScope extends IDirectiveScope<void> {
 function getTags(_vocabularies: Array<IVocabulary>): IVocabulary['tags'] {
     const wordSet = (_vocabularies || []).reduce((_wordSet, vocabulary) => {
         (vocabulary.tags || []).forEach((tag) => {
-            if (tag.text !== OTHER) {
+            if (tag.text !== getOther()) {
                 _wordSet.add(tag.text);
             }
         });
@@ -37,7 +39,7 @@ function getTags(_vocabularies: Array<IVocabulary>): IVocabulary['tags'] {
 
     const wordList = Array.from(wordSet).sort((a, b) => a.localeCompare(b));
 
-    wordList.push(OTHER);
+    wordList.push(getOther());
 
     return wordList.map((word) => ({text: word}));
 }
@@ -47,7 +49,7 @@ VocabularyConfigController.$inject = ['$scope', '$route', '$routeParams', 'vocab
 export function VocabularyConfigController($scope: IScope, $route, $routeParams, vocabularies, $rootScope,
     api, notify, modal, session) {
     $scope.loading = true;
-    $scope.mediaTypes = MEDIA_TYPES;
+    $scope.mediaTypes = getMediaTypes();
 
     /**
      * Open vocabulary in the edit modal.
@@ -88,7 +90,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
         (tab === 'text-fields' && fieldType === 'text' ||
             tab === 'date-fields' && fieldType === 'date' ||
             tab === 'urls-fields' && fieldType === 'urls' ||
-            tab === 'related-content-fields' && MEDIA_TYPE_KEYS.includes(fieldType) ||
+            tab === 'related-content-fields' && getMediaTypeKeys().includes(fieldType) ||
             tab === 'embed-fields' && fieldType === 'embed' ||
             tab === 'custom-fields' && fieldType === 'custom'
         );
@@ -108,7 +110,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
 
     function checkTag(vocabulary: IVocabulary, currentTag: IVocabularyTag, tab: string) {
         return $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
-        (currentTag.text === OTHER && (vocabulary.tags == null || vocabulary.tags.length === 0) ||
+        (currentTag.text === getOther() && (vocabulary.tags == null || vocabulary.tags.length === 0) ||
         (vocabulary.tags || []).some((tag) => tag.text === currentTag.text));
     }
 
@@ -122,10 +124,10 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * Don't show OTHER tag if it is the only tag available for current tab
      */
     $scope.canShowTag = (currentTag: IVocabularyTag, tab: string) =>
-        currentTag.text !== OTHER ||
+        currentTag.text !== getOther() ||
         ($scope.vocabularies || []).some((vocabulary) =>
             $scope.matchFieldTypeToTab(tab, vocabulary.field_type) &&
-            (vocabulary.tags || []).some((tag) => tag.text !== OTHER),
+            (vocabulary.tags || []).some((tag) => tag.text !== getOther()),
         );
 
     /**
@@ -207,7 +209,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
             };
 
             if ($routeParams.type == null) {
-                $scope.vocabulary.selection_type = VOCABULARY_SELECTION_TYPES.MULTIPLE_SELECTION.id;
+                $scope.vocabulary.selection_type = getVocabularySelectionTypes().MULTIPLE_SELECTION.id;
             }
         }
 

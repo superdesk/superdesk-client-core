@@ -66,12 +66,6 @@
         .title {
             text-transform: uppercase;
         }
-
-        .dropdown__menu {
-            .label-group {
-                text-transform: capitalize;
-            }
-        }
     }
 
     .main-section {
@@ -138,6 +132,7 @@
         }
         .monitoring__toolbar-container {
             flex-shrink: 1;
+            position: relative;
         }
         .monitoring__main-content {
             position: relative;

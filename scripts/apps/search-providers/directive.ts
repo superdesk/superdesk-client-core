@@ -20,6 +20,8 @@ export default function SearchProviderConfigDirective(searchProviderService, not
             searchProviderService.getAllowedProviderTypes().then((providerTypes) => {
                 $scope.providerTypes = providerTypes;
                 $scope.noProvidersAllowed = !$scope.providerTypes.length;
+                $scope.addProviderLabel = $scope.noProvidersAllowed ?
+                    gettext('There are no providers available.') : gettext('Add New Search Provider');
                 $scope.providerLabels = searchProviderService.getProviderLabels(providerTypes);
                 $scope.providerTypesOptions = providerTypes.map((t) => ({label: t.label, value: t.search_provider}));
             });
@@ -28,7 +30,7 @@ export default function SearchProviderConfigDirective(searchProviderService, not
              * Fetches all search providers from backend
              */
             function fetchSearchProviders() {
-                searchProviderService.getSearchProviders().then(
+                searchProviderService.getSearchProviders({manage: 1}).then(
                     (result) => {
                         $scope.providers = result;
                     },
@@ -39,6 +41,12 @@ export default function SearchProviderConfigDirective(searchProviderService, not
              * Upserts the selected search provider.
              */
             $scope.save = function() {
+                Object.keys($scope.provider).forEach((key) => {
+                    if (typeof $scope.provider[key] === 'object' && $scope.provider[key] !== null) {
+                        $scope.provider[key] = {...$scope.origProvider[key], ...$scope.provider[key]};
+                    }
+                });
+
                 api.search_providers.save($scope.origProvider, $scope.provider)
                     .then(
                         () => {
@@ -105,6 +113,9 @@ export default function SearchProviderConfigDirective(searchProviderService, not
             };
 
             fetchSearchProviders();
+
+            $scope.getStatusLabel = (provider) => provider.is_closed ? gettext('Open') : gettext('Close');
+            $scope.getIsDefaultLabel = (provider) => provider.is_default ? gettext('Default') : '';
         },
     };
 }

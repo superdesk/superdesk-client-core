@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil} from 'lodash';
+import {get, set, isEqual, cloneDeep, some, isEmpty, extend, each, omit, isNil, isObject} from 'lodash';
 
 import {gettext} from 'core/utils';
 import {StretchBar} from 'core/ui/components/SubNav';
@@ -29,6 +29,7 @@ interface IProps {
     onValidation(valid: boolean): void;
     triggerSave: boolean;
     hideActionBar: boolean;
+    formClass?: string;
 }
 
 interface IState {
@@ -145,6 +146,10 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
             diff.instagram = IG_URL + this.state.currentContact.instagram;
         }
 
+        if (diff?.contact_state != null && !isObject(diff?.contact_state)) {
+            diff.contact_state = {name: diff.contact_state};
+        }
+
         // clean diff
         diff = omit(diff, 'type');
 
@@ -192,7 +197,7 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {svc, contact, onCancel, hideActionBar} = this.props;
+        const {svc, contact, onCancel, hideActionBar, formClass} = this.props;
         const {
             isFormValid = false,
             dirty = false,
@@ -209,15 +214,17 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
 
         return (
             <div id={contact._id} key={contact._id} className="contact-form">
-                <form name="contactForm"
-                    className="side-panel side-panel--shadow-right"
+                <form
+                    name="contactForm"
+                    className={formClass}
                     onSubmit={(e) => e.preventDefault()}
                 >
                     {!hideActionBar && (
                         <div className="subnav subnav--darker">
                             <StretchBar>
-                                <div className="contact__type-icon"
-                                    data-sd-tooltip="Organisation Contact"
+                                <div
+                                    className="contact__type-icon"
+                                    data-sd-tooltip={gettext('Organisation Contact')}
                                     data-flow="right"
                                 >
                                     <i className={iconName} />

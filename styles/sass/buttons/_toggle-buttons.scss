@@ -63,6 +63,7 @@ $toggleButtonBorderColor: #c6c6c6;
     .toggle-button, .btn {
         float:left;
         margin-right: 6px;
+        margin-bottom: 0;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;

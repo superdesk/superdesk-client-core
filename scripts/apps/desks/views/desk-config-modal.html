@@ -140,36 +140,47 @@
                         </div>
                     </div>
                     <div class="form__row">
-                        <label translate class="form-label form-label--marg-b10">Service</label>
-                        <div sd-meta-terms
-                            class="data"
-                            data-item="desk.edit.desk_metadata"
-                            data-field="anpa_category"
-                            data-unique="qcode"
-                            data-list="metadata.categories"
-                            data-header="true">
-                        </div>
-                    </div>
-                    <div class="form__row">
-                        <div class="sd-line-input sd-line-input--is-select">
+                        <div class="sd-line-input sd-line-input--required">
                             <label class="sd-line-input__label" translate>Default Content Template</label>
-                            <select
-                                ng-model="desk.edit.default_content_template"
-                                ng-options="template._id as template.template_name for template in templates"
-                                class="sd-line-input__select"
-                                data-test-id="field--default-content-template"
-                            >
+                            <div class="sd-alert sd-alert--hollow sd-alert--small">
+                                <i class="icon-info-sign icon--blue icon--2x sd-alert__icon"></i>
+                               <span translate>
+                                   Select a default template for new articles. If you don't see any, first make sure that there is at least one content profile. Each time a profile is created, Superdesk creates a template with the same name.
+                                </span>
+                            </div>
+                            <div class="sd-line-input sd-line-input--is-select">
+                                <select
+                                    ng-options="template._id as template.template_name for template in templates"
+                                    ng-model="desk.edit.default_content_template"
+                                    class="sd-line-input__select"
+                                    required
+                                    data-test-id="field--default-content-template"
+                                >
                                 <option value=""></option>
-                            </select>
+
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="form__row" ng-show="profiles.length">
-                        <div class="sd-line-input sd-line-input--is-select">
+                        <div class="sd-line-input sd-line-input--required">
                             <label class="sd-line-input__label" translate>Default Content Profile</label>
-                            <select ng-model="desk.edit.default_content_profile"
-                                    ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'" class="sd-line-input__select">
-                                <option value=""></option>
-                            </select>
+                            <div class="sd-alert sd-alert--hollow sd-alert--small">
+                                <i class="icon-info-sign icon--blue icon--2x sd-alert__icon"></i>
+                               <span translate>
+                                    Select a default content profile which is used for articles fetched from ingest. If you don't see any, create one
+                                   <a href="#/settings/content-profiles">here</a>
+                                </span>
+                            </div>
+                            <div  class="sd-line-input sd-line-input--is-select">
+                                <select ng-model="desk.edit.default_content_profile"
+                                        ng-options="profile._id as profile.label for profile in profiles | orderBy: 'label'"
+                                        class="sd-line-input__select"
+                                        required
+                                        data-test-id="field--default-content-profile">
+                                    <option value=""></option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <fieldset class="form__row">
@@ -179,7 +190,6 @@
                 </fieldset>
                 <span ng-show="message">{{ message}}</span>
                 <span class="alert-danger" ng-show="_errorLimits" translate>Character limit exceeded, desk can not be created/updated.</span>
-                <span class="alert-danger" ng-show="_error">{{ _errorMessage}}</span>
             </form>
             <div class="modal__footer" ng-if="step.current === 'general'">
                 <button
@@ -208,14 +218,18 @@
                     <div class="grid__item grid__item--col-5">
                         <div class="heading" translate>Work stages</div>
                         <div class="column">
-                            <ul class="pills-list" ng-class="{'edit-mode': editStage}">
+                            <ul class="pills-list stages-list" ng-class="{'edit-mode': editStage, 'pills-list--draggable': !editStage}">
                                 <li class="stage editable addnew" ng-show="editStage && !editStage._id">
                                     <div class="sd-line-input">
                                         <input class="sd-line-input__input" type="text" id="insert-stage" ng-model="editStage.name" required ng-keyup="handleEdit($event);" autofocus placeholder="{{ 'New stage' | translate }}">
                                         <sd-character-count class="sd-line-input__char-count" data-item="editStage.name" data-limit="limits.stage"></sd-character-count>
                                     </div>
                                 </li>
-                                <li ng-repeat="stage in stages track by stage._id" ng-click="select(stage)" ng-class="{active: selected === stage, editable: isActive(stage)}">
+                                <li
+                                    ng-repeat="stage in stages track by $index"
+                                    ng-click="select(stage)"
+                                    ng-class="{active: selected === stage, editable: isActive(stage)}"
+                                >
                                     <div ng-if="!isActive(stage)">
                                         <span data-test-id="stage-name">{{ labelForStage(stage) }}</span>
                                         <label class="global-label" ng-if="!stage.is_visible">
@@ -406,7 +420,6 @@
                                     <sd-user-avatar data-user="user"></sd-user-avatar>
                                     <h5>{{:: user.display_name}}</h5> <span class="user-email">{{:: user.email}}</span>
                                 </span>
-
                                 <div class="actions">
                                     <button ng-click="remove(user)"><i class="icon-close-small"></i></button>
                                 </div>
@@ -414,7 +427,6 @@
                         </ul>
                     </div>
                 </div>
-                <span class="alert-danger" ng-show="_errorMessage">{{ _errorMessage}}</span>
             </div>
             <div class="modal__footer" ng-if="step.current === 'people'">
                 <button id="next-people"

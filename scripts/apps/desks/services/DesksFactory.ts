@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {IDesk} from 'superdesk-api';
 import {logger} from 'core/services/logger';
+import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 
 import {
     DESK_OUTPUT,
@@ -9,6 +10,7 @@ import {
     SCHEDULED_OUTPUT,
     HIGHLIGHTS,
 } from '../constants';
+import {UserActions} from 'core/data/users/UserActions';
 
 const OUTPUT_TYPES = [
     DESK_OUTPUT,
@@ -45,12 +47,12 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
     session, $filter, privileges, $rootScope) {
     let _cache = {};
 
-    var _fetchAll = function(endpoint, parent?, page = 1, items = []) {
+    var _fetchAll = function(endpoint, parent?, page = 1, items = [], refresh = false) {
         let key;
 
         if (page === 1) {
             key = angular.toJson({resource: endpoint, parent: parent});
-            if (_cache[key]) {
+            if (!refresh && _cache[key]) {
                 return _cache[key];
             }
         }
@@ -62,7 +64,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
 
                 if (result._links && result._links.next) {
                     pg++;
-                    return _fetchAll(endpoint, parent, pg, extended);
+                    return _fetchAll(endpoint, parent, pg, extended, refresh);
                 }
                 return extended;
             });
@@ -88,6 +90,11 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
             desk: desks.activeDeskId,
             stage: desks.activeStageId,
         };
+
+        dispatchCustomEvent('activeDeskChanged', {
+            desk: desks.activeDeskId,
+            stage: desks.activeStageId,
+        });
     }
 
     var desksService = {
@@ -133,17 +140,20 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                     _.each(result, (user) => {
                         self.userLookup[user._id] = user;
                     });
+                    UserActions.initUsers(self.users._items);
                 });
         },
-        fetchStages: function() {
+        fetchStages: function(refresh = false) {
             var self = this;
 
-            return _fetchAll('stages')
+            return _fetchAll('stages', undefined, undefined, undefined, refresh)
                 .then((items) => {
                     self.stages = {_items: items};
                     _.each(items, (item) => {
                         self.stageLookup[item._id] = item;
                     });
+
+                    return self.stages;
                 });
         },
         fetchDeskStages: function(desk, refresh) {
@@ -153,7 +163,7 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
                 return $q.when().then(returnDeskStages);
             }
 
-            return self.fetchStages()
+            return self.fetchStages(refresh)
                 .then(angular.bind(self, self.generateDeskStages))
                 .then(returnDeskStages);
 
@@ -392,6 +402,15 @@ export function DesksFactory($q, api, preferencesService, userList, notify,
 
     $rootScope.$on('desk', reset);
     $rootScope.$on('stage', reset);
+
+    // re-fetch stages when order changes for any stage
+    $rootScope.$on('resource:updated', (event, data) => {
+        if (data.resource === 'stages' && data.fields?.['desk_order'] === 1) {
+            desksService.fetchStages(true).then(() => {
+                desksService.generateDeskStages();
+            });
+        }
+    });
 
     return desksService;
 

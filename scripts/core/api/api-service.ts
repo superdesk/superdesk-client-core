@@ -194,7 +194,7 @@ function APIProvider() {
          * @description
          * Save an item
          */
-        Resource.prototype.save = function(item, diff, params) {
+        Resource.prototype.save = function(item, diff, httpParams, options?: {skipPostProcessing: boolean}) {
             if (diff && diff._etag) {
                 item._etag = diff._etag;
             }
@@ -203,9 +203,13 @@ function APIProvider() {
                 method: item._links ? 'PATCH' : 'POST',
                 url: item._links ? urls.item(item._links.self.href) : this.url(),
                 data: diff ? clean(diff, !item._links) : clean(item, !item._links),
-                params: params,
+                params: httpParams,
                 headers: getHeaders(item),
             }).then((data) => {
+                if (options?.skipPostProcessing === true) {
+                    return data;
+                }
+
                 delete data._type;
                 angular.extend(item, diff || {});
                 angular.extend(item, data);
@@ -329,8 +333,8 @@ function APIProvider() {
         /**
          * @alias api(resource).save(dest, diff)
          */
-        api.save = function apiSave(resource, dest, diff, parent, params) {
-            return api(resource, parent).save(dest, diff, params);
+        api.save = function apiSave(resource, dest, diff, parent, params, options?: {skipPostProcessing: boolean}) {
+            return api(resource, parent).save(dest, diff, params, options);
         };
 
         /**

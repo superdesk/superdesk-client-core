@@ -41,7 +41,8 @@ export const InputArray: React.StatelessComponent<any> = ({
                     remove={remove.bind(null, index)}
                     readOnly={readOnly}
                     errors={errors}
-                    {...props} />
+                    {...props}
+                />
             ))}
 
             {!readOnly && (

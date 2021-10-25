@@ -1,4 +1,4 @@
-import _, {get} from 'lodash';
+import _ from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {dataApi} from 'core/helpers/CrudManager';
 
@@ -140,10 +140,6 @@ export function FamilyService(api, desks) {
             {term: {type: item.type}},
         ];
 
-        if (get(item, 'genre[0].qcode')) {
-            filter.push({term: {'genre.qcode': get(item, 'genre[0].qcode')}});
-        }
-
         let queryString = null;
         let queryRelatedItem = [];
         let sanitizedKeyword = keyword.replace(/[\\:]/g, '').replace(/\//g, '\\/');
@@ -179,7 +175,7 @@ export function FamilyService(api, desks) {
                 queryString = {
                     query_string: {
                         query: queryRelatedItem.join(' '),
-                        lenient: false,
+                        lenient: true,
                         default_operator: 'OR',
                     },
                 };
@@ -198,7 +194,7 @@ export function FamilyService(api, desks) {
             queryString = {
                 query_string: {
                     query: 'slugline.phrase:("' + sanitizedKeyword + '")',
-                    lenient: false,
+                    lenient: true,
                 },
             };
         }

@@ -7,7 +7,16 @@ import {
     IPreviewComponentProps,
 } from 'superdesk-api';
 import {getDateTimeField} from './getDateTimeField';
+import {getTemplateDateTimeField} from './getTemplateDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
+
+export function isDateValue(value: string | undefined | null) {
+    if (value == null) {
+        return false;
+    } else {
+        return isNaN(Date.parse(value)) !== true;
+    }
+}
 
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {
     const {formatDateTime} = superdesk.localization;
@@ -34,7 +43,6 @@ export const defaultDateTimeConfig: IDateTimeFieldConfig = {
 };
 
 const extension: IExtension = {
-    id: 'datetimeField',
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
 
@@ -47,6 +55,7 @@ const extension: IExtension = {
                         editorComponent: getDateTimeField(superdesk),
                         previewComponent: getDateTimePreviewComponent(superdesk),
                         configComponent: getConfigComponent(superdesk),
+                        templateEditorComponent: getTemplateDateTimeField(superdesk),
                     },
                 ],
             },

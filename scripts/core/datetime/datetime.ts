@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {gettext} from 'core/utils';
 import moment from 'moment-timezone';
 import {appConfig} from 'appConfig';
+import {IArticle} from 'superdesk-api';
 
 const ISO_DATE_FORMAT = 'YYYY-MM-DD';
 const ISO_WEEK_FORMAT = 'YYYY-W';
@@ -12,6 +13,7 @@ const TIME_FORMAT = appConfig.shortTimeFormat || 'hh:mm';
 const DATE_FORMAT = appConfig.shortDateFormat || 'MM/DD';
 const WEEK_FORMAT = appConfig.shortWeekFormat || 'dddd, ' + TIME_FORMAT;
 const ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
+const SERVER_FORMAT = 'YYYY-MM-DDTHH:mm:ssZZ';
 
 /**
 * Get long representation of given datetime
@@ -20,6 +22,10 @@ const ARCHIVE_FORMAT = appConfig.ArchivedDateFormat || DATE_FORMAT;
 */
 export function longFormat(d: string): string {
     return moment(d).format(LONG_FORMAT);
+}
+
+export function serverFormat(d: string | moment.Moment): string {
+    return moment(d).utc().format(SERVER_FORMAT);
 }
 
 DateTimeDirective.$inject = ['datetime'];
@@ -72,6 +78,54 @@ function ShortDateDirective() {
     };
 }
 
+function isSameDay(a, b) {
+    return a.format(ISO_DATE_FORMAT) === b.format(ISO_DATE_FORMAT);
+}
+
+function isSameWeek(a, b) {
+    return a.format(ISO_WEEK_FORMAT) === b.format(ISO_WEEK_FORMAT);
+}
+
+function isArchiveYear(a, b) {
+    return (appConfig.ArchivedDateOnCalendarYear === 1) ?
+        a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
+}
+
+export function isScheduled(__item: IArticle) {
+    const item = __item.archive_item ?? __item;
+
+    return item.publish_schedule != null;
+}
+
+/**
+ * Get date and time format for scheduled datetime
+ * Returns time for current day, date and time otherwise
+ */
+export function scheduledFormat(__item: IArticle): {short: string, long: string} {
+    const browserTimezone = moment.tz.guess();
+
+    const item = __item.archive_item ?? __item;
+
+    const datetime = item?.schedule_settings?.time_zone == null
+        ? moment(item.publish_schedule).tz(browserTimezone)
+        : moment.tz(
+            item.publish_schedule.replace('+0000', ''),
+            item.schedule_settings.time_zone,
+        ).tz(browserTimezone);
+
+    var now = moment();
+
+    const _date = datetime.format(appConfig.view.dateformat || 'MM/DD'),
+        _time = datetime.format(appConfig.view.timeformat || 'hh:mm');
+
+    let short = isSameDay(datetime, now) ? '@ '.concat(_time) : _date.concat(' @ ', _time);
+
+    return {
+        short: short,
+        long: longFormat(datetime),
+    };
+}
+
 DateTimeService.$inject = [];
 function DateTimeService() {
     /**
@@ -98,39 +152,6 @@ function DateTimeService() {
     };
 
     this.longFormat = longFormat;
-
-    /**
-     * Get date and time format for scheduled datetime
-     * Returns time for current day, date and time otherwise
-     *
-     * @param {String} d iso format datetime
-     * @return {String}
-     */
-    this.scheduledFormat = function(d) {
-        var m = moment(d);
-        var now = moment();
-        const _date = m.format(appConfig.view.dateformat || 'MM/DD'),
-            _time = m.format(appConfig.view.timeformat || 'hh:mm');
-
-        if (isSameDay(m, now)) {
-            return '@ '.concat(_time);
-        }
-
-        return _date.concat(' @ ', _time);
-    };
-
-    function isSameDay(a, b) {
-        return a.format(ISO_DATE_FORMAT) === b.format(ISO_DATE_FORMAT);
-    }
-
-    function isSameWeek(a, b) {
-        return a.format(ISO_WEEK_FORMAT) === b.format(ISO_WEEK_FORMAT);
-    }
-
-    function isArchiveYear(a, b) {
-        return (appConfig.ArchivedDateOnCalendarYear === 1) ?
-            a.format(ISO_YEAR_FORMAT) !== b.format(ISO_YEAR_FORMAT) : b.diff(a, 'years') >= 1;
-    }
 }
 
 DateTimeHelperService.$inject = [];
@@ -161,7 +182,7 @@ function DateTimeHelperService() {
     };
 
     this.mergeDateTime = function(dateStr, timeStr, timezone) {
-        var tz = timezone || appConfig.defaultTimezone;
+        var tz = timezone || appConfig.default_timezone;
         var mergeStr = dateStr + ' ' + timeStr;
         var formatter = appConfig.model.dateformat + ' ' + appConfig.model.timeformat;
 
@@ -267,8 +288,7 @@ export default angular.module('superdesk.core.datetime', [
      *   avoiding the need to fetch it again every time when needed.
      */
     .factory('tzdata', ['$resource', function($resource) {
-        var filename = 'scripts/apps/dashboard/world-clock/timezones-all.json',
-            tzResource = $resource(filename);
+        const tzResource = $resource('scripts/apps/dashboard/world-clock/timezones-all.json');
 
         /**
          * Returns a sorted list of all time zone names. If time zone data

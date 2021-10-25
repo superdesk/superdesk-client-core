@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import _ from 'lodash';
-import {URL_PARAMETERS} from '../constants';
+import {getUrlParameters} from '../constants';
 import {SelectFieldSearchInput} from '../../contacts/components/Form';
 import {gettext} from 'core/utils';
 
@@ -50,7 +50,7 @@ class LinkFunction {
         this.scope.flags = false;
         let meta = {};
 
-        _.forEach(URL_PARAMETERS, (value, key) => {
+        _.forEach(getUrlParameters(), (value, key) => {
             if (_.get(params, key)) {
                 meta[key] = params[key];
             }
@@ -68,7 +68,7 @@ class LinkFunction {
     isSearchDifferent() {
         let params = this.$location.search();
 
-        return _.some(_.keys(URL_PARAMETERS), (key) => _.get(this.scope.meta, key) !== _.get(params, key));
+        return _.some(_.keys(getUrlParameters()), (key) => _.get(this.scope.meta, key) !== _.get(params, key));
     }
 
     handleOnChange(field, value) {
@@ -174,7 +174,7 @@ class LinkFunction {
      * @description clear all search and refresh the results.
      */
     clear() {
-        const fields = [..._.keys(URL_PARAMETERS), 'q'];
+        const fields = [..._.keys(getUrlParameters()), 'q'];
 
         this.$location.search(_.omit(this.$location.search(), fields));
         this.scope.$broadcast('tag:removed');

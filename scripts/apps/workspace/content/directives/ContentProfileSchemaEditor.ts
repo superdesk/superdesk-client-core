@@ -1,7 +1,7 @@
 import {includes} from 'lodash';
 import {getLabelForFieldId} from '../../helpers/getLabelForFieldId';
 import {appConfig} from 'appConfig';
-import {IArticleField} from 'superdesk-api';
+import {IArticleField, FORMATTING_OPTION, RICH_FORMATTING_OPTION} from 'superdesk-api';
 
 interface IScope extends ng.IScope {
     getEditor3FormattingOptions: (fieldName: string) => Array<string>;
@@ -38,33 +38,6 @@ const HAS_RICH_FORMATTING_OPTIONS = Object.freeze({
     body_footer: true,
 });
 
-export type FORMATTING_OPTION =
-    'h1' |
-    'h2' |
-    'h3' |
-    'h4' |
-    'h5' |
-    'h6' |
-    'justifyLeft' |
-    'justifyCenter' |
-    'justifyRight' |
-    'justifyFull' |
-    'outdent' |
-    'indent' |
-    'unordered list' |
-    'ordered list' |
-    'pre' |
-    'quote' |
-    'media' |
-    'link' |
-    'superscript' |
-    'subscript' |
-    'strikethrough' |
-    'underline' |
-    'italic' |
-    'bold' |
-    'table';
-
 const FORMATTING_OPTIONS: Array<FORMATTING_OPTION> = [
     'h1',
     'h2',
@@ -100,38 +73,20 @@ const EDITOR3_PLAINTEXT_FORMATTING_OPTIONS: Array<PLAINTEXT_FORMATTING_OPTION> =
     'lowercase',
 ];
 
-export type RICH_FORMATTING_OPTION =
-    PLAINTEXT_FORMATTING_OPTION |
-    'h1' |
-    'h2' |
-    'h3' |
-    'h4' |
-    'h5' |
-    'h6' |
-    'ordered list' |
-    'unordered list' |
-    'quote' |
-    'media' |
-    'link' |
-    'embed' |
-    'underline' |
-    'italic' |
-    'bold' |
-    'table' |
-    'formatting marks' |
-    'remove format' |
-    'remove all format' |
-    'annotation' |
-    'comments' |
-    'suggestions' |
-    'pre' |
-    'superscript' |
-    'subscript' |
-    'strikethrough' |
-    'tab' |
-    'tab as spaces' |
-    'undo' |
-    'redo';
+export const formattingOptionsUnsafeToParseFromHTML: Array<RICH_FORMATTING_OPTION> = [
+    // these aren't outputted to HTML at all
+    'comments',
+    'suggestions',
+
+    // no standard in HTML, parsing according to our output format is not implemented
+    'annotation',
+
+    // may not be parsed well
+    'pre',
+    'embed',
+    'media',
+    'table',
+];
 
 const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
     ...EDITOR3_PLAINTEXT_FORMATTING_OPTIONS,
@@ -161,6 +116,8 @@ const EDITOR3_RICH_FORMATTING_OPTIONS: Array<RICH_FORMATTING_OPTION> = [
     'superscript',
     'subscript',
     'strikethrough',
+    'tab',
+    'tab as spaces',
     'undo',
     'redo',
 ];
