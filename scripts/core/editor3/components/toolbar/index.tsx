@@ -275,26 +275,6 @@ class ToolbarComponent extends React.Component<any, IState> {
                     />
                 )}
 
-                {has('undo') && (
-                    <IconButton
-                        onClick={() => {
-                            this.props.dispatch(undo());
-                        }}
-                        tooltip={gettext('Undo') + ' (ctrl + z)'}
-                        iconName="undo"
-                    />
-                )}
-
-                {has('redo') && (
-                    <IconButton
-                        onClick={() => {
-                            this.props.dispatch(redo());
-                        }}
-                        tooltip={gettext('Redo') + ' (ctrl + y)'}
-                        iconName="redo"
-                    />
-                )}
-
                 {has('undo') &&
                     <IconButton
                         onClick={() => {

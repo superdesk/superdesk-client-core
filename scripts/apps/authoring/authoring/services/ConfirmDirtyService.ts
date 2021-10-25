@@ -51,18 +51,6 @@ export function ConfirmDirtyService($window, $q, $filter, api, modal, $interpola
     };
 
     /**
-     * In case publish is triggered by quick buttons, show confirmation dialog
-     */
-    this.confirmQuickPublish = function(length = 1) {
-        return modal.confirm(
-            gettextPlural(length, 'Do you want to publish the article?', 'Do you want to publish the articles?'),
-            gettext('Publishing'),
-            gettext('Publish'),
-            gettext('Cancel'),
-        );
-    };
-
-    /**
      * In case $scope is dirty ask user if he want's to save changes and publish.
      */
     this.confirmPublish = function() {
