@@ -3,6 +3,7 @@ import * as React from 'react';
 import {IAssetItem} from '../../interfaces';
 import {samsApi} from '../../apis';
 import {isImageAsset} from '../../utils/assets';
+import {showImagePreviewModal} from './assetImagePreviewFullScreen';
 
 interface IProps extends React.DetailedHTMLProps<React.ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>{
     asset: Partial<IAssetItem>;
@@ -28,6 +29,8 @@ export class AssetImageRendition extends React.Component<IProps, IState> {
         }
 
         this.state = {source: undefined};
+
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -39,6 +42,10 @@ export class AssetImageRendition extends React.Component<IProps, IState> {
             // Make sure to release the memory created for this image
             window.URL.revokeObjectURL(this.state.source);
         }
+    }
+
+    handleClick() {
+        showImagePreviewModal(this.props.asset);
     }
 
     loadRendition() {
@@ -74,6 +81,7 @@ export class AssetImageRendition extends React.Component<IProps, IState> {
                 alt={this.props.asset.name}
                 {...imageProps}
                 src={this.state.source}
+                onClick={this.handleClick}
             />
         );
 

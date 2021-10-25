@@ -35,6 +35,9 @@ const isActionAllowed: {[key: string]: (asset: Partial<IAssetItem>) => boolean} 
         asset._created != null &&
         isAssetLocked(asset)
     ),
+    [ASSET_ACTIONS.VIEW_FULL_SCREEN]: (asset) => (
+        isImageAsset(asset)
+    ),
 };
 
 function getBaseAssetAction(action: ASSET_ACTIONS): IBaseAssetAction {
@@ -71,6 +74,12 @@ function getBaseAssetAction(action: ASSET_ACTIONS): IBaseAssetAction {
             id: ASSET_ACTIONS.FORCE_UNLOCK,
             label: gettext('Force Unlock'),
             icon: 'unlocked',
+        };
+    case ASSET_ACTIONS.VIEW_FULL_SCREEN:
+        return {
+            id: ASSET_ACTIONS.VIEW_FULL_SCREEN,
+            label: gettext('Full-screen preview'),
+            icon: 'fullscreen',
         };
     }
 
