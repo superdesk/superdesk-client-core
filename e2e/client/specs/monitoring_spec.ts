@@ -866,11 +866,10 @@ describe('monitoring', () => {
         monitoring.actionOnItem('Open', 4, 0);
         expect(authoring.save_button.isPresent()).toBe(false); // Save button hidden for publish item
 
-        var textField = element(by.className('text-editor'));
-        // expect contenteditable=true attribute is missing/null for text-editor field,
-        // hence editing is disabled for published item
+        const bodyHtml = element(by.css('.field.body [contenteditable]'));
 
-        expect(textField.getAttribute('contenteditable')).toBe(null);
+        expect(bodyHtml.isPresent()).toBe(true);
+        expect(bodyHtml.getAttribute('contenteditable')).toBe('false');
     });
 
     it('closes preview when an item is opened for editing', () => {
