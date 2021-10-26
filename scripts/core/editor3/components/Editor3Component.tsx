@@ -671,7 +671,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
                         this.state.contentChangesAfterLastFocus > 0 && (
                             <Editor3Autocomplete
                                 editorState={editorState}
-                                editorNode={this.editorNode}
+                                editorNode={this.editorNode.current}
                                 dispatch={this.props.dispatch}
                                 autocompleteSuggestions={this.props.autocompleteSuggestions}
                                 className={editor3AutocompleteClassName}
