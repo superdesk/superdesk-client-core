@@ -847,7 +847,7 @@ class Authoring {
         };
 
         this.getAbstractFieldCount = function() {
-            return element.all(by.model('item.abstract')).count();
+            return element.all(by.css('.abstract [contenteditable]')).count();
         };
 
         this.closeHeader = function() {
