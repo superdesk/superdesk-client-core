@@ -739,8 +739,8 @@ class Authoring {
             return browser.wait(ECE.presenceOf(elem)).then(() => elem);
         };
 
-        var abstract = element(by.model('item.abstract')).all(by.className('editor-type-html')).first();
-        var bodyFooter = element(by.id('body_footer')).all(by.className('editor-type-html')).first();
+        var abstract = element(by.css('.abstract [contenteditable]'));
+        var bodyFooter = element(by.css('#body_footer [contenteditable]'));
         var packageSlugline = element.all(by.className('keyword')).last();
         var byline = element(by.model('item.byline')).all(by.className('editor-type-html')).first();
 

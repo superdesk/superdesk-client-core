@@ -405,31 +405,6 @@ describe('authoring', () => {
         expect(element(by.model('spellcheckMenu.isAuto')).getAttribute('checked')).toBeFalsy();
     });
 
-    it('spellcheck hilite sentence word for capitalization and ignore the word after abbreviations', () => {
-        nav('/settings/dictionaries');
-        dictionaries.edit('Test 1');
-        expect(dictionaries.getWordsCount()).toBe(0);
-        dictionaries.search('abbrev.');
-        dictionaries.saveWord();
-        dictionaries.search('abbrev');
-        dictionaries.saveWord();
-        expect(dictionaries.getWordsCount()).toBe(2);
-        dictionaries.save();
-        browser.sleep(200);
-
-        monitoring.openMonitoring();
-
-        authoring.createTextItem();
-        authoring.writeText('some is a sentence word, but words come after an abbrev. few are not');
-        browser.sleep(200);
-        expect(authoring.getBodyInnerHtml()).toContain('<span class="sderror sdhilite sdCapitalize" data-word="some" ' +
-        'data-index="0" data-sentence-word="true">some</span>');
-        expect(authoring.getBodyInnerHtml()).not.toContain('<span class="sderror sdhilite sdCapitalize" ' +
-        'data-word="few" data-index="57">few</span>');
-        expect(authoring.getBodyInnerHtml()).toContain('<span class="sderror sdhilite" data-word="few" ' +
-        'data-index="57">few</span>');
-    });
-
     it('related item widget', () => {
         monitoring.actionOnItem('Edit', 2, 1);
         authoring.writeText('something');
