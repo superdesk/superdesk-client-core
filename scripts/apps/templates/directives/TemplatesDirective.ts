@@ -272,6 +272,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.template = _.create($scope.origTemplate);
                 $scope.template.schedule = $scope.origTemplate.schedule || {};
                 $scope.template.data = $scope.origTemplate.data || {
+                    type: 'text',
                     headline: '',
                     abstract: '',
                     byline: '',

@@ -230,7 +230,7 @@ class Authoring {
         this.publish_panel = element(by.css('#panel-publish:not(.ng-hide)'));
         this.send_panel = element(by.css('#panel-send:not(.ng-hide)'));
         this.fetch_panel = element(by.css('#panel-fetch:not(.ng-hide)'));
-        this.headline = element(by.model('item.headline')).all(by.className('editor-type-html')).first();
+        this.headline = element(by.css('.headline [contenteditable]'));
 
         this.send_kill_button = element(by.id('send-kill-btn'));
         this.send_correction_button = element(by.id('send-correction-btn'));
@@ -733,8 +733,11 @@ class Authoring {
             return element(by.id('subnav'));
         };
 
-        var getBodyHtml = () => browser.wait(ECE.presenceOf(element(by.model('item.body_html'))))
-            .then(() => element(by.model('item.body_html')).all(by.className('editor-type-html')).first());
+        var getBodyHtml = () => {
+            const elem = element(by.css('.field.body [contenteditable]'));
+
+            return browser.wait(ECE.presenceOf(elem)).then(() => elem);
+        };
 
         var abstract = element(by.model('item.abstract')).all(by.className('editor-type-html')).first();
         var bodyFooter = element(by.id('body_footer')).all(by.className('editor-type-html')).first();
