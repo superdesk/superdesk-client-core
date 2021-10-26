@@ -2,10 +2,19 @@ import {OrderedMap} from 'immutable';
 import {IArticle} from 'superdesk-api';
 import ng from 'core/services/ng';
 
-export interface IAuthoringFieldV2 {
-    name: string;
-    type: 'plain-text' | 'html' | 'dropdown';
+interface IFieldBase {
+    id: string;
 }
+
+interface IFieldText extends IFieldBase {
+    type: 'text';
+}
+
+interface IFieldDropdown extends IFieldBase {
+    type: 'dropdown';
+}
+
+export type IAuthoringFieldV2 = IFieldText | IFieldDropdown;
 
 export type IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>;
 
@@ -40,14 +49,14 @@ export function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
         for (const editorItem of editorOrdered) {
             const field: IAuthoringFieldV2 = {
-                name: editorItem.name,
-                type: 'plain-text',
+                id: editorItem.name ?? 'hmtl',
+                type: 'text',
             };
 
             if (editorItem.section === 'header') {
-                headerFields = headerFields.set(field.name, field);
+                headerFields = headerFields.set(field.id, field);
             } else if (editorItem.section === 'content') {
-                contentFields = contentFields.set(field.name, field);
+                contentFields = contentFields.set(field.id, field);
             } else {
                 throw new Error('invalid section');
             }

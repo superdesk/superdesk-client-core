@@ -4,6 +4,7 @@ import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 import {getContentProfile, IContentProfileV2} from './data-layer';
+import {AuthoringSection} from './authoring-section';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -12,7 +13,8 @@ interface IProps {
 
 interface IStateLoaded {
     loading: false;
-    item: IArticle;
+    itemOriginal: IArticle;
+    itemWithChanges: IArticle;
     profile: IContentProfileV2;
 }
 
@@ -50,10 +52,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             [
                 fetchArticle(this.props.itemId).then((item) => {
                     return getContentProfile(item).then((profile) => {
-                        return {
-                            item,
-                            profile,
-                        };
+                        return {item, profile};
                     });
                 }),
                 waitForCssAnimation(),
@@ -61,7 +60,14 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         ).then((res) => {
             const [{item, profile}] = res;
 
-            this.setState({loading: false, item, profile});
+            const nextState: IStateLoaded = {
+                loading: false,
+                itemOriginal: Object.freeze(item),
+                itemWithChanges: item,
+                profile: profile,
+            };
+
+            this.setState(nextState);
         });
     }
 
@@ -91,27 +97,35 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 <div>
                     <h3>{gettext('Header')}</h3>
 
-                    {
-                        state.profile.header.map((field) => (
-                            <div key={field.name}>
-                                <label>{field.name}</label>
-                                <div>{state.item[field.name]}</div>
-                            </div>
-                        )).toArray()
-                    }
+                    <AuthoringSection
+                        fields={state.profile.header}
+                        item={state.itemWithChanges}
+                        onChange={(itemChanged) => {
+                            const nextState: IStateLoaded = {
+                                ...state,
+                                itemWithChanges: itemChanged,
+                            };
+
+                            this.setState(nextState);
+                        }}
+                    />
                 </div>
 
                 <div>
                     <h3>{gettext('Content')}</h3>
 
-                    {
-                        state.profile.content.map((field) => (
-                            <div key={field.name}>
-                                <label>{field.name}</label>
-                                <div>{state.item[field.name]}</div>
-                            </div>
-                        )).toArray()
-                    }
+                    <AuthoringSection
+                        fields={state.profile.content}
+                        item={state.itemWithChanges}
+                        onChange={(itemChanged) => {
+                            const nextState: IStateLoaded = {
+                                ...state,
+                                itemWithChanges: itemChanged,
+                            };
+
+                            this.setState(nextState);
+                        }}
+                    />
                 </div>
 
             </div>
