@@ -203,3 +203,13 @@ export function getWeekDayIndex(weekday: IWeekday): number {
 export function isElasticDateFormat(date: string) {
     return date.startsWith('now+') || date.startsWith('now-');
 }
+
+export function isScrolledIntoViewVertically(element: HTMLElement, container: HTMLElement): boolean {
+    const elementTop = element.offsetTop;
+    const elementBottom = element.offsetTop + element.offsetHeight;
+
+    const topVisible = elementTop >= container.scrollTop;
+    const bottomVisible = elementBottom < container.scrollTop + container.offsetHeight;
+
+    return topVisible && bottomVisible;
+}
