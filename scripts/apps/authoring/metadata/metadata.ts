@@ -1330,7 +1330,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
             return this.fetchMetadataValues().then(() => {
                 const customVocabulariesForArticleHeader = this.cvs.filter(
-                    (cv) => (cv.items.length || !cv.hasOwnProperty('field_type')) &&
+                    (cv) => (cv.items.length || cv.field_type == null) &&
                         cv.service && (editor[cv._id] || schema[cv._id]),
                 );
 
