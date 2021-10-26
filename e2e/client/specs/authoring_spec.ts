@@ -636,22 +636,6 @@ describe('authoring', () => {
         expect(authoring.send_kill_button.isDisplayed()).toBeTruthy();
     });
 
-    it('after undo/redo save last version', () => {
-        monitoring.actionOnItem('Edit', 2, 0);
-        authoring.cleanBodyHtmlElement();
-        browser.sleep(2000);
-        authoring.writeText('one\ntwo\nthree');
-        browser.sleep(2000); // wait for autosave
-        authoring.backspaceBodyHtml(5);
-        browser.sleep(2000);
-        ctrlKey('z');
-        browser.sleep(1000);
-        authoring.save();
-        authoring.close();
-        monitoring.actionOnItem('Edit', 2, 0);
-        expect(authoring.getBodyText()).toBe('one\ntwo\nthree');
-    });
-
     it('can minimize story while a correction and kill is being written', () => {
         workspace.selectDesk('Politic Desk');
         expect(monitoring.getTextItem(3, 2)).toBe('item6');

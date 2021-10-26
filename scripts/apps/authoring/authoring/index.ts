@@ -96,8 +96,6 @@ angular.module('superdesk.apps.authoring', [
     .service('authoringWorkspace', svc.AuthoringWorkspaceService)
     .service('renditions', svc.RenditionsService)
 
-    .factory('history', svc.HistoryFactory)
-
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .directive('sdSendItem', directive.SendItem)

@@ -85,8 +85,6 @@ ArticleEditDirective.$inject = [
     '$filter',
     'superdesk',
     'session',
-    'history',
-    '$interpolate',
     'suggest',
     'renditions',
 ];
@@ -96,8 +94,6 @@ export function ArticleEditDirective(
     $filter,
     superdesk,
     session,
-    history,
-    $interpolate,
     suggest,
     renditions,
 ) {
