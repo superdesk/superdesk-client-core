@@ -978,6 +978,10 @@ declare module 'superdesk-api' {
         countLines?(plainText: string, lineLength: number): number;
     }
 
+    export interface IConfigurableAlgorithms {
+        countLines?(plainText: string, lineLength: number): number;
+    }
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;

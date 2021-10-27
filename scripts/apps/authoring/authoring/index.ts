@@ -266,7 +266,8 @@ angular.module('superdesk.apps.authoring', [
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) =>
                     authoring.itemActions(item).send && item.type !== 'composite'
-                    && appConfig?.features?.sendToPersonal,
+                    && appConfig?.features?.sendToPersonal
+                    && item.task?.desk != null,
                 ],
                 privileges: {send_to_personal: 1},
             })

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
@@ -234,6 +235,7 @@ class Editor3Directive {
                 this.$rootScope = $rootScope;
                 this.$scope = $scope;
                 this.svc = {};
+                this.limit = this.limit || null;
                 this.limitBehavior =
                     userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
                         pathValue || this.pathToValue
@@ -325,6 +327,17 @@ class Editor3Directive {
                 $scope.$watch('vm.readOnly', (val, old) => {
                     if (val !== old) {
                         store.dispatch(setReadOnly(val));
+                    }
+                });
+
+                // bind the directive limit attribute bi-directionally between Angular and Redux.
+                $scope.$watch('vm.limit', (val, old) => {
+                    // tslint:disable-next-line:triple-equals
+                    if (val != old) { // keep `!=` cause `!==` will trigger with null !== undefined
+                        store.dispatch(changeLimitConfig({
+                            chars: val,
+                            ui: this.limitBehavior,
+                        }));
                     }
                 });
 

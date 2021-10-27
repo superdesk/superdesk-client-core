@@ -3,6 +3,7 @@ import {
     getExcludeFacets,
     CORE_PROJECTED_FIELDS,
     DEFAULT_LIST_CONFIG,
+    UI_PROJECTED_FIELD_MAPPINGS,
 } from 'apps/search/constants';
 
 import _ from 'lodash';
@@ -889,18 +890,6 @@ export function SearchService($location, session, multi,
      * @description Returns the list of fields to be used in projections
      */
     this.getProjectedFields = function() {
-        const UI_PROJECTED_FIELD_MAPPINGS = {
-            wordcount: 'word_count',
-            takekey: 'anpa_take_key',
-            update: 'correction_sequence',
-            provider: 'ingest_provider',
-            category: 'anpa_category',
-            versioncreator: 'version_creator',
-            markedDesks: 'marked_desks',
-            queueError: 'error_message',
-            used: ['used', 'used_updated', 'used_count'],
-        };
-
         const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
         const uiFields = [
