@@ -1,7 +1,9 @@
-import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
+import {
+    isNull, isUndefined, find, filter, keys, findIndex,
+    defer, sortBy, map, forEach, startsWith, flatMap} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getReadOnlyLabel} from './ArticleEditDirective';
 import {translateArticleType, gettext} from 'core/utils';
@@ -51,6 +53,11 @@ export function AuthoringHeaderDirective(
                 'countries',
                 'label',
             ];
+
+            scope.previewFields = flatMap(
+                Object.values(extensions),
+                (extension) => extension.activationResult?.contributions?.authoringHeaderComponents ?? [],
+            );
 
             scope.isCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault == null
                 ? false :
