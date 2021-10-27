@@ -890,8 +890,6 @@ export function SearchService($location, session, multi,
      * @description Returns the list of fields to be used in projections
      */
     this.getProjectedFields = function() {
-        
-
         const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
         const uiFields = [

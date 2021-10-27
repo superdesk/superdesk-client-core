@@ -275,7 +275,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                     />
                 )}
 
-                {has('undo') &&
+                {has('undo') && (
                     <IconButton
                         onClick={() => {
                             this.props.dispatch(undo());
@@ -283,9 +283,9 @@ class ToolbarComponent extends React.Component<any, IState> {
                         tooltip={gettext('Undo') + ' (ctrl + z)'}
                         iconName="undo"
                     />
-                }
+                )}
 
-                {has('redo') &&
+                {has('redo') && (
                     <IconButton
                         onClick={() => {
                             this.props.dispatch(redo());
@@ -293,7 +293,7 @@ class ToolbarComponent extends React.Component<any, IState> {
                         tooltip={gettext('Redo') + ' (ctrl + y)'}
                         iconName="redo"
                     />
-                }
+                )}
 
                 <ToolbarPopup
                     type={popup.type}

@@ -2,8 +2,6 @@ import {
     EditorState,
     Modifier,
     SelectionState,
-    DraftEditorCommand,
-    RichUtils,
 } from 'draft-js';
 import {getEditorFieldCharactersCount} from 'apps/authoring/authoring/components/CharacterCount';
 import getFragmentFromSelection from 'draft-js/lib/getFragmentFromSelection';
