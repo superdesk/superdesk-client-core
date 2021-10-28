@@ -1106,7 +1106,7 @@ class Authoring {
 
         this.getArticleHeadlineOfBoard = function(index) {
             return this.getBoardArticle(index)
-                .all(by.css('.headline .medium-editor-element:not(.clone)'))
+                .all(by.css('.headline [contenteditable]'))
                 .first()
                 .getText();
         };
