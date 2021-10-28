@@ -10,7 +10,9 @@ function SuperdeskFlagsService() {
         notifications: false,
     };
 
-    angular.extend(this.flags, appConfig.ui);
+    Object.keys(appConfig.ui).filter((key) => key !== 'authoring').forEach((key) => {
+        this.flags[key] = appConfig.ui[key];
+    });
 }
 
 /**

@@ -184,3 +184,25 @@ export const CORE_PROJECTED_FIELDS = {
         'schedule_settings',
     ],
 };
+
+/**
+ * Mappings of UI fields to schema fields for projection
+ */
+export const UI_PROJECTED_FIELD_MAPPINGS = {
+    priority: 'priority',
+    urgency: 'urgency',
+    wordcount: 'word_count',
+    slugline: 'slugline',
+    headline: 'headline',
+    profile: 'profile',
+    signal: 'signal',
+    takekey: 'anpa_take_key',
+    update: 'correction_sequence',
+    provider: 'ingest_provider',
+    category: 'anpa_category',
+    versioncreator: 'version_creator',
+    versioncreated: 'versioncreated',
+    markedDesks: 'marked_desks',
+    queueError: 'error_message',
+    used: ['used', 'used_updated', 'used_count'],
+};

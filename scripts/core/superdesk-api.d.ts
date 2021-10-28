@@ -978,6 +978,10 @@ declare module 'superdesk-api' {
         countLines?(plainText: string, lineLength: number): number;
     }
 
+    export interface IConfigurableAlgorithms {
+        countLines?(plainText: string, lineLength: number): number;
+    }
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
@@ -1867,6 +1871,10 @@ declare module 'superdesk-api' {
         oidc_auth: any;
         keycloak_config: any;
 
+        /**
+         * Enable autocomplete for supported text fields in authoring.
+         * Values of published items are used for autocomplete suggestions.
+         */
         archive_autocomplete: boolean;
 
         /** allow updates for items which aren't published yet */

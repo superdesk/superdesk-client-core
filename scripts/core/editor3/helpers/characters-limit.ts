@@ -2,8 +2,6 @@ import {
     EditorState,
     Modifier,
     SelectionState,
-    DraftEditorCommand,
-    RichUtils,
 } from 'draft-js';
 import {getEditorFieldCharactersCount} from 'apps/authoring/authoring/components/CharacterCount';
 import getFragmentFromSelection from 'draft-js/lib/getFragmentFromSelection';
@@ -39,6 +37,7 @@ function getLengthOfSelectedText(editorState: EditorState) {
 }
 
 function clearOverflowInlineStyles(editorState: EditorState) {
+    const restoreSelection = editorState.getSelection();
     const blockMap = editorState.getCurrentContent().getBlockMap();
 
     // clear inline style from all text
@@ -53,16 +52,20 @@ function clearOverflowInlineStyles(editorState: EditorState) {
         LIMIT_CHARACTERS_OVERFLOW_STYLE,
     );
 
-    let newEditorState = EditorState.push(
-        editorState,
+    let newEditorState = EditorState.set(editorState, {allowUndo: false});
+
+    newEditorState = EditorState.push(
+        newEditorState,
         newContentState,
         'change-inline-style',
     );
+    newEditorState = EditorState.forceSelection(newEditorState, restoreSelection);
+    newEditorState = EditorState.set(newEditorState, {allowUndo: true});
 
     return newEditorState;
 }
 
-function insertOverflowInlineStyles(
+function insertStyles(
     editorState: EditorState,
     overflow: number,
 ) {
@@ -120,7 +123,7 @@ function insertOverflowInlineStyles(
     return newEditorState;
 }
 
-export function handleOverflowHighlights(
+function insertOverflowInlineStyles(
     editorState: EditorState,
     limit: number,
 ): EditorState {
@@ -134,17 +137,28 @@ export function handleOverflowHighlights(
     const overflow = length - limit;
     const reachedLimit = overflow > 0;
 
+    if (!reachedLimit) {
+        return editorState;
+    }
+
     let newEditorState = EditorState.set(editorState, {allowUndo: false});
 
-    newEditorState = clearOverflowInlineStyles(newEditorState);
-    if (reachedLimit) {
-        newEditorState = insertOverflowInlineStyles(newEditorState, overflow);
-    }
+    newEditorState = insertStyles(newEditorState, overflow);
     newEditorState = EditorState.forceSelection(
         newEditorState,
         restoreSelection,
     );
     newEditorState = EditorState.set(newEditorState, {allowUndo: true});
+
+    return newEditorState;
+}
+
+export function handleOverflowHighlights(editorState: EditorState, limit: number | null) {
+    let newEditorState = clearOverflowInlineStyles(editorState);
+
+    if (limit) {
+        newEditorState = insertOverflowInlineStyles(newEditorState, limit);
+    }
 
     return newEditorState;
 }
