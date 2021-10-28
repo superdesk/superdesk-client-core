@@ -552,8 +552,15 @@ describe('authoring', () => {
         expect(authoring.getInnerDropdownItemVersions(1).count()).toBe(2);
         authoring.openItemVersionInBoard(1, 0);
         expect(authoring.getInnerDropdownItemVersions(0).count()).toBe(1);
-        expect(authoring.getHtmlArticleHeadlineOfBoard(0)).toContain(
-            '<span>item5 updated</span><ins style="background:#e6ffe6;"> newly</ins>',
+        expect(
+            authoring.getHtmlArticleHeadlineOfBoard(0).then((text) => {
+                return text
+                    .replace(/ data-text="true"/g, '')
+                    .replace(/ data-offset-key=".+?"/g, '');
+            }),
+        ).toContain(
+            '<span>item5 updated</span></span>'
+            + '<span style="background-color: rgb(230, 255, 230);"><span> newly</span></span>',
         );
         expect(authoring.getArticleHeadlineOfBoard(1)).toEqual('item5 updated');
     });

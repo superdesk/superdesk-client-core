@@ -252,7 +252,15 @@ class Editor3Directive {
                             'insert-characters',
                         );
 
-                        store.dispatch(changeEditorState(editorState));
+                        /**
+                         * `onChange` handler needs to be skipped, because it is converting
+                         * `editorState` to text or HTML and removes diff markup in the process.
+                         * It then writes the result to item field and this triggers
+                         * this exact watch with `newValue` without diff markup.
+                         */
+                        const skipOnChangeHandler = true;
+
+                        store.dispatch(changeEditorState(editorState, false, skipOnChangeHandler));
                     });
                 }
 
