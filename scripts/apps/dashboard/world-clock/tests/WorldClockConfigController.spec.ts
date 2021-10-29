@@ -11,6 +11,7 @@ describe('WorldClockConfigController', () => {
 
     beforeEach(window.module('superdesk.apps.dashboard.world-clock'));
     beforeEach(window.module('superdesk.apps.searchProviders'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
 
     beforeEach(inject(($controller, $rootScope, $q) => {
         scope = $rootScope.$new();

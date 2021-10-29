@@ -85,8 +85,6 @@ ArticleEditDirective.$inject = [
     '$filter',
     'superdesk',
     'session',
-    'history',
-    '$interpolate',
     'suggest',
     'renditions',
 ];
@@ -96,8 +94,6 @@ export function ArticleEditDirective(
     $filter,
     superdesk,
     session,
-    history,
-    $interpolate,
     suggest,
     renditions,
 ) {
@@ -414,6 +410,8 @@ export function ArticleEditDirective(
                         mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
                     }
+
+                    scope.refresh(); // reload footer editorState from HTML that was set here
 
                     // first option should always be selected, as multiple helplines could be added in footer
                     _.defer(() => {

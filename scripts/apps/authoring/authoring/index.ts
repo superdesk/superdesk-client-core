@@ -97,8 +97,6 @@ angular.module('superdesk.apps.authoring', [
     .service('authoringWorkspace', svc.AuthoringWorkspaceService)
     .service('renditions', svc.RenditionsService)
 
-    .factory('history', svc.HistoryFactory)
-
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .directive('sdSendItem', directive.SendItem)
@@ -269,7 +267,8 @@ angular.module('superdesk.apps.authoring', [
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) =>
                     authoring.itemActions(item).send && item.type !== 'composite'
-                    && appConfig?.features?.sendToPersonal,
+                    && appConfig?.features?.sendToPersonal
+                    && item.task?.desk != null,
                 ],
                 privileges: {send_to_personal: 1},
             })
