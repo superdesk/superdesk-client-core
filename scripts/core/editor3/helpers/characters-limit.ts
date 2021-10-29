@@ -37,6 +37,18 @@ function getLengthOfSelectedText(editorState: EditorState) {
 }
 
 function clearOverflowInlineStyles(editorState: EditorState) {
+    const hasOverflowsMarked = editorState.getCurrentContent().getBlocksAsArray().some(
+        (block) => {
+            return new Array(block.getLength()).fill(null).some(
+                (_, i) => block.getInlineStyleAt(i).has(LIMIT_CHARACTERS_OVERFLOW_STYLE),
+            );
+        },
+    );
+
+    if (hasOverflowsMarked === false) {
+        return editorState;
+    }
+
     const restoreSelection = editorState.getSelection();
     const blockMap = editorState.getCurrentContent().getBlockMap();
 
