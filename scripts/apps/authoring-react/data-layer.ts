@@ -1,6 +1,8 @@
 import {OrderedMap} from 'immutable';
 import {IArticle} from 'superdesk-api';
 import ng from 'core/services/ng';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {dataApi} from 'core/helpers/CrudManager';
 
 interface IFieldBase {
     id: string;
@@ -24,7 +26,7 @@ export interface IContentProfileV2 {
     content: IFieldsV2;
 }
 
-export function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
+function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
     interface IFakeScope {
         schema: any;
         editor: any;
@@ -71,3 +73,27 @@ export function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
         return profile;
     });
 }
+
+interface IAuthoringStorage {
+    getArticle(id: string): Promise<IArticle>;
+    saveArticle(id: string, etag: string, diff: Partial<IArticle>): Promise<IArticle>;
+    getContentProfile(item: IArticle): Promise<IContentProfileV2>;
+}
+
+export const authoringStorage: IAuthoringStorage = {
+    getArticle: (id) => {
+        // TODO: take published items into account
+        return dataApi.findOne<IArticle>('archive', id);
+    },
+    saveArticle: (id, etag, diff) => {
+        return httpRequestJsonLocal<IArticle>({
+            method: 'PATCH',
+            path: `/archive/${id}`,
+            payload: diff,
+            headers: {
+                'If-Match': etag,
+            },
+        });
+    },
+    getContentProfile,
+};

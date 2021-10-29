@@ -1,9 +1,9 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {Button} from 'superdesk-ui-framework';
+import {Button, Loader} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
-import {dataApi} from 'core/helpers/CrudManager';
-import {getContentProfile, IContentProfileV2} from './data-layer';
+import {generatePatch} from 'core/helpers/CrudManager';
+import {IContentProfileV2, authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section';
 
 interface IProps {
@@ -12,13 +12,18 @@ interface IProps {
 }
 
 interface IStateLoaded {
-    loading: false;
+    initialized: true;
     itemOriginal: IArticle;
     itemWithChanges: IArticle;
     profile: IContentProfileV2;
+
+    /**
+     * Prevents changes to state while async operation is in progress(e.g. saving).
+     */
+    loading: boolean;
 }
 
-type IState = {loading: true} | IStateLoaded;
+type IState = {initialized: false} | IStateLoaded;
 
 function waitForCssAnimation(): Promise<void> {
     return new Promise((resolve) => {
@@ -26,32 +31,49 @@ function waitForCssAnimation(): Promise<void> {
             () => {
                 resolve();
             },
-
-            // transition time taken from styles/sass/layouts.scss #authoring-container
-            500,
+            500, // transition time taken from styles/sass/layouts.scss #authoring-container
         );
     });
 }
-
-function fetchArticle(id: IArticle['_id']): Promise<IArticle> {
-    // TODO: take published items into account
-    return dataApi.findOne<IArticle>('archive', id);
-}
-
 export class AuthoringReact extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
         this.state = {
-            loading: true,
+            initialized: false,
+        };
+
+        this.save = this.save.bind(this);
+
+        const setStateOriginal = this.setState.bind(this);
+
+        this.setState = (...args) => {
+            const {state} = this;
+
+            // disallow changing state while loading (for example when saving is in progress)
+            const allow: boolean = (() => {
+                if (state.initialized !== true) {
+                    return true;
+                } else if (args[0]['loading'] === false) {
+                    // it is allowed to change state while loading
+                    // only if it sets loading to false
+                    return true;
+                } else {
+                    return state.loading === false;
+                }
+            })();
+
+            if (allow) {
+                setStateOriginal(...args);
+            }
         };
     }
 
     componentDidMount() {
         Promise.all(
             [
-                fetchArticle(this.props.itemId).then((item) => {
-                    return getContentProfile(item).then((profile) => {
+                authoringStorage.getArticle(this.props.itemId).then((item) => {
+                    return authoringStorage.getContentProfile(item).then((profile) => {
                         return {item, profile};
                     });
                 }),
@@ -61,6 +83,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             const [{item, profile}] = res;
 
             const nextState: IStateLoaded = {
+                initialized: true,
                 loading: false,
                 itemOriginal: Object.freeze(item),
                 itemWithChanges: item,
@@ -71,15 +94,43 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         });
     }
 
+    save(state: IStateLoaded) {
+        const original = state.itemOriginal;
+        const patch = generatePatch(original, state.itemWithChanges);
+
+        this.setState({
+            ...state,
+            loading: true,
+        });
+
+        authoringStorage.saveArticle(original._id, original._etag, patch).then((item: IArticle) => {
+            const nextState: IStateLoaded = {
+                ...state,
+                loading: false,
+                itemOriginal: Object.freeze(item),
+                itemWithChanges: item,
+            };
+
+            this.setState(nextState);
+        });
+    }
+
     render() {
         const state = this.state;
 
-        if (state.loading === true) {
+        if (state.initialized !== true) {
             return null;
         }
 
         return (
             <div className="sd-authoring-react">
+
+                {
+                    state.loading && (
+                        <Loader overlay />
+                    )
+                }
+
                 <div>
                     <h3>{gettext('Toolbar')}</h3>
 
@@ -87,6 +138,13 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         text={gettext('Close')}
                         onClick={() => {
                             this.props.onClose();
+                        }}
+                    />
+
+                    <Button
+                        text={gettext('Save')}
+                        onClick={() => {
+                            this.save(state);
                         }}
                     />
 
