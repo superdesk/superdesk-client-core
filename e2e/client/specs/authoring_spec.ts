@@ -42,61 +42,7 @@ describe('authoring', () => {
         monitoring.openMonitoring();
     });
 
-    it('add an embed and respect the order', () => {
-        // try with same block content
-        monitoring.actionOnItem('Edit', 2, 0);
-        authoring.cleanBodyHtmlElement();
-        authoring.writeText('line\n');
-        authoring.addEmbed('embed');
-        var thirdBlockContext = element(by.model('item.body_html')).all(by.repeater('block in vm.blocks')).get(2);
-
-        thirdBlockContext.all(by.css('.editor-type-html')).first().sendKeys('line\n');
-        authoring.addEmbed('embed', thirdBlockContext);
-        authoring.blockContains(0, 'line');
-        authoring.blockContains(1, 'embed');
-        authoring.blockContains(2, 'line');
-        authoring.blockContains(3, 'embed');
-        authoring.close();
-        authoring.ignore();
-        // with different block content
-        monitoring.actionOnItem('Edit', 2, 0);
-        authoring.cleanBodyHtmlElement();
-        function generateLines(from, to) {
-            var lines = '';
-
-            for (var j = from; j < to; j++) {
-                lines += 'line ' + j + '\n';
-            }
-            return lines;
-        }
-        var body1 = generateLines(0, 8);
-        var body2 = generateLines(8, 15);
-        var body3 = generateLines(15, 20);
-
-        authoring.writeText(body1 + body2 + body3.trim());
-        authoring.writeText(
-            protractor.Key.HOME +
-            protractor.Key.UP.repeat(4) +
-            protractor.Key.ENTER +
-            protractor.Key.UP,
-        );
-
-        authoring.addEmbed('Embed at position 15');
-        authoring.blockContains(0, (body1 + body2).replace(/\n$/, ''));
-        authoring.blockContains(2, body3.replace(/\n$/, ''));
-        authoring.writeText(
-            protractor.Key.UP.repeat(7) +
-            protractor.Key.ENTER,
-        );
-        authoring.addEmbed('Embed at position 8');
-        authoring.blockContains(0, body1.replace(/\n$/, ''));
-        authoring.blockContains(2, body2.replace(/\n$/, ''));
-        authoring.blockContains(4, body3.replace(/\n$/, ''));
-    });
-
-    it('authoring operations', () => {
-        // undo and redo operations by using CTRL+Z and CTRL+y ...
-        // ... from a new item
+    it('can undo and redo', () => {
         authoring.createTextItem();
         browser.sleep(1000);
         authoring.writeText('to be undone');
@@ -106,38 +52,9 @@ describe('authoring', () => {
         expect(authoring.getBodyText()).toBe('');
         ctrlKey('y');
         expect(authoring.getBodyText()).toBe('to be undone');
-        authoring.writeText(protractor.Key.HOME + protractor.Key.ENTER + protractor.Key.UP);
-        authoring.addEmbed('Embed');
-        authoring.blockContains(1, 'Embed');
-        authoring.blockContains(2, 'to be undone');
-        commandKey('z');
-        authoring.blockContains(0, 'to be undone');
-        commandKey('y');
-        authoring.blockContains(1, 'Embed');
-        authoring.blockContains(2, 'to be undone');
+    });
 
-        authoring.cutBlock(1);
-        authoring.blockContains(0, 'to be undone');
-        ctrlKey('z');
-        authoring.blockContains(1, 'Embed');
-        authoring.blockContains(2, 'to be undone');
-        authoring.close();
-        authoring.ignore();
-        // ... from an existing item
-        expect(monitoring.getTextItem(2, 0)).toBe('item5');
-        monitoring.actionOnItem('Edit', 2, 0);
-        expect(authoring.getBodyText()).toBe('item5 text');
-        authoring.writeText(' Two');
-        expect(authoring.getBodyText()).toBe('item5 text Two');
-        authoring.writeText(' Words');
-        expect(authoring.getBodyText()).toBe('item5 text Two Words');
-        ctrlKey('z');
-        expect(authoring.getBodyText()).toBe('item5 text Two');
-        ctrlKey('y');
-        expect(authoring.getBodyText()).toBe('item5 text Two Words');
-        authoring.save();
-        authoring.close();
-
+    it('authoring operations', () => {
         // allows to create a new empty package
         monitoring.createItemAction('create_package');
         expect(element(by.className('packaging-screen')).isDisplayed()).toBe(true);
