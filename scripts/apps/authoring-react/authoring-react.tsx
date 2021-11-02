@@ -2,7 +2,6 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {Button, Loader} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
-import {generatePatch} from 'core/helpers/CrudManager';
 import {IContentProfileV2, authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section';
 
@@ -95,15 +94,12 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     save(state: IStateLoaded) {
-        const original = state.itemOriginal;
-        const patch = generatePatch(original, state.itemWithChanges);
-
         this.setState({
             ...state,
             loading: true,
         });
 
-        authoringStorage.saveArticle(original._id, original._etag, patch).then((item: IArticle) => {
+        authoringStorage.saveArticle(state.itemWithChanges, state.itemOriginal).then((item: IArticle) => {
             const nextState: IStateLoaded = {
                 ...state,
                 loading: false,

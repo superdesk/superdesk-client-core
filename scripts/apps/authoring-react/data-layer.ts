@@ -3,6 +3,9 @@ import {IArticle} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {dataApi} from 'core/helpers/CrudManager';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {generatePatch} from 'core/patch';
+import {appConfig} from 'appConfig';
 
 interface IFieldBase {
     id: string;
@@ -76,7 +79,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
 interface IAuthoringStorage {
     getArticle(id: string): Promise<IArticle>;
-    saveArticle(id: string, etag: string, diff: Partial<IArticle>): Promise<IArticle>;
+    saveArticle(current: IArticle, original: IArticle): Promise<IArticle>;
     unlockArticle(id: string): Promise<void>;
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
 }
@@ -86,14 +89,29 @@ export const authoringStorage: IAuthoringStorage = {
         // TODO: take published items into account
         return dataApi.findOne<IArticle>('archive', id);
     },
-    saveArticle: (id, etag, diff) => {
-        return httpRequestJsonLocal<IArticle>({
-            method: 'PATCH',
-            path: `/archive/${id}`,
-            payload: diff,
-            headers: {
-                'If-Match': etag,
-            },
+    saveArticle: (current, original) => {
+        return authoringApiCommon.saveBefore(current, original).then((_current) => {
+            const id = original._id;
+            const etag = original._etag;
+
+            const diff = generatePatch(original, _current);
+
+            const queryString = appConfig.features.publishFromPersonal === true
+                ? '?publish_from_personal=true'
+                : '';
+
+            return httpRequestJsonLocal<IArticle>({
+                method: 'PATCH',
+                path: `/archive/${id}${queryString}`,
+                payload: diff,
+                headers: {
+                    'If-Match': etag,
+                },
+            }).then((next) => {
+                authoringApiCommon.saveAfter(next, original);
+
+                return next;
+            });
         });
     },
     getContentProfile,

@@ -13,7 +13,7 @@ import {IPublishedArticle, IArticle, IExtensionActivationResult} from 'superdesk
 import {getPublishWarningConfirmModal} from '../components/publish-warning-confirm-modal';
 import {applyMiddleware as coreApplyMiddleware} from 'core/middleware';
 import {onChangeMiddleware} from '../index';
-import {dataApi} from 'core/helpers/CrudManager';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promise<IArticle> {
     return coreApplyMiddleware(onChangeMiddleware, {item: item, original: orig}, 'item')
@@ -32,7 +32,6 @@ export function runBeforeUpdateMiddlware(item: IArticle, orig: IArticle): Promis
                             ),
                             Promise.resolve(item),
                         )
-                        .then((nextItem) => angular.extend(item, nextItem))
             );
         });
 }
@@ -591,8 +590,10 @@ export function AuthoringService(
      * @param {Object} origItem
      * @param {Object} item
      */
-    this.save = function saveAuthoring(origItem, _item) {
-        return runBeforeUpdateMiddlware(_item, origItem).then((item: IArticle) => {
+    this.save = function saveAuthoring(origItem: IArticle, _item: IArticle) {
+        return authoringApiCommon.saveBefore(_item, origItem).then((item: IArticle) => {
+            angular.extend(_item, item);
+
             var diff = helpers.extendItem({}, item);
             // Finding if all the keys are dirty for real
 
@@ -621,9 +622,14 @@ export function AuthoringService(
             helpers.filterDefaultValues(diff, origItem);
 
             if (_.size(diff) > 0) {
-                return api.save('archive', origItem, diff, {},
-                    {publish_from_personal: publishFromPersonal}).then((__item) => {
-                    runAfterUpdateEvent(origItem, __item);
+                return api.save(
+                    'archive',
+                    origItem,
+                    diff,
+                    {},
+                    {publish_from_personal: publishFromPersonal}, // DUPLICATED IN authoring-react/data-layer.ts
+                ).then((__item) => {
+                    authoringApiCommon.saveAfter(__item, origItem);
 
                     if (origItem.type === 'picture') {
                         item._etag = __item._etag;
