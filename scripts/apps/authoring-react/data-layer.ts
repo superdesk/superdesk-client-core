@@ -77,6 +77,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 interface IAuthoringStorage {
     getArticle(id: string): Promise<IArticle>;
     saveArticle(id: string, etag: string, diff: Partial<IArticle>): Promise<IArticle>;
+    unlockArticle(id: string): Promise<void>;
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
 }
 
@@ -96,4 +97,11 @@ export const authoringStorage: IAuthoringStorage = {
         });
     },
     getContentProfile,
+    unlockArticle: (id) => {
+        return httpRequestJsonLocal<void>({
+            method: 'POST',
+            payload: {},
+            path: `/archive/${id}/unlock`,
+        });
+    },
 };

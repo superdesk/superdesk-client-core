@@ -137,7 +137,14 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                     <Button
                         text={gettext('Close')}
                         onClick={() => {
-                            this.props.onClose();
+                            this.setState({
+                                ...state,
+                                loading: true,
+                            });
+
+                            authoringStorage.unlockArticle(state.itemOriginal._id).then(() => {
+                                this.props.onClose();
+                            });
                         }}
                     />
 
