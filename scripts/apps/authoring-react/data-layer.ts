@@ -54,7 +54,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
         for (const editorItem of editorOrdered) {
             const field: IAuthoringFieldV2 = {
-                id: editorItem.name ?? 'hmtl',
+                id: editorItem.name,
                 type: 'text',
             };
 
