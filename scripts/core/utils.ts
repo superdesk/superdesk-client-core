@@ -3,6 +3,7 @@ import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {appConfig} from 'appConfig';
+import {isObject} from 'lodash';
 
 export type IScopeApply = (fn: () => void) => void;
 
@@ -212,4 +213,21 @@ export function isScrolledIntoViewVertically(element: HTMLElement, container: HT
     const bottomVisible = elementBottom < container.scrollTop + container.offsetHeight;
 
     return topVisible && bottomVisible;
+}
+
+/**
+ * Note: `{a: false}` will be converted to '?a=false'.
+ * If you need to exclude keys when value is `false`,
+ * do so before passing the object to this function.
+ */
+export function toQueryString(
+    params: {}, // key value pairs e.g. {}
+): string {
+    if (Object.keys(params).length < 1) {
+        return '';
+    }
+
+    return '?' + Object.keys(params).map((key) =>
+        `${key}=${isObject(params[key]) ? JSON.stringify(params[key]) : encodeURIComponent(params[key])}`,
+    ).join('&');
 }
