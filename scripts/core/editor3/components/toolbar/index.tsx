@@ -56,7 +56,7 @@ class ToolbarComponent extends React.Component<any, IState> {
             width: 'auto',
         };
 
-        if (!this.props.editorNode?.current || !this.toolbarNode.current) {
+        if (this.props.editorNode?.current == null || this.toolbarNode?.current == null) {
             return defaultState;
         }
 
