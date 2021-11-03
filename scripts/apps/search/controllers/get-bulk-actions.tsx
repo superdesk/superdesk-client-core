@@ -12,6 +12,7 @@ import {showModal} from 'core/services/modalService';
 import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
 import {dataApi} from 'core/helpers/CrudManager';
 import {appConfig} from 'appConfig';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 
 export function getBulkActions(
     articles: Array<IArticle>,
@@ -254,7 +255,7 @@ export function getBulkActions(
                 Promise.all(
                     ids.map((id) => dataApi.findOne<IArticle>('archive', id)),
                 ).then((res: Array<IArticle>) => {
-                    dispatchInternalEvent('openFullPreview', res);
+                    previewItems(res);
                 });
             },
             canAutocloseMultiActionBar: false,

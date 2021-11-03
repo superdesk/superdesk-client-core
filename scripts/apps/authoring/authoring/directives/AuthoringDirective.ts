@@ -20,6 +20,7 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isMediaType} from 'core/helpers/item';
 import {confirmPublish} from '../services/quick-publish-modal';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 
 /**
  * @ngdoc directive
@@ -165,7 +166,6 @@ export function AuthoringDirective(
 
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
-            $scope.fullPreview = false;
             $scope.proofread = false;
             $scope.referrerUrl = referrer.getReferrerUrl();
             $scope.gettext = gettext;
@@ -301,12 +301,8 @@ export function AuthoringDirective(
             $scope.openFullPreview = function($event) {
                 if ($event.button === 0 && !$event.ctrlKey) {
                     $event.preventDefault();
-                    $scope.fullPreview = true;
+                    previewItems([$scope.item]);
                 }
-            };
-
-            $scope.closeFullPreview = function() {
-                $scope.fullPreview = false;
             };
 
             /**

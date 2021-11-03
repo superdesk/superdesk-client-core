@@ -27,14 +27,6 @@
     <div sd-item-preview-container></div>
 
     <div ng-if="itemsForExport != null" sd-export></div>
-
-    <div
-        ng-if="fullPreviewItems.length > 0"
-        sd-full-preview
-        data-items="fullPreviewItems"
-        data-close-action="closeFullPreview"
-    ></div>
-
 </div>
 
 <div id="main-container" ng-class="superdesk.flags" ng-if="popup">
