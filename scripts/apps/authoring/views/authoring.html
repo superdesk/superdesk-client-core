@@ -18,13 +18,6 @@
         
                         <div class="authoring-sticky__theme-controls ">
                             <div class="preview-modal-control" ng-if="$root.config.features.preview">
-                                <div
-                                    sd-full-preview
-                                    ng-if="fullPreview"
-                                    data-items="[item]"
-                                    data-close-action="closeFullPreview"
-                                ></div>
-         
                                 <button class="preview-toggle icn-btn"
                                     ng-if="canPrintPreview(item)"
                                     title="{{:: 'Preview' | translate}}"

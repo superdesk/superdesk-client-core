@@ -65,19 +65,6 @@ angular.module('superdesk.core.menu', [
                 $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
             });
 
-            // full preview
-
-            $scope.fullPreviewItems = [];
-
-            $scope.closeFullPreview = () => {
-                $scope.fullPreviewItems = [];
-            };
-
-            const removeMultiPreviewEventListener = addInternalEventListener('openFullPreview', (event) => {
-                $scope.fullPreviewItems = event.detail;
-                $scope.$apply();
-            });
-
             $scope.itemsForExport = null;
 
             /**
@@ -100,7 +87,6 @@ angular.module('superdesk.core.menu', [
 
             // remove listeners
             $scope.$on('$destroy', () => {
-                removeMultiPreviewEventListener();
                 removeOpenExportListener();
             });
         }
