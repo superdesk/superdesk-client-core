@@ -6,20 +6,24 @@ import {dataApi} from 'core/helpers/CrudManager';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import {generatePatch} from 'core/patch';
 import {appConfig} from 'appConfig';
+import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 
 interface IFieldBase {
     id: string;
+    name: string;
 }
 
 interface IFieldText extends IFieldBase {
     type: 'text';
 }
 
-interface IFieldDropdown extends IFieldBase {
-    type: 'dropdown';
+interface IFieldFromExtension extends IFieldBase {
+    type: 'from-extension';
+    extension_field_type: string;
+    extension_field_config: any;
 }
 
-export type IAuthoringFieldV2 = IFieldText | IFieldDropdown;
+export type IAuthoringFieldV2 = IFieldText | IFieldFromExtension;
 
 export type IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>;
 
@@ -38,30 +42,67 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
     let fakeScope: Partial<IFakeScope> = {};
 
-    /**
-     * !!! The use of `setupAuthoring` outside of angular is experimental.
-     * I'm only using for getting some test data on the screen.
-     */
-    return ng.get('content').setupAuthoring(item.profile, fakeScope, item).then(() => {
-        const {editor} = fakeScope;
-        const editorOrdered =
+    return Promise.all([
+        getLabelNameResolver(),
+        ng.get('content').setupAuthoring(item.profile, fakeScope, item),
+    ]).then((res) => {
+        const [getLabelForFieldId] = res;
+
+        const {editor, fields} = fakeScope;
+
+        const fieldsOrdered =
             Object.keys(editor)
-                .map((key) => ({...editor[key], name: key}))
-                .sort((a, b) => a.order - b.order);
+                .map((key) => {
+                    const result: {fieldId: string, editorItem: any} =
+                        {
+                            fieldId: key,
+                            editorItem: editor[key],
+                        };
+
+                    return result;
+                })
+                .sort((a, b) => a.editorItem.order - b.editorItem.order);
 
         let headerFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
         let contentFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
 
-        for (const editorItem of editorOrdered) {
-            const field: IAuthoringFieldV2 = {
-                id: editorItem.name,
-                type: 'text',
-            };
+        for (const {fieldId, editorItem} of fieldsOrdered) {
+            const field = fields.find(({_id}) => _id === fieldId);
+
+            const fieldV2: IAuthoringFieldV2 = (() => {
+                if (field == null) {
+                    const result: IAuthoringFieldV2 = {
+                        id: fieldId,
+                        name: getLabelForFieldId(fieldId),
+                        type: 'text',
+                    };
+
+                    return result;
+                } else if (field.field_type === 'custom') {
+                    const result: IAuthoringFieldV2 = {
+                        id: fieldId,
+                        name: getLabelForFieldId(fieldId),
+                        type: 'from-extension',
+                        extension_field_type: field.custom_field_type,
+                        extension_field_config: field.custom_field_config,
+                    };
+
+                    return result;
+                } else {
+                    const result: IAuthoringFieldV2 = {
+                        id: fieldId,
+                        name: getLabelForFieldId(fieldId),
+                        type: 'text',
+                    };
+
+                    return result;
+                }
+            })();
 
             if (editorItem.section === 'header') {
-                headerFields = headerFields.set(field.id, field);
+                headerFields = headerFields.set(fieldV2.id, fieldV2);
             } else if (editorItem.section === 'content') {
-                contentFields = contentFields.set(field.id, field);
+                contentFields = contentFields.set(fieldV2.id, fieldV2);
             } else {
                 throw new Error('invalid section');
             }

@@ -3,6 +3,7 @@ import {IFieldsV2} from './data-layer';
 import {IArticle} from 'superdesk-api';
 import {FieldText} from './fields/field-text';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {getField} from 'apps/fields';
 
 interface IProps {
     fields: IFieldsV2;
@@ -19,16 +20,13 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                 {
                     fields.map((field) => (
                         <div key={field.id}>
-                            <h4>{field.id}</h4>
+                            <h4>{field.name}</h4>
 
                             {(() => {
-                                const {type} = field;
-
-                                switch (type) {
-                                case 'text':
+                                if (field.type === 'text') {
                                     return (
                                         <FieldText
-                                            value={this.props.item[field.id]}
+                                            value={this.props.item[field.id] ?? ''}
                                             onChange={(valueChanged) => {
                                                 this.props.onChange({
                                                     ...item,
@@ -37,21 +35,28 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                             }}
                                         />
                                     );
+                                } else if (field.type === 'from-extension') {
+                                    const FieldType = getField(field.extension_field_type);
 
-                                case 'dropdown':
                                     return (
-                                        <FieldText
-                                            value={this.props.item[field.id]}
-                                            onChange={(valueChanged) => {
+                                        <FieldType.editorComponent
+                                            item={this.props.item}
+                                            value={this.props.item?.extra?.[field.id]}
+                                            setValue={(valueChanged) => {
                                                 this.props.onChange({
                                                     ...item,
-                                                    [field.id]: valueChanged,
+                                                    extra: {
+                                                        ...(item.extra ?? {}),
+                                                        [field.id]: valueChanged,
+                                                    },
                                                 });
                                             }}
+                                            readOnly={false}
+                                            config={field.extension_field_config}
                                         />
                                     );
-                                default:
-                                    return assertNever(type);
+                                } else {
+                                    return assertNever(field);
                                 }
                             })()}
                         </div>
