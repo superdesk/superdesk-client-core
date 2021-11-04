@@ -4,6 +4,7 @@ import {Button, Loader} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {IContentProfileV2, authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -132,6 +133,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
                     <Button
                         text={gettext('Close')}
+                        style="hollow"
                         onClick={() => {
                             this.setState({
                                 ...state,
@@ -146,8 +148,19 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
                     <Button
                         text={gettext('Save')}
+                        style="hollow"
                         onClick={() => {
                             this.save(state);
+                        }}
+                    />
+
+                    <Button
+                        text={gettext('Preview')}
+                        icon="preview-mode"
+                        iconOnly
+                        style="hollow"
+                        onClick={() => {
+                            previewItems([state.itemOriginal]);
                         }}
                     />
 
