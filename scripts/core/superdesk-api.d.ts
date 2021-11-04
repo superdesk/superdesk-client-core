@@ -500,6 +500,7 @@ declare module 'superdesk-api' {
             archiveContent?: boolean;
         };
         _autosave?: any;
+        _autosaved?: any;
         _locked?: boolean;
 
         attachments?: Array<{

@@ -1,11 +1,11 @@
-import {IExtension, IExtensionActivationResult, ICustomFieldType} from 'superdesk-api';
-import {superdesk} from './superdesk';
+import {IExtension, IExtensionActivationResult} from 'superdesk-api';
+// import {superdesk} from './superdesk';
 
-const {gettext} = superdesk.localization;
+// const {gettext} = superdesk.localization;
 
-const field: ICustomFieldType<{}> = {
-    id: '',
-};
+// const field: ICustomFieldType<{}> = {
+//     id: '',
+// };
 
 const result: IExtensionActivationResult = {
     contributions: {
