@@ -7,7 +7,6 @@ import {generateTrackByIdentifier} from '../services/SearchService';
 interface IProps {
     canEdit?: boolean;
     customMonitoringWidget?: boolean;
-    preview: (item: IArticle) => void;
     select: (item: IArticle) => void;
     edit: (item: IArticle) => void;
     customUIMessages?: {
@@ -59,7 +58,6 @@ export class WidgetItemList extends React.Component<IProps> {
                                 customMonitoringWidget={
                                     this.props.customMonitoringWidget
                                 }
-                                preview={this.props.preview}
                                 select={this.props.select}
                                 edit={this.props.edit}
                             />

@@ -430,7 +430,6 @@ export function WidgetGroup(search, api, superdesk, desks, cards, $timeout, $q,
                 canEdit: scope.canEdit,
                 customMonitoringWidget: $rootScope.config.features.customMonitoringWidget,
                 svc: services,
-                preview: scope.preview,
                 select: scope.select,
                 edit: scope.edit,
             };
