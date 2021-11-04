@@ -256,28 +256,6 @@ describe('content', () => {
         }));
     });
 
-    describe('item preview container', () => {
-        it('can handle preview:item intent', inject(($rootScope, $compile, superdesk) => {
-            var scope = $rootScope.$new();
-            var elem = $compile('<div sd-item-preview-container></div>')(scope);
-
-            scope.$digest();
-
-            var iscope = elem.isolateScope();
-
-            expect(iscope.item).toBe(null);
-
-            scope.$apply(() => {
-                superdesk.intent('preview', 'item', item);
-            });
-
-            expect(iscope.item).toBe(item);
-
-            iscope.close();
-            expect(iscope.item).toBe(null);
-        }));
-    });
-
     describe('item preview header', () => {
         it('on toggle sets the header state in local storage', inject(($rootScope, $compile, storage) => {
             storage.clear();

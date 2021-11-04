@@ -38,15 +38,7 @@ export function ProductionTestController($scope, contentFilters, notify, $locati
     $scope.preview = function(Item) {
         $location.search('_id', Item ? Item._id : Item);
     };
-    $scope.openView = function(item) {
-        $scope.openLightbox(item);
-    };
-    $scope.openLightbox = function(item) {
-        $scope.selected.view = item;
-    };
-    $scope.closeLightbox = function() {
-        $scope.selected.view = null;
-    };
+
     $scope.hideActions = function() {
         return true;
     };

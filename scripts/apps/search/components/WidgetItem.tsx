@@ -5,13 +5,13 @@ import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import ng from 'core/services/ng';
+import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 
 interface IProps {
-    item?: any;
+    item?: IArticle;
     selected?: boolean;
     canEdit?: boolean;
     customMonitoringWidget?: boolean;
-    preview: (item: IArticle) => void;
     select: (item: IArticle) => void;
     edit: (item: IArticle) => void;
 }
@@ -35,7 +35,7 @@ export class WidgetItem extends React.Component<IProps, any> {
     }
 
     preview() {
-        this.props.preview(this.item);
+        previewItems([this.item]);
     }
 
     select(e) {
