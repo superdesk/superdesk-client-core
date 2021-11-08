@@ -140,8 +140,15 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                 loading: true,
                             });
 
-                            authoringStorage.unlockArticle(state.itemOriginal._id).then(() => {
-                                this.props.onClose();
+                            authoringStorage.closeAuthoring(
+                                state.itemWithChanges,
+                                state.itemOriginal,
+                                () => this.props.onClose(),
+                            ).then(() => {
+                                this.setState({
+                                    ...state,
+                                    loading: false,
+                                });
                             });
                         }}
                     />

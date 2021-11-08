@@ -139,8 +139,8 @@ AuthoringService.$inject = [
     '$injector',
     'moment',
     'familyService',
-    'modal',
     'archiveService',
+    '$rootScope',
 ];
 
 export function AuthoringService(
@@ -158,8 +158,8 @@ export function AuthoringService(
     $injector,
     moment,
     familyService,
-    modal,
     archiveService,
+    $rootScope,
 ) {
     var self = this;
 
@@ -330,35 +330,21 @@ export function AuthoringService(
         diff: Readonly<Partial<IArticle>>,
         orig: Readonly<IArticle>,
         isDirty: boolean,
-        closeItem: boolean,
+        doClose: () => void,
     ): Promise<void> {
-        var promise = $q.when();
-
-        if (isEditable(diff)) {
-            if (isDirty) {
-                if (!_.includes(['published', 'corrected'], orig.state)) {
-                    promise = confirm.confirm()
-                        .then(angular.bind(this, function save() {
-                            return this.save(orig, diff);
-                        }), () => // ignore saving
-                            $q.when('ignore'));
-                } else {
-                    promise = $q.when('ignore');
-                }
-            }
-
-            promise = promise.then(function unlock(cancelType) {
-                if (cancelType && cancelType === 'ignore') {
-                    autosave.drop(orig);
-                }
-
-                if (!closeItem) {
-                    return lock.unlock(diff);
-                }
-            });
-        }
-
-        return promise;
+        return authoringApiCommon.closeAuthoring(
+            orig,
+            isDirty,
+            () => this.save(orig, diff),
+            () => lock.unlock(diff),
+            () => new Promise((resolve) => {
+                autosave.drop(orig);
+                resolve();
+            }),
+            doClose,
+        ).then(() => {
+            $rootScope.$applyAsync(); // update angular UI
+        });
     };
 
     /**

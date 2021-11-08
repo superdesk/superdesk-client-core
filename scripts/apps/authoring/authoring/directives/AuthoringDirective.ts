@@ -810,10 +810,15 @@ export function AuthoringDirective(
                 _closing = true;
 
                 // returned promise used by superdesk-fi
-                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled()).then(() => {
-                    authoringWorkspace.close(true);
-                    $rootScope.$broadcast('item:close', $scope.origItem._id);
-                });
+                return authoring.close(
+                    $scope.item,
+                    $scope.origItem,
+                    $scope.save_enabled(),
+                    () => {
+                        authoringWorkspace.close(true);
+                        $rootScope.$broadcast('item:close', $scope.origItem._id);
+                    },
+                );
             };
 
             /**
@@ -830,13 +835,6 @@ export function AuthoringDirective(
              */
             $scope.minimize = function() {
                 authoringWorkspace.close(true);
-            };
-
-            $scope.closeOpenNew = function(createFunction, paramValue) {
-                _closing = true;
-                authoring.close($scope.item, $scope.origItem, $scope.dirty, true).then(() => {
-                    createFunction(paramValue);
-                });
             };
 
             /**

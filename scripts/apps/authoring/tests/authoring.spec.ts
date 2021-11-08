@@ -387,64 +387,33 @@ describe('authoring', () => {
                 .toBe(true);
         }));
 
-        it('can close a read-only item', inject((authoring, confirm, lock, $rootScope) => {
-            var done = jasmine.createSpy('done');
+        it('can close a read-only item', (done) => inject((authoring, confirm, lock, $rootScope) => {
+            const onClose = jasmine.createSpy('onClose1');
 
-            authoring.close({}).then(done);
+            authoring.close({}, {}, true, onClose);
             $rootScope.$digest();
 
-            expect(confirm.confirm).not.toHaveBeenCalled();
-            expect(lock.unlock).not.toHaveBeenCalled();
-            expect(done).toHaveBeenCalled();
+            setTimeout(() => {
+                expect(confirm.confirm).not.toHaveBeenCalled();
+                expect(lock.unlock).not.toHaveBeenCalled();
+                expect(onClose).toHaveBeenCalled();
+                done();
+            }, 100);
         }));
 
         it('can unlock on close editable item without changes made',
-            inject((authoring, confirm, lock, $rootScope) => {
-                expect(authoring.isEditable(ITEM)).toBe(true);
-                authoring.close(ITEM, false);
+            inject((authoring, confirm, lock, $rootScope, session) => {
+                const itemLocked = {
+                    ...ITEM,
+                    lock_user: session.identity._id,
+                    lock_session: session.sessionId,
+                };
+
+                expect(authoring.isEditable(itemLocked)).toBe(true);
+                authoring.close(itemLocked, itemLocked, false);
                 $rootScope.$digest();
                 expect(confirm.confirm).not.toHaveBeenCalled();
                 expect(lock.unlock).toHaveBeenCalled();
-            }));
-
-        it('confirms if an item is dirty and saves',
-            inject((authoring, confirm, lock, $q, $rootScope) => {
-                var edit = Object.create(ITEM);
-
-                edit.headline = 'test';
-
-                authoring.close(edit, ITEM, true);
-                $rootScope.$digest();
-
-                expect(confirm.confirm).toHaveBeenCalled();
-                expect(lock.unlock).not.toHaveBeenCalled();
-
-                spyOn(authoring, 'save').and.returnValue($q.when());
-                confirmDefer.resolve();
-                $rootScope.$digest();
-
-                expect(authoring.save).toHaveBeenCalledWith(ITEM, edit);
-                expect(lock.unlock).toHaveBeenCalled();
-            }));
-
-        it('confirms if an item is dirty on opening new or existing item and not unlocking on save',
-            inject((authoring, confirm, lock, $q, $rootScope) => {
-                var edit = Object.create(ITEM);
-
-                edit.headline = 'test';
-
-                authoring.close(edit, ITEM, true, true);
-                $rootScope.$digest();
-
-                expect(confirm.confirm).toHaveBeenCalled();
-                expect(lock.unlock).not.toHaveBeenCalled();
-
-                spyOn(authoring, 'save').and.returnValue($q.when());
-                confirmDefer.resolve();
-                $rootScope.$digest();
-
-                expect(authoring.save).toHaveBeenCalledWith(ITEM, edit);
-                expect(lock.unlock).not.toHaveBeenCalled();
             }));
 
         it('can unlock an item', inject((authoring, session, confirm, autosave) => {
@@ -514,40 +483,6 @@ describe('authoring', () => {
                 $rootScope.$digest();
 
                 expect(api.save).toHaveBeenCalledWith('archive', {}, edit);
-            }));
-
-        it('close the published dirty item without confirmation',
-            inject((authoring, api, confirm, lock, autosave, $q, $rootScope) => {
-                var publishedItem = Object.create(ITEM);
-
-                publishedItem.state = 'published';
-                var edit = Object.create(publishedItem);
-
-                edit.headline = 'test';
-                spyOn(authoring, 'isEditable').and.returnValue(true);
-                spyOn(autosave, 'drop').and.returnValue($q.when({}));
-                authoring.close(edit, publishedItem, true, false);
-                $rootScope.$digest();
-                expect(confirm.confirm).not.toHaveBeenCalled();
-                expect(lock.unlock).toHaveBeenCalled();
-                expect(autosave.drop).toHaveBeenCalled();
-            }));
-
-        it('close the corrected dirty item without confirmation',
-            inject((authoring, api, confirm, lock, autosave, $q, $rootScope) => {
-                var publishedItem = Object.create(ITEM);
-
-                publishedItem.state = 'corrected';
-                var edit = Object.create(publishedItem);
-
-                edit.headline = 'test';
-                spyOn(authoring, 'isEditable').and.returnValue(true);
-                spyOn(autosave, 'drop').and.returnValue($q.when({}));
-                authoring.close(edit, publishedItem, true, false);
-                $rootScope.$digest();
-                expect(confirm.confirm).not.toHaveBeenCalled();
-                expect(lock.unlock).toHaveBeenCalled();
-                expect(autosave.drop).toHaveBeenCalled();
             }));
 
         it('can validate schedule', inject((authoring) => {

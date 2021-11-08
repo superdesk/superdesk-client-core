@@ -121,7 +121,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 interface IAuthoringStorage {
     getArticle(id: string): Promise<IArticle>;
     saveArticle(current: IArticle, original: IArticle): Promise<IArticle>;
-    unlockArticle(id: string): Promise<void>;
+    closeAuthoring(current: IArticle, original: IArticle, doClose: () => void): Promise<void>;
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
 }
 
@@ -156,11 +156,24 @@ export const authoringStorage: IAuthoringStorage = {
         });
     },
     getContentProfile,
-    unlockArticle: (id) => {
-        return httpRequestJsonLocal<void>({
+    closeAuthoring: (current, original, doClose) => {
+        const diff = generatePatch(original, current);
+        const hasUnsavedChanges = Object.keys(diff).length > 0;
+        const cancelAutoSave = () => Promise.resolve(); // no auto-save yet
+
+        const unlockArticle = (id: string) => httpRequestJsonLocal<void>({
             method: 'POST',
             payload: {},
             path: `/archive/${id}/unlock`,
         });
+
+        return authoringApiCommon.closeAuthoring(
+            original,
+            hasUnsavedChanges,
+            () => authoringStorage.saveArticle(current, original).then(() => undefined),
+            () => unlockArticle(original._id),
+            cancelAutoSave,
+            doClose,
+        );
     },
 };
