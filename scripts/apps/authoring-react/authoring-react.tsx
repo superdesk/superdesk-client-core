@@ -5,6 +5,8 @@ import {gettext} from 'core/utils';
 import {IContentProfileV2, authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
+import {EditorTest} from './ui-framework-authoring-test';
+import {uiFrameworkAuthoringPanelTest} from 'appConfig';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -117,6 +119,14 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         if (state.initialized !== true) {
             return null;
+        }
+
+        if (uiFrameworkAuthoringPanelTest) {
+            return (
+                <div className="sd-authoring-react" style={{padding: 0}}>
+                    <EditorTest />
+                </div>
+            );
         }
 
         return (

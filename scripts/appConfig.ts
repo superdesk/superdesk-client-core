@@ -38,6 +38,7 @@ export const debugInfo = {
 };
 
 //
-export const authoringReactViewEnabled = false;
+export const authoringReactViewEnabled = true;
+export const uiFrameworkAuthoringPanelTest = true;
 
 export const extensions: IExtensions = {};
