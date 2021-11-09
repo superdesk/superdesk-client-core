@@ -1,13 +1,19 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {Button, Loader} from 'superdesk-ui-framework';
+import {
+    Button,
+    ButtonGroup,
+    Loader,
+    SubNav,
+    IconButton,
+} from 'superdesk-ui-framework';
+import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
 import {IContentProfileV2, authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {EditorTest} from './ui-framework-authoring-test';
 import {uiFrameworkAuthoringPanelTest} from 'appConfig';
-
 interface IProps {
     itemId: IArticle['_id'];
     onClose(): void;
@@ -123,7 +129,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         if (uiFrameworkAuthoringPanelTest) {
             return (
-                <div className="sd-authoring-react" style={{padding: 0}}>
+                <div className="sd-authoring-react">
                     <EditorTest />
                 </div>
             );
@@ -138,87 +144,93 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                     )
                 }
 
-                <div>
-                    <h3>{gettext('Toolbar')}</h3>
+                <Layout.AuthoringFrame
+                    header={(
+                        <SubNav>
+                            <ButtonGroup align="right" padded>
+                                <Button
+                                    text={gettext('Close')}
+                                    style="hollow"
+                                    onClick={() => {
+                                        this.setState({
+                                            ...state,
+                                            loading: true,
+                                        });
 
-                    <Button
-                        text={gettext('Close')}
-                        style="hollow"
-                        onClick={() => {
-                            this.setState({
-                                ...state,
-                                loading: true,
-                            });
+                                        authoringStorage.closeAuthoring(
+                                            state.itemWithChanges,
+                                            state.itemOriginal,
+                                            () => this.props.onClose(),
+                                        ).then(() => {
+                                            this.setState({
+                                                ...state,
+                                                loading: false,
+                                            });
+                                        });
+                                    }}
+                                />
 
-                            authoringStorage.closeAuthoring(
-                                state.itemWithChanges,
-                                state.itemOriginal,
-                                () => this.props.onClose(),
-                            ).then(() => {
-                                this.setState({
-                                    ...state,
-                                    loading: false,
-                                });
-                            });
-                        }}
-                    />
+                                <Button
+                                    text={gettext('Save')}
+                                    style="filled"
+                                    type="primary"
+                                    disabled={state.itemWithChanges === state.itemOriginal}
+                                    onClick={() => {
+                                        this.save(state);
+                                    }}
+                                />
+                            </ButtonGroup>
+                        </SubNav>
+                    )}
+                    main={(
+                        <Layout.AuthoringMain
+                            toolBar={(
+                                <React.Fragment>
+                                    <ButtonGroup align="right">
+                                        <IconButton
+                                            icon="preview-mode"
+                                            ariaValue={gettext('Print preview')}
+                                            onClick={() => {
+                                                previewItems([state.itemOriginal]);
+                                            }}
+                                        />
+                                    </ButtonGroup>
+                                </React.Fragment>
+                            )}
+                            authoringHeader={(
+                                <div>
+                                    <AuthoringSection
+                                        fields={state.profile.header}
+                                        item={state.itemWithChanges}
+                                        onChange={(itemChanged) => {
+                                            const nextState: IStateLoaded = {
+                                                ...state,
+                                                itemWithChanges: itemChanged,
+                                            };
 
-                    <Button
-                        text={gettext('Save')}
-                        style="hollow"
-                        onClick={() => {
-                            this.save(state);
-                        }}
-                    />
+                                            this.setState(nextState);
+                                        }}
+                                    />
+                                </div>
+                            )}
+                        >
+                            <div>
+                                <AuthoringSection
+                                    fields={state.profile.content}
+                                    item={state.itemWithChanges}
+                                    onChange={(itemChanged) => {
+                                        const nextState: IStateLoaded = {
+                                            ...state,
+                                            itemWithChanges: itemChanged,
+                                        };
 
-                    <Button
-                        text={gettext('Preview')}
-                        icon="preview-mode"
-                        iconOnly
-                        style="hollow"
-                        onClick={() => {
-                            previewItems([state.itemOriginal]);
-                        }}
-                    />
-
-                    <br />
-                    <br />
-                </div>
-
-                <div>
-                    <h3>{gettext('Header')}</h3>
-
-                    <AuthoringSection
-                        fields={state.profile.header}
-                        item={state.itemWithChanges}
-                        onChange={(itemChanged) => {
-                            const nextState: IStateLoaded = {
-                                ...state,
-                                itemWithChanges: itemChanged,
-                            };
-
-                            this.setState(nextState);
-                        }}
-                    />
-                </div>
-
-                <div>
-                    <h3>{gettext('Content')}</h3>
-
-                    <AuthoringSection
-                        fields={state.profile.content}
-                        item={state.itemWithChanges}
-                        onChange={(itemChanged) => {
-                            const nextState: IStateLoaded = {
-                                ...state,
-                                itemWithChanges: itemChanged,
-                            };
-
-                            this.setState(nextState);
-                        }}
-                    />
-                </div>
-
+                                        this.setState(nextState);
+                                    }}
+                                />
+                            </div>
+                        </Layout.AuthoringMain>
+                    )}
+                />
             </div>
         );
     }

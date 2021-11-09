@@ -88,7 +88,7 @@ export class EditorTest extends React.Component<IProps, IState> {
         return (
             <Layout.AuthoringFrame
                 header={(
-                    <SubNav zIndex={2}>
+                    <SubNav>
                         <ButtonGroup align="right">
                             <Button
                                 text="Open pinned"
