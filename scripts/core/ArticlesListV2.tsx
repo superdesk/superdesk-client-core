@@ -140,6 +140,7 @@ export class ArticlesListV2 extends SuperdeskReactComponent<IProps, IState> {
 
     public reloadList() {
         this.lazyLoaderRef?.reset();
+        this.idMap?.clear();
     }
 
     fetchRelatedEntities(items: OrderedMap<ITrackById, IArticle>): Promise<OrderedMap<ITrackById, IArticle>> {
