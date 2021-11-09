@@ -1,9 +1,9 @@
 import gettextjs from 'gettext.js';
 import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
-import {IVocabularyItem, IArticle} from 'superdesk-api';
+import {IVocabularyItem, IArticle, IBaseRestApiResponse} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {appConfig} from 'appConfig';
-import {isObject} from 'lodash';
+import {isObject, omit} from 'lodash';
 
 export type IScopeApply = (fn: () => void) => void;
 
@@ -230,4 +230,19 @@ export function toQueryString(
     return '?' + Object.keys(params).map((key) =>
         `${key}=${isObject(params[key]) ? JSON.stringify(params[key]) : encodeURIComponent(params[key])}`,
     ).join('&');
+}
+
+/**
+ see {@link IBaseRestApiResponse}
+ */
+export function omitRestApiFields<T extends {}>(item: T): T {
+    const keys: Array<keyof IBaseRestApiResponse> = [
+        '_created',
+        '_etag',
+        // '_id', <-- don't omit ID
+        '_links',
+        '_updated',
+    ];
+
+    return omit(item, keys) as unknown as T;
 }

@@ -7,6 +7,10 @@ import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 import {generatePatch} from 'core/patch';
 import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {AutoSaveHttp} from './auto-save-http';
+import {omitRestApiFields} from 'core/utils';
+import {omit} from 'lodash';
+import {AUTOSAVE_TIMEOUT} from 'core/constants';
 
 interface IFieldBase {
     id: string;
@@ -118,17 +122,46 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
     });
 }
 
+export interface IAuthoringAutoSave {
+    get(id: IArticle['_id']): Promise<IArticle>;
+    delete(id: IArticle): Promise<void>;
+    schedule(item: IArticle): void;
+    cancel(): void;
+}
+
+/**
+ * {@link AuthoringReact} component will use this interface
+ * instead of making network calls directly.
+ * Alternative implementation can be used
+ * to enable offline support.
+ */
 interface IAuthoringStorage {
-    getArticle(id: string): Promise<IArticle>;
+    getArticle(id: string): Promise<{saved: IArticle | null, autosaved: IArticle | null}>;
     saveArticle(current: IArticle, original: IArticle): Promise<IArticle>;
     closeAuthoring(current: IArticle, original: IArticle, doClose: () => void): Promise<void>;
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
+    autosave: IAuthoringAutoSave;
+}
+
+export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
+    // TODO: these shouldn't be needed
+    const customFields = ['_latest_version', 'revert_state', 'expiry'];
+
+    return {...omit(omitRestApiFields(item), ...customFields)};
 }
 
 export const authoringStorage: IAuthoringStorage = {
+    autosave: new AutoSaveHttp(AUTOSAVE_TIMEOUT),
     getArticle: (id) => {
         // TODO: take published items into account
-        return dataApi.findOne<IArticle>('archive', id);
+        return Promise.all([
+            dataApi.findOne<IArticle>('archive', id),
+            authoringStorage.autosave.get(id).catch(() => null),
+        ]).then((res) => {
+            const [saved, autosaved] = res;
+
+            return {saved, autosaved};
+        });
     },
     saveArticle: (current, original) => {
         return authoringApiCommon.saveBefore(current, original).then((_current) => {
@@ -144,7 +177,7 @@ export const authoringStorage: IAuthoringStorage = {
             return httpRequestJsonLocal<IArticle>({
                 method: 'PATCH',
                 path: `/archive/${id}${queryString}`,
-                payload: diff,
+                payload: omitFields(diff),
                 headers: {
                     'If-Match': etag,
                 },
@@ -159,7 +192,11 @@ export const authoringStorage: IAuthoringStorage = {
     closeAuthoring: (current, original, doClose) => {
         const diff = generatePatch(original, current);
         const hasUnsavedChanges = Object.keys(diff).length > 0;
-        const cancelAutoSave = () => Promise.resolve(); // no auto-save yet
+        const cancelAutoSave = () => {
+            authoringStorage.autosave.cancel();
+
+            return authoringStorage.autosave.delete(current);
+        };
 
         const unlockArticle = (id: string) => httpRequestJsonLocal<void>({
             method: 'POST',

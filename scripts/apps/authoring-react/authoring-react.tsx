@@ -81,7 +81,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         Promise.all(
             [
                 authoringStorage.getArticle(this.props.itemId).then((item) => {
-                    return authoringStorage.getContentProfile(item).then((profile) => {
+                    return authoringStorage.getContentProfile(item.autosaved ?? item.saved).then((profile) => {
                         return {item, profile};
                     });
                 }),
@@ -93,13 +93,23 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             const nextState: IStateLoaded = {
                 initialized: true,
                 loading: false,
-                itemOriginal: Object.freeze(item),
-                itemWithChanges: item,
+                itemOriginal: Object.freeze(item.saved),
+                itemWithChanges: item.autosaved ?? item.saved,
                 profile: profile,
             };
 
             this.setState(nextState);
         });
+    }
+
+    componentDidUpdate(_prevProps, prevState: IState) {
+        if (
+            this.state.initialized
+            && prevState.initialized
+            && this.state.itemWithChanges !== prevState.itemWithChanges
+        ) {
+            authoringStorage.autosave.schedule(this.state.itemWithChanges);
+        }
     }
 
     save(state: IStateLoaded) {

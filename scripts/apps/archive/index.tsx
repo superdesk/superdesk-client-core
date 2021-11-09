@@ -25,6 +25,7 @@ import * as actions from './actions';
 import {RelatedView} from './views/related-view';
 import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {httpRequestJsonLocal, httpRequestRawLocal} from 'core/helpers/network';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -406,10 +407,11 @@ spikeActivity.$inject = [
     'authoringWorkspace',
     'confirm',
     'autosave',
+    '$rootScope',
 ];
 
 function spikeActivity(spike, data, modal, $location, multi,
-    authoringWorkspace: AuthoringWorkspaceService, confirm, autosave) {
+    authoringWorkspace: AuthoringWorkspaceService, confirm, autosave, $rootScope) {
     // For the sake of keyboard shortcut to work consistently,
     // if the item is multi-selected, let multibar controller handle its spike
     if (!data.item || multi.count > 0 && includes(multi.getIds(), data.item._id)) {
@@ -430,8 +432,20 @@ function spikeActivity(spike, data, modal, $location, multi,
                         break;
 
                     case IUnsavedChangesAction.discardChanges:
-                        closePromptFn();
-                        _spike();
+                        httpRequestJsonLocal<IArticle>({
+                            method: 'GET',
+                            path: `/archive_autosave/${data.item._id}`,
+                        }).then((item) => httpRequestRawLocal({
+                            method: 'DELETE',
+                            path: `/archive_autosave/${item._id}`,
+                            headers: {
+                                'If-Match': item._etag,
+                            },
+                        }).then(() => {
+                            $rootScope.$applyAsync();
+                            closePromptFn();
+                            _spike();
+                        }));
 
                         break;
 
