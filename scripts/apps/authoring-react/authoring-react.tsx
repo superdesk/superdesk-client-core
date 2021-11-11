@@ -19,6 +19,8 @@ import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
+import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
+import {addInternalEventListener} from 'core/internal-events';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -54,6 +56,8 @@ function waitForCssAnimation(): Promise<void> {
     });
 }
 export class AuthoringReact extends React.PureComponent<IProps, IState> {
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+
     constructor(props: IProps) {
         super(props);
 
@@ -148,6 +152,57 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
             this.setState(nextState);
         });
+
+        registerToReceivePatches(this.props.itemId, (patch) => {
+            const {state} = this;
+
+            if (state.initialized) {
+                this.setState({
+                    ...state,
+                    itemWithChanges: {
+                        ...state.itemWithChanges,
+                        ...patch,
+                    },
+                });
+            }
+        });
+
+        this.eventListenersToRemoveBeforeUnmounting = [];
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addInternalEventListener(
+                'dangerouslyOverwriteAuthoringData',
+                (event) => {
+                    if (event.detail._id === this.props.itemId) {
+                        const patch = event.detail;
+
+                        const {state} = this;
+
+                        if (state.initialized) {
+                            this.setState({
+                                ...state,
+                                itemWithChanges: {
+                                    ...state.itemWithChanges,
+                                    ...patch,
+                                },
+                                itemOriginal: {
+                                    ...state.itemOriginal,
+                                    ...patch,
+                                },
+                            });
+                        }
+                    }
+                },
+            ),
+        );
+    }
+
+    componentWillUnmount() {
+        unregisterFromReceivingPatches();
+
+        for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
+            fn();
+        }
     }
 
     componentDidUpdate(_prevProps, prevState: IState) {

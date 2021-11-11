@@ -3,7 +3,7 @@ import {IArticle} from 'superdesk-api';
 import {flatMap} from 'lodash';
 import {extensions} from 'appConfig';
 import {IAuthoringAction} from './services/AuthoringWorkspaceService';
-import {registerInternalExtension, unregisterInternalExtension} from 'core/helpers/register-internal-extension';
+import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
 import {dataApi} from 'core/helpers/CrudManager';
 
 interface IProps {
@@ -47,35 +47,16 @@ export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
         if (this.props.action === 'view') {
             this.fetchArticleFromServer();
         } else {
-            registerInternalExtension(authoringTopBarExtensionName, {
-                contributions: {
-                    entities: {
-                        article: {
-                            onPatchBefore: (id, patch, dangerousOptions) => {
-                                if (
-                                    this.props.article._id === id
-                                    && dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues !== true
-                                ) {
-                                    this.props.onChange({
-                                        ...this.props.article,
-                                        ...patch,
-                                    });
-                                    console.info('Article is locked and can\'t be updated via HTTP directly.'
-                                    + 'The updates will be added to existing diff in article-edit view instead.');
-
-                                    return Promise.reject();
-                                } else {
-                                    return Promise.resolve(patch);
-                                }
-                            },
-                        },
-                    },
-                },
+            registerToReceivePatches(this.props.article._id, (patch) => {
+                this.props.onChange({
+                    ...this.props.article,
+                    ...patch,
+                });
             });
         }
     }
     componentWillUnmount() {
-        unregisterInternalExtension(authoringTopBarExtensionName);
+        unregisterFromReceivingPatches();
     }
     render() {
         if (this.props.action === 'view' && typeof this.state.articleOriginal === 'undefined') {
