@@ -193,7 +193,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                         </button>
                     ) : null}
 
-                    <ButtonGroup align="left" padded={true}>
+                    <ButtonGroup align="end" padded={true}>
                         <CheckButtonGroup>
                             <RadioButton
                                 value={this.props.activeTab}
@@ -205,7 +205,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
                     {this.props.selectedDesk != null &&
                         this.isDeskMember(this.props.selectedDesk) ? (
-                            <ButtonGroup align="right">
+                            <ButtonGroup align="end">
                                 <Button
                                     text={gettext('Go To Desk')}
                                     style="hollow"

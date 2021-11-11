@@ -89,7 +89,7 @@ export class EditorTest extends React.Component<IProps, IState> {
             <Layout.AuthoringFrame
                 header={(
                     <SubNav>
-                        <ButtonGroup align="right">
+                        <ButtonGroup align="end">
                             <Button
                                 text="Open pinned"
                                 style="hollow"
@@ -157,7 +157,7 @@ export class EditorTest extends React.Component<IProps, IState> {
                                         <dd><time title="July 29, 2021 3:58 PM">07/29</time></dd>
                                     </dl>
                                 </div>
-                                <ButtonGroup align="right">
+                                <ButtonGroup align="end">
                                     <IconButton icon="preview-mode" ariaValue="Print preview" onClick={() => false} />
                                     <IconButton icon="adjust" ariaValue="Toggle theme" onClick={() => false} />
                                     <IconButton icon="switches" ariaValue="Theme settings" onClick={() => false} />
@@ -265,7 +265,7 @@ export class EditorTest extends React.Component<IProps, IState> {
                             <span>Curabitur blandit tempus porttitor.</span>
                             <Button text="Test button" type="primary" onClick={() => false} />
                             <Button text="Test button" type="highlight" onClick={() => false} />
-                            <ButtonGroup align="right">
+                            <ButtonGroup align="end">
                                 <Button text="Cancel" onClick={() => false} type="default" style="hollow" />
                                 <Button text="Submit" onClick={() => false} type="primary" />
                             </ButtonGroup>
@@ -308,7 +308,7 @@ export class EditorTest extends React.Component<IProps, IState> {
                                             </AvatarWrapper>
                                         )}
                                         footer={(
-                                            <ButtonGroup align="right">
+                                            <ButtonGroup align="end">
                                                 <Button text="cancel" size="small" style="hollow" onClick={() => false} />
                                                 <Button text="yes" size="small" style="hollow" type="primary" onClick={() => false} />
                                             </ButtonGroup>

@@ -157,7 +157,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 <Layout.AuthoringFrame
                     header={(
                         <SubNav>
-                            <ButtonGroup align="right" padded>
+                            <ButtonGroup align="end" padded>
                                 <Button
                                     text={gettext('Close')}
                                     style="hollow"
@@ -196,7 +196,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         <Layout.AuthoringMain
                             toolBar={(
                                 <React.Fragment>
-                                    <ButtonGroup align="right">
+                                    <ButtonGroup align="end">
                                         <IconButton
                                             icon="preview-mode"
                                             ariaValue={gettext('Print preview')}

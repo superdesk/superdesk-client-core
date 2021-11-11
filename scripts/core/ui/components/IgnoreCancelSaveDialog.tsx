@@ -59,7 +59,7 @@ class IgnoreCancelSaveDialog extends React.PureComponent<IProps> {
                     {this.props.body}
                 </ModalBody>
                 <ModalFooter flex={true}>
-                    <ButtonGroup align="right">
+                    <ButtonGroup align="end">
                         {this.props.hideIgnore ? null : (
                             <Button
                                 text={gettext('Ignore')}
