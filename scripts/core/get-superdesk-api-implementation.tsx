@@ -79,7 +79,8 @@ import {querySelectorParent} from './helpers/dom/querySelectorParent';
 import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
 import {Editor3Html} from './editor3/Editor3Html';
 import {arrayToTree, treeToArray} from './helpers/tree';
-import {WidgetHeading} from 'apps/dashboard/widget-heading';
+import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
+import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -350,7 +351,8 @@ export function getSuperdeskApiImplementation(
             getLiveQueryHOC: () => WithLiveQuery,
             WithLiveResources,
             Editor3Html,
-            WidgetHeading,
+            AuthoringWidgetHeading,
+            AuthoringWidgetLayout,
         },
         forms: {
             FormFieldType,

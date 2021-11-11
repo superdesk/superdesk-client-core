@@ -8,12 +8,18 @@ import {
     IconButton,
 } from 'superdesk-ui-framework';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
+import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {gettext} from 'core/utils';
 import {IContentProfileV2, authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {EditorTest} from './ui-framework-authoring-test';
-import {uiFrameworkAuthoringPanelTest} from 'appConfig';
+import {extensions, uiFrameworkAuthoringPanelTest} from 'appConfig';
+import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
+import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
+import {WidgetHeaderComponent} from './widget-header-component';
+import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
+
 interface IProps {
     itemId: IArticle['_id'];
     onClose(): void;
@@ -24,6 +30,10 @@ interface IStateLoaded {
     itemOriginal: IArticle;
     itemWithChanges: IArticle;
     profile: IContentProfileV2;
+    openWidget?: {
+        name: string;
+        pinned: boolean;
+    };
 
     /**
      * Prevents changes to state while async operation is in progress(e.g. saving).
@@ -75,6 +85,44 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 setStateOriginal(...args);
             }
         };
+
+        widgetReactIntegration.pinWidget = () => {
+            const state = this.state;
+
+            if (state.initialized) {
+                const nextState: IStateLoaded = {
+                    ...state,
+                    openWidget: {
+                        ...state.openWidget,
+                        pinned: !(state.openWidget?.pinned ?? false),
+                    },
+                };
+
+                this.setState(nextState);
+            }
+        };
+        widgetReactIntegration.getActiveWidget = () => {
+            if (this.state.initialized) {
+                return this.state.openWidget?.name ?? null;
+            } else {
+                return null;
+            }
+        };
+        widgetReactIntegration.getPinnedWidget = () => {
+            if (this.state.initialized) {
+                const pinned = this.state.openWidget?.pinned === true;
+
+                if (pinned) {
+                    return this.state.openWidget.name;
+                } else {
+                    return null;
+                }
+            } else {
+                return null;
+            }
+        };
+        widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
+        widgetReactIntegration.WidgetLayoutComponent = AuthoringWidgetLayoutComponent;
     }
 
     componentDidMount() {
@@ -145,9 +193,36 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             );
         }
 
+        const widgetsFromExtensions = Object.values(extensions)
+            .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
+            .filter((widget) => widget.isAllowed(state.itemWithChanges));
+
+        const sidebarTabs: Array<ISideBarTab> = widgetsFromExtensions.map((widget) => ({
+            icon: widget.icon,
+            size: 'big',
+            tooltip: widget.label,
+            onClick: () => {
+                const selfToggled = state.openWidget != null && widget.label === state.openWidget?.name;
+
+                const nextState: IStateLoaded = {
+                    ...state,
+                    openWidget: selfToggled
+                        ? undefined
+                        : {name: widget.label, pinned: state.openWidget?.pinned ?? false},
+                };
+
+                this.setState(nextState);
+            },
+        }));
+
+        const OpenWidgetComponent = state.openWidget == null
+            ? null
+            : widgetsFromExtensions.find(({label}) => state.openWidget.name === label).component;
+
+        const pinned = state.openWidget?.pinned === true;
+
         return (
             <div className="sd-authoring-react">
-
                 {
                     state.loading && (
                         <Loader overlay />
@@ -239,6 +314,31 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                 />
                             </div>
                         </Layout.AuthoringMain>
+                    )}
+                    sideOverlay={
+                        !pinned && OpenWidgetComponent != null
+                            ? (
+                                <OpenWidgetComponent
+                                    article={{...state.itemWithChanges}}
+                                />
+                            )
+                            : undefined
+                    }
+                    sideOverlayOpen={!pinned && OpenWidgetComponent != null}
+                    sidePanel={
+                        pinned && OpenWidgetComponent != null
+                            ? (
+                                <OpenWidgetComponent
+                                    article={{...state.itemWithChanges}}
+                                />
+                            )
+                            : undefined
+                    }
+                    sidePanelOpen={pinned && OpenWidgetComponent != null}
+                    sideBar={(
+                        <Nav.SideBarTabs
+                            items={sidebarTabs}
+                        />
                     )}
                 />
             </div>

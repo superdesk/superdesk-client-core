@@ -65,6 +65,12 @@ declare module 'superdesk-api' {
         query: {[key: string]: any};
     }
 
+    export interface IAuthoringWidgetLayoutProps {
+        header?: JSX.Element;
+        body: JSX.Element;
+        footer?: JSX.Element;
+    }
+
     export interface IAuthoringSideWidget {
         _id: string; // required for configuring widget visibility in content profile
         label: string;
@@ -1700,7 +1706,8 @@ declare module 'superdesk-api' {
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
             Editor3Html: React.ComponentType<IEditor3HtmlProps>;
-            WidgetHeading: React.ComponentType<IPropsWidgetHeading>;
+            AuthoringWidgetHeading: React.ComponentType<IPropsWidgetHeading>;
+            AuthoringWidgetLayout: React.ComponentType<IAuthoringWidgetLayoutProps>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
