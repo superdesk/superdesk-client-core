@@ -101,6 +101,7 @@ export interface IWidgetIntegrationComponentProps {
     widget: any;
     editMode: boolean;
     pinWidget(widget: any): void;
+    closeWidget(): void;
 }
 
 /**
@@ -112,6 +113,7 @@ export interface IWidgetIntegrationComponentProps {
 interface IWidgetIntegration {
     pinWidget(widget: any): void;
     getActiveWidget(): any;
+    closeActiveWidget(): any;
     getPinnedWidget(): any;
     WidgetHeaderComponent: React.ComponentType<IWidgetIntegrationComponentProps>;
     WidgetLayoutComponent: React.ComponentType<IAuthoringWidgetLayoutProps>;
@@ -121,6 +123,7 @@ export const widgetReactIntegration: IWidgetIntegration = {
     pinWidget: noop as any,
     getActiveWidget: noop as any,
     getPinnedWidget: noop as any,
+    closeActiveWidget: noop,
     WidgetHeaderComponent: () => null,
     WidgetLayoutComponent: () => null,
 };

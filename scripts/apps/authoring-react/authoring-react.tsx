@@ -125,6 +125,20 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 return null;
             }
         };
+
+        widgetReactIntegration.closeActiveWidget = () => {
+            const state = this.state;
+
+            if (state.initialized) {
+                const nextState: IStateLoaded = {
+                    ...state,
+                    openWidget: undefined,
+                };
+
+                this.setState(nextState);
+            }
+        };
+
         widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
         widgetReactIntegration.WidgetLayoutComponent = AuthoringWidgetLayoutComponent;
     }

@@ -402,7 +402,9 @@ describe('authoring', () => {
         }));
 
         it('can unlock on close editable item without changes made',
-            inject((authoring, confirm, lock, $rootScope, session) => {
+            (done) => inject((authoring, confirm, lock, $rootScope, session) => {
+                const onClose = jasmine.createSpy('onClose2');
+
                 const itemLocked = {
                     ...ITEM,
                     lock_user: session.identity._id,
@@ -410,10 +412,15 @@ describe('authoring', () => {
                 };
 
                 expect(authoring.isEditable(itemLocked)).toBe(true);
-                authoring.close(itemLocked, itemLocked, false);
+                authoring.close(itemLocked, itemLocked, false, onClose);
                 $rootScope.$digest();
-                expect(confirm.confirm).not.toHaveBeenCalled();
-                expect(lock.unlock).toHaveBeenCalled();
+
+                setTimeout(() => {
+                    expect(confirm.confirm).not.toHaveBeenCalled();
+                    expect(lock.unlock).toHaveBeenCalled();
+                    expect(onClose).toHaveBeenCalled();
+                    done();
+                }, 100);
             }));
 
         it('can unlock an item', inject((authoring, session, confirm, autosave) => {

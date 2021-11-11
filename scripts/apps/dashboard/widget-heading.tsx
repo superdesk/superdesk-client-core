@@ -25,6 +25,7 @@ export class AuthoringWidgetHeading extends React.Component<IPropsWidgetHeading>
                 widget={widget}
                 widgetName={this.props.widgetName}
                 editMode={this.props.editMode}
+                closeWidget={() => widgetReactIntegration.closeActiveWidget()}
             >
                 {this.props.children}
             </WidgetHeaderComponent>
