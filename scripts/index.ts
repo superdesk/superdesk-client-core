@@ -22,6 +22,7 @@ import {setupTansa} from 'apps/tansa';
 import {i18n} from 'core/utils';
 import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
 import {merge} from 'lodash';
+import {registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
 
 let body = angular.element('body');
 
@@ -180,7 +181,9 @@ export function startApp(
                     metadata,
                     _workspaceMenu,
                     preferencesService,
-                );
+                ).then(() => {
+                    registerAuthoringReactWidgets();
+                });
             },
         ]);
 

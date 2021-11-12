@@ -1,4 +1,5 @@
-import {IArticle} from 'superdesk-api';
+import {IArticle, IDangerousArticlePatchingOptions} from 'superdesk-api';
+import {patchArticle} from './article-patch';
 import ng from 'core/services/ng';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
@@ -20,6 +21,11 @@ interface IArticleApi {
     isArchived(article: IArticle): boolean;
     isPublished(article: IArticle): boolean;
     isPersonal(article: IArticle): boolean;
+    patch(
+        article: IArticle,
+        patch: Partial<IArticle>,
+        dangerousOptions?: IDangerousArticlePatchingOptions,
+    ): Promise<void>;
 }
 
 export const article: IArticleApi = {
@@ -31,4 +37,5 @@ export const article: IArticleApi = {
     isArchived,
     isPublished,
     isPersonal,
+    patch: patchArticle,
 };

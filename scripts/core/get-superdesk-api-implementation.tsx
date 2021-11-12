@@ -81,6 +81,7 @@ import {Editor3Html} from './editor3/Editor3Html';
 import {arrayToTree, treeToArray} from './helpers/tree';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
+import {patchArticle} from 'api/article-patch';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -207,36 +208,7 @@ export function getSuperdeskApiImplementation(
                 isLocked: sdApi.article.isLocked,
                 isLockedInCurrentSession: sdApi.article.isLockedInCurrentSession,
                 isLockedInOtherSession: sdApi.article.isLockedInOtherSession,
-                patch: (article, patch, dangerousOptions) => {
-                    const onPatchBeforeMiddlewares = Object.values(extensions)
-                        .map((extension) => extension.activationResult?.contributions?.entities?.article?.onPatchBefore)
-                        .filter((middleware) => middleware != null);
-
-                    return onPatchBeforeMiddlewares.reduce(
-                        (current, next) => current.then((result) => next(article._id, result, dangerousOptions)),
-                        Promise.resolve(patch),
-                    ).then((patchFinal) => {
-                        return dataApi.patchRaw<IArticle>(
-                            // distinction between handling published and non-published items
-                            // should be removed: SDESK-4687
-                            (sdApi.article.isPublished(article) ? 'published' : 'archive'),
-                            article._id,
-                            article._etag,
-                            patchFinal,
-                        ).then((res) => {
-                            if (dangerousOptions?.patchDirectlyAndOverwriteAuthoringValues === true) {
-                                dispatchInternalEvent(
-                                    'dangerouslyOverwriteAuthoringData',
-                                    {...patch, _etag: res._etag, _id: res._id},
-                                );
-                            }
-                        });
-                    }).catch((err) => {
-                        if (err instanceof Error) {
-                            logger.error(err);
-                        }
-                    });
-                },
+                patch: patchArticle,
                 isArchived: sdApi.article.isArchived,
                 isPublished: (article) => sdApi.article.isPublished(article),
             },

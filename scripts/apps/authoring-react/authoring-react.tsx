@@ -264,7 +264,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         const widgetsFromExtensions = Object.values(extensions)
             .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
-            .filter((widget) => widget.isAllowed(state.itemWithChanges));
+            .filter((widget) => widget.isAllowed?.(state.itemWithChanges) ?? true);
 
         const sidebarTabs: Array<ISideBarTab> = widgetsFromExtensions.map((widget) => ({
             icon: widget.icon,
