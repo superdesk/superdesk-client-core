@@ -162,7 +162,7 @@ export class SelectAssetModalComponent extends React.Component<IProps, IState> {
                     text={gettext('Select Asset(s)')}
                     flex={true}
                 >
-                    <ButtonGroup align="right">
+                    <ButtonGroup align="end">
                         <Button
                             text={gettext('Cancel')}
                             onClick={this.closeModal}

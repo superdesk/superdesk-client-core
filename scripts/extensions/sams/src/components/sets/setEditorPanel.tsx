@@ -232,7 +232,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
             <React.Fragment>
                 <PanelHeader borderB={true}>
                     <PanelHeaderSlidingToolbar>
-                        <ButtonGroup align="right">
+                        <ButtonGroup align="end">
                             <Button
                                 text={gettext('Cancel')}
                                 style="hollow"

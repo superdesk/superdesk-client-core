@@ -278,7 +278,7 @@ export class FileUploadModal<T> extends React.Component<IProps<T>, IState> {
                     text={this.props.title}
                     flex={true}
                 >
-                    <ButtonGroup align="right">
+                    <ButtonGroup align="end">
                         <Button
                             text={gettext('Close')}
                             onClick={this.props.closeModal}

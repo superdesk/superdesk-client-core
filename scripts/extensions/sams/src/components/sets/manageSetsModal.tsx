@@ -101,7 +101,7 @@ export class ManageSetsModalComponent extends React.PureComponent<IProps> {
                     <PageLayout
                         header={(
                             <SubNav zIndex={2}>
-                                <ButtonGroup align="right">
+                                <ButtonGroup align="end">
                                     <Button
                                         type="primary"
                                         text={gettext('Add New')}
