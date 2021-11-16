@@ -34,7 +34,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                 />
             ) : null;
 
-            if (this.props.value == null) {
+            if (this.props.value == null || (this.props.value != null && this.props.template != null)) {
                 return (
                     <div>
                         {checkbox}

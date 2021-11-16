@@ -72,27 +72,14 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         return (
             <div>
-                {this.props.template != null && FieldType.templateEditorComponent != null ?
-                    (
-                        <FieldType.templateEditorComponent
-                            item={item}
-                            value={this.state.value}
-                            setValue={(value) => this.setValue(value)}
-                            readOnly={!editable}
-                            config={field.custom_field_config}
-                            template={this.props.template}
-                        />
-                    ) :
-                    (
-                        <FieldType.editorComponent
-                            item={item}
-                            value={this.state.value}
-                            setValue={(value) => this.setValue(value)}
-                            readOnly={!editable}
-                            config={field.custom_field_config}
-                        />
-                    )
-                }
+                <FieldType.editorComponent
+                    item={item}
+                    value={this.state.value}
+                    setValue={(value) => this.setValue(value)}
+                    readOnly={!editable}
+                    config={field.custom_field_config}
+                    template={this.props.template}
+                />
             </div>
         );
     }

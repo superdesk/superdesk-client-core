@@ -2125,6 +2125,7 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
+        template?: ITemplate;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {
@@ -2133,7 +2134,6 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
-        template?: ITemplate;
     }
 
     export interface IPreviewComponentProps {
