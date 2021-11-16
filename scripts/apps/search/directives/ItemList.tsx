@@ -31,8 +31,6 @@ export function ItemList(
             var groupId = scope.$id;
             var groups = monitoringState.state.groups || [];
 
-            let firstLoad = true;
-
             monitoringState.setState({
                 groups: groups.concat(scope.$id),
                 activeGroup: monitoringState.state.activeGroup || groupId,
@@ -316,7 +314,12 @@ export function ItemList(
                  */
                 function handleScroll($event) {
                     // force refresh the group or list, if scroll bar hits the top of list.
-                    if (elem[0].scrollTop === 0) {
+                    // unless multi-select is in progress
+
+                    const multiSelectInProgress = Object.values(listComponent.state.itemsById)
+                        .some((item) => item.selected === true);
+
+                    if (elem[0].scrollTop === 0 && !multiSelectInProgress) {
                         $rootScope.$broadcast('refresh:list', scope.group);
                     }
 

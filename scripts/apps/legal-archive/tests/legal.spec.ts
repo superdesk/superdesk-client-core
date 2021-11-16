@@ -20,7 +20,7 @@ describe('legal archive service', () => {
                 timeformat: 'HH:mm',
                 dateformat: 'MM/DD/YYYY',
             },
-            defaultTimezone: 'UTC',
+            default_timezone: 'UTC',
             server: {url: undefined, ws: undefined},
         };
 

@@ -32,7 +32,6 @@
         <!-- Content Send To-->
         <div class="side-panel__content" ng-if="currentUserAction === vm.userActions.send_to || currentUserAction === vm.userActions.duplicate_to || currentUserAction === vm.userActions.externalsource_to" data-test-id="view--send-to">
             <div class="side-panel__content-block">
-
                 <div sd-toggle-box
                     ng-if="showSendButtonAndDestination()"
                     data-title="{{ 'Destination' | translate }}"
@@ -42,7 +41,7 @@
                         <div sd-desk-select
                             data-desks="desks"
                             data-selected-desk="selectedDesk"
-                            data-allow-personal-space="true"
+                            data-allow-personal-space="allowPersonalSpace"
                             data-personal-space="PERSONAL_SPACE"
                             on-change="selectDesk(desk)"
                         ></div>

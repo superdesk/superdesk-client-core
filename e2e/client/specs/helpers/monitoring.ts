@@ -2,10 +2,10 @@
 
 import {element, by, browser, protractor, ElementFinder, promise as wdpromise} from 'protractor';
 import {nav, waitFor, acceptConfirm, scrollToView} from './utils';
-import {s, ECE, el, els, articleList} from '@superdesk/end-to-end-testing-helpers';
+import {s, ECE, el, els, articleList, hover} from '@superdesk/end-to-end-testing-helpers';
 import {multiAction} from './actions';
 
-export const MONITORING_DEBOUNCE_MAX_WAIT = 5000;
+export const MONITORING_DEBOUNCE_MAX_WAIT = 10000;
 
 class Monitoring {
     config: ElementFinder;
@@ -520,11 +520,7 @@ class Monitoring {
             var itemElem = this.getItem(group, item);
 
             scrollToView(itemElem);
-
-            browser.actions()
-                .mouseMove(itemElem, {x: -50, y: -50}) // first move out
-                .mouseMove(itemElem) // now it can mouseover for sure
-                .perform();
+            hover(itemElem);
 
             el(['context-menu-button'], null, itemElem).click();
 

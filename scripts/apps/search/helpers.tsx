@@ -7,6 +7,7 @@ import {isKilled} from 'apps/archive/utils';
 import {IArticle, IPublishedArticle, IListViewFieldWithOptions} from 'superdesk-api';
 import {getVocabularyItemNameTranslated} from 'core/utils';
 import {appConfig} from 'appConfig';
+import {ErrorBoundary} from 'core/helpers/ErrorBoundary';
 
 export function getSpecStyle(spec) {
     var style = {};
@@ -40,8 +41,23 @@ export function isCheckAllowed(item) {
     );
 }
 
-export function menuHolderElem() {
-    return document.getElementById('react-placeholder');
+const menuHolderEl = document.createElement('div');
+
+menuHolderEl.setAttribute('data-debug-info', 'menu holder');
+
+/**
+ * positionPopup algorithm expects these styles on a wrapper
+ */
+menuHolderEl.style['position'] = 'absolute';
+menuHolderEl.style['top'] = '0';
+menuHolderEl.style['left'] = '0';
+menuHolderEl.style['width'] = '1px';
+menuHolderEl.style['height'] = '1px';
+
+document.body.append(menuHolderEl);
+
+export function menuHolderElem(): HTMLDivElement {
+    return menuHolderEl;
 }
 
 export function closeActionsMenu(itemId?) {
@@ -183,7 +199,11 @@ export function renderArea(
         const Component = fields[field];
 
         if (Component != null) {
-            return <Component key={i} {...itemProps} options={options} />;
+            return (
+                <ErrorBoundary key={i}>
+                    <Component {...itemProps} options={options} />
+                </ErrorBoundary>
+            );
         }
 
         return null;

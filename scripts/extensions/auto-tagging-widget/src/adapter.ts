@@ -6,11 +6,15 @@ export interface ITagBase {
     name: string;
     description?: string;
     qcode: string;
+    parent?: string;
     source?: string;
     altids: {[key: string]: string};
+    aliases?: Array<string>;
+    original_source?: string;
 }
 
 export interface ISubjectTag extends ITagBase {
+    parent?: string;
     scheme: string;
 }
 
@@ -40,14 +44,17 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
     let tags = OrderedMap<string, ITagUi>();
 
     response.subject?.forEach((item) => {
-        const {name, description, qcode, source, altids} = item;
+        const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
 
         const tag: ITagUi = {
             name,
             description,
             qcode,
             source,
+            original_source,
+            aliases,
             altids,
+            parent,
             group: {
                 kind: 'scheme',
                 value: item.scheme,
@@ -81,7 +88,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
 
     others.forEach(({group, items}) => {
         items.forEach((item) => {
-            const {name, description, qcode, source, altids} = item;
+            const {name, description, qcode, source, altids, aliases, original_source} = item;
 
             const tag: ITagUi = {
                 name,
@@ -89,6 +96,8 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
                 qcode,
                 source,
                 altids,
+                aliases,
+                original_source,
                 group: {
                     kind: 'visual',
                     value: group,
@@ -116,7 +125,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 result.subject = [];
             }
 
-            const {name, description, qcode, source, altids} = item;
+            const {name, description, qcode, source, altids, aliases, original_source, parent} = item;
 
             const subjectTag: ISubjectTag = {
                 name,
@@ -124,7 +133,10 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 qcode,
                 source,
                 altids,
+                parent,
                 scheme: item.group.value,
+                aliases,
+                original_source,
             };
 
             result.subject.push(subjectTag);
@@ -135,7 +147,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 result[groupValue] = [];
             }
 
-            const {name, description, qcode, source, altids} = item;
+            const {name, description, qcode, source, altids, aliases, original_source} = item;
 
             const tagBase: ITagBase = {
                 name,
@@ -143,6 +155,8 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 qcode,
                 source,
                 altids,
+                aliases,
+                original_source,
             };
 
             result[groupValue]!.push(tagBase);

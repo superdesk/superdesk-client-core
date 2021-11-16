@@ -445,13 +445,13 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                     return metas.join(' ');
                 }
 
-                return scope.query || null;
+                return null;
             }
 
             scope.$on('search:parameters', searchParameters);
 
             function searchParameters() {
-                $location.search('q', getQuery() || null);
+                $location.search('q', getQuery());
                 $location.search('params', scope.params ? JSON.stringify(scope.params) : null);
                 scope.meta = {};
             }

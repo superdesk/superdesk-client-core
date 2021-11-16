@@ -240,6 +240,7 @@ describe('spellcheck', () => {
 
         spellcheck.setLanguage('');
         spellcheck.getAbbreviationsDict().then(spy);
+
         $rootScope.$digest();
         expect(spy).toHaveBeenCalled();
     }));

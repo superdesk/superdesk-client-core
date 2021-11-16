@@ -76,6 +76,10 @@ import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {WithLiveQuery} from './with-live-query';
 import {WithLiveResources} from './with-resources';
 import {querySelectorParent} from './helpers/dom/querySelectorParent';
+import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog';
+import {Editor3Html} from './editor3/Editor3Html';
+import {arrayToTree, treeToArray} from './helpers/tree';
+import {WidgetHeading} from 'apps/dashboard/widget-heading';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -148,7 +152,7 @@ export function isLockedInOtherSession(article: IArticle): boolean {
 
 export const formatDate = (date: Date | string) => (
     moment(date)
-        .tz(appConfig.defaultTimezone)
+        .tz(appConfig.default_timezone)
         .format(appConfig.view.dateformat)
 );
 
@@ -165,7 +169,7 @@ export function getRelativeOrAbsoluteDateTime(
     }
 
     return datetime
-        .tz(appConfig.defaultTimezone)
+        .tz(appConfig.default_timezone)
         .format(format);
 }
 
@@ -301,6 +305,7 @@ export function getSuperdeskApiImplementation(
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
+            showIgnoreCancelSaveDialog,
             showModal,
             notify: notify,
             framework: {
@@ -344,6 +349,8 @@ export function getSuperdeskApiImplementation(
             Spacer,
             getLiveQueryHOC: () => WithLiveQuery,
             WithLiveResources,
+            Editor3Html,
+            WidgetHeading,
         },
         forms: {
             FormFieldType,
@@ -359,12 +366,12 @@ export function getSuperdeskApiImplementation(
             formatDate: formatDate,
             formatDateTime: (date: Date) => {
                 return moment(date)
-                    .tz(appConfig.defaultTimezone)
+                    .tz(appConfig.default_timezone)
                     .format(appConfig.view.dateformat + ' ' + appConfig.view.timeformat);
             },
             longFormatDateTime: (date: Date | string) => {
                 return moment(date)
-                    .tz(appConfig.defaultTimezone)
+                    .tz(appConfig.default_timezone)
                     .format(appConfig.longDateFormat || 'LLL');
             },
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
@@ -422,6 +429,8 @@ export function getSuperdeskApiImplementation(
             downloadBlob,
             throttleAndCombineArray,
             querySelectorParent,
+            arrayToTree,
+            treeToArray,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

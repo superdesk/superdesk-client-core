@@ -30,8 +30,8 @@ var config = {
     },
 
     suites: {
-        a: path.join(__dirname, '/spec/**/[a-k]*[Ss]pec.js'),
-        b: path.join(__dirname, '/spec/**/[l-z]*[Ss]pec.js'),
+        a: path.join(__dirname, './specs/**/[a-k]*[Ss]pec.js'),
+        b: path.join(__dirname, './specs/**/[l-z]*[Ss]pec.js'),
 
         // disable running e2e tests from extensions until testing environment is reconfigured
         // to run start client from the main repo with all extensions enabled
@@ -52,15 +52,14 @@ var config = {
 
     directConnect: true,
 
-    // workaround for https://github.com/angular/protractor/issues/5519
-    // chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER + '/chromedriver') : null,
+    chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER + '/chromedriver') : null,
 
     onPrepare: function() {
-        require('./spec/helpers/setup').setup({fixture_profile: 'app_prepopulate_data'});
+        require('./specs/helpers/setup').setup({fixture_profile: 'app_prepopulate_data'});
 
         // so it can be used without import in tests
         // useful when debugging on CI server
-        browser.screenshot = require('./spec/helpers/utils').screenshot;
+        browser.screenshot = require('./specs/helpers/utils').screenshot;
 
         var reporters = require('jasmine-reporters');
 

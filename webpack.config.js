@@ -71,10 +71,6 @@ module.exports = function makeConfig(grunt) {
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
-                // ensure that react is loaded only once (3rd party apps can load more...)
-                react: path.resolve('./node_modules/react'),
-                'react-dom': path.resolve('./node_modules/react-dom'),
-                'jquery': path.resolve('./node_modules/jquery'),
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
@@ -206,9 +202,6 @@ function getDefaults(grunt) {
         editor3: {
             browserSpellCheck: false,
         },
-
-        // default timezone for the app
-        defaultTimezone: grunt.option('defaultTimezone') || 'Europe/London',
 
         // model date and time formats
         model: {

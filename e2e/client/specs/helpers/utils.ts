@@ -179,7 +179,18 @@ export function assertToastMsg(type: 'info' | 'success' | 'error', msg: string) 
     const elem = element(s([`notification--${type}`], msg));
 
     browser.wait(ECE.elementToBeClickable(elem), 2000);
-    elem.click();
+
+    /**
+     * It seems there's an issue with protractor:
+     * Clicking an element throws `StaleElementReferenceError` when clicked immediately
+     * after waiting until it's clickable.
+     */
+    elem.isPresent().then((present) => {
+        // Only click if the toast is still present.
+        if (present) {
+            elem.click();
+        }
+    });
 }
 
 // Don't expect message to appear
@@ -187,7 +198,7 @@ export function assertToastMsgNotDisplayed(type, msg) {
     expect(element.all(by.cssContainingText(`[data-test-id="notification--${type}"]`, msg)).isPresent()).toBe(false);
 }
 
-export function waitForToastMsgDissapear(type, msg) {
+export function waitForToastMsgDisappear(type, msg) {
     browser.wait(protractor.ExpectedConditions.invisibilityOf(
         element(by.cssContainingText(`[data-test-id="notification--${type}"]`, msg)),
     ), 3000);

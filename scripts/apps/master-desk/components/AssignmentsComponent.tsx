@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {IDesk, IStage} from 'superdesk-api';
+import {IDataProvider, IDesk, IStage} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 
@@ -16,8 +16,15 @@ interface IProps {
     stages: Array<IStage>;
 }
 
+interface IDeskData {
+    [deskId: string]: Array<{
+        state: string;
+        count: number;
+    }>;
+}
+
 interface IState {
-    deskData: Array<any>;
+    deskData: IDeskData;
 }
 
 interface IAssignmentStage {
@@ -26,6 +33,7 @@ interface IAssignmentStage {
     code: string;
     states: Array<string>;
 }
+
 export class AssignmentsComponent extends React.Component<IProps, IState> {
     private assignmentStages: Array<IAssignmentStage> = [
         {
@@ -48,18 +56,48 @@ export class AssignmentsComponent extends React.Component<IProps, IState> {
         },
     ];
 
+    private data: IDataProvider;
+
     constructor(props) {
         super(props);
 
         this.state = {
-            deskData: [],
+            deskData: {},
         };
     }
 
     componentDidMount() {
-        this.props.desks.forEach((desk) => this.getDeskOverview(desk).then((data: any) => {
-            this.setState({deskData: {...this.state.deskData, [desk._id]: data._items}});
-        }));
+        this.data = dataApi.createProvider(
+            () => ({
+                method: 'POST',
+                endpoint: 'desks/all/overview/assignments',
+                data: {},
+            }),
+            (res) => {
+                if (this.data == null) {
+                    return;
+                }
+
+                const deskData: IDeskData = {};
+
+                res._items.forEach((bucket) => {
+                    deskData[bucket.desk] = bucket.sub.map((sub) => ({
+                        state: sub['key'],
+                        count: sub['count'],
+                    }));
+                });
+
+                this.setState({deskData});
+            },
+            {
+                assignments: {create: true, update: true, delete: true},
+            },
+        );
+    }
+
+    componentWillUnmount() {
+        this.data.stop();
+        this.data = null;
     }
 
     getDeskOverview(desk: IDesk | IDeskExtra) {

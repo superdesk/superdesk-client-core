@@ -376,3 +376,12 @@ $sd-leftNavBtn-transition: background-color 0.2s ease-out, color 0.1s ease-out;
         }
     }
 }
+
+.modal-footer--flex {
+    border: 1px solid var(--color-line__modal);
+    padding: 0.8rem 1.6rem;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

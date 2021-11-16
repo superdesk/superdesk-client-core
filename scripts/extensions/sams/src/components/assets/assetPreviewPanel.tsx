@@ -29,6 +29,8 @@ import {
     Text,
 } from '../../ui';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
+import {getPreviewComponent} from './preview';
+import {showImagePreviewModal} from './assetImagePreviewFullScreen';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
@@ -69,6 +71,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
         this.onEditAsset = this.onEditAsset.bind(this);
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onDeleteAsset = this.onDeleteAsset.bind(this);
+        this.onAssetImagePreview = this.onAssetImagePreview.bind(this);
     }
 
     onEditAsset(): void {
@@ -83,7 +86,15 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
         downloadAssetBinary(this.props.asset!);
     }
 
+    onAssetImagePreview(asset: IAssetItem): void {
+        showImagePreviewModal(asset!);
+    }
+
     render() {
+        if (this.props.asset?._id == null) {
+            return null;
+        }
+
         const {gettext} = superdeskApi.localization;
         const actions: Array<IAssetCallback> =
             [{
@@ -98,6 +109,10 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                 action: ASSET_ACTIONS.DELETE,
                 onSelect: this.onDeleteAsset,
             },
+            {
+                action: ASSET_ACTIONS.VIEW_FULL_SCREEN,
+                onSelect: this.onAssetImagePreview,
+            },
             ];
 
         if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
@@ -108,10 +123,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
         }
 
         const newActions = getDropdownItemsForActions(this.props.asset!, actions);
-
-        if (this.props.asset?._id == null) {
-            return null;
-        }
+        const ContentPreview = getPreviewComponent(this.props.asset);
 
         return (
             <React.Fragment>
@@ -143,6 +155,13 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                             </Dropdown>
                         </PanelContentBlockInner>
                     </PanelContentBlock>
+                    {!ContentPreview ? null : (
+                        <PanelContentBlock flex={true}>
+                            <PanelContentBlockInner grow={true}>
+                                <ContentPreview asset={this.props.asset} />
+                            </PanelContentBlockInner>
+                        </PanelContentBlock>
+                    )}
                     <PanelContentBlock flex={true}>
                         <PanelContentBlockInner grow={true}>
                             <FormRow>
@@ -182,6 +201,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                                 <FormLabel text={gettext('Set')} style="light" />
                                 <Text>{this.props.setName}</Text>
                             </FormRow>
+
                             <FormRow>
                                 <FormLabel text={gettext('Tags')} style="light" />
                                 {this.props.asset.tags?.map((tag) => (

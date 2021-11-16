@@ -1,4 +1,4 @@
-import {debounce, flatMap} from 'lodash';
+import {flatMap, noop} from 'lodash';
 import {isWidgetVisibleForContentProfile} from 'apps/workspace/content/components/WidgetsConfig';
 import {gettext} from 'core/utils';
 import {isKilled} from 'apps/archive/utils';
@@ -91,6 +91,12 @@ function AuthoringWidgetsProvider() {
         return widgets.concat(widgetsFromExtensions);
     };
 }
+
+export const widgetReactIntegration = {
+    pinWidget: noop as any,
+    getActiveWidget: noop as any,
+    getPinnedWidget: noop as any,
+};
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
     'keyboardManager', '$location', 'desks', 'lock', 'content', 'lodash', 'privileges',
@@ -289,6 +295,9 @@ function WidgetsManagerCtrl(
             this.updateUserPreferences(widget);
         }
     };
+
+    widgetReactIntegration.pinWidget = $scope.pinWidget;
+    widgetReactIntegration.getActiveWidget = () => $scope.active ?? $scope.pinnedWidget;
 
     this.updateUserPreferences = (widget?: IWidget) => {
         let update = [];

@@ -96,7 +96,7 @@ export class EditAttachmentModal extends React.Component<IProps, IState> {
                 id="EditAttachmentModal"
                 size="large"
                 closeModal={this.props.closeModal}
-                darkUI={true}
+                theme="dark-ui"
             >
                 <ModalHeader
                     text={gettext('Edit Attachment')}

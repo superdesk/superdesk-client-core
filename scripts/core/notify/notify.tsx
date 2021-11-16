@@ -18,18 +18,32 @@ const messageDisplayDurationsByType: IMessageDisplayDurationByType = {
     error: 8000,
 };
 
-interface IState {
-    messages: Array<any>;
+interface IMessage {
+    type: keyof IMessageDisplayDurationByType;
+    msg: string;
+    options?: {
+        button?: {
+            label: string;
+            onClick(): void;
+        }
+    };
+    displayDuration: IDisplayDuration;
 }
 
-class NotifyComponent extends React.Component<any, IState> {
+interface IState {
+    messages: Array<IMessage>;
+}
+
+type IDisplayDuration = number | 'manual';
+
+class NotifyComponent extends React.Component<{}, IState> {
     constructor(props) {
         super(props);
         this.state = {
             messages: [],
         };
     }
-    info(text: string, displayDuration?, options?) {
+    info(text: string, displayDuration?: IDisplayDuration, options?) {
         this.addMessage('info', text, displayDuration, options);
     }
     success(text: string, displayDuration?, options?) {
@@ -65,7 +79,7 @@ class NotifyComponent extends React.Component<any, IState> {
     addMessage(
         type: keyof IMessageDisplayDurationByType,
         text,
-        displayDuration = messageDisplayDurationsByType[type],
+        displayDuration: IDisplayDuration = messageDisplayDurationsByType[type],
         options = {},
     ) {
         if (find(this.state.messages, matches({msg: text})) !== undefined) {
@@ -73,13 +87,20 @@ class NotifyComponent extends React.Component<any, IState> {
         }
 
         this.setState({
-            messages: this.state.messages.concat({type: type, msg: text, options: options}),
+            messages: this.state.messages.concat({
+                type: type,
+                msg: text,
+                options: options,
+                displayDuration: displayDuration,
+            }),
         }, () => {
-            setTimeout(() => {
-                this.setState({
-                    messages: this.state.messages.filter(({msg}) => msg !== text),
-                });
-            }, displayDuration);
+            if (displayDuration !== 'manual') {
+                setTimeout(() => {
+                    this.setState({
+                        messages: this.state.messages.filter(({msg}) => msg !== text),
+                    });
+                }, displayDuration);
+            }
         });
     }
 
@@ -94,24 +115,38 @@ class NotifyComponent extends React.Component<any, IState> {
                     this.state.messages.map((msg, i) => (
                         <div
                             key={i}
-                            className={'alert alert-' + msg.type}
+                            className={`alert alert-${msg.type} space-between`}
                             onClick={() => this.removeMessage(i)}
                             data-test-id={`notification--${msg.type}`}
                         >
-                            {gettext(msg.msg)}
+                            <div>{msg.msg}</div>
 
-                            {
-                                (msg.options == null || !msg.options.button) ? null : (
-                                    <div className="pull-right">
+                            <div>
+                                {
+                                    msg.options?.button != null && (
                                         <button
                                             className="btn btn--hollow btn--small"
                                             onClick={msg.options.button.onClick}
                                         >
                                             {msg.options.button.label}
                                         </button>
-                                    </div>
-                                )
-                            }
+                                    )
+                                }
+
+                                {
+                                    msg.displayDuration === 'manual' && (
+                                        <button
+                                            className="btn btn--hollow btn--small btn--icon-only"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                this.removeMessage(i);
+                                            }}
+                                        >
+                                            <i className="icon-close-small" />
+                                        </button>
+                                    )
+                                }
+                            </div>
                         </div>
                     ))
                 }
@@ -139,17 +174,17 @@ export default angular.module('superdesk.core.notify', ['superdesk.core.translat
     }]);
 
 export const notify = {
-    info: (text: string, displayDuration?: number, options?: any) => {
+    info: (text: string, displayDuration?: IDisplayDuration, options?: IMessage['options']) => {
         ng.get('notify').info(text, displayDuration, options);
     },
-    success: (text: string, displayDuration?: number, options?: any) => {
+    success: (text: string, displayDuration?: IDisplayDuration, options?: IMessage['options']) => {
         // eslint-disable-next-line angular/no-http-callback
         ng.get('notify').success(text, displayDuration, options);
     },
-    warning: (text: string, displayDuration?: number, options?: any) => {
+    warning: (text: string, displayDuration?: IDisplayDuration, options?: IMessage['options']) => {
         ng.get('notify').warning(text, displayDuration, options);
     },
-    error: (text: string, displayDuration?: number, options?: any) => {
+    error: (text: string, displayDuration?: IDisplayDuration, options?: IMessage['options']) => {
         // eslint-disable-next-line angular/no-http-callback
         ng.get('notify').error(text, displayDuration, options);
     },

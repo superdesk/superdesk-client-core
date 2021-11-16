@@ -48,7 +48,8 @@ function httpRequestBase(options: IHttpRequestOptions): Promise<Response> {
         method,
         headers: headers || {},
         mode: 'cors',
-        body: JSON.stringify(payload), // works when `payload` is `undefined`
+        credentials: 'include',
+        body: JSON.stringify(payload || undefined), // works when `payload` is `undefined`
         signal: abortSignal,
     });
 }
@@ -68,7 +69,16 @@ export function httpRequestVoidLocal(options: IHttpRequestOptionsLocal): Promise
                 if (res.ok) {
                     return Promise.resolve();
                 } else {
-                    return Promise.reject();
+                    // Attempt to convert error response to JSON,
+                    // otherwise return body as text as returned from the server
+                    return res.text()
+                        .then((bodyText) => {
+                            try {
+                                return Promise.reject(JSON.parse(bodyText));
+                            } catch (_err) {
+                                return Promise.reject(bodyText);
+                            }
+                        });
                 }
             });
         });

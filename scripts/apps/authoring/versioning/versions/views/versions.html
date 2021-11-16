@@ -19,7 +19,7 @@
                 <span class="state-label state-{{ :: version.state}}" translate>{{ :: version.state | removeLodash }}</span>
                 <button class="btn btn--small btn--hollow ml-auto"
                         ng-show="canRevert && !$first && !dirty"
-                        ng-click="revert(version)"
+                        ng-click="revert(version, $event)"
                         translate>revert</button>
             </div>
         </li>

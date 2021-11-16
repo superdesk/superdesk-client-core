@@ -443,7 +443,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
             );
     };
 
-    this.correction = function correction(item: IPublishedArticle, removeCorrection = false) {
+    this.correction = function correction(item: IPublishedArticle, handleIsCorrection, removeCorrection = false) {
         var authoringWorkspace: AuthoringWorkspaceService = $injector.get('authoringWorkspace');
         let extDiff = {};
 
@@ -477,6 +477,9 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
                                 {message: response.data._message}));
                         } else {
                             notify.error(gettext('There was an error. Failed to generate update.'));
+                        }
+                        if (handleIsCorrection) {
+                            handleIsCorrection();
                         }
                     });
             });
@@ -913,7 +916,7 @@ export function AuthoringService($q, $location, api, lock, autosave, confirm, pr
         var now = moment();
         var schedule = moment.tz(
             timestamp.replace('+0000', '').replace('Z', ''), // avoid timezone info here
-            timezone || appConfig.defaultTimezone,
+            timezone || appConfig.default_timezone,
         );
 
         if (!schedule.isValid()) {

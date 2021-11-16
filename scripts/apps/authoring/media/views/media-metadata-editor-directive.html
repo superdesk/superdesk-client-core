@@ -104,7 +104,7 @@
     </div>
 
     <div ng-if="field.cv && field.cv.field_type === 'authors'" class="sd-line-input sd-line-input--boxed" ng-class="{'sd-line-input--required': field.required}">
-        <label class="authoring-header__item-label">{{ field.label }}</label>
+        <label class="sd-line-input__label">{{ field.label }}</label>
         <div class="authoring-header__input-holder">
             <div
                 sd-meta-terms
@@ -119,6 +119,7 @@
                 data-change="onChange({key: field})"
                 data-reload-list="true"
                 data-disable-entire-category="{{field.cv.disable_entire_category_selection}}"
+                data-placeholder="placeholder[field.field]"
             ></div>
         </div>
     </div>

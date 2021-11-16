@@ -14,20 +14,11 @@ jobs:
 
     - uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
-
-    - name: Cache NPM
-      uses: actions/cache@v2
-      with:
-        # npm cache files are stored in `~/.npm` on Linux/macOS
-        path: ~/.npm
-        key: ${{ runner.OS }}-node-${{ hashFiles('package-lock.json') }}
-        restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
+        node-version: '10.x'
 
     # avoid file watch limit error
     - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
     - run: npm ci
     - run: npm run test
 
@@ -44,38 +35,26 @@ jobs:
 
     - uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: '10.x'
 
-    - name: Cache NPM
-      uses: actions/cache@v2
-      with:
-        # npm cache files are stored in `~/.npm` on Linux/macOS
-        path: ~/.npm
-        key: ${{ runner.OS }}-node-${{ hashFiles('package-lock.json') }}
-        restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}-
-
-    - run: npm ci
 
     - name: Start e2e server
       run: |
         docker-compose pull
         docker-compose build
         docker-compose up -d
-      working-directory: test-server
+      working-directory: e2e/server
 
     - name: Build client
-      run: npm run build-e2e && npm run start-client-server
-
-    - name: Workaround for webdriver version (https://github.com/angular/protractor/issues/5519)
-      run: node ./node_modules/.bin/webdriver-manager update --versions.chrome=90.0.4430.24
-
+      run: npm install && npm run build && npm run specs--compile && npm run start-client-server
+      working-directory: e2e/client
+    
     - name: Protractor
       run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
       env:
         TRAVIS: ci
         SCREENSHOTS_DIR: /tmp
+      working-directory: e2e/client
 
     - name: Upload screenshots
       if: ${{ failure() }}

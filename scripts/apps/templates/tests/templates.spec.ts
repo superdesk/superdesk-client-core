@@ -86,23 +86,9 @@ describe('templates', () => {
             templates.fetchTemplatesByUserDesk();
             expect(api.query).not.toHaveBeenCalledWith('content_templates');
         }));
-        it('can fetch templates using page parameters', inject((api, templates) => {
-            templates.fetchTemplatesByUserDesk('foo', undefined, 2, 25);
-            expect(api.query).toHaveBeenCalledWith('content_templates', {
-                max_results: 25,
-                page: 2,
-                sort: 'template_name',
-                where: '{"$and":[{"$or":[{"$or":[' +
-                '{"template_desks":{"$exists":false}},' +
-                '{"template_desks":[]}]},' +
-                '{"user":"foo"}]}]}',
-            });
-        }));
         it('can fetch templates using type parameter', inject((api, templates) => {
             templates.fetchTemplatesByUserDesk('foo', undefined, undefined, undefined, 'create');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
-                max_results: 10,
-                page: 1,
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false}},' +
                        '{"template_desks":[]}]},' +
@@ -112,8 +98,6 @@ describe('templates', () => {
         it('can fetch templates using desk parameter', inject((api, templates) => {
             templates.fetchTemplatesByUserDesk('foo', 'desk1', 2, 10);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
-                max_results: 10,
-                page: 2,
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false}},' +
                 '{"template_desks":[]},' +
@@ -124,8 +108,6 @@ describe('templates', () => {
         it('can fetch templates using keyword parameter', inject((api, templates) => {
             templates.fetchTemplatesByUserDesk('foo', undefined, undefined, undefined, undefined, 'keyword');
             expect(api.query).toHaveBeenCalledWith('content_templates', {
-                page: 1,
-                max_results: 10,
                 sort: 'template_name',
                 where: '{"$and":[{"$or":[{"$or":[{"template_desks":{"$exists":false}},' +
                 '{"template_desks":[]}]},' +
@@ -136,8 +118,6 @@ describe('templates', () => {
         it('can fetch templates by id', inject((api, templates) => {
             templates.fetchTemplatesByIds([123, 456]);
             expect(api.query).toHaveBeenCalledWith('content_templates', {
-                max_results: 10,
-                page: 1,
                 where: '{"_id":{"$in":[123,456]}}',
             });
         }));
@@ -161,8 +141,6 @@ describe('templates', () => {
             templates.getRecentTemplates('desk2');
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalledWith('content_templates', {
-                max_results: 10,
-                page: 1,
                 where: '{"_id":{"$in":["template2","template3"]}}',
             });
         }));
@@ -180,8 +158,6 @@ describe('templates', () => {
             templates.fetchAllTemplates();
             $rootScope.$digest();
             expect(api.query).toHaveBeenCalledWith('content_templates', {
-                page: 1,
-                max_results: 10,
                 sort: 'template_name',
                 manage: true,
             });
@@ -198,8 +174,6 @@ describe('templates', () => {
                 templates.fetchAllTemplates();
                 $rootScope.$digest();
                 expect(api.query).toHaveBeenCalledWith('content_templates', {
-                    page: 1,
-                    max_results: 10,
                     sort: 'template_name',
                     manage: true,
                 });
@@ -211,8 +185,6 @@ describe('templates', () => {
                 templates.fetchAllTemplates(1, 50);
                 $rootScope.$digest();
                 expect(api.query).toHaveBeenCalledWith('content_templates', {
-                    page: 1,
-                    max_results: 50,
                     sort: 'template_name',
                     manage: true,
                 });
@@ -224,8 +196,6 @@ describe('templates', () => {
                 templates.fetchAllTemplates(1, 50, 'create');
                 $rootScope.$digest();
                 expect(api.query).toHaveBeenCalledWith('content_templates', {
-                    page: 1,
-                    max_results: 50,
                     sort: 'template_name',
                     where: '{"$and":[{"template_type":"create"}]}',
                     manage: true,
@@ -237,8 +207,6 @@ describe('templates', () => {
                 templates.fetchAllTemplates(1, 50, 'create', 'test');
                 $rootScope.$digest();
                 expect(api.query).toHaveBeenCalledWith('content_templates', {
-                    page: 1,
-                    max_results: 50,
                     sort: 'template_name',
                     where: '{"$and":[{"template_type":"create","template_name":{"$regex":"test","$options":"-i"}}]}',
                     manage: true,

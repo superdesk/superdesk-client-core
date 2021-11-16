@@ -190,13 +190,13 @@
                     </div>
 
                     <div class="form__row credentials">
-                        <div class="sd-alert sd-alert--hollow sd-alert--alert sd-alert--small" ng-show="error" translate>
-                            An error occured when testing config.
+                        <div class="sd-alert sd-alert--hollow sd-alert--alert sd-alert--small" ng-show="error">
+                            {{getErrorMessage(error)}}
                         </div>
 
                         <div sd-ingest-provider-config></div>
 
-                        <div class="sd-line-input">
+                        <div class="sd-line-input" ng-if="!shouldSkipConfigTest()">
                             <span sd-switch ng-model="provider.skip_config_test"></span><label translate>Skip config test</label>
                             <p class="sd-line-input__hint" translate>Enable if config can't be tested on REST server.</p>
                         </div>

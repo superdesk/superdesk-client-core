@@ -4,7 +4,10 @@ import {logger} from 'core/services/logger';
 import {SelectionState, convertFromRaw, EditorState} from 'draft-js';
 import {IArticle} from 'superdesk-api';
 import {getFieldMetadata, fieldsMetaKeys} from '../helpers/fieldsMeta';
-import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {
+    CharacterLimitUiBehavior,
+    DEFAULT_UI_FOR_EDITOR_LIMIT,
+} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 
 /**
  * @ngdoc method
@@ -236,8 +239,17 @@ export function changeCase(changeTo: ITextCase, selection: SelectionState) {
 
 export type EditorLimit = { ui: CharacterLimitUiBehavior, chars: number };
 export function changeLimitConfig(payload: EditorLimit) {
+    const config = payload.ui ? payload : {...payload, ui: DEFAULT_UI_FOR_EDITOR_LIMIT};
+
     return {
         type: 'EDITOR_CHANGE_LIMIT_CONFIG',
-        payload,
+        payload: config,
+    };
+}
+
+export function autocomplete(value: string) {
+    return {
+        type: 'EDITOR_AUTOCOMPLETE',
+        payload: {value},
     };
 }

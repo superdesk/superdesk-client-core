@@ -7,7 +7,7 @@ import {
     ctrlShiftKey,
     assertToastMsg,
     assertToastMsgNotDisplayed,
-    waitForToastMsgDissapear,
+    waitForToastMsgDisappear,
     nav,
     shiftKey,
 } from './helpers/utils';
@@ -17,12 +17,13 @@ import {workspace} from './helpers/workspace';
 import {authoring} from './helpers/authoring';
 
 import {el, ECE, els, hover, selectFilesForUpload} from '@superdesk/end-to-end-testing-helpers';
+import {getAbsoluteFilePath} from './utils';
 
-function uploadMedia(imageName) {
+function uploadMedia(imagePathAbsolute) {
     el(['media-gallery--upload-placeholder']).click();
 
     browser.wait(ECE.presenceOf(el(['image-upload-input'])));
-    selectFilesForUpload(el(['image-upload-input']), [imageName]);
+    selectFilesForUpload(el(['image-upload-input']), [imagePathAbsolute]);
 
     el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]'))
         .sendKeys('image headline');
@@ -357,7 +358,7 @@ describe('authoring', () => {
         expect(authoring.getHeaderSluglineText()).toContain('item5');
     });
 
-    it('can calculate word counts', () => {
+    xit('can calculate word counts', () => {
         expect(monitoring.getTextItem(2, 0)).toBe('item5');
         monitoring.actionOnItem('Edit', 2, 0);
         authoring.cleanBodyHtmlElement();
@@ -714,10 +715,10 @@ describe('authoring', () => {
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
 
-        uploadMedia('image-big.jpg');
+        uploadMedia(getAbsoluteFilePath('test-files/image-big.jpg'));
 
         assertToastMsg('success', 'Item updated.');
-        waitForToastMsgDissapear('success', 'Item updated.');
+        waitForToastMsgDisappear('success', 'Item updated.');
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
 
@@ -736,7 +737,7 @@ describe('authoring', () => {
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
 
-        uploadMedia('image-big.jpg');
+        uploadMedia(getAbsoluteFilePath('test-files/image-big.jpg'));
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
     });
@@ -750,7 +751,7 @@ describe('authoring', () => {
         browser.wait(ECE.visibilityOf(el(['authoring-field--media-gallery', 'media-gallery--upload-placeholder'])));
         expect(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 0)()).toBe(true);
 
-        uploadMedia('image-red.jpg');
+        uploadMedia(getAbsoluteFilePath('test-files/image-red.jpg'));
 
         browser.wait(ECE.hasElementCount(els(['authoring-field--media-gallery', 'media-gallery-image']), 1));
 

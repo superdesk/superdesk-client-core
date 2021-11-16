@@ -1,4 +1,4 @@
-import Raven from 'raven-js';
+import Raven, {RavenOptions} from 'raven-js';
 
 class Logger {
     constructor() {
@@ -13,29 +13,45 @@ class Logger {
         }
     }
 
-    error(e: Error) {
+    error(
+        e: Error,
+        additionalData?: any, // has to be serializable to JSON string
+    ) {
         console.error(e);
 
-        Raven.captureException(e);
-    }
-
-    warn(message: string, additionalData?) {
-        const data = {};
-
-        data['level'] = 'warning';
+        const options: RavenOptions = {};
 
         if (additionalData != null) {
             try {
-                data['extra'] = {additionalData: JSON.stringify(additionalData)};
+                options.extra = {additionalData: JSON.stringify(additionalData)};
             } catch (e) {
-                data['extra'] = {additionalData: 'Failed to serialize'};
+                options.extra = {additionalData: 'Failed to serialize'};
             }
         }
 
-        console.warn(message, data);
+        Raven.captureException(e, options);
+    }
+
+    warn(
+        message: string,
+        additionalData?, // has to be serializable to JSON string
+    ) {
+        const options: RavenOptions = {};
+
+        options['level'] = 'warning';
+
+        if (additionalData != null) {
+            try {
+                options.extra = {additionalData: JSON.stringify(additionalData)};
+            } catch (e) {
+                options.extra = {additionalData: 'Failed to serialize'};
+            }
+        }
+
+        console.warn(message, options);
 
         if (Raven.isSetup()) {
-            Raven.captureMessage(message, data);
+            Raven.captureMessage(message, options);
         }
     }
 }

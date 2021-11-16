@@ -23,6 +23,8 @@ import {showSpikeDialog} from './show-spike-dialog';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services';
 import * as actions from './actions';
 import {RelatedView} from './views/related-view';
+import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/components/prompt-for-unsaved-changes';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -327,7 +329,7 @@ angular.module('superdesk.apps.archive', [
                     return authoring.itemActions(item).cancelCorrection;
                 }],
                 controller: ['data', 'authoring', function(data, authoring) {
-                    authoring.correction(data.item.archive_item || data.item, true);
+                    authoring.correction(data.item.archive_item || data.item, false, true);
                 }],
             })
             .activity('export', {
@@ -417,14 +419,39 @@ function spikeActivity(spike, data, modal, $location, multi,
         return;
     }
 
-    if (data.item.lock_user) { // current user has the lock
-        return autosave.get(data.item)
-            .then(() => confirm.reopen())
-            .then(() => authoringWorkspace.edit(data.item))
-            .catch(_spike);
-    }
+    const checkIfHasUnsavedChanges = data.item.lock_user == null
+        ? Promise.resolve(false)
+        : autosave.hasUnsavedChanges(data.item);
 
-    _spike();
+    checkIfHasUnsavedChanges.then((hasUnsavedChanges) => {
+        if (hasUnsavedChanges) {
+            showUnsavedChangesPrompt().then(({action, closePromptFn}) => {
+                autosave.settle(data.item).then(() => {
+                    switch (action) {
+                    case IUnsavedChangesAction.cancelAction:
+                        closePromptFn();
+                        break;
+
+                    case IUnsavedChangesAction.discardChanges:
+                        closePromptFn();
+                        _spike();
+
+                        break;
+
+                    case IUnsavedChangesAction.openItem:
+                        closePromptFn();
+                        authoringWorkspace.edit(data.item);
+                        break;
+
+                    default:
+                        assertNever(action);
+                    }
+                });
+            });
+        } else {
+            _spike();
+        }
+    });
 
     function _spike() {
         if ($location.path() === '/workspace/personal') {

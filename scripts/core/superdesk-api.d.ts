@@ -368,7 +368,10 @@ declare module 'superdesk-api' {
         version_creator: string;
         state: ITEM_STATE;
         embargo?: any;
-        signal?: any;
+        signal?: Array<{
+            name?: string;
+            qcode: string;
+        }>;
         broadcast?: {
             master_id?: any; // original story this broadcast version was created from
             status?: any;
@@ -539,6 +542,13 @@ declare module 'superdesk-api' {
         editor_role: string;
     }
 
+    export interface IMonitoringGroup {
+        _id: string;
+        type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
+        max_items?: number;
+        header?: string;
+    }
+
     export interface IDesk extends IBaseRestApiResponse {
         name: string;
         description?: string;
@@ -547,11 +557,7 @@ declare module 'superdesk-api' {
         working_stage: IStage['_id'];
         content_expiry?: number;
         source: string;
-        monitoring_settings?: Array<{
-            _id: string;
-            type: 'search' | 'stage' | 'scheduledDeskOutput' | 'deskOutput' | 'personal' | 'sentDeskOutput';
-            max_items: number;
-        }>;
+        monitoring_settings?: Array<IMonitoringGroup>;
         desk_type: 'authoring' | 'production';
         desk_metadata?: {[key: string]: any};
         content_profiles: {[key: IContentProfile['_id']]: any};
@@ -574,7 +580,7 @@ declare module 'superdesk-api' {
         default_incoming: boolean;
         task_status: 'todo' | 'in_progress' | 'done';
         desk_order: number;
-        desk: any;
+        desk: IDesk['_id'];
         content_expiry: number;
         is_visible: boolean;
         local_readonly: boolean;
@@ -972,6 +978,10 @@ declare module 'superdesk-api' {
         countLines?(plainText: string, lineLength: number): number;
     }
 
+    export interface IConfigurableAlgorithms {
+        countLines?(plainText: string, lineLength: number): number;
+    }
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
@@ -996,6 +1006,11 @@ declare module 'superdesk-api' {
         justifyContent?: string;
     }
 
+    export interface IPropsWidgetHeading {
+        widgetName: string;
+        editMode: boolean;
+    }
+
     export interface IGridComponentProps {
         columns: number;
         boxed?: boolean;
@@ -1004,8 +1019,17 @@ declare module 'superdesk-api' {
 
     export interface IAlertComponentProps {
         type: 'info' | 'warning' | 'error';
+        message: string;
+        title?: string;
+
+        /** actions will be rendered as small icon-buttons on the right */
+        actions?: Array<{
+            label: string;
+            onClick(): void;
+            icon?: string;
+        }>;
+        size?: 'small';
         hollow?: boolean;
-        children?: React.ReactNode;
     }
 
     export interface IFigureComponentProps {
@@ -1033,6 +1057,10 @@ declare module 'superdesk-api' {
         onClose?(): void;
     }
 
+    export interface IModalFooterProps {
+        flex?: boolean;
+    }
+
     export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
         openPreview(id: string): void;
         startEditing(id: string): void;
@@ -1053,7 +1081,6 @@ declare module 'superdesk-api' {
         autoFocus?: boolean;
         horizontalSpacing?: boolean;
     }
-
 
     export interface IDropdownTreeGroup<T> {
         render(): JSX.Element | null;
@@ -1131,10 +1158,26 @@ declare module 'superdesk-api' {
         isUploadValid(files: Array<File>): boolean;
     }
 
+    export interface IIgnoreCancelSaveProps {
+        title: string;
+        body: React.ReactNode;
+        hideIgnore?: boolean;
+        hideCancel?: boolean;
+        hideSave?: boolean;
+    }
+
+    export type IIgnoreCancelSaveResponse = 'ignore' | 'cancel' | 'save';
+    // HELPERS
+
+    export interface ITreeNode<T> {
+        value: T;
+        parent?: ITreeNode<T>;
+        children?: Array<ITreeNode<T>>;
+    }
+
+
 
     // EDITOR3
-
-
     export interface IEditor3AnnotationInputTab {
         label: string;
         selectedByDefault(annotationText: string, mode: 'create' | 'edit'): Promise<boolean>;
@@ -1151,9 +1194,115 @@ declare module 'superdesk-api' {
         onApplyAnnotation(html: string): void;
     }
 
+    export type FORMATTING_OPTION =
+        'h1' |
+        'h2' |
+        'h3' |
+        'h4' |
+        'h5' |
+        'h6' |
+        'justifyLeft' |
+        'justifyCenter' |
+        'justifyRight' |
+        'justifyFull' |
+        'outdent' |
+        'indent' |
+        'unordered list' |
+        'ordered list' |
+        'pre' |
+        'quote' |
+        'media' |
+        'link' |
+        'superscript' |
+        'subscript' |
+        'strikethrough' |
+        'underline' |
+        'italic' |
+        'bold' |
+        'table';
+
+    export type PLAINTEXT_FORMATTING_OPTION = 'uppercase' | 'lowercase';
+
+    export type RICH_FORMATTING_OPTION =
+        PLAINTEXT_FORMATTING_OPTION |
+        'h1' |
+        'h2' |
+        'h3' |
+        'h4' |
+        'h5' |
+        'h6' |
+        'ordered list' |
+        'unordered list' |
+        'quote' |
+        'media' |
+        'link' |
+        'embed' |
+        'underline' |
+        'italic' |
+        'bold' |
+        'table' |
+        'formatting marks' |
+        'remove format' |
+        'remove all format' |
+        'annotation' |
+        'comments' |
+        'suggestions' |
+        'pre' |
+        'superscript' |
+        'subscript' |
+        'strikethrough' |
+        'tab' |
+        'tab as spaces' |
+        'undo' |
+        'redo';
+
+    export interface IEditor3HtmlProps {
+        value: string;
+        onChange(value: string): void;
+        readOnly: boolean;
+
+        // If set, it will be used to make sure the toolbar is always
+        // visible when scrolling. If not set, window object is used as reference.
+        // Any valid jQuery selector will do.
+        scrollContainer?: any;
+
+        // Editor format options that are enabled and should be displayed
+        // in the toolbar.
+        editorFormat?: Array<RICH_FORMATTING_OPTION>;
+    }
+
 
 
     // DATA API
+
+    export interface IDataRequestParams {
+        method: 'GET' | 'POST';
+        endpoint: string;
+        data?: any;
+        params?: any;
+    }
+
+    type IRequestFactory = () => IDataRequestParams;
+
+    type IResponseHandler = (res: IRestApiResponse<T>) => any;
+
+    export interface IDataProvider {
+        update: () => void;
+        stop: () => void;
+    }
+
+    export interface IListenTo {
+        [resource: string]: {
+            create?: true;
+            delete?: true;
+            update?: true | Array<string>;
+        } | true;
+    }
+
+    export interface IAbortablePromise<T> {
+        response: Promise<T>;
+        abort(): void;
+    }
 
     export interface IDataApi {
         findOne<T>(endpoint: string, id: string): Promise<T>;
@@ -1168,13 +1317,13 @@ declare module 'superdesk-api' {
         ): Promise<IRestApiResponse<T>>;
         queryRawJson<T>(endpoint, params?: Dictionary<string, any>): Promise<T>;
         queryRaw<T>(endpoint, params?: Dictionary<string, any>): Promise<Response>;
+        abortableQueryRaw(endpoint, params?: Dictionary<string, any>): IAbortablePromise<Response>;
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
         uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress: (event: ProgressEvent) => void): Promise<T>;
+        createProvider: (requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo?: IListenTo) => IDataProvider;
     }
-
-
 
     // EVENTS
 
@@ -1437,7 +1586,7 @@ declare module 'superdesk-api' {
             articleInEditMode?: IArticle['_id'];
         };
         instance: {
-            config: ISuperdeskGlobalConfig
+            config: ISuperdeskGlobalConfig;
         };
 
         /** Retrieves configuration options passed when registering an extension. */
@@ -1458,6 +1607,7 @@ declare module 'superdesk-api' {
             };
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
+            showIgnoreCancelSaveDialog(props: IIgnoreCancelSaveProps): Promise<IIgnoreCancelSaveResponse>;
             showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
             notify: {
                 info(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
@@ -1535,7 +1685,7 @@ declare module 'superdesk-api' {
             Modal: React.ComponentType<IModalProps>;
             ModalHeader: React.ComponentType<IPropsModalHeader>;
             ModalBody: React.ComponentType;
-            ModalFooter: React.ComponentType;
+            ModalFooter: React.ComponentType<IModalFooterProps>;
             Badge: React.ComponentType<IPropsBadge>;
             SelectUser: React.ComponentType<IPropsSelectUser>;
             UserAvatar: React.ComponentType<{userId: string}>;
@@ -1548,6 +1698,8 @@ declare module 'superdesk-api' {
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
+            Editor3Html: React.ComponentType<IEditor3HtmlProps>;
+            WidgetHeading: React.ComponentType<IPropsWidgetHeading>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;
@@ -1658,6 +1810,13 @@ declare module 'superdesk-api' {
                     self: boolean; // will check the current element too if set to true
                 },
             ): HTMLElement | null;
+
+            arrayToTree<T>(
+                itemsFlat: Array<T>,
+                getId: (item: T) => string,
+                getParentId: (item: T) => string | undefined | null,
+            ): {result: Array<ITreeNode<T>>, errors: Array<T>};
+            treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,
@@ -1712,6 +1871,10 @@ declare module 'superdesk-api' {
         oidc_auth: any;
         keycloak_config: any;
 
+        /**
+         * Enable autocomplete for supported text fields in authoring.
+         * Values of published items are used for autocomplete suggestions.
+         */
         archive_autocomplete: boolean;
 
         /** allow updates for items which aren't published yet */
@@ -1726,6 +1889,8 @@ declare module 'superdesk-api' {
         allow_updating_scheduled_items: boolean;
 
         corrections_workflow: boolean;
+
+        default_timezone: string;
 
         // TANSA SERVER CONFIG
         tansa?: {
@@ -1781,6 +1946,8 @@ declare module 'superdesk-api' {
                 publishAndContinue?: boolean;
             },
             showPublishSchedule?: boolean
+            hideCreatePackage?: boolean;
+            confirmDueDate?: boolean;
         };
         auth: {
             google: boolean
@@ -1803,7 +1970,6 @@ declare module 'superdesk-api' {
             };
         };
         confirm_spike: boolean;
-        defaultTimezone: any;
         search: {
             useDefaultTimezone: any;
         };
@@ -1813,7 +1979,7 @@ declare module 'superdesk-api' {
             timeformat: string;
         };
         user: {
-            sign_off_mapping: any;
+            sign_off_mapping?: string;
             username_pattern?: string;
         };
         infoRemovedFields: {};
@@ -1929,6 +2095,17 @@ declare module 'superdesk-api' {
                 };
             }
         };
+
+        media: {
+            renditions: {
+                [media_type: string]: {
+                    [rendition_name: string]: {
+                        width: number;
+                        height: number;
+                    };
+                };
+            };
+        };
     }
 
     export interface ITemplate extends IBaseRestApiResponse {
@@ -2030,8 +2207,15 @@ declare module 'superdesk-api' {
         description?: string;
         qcode: string;
         scheme?: string;
-        source?: string;
         translations?: {};
         altids?: {[key: string]: string};
+        aliases?: Array<string>;
+
+        /** provider name, eg. imatrics */
+        source?: string;
+
+        /** original source of the data, eg. wikidata */
+        original_source?: string;
+        parent?: string;
     }
 }
