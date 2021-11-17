@@ -13,8 +13,9 @@ function getAllInputTypes(): Array<FormFieldType> {
 
 function getTestFieldConfig(type: FormFieldType): IFormField {
     switch (type) {
-    case FormFieldType.textSingleLine:
+    case FormFieldType.plainText:
     case FormFieldType.textEditor3:
+    case FormFieldType.number:
     case FormFieldType.checkbox:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
@@ -22,6 +23,15 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
         return {
             type: type,
             field: 'test-field',
+        };
+    case FormFieldType.select:
+    case FormFieldType.selectMultiple:
+        return {
+            type: type,
+            field: 'test-field',
+            component_parameters: {
+                items: [],
+            },
         };
     case FormFieldType.vocabularySingleValue:
         return {
@@ -40,16 +50,6 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
                 deskField: 'test-desk-field',
             },
         };
-    case FormFieldType.select:
-        return {
-            type: type,
-            field: 'test-field',
-            component_parameters: {
-                options: [
-                    {id: 'test', label: 'test'},
-                ],
-            },
-        };
     default:
         assertNever(type);
     }
@@ -62,6 +62,7 @@ describe('generic form', () => {
     beforeEach(window.module('superdesk.apps.desks'));
 
     getAllInputTypes()
+        .filter((type) => type !== FormFieldType.checkbox) // checkbox doesn't have error messages
         .forEach((type: FormFieldType) => {
             it(`${type} should render error messages`, (done) => inject((desks) => {
                 desks.desks = {_items: []};
@@ -93,6 +94,7 @@ describe('generic form', () => {
         });
 
     getAllInputTypes()
+        .filter((type) => type !== FormFieldType.checkbox) // checkbox can't be required
         .forEach((type: FormFieldType) => {
             it(`${type} should add a classname for required fields`, (done) => inject((desks) => {
                 desks.desks = {_items: []};

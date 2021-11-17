@@ -617,7 +617,7 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
     });
 
     function getActiveProfiles() {
-        content.getTypes(false).then((profiles) => {
+        content.getTypes('text', false).then((profiles) => {
             self.loading = false;
             self.activeProfiles = profiles;
 

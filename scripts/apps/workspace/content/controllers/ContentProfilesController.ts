@@ -1,11 +1,81 @@
 import {cloneDeep, get, isEqual} from 'lodash';
 import {gettext} from 'core/utils';
-import {IContentProfile} from 'superdesk-api';
+import {IContentProfile, IRestApiResponse} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {assertNever, nameof} from 'core/helpers/typescript-helpers';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+
+export enum IContentProfileType {
+    text = 'text',
+    image = 'image',
+    audio = 'audio',
+    video = 'video',
+    package = 'package',
+}
+
+const allContentProfileTypes: Array<IContentProfileType> =
+    Object.keys(IContentProfileType).map((key) => IContentProfileType[key]);
+
+interface IScope extends ng.IScope {
+    showInfoBubble: boolean;
+    creating: boolean;
+    editing: {[key: string]: any};
+    new: {[key: string]: any};
+    active_only: boolean;
+    contentTypeFilter: string | null;
+    ngForm: any;
+    contentProfileTypes: Array<{
+        label: string;
+        value: string;
+        disabled: boolean;
+        icon: string;
+    }>;
+    setNgForm(ngForm): void;
+    patchContentProfile(patch: Partial<IContentProfile>): void;
+    getContentProfileIconByProfileType(type: IContentProfile['type']): string;
+    toggleContentProfileFilter(type: IContentProfile['type']): void;
+}
+
+function getContentProfileIcon(type: IContentProfileType): string {
+    switch (type) {
+    case IContentProfileType.text:
+        return 'icon-text';
+    case IContentProfileType.image:
+        return 'icon-picture';
+    case IContentProfileType.audio:
+        return 'icon-audio';
+    case IContentProfileType.video:
+        return 'icon-video';
+    case IContentProfileType.package:
+        return 'icon-composite';
+    default:
+        return 'icon-text';
+    }
+}
+
+function getLabelForContentProfileType(type: IContentProfileType): string {
+    switch (type) {
+    case IContentProfileType.text:
+        return gettext('Text');
+    case IContentProfileType.image:
+        return gettext('Image');
+    case IContentProfileType.audio:
+        return gettext('Audio');
+    case IContentProfileType.video:
+        return gettext('Video');
+    case IContentProfileType.package:
+        return gettext('Package');
+    default:
+        return assertNever(type);
+    }
+}
 
 ContentProfilesController.$inject = ['$scope', '$location', 'notify', 'content', 'modal', '$q'];
-export function ContentProfilesController($scope, $location, notify, content, modal, $q) {
+export function ContentProfilesController($scope: IScope, $location, notify, content, modal, $q) {
     var self = this;
+
+    // info bubble
+    $scope.showInfoBubble = true;
 
     // creating will be true while the modal for creating a new content
     // profile is visible.
@@ -16,9 +86,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
     // be null.
     $scope.editing = null;
 
-    // if true, only active Content Profiles will be shown
-    // can be changed with a button
-    $scope.active_only = true;
+    $scope.active_only = false;
 
     // required for being able to mark the form as dirty and enable the save button
     // after saving content profile widgets config
@@ -26,11 +94,26 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         $scope.ngForm = ngForm;
     };
 
-    $scope.saveContentProfileWidgetsConfig = (nextWidgetsConfig: IContentProfile['widgets_config']) => {
-        $scope.editing.form.widgets_config = nextWidgetsConfig;
+    $scope.patchContentProfile = (patch: Partial<IContentProfile>) => {
+        Object.assign($scope.editing.form, patch);
+
         $scope.$applyAsync(() => {
             $scope.ngForm.$dirty = true;
         });
+    };
+
+    $scope.getContentProfileIconByProfileType = (type: IContentProfile['type']) => {
+        return getContentProfileIcon(IContentProfileType[type]);
+    };
+
+    $scope.contentTypeFilter = null;
+
+    $scope.toggleContentProfileFilter = (type: IContentProfile['type']) => {
+        if ($scope.contentTypeFilter === type) {
+            $scope.contentTypeFilter = null;
+        } else {
+            $scope.contentTypeFilter = type;
+        }
     };
 
     /**
@@ -39,7 +122,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
      * @private
      */
     function refreshList(callEditActive) {
-        return content.getTypes(true).then((types) => {
+        return content.getTypes(null, true).then((types) => {
             self.items = types;
             if (callEditActive) {
                 editActive();
@@ -73,6 +156,27 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         }
     }
 
+    function setContentProfiles() {
+        $scope.contentProfileTypes = []; // loading
+
+        httpRequestJsonLocal<IRestApiResponse<IContentProfile>>({
+            method: 'GET',
+            path: '/content_types',
+            urlParams: {
+                where: {type: {$ne: 'text'}},
+            },
+        }).then((res) => {
+            const existingTypes = new Set(res._items.map((profile) => IContentProfileType[profile.type]));
+
+            $scope.contentProfileTypes = allContentProfileTypes.map((type) => ({
+                label: getLabelForContentProfileType(type),
+                value: type,
+                disabled: existingTypes.has(type),
+                icon: getContentProfileIcon(type),
+            }));
+        });
+    }
+
     /**
      * @description Reports that an error has occurred.
      * @private
@@ -84,6 +188,12 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         console.error(resp);
         return $q.reject(resp);
     }
+
+    $scope.$on('resource:updated', (event, data) => {
+        if (data.resource === 'content_types' && data.fields[nameof<IContentProfile>('type')] === 1) {
+            setContentProfiles();
+        }
+    });
 
     /**
      * @description Middle-ware that checks an error response to verify whether
@@ -129,6 +239,11 @@ export function ContentProfilesController($scope, $location, notify, content, mo
      * @description Creates a new content profile.
      */
     this.save = function() {
+        if ($scope.new?.type == null) {
+            notify.error(gettext('"{{x}}" field is required', {x: 'content type'}));
+            return;
+        }
+
         var onSuccess = function(resp) {
             refreshList(true);
             self.toggleCreate();
@@ -171,4 +286,5 @@ export function ContentProfilesController($scope, $location, notify, content, mo
     };
 
     refreshList(true);
+    setContentProfiles();
 }

@@ -16,6 +16,11 @@ export function stripHtmlTags(value) {
     return el.innerText;
 }
 
+/** Does not mutate the original array. */
+export function arrayInsert<T>(array: Array<T>, item: T, index: number): Array<T> {
+    return array.slice(0, index).concat(item).concat(array.slice(index, array.length));
+}
+
 export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
     const keys = Object.keys(promises);
     const promisesArray = keys.map((key) => promises[key]);
@@ -31,6 +36,25 @@ export const promiseAllObject = (promises) => new Promise((resolve, reject) => {
         })
         .catch(reject);
 });
+
+/** Does not mutate the original array. */
+export function arrayMove<T>(arr: Array<T>, from: number, to: number): Array<T> {
+    if (
+        from < 0 || from > arr.length - 1
+        || to < 0 || to > arr.length - 1
+    ) {
+        console.error('Out of range.');
+        return arr;
+    }
+
+    const copy = [...arr];
+
+    const item = copy.splice(from, 1)[0];
+
+    copy.splice(to, 0, item);
+
+    return copy;
+}
 
 /**
  * Get superdesk supported type for data transfer if any
@@ -84,7 +108,7 @@ export const gettextPlural = (
     text: string,
     pluralText: string,
     params: {[key: string]: string | number} = {},
-) => {
+): string => {
     if (!text) {
         return '';
     }

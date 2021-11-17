@@ -2,14 +2,15 @@ import React from 'react';
 import classNames from 'classnames';
 import {IInputType} from '../interfaces/input-types';
 
-export class TextSingleLine extends React.Component<IInputType<string>> {
+export class NumberComponent extends React.Component<IInputType<number>> {
     render() {
         if (this.props.previewOutput) {
             return <div data-test-id={`gform-output--${this.props.formField.field}`}>{this.props.value}</div>;
         }
 
-        // default value is required so React doesn't complain that uncontrolled component is changed to controlled.
-        const valueWithDefaultValue = this.props.value || '';
+        // Default value is required to make it a controlled input.
+        // Empty string is used instead of a zero to allow for empty values.
+        const valueWithDefaultValue = this.props.value ?? '';
 
         return (
             <div
@@ -19,16 +20,17 @@ export class TextSingleLine extends React.Component<IInputType<string>> {
                         {
                             'sd-line-input--invalid': this.props.issues.length > 0,
                             'sd-line-input--required': this.props.formField.required === true,
+                            'sd-line-input--boxed': this.props.formField.component_parameters?.style?.boxed,
                         },
                     )
                 }
             >
                 <label className="sd-line-input__label">{this.props.formField.label}</label>
                 <input
-                    type="text"
+                    type="number"
                     disabled={this.props.disabled}
                     value={valueWithDefaultValue}
-                    onChange={(event) => this.props.onChange(event.target.value)}
+                    onChange={(event) => this.props.onChange(parseFloat(event.target.value))}
                     className="sd-line-input__input"
                     data-test-id={`gform-input--${this.props.formField.field}`}
                 />

@@ -1932,6 +1932,12 @@
     }
 }
 
+// For items appended to body
+// content-profile settings
+body > .sd-list-item {
+    z-index: 1060;
+}
+
 .sd-toggle + label {
     letter-spacing: 0;
 }
@@ -2233,4 +2239,9 @@ sd-multi-image-edit {
 .sd-line-input input.sd-line-input__input,
 .sd-line-input textarea.sd-line-input__input {
     display: block !important;
+}
+
+// Transition for draggable lists
+.modal__body .sd-list-item {
+    transition: transform .1s linear !important;
 }

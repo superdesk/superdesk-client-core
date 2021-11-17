@@ -8,7 +8,7 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     const type: FormFieldType = fieldConfig.type;
 
     switch (type) {
-    case FormFieldType.textSingleLine:
+    case FormFieldType.plainText:
     case FormFieldType.textEditor3:
         return {[field]: ''};
     case FormFieldType.vocabularySingleValue:
@@ -18,6 +18,8 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     case FormFieldType.macroSingleValue:
     case FormFieldType.yesNo:
     case FormFieldType.select:
+    case FormFieldType.selectMultiple:
+    case FormFieldType.number:
         return {[field]: undefined};
     case FormFieldType.checkbox:
         return {[field]: false};

@@ -36,8 +36,10 @@ import {
     ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
+import {
+    formattingOptionsUnsafeToParseFromHTML,
+} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {RICH_FORMATTING_OPTION} from 'superdesk-api';
-import {formattingOptionsUnsafeToParseFromHTML} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,

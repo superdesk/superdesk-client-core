@@ -18,6 +18,8 @@ declare module 'superdesk-api' {
 
     export type Omit<K, V> = Pick<K, Exclude<keyof K, V>>;
 
+    export type IArrayKeyed<T> = Array<{key: string; value: T}>;
+
     export type ICallable = (...args: Array<any>) => any;
 
 
@@ -689,15 +691,42 @@ declare module 'superdesk-api' {
         disable_entire_category_selection?: boolean;
     }
 
-    export interface IArticleField extends IVocabulary {
-        single?: boolean;
-        preview?: boolean;
-    }
+    export type IContentProfileEditorConfig = {
+        [key: string]: {
+            single?: boolean;
+            enabled?: boolean;
+            order: number;
+            field_name?: string;
+            section?: 'header' | 'content';
+            editor3?: boolean; // only for body_html
+            required?: boolean;
+            readonly?: boolean;
+            sdWidth?: 'full' | 'half' | 'quarter';
+            minlength?: number;
+            maxlength?: number;
+            hideDate?: boolean;
+            preview?: boolean;
+            cleanPastedHTML?: boolean;
+            validate_characters?: boolean;
+            formatOptions?: Array<string>;
+            showCrops?: boolean;
+            imageTitle?: boolean;
+            sourceField?: string;
+        }
+    };
 
-    export type IContentProfileEditorConfig = {[key: string]: IArticleField};
+    export enum IContentProfileType {
+        text = 'text',
+        image = 'image',
+        audio = 'audio',
+        video = 'video',
+        package = 'package',
+    }
 
     export interface IContentProfile {
         _id: string;
+        type: keyof typeof IContentProfileType;
+        type: 'text';
         label: string;
         description: string;
         schema: Object;
@@ -706,8 +735,8 @@ declare module 'superdesk-api' {
         priority: number;
         enabled: boolean;
         is_used: boolean;
-        created_by: string;
-        updated_by: string;
+        created_by: IUser['_id'];
+        updated_by: IUser['_id'];
     }
 
     export interface IMedia {
@@ -727,7 +756,6 @@ declare module 'superdesk-api' {
         media: string | IMedia;
         internal: boolean;
     }
-
 
 
     // PAGE
@@ -879,25 +907,49 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
-    export interface IPropsGenericForm<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
-        formConfig: IFormGroup;
-        defaultSortOption: ISortOption;
-        defaultFilters?: Partial<TBase>;
-        renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
+    export interface IPropsGenericFormContainer<T> {
+        page: IGenericListPageComponent<T>;
+    }
+
+    export interface IPropsGenericFormItemComponent<T> {
+        item: T;
+        page: IGenericListPageComponent<T>;
+        inEditMode: boolean;
+        index: number;
+    }
+
+    export interface IPropsGenericForm<T extends IItemWithId, P> {
+        getFormConfig(item?: Partial<T>): IFormGroup;
+        additionalSortOptions?: Array<{label: string; field: string;}>;
+        additionalProps?: P; // allows passing props which will be available in container and item components
+        defaultFilters?: Partial<T>;
+        ItemComponent: React.ComponentType<IPropsGenericFormItemComponent<T> & {additionalProps?: P}>;
+        ItemsContainerComponent?: React.ComponentType<IPropsGenericFormContainer<T> & {additionalProps?: P}>;
 
         // Allows initializing a new item with some fields already filled.
-        getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<TBase>;
+        getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<T>;
 
         refreshOnEvents?: Array<string>;
 
         fieldForSearch?: IFormField; // must be present in formConfig
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
+
+        /**
+         * Dynamic schema is supported in order to display additional fields depending on values of current fields.
+         * All fields are removed which aren't present in the schema at the time of saving.
+         * In some cases it is desirable to maintain a field even if it is not in the schema.
+        */
+        hiddenFields?: Array<string>;
+
+        // styles
+        contentMargin?: number;
     }
 
     export enum FormFieldType {
-        textSingleLine = 'textSingleLine',
+        plainText = 'plainText',
         textEditor3 = 'textEditor3',
+        number = 'number',
         vocabularySingleValue = 'vocabularySingleValue',
         checkbox = 'checkbox',
         contentFilterSingleValue = 'contentFilterSingleValue',
@@ -906,6 +958,7 @@ declare module 'superdesk-api' {
         macroSingleValue = 'macroSingleValue',
         yesNo = 'yesNo',
         select = 'select',
+        selectMultiple = 'selectMultiple',
     }
 
     export interface IFormField { // don't forget to update runtime type checks
@@ -946,29 +999,41 @@ declare module 'superdesk-api' {
         direction: 'ascending' | 'descending';
     }
 
+    export interface IItemWithId {
+        _id: string;
+    }
 
-    export interface ICrudManagerState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
+    export interface ICrudManagerResponse<T extends IItemWithId> {
+        _items: Array<T>;
+        _meta: {
+            max_results: number;
+            page: number;
+            total: number;
+        };
+    }
+
+    export interface ICrudManagerState<Entity extends IItemWithId> extends ICrudManagerResponse<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
 
-    export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
+    export interface ICrudManagerMethods<Entity extends IItemWithId> {
         read(
             page: number,
             sort: ISortOption,
             filterValues?: ICrudManagerFilters,
-        ): Promise<IRestApiResponse<Entity>>;
+        ): Promise<ICrudManagerResponse<Entity>>;
         update(item: Entity): Promise<Entity>;
         create(item: Entity): Promise<Entity>;
         delete(item: Entity): Promise<void>;
-        refresh(): Promise<IRestApiResponse<Entity>>;
-        sort(nextSortOption: ISortOption): Promise<IRestApiResponse<Entity>>;
-        removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
-        goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
+        refresh(): Promise<ICrudManagerResponse<Entity>>;
+        sort(nextSortOption: ISortOption): Promise<ICrudManagerResponse<Entity>>;
+        removeFilter(fieldName: string): Promise<ICrudManagerResponse<Entity>>;
+        goToPage(nextPage: number): Promise<ICrudManagerResponse<Entity>>;
     }
 
 
-    export interface ICrudManager<Entity extends IBaseRestApiResponse> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
+    export interface ICrudManager<Entity extends IItemWithId> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
         // allow exposing it as one interface for consumer components
     }
 
@@ -1068,17 +1133,18 @@ declare module 'superdesk-api' {
         flex?: boolean;
     }
 
-    export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+    export interface IGenericListPageComponent<T extends IItemWithId> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
         setFiltersVisibility(nextValue: boolean): void;
         handleFilterFieldChange(field: string, nextValue: any, callback): void;
-        openNewItemForm(): void;
+        openNewItemForm(initialValues?: {[key: string]: any}): void;
         closeNewItemForm(): void;
         deleteItem(item: T): void;
-        getActiveFilters(): Partial<TBase>;
+        getActiveFilters(): Partial<T>;
         removeFilter(fieldName: string): void;
+        getItemsCount(): number;
     }
 
     export interface IPropsSelectUser {
@@ -1669,11 +1735,17 @@ declare module 'superdesk-api' {
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup): React.ComponentType<IPropsGenericForm<T>>;
+            getGenericListPageComponent<T extends IBaseRestApiResponse, P>(
+                resource: string,
+                formConfig: IFormGroup,
+                defaultSortOption?: ISortOption,
+                additionalProps?: P,
+            ): React.ComponentType<IPropsGenericForm<T, P>>;
             connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
                 endpoint: string,
+                defaultSortOption?: ISortOption,
                 formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
             ): React.ComponentType<Props>;
             ListItem: React.ComponentType<IListItemProps>;

@@ -271,15 +271,17 @@ export class Item extends React.Component<IProps, IState> {
         httpRequestJsonLocal<{_items: Array<IArticle>}>({
             method: 'GET',
             path: '/published',
-            urlParams: {source: JSON.stringify({
-                query: {
-                    bool: {
-                        must: {term: {family_id: item.archive_item.family_id}},
-                        must_not: {term: {_id: item.item_id}},
+            urlParams: {
+                source: {
+                    query: {
+                        bool: {
+                            must: {term: {family_id: item.archive_item.family_id}},
+                            must_not: {term: {_id: item.item_id}},
+                        },
                     },
+                    sort: [{'versioncreated': 'desc'}],
                 },
-                sort: [{'versioncreated': 'desc'}],
-            })},
+            },
         }).then((data) => {
             this.setState({loading: false, nested: data._items});
         }).catch(() => {

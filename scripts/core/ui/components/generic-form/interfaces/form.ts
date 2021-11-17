@@ -1,8 +1,9 @@
 import {IFormGroup, IFormField, IFormGroupCollapsible} from 'superdesk-api';
 
 export enum FormFieldType {
-    textSingleLine = 'textSingleLine',
+    plainText = 'plainText',
     textEditor3 = 'textEditor3',
+    number = 'number',
     vocabularySingleValue = 'vocabularySingleValue',
     checkbox = 'checkbox',
     contentFilterSingleValue = 'contentFilterSingleValue',
@@ -11,6 +12,7 @@ export enum FormFieldType {
     macroSingleValue = 'macroSingleValue',
     yesNo = 'yesNo',
     select = 'select',
+    selectMultiple = 'selectMultiple',
 }
 
 export function isIFormField(x: IFormGroup['form'][0]): x is IFormField { // don't forget to update runtime type checks
