@@ -6,7 +6,9 @@ import {
     Loader,
     SubNav,
     IconButton,
-} from 'superdesk-ui-framework';
+    Divider,
+    NavButton,
+} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {gettext} from 'core/utils';
@@ -301,7 +303,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 <Layout.AuthoringFrame
                     header={(
                         <SubNav>
-                            <ButtonGroup align="end" padded>
+                            <ButtonGroup align="end">
                                 <Button
                                     text={gettext('Close')}
                                     style="hollow"
@@ -333,6 +335,20 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                         this.save(state);
                                     }}
                                 />
+
+                                <Divider size="mini" />
+
+                                <ButtonGroup subgroup={true} spaces="no-space">
+                                    <NavButton
+                                        type="highlight"
+                                        icon="send-to"
+                                        iconSize="big"
+                                        text="Send to / Publish"
+                                        onClick={() => {
+                                            console.log('test');
+                                        }}
+                                    />
+                                </ButtonGroup>
                             </ButtonGroup>
                         </SubNav>
                     )}
