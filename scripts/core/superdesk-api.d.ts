@@ -1931,7 +1931,14 @@ declare module 'superdesk-api' {
             confirmMediaOnUpdate?: any;
             noMissingLink?: any;
             hideRoutedDesks?: any;
-            autorefreshContent?: any;
+
+            /**
+             * If set to false, a refresh icon will be displayed
+             * instead of reloading the list automatically
+             * when items are created/deleted
+             */
+            autorefreshContent?: boolean;
+
             elasticHighlight?: any;
             onlyEditor3?: any;
             nestedItemsInOutputStage?: boolean;
