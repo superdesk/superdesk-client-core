@@ -8,7 +8,7 @@ import {
 } from 'superdesk-api';
 import {getDateTimeField} from './getDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
-import { getToggleDateTimeField } from './getToggleTemplateDateTimeField';
+import {getToggleDateTimeField} from './getToggleTemplateDateTimeField';
 
 export function isDateValue(value: string | undefined | null) {
     if (value == null) {
