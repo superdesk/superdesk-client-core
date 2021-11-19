@@ -20,8 +20,11 @@ export function getToggleDateTimeField(superdesk: ISuperdesk) {
                     onChange={(value) => {
                         if (value) {
                             const initialConfig = this.props.config.initial_offset_minutes;
+
                             this.props.setValue(`{{ now|add_timedelta(minutes=${initialConfig})|iso_datetime }}`);
-                            notify.success(gettext(`Time offset is configured to be {{minutes}} minutes`, {minutes: initialConfig}));
+                            notify.success(gettext('Time offset is configured to be {{minutes}} minutes',
+                                {minutes: initialConfig},
+                            ));
                         } else {
                             this.props.setValue(null);
                         }
