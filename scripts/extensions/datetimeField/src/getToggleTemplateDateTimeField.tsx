@@ -1,0 +1,37 @@
+import {ISuperdesk, IEditorComponentProps} from 'superdesk-api';
+import * as React from 'react';
+import {IDateTimeFieldConfig} from './extension';
+import {Switch} from 'superdesk-ui-framework/react';
+
+interface IPropsAdditional {
+    hideToggle?: boolean;
+}
+
+export function getToggleDateTimeField(superdesk: ISuperdesk) {
+    const {notify} = superdesk.ui;
+
+    return class ToggleDateTimeField
+        extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig> & IPropsAdditional> {
+        render() {
+            const checkbox = (
+                <Switch
+                    value={this.props.value != null}
+                    onChange={(value) => {
+                        if (value) {
+                            const initialConfig = this.props.config.initial_offset_minutes
+                            this.props.setValue(`{{ now|iso_datetime(${initialConfig}) }}`)
+                            notify.success(`Time offset is configured to be ${initialConfig} minutes`)
+                        } else {
+                            this.props.setValue(null);
+                        }
+                    }}
+                />
+            );
+            return (
+                <div>
+                    {checkbox}
+                </div>
+            );
+        }
+    };
+}

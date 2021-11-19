@@ -8,6 +8,7 @@ import {
 } from 'superdesk-api';
 import {getDateTimeField} from './getDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
+import { getToggleDateTimeField } from './getToggleTemplateDateTimeField';
 
 export function isDateValue(value: string | undefined | null) {
     if (value == null) {
@@ -54,6 +55,7 @@ const extension: IExtension = {
                         editorComponent: getDateTimeField(superdesk),
                         previewComponent: getDateTimePreviewComponent(superdesk),
                         configComponent: getConfigComponent(superdesk),
+                        templateEditorComponent: getToggleDateTimeField(superdesk),
                     },
                 ],
             },
