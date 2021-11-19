@@ -9,6 +9,8 @@ interface IPropsAdditional {
 
 export function getToggleDateTimeField(superdesk: ISuperdesk) {
     const {notify} = superdesk.ui;
+    const {gettext} = superdesk.localization;
+
 
     return class ToggleDateTimeField
         extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig> & IPropsAdditional> {
@@ -21,7 +23,7 @@ export function getToggleDateTimeField(superdesk: ISuperdesk) {
                             const initialConfig = this.props.config.initial_offset_minutes;
 
                             this.props.setValue(`{{ now|iso_datetime(${initialConfig}) }}`);
-                            notify.success(`Time offset is configured to be ${initialConfig} minutes`);
+                            notify.success(gettext(`Time offset is configured to be ${initialConfig} minutes`));
                         } else {
                             this.props.setValue(null);
                         }
