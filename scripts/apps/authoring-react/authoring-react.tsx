@@ -23,6 +23,7 @@ import {WidgetHeaderComponent} from './widget-header-component';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
 import {addInternalEventListener} from 'core/internal-events';
+import {SendItemReact} from 'core/send-item-react/send-item-react';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -38,6 +39,7 @@ interface IStateLoaded {
         name: string;
         pinned: boolean;
     };
+    sendToOrPublishSidebar?: boolean;
 
     /**
      * Prevents changes to state while async operation is in progress(e.g. saving).
@@ -286,9 +288,27 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             },
         }));
 
-        const OpenWidgetComponent = state.openWidget == null
-            ? null
-            : widgetsFromExtensions.find(({label}) => state.openWidget.name === label).component;
+        const OpenWidgetComponent = (() => {
+            if (state.sendToOrPublishSidebar === true) {
+                return (props: {article: IArticle}) => (
+                    <SendItemReact
+                        items={[props.article]}
+                        closeSendToView={() => {
+                            const nextState: IStateLoaded = {
+                                ...state,
+                                sendToOrPublishSidebar: false,
+                            };
+
+                            this.setState(nextState);
+                        }}
+                    />
+                );
+            } else if (state.openWidget != null) {
+                return widgetsFromExtensions.find(({label}) => state.openWidget.name === label).component;
+            } else {
+                return null;
+            }
+        })();
 
         const pinned = state.openWidget?.pinned === true;
 
@@ -343,9 +363,14 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                         type="highlight"
                                         icon="send-to"
                                         iconSize="big"
-                                        text="Send to / Publish"
+                                        text={gettext('Send to / Publish')}
                                         onClick={() => {
-                                            console.log('test');
+                                            const nextState: IStateLoaded = {
+                                                ...state,
+                                                sendToOrPublishSidebar: !(state.sendToOrPublishSidebar ?? false),
+                                            };
+
+                                            this.setState(nextState);
                                         }}
                                     />
                                 </ButtonGroup>
