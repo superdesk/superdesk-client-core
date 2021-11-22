@@ -8,6 +8,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {PanelContent} from './panel/panel-content';
 import {PanelFooter} from './panel/panel-footer';
 import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 interface IProps {
     items: Array<IArticle>;
@@ -35,7 +36,19 @@ function sendItems(items: Array<IArticle>, deskId: IDesk['_id'], stageId: IStage
                 },
             });
         }),
-    ).then(() => undefined);
+    ).then((patches: Array<Partial<IArticle>>) => {
+        /**
+         * Patch articles that are open in authoring.
+         * Otherwise authors may see out of date data
+         * and/or get an _etag mismatch error.
+         */
+        for (const patch of patches) {
+            dispatchInternalEvent(
+                'dangerouslyOverwriteAuthoringData',
+                patch,
+            );
+        }
+    });
 }
 
 // TODO: ensure https://github.com/superdesk/superdesk-ui-framework/issues/574 is fixed before merging to develop

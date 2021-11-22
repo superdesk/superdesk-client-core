@@ -145,7 +145,7 @@ interface IAuthoringStorage {
 
 export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
     // TODO: these shouldn't be needed
-    const customFields = ['_latest_version', 'revert_state', 'expiry'];
+    const customFields = ['_latest_version', 'revert_state', 'expiry', '_current_version'];
 
     return {...omit(omitRestApiFields(item), ...customFields)};
 }
