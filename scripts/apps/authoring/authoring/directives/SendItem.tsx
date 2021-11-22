@@ -4,7 +4,7 @@ import {PreviewModal} from '../previewModal';
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {appConfig, extensions} from 'appConfig';
+import {appConfig, extensions, sendItemReact} from 'appConfig';
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {confirmPublish} from '../services/quick-publish-modal';
@@ -100,6 +100,8 @@ export function SendItem($q,
             scope.PERSONAL_SPACE = {label: gettext('Personal Space'), value: 'PERSONAL_SPACE'};
             scope.isCorrection = appConfig?.corrections_workflow
                 && scope.item?.state === ITEM_STATE.CORRECTION;
+
+            scope.sendItemReact = sendItemReact;
 
             // Only initialize when it's being set for the first time.
             // If time zone was removed manually, it should not be automatically re-added.
@@ -232,6 +234,11 @@ export function SendItem($q,
                 }
             };
 
+            scope.closeFromReact = () => {
+                scope.close();
+                scope.$applyAsync();
+            };
+
             scope.selectDesk = function(desk) {
                 scope.selectedDesk = desk ? _.cloneDeep(desk)
                     : appConfig?.features?.sendToPersonal && privileges.userHasPrivileges({send_to_personal: 1})
@@ -250,6 +257,21 @@ export function SendItem($q,
                     scope.selectedMacro = null;
                 } else {
                     scope.selectedMacro = macro;
+                }
+            };
+
+            scope.getItemsToSend = (): Array<IArticle> => {
+                if (scope.multiItems != null) {
+                    // scope.multiItems is populated by MultiService
+                    return scope.multiItems;
+                } else if (scope.item != null && scope.item._id) {
+                    // scope.item is populated by the editor
+                    return [scope.item];
+                } else if (scope.config && scope.config.items) {
+                    // scope.config.items is populated by SendService
+                    return scope.config.items;
+                } else {
+                    return [];
                 }
             };
 

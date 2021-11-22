@@ -1,5 +1,19 @@
-<div class="sd-overlay-panel sd-overlay-panel--dark-ui" ng-show="isActive && !isSendToNextStage"
-     ng-class="{'sd-overlay-panel--open': isActive, 'sd-overlay-panel--large' : currentUserAction === vm.userActions.publish && vm.userActions.publish_pane_two_columns}" >
+<!--
+    ng-init is used below to avoid the error regarding digest iteration limit being reached
+-->
+<div ng-if="sendItemReact && isActive && !isSendToNextStage" ng-init="itemsToSend = getItemsToSend()">
+    <sd-send-item-react
+        items="itemsToSend"
+        close-send-to-view="closeFromReact"
+    ></sd-send-item-react>
+</div>
+
+<div
+    class="sd-overlay-panel sd-overlay-panel--dark-ui"
+    ng-if="!sendItemReact"
+    ng-show="isActive && !isSendToNextStage"
+    ng-class="{'sd-overlay-panel--open': isActive, 'sd-overlay-panel--large' : currentUserAction === vm.userActions.publish && vm.userActions.publish_pane_two_columns}"
+>
     <div class="side-panel side-panel--shadow-right side-panel--dark-ui">
         <div class="side-panel__header">
             <ul class="nav-tabs nav-tabs--ui-dark nav-tabs--big">
