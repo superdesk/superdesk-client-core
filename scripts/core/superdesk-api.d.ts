@@ -2010,7 +2010,14 @@ declare module 'superdesk-api' {
             confirmMediaOnUpdate?: any;
             noMissingLink?: any;
             hideRoutedDesks?: any;
-            autorefreshContent?: any;
+
+            /**
+             * If set to false, a refresh icon will be displayed
+             * instead of reloading the list automatically
+             * when items are created/deleted
+             */
+            autorefreshContent?: boolean;
+
             elasticHighlight?: any;
             nestedItemsInOutputStage?: boolean;
             keepMetaTermsOpenedOnClick?: boolean;
@@ -2198,14 +2205,6 @@ declare module 'superdesk-api' {
     // CUSTOM FIELD TYPES
 
     export interface IEditorComponentProps<IValue, IConfig> {
-        item: IArticle;
-        value: IValue;
-        setValue: (value: IValue) => void;
-        readOnly: boolean;
-        config: IConfig;
-    }
-
-    export interface ITemplateEditorComponentProps<IValue, IConfig> {
         item: IArticle;
         value: IValue;
         setValue: (value: IValue) => void;
