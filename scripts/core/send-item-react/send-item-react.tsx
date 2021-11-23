@@ -7,12 +7,14 @@ import {Button} from 'superdesk-ui-framework';
 import {gettext} from 'core/utils';
 import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';
+import {authoringReactViewEnabled} from 'appConfig';
 
 type ITab = 'send to' | 'publish';
 
 interface IProps {
     items: Array<IArticle>;
     closeSendToView(): void;
+    markupV2?: boolean;
 }
 
 interface IState {
@@ -31,10 +33,11 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
     }
     render() {
         const {activeTab} = this.state;
+        const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
 
         return (
-            <Panel>
-                <PanelHeader>
+            <Panel markupV2={markupV2}>
+                <PanelHeader markupV2={markupV2}>
                     <div className="space-between" style={{width: '100%', paddingLeft: 10, paddingRight: 10}}>
                         <TabList
                             tabs={[{label: 'send to'}, {label: 'publish'}]}
@@ -68,6 +71,7 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                             <SendToTab
                                 items={this.props.items}
                                 closeSendToView={this.props.closeSendToView}
+                                markupV2={markupV2}
                             />
                         );
                     } else {

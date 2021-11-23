@@ -301,6 +301,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
                             this.setState(nextState);
                         }}
+                        markupV2
                     />
                 );
             } else if (state.openWidget != null) {

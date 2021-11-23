@@ -1,10 +1,10 @@
 import React from 'react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import {authoringReactViewEnabled} from 'appConfig';
+import {IPropsSendToPanel} from './panel-main';
 
-export class PanelFooter extends React.PureComponent {
+export class PanelFooter extends React.PureComponent<IPropsSendToPanel> {
     render() {
-        if (authoringReactViewEnabled) {
+        if (this.props.markupV2) {
             return (
                 <Layout.PanelFooter>
                     {this.props.children}

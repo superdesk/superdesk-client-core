@@ -13,6 +13,7 @@ import {dispatchInternalEvent} from 'core/internal-events';
 interface IProps {
     items: Array<IArticle>;
     closeSendToView(): void;
+    markupV2: boolean;
 }
 
 interface IState {
@@ -68,7 +69,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         };
     }
     render() {
-        const {items, closeSendToView} = this.props;
+        const {items, closeSendToView, markupV2} = this.props;
         const {allDesks, stagesForDesk} = this.state;
         const itemToOpen: IArticle['_id'] | null = (() => {
             if (items.length !== 1) {
@@ -86,7 +87,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
         return (
             <React.Fragment>
-                <PanelContent>
+                <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
                         <Select
                             label={'Desk'}
@@ -126,7 +127,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                     </ToggleBox>
                 </PanelContent>
 
-                <PanelFooter>
+                <PanelFooter markupV2={markupV2}>
                     {
                         itemToOpen && (
                             <Button
