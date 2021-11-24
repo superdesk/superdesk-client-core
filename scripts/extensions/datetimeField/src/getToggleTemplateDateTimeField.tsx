@@ -8,34 +8,45 @@ interface IPropsAdditional {
 }
 
 export function getToggleDateTimeField(superdesk: ISuperdesk) {
-    const {notify} = superdesk.ui;
     const {gettext} = superdesk.localization;
 
     return class ToggleDateTimeField
         extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig> & IPropsAdditional> {
         render() {
+            const initialConfig = this.props.config.initial_offset_minutes;
             const checkbox = (
                 <Switch
                     value={this.props.value != null}
                     onChange={(value) => {
                         if (value) {
-                            const initialConfig = this.props.config.initial_offset_minutes;
-
                             this.props.setValue(`{{ now|add_timedelta(minutes=${initialConfig})|iso_datetime }}`);
-                            notify.success(gettext('Time offset is configured to be {{minutes}} minutes',
-                                {minutes: initialConfig},
-                            ));
                         } else {
                             this.props.setValue(null);
                         }
                     }}
                 />
             );
+            const messageText = gettext(
+                `Time offset is configured to be {{minutes}} minutes for this field. When an article is created
+                based on this template, it's value will initialize to creation time {{offset}} minutes`,
+                {minutes: initialConfig, offset: initialConfig},
+            );
 
             return (
-                <div>
-                    {checkbox}
-                </div>
+                <>
+                    <div>
+                        {checkbox}
+                    </div>
+                    <div>
+                        {this.props.template?.data?.extra?.DueBy &&
+                            (
+                                <span className="authoring-header__hint">
+                                    {messageText}
+                                </span>
+                            )
+                        }
+                    </div>
+                </>
             );
         }
     };
