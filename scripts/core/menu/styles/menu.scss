@@ -543,7 +543,6 @@
       opacity: 1;
     }
     a:active, .dropdown__toggle:active {
-      background-color: $sd-blue;
       opacity: 1;
     }
     .main-icon {
@@ -569,8 +568,14 @@
         top: -10px;
       }
     }
-
+    li.active {
+        .sd-sidebar-menu__btn {
+            background-color: var(--sd-colour-interactive--active);
+        }
+        
+    }
 }
+
 #side-menu {
   a {
     overflow: visible!important;
@@ -744,6 +749,7 @@
             font-weight: 300;
             letter-spacing:0.08em;
             padding: 8px 0 6px;
+            text-align: center;
             border-bottom: 1px solid var(--sd-colour-line--x-light);
         }
         .about {

@@ -45,10 +45,11 @@ html {
       -ms-text-size-adjust: 100%;
 }
 // Focus states
-a:focus {
+a:focus-visible {
   @include tab-focus();
 }
 // Hover & Active
+a:focus,
 a:hover,
 a:active {
   outline: 0;

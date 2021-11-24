@@ -601,9 +601,9 @@ Profile page styles
     left: 0px;
     display: none;
     z-index: 1001;
-    background: #fff;
-    border:1px solid #e0e0e0;
-    @include box-shadow(0 0 3px 0 rgba(0,0,0,0.15));
+    background: var(--sd-item__main-Bg);
+    border:1px solid var(--sd-colour-line--light);
+    box-shadow: 0 0 3px 0 hsla(0, 0%, 0%, 0.15);
 
     .title {
         height: 40px;

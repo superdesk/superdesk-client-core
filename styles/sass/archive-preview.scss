@@ -807,18 +807,17 @@ $lightbox-composite-condensed : 100px;
             text-align: center;
             font-size: 14px;
             line-height: 20px;
-            @include box-sizing(border-box);
         }
         .lightbox-paper {
             position: absolute;
             top: 50px; left: 50px; right: 50px; bottom: 50px;
             .lightbox-text {
-                background: #fff;
+                background: var(--sd-item__main-Bg);
                 max-width: 800px;
                 margin: 0px auto;
                 height: 100%;
                 position: relative;
-                @include border-radius(5px);
+                border-radius: 5px;
                 .lightbox-title {
                     position: absolute;
                     top: 20px;
@@ -827,7 +826,7 @@ $lightbox-composite-condensed : 100px;
                     height: 55px;
                     font-size: 18px;
                     line-height: 24px;
-                    border-bottom: 5px solid #e0e0e0;
+                    border-bottom: 5px solid var(--sd-colour-line--light);
                 }
                 .lightbox-fulltext {
                     position: absolute;
@@ -837,7 +836,7 @@ $lightbox-composite-condensed : 100px;
                     bottom: 20px;
                     overflow: auto;
                     small {
-                        color: #777;
+                        color: var(--color-text-light);
                     }
                     .lightbox-fullcontent {
                         margin: 20px 0;

@@ -175,12 +175,6 @@
 }
 
 .toggle-box {
-    .toggle-box__header {
-        &:focus{
-            background: $sd-hover;
-        }
-    }
-
     &__content--hidden {
         display: none;
     }

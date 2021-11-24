@@ -14,7 +14,7 @@
     background-color: $archive-sidebar-bg;
     box-shadow: inset -1px 0px 6px 0px rgba(0,0,0,.1);
     transition: left 0.2s ease;
-    border-right: 2px solid var(--sd-colour__side-panel-border);
+    border-inline-end: 2px solid var(--sd-colour__side-panel-border);
 
     .header {
         height: $nav-height;

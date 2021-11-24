@@ -176,12 +176,12 @@
                 display: none;
                 right: 5px;
                 top: 6px;
-                @include opacity(0);
-                @include transition(all .5s);
+                opacity: 0;
+                transition: all .5s ease;
             }
             &:hover {
                 cursor: pointer;
-                background: #e0e0e0;
+                background: var(--sd-item__main-Bg--hover);
                 i {
                     @include opacity(70);
                 }

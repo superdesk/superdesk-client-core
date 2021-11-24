@@ -314,7 +314,7 @@ TASK PAGE
 
         .title {
             border: 0 !important;
-            border-bottom: 1px solid #e0e0e0 !important;
+            border-bottom: 1px solid var(--sd-colour-line--light) !important;
             padding: 5px 20px;
             @include text-normal();
             height: 40px;

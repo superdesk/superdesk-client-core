@@ -1,11 +1,6 @@
 @import '~superdesk-ui-framework/app/styles/variables/_colors.scss';
 
 .toggle-box {
-    .toggle-box__header--focus {
-        &:focus{
-            background: $sd-hover;
-        }
-    }
 
     &__content--hidden {
         display: none;
@@ -25,9 +20,6 @@
         }
     }
 
-    .toggle-box__header {
-        @extend .toggle-box__header--focus;
-    }
 
     &--no-margin {
         margin: 0 !important;

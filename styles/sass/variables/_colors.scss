@@ -83,15 +83,15 @@ $inputDisabledBackground:       $grayLighter;
 
 // Dropdowns
 // -------------------------
-$dropdownBackground:            $white;
-$dropdownBorder:                1px solid #c6c6c6;
-$dropdownLinkColor:             $sd-text;
-$dropdownLinkColorHover:        $sd-text;
-$dropdownLinkBackgroundHover:   $sd-hover;
+$dropdownBackground:            var(--color-dropdown-menu-Bg);
+$dropdownBorder:                var(--sd-colour-line--light);
+$dropdownLinkColor:             var(--color-text);
+$dropdownLinkColorHover:        var(--color-text);
+$dropdownLinkBackgroundHover:   var(--sd-colour-interactive--alpha-20) !important;
 
 // Input placeholder text color
 // -------------------------
-$placeholderText:               $grayLight;
+$placeholderText:               var(--color-text--lighter);
 
 // Hr border color
 // -------------------------

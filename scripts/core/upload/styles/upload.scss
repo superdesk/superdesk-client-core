@@ -125,14 +125,13 @@ user avatar uploader
             height: 100%;
             .dropzone {
                 height: 100%;
-                @include box-sizing(border-box);
-                border: 2px dashed #e0e0e0;
+                border: 2px dashed var(--sd-colour-line--light);
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 .text {
                     text-align: center;
-                    color: #ccc;
+                    color: var(--color-text-light);
                     font-size: 30px;
                     @include text-light();
                 }

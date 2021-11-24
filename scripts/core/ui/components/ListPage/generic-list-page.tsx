@@ -416,7 +416,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                             )
                         }
 
-                        <div style={{display: 'flex', marginLeft: 'auto'}}>
+                        <div style={{display: 'flex', marginInlineStart: 'auto'}}>
                             <SortBar
                                 sortOptions={sortOptions}
                                 selected={this.props.items.activeSortOption}

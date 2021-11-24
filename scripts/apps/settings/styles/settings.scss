@@ -39,11 +39,10 @@
                     }
                 }
                 &.active>a {
-                    border-color:#e0e0e0;
+                    border-color: var(--sd-colour-line--light);
                     position: relative;
                     border-radius: 0 !important;
-                    color: #484848;
-                    @include box-shadow(inset -3px 0 2px #f0f0f0);
+                    color: var(--color-text-light);
                     &:hover {
                         background: #fff;
                     }
