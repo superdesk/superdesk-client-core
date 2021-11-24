@@ -430,7 +430,9 @@ describe('editor3.reducers', () => {
     });
 
     it('EDITOR_CHANGE_LIMIT_CONFIG changes the config', () => {
+        const contentState = ContentState.createFromText('some loooong text');
         const nextState = reducer({
+            editorState: EditorState.createWithContent(contentState),
             limitConfig: {ui: 'limit', chars: 5},
         }, {
             type: 'EDITOR_CHANGE_LIMIT_CONFIG',
@@ -439,5 +441,10 @@ describe('editor3.reducers', () => {
 
         expect(nextState.limitConfig.ui).toBe('highlight');
         expect(nextState.limitConfig.chars).toBe(10);
+
+        const block = nextState.editorState.getCurrentContent().getLastBlock();
+
+        expect(block.getInlineStyleAt(10).toArray()).toContain(LIMIT_CHARACTERS_OVERFLOW_STYLE);
+        expect(block.getInlineStyleAt(9).toArray()).not.toContain(LIMIT_CHARACTERS_OVERFLOW_STYLE);
     });
 });

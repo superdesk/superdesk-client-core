@@ -50,7 +50,13 @@ export class ItemSwimlane extends React.Component<IProps, any> {
         const swimlaneViewFieldsConfig = appConfig.swimlaneViewFields ?? DEFAULT_SWIMLANE_FIELDS_CONFIG;
 
         return (
-            <div className="sd-list-item" style={{borderBottom: '1px solid #e7e7e7'}}>
+            <div
+                className={classNames('sd-list-item', {
+                    'active': itemSelected,
+                    'selected': itemSelected,
+                })}
+                style={{borderBottom: '1px solid #e7e7e7'}}
+            >
                 <span
                     style={{
                         minWidth: '4px',

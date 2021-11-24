@@ -3,11 +3,12 @@ import {
     getExcludeFacets,
     CORE_PROJECTED_FIELDS,
     DEFAULT_LIST_CONFIG,
+    UI_PROJECTED_FIELD_MAPPINGS,
 } from 'apps/search/constants';
 
 import _ from 'lodash';
 import {getDateFilters, getDateRangesByKey} from '../directives/DateFilters';
-import {gettext} from 'core/utils';
+import {gettext, isElasticDateFormat} from 'core/utils';
 import {KILLED_STATES, ITEM_STATE} from 'apps/archive/constants';
 import {appConfig} from 'appConfig';
 import {ISortFields} from 'core/ui/components/SortBar';
@@ -184,7 +185,7 @@ export function SearchService($location, session, multi,
         });
 
         // set the filters for parameters defined in the parameters panel.
-        _.each(PARAMETERS, (value, key) => {
+        _.each(PARAMETERS, (_param, key) => {
             var facetrange = {};
             const dateRangesByKey = getDateRangesByKey();
 
@@ -233,17 +234,29 @@ export function SearchService($location, session, multi,
                     } else {
                         // handle manual ranges
 
+                        const value = params[key];
+
                         if (params[key] != null && key === fieldname + 'to') {
                             if (facetrange[key] == null) {
                                 facetrange[key] = {};
                             }
-                            facetrange[key].lte = formatDate(params[key], midnightSuffix);
+
+                            if (isElasticDateFormat(value)) {
+                                facetrange[key].lte = value;
+                            } else {
+                                facetrange[key].lte = formatDate(value, midnightSuffix);
+                            }
                         }
                         if (params[key] != null && key === fieldname + 'from') {
                             if (facetrange[key] == null) {
                                 facetrange[key] = {};
                             }
-                            facetrange[key].gte = formatDate(params[key], zeroHourSuffix);
+
+                            if (isElasticDateFormat(value)) {
+                                facetrange[key].gte = value;
+                            } else {
+                                facetrange[key].gte = formatDate(value, zeroHourSuffix);
+                            }
                         }
                     }
                 });
@@ -346,7 +359,7 @@ export function SearchService($location, session, multi,
 
         if (appConfig.search != null && appConfig.search.useDefaultTimezone) {
             // use the default timezone of the server.
-            local += moment.tz(appConfig.defaultTimezone).format('ZZ');
+            local += moment.tz(appConfig.default_timezone).format('ZZ');
         } else {
             // use the client timezone of the server.
             local += moment().format('ZZ');
@@ -459,23 +472,38 @@ export function SearchService($location, session, multi,
                     // handle manual ranges
 
                     if (paramsObject[fieldname + 'to'] != null) {
+                        const value: string = paramsObject[fieldname + 'to'];
+
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
                         }
-                        facetrange[fieldname].lte = formatDate(paramsObject[fieldname + 'to'], midnightSuffix);
+
+                        if (isElasticDateFormat(value)) {
+                            facetrange[fieldname].lte = value;
+                        } else {
+                            facetrange[fieldname].lte = formatDate(value, midnightSuffix);
+                        }
                     }
                     if (paramsObject[fieldname + 'from'] != null) {
+                        const value = paramsObject[fieldname + 'from'];
+
                         if (facetrange[fieldname] == null) {
                             facetrange[fieldname] = {};
                         }
-                        facetrange[fieldname].gte = formatDate(paramsObject[fieldname + 'from'], zeroHourSuffix);
+
+                        if (isElasticDateFormat(value)) {
+                            facetrange[fieldname].gte = value;
+                        } else {
+                            facetrange[fieldname].gte = formatDate(value, zeroHourSuffix);
+                        }
                     }
                 }
             });
 
-            if (Object.keys(facetrange).length > 0) {
-                query.post_filter({range: facetrange});
-            }
+            Object.keys(facetrange).forEach((key) => {
+                query.post_filter({range: {[key]: facetrange[key]}});
+            });
+
             // date filters end
 
             if (paramsObject.type) {
@@ -862,18 +890,6 @@ export function SearchService($location, session, multi,
      * @description Returns the list of fields to be used in projections
      */
     this.getProjectedFields = function() {
-        const UI_PROJECTED_FIELD_MAPPINGS = {
-            wordcount: 'word_count',
-            takekey: 'anpa_take_key',
-            update: 'correction_sequence',
-            provider: 'ingest_provider',
-            category: 'anpa_category',
-            versioncreator: 'version_creator',
-            markedDesks: 'marked_desks',
-            queueError: 'error_message',
-            used: ['used', 'used_updated', 'used_count'],
-        };
-
         const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
         const uiFields = [

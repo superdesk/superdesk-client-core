@@ -66,7 +66,7 @@ export function LegalArchiveService(api, $location, moment, sortService) {
 
         function prepareDate(val, timeSuffix) {
             var local = moment(val, appConfig.view.dateformat).format('YYYY-MM-DD') + timeSuffix +
-            moment.tz(appConfig.defaultTimezone).format('ZZ');
+            moment.tz(appConfig.default_timezone).format('ZZ');
 
             return moment(local, 'YYYY-MM-DDTHH:mm:ssZZ').utc()
                 .format('YYYY-MM-DDTHH:mm:ssZZ');

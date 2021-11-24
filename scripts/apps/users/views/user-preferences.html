@@ -150,7 +150,7 @@
             </li>
             <li class="simple-list__item" ng-if="showPlanning()">
                 <div class="user-preferences__heading" translate>Planning</div>
-                <div sd-info-item>
+                <div sd-info-item ng-if="calendars.length">
                     <label class="form-label" translate>Default Calendar</label>
                     <div class="form__row form__row--s-padding">
                         <span sd-meta-dropdown
@@ -161,7 +161,7 @@
                               data-change="articleDefaultsChanged(item)"></span>
                     </div>
                 </div>
-                <div sd-info-item>
+                <div sd-info-item ng-if="agendas.length">
                     <label class="form-label" translate>Default Agenda</label>
                     <div class="form__row form__row--s-padding">
                         <span sd-meta-dropdown
@@ -172,7 +172,7 @@
                               data-change="articleDefaultsChanged(item)"></span>
                     </div>
                 </div>
-                <div sd-info-item>
+                <div sd-info-item ng-if="eventsPlanningFilters">
                     <label class="form-label" translate>Default Events & Planning Filter</label>
                     <div class="form__row form__row--s-padding">
                         <span sd-meta-dropdown

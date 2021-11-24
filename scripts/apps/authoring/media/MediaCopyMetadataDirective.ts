@@ -1,7 +1,8 @@
 import {merge} from 'lodash';
+import {IArticle} from 'superdesk-api';
 
-function getMediaMetadata(metadata, fields) {
-    const output = {extra: {}};
+function getMediaMetadata(metadata: Partial<IArticle>, fields): Partial<IArticle> {
+    const output: Partial<IArticle> = {extra: {}};
 
     if (metadata == null) {
         return output;
@@ -14,6 +15,12 @@ function getMediaMetadata(metadata, fields) {
             }
         } else if (metadata[field.field] != null) {
             output[field.field] = metadata[field.field];
+        } else if (field.cv != null && metadata.subject?.length > 0) {
+            const values = metadata.subject.filter((subj) => subj.scheme === field.field);
+
+            if (values.length) {
+                output.subject = output.subject ? output.subject.concat(values) : values;
+            }
         }
     });
 

@@ -29,6 +29,7 @@ import {
     onEditAsset,
     deleteAssets,
     forceUnlockAsset,
+    updateMultipleSelectedAssetIds,
 } from '../store/assets/actions';
 import {
     getAssetListStyle,
@@ -42,6 +43,7 @@ import {
 } from '../store/assets/selectors';
 import {toggleFilterPanelState} from '../store/workspace/actions';
 import {isFilterPanelOpen} from '../store/workspace/selectors';
+import {getSets} from '../store/sets/selectors';
 
 // UI
 import {PanelContent} from '../ui';
@@ -52,6 +54,7 @@ import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
 import {AssetEditorPanel} from '../components/assets/assetEditorPanel';
+import {showImagePreviewModal} from '../components/assets/assetImagePreviewFullScreen';
 
 interface IProps {
     assets: Array<IAssetItem>;
@@ -67,6 +70,7 @@ interface IProps {
     previewAsset(asset: IAssetItem): void;
     onEditAsset(asset: IAssetItem): void;
     updateSelectedAssetIds(asset: IAssetItem): void;
+    updateMultipleSelectedAssetIds(asset: IAssetItem): void;
     setListStyle(style: ASSET_LIST_STYLE): void;
     queryAssetsFromCurrentSearch(listStyle: LIST_ACTION): void;
     updateAssetSearchParamsAndListItems(
@@ -109,6 +113,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     toggleFilterPanel: () => dispatch<any>(toggleFilterPanelState()),
     previewAsset: (asset: IAssetItem) => dispatch(previewAsset(asset._id)),
     updateSelectedAssetIds: (asset: IAssetItem) => dispatch(updateSelectedAssetIds(asset._id)),
+    updateMultipleSelectedAssetIds: (asset: IAssetItem) => dispatch(updateMultipleSelectedAssetIds(asset._id)),
     onEditAsset: (asset: IAssetItem) => dispatch<any>(onEditAsset(asset)),
     deleteAsset: (asset: IAssetItem) => dispatch<any>(deleteAssets(asset)),
     forceUnlockAsset: (asset: IAssetItem) => dispatch<any>(forceUnlockAsset(asset)),
@@ -120,12 +125,15 @@ export function downloadAssetBinary(asset: IAssetItem): void {
 
 export class SamsWorkspaceApp extends React.PureComponent {
     onStoreInit(store: Store) {
-        return store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
-            .catch(() => {
-                // Catch errors here so `Promise.all` still returns on fetching error
-                // This can happen when invalid search params are stored in the URL
-                return Promise.resolve();
-            });
+        // Only load Assets if we have Sets configured
+        return !getSets(store.getState()).length ?
+            Promise.resolve() :
+            store.dispatch<any>(updateAssetSearchParamsAndListItemsFromURL(LIST_ACTION.REPLACE))
+                .catch(() => {
+                    // Catch errors here so `Promise.all` still returns on fetching error
+                    // This can happen when invalid search params are stored in the URL
+                    return Promise.resolve();
+                });
     }
 
     render() {
@@ -148,9 +156,11 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.onScroll = this.onScroll.bind(this);
         this.toggleListStyle = this.toggleListStyle.bind(this);
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
-        this.onMultiActionBar = this.onMultiActionBar.bind(this);
+        this.onUpdateSelectedAssetIds = this.onUpdateSelectedAssetIds.bind(this);
+        this.onUpdateMultipleSelectedAssetIds = this.onUpdateMultipleSelectedAssetIds.bind(this);
         this.onDeleteAsset = this.onDeleteAsset.bind(this);
         this.onEditAsset = this.onEditAsset.bind(this);
+        this.onAssetImagePreview = this.onAssetImagePreview.bind(this);
     }
 
     onDeleteAsset(asset: IAssetItem): void {
@@ -165,8 +175,16 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         downloadAssetBinary(asset);
     }
 
-    onMultiActionBar(asset: IAssetItem) {
+    onUpdateSelectedAssetIds(asset: IAssetItem) {
         this.props.updateSelectedAssetIds(asset);
+    }
+
+    onUpdateMultipleSelectedAssetIds(asset: IAssetItem) {
+        this.props.updateMultipleSelectedAssetIds(asset);
+    }
+
+    onAssetImagePreview(asset: IAssetItem): void {
+        showImagePreviewModal(asset!);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -225,6 +243,10 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                 action: ASSET_ACTIONS.DELETE,
                 onSelect: this.onDeleteAsset,
             },
+            {
+                action: ASSET_ACTIONS.VIEW_FULL_SCREEN,
+                onSelect: this.onAssetImagePreview,
+            },
             ];
 
         if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
@@ -273,7 +295,8 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                             onItemClicked={this.props.previewAsset}
                             onItemDoubleClicked={this.onEditAsset}
                             selectedAssetIds={this.props.selectedAssetIds}
-                            updateSelectedAssetIds={this.onMultiActionBar}
+                            updateSelectedAssetIds={this.onUpdateSelectedAssetIds}
+                            updateMultipleSelectedAssetIds={this.onUpdateMultipleSelectedAssetIds}
                             actions={actions}
                         />
                     )}

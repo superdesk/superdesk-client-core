@@ -1,0 +1,89 @@
+<div class="form__row">
+    <div class="sd-line-input">
+        <label class="sd-line-input__label" for="endpoint_url" translate>
+            Endpoint URL
+        </label>
+        <input
+            id="endpoint_url"
+            type="text"
+            class="sd-line-input__input"
+            ng-model="destination.config.endpoint_url"
+            ng-change="$parent.setConfig(destination)"
+        >
+    </div>
+</div>
+
+<div class="form__row">
+    <div class="sd-line-input sd-line-input--required">
+        <label class="sd-line-input__label" for="region" translate>
+            Region
+        </label>
+        <input
+            id="region"
+            type="text"
+            class="sd-line-input__input"
+            ng-model="destination.config.region"
+            ng-change="$parent.setConfig(destination)"
+        >
+    </div>
+</div>
+
+<div class="form__row">
+    <div class="sd-line-input sd-line-input--required">
+        <label class="sd-line-input__label" for="access_key_id" translate>
+            Access Key ID
+        </label>
+        <input
+            id="access_key_id"
+            type="password"
+            class="sd-line-input__input"
+            ng-model="destination.config.access_key_id"
+            ng-change="$parent.setConfig(destination)"
+        >
+    </div>
+</div>
+
+<div class="form__row">
+    <div class="sd-line-input sd-line-input--required">
+        <label class="sd-line-input__label" for="secret_access_key" translate>
+            Secret Access Key
+        </label>
+        <input
+            id="secret_access_key"
+            type="password"
+            class="sd-line-input__input"
+            ng-model="destination.config.secret_access_key"
+            ng-change="$parent.setConfig(destination)"
+        >
+    </div>
+</div>
+
+<div class="form__row">
+    <div class="sd-line-input sd-line-input--required">
+        <label class="sd-line-input__label" for="queue_name" translate>
+            Queue Name
+        </label>
+        <input
+            id="queue_name"
+            type="text"
+            class="sd-line-input__input"
+            ng-model="destination.config.queue_name"
+            ng-change="$parent.setConfig(destination)"
+        >
+    </div>
+</div>
+
+<div class="form__row">
+    <div class="sd-line-input sd-line-input--required">
+        <label class="sd-line-input__label" for="message_group_id" translate>
+            Message Group ID
+        </label>
+        <input
+            id="message_group_id"
+            type="text"
+            class="sd-line-input__input"
+            ng-model="destination.config.message_group_id"
+            ng-change="$parent.setConfig(destination)"
+        >
+    </div>
+</div>

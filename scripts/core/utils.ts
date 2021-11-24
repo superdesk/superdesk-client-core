@@ -2,6 +2,7 @@ import gettextjs from 'gettext.js';
 import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
+import {appConfig} from 'appConfig';
 
 export type IScopeApply = (fn: () => void) => void;
 
@@ -46,7 +47,7 @@ export const getSuperdeskType = (event, supportExternalFiles = true) =>
 export const gettext = (
     text: string,
     params: {[key: string]: string | number} = {},
-) => {
+): string => {
     if (!text) {
         return '';
     }
@@ -156,4 +157,59 @@ export function getUserSearchMongoQuery(searchString: string) {
             {email: {$regex: searchString, $options: '-i'}},
         ],
     };
+}
+
+export function getItemTypes() {
+    const item_types = [
+        {type: 'all', label: gettext('all')},
+        {type: 'text', label: gettext('text')},
+        {type: 'picture', label: gettext('picture')},
+        {type: 'graphic', label: gettext('graphic')},
+        {type: 'composite', label: gettext('package')},
+        {type: 'highlight-pack', label: gettext('highlights package')},
+        {type: 'video', label: gettext('video')},
+        {type: 'audio', label: gettext('audio')},
+    ];
+
+    return item_types.filter(
+        (item) => (
+            appConfig.features.hideCreatePackage ?
+                item.type !== 'composite' && item.type !== 'highlight-pack' :
+                true
+        ));
+}
+
+type IWeekday =
+    'sunday'
+    | 'monday'
+    | 'tuesday'
+    | 'wednesday'
+    | 'thursday'
+    | 'friday'
+    | 'saturday';
+
+export function getWeekDayIndex(weekday: IWeekday): number {
+    return [
+        'sunday',
+        'monday',
+        'tuesday',
+        'wednesday',
+        'thursday',
+        'friday',
+        'saturday',
+    ].indexOf(weekday);
+}
+
+export function isElasticDateFormat(date: string) {
+    return date.startsWith('now+') || date.startsWith('now-');
+}
+
+export function isScrolledIntoViewVertically(element: HTMLElement, container: HTMLElement): boolean {
+    const elementTop = element.offsetTop;
+    const elementBottom = element.offsetTop + element.offsetHeight;
+
+    const topVisible = elementTop >= container.scrollTop;
+    const bottomVisible = elementBottom < container.scrollTop + container.offsetHeight;
+
+    return topVisible && bottomVisible;
 }

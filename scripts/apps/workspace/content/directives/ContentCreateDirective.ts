@@ -19,9 +19,9 @@ ContentCreateDirective.$inject = [
     'keyboardManager',
     '$location',
     'packages',
-    '$rootScope',
     'storage',
     'autosave',
+    'superdeskFlags',
 ];
 
 interface IScope extends ng.IScope {
@@ -49,9 +49,9 @@ export function ContentCreateDirective(
     keyboardManager,
     $location,
     packages,
-    $rootScope,
     storage,
     autosave,
+    superdeskFlags,
 ) {
     return {
         scope: {
@@ -69,6 +69,8 @@ export function ContentCreateDirective(
             }
 
             scope.create = function(action: IItemCreationAction) {
+                superdeskFlags.flags.authoring = true;
+
                 return (() => {
                     if (action.kind === 'plain-text') {
                         return content.createItem('text', scope.initializeAsUpdated);
@@ -95,7 +97,12 @@ export function ContentCreateDirective(
 
                     if (action.kind !== 'upload-media' && !isArray(result)) {
                         authoringWorkspace.edit(result);
+                    } else {
+                        superdeskFlags.flags.authoring = false;
                     }
+                }).catch(() => {
+                    superdeskFlags.flags.authoring = false;
+                    scope.$applyAsync();
                 });
             };
 

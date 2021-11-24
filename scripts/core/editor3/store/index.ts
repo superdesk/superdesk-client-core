@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {
     EditorState,
     convertFromRaw,
@@ -35,10 +36,8 @@ import {
     ISpellcheckWarningsByBlock,
 } from '../components/spellchecker/SpellcheckerDecorator';
 import {appConfig} from 'appConfig';
-import {
-    RICH_FORMATTING_OPTION,
-    formattingOptionsUnsafeToParseFromHTML,
-} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {formattingOptionsUnsafeToParseFromHTML} from 'apps/workspace/content/directives/ContentProfileSchemaEditor';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -94,6 +93,8 @@ export interface IEditorStore {
     loading: boolean;
     limitConfig?: EditorLimit;
 }
+
+let editor3Stores = [];
 
 export const getCustomDecorator = (
     language?: string,
@@ -193,13 +194,22 @@ export default function createEditorStore(
     if (spellcheck != null) {
         // after we have the dictionary, force update the editor to highlight typos
         spellcheck.getDict().finally(() => store.dispatch(forceUpdate()));
-
         spellcheck.getAbbreviationsDict().then((abbreviations) => {
             store.dispatch(setAbbreviations(abbreviations || {}));
         });
     }
 
+    editor3Stores.push(store);
+
     return store;
+}
+
+export function getStores() {
+    return editor3Stores;
+}
+
+export function unsetStore() {
+    return editor3Stores = [];
 }
 
 /**

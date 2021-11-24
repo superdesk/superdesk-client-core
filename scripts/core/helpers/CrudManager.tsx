@@ -18,8 +18,10 @@ import {
     IArticle,
     IResourceChange,
 } from 'superdesk-api';
+import {DataProvider} from './data-provider';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
 import {connectServices} from './ReactRenderAsync';
+import {ignoreAbortError} from '../SuperdeskReactComponent';
 
 export function queryElastic(
     parameters: IQueryElasticParameters,
@@ -138,11 +140,21 @@ export function generatePatchIArticle(a: IArticle, b: IArticle) {
     return patch;
 }
 
+const cache = {};
+
 function findOne<T>(endpoint: string, id: string): Promise<T> {
-    return httpRequestJsonLocal({
-        method: 'GET',
-        path: '/' + endpoint + '/' + id,
-    });
+    const key = `${endpoint}:${id}`;
+
+    if (cache[key] == null) {
+        cache[key] = httpRequestJsonLocal({
+            method: 'GET',
+            path: '/' + endpoint + '/' + id,
+        }).finally(() => {
+            delete cache[key];
+        });
+    }
+
+    return cache[key];
 }
 
 export function fetchChangedResources<T extends IBaseRestApiResponse>(
@@ -275,6 +287,19 @@ export const dataApi: IDataApi = {
             urlParams: params,
         });
     },
+    abortableQueryRaw: (endpoint, params?: Dictionary<string, any>) => {
+        const abortController = new AbortController();
+
+        return {
+            response: ignoreAbortError(httpRequestRawLocal({
+                method: 'GET',
+                path: '/' + endpoint,
+                urlParams: params,
+                abortSignal: abortController.signal,
+            })),
+            abort: () => abortController.abort(),
+        };
+    },
     patch: (endpoint, item1, item2) => {
         const patch = generatePatch(item1, item2);
 
@@ -305,6 +330,8 @@ export const dataApi: IDataApi = {
         },
     }),
     uploadFileWithProgress: uploadFileWithProgress,
+    createProvider: (requestFactory, responseHandler, listenTo) =>
+        new DataProvider(requestFactory, responseHandler, listenTo),
 };
 
 export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(

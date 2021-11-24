@@ -90,6 +90,7 @@ export function getSelectSingleValueAutoComplete(
                         //  after dependentFields change
 
                         query={(searchString: string) => query(searchString, this.props)}
+                        queryById={(id) => queryById(id)}
                         placeholder={getPlaceholder(this.props)}
                         getLabel={(item) => getLabel(item)}
                         onSelect={(item) => {

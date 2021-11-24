@@ -29,7 +29,7 @@ interface IState {
     narrow: boolean;
     view: 'compact' | 'mgrid' | 'photogrid';
     itemsList: Array<string>;
-    itemsById: any;
+    itemsById: {[key: string]: IArticle};
     relatedEntities: IRelatedEntities;
     selected: string;
     swimlane: any;
@@ -42,6 +42,7 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     private abortController: AbortController;
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChanges: (changes: Array<IResourceChange>) => void;
+    private _mounted: boolean;
 
     constructor(props: IProps) {
         super(props);
@@ -77,7 +78,9 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
                     changes,
                     this.abortController.signal,
                 ).then((relatedEntities) => {
-                    this.setState({relatedEntities});
+                    if (this._mounted) {
+                        this.setState({relatedEntities});
+                    }
                 });
             },
             300,
@@ -205,6 +208,8 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     }
 
     componentDidMount() {
+        this._mounted = true;
+
         this.eventListenersToRemoveBeforeUnmounting.push(
             addWebsocketEventListener(
                 'resource:created',
@@ -240,6 +245,8 @@ export class ItemListAngularWrapper extends React.Component<IProps, IState> {
     }
 
     componentWillUnmount() {
+        this._mounted = false;
+
         this.abortController.abort();
 
         this.eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {

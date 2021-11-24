@@ -1617,6 +1617,20 @@
     }
 }
 
+.pills-list:not(.pills-list--draggable) > li {
+    transition: all ease-in-out 0.2s;
+}
+
+[class^="--dark-ui"],
+[class*="--dark-ui"] {
+    .pills-list {
+        > li {
+            background: #4f4f4f;
+        }
+    }
+}
+
+
 .pill-small {
     width: 200px;
     margin: 4px;

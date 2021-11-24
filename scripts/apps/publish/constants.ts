@@ -14,4 +14,7 @@ export const transmissionTypes = {
     http_push: {
         templateUrl: 'scripts/apps/publish/views/http-push-config.html',
     },
+    amazon_sqs_fifo: {
+        templateUrl: 'scripts/apps/publish/views/amazon-sqs-fifo-config.html',
+    },
 };

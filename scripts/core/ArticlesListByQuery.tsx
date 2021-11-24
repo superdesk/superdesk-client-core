@@ -1,4 +1,4 @@
-/* eslint-disable react/no-multi-comp */
+/* eslint-disable react/no-multi-comp, no-unreachable */
 
 import React from 'react';
 import {ArticlesListV2} from './ArticlesListV2';
@@ -10,6 +10,7 @@ import {SmoothLoader} from 'apps/search/components/SmoothLoader';
 import {IMultiSelectNew} from 'apps/search/components/ItemList';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 import {OrderedMap} from 'immutable';
+import {addInternalWebsocketEventListener} from './notification/notification';
 
 interface IProps {
     query: ISuperdeskQuery;
@@ -29,6 +30,9 @@ interface IPropsInner extends IProps {
 }
 
 class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, IState> {
+    articlesListComponentRef: ArticlesListV2 | null;
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+
     constructor(props: IPropsInner) {
         super(props);
 
@@ -37,7 +41,10 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
         };
 
         this.loadItems = this.loadItems.bind(this);
+
+        this.eventListenersToRemoveBeforeUnmounting = [];
     }
+
     loadItems(from, to): Promise<IRestApiResponse<any>> {
         const pageSize = to - from;
 
@@ -79,6 +86,7 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
             });
         });
     }
+
     componentDidMount() {
         // Making a request for getting the item count.
         // Item count is required for virtual scrolling in order to compute the height of the scroll-box.
@@ -86,6 +94,37 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
             this.setState({
                 itemCount: res._meta.total,
             });
+        });
+
+        // TEMPORARY FIX FOR SDESK-6157 BELOW
+
+        const q = this.props.query as unknown as any;
+
+        const highlightId = q?.filter?.$and?.[3]?.highlights?.$eq;
+        const isSpikeView = q?.filter?.$and?.[0]?.state?.$eq === 'spiked';
+
+        if (highlightId != null) {
+            this.eventListenersToRemoveBeforeUnmounting.push(
+                addInternalWebsocketEventListener('item:highlights', (message) => {
+                    if (message?.extra.mark_id === highlightId) {
+                        this.articlesListComponentRef.reloadList();
+                    }
+                }),
+            );
+        } else if (isSpikeView) {
+            this.eventListenersToRemoveBeforeUnmounting.push(addInternalWebsocketEventListener('item:spike', () => {
+                this.articlesListComponentRef.reloadList();
+            }));
+
+            this.eventListenersToRemoveBeforeUnmounting.push(addInternalWebsocketEventListener('item:unspike', () => {
+                this.articlesListComponentRef.reloadList();
+            }));
+        }
+    }
+
+    componentWillUnmount() {
+        this.eventListenersToRemoveBeforeUnmounting.forEach((fn) => {
+            fn();
         });
     }
 
@@ -112,6 +151,9 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                         pageSize={this.props.query.max_results}
                         loadItems={(from, to) => this.loadItems(from, to).then(({_items}) => _items)}
                         shouldReloadTheList={(changedFields) => {
+                            // TEMPORARY FIX FOR SDESK-6157
+                            return false;
+
                             /** TODO: Have websockets transmit the diff.
                              * The component should not update when field value changes do not affect the query -
                              * for example, if the query is {desk: 'X'} and an update is about an item moved
@@ -131,6 +173,9 @@ class ArticlesListByQueryComponent extends SuperdeskReactComponent<IPropsInner, 
                         onItemDoubleClick={this.props.onItemDoubleClick}
                         padding={this.props.padding}
                         getMultiSelect={this.props.getMultiSelect}
+                        ref={(ref) => {
+                            this.articlesListComponentRef = ref;
+                        }}
                     />
                 </div>
             </div>

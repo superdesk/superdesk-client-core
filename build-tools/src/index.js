@@ -7,6 +7,7 @@ const currentDir = process.cwd();
 const poToJson = require('./po-to-json/index');
 const installExtensions = require('./extensions/install-extensions');
 const {mergeTranslationsFromExtensions} = require('./extensions/translations');
+const {extractTranslations} = require('./extensions/extract-translations');
 const {namespaceCSS, watchCSS} = require('./extensions/css');
 
 const {Command} = require('commander');
@@ -65,6 +66,7 @@ extensions
 
         installExtensions(clientDirAbs);
         namespaceCSS(clientDirAbs);
+        extractTranslations(clientDirAbs);
         mergeTranslationsFromExtensions(clientDirAbs);
     });
 
@@ -90,6 +92,18 @@ extensions
         const clientDirAbs = path.join(currentDir, clientDir);
 
         mergeTranslationsFromExtensions(clientDirAbs);
+    });
+
+extensions
+    .command('extract-translations <main-client-dir>')
+    .description(
+        'extracts gettext calls from code and generates a .pot file'
+        + ' (requires config in package.json)'
+    )
+    .action((clientDir) => {
+        const clientDirAbs = path.join(currentDir, clientDir);
+
+        extractTranslations(clientDirAbs);
     });
 
 program.addCommand(extensions);

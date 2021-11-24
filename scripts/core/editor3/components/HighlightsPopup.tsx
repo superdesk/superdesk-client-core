@@ -101,7 +101,7 @@ export class HighlightsPopup extends React.Component<any, any> {
                     annotation={h}
                     highlightId={highlightId}
                     highlightsManager={this.props.highlightsManager}
-                    editorNode={this.props.editorNode}
+                    editorNode={this.props.editorNode.current}
                     close={() => this.unmountCustom()}
                 />
             );
@@ -113,14 +113,14 @@ export class HighlightsPopup extends React.Component<any, any> {
                     highlightsManager={this.props.highlightsManager}
                     onChange={this.props.onChange}
                     editorState={this.props.editorState}
-                    editorNode={this.props.editorNode}
+                    editorNode={this.props.editorNode.current}
                 />
             );
         } else if (getSuggestionsTypes().indexOf(type) !== -1) {
             return (
                 <SuggestionPopup
                     suggestion={h}
-                    editorNode={this.props.editorNode}
+                    editorNode={this.props.editorNode.current}
                 />
             );
         } else {
@@ -185,7 +185,7 @@ export class HighlightsPopup extends React.Component<any, any> {
         const t = $(e.target);
         const {editorNode} = this.props;
         const onPopup = t.closest('.editor-popup').length || t.closest('.mentions-input__suggestions').length;
-        const onEditor = t.closest(editorNode).length;
+        const onEditor = t.closest(editorNode.current).length;
         const onModal = t.closest('.modal__dialog');
 
         if (!onPopup && !onEditor && !onModal) {

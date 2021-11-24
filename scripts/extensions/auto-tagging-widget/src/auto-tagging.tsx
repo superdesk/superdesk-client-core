@@ -59,11 +59,67 @@ function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
     return iMatricsFields[key] != null;
 }
 
+function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
+    const {gettext} = superdesk.localization;
+    const {showModal} = superdesk.ui;
+    const {Modal, ModalHeader, ModalBody, ModalFooter} = superdesk.components;
+
+    showModal(({closeModal}) => (
+        <Modal>
+            <ModalHeader onClose={closeModal}>
+                {gettext('iMatrics service error')}
+            </ModalHeader>
+
+            <ModalBody>
+                <h3>{gettext('Some tags can not be displayed')}</h3>
+
+                <p>
+                    {
+                        gettext(
+                            'iMatrics service has returned tags referencing parents that do not exist in the response.',
+                        )
+                    }
+                </p>
+
+                <table className="table">
+                    <thead>
+                        <th>{gettext('tag name')}</th>
+                        <th>{gettext('qcode')}</th>
+                        <th>{gettext('parent ID')}</th>
+                    </thead>
+
+                    <tbody>
+                        {
+                            errors.map((tag) => (
+                                <tr key={tag.qcode}>
+                                    <td>{tag.name}</td>
+                                    <td>{tag.qcode}</td>
+                                    <td>{tag.parent}</td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </table>
+            </ModalBody>
+
+            <ModalFooter>
+                <Button
+                    text={gettext('close')}
+                    onClick={() => {
+                        closeModal();
+                    }}
+                />
+            </ModalFooter>
+        </Modal>
+    ));
+}
+
 export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
     const {preferences} = superdesk;
     const {httpRequestJsonLocal} = superdesk;
-    const {gettext} = superdesk.localization;
-    const {memoize, generatePatch} = superdesk.utilities;
+    const {gettext, gettextPlural} = superdesk.localization;
+    const {memoize, generatePatch, arrayToTree} = superdesk.utilities;
+    const {WidgetHeading, Alert} = superdesk.components;
     const groupLabels = getGroups(superdesk);
 
     const TagListComponent = getTagsListComponent(superdesk);
@@ -164,6 +220,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             const tag: ITagUi = {
                 qcode: Math.random().toString(),
                 name: _title,
+                description: newItem.description,
                 source: SOURCE_IMATRICS,
                 altids: {},
                 group: newItem.group,
@@ -223,12 +280,57 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             return (
                 <React.Fragment>
-                    <div className="widget-header">
-                        <div className="widget-title">{label}</div>
+                    {
+                        (() => {
+                            if (data === 'loading' || data === 'not-initialized') {
+                                return null;
+                            } else {
+                                const treeErrors = arrayToTree(
+                                    data.changes.analysis.toArray(),
+                                    (item) => item.qcode,
+                                    (item) => item.parent,
+                                ).errors;
 
+                                // only show errors when there are unsaved changes
+                                if (treeErrors.length > 0 && dirty) {
+                                    return (
+                                        <Alert
+                                            type="warning"
+                                            size="small"
+                                            title={gettext('iMatrics service error')}
+                                            message={
+                                                gettextPlural(
+                                                    treeErrors.length,
+                                                    '1 tag can not be displayed',
+                                                    '{{n}} tags can not be displayed',
+                                                    {n: treeErrors.length},
+                                                )
+                                            }
+                                            actions={[
+                                                {
+                                                    label: gettext('details'),
+                                                    onClick: () => {
+                                                        showImatricsServiceErrorModal(superdesk, treeErrors);
+                                                    },
+                                                    icon: 'info-sign',
+                                                },
+                                            ]}
+                                        />
+                                    );
+                                } else {
+                                    return null;
+                                }
+                            }
+                        })()
+                    }
+
+                    <WidgetHeading
+                        widgetName={label}
+                        editMode={dirty}
+                    >
                         {
                             data === 'loading' || data === 'not-initialized' || !dirty ? null : (
-                                <div className="widget__sliding-toolbar widget__sliding-toolbar--right">
+                                <div>
                                     <button
                                         className="btn btn--primary"
                                         onClick={() => {
@@ -254,11 +356,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 </div>
                             )
                         }
-                    </div>
+                    </WidgetHeading>
 
                     <div className="widget-content sd-padding-all--2">
                         <div>
-                            <div className="form__row form__row--flex" style={{padding: 0}}>
+                            <div className="form__row form__row--flex sd-padding-b--1">
                                 <ButtonGroup align="left">
                                     <Switch
                                         value={runAutomaticallyPreference}
@@ -274,8 +376,8 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                 this.runAnalysis();
                                             }
                                         }}
+                                        label={{text: gettext('Run automatically')}}
                                     />
-                                    <label>{gettext('Run automatically')}</label>
                                 </ButtonGroup>
                             </div>
 
@@ -350,7 +452,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                             />
                                         </div>
 
-                                        <div style={{marginLeft: 10}}>
+                                        <div style={{marginLeft: 10, marginTop: 14}}>
                                             <Button
                                                 type="primary"
                                                 icon="plus-large"
@@ -414,28 +516,33 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
                                 let allGrouped = OrderedMap<string, JSX.Element>();
 
-                                othersGrouped.forEach((tags, groupId) =>
-                                    tags && groupId ? allGrouped = allGrouped.set(groupId,
-                                        <ToggleBoxNext
-                                            key={groupId}
-                                            title={this.getGroupName(groupId, vocabularyLabels)}
-                                            style="circle"
-                                            isOpen={true}
-                                        >
-                                            <TagListComponent
-                                                savedTags={savedTags}
-                                                tags={tags.toMap()}
-                                                readOnly={readOnly}
-                                                onRemove={(id) => {
-                                                    this.updateTags(
-                                                        data.changes.analysis.remove(id),
-                                                        data,
-                                                    );
-                                                }}
-                                            />
-                                        </ToggleBoxNext>,
-                                    ) : false,
-                                );
+                                othersGrouped.forEach((tags, groupId) => {
+                                    if (tags != null && groupId != null) {
+                                        allGrouped = allGrouped.set(groupId,
+                                            <ToggleBoxNext
+                                                key={groupId}
+                                                title={this.getGroupName(groupId, vocabularyLabels)}
+                                                style="circle"
+                                                isOpen={true}
+                                            >
+                                                <TagListComponent
+                                                    savedTags={savedTags}
+                                                    tags={tags.toMap()}
+                                                    readOnly={readOnly}
+                                                    onRemove={(ids) => {
+                                                        this.updateTags(
+                                                            ids.reduce(
+                                                                (analysis, id) => analysis.remove(id),
+                                                                data.changes.analysis,
+                                                            ),
+                                                            data,
+                                                        );
+                                                    }}
+                                                />
+                                            </ToggleBoxNext>,
+                                        );
+                                    }
+                                });
 
                                 if (entitiesGroupedAndSorted.size > 0) {
                                     allGrouped = allGrouped.set('entities',
@@ -457,9 +564,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                         savedTags={savedTags}
                                                         tags={tags.toMap()}
                                                         readOnly={readOnly}
-                                                        onRemove={(id) => {
+                                                        onRemove={(ids) => {
                                                             this.updateTags(
-                                                                data.changes.analysis.remove(id),
+                                                                ids.reduce(
+                                                                    (analysis, id) => analysis.remove(id),
+                                                                    data.changes.analysis,
+                                                                ),
                                                                 data,
                                                             );
                                                         }}

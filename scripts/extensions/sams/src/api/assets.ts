@@ -498,12 +498,17 @@ export function showUploadAssetModal(props?: Partial<IUploadAssetModalProps>): v
             showModalConnectedToStore<Partial<IUploadAssetModalProps>>(
                 UploadAssetModal,
                 {
-                    dark: true,
                     modalSize: 'fill',
                     ...props ?? {},
                 },
             );
         });
+}
+
+export function getAssetDownloadUrl(assetId: IAssetItem['_id']): string {
+    const {server} = superdeskApi.instance.config;
+
+    return `${server.url}/${BINARY_RESOURCE}/${assetId}`;
 }
 
 export function getAssetBinary(asset: IAssetItem): Promise<void | Response> {
@@ -565,6 +570,8 @@ export function deleteAsset(item: IAssetItem): Promise<void> {
         .catch((error: any) => {
             if (isSamsApiError(error)) {
                 notify.error(getApiErrorMessage(error));
+            } else if (error._message != null) {
+                notify.error(gettext('Error: {{message}}', {message: error._message}));
             } else {
                 notify.error(gettext('Failed to delete the Asset'));
             }

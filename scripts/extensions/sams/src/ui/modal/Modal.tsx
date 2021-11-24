@@ -9,7 +9,7 @@ interface IProps {
     size?: IModalSize;
     closeOnEsc?: boolean;
     closeModal?(): void;
-    darkUI?: boolean;
+    theme?: 'dark-ui';
     fullHeight?: boolean;
 }
 
@@ -42,18 +42,18 @@ export class Modal extends React.PureComponent<IProps> {
     render() {
         const modalClass = classNames(
             'modal',
-            {
-                [`modal--${this.props.size}`]: this.props.size,
-                'modal--dark-ui': this.props.darkUI,
-                'dark-ui': this.props.darkUI,
-            },
+            {[`modal--${this.props.size}`]: this.props.size},
         );
         const dialogStyle = !this.props.fullHeight ? {} : {height: '100%'};
 
         return (
             <Portal id={this.props.id}>
                 <div className="modal__backdrop fade in" />
-                <div className={modalClass} style={{display: 'block'}}>
+                <div
+                    className={modalClass}
+                    style={{display: 'block'}}
+                    data-theme={this.props.theme}
+                >
                     <div className="modal__dialog" style={dialogStyle}>
                         <div className="modal__content">
                             {this.props.children}

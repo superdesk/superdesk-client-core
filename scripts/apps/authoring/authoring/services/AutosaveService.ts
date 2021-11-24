@@ -30,6 +30,23 @@ export class AutosaveService {
         return this.get(item);
     }
 
+    hasUnsavedChanges(item): Promise<boolean> {
+        if (this.timeouts[item._id] != null) {
+            return Promise.resolve(true);
+        } else {
+            return new Promise((resolve) => {
+                api.find(RESOURCE, item._id)
+                    .then(() => resolve(true))
+                    .catch(() => resolve(false)); // 404
+            });
+        }
+    }
+
+    /** If auto-save is in progress, wait for it to finish */
+    settle(item): Promise<void> {
+        return this.timeouts[item._id] ?? $q.resolve();
+    }
+
     /**
      * Get the resource.
      */

@@ -104,7 +104,8 @@
     <div sd-wizard-step data-title="{{ :: 'Reorder Sections' | translate }}" data-code="reorder"
          data-hide="shouldHideStep('reorder')">
         <div class="content">
-            <div class="legend" translate>Reorder stages and saved searches for view</div>
+            <p class="legend" translate>Reorder stages and saved searches for monitoring view</p>
+            <p translate>You are changing you personal preferences. If you would like to set the default order for the desk, you can do so from the settings page.</p>
             <ul class="groups draggable-list" sd-sort-groups>
                 <li class="sort-item draggable-list__item draggable-list__item--small" ng-class="{'active': item.order < columnsLimit}"
                  ng-repeat="item in getValues() track by item.order">

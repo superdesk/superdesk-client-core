@@ -7,6 +7,7 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {appConfig, extensions} from 'appConfig';
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {confirmPublish} from '../services/quick-publish-modal';
 
 SendItem.$inject = [
     '$q',
@@ -95,6 +96,7 @@ export function SendItem($q,
             scope.subscribersWithPreviewConfigured = [];
             scope.sendPublishSchedule = appConfig?.ui?.sendPublishSchedule ?? true;
             scope.sendEmbargo = appConfig?.ui?.sendEmbargo ?? true;
+            scope.allowPersonalSpace = false;
             scope.PERSONAL_SPACE = {label: gettext('Personal Space'), value: 'PERSONAL_SPACE'};
             scope.isCorrection = appConfig?.corrections_workflow
                 && scope.item?.state === ITEM_STATE.CORRECTION;
@@ -119,6 +121,14 @@ export function SendItem($q,
             scope.metadata = metadata.values;
 
             scope.publish = function() {
+                if (appConfig?.features?.confirmDueDate) {
+                    return confirmPublish([scope.item]).then(publishItem);
+                } else {
+                    return publishItem();
+                }
+            };
+
+            function publishItem() {
                 scope.loading = true;
                 var result = scope._publish();
 
@@ -128,7 +138,7 @@ export function SendItem($q,
                     .finally(() => {
                         scope.loading = false;
                     });
-            };
+            }
 
             function activateConfig(_config, oldConfig) {
                 if (scope.mode !== 'authoring' && _config !== oldConfig) {
@@ -931,7 +941,7 @@ export function SendItem($q,
                     return;
                 }
 
-                scope.stages = desks.deskStages[scope.selectedDesk._id];
+                scope.stages = desks.deskStages[scope.selectedDesk._id] || [];
                 var stage = null;
 
                 if (scope.currentUserAction === ctrl.userActions.send_to ||
@@ -1005,6 +1015,10 @@ export function SendItem($q,
                         scope.currentUserAction = ctrl.userActions.send_to;
                     }
                 }
+
+                const item = scope.orig || scope.item || scope.config?.item;
+
+                scope.allowPersonalSpace = item.task?.desk != null;
             }
 
             /**

@@ -23,7 +23,7 @@ describe('Content API Search', () => {
             search: {
                 useDefaultTimezone: true,
             },
-            defaultTimezone: 'UTC',
+            default_timezone: 'UTC',
             server: {url: undefined, ws: undefined},
         };
 

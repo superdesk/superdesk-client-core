@@ -6,6 +6,21 @@ The main purpose of extensions is to reduce the complexity and interdependencies
 
 It's easiest to copy the `helloWorld` extension and change the directory name.
 
+# Registering an extension
+
+Pass the following registration object to `startApp`
+
+```javascript
+startApp([
+    {
+        id: 'planning-extension',
+        load: () => import('superdesk-planning/client/planning-extension'),
+    },
+]);
+
+IMPORTANT: extension `id` must match its directory name
+```
+
 # Writing end-to-end tests for extensions
 
 Not supported at the moment.
@@ -31,8 +46,30 @@ There's an npm task - "watch-css-from-extensions" for rebuilding extension style
 
 In order for translations to be accessible via `gettext` function that is exposed via the extensions API, it is required to put `.po` files in a directory, and add an the following entry to `package.json` of an extension(path relative to `package.json`):
 
+```json
+{
+    "superdeskExtension": {
+        "translations-directory": "./dir-name"
+    }
+}
 ```
-superdeskExtension: {
-    "translations-directory": "./dir-name"
+
+# Extracting translation strings from code
+
+Set `superdeskExtension.translations-extract-paths` to an array of paths in `package.json` and `@superdesk/build-tools` will generate a .pot file in the root directory of the extension. Translations will be extracted from the following file types: `.ts`, `.tsx`, `.js`, `.jsx`
+
+`.pot` files are generated on every build or running a command explicitly. Run `npx @superdesk/build-tools --help` to see available commands.
+
+It is also possible to extract translation strings outside the extension as well e.g. `"translations-extract-paths": ["../any-dir"]`.
+
+Ensure that node_modules or any other external code is not a child directory of any translation paths.
+
+```json
+{
+    "superdeskExtension": {
+        "translations-extract-paths": [
+            "./src"
+        ]
+    }
 }
 ```

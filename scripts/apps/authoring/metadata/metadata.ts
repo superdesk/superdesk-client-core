@@ -640,6 +640,12 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             setLanguage: '@',
             helperText: '@',
             disableEntireCategory: '@',
+
+            /**
+             * Placeholder is used in multi-editing.
+             * If items have different values, placeholder is shown instead of values.
+             */
+            placeholder: '=',
         },
         templateUrl: 'scripts/apps/authoring/metadata/views/metadata-terms.html',
         link: function MetaTermsDirectiveLink(scope, elem, attrs) {
@@ -1310,7 +1316,8 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         getCustomVocabulariesForArticleHeader: function(qcodes, editor, schema) {
             return this.getFilteredCustomVocabularies(qcodes)
                 .then(
-                    (cvs) => cvs.filter((cv) => cv.terms.length && (editor[cv._id] || schema[cv._id])),
+                    (cvs) => cvs.filter((cv) => (cv.terms.length || cv.read_only) &&
+                        (editor[cv._id] || schema[cv._id])),
                 );
         },
         /**
@@ -1323,7 +1330,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
             return this.fetchMetadataValues().then(() => {
                 const customVocabulariesForArticleHeader = this.cvs.filter(
-                    (cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id]),
+                    (cv) => cv.field_type == null && cv.service && (editor[cv._id] || schema[cv._id]),
                 );
 
                 const customTextAndDateVocabularies = this.cvs.filter(
