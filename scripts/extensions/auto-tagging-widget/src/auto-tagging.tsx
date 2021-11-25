@@ -26,6 +26,13 @@ interface IAutoTaggingResponse {
 interface IAutoTaggingSearchResult {
     result: {
         tags: IServerResponse;
+
+        /**
+         * When search is performed, this will contain
+         * all parents of items that matched the search query
+         * and were returned in `tags` section.
+         */
+        broader?: IServerResponse;
     };
 }
 
@@ -260,9 +267,39 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.setState({newItem: null});
         }
-        insertTagFromSearch(tag: ITagUi, data: IEditableData) {
+        insertTagFromSearch(tag: ITagUi, data: IEditableData, searchResponse: IAutoTaggingSearchResult) {
+            /**
+             * Contains parents of all items returned in search results,
+             * not only the one that was eventually chosen
+             */
+            const parentsMixed = searchResponse?.result?.broader != null
+                ? toClientFormat(searchResponse.result.broader)
+                : OrderedMap<string, ITagUi>();
+
+            const parentsForChosenTag: Array<ITagUi> = [];
+
+            let latestParent = tag;
+
+            while (latestParent?.parent != null) {
+                const nextParent = parentsMixed.get(latestParent.parent);
+
+                if (nextParent != null) {
+                    parentsForChosenTag.push(nextParent);
+                }
+
+                latestParent = nextParent;
+            }
+
+            let result: OrderedMap<string, ITagUi> = data.changes.analysis;
+
+            result = result.set(tag.qcode, tag);
+
+            for (const parent of parentsForChosenTag) {
+                result = result.set(parent.qcode, parent);
+            }
+
             this.updateTags(
-                data.changes.analysis.set(tag.qcode, tag),
+                result,
                 data,
             );
         }
@@ -414,7 +451,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         <div style={{flexGrow: 1}}>
                                             <Autocomplete
                                                 value={''}
-                                                keyValue="name"
+                                                keyValue="keyValue"
                                                 items={[]}
                                                 search={(searchString, callback) => {
                                                     let cancelled = false;
@@ -438,7 +475,20 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                                 ) !== true,
                                                             );
 
-                                                            callback(withoutExistingTags);
+                                                            const withResponse = withoutExistingTags.map(
+                                                                (tag) => ({
+                                                                    // required for Autocomplete component
+                                                                    keyValue: tag.qcode,
+
+                                                                    tag,
+
+                                                                    // required to be able to
+                                                                    // get all parents when an item is selected
+                                                                    entireResponse: res,
+                                                                }),
+                                                            );
+
+                                                            callback(withResponse);
                                                         }
                                                     });
 
@@ -449,7 +499,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     };
                                                 }}
                                                 listItemTemplate={(__item: any) => {
-                                                    const _item: ITagUi = __item;
+                                                    const _item: ITagUi = __item.tag;
 
                                                     return (
                                                         <div className="auto-tagging-widget__autocomplete-item">
@@ -470,9 +520,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     );
                                                 }}
                                                 onSelect={(_value: any) => {
-                                                    const value = _value as ITagUi;
+                                                    const tag: ITagUi = _value.tag;
+                                                    const entireResponse: IAutoTaggingSearchResult =
+                                                        _value.entireResponse;
 
-                                                    this.insertTagFromSearch(value, data);
+                                                    this.insertTagFromSearch(tag, data, entireResponse);
                                                     // TODO: clear autocomplete?
                                                 }}
                                                 onChange={noop}
@@ -619,9 +671,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     tagAlreadyExists={
                                                         (qcode) => tagAlreadyExists(data, qcode)
                                                     }
-                                                    insertTagFromSearch={(tag: ITagUi) => {
-                                                        this.insertTagFromSearch(tag, data);
-                                                    }}
                                                 />
                                             )
                                         }
