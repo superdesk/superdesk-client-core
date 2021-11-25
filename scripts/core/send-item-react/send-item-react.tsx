@@ -14,6 +14,7 @@ type ITab = 'send to' | 'publish';
 interface IProps {
     items: Array<IArticle>;
     closeSendToView(): void;
+    onSendBefore(items: Array<IArticle>): Promise<Array<IArticle>>;
     markupV2?: boolean;
 }
 
@@ -71,6 +72,7 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                             <SendToTab
                                 items={this.props.items}
                                 closeSendToView={this.props.closeSendToView}
+                                onSendBefore={this.props.onSendBefore}
                                 markupV2={markupV2}
                             />
                         );

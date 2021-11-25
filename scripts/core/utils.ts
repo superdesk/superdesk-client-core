@@ -270,3 +270,10 @@ export function omitRestApiFields<T extends {}>(item: T): T {
 
     return omit(item, keys) as unknown as T;
 }
+
+/**
+ * Output example: "1970-01-19T22:57:38"
+ */
+export function toServerDateFormat(date: Date): string {
+    return date.toJSON().slice(0, 19);
+}

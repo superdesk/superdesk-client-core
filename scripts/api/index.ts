@@ -1,6 +1,7 @@
 import {article} from './article';
 import {desks} from './desks';
 import {time} from './time';
+import {preferences} from './preferences';
 
 /**
  * This is core API, not extensions API.
@@ -11,4 +12,5 @@ export const sdApi = {
     article,
     desks,
     time,
+    preferences,
 };

@@ -24,6 +24,11 @@ import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/Si
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
 import {addInternalEventListener} from 'core/internal-events';
 import {SendItemReact} from 'core/send-item-react/send-item-react';
+import {
+    showUnsavedChangesPrompt,
+    IUnsavedChangesActionWithSaving,
+} from 'core/ui/components/prompt-for-unsaved-changes';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -70,6 +75,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         };
 
         this.save = this.save.bind(this);
+        this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -224,22 +230,29 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     componentDidUpdate(_prevProps, prevState: IState) {
-        if (
-            this.state.initialized
-            && prevState.initialized
-            && this.state.itemWithChanges !== prevState.itemWithChanges
-        ) {
-            authoringStorage.autosave.schedule(this.state.itemWithChanges);
+        if (this.state.initialized && prevState.initialized) {
+            if (this.state.itemWithChanges !== prevState.itemWithChanges) {
+                if (this.state.itemWithChanges === this.state.itemOriginal) {
+                    /**
+                     * Item changed, but is now the same as original item.
+                     * This means either article was saved, or changes discarded.
+                     * In either case, autosaved data needs to be deleted.
+                     */
+                    authoringStorage.autosave.delete(this.state.itemWithChanges);
+                } else {
+                    authoringStorage.autosave.schedule(this.state.itemWithChanges);
+                }
+            }
         }
     }
 
-    save(state: IStateLoaded) {
+    save(state: IStateLoaded): Promise<IArticle> {
         this.setState({
             ...state,
             loading: true,
         });
 
-        authoringStorage.saveArticle(state.itemWithChanges, state.itemOriginal).then((item: IArticle) => {
+        return authoringStorage.saveArticle(state.itemWithChanges, state.itemOriginal).then((item: IArticle) => {
             const nextState: IStateLoaded = {
                 ...state,
                 loading: false,
@@ -248,6 +261,23 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             };
 
             this.setState(nextState);
+
+            return item;
+        });
+    }
+
+    discardUnsavedChanges(state: IStateLoaded): Promise<void> {
+        return authoringStorage.autosave.delete(state.itemWithChanges).then(() => {
+            return new Promise((resolve) => {
+                const stateNext: IStateLoaded = {
+                    ...state,
+                    itemWithChanges: state.itemOriginal,
+                };
+
+                this.setState(stateNext, () => {
+                    resolve();
+                });
+            });
         });
     }
 
@@ -301,6 +331,37 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
                             this.setState(nextState);
                         }}
+                        onSendBefore={() => new Promise((resolve, reject) => {
+                            if (state.itemWithChanges === state.itemOriginal) {
+                                resolve([state.itemOriginal]);
+                                return;
+                            }
+
+                            return showUnsavedChangesPrompt(true).then(({action, closePromptFn}) => {
+                                if (action === IUnsavedChangesActionWithSaving.cancelAction) {
+                                    closePromptFn();
+                                    reject();
+                                } else if (action === IUnsavedChangesActionWithSaving.discardChanges) {
+                                    this.discardUnsavedChanges(state).then(() => {
+                                        closePromptFn();
+
+                                        if (this.state.initialized) {
+                                            resolve([this.state.itemOriginal]);
+                                        }
+                                    });
+                                } else if (action === IUnsavedChangesActionWithSaving.save) {
+                                    this.save(state).then(() => {
+                                        closePromptFn();
+
+                                        if (this.state.initialized) {
+                                            resolve([this.state.itemOriginal]);
+                                        }
+                                    });
+                                } else {
+                                    assertNever(action);
+                                }
+                            });
+                        })}
                         markupV2
                     />
                 );

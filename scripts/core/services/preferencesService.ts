@@ -185,6 +185,8 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                 }
             };
 
+            this.getSync = getValue;
+
             this.registerUserPreference = function(key) {
                 userPreferences[key] = 1;
             };

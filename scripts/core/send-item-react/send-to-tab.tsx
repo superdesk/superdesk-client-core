@@ -1,9 +1,8 @@
 import React from 'react';
 import {IDesk, IStage, IArticle} from 'superdesk-api';
 import {OrderedMap} from 'immutable';
-import {desks} from 'api/desks';
 import {Button, ToggleBox, FormLabel} from 'superdesk-ui-framework/react';
-import {gettext} from 'core/utils';
+import {gettext, toServerDateFormat} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {PanelContent} from './panel/panel-content';
 import {PanelFooter} from './panel/panel-footer';
@@ -12,12 +11,21 @@ import {dispatchInternalEvent} from 'core/internal-events';
 import {DateTimePicker} from 'core/ui/components/date-time-picker';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
+import {notify} from 'core/notify/notify';
+import {sdApi} from 'api';
+import {getInitialDestination} from './get-initial-destination';
+import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 
 interface IProps {
     items: Array<IArticle>;
     closeSendToView(): void;
     markupV2: boolean;
+
+    /**
+     * Required to handle unsaved changes prompt
+     */
+    onSendBefore(items: Array<IArticle>): Promise<Array<IArticle>>;
 }
 
 interface IState {
@@ -30,56 +38,161 @@ interface IState {
     timeZone: string | null;
 }
 
-function sendItems(items: Array<IArticle>, deskId: IDesk['_id'], stageId: IStage['_id']): Promise<void> {
-    return Promise.all(
-        items.map((item) => {
-            return httpRequestJsonLocal({
-                method: 'POST',
-                path: `/archive/${item._id}/move`,
-                payload: {
-                    'task': {
-                        'desk': deskId,
-                        'stage': stageId,
-                    },
-                },
-            });
-        }),
-    ).then((patches: Array<Partial<IArticle>>) => {
-        /**
-         * Patch articles that are open in authoring.
-         * Otherwise data displayed in authoring might be out of date
-         * and _etag mismatch error would be thrown when attempting to save.
-         */
-        for (const patch of patches) {
-            dispatchInternalEvent(
-                'dangerouslyOverwriteAuthoringData',
-                patch,
-            );
-        }
-    });
-}
-
 // TODO: ensure https://github.com/superdesk/superdesk-ui-framework/issues/574 is fixed before merging to develop
+// TODO: ensure SDESK-6319 is merged
 export class SendToTab extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
-        const allDesks = desks.getAllDesks();
+        const allDesks = sdApi.desks.getAllDesks();
         const selectedDesk = allDesks.first();
-        const stagesForDesk = desks.getDeskStages(selectedDesk._id);
+        const stagesForDesk = sdApi.desks.getDeskStages(selectedDesk._id);
+        const initialDestination = getInitialDestination(allDesks, props.items);
 
         this.state = {
             allDesks,
             stagesForDesk,
-            selectedDesk: selectedDesk._id,
-            selectedStage: stagesForDesk.first()._id,
-            embargo: null,
-            publishSchedule: null,
+            selectedDesk: initialDestination.desk,
+            selectedStage: initialDestination.stage,
+            embargo: props.items.length === 1 && props.items[0].embargo != null
+                ? new Date(props.items[0].embargo) ?? null
+                : null,
+            publishSchedule: props.items.length === 1 && props.items[0].publish_schedule != null
+                ? new Date(props.items[0].publish_schedule) ?? null
+                : null,
             timeZone: props.items.length === 1 ? props.items[0].schedule_settings?.time_zone ?? null : null,
         };
+
+        this.sendItems = this.sendItems.bind(this);
     }
+
+    sendItems(itemToOpenAfterSending?: IArticle['_id']) {
+        const {closeSendToView, onSendBefore} = this.props;
+        const {selectedDesk, selectedStage} = this.state;
+
+        const selectedDeskObj = this.state.allDesks.find((desk) => desk._id === selectedDesk);
+
+        const middlewares = Object.values(extensions)
+            .map((ext) => ext?.activationResult?.contributions?.entities?.article?.onSendBefore)
+            .filter(notNullOrUndefined);
+
+        return onSendBefore(this.props.items)
+            .then((items) => {
+                middlewares.reduce(
+                    (current, next) => {
+                        return current.then(() => {
+                            return next(items, selectedDeskObj);
+                        });
+                    },
+                    Promise.resolve(),
+                ).then(() => {
+                    return Promise.all(
+                        items.map((item) => {
+                            return (() => {
+                                /**
+                                 * If needed, update embargo / publish schedule / time zone
+                                 */
+
+                                if (items.length !== 1) {
+                                    return Promise.resolve({});
+                                }
+
+                                const itemEmbargo = item.embargo;
+                                const itemPublishSchedule = item.publish_schedule;
+                                const itemTimeZone = item.schedule_settings?.time_zone;
+
+                                const currentEmbargo = this.state.embargo == null
+                                    ? null
+                                    : toServerDateFormat(this.state.embargo);
+
+                                const currentPublishSchedule = this.state.publishSchedule == null
+                                    ? null
+                                    : toServerDateFormat(this.state.publishSchedule);
+
+                                const currentTimeZone = this.state.timeZone;
+
+                                if (
+                                    currentEmbargo !== itemEmbargo
+                                    || currentPublishSchedule !== itemPublishSchedule
+                                    || currentTimeZone !== itemTimeZone
+                                ) {
+                                    const patch: Partial<IArticle> = {
+                                        embargo: currentEmbargo,
+                                        publish_schedule: currentPublishSchedule,
+                                        schedule_settings: {
+                                            ...(item.schedule_settings ?? {}),
+                                            time_zone: currentTimeZone,
+                                        },
+                                    };
+
+                                    return httpRequestJsonLocal<IArticle>({
+                                        method: 'PATCH',
+                                        path: `/archive/${item._id}`,
+                                        payload: patch,
+                                        headers: {
+                                            'If-Match': item._etag,
+                                        },
+                                    });
+                                } else {
+                                    return Promise.resolve({});
+                                }
+                            })().then((patch1: Partial<IArticle>) => {
+                                return httpRequestJsonLocal({
+                                    method: 'POST',
+                                    path: `/archive/${item._id}/move`,
+                                    payload: {
+                                        'task': {
+                                            'desk': selectedDesk,
+                                            'stage': selectedStage,
+                                        },
+                                    },
+                                }).then((patch2: Partial<IArticle>) => {
+                                    return {
+                                        ...patch1,
+                                        ...patch2,
+                                    };
+                                });
+                            });
+                        }),
+                    ).then((patches: Array<Partial<IArticle>>) => {
+                        /**
+                         * Patch articles that are open in authoring.
+                         * Otherwise data displayed in authoring might be out of date
+                         * and _etag mismatch error would be thrown when attempting to save.
+                         */
+                        for (const patch of patches) {
+                            dispatchInternalEvent(
+                                'dangerouslyOverwriteAuthoringData',
+                                patch,
+                            );
+                        }
+
+                        closeSendToView();
+
+                        if (itemToOpenAfterSending != null) {
+                            openArticle(itemToOpenAfterSending, 'edit');
+                        }
+
+                        notify.success(gettext('Item sent'));
+
+                        sdApi.preferences.update('destination:active', {
+                            desk: selectedDesk,
+                            stage: selectedStage,
+                        });
+                    });
+                }).catch(() => {
+                    /**
+                     * Middleware that rejected the promise is responsible
+                     * for informing the user regarding the reason.
+                     */
+                });
+            }).catch(() => {
+                // sending cancelled by user
+            });
+    }
+
     render() {
-        const {items, closeSendToView, markupV2} = this.props;
+        const {items, markupV2} = this.props;
         const {allDesks, stagesForDesk} = this.state;
         const itemToOpenAfterSending: IArticle['_id'] | null = (() => {
             if (items.length !== 1) {
@@ -107,11 +220,11 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                 items={allDesks.toArray()}
                                 onChange={(val) => {
                                     const deskId = val._id;
-                                    const nextStages = desks.getDeskStages(deskId);
+                                    const nextStages = sdApi.desks.getDeskStages(deskId);
 
                                     this.setState({
                                         selectedDesk: deskId,
-                                        stagesForDesk: desks.getDeskStages(deskId),
+                                        stagesForDesk: sdApi.desks.getDeskStages(deskId),
                                         selectedStage: nextStages.first()._id,
                                     });
                                 }}
@@ -130,6 +243,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                     <div key={stage._id} style={{flexBasis: 'calc((100% - 10px) / 2)'}}>
                                         <Button
                                             text={stage.name}
+                                            disabled={items.length === 1 ? stage._id === items[0].task.stage : false}
                                             onClick={() => {
                                                 this.setState({selectedStage: stage._id});
                                             }}
@@ -204,15 +318,11 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
                 <PanelFooter markupV2={markupV2}>
                     {
-                        itemToOpenAfterSending && (
+                        itemToOpenAfterSending != null && (
                             <Button
                                 text={gettext('Send and open')}
                                 onClick={() => {
-                                    sendItems(this.props.items, this.state.selectedDesk, this.state.selectedStage)
-                                        .then(() => {
-                                            closeSendToView();
-                                            openArticle(itemToOpenAfterSending, 'edit');
-                                        });
+                                    this.sendItems(itemToOpenAfterSending);
                                 }}
                                 size="large"
                                 type="primary"
@@ -223,9 +333,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                     <Button
                         text={gettext('Send')}
                         onClick={() => {
-                            sendItems(this.props.items, this.state.selectedDesk, this.state.selectedStage).then(() => {
-                                closeSendToView();
-                            });
+                            this.sendItems();
                         }}
                         size="large"
                         type="primary"

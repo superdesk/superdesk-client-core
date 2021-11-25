@@ -124,7 +124,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
 export interface IAuthoringAutoSave {
     get(id: IArticle['_id']): Promise<IArticle>;
-    delete(id: IArticle): Promise<void>;
+    delete(item: IArticle): Promise<void>;
     schedule(item: IArticle): void;
     cancel(): void;
 }
