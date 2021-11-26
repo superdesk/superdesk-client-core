@@ -1,4 +1,4 @@
-import {ISuperdesk, IEditorComponentProps} from 'superdesk-api';
+import {ISuperdesk, ITemplateEditorComponentProps} from 'superdesk-api';
 import * as React from 'react';
 import {IDateTimeFieldConfig} from './extension';
 import {Switch} from 'superdesk-ui-framework/react';
@@ -11,9 +11,10 @@ export function getToggleDateTimeField(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
 
     return class ToggleDateTimeField
-        extends React.PureComponent<IEditorComponentProps<string | null, IDateTimeFieldConfig> & IPropsAdditional> {
+        extends React.PureComponent<ITemplateEditorComponentProps<string | null, IDateTimeFieldConfig> &
+            IPropsAdditional> {
         render() {
-            const initialConfig = this.props.config.initial_offset_minutes;
+            const initialConfig = this.props?.config?.initial_offset_minutes;
             const checkbox = (
                 <Switch
                     value={this.props.value != null}
@@ -28,8 +29,8 @@ export function getToggleDateTimeField(superdesk: ISuperdesk) {
             );
             const messageText = gettext(
                 `Time offset is configured to be {{minutes}} minutes for this field. When an article is created
-                based on this template, it's value will initialize to creation time plus {{offset}} minutes`,
-                {minutes: initialConfig, offset: initialConfig},
+                based on this template, it's value will initialize to creation time + {{minutes}} minutes`,
+                {minutes: initialConfig},
             );
 
             return (
@@ -38,9 +39,9 @@ export function getToggleDateTimeField(superdesk: ISuperdesk) {
                         {checkbox}
                     </div>
                     <div>
-                        {this.props.template?.data?.extra?.DueBy &&
+                        {this.props.value &&
                             (
-                                <span className="authoring-header__hint">
+                                <span style={{fontSize: '12px', color: '#747474'}}>
                                     {messageText}
                                 </span>
                             )

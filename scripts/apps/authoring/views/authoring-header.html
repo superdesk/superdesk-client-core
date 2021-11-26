@@ -519,7 +519,7 @@
             </div>
 
             <!-- custom fields from extensions API -->
-            <div class="authoring-header__item"
+            <div class="authoring-header__item authoring-header__item-start"
                 ng-repeat="field in fields track by field._id"
                 ng-if="field.custom_field_type != null && editor[field._id].section === 'header'"
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
@@ -527,7 +527,7 @@
                 order="{{ editor[field._id].order }}"
                 ng-attr-title="{{schema[field._id].readonly === true ? readOnlyLabel : ''}}"
                 sd-validation-error="error[field._id.toLowerCase()]">
-                <label class="authoring-header__item-label" ng-style="template.data.extra.DueBy !== null && {'margin-bottom':'35px'}">{{field.display_name}}</label>
+                <label class="authoring-header__item-label">{{field.display_name}}</label>
                 <div class="authoring-header__input-holder">
                     <div class="authoring-header__hint" ng-if="helper_text[field._id]">{{field.helper_text}}</div>
                     <sd-authoring-custom-field
