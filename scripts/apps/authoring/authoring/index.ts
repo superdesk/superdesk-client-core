@@ -100,7 +100,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('sdSendItem', directive.SendItem)
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
     .component('sdAuthoringIntegrationWrapper', reactToAngular1(AuthoringIntegrationWrapper, ['itemId'], []))
-    .component('sdSendItemReact', reactToAngular1(SendItemReact, ['items', 'closeSendToView'], []))
+    .component('sdSendItemReact', reactToAngular1(SendItemReact, ['items', 'closeSendToView', 'onSendBefore'], []))
     .component('sdCharacterCountConfigButton', reactToAngular1(
         CharacterCountConfigButton, ['field'], [], 'display: inline',
     ))

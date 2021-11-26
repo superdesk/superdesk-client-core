@@ -91,6 +91,22 @@ export function SendItem($q,
             scope.selectedStage = null;
             scope.selectedMacro = null;
             scope.beforeSend = scope._beforeSend || $q.when;
+
+            /** only used with react-based send view */
+            scope.beforeSendReact = (items) => {
+                return new Promise((resolve) => {
+                    const res = scope.beforeSend();
+
+                    if (res?.then == null) {
+                        resolve(items);
+                    } else {
+                        res.then(() => {
+                            resolve(items);
+                        });
+                    }
+                });
+            };
+
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);
             scope.subscribersWithPreviewConfigured = [];
