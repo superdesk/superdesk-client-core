@@ -478,7 +478,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                             const withResponse = withoutExistingTags.map(
                                                                 (tag) => ({
                                                                     // required for Autocomplete component
-                                                                    keyValue: tag.qcode,
+                                                                    keyValue: tag.name,
 
                                                                     tag,
 
