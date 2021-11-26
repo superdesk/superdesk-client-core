@@ -28,9 +28,9 @@ export function getToggleDateTimeField(superdesk: ISuperdesk) {
                 />
             );
             const messageText = gettext(
-                `Time offset is configured to be {{minutes}} minutes for this field. When an article is created
-                based on this template, it's value will initialize to creation time + {{minutes}} minutes`,
-                {minutes: initialConfig},
+                `Time offset is configured to be {{x}} minutes for this field. When an article is created
+                based on this template, it's value will initialize to creation time + {{x}} minutes`,
+                {x: initialConfig},
             );
 
             return (
