@@ -352,7 +352,7 @@ export function getSuperdeskApiImplementation(
         },
         privileges: {
             getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
-            hasPrivilege: (privilege: string) => privileges.userHasPrivileges({[privilege]: 1}),
+            hasPrivilege: (privilege: string) => sdApi.user.hasPrivilege(privilege),
         },
         preferences: {
             get: (key) => {

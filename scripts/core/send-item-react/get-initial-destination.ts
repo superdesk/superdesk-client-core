@@ -3,18 +3,23 @@ import {IDesk, IArticle, IStage} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {ISendToDestination} from './send-to-tab';
 
-export interface IDestination {
-    desk: string | null;
-    stage: string | null;
-}
+export function getInitialDestination(
+    allDesks: OrderedMap<string, IDesk>,
+    items: Array<IArticle>,
+    canSendToPersonal: boolean,
+): ISendToDestination {
+    const lastDestination: ISendToDestination | null = sdApi.preferences.get('destination:active');
 
-export function getInitialDestination(allDesks: OrderedMap<string, IDesk>, items: Array<IArticle>): IDestination {
-    const lastDestination: IDestination = sdApi.preferences.get('destination:active');
+    if (canSendToPersonal && lastDestination?.type === 'personal-space') {
+        return lastDestination;
+    }
+
     const currentDeskId = sdApi.desks.getCurrentDeskId();
 
     const destinationDesk: string = (() => {
-        if (lastDestination.desk != null) {
+        if (lastDestination?.type === 'desk' && lastDestination.desk != null) {
             return lastDestination.desk;
         } else if (currentDeskId != null) {
             return currentDeskId;
@@ -27,6 +32,7 @@ export function getInitialDestination(allDesks: OrderedMap<string, IDesk>, items
 
     if (destinationDesk == null) {
         return {
+            type: 'desk',
             desk: null,
             stage: null,
         };
@@ -50,10 +56,8 @@ export function getInitialDestination(allDesks: OrderedMap<string, IDesk>, items
             });
         }
 
-        if (result == null) {
-            if (lastDestination.stage != null) {
-                result = deskStages.find((stage) => stage._id === lastDestination.stage);
-            }
+        if (result == null && lastDestination?.type === 'desk' && lastDestination.stage != null) {
+            result = deskStages.find((stage) => stage._id === lastDestination.stage);
         }
 
         if (result == null) {
@@ -67,7 +71,8 @@ export function getInitialDestination(allDesks: OrderedMap<string, IDesk>, items
         return result?._id ?? null;
     })();
 
-    const destination: IDestination = {
+    const destination: ISendToDestination = {
+        type: 'desk',
         desk: destinationDesk,
         stage: destinationStage,
     };

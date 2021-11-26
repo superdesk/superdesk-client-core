@@ -15,7 +15,21 @@ import {appConfig, extensions} from 'appConfig';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
 import {getInitialDestination} from './get-initial-destination';
-import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
+import {notNullOrUndefined, assertNever} from 'core/helpers/typescript-helpers';
+
+export interface ISendToDestinationDesk {
+    type: 'desk';
+    desk: IDesk['_id'];
+    stage: IStage['_id'];
+}
+
+export interface ISendToDestinationPersonalSpace {
+    type: 'personal-space';
+}
+
+export type ISendToDestination = ISendToDestinationDesk | ISendToDestinationPersonalSpace;
+
+const PERSONAL_SPACE = 'PERSONAL_SPACE';
 
 interface IProps {
     items: Array<IArticle>;
@@ -31,11 +45,18 @@ interface IProps {
 interface IState {
     allDesks: OrderedMap<IDesk['_id'], IDesk>;
     stagesForDesk: OrderedMap<IStage['_id'], IStage>;
-    selectedDesk: IDesk['_id'];
-    selectedStage: IStage['_id'];
+    selectedDestination: ISendToDestination;
     embargo: Date | null;
     publishSchedule: Date | null;
     timeZone: string | null;
+}
+
+function canSendToPersonal(items: Array<IArticle>) {
+    const haveDeskSet = items.every((item) => item.task?.desk != null);
+
+    return haveDeskSet
+        && appConfig?.features?.sendToPersonal === true
+        && sdApi.user.hasPrivilege('send_to_personal');
 }
 
 // TODO: ensure https://github.com/superdesk/superdesk-ui-framework/issues/574 is fixed before merging to develop
@@ -45,15 +66,15 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         super(props);
 
         const allDesks = sdApi.desks.getAllDesks();
-        const selectedDesk = allDesks.first();
-        const stagesForDesk = sdApi.desks.getDeskStages(selectedDesk._id);
-        const initialDestination = getInitialDestination(allDesks, props.items);
+        const selectedDestination = getInitialDestination(allDesks, props.items, canSendToPersonal(props.items));
+        const stagesForDesk = selectedDestination.type === 'desk'
+            ? sdApi.desks.getDeskStages(selectedDestination.desk)
+            : OrderedMap<IStage['_id'], IStage>();
 
         this.state = {
             allDesks,
             stagesForDesk,
-            selectedDesk: initialDestination.desk,
-            selectedStage: initialDestination.stage,
+            selectedDestination: selectedDestination,
             embargo: props.items.length === 1 && props.items[0].embargo != null
                 ? new Date(props.items[0].embargo) ?? null
                 : null,
@@ -67,10 +88,8 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
     }
 
     sendItems(itemToOpenAfterSending?: IArticle['_id']) {
+        const {selectedDestination} = this.state;
         const {closeSendToView, onSendBefore} = this.props;
-        const {selectedDesk, selectedStage} = this.state;
-
-        const selectedDeskObj = this.state.allDesks.find((desk) => desk._id === selectedDesk);
 
         const middlewares = Object.values(extensions)
             .map((ext) => ext?.activationResult?.contributions?.entities?.article?.onSendBefore)
@@ -78,6 +97,14 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
         return onSendBefore(this.props.items)
             .then((items) => {
+                const selectedDeskObj: IDesk | null = (() => {
+                    if (selectedDestination.type === 'desk') {
+                        return this.state.allDesks.find((desk) => desk._id === selectedDestination.desk);
+                    } else {
+                        return null;
+                    }
+                })();
+
                 middlewares.reduce(
                     (current, next) => {
                         return current.then(() => {
@@ -137,15 +164,27 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                     return Promise.resolve({});
                                 }
                             })().then((patch1: Partial<IArticle>) => {
+                                const payload = (() => {
+                                    if (selectedDestination.type === 'personal-space') {
+                                        return {};
+                                    } else if (selectedDestination.type === 'desk') {
+                                        const _payload: Partial<IArticle> = {
+                                            task: {
+                                                desk: selectedDestination.desk,
+                                                stage: selectedDestination.stage,
+                                            },
+                                        };
+
+                                        return _payload;
+                                    } else {
+                                        assertNever(selectedDestination);
+                                    }
+                                })();
+
                                 return httpRequestJsonLocal({
                                     method: 'POST',
                                     path: `/archive/${item._id}/move`,
-                                    payload: {
-                                        'task': {
-                                            'desk': selectedDesk,
-                                            'stage': selectedStage,
-                                        },
-                                    },
+                                    payload: payload,
                                 }).then((patch2: Partial<IArticle>) => {
                                     return {
                                         ...patch1,
@@ -175,10 +214,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
                         notify.success(gettext('Item sent'));
 
-                        sdApi.preferences.update('destination:active', {
-                            desk: selectedDesk,
-                            stage: selectedStage,
-                        });
+                        sdApi.preferences.update('destination:active', selectedDestination);
                     });
                 }).catch(() => {
                     /**
@@ -193,7 +229,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
     render() {
         const {items, markupV2} = this.props;
-        const {allDesks, stagesForDesk} = this.state;
+        const {allDesks, selectedDestination, stagesForDesk} = this.state;
         const itemToOpenAfterSending: IArticle['_id'] | null = (() => {
             if (items.length !== 1) {
                 return null;
@@ -208,52 +244,106 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
             }
         })();
 
+        const destinationPersonalSpace: {id: string; label: string} = {
+            id: PERSONAL_SPACE, label: gettext('Personal space'),
+        };
+
+        let destinations: Array<{id: string; label: string}> =
+            allDesks.toArray().map((desk) => ({id: desk._id, label: desk.name}));
+
+        if (canSendToPersonal(items)) {
+            destinations.push(destinationPersonalSpace);
+        }
+
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
-                        <FormLabel text={gettext('Desk')} />
-
                         <div style={{paddingTop: 5}}>
                             <SelectFilterable
-                                value={this.state.selectedDesk == null ? null : allDesks.get(this.state.selectedDesk)}
-                                items={allDesks.toArray()}
-                                onChange={(val) => {
-                                    const deskId = val._id;
-                                    const nextStages = sdApi.desks.getDeskStages(deskId);
+                                value={(() => {
+                                    const dest = this.state.selectedDestination;
 
-                                    this.setState({
-                                        selectedDesk: deskId,
-                                        stagesForDesk: sdApi.desks.getDeskStages(deskId),
-                                        selectedStage: nextStages.first()._id,
-                                    });
+                                    if (dest.type === 'personal-space') {
+                                        return destinationPersonalSpace;
+                                    } else if (dest.type === 'desk') {
+                                        const destinationDesk: {id: string; label: string} = {
+                                            id: dest.desk,
+                                            label: this.state.allDesks.find((desk) => desk._id === dest.desk).name,
+                                        };
+
+                                        return destinationDesk;
+                                    } else {
+                                        assertNever(dest);
+                                    }
+                                })()}
+                                items={destinations}
+                                onChange={(val) => {
+                                    if (val.id === PERSONAL_SPACE) {
+                                        this.setState({
+                                            selectedDestination: {
+                                                type: 'personal-space',
+                                            },
+                                        });
+                                    } else {
+                                        const deskId: IDesk['_id'] = val.id;
+                                        const nextStages = sdApi.desks.getDeskStages(deskId);
+
+                                        this.setState({
+                                            selectedDestination: {
+                                                type: 'desk',
+                                                desk: deskId,
+                                                stage: nextStages.first()._id,
+                                            },
+                                            stagesForDesk: nextStages,
+                                        });
+                                    }
                                 }}
-                                getLabel={(desk) => desk.name}
+                                getLabel={(destination) => destination.label}
                                 required
                             />
                         </div>
 
-                        <br />
+                        {
+                            selectedDestination.type === 'desk' && (
+                                <div>
+                                    <br />
 
-                        <FormLabel text={gettext('Stage')} />
+                                    <FormLabel text={gettext('Stage')} />
 
-                        <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 5}}>
-                            {
-                                stagesForDesk.map((stage) => (
-                                    <div key={stage._id} style={{flexBasis: 'calc((100% - 10px) / 2)'}}>
-                                        <Button
-                                            text={stage.name}
-                                            disabled={items.length === 1 ? stage._id === items[0].task.stage : false}
-                                            onClick={() => {
-                                                this.setState({selectedStage: stage._id});
-                                            }}
-                                            type={this.state.selectedStage === stage._id ? 'primary' : 'default'}
-                                            expand
-                                        />
+                                    <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 5}}>
+                                        {
+                                            stagesForDesk.map((stage) => (
+                                                <div key={stage._id} style={{flexBasis: 'calc((100% - 10px) / 2)'}}>
+                                                    <Button
+                                                        text={stage.name}
+                                                        disabled={
+                                                            items.length === 1
+                                                                ? stage._id === items[0].task.stage
+                                                                : false
+                                                        }
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                selectedDestination: {
+                                                                    ...selectedDestination,
+                                                                    stage: stage._id,
+                                                                },
+                                                            });
+                                                        }}
+                                                        type={
+                                                            selectedDestination.stage === stage._id
+                                                                ? 'primary'
+                                                                : 'default'
+                                                        }
+                                                        expand
+                                                    />
+                                                </div>
+                                            )).toArray()
+                                        }
                                     </div>
-                                )).toArray()
-                            }
-                        </div>
+                                </div>
+                            )
+                        }
                     </ToggleBox>
 
                     {
