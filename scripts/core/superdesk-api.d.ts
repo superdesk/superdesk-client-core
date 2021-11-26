@@ -1957,7 +1957,14 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
-        template?: ITemplate;
+    }
+
+    export interface ITemplateEditorComponentProps<IValue, IConfig> {
+        item: IArticle;
+        value: IValue;
+        setValue: (value: IValue) => void;
+        readOnly: boolean;
+        config: IConfig;
     }
 
     export interface IPreviewComponentProps {
