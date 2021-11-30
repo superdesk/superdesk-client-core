@@ -3,14 +3,18 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {SendToTab} from './send-to-tab';
 import {IArticle} from 'superdesk-api';
 import {TabList} from 'core/ui/components/tabs';
-import {Button} from 'superdesk-ui-framework';
+import {Button} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';
 import {authoringReactViewEnabled} from 'appConfig';
 import {DuplicateToTab} from './duplicate-to-tab';
 
-type ITab = 'send to' | 'publish' | 'duplicate to';
+type ITab = 'send_to' | 'publish' | 'duplicate_to';
+
+const TAB_SEND_TO: ITab = 'send_to';
+const TAB_PUBLISH: ITab = 'publish';
+const TAB_DUPLICATE_TO: ITab = 'duplicate_to';
 
 interface IProps {
     items: Array<IArticle>;
@@ -29,7 +33,7 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            tabs: ['publish', 'send to', 'duplicate to'],
+            tabs: ['publish', 'send_to', 'duplicate_to'],
             activeTab: 'publish',
         };
     }
@@ -40,12 +44,12 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
         return (
             <Panel markupV2={markupV2}>
                 <PanelHeader markupV2={markupV2}>
-                    <div className="space-between" style={{width: '100%', paddingLeft: 10, paddingRight: 10}}>
+                    <div className="space-between" style={{width: '100%', paddingRight: 10}}>
                         <TabList
                             tabs={[
-                                {label: gettext('send to')},
-                                {label: gettext('publish')},
-                                {label: gettext('duplicate to')},
+                                {id: TAB_PUBLISH, label: gettext('Publish')},
+                                {id: TAB_SEND_TO, label: gettext('Send to')},
+                                {id: TAB_DUPLICATE_TO, label: gettext('Duplicate to')},
                             ]}
                             selected={this.state.activeTab}
                             onChange={(tab: ITab) => {
@@ -72,7 +76,7 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                         return (
                             <div>publish tab</div>
                         );
-                    } else if (activeTab === 'send to') {
+                    } else if (activeTab === 'send_to') {
                         return (
                             <SendToTab
                                 items={this.props.items}
@@ -81,7 +85,7 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                                 markupV2={markupV2}
                             />
                         );
-                    } if (activeTab === 'duplicate to') {
+                    } if (activeTab === 'duplicate_to') {
                         return (
                             <DuplicateToTab
                                 items={this.props.items}
