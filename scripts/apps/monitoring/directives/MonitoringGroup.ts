@@ -542,6 +542,8 @@ export function MonitoringGroup(
                     multi.reset();
                 }
 
+                const scopeItemsSaved = scope.items;
+
                 // reset in order to display loading indicator
                 scope.items = undefined;
 
@@ -582,8 +584,8 @@ export function MonitoringGroup(
 
                         // when forced refresh or query then keep query size default as set PAGE_SIZE (25) above.
                         // To compare current scope of items, consider fetching same number of items.
-                        if (!(data && data.force) && scope.items && scope.items._items.length > PAGE_SIZE) {
-                            criteria.source.size = scope.items._items.length;
+                        if (!(data && data.force) && scopeItemsSaved && scopeItemsSaved._items.length > PAGE_SIZE) {
+                            criteria.source.size = scopeItemsSaved._items.length;
                         }
 
                         if (data && (data.item || data.items || data.item_id) && scope.showRefresh && !data.force) {
@@ -629,7 +631,7 @@ export function MonitoringGroup(
 
                             var _data = {
                                 newItems: items,
-                                scopeItems: scope.items,
+                                scopeItems: scopeItemsSaved,
                                 scrollTop: containerElem.scrollTop(),
                                 isItemPreviewing: itemPreviewing,
                             };
@@ -644,10 +646,10 @@ export function MonitoringGroup(
                                 : items;
 
                             monitoring.totalItems = onlyHighlighted._meta.total;
-                            scope.items = search.mergeItems(onlyHighlighted, scope.items, null, true);
+                            scope.items = search.mergeItems(onlyHighlighted, scopeItemsSaved, null, true);
                         } else {
                             // update scope items only with the matching fetched items
-                            scope.items = search.updateItems(items, scope.items);
+                            scope.items = search.updateItems(items, scopeItemsSaved);
                         }
                     });
             }
