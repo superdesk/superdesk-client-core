@@ -1,15 +1,14 @@
-import {OrderedMap} from 'immutable';
-import {IDesk, IArticle, IStage} from 'superdesk-api';
+import {IArticle, IStage} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {ISendToDestination} from './send-to-tab';
+import {ISendToDestination} from './interfaces';
 
 export function getInitialDestination(
-    allDesks: OrderedMap<string, IDesk>,
     items: Array<IArticle>,
     canSendToPersonal: boolean,
 ): ISendToDestination {
+    const allDesks = sdApi.desks.getAllDesks();
     const lastDestination: ISendToDestination | null = sdApi.preferences.get('destination:active');
 
     if (canSendToPersonal && lastDestination?.type === 'personal-space') {

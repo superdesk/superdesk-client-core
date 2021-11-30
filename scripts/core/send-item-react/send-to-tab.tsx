@@ -1,7 +1,6 @@
 import React from 'react';
-import {IDesk, IStage, IArticle} from 'superdesk-api';
-import {OrderedMap} from 'immutable';
-import {Button, ToggleBox, FormLabel} from 'superdesk-ui-framework/react';
+import {IDesk, IArticle} from 'superdesk-api';
+import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext, toServerDateFormat} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {PanelContent} from './panel/panel-content';
@@ -10,26 +9,14 @@ import {applicationState, openArticle} from 'core/get-superdesk-api-implementati
 import {dispatchInternalEvent} from 'core/internal-events';
 import {DateTimePicker} from 'core/ui/components/date-time-picker';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
-import {SelectFilterable} from 'core/ui/components/select-filterable';
 import {appConfig, extensions} from 'appConfig';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
 import {getInitialDestination} from './get-initial-destination';
 import {notNullOrUndefined, assertNever} from 'core/helpers/typescript-helpers';
-
-export interface ISendToDestinationDesk {
-    type: 'desk';
-    desk: IDesk['_id'];
-    stage: IStage['_id'];
-}
-
-export interface ISendToDestinationPersonalSpace {
-    type: 'personal-space';
-}
-
-export type ISendToDestination = ISendToDestinationDesk | ISendToDestinationPersonalSpace;
-
-const PERSONAL_SPACE = 'PERSONAL_SPACE';
+import {canSendToPersonal} from './can-send-to-personal';
+import {DestinationSelect} from './destination-select';
+import {ISendToDestination} from './interfaces';
 
 interface IProps {
     items: Array<IArticle>;
@@ -43,20 +30,10 @@ interface IProps {
 }
 
 interface IState {
-    allDesks: OrderedMap<IDesk['_id'], IDesk>;
-    stagesForDesk: OrderedMap<IStage['_id'], IStage>;
     selectedDestination: ISendToDestination;
     embargo: Date | null;
     publishSchedule: Date | null;
     timeZone: string | null;
-}
-
-function canSendToPersonal(items: Array<IArticle>) {
-    const haveDeskSet = items.every((item) => item.task?.desk != null);
-
-    return haveDeskSet
-        && appConfig?.features?.sendToPersonal === true
-        && sdApi.user.hasPrivilege('send_to_personal');
 }
 
 // TODO: ensure https://github.com/superdesk/superdesk-ui-framework/issues/574 is fixed before merging to develop
@@ -65,15 +42,9 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
-        const allDesks = sdApi.desks.getAllDesks();
-        const selectedDestination = getInitialDestination(allDesks, props.items, canSendToPersonal(props.items));
-        const stagesForDesk = selectedDestination.type === 'desk'
-            ? sdApi.desks.getDeskStages(selectedDestination.desk)
-            : OrderedMap<IStage['_id'], IStage>();
+        const selectedDestination = getInitialDestination(props.items, canSendToPersonal(props.items));
 
         this.state = {
-            allDesks,
-            stagesForDesk,
             selectedDestination: selectedDestination,
             embargo: props.items.length === 1 && props.items[0].embargo != null
                 ? new Date(props.items[0].embargo) ?? null
@@ -99,7 +70,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
             .then((items) => {
                 const selectedDeskObj: IDesk | null = (() => {
                     if (selectedDestination.type === 'desk') {
-                        return this.state.allDesks.find((desk) => desk._id === selectedDestination.desk);
+                        return sdApi.desks.getAllDesks().find((desk) => desk._id === selectedDestination.desk);
                     } else {
                         return null;
                     }
@@ -229,7 +200,6 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
     render() {
         const {items, markupV2} = this.props;
-        const {allDesks, selectedDestination, stagesForDesk} = this.state;
         const itemToOpenAfterSending: IArticle['_id'] | null = (() => {
             if (items.length !== 1) {
                 return null;
@@ -244,106 +214,24 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
             }
         })();
 
-        const destinationPersonalSpace: {id: string; label: string} = {
-            id: PERSONAL_SPACE, label: gettext('Personal space'),
-        };
-
-        let destinations: Array<{id: string; label: string}> =
-            allDesks.toArray().map((desk) => ({id: desk._id, label: desk.name}));
-
-        if (canSendToPersonal(items)) {
-            destinations.push(destinationPersonalSpace);
-        }
-
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
                     <ToggleBox title={gettext('Destination')} initiallyOpen>
-                        <div style={{paddingTop: 5}}>
-                            <SelectFilterable
-                                value={(() => {
-                                    const dest = this.state.selectedDestination;
-
-                                    if (dest.type === 'personal-space') {
-                                        return destinationPersonalSpace;
-                                    } else if (dest.type === 'desk') {
-                                        const destinationDesk: {id: string; label: string} = {
-                                            id: dest.desk,
-                                            label: this.state.allDesks.find((desk) => desk._id === dest.desk).name,
-                                        };
-
-                                        return destinationDesk;
-                                    } else {
-                                        assertNever(dest);
-                                    }
-                                })()}
-                                items={destinations}
-                                onChange={(val) => {
-                                    if (val.id === PERSONAL_SPACE) {
-                                        this.setState({
-                                            selectedDestination: {
-                                                type: 'personal-space',
-                                            },
-                                        });
-                                    } else {
-                                        const deskId: IDesk['_id'] = val.id;
-                                        const nextStages = sdApi.desks.getDeskStages(deskId);
-
-                                        this.setState({
-                                            selectedDestination: {
-                                                type: 'desk',
-                                                desk: deskId,
-                                                stage: nextStages.first()._id,
-                                            },
-                                            stagesForDesk: nextStages,
-                                        });
-                                    }
-                                }}
-                                getLabel={(destination) => destination.label}
-                                required
-                            />
-                        </div>
-
-                        {
-                            selectedDestination.type === 'desk' && (
-                                <div>
-                                    <br />
-
-                                    <FormLabel text={gettext('Stage')} />
-
-                                    <div style={{display: 'flex', gap: 10, flexWrap: 'wrap', paddingTop: 5}}>
-                                        {
-                                            stagesForDesk.map((stage) => (
-                                                <div key={stage._id} style={{flexBasis: 'calc((100% - 10px) / 2)'}}>
-                                                    <Button
-                                                        text={stage.name}
-                                                        disabled={
-                                                            items.length === 1
-                                                                ? stage._id === items[0].task.stage
-                                                                : false
-                                                        }
-                                                        onClick={() => {
-                                                            this.setState({
-                                                                selectedDestination: {
-                                                                    ...selectedDestination,
-                                                                    stage: stage._id,
-                                                                },
-                                                            });
-                                                        }}
-                                                        type={
-                                                            selectedDestination.stage === stage._id
-                                                                ? 'primary'
-                                                                : 'default'
-                                                        }
-                                                        expand
-                                                    />
-                                                </div>
-                                            )).toArray()
-                                        }
-                                    </div>
-                                </div>
-                            )
-                        }
+                        <DestinationSelect
+                            value={this.state.selectedDestination}
+                            onChange={(value) => {
+                                this.setState({
+                                    selectedDestination: value,
+                                });
+                            }}
+                            includePersonalSpace={canSendToPersonal(items)}
+                            disallowedStages={// if only one item is being sent, disallow current stage
+                                items.length === 1 && items[0]?.task?.stage != null
+                                    ? [items[0].task.stage]
+                                    : undefined
+                            }
+                        />
                     </ToggleBox>
 
                     {

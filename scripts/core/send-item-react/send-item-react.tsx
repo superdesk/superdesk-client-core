@@ -8,8 +8,9 @@ import {gettext} from 'core/utils';
 import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';
 import {authoringReactViewEnabled} from 'appConfig';
+import {DuplicateToTab} from './duplicate-to-tab';
 
-type ITab = 'send to' | 'publish';
+type ITab = 'send to' | 'publish' | 'duplicate to';
 
 interface IProps {
     items: Array<IArticle>;
@@ -28,7 +29,7 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            tabs: ['publish', 'send to'],
+            tabs: ['publish', 'send to', 'duplicate to'],
             activeTab: 'publish',
         };
     }
@@ -41,7 +42,11 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                 <PanelHeader markupV2={markupV2}>
                     <div className="space-between" style={{width: '100%', paddingLeft: 10, paddingRight: 10}}>
                         <TabList
-                            tabs={[{label: 'send to'}, {label: 'publish'}]}
+                            tabs={[
+                                {label: gettext('send to')},
+                                {label: gettext('publish')},
+                                {label: gettext('duplicate to')},
+                            ]}
                             selected={this.state.activeTab}
                             onChange={(tab: ITab) => {
                                 this.setState({activeTab: tab});
@@ -73,6 +78,14 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                                 items={this.props.items}
                                 closeSendToView={this.props.closeSendToView}
                                 onSendBefore={this.props.onSendBefore}
+                                markupV2={markupV2}
+                            />
+                        );
+                    } if (activeTab === 'duplicate to') {
+                        return (
+                            <DuplicateToTab
+                                items={this.props.items}
+                                closeDuplicateToView={this.props.closeSendToView}
                                 markupV2={markupV2}
                             />
                         );
