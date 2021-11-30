@@ -8,6 +8,7 @@ import {appConfig, extensions, sendItemReact} from 'appConfig';
 import {IExtensionActivationResult, IArticle} from 'superdesk-api';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {confirmPublish} from '../services/quick-publish-modal';
+import {ISendToTabID} from 'core/send-item-react/send-item-react';
 
 SendItem.$inject = [
     '$q',
@@ -106,6 +107,19 @@ export function SendItem($q,
                     }
                 });
             };
+
+            const getTabsForSendItemReact: () => Array<ISendToTabID> = () => {
+                if (scope.currentUserAction == null) {
+                    return ['send_to', 'publish'];
+                } else if (scope.currentUserAction === 'send_to') {
+                    return ['send_to'];
+                } else if (scope.currentUserAction === 'duplicate_to') {
+                    return ['duplicate_to'];
+                }
+            };
+
+            /** only used with react-based send view */
+            scope.getTabsForSendItemReact = getTabsForSendItemReact;
 
             scope.destination_last = {send_to: null, publish: null, duplicate_to: null};
             scope.origItem = angular.extend({}, scope.item);

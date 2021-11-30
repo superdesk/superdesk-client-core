@@ -1,11 +1,12 @@
 <!--
     ng-init is used below to avoid the error regarding digest iteration limit being reached
 -->
-<div ng-if="sendItemReact && isActive && !isSendToNextStage" ng-init="itemsToSend = getItemsToSend()">
+<div ng-if="sendItemReact && isActive && !isSendToNextStage" ng-init="itemsToSend = getItemsToSend(); sendToReactTabs = getTabsForSendItemReact()">
     <sd-send-item-react
         items="itemsToSend"
         close-send-to-view="closeFromReact"
         on-send-before="beforeSendReact"
+        tabs="sendToReactTabs"
     ></sd-send-item-react>
 </div>
 

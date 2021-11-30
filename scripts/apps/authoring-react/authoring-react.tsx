@@ -363,6 +363,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                             });
                         })}
                         markupV2
+                        tabs={['send_to', 'publish']}
                     />
                 );
             } else if (state.openWidget != null) {

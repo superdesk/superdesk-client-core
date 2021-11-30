@@ -10,13 +10,22 @@ import {PanelHeader} from './panel/panel-header';
 import {authoringReactViewEnabled} from 'appConfig';
 import {DuplicateToTab} from './duplicate-to-tab';
 
-type ITab = 'send_to' | 'publish' | 'duplicate_to';
+export type ISendToTabID = 'send_to' | 'publish' | 'duplicate_to';
 
-const TAB_SEND_TO: ITab = 'send_to';
-const TAB_PUBLISH: ITab = 'publish';
-const TAB_DUPLICATE_TO: ITab = 'duplicate_to';
+function getTabLabel(id: ISendToTabID) {
+    if (id === 'send_to') {
+        return gettext('Send to');
+    } else if (id === 'duplicate_to') {
+        return gettext('Duplicate to');
+    } else if (id === 'publish') {
+        return gettext('Publish');
+    } else {
+        assertNever(id);
+    }
+}
 
 interface IProps {
+    tabs: Array<ISendToTabID>;
     items: Array<IArticle>;
     closeSendToView(): void;
     onSendBefore(items: Array<IArticle>): Promise<Array<IArticle>>;
@@ -24,8 +33,7 @@ interface IProps {
 }
 
 interface IState {
-    tabs: Array<ITab>;
-    activeTab: ITab;
+    activeTab: ISendToTabID;
 }
 
 export class SendItemReact extends React.PureComponent<IProps, IState> {
@@ -33,7 +41,6 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            tabs: ['publish', 'send_to', 'duplicate_to'],
             activeTab: 'publish',
         };
     }
@@ -46,13 +53,11 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                 <PanelHeader markupV2={markupV2}>
                     <div className="space-between" style={{width: '100%', paddingRight: 10}}>
                         <TabList
-                            tabs={[
-                                {id: TAB_PUBLISH, label: gettext('Publish')},
-                                {id: TAB_SEND_TO, label: gettext('Send to')},
-                                {id: TAB_DUPLICATE_TO, label: gettext('Duplicate to')},
-                            ]}
+                            tabs={
+                                this.props.tabs.map((id) => ({id, label: getTabLabel(id)}))
+                            }
                             selected={this.state.activeTab}
-                            onChange={(tab: ITab) => {
+                            onChange={(tab: ISendToTabID) => {
                                 this.setState({activeTab: tab});
                             }}
                         />
