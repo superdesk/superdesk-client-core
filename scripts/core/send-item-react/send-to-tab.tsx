@@ -7,9 +7,7 @@ import {PanelContent} from './panel/panel-content';
 import {PanelFooter} from './panel/panel-footer';
 import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
 import {dispatchInternalEvent} from 'core/internal-events';
-import {DateTimePicker} from 'core/ui/components/date-time-picker';
-import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
-import {appConfig, extensions} from 'appConfig';
+import {extensions} from 'appConfig';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
 import {getInitialDestination} from './get-initial-destination';
@@ -17,6 +15,11 @@ import {notNullOrUndefined, assertNever} from 'core/helpers/typescript-helpers';
 import {canSendToPersonal} from './can-send-to-personal';
 import {DestinationSelect} from './destination-select';
 import {ISendToDestination} from './interfaces';
+import {
+    IPublishingDateOptions,
+    getInitialPublishingDateOptions,
+    PublishingDateOptions,
+} from './publishing-date-options';
 
 interface IProps {
     items: Array<IArticle>;
@@ -31,9 +34,7 @@ interface IProps {
 
 interface IState {
     selectedDestination: ISendToDestination;
-    embargo: Date | null;
-    publishSchedule: Date | null;
-    timeZone: string | null;
+    publishingDateOptions: IPublishingDateOptions;
 }
 
 // TODO: ensure https://github.com/superdesk/superdesk-ui-framework/issues/574 is fixed before merging to develop
@@ -46,13 +47,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
         this.state = {
             selectedDestination: selectedDestination,
-            embargo: props.items.length === 1 && props.items[0].embargo != null
-                ? new Date(props.items[0].embargo) ?? null
-                : null,
-            publishSchedule: props.items.length === 1 && props.items[0].publish_schedule != null
-                ? new Date(props.items[0].publish_schedule) ?? null
-                : null,
-            timeZone: props.items.length === 1 ? props.items[0].schedule_settings?.time_zone ?? null : null,
+            publishingDateOptions: getInitialPublishingDateOptions(props.items),
         };
 
         this.sendItems = this.sendItems.bind(this);
@@ -99,15 +94,21 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                 const itemPublishSchedule = item.publish_schedule;
                                 const itemTimeZone = item.schedule_settings?.time_zone;
 
-                                const currentEmbargo = this.state.embargo == null
-                                    ? null
-                                    : toServerDateFormat(this.state.embargo);
+                                const {
+                                    embargo,
+                                    publishSchedule,
+                                    timeZone,
+                                } = this.state.publishingDateOptions;
 
-                                const currentPublishSchedule = this.state.publishSchedule == null
+                                const currentEmbargo = embargo == null
                                     ? null
-                                    : toServerDateFormat(this.state.publishSchedule);
+                                    : toServerDateFormat(embargo);
 
-                                const currentTimeZone = this.state.timeZone;
+                                const currentPublishSchedule = publishSchedule == null
+                                    ? null
+                                    : toServerDateFormat(publishSchedule);
+
+                                const currentTimeZone = timeZone;
 
                                 if (
                                     currentEmbargo !== itemEmbargo
@@ -236,60 +237,13 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
                     {
                         this.props.items.length === 1 && (
-                            <div>
-                                {
-                                    this.state.publishSchedule == null && (
-                                        <ToggleBox title={gettext('Embargo')} initiallyOpen>
-                                            <DateTimePicker
-                                                value={this.state.embargo}
-                                                onChange={(val) => {
-                                                    this.setState({
-                                                        embargo: val,
-                                                        timeZone: this.state.timeZone ?? appConfig.default_timezone,
-                                                    });
-                                                }}
-                                            />
-                                        </ToggleBox>
-                                    )
-                                }
-
-                                {
-                                    this.state.embargo == null && (
-                                        <ToggleBox title={gettext('Publish schedule')} initiallyOpen>
-                                            <DateTimePicker
-                                                value={this.state.publishSchedule}
-                                                onChange={(val) => {
-                                                    this.setState({
-                                                        publishSchedule: val,
-                                                        timeZone: this.state.timeZone ?? appConfig.default_timezone,
-                                                    });
-                                                }}
-                                            />
-                                        </ToggleBox>
-                                    )
-                                }
-
-                                {
-                                    (this.state.embargo != null || this.state.publishSchedule != null) && (
-                                        <ToggleBox title={gettext('Time zone')} initiallyOpen>
-                                            <TimeZonePicker
-                                                value={this.state.timeZone}
-                                                onChange={(val) => {
-                                                    this.setState({timeZone: val});
-                                                }}
-                                            />
-
-                                            {
-                                                this.state.timeZone == null && (
-                                                    <div style={{paddingTop: 5}}>
-                                                        {gettext('If not set, the UTC+0 time zone is assumed.')}
-                                                    </div>
-                                                )
-                                            }
-                                        </ToggleBox>
-                                    )
-                                }
-                            </div>
+                            <PublishingDateOptions
+                                items={this.props.items}
+                                value={this.state.publishingDateOptions}
+                                onChange={(val) => {
+                                    this.setState({publishingDateOptions: val});
+                                }}
+                            />
                         )
                     }
                 </PanelContent>

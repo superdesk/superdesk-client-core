@@ -9,6 +9,8 @@ import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';
 import {authoringReactViewEnabled} from 'appConfig';
 import {DuplicateToTab} from './duplicate-to-tab';
+import {PublishTab} from './publish-tab';
+import {logger} from 'core/services/logger';
 
 export type ISendToTabID = 'send_to' | 'publish' | 'duplicate_to';
 
@@ -78,8 +80,18 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
 
                 {(() => {
                     if (activeTab === 'publish') {
+                        if (this.props.items.length !== 1) {
+                            logger.error(new Error('Publishing multiple items from authoring pane is not supported'));
+
+                            return null;
+                        }
+
                         return (
-                            <div>publish tab</div>
+                            <PublishTab
+                                item={this.props.items[0]}
+                                closePublishView={this.props.closeSendToView}
+                                markupV2={markupV2}
+                            />
                         );
                     } else if (activeTab === 'send_to') {
                         return (
