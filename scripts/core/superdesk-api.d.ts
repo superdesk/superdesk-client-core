@@ -375,7 +375,7 @@ declare module 'superdesk-api' {
         lines_count?: number;
         version_creator: string;
         state: ITEM_STATE;
-        embargo?: any;
+        embargo?: string;
         signal?: Array<{
             name?: string;
             qcode: string;

@@ -11,7 +11,11 @@ import {
     IPublishingDateOptions,
     getInitialPublishingDateOptions,
     PublishingDateOptions,
+    getPublishingDatePatch,
 } from './publishing-date-options';
+import ng from 'core/services/ng';
+import {confirmPublish} from 'apps/authoring/authoring/services/quick-publish-modal';
+import {cloneDeep} from 'lodash';
 
 interface IProps {
     item: IArticle;
@@ -19,8 +23,9 @@ interface IProps {
     markupV2: boolean;
 }
 
-interface IState extends IPublishingDateOptions {
+interface IState {
     selectedDestination: ISendToDestination;
+    publishingDateOptions: IPublishingDateOptions;
 }
 
 export class PublishTab extends React.PureComponent<IProps, IState> {
@@ -30,11 +35,46 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
         this.state = {
             ...getInitialPublishingDateOptions([this.props.item]),
             selectedDestination: getInitialDestination([this.props.item], false),
+            publishingDateOptions: getInitialPublishingDateOptions([props.item]),
         };
+
+        this.doPublish = this.doPublish.bind(this);
+        this.otherDeskSelected = this.otherDeskSelected.bind(this);
+    }
+
+    otherDeskSelected(): boolean {
+        return this.state.selectedDestination.type === 'desk'
+            && this.state.selectedDestination.desk !== this.props.item.task?.desk;
+    }
+
+    doPublish(applyDestination?: boolean): void {
+        const {item} = this.props;
+
+        let itemToPublish: IArticle = {
+            ...item,
+            ...getPublishingDatePatch(item, this.state.publishingDateOptions),
+        };
+
+        if (applyDestination === true && this.state.selectedDestination.type === 'desk' && this.otherDeskSelected()) {
+            itemToPublish = {
+                ...itemToPublish,
+                task: {
+                    ...(itemToPublish.task ?? {}),
+                    desk: this.state.selectedDestination.desk,
+                    stage: this.state.selectedDestination.stage,
+                },
+            };
+        }
+
+        confirmPublish([itemToPublish]).then(() => {
+            // Cloning to prevent objects from being modified by angular
+            ng.get('authoring').publish(cloneDeep(this.props.item), cloneDeep(itemToPublish));
+        });
     }
 
     render() {
         const {markupV2} = this.props;
+        const otherDeskSelected = this.otherDeskSelected();
 
         return (
             <React.Fragment>
@@ -48,18 +88,22 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                                 });
                             }}
                             includePersonalSpace={false}
+
+                            /**
+                             * Changing the destination is only used
+                             * to control which desk's output stage
+                             * the published item appears in, thus
+                             * choosing a stage would not have an impact
+                             */
+                            hideStages={true}
                         />
                     </ToggleBox>
 
                     <PublishingDateOptions
                         items={[this.props.item]}
-                        value={{
-                            embargo: this.state.embargo,
-                            publishSchedule: this.state.publishSchedule,
-                            timeZone: this.state.timeZone,
-                        }}
-                        onChange={({embargo, publishSchedule, timeZone}) => {
-                            this.setState({embargo, publishSchedule, timeZone});
+                        value={this.state.publishingDateOptions}
+                        onChange={(val) => {
+                            this.setState({publishingDateOptions: val});
                         }}
                     />
 
@@ -72,20 +116,23 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                     <Button
                         text={gettext('Publish from')}
                         onClick={() => {
-                            //
+                            this.doPublish(true);
                         }}
+                        disabled={!otherDeskSelected}
                         size="large"
                         type="primary"
                         expand
+                        style="hollow"
                     />
 
                     <Button
                         text={gettext('Publish')}
                         onClick={() => {
-                            //
+                            this.doPublish();
                         }}
+                        disabled={otherDeskSelected}
                         size="large"
-                        type="primary"
+                        type="highlight"
                         expand
                     />
                 </PanelFooter>

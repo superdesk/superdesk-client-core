@@ -13,6 +13,7 @@ interface IProps {
     onChange(value: ISendToDestination): void;
     includePersonalSpace: boolean;
     disallowedStages?: Array<IStage['_id']>;
+    hideStages?: boolean;
 }
 
 const PERSONAL_SPACE = 'PERSONAL_SPACE';
@@ -76,7 +77,7 @@ export class DestinationSelect extends React.PureComponent<IProps> {
                 </div>
 
                 {
-                    selectedDestination.type === 'desk' && (
+                    (selectedDestination.type === 'desk' && this.props.hideStages !== true) && (
                         <div>
                             <br />
 

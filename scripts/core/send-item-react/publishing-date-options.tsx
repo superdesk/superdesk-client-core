@@ -1,10 +1,11 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
-import {gettext} from 'core/utils';
+import {gettext, toServerDateFormat} from 'core/utils';
 import {DateTimePicker} from 'core/ui/components/date-time-picker';
 import {appConfig} from 'appConfig';
 import {ToggleBox} from 'superdesk-ui-framework/react';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
+import {generatePatch} from 'core/patch';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -22,6 +23,35 @@ export function getInitialPublishingDateOptions(items: Array<IArticle>): IPublis
             : null,
         timeZone: items.length === 1 ? items[0].schedule_settings?.time_zone ?? null : null,
     };
+}
+
+export function getPublishingDatePatch(item: IArticle, options: IPublishingDateOptions): Partial<IArticle> {
+    const {
+        embargo,
+        publishSchedule,
+        timeZone,
+    } = options;
+
+    const currentOptions: Partial<IArticle> = {
+        embargo: item.embargo,
+        publish_schedule: item.publish_schedule,
+        schedule_settings: item.schedule_settings,
+    };
+
+    const nextOptions: Partial<IArticle> = {
+        embargo: embargo == null
+            ? null
+            : toServerDateFormat(embargo),
+        publish_schedule: publishSchedule == null
+            ? null
+            : toServerDateFormat(publishSchedule),
+        schedule_settings: {
+            ...item.schedule_settings,
+            time_zone: timeZone,
+        },
+    };
+
+    return generatePatch(currentOptions, nextOptions, {undefinedEqNull: true});
 }
 
 interface IProps {

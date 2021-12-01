@@ -1,7 +1,7 @@
 import React from 'react';
 import {IDesk, IArticle} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
-import {gettext, toServerDateFormat} from 'core/utils';
+import {gettext} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {PanelContent} from './panel/panel-content';
 import {PanelFooter} from './panel/panel-footer';
@@ -19,6 +19,7 @@ import {
     IPublishingDateOptions,
     getInitialPublishingDateOptions,
     PublishingDateOptions,
+    getPublishingDatePatch,
 } from './publishing-date-options';
 
 interface IProps {
@@ -90,40 +91,9 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                     return Promise.resolve({});
                                 }
 
-                                const itemEmbargo = item.embargo;
-                                const itemPublishSchedule = item.publish_schedule;
-                                const itemTimeZone = item.schedule_settings?.time_zone;
+                                var patch = getPublishingDatePatch(item, this.state.publishingDateOptions);
 
-                                const {
-                                    embargo,
-                                    publishSchedule,
-                                    timeZone,
-                                } = this.state.publishingDateOptions;
-
-                                const currentEmbargo = embargo == null
-                                    ? null
-                                    : toServerDateFormat(embargo);
-
-                                const currentPublishSchedule = publishSchedule == null
-                                    ? null
-                                    : toServerDateFormat(publishSchedule);
-
-                                const currentTimeZone = timeZone;
-
-                                if (
-                                    currentEmbargo !== itemEmbargo
-                                    || currentPublishSchedule !== itemPublishSchedule
-                                    || currentTimeZone !== itemTimeZone
-                                ) {
-                                    const patch: Partial<IArticle> = {
-                                        embargo: currentEmbargo,
-                                        publish_schedule: currentPublishSchedule,
-                                        schedule_settings: {
-                                            ...(item.schedule_settings ?? {}),
-                                            time_zone: currentTimeZone,
-                                        },
-                                    };
-
+                                if (Object.keys(patch).length > 0) {
                                     return httpRequestJsonLocal<IArticle>({
                                         method: 'PATCH',
                                         path: `/archive/${item._id}`,
