@@ -41,7 +41,7 @@ export function CreateTemplateController(
     function itemData() {
         const _item = JSON.parse(JSON.stringify(templates.pickItemData(item)));
 
-        self.dateTimeFields.forEach((field) => {
+        self.dateTimeFields?.forEach((field) => {
             if (_item.extra[field._id]) {
                 const initialOffset = field.custom_field_config.initial_offset_minutes;
 
