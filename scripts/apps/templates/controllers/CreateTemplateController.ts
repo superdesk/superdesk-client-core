@@ -10,6 +10,7 @@ CreateTemplateController.$inject = [
     'lodash',
     'privileges',
     'session',
+    'vocabularies',
 ];
 export function CreateTemplateController(
     item,
@@ -21,6 +22,7 @@ export function CreateTemplateController(
     _,
     privileges,
     session,
+    vocabularies,
 ) {
     var self = this;
 
@@ -32,8 +34,22 @@ export function CreateTemplateController(
     this.types = templates.types;
     this.createTypes = _.filter(templates.types, (element) => element._id !== 'kill');
     this.save = save;
+    this.dateTimeFields = null;
 
     activate();
+
+    function itemData() {
+        const _item = JSON.parse(JSON.stringify(templates.pickItemData(item)));
+
+        self.dateTimeFields.forEach((field) => {
+            if (_item.extra[field._id]) {
+                const initialOffset = field.custom_field_config.initial_offset_minutes;
+
+                _item.extra[field._id] = `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
+            }
+        });
+        return _item;
+    }
 
     function activate() {
         if (item.template) {
@@ -47,6 +63,10 @@ export function CreateTemplateController(
 
         desks.fetchCurrentUserDesks().then((_desks) => {
             self.desks = _desks;
+        });
+
+        vocabularies.getVocabularies().then((_vocabularies) => {
+            self.dateTimeFields = _vocabularies.filter((vocabulary) => vocabulary.custom_field_type === 'datetime');
         });
     }
 
@@ -81,7 +101,7 @@ export function CreateTemplateController(
             template_type: self.type,
             template_desks: self.is_public ? [self.desk] : null,
             is_public: self.is_public,
-            data: templates.pickItemData(item),
+            data: itemData(),
         };
 
         var template = self.template ? self.template : data;
