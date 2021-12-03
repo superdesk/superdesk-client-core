@@ -16,6 +16,7 @@ export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
 
         return (
             <SelectWithTemplate
+                key={JSON.stringify(items)} // re-mount when items change
                 getItems={(searchString) => searchString === null
                     ? Promise.resolve(items)
                     : Promise.resolve(
