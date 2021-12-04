@@ -21,6 +21,7 @@ import {PublishingTargetSelect, IPublishingTarget, getPublishingTargetPatch} fro
 interface IProps {
     item: IArticle;
     closePublishView(): void;
+    handleUnsavedChanges(): Promise<IArticle>;
     markupV2: boolean;
 }
 
@@ -55,29 +56,39 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
     }
 
     doPublish(applyDestination?: boolean): void {
-        const {item} = this.props;
+        this.props.handleUnsavedChanges()
+            .then((item) => {
+                let itemToPublish: IArticle = {
+                    ...item,
+                    ...getPublishingDatePatch(item, this.state.publishingDateOptions),
+                    ...getPublishingTargetPatch(item, this.state.publishingTarget),
+                };
 
-        let itemToPublish: IArticle = {
-            ...item,
-            ...getPublishingDatePatch(item, this.state.publishingDateOptions),
-            ...getPublishingTargetPatch(item, this.state.publishingTarget),
-        };
+                if (
+                    applyDestination === true
+                    && this.state.selectedDestination.type === 'desk'
+                    && this.otherDeskSelected()
+                ) {
+                    itemToPublish = {
+                        ...itemToPublish,
+                        task: {
+                            ...(itemToPublish.task ?? {}),
+                            desk: this.state.selectedDestination.desk,
+                            stage: this.state.selectedDestination.stage,
+                        },
+                    };
+                }
 
-        if (applyDestination === true && this.state.selectedDestination.type === 'desk' && this.otherDeskSelected()) {
-            itemToPublish = {
-                ...itemToPublish,
-                task: {
-                    ...(itemToPublish.task ?? {}),
-                    desk: this.state.selectedDestination.desk,
-                    stage: this.state.selectedDestination.stage,
-                },
-            };
-        }
-
-        confirmPublish([itemToPublish]).then(() => {
-            // Cloning to prevent objects from being modified by angular
-            ng.get('authoring').publish(cloneDeep(this.props.item), cloneDeep(itemToPublish));
-        });
+                confirmPublish([itemToPublish]).then(() => {
+                    // Cloning to prevent objects from being modified by angular
+                    ng.get('authoring').publish(cloneDeep(this.props.item), cloneDeep(itemToPublish)).then(() => {
+                        ng.get('authoringWorkspace').close();
+                    });
+                });
+            })
+            .catch(() => {
+                // cancelled by user
+            });
     }
 
     render() {

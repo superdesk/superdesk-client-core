@@ -499,9 +499,9 @@ declare module 'superdesk-api' {
         used_count?: number;
         used_updated?: string;
 
-        target_subscribers: Array<{_id: string; name: string}>;
-        target_regions: Array<{name: string; qcode: string; allow: boolean}>;
-        target_types: Array<{name: string; qcode: string; allow: boolean}>;
+        target_subscribers?: Array<{_id: string; name: string}>;
+        target_regions?: Array<{name: string; qcode: string; allow: boolean}>;
+        target_types?: Array<{name: string; qcode: string; allow: boolean}>;
 
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;

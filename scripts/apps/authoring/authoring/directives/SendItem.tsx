@@ -94,7 +94,7 @@ export function SendItem($q,
             scope.beforeSend = scope._beforeSend || $q.when;
 
             /** only used with react-based send view */
-            scope.beforeSendReact = (items) => {
+            scope.handleUnsavedChangesReact = (items) => {
                 return new Promise((resolve) => {
                     const res = scope.beforeSend();
 

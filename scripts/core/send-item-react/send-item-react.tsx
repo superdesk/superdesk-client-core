@@ -30,7 +30,7 @@ interface IProps {
     tabs: Array<ISendToTabID>;
     items: Array<IArticle>;
     closeSendToView(): void;
-    onSendBefore(items: Array<IArticle>): Promise<Array<IArticle>>;
+    handleUnsavedChanges(items: Array<IArticle>): Promise<Array<IArticle>>;
     markupV2?: boolean;
 }
 
@@ -86,11 +86,16 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                             return null;
                         }
 
+                        const item = this.props.items[0];
+
                         return (
                             <PublishTab
-                                item={this.props.items[0]}
+                                item={item}
                                 closePublishView={this.props.closeSendToView}
                                 markupV2={markupV2}
+                                handleUnsavedChanges={
+                                    () => this.props.handleUnsavedChanges([item]).then((res) => res[0])
+                                }
                             />
                         );
                     } else if (activeTab === 'send_to') {
@@ -98,7 +103,7 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                             <SendToTab
                                 items={this.props.items}
                                 closeSendToView={this.props.closeSendToView}
-                                onSendBefore={this.props.onSendBefore}
+                                handleUnsavedChanges={this.props.handleUnsavedChanges}
                                 markupV2={markupV2}
                             />
                         );

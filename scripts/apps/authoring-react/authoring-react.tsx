@@ -331,7 +331,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
                             this.setState(nextState);
                         }}
-                        onSendBefore={() => new Promise((resolve, reject) => {
+                        handleUnsavedChanges={() => new Promise((resolve, reject) => {
                             if (state.itemWithChanges === state.itemOriginal) {
                                 resolve([state.itemOriginal]);
                                 return;
@@ -401,6 +401,10 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                             state.itemOriginal,
                                             () => this.props.onClose(),
                                         ).then(() => {
+                                            /**
+                                             * The promise will also resolve
+                                             * if user decides to cancel closing.
+                                             */
                                             this.setState({
                                                 ...state,
                                                 loading: false,

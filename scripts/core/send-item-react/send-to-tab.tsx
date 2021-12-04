@@ -26,11 +26,7 @@ interface IProps {
     items: Array<IArticle>;
     closeSendToView(): void;
     markupV2: boolean;
-
-    /**
-     * Required to handle unsaved changes prompt
-     */
-    onSendBefore(items: Array<IArticle>): Promise<Array<IArticle>>;
+    handleUnsavedChanges(items: Array<IArticle>): Promise<Array<IArticle>>;
 }
 
 interface IState {
@@ -56,13 +52,13 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
     sendItems(itemToOpenAfterSending?: IArticle['_id']) {
         const {selectedDestination} = this.state;
-        const {closeSendToView, onSendBefore} = this.props;
+        const {closeSendToView, handleUnsavedChanges} = this.props;
 
         const middlewares = Object.values(extensions)
             .map((ext) => ext?.activationResult?.contributions?.entities?.article?.onSendBefore)
             .filter(notNullOrUndefined);
 
-        return onSendBefore(this.props.items)
+        return handleUnsavedChanges(this.props.items)
             .then((items) => {
                 const selectedDeskObj: IDesk | null = (() => {
                     if (selectedDestination.type === 'desk') {
