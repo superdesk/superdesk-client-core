@@ -17,6 +17,7 @@ import ng from 'core/services/ng';
 import {confirmPublish} from 'apps/authoring/authoring/services/quick-publish-modal';
 import {cloneDeep} from 'lodash';
 import {PublishingTargetSelect, IPublishingTarget, getPublishingTargetPatch} from './publishing-target-select';
+import {appConfig} from 'appConfig';
 
 interface IProps {
     item: IArticle;
@@ -124,6 +125,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                         onChange={(val) => {
                             this.setState({publishingDateOptions: val});
                         }}
+                        allowSettingEmbargo={appConfig.ui.publishEmbargo !== false}
                     />
 
                     <PublishingTargetSelect

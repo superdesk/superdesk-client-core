@@ -6,6 +6,7 @@ import {appConfig} from 'appConfig';
 import {ToggleBox} from 'superdesk-ui-framework/react';
 import {TimeZonePicker} from 'core/ui/components/time-zone-picker';
 import {generatePatch} from 'core/patch';
+import {sdApi} from 'api';
 
 export interface IPublishingDateOptions {
     embargo: Date | null;
@@ -58,6 +59,7 @@ interface IProps {
     items: Array<IArticle>;
     value: IPublishingDateOptions;
     onChange(value: IPublishingDateOptions): void;
+    allowSettingEmbargo: boolean;
 }
 
 export class PublishingDateOptions extends React.PureComponent<IProps> {
@@ -69,13 +71,20 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
             timeZone,
         } = this.props.value;
 
+        const canSetEmbargo =
+            publishSchedule == null
+            && this.props.allowSettingEmbargo
+            && sdApi.user.hasPrivilege('embargo');
+
+        const canSetPublishSchedule = embargo == null;
+
         return (
             <div>
                 {
                     items.length === 1 && (
                         <div>
                             {
-                                publishSchedule == null && (
+                                canSetEmbargo && (
                                     <ToggleBox title={gettext('Embargo')} initiallyOpen>
                                         <DateTimePicker
                                             value={embargo}
@@ -92,7 +101,7 @@ export class PublishingDateOptions extends React.PureComponent<IProps> {
                             }
 
                             {
-                                embargo == null && (
+                                canSetPublishSchedule && (
                                     <ToggleBox title={gettext('Publish schedule')} initiallyOpen>
                                         <DateTimePicker
                                             value={publishSchedule}

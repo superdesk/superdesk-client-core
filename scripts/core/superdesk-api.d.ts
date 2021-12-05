@@ -2081,11 +2081,19 @@ declare module 'superdesk-api' {
             };
         };
         ui: {
-            publishEmbargo?: any;
+            /**
+             * Can set embargo in publishing pane. Defaults to true;
+             */
+            publishEmbargo?: boolean;
             sendAndPublish?: any;
             italicAbstract?: any;
             sendPublishSchedule?: boolean;
+
+            /**
+             * Can set embargo in "send to" pane. Defaults to true;
+             */
             sendEmbargo?: boolean;
+
             sendDefaultStage?: 'working' | 'incoming';
             authoring?: {
                 firstLine?: {

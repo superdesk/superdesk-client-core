@@ -7,7 +7,7 @@ import {PanelContent} from './panel/panel-content';
 import {PanelFooter} from './panel/panel-footer';
 import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
 import {dispatchInternalEvent} from 'core/internal-events';
-import {extensions} from 'appConfig';
+import {extensions, appConfig} from 'appConfig';
 import {notify} from 'core/notify/notify';
 import {sdApi} from 'api';
 import {getInitialDestination} from './get-initial-destination';
@@ -209,6 +209,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                 onChange={(val) => {
                                     this.setState({publishingDateOptions: val});
                                 }}
+                                allowSettingEmbargo={appConfig.ui.sendEmbargo !== false}
                             />
                         )
                     }
