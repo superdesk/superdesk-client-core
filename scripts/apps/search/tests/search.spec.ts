@@ -168,35 +168,6 @@ describe('search service', () => {
         expect(nextItems._items[0].slugline).toBe('slugline updated');
     }));
 
-    it('can evalute canShowRefresh for refresh button display', inject((search) => {
-        var newItems, scopeItems, scrollTop, isItemPreviewing, _data;
-
-        newItems = {_items: [{_id: 'foo', _current_version: 1}]};
-        scopeItems = {_items: [{_id: 'bar', _current_version: 1}]};
-        // consider item is not currently previewing but scroll is not on top.
-        scrollTop = 50;
-
-        _data = prepareData(newItems, scopeItems, scrollTop, isItemPreviewing);
-        expect(search.canShowRefresh(_data)).toBe(true);
-
-        // consider published item ids are same, but version is different as in case of take/update.
-        newItems = {_items: [{_id: 'foo', _current_version: 1, _type: 'published'}]};
-        scopeItems = {_items: [{_id: 'foo', _current_version: 2, _type: 'published'}]};
-        // consider scroll on Top but item is currently previewing.
-        scrollTop = 0;
-        isItemPreviewing = true;
-
-        _data = prepareData(newItems, scopeItems, scrollTop, isItemPreviewing);
-        expect(search.canShowRefresh(_data)).toBe(true);
-
-        // consider newItems and scopeItems are same and scroll is on top and no item is currently previewing.
-        newItems = {_items: [{_id: 'foo', _current_version: 1}]};
-        scopeItems = {_items: [{_id: 'foo', _current_version: 1}]};
-
-        _data = prepareData(newItems, scopeItems, scrollTop, isItemPreviewing);
-        expect(search.canShowRefresh(_data)).toBe(undefined);
-    }));
-
     it('can create query for notdesk facet', inject(($rootScope, search, session) => {
         // only to desk is specified
         session.identity = {_id: 'foo'};
@@ -228,15 +199,6 @@ describe('search service', () => {
 
         expect(criteria.query.filtered.query.query_string.query).toBe('(item5) AND (item3 OR item4)');
     }));
-
-    function prepareData(newItems, scopeItems, scrollTop, isItemPreviewing) {
-        return {
-            newItems: newItems,
-            scopeItems: scopeItems,
-            scrollTop: scrollTop,
-            isItemPreviewing: isItemPreviewing,
-        };
-    }
 
     describe('multi action bar directive', () => {
         var scope;
