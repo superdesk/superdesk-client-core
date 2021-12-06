@@ -91,6 +91,10 @@ export function generateTrackByIdentifier(
  * It is shown if items are added/removed or order has changed.
  */
 export function showRefresh(currentItems: Array<IArticle>, newItems: Array<IArticle>) {
+    if (newItems.length !== currentItems?.length) {
+        return true;
+    }
+
     for (let i = 0; i < newItems.length; i++) {
         const _new = newItems[i];
         const _current = currentItems[i];
