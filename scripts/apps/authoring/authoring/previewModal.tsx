@@ -6,8 +6,17 @@ import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
 
-const getFormattedDocument = (url) => fetch(url).then(
+const getFormattedDocument = (url) => fetch(
+    url,
+    {
+        method: 'GET',
+        headers: {
+            'Authorization': ng.get('session').token,
+        },
+    },
+).then(
     (response) => response.text()
         .then((responseText) => ({
             fomattedDocument: responseText,
