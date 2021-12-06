@@ -90,7 +90,7 @@ export function generateTrackByIdentifier(
  * Determine if refresh button needs to be shown.
  * It is shown if items are added/removed or order has changed.
  */
-export function showRefresh(currentItems: Array<IArticle>, newItems: Array<IArticle>) {
+export function showRefresh(currentItems: Array<IArticle> | null, newItems: Array<IArticle>) {
     if (newItems.length !== currentItems?.length) {
         return true;
     }
