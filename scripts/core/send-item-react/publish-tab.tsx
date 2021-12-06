@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IRestApiResponse} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 import {PanelContent} from './panel/panel-content';
@@ -18,6 +18,10 @@ import {confirmPublish} from 'apps/authoring/authoring/services/quick-publish-mo
 import {cloneDeep} from 'lodash';
 import {PublishingTargetSelect, IPublishingTarget, getPublishingTargetPatch} from './publishing-target-select';
 import {appConfig} from 'appConfig';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {ISubscriber} from 'superdesk-interfaces/Subscriber';
+import {showModal} from 'core/services/modalService';
+import {PreviewModal} from 'apps/publish-preview/previewModal';
 
 interface IProps {
     item: IArticle;
@@ -30,6 +34,7 @@ interface IState {
     selectedDestination: ISendToDestination;
     publishingDateOptions: IPublishingDateOptions;
     publishingTarget: IPublishingTarget;
+    subscribers: Array<ISubscriber> | null;
 }
 
 export class PublishTab extends React.PureComponent<IProps, IState> {
@@ -45,9 +50,11 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                 target_regions: [],
                 target_types: [],
             },
+            subscribers: null,
         };
 
         this.doPublish = this.doPublish.bind(this);
+        this.doPreview = this.doPreview.bind(this);
         this.otherDeskSelected = this.otherDeskSelected.bind(this);
     }
 
@@ -92,9 +99,37 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
             });
     }
 
+    doPreview() {
+        this.props.handleUnsavedChanges().then(() => {
+            showModal(({closeModal}) => (
+                <PreviewModal
+                    itemId={this.props.item._id}
+                    subscribers={this.state.subscribers}
+                    closeModal={closeModal}
+                />
+            ));
+        });
+    }
+
+    componentDidMount() {
+        httpRequestJsonLocal({
+            method: 'GET',
+            path: '/subscribers',
+        }).then((res: IRestApiResponse<ISubscriber>) => {
+            this.setState({subscribers: res._items});
+        });
+    }
+
     render() {
+        if (this.state.subscribers == null) { // loading
+            return null;
+        }
+
         const {markupV2} = this.props;
         const otherDeskSelected = this.otherDeskSelected();
+        const canPreview: boolean = this.state.subscribers.some(({destinations}) =>
+            (destinations ?? []).some(({preview_endpoint_url}) => (preview_endpoint_url ?? '').length > 0),
+        );
 
         return (
             <React.Fragment>
@@ -139,6 +174,20 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                 </PanelContent>
 
                 <PanelFooter markupV2={markupV2}>
+                    {
+                        canPreview && (
+                            <Button
+                                text={gettext('Preview')}
+                                onClick={() => {
+                                    this.doPreview();
+                                }}
+                                size="large"
+                                expand
+                                style="hollow"
+                            />
+                        )
+                    }
+
                     <Button
                         text={gettext('Publish from')}
                         onClick={() => {

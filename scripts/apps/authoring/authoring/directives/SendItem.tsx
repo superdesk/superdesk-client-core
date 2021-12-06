@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import React from 'react';
-import {PreviewModal} from '../previewModal';
+import {PreviewModal} from '../../../publish-preview/previewModal';
 import {gettext} from 'core/utils';
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
@@ -236,9 +236,8 @@ export function SendItem($q,
                         .then(({openModal, closeModal}) => {
                             openModal(
                                 <PreviewModal
-                                    subscribersWithPreviewConfigured={scope.subscribersWithPreviewConfigured}
-                                    documentId={scope.item._id}
-                                    urls={urls}
+                                    itemId={scope.item._id}
+                                    subscribers={scope.subscribersWithPreviewConfigured}
                                     closeModal={closeModal}
                                 />,
                             );

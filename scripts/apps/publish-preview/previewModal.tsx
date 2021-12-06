@@ -1,12 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
+import {ISubscriber} from 'superdesk-interfaces/Subscriber';
+import {IArticle} from 'superdesk-api';
+import {IDestination} from 'superdesk-interfaces/Destination';
 
 const getFormattedDocument = (url) => fetch(
     url,
@@ -24,19 +25,30 @@ const getFormattedDocument = (url) => fetch(
         })),
 );
 
-export class PreviewModal extends React.Component<any, any> {
+interface IProps {
+    subscribers: Array<ISubscriber>;
+    itemId: IArticle['_id'];
+    closeModal(): void;
+}
+
+function publishPreviewEnabled(destination: IDestination): boolean {
+    return (destination.preview_endpoint_url ?? '').length > 0;
+}
+
+export class PreviewModal extends React.Component<IProps> {
     static propTypes: any;
     static defaultProps: any;
 
     openPreviewForItem(subscriberId, format, endpointUrl) {
-        const {urls, documentId} = this.props;
+        const {itemId} = this.props;
+        const urls = ng.get('urls');
 
         const nextWindow = window.open();
 
         nextWindow.document.body.innerText = gettext('Loading preview');
 
         const url = urls.item('format-document-for-preview')
-            + `?subscriber_id=${subscriberId}&formatter=${format}&document_id=${documentId}`;
+            + `?subscriber_id=${subscriberId}&formatter=${format}&document_id=${itemId}`;
 
         getFormattedDocument(url).then(({fomattedDocument, documentContentType}) => {
             const headers = new Headers();
@@ -54,7 +66,7 @@ export class PreviewModal extends React.Component<any, any> {
                         nextWindow.document.body.innerHTML = responseText;
                     } else {
                         nextWindow.document.body.innerHTML =
-                            `<h1>${gettext('An error occured while trying to preview the item.')}</h1>`
+                            `<h1>${gettext('An error occurred while trying to preview the item.')}</h1>`
                             + `<p>${gettext('Ensure correct preview endpoint is configured'
                                 + ' or contact endpoint maintainers.')}</p>`
                             + '<br /><br />' + responseText;
@@ -62,8 +74,13 @@ export class PreviewModal extends React.Component<any, any> {
                 }));
         });
     }
+
     render() {
-        const {closeModal, subscribersWithPreviewConfigured} = this.props;
+        const {closeModal} = this.props;
+
+        const subscribers = this.props.subscribers.filter(
+            ({destinations}) => (destinations ?? []).some((dest) => publishPreviewEnabled(dest)),
+        );
 
         return (
             <Modal>
@@ -71,36 +88,38 @@ export class PreviewModal extends React.Component<any, any> {
                 <ModalBody>
                     <ul>
                         {
-                            subscribersWithPreviewConfigured.map((subscriber, i) => (
+                            subscribers.map((subscriber, i) => (
                                 <li key={i}>
                                     <strong>{subscriber.name}</strong>
                                     <ul>
                                         {
-                                            subscriber.destinations.map((destination, j) => (
-                                                <li
-                                                    key={j}
-                                                    style={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'space-between',
-                                                        margin: '4px 0',
-                                                    }}
-                                                >
-                                                    <span>{destination.name}</span>
-                                                    <button
-                                                        className="btn btn--primary btn--small"
-                                                        onClick={() => {
-                                                            this.openPreviewForItem(
-                                                                subscriber._id,
-                                                                destination.format,
-                                                                destination.preview_endpoint_url,
-                                                            );
+                                            subscriber.destinations
+                                                .filter((dest) => publishPreviewEnabled(dest))
+                                                .map((destination, j) => (
+                                                    <li
+                                                        key={j}
+                                                        style={{
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                            margin: '4px 0',
                                                         }}
                                                     >
-                                                        {gettext('preview')}
-                                                    </button>
-                                                </li>
-                                            ))
+                                                        <span>{destination.name}</span>
+                                                        <button
+                                                            className="btn btn--primary btn--small"
+                                                            onClick={() => {
+                                                                this.openPreviewForItem(
+                                                                    subscriber._id,
+                                                                    destination.format,
+                                                                    destination.preview_endpoint_url,
+                                                                );
+                                                            }}
+                                                        >
+                                                            {gettext('preview')}
+                                                        </button>
+                                                    </li>
+                                                ))
                                         }
                                     </ul>
                                 </li>
@@ -115,10 +134,3 @@ export class PreviewModal extends React.Component<any, any> {
         );
     }
 }
-
-PreviewModal.propTypes = {
-    subscribersWithPreviewConfigured: PropTypes.array.isRequired,
-    documentId: PropTypes.string.isRequired,
-    urls: PropTypes.object.isRequired,
-    closeModal: PropTypes.func.isRequired,
-};
