@@ -1,4 +1,5 @@
 import notifySaveError from '../helpers';
+import {extensions} from 'appConfig';
 
 CreateTemplateController.$inject = [
     'item',
@@ -37,15 +38,18 @@ export function CreateTemplateController(
     this.dateTimeFields = null;
 
     activate();
-
     function itemData() {
         const _item = JSON.parse(JSON.stringify(templates.pickItemData(item)));
 
         self.dateTimeFields?.forEach((field) => {
             if (_item.extra[field._id]) {
-                const initialOffset = field.custom_field_config.initial_offset_minutes;
-
-                _item.extra[field._id] = `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
+                Object.values(extensions).forEach(({activationResult}) => {
+                    if (activationResult.contributions?.customFieldTypes) {
+                        if (activationResult.contributions?.customFieldTypes[0]?.onTemplateCreate) {
+                            activationResult.contributions.customFieldTypes[0]?.onTemplateCreate(_item, field);
+                        }
+                    }
+                });
             }
         });
         return _item;
