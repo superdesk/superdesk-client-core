@@ -612,7 +612,7 @@ export function MonitoringGroup(
                             data.force = true;
                         }
 
-                        if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
+                        if (!scope.showRefresh && data && !data.force) {
                             monitoring.showRefresh = scope.showRefresh = showRefresh(
                                 (scopeItemsSaved?._items ?? []),
                                 items._items,
