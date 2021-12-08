@@ -122,7 +122,7 @@
             </li>
 
             <li sd-metadata-list-item data-label="'Signal' | translate" ng-if="item.signal">
-                {{ item.signal }}
+                <span ng-repeat="signal in item.signal">{{ signal.name || signal.qcode }}</span>
             </li>
 
             <li sd-metadata-list-item data-label="'Service' | translate" ng-if="item.anpa_category && item.anpa_category.length">
