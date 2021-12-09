@@ -42,7 +42,8 @@
                 <span class="authoring-header__label" translate translate-n="item.word_count" translate-plural="WORDS">WORD</span>
             </div>
             <div ng-if="item.signal">
-                <span class="signal">{{ item.signal}}</span>
+                <span class="authoring-header__label" translate>SIGNAL</span>
+                <span class="signal authoring-header__value" ng-repeat="signal in item.signal">{{ signal.name || signal.qcode }}</span>
             </div>
             <div>
                 <span class="authoring-header__label" translate>SOURCE</span>
