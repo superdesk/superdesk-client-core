@@ -214,7 +214,7 @@ export function AuthoringDirective(
                 if (!$scope.item.task.desk) {
                     return false;
                 }
-                const desk = desks.getItemDesk($scope.item);
+                const desk = _.find(desks.userDesks, (item) => item._id === $scope.item.task.desk);
 
                 if (desk) {
                     $scope.deskName = desk.name;
