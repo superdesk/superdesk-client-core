@@ -619,8 +619,9 @@ export function MonitoringGroup(
                             );
                         }
 
+                        scope.total = items._meta.total;
+
                         if (!scope.showRefresh || data && data.force) {
-                            scope.total = items._meta.total;
                             let onlyHighlighted = scope.group.type === 'highlights'
                                 ? getOnlyHighlightsItems(items)
                                 : items;
