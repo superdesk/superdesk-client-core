@@ -29,6 +29,7 @@ import {
     IUnsavedChangesActionWithSaving,
 } from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {ITEM_STATE} from 'apps/search/interfaces';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -53,6 +54,79 @@ interface IStateLoaded {
 }
 
 type IState = {initialized: false} | IStateLoaded;
+
+interface IAuthoringOptions {
+    readOnly: boolean;
+    actions: Array<{label: string; onClick(): void}>;
+}
+
+function getAuthoringOptions(item: IArticle): IAuthoringOptions {
+    const state: ITEM_STATE = item.state;
+
+    switch (state) {
+    case ITEM_STATE.DRAFT:
+        return {
+            readOnly: false,
+            actions: [],
+        };
+
+    case ITEM_STATE.SUBMITTED:
+    case ITEM_STATE.IN_PROGRESS:
+    case ITEM_STATE.ROUTED:
+    case ITEM_STATE.FETCHED:
+    case ITEM_STATE.UNPUBLISHED:
+        return {
+            readOnly: false,
+            actions: [], // all of them
+        };
+
+    case ITEM_STATE.INGESTED:
+        return {
+            readOnly: true,
+            actions: [], // fetch
+        };
+
+    case ITEM_STATE.SPIKED:
+        return {
+            readOnly: true,
+            actions: [], // un-spike
+        };
+
+    case ITEM_STATE.SCHEDULED:
+        return {
+            readOnly: true,
+            actions: [], // un-schedule
+        };
+
+    case ITEM_STATE.PUBLISHED:
+    case ITEM_STATE.CORRECTED:
+        return {
+            readOnly: true,
+            actions: [], // correct update kill takedown
+        };
+
+    case ITEM_STATE.BEING_CORRECTED:
+        return {
+            readOnly: true,
+            actions: [], // cancel correction
+        };
+
+    case ITEM_STATE.CORRECTION:
+        return {
+            readOnly: false,
+            actions: [], // cancel correction, save, publish
+        };
+
+    case ITEM_STATE.KILLED:
+    case ITEM_STATE.RECALLED:
+        return {
+            readOnly: true,
+            actions: [], // NONE
+        };
+    default:
+        assertNever(state);
+    }
+}
 
 function waitForCssAnimation(): Promise<void> {
     return new Promise((resolve) => {
@@ -296,6 +370,9 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             );
         }
 
+        const authoringOptions = getAuthoringOptions(state.itemOriginal);
+        const readOnly = state.initialized ? authoringOptions.readOnly : false;
+
         const widgetsFromExtensions = Object.values(extensions)
             .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
             .filter((widget) => widget.isAllowed?.(state.itemWithChanges) ?? true);
@@ -472,6 +549,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
                                             this.setState(nextState);
                                         }}
+                                        readOnly={readOnly}
                                     />
                                 </div>
                             )}
@@ -488,6 +566,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
                                         this.setState(nextState);
                                     }}
+                                    readOnly={readOnly}
                                 />
                             </div>
                         </Layout.AuthoringMain>

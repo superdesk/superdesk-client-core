@@ -8,6 +8,7 @@ import {getField} from 'apps/fields';
 interface IProps {
     fields: IFieldsV2;
     item: IArticle;
+    readOnly: boolean;
     onChange(itemChanged: IArticle): void;
 }
 
@@ -33,6 +34,7 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                                     [field.id]: valueChanged,
                                                 });
                                             }}
+                                            readOnly={this.props.readOnly}
                                         />
                                     );
                                 } else if (field.type === 'from-extension') {
@@ -51,7 +53,7 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                                     },
                                                 });
                                             }}
-                                            readOnly={false}
+                                            readOnly={this.props.readOnly}
                                             config={field.extension_field_config}
                                         />
                                     );

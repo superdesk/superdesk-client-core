@@ -1,9 +1,9 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
 
 interface IProps {
     value: string;
     onChange(value: string): void;
+    readOnly?: boolean;
 }
 
 export class FieldText extends React.PureComponent<IProps> {
@@ -16,6 +16,7 @@ export class FieldText extends React.PureComponent<IProps> {
                     onChange={(event) => {
                         this.props.onChange(event.target.value);
                     }}
+                    readOnly={this.props.readOnly}
                 />
             </div>
         );
