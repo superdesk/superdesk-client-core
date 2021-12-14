@@ -1,0 +1,36 @@
+digraph {
+	node [
+		shape=circle,
+		fixedsize=true,
+		width=1.6,
+	]
+
+	workflow [label="\nIN_PROGRESS \n / SUBMITTED \n / FETCHED \n / ROUTED"]
+	published [label="PUBLISHED \n / CORRECTED"]
+
+	"INGESTED"      -> workflow [label="fetch"]
+	"INGESTED"      -> workflow [label="route"]
+
+	workflow		-> workflow [label="  send to -> SUBMITTED\n edit -> IN_PROGRESS"]
+
+	"DRAFT"         -> workflow
+
+	workflow		-> "SPIKED"
+	"SPIKED"		-> workflow
+
+	workflow		-> published
+
+	workflow		-> "SCHEDULED"
+	"SCHEDULED"		-> workflow
+
+
+	"SCHEDULED"		-> published
+
+	published		-> "UNPUBLISHED"
+	"UNPUBLISHED"	-> workflow
+
+	published		-> "KILLED"
+	published		-> "RECALLED"
+
+	published -> published [label="  correct -> CORRECTED"]
+}
