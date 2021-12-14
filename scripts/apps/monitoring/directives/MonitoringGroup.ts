@@ -631,6 +631,9 @@ export function MonitoringGroup(
                             // update scope items only with the matching fetched items
                             scope.items = search.updateItems(items, scopeItemsSaved);
                         }
+                    }).finally(() => {
+                        // reset page size to default
+                        criteria.source.size = PAGE_SIZE;
                     });
             }
 
