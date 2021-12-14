@@ -631,6 +631,9 @@ export function MonitoringGroup(
                             // update scope items only with the matching fetched items
                             scope.items = search.updateItems(items, scopeItemsSaved);
                         }
+                    }).finally(() => {
+                        // reset page size to default
+                        criteria.source.size = PAGE_SIZE;
                     });
             }
 
@@ -675,7 +678,7 @@ export function MonitoringGroup(
                 })()
                     .then((items) => {
                         scope.$applyAsync(() => {
-                            if (scope.total !== items._meta.total) {
+                            if (!scope.showRefresh && scope.total !== items._meta.total) {
                                 scope.total = items._meta.total;
                             }
                             let onlyHighlighted = scope.group.type === 'highlights'
