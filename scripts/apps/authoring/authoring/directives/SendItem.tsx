@@ -116,7 +116,11 @@ export function SendItem($q,
                 if (scope.currentUserAction == null) {
                     return ['send_to', 'publish'];
                 } else if (scope.currentUserAction === 'publish') {
-                    return ['send_to', 'publish'];
+                    if (scope.isCorrection) {
+                        return ['send_to', 'correct'];
+                    } else {
+                        return ['send_to', 'publish'];
+                    }
                 } else if (scope.currentUserAction === 'send_to') {
                     return ['send_to'];
                 } else if (scope.currentUserAction === 'duplicate_to') {

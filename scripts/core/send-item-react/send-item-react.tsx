@@ -11,8 +11,9 @@ import {authoringReactViewEnabled} from 'appConfig';
 import {DuplicateToTab} from './duplicate-to-tab';
 import {PublishTab} from './publish-tab';
 import {logger} from 'core/services/logger';
+import {SendCorrectionTab} from './send-correction-tab';
 
-export type ISendToTabID = 'send_to' | 'publish' | 'duplicate_to';
+export type ISendToTabID = 'send_to' | 'publish' | 'duplicate_to' | 'correct';
 
 function getTabLabel(id: ISendToTabID) {
     if (id === 'send_to') {
@@ -20,6 +21,13 @@ function getTabLabel(id: ISendToTabID) {
     } else if (id === 'duplicate_to') {
         return gettext('Duplicate to');
     } else if (id === 'publish') {
+        return gettext('Publish');
+    } else if (id === 'correct') {
+        /**
+         * Display as "Publish".
+         * It's implemented as separate tab so it's easier
+         * to decouple implementation into a separate component.
+         */
         return gettext('Publish');
     } else {
         assertNever(id);
@@ -90,6 +98,25 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
 
                         return (
                             <PublishTab
+                                item={item}
+                                closePublishView={this.props.closeSendToView}
+                                markupV2={markupV2}
+                                handleUnsavedChanges={
+                                    () => this.props.handleUnsavedChanges([item]).then((res) => res[0])
+                                }
+                            />
+                        );
+                    } if (activeTab === 'correct') {
+                        if (this.props.items.length !== 1) {
+                            logger.error(new Error('Correcting multiple items from authoring pane is not supported'));
+
+                            return null;
+                        }
+
+                        const item = this.props.items[0];
+
+                        return (
+                            <SendCorrectionTab
                                 item={item}
                                 closePublishView={this.props.closeSendToView}
                                 markupV2={markupV2}

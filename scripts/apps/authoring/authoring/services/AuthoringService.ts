@@ -404,7 +404,11 @@ export function AuthoringService(
         }
     };
 
-    this.publish = function publish(orig, diff, action = 'publish', publishingWarningsConfirmed = false,
+    this.publish = function publish(
+        orig,
+        diff,
+        action: 'publish' | 'correct' = 'publish',
+        publishingWarningsConfirmed = false,
         {notifyErrors}: IPublishOptions = {notifyErrors: false},
     ) {
         let extDiff = helpers.extendItem({}, diff);
