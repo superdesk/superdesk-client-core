@@ -45,9 +45,11 @@ export function CreateTemplateController(
             if (_item.extra[field._id]) {
                 Object.values(extensions).forEach(({activationResult}) => {
                     if (activationResult.contributions?.customFieldTypes) {
-                        if (activationResult.contributions?.customFieldTypes[0]?.onTemplateCreate) {
-                            activationResult.contributions.customFieldTypes[0]?.onTemplateCreate(_item, field);
-                        }
+                        activationResult.contributions?.customFieldTypes?.forEach((customField) => {
+                            if (customField?.onTemplateCreate) {
+                                _item.extra[field._id] = customField.onTemplateCreate(field);
+                            }
+                        });
                     }
                 });
             }
