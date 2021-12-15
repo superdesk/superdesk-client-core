@@ -22,6 +22,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from 'core/services/modalService';
 import {PreviewModal} from 'apps/publish-preview/previewModal';
+import {notify} from 'core/notify/notify';
 
 interface IProps {
     item: IArticle;
@@ -91,6 +92,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                     // Cloning to prevent objects from being modified by angular
                     ng.get('authoring').publish(cloneDeep(this.props.item), cloneDeep(itemToPublish)).then(() => {
                         ng.get('authoringWorkspace').close();
+                        notify.success('Item published.');
                     });
                 });
             })

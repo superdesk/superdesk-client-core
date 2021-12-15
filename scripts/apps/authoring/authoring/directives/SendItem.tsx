@@ -101,8 +101,12 @@ export function SendItem($q,
                     if (res?.then == null) {
                         resolve(items);
                     } else {
-                        res.then(() => {
-                            resolve(items);
+                        res.then((_items) => {
+                            if (Array.isArray(_items)) {
+                                resolve(_items);
+                            } else {
+                                resolve([_items]);
+                            }
                         });
                     }
                 });
@@ -111,10 +115,14 @@ export function SendItem($q,
             const getTabsForSendItemReact: () => Array<ISendToTabID> = () => {
                 if (scope.currentUserAction == null) {
                     return ['send_to', 'publish'];
+                } else if (scope.currentUserAction === 'publish') {
+                    return ['send_to', 'publish'];
                 } else if (scope.currentUserAction === 'send_to') {
                     return ['send_to'];
                 } else if (scope.currentUserAction === 'duplicate_to') {
                     return ['duplicate_to'];
+                } else {
+                    return [];
                 }
             };
 
