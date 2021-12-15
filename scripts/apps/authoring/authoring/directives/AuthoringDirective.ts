@@ -214,7 +214,7 @@ export function AuthoringDirective(
                 if (!$scope.item.task.desk) {
                     return false;
                 }
-                const desk = _.find(desks.userDesks, (item) => item._id === $scope.item.task.desk);
+                const desk = desks.getItemDesk($scope.item);
 
                 if (desk) {
                     $scope.deskName = desk.name;
@@ -231,8 +231,10 @@ export function AuthoringDirective(
                     privileges.userHasPrivileges({publish: 1});
             }
 
-            getDeskStage();
-            getCurrentTemplate();
+            desks.initialize().then(() => {
+                getDeskStage();
+                getCurrentTemplate();
+            });
             /**
              * `desk_stage:change` event from send and publish action.
              * If send action succeeds but publish fails then we need change item location.
