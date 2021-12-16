@@ -1,6 +1,5 @@
 import notifySaveError from '../helpers';
 import {extensions} from 'appConfig';
-import ng from 'core/services/ng';
 import {IArticle, ICustomFieldType, IVocabulary} from 'superdesk-api';
 
 /**
@@ -9,10 +8,7 @@ import {IArticle, ICustomFieldType, IVocabulary} from 'superdesk-api';
  * If it is, run `onTemplateCreate` middleware on it
  * and update the value.
  */
-function applyMiddleware(_item: IArticle): Promise<IArticle> {
-    const content = ng.get('content');
-    const vocabularies = ng.get('vocabularies');
-
+function applyMiddleware(_item: IArticle, content, vocabularies): Promise<IArticle> {
     // Custom field types with `onTemplateCreate` defined. From all extensions.
     const fieldTypes: {[id: string]: ICustomFieldType<any>} = {};
 
@@ -65,6 +61,8 @@ CreateTemplateController.$inject = [
     'lodash',
     'privileges',
     'session',
+    'content',
+    'vocabularies',
 ];
 export function CreateTemplateController(
     item,
@@ -76,6 +74,8 @@ export function CreateTemplateController(
     _,
     privileges,
     session,
+    content,
+    vocabularies,
 ) {
     var self = this;
 
@@ -132,8 +132,9 @@ export function CreateTemplateController(
 
     function save() {
         const _item: IArticle = JSON.parse(JSON.stringify(templates.pickItemData(item)));
+        const sessionId = session.identity._id;
 
-        return applyMiddleware(_item).then((itemAfterMiddleware) => {
+        return applyMiddleware(_item, content, vocabularies).then((itemAfterMiddleware) => {
             var data = {
                 template_name: self.name,
                 template_type: self.type,
@@ -153,14 +154,14 @@ export function CreateTemplateController(
 
                 if (self.canEdit() !== true) {
                     template.is_public = false;
-                    template.user = session.identity._id;
+                    template.user = sessionId;
                     template.template_desks = null;
                 }
             }
 
             // if template is made private, set current user as template owner
             if (template.is_public === true && diff?.is_public === false) {
-                diff.user = session.identity._id;
+                diff.user = sessionId;
             }
 
             return api.save('content_templates', template, diff)
