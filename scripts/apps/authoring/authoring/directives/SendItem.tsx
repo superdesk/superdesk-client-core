@@ -122,7 +122,14 @@ export function SendItem($q,
                         return ['send_to', 'publish'];
                     }
                 } else if (scope.currentUserAction === 'send_to') {
-                    return ['send_to'];
+                    if (
+                        scope?.config?.action === 'fetch_to'
+                        || scope.multiItems?.every((item: IArticle) => item._type === 'ingest')
+                    ) {
+                        return ['fetch_to'];
+                    } else {
+                        return ['send_to'];
+                    }
                 } else if (scope.currentUserAction === 'duplicate_to') {
                     return ['duplicate_to'];
                 } else {

@@ -12,12 +12,15 @@ import {DuplicateToTab} from './duplicate-to-tab';
 import {PublishTab} from './publish-tab';
 import {logger} from 'core/services/logger';
 import {SendCorrectionTab} from './send-correction-tab';
+import {FetchToTab} from './fetch-to-tab';
 
-export type ISendToTabID = 'send_to' | 'publish' | 'duplicate_to' | 'correct';
+export type ISendToTabID = 'send_to' | 'fetch_to' | 'duplicate_to' | 'publish' | 'correct';
 
 function getTabLabel(id: ISendToTabID) {
     if (id === 'send_to') {
         return gettext('Send to');
+    } else if (id === 'fetch_to') {
+        return gettext('Fetch to');
     } else if (id === 'duplicate_to') {
         return gettext('Duplicate to');
     } else if (id === 'publish') {
@@ -51,7 +54,7 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            activeTab: 'publish',
+            activeTab: this.props.tabs[0],
         };
     }
     render() {
@@ -130,6 +133,15 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                             <SendToTab
                                 items={this.props.items}
                                 closeSendToView={this.props.closeSendToView}
+                                handleUnsavedChanges={this.props.handleUnsavedChanges}
+                                markupV2={markupV2}
+                            />
+                        );
+                    } else if (activeTab === 'fetch_to') {
+                        return (
+                            <FetchToTab
+                                items={this.props.items}
+                                closeFetchToView={this.props.closeSendToView}
                                 handleUnsavedChanges={this.props.handleUnsavedChanges}
                                 markupV2={markupV2}
                             />
