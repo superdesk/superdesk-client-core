@@ -20,7 +20,7 @@ interface ISubscriberType {
 }
 
 /**
- * Avoids generating useless patches
+ * Avoids generating patches for insignificant changes like undefined/null to empty array.
  */
 export function getPublishingTargetPatch(item: IArticle, publishingTarget: IPublishingTarget) {
     const patch: Partial<IArticle> = {};
