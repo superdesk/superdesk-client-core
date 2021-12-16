@@ -32,12 +32,6 @@ function getDateTimePreviewComponent(superdesk: ISuperdesk) {
     };
 }
 
-function onTemplateCreate(field: any) {
-    const initialOffset = field.custom_field_config.initial_offset_minutes;
-
-    return `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
-}
-
 export interface IDateTimeFieldConfig {
     initial_offset_minutes: number;
     increment_steps: Array<number>;
@@ -47,6 +41,12 @@ export const defaultDateTimeConfig: IDateTimeFieldConfig = {
     initial_offset_minutes: 0,
     increment_steps: [],
 };
+
+function onTemplateCreate(_value: string, config: IDateTimeFieldConfig) {
+    const initialOffset = config.initial_offset_minutes;
+
+    return `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
+}
 
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
@@ -62,7 +62,7 @@ const extension: IExtension = {
                         previewComponent: getDateTimePreviewComponent(superdesk),
                         configComponent: getConfigComponent(superdesk),
                         templateEditorComponent: getToggleDateTimeField(superdesk),
-                        onTemplateCreate: (field: any) => onTemplateCreate(field),
+                        onTemplateCreate: onTemplateCreate,
                     },
                 ],
             },

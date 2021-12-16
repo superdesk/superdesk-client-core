@@ -1,5 +1,59 @@
 import notifySaveError from '../helpers';
 import {extensions} from 'appConfig';
+import ng from 'core/services/ng';
+import {IArticle, ICustomFieldType, IVocabulary} from 'superdesk-api';
+
+/**
+ * Iterate content profile fields.
+ * Check if field is a custom field from extension.
+ * If it is, run `onTemplateCreate` middleware on it
+ * and update the value.
+ */
+function applyMiddleware(_item: IArticle): Promise<IArticle> {
+    const content = ng.get('content');
+    const vocabularies = ng.get('vocabularies');
+
+    // Custom field types with `onTemplateCreate` defined. From all extensions.
+    const fieldTypes: {[id: string]: ICustomFieldType<any>} = {};
+
+    Object.values(extensions).forEach((ext) => {
+        ext?.activationResult?.contributions?.customFieldTypes?.forEach((customField: ICustomFieldType<any>) => {
+            if (customField.onTemplateCreate != null) {
+                fieldTypes[customField.id] = customField;
+            }
+        });
+    });
+
+    return vocabularies.getVocabularies().then((_vocabularies: Array<IVocabulary>) => {
+        const fakeScope: any = {};
+
+        return content.setupAuthoring(_item.profile, fakeScope, _item).then(() => {
+            let itemNext: IArticle = {..._item};
+
+            for (const fieldId of Object.keys(fakeScope.editor)) {
+                const vocabulary = _vocabularies.find(({_id}) => _id === fieldId);
+
+                if (vocabulary != null && fieldTypes[vocabulary.custom_field_type] != null) {
+                    const config = vocabulary.custom_field_config ?? {};
+                    const customField = fieldTypes[vocabulary.custom_field_type];
+
+                    itemNext = {
+                        ...itemNext,
+                        extra: {
+                            ...itemNext.extra,
+                            [fieldId]: customField.onTemplateCreate(
+                                itemNext?.extra?.[fieldId],
+                                config,
+                            ),
+                        },
+                    };
+                }
+            }
+
+            return itemNext;
+        });
+    });
+}
 
 CreateTemplateController.$inject = [
     'item',
@@ -11,7 +65,6 @@ CreateTemplateController.$inject = [
     'lodash',
     'privileges',
     'session',
-    'vocabularies',
 ];
 export function CreateTemplateController(
     item,
@@ -23,7 +76,6 @@ export function CreateTemplateController(
     _,
     privileges,
     session,
-    vocabularies,
 ) {
     var self = this;
 
@@ -35,27 +87,8 @@ export function CreateTemplateController(
     this.types = templates.types;
     this.createTypes = _.filter(templates.types, (element) => element._id !== 'kill');
     this.save = save;
-    this.dateTimeFields = null;
 
     activate();
-    function itemData() {
-        const _item = JSON.parse(JSON.stringify(templates.pickItemData(item)));
-
-        self.dateTimeFields?.forEach((field) => {
-            if (_item.extra[field._id]) {
-                Object.values(extensions).forEach(({activationResult}) => {
-                    if (activationResult.contributions?.customFieldTypes) {
-                        activationResult.contributions?.customFieldTypes?.forEach((customField) => {
-                            if (customField?.onTemplateCreate) {
-                                _item.extra[field._id] = customField.onTemplateCreate(field);
-                            }
-                        });
-                    }
-                });
-            }
-        });
-        return _item;
-    }
 
     function activate() {
         if (item.template) {
@@ -69,10 +102,6 @@ export function CreateTemplateController(
 
         desks.fetchCurrentUserDesks().then((_desks) => {
             self.desks = _desks;
-        });
-
-        vocabularies.getVocabularies().then((_vocabularies) => {
-            self.dateTimeFields = _vocabularies.filter((vocabulary) => vocabulary.custom_field_type === 'datetime');
         });
     }
 
@@ -102,43 +131,47 @@ export function CreateTemplateController(
         || self.canEdit() !== true;
 
     function save() {
-        var data = {
-            template_name: self.name,
-            template_type: self.type,
-            template_desks: self.is_public ? [self.desk] : null,
-            is_public: self.is_public,
-            data: itemData(),
-        };
+        const _item: IArticle = JSON.parse(JSON.stringify(templates.pickItemData(item)));
 
-        var template = self.template ? self.template : data;
-        var diff: any = self.template ? data : null;
+        return applyMiddleware(_item).then((itemAfterMiddleware) => {
+            var data = {
+                template_name: self.name,
+                template_type: self.type,
+                template_desks: self.is_public ? [self.desk] : null,
+                is_public: self.is_public,
+                data: itemAfterMiddleware,
+            };
 
-        // in case there is old template but user renames it
-        // or user is not allowed to edit it - create a new one
-        if (self.willCreateNew()) {
-            template = data;
-            diff = null;
+            var template = self.template ? self.template : data;
+            var diff: any = self.template ? data : null;
 
-            if (self.canEdit() !== true) {
-                template.is_public = false;
-                template.user = session.identity._id;
-                template.template_desks = null;
+            // in case there is old template but user renames it
+            // or user is not allowed to edit it - create a new one
+            if (self.willCreateNew()) {
+                template = data;
+                diff = null;
+
+                if (self.canEdit() !== true) {
+                    template.is_public = false;
+                    template.user = session.identity._id;
+                    template.template_desks = null;
+                }
             }
-        }
 
-        // if template is made private, set current user as template owner
-        if (template.is_public === true && diff?.is_public === false) {
-            diff.user = session.identity._id;
-        }
+            // if template is made private, set current user as template owner
+            if (template.is_public === true && diff?.is_public === false) {
+                diff.user = session.identity._id;
+            }
 
-        return api.save('content_templates', template, diff)
-            .then((_data) => {
-                self._issues = null;
-                return _data;
-            }, (response) => {
-                notifySaveError(response, notify);
-                self._issues = response.data._issues;
-                return $q.reject(self._issues);
-            });
+            return api.save('content_templates', template, diff)
+                .then((_data) => {
+                    self._issues = null;
+                    return _data;
+                }, (response) => {
+                    notifySaveError(response, notify);
+                    self._issues = response.data._issues;
+                    return $q.reject(self._issues);
+                });
+        });
     }
 }

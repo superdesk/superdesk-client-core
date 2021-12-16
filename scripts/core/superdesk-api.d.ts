@@ -2161,7 +2161,8 @@ declare module 'superdesk-api' {
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
 
-        onTemplateCreate?(field: IConfig): any;
+        // may intercept template creation and return modified value
+        onTemplateCreate?(value: any, config: IConfig): any;
     }
 
 
