@@ -3,7 +3,7 @@ import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
 import {MultiSelect} from 'core/ui/components/MultiSelect';
 import {ToggleBox, FormLabel} from 'superdesk-ui-framework/react';
-import {ControlledVocabulariesSelect} from './controller-vocabularies-select';
+import {ControlledVocabulariesSelect} from './controlled-vocabulary-select';
 import {IArticle} from 'superdesk-api';
 
 export type IPublishingTarget = Pick<IArticle, 'target_subscribers' | 'target_regions' | 'target_types'>;
