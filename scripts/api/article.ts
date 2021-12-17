@@ -1,6 +1,8 @@
-import {IArticle, IDangerousArticlePatchingOptions} from 'superdesk-api';
+import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage} from 'superdesk-api';
 import {patchArticle} from './article-patch';
 import ng from 'core/services/ng';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {applicationState} from 'core/get-superdesk-api-implementation';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -11,6 +13,58 @@ const isPublished = (_article: IArticle) => _article.item_id != null;
 const isArchived = (_article: IArticle) => _article._type === 'archived';
 const isPersonal = (_article: IArticle) =>
     _article.task == null || _article.task.desk == null || _article.task.stage == null;
+
+/**
+ * Does not prompt for confirmation
+ */
+function doSpike(item: IArticle) {
+    return httpRequestJsonLocal<void>({
+        method: 'PATCH',
+        path: `/archive/spike/${item._id}`,
+        payload: {
+            state: 'spiked',
+        },
+        headers: {
+            'If-Match': item._etag,
+        },
+    }).then(() => {
+        const $location = ng.get('$location');
+
+        if ($location.search()._id === item._id) {
+            $location.search('_id', null);
+        }
+
+        if (applicationState.articleInEditMode === item._id) {
+            ng.get('authoringWorkspace').close();
+        }
+    });
+}
+
+function doUnspike(item: IArticle, deskId: IDesk['_id'], stageId: IStage['_id']): Promise<void> {
+    return httpRequestJsonLocal<IArticle>({
+        method: 'PATCH',
+        path: `/archive/unspike/${item._id}`,
+        payload: {
+            task: {
+                desk: deskId,
+                stage: stageId,
+            },
+        },
+        headers: {
+            'If-Match': item._etag,
+        },
+    }).then(() => {
+        const $location = ng.get('$location');
+
+        if ($location.search()._id === item._id) {
+            $location.search('_id', null);
+        }
+
+        if (applicationState.articleInEditMode === item._id) {
+            ng.get('authoringWorkspace').close();
+        }
+    });
+}
 
 interface IArticleApi {
     isLocked(article: IArticle): boolean;
@@ -26,6 +80,8 @@ interface IArticleApi {
         patch: Partial<IArticle>,
         dangerousOptions?: IDangerousArticlePatchingOptions,
     ): Promise<void>;
+    doSpike(item: IArticle): Promise<void>;
+    doUnspike(item: IArticle, deskId: IDesk['_id'], stageId: IStage['_id']): Promise<void>;
 }
 
 export const article: IArticleApi = {
@@ -38,4 +94,6 @@ export const article: IArticleApi = {
     isPublished,
     isPersonal,
     patch: patchArticle,
+    doSpike,
+    doUnspike,
 };

@@ -13,8 +13,9 @@ import {PublishTab} from './publish-tab';
 import {logger} from 'core/services/logger';
 import {SendCorrectionTab} from './send-correction-tab';
 import {FetchToTab} from './fetch-to-tab';
+import {UnspikeTab} from './unspike-tab';
 
-export type ISendToTabID = 'send_to' | 'fetch_to' | 'duplicate_to' | 'publish' | 'correct';
+export type ISendToTabID = 'send_to' | 'fetch_to' | 'unspike' | 'duplicate_to' | 'publish' | 'correct';
 
 function getTabLabel(id: ISendToTabID) {
     if (id === 'send_to') {
@@ -23,6 +24,8 @@ function getTabLabel(id: ISendToTabID) {
         return gettext('Fetch to');
     } else if (id === 'duplicate_to') {
         return gettext('Duplicate to');
+    } else if (id === 'unspike') {
+        return gettext('Unspike');
     } else if (id === 'publish') {
         return gettext('Publish');
     } else if (id === 'correct') {
@@ -151,6 +154,14 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                             <DuplicateToTab
                                 items={this.props.items}
                                 closeDuplicateToView={this.props.closeSendToView}
+                                markupV2={markupV2}
+                            />
+                        );
+                    } if (activeTab === 'unspike') {
+                        return (
+                            <UnspikeTab
+                                items={this.props.items}
+                                closeUnspikeView={this.props.closeSendToView}
                                 markupV2={markupV2}
                             />
                         );

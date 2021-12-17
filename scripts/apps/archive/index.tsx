@@ -26,6 +26,7 @@ import {RelatedView} from './views/related-view';
 import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {httpRequestJsonLocal, httpRequestRawLocal} from 'core/helpers/network';
+import {sdApi} from 'api';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -77,8 +78,6 @@ angular.module('superdesk.apps.archive', [
     'superdesk.apps.dashboard.widgets.relatedItem',
     'superdesk.apps.workspace.menu',
 ])
-
-    .service('spike', svc.SpikeService)
     .service('multi', svc.MultiService)
     .service('archiveService', svc.ArchiveService)
 
@@ -131,11 +130,8 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Unspike Item'),
                 icon: 'unspike',
                 monitor: true,
-                controller: ['spike', 'data', '$rootScope', function unspikeActivity(spike, data, $rootScope) {
-                    return spike.unspike(data.item).then((item) => {
-                        $rootScope.$broadcast('item:unspike');
-                        return item;
-                    });
+                controller: ['data', 'send', function(data, send) {
+                    return send.allAs([data.item], 'unspike');
                 }],
                 filters: [{action: 'list', type: 'spike'}],
                 action: 'unspike',
@@ -399,7 +395,6 @@ angular.module('superdesk.apps.archive', [
     }]);
 
 spikeActivity.$inject = [
-    'spike',
     'data',
     'modal',
     '$location',
@@ -410,7 +405,7 @@ spikeActivity.$inject = [
     '$rootScope',
 ];
 
-function spikeActivity(spike, data, modal, $location, multi,
+function spikeActivity(data, modal, $location, multi,
     authoringWorkspace: AuthoringWorkspaceService, confirm, autosave, $rootScope) {
     // For the sake of keyboard shortcut to work consistently,
     // if the item is multi-selected, let multibar controller handle its spike
@@ -467,7 +462,7 @@ function spikeActivity(spike, data, modal, $location, multi,
     function _spike() {
         if ($location.path() === '/workspace/personal') {
             return modal.confirm(gettext('Do you want to delete the item permanently?'), gettext('Confirm'))
-                .then(() => spike.spike(data.item));
+                .then(() => sdApi.article.doSpike(data.item));
         }
 
         const onSpikeMiddlewares
@@ -487,7 +482,7 @@ function spikeActivity(spike, data, modal, $location, multi,
 
         showSpikeDialog(
             modal,
-            () => spike.spike(data.item),
+            () => sdApi.article.doSpike(data.item),
             gettext('Are you sure you want to spike the item?'),
             onSpikeMiddlewares,
             item,

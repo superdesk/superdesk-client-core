@@ -74,6 +74,7 @@ export function SendItem($q,
                 send_to: 'send_to',
                 publish: 'publish',
                 duplicate_to: 'duplicate_to',
+                unspike: 'unspike',
                 externalsource_to: 'externalsource_to',
                 publish_pane_two_columns: false,
             };
@@ -132,6 +133,8 @@ export function SendItem($q,
                     }
                 } else if (scope.currentUserAction === 'duplicate_to') {
                     return ['duplicate_to'];
+                } else if (scope.currentUserAction === 'unspike') {
+                    return ['unspike'];
                 } else {
                     return [];
                 }
@@ -1073,7 +1076,10 @@ export function SendItem($q,
                     // if the last action is send to but item is published open publish tab.
                     if (scope.config && scope.config.action === 'duplicateTo') {
                         scope.currentUserAction = ctrl.userActions.duplicate_to;
+                    } else if (scope.config && scope.config.action === 'unspike') {
+                        scope.currentUserAction = ctrl.userActions.unspike;
                     }
+
                     if (scope.currentUserAction === ctrl.userActions.send_to &&
                         scope.canPublishItem() && !scope.isSendEnabled()) {
                         scope.currentUserAction = ctrl.userActions.publish;

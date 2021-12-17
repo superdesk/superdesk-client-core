@@ -7,6 +7,7 @@ import {extensions, appConfig} from 'appConfig';
 import {showSpikeDialog} from 'apps/archive/show-spike-dialog';
 import ng from 'core/services/ng';
 import {confirmPublish} from 'apps/authoring/authoring/services/quick-publish-modal';
+import {sdApi} from 'api';
 
 export interface IMultiActions {
     send(): void;
@@ -19,7 +20,7 @@ export interface IMultiActions {
     createPackage(): void;
     addToPackage(): void;
     spikeItems(): void;
-    unspikeItems(): void;
+    unspikeItems(): Promise<void>;
     canEditMetadata(): boolean;
     canPackageItems(): boolean;
     canPublishItem(): boolean;
@@ -47,12 +48,7 @@ export function getMultiActions(
     const remove = ng.get('remove');
     const send = ng.get('send');
     const privileges = ng.get('privileges');
-    const confirm = ng.get('confirm');
-    const session = ng.get('session');
-    const spike = ng.get('spike');
     const superdesk = ng.get('superdesk');
-
-    const personalLocationPath = $location.path() === '/workspace/personal';
 
     function sendFn() {
         send.all(getSelectedItems());
@@ -144,9 +140,12 @@ export function getMultiActions(
      */
     function spikeItems(): void {
         const spikeMultiple = () => {
-            spike.spikeMultiple(getSelectedItems());
-            $rootScope.$broadcast('item:spike');
-            unselectAll();
+            Promise.all(
+                getSelectedItems().map((item) => sdApi.article.doSpike(item)),
+            ).then(() => {
+                $rootScope.$broadcast('item:spike');
+                unselectAll();
+            });
         };
 
         if ($location.path() === '/workspace/personal') {
@@ -182,9 +181,9 @@ export function getMultiActions(
      * Multiple item unspike
      */
     function unspikeItems() {
-        spike.unspikeMultiple(getSelectedItems());
-        $rootScope.$broadcast('item:unspike');
-        unselectAll();
+        return send.allAs(getSelectedItems(), 'unspike').then(() => {
+            unselectAll();
+        });
     }
 
     const canEditMetadata = () => getSelectedItems().every(
