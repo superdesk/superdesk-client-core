@@ -149,20 +149,6 @@ export function AuthoringDirective(
                 return $scope.item.task && $scope.item.task.desk && $scope.item.state !== 'draft' || $scope.dirty;
             }
 
-            $scope.$watch('item', () => {
-                $scope.toDeskEnabled = appConfig?.features?.customAuthoringTopbar?.toDesk
-                && !isPersonalSpace && checkShortcutButtonAvailability();
-
-                $scope.closeAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.closeAndContinue
-                && !isPersonalSpace && checkShortcutButtonAvailability();
-
-                $scope.publishEnabled = appConfig?.features?.customAuthoringTopbar?.publish
-                    && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
-
-                $scope.publishAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.publishAndContinue
-                    && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
-            }, true);
-
             $scope._isInProductionStates = !isPublished($scope.origItem);
 
             $scope.fullPreview = false;
@@ -234,6 +220,19 @@ export function AuthoringDirective(
             desks.initialize().then(() => {
                 getDeskStage();
                 getCurrentTemplate();
+                $scope.$watch('item', () => {
+                    $scope.toDeskEnabled = appConfig?.features?.customAuthoringTopbar?.toDesk
+                    && !isPersonalSpace && checkShortcutButtonAvailability();
+
+                    $scope.closeAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.closeAndContinue
+                    && !isPersonalSpace && checkShortcutButtonAvailability();
+
+                    $scope.publishEnabled = appConfig?.features?.customAuthoringTopbar?.publish
+                        && canPublishOnDesk() && checkShortcutButtonAvailability(isPersonalSpace);
+
+                    $scope.publishAndContinueEnabled = appConfig?.features?.customAuthoringTopbar?.publishAndContinue
+                        && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
+                }, true);
             });
             /**
              * `desk_stage:change` event from send and publish action.
