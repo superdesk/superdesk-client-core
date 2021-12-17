@@ -1,7 +1,7 @@
 import React from 'react';
 import {IDesk, IArticle} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {PanelContent} from './panel/panel-content';
 import {PanelFooter} from './panel/panel-footer';
@@ -50,7 +50,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         this.sendItems = this.sendItems.bind(this);
     }
 
-    sendItems(itemToOpenAfterSending?: IArticle['_id']) {
+    sendItems(itemToOpenAfterSending?: IArticle['_id'], sendPackageItems?: boolean) {
         const {selectedDestination} = this.state;
         const {closeSendToView, handleUnsavedChanges} = this.props;
 
@@ -103,10 +103,17 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                                 }
                             })().then((patch1: Partial<IArticle>) => {
                                 const payload = (() => {
+                                    const basePayload = {};
+
+                                    if (sendPackageItems) {
+                                        basePayload['allPackageItems'] = true;
+                                    }
+
                                     if (selectedDestination.type === 'personal-space') {
-                                        return {};
+                                        return basePayload;
                                     } else if (selectedDestination.type === 'desk') {
                                         const _payload: Partial<IArticle> = {
+                                            ...basePayload,
                                             task: {
                                                 desk: selectedDestination.desk,
                                                 stage: selectedDestination.stage,
@@ -181,6 +188,8 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
             }
         })();
 
+        const sendPackages = this.props.items.every(({type}) => type === 'composite');
+
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
@@ -229,6 +238,7 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                             />
                         )
                     }
+
                     <Button
                         text={gettext('Send')}
                         onClick={() => {
@@ -238,6 +248,24 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
                         type="primary"
                         expand
                     />
+
+                    {
+                        sendPackages && (
+                            <Button
+                                text={gettextPlural(
+                                    this.props.items.length,
+                                    'Send package and items',
+                                    'Send packages and items',
+                                )}
+                                onClick={() => {
+                                    this.sendItems(undefined, true);
+                                }}
+                                size="large"
+                                type="primary"
+                                expand
+                            />
+                        )
+                    }
                 </PanelFooter>
             </React.Fragment>
         );
