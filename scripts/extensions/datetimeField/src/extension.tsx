@@ -42,6 +42,12 @@ export const defaultDateTimeConfig: IDateTimeFieldConfig = {
     increment_steps: [],
 };
 
+function onTemplateCreate(_value: string, config: IDateTimeFieldConfig) {
+    const initialOffset = config.initial_offset_minutes;
+
+    return `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
+}
+
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
@@ -56,6 +62,7 @@ const extension: IExtension = {
                         previewComponent: getDateTimePreviewComponent(superdesk),
                         configComponent: getConfigComponent(superdesk),
                         templateEditorComponent: getToggleDateTimeField(superdesk),
+                        onTemplateCreate: onTemplateCreate,
                     },
                 ],
             },
