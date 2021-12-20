@@ -7,5 +7,6 @@ export interface ITagUi {
     aliases?: Array<string>;
     altids: {[key: string]: string};
     parent?: string;
+    scheme?: string;
     group: {kind: 'scheme' | 'visual'; value: string};
 }
