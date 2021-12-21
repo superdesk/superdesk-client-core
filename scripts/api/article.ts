@@ -7,6 +7,7 @@ import {ISendToDestinationDesk, ISendToDestination} from 'core/interactive-artic
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/publishing-date-options';
 import {sendItems} from './article-send';
+import {duplicateItems} from './article-duplicate';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -104,6 +105,8 @@ interface IArticleApi {
         sendPackageItems?: boolean,
         publishingDateOptions?: IPublishingDateOptions,
     ): Promise<Array<Partial<IArticle>>>;
+
+    duplicateItems(items: Array<IArticle>, destination: ISendToDestination): Promise<Array<IArticle>>;
 }
 
 export const article: IArticleApi = {
@@ -121,4 +124,5 @@ export const article: IArticleApi = {
     fetchItems,
     fetchItemsToCurrentDesk,
     sendItems,
+    duplicateItems,
 };
