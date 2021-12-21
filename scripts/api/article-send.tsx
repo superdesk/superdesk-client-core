@@ -3,7 +3,10 @@ import {ISendToDestination} from 'core/interactive-article-actions-panel/interfa
 import {sdApi} from 'api';
 import {extensions} from 'appConfig';
 import {notNullOrUndefined, assertNever} from 'core/helpers/typescript-helpers';
-import {getPublishingDatePatch, IPublishingDateOptions} from 'core/interactive-article-actions-panel/publishing-date-options';
+import {
+    getPublishingDatePatch,
+    IPublishingDateOptions,
+} from 'core/interactive-article-actions-panel/publishing-date-options';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {notify} from 'core/notify/notify';
 import {gettext} from 'core/utils';

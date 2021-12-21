@@ -189,7 +189,6 @@
                 id="send-correction-btn"
                 ng-if="action === 'correct' && !isCorrection(item)"
                 ng-show="_editable"
-                ng-disabled="canSendAndPublish()"
                 ng-click="publish()"
                 translate>Send Correction</button>
 
@@ -197,7 +196,6 @@
                 id="send-kill-btn"
                 ng-if="action === 'kill'"
                 ng-show="_editable"
-                ng-disabled="canSendAndPublish()"
                 ng-click="publish()"
                 translate>Send Kill</button>
 
@@ -205,7 +203,6 @@
                 id="send-takedown-btn"
                 ng-if="action === 'takedown'"
                 ng-show="_editable"
-                ng-disabled="canSendAndPublish()"
                 ng-click="publish()"
                 translate>Send Takedown</button>
 
