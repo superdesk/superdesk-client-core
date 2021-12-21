@@ -190,17 +190,21 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                         )
                     }
 
-                    <Button
-                        text={gettext('Publish from')}
-                        onClick={() => {
-                            this.doPublish(true);
-                        }}
-                        disabled={!otherDeskSelected}
-                        size="large"
-                        type="primary"
-                        expand
-                        style="hollow"
-                    />
+                    {
+                        appConfig.ui.sendAndPublish === true && (
+                            <Button
+                                text={gettext('Publish from')}
+                                onClick={() => {
+                                    this.doPublish(true);
+                                }}
+                                disabled={!otherDeskSelected}
+                                size="large"
+                                type="primary"
+                                expand
+                                style="hollow"
+                            />
+                        )
+                    }
 
                     <Button
                         text={gettext('Publish')}

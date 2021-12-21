@@ -2117,7 +2117,13 @@ declare module 'superdesk-api' {
              * Can set embargo in publishing pane. Defaults to true;
              */
             publishEmbargo?: boolean;
+
+            /**
+             * Allows sending item to another desk before publishing.
+             * The button is labeled "publish from".
+             */
             sendAndPublish?: any;
+
             italicAbstract?: any;
             sendPublishSchedule?: boolean;
 
