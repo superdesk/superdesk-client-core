@@ -8,6 +8,7 @@ import {IVocabulary, IContentProfile} from 'superdesk-api';
 import {IArticle, IContentProfileEditorConfig} from 'superdesk-api';
 import {IPackagesService} from 'types/Services/Packages';
 import {isMediaType} from 'core/helpers/item';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc service
@@ -41,12 +42,10 @@ ContentService.$inject = [
     '$q',
     '$rootScope',
     'session',
-    'send',
     'renditions',
-    'modal',
 ];
 export function ContentService(api, templates, desks, packages: IPackagesService, archiveService, notify,
-    $filter, $q, $rootScope, session, send, renditions, modal) {
+    $filter, $q, $rootScope, session, renditions) {
     const TEXT_TYPE = 'text';
 
     const self = this;
@@ -341,7 +340,7 @@ export function ContentService(api, templates, desks, packages: IPackagesService
     this.dropItem = (item: IArticle, {fetchExternal} = {fetchExternal: true}) => {
         if (item._type !== 'externalsource') {
             if (item._type === 'ingest') {
-                return send.validateAndSend(item);
+                return sdApi.article.fetchItemsToCurrentDesk([item]).then((res) => res[0]);
             }
 
             if (item.archive_item != null) {

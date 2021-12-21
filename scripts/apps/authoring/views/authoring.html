@@ -59,18 +59,8 @@
 
     </div>
 
-    <div sd-send-item
-        id="send-item-container"
-        ng-if="views.send"
-        data-item="item"
-        data-orig="origItem"
-        data-view="views.send"
-        data-before-send="beforeSend(action)"
-        data-editable="_editable"
-        data-publish="publish()"
-        data-action="action"
-        data-autosave="autosave(item)"
-        data-mode="authoring"
-        data-test-id="send-publish-pane"
-    ></div>
+    <sd-send-item-react-standalone
+        handle-unsaved-changes="handleUnsavedChangesReact"
+        location="'authoring'"
+    ></sd-send-item-react-standalone>
 </section>

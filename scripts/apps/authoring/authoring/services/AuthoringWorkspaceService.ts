@@ -1,6 +1,7 @@
 import {includes} from 'lodash';
 import {IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {sdApi} from 'api';
 
 export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
 
@@ -31,11 +32,10 @@ export class AuthoringWorkspaceService {
     authoringTopBarButtonsToHide: {};
     displayAuthoringHeaderCollapedByDefault: any;
 
-    constructor($location, superdeskFlags, authoring, send, suggest, $rootScope, search, $window) {
+    constructor($location, superdeskFlags, authoring, suggest, $rootScope, search, $window) {
         this.$location = $location;
         this.superdeskFlags = superdeskFlags;
         this.authoring = authoring;
-        this.send = send;
         this.suggest = suggest;
         this.$rootScope = $rootScope;
         this.search = search;
@@ -150,7 +150,9 @@ export class AuthoringWorkspaceService {
         }
 
         if (includes(['ingest', 'externalsource'], item._type) || item.state === 'ingested') {
-            this.send.validateAndSend(item).then(_open);
+            sdApi.article.fetchItemsToCurrentDesk([item]).then((res) => {
+                _open(res[0]);
+            });
         } else {
             _open(item);
         }
@@ -317,7 +319,6 @@ AuthoringWorkspaceService.$inject = [
     '$location',
     'superdeskFlags',
     'authoring',
-    'send',
     'suggest',
     '$rootScope',
     'search',

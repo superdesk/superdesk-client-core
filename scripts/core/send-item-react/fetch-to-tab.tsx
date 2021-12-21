@@ -2,13 +2,14 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 import {PanelContent} from './panel/panel-content';
 import {PanelFooter} from './panel/panel-footer';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {getInitialDestination} from './get-initial-destination';
 import {DestinationSelect} from './destination-select';
 import {ISendToDestination} from './interfaces';
+import {sdApi} from 'api';
+import {noop} from 'lodash';
 
 interface IProps {
     items: Array<IArticle>;
@@ -35,29 +36,16 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
     }
 
     fetchItems(openAfterFetching?: boolean) {
-        const {selectedDestination} = this.state;
-        const {items} = this.props;
+        if (this.state.selectedDestination.type === 'desk') { // personal space not supported
+            sdApi.article.fetchItems(this.props.items, this.state.selectedDestination)
+                .then((res) => {
+                    this.props.closeFetchToView();
 
-        /**
-         * Only desk selection is supported.
-         */
-        if (selectedDestination.type === 'desk') {
-            Promise.all(
-                items.map((item) => httpRequestJsonLocal<IArticle>({
-                    method: 'POST',
-                    path: `/ingest/${item._id}/fetch`,
-                    payload: {
-                        desk: selectedDestination.desk,
-                        stage: selectedDestination.stage,
-                    },
-                })),
-            ).then((res) => {
-                this.props.closeFetchToView();
-
-                if (openAfterFetching) {
-                    openArticle(res[0]._id, 'edit');
-                }
-            });
+                    if (openAfterFetching) {
+                        openArticle(res[0]._id, 'edit');
+                    }
+                })
+                .catch(noop);
         }
     }
 

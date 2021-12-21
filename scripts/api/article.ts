@@ -3,6 +3,10 @@ import {patchArticle} from './article-patch';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {applicationState} from 'core/get-superdesk-api-implementation';
+import {ISendToDestinationDesk, ISendToDestination} from 'core/send-item-react/interfaces';
+import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
+import {IPublishingDateOptions} from 'core/send-item-react/publishing-date-options';
+import {sendItems} from './article-send';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -82,6 +86,24 @@ interface IArticleApi {
     ): Promise<void>;
     doSpike(item: IArticle): Promise<void>;
     doUnspike(item: IArticle, deskId: IDesk['_id'], stageId: IStage['_id']): Promise<void>;
+
+    fetchItems(
+        items: Array<IArticle>,
+        selectedDestination: ISendToDestinationDesk,
+    ): Promise<Array<IArticle>>;
+
+    fetchItemsToCurrentDesk(items: Array<IArticle>): Promise<Array<IArticle>>;
+
+    /**
+     * Promise may be rejected by middleware.
+     * Returns patches, not whole items.
+     */
+    sendItems(
+        items: Array<IArticle>,
+        selectedDestination: ISendToDestination,
+        sendPackageItems?: boolean,
+        publishingDateOptions?: IPublishingDateOptions,
+    ): Promise<Array<Partial<IArticle>>>;
 }
 
 export const article: IArticleApi = {
@@ -96,4 +118,7 @@ export const article: IArticleApi = {
     patch: patchArticle,
     doSpike,
     doUnspike,
+    fetchItems,
+    fetchItemsToCurrentDesk,
+    sendItems,
 };

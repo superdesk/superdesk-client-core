@@ -2,7 +2,7 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
 import {IArticleAction} from 'superdesk-api';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
-import {addInternalEventListener} from 'core/internal-events';
+import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 
@@ -46,6 +46,14 @@ export function AuthoringTopbarDirective(
                 Object.assign(scope.item, article);
 
                 scope.autosave(scope.item, 0);
+            };
+
+            scope.openPublishOrSendToPane = () => {
+                dispatchInternalEvent('interactiveArticleActionStart', {
+                    items: [scope.item],
+                    tabs: ['send_to', 'publish'],
+                    activeTab: 'publish',
+                });
             };
 
             /*

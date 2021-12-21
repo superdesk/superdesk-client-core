@@ -14,8 +14,12 @@ import {logger} from 'core/services/logger';
 import {SendCorrectionTab} from './send-correction-tab';
 import {FetchToTab} from './fetch-to-tab';
 import {UnspikeTab} from './unspike-tab';
+import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
+import {applicationState} from 'core/get-superdesk-api-implementation';
 
 export type ISendToTabID = 'send_to' | 'fetch_to' | 'unspike' | 'duplicate_to' | 'publish' | 'correct';
+
+const handleUnsavedChangesDefault = (items: Array<IArticle>) => Promise.resolve(items);
 
 function getTabLabel(id: ISendToTabID) {
     if (id === 'send_to') {
@@ -41,28 +45,73 @@ function getTabLabel(id: ISendToTabID) {
 }
 
 interface IProps {
-    tabs: Array<ISendToTabID>;
-    items: Array<IArticle>;
-    closeSendToView(): void;
-    handleUnsavedChanges(items: Array<IArticle>): Promise<Array<IArticle>>;
+    /**
+     * Multiple instances of the component should be able to work at once.
+     * `location` is added in order to be able to determine which one should be activated.
+     */
+    location: 'authoring' | 'list-view';
+    handleUnsavedChanges?(items: Array<IArticle>): Promise<Array<IArticle>>;
     markupV2?: boolean;
 }
 
-interface IState {
+interface IStateActive {
+    active: true;
+    tabs: Array<ISendToTabID>;
+    items: Array<IArticle>;
     activeTab: ISendToTabID;
 }
 
-export class SendItemReact extends React.PureComponent<IProps, IState> {
+export interface IPanelAction {
+    tabs: Array<ISendToTabID>;
+    items: Array<IArticle>;
+    activeTab: ISendToTabID;
+}
+
+type IState = {active: false} | IStateActive;
+
+export class SendItemReactStandalone extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
         this.state = {
-            activeTab: this.props.tabs[0],
+            active: false,
         };
+
+        this.closePanel = this.closePanel.bind(this);
     }
+
+    componentDidMount() {
+        addInternalEventListener('interactiveArticleActionStart', (event) => {
+            const {items} = event.detail;
+
+            const triggeredFromAuthoring = items.length === 1 && items[0]._id === applicationState.articleInEditMode;
+
+            if (
+                (this.props.location === 'authoring' && triggeredFromAuthoring === true)
+                || (this.props.location !== 'authoring' && triggeredFromAuthoring !== true)
+            ) {
+                this.setState({
+                    active: true,
+                    ...event.detail,
+                });
+            }
+        });
+    }
+
+    closePanel() {
+        this.setState({active: false});
+
+        dispatchInternalEvent('interactiveArticleActionEnd', undefined);
+    }
+
     render() {
+        if (this.state.active !== true) {
+            return null;
+        }
+
         const {activeTab} = this.state;
         const markupV2 = authoringReactViewEnabled && this.props.markupV2 === true;
+        const handleUnsavedChanges = this.props.handleUnsavedChanges ?? handleUnsavedChangesDefault;
 
         return (
             <Panel markupV2={markupV2}>
@@ -70,18 +119,23 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
                     <div className="space-between" style={{width: '100%', paddingRight: 10}}>
                         <TabList
                             tabs={
-                                this.props.tabs.map((id) => ({id, label: getTabLabel(id)}))
+                                this.state.tabs.map((id) => ({id, label: getTabLabel(id)}))
                             }
                             selected={this.state.activeTab}
                             onChange={(tab: ISendToTabID) => {
-                                this.setState({activeTab: tab});
+                                if (this.state.active) {
+                                    this.setState({
+                                        ...this.state,
+                                        activeTab: tab,
+                                    });
+                                }
                             }}
                         />
 
                         <Button
                             text={gettext('Close')}
                             onClick={() => {
-                                this.props.closeSendToView();
+                                this.closePanel();
                             }}
                             iconOnly
                             icon="close-small"
@@ -94,74 +148,74 @@ export class SendItemReact extends React.PureComponent<IProps, IState> {
 
                 {(() => {
                     if (activeTab === 'publish') {
-                        if (this.props.items.length !== 1) {
+                        if (this.state.items.length !== 1) {
                             logger.error(new Error('Publishing multiple items from authoring pane is not supported'));
 
                             return null;
                         }
 
-                        const item = this.props.items[0];
+                        const item = this.state.items[0];
 
                         return (
                             <PublishTab
                                 item={item}
-                                closePublishView={this.props.closeSendToView}
+                                closePublishView={this.closePanel}
                                 markupV2={markupV2}
                                 handleUnsavedChanges={
-                                    () => this.props.handleUnsavedChanges([item]).then((res) => res[0])
+                                    () => handleUnsavedChanges([item]).then((res) => res[0])
                                 }
                             />
                         );
                     } if (activeTab === 'correct') {
-                        if (this.props.items.length !== 1) {
+                        if (this.state.items.length !== 1) {
                             logger.error(new Error('Correcting multiple items from authoring pane is not supported'));
 
                             return null;
                         }
 
-                        const item = this.props.items[0];
+                        const item = this.state.items[0];
 
                         return (
                             <SendCorrectionTab
                                 item={item}
-                                closePublishView={this.props.closeSendToView}
+                                closePublishView={this.closePanel}
                                 markupV2={markupV2}
                                 handleUnsavedChanges={
-                                    () => this.props.handleUnsavedChanges([item]).then((res) => res[0])
+                                    () => handleUnsavedChanges([item]).then((res) => res[0])
                                 }
                             />
                         );
                     } else if (activeTab === 'send_to') {
                         return (
                             <SendToTab
-                                items={this.props.items}
-                                closeSendToView={this.props.closeSendToView}
-                                handleUnsavedChanges={this.props.handleUnsavedChanges}
+                                items={this.state.items}
+                                closeSendToView={this.closePanel}
+                                handleUnsavedChanges={handleUnsavedChanges}
                                 markupV2={markupV2}
                             />
                         );
                     } else if (activeTab === 'fetch_to') {
                         return (
                             <FetchToTab
-                                items={this.props.items}
-                                closeFetchToView={this.props.closeSendToView}
-                                handleUnsavedChanges={this.props.handleUnsavedChanges}
+                                items={this.state.items}
+                                closeFetchToView={this.closePanel}
+                                handleUnsavedChanges={handleUnsavedChanges}
                                 markupV2={markupV2}
                             />
                         );
                     } if (activeTab === 'duplicate_to') {
                         return (
                             <DuplicateToTab
-                                items={this.props.items}
-                                closeDuplicateToView={this.props.closeSendToView}
+                                items={this.state.items}
+                                closeDuplicateToView={this.closePanel}
                                 markupV2={markupV2}
                             />
                         );
                     } if (activeTab === 'unspike') {
                         return (
                             <UnspikeTab
-                                items={this.props.items}
-                                closeUnspikeView={this.props.closeSendToView}
+                                items={this.state.items}
+                                closeUnspikeView={this.closePanel}
                                 markupV2={markupV2}
                             />
                         );

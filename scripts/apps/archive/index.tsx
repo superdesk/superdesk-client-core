@@ -27,6 +27,7 @@ import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/component
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {httpRequestJsonLocal, httpRequestRawLocal} from 'core/helpers/network';
 import {sdApi} from 'api';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 angular.module('superdesk.apps.archive.directives', [
     'superdesk.core.filters',
@@ -130,8 +131,12 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Unspike Item'),
                 icon: 'unspike',
                 monitor: true,
-                controller: ['data', 'send', function(data, send) {
-                    return send.allAs([data.item], 'unspike');
+                controller: ['data', function(data) {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['unspike'],
+                        activeTab: 'unspike',
+                    });
                 }],
                 filters: [{action: 'list', type: 'spike'}],
                 action: 'unspike',
@@ -164,8 +169,12 @@ angular.module('superdesk.apps.archive', [
                 label: gettext('Duplicate To'),
                 icon: 'copy',
                 monitor: true,
-                controller: ['data', 'send', function(data, send) {
-                    return send.allAs([data.item], 'duplicateTo');
+                controller: ['data', function(data) {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['duplicate_to'],
+                        activeTab: 'duplicate_to',
+                    });
                 }],
                 filters: [
                     {action: 'list', type: 'archive'},

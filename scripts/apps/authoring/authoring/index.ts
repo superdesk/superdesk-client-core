@@ -30,7 +30,8 @@ import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {AuthoringIntegrationWrapper} from 'apps/authoring-react/authoring-integration-wrapper';
-import {SendItemReact} from '../../../core/send-item-react/send-item-react';
+import {SendItemReactStandalone} from 'core/send-item-react/send-item-react-standalone';
+import {dispatchInternalEvent} from 'core/internal-events';
 
 export interface IOnChangeParams {
     item: IArticle;
@@ -97,12 +98,11 @@ angular.module('superdesk.apps.authoring', [
 
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
-    .directive('sdSendItem', directive.SendItem)
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
     .component('sdAuthoringIntegrationWrapper', reactToAngular1(AuthoringIntegrationWrapper, ['itemId'], []))
     .component(
-        'sdSendItemReact',
-        reactToAngular1(SendItemReact, ['tabs', 'items', 'closeSendToView', 'handleUnsavedChanges'], []),
+        'sdSendItemReactStandalone',
+        reactToAngular1(SendItemReactStandalone, ['handleUnsavedChanges', 'location'], []),
     )
     .component('sdCharacterCountConfigButton', reactToAngular1(
         CharacterCountConfigButton, ['field'], [], 'display: inline',
@@ -249,8 +249,12 @@ angular.module('superdesk.apps.authoring', [
             .activity('move.item', {
                 label: gettext('Send to'),
                 icon: 'share-alt',
-                controller: ['data', 'send', (data, send) => {
-                    send.allAs([data.item], 'send_to');
+                controller: ['data', (data) => {
+                    dispatchInternalEvent('interactiveArticleActionStart', {
+                        items: [data.item],
+                        tabs: ['send_to'],
+                        activeTab: 'send_to',
+                    });
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) =>
@@ -260,8 +264,11 @@ angular.module('superdesk.apps.authoring', [
             .activity('move.item.personal_space', {
                 label: gettext('Send to Personal Space'),
                 icon: 'share-alt',
-                controller: ['data', 'send', (data, send) => {
-                    send.oneAs([data.item][0], '', 'send_to_personal');
+                controller: ['data', (data) => {
+                    sdApi.article.sendItems(
+                        [data.item],
+                        {type: 'personal-space'},
+                    );
                 }],
                 filters: [{action: 'list', type: 'archive'}],
                 additionalCondition: ['authoring', 'item', (authoring, item) =>

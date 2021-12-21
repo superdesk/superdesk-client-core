@@ -371,7 +371,7 @@
             aria-label="{{ :: 'Send to / Publish' | translate }}"
             sd-tooltip="{{ :: 'Send to / Publish' | translate }}"
             flow="left"
-            ng-click="views.send = !views.send"
+            ng-click="openPublishOrSendToPane()"
             ng-class="{'active': views.send}"
             data-test-id="open-send-publish-pane"
           >

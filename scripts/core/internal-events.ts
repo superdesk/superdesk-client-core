@@ -1,4 +1,5 @@
 import {IArticle} from 'superdesk-api';
+import {IPanelAction} from './send-item-react/send-item-react-standalone';
 
 interface IInternalEvents {
     addImage: {
@@ -10,6 +11,9 @@ interface IInternalEvents {
     changeUserPreferences: {[preferenceId: string]: any};
     openExportView: Array<IArticle['_id']>;
     extensionsHaveLoaded: true;
+
+    interactiveArticleActionStart: IPanelAction;
+    interactiveArticleActionEnd: void;
 }
 
 export function addInternalEventListener<T extends keyof IInternalEvents>(

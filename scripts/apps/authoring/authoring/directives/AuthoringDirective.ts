@@ -12,7 +12,7 @@ import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
 import {appConfig, extensions} from 'appConfig';
-import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle} from 'superdesk-api';
+import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle, IStage} from 'superdesk-api';
 import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
@@ -21,6 +21,7 @@ import {ITEM_STATE} from 'apps/archive/constants';
 import {isMediaType} from 'core/helpers/item';
 import {confirmPublish} from '../services/quick-publish-modal';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc directive
@@ -858,6 +859,12 @@ export function AuthoringDirective(
                     .catch(() => $scope.origItem); // ignore failed unlock
             };
 
+            $scope.handleUnsavedChangesReact = (items: Array<IArticle>) => {
+                return $scope.beforeSend().then(() => {
+                    return [$scope.origItem];
+                });
+            };
+
             /**
              * Preview different version of an item
              */
@@ -1017,25 +1024,23 @@ export function AuthoringDirective(
                     throw new Error('currentDeskId is null');
                 }
 
-                var stageIndex, stageList = desks.deskStages[currentDeskId];
-                var selectedStage, selectedDesk = desks.deskLookup[currentDeskId];
+                const selectedDesk = desks.deskLookup[currentDeskId];
+                const deskStages: Array<IStage> = desks.deskStages[currentDeskId];
+                const currentStage = deskStages.find(({_id}) => _id === $scope.stage._id);
+                const currentStageIndex = deskStages.indexOf(currentStage);
+                const nextStageIndex = currentStageIndex === deskStages.length - 1 ? 0 : currentStageIndex + 1;
 
-                for (var i = 0; i < stageList.length; i++) {
-                    if (stageList[i]._id === $scope.stage._id) {
-                        selectedStage = stageList[i];
-                        stageIndex = i + 1 === stageList.length ? 0 : i + 1;
-                        break;
-                    }
-                }
-
-                $rootScope.$broadcast('item:nextStage', {
-                    stage: stageList[stageIndex],
-                    itemId: $scope.item._id,
-                    selectedStage: selectedStage,
-                    selectedDesk: selectedDesk,
-                    item: $scope.item,
+                sdApi.article.sendItems(
+                    [$scope.item],
+                    {
+                        type: 'desk',
+                        desk: selectedDesk._id,
+                        stage: deskStages[nextStageIndex]._id,
+                    },
+                ).then(() => {
+                    $scope.$applyAsync();
+                    $scope.close();
                 });
-                $scope.close();
             };
 
             // Returns true if the given text is an URL

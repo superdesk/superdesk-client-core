@@ -1,17 +1,13 @@
 import React from 'react';
-import {IDesk, IArticle} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext, gettextPlural} from 'core/utils';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 import {PanelContent} from './panel/panel-content';
 import {PanelFooter} from './panel/panel-footer';
 import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
-import {dispatchInternalEvent} from 'core/internal-events';
-import {extensions, appConfig} from 'appConfig';
-import {notify} from 'core/notify/notify';
+import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {getInitialDestination} from './get-initial-destination';
-import {notNullOrUndefined, assertNever} from 'core/helpers/typescript-helpers';
 import {canSendToPersonal} from './can-send-to-personal';
 import {DestinationSelect} from './destination-select';
 import {ISendToDestination} from './interfaces';
@@ -19,7 +15,6 @@ import {
     IPublishingDateOptions,
     getInitialPublishingDateOptions,
     PublishingDateOptions,
-    getPublishingDatePatch,
 } from './publishing-date-options';
 
 interface IProps {
@@ -34,8 +29,6 @@ interface IState {
     publishingDateOptions: IPublishingDateOptions;
 }
 
-// TODO: ensure https://github.com/superdesk/superdesk-ui-framework/issues/574 is fixed before merging to develop
-// TODO: ensure SDESK-6319 is merged
 export class SendToTab extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -54,113 +47,19 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
         const {selectedDestination} = this.state;
         const {closeSendToView, handleUnsavedChanges} = this.props;
 
-        const middlewares = Object.values(extensions)
-            .map((ext) => ext?.activationResult?.contributions?.entities?.article?.onSendBefore)
-            .filter(notNullOrUndefined);
-
         return handleUnsavedChanges(this.props.items)
             .then((items) => {
-                const selectedDeskObj: IDesk | null = (() => {
-                    if (selectedDestination.type === 'desk') {
-                        return sdApi.desks.getAllDesks().find((desk) => desk._id === selectedDestination.desk);
-                    } else {
-                        return null;
-                    }
-                })();
-
-                middlewares.reduce(
-                    (current, next) => {
-                        return current.then(() => {
-                            return next(items, selectedDeskObj);
-                        });
-                    },
-                    Promise.resolve(),
+                sdApi.article.sendItems(
+                    items,
+                    selectedDestination,
+                    sendPackageItems,
+                    this.state.publishingDateOptions,
                 ).then(() => {
-                    return Promise.all(
-                        items.map((item) => {
-                            return (() => {
-                                /**
-                                 * If needed, update embargo / publish schedule / time zone
-                                 */
+                    closeSendToView();
 
-                                if (items.length !== 1) {
-                                    return Promise.resolve({});
-                                }
-
-                                var patch = getPublishingDatePatch(item, this.state.publishingDateOptions);
-
-                                if (Object.keys(patch).length > 0) {
-                                    return httpRequestJsonLocal<IArticle>({
-                                        method: 'PATCH',
-                                        path: `/archive/${item._id}`,
-                                        payload: patch,
-                                        headers: {
-                                            'If-Match': item._etag,
-                                        },
-                                    });
-                                } else {
-                                    return Promise.resolve({});
-                                }
-                            })().then((patch1: Partial<IArticle>) => {
-                                const payload = (() => {
-                                    const basePayload = {};
-
-                                    if (sendPackageItems) {
-                                        basePayload['allPackageItems'] = true;
-                                    }
-
-                                    if (selectedDestination.type === 'personal-space') {
-                                        return basePayload;
-                                    } else if (selectedDestination.type === 'desk') {
-                                        const _payload: Partial<IArticle> = {
-                                            ...basePayload,
-                                            task: {
-                                                desk: selectedDestination.desk,
-                                                stage: selectedDestination.stage,
-                                            },
-                                        };
-
-                                        return _payload;
-                                    } else {
-                                        assertNever(selectedDestination);
-                                    }
-                                })();
-
-                                return httpRequestJsonLocal({
-                                    method: 'POST',
-                                    path: `/archive/${item._id}/move`,
-                                    payload: payload,
-                                }).then((patch2: Partial<IArticle>) => {
-                                    return {
-                                        ...patch1,
-                                        ...patch2,
-                                    };
-                                });
-                            });
-                        }),
-                    ).then((patches: Array<Partial<IArticle>>) => {
-                        /**
-                         * Patch articles that are open in authoring.
-                         * Otherwise data displayed in authoring might be out of date
-                         * and _etag mismatch error would be thrown when attempting to save.
-                         */
-                        for (const patch of patches) {
-                            dispatchInternalEvent(
-                                'dangerouslyOverwriteAuthoringData',
-                                patch,
-                            );
-                        }
-
-                        closeSendToView();
-
-                        if (itemToOpenAfterSending != null) {
-                            openArticle(itemToOpenAfterSending, 'edit');
-                        }
-
-                        notify.success(gettext('Item sent'));
-
-                        sdApi.preferences.update('destination:active', selectedDestination);
-                    });
+                    if (itemToOpenAfterSending != null) {
+                        openArticle(itemToOpenAfterSending, 'edit');
+                    }
                 }).catch(() => {
                     /**
                      * Middleware that rejected the promise is responsible

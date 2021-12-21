@@ -37,7 +37,7 @@ export function getBulkActions(
             label: gettext('Fetch'),
             icon: 'icon-archive',
             onTrigger: () => {
-                multiActions.send();
+                multiActions.fetch();
                 scopeApply?.();
             },
             canAutocloseMultiActionBar: false,
@@ -46,7 +46,7 @@ export function getBulkActions(
             label: gettext('Fetch to'),
             icon: 'icon-fetch-as',
             onTrigger: () => {
-                multiActions.sendAs();
+                multiActions.sendTo();
                 scopeApply?.();
             },
             canAutocloseMultiActionBar: false,
@@ -152,7 +152,7 @@ export function getBulkActions(
                 label: gettext('Send to'),
                 icon: 'icon-expand-thin',
                 onTrigger: () => {
-                    multiActions.sendAs();
+                    multiActions.sendTo();
                     scopeApply?.();
                 },
                 canAutocloseMultiActionBar: false,

@@ -23,7 +23,7 @@ import {WidgetHeaderComponent} from './widget-header-component';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
 import {addInternalEventListener} from 'core/internal-events';
-import {SendItemReact} from 'core/send-item-react/send-item-react';
+import {SendItemReactStandalone} from 'core/send-item-react/send-item-react-standalone';
 import {
     showUnsavedChangesPrompt,
     IUnsavedChangesActionWithSaving,
@@ -398,16 +398,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         const OpenWidgetComponent = (() => {
             if (state.sendToOrPublishSidebar === true) {
                 return (props: {article: IArticle}) => (
-                    <SendItemReact
-                        items={[props.article]}
-                        closeSendToView={() => {
-                            const nextState: IStateLoaded = {
-                                ...state,
-                                sendToOrPublishSidebar: false,
-                            };
-
-                            this.setState(nextState);
-                        }}
+                    <SendItemReactStandalone
                         handleUnsavedChanges={() => new Promise((resolve, reject) => {
                             if (state.itemWithChanges === state.itemOriginal) {
                                 resolve([state.itemOriginal]);
@@ -439,8 +430,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                 }
                             });
                         })}
+                        location="authoring"
                         markupV2
-                        tabs={['send_to', 'publish']}
                     />
                 );
             } else if (state.openWidget != null) {
