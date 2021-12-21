@@ -30,7 +30,7 @@ import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {AuthoringIntegrationWrapper} from 'apps/authoring-react/authoring-integration-wrapper';
-import {SendItemReactStandalone} from 'core/send-item-react/send-item-react-standalone';
+import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel';
 import {dispatchInternalEvent} from 'core/internal-events';
 
 export interface IOnChangeParams {
@@ -101,8 +101,8 @@ angular.module('superdesk.apps.authoring', [
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
     .component('sdAuthoringIntegrationWrapper', reactToAngular1(AuthoringIntegrationWrapper, ['itemId'], []))
     .component(
-        'sdSendItemReactStandalone',
-        reactToAngular1(SendItemReactStandalone, ['handleUnsavedChanges', 'location'], []),
+        'sdInteractiveArticleActionsPanel',
+        reactToAngular1(InteractiveArticleActionsPanel, ['handleUnsavedChanges', 'location'], []),
     )
     .component('sdCharacterCountConfigButton', reactToAngular1(
         CharacterCountConfigButton, ['field'], [], 'display: inline',

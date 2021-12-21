@@ -1,5 +1,5 @@
 import {IArticle} from 'superdesk-api';
-import {IPanelAction} from './send-item-react/send-item-react-standalone';
+import {IPanelAction} from './interactive-article-actions-panel';
 
 interface IInternalEvents {
     addImage: {

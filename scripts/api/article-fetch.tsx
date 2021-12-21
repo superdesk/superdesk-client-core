@@ -1,7 +1,7 @@
 import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
-import {ISendToDestinationDesk} from 'core/send-item-react/interfaces';
+import {ISendToDestinationDesk} from 'core/interactive-article-actions-panel/interfaces';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {showModal} from 'core/services/modalService';
 import {IModalSimpleAction, ModalSimple} from 'core/ui/components/modal-simple';

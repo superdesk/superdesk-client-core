@@ -3,9 +3,9 @@ import {patchArticle} from './article-patch';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {applicationState} from 'core/get-superdesk-api-implementation';
-import {ISendToDestinationDesk, ISendToDestination} from 'core/send-item-react/interfaces';
+import {ISendToDestinationDesk, ISendToDestination} from 'core/interactive-article-actions-panel/interfaces';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
-import {IPublishingDateOptions} from 'core/send-item-react/publishing-date-options';
+import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/publishing-date-options';
 import {sendItems} from './article-send';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;

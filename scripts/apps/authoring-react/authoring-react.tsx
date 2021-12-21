@@ -23,7 +23,7 @@ import {WidgetHeaderComponent} from './widget-header-component';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
 import {addInternalEventListener} from 'core/internal-events';
-import {SendItemReactStandalone} from 'core/send-item-react/send-item-react-standalone';
+import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel';
 import {
     showUnsavedChangesPrompt,
     IUnsavedChangesActionWithSaving,
@@ -398,7 +398,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         const OpenWidgetComponent = (() => {
             if (state.sendToOrPublishSidebar === true) {
                 return (props: {article: IArticle}) => (
-                    <SendItemReactStandalone
+                    <InteractiveArticleActionsPanel
                         handleUnsavedChanges={() => new Promise((resolve, reject) => {
                             if (state.itemWithChanges === state.itemOriginal) {
                                 resolve([state.itemOriginal]);

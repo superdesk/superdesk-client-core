@@ -17,11 +17,11 @@ import {UnspikeTab} from './unspike-tab';
 import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {applicationState} from 'core/get-superdesk-api-implementation';
 
-export type ISendToTabID = 'send_to' | 'fetch_to' | 'unspike' | 'duplicate_to' | 'publish' | 'correct';
+export type IArticleActionInteractive = 'send_to' | 'fetch_to' | 'unspike' | 'duplicate_to' | 'publish' | 'correct';
 
 const handleUnsavedChangesDefault = (items: Array<IArticle>) => Promise.resolve(items);
 
-function getTabLabel(id: ISendToTabID) {
+function getTabLabel(id: IArticleActionInteractive) {
     if (id === 'send_to') {
         return gettext('Send to');
     } else if (id === 'fetch_to') {
@@ -56,20 +56,20 @@ interface IProps {
 
 interface IStateActive {
     active: true;
-    tabs: Array<ISendToTabID>;
+    tabs: Array<IArticleActionInteractive>;
     items: Array<IArticle>;
-    activeTab: ISendToTabID;
+    activeTab: IArticleActionInteractive;
 }
 
 export interface IPanelAction {
-    tabs: Array<ISendToTabID>;
+    tabs: Array<IArticleActionInteractive>;
     items: Array<IArticle>;
-    activeTab: ISendToTabID;
+    activeTab: IArticleActionInteractive;
 }
 
 type IState = {active: false} | IStateActive;
 
-export class SendItemReactStandalone extends React.PureComponent<IProps, IState> {
+export class InteractiveArticleActionsPanel extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -122,7 +122,7 @@ export class SendItemReactStandalone extends React.PureComponent<IProps, IState>
                                 this.state.tabs.map((id) => ({id, label: getTabLabel(id)}))
                             }
                             selected={this.state.activeTab}
-                            onChange={(tab: ISendToTabID) => {
+                            onChange={(tab: IArticleActionInteractive) => {
                                 if (this.state.active) {
                                     this.setState({
                                         ...this.state,
