@@ -1,4 +1,5 @@
-import {IArticle, IDesk} from 'superdesk-api';
+import React from 'react';
+import {IArticle, IDesk, ISuperdeskQuery, IRestApiResponse} from 'superdesk-api';
 import {ISendToDestination} from 'core/interactive-article-actions-panel/interfaces';
 import {sdApi} from 'api';
 import {extensions} from 'appConfig';
@@ -9,22 +10,38 @@ import {
 } from 'core/interactive-article-actions-panel/publishing-date-options';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {notify} from 'core/notify/notify';
-import {gettext} from 'core/utils';
+import {gettext, getItemLabel} from 'core/utils';
 import {dispatchInternalEvent} from 'core/internal-events';
+import {toElasticQuery} from 'core/query-formatting';
+import {showModal} from 'core/services/modalService';
+import {ModalSimple, IModalSimpleAction} from 'core/ui/components/modal-simple';
+import {UnorderedList} from 'core/ui/components/UnorderedList';
 
-/**
- * Promise may be rejected by middleware.
- * Returns patches, not whole items.
- */
-export function sendItems(
+function getPublishedPackageItems(_package: IArticle): Promise<Array<IArticle>> {
+    const query: ISuperdeskQuery = {
+        filter: {$and: [{'guid': {$in: sdApi.article.getPackageItemIds(_package)}}]},
+        page: 0,
+        max_results: 200,
+        sort: [{'versioncreated': 'asc'}],
+    };
+
+    return httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+        method: 'GET',
+        path: '/search',
+        urlParams: {
+            repo: 'published',
+            source: JSON.stringify(toElasticQuery(query)),
+        },
+    }).then((res) => res._items);
+}
+
+function applyMiddlewares(
     items: Array<IArticle>,
-    selectedDestination: ISendToDestination,
-    sendPackageItems: boolean = false,
-    publishingDateOptions?: IPublishingDateOptions,
-): Promise<Array<Partial<IArticle>>> {
+    destination: ISendToDestination,
+): Promise<void> {
     const selectedDeskObj: IDesk | null = (() => {
-        if (selectedDestination.type === 'desk') {
-            return sdApi.desks.getAllDesks().find((desk) => desk._id === selectedDestination.desk);
+        if (destination.type === 'desk') {
+            return sdApi.desks.getAllDesks().find((desk) => desk._id === destination.desk);
         } else {
             return null;
         }
@@ -41,92 +58,212 @@ export function sendItems(
             });
         },
         Promise.resolve(),
-    ).then(() => {
-        return Promise.all(
-            items.map((item) => {
-                return (() => {
-                    if (Object.keys(publishingDateOptions ?? {}).length < 1) {
-                        return Promise.resolve({});
-                    }
+    );
+}
 
-                    /**
-                     * If needed, update embargo / publish schedule / time zone
-                     */
+function confirmSendingPackages(items: Array<IArticle>): Promise<void> {
+    const packages = items.filter(({type}) => type === 'composite');
 
-                    var patch = getPublishingDatePatch(item, publishingDateOptions);
+    if (packages.length < 1) {
+        return Promise.resolve();
+    }
 
-                    if (Object.keys(patch).length > 0) {
-                        return httpRequestJsonLocal<IArticle>({
-                            method: 'PATCH',
-                            path: `/archive/${item._id}`,
-                            payload: patch,
-                            headers: {
-                                'If-Match': item._etag,
+    return new Promise((resolve, reject) => {
+        Promise.all(
+            packages.map((_package) => getPublishedPackageItems(_package).then((publishedPackageItems) => ({
+                _package,
+                publishedPackageItems,
+            }))),
+        ).then((res) => {
+            const withPublishedItems = res.filter(({publishedPackageItems}) => publishedPackageItems.length > 0);
+
+            if (withPublishedItems.length < 1) {
+                resolve();
+            } else {
+                showModal(({closeModal}) => {
+                    const actions: Array<IModalSimpleAction> = [
+                        {
+                            label: gettext('Cancel'),
+                            onClick: () => {
+                                closeModal();
+                                reject();
                             },
-                        });
-                    } else {
-                        return Promise.resolve({});
-                    }
-                })().then((patch1: Partial<IArticle>) => {
-                    const payload = (() => {
-                        const basePayload = {};
+                        },
+                        {
+                            label: gettext('Continue'),
+                            onClick: () => {
+                                closeModal();
+                                resolve();
+                            },
+                            primary: true,
+                        },
+                    ];
 
-                        if (sendPackageItems) {
-                            basePayload['allPackageItems'] = true;
+                    return (
+                        <ModalSimple title={gettext('Warning')} closeModal={closeModal} footerButtons={actions}>
+                            {
+                                (() => {
+                                    if (withPublishedItems.length === 1) {
+                                        const _package = withPublishedItems[0]._package;
+
+                                        return (
+                                            <div>
+                                                <h3>
+                                                    {
+                                                        gettext(
+                                                            'The package "{{name}}" contains the following '
+                                                            + 'published items that can not be sent:',
+                                                            {
+                                                                name: getItemLabel(_package),
+                                                            },
+                                                        )
+                                                    }
+                                                </h3>
+
+                                                <UnorderedList
+                                                    items={withPublishedItems[0].publishedPackageItems.map(
+                                                        (item) => getItemLabel(item),
+                                                    )}
+                                                />
+                                            </div>
+                                        );
+                                    } else {
+                                        return (
+                                            <div>
+                                                <h3>
+                                                    {
+                                                        gettext(
+                                                            'Some packages contain the following '
+                                                            + 'published items that can not be sent:',
+                                                        )
+                                                    }
+                                                </h3>
+
+                                                <br />
+
+                                                {
+                                                    withPublishedItems.map(({_package, publishedPackageItems}) => (
+                                                        <div key={_package._id}>
+                                                            <h3>{getItemLabel(_package)}</h3>
+
+                                                            <UnorderedList
+                                                                items={publishedPackageItems.map(
+                                                                    (item) => getItemLabel(item),
+                                                                )}
+                                                            />
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        );
+                                    }
+                                })()
+                            }
+                        </ModalSimple>
+                    );
+                });
+            }
+        });
+    });
+}
+
+/**
+ * Promise may be rejected by middleware.
+ * Returns patches, not whole items.
+ */
+export function sendItems(
+    items: Array<IArticle>,
+    selectedDestination: ISendToDestination,
+    sendPackageItems: boolean = false,
+    publishingDateOptions?: IPublishingDateOptions,
+): Promise<Array<Partial<IArticle>>> {
+    return applyMiddlewares(items, selectedDestination)
+        .then(() => sendPackageItems ? confirmSendingPackages(items) : Promise.resolve())
+        .then(() => {
+            return Promise.all(
+                items.map((item) => {
+                    return (() => {
+                        if (Object.keys(publishingDateOptions ?? {}).length < 1) {
+                            return Promise.resolve({});
                         }
 
-                        if (selectedDestination.type === 'personal-space') {
-                            return basePayload;
-                        } else if (selectedDestination.type === 'desk') {
-                            const _payload: Partial<IArticle> = {
-                                ...basePayload,
-                                task: {
-                                    desk: selectedDestination.desk,
-                                    stage: selectedDestination.stage,
+                        /**
+                         * If needed, update embargo / publish schedule / time zone
+                         */
+
+                        var patch = getPublishingDatePatch(item, publishingDateOptions);
+
+                        if (Object.keys(patch).length > 0) {
+                            return httpRequestJsonLocal<IArticle>({
+                                method: 'PATCH',
+                                path: `/archive/${item._id}`,
+                                payload: patch,
+                                headers: {
+                                    'If-Match': item._etag,
                                 },
+                            });
+                        } else {
+                            return Promise.resolve({});
+                        }
+                    })().then((patch1: Partial<IArticle>) => {
+                        const payload = (() => {
+                            const basePayload = {};
+
+                            if (sendPackageItems) {
+                                basePayload['allPackageItems'] = true;
+                            }
+
+                            if (selectedDestination.type === 'personal-space') {
+                                return basePayload;
+                            } else if (selectedDestination.type === 'desk') {
+                                const _payload: Partial<IArticle> = {
+                                    ...basePayload,
+                                    task: {
+                                        desk: selectedDestination.desk,
+                                        stage: selectedDestination.stage,
+                                    },
+                                };
+
+                                return _payload;
+                            } else {
+                                assertNever(selectedDestination);
+                            }
+                        })();
+
+                        return httpRequestJsonLocal({
+                            method: 'POST',
+                            path: `/archive/${item._id}/move`,
+                            payload: payload,
+                        }).then((patch2: Partial<IArticle>) => {
+                            const patchFinal = {
+                                ...patch1,
+                                ...patch2,
                             };
 
-                            return _payload;
-                        } else {
-                            assertNever(selectedDestination);
-                        }
-                    })();
+                            // TODO: fix server response to contain correct links or none at all
+                            delete patchFinal['_links'];
 
-                    return httpRequestJsonLocal({
-                        method: 'POST',
-                        path: `/archive/${item._id}/move`,
-                        payload: payload,
-                    }).then((patch2: Partial<IArticle>) => {
-                        notify.success(gettext('Item sent'));
-
-                        sdApi.preferences.update('destination:active', selectedDestination);
-
-                        return {
-                            ...patch1,
-                            ...patch2,
-                        };
+                            return patchFinal;
+                        });
                     });
-                });
-            }),
-        );
-    }).then((patches: Array<Partial<IArticle>>) => {
-        /**
-         * Patch articles that are open in authoring.
-         * Otherwise data displayed in authoring might be out of date
-         * and _etag mismatch error would be thrown when attempting to save.
-         */
-        for (const patch of patches) {
-            const patchWithoutLinks = {...patch};
-
-            // TODO: fix server response to contain correct links or none at all
-            delete patchWithoutLinks['_links'];
-
-            dispatchInternalEvent(
-                'dangerouslyOverwriteAuthoringData',
-                patchWithoutLinks,
+                }),
             );
-        }
+        }).then((patches: Array<Partial<IArticle>>) => {
+            sdApi.preferences.update('destination:active', selectedDestination);
+            notify.success(gettext('Sent successfully'));
 
-        return patches;
-    });
+            /**
+             * Patch articles that are open in authoring.
+             * Otherwise data displayed in authoring might be out of date
+             * and _etag mismatch error would be thrown when attempting to save.
+             */
+            for (const patch of patches) {
+                dispatchInternalEvent(
+                    'dangerouslyOverwriteAuthoringData',
+                    patch,
+                );
+            }
+
+            return patches;
+        });
 }

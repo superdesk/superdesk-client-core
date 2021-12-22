@@ -18,6 +18,19 @@ const isPublished = (_article: IArticle) => _article.item_id != null;
 const isArchived = (_article: IArticle) => _article._type === 'archived';
 const isPersonal = (_article: IArticle) =>
     _article.task == null || _article.task.desk == null || _article.task.stage == null;
+const getPackageItemIds = (item: IArticle): Array<IArticle['_id']> => {
+    const ids: Array<IArticle['_id']> = [];
+
+    item.groups.forEach((group) => {
+        if (group.id !== 'root') {
+            group.refs?.forEach(({residRef}) => {
+                ids.push(residRef);
+            });
+        }
+    });
+
+    return ids;
+};
 
 /**
  * Does not prompt for confirmation
@@ -80,6 +93,7 @@ interface IArticleApi {
     isArchived(article: IArticle): boolean;
     isPublished(article: IArticle): boolean;
     isPersonal(article: IArticle): boolean;
+    getPackageItemIds(item: IArticle): Array<IArticle['_id']>;
     patch(
         article: IArticle,
         patch: Partial<IArticle>,
@@ -118,6 +132,7 @@ export const article: IArticleApi = {
     isArchived,
     isPublished,
     isPersonal,
+    getPackageItemIds,
     patch: patchArticle,
     doSpike,
     doUnspike,

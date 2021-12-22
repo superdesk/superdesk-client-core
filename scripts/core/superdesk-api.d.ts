@@ -535,6 +535,9 @@ declare module 'superdesk-api' {
         target_regions?: Array<{name: string; qcode: string; allow: boolean}>;
         target_types?: Array<{name: string; qcode: string; allow: boolean}>;
 
+        // holds info on packages
+        groups?: Array<any>;
+
         // other fields which don't exist in the database, don't belong to this entity and should be removed
         error?: any;
         _editable?: any;
