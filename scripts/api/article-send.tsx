@@ -116,9 +116,14 @@ export function sendItems(
          * and _etag mismatch error would be thrown when attempting to save.
          */
         for (const patch of patches) {
+            const patchWithoutLinks = {...patch};
+
+            // TODO: fix server response to contain correct links or none at all
+            delete patchWithoutLinks['_links'];
+
             dispatchInternalEvent(
                 'dangerouslyOverwriteAuthoringData',
-                patch,
+                patchWithoutLinks,
             );
         }
 

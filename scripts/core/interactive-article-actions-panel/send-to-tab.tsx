@@ -16,6 +16,7 @@ import {
     getInitialPublishingDateOptions,
     PublishingDateOptions,
 } from './publishing-date-options';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 interface IProps {
     items: Array<IArticle>;
@@ -59,6 +60,8 @@ export class SendToTab extends React.PureComponent<IProps, IState> {
 
                     if (itemToOpenAfterSending != null) {
                         openArticle(itemToOpenAfterSending, 'edit');
+                    } else if (items.length === 1 && applicationState.articleInEditMode === items[0]._id) {
+                        authoringApiCommon.closeAuthoringForce();
                     }
                 }).catch(() => {
                     /**

@@ -1,5 +1,5 @@
 import {OrderedMap} from 'immutable';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IBaseRestApiResponse} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {dataApi} from 'core/helpers/CrudManager';
@@ -8,7 +8,6 @@ import {generatePatch} from 'core/patch';
 import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {AutoSaveHttp} from './auto-save-http';
-import {omitRestApiFields} from 'core/utils';
 import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 
@@ -144,10 +143,27 @@ interface IAuthoringStorage {
 }
 
 export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
-    // TODO: these shouldn't be needed
-    const customFields = ['_latest_version', 'revert_state', 'expiry', '_current_version'];
+    /**
+     * TODO: try getting rid of these when angular based monitoring is dropped.
+     * When sending patches, these fields will automatically be excluded by patching algorithm
+     * When receiving patches, server should be fixed if it sends invalid data.
+     */
 
-    return {...omit(omitRestApiFields(item), ...customFields)};
+    const customFields = [
+        '_latest_version',
+        'revert_state',
+        'expiry',
+        '_current_version',
+    ];
+
+    const baseApiFields = [
+        '_created',
+        '_links',
+        '_updated',
+        '_etag',
+    ];
+
+    return {...omit(item, [...customFields, ...baseApiFields])};
 }
 
 export const authoringStorage: IAuthoringStorage = {

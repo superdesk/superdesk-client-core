@@ -4,6 +4,7 @@ import {showUnsavedChangesPrompt, IUnsavedChangesActionWithSaving} from 'core/ui
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
+import ng from 'core/services/ng';
 
 export interface IAuthoringApiCommon {
     saveBefore(current: IArticle, original: IArticle): Promise<IArticle>;
@@ -16,6 +17,12 @@ export interface IAuthoringApiCommon {
         cancelAutoSave: () => Promise<void>,
         doClose: () => void,
     ): Promise<void>;
+
+    /**
+     * Is only meant to be used when there are no unsaved changes
+     * and item is not locked.
+     */
+    closeAuthoringForce(): void;
 }
 
 /**
@@ -53,5 +60,8 @@ export const authoringApiCommon: IAuthoringApiCommon = {
         } else {
             return unlock().then(() => doClose());
         }
+    },
+    closeAuthoringForce: () => {
+        ng.get('authoringWorkspace').close();
     },
 };

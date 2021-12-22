@@ -257,21 +257,6 @@ export function toQueryString(
 }
 
 /**
- see {@link IBaseRestApiResponse}
- */
-export function omitRestApiFields<T extends {}>(item: T): T {
-    const keys: Array<keyof IBaseRestApiResponse> = [
-        '_created',
-        '_etag',
-        // '_id', <-- don't omit ID
-        '_links',
-        '_updated',
-    ];
-
-    return omit(item, keys) as unknown as T;
-}
-
-/**
  * Output example: "1970-01-19T22:57:38"
  */
 export function toServerDateFormat(date: Date): string {
