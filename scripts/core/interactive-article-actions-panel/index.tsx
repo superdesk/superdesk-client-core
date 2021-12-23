@@ -70,6 +70,8 @@ export interface IPanelAction {
 type IState = {active: false} | IStateActive;
 
 export class InteractiveArticleActionsPanel extends React.PureComponent<IProps, IState> {
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+
     constructor(props: IProps) {
         super(props);
 
@@ -81,20 +83,30 @@ export class InteractiveArticleActionsPanel extends React.PureComponent<IProps, 
     }
 
     componentDidMount() {
-        addInternalEventListener('interactiveArticleActionStart', (event) => {
-            const {items} = event.detail;
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addInternalEventListener('interactiveArticleActionStart', (event) => {
+                const {items} = event.detail;
 
-            const triggeredFromAuthoring = items.length === 1 && items[0]._id === applicationState.articleInEditMode;
+                const triggeredFromAuthoring =
+                    items.length === 1
+                    && items[0]._id === applicationState.articleInEditMode;
 
-            if (
-                (this.props.location === 'authoring' && triggeredFromAuthoring === true)
-                || (this.props.location !== 'authoring' && triggeredFromAuthoring !== true)
-            ) {
-                this.setState({
-                    active: true,
-                    ...event.detail,
-                });
-            }
+                if (
+                    (this.props.location === 'authoring' && triggeredFromAuthoring === true)
+                    || (this.props.location !== 'authoring' && triggeredFromAuthoring !== true)
+                ) {
+                    this.setState({
+                        active: true,
+                        ...event.detail,
+                    });
+                }
+            }),
+        );
+    }
+
+    componentWillUnmount() {
+        this.eventListenersToRemoveBeforeUnmounting.forEach((removeListener) => {
+            removeListener();
         });
     }
 
