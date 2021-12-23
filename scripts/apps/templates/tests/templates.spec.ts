@@ -10,15 +10,22 @@ describe('templates', () => {
     describe('templates widget', () => {
         var existingTemplate = {template_name: 'template1', template_desks: ['sports'], is_public: true, user: 'foo'};
 
-        beforeEach(inject((desks, api, $q, session, privileges) => {
+        beforeEach(inject((desks, api, $q, session, privileges, vocabularies, content) => {
             spyOn(desks, 'fetchCurrentUserDesks').and.returnValue($q.when({_items: []}));
             spyOn(api, 'save').and.returnValue($q.when({}));
             spyOn(api, 'find').and.returnValue($q.when(existingTemplate));
             spyOn(privileges, 'userHasPrivileges').and.returnValue(true);
             session.identity = {_id: 'foo', user_type: 'user'};
+            spyOn(vocabularies, 'getVocabularies').and.returnValue(Promise.resolve([]));
+            spyOn(content, 'setupAuthoring').and.callFake((profile, scope, item) => {
+                scope.editor = {};
+                scope.schema = {};
+
+                return Promise.resolve({});
+            });
         }));
 
-        it('can create template', inject(($controller, api) => {
+        it('can create template', (done) => inject(($controller, api) => {
             var item = _.create({slugline: 'FOO', headline: 'foo'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
@@ -28,20 +35,25 @@ describe('templates', () => {
             ctrl.desk = 'news';
             ctrl.hasCrops = true;
             ctrl.save();
-            expect(api.save).toHaveBeenCalledWith('content_templates', {
-                template_name: 'test',
-                template_type: 'create',
-                template_desks: null,
-                is_public: false,
-                user: 'foo',
-                data: {
-                    headline: 'foo',
-                    slugline: 'FOO',
-                },
-            }, null);
+
+            setTimeout(() => {
+                expect(api.save).toHaveBeenCalledWith('content_templates', {
+                    template_name: 'test',
+                    template_type: 'create',
+                    template_desks: null,
+                    is_public: false,
+                    user: 'foo',
+                    data: {
+                        headline: 'foo',
+                        slugline: 'FOO',
+                    },
+                }, null);
+
+                done();
+            }, 200);
         }));
 
-        it('can update template', inject(($controller, api, $rootScope, session) => {
+        it('can update template', (done) => inject(($controller, api, $rootScope, session) => {
             var item = _.create({slugline: 'FOO', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
@@ -53,10 +65,15 @@ describe('templates', () => {
             expect(ctrl.type).toBe('create');
             expect(ctrl.desk).toBe('sports');
             ctrl.save();
-            expect(api.save.calls.argsFor(0)[1]).toBe(existingTemplate);
+
+            setTimeout(() => {
+                expect(api.save.calls.argsFor(0)[1]).toBe(existingTemplate);
+
+                done();
+            }, 200);
         }));
 
-        it('can create new using old template data', inject(($controller, api, $rootScope, session) => {
+        it('can create new using old template data', (done) => inject(($controller, api, $rootScope, session) => {
             var item = _.create({slugline: 'foo', template: '123'});
             var ctrl = $controller('CreateTemplateController', {item: item});
 
@@ -66,10 +83,15 @@ describe('templates', () => {
             ctrl.name = 'rename it';
             ctrl.is_public = true;
             ctrl.save();
-            expect(api.save.calls.argsFor(0)[1]).not.toBe(existingTemplate);
-            expect(api.save.calls.argsFor(0)[1].is_public).toBe(true);
-            expect(api.save.calls.argsFor(0)[1].template_desks[0]).toBe('sports');
-            expect(api.save.calls.argsFor(0)[1].template_desks.length).toBe(1);
+
+            setTimeout(() => {
+                expect(api.save.calls.argsFor(0)[1]).not.toBe(existingTemplate);
+                expect(api.save.calls.argsFor(0)[1].is_public).toBe(true);
+                expect(api.save.calls.argsFor(0)[1].template_desks[0]).toBe('sports');
+                expect(api.save.calls.argsFor(0)[1].template_desks.length).toBe(1);
+
+                done();
+            }, 200);
         }));
     });
 

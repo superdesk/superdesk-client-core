@@ -82,6 +82,13 @@ declare module 'superdesk-api' {
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 
+    export interface AuthoringHeaderItem {
+        _id: string;
+        label: string;
+        order: number;
+        component: React.ComponentType<{article: IArticle}>;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -92,6 +99,7 @@ declare module 'superdesk-api' {
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringSideWidgets?: Array<IAuthoringSideWidget>;
+            authoringHeaderComponents?: Array<AuthoringHeaderItem>;
             authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -2291,6 +2299,9 @@ declare module 'superdesk-api' {
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
+
+        // may intercept template creation and return modified value
+        onTemplateCreate?(value: any, config: IConfig): any;
     }
 
 

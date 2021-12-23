@@ -344,7 +344,6 @@
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
-                        data-cv="categoriesVocabulary"
                         data-set-language="true"
                         tabindex="{{editor.anpa_category.order}}">
                     </div>
@@ -355,14 +354,11 @@
                         data-item="item"
                         data-field="anpa_category"
                         data-list="availableCategories"
-                        data-cv="categoriesVocabulary"
                         ng-disabled="!_editable || schema.anpa_category.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         tabindex="{{editor.anpa_category.order}}"
-                        data-key="qcode"
-                        class="boxed-input"
-                        >
+                        class="boxed-input">
                    </div>
 
                     <div class="authoring-header__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
@@ -538,6 +534,19 @@
                         editable="_editable && schema[field._id].readonly !== true"
                         template="template"
                     ></sd-authoring-custom-field>
+                </div>
+            </div>
+
+            <!-- custom preview field from extensions API -->
+            <div class="authoring-header__item"
+                ng-repeat="field in previewFields track by field._id"
+                order="{{ field.order }}">
+                <label class="authoring-header__item-label">{{field.label}}</label>
+                <div class="authoring-header__input-holder">
+                    <sd-header-component-field
+                        item="item"
+                        component="field.component"
+                    ></sd-header-component-field>
                 </div>
             </div>
 
