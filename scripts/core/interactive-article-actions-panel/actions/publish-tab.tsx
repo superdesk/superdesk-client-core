@@ -136,29 +136,34 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
         const canPreview: boolean = this.state.subscribers.some(({destinations}) =>
             (destinations ?? []).some(({preview_endpoint_url}) => (preview_endpoint_url ?? '').length > 0),
         );
+        const publishFromEnabled = appConfig.ui.sendAndPublish === true;
 
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
-                    <ToggleBox title={gettext('From')} initiallyOpen>
-                        <DestinationSelect
-                            value={this.state.selectedDestination}
-                            onChange={(value) => {
-                                this.setState({
-                                    selectedDestination: value,
-                                });
-                            }}
-                            includePersonalSpace={false}
+                    {
+                        publishFromEnabled && (
+                            <ToggleBox title={gettext('From')} initiallyOpen>
+                                <DestinationSelect
+                                    value={this.state.selectedDestination}
+                                    onChange={(value) => {
+                                        this.setState({
+                                            selectedDestination: value,
+                                        });
+                                    }}
+                                    includePersonalSpace={false}
 
-                            /**
-                             * Changing the destination is only used
-                             * to control which desk's output stage
-                             * the published item appears in, thus
-                             * choosing a stage would not have an impact
-                             */
-                            hideStages={true}
-                        />
-                    </ToggleBox>
+                                    /**
+                                     * Changing the destination is only used
+                                     * to control which desk's output stage
+                                     * the published item appears in, thus
+                                     * choosing a stage would not have an impact
+                                     */
+                                    hideStages={true}
+                                />
+                            </ToggleBox>
+                        )
+                    }
 
                     <PublishingDateOptions
                         items={[this.props.item]}
@@ -195,7 +200,7 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
                     }
 
                     {
-                        appConfig.ui.sendAndPublish === true && (
+                        publishFromEnabled && (
                             <Button
                                 text={gettext('Publish from')}
                                 onClick={() => {
