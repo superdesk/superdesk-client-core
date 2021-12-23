@@ -252,18 +252,6 @@ export function sendItems(
             sdApi.preferences.update('destination:active', selectedDestination);
             notify.success(gettext('Sent successfully'));
 
-            /**
-             * Patch articles that are open in authoring.
-             * Otherwise data displayed in authoring might be out of date
-             * and _etag mismatch error would be thrown when attempting to save.
-             */
-            for (const patch of patches) {
-                dispatchInternalEvent(
-                    'dangerouslyOverwriteAuthoringData',
-                    patch,
-                );
-            }
-
             return patches;
         });
 }
