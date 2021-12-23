@@ -1,6 +1,6 @@
 import React from 'react';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {SendToTab} from './send-to-tab';
+import {SendToTab} from './actions/send-to-tab';
 import {IArticle} from 'superdesk-api';
 import {TabList} from 'core/ui/components/tabs';
 import {Button} from 'superdesk-ui-framework/react';
@@ -8,12 +8,12 @@ import {gettext} from 'core/utils';
 import {Panel} from './panel/panel-main';
 import {PanelHeader} from './panel/panel-header';
 import {authoringReactViewEnabled} from 'appConfig';
-import {DuplicateToTab} from './duplicate-to-tab';
-import {PublishTab} from './publish-tab';
+import {DuplicateToTab} from './actions/duplicate-to-tab';
+import {PublishTab} from './actions/publish-tab';
 import {logger} from 'core/services/logger';
-import {SendCorrectionTab} from './send-correction-tab';
-import {FetchToTab} from './fetch-to-tab';
-import {UnspikeTab} from './unspike-tab';
+import {SendCorrectionTab} from './actions/send-correction-tab';
+import {FetchToTab} from './actions/fetch-to-tab';
+import {UnspikeTab} from './actions/unspike-tab';
 import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {applicationState} from 'core/get-superdesk-api-implementation';
 

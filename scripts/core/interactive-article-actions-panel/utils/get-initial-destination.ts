@@ -2,7 +2,7 @@ import {IArticle, IStage} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {ISendToDestination} from './interfaces';
+import {ISendToDestination} from '../interfaces';
 
 export function getInitialDestination(
     items: Array<IArticle>,

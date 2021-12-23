@@ -6,7 +6,7 @@ import {OrderedMap} from 'immutable';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {sdApi} from 'api';
 import {FormLabel, Button} from 'superdesk-ui-framework/react';
-import {ISendToDestination} from './interfaces';
+import {ISendToDestination} from '../interfaces';
 
 interface IProps {
     value: ISendToDestination;

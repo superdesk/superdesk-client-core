@@ -2,20 +2,20 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext, gettextPlural} from 'core/utils';
-import {PanelContent} from './panel/panel-content';
-import {PanelFooter} from './panel/panel-footer';
+import {PanelContent} from '../panel/panel-content';
+import {PanelFooter} from '../panel/panel-footer';
 import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
-import {getInitialDestination} from './get-initial-destination';
-import {canSendToPersonal} from './can-send-to-personal';
-import {DestinationSelect} from './destination-select';
-import {ISendToDestination} from './interfaces';
+import {getInitialDestination} from '../utils/get-initial-destination';
+import {canSendToPersonal} from '../utils/can-send-to-personal';
+import {DestinationSelect} from '../subcomponents/destination-select';
+import {ISendToDestination} from '../interfaces';
 import {
     IPublishingDateOptions,
     getInitialPublishingDateOptions,
     PublishingDateOptions,
-} from './publishing-date-options';
+} from '../subcomponents/publishing-date-options';
 import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 interface IProps {

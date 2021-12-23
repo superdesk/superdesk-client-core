@@ -2,55 +2,56 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
-import {PanelContent} from './panel/panel-content';
-import {PanelFooter} from './panel/panel-footer';
+import {PanelContent} from '../panel/panel-content';
+import {PanelFooter} from '../panel/panel-footer';
 import {openArticle} from 'core/get-superdesk-api-implementation';
-import {getInitialDestination} from './get-initial-destination';
-import {DestinationSelect} from './destination-select';
-import {ISendToDestination} from './interfaces';
 import {sdApi} from 'api';
-import {noop} from 'lodash';
+import {getInitialDestination} from '../utils/get-initial-destination';
+import {canSendToPersonal} from '../utils/can-send-to-personal';
+import {DestinationSelect} from '../subcomponents/destination-select';
+import {ISendToDestination} from '../interfaces';
 
 interface IProps {
     items: Array<IArticle>;
-    closeFetchToView(): void;
+    closeDuplicateToView(): void;
     markupV2: boolean;
-    handleUnsavedChanges(items: Array<IArticle>): Promise<Array<IArticle>>;
 }
 
 interface IState {
     selectedDestination: ISendToDestination;
 }
 
-export class FetchToTab extends React.PureComponent<IProps, IState> {
+export class DuplicateToTab extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
-        const selectedDestination = getInitialDestination(props.items, false);
-
         this.state = {
-            selectedDestination: selectedDestination,
+            selectedDestination: getInitialDestination(props.items, canSendToPersonal(props.items)),
         };
 
-        this.fetchItems = this.fetchItems.bind(this);
+        this.duplicateItems = this.duplicateItems.bind(this);
     }
 
-    fetchItems(openAfterFetching?: boolean) {
-        if (this.state.selectedDestination.type === 'desk') { // personal space not supported
-            sdApi.article.fetchItems(this.props.items, this.state.selectedDestination)
-                .then((res) => {
-                    this.props.closeFetchToView();
+    duplicateItems(
+        /**
+         * Is only supposed to be used when only one item is being duplicated
+         */
+        openAfterDuplicating?: boolean,
+    ) {
+        const {selectedDestination} = this.state;
+        const {closeDuplicateToView, items} = this.props;
 
-                    if (openAfterFetching) {
-                        openArticle(res[0]._id, 'edit');
-                    }
-                })
-                .catch(noop);
-        }
+        sdApi.article.duplicateItems(items, selectedDestination).then((res) => {
+            closeDuplicateToView();
+
+            if (openAfterDuplicating) {
+                openArticle(res[0]._id, 'edit');
+            }
+        });
     }
 
     render() {
-        const {markupV2} = this.props;
+        const {items, markupV2} = this.props;
 
         return (
             <React.Fragment>
@@ -63,7 +64,7 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                                     selectedDestination: value,
                                 });
                             }}
-                            includePersonalSpace={false}
+                            includePersonalSpace={canSendToPersonal(items)}
                         />
                     </ToggleBox>
                 </PanelContent>
@@ -72,9 +73,9 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                     {
                         this.props.items.length === 1 && (
                             <Button
-                                text={gettext('Fetch and open')}
+                                text={gettext('Duplicate and open')}
                                 onClick={() => {
-                                    this.fetchItems(true);
+                                    this.duplicateItems(true);
                                 }}
                                 size="large"
                                 type="primary"
@@ -82,11 +83,10 @@ export class FetchToTab extends React.PureComponent<IProps, IState> {
                             />
                         )
                     }
-
                     <Button
-                        text={gettext('Fetch')}
+                        text={gettext('Duplicate')}
                         onClick={() => {
-                            this.fetchItems();
+                            this.duplicateItems();
                         }}
                         size="large"
                         type="primary"

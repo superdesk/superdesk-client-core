@@ -2,21 +2,25 @@ import React from 'react';
 import {IArticle, IRestApiResponse} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
-import {PanelContent} from './panel/panel-content';
-import {PanelFooter} from './panel/panel-footer';
-import {DestinationSelect} from './destination-select';
-import {ISendToDestination} from './interfaces';
-import {getInitialDestination} from './get-initial-destination';
+import {PanelContent} from '../panel/panel-content';
+import {PanelFooter} from '../panel/panel-footer';
+import {DestinationSelect} from '../subcomponents/destination-select';
+import {ISendToDestination} from '../interfaces';
+import {getInitialDestination} from '../utils/get-initial-destination';
 import {
     IPublishingDateOptions,
     getInitialPublishingDateOptions,
     PublishingDateOptions,
     getPublishingDatePatch,
-} from './publishing-date-options';
+} from '../subcomponents/publishing-date-options';
 import ng from 'core/services/ng';
 import {confirmPublish} from 'apps/authoring/authoring/services/quick-publish-modal';
 import {cloneDeep} from 'lodash';
-import {PublishingTargetSelect, IPublishingTarget, getPublishingTargetPatch} from './publishing-target-select';
+import {
+    PublishingTargetSelect,
+    IPublishingTarget,
+    getPublishingTargetPatch,
+} from '../subcomponents/publishing-target-select';
 import {appConfig} from 'appConfig';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {ISubscriber} from 'superdesk-interfaces/Subscriber';

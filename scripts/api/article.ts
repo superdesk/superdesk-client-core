@@ -5,7 +5,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {applicationState} from 'core/get-superdesk-api-implementation';
 import {ISendToDestinationDesk, ISendToDestination} from 'core/interactive-article-actions-panel/interfaces';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
-import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/publishing-date-options';
+import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
 import {sendItems} from './article-send';
 import {duplicateItems} from './article-duplicate';
 

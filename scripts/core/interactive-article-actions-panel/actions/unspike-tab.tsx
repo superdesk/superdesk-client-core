@@ -2,11 +2,11 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
-import {PanelContent} from './panel/panel-content';
-import {PanelFooter} from './panel/panel-footer';
-import {getInitialDestination} from './get-initial-destination';
-import {DestinationSelect} from './destination-select';
-import {ISendToDestination} from './interfaces';
+import {PanelContent} from '../panel/panel-content';
+import {PanelFooter} from '../panel/panel-footer';
+import {getInitialDestination} from '../utils/get-initial-destination';
+import {DestinationSelect} from '../subcomponents/destination-select';
+import {ISendToDestination} from '../interfaces';
 import {sdApi} from 'api';
 
 interface IProps {

@@ -7,7 +7,7 @@ import {notNullOrUndefined, assertNever} from 'core/helpers/typescript-helpers';
 import {
     getPublishingDatePatch,
     IPublishingDateOptions,
-} from 'core/interactive-article-actions-panel/publishing-date-options';
+} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {notify} from 'core/notify/notify';
 import {gettext, getItemLabel} from 'core/utils';
