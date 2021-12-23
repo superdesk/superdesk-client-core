@@ -1,5 +1,5 @@
 import {IArticle} from 'superdesk-api';
-import {IPanelAction} from './interactive-article-actions-panel';
+import {IPanelAction} from './interactive-article-actions-panel/interfaces';
 
 interface IInternalEvents {
     addImage: {

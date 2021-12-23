@@ -1,4 +1,12 @@
-import {IDesk, IStage} from 'superdesk-api';
+import {IDesk, IStage, IArticle} from 'superdesk-api';
+
+export type IArticleActionInteractive = 'send_to' | 'fetch_to' | 'unspike' | 'duplicate_to' | 'publish' | 'correct';
+
+export interface IPanelAction {
+    items: Array<IArticle>;
+    tabs: Array<IArticleActionInteractive>;
+    activeTab: IArticleActionInteractive;
+}
 
 export interface ISendToDestinationDesk {
     type: 'desk';

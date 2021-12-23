@@ -22,14 +22,15 @@ import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
-import {addInternalEventListener} from 'core/internal-events';
-import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel';
+import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {
     showUnsavedChangesPrompt,
     IUnsavedChangesActionWithSaving,
 } from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/search/interfaces';
+import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-hoc';
+import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -45,7 +46,6 @@ interface IStateLoaded {
         name: string;
         pinned: boolean;
     };
-    sendToOrPublishSidebar?: boolean;
 
     /**
      * Prevents changes to state while async operation is in progress(e.g. saving).
@@ -320,6 +320,40 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         }
     }
 
+    handleUnsavedChanges(state: IStateLoaded): Promise<Array<IArticle>> {
+        return new Promise((resolve, reject) => {
+            if (state.itemWithChanges === state.itemOriginal) {
+                resolve([state.itemOriginal]);
+                return;
+            }
+
+            return showUnsavedChangesPrompt(true).then(({action, closePromptFn}) => {
+                if (action === IUnsavedChangesActionWithSaving.cancelAction) {
+                    closePromptFn();
+                    reject();
+                } else if (action === IUnsavedChangesActionWithSaving.discardChanges) {
+                    this.discardUnsavedChanges(state).then(() => {
+                        closePromptFn();
+
+                        if (this.state.initialized) {
+                            resolve([this.state.itemOriginal]);
+                        }
+                    });
+                } else if (action === IUnsavedChangesActionWithSaving.save) {
+                    this.save(state).then(() => {
+                        closePromptFn();
+
+                        if (this.state.initialized) {
+                            resolve([this.state.itemOriginal]);
+                        }
+                    });
+                } else {
+                    assertNever(action);
+                }
+            });
+        });
+    }
+
     save(state: IStateLoaded): Promise<IArticle> {
         this.setState({
             ...state,
@@ -362,6 +396,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             return null;
         }
 
+        // TODO: remove test code
         if (uiFrameworkAuthoringPanelTest) {
             return (
                 <div className="sd-authoring-react">
@@ -395,52 +430,6 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             },
         }));
 
-        const OpenWidgetComponent = (() => {
-            if (state.sendToOrPublishSidebar === true) {
-                return (props: {article: IArticle}) => (
-                    <InteractiveArticleActionsPanel
-                        handleUnsavedChanges={() => new Promise((resolve, reject) => {
-                            if (state.itemWithChanges === state.itemOriginal) {
-                                resolve([state.itemOriginal]);
-                                return;
-                            }
-
-                            return showUnsavedChangesPrompt(true).then(({action, closePromptFn}) => {
-                                if (action === IUnsavedChangesActionWithSaving.cancelAction) {
-                                    closePromptFn();
-                                    reject();
-                                } else if (action === IUnsavedChangesActionWithSaving.discardChanges) {
-                                    this.discardUnsavedChanges(state).then(() => {
-                                        closePromptFn();
-
-                                        if (this.state.initialized) {
-                                            resolve([this.state.itemOriginal]);
-                                        }
-                                    });
-                                } else if (action === IUnsavedChangesActionWithSaving.save) {
-                                    this.save(state).then(() => {
-                                        closePromptFn();
-
-                                        if (this.state.initialized) {
-                                            resolve([this.state.itemOriginal]);
-                                        }
-                                    });
-                                } else {
-                                    assertNever(action);
-                                }
-                            });
-                        })}
-                        location="authoring"
-                        markupV2
-                    />
-                );
-            } else if (state.openWidget != null) {
-                return widgetsFromExtensions.find(({label}) => state.openWidget.name === label).component;
-            } else {
-                return null;
-            }
-        })();
-
         const pinned = state.openWidget?.pinned === true;
 
         return (
@@ -451,143 +440,173 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                     )
                 }
 
-                <Layout.AuthoringFrame
-                    header={(
-                        <SubNav>
-                            <ButtonGroup align="end">
-                                <Button
-                                    text={gettext('Close')}
-                                    style="hollow"
-                                    onClick={() => {
-                                        this.setState({
-                                            ...state,
-                                            loading: true,
-                                        });
-
-                                        authoringStorage.closeAuthoring(
-                                            state.itemWithChanges,
-                                            state.itemOriginal,
-                                            () => this.props.onClose(),
-                                        ).then(() => {
-                                            /**
-                                             * The promise will also resolve
-                                             * if user decides to cancel closing.
-                                             */
-                                            this.setState({
-                                                ...state,
-                                                loading: false,
-                                            });
-                                        });
-                                    }}
-                                />
-
-                                <Button
-                                    text={gettext('Save')}
-                                    style="filled"
-                                    type="primary"
-                                    disabled={state.itemWithChanges === state.itemOriginal}
-                                    onClick={() => {
-                                        this.save(state);
-                                    }}
-                                />
-
-                                <Divider size="mini" />
-
-                                <ButtonGroup subgroup={true} spaces="no-space">
-                                    <NavButton
-                                        type="highlight"
-                                        icon="send-to"
-                                        iconSize="big"
-                                        text={gettext('Send to / Publish')}
-                                        onClick={() => {
-                                            const nextState: IStateLoaded = {
-                                                ...state,
-                                                sendToOrPublishSidebar: !(state.sendToOrPublishSidebar ?? false),
-                                            };
-
-                                            this.setState(nextState);
-                                        }}
+                <WithInteractiveArticleActionsPanel location="authoring">
+                    {(panelState, panelActions) => {
+                        const OpenWidgetComponent = (() => {
+                            if (panelState.active === true) {
+                                return () => (
+                                    <InteractiveArticleActionsPanel
+                                        items={panelState.items}
+                                        tabs={panelState.tabs}
+                                        activeTab={panelState.activeTab}
+                                        handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
+                                        onClose={panelActions.closePanel}
+                                        markupV2
                                     />
-                                </ButtonGroup>
-                            </ButtonGroup>
-                        </SubNav>
-                    )}
-                    main={(
-                        <Layout.AuthoringMain
-                            toolBar={(
-                                <React.Fragment>
-                                    <ButtonGroup align="end">
-                                        <IconButton
-                                            icon="preview-mode"
-                                            ariaValue={gettext('Print preview')}
-                                            onClick={() => {
-                                                previewItems([state.itemOriginal]);
-                                            }}
-                                        />
-                                    </ButtonGroup>
-                                </React.Fragment>
-                            )}
-                            authoringHeader={(
-                                <div>
-                                    <AuthoringSection
-                                        fields={state.profile.header}
-                                        item={state.itemWithChanges}
-                                        onChange={(itemChanged) => {
-                                            const nextState: IStateLoaded = {
-                                                ...state,
-                                                itemWithChanges: itemChanged,
-                                            };
+                                );
+                            } else if (state.openWidget != null) {
+                                return widgetsFromExtensions.find(
+                                    ({label}) => state.openWidget.name === label,
+                                ).component;
+                            } else {
+                                return null;
+                            }
+                        })();
 
-                                            this.setState(nextState);
-                                        }}
-                                        readOnly={readOnly}
+                        return (
+                            <Layout.AuthoringFrame
+                                header={(
+                                    <SubNav>
+                                        <ButtonGroup align="end">
+                                            <Button
+                                                text={gettext('Close')}
+                                                style="hollow"
+                                                onClick={() => {
+                                                    this.setState({
+                                                        ...state,
+                                                        loading: true,
+                                                    });
+
+                                                    authoringStorage.closeAuthoring(
+                                                        state.itemWithChanges,
+                                                        state.itemOriginal,
+                                                        () => this.props.onClose(),
+                                                    ).then(() => {
+                                                        /**
+                                                         * The promise will also resolve
+                                                         * if user decides to cancel closing.
+                                                         */
+                                                        this.setState({
+                                                            ...state,
+                                                            loading: false,
+                                                        });
+                                                    });
+                                                }}
+                                            />
+
+                                            <Button
+                                                text={gettext('Save')}
+                                                style="filled"
+                                                type="primary"
+                                                disabled={state.itemWithChanges === state.itemOriginal}
+                                                onClick={() => {
+                                                    this.save(state);
+                                                }}
+                                            />
+
+                                            <Divider size="mini" />
+
+                                            <ButtonGroup subgroup={true} spaces="no-space">
+                                                <NavButton
+                                                    type="highlight"
+                                                    icon="send-to"
+                                                    iconSize="big"
+                                                    text={gettext('Send to / Publish')}
+                                                    onClick={() => {
+                                                        if (panelState.active) {
+                                                            panelActions.closePanel();
+                                                        } else {
+                                                            dispatchInternalEvent('interactiveArticleActionStart', {
+                                                                items: [state.itemWithChanges],
+                                                                tabs: ['send_to', 'publish'],
+                                                                activeTab: 'publish',
+                                                            });
+                                                        }
+                                                    }}
+                                                />
+                                            </ButtonGroup>
+                                        </ButtonGroup>
+                                    </SubNav>
+                                )}
+                                main={(
+                                    <Layout.AuthoringMain
+                                        toolBar={(
+                                            <React.Fragment>
+                                                <ButtonGroup align="end">
+                                                    <IconButton
+                                                        icon="preview-mode"
+                                                        ariaValue={gettext('Print preview')}
+                                                        onClick={() => {
+                                                            previewItems([state.itemOriginal]);
+                                                        }}
+                                                    />
+                                                </ButtonGroup>
+                                            </React.Fragment>
+                                        )}
+                                        authoringHeader={(
+                                            <div>
+                                                <AuthoringSection
+                                                    fields={state.profile.header}
+                                                    item={state.itemWithChanges}
+                                                    onChange={(itemChanged) => {
+                                                        const nextState: IStateLoaded = {
+                                                            ...state,
+                                                            itemWithChanges: itemChanged,
+                                                        };
+
+                                                        this.setState(nextState);
+                                                    }}
+                                                    readOnly={readOnly}
+                                                />
+                                            </div>
+                                        )}
+                                    >
+                                        <div>
+                                            <AuthoringSection
+                                                fields={state.profile.content}
+                                                item={state.itemWithChanges}
+                                                onChange={(itemChanged) => {
+                                                    const nextState: IStateLoaded = {
+                                                        ...state,
+                                                        itemWithChanges: itemChanged,
+                                                    };
+
+                                                    this.setState(nextState);
+                                                }}
+                                                readOnly={readOnly}
+                                            />
+                                        </div>
+                                    </Layout.AuthoringMain>
+                                )}
+                                sideOverlay={
+                                    !pinned && OpenWidgetComponent != null
+                                        ? (
+                                            <OpenWidgetComponent
+                                                article={{...state.itemWithChanges}}
+                                            />
+                                        )
+                                        : undefined
+                                }
+                                sideOverlayOpen={!pinned && OpenWidgetComponent != null}
+                                sidePanel={
+                                    pinned && OpenWidgetComponent != null
+                                        ? (
+                                            <OpenWidgetComponent
+                                                article={{...state.itemWithChanges}}
+                                            />
+                                        )
+                                        : undefined
+                                }
+                                sidePanelOpen={pinned && OpenWidgetComponent != null}
+                                sideBar={(
+                                    <Nav.SideBarTabs
+                                        items={sidebarTabs}
                                     />
-                                </div>
-                            )}
-                        >
-                            <div>
-                                <AuthoringSection
-                                    fields={state.profile.content}
-                                    item={state.itemWithChanges}
-                                    onChange={(itemChanged) => {
-                                        const nextState: IStateLoaded = {
-                                            ...state,
-                                            itemWithChanges: itemChanged,
-                                        };
-
-                                        this.setState(nextState);
-                                    }}
-                                    readOnly={readOnly}
-                                />
-                            </div>
-                        </Layout.AuthoringMain>
-                    )}
-                    sideOverlay={
-                        !pinned && OpenWidgetComponent != null
-                            ? (
-                                <OpenWidgetComponent
-                                    article={{...state.itemWithChanges}}
-                                />
-                            )
-                            : undefined
-                    }
-                    sideOverlayOpen={!pinned && OpenWidgetComponent != null}
-                    sidePanel={
-                        pinned && OpenWidgetComponent != null
-                            ? (
-                                <OpenWidgetComponent
-                                    article={{...state.itemWithChanges}}
-                                />
-                            )
-                            : undefined
-                    }
-                    sidePanelOpen={pinned && OpenWidgetComponent != null}
-                    sideBar={(
-                        <Nav.SideBarTabs
-                            items={sidebarTabs}
-                        />
-                    )}
-                />
+                                )}
+                            />
+                        );
+                    }}
+                </WithInteractiveArticleActionsPanel>
             </div>
         );
     }
