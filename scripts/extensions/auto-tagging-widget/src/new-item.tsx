@@ -15,7 +15,6 @@ interface IProps {
     save(item: INewItem): void;
     cancel(): void;
     tagAlreadyExists(uuid: ITagUi['qcode']): boolean;
-    insertTagFromSearch(tag: ITagUi): void;
 }
 
 interface IState {

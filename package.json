@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "2.3.0-dev.0",
+  "version": "2.4.0-dev.0",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -120,7 +120,7 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.4.10",
+    "superdesk-ui-framework": "2.4.14",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.9.7",
@@ -133,7 +133,7 @@
     "@types/classnames": "^2.2.10",
     "@types/moment": "^2.13.0",
     "@types/moment-timezone": "^0.5.13",
-    "@types/webpack-env": "^1.13.9",
+    "@types/webpack-env": "^1.16.3",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "^1.15.5",
     "grunt-karma": "^2.0.0",
