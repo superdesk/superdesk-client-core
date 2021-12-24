@@ -40,11 +40,19 @@ angular.module('superdesk.core.menu', [
 
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
-        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session', '$timeout'];
-        function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session, $timeout) {
+        SuperdeskViewController.$inject = ['superdeskFlags', '$scope', '$route', 'session'];
+        function SuperdeskViewController(superdeskFlags, $scope, $route, session) {
             $scope.session = session;
 
             this.flags = superdeskFlags.flags;
+
+            /**
+             * `$scope.popup` is true when an article is opened in full screen in new window
+             * `hideMonitoring` is true when authoring view is switched to full screen in the same window
+             */
+            $scope.shouldRenderMonitoring = () => {
+                return $scope.popup !== true && this.flags.hideMonitoring !== true;
+            };
 
             $scope.$watch(function currentRoute() {
                 return $route.current;
@@ -61,8 +69,7 @@ angular.module('superdesk.core.menu', [
             $scope.$watch(() => {
                 return superdeskFlags.flags.hideMonitoring;
             }, () => {
-                // Trigger resize event to update elements, 500ms delay is for animation
-                $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
+                window.dispatchEvent(new Event('resize'));
             });
 
             // full preview
