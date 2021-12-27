@@ -142,6 +142,11 @@ declare module 'superdesk-api' {
             personalSpace?: {
                 getSections?(): Array<IPersonalSpaceSection>;
             };
+
+            /**
+             * Extra vertical sections may be added to the publishing panel.
+             */
+            publishingSections?: Array<{component: React.ComponentType<{item: IArticle}>}>;
         }
     }
 

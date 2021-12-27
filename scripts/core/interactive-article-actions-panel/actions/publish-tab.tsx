@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {CSSProperties} from 'react';
 import {IArticle, IRestApiResponse} from 'superdesk-api';
 import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
@@ -21,7 +21,7 @@ import {
     IPublishingTarget,
     getPublishingTargetPatch,
 } from '../subcomponents/publishing-target-select';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {ISubscriber} from 'superdesk-interfaces/Subscriber';
 import {showModal} from 'core/services/modalService';
@@ -138,50 +138,73 @@ export class PublishTab extends React.PureComponent<IProps, IState> {
         );
         const publishFromEnabled = appConfig.ui.sendAndPublish === true;
 
+        const sectionsFromExtensions = Object.values(extensions)
+            .flatMap(({activationResult}) => activationResult?.contributions?.publishingSections ?? []);
+
+        const style: CSSProperties | undefined = sectionsFromExtensions.length > 0
+            ? {display: 'flex', alignItems: 'start', justifyContent: 'space-between'}
+            : undefined;
+
         return (
             <React.Fragment>
                 <PanelContent markupV2={markupV2}>
-                    {
-                        publishFromEnabled && (
-                            <ToggleBox title={gettext('From')} initiallyOpen>
-                                <DestinationSelect
-                                    value={this.state.selectedDestination}
-                                    onChange={(value) => {
-                                        this.setState({
-                                            selectedDestination: value,
-                                        });
-                                    }}
-                                    includePersonalSpace={false}
+                    <div style={style}>
+                        <div>
+                            {
+                                publishFromEnabled && (
+                                    <ToggleBox title={gettext('From')} initiallyOpen>
+                                        <DestinationSelect
+                                            value={this.state.selectedDestination}
+                                            onChange={(value) => {
+                                                this.setState({
+                                                    selectedDestination: value,
+                                                });
+                                            }}
+                                            includePersonalSpace={false}
 
-                                    /**
-                                     * Changing the destination is only used
-                                     * to control which desk's output stage
-                                     * the published item appears in, thus
-                                     * choosing a stage would not have an impact
-                                     */
-                                    hideStages={true}
-                                />
-                            </ToggleBox>
-                        )
-                    }
+                                            /**
+                                             * Changing the destination is only used
+                                             * to control which desk's output stage
+                                             * the published item appears in, thus
+                                             * choosing a stage would not have an impact
+                                             */
+                                            hideStages={true}
+                                        />
+                                    </ToggleBox>
+                                )
+                            }
 
-                    <PublishingDateOptions
-                        items={[this.props.item]}
-                        value={this.state.publishingDateOptions}
-                        onChange={(val) => {
-                            this.setState({publishingDateOptions: val});
-                        }}
-                        allowSettingEmbargo={appConfig.ui.publishEmbargo !== false}
-                    />
+                            <PublishingDateOptions
+                                items={[this.props.item]}
+                                value={this.state.publishingDateOptions}
+                                onChange={(val) => {
+                                    this.setState({publishingDateOptions: val});
+                                }}
+                                allowSettingEmbargo={appConfig.ui.publishEmbargo !== false}
+                            />
 
-                    <PublishingTargetSelect
-                        value={this.state.publishingTarget}
-                        onChange={(val) => {
-                            this.setState({
-                                publishingTarget: val,
-                            });
-                        }}
-                    />
+                            <PublishingTargetSelect
+                                value={this.state.publishingTarget}
+                                onChange={(val) => {
+                                    this.setState({
+                                        publishingTarget: val,
+                                    });
+                                }}
+                            />
+                        </div>
+
+                        {
+                            sectionsFromExtensions.map((panel, i) => {
+                                const Component = panel.component;
+
+                                return (
+                                    <div key={i}>
+                                        <Component item={this.props.item} />
+                                    </div>
+                                );
+                            })
+                        }
+                    </div>
                 </PanelContent>
 
                 <PanelFooter markupV2={markupV2}>
