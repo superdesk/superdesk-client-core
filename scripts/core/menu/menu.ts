@@ -54,6 +54,16 @@ angular.module('superdesk.core.menu', [
                 return $scope.popup !== true && this.flags.hideMonitoring !== true;
             };
 
+            $scope.setMonitoringAnimation = (val) => {
+                if (val === true) {
+                    document.body.classList.add('monitoring--no-animation');
+                } else {
+                    setTimeout(() => {
+                        document.body.classList.remove('monitoring--no-animation');
+                    }, 500); // wait for animation to finish
+                }
+            };
+
             $scope.$watch(function currentRoute() {
                 return $route.current;
             }, (route) => {

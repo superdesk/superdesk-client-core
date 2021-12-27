@@ -58,6 +58,16 @@ a:hover, .link:hover {
     }
 }
 
+body:not(.monitoring--no-animation) {
+    #authoring-container {
+        @include transition(width .5s);
+    }
+
+    #workspace-container:not(.monitoring--no-animation) {
+        @include transition(all .5s);
+    }
+}
+
 // main container
 // ------------------------------------
 #main-container {
