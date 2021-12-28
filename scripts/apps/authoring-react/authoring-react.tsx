@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {
     Button,
     ButtonGroup,
@@ -33,6 +33,8 @@ import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actio
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
 import {sdApi} from 'api';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
+import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
+import {DeskAndStage} from './subcomponents/desk-and-stage';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -152,6 +154,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         this.save = this.save.bind(this);
         this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
+        this.handleClose = this.handleClose.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -391,6 +394,28 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         });
     }
 
+    handleClose(state: IStateLoaded) {
+        this.setState({
+            ...state,
+            loading: true,
+        });
+
+        authoringStorage.closeAuthoring(
+            state.itemWithChanges,
+            state.itemOriginal,
+            () => this.props.onClose(),
+        ).then(() => {
+            /**
+             * The promise will also resolve
+             * if user decides to cancel closing.
+             */
+            this.setState({
+                ...state,
+                loading: false,
+            });
+        });
+    }
+
     render() {
         const state = this.state;
 
@@ -432,8 +457,41 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             },
         }));
 
-        const topbarWidgets = Object.values(extensions)
-            .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbarWidgets ?? []);
+        const toolbar1Widgets: IExtensionActivationResult['contributions']['authoringTopbarWidgets'] = [
+            {
+                group: 'start',
+                priority: 0.1,
+                component: DeskAndStage,
+            },
+            {
+                group: 'end',
+                priority: 0.1,
+                component: () => (
+                    <Button
+                        text={gettext('Close')}
+                        style="hollow"
+                        onClick={() => {
+                            this.handleClose(state);
+                        }}
+                    />
+                ),
+            },
+            {
+                group: 'end',
+                priority: 0.2,
+                component: () => (
+                    <Button
+                        text={gettext('Save')}
+                        style="filled"
+                        type="primary"
+                        disabled={state.itemWithChanges === state.itemOriginal}
+                        onClick={() => {
+                            this.save(state);
+                        }}
+                    />
+                ),
+            },
+        ];
 
         const topbar2Widgets = Object.values(extensions)
             .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
@@ -475,55 +533,13 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                             <Layout.AuthoringFrame
                                 header={(
                                     <SubNav>
-                                        <div style={{paddingLeft: 16, paddingRight: 16, display: 'flex', gap: 8}}>
-                                            {
-                                                topbarWidgets.map((Widget, i) => {
-                                                    return (
-                                                        <Widget key={i} article={state.itemWithChanges} />
-                                                    );
-                                                })
-                                            }
-                                        </div>
+                                        <AuthoringToolbar
+                                            itemOriginal={state.itemOriginal}
+                                            itemWithChanges={state.itemWithChanges}
+                                            coreWidgets={toolbar1Widgets}
+                                        />
 
                                         <ButtonGroup align="end">
-                                            <Button
-                                                text={gettext('Close')}
-                                                style="hollow"
-                                                onClick={() => {
-                                                    this.setState({
-                                                        ...state,
-                                                        loading: true,
-                                                    });
-
-                                                    authoringStorage.closeAuthoring(
-                                                        state.itemWithChanges,
-                                                        state.itemOriginal,
-                                                        () => this.props.onClose(),
-                                                    ).then(() => {
-                                                        /**
-                                                         * The promise will also resolve
-                                                         * if user decides to cancel closing.
-                                                         */
-                                                        this.setState({
-                                                            ...state,
-                                                            loading: false,
-                                                        });
-                                                    });
-                                                }}
-                                            />
-
-                                            <Button
-                                                text={gettext('Save')}
-                                                style="filled"
-                                                type="primary"
-                                                disabled={state.itemWithChanges === state.itemOriginal}
-                                                onClick={() => {
-                                                    this.save(state);
-                                                }}
-                                            />
-
-                                            <Divider size="mini" />
-
                                             <ButtonGroup subgroup={true} spaces="no-space">
                                                 <NavButton
                                                     type="highlight"
@@ -560,7 +576,13 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                     <Layout.AuthoringMain
                                         toolBar={(
                                             <React.Fragment>
-                                                <div style={{paddingRight: 16, display: 'flex', gap: 8}}>
+                                                <div
+                                                    style={{paddingRight: 16,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: 8,
+                                                    }}
+                                                >
                                                     {
                                                         topbar2Widgets.map((Widget, i) => {
                                                             return (

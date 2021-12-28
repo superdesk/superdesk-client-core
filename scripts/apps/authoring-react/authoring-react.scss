@@ -8,3 +8,22 @@
     z-index: 100;
     background: $white;
 }
+
+.desk-and-stage {
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    font-size: 10px;
+    @include text-light();
+    letter-spacing: 0.035em;
+    line-height: 34px;
+    color: $gray;
+    text-transform: uppercase;
+}
+
+.desk-and-stage--desk {
+    color: $grayDark;
+    @include text-semibold();
+}

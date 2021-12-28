@@ -101,7 +101,11 @@ declare module 'superdesk-api' {
             /**
              * Display custom components at the top of authoring panel
              */
-            authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+            authoringTopbarWidgets?: Array<{
+                component: React.ComponentType<{article: IArticle}>;
+                priority: IDisplayPriority;
+                group: 'start' | 'middle' | 'end';
+            }>;
 
             /**
              * Display custom components in the second toolbar in authoring panel
