@@ -8,6 +8,8 @@ import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
 import {sendItems} from './article-send';
 import {duplicateItems} from './article-duplicate';
+import {sdApi} from 'api';
+import {appConfig} from 'appConfig';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -31,6 +33,26 @@ const getPackageItemIds = (item: IArticle): Array<IArticle['_id']> => {
 
     return ids;
 };
+
+function canPublish(item: IArticle): boolean {
+    const deskId = item?.task?.desk;
+
+    if (deskId == null) {
+        return false;
+    }
+
+    const desk = sdApi.desks.getAllDesks().get(deskId);
+
+    if (desk.desk_type === 'authoring' && appConfig?.features?.noPublishOnAuthoringDesk === true) {
+        return false;
+    }
+
+    if (sdApi.user.hasPrivilege('publish') !== true) {
+        return false;
+    }
+
+    return true;
+}
 
 /**
  * Does not prompt for confirmation
@@ -121,6 +143,8 @@ interface IArticleApi {
     ): Promise<Array<Partial<IArticle>>>;
 
     duplicateItems(items: Array<IArticle>, destination: ISendToDestination): Promise<Array<IArticle>>;
+
+    canPublish(item: IArticle): boolean;
 }
 
 export const article: IArticleApi = {
@@ -140,4 +164,5 @@ export const article: IArticleApi = {
     fetchItemsToCurrentDesk,
     sendItems,
     duplicateItems,
+    canPublish,
 };

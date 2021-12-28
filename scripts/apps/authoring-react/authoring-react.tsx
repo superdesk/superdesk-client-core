@@ -31,6 +31,8 @@ import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/search/interfaces';
 import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
+import {sdApi} from 'api';
+import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -516,10 +518,20 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                         if (panelState.active) {
                                                             panelActions.closePanel();
                                                         } else {
+                                                            const availableTabs: Array<IArticleActionInteractive> = [
+                                                                'send_to',
+                                                            ];
+                                                            const canPublish =
+                                                                sdApi.article.canPublish(state.itemWithChanges);
+
+                                                            if (canPublish) {
+                                                                availableTabs.push('publish');
+                                                            }
+
                                                             dispatchInternalEvent('interactiveArticleActionStart', {
                                                                 items: [state.itemWithChanges],
-                                                                tabs: ['send_to', 'publish'],
-                                                                activeTab: 'publish',
+                                                                tabs: availableTabs,
+                                                                activeTab: canPublish ? 'publish' : availableTabs[0],
                                                             });
                                                         }
                                                     }}
