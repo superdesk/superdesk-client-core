@@ -97,10 +97,19 @@ declare module 'superdesk-api' {
             }
             articleListItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+
+            /**
+             * Display custom components at the top of authoring panel
+             */
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
+
+            /**
+             * Display custom components in the second toolbar in authoring panel
+             */
+            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
+
             authoringSideWidgets?: Array<IAuthoringSideWidget>;
             authoringHeaderComponents?: Array<AuthoringHeaderItem>;
-            authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;

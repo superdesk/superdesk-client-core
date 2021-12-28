@@ -16,8 +16,9 @@ interface IState {
     articleOriginal?: IArticle;
 }
 
-const authoringTopBarExtensionName = 'authoring-top-bar';
-
+/**
+ * Only used from angular based authoring.
+ */
 export class AuthoringTopbarReact extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);

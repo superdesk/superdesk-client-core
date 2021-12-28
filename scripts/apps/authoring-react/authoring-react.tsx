@@ -432,6 +432,12 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             },
         }));
 
+        const topbarWidgets = Object.values(extensions)
+            .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbarWidgets ?? []);
+
+        const topbar2Widgets = Object.values(extensions)
+            .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
+
         const pinned = state.openWidget?.pinned === true;
 
         return (
@@ -469,6 +475,16 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                             <Layout.AuthoringFrame
                                 header={(
                                     <SubNav>
+                                        <div style={{paddingLeft: 16, paddingRight: 16, display: 'flex', gap: 8}}>
+                                            {
+                                                topbarWidgets.map((Widget, i) => {
+                                                    return (
+                                                        <Widget key={i} article={state.itemWithChanges} />
+                                                    );
+                                                })
+                                            }
+                                        </div>
+
                                         <ButtonGroup align="end">
                                             <Button
                                                 text={gettext('Close')}
@@ -544,6 +560,16 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                     <Layout.AuthoringMain
                                         toolBar={(
                                             <React.Fragment>
+                                                <div style={{paddingRight: 16, display: 'flex', gap: 8}}>
+                                                    {
+                                                        topbar2Widgets.map((Widget, i) => {
+                                                            return (
+                                                                <Widget key={i} article={state.itemWithChanges} />
+                                                            );
+                                                        })
+                                                    }
+                                                </div>
+
                                                 <ButtonGroup align="end">
                                                     <IconButton
                                                         icon="preview-mode"
