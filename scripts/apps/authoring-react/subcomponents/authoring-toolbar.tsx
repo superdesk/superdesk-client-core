@@ -43,7 +43,6 @@ export class AuthoringToolbar extends React.PureComponent<IProps> {
                     gap: 16,
                     alignItems: 'center',
                     paddingLeft: 16,
-                    paddingRight: 16,
                 }}
             >
                 {

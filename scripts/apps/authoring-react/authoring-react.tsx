@@ -35,6 +35,7 @@ import {sdApi} from 'api';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
+import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -488,6 +489,20 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         onClick={() => {
                             this.save(state);
                         }}
+                    />
+                ),
+            },
+            {
+                group: 'end',
+                priority: 0.3,
+                component: () => (
+                    <NavButton
+                        text={gettext('Minimize')}
+                        onClick={() => {
+                            this.props.onClose();
+                        }}
+                        icon="minimize"
+                        iconSize="big"
                     />
                 ),
             },
