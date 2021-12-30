@@ -31,6 +31,7 @@
 }
 
 .desk-and-stage {
+    display: flex;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -41,6 +42,12 @@
     line-height: 34px;
     color: $gray;
     text-transform: uppercase;
+}
+
+.desk-and-stage--desk,
+.desk-and-stage--stage {
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .desk-and-stage--desk {

@@ -21,7 +21,8 @@ export class DeskAndStage extends React.PureComponent<IProps> {
 
         return (
             <div className="desk-and-stage" title={`${desk.name} / ${stage.name}`}>
-                <span className="desk-and-stage--desk">{desk.name}</span> / {stage.name}
+                <span className="desk-and-stage--desk">{desk.name}</span>
+                <span className="desk-and-stage--stage">&nbsp;/ {stage.name}</span>
             </div>
         );
     }
