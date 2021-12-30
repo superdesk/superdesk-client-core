@@ -106,6 +106,24 @@ function doUnspike(item: IArticle, deskId: IDesk['_id'], stageId: IStage['_id'])
     });
 }
 
+function lock(itemId: IArticle['_id']): Promise<IArticle> {
+    return httpRequestJsonLocal({
+        method: 'POST',
+        path: `/archive/${itemId}/lock`,
+        payload: {
+            lock_action: 'edit',
+        },
+    });
+}
+
+function unlock(itemId: IArticle['_id']): Promise<IArticle> {
+    return httpRequestJsonLocal({
+        method: 'POST',
+        path: `/archive/${itemId}/unlock`,
+        payload: {},
+    });
+}
+
 interface IArticleApi {
     isLocked(article: IArticle): boolean;
     isLockedInCurrentSession(article: IArticle): boolean;
@@ -145,6 +163,9 @@ interface IArticleApi {
     duplicateItems(items: Array<IArticle>, destination: ISendToDestination): Promise<Array<IArticle>>;
 
     canPublish(item: IArticle): boolean;
+
+    lock(itemId: IArticle['_id']): Promise<IArticle>;
+    unlock(itemId: IArticle['_id']): Promise<IArticle>;
 }
 
 export const article: IArticleApi = {
@@ -165,4 +186,6 @@ export const article: IArticleApi = {
     sendItems,
     duplicateItems,
     canPublish,
+    lock,
+    unlock,
 };

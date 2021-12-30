@@ -1,12 +1,11 @@
 import React from 'react';
-import {IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {IArticle, IExtensionActivationResult, IUser} from 'superdesk-api';
 import {
     Button,
     ButtonGroup,
     Loader,
     SubNav,
     IconButton,
-    Divider,
     NavButton,
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
@@ -35,7 +34,9 @@ import {sdApi} from 'api';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
-import {authoringApiCommon} from 'apps/authoring-bridge/authoring-api-common';
+import {LockInfo} from './subcomponents/lock-info';
+import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -62,75 +63,7 @@ type IState = {initialized: false} | IStateLoaded;
 
 interface IAuthoringOptions {
     readOnly: boolean;
-    actions: Array<{label: string; onClick(): void}>;
-}
-
-function getAuthoringOptions(item: IArticle): IAuthoringOptions {
-    const state: ITEM_STATE = item.state;
-
-    switch (state) {
-    case ITEM_STATE.DRAFT:
-        return {
-            readOnly: false,
-            actions: [],
-        };
-
-    case ITEM_STATE.SUBMITTED:
-    case ITEM_STATE.IN_PROGRESS:
-    case ITEM_STATE.ROUTED:
-    case ITEM_STATE.FETCHED:
-    case ITEM_STATE.UNPUBLISHED:
-        return {
-            readOnly: false,
-            actions: [], // all of them
-        };
-
-    case ITEM_STATE.INGESTED:
-        return {
-            readOnly: true,
-            actions: [], // fetch
-        };
-
-    case ITEM_STATE.SPIKED:
-        return {
-            readOnly: true,
-            actions: [], // un-spike
-        };
-
-    case ITEM_STATE.SCHEDULED:
-        return {
-            readOnly: true,
-            actions: [], // un-schedule
-        };
-
-    case ITEM_STATE.PUBLISHED:
-    case ITEM_STATE.CORRECTED:
-        return {
-            readOnly: true,
-            actions: [], // correct update kill takedown
-        };
-
-    case ITEM_STATE.BEING_CORRECTED:
-        return {
-            readOnly: true,
-            actions: [], // cancel correction
-        };
-
-    case ITEM_STATE.CORRECTION:
-        return {
-            readOnly: false,
-            actions: [], // cancel correction, save, publish
-        };
-
-    case ITEM_STATE.KILLED:
-    case ITEM_STATE.RECALLED:
-        return {
-            readOnly: true,
-            actions: [], // NONE
-        };
-    default:
-        assertNever(state);
-    }
+    actions: IExtensionActivationResult['contributions']['authoringTopbarWidgets'];
 }
 
 function waitForCssAnimation(): Promise<void> {
@@ -143,6 +76,7 @@ function waitForCssAnimation(): Promise<void> {
         );
     });
 }
+
 export class AuthoringReact extends React.PureComponent<IProps, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
@@ -154,6 +88,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         };
 
         this.save = this.save.bind(this);
+        this.stealLock = this.stealLock.bind(this);
         this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
         this.handleClose = this.handleClose.bind(this);
 
@@ -237,7 +172,9 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         Promise.all(
             [
                 authoringStorage.getArticle(this.props.itemId).then((item) => {
-                    return authoringStorage.getContentProfile(item.autosaved ?? item.saved).then((profile) => {
+                    const itemCurrent = item.autosaved ?? item.saved;
+
+                    return authoringStorage.getContentProfile(itemCurrent).then((profile) => {
                         return {item, profile};
                     });
                 }),
@@ -249,7 +186,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             const nextState: IStateLoaded = {
                 initialized: true,
                 loading: false,
-                itemOriginal: Object.freeze(item.saved),
+                itemOriginal: item.saved,
                 itemWithChanges: item.autosaved ?? item.saved,
                 profile: profile,
             };
@@ -283,21 +220,141 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         const {state} = this;
 
                         if (state.initialized) {
-                            this.setState({
-                                ...state,
-                                itemWithChanges: {
-                                    ...state.itemWithChanges,
-                                    ...patch,
-                                },
-                                itemOriginal: {
+                            if (state.itemOriginal === state.itemWithChanges) {
+                                /**
+                                 * if object references are the same before patching
+                                 * they should be the same after patching too
+                                 * in order for checking for changes to work correctly
+                                 * (reference equality is used for change detection)
+                                 */
+
+                                const patched = {
                                     ...state.itemOriginal,
                                     ...patch,
-                                },
-                            });
+                                };
+
+                                this.setState({
+                                    ...state,
+                                    itemOriginal: patched,
+                                    itemWithChanges: patched,
+                                });
+                            } else {
+                                this.setState({
+                                    ...state,
+                                    itemWithChanges: {
+                                        ...state.itemWithChanges,
+                                        ...patch,
+                                    },
+                                    itemOriginal: {
+                                        ...state.itemOriginal,
+                                        ...patch,
+                                    },
+                                });
+                            }
                         }
                     }
                 },
             ),
+        );
+
+        /**
+         * Update UI when locked in another session,
+         * regardless whether by same or different user.
+         */
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addInternalWebsocketEventListener('item:lock', (data) => {
+                const {user, lock_session, lock_time, _etag} = data.extra;
+
+                const state = this.state;
+
+                /**
+                 * Only patch these fields to preserve
+                 * unsaved changes.
+                 */
+                const patch: Partial<IArticle> = {
+                    _etag,
+                    lock_session,
+                    lock_time,
+                    lock_user: user,
+                    lock_action: 'edit',
+                };
+
+                if (state.initialized) {
+                    if (state.itemOriginal === state.itemWithChanges) {
+                        /**
+                         * if object references are the same before patching
+                         * they should be the same after patching too
+                         * in order for checking for changes to work correctly
+                         * (reference equality is used for change detection)
+                         */
+
+                        const patched = {
+                            ...state.itemOriginal,
+                            ...patch,
+                        };
+
+                        this.setState({
+                            ...state,
+                            itemOriginal: patched,
+                            itemWithChanges: patched,
+                        });
+                    } else {
+                        this.setState({
+                            ...state,
+                            itemOriginal: {
+                                ...state.itemOriginal,
+                                ...patch,
+                            },
+                            itemWithChanges: {
+                                ...state.itemWithChanges,
+                                ...patch,
+                            },
+                        });
+                    }
+                }
+            }),
+        );
+
+        /**
+         * Reload item if updated while locked in another session.
+         * Unless there are unsaved changes.
+         */
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener('resource:updated', (event) => {
+                const {_id, resource} = event.extra;
+                const state = this.state;
+
+                if (state.initialized !== true) {
+                    return;
+                }
+
+                if (
+                    ARTICLE_RELATED_RESOURCE_NAMES.includes(resource) !== true
+                    || state.itemOriginal._id !== _id
+                ) {
+                    return;
+                }
+
+                if (sdApi.article.isLockedInCurrentSession(state.itemOriginal)) {
+                    return;
+                }
+
+                const hasUnsavedChanges = state.itemWithChanges !== state.itemOriginal;
+
+                if (hasUnsavedChanges) {
+                    return;
+                }
+
+                authoringStorage.getArticle(state.itemOriginal._id).then((res) => {
+                    const itemCurrent = res.autosaved ?? res.saved;
+
+                    this.setState({
+                        ...state,
+                        itemOriginal: res.saved,
+                        itemWithChanges: itemCurrent,
+                    });
+                });
+            }),
         );
     }
 
@@ -310,7 +367,11 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     componentDidUpdate(_prevProps, prevState: IState) {
-        if (this.state.initialized && prevState.initialized) {
+        if (
+            this.state.initialized
+            && prevState.initialized
+            && sdApi.article.isLockedInCurrentSession(this.state.itemOriginal)
+        ) {
             if (this.state.itemWithChanges !== prevState.itemWithChanges) {
                 if (this.state.itemWithChanges === this.state.itemOriginal) {
                     /**
@@ -361,6 +422,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     save(state: IStateLoaded): Promise<IArticle> {
+        authoringStorage.autosave.delete(state.itemWithChanges);
+
         this.setState({
             ...state,
             loading: true,
@@ -377,6 +440,24 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             this.setState(nextState);
 
             return item;
+        });
+    }
+
+    /**
+     * Unlocks article from other user that holds the lock
+     * and locks for current user.
+     */
+    stealLock(state: IStateLoaded) {
+        const _id = state.itemOriginal._id;
+
+        authoringStorage.unlock(_id).then(() => {
+            authoringStorage.lock(_id).then((res) => {
+                this.setState({
+                    ...state,
+                    itemOriginal: Object.freeze(res),
+                    itemWithChanges: res,
+                });
+            });
         });
     }
 
@@ -417,6 +498,93 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         });
     }
 
+    getAuthoringOptions(state: IStateLoaded): IAuthoringOptions {
+        const item = state.itemWithChanges;
+        const itemState: ITEM_STATE = item.state;
+
+        switch (itemState) {
+        case ITEM_STATE.DRAFT:
+            return {
+                readOnly: false,
+                actions: [],
+            };
+
+        case ITEM_STATE.SUBMITTED:
+        case ITEM_STATE.IN_PROGRESS:
+        case ITEM_STATE.ROUTED:
+        case ITEM_STATE.FETCHED:
+        case ITEM_STATE.UNPUBLISHED:
+            return {
+                readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
+                actions: sdApi.article.isLockedInCurrentSession(item)
+                    ? [
+                        {
+                            group: 'end',
+                            priority: 0.2,
+                            component: () => (
+                                <Button
+                                    text={gettext('Save')}
+                                    style="filled"
+                                    type="primary"
+                                    disabled={state.itemWithChanges === state.itemOriginal}
+                                    onClick={() => {
+                                        this.save(state);
+                                    }}
+                                />
+                            ),
+                        },
+                    ]
+                    : [],
+            };
+
+        case ITEM_STATE.INGESTED:
+            return {
+                readOnly: true,
+                actions: [], // fetch
+            };
+
+        case ITEM_STATE.SPIKED:
+            return {
+                readOnly: true,
+                actions: [], // un-spike
+            };
+
+        case ITEM_STATE.SCHEDULED:
+            return {
+                readOnly: true,
+                actions: [], // un-schedule
+            };
+
+        case ITEM_STATE.PUBLISHED:
+        case ITEM_STATE.CORRECTED:
+            return {
+                readOnly: true,
+                actions: [], // correct update kill takedown
+            };
+
+        case ITEM_STATE.BEING_CORRECTED:
+            return {
+                readOnly: true,
+                actions: [], // cancel correction
+            };
+
+        case ITEM_STATE.CORRECTION:
+            return {
+                readOnly: false,
+                actions: [], // cancel correction, save, publish
+            };
+
+        case ITEM_STATE.KILLED:
+        case ITEM_STATE.RECALLED:
+            return {
+                readOnly: true,
+                actions: [], // NONE
+            };
+        default:
+            assertNever(itemState);
+        }
+    }
+
     render() {
         const state = this.state;
 
@@ -433,7 +601,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             );
         }
 
-        const authoringOptions = getAuthoringOptions(state.itemOriginal);
+        const authoringOptions = this.getAuthoringOptions(state);
         const readOnly = state.initialized ? authoringOptions.readOnly : false;
 
         const widgetsFromExtensions = Object.values(extensions)
@@ -459,9 +627,22 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         }));
 
         const toolbar1Widgets: IExtensionActivationResult['contributions']['authoringTopbarWidgets'] = [
+            ...authoringOptions.actions,
             {
                 group: 'start',
                 priority: 0.1,
+                component: () => (
+                    <LockInfo
+                        article={state.itemWithChanges}
+                        unlock={() => {
+                            this.stealLock(state);
+                        }}
+                    />
+                ),
+            },
+            {
+                group: 'start',
+                priority: 0.2,
                 component: DeskAndStage,
             },
             {
@@ -473,21 +654,6 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         style="hollow"
                         onClick={() => {
                             this.handleClose(state);
-                        }}
-                    />
-                ),
-            },
-            {
-                group: 'end',
-                priority: 0.2,
-                component: () => (
-                    <Button
-                        text={gettext('Save')}
-                        style="filled"
-                        type="primary"
-                        disabled={state.itemWithChanges === state.itemOriginal}
-                        onClick={() => {
-                            this.save(state);
                         }}
                     />
                 ),
@@ -568,6 +734,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                             const availableTabs: Array<IArticleActionInteractive> = [
                                                                 'send_to',
                                                             ];
+
                                                             const canPublish =
                                                                 sdApi.article.canPublish(state.itemWithChanges);
 

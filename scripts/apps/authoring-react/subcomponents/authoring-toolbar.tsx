@@ -39,6 +39,7 @@ export class AuthoringToolbar extends React.PureComponent<IProps> {
                 style={{
                     display: 'flex',
                     width: '100%',
+                    overflow: 'auto',
                     justifyContent: 'space-between',
                     gap: 16,
                     alignItems: 'center',

@@ -3,6 +3,7 @@ export const ARTICLE_RELATED_RESOURCE_NAMES = [
     'archive',
     'archive_spike',
     'archive_unspike',
+    'archive_publish',
 ];
 
 export const AUTOSAVE_TIMEOUT = 3000;

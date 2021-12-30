@@ -10,6 +10,7 @@ import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {AutoSaveHttp} from './auto-save-http';
 import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
+import {sdApi} from 'api';
 
 interface IFieldBase {
     id: string;
@@ -135,6 +136,8 @@ export interface IAuthoringAutoSave {
  * to enable offline support.
  */
 interface IAuthoringStorage {
+    lock(itemId: IArticle['_id']): Promise<IArticle>;
+    unlock(itemId: IArticle['_id']): Promise<IArticle>;
     getArticle(id: string): Promise<{saved: IArticle | null, autosaved: IArticle | null}>;
     saveArticle(current: IArticle, original: IArticle): Promise<IArticle>;
     closeAuthoring(current: IArticle, original: IArticle, doClose: () => void): Promise<void>;
@@ -154,6 +157,7 @@ export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
         'revert_state',
         'expiry',
         '_current_version',
+        'original_id',
     ];
 
     const baseApiFields = [
@@ -161,6 +165,7 @@ export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
         '_links',
         '_updated',
         '_etag',
+        '_status',
     ];
 
     return {...omit(item, [...customFields, ...baseApiFields])};
@@ -170,15 +175,27 @@ export const authoringStorage: IAuthoringStorage = {
     autosave: new AutoSaveHttp(AUTOSAVE_TIMEOUT),
     getArticle: (id) => {
         // TODO: take published items into account
-        return Promise.all([
-            dataApi.findOne<IArticle>('archive', id),
-            authoringStorage.autosave.get(id).catch(() => null),
-        ]).then((res) => {
-            const [saved, autosaved] = res;
 
-            return {saved, autosaved};
+        return dataApi.findOne<IArticle>('archive', id).then((saved) => {
+            if (sdApi.article.isLockedInOtherSession(saved)) {
+                return {saved, autosaved: null};
+            } else if (sdApi.article.isLockedInCurrentSession(saved)) {
+                return new Promise<IArticle>((resolve) => {
+                    authoringStorage.autosave.get(id)
+                        .then((autosaved) => {
+                            resolve(autosaved);
+                        })
+                        .catch(() => {
+                            resolve(null);
+                        });
+                }).then((autosaved) => ({saved, autosaved}));
+            } else {
+                return {saved, autosaved: null};
+            }
         });
     },
+    lock: sdApi.article.lock,
+    unlock: sdApi.article.unlock,
     saveArticle: (current, original) => {
         return authoringApiCommon.saveBefore(current, original).then((_current) => {
             const id = original._id;
