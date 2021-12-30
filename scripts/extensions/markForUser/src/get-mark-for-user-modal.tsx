@@ -65,10 +65,13 @@ export function getMarkForUserModal(options: {
 
                         {
                             lockedInOtherSession === true ? (
-                                <div
-                                    className="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small"
-                                >
-                                    {gettext('Item is locked and marked user can not be changed.')}
+                                <div>
+                                    <div
+                                        className="sd-alert sd-alert--hollow sd-alert--primary sd-alert--small"
+                                    >
+                                        {gettext('Item is locked and marked user can not be changed.')}
+                                    </div>
+                                    <br />
                                 </div>
                             ) : null
                         }
