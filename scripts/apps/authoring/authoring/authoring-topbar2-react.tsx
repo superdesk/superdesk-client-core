@@ -19,6 +19,9 @@ interface IState {
     articleOriginal?: IArticle;
 }
 
+/**
+ * Only used from angular based authoring view
+ */
 export class AuthoringTopbar2React extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);

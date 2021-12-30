@@ -414,6 +414,46 @@ $authoring-toolbar-spacing: 10px;
 // Authoring Header
 // -------------------------------------------------
 
+.created-modified-info {
+    display: flex;
+    align-items: center;
+
+    .created-modified-info--separator {
+        width: 1px;
+        height: 16px;
+        background-color: #DADADA;
+        margin-left: $authoring-toolbar-spacing;
+        margin-right: $authoring-toolbar-spacing;
+    }
+
+    dl, dt, dd {
+        font-size: 12px;
+        line-height: 1;
+        margin-bottom: 0;
+        margin-top: 0;
+    }
+
+    dl {
+        display: flex;
+        align-items: center;
+    }
+
+    dt {
+        color: $sd-gray-text;
+    }
+    dd {
+        color: $sd-text;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    dd + dt,
+    dt + dt {
+        margin-left: 8px;
+    }
+}
+
 // ---- Sticky header ----
 .authoring-sticky {
     height:$sd-base-increment * 6;

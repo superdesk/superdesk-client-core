@@ -38,6 +38,7 @@ import {LockInfo} from './subcomponents/lock-info';
 import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
+import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -691,6 +692,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         const pinned = state.openWidget?.pinned === true;
 
+        const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
+
         return (
             <div className="sd-authoring-react">
                 {
@@ -778,11 +781,15 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                     }}
                                                 >
                                                     {
-                                                        topbar2Widgets.map((Widget, i) => {
-                                                            return (
-                                                                <Widget key={i} article={state.itemWithChanges} />
-                                                            );
-                                                        })
+                                                        defaultToolbarItems.concat(topbar2Widgets)
+                                                            .map((Component, i) => {
+                                                                return (
+                                                                    <Component
+                                                                        key={i}
+                                                                        article={state.itemWithChanges}
+                                                                    />
+                                                                );
+                                                            })
                                                     }
                                                 </div>
 
