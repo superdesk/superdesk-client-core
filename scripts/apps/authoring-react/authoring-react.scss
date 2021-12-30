@@ -9,8 +9,28 @@
     background: $white;
 }
 
+.authoring-toolbar-1 {
+    display: flex;
+    width: 100%;
+    overflow: auto;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    padding-left: 16px;
+
+    > * {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        // allow desk/stage name to get truncated
+        &:first-child {
+            overflow: hidden;
+        }
+    }
+}
+
 .desk-and-stage {
-    width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

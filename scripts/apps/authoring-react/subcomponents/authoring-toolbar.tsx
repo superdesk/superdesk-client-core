@@ -35,26 +35,11 @@ export class AuthoringToolbar extends React.PureComponent<IProps> {
         ];
 
         return (
-            <div
-                style={{
-                    display: 'flex',
-                    width: '100%',
-                    overflow: 'auto',
-                    justifyContent: 'space-between',
-                    gap: 16,
-                    alignItems: 'center',
-                    paddingLeft: 16,
-                }}
-            >
+            <div className="authoring-toolbar-1">
                 {
                     toolbarGroups.map((items, i) => (
                         <div
                             key={i}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 8,
-                            }}
                         >
                             {
                                 items.map((widget, _i) => {
