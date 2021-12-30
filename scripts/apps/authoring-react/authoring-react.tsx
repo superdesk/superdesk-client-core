@@ -372,7 +372,9 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             && prevState.initialized
             && sdApi.article.isLockedInCurrentSession(this.state.itemOriginal)
         ) {
-            if (this.state.itemWithChanges !== prevState.itemWithChanges) {
+            const itemWasSaved = this.state.itemOriginal === this.state.itemWithChanges;
+
+            if (!itemWasSaved && this.state.itemWithChanges !== prevState.itemWithChanges) {
                 if (this.state.itemWithChanges === this.state.itemOriginal) {
                     /**
                      * Item changed, but is now the same as original item.
