@@ -1017,26 +1017,7 @@ export function AuthoringDirective(
             };
 
             $scope.sendToNextStage = function() {
-                var currentDeskId = $scope.item.task.desk;
-
-                if (currentDeskId == null) {
-                    throw new Error('currentDeskId is null');
-                }
-
-                const selectedDesk = desks.deskLookup[currentDeskId];
-                const deskStages: Array<IStage> = desks.deskStages[currentDeskId];
-                const currentStage = deskStages.find(({_id}) => _id === $scope.stage._id);
-                const currentStageIndex = deskStages.indexOf(currentStage);
-                const nextStageIndex = currentStageIndex === deskStages.length - 1 ? 0 : currentStageIndex + 1;
-
-                sdApi.article.sendItems(
-                    [$scope.item],
-                    {
-                        type: 'desk',
-                        desk: selectedDesk._id,
-                        stage: deskStages[nextStageIndex]._id,
-                    },
-                ).then(() => {
+                sdApi.article.sendItemToNextStage($scope.item).then(() => {
                     $scope.$applyAsync();
                     $scope.close();
                 });

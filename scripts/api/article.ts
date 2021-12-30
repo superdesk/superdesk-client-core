@@ -124,6 +124,32 @@ function unlock(itemId: IArticle['_id']): Promise<IArticle> {
     });
 }
 
+/**
+ * Item must be on a stage already.
+ * i.e. can't be in personal space.
+ */
+function sendItemToNextStage(item: IArticle): Promise<void> {
+    if (sdApi.article.isPersonal(item)) {
+        throw new Error('can not send personal item to next stage');
+    }
+
+    const deskId = item.task.desk;
+    const stageId = item.task.stage;
+    const deskStages = sdApi.desks.getDeskStages(deskId).toArray();
+    const currentStage = deskStages.find(({_id}) => _id === stageId);
+    const currentStageIndex = deskStages.indexOf(currentStage);
+    const nextStageIndex = currentStageIndex === deskStages.length - 1 ? 0 : currentStageIndex + 1;
+
+    return sdApi.article.sendItems(
+        [item],
+        {
+            type: 'desk',
+            desk: deskId,
+            stage: deskStages[nextStageIndex]._id,
+        },
+    ).then(() => undefined);
+}
+
 interface IArticleApi {
     isLocked(article: IArticle): boolean;
     isLockedInCurrentSession(article: IArticle): boolean;
@@ -160,6 +186,8 @@ interface IArticleApi {
         publishingDateOptions?: IPublishingDateOptions,
     ): Promise<Array<Partial<IArticle>>>;
 
+    sendItemToNextStage(item: IArticle): Promise<void>;
+
     duplicateItems(items: Array<IArticle>, destination: ISendToDestination): Promise<Array<IArticle>>;
 
     canPublish(item: IArticle): boolean;
@@ -184,6 +212,7 @@ export const article: IArticleApi = {
     fetchItems,
     fetchItemsToCurrentDesk,
     sendItems,
+    sendItemToNextStage,
     duplicateItems,
     canPublish,
     lock,

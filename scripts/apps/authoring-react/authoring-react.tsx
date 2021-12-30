@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+
 import React from 'react';
 import {IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {
@@ -15,7 +17,7 @@ import {IContentProfileV2, authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {EditorTest} from './ui-framework-authoring-test';
-import {extensions, uiFrameworkAuthoringPanelTest} from 'appConfig';
+import {extensions, uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
@@ -518,27 +520,51 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         case ITEM_STATE.ROUTED:
         case ITEM_STATE.FETCHED:
         case ITEM_STATE.UNPUBLISHED:
+            const actions: IExtensionActivationResult['contributions']['authoringTopbarWidgets'] = [];
+
+            if (sdApi.article.isLockedInCurrentSession(item)) {
+                actions.push({
+                    group: 'end',
+                    priority: 0.2,
+                    component: () => (
+                        <Button
+                            text={gettext('Save')}
+                            style="filled"
+                            type="primary"
+                            disabled={state.itemWithChanges === state.itemOriginal}
+                            onClick={() => {
+                                this.save(state);
+                            }}
+                        />
+                    ),
+                });
+            }
+
+            if (
+                appConfig.features.customAuthoringTopbar.toDesk === true
+                && sdApi.article.isPersonal(state.itemOriginal) !== true
+            ) {
+                // TODO: think about how to handle this when offline
+                actions.push({
+                    group: 'middle',
+                    priority: 0.2,
+                    component: () => (
+                        <Button
+                            text={gettext('TD')}
+                            style="filled"
+                            onClick={() => {
+                                this.handleUnsavedChanges(state)
+                                    .then(() => sdApi.article.sendItemToNextStage(state.itemOriginal))
+                                    .then(() => this.props.onClose());
+                            }}
+                        />
+                    ),
+                });
+            }
+
             return {
                 readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
-                actions: sdApi.article.isLockedInCurrentSession(item)
-                    ? [
-                        {
-                            group: 'end',
-                            priority: 0.2,
-                            component: () => (
-                                <Button
-                                    text={gettext('Save')}
-                                    style="filled"
-                                    type="primary"
-                                    disabled={state.itemWithChanges === state.itemOriginal}
-                                    onClick={() => {
-                                        this.save(state);
-                                    }}
-                                />
-                            ),
-                        },
-                    ]
-                    : [],
+                actions: actions,
             };
 
         case ITEM_STATE.INGESTED:
