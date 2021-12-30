@@ -1,5 +1,5 @@
 import React from 'react';
-import {IArticle, IExtensionActivationResult, IUser} from 'superdesk-api';
+import {IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {
     Button,
     ButtonGroup,
@@ -37,6 +37,7 @@ import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
 import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
+import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -673,6 +674,15 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         iconSize="big"
                     />
                 ),
+            },
+            {
+                group: 'end',
+                priority: 0.4,
+                component: () => {
+                    return (
+                        <AuthoringActionsMenu item={state.itemWithChanges} />
+                    );
+                },
             },
         ];
 
