@@ -541,7 +541,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             }
 
             if (
-                appConfig.features.customAuthoringTopbar.toDesk === true
+                sdApi.article.isLockedInCurrentSession(state.itemOriginal)
+                && appConfig.features.customAuthoringTopbar.toDesk === true
                 && sdApi.article.isPersonal(state.itemOriginal) !== true
             ) {
                 // TODO: think about how to handle this when offline
