@@ -41,6 +41,7 @@ import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core
 import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
+import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -194,6 +195,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 itemWithChanges: item.autosaved ?? item.saved,
                 profile: profile,
             };
+
+            dispatchCustomEvent('articleEditStart', nextState.itemWithChanges);
 
             this.setState(nextState);
         });
@@ -363,6 +366,12 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     componentWillUnmount() {
+        const state = this.state;
+
+        if (state.initialized) {
+            dispatchCustomEvent('articleEditEnd', state.itemWithChanges);
+        }
+
         unregisterFromReceivingPatches();
 
         for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
