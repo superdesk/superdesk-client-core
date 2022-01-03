@@ -103,6 +103,7 @@ declare module 'superdesk-api' {
              */
             authoringTopbarWidgets?: Array<{
                 component: React.ComponentType<{article: IArticle}>;
+                availableOffline: boolean;
                 priority: IDisplayPriority;
                 group: 'start' | 'middle' | 'end';
             }>;

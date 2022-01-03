@@ -546,6 +546,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                             }}
                         />
                     ),
+                    availableOffline: true,
                 });
             }
 
@@ -554,7 +555,6 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 && appConfig.features.customAuthoringTopbar.toDesk === true
                 && sdApi.article.isPersonal(state.itemOriginal) !== true
             ) {
-                // TODO: think about how to handle this when offline
                 actions.push({
                     group: 'middle',
                     priority: 0.2,
@@ -569,6 +569,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                             }}
                         />
                     ),
+                    availableOffline: false,
                 });
             }
 
@@ -679,11 +680,13 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         }}
                     />
                 ),
+                availableOffline: false,
             },
             {
                 group: 'start',
                 priority: 0.2,
                 component: DeskAndStage,
+                availableOffline: false,
             },
             {
                 group: 'end',
@@ -697,6 +700,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         }}
                     />
                 ),
+                availableOffline: true,
             },
             {
                 group: 'end',
@@ -711,6 +715,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         iconSize="big"
                     />
                 ),
+                availableOffline: true,
             },
             {
                 group: 'end',
@@ -720,6 +725,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         <AuthoringActionsMenu item={state.itemWithChanges} />
                     );
                 },
+                availableOffline: true,
             },
         ];
 
