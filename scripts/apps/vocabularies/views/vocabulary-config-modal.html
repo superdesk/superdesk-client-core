@@ -1,5 +1,5 @@
 <form name="editForm">
-    <div sd-modal data-model="vocabulary" class="modal--x-large">
+    <div sd-modal data-model="vocabulary" class="modal--x-large" ng-if="vocabulary.field_type !== 'upload' ">
         <div class="modal__header modal__header--flex">
             <h3 class="modal__heading" ng-show="vocabulary._id"><span translate>Edit</span> {{vocabulary.display_name}}
             </h3>
@@ -275,6 +275,74 @@
                 translate
             >
                 Save
+            </button>
+            <button
+                id="cancel-edit-btn"
+                type="button"
+                class="btn pull-right"
+                ng-click="cancel()"
+                translate
+                data-test-id="vocabulary-edit-modal--cancel"
+            >
+                Cancel
+            </button>
+        </div>
+    </div>
+
+    <div sd-modal data-model="vocabulary" class="modal--large" ng-if="vocabulary.field_type === 'upload' ">
+        <div class="modal__header modal__header--flex">
+            <h3 class="modal__heading"><span translate>Upload Config</span></h3>
+            <a href="" class="icn-btn close-modal" ng-click="cancel()"><i class="icon-close-small"></i></a>
+        </div>
+        <div class="modal__body modal__body--with-navigation">
+            <div class="sd-padding--3">
+                <div class="sd-alert sd-alert--hollow sd-alert--primary">
+                    <button class="sd-alert__close"></button>
+                    <span><i class="big-icon--info big-icon--blue" style="margin: 0 0.6rem 0 -0.3rem;"></i></span>
+                    <span translate>
+                        Please be aware that uploading external config files will overwrite your existing configuration.
+                    </span>
+                </div>
+                <button class="item-association" style="min-height: 20em;"
+                    ngf-drop="addFiles($files)"
+                >
+                    <div ng-show="!configFiles">
+                        <h3>
+                            <i class="big-icon--upload-alt icon" />
+                        </h3>
+                        <span class="item-association__text-label" translate>
+                            Drag one or more files here to upload them, or select files by clicking the button below.
+                        </span>
+                        <div>
+                            <a class="btn btn--hollow btn--primary" ng-click="uploadFile()">
+                                <span translate>Select Files</span>
+                            </a>
+                            <input type='file' ng-show="hide" id="uploadConfigFile" ngf-select="addFiles($files)" />
+                        </div>
+                    </div>
+
+                    <div ng-show="configFiles && configFiles[0].type === 'application/json'">
+                        <span><i class="icon-ok icon--green"></i></span>
+                        <p translate>Your upload was successfull</p>
+                    </div>
+
+                    <div ng-show="configFiles && configFiles[0].type !== 'application/json'">
+                        <span><i class="big-icon--info big-icon--red"></i></span>
+                        <p translate>There was a problem uploading the file</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+        <div class="modal__footer">
+            <button
+                id="upload-config-btn"
+                type="submit"
+                class="btn btn--primary pull-right"
+                ng-click="uploadConfigFile()"
+                ng-disabled="!configFiles || configFiles[0].type !== 'application/json'"
+                translate
+            >
+                Apply Config
             </button>
             <button
                 id="cancel-edit-btn"

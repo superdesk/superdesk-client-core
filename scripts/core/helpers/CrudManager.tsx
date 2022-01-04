@@ -19,7 +19,13 @@ import {
     IResourceChange,
 } from 'superdesk-api';
 import {DataProvider} from './data-provider';
-import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
+import {
+    httpRequestJsonLocal,
+    httpRequestVoidLocal,
+    httpRequestRawLocal,
+    uploadFileWithProgress,
+    uploadFile,
+} from './network';
 import {connectServices} from './ReactRenderAsync';
 import {ignoreAbortError} from '../SuperdeskReactComponent';
 
@@ -330,6 +336,7 @@ export const dataApi: IDataApi = {
         },
     }),
     uploadFileWithProgress: uploadFileWithProgress,
+    uploadFile: uploadFile,
     createProvider: (requestFactory, responseHandler, listenTo) =>
         new DataProvider(requestFactory, responseHandler, listenTo),
 };

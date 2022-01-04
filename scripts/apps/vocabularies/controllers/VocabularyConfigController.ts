@@ -15,6 +15,8 @@ export interface IScope extends IDirectiveScope<void> {
     loading: boolean;
     mediaTypes: object;
     openVocabulary(vocabulary: IVocabulary): void;
+    downloadVocabulary(vocabulary: IVocabulary): void;
+    uploadConfig(): void;
     getVocabulariesForTag(currentTag: IVocabularyTag, tab: string): Array<IVocabulary>;
     existsVocabulariesForTag(currentTag: IVocabularyTag, tab: string): boolean;
     canShowTag(currentTag: IVocabularyTag, tab: string): boolean;
@@ -58,6 +60,30 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      */
     $scope.openVocabulary = (vocabulary: IVocabulary) => {
         $route.updateParams({id: vocabulary._id});
+    };
+
+    /**
+     * Download vocabulary in json file.
+     *
+     * @param {Object} vocabulary
+     */
+    $scope.downloadVocabulary = (vocabulary: IVocabulary) => {
+        const _vocabulary = JSON.stringify(vocabulary);
+        const _vocabularyUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(_vocabulary);
+        let elem = $('#vocabularyDownloadLink');
+
+        if (elem[0]) {
+            elem[0].href = _vocabularyUri;
+            elem[0].download = vocabulary.display_name;
+            elem[0].click();
+        }
+    };
+
+    /**
+     * Open modal for upload config file.
+     */
+    $scope.uploadConfig = () => {
+        $route.updateParams({id: null, new: true, type: 'upload'});
     };
 
     /**

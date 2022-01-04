@@ -125,28 +125,24 @@ export function httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promi
         });
 }
 
-export function uploadFileWithProgress<T>(
-    endpoint: string,
-    data: FormData,
-    onProgress: (event: ProgressEvent) => void,
-    method?: 'POST' | 'PATCH',
-    etag?: string,
-): Promise<T> {
+function upload<T>(options) {
     return ng.getService('session')
         .then((session) => {
             return new Promise<T>((resolve, reject) => {
                 // Using `XMLHttpRequest` over `fetch` so we can get `onprogress` reporting
                 const request = new XMLHttpRequest();
-                const url = appConfig.server.url + endpoint;
+                const url = appConfig.server.url + options.endpoint;
 
-                request.open(method ?? 'POST', url);
+                request.open(options.method ?? 'POST', url);
                 request.setRequestHeader('Authorization', session.token);
 
-                if (method === 'PATCH' && etag != null) {
-                    request.setRequestHeader('If-Match', etag);
+                if (options.method === 'PATCH' && options.etag != null) {
+                    request.setRequestHeader('If-Match', options.etag);
                 }
 
-                request.upload.onprogress = onProgress;
+                if (options.onProgress) {
+                    request.upload.onprogress = options.onProgress;
+                }
 
                 request.onload = function() {
                     if (this.status >= 200 && this.status < 300) {
@@ -160,7 +156,41 @@ export function uploadFileWithProgress<T>(
                     reject(e);
                 };
 
-                request.send(data);
+                request.send(options.data);
             });
         });
+}
+
+export function uploadFileWithProgress<T>(
+    endpoint: string,
+    data: FormData,
+    onProgress: (event: ProgressEvent) => void,
+    method?: 'POST' | 'PATCH',
+    etag?: string,
+): Promise<T> {
+    const options = {
+        endpoint: endpoint,
+        data: data,
+        onProgress: onProgress,
+        method: method,
+        etag: etag,
+    };
+
+    return upload(options);
+}
+
+export function uploadFile<T>(
+    endpoint: string,
+    data: FormData,
+    method?: 'POST' | 'PATCH',
+    etag?: string,
+): Promise<T> {
+    const options = {
+        endpoint: endpoint,
+        data: data,
+        method: method,
+        etag: etag,
+    };
+
+    return upload(options);
 }
