@@ -318,6 +318,7 @@ export default angular.module('superdesk.core.upload.imagecrop', [
                         if (!_.isEqual(self.poi, poi)) {
                             angular.extend(self.poi, poi);
                             self.onChange();
+                            $rootScope.$broadcast('isDirtyChange', self.onChange());
                             $rootScope.$broadcast('poiUpdate', self.poi);
                         }
                     },

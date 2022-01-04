@@ -102,7 +102,6 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     $scope.toggleShowMetadata = (value) => {
         $scope.showMetadata = value;
     };
-
     if ($scope.data.renditions) {
         $scope.data.renditions.forEach((rendition) => {
             const original = $scope.data.item.renditions.original;
@@ -622,4 +621,10 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
             $scope.saveCrops(); // save it as defaults
         }
     }
+
+    $rootScope.$on('isDirtyChange', (e, onChange) => {
+        $scope.$applyAsync(() => {
+            $scope.crops.isDirty = onChange;
+        });
+    });
 }
