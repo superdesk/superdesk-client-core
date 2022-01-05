@@ -35,13 +35,11 @@
         data-close-action="closeFullPreview"
     ></div>
 
-    <div ng-init="setMonitoringAnimation(false)"></div>
 </div>
 
 <div id="main-container" ng-class="superdesk.flags" ng-if="!renderMonitoring">
     <div id="authoring-container" sd-authoring-container></div>
     <div sd-item-preview-container></div>
-    <div ng-init="setMonitoringAnimation(true)"></div>
 </div>
 
 <div id="main-container" ng-class="superdesk.flags" ng-if="renderMonitoring && superdesk.flags.workspace === false" ng-view></div>

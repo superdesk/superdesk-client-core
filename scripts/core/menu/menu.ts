@@ -2,6 +2,7 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
+import {debounce} from 'lodash';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -14,6 +15,16 @@ function SuperdeskFlagsService() {
         this.flags[key] = appConfig.ui[key];
     });
 }
+
+const setMonitoringAnimationDebounced = debounce(function setMonitoringAnimation(val) {
+    if (val === false) {
+        document.body.classList.add('monitoring--no-animation');
+    } else {
+        setTimeout(() => {
+            document.body.classList.remove('monitoring--no-animation');
+        }, 500); // wait for animation to finish
+    }
+}, 500);
 
 /**
  * @ngdoc module
@@ -40,8 +51,8 @@ angular.module('superdesk.core.menu', [
 
     // set flags for other directives
     .directive('sdSuperdeskView', ['asset', function(asset) {
-        SuperdeskViewController.$inject = ['superdeskFlags', '$scope', '$route', 'session'];
-        function SuperdeskViewController(superdeskFlags, $scope, $route, session) {
+        SuperdeskViewController.$inject = ['superdeskFlags', 'superdesk', '$scope', '$route', 'session', '$timeout'];
+        function SuperdeskViewController(superdeskFlags, superdesk, $scope, $route, session, $timeout) {
             $scope.session = session;
 
             this.flags = superdeskFlags.flags;
@@ -56,21 +67,12 @@ angular.module('superdesk.core.menu', [
 
             $scope.renderMonitoring = shouldRenderMonitoring();
 
-            $scope.$watch(shouldRenderMonitoring, (result) => {
-                if ($scope.renderMonitoring !== result) {
-                    $scope.renderMonitoring = result;
+            $scope.$watch(shouldRenderMonitoring, (renderMonitoring) => {
+                if ($scope.renderMonitoring !== renderMonitoring) {
+                    $scope.renderMonitoring = renderMonitoring;
+                    setMonitoringAnimationDebounced(renderMonitoring);
                 }
             });
-
-            $scope.setMonitoringAnimation = (val) => {
-                if (val === true) {
-                    document.body.classList.add('monitoring--no-animation');
-                } else {
-                    setTimeout(() => {
-                        document.body.classList.remove('monitoring--no-animation');
-                    }, 500); // wait for animation to finish
-                }
-            };
 
             $scope.$watch(function currentRoute() {
                 return $route.current;
@@ -85,10 +87,10 @@ angular.module('superdesk.core.menu', [
             });
 
             $scope.$watch(() => {
-                // console.log('flags hide monitoring');
                 return superdeskFlags.flags.hideMonitoring;
             }, () => {
-                window.dispatchEvent(new Event('resize'));
+                // Trigger resize event to update elements, 500ms delay is for animation
+                $timeout(() => window.dispatchEvent(new Event('resize')), 500, false);
             });
 
             // full preview
