@@ -58,16 +58,6 @@ a:hover, .link:hover {
     }
 }
 
-body:not(.monitoring--no-animation) {
-    #authoring-container {
-        @include transition(width .5s);
-    }
-
-    #workspace-container:not(.monitoring--no-animation) {
-        @include transition(all .5s);
-    }
-}
-
 // main container
 // ------------------------------------
 #main-container {
@@ -92,6 +82,7 @@ body:not(.monitoring--no-animation) {
             right: 44%;
             z-index:100;
             border-right: 3px solid #666;
+            @include transition(all .5s);
             @media only screen and (max-width : 1430px) {
                 right: 54%;
             }
@@ -106,6 +97,7 @@ body:not(.monitoring--no-animation) {
 
         #authoring-container {
             width: 44%;
+            @include transition(width .5s);
             .content-item-preview {
                 display: flex;
             }

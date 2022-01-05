@@ -2,7 +2,6 @@ import {reactToAngular1} from 'superdesk-ui-framework';
 import {GlobalMenuHorizontal} from './GlobalMenuHorizontal';
 import {appConfig} from 'appConfig';
 import {addInternalEventListener} from 'core/internal-events';
-import {debounce} from 'lodash';
 
 SuperdeskFlagsService.$inject = [];
 function SuperdeskFlagsService() {
@@ -15,16 +14,6 @@ function SuperdeskFlagsService() {
         this.flags[key] = appConfig.ui[key];
     });
 }
-
-const setMonitoringAnimationDebounced = debounce(function setMonitoringAnimation(val) {
-    if (val === false) {
-        document.body.classList.add('monitoring--no-animation');
-    } else {
-        setTimeout(() => {
-            document.body.classList.remove('monitoring--no-animation');
-        }, 500); // wait for animation to finish
-    }
-}, 500);
 
 /**
  * @ngdoc module
@@ -70,7 +59,6 @@ angular.module('superdesk.core.menu', [
             $scope.$watch(shouldRenderMonitoring, (renderMonitoring) => {
                 if ($scope.renderMonitoring !== renderMonitoring) {
                     $scope.renderMonitoring = renderMonitoring;
-                    setMonitoringAnimationDebounced(renderMonitoring);
                 }
             });
 
