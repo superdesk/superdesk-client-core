@@ -181,7 +181,9 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
             // ignore fields is only required for editor3
             if (isEditor3) {
                 if (useReplace && macro.replace_type === 'editor_state') {
-                    editor.setEditorStateFromItem(res.item, 'body_html');
+                    Object.keys(res.item.fields_meta).forEach((field) => {
+                        editor.setEditorStateFromItem(res.item, field);
+                    });
                 } else {
                     ignoreFields.push('body_html');
 

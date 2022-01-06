@@ -329,7 +329,7 @@ class Editor3Directive {
                 };
 
                 // Expose the store in the editor3 spellchecker service
-                const storeIndex = editor3.addSpellcheckerStore(store);
+                const storeIndex = editor3.addSpellcheckerStore(store, this.pathToValue);
 
                 initListeners();
 
