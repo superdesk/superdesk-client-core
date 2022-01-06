@@ -622,7 +622,7 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
         }
     }
 
-    $rootScope.$on('isDirtyChange', (e, onChange) => {
+    $rootScope.$on('point-of-interest--updated', (e, onChange) => {
         $scope.$applyAsync(() => {
             $scope.crops.isDirty = onChange;
         });
