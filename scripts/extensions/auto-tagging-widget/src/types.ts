@@ -8,6 +8,6 @@ export interface ITagUi {
     altids: {[key: string]: string};
     parent?: string;
     /** The identifier of a controlled vocabulary which includes a code for the tag. */
-    scheme?: string; 
+    scheme?: string;
     group: {kind: 'scheme' | 'visual'; value: string};
 }
