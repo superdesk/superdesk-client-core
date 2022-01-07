@@ -19,7 +19,7 @@
 <div
     id="main-container"
     ng-class="superdesk.flags"
-    ng-if="!popup && superdesk.flags.workspace === true"
+    ng-if="renderMonitoring && superdesk.flags.workspace === true"
 >
     <div id="workspace-container" ng-view sd-splitter-widget></div>
     <div id="authoring-container" ng-show="superdesk.flags.authoring" ng-if="superdesk.flags.workspace" sd-authoring-container></div>
@@ -37,12 +37,12 @@
 
 </div>
 
-<div id="main-container" ng-class="superdesk.flags" ng-if="popup">
+<div id="main-container" ng-class="superdesk.flags" ng-if="!renderMonitoring">
     <div id="authoring-container" sd-authoring-container></div>
     <div sd-item-preview-container></div>
 </div>
 
-<div id="main-container" ng-class="superdesk.flags" ng-if="!popup && superdesk.flags.workspace === false" ng-view></div>
+<div id="main-container" ng-class="superdesk.flags" ng-if="renderMonitoring && superdesk.flags.workspace === false" ng-view></div>
 
 <div id="react-placeholder"></div>
 <div id="react-backdrop"></div>
