@@ -2,7 +2,7 @@ import {DEFAULT_SCHEMA, getVocabularySelectionTypes, getMediaTypeKeys, getMediaT
 import {IVocabulary, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
-import {gettext, downloadJSON} from 'core/utils';
+import {gettext, downloadFile} from 'core/utils';
 import {showModal} from 'core/services/modalService';
 import {UploadConfig} from '../components/UploadConfigModal';
 
@@ -70,7 +70,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * @param {Object} vocabulary
      */
     $scope.downloadVocabulary = (vocabulary: IVocabulary) => {
-        downloadJSON(vocabulary, vocabulary.display_name, 'vocabularyDownloadLink');
+        downloadFile(vocabulary, vocabulary.display_name, '.json', 'vocabularyDownloadLink');
     };
 
     /**

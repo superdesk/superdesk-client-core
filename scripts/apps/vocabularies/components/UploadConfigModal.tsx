@@ -54,7 +54,7 @@ export function UploadConfig(updateVocabulary) {
                     notify.error(gettext(res._error._message));
                 }
             }).catch((error: any) => {
-                notify.error(gettext('Vocabulary not uploaded'));
+                notify.error(gettext(error._message));
             });
         }
 
