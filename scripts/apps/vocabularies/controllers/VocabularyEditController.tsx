@@ -35,10 +35,6 @@ interface IScope extends IScopeConfigController {
     requireAllowedTypesSelection: () => void;
     addItem: () => void;
     cancel: () => void;
-    uploadConfigFile: () => void;
-    addFiles(files: Array<File>): void;
-    configFiles: Array<File>;
-    uploadFile(): void;
     model: any;
     schema: any;
     schemaFields: Array<any>;
@@ -115,41 +111,6 @@ export function VocabularyEditController(
         }
         return true;
     }
-
-    /**
-     * Upload Config file.
-     */
-    $scope.uploadConfigFile = () => {
-        const formData = new FormData();
-
-        $scope.configFiles.forEach((file) => formData.append('json_file', file));
-
-        dataApi.uploadFile('/' + RESOURCE, formData)
-            .then((res: any) => {
-                if (res._success) {
-                    res.items.forEach((item) => $scope.updateVocabulary(item));
-                    $scope.closeVocabulary();
-                    notify.success(gettext(res._success._message));
-                } else if (res._error) {
-                    notify.error(gettext(res._error._message));
-                }
-            })
-            .catch((error) => {
-                notify.error(gettext(error._message));
-            });
-    };
-
-    $scope.addFiles = function(files: Array<File>) {
-        if (files.length > 0) {
-            $scope.configFiles = files;
-        }
-    };
-
-    $scope.uploadFile = function() {
-        const elem = $('#uploadConfigFile');
-
-        elem.click();
-    };
 
     /**
      * Save current edit modal contents on backend.

@@ -56,7 +56,6 @@ const dataApiForTesting: IDataApi = {
     patchRaw: <T>(endpoint, id, etag, patch) => Promise.resolve({} as T),
     delete: (endpoint, item) => Promise.resolve(),
     uploadFileWithProgress: <T>(endpoint, data, onProgress) => Promise.resolve({} as T),
-    uploadFile: <T>(endpoint, data) => Promise.resolve({} as T),
     createProvider: (requestFactory, responseHandler, listenTo) => ({
         stop: () => null,
         update: () => null,
@@ -74,5 +73,4 @@ export function mockDataApi() {
     spyOn(dataApi, 'patchRaw').and.callFake(dataApiForTesting.patchRaw);
     spyOn(dataApi, 'delete').and.callFake(dataApiForTesting.delete);
     spyOn(dataApi, 'uploadFileWithProgress').and.callFake(dataApiForTesting.uploadFileWithProgress);
-    spyOn(dataApi, 'uploadFile').and.callFake(dataApiForTesting.uploadFile);
 }

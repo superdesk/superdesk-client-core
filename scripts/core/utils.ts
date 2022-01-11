@@ -213,3 +213,15 @@ export function isScrolledIntoViewVertically(element: HTMLElement, container: HT
 
     return topVisible && bottomVisible;
 }
+
+export function downloadJSON(data: {}, fileName: string, htmlElementId: string) {
+    const _data = JSON.stringify(data);
+    const _dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(_data);
+    let elem = $(`#${htmlElementId}`);
+
+    if (elem[0]) {
+        elem[0].href = _dataUri;
+        elem[0].download = `${fileName}.json`;
+        elem[0].click();
+    }
+}
