@@ -42,9 +42,9 @@ export function UploadConfig(updateVocabulary) {
             const formData = new FormData();
 
             this.state.files.forEach((file) => formData.append('json_file', file));
-
+ 
             return dataApi.uploadFileWithProgress(
-                '/' + RESOURCE,
+                '/' + RESOURCE + '?resource=vocabularies',
                 formData,
             ).then((res: any) => {
                 if (res._success) {
