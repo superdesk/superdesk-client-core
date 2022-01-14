@@ -352,7 +352,7 @@ export function getMultiActions(
                     }),
                 )).then(() => {
                 if (errors.length === 0) {
-                    notify.success(gettext(`${success.length} Articles have been descheduled`));
+                    notify.success(gettext('{{count}} articles have been descheduled', {count: success.length}));
                 } else {
                     errors.forEach((err) => {
                         let messages = null;
