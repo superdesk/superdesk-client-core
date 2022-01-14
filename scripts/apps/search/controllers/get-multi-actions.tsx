@@ -331,11 +331,14 @@ export function getMultiActions(
     const deschedule = () => {
         const descheduled = () => {
             const errors = [];
+            const success = [];
 
             Promise.all(
                 items.map((item) => api.update('archive', item, {publish_schedule: null})
                     .then((response) => {
-                        if (response.status >= 400) {
+                        if (response) {
+                            success.push(item);
+                        } else {
                             errors.push({
                                 'itemName': item.headline || item.slugline || item._id,
                                 'message': response.data._message,
@@ -349,7 +352,7 @@ export function getMultiActions(
                     }),
                 )).then(() => {
                 if (errors.length === 0) {
-                    notify.success(gettext('All Articles have been descheduled'));
+                    notify.success(gettext(`${success.length} Articles have been descheduled`));
                 } else {
                     errors.forEach((err) => {
                         let messages = null;
