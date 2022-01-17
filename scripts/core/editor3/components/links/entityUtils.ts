@@ -18,10 +18,14 @@ export function getSelectedEntityKey(editorState) {
  * @returns {Object} Entity.
  */
 export function getSelectedEntity(editorState) {
-    const entityKey = getSelectedEntityKey(editorState);
-    const contentState = editorState.getCurrentContent();
+    try {
+        const entityKey = getSelectedEntityKey(editorState);
+        const contentState = editorState.getCurrentContent();
 
-    return entityKey !== null ? contentState.getEntity(entityKey) : null;
+        return entityKey !== null ? contentState.getEntity(entityKey) : null;
+    } catch (e) {
+        return null;
+    }
 }
 
 /**

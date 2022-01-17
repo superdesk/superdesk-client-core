@@ -60,10 +60,16 @@ export class BlockStyleButtonsComponent extends React.Component<any, any> {
         const {editorState, editorFormat} = this.props;
         const selection = editorState.getSelection();
         const blockStyleKeys = Object.keys(blockStyles);
-        const blockType = editorState
-            .getCurrentContent()
-            .getBlockForKey(selection.getStartKey())
-            .getType();
+        const blockType = () => {
+            const selectedBlock = editorState
+                .getCurrentContent()
+                .getBlockForKey(selection.getStartKey());
+
+            if (selectedBlock != null) {
+                return selectedBlock.getType();
+            }
+            return null;
+        };
 
         return (
             <span>

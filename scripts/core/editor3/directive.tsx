@@ -301,7 +301,7 @@ class Editor3Directive {
                     (evt, field, value, options) => {
                         if (field === this.pathToValue) {
                             const _options = Object.assign(
-                                {skipOnChange: true},
+                                {skipOnChange: false},
                                 options,
                             );
                             const content = getContentStateFromHtml(value);
