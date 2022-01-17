@@ -262,5 +262,16 @@ export function getBulkActions(
         });
     }
 
+    if (articles.some((article) => article?.schedule_settings?.utc_publish_schedule)) {
+        actions.push({
+            label: gettext('Deschedule'),
+            icon: 'icon-calendar',
+            onTrigger: () => {
+                multiActions.deschedule();
+            },
+            canAutocloseMultiActionBar: false,
+        });
+    }
+
     return actions;
 }

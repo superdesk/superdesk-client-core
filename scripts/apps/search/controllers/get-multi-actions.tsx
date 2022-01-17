@@ -28,6 +28,7 @@ export interface IMultiActions {
     duplicateInPlace(): void;
     canHighlightItems(): boolean;
     publish(): void;
+    deschedule(): void;
 }
 
 export function getMultiActions(
@@ -356,6 +357,54 @@ export function getMultiActions(
         });
     };
 
+    const deschedule = () => {
+        const descheduled = () => {
+            const errors = [];
+            const success = [];
+
+            Promise.all(
+                items.map((item) => api.update('archive', item, {publish_schedule: null})
+                    .then((response) => {
+                        if (response) {
+                            success.push(item);
+                        } else {
+                            errors.push({
+                                'itemName': item.headline || item.slugline || item._id,
+                                'message': response.data._message,
+                            });
+                        }
+                    }).catch((err) => {
+                        errors.push({
+                            'itemName': item.headline || item.slugline || item._id,
+                            'message': gettext('Unknown error occured, Try descheduling again.'),
+                        });
+                    }),
+                )).then(() => {
+                if (errors.length === 0) {
+                    notify.success(gettext('{{count}} articles have been descheduled', {count: success.length}));
+                } else {
+                    errors.forEach((err) => {
+                        let messages = null;
+
+                        try {
+                            messages = JSON.parse(err.message.replace(/'/gi, '"'));
+                        } catch (error) {
+                            messages = [[err.message]];
+                        }
+                        messages[0].forEach((message: string) =>
+                            notify.error(gettext('Error on item:') + ` ${err.itemName} ${message}`));
+                    });
+                }
+                unselectAll();
+            });
+        };
+
+        const items: Array<IArticle> = getSelectedItems()
+            .filter((item) => item?.schedule_settings?.utc_publish_schedule);
+
+        modal.confirm(gettext('Do you want to deschedule articles?')).then(descheduled);
+    };
+
     const actions: IMultiActions = {
         sendTo,
         fetch,
@@ -374,6 +423,7 @@ export function getMultiActions(
         duplicateInPlace,
         canHighlightItems,
         publish,
+        deschedule,
     };
 
     return actions;
