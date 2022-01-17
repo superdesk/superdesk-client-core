@@ -1111,6 +1111,17 @@ angular.module('superdesk.apps.editor2', [
 
                     ngModel.$viewChangeListeners.push(changeListener);
                     ngModel.$render = function() {
+                        editorElem = elem.find(scope.type === 'preformatted' ? '.editor-type-text'
+                            : '.editor-type-html');
+                        // events could be attached already, so remove these
+                        editorElem.off('mouseup keydown keyup click contextmenu');
+                        editorElem.empty();
+                        editorElem.html(ngModel.$viewValue || '');
+
+                        if (scope.readOnly) {
+                            return;
+                        }
+
                         editor.registerScope(scope);
                         var editorConfig = angular.merge(
                             {},
@@ -1135,12 +1146,6 @@ angular.module('superdesk.apps.editor2', [
                         }
 
                         spellcheck.setLanguage(scope.language);
-                        editorElem = elem.find(scope.type === 'preformatted' ? '.editor-type-text'
-                            : '.editor-type-html');
-                        // events could be attached already, so remove these
-                        editorElem.off('mouseup keydown keyup click contextmenu');
-                        editorElem.empty();
-                        editorElem.html(ngModel.$viewValue || '');
                         scope.node = editorElem[0];
                         scope.model = ngModel;
                         // destroy exiting instance
