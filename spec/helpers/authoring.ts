@@ -1104,6 +1104,7 @@ class Authoring {
         this.getArticleHeadlineOfBoard = function(index) {
             const headline = this.getBoardArticle(index)
                 .all(by.css('[data-test-id="field--headline"]')).first();
+
             browser.wait(ECE.visibilityOf(headline), 2000);
             return headline.getText();
         };
