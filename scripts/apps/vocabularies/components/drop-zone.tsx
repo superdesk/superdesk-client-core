@@ -6,10 +6,6 @@ interface IState {
     hover: boolean;
 }
 
-interface IJQueryDragEvent extends JQueryEventObject {
-    originalEvent: DragEvent;
-}
-
 export class DropZone extends React.PureComponent<IDropZoneComponentProps, IState> {
     elem: React.RefObject<HTMLButtonElement>;
     input: React.RefObject<HTMLInputElement>;
@@ -23,51 +19,35 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
         this.input = React.createRef();
 
         this.onDrop = this.onDrop.bind(this);
-        this.onDragEnter = this.onDragEnter.bind(this);
-        this.onDragLeave = this.onDragLeave.bind(this);
+        this.onDropOver = this.onDropOver.bind(this);
     }
 
-    onDrop(event: IJQueryDragEvent) {
-        event.stopPropagation();
-        if (this.props.canDrop(event.originalEvent)) {
+    onDropOver(event) {
+        event.preventDefault();
+    }
+
+    onDrop(event) {
+        event.preventDefault();
+
+        if (this.props.canDrop(event)) {
             event.preventDefault();
 
             if (this.state.hover) {
                 this.setState({hover: false});
             }
 
-            this.props.onDrop(event.originalEvent);
-        }
-    }
-
-    onDragEnter(event: IJQueryDragEvent) {
-        event.stopPropagation();
-        const isAllowed = this.props.canDrop(event.originalEvent);
-
-        if (isAllowed) {
-            event.preventDefault();
-        }
-
-        if (!this.state.hover && isAllowed) {
-            this.setState({hover: true});
-        }
-    }
-
-    onDragLeave(event: IJQueryDragEvent) {
-        event.stopPropagation();
-        if (this.state.hover) {
-            this.setState({hover: false});
+            this.props.onDrop(event);
         }
     }
 
     componentDidMount() {
-        $(this.elem.current).on('drop', this.onDrop);
-        $(this.elem.current).on('dragleave', this.onDragLeave);
-        $(this.elem.current).on('dragover dragenter', this.onDragEnter);
+        this.elem.current.addEventListener('dragover', this.onDropOver);
+        this.elem.current.addEventListener('drop', this.onDrop);
     }
 
     componentWillUnmount() {
-        $(this.elem.current).off('drop dragleave dragover dragenter');
+        this.elem.current.removeEventListener('drop', this.onDrop);
+        this.elem.current.removeEventListener('dragover', this.onDropOver);
     }
 
     render() {

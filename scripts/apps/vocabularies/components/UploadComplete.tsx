@@ -5,7 +5,7 @@ export const UploadComplete = () => {
     return (
         <div className="file-uploaded">
             <span><i className="icon-ok icon--green" /></span>
-            <p>{gettext('Your upload was successfull')}</p>
+            <p>{gettext('Your upload was successful')}</p>
         </div>
     );
 };

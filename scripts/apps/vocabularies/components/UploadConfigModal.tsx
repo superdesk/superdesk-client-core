@@ -12,6 +12,7 @@ import {dataApi} from 'core/helpers/CrudManager';
 import {UploadComplete} from './UploadComplete';
 import {UploadconfigModalInformation} from './UploadConfigModalInformation';
 import {DropZone} from './drop-zone';
+import {notify} from '../../../core/notify/notify';
 
 interface IProps {
     closeModal(): void;
@@ -38,7 +39,6 @@ export function UploadConfig(updateVocabulary) {
         }
 
         uploadFile() {
-            const notify = ng.get('notify');
             const formData = new FormData();
 
             this.state.files.forEach((file) => formData.append('json_file', file));
@@ -59,10 +59,10 @@ export function UploadConfig(updateVocabulary) {
         }
 
         render() {
-            const modalInformationLabel = `Please be aware that uploading external config files
-                will overwrite your existing configuration.`;
-            const dropZoneLabel = `Drag one or more files here to upload them,
-                or select files by clicking the button below`;
+            const modalInformationLabel = gettext(`Please be aware that uploading external config files
+                will overwrite your existing configuration.`);
+            const dropZoneLabel = gettext(`Drag one or more files here to upload them,
+                or select files by clicking the button below`);
 
             return (
                 <Modal size="large">

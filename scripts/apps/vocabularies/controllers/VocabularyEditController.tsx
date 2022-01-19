@@ -47,7 +47,6 @@ interface IScope extends IScopeConfigController {
 }
 
 const idRegex = '^[a-zA-Z0-9-_]+$';
-const RESOURCE = 'upload/config-file';
 
 export function VocabularyEditController(
     $scope: IScope, notify, api, metadata, cvSchema, relationsService, $timeout,

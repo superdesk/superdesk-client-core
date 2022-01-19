@@ -8,7 +8,7 @@ export const UploadconfigModalInformation = ({label}) => {
                 <i className="big-icon--info big-icon--blue" style={{margin: '0 0.6rem 0 -0.3rem'}} />
             </span>
             <span>
-                {gettext(label)}
+                {label}
             </span>
         </div>
     );

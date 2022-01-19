@@ -1,6 +1,6 @@
 import gettextjs from 'gettext.js';
 import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
-import {IVocabularyItem, IArticle} from 'superdesk-api';
+import {IVocabularyItem, IArticle, IVocabulary} from 'superdesk-api';
 import {assertNever} from './helpers/typescript-helpers';
 import {appConfig} from 'appConfig';
 
@@ -214,14 +214,16 @@ export function isScrolledIntoViewVertically(element: HTMLElement, container: HT
     return topVisible && bottomVisible;
 }
 
-export function downloadFile(data: {}, fileName: string, extensionValue: string, htmlElementId: string) {
-    const _data = JSON.stringify(data);
-    const _dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(_data);
-    let elem = $(`#${htmlElementId}`);
+export function downloadFile(data: IVocabulary, fileName: string) {
+    const a = document.createElement('a');
 
-    if (elem[0]) {
-        elem[0].href = _dataUri;
-        elem[0].download = fileName + extensionValue;
-        elem[0].click();
-    }
+    document.body.appendChild(a);
+    const blob = new Blob([JSON.stringify(data)], {type: 'application/json'}),
+        url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
 }
