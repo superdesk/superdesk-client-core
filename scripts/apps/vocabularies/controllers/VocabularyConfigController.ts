@@ -70,7 +70,7 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      * @param {Object} vocabulary
      */
     $scope.downloadVocabulary = (vocabulary: IVocabulary) => {
-        downloadFile(vocabulary, vocabulary.display_name);
+        downloadFile(JSON.stringify(vocabulary), 'application/json', vocabulary.display_name);
     };
 
     /**

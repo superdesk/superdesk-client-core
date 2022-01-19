@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {Button} from 'core/ui/components';
-import ng from 'core/services/ng';
 
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
@@ -10,7 +9,7 @@ import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {gettext} from 'core/utils';
 import {dataApi} from 'core/helpers/CrudManager';
 import {UploadComplete} from './UploadComplete';
-import {UploadconfigModalInformation} from './UploadConfigModalInformation';
+import {UploadConfigModalInformation} from './UploadConfigModalInformation';
 import {DropZone} from './drop-zone';
 import {notify} from '../../../core/notify/notify';
 
@@ -32,6 +31,8 @@ export function UploadConfig(updateVocabulary) {
             this.state = {
                 files: [],
             };
+
+            this.onAddFiles = this.onAddFiles.bind(this);
         }
 
         onAddFiles(files) {
@@ -71,7 +72,7 @@ export function UploadConfig(updateVocabulary) {
                     </ModalHeader>
                     <ModalBody>
                         <div className="sd-padding--3">
-                            <UploadconfigModalInformation label= {modalInformationLabel} />
+                            <UploadConfigModalInformation label= {modalInformationLabel} />
                             {this.state.files.length === 0 ? (
                                 <DropZone
                                     label={dropZoneLabel}

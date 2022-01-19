@@ -7,7 +7,6 @@ import {getFields} from 'apps/fields';
 import {IVocabulary} from 'superdesk-api';
 import {IScope as IScopeConfigController} from './VocabularyConfigController';
 import {VocabularyItemsViewEdit} from '../components/VocabularyItemsViewEdit';
-import {dataApi} from 'core/helpers/CrudManager';
 
 VocabularyEditController.$inject = [
     '$scope',
