@@ -218,7 +218,7 @@ export function downloadFile(data: string, mimeType: string, fileName: string) {
     const a = document.createElement('a');
 
     document.body.appendChild(a);
-    const blob = new Blob([(data)], {type: mimeType}),
+    const blob = new Blob([data], {type: mimeType}),
         url = window.URL.createObjectURL(blob);
 
     a.href = url;

@@ -33,6 +33,7 @@ export function UploadConfig(updateVocabulary) {
             };
 
             this.onAddFiles = this.onAddFiles.bind(this);
+            this.uploadFile = this.uploadFile.bind(this);
         }
 
         onAddFiles(files) {
