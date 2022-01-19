@@ -2311,16 +2311,29 @@ declare module 'superdesk-api' {
         onChange(config: IConfig): void;
     }
 
-    export interface ICustomFieldType<IConfig> {
+    export interface ICustomFieldType<IValue, IConfig, IValueStorage> {
         id: string;
         label: string;
-        editorComponent: React.ComponentType<IEditorComponentProps<IConfig>>;
+        editorComponent: React.ComponentClass<IEditorComponentProps<IValue, IConfig>>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
 
         // may intercept template creation and return modified value
         onTemplateCreate?(value: any, config: IConfig): any;
+
+        /**
+         * In some cases a field might need to use different data structures for operation and storage.
+         * For example, draft-js uses EditorState for operation, and RawDraftContentState for storage.
+         * It would be inefficient to serialize/deserialize on every keypress.
+         */
+
+        fromStorageValue?(
+            valueStorage: IValueStorage | null,
+            config?: IConfig,
+            onChange?: (val: IValue) => void,
+        ): IValue;
+        toStorageValue?(value: IValue): IValueStorage;
     }
 
 

@@ -13,7 +13,7 @@ import {
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {gettext} from 'core/utils';
-import {IContentProfileV2, authoringStorage} from './data-layer';
+import {IContentProfileV2, authoringStorage, IAuthoringFieldV2} from './data-layer';
 import {AuthoringSection} from './authoring-section';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {EditorTest} from './ui-framework-authoring-test';
@@ -42,6 +42,35 @@ import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
+import {Map} from 'immutable';
+import {getField} from 'apps/fields';
+
+function getFieldsData(
+    item: IArticle,
+    fields: Map<string, IAuthoringFieldV2>,
+    onChange: (fieldId: string, value: unknown) => void,
+) {
+    return fields.map((field) => {
+        if (field.type === 'from-extension') {
+            const fieldConfig = getField(field.extension_field_type);
+
+            if (fieldConfig.fromStorageValue != null) {
+                // TODO: use a different location from fields_meta
+                return fieldConfig.fromStorageValue(
+                    item.fields_meta?.[field.id] ?? null,
+                    fieldConfig,
+                    (val) => {
+                        onChange(field.id, val);
+                    },
+                );
+            } else {
+                return item.extra?.[field.id] ?? null;
+            }
+        } else {
+            return item.extra?.[field.id] ?? null;
+        }
+    }).toMap();
+}
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -50,8 +79,17 @@ interface IProps {
 
 interface IStateLoaded {
     initialized: true;
+
+    /**
+     * TODO: go over the usages of `itemOriginal` / `itemWithChanges`
+     * and use `fieldsDataOriginal` / `fieldsDataWithChanges` instead
+     * where appropriate.
+     */
     itemOriginal: IArticle;
     itemWithChanges: IArticle;
+
+    fieldsDataOriginal: Map<string, unknown>;
+    fieldsDataWithChanges: Map<string, unknown>;
     profile: IContentProfileV2;
     openWidget?: {
         name: string;
@@ -96,6 +134,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         this.stealLock = this.stealLock.bind(this);
         this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleFieldChange = this.handleFieldChange.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -173,6 +212,19 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         widgetReactIntegration.WidgetLayoutComponent = AuthoringWidgetLayoutComponent;
     }
 
+    handleFieldChange(fieldId: string, data: unknown) {
+        const {state} = this;
+
+        if (state.initialized !== true) {
+            throw new Error('can not change field value when authoring is not initialized');
+        }
+
+        this.setState({
+            ...state,
+            fieldsDataWithChanges: state.fieldsDataWithChanges.set(fieldId, data),
+        });
+    }
+
     componentDidMount() {
         Promise.all(
             [
@@ -188,11 +240,30 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         ).then((res) => {
             const [{item, profile}] = res;
 
+            const allFields = profile.header.merge(profile.content);
+
+            const itemOriginal = item.saved;
+            const itemWithChanges = item.autosaved ?? itemOriginal;
+
+            const fieldsOriginal = getFieldsData(
+                itemOriginal,
+                allFields,
+                this.handleFieldChange,
+            );
+
             const nextState: IStateLoaded = {
                 initialized: true,
                 loading: false,
-                itemOriginal: item.saved,
-                itemWithChanges: item.autosaved ?? item.saved,
+                itemOriginal: itemOriginal,
+                itemWithChanges: itemWithChanges,
+                fieldsDataOriginal: fieldsOriginal,
+                fieldsDataWithChanges: itemOriginal === itemWithChanges
+                    ? fieldsOriginal
+                    : getFieldsData(
+                        itemWithChanges,
+                        allFields,
+                        this.handleFieldChange,
+                    ),
                 profile: profile,
             };
 
@@ -851,14 +922,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 <AuthoringSection
                                                     fields={state.profile.header}
                                                     item={state.itemWithChanges}
-                                                    onChange={(itemChanged) => {
-                                                        const nextState: IStateLoaded = {
-                                                            ...state,
-                                                            itemWithChanges: itemChanged,
-                                                        };
-
-                                                        this.setState(nextState);
-                                                    }}
+                                                    fieldsData={state.fieldsDataWithChanges}
+                                                    onChange={this.handleFieldChange}
                                                     readOnly={readOnly}
                                                 />
                                             </div>
@@ -868,14 +933,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                             <AuthoringSection
                                                 fields={state.profile.content}
                                                 item={state.itemWithChanges}
-                                                onChange={(itemChanged) => {
-                                                    const nextState: IStateLoaded = {
-                                                        ...state,
-                                                        itemWithChanges: itemChanged,
-                                                    };
-
-                                                    this.setState(nextState);
-                                                }}
+                                                fieldsData={state.fieldsDataWithChanges}
+                                                onChange={this.handleFieldChange}
                                                 readOnly={readOnly}
                                             />
                                         </div>

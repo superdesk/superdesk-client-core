@@ -7,7 +7,7 @@ import {
     RawDraftContentState,
     CompositeDecorator,
 } from 'draft-js';
-import {createStore} from 'redux';
+import {createStore, Store} from 'redux';
 import {pick, get, debounce} from 'lodash';
 import {
     PopupTypes,
@@ -124,7 +124,7 @@ export default function createEditorStore(
     props: IProps,
     spellcheck,
     isReact = false,
-) {
+): Store<IEditorStore> {
     const spellcheckerDisabledInConfig =
         get(appConfig, 'features.useTansaProofing') === true;
     let disableSpellchecker = true;
@@ -158,7 +158,7 @@ export default function createEditorStore(
 
     editorState = handleOverflowHighlights(editorState, limitConfig?.chars);
 
-    const store = createStore<IEditorStore, any, any, any>(
+    const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(
         reducers,
         {
             editorState,

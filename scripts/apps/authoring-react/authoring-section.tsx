@@ -4,17 +4,19 @@ import {IArticle} from 'superdesk-api';
 import {FieldText} from './fields/field-text';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {getField} from 'apps/fields';
+import {Map} from 'immutable';
 
 interface IProps {
-    fields: IFieldsV2;
     item: IArticle;
+    fieldsData: Map<string, unknown>;
+    fields: IFieldsV2;
     readOnly: boolean;
-    onChange(itemChanged: IArticle): void;
+    onChange(fieldId: string, value: unknown): void;
 }
 
 export class AuthoringSection extends React.PureComponent<IProps> {
     render() {
-        const {item, fields} = this.props;
+        const {fields, fieldsData} = this.props;
 
         return (
             <div>
@@ -27,12 +29,9 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                 if (field.type === 'text') {
                                     return (
                                         <FieldText
-                                            value={this.props.item[field.id] ?? ''}
-                                            onChange={(valueChanged) => {
-                                                this.props.onChange({
-                                                    ...item,
-                                                    [field.id]: valueChanged,
-                                                });
+                                            value={fieldsData[field.id] ?? ''}
+                                            onChange={(val) => {
+                                                this.props.onChange(field.id, val);
                                             }}
                                             readOnly={this.props.readOnly}
                                         />
@@ -43,15 +42,9 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                     return (
                                         <FieldType.editorComponent
                                             item={this.props.item}
-                                            value={this.props.item?.extra?.[field.id]}
-                                            setValue={(valueChanged) => {
-                                                this.props.onChange({
-                                                    ...item,
-                                                    extra: {
-                                                        ...(item.extra ?? {}),
-                                                        [field.id]: valueChanged,
-                                                    },
-                                                });
+                                            value={fieldsData.get(field.id)}
+                                            setValue={(val) => {
+                                                this.props.onChange(field.id, val);
                                             }}
                                             readOnly={this.props.readOnly}
                                             config={field.extension_field_config}
