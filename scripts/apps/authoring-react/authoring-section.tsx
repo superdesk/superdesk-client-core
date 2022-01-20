@@ -1,11 +1,10 @@
 import React from 'react';
 import {IFieldsV2} from './data-layer';
-import {IArticle} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {Map} from 'immutable';
 
 interface IProps {
-    item: IArticle;
+    language: string;
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
     readOnly: boolean;
@@ -27,7 +26,7 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                 <h4>{field.name}</h4>
 
                                 <FieldEditorConfig.editorComponent
-                                    item={this.props.item}
+                                    language={this.props.language}
                                     value={fieldsData.get(field.id)}
                                     setValue={(val) => {
                                         this.props.onChange(field.id, val);

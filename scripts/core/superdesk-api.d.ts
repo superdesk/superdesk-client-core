@@ -2286,7 +2286,7 @@ declare module 'superdesk-api' {
     // CUSTOM FIELD TYPES
 
     export interface IEditorComponentProps<IValue, IConfig> {
-        item: IArticle;
+        language: string;
         value: IValue;
         setValue: (value: IValue) => void;
         readOnly: boolean;
@@ -2294,7 +2294,7 @@ declare module 'superdesk-api' {
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {
-        item: IArticle;
+        language: string;
         value: IValue;
         setValue: (value: IValue) => void;
         readOnly: boolean;
@@ -2302,7 +2302,6 @@ declare module 'superdesk-api' {
     }
 
     export interface IPreviewComponentProps {
-        item: IArticle;
         value: any;
     }
 
@@ -2318,7 +2317,7 @@ declare module 'superdesk-api' {
         editorComponent: React.ComponentClass<IEditorComponentProps<IValue, IConfig>>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
-        templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
+        templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IValue, IConfig>>;
 
         // may intercept template creation and return modified value
         onTemplateCreate?(value: any, config: IConfig): any;

@@ -75,7 +75,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                 {this.props.template != null && FieldType.templateEditorComponent != null ?
                     (
                         <FieldType.templateEditorComponent
-                            item={item}
+                            language={item.language}
                             value={this.state.value}
                             setValue={(value) => this.setValue(value)}
                             readOnly={!editable}
@@ -84,7 +84,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                     ) :
                     (
                         <FieldType.editorComponent
-                            item={item}
+                            language={item.language}
                             value={this.state.value}
                             setValue={(value) => this.setValue(value)}
                             readOnly={!editable}

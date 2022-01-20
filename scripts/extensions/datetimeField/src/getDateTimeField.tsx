@@ -49,7 +49,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                 const steps = this.props.config?.increment_steps ?? [];
 
                 // Get the DatePicker locale using the language of this item
-                const language = this.props.item.language ?? superdesk.instance.config.default_language;
+                const language = this.props.language ?? superdesk.instance.config.default_language;
                 const datePickerLocale = getLocaleForDatePicker(language);
 
                 return (

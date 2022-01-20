@@ -960,9 +960,9 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                             <div>
                                                 <AuthoringSection
                                                     fields={state.profile.header}
-                                                    item={state.itemWithChanges}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
+                                                    language={state.itemWithChanges.language}
                                                     readOnly={readOnly}
                                                 />
                                             </div>
@@ -971,9 +971,9 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                         <div>
                                             <AuthoringSection
                                                 fields={state.profile.content}
-                                                item={state.itemWithChanges}
                                                 fieldsData={state.fieldsDataWithChanges}
                                                 onChange={this.handleFieldChange}
+                                                language={state.itemWithChanges.language}
                                                 readOnly={readOnly}
                                             />
                                         </div>
