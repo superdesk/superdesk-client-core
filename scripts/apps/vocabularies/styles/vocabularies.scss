@@ -125,3 +125,18 @@
         width: 5%;
     }
 }
+
+.file-upload-border {
+    height: 300px !important;
+    border: 2px dashed rgba(150,150,150,0.3) !important;
+}
+
+.file-uploaded {
+    height: 300px;
+    text-align: center;
+    border: 2px dashed rgba(150,150,150,0.3) !important;
+    vertical-align: middle;
+    display: table-cell;
+    vertical-align: middle;
+    width: 700px;
+}
