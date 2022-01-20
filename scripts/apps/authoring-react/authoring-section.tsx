@@ -36,7 +36,7 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                     config={field.fieldConfig}
                                 />
                             </div>
-                        )
+                        );
                     }).toArray()
                 }
             </div>
