@@ -60,7 +60,7 @@ function getFieldsData(
     }).toMap();
 }
 
-function applyFieldsDataOnArticle(
+function serializeFieldsDataAndApplyOnArticle(
     item: IArticle,
     fieldsProfile: Map<string, IAuthoringFieldV2>,
     fieldsData: Map<string, unknown>,
@@ -151,6 +151,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         this.handleClose = this.handleClose.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
+        this.computeLatestArticle = this.computeLatestArticle.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -226,6 +227,28 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
         widgetReactIntegration.WidgetLayoutComponent = AuthoringWidgetLayoutComponent;
+    }
+
+    /**
+     * This is a relatively computationally expensive operation that serializes all fields.
+     * It is meant to be called when an article is to be saved/autosaved.
+     */
+    computeLatestArticle() {
+        const state = this.state;
+
+        if (state.initialized !== true) {
+            throw new Error('Authoring not initialized');
+        }
+
+        const allFields = state.profile.header.merge(state.profile.content);
+
+        const itemWithFieldsApplied = serializeFieldsDataAndApplyOnArticle(
+            state.itemWithChanges,
+            allFields,
+            state.fieldsDataWithChanges,
+        );
+
+        return itemWithFieldsApplied;
     }
 
     handleFieldChange(fieldId: string, data: unknown) {
@@ -479,18 +502,20 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             && prevState.initialized
             && sdApi.article.isLockedInCurrentSession(this.state.itemOriginal)
         ) {
-            const itemWasSaved = this.state.itemOriginal === this.state.itemWithChanges;
+            const articleChanged = (this.state.itemWithChanges !== prevState.itemWithChanges)
+                || (this.state.fieldsDataWithChanges !== prevState.fieldsDataWithChanges);
 
-            if (!itemWasSaved && this.state.itemWithChanges !== prevState.itemWithChanges) {
-                if (this.state.itemWithChanges === this.state.itemOriginal) {
+            if (articleChanged) {
+                if (this.hasUnsavedChanges()) {
+                    authoringStorage.autosave.schedule(() => {
+                        return this.computeLatestArticle();
+                    });
+                } else {
                     /**
-                     * Item changed, but is now the same as original item.
-                     * This means either article was saved, or changes discarded.
-                     * In either case, autosaved data needs to be deleted.
+                     * If article has changed, but there are no unsaved changes, it means
+                     * saving itself triggered the change. Autosaved data then has to be removed.
                      */
                     authoringStorage.autosave.delete(this.state.itemWithChanges);
-                } else {
-                    authoringStorage.autosave.schedule(this.state.itemWithChanges);
                 }
             }
         }
@@ -538,15 +563,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             loading: true,
         });
 
-        const allFields = state.profile.header.merge(state.profile.content);
-
-        const itemWithFieldsApplied = applyFieldsDataOnArticle(
-            state.itemWithChanges,
-            allFields,
-            state.fieldsDataWithChanges,
-        );
-
-        return authoringStorage.saveArticle(itemWithFieldsApplied, state.itemOriginal).then((item: IArticle) => {
+        return authoringStorage.saveArticle(this.computeLatestArticle(), state.itemOriginal).then((item: IArticle) => {
             const nextState: IStateLoaded = {
                 ...state,
                 loading: false,

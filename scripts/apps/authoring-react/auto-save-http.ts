@@ -4,11 +4,13 @@ import {IArticle} from 'superdesk-api';
 import {IAuthoringAutoSave, omitFields} from './data-layer';
 
 export class AutoSaveHttp implements IAuthoringAutoSave {
-    autoSaveThrottled: ((item: IArticle) => void) & Cancelable;
+    autoSaveThrottled: ((getItem: () => IArticle) => void) & Cancelable;
 
     constructor(delay: number) {
         this.autoSaveThrottled = throttle(
-            (item: IArticle) => {
+            (getItem: () => IArticle) => {
+                const item = getItem();
+
                 httpRequestJsonLocal<IArticle>({
                     method: 'POST',
                     path: '/archive_autosave',
@@ -37,8 +39,8 @@ export class AutoSaveHttp implements IAuthoringAutoSave {
         }).then(() => undefined);
     }
 
-    schedule(item: IArticle) {
-        this.autoSaveThrottled(item);
+    schedule(getItem) {
+        this.autoSaveThrottled(getItem);
     }
 
     cancel() {

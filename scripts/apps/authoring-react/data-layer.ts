@@ -92,8 +92,14 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 export interface IAuthoringAutoSave {
     get(id: IArticle['_id']): Promise<IArticle>;
     delete(item: IArticle): Promise<void>;
-    schedule(item: IArticle): void;
     cancel(): void;
+
+    /**
+     * A function that returns the article is used to improve performance.
+     * In order to get the latest article, data has to be serialized. Using a function
+     * allows to only do it once after timeout passes, instead of on every character change.
+     */
+    schedule(getItem: () => IArticle): void;
 }
 
 /**
