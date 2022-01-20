@@ -92,17 +92,39 @@ interface IProps {
     onClose(): void;
 }
 
+function getInitialState(item: {saved: IArticle; autosaved: IArticle}, profile: IContentProfileV2): IStateLoaded {
+    const allFields = profile.header.merge(profile.content);
+
+    const itemOriginal = item.saved;
+    const itemWithChanges = item.autosaved ?? itemOriginal;
+
+    const fieldsOriginal = getFieldsData(
+        itemOriginal,
+        allFields,
+    );
+
+    const initialState: IStateLoaded = {
+        initialized: true,
+        loading: false,
+        itemOriginal: itemOriginal,
+        itemWithChanges: itemWithChanges,
+        fieldsDataOriginal: fieldsOriginal,
+        fieldsDataWithChanges: itemOriginal === itemWithChanges
+            ? fieldsOriginal
+            : getFieldsData(
+                itemWithChanges,
+                allFields,
+            ),
+        profile: profile,
+    };
+
+    return initialState;
+}
+
 interface IStateLoaded {
     initialized: true;
-
-    /**
-     * TODO: go over the usages of `itemOriginal` / `itemWithChanges`
-     * and use `fieldsDataOriginal` / `fieldsDataWithChanges` instead
-     * where appropriate.
-     */
     itemOriginal: IArticle;
     itemWithChanges: IArticle;
-
     fieldsDataOriginal: Map<string, unknown>;
     fieldsDataWithChanges: Map<string, unknown>;
     profile: IContentProfileV2;
@@ -287,35 +309,11 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             ],
         ).then((res) => {
             const [{item, profile}] = res;
+            const initialState = getInitialState(item, profile);
 
-            const allFields = profile.header.merge(profile.content);
+            dispatchCustomEvent('articleEditStart', initialState.itemWithChanges);
 
-            const itemOriginal = item.saved;
-            const itemWithChanges = item.autosaved ?? itemOriginal;
-
-            const fieldsOriginal = getFieldsData(
-                itemOriginal,
-                allFields,
-            );
-
-            const nextState: IStateLoaded = {
-                initialized: true,
-                loading: false,
-                itemOriginal: itemOriginal,
-                itemWithChanges: itemWithChanges,
-                fieldsDataOriginal: fieldsOriginal,
-                fieldsDataWithChanges: itemOriginal === itemWithChanges
-                    ? fieldsOriginal
-                    : getFieldsData(
-                        itemWithChanges,
-                        allFields,
-                    ),
-                profile: profile,
-            };
-
-            dispatchCustomEvent('articleEditStart', nextState.itemWithChanges);
-
-            this.setState(nextState);
+            this.setState(initialState);
         });
 
         registerToReceivePatches(this.props.itemId, (patch) => {
@@ -404,7 +402,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 };
 
                 if (state.initialized) {
-                    if (state.itemOriginal === state.itemWithChanges) {
+                    if (!this.hasUnsavedChanges) {
                         /**
                          * if object references are the same before patching
                          * they should be the same after patching too
@@ -463,20 +461,12 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                     return;
                 }
 
-                const hasUnsavedChanges = state.itemWithChanges !== state.itemOriginal;
-
-                if (hasUnsavedChanges) {
+                if (this.hasUnsavedChanges()) {
                     return;
                 }
 
-                authoringStorage.getArticle(state.itemOriginal._id).then((res) => {
-                    const itemCurrent = res.autosaved ?? res.saved;
-
-                    this.setState({
-                        ...state,
-                        itemOriginal: res.saved,
-                        itemWithChanges: itemCurrent,
-                    });
+                authoringStorage.getArticle(state.itemOriginal._id).then((item) => {
+                    this.setState(getInitialState(item, state.profile));
                 });
             }),
         );
@@ -523,7 +513,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
     handleUnsavedChanges(state: IStateLoaded): Promise<Array<IArticle>> {
         return new Promise((resolve, reject) => {
-            if (state.itemWithChanges === state.itemOriginal) {
+            if (!this.hasUnsavedChanges()) {
                 resolve([state.itemOriginal]);
                 return;
             }
@@ -601,6 +591,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 const stateNext: IStateLoaded = {
                     ...state,
                     itemWithChanges: state.itemOriginal,
+                    fieldsDataWithChanges: state.fieldsDataOriginal,
                 };
 
                 this.setState(stateNext, () => {
@@ -617,7 +608,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         });
 
         authoringStorage.closeAuthoring(
-            state.itemWithChanges,
+            this.computeLatestArticle(),
             state.itemOriginal,
             () => this.props.onClose(),
         ).then(() => {
@@ -959,7 +950,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                         icon="preview-mode"
                                                         ariaValue={gettext('Print preview')}
                                                         onClick={() => {
-                                                            previewItems([state.itemOriginal]);
+                                                            previewItems([this.computeLatestArticle()]);
                                                         }}
                                                     />
                                                 </ButtonGroup>
