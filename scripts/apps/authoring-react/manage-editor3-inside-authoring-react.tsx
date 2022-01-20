@@ -12,6 +12,7 @@ import ng from 'core/services/ng';
 import {Provider} from 'react-redux';
 import {Store} from 'redux';
 import {Editor3} from 'core/editor3/components';
+import {noop} from 'lodash';
 
 const EditorStore = React.createContext<Store>(null);
 
@@ -23,6 +24,18 @@ interface IValue {
 type IProps = IEditorComponentProps<IValue, unknown>;
 
 class Editor3Component extends React.PureComponent<IProps> {
+    componentDidMount() {
+        const store = this.props.value.store;
+
+        store.subscribe(() => {
+            const contentState = store.getState().editorState.getCurrentContent();
+
+            if (this.props.value.contentState !== contentState) {
+                this.props.setValue({store, contentState});
+            }
+        });
+    }
+
     render() {
         const store = this.props.value.store;
 
@@ -49,25 +62,22 @@ const editor3AuthoringReact = 'editor3--authoring-react';
 
 export function registerEditor3AsCustomField() {
     /**
-     * TODO: add preview component and all missing data for store initialization.
+     * TODO: add missing data for store initialization.
      */
     const customFields: Array<ICustomFieldType<IValue, unknown, RawDraftContentState>> = [
         {
             id: 'editor3',
             label: gettext('Editor3 (authoring-react)'),
             editorComponent: Editor3Component,
-            // previewComponent: Editor3Component
-            previewComponent: () => null,
+            previewComponent: Editor3Component,
 
-            fromStorageValue: (rawContentState, config, onChange) => {
+            retrieveStoredValue: (fieldId, article) => {
+                const rawContentState = article.fields_meta?.[fieldId]?.['draftjsState'][0];
+
                 const store = createEditorStore(
                     {
                         editorState: rawContentState ?? convertToRaw(ContentState.createFromText('')),
-                        onChange: (contentState: ContentState) => {
-                            if (typeof onChange === 'function') {
-                                onChange({store, contentState});
-                            }
-                        },
+                        onChange: noop,
                         editorFormat: ['bold', 'comments', 'annotation'],
                         // language
                         // debounce
@@ -92,7 +102,24 @@ export function registerEditor3AsCustomField() {
                     contentState: store.getState().editorState.getCurrentContent(),
                 };
             },
-            toStorageValue: ({contentState}) => convertToRaw(contentState),
+
+            storeValue: (fieldId, article, value) => {
+                const rawContentState = convertToRaw(
+                    value.store.getState().editorState.getCurrentContent(),
+                );
+
+                return {
+                    ...article,
+                    fields_meta: {
+                        ...(article.fields_meta ?? {}),
+                        [fieldId]: {
+                            draftjsState: [rawContentState],
+                        },
+                    },
+                };
+
+                // TODO: update HTML too
+            },
         },
     ];
 

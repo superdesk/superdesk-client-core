@@ -487,7 +487,7 @@ declare module 'superdesk-api' {
         format: any;
         fields_meta?: {
             [key: string]: {
-                draftjsState?: any;
+                draftjsState?: [any]; // [RawDraftContentState] - can't import it here
             }
         };
         version: any;
@@ -2323,17 +2323,20 @@ declare module 'superdesk-api' {
         onTemplateCreate?(value: any, config: IConfig): any;
 
         /**
-         * In some cases a field might need to use different data structures for operation and storage.
+         * The APIs below serve 2 functions:
+         * 
+         * 1. Allows to customize where values are stored
+         * By default, custom fields are stored in IArticle['extra'].
+         * Some fields may require a different storing strategy.
+         * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
+         * and also HTML version of the data in another location.
+         *
+         * 2. Allows to use different formats for storage and operation.
          * For example, draft-js uses EditorState for operation, and RawDraftContentState for storage.
-         * It would be inefficient to serialize/deserialize on every keypress.
          */
 
-        fromStorageValue?(
-            valueStorage: IValueStorage | null,
-            config?: IConfig,
-            onChange?: (val: IValue) => void,
-        ): IValue;
-        toStorageValue?(value: IValue): IValueStorage;
+        storeValue?(fieldId: string, article: IArticle, value: IValue): IArticle;
+        retrieveStoredValue?(fieldId: string, article: IArticle): IValue;
     }
 
 

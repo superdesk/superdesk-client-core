@@ -48,28 +48,43 @@ import {getField} from 'apps/fields';
 function getFieldsData(
     item: IArticle,
     fields: Map<string, IAuthoringFieldV2>,
-    onChange: (fieldId: string, value: unknown) => void,
 ) {
     return fields.map((field) => {
-        if (field.type === 'from-extension') {
-            const fieldConfig = getField(field.extension_field_type);
+        const fieldEditor = getField(field.fieldType);
 
-            if (fieldConfig.fromStorageValue != null) {
-                // TODO: use a different location from fields_meta
-                return fieldConfig.fromStorageValue(
-                    item.fields_meta?.[field.id] ?? null,
-                    fieldConfig,
-                    (val) => {
-                        onChange(field.id, val);
-                    },
-                );
-            } else {
-                return item.extra?.[field.id] ?? null;
-            }
+        if (fieldEditor.retrieveStoredValue != null) {
+            return fieldEditor.retrieveStoredValue(field.id, item);
         } else {
             return item.extra?.[field.id] ?? null;
         }
     }).toMap();
+}
+
+function applyFieldsDataOnArticle(
+    item: IArticle,
+    fieldsProfile: Map<string, IAuthoringFieldV2>,
+    fieldsData: Map<string, unknown>,
+): IArticle {
+    let result: IArticle = item;
+
+    fieldsProfile.forEach((field) => {
+        const fieldEditor = getField(field.fieldType);
+        const fieldValue = fieldsData.get(field.id);
+
+        if (fieldEditor.storeValue != null) {
+            result = fieldEditor.storeValue(field.id, result, fieldValue);
+        } else {
+            result = {
+                ...result,
+                extra: {
+                    ...(result.extra ?? {}),
+                    [field.id]: fieldValue,
+                },
+            };
+        }
+    });
+
+    return result;
 }
 
 interface IProps {
@@ -135,6 +150,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -225,6 +241,15 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         });
     }
 
+    hasUnsavedChanges() {
+        if (this.state.initialized) {
+            return (this.state.itemOriginal !== this.state.itemWithChanges)
+                || (this.state.fieldsDataOriginal !== this.state.fieldsDataWithChanges);
+        } else {
+            return false;
+        }
+    }
+
     componentDidMount() {
         Promise.all(
             [
@@ -248,7 +273,6 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             const fieldsOriginal = getFieldsData(
                 itemOriginal,
                 allFields,
-                this.handleFieldChange,
             );
 
             const nextState: IStateLoaded = {
@@ -262,7 +286,6 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                     : getFieldsData(
                         itemWithChanges,
                         allFields,
-                        this.handleFieldChange,
                     ),
                 profile: profile,
             };
@@ -508,14 +531,22 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     save(state: IStateLoaded): Promise<IArticle> {
-        authoringStorage.autosave.delete(state.itemWithChanges);
+        authoringStorage.autosave.delete(state.itemOriginal);
 
         this.setState({
             ...state,
             loading: true,
         });
 
-        return authoringStorage.saveArticle(state.itemWithChanges, state.itemOriginal).then((item: IArticle) => {
+        const allFields = state.profile.header.merge(state.profile.content);
+
+        const itemWithFieldsApplied = applyFieldsDataOnArticle(
+            state.itemWithChanges,
+            allFields,
+            state.fieldsDataWithChanges,
+        );
+
+        return authoringStorage.saveArticle(itemWithFieldsApplied, state.itemOriginal).then((item: IArticle) => {
             const nextState: IStateLoaded = {
                 ...state,
                 loading: false,
@@ -611,7 +642,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                             text={gettext('Save')}
                             style="filled"
                             type="primary"
-                            disabled={state.itemWithChanges === state.itemOriginal}
+                            disabled={!this.hasUnsavedChanges()}
                             onClick={() => {
                                 this.save(state);
                             }}

@@ -1,5 +1,5 @@
 import {OrderedMap} from 'immutable';
-import {IArticle, IBaseRestApiResponse} from 'superdesk-api';
+import {IArticle} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {dataApi} from 'core/helpers/CrudManager';
@@ -12,22 +12,12 @@ import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 
-interface IFieldBase {
+export interface IAuthoringFieldV2 {
     id: string;
     name: string;
+    fieldType: string;
+    fieldConfig: any;
 }
-
-interface IFieldText extends IFieldBase {
-    type: 'text';
-}
-
-interface IFieldFromExtension extends IFieldBase {
-    type: 'from-extension';
-    extension_field_type: string;
-    extension_field_config: any;
-}
-
-export type IAuthoringFieldV2 = IFieldText | IFieldFromExtension;
 
 export type IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>;
 
@@ -73,35 +63,12 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
         for (const {fieldId, editorItem} of fieldsOrdered) {
             const field = fields.find(({_id}) => _id === fieldId);
 
-            const fieldV2: IAuthoringFieldV2 = (() => {
-                if (field == null) {
-                    const result: IAuthoringFieldV2 = {
-                        id: fieldId,
-                        name: getLabelForFieldId(fieldId),
-                        type: 'text',
-                    };
-
-                    return result;
-                } else if (field.field_type === 'custom') {
-                    const result: IAuthoringFieldV2 = {
-                        id: fieldId,
-                        name: getLabelForFieldId(fieldId),
-                        type: 'from-extension',
-                        extension_field_type: field.custom_field_type,
-                        extension_field_config: field.custom_field_config,
-                    };
-
-                    return result;
-                } else {
-                    const result: IAuthoringFieldV2 = {
-                        id: fieldId,
-                        name: getLabelForFieldId(fieldId),
-                        type: 'text',
-                    };
-
-                    return result;
-                }
-            })();
+            const fieldV2: IAuthoringFieldV2 = {
+                id: fieldId,
+                name: getLabelForFieldId(fieldId),
+                fieldType: field.custom_field_type,
+                fieldConfig: field.custom_field_config,
+            };
 
             if (editorItem.section === 'header') {
                 headerFields = headerFields.set(fieldV2.id, fieldV2);
@@ -158,6 +125,7 @@ export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
         'expiry',
         '_current_version',
         'original_id',
+        'ingest_version',
     ];
 
     const baseApiFields = [
