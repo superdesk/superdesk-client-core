@@ -2311,7 +2311,7 @@ declare module 'superdesk-api' {
         onChange(config: IConfig): void;
     }
 
-    export interface ICustomFieldType<IValue, IConfig, IValueStorage> {
+    export interface ICustomFieldType<IValue, IConfig> {
         id: string;
         label: string;
         editorComponent: React.ComponentClass<IEditorComponentProps<IValue, IConfig>>;
