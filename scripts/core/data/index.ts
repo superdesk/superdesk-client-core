@@ -34,9 +34,22 @@ const resourcesInStore = [
 addWebsocketEventListener(
     'resource:updated',
     (event: IWebsocketMessage<IResourceUpdateEvent>) => {
-        const {resource, _id} = event.extra;
+        const {resource, _id, fields} = event.extra;
+        const fieldKeys = Object.keys(fields);
 
         if (!resourcesInStore.includes(resource)) {
+            return;
+        } else if (resource === 'users' &&
+            fieldKeys.length === 1 &&
+            fieldKeys[0] === 'last_activity_at' &&
+            store.getState().users.entities[_id] != null
+        ) {
+            // This websocket message is purely to update a User's last_activity_at
+            // So manually update the resource rather than sending an API request
+            store.dispatch({
+                type: 'UPDATE_USER_LAST_ACTIVE',
+                payload: _id,
+            });
             return;
         }
 
