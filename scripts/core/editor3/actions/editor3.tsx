@@ -253,10 +253,3 @@ export function autocomplete(value: string) {
         payload: {value},
     };
 }
-
-export function autocomplete(value: string) {
-    return {
-        type: 'EDITOR_AUTOCOMPLETE',
-        payload: {value},
-    };
-}
