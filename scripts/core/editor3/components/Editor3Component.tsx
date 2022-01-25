@@ -160,7 +160,11 @@ export class Editor3Component extends React.Component<IProps, IState> {
     static defaultProps: any;
 
     editorKey: any;
-    editorNode: any;
+
+    // Use an object otherwise a second render will be required after mounting
+    // to use this reference in a render property to a component.
+    editorNode: React.MutableRefObject<HTMLDivElement>;
+
     div: any;
     editor: any;
     spellcheckCancelFn: () => void;
@@ -171,7 +175,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
         super(props);
 
         this.editorKey = null;
-        this.editorNode = undefined;
+        this.editorNode = React.createRef();
 
         this.focus = this.focus.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
@@ -490,7 +494,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
         this.editorKey = this.editor === null ? null : this.editor._editorKey;
 
         // eslint-disable-next-line react/no-find-dom-node
-        this.editorNode = this.editor === null ? undefined : ReactDOM.findDOMNode(this.editor);
+        this.editorNode.current = this.editor === null ?
+            undefined :
+            ReactDOM.findDOMNode(this.editor) as HTMLDivElement;
     }
 
     componentWillUnmount() {
@@ -607,8 +613,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
                             const selectionRect = getVisibleSelectionRect(window);
 
-                            if (this.editorNode != null && selectionRect != null) {
-                                this.editorNode.dataset.editorSelectionRect = JSON.stringify(selectionRect);
+                            if (this.editorNode?.current != null && selectionRect != null) {
+                                this.editorNode.current.dataset.editorSelectionRect = JSON.stringify(selectionRect);
                             }
 
                             onChange(editorStateNext);
