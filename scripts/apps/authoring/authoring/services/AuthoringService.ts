@@ -68,10 +68,6 @@ function canRewrite(item: IArticle): true | Array<string> {
         ));
     }
 
-    if (item.embargo != null) {
-        errors.push(gettext('The item is embargoed.'));
-    }
-
     if (item.rewritten_by != null) {
         errors.push(gettext(
             'An update for this version of the item already exists. '
