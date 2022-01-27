@@ -488,6 +488,7 @@ declare module 'superdesk-api' {
         fields_meta?: {
             [key: string]: {
                 draftjsState?: [any]; // [RawDraftContentState] - can't import it here
+                annotations?: Array<any>;
             }
         };
         version: any;
@@ -561,6 +562,8 @@ declare module 'superdesk-api' {
         target_subscribers?: Array<{_id: string; name: string}>;
         target_regions?: Array<{name: string; qcode: string; allow: boolean}>;
         target_types?: Array<{name: string; qcode: string; allow: boolean}>;
+
+        annotations?: Array<{id: number; type: string; body: string}>;
 
         // holds info on packages
         groups?: Array<any>;

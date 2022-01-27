@@ -16,6 +16,7 @@ import createEditorStore, {
     initializeSpellchecker,
     getInitialSpellcheckerData,
     prepareEditor3StateForExport,
+    getAnnotationsForField,
 } from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {Provider} from 'react-redux';
@@ -98,6 +99,9 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
             readOnly: this.props.readOnly ?? false,
             spellchecking: getInitialSpellcheckerData(spellcheck, this.props.language),
             limitConfig: this.getCharacterLimitPreference(),
+            item: {
+                language: this.props.language, // required for annotations to work
+            },
         }));
     }
 
@@ -314,12 +318,15 @@ export function registerEditor3AsCustomField() {
                     }
                 })();
 
+                const annotations = getAnnotationsForField(article, fieldId);
+
                 const articleUpdated: IArticle = {
                     ...article,
                     fields_meta: {
                         ...(article.fields_meta ?? {}),
                         [fieldId]: {
                             draftjsState: [rawContentState],
+                            annotations: annotations,
                         },
                     },
                 };
@@ -329,6 +336,11 @@ export function registerEditor3AsCustomField() {
                  */
                 if (CONTENT_FIELDS_DEFAULTS[fieldId] != null) {
                     articleUpdated[fieldId] = generatedValue;
+                }
+
+                // keep compatibility with existing output format
+                if (fieldId === 'body_html') {
+                    articleUpdated.annotations = annotations;
                 }
 
                 return articleUpdated;

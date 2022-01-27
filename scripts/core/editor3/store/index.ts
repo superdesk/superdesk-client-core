@@ -38,7 +38,7 @@ import {appConfig} from 'appConfig';
 import {
     formattingOptionsUnsafeToParseFromHTML,
 } from 'apps/workspace/content/components/get-content-profiles-form-config';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION, IArticle} from 'superdesk-api';
 import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -231,12 +231,18 @@ export function unsetStore() {
     return editor3Stores = [];
 }
 
+export function getAnnotationsForField(item: IArticle, fieldId: string) {
+    return ignoreInternalAnnotationFields(
+        getAnnotationsFromItem(item, fieldId),
+    );
+}
+
 /**
  * Generate item annotations field
  *
  * @param {Object} item
  */
-function generateAnnotations(item) {
+export function generateAnnotations(item) {
     item.annotations = ignoreInternalAnnotationFields(
         getAnnotationsFromItem(item, 'body_html'),
     );
