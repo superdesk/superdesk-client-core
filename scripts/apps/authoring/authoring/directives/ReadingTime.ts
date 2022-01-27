@@ -1,7 +1,27 @@
 import {compact, trim, filter} from 'lodash';
 import {cleanHtml} from '../helpers';
 import {appConfig} from 'appConfig';
-import {gettext, gettextPlural} from 'core/utils';
+import {gettext} from 'core/utils';
+
+function getReadingTime(input: string, language: string): number {
+    if (language && language.startsWith('ja')) {
+        return filter(input, (x) => !!trim(x)).length / (appConfig.japanese_characters_per_minute || 600);
+    }
+
+    const numWords = compact(input.split(/\s+/)).length || 0;
+
+    return numWords / 250;
+}
+
+export function getReadingTimeText(text: string, language: string) {
+    const minutes = getReadingTime(text, language);
+
+    if (minutes < 1) {
+        return gettext('less than one minute read');
+    } else {
+        return gettext('{{x}} min read', {x: minutes});
+    }
+}
 
 /**
  * @ngdoc directive
@@ -48,16 +68,6 @@ export function ReadingTime() {
             });
         },
     };
-
-    function getReadingTime(input, language) {
-        if (language && language.startsWith('ja')) {
-            return filter(input, (x) => !!trim(x)).length / (appConfig.japanese_characters_per_minute || 600);
-        }
-
-        const numWords = compact(input.split(/\s+/)).length || 0;
-
-        return numWords / 250;
-    }
 }
 
 ReadingTime.$inject = [];

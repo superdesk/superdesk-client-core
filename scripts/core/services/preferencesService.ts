@@ -1,3 +1,5 @@
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
+
 export default angular.module('superdesk.core.preferences', ['superdesk.core.notify', 'superdesk.core.auth.session'])
     /**
      * @ngdoc service
@@ -38,6 +40,7 @@ export default angular.module('superdesk.core.preferences', ['superdesk.core.not
                     'cvs:preferred_items': 1,
                     'masterdesk:desks': 1,
                     'editor:pinned_widget': 1,
+                    [AUTHORING_FIELD_PREFERENCES]: 1,
                 },
                 preferences,
                 preferencesPromise;

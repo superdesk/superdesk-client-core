@@ -1,10 +1,10 @@
 import {IArticle} from 'superdesk-api';
-import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from 'apps/authoring/authoring/services/AuthoringService';
 import {showUnsavedChangesPrompt, IUnsavedChangesActionWithSaving} from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
 import ng from 'core/services/ng';
+import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from 'apps/authoring/authoring/services/authoring-helpers';
 
 export interface IAuthoringApiCommon {
     saveBefore(current: IArticle, original: IArticle): Promise<IArticle>;

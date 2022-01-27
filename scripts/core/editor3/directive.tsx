@@ -14,13 +14,11 @@ import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 import ng from 'core/services/ng';
 import {RICH_FORMATTING_OPTION, IRestApiResponse} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
-import {
-    CHARACTER_LIMIT_UI_PREF,
-    CharacterLimitUiBehavior,
-} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {appConfig} from 'appConfig';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 
 function getAutocompleteSuggestions(field: string, language: string): Promise<Array<string>> {
     const supportedFields = ['slugline'];
@@ -52,7 +50,8 @@ function getAutocompleteSuggestions(field: string, language: string): Promise<Ar
  */
 export const sdEditor3 = () => new Editor3Directive();
 
-export const EditorStore = React.createContext<Store>(null);
+// used in HighlightsPopup
+export const ReactContextForEditor3 = React.createContext<Store>(null);
 
 class Editor3Directive {
     scope: any;
@@ -237,9 +236,9 @@ class Editor3Directive {
                 this.svc = {};
                 this.limit = this.limit || null;
                 this.limitBehavior =
-                    userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
+                    userPreferences[AUTHORING_FIELD_PREFERENCES]?.[
                         pathValue || this.pathToValue
-                    ];
+                    ]?.characterLimitMode;
 
                 let store = createEditorStore(this, ng.get('spellcheck'));
 
@@ -250,14 +249,14 @@ class Editor3Directive {
 
                     ReactDOM.render(
                         <Provider store={store}>
-                            <EditorStore.Provider value={store}>
+                            <ReactContextForEditor3.Provider value={store}>
                                 <Editor3
                                     scrollContainer={this.scrollContainer}
                                     singleLine={this.singleLine}
                                     cleanPastedHtml={this.cleanPastedHtml}
                                     autocompleteSuggestions={autocompleteSuggestions}
                                 />
-                            </EditorStore.Provider>
+                            </ReactContextForEditor3.Provider>
                         </Provider>,
                         element,
                     );
@@ -362,9 +361,9 @@ class Editor3Directive {
                         'changeUserPreferences',
                         (event) => {
                             const limitBehavior =
-                                event.detail?.[CHARACTER_LIMIT_UI_PREF]?.[
+                                event.detail?.[AUTHORING_FIELD_PREFERENCES]?.[
                                     pathValue || this.pathToValue
-                                ];
+                                ]?.characterLimitMode;
 
                             if (limitBehavior) {
                                 this.limitBehavior = limitBehavior;

@@ -8,6 +8,8 @@ export const ARTICLE_RELATED_RESOURCE_NAMES = [
 
 export const AUTOSAVE_TIMEOUT = 3000;
 
+export const AUTHORING_FIELD_PREFERENCES = 'authoring:field_preferences';
+
 export enum IDevTools {
     reduxLogger = 'reduxLogger',
     networkQueueLogger = 'networkQueueLogger',

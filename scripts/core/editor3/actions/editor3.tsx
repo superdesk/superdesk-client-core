@@ -8,6 +8,7 @@ import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {IEditorStore} from '../store';
 
 /**
  * @ngdoc method
@@ -251,5 +252,15 @@ export function autocomplete(value: string) {
     return {
         type: 'EDITOR_AUTOCOMPLETE',
         payload: {value},
+    };
+}
+
+export type IActionPayloadSetExternalOptions =
+    Pick<IEditorStore, 'readOnly' | 'singleLine' | 'editorFormat' | 'spellchecking' | 'limitConfig'>;
+
+export function setExternalOptions(payload: IActionPayloadSetExternalOptions) {
+    return {
+        type: 'SET_EXTERNAL_OPTIONS',
+        payload,
     };
 }

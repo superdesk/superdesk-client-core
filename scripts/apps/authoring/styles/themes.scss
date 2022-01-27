@@ -81,6 +81,22 @@ body, html {
     }
 }
 
+.field-label--base {
+    @include text-normal();
+    background: rgba(0, 0, 0, 0.4);
+    @include border-radius(2px);
+    color: #fff;
+    display: inline-block;
+    padding: 2px 8px 1px;
+    font-size: 11px;
+    font-family: "Roboto", sans-serif;
+    line-height: 16px;
+    @include transition(all ease 0.2s);
+    text-transform: uppercase;
+    font-style: normal;
+    letter-spacing: 0.1em;
+}
+
 .authoring-sticky__theme-controls {
     display: flex;
     flex-direction: row;
@@ -280,22 +296,9 @@ body, html {
     //labels
     .field {
         .field__label {
-            @include text-normal();
-            background: rgba(0, 0, 0, 0.4);
-            @include border-radius(2px);
-            color: #fff;
-            display: inline-block;
-            padding: 2px 8px 1px;
+            @extend .field-label--base;
             margin-bottom: 15px;
-            font-size: 11px;
-            font-family: "Roboto", sans-serif;
-            line-height: 16px;
-            //height: 16px;
-            @include transition(all ease 0.2s);
             opacity: 0.4;
-            text-transform: uppercase;
-            font-style: normal;
-            letter-spacing: 0.1em;
         }
         &.active {
             .field__label {

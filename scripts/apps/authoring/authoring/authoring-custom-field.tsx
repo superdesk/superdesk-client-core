@@ -3,6 +3,9 @@ import {get, throttle, Cancelable} from 'lodash';
 
 import {getField} from 'apps/fields';
 import {IArticle, IVocabulary, ITemplate} from 'superdesk-api';
+import ng from 'core/services/ng';
+import {preferences} from 'api/preferences';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 
 interface IProps {
     item: IArticle;
@@ -18,6 +21,7 @@ interface IProps {
 // Internal state is used to fix this.
 interface IState {
     value: any;
+    preferences: {};
 }
 
 function getValue(props: IProps) {
@@ -36,6 +40,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.state = {
             value: getValue(props),
+            preferences: ng.get('preferencesService').getSync(),
         };
 
         this.lastPropsValue = this.state.value;
@@ -46,11 +51,13 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.setValue = this.setValue.bind(this);
     }
+
     setValue(value) {
         this.setState({value}, () => {
             this.onChangeThrottled(this.props.field, value);
         });
     }
+
     componentDidUpdate() {
         const propsValue = getValue(this.props);
         const propsValueChanged = JSON.stringify(propsValue) !== JSON.stringify(this.lastPropsValue);
@@ -62,6 +69,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
 
         this.lastPropsValue = propsValue;
     }
+
     render() {
         const {item, field, editable} = this.props;
         const FieldType = getField(field.custom_field_type);
@@ -69,6 +77,8 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
         if (FieldType == null) {
             return null;
         }
+
+        const preferencesForFields = this.state.preferences[AUTHORING_FIELD_PREFERENCES] ?? {};
 
         return (
             <div>
@@ -89,6 +99,22 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                             setValue={(value) => this.setValue(value)}
                             readOnly={!editable}
                             config={field.custom_field_config}
+                            userPreferences={preferencesForFields[field._id]}
+                            setUserPreferences={(val) => {
+                                const nextFieldPreferences = {
+                                    ...preferencesForFields,
+                                    [field._id]: val,
+                                };
+
+                                preferences.update(AUTHORING_FIELD_PREFERENCES, nextFieldPreferences);
+
+                                this.setState({
+                                    preferences: {
+                                        ...this.state.preferences,
+                                        [AUTHORING_FIELD_PREFERENCES]: nextFieldPreferences,
+                                    },
+                                });
+                            }}
                         />
                     )
                 }

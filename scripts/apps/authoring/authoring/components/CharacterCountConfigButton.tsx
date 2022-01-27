@@ -9,8 +9,7 @@ import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import {Radio, CheckGroup} from 'superdesk-ui-framework';
 import ng from 'core/services/ng';
 import {dispatchInternalEvent} from 'core/internal-events';
-
-export const CHARACTER_LIMIT_UI_PREF = 'editor:char_limit_ui';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 
 export type CharacterLimitUiBehavior = 'highlight' | 'limit'; // highlight extra chars or limit the editor
 export interface ICharacterLimitUiBehavior {
@@ -59,9 +58,11 @@ export class CharacterCountConfigButton extends React.Component<
 
         const newPreferences = {
             ...this.state.preferences,
-            [CHARACTER_LIMIT_UI_PREF]: {
-                ...this.state.preferences[CHARACTER_LIMIT_UI_PREF],
-                [this.props.field]: newValue,
+            [AUTHORING_FIELD_PREFERENCES]: {
+                ...this.state.preferences[AUTHORING_FIELD_PREFERENCES],
+                [this.props.field]: {
+                    characterLimitMode: newValue,
+                },
             },
         };
 
@@ -83,9 +84,8 @@ export class CharacterCountConfigButton extends React.Component<
                         <CharacterCountConfigModal
                             closeModal={props.closeModal}
                             value={
-                                this.state.preferences[
-                                    CHARACTER_LIMIT_UI_PREF
-                                ]?.[this.props.field] ?? DEFAULT_UI_FOR_EDITOR_LIMIT
+                                this.state.preferences[AUTHORING_FIELD_PREFERENCES]
+                                    ?.[this.props.field].characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT
                             }
                             onChange={this.onModalValueChange}
                         />
@@ -108,7 +108,7 @@ interface IModalState {
     radioValue: CharacterLimitUiBehavior;
 }
 
-class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalState> {
+export class CharacterCountConfigModal extends React.PureComponent<IModalProps, IModalState> {
     constructor(props) {
         super(props);
 

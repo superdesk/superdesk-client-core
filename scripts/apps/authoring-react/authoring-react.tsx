@@ -38,22 +38,29 @@ import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
 import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
-import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
+import {ARTICLE_RELATED_RESOURCE_NAMES, AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
+import {preferences} from 'api/preferences';
 
 function getFieldsData(
     item: IArticle,
     fields: Map<string, IAuthoringFieldV2>,
+    userPreferencesForFields: {[key: string]: unknown},
 ) {
     return fields.map((field) => {
         const fieldEditor = getField(field.fieldType);
 
         if (fieldEditor.retrieveStoredValue != null) {
-            return fieldEditor.retrieveStoredValue(field.id, item);
+            return fieldEditor.retrieveStoredValue(
+                field.id,
+                item,
+                field.fieldConfig,
+                userPreferencesForFields[field.id],
+            );
         } else {
             return item.extra?.[field.id] ?? null;
         }
@@ -64,6 +71,7 @@ function serializeFieldsDataAndApplyOnArticle(
     item: IArticle,
     fieldsProfile: Map<string, IAuthoringFieldV2>,
     fieldsData: Map<string, unknown>,
+    userPreferencesForFields: {[key: string]: unknown},
 ): IArticle {
     let result: IArticle = item;
 
@@ -72,7 +80,13 @@ function serializeFieldsDataAndApplyOnArticle(
         const fieldValue = fieldsData.get(field.id);
 
         if (fieldEditor.storeValue != null) {
-            result = fieldEditor.storeValue(field.id, result, fieldValue);
+            result = fieldEditor.storeValue(
+                field.id,
+                result,
+                fieldValue,
+                field.fieldConfig,
+                userPreferencesForFields[field.id],
+            );
         } else {
             result = {
                 ...result,
@@ -92,7 +106,11 @@ interface IProps {
     onClose(): void;
 }
 
-function getInitialState(item: {saved: IArticle; autosaved: IArticle}, profile: IContentProfileV2): IStateLoaded {
+function getInitialState(
+    item: {saved: IArticle; autosaved: IArticle},
+    profile: IContentProfileV2,
+    userPreferencesForFields: IStateLoaded['userPreferencesForFields'],
+): IStateLoaded {
     const allFields = profile.header.merge(profile.content);
 
     const itemOriginal = item.saved;
@@ -101,6 +119,7 @@ function getInitialState(item: {saved: IArticle; autosaved: IArticle}, profile: 
     const fieldsOriginal = getFieldsData(
         itemOriginal,
         allFields,
+        userPreferencesForFields,
     );
 
     const initialState: IStateLoaded = {
@@ -114,8 +133,10 @@ function getInitialState(item: {saved: IArticle; autosaved: IArticle}, profile: 
             : getFieldsData(
                 itemWithChanges,
                 allFields,
+                userPreferencesForFields,
             ),
         profile: profile,
+        userPreferencesForFields,
     };
 
     return initialState;
@@ -128,6 +149,7 @@ interface IStateLoaded {
     fieldsDataOriginal: Map<string, unknown>;
     fieldsDataWithChanges: Map<string, unknown>;
     profile: IContentProfileV2;
+    userPreferencesForFields: {[key: string]: unknown};
     openWidget?: {
         name: string;
         pinned: boolean;
@@ -174,6 +196,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
         this.computeLatestArticle = this.computeLatestArticle.bind(this);
+        this.setUserPreferences = this.setUserPreferences.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -268,6 +291,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             state.itemWithChanges,
             allFields,
             state.fieldsDataWithChanges,
+            state.userPreferencesForFields,
         );
 
         return itemWithFieldsApplied;
@@ -305,11 +329,13 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         return {item, profile};
                     });
                 }),
+                authoringStorage.getUserPreferences(),
                 waitForCssAnimation(),
             ],
         ).then((res) => {
-            const [{item, profile}] = res;
-            const initialState = getInitialState(item, profile);
+            const [{item, profile}, userPreferences] = res;
+
+            const initialState = getInitialState(item, profile, userPreferences[AUTHORING_FIELD_PREFERENCES] ?? {});
 
             dispatchCustomEvent('articleEditStart', initialState.itemWithChanges);
 
@@ -466,7 +492,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 }
 
                 authoringStorage.getArticle(state.itemOriginal._id).then((item) => {
-                    this.setState(getInitialState(item, state.profile));
+                    this.setState(getInitialState(item, state.profile, state.userPreferencesForFields));
                 });
             }),
         );
@@ -736,6 +762,21 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         }
     }
 
+    setUserPreferences(val: IStateLoaded['userPreferencesForFields']) {
+        const state = this.state;
+
+        if (state.initialized !== true) {
+            return;
+        }
+
+        preferences.update(AUTHORING_FIELD_PREFERENCES, val);
+
+        this.setState({
+            ...state,
+            userPreferencesForFields: val,
+        });
+    }
+
     render() {
         const state = this.state;
 
@@ -963,6 +1004,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
                                                     language={state.itemWithChanges.language}
+                                                    userPreferencesForFields={state.userPreferencesForFields}
+                                                    setUserPreferencesForFields={this.setUserPreferences}
                                                     readOnly={readOnly}
                                                 />
                                             </div>
@@ -974,6 +1017,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 fieldsData={state.fieldsDataWithChanges}
                                                 onChange={this.handleFieldChange}
                                                 language={state.itemWithChanges.language}
+                                                userPreferencesForFields={state.userPreferencesForFields}
+                                                setUserPreferencesForFields={this.setUserPreferences}
                                                 readOnly={readOnly}
                                             />
                                         </div>

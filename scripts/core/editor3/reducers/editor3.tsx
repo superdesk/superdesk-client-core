@@ -15,6 +15,7 @@ import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispa
 import {insertEntity} from '../helpers/draftInsertEntity';
 import {handleOverflowHighlights} from '../helpers/characters-limit';
 import {logger} from 'core/services/logger';
+import {IActionPayloadSetExternalOptions} from '../actions';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -55,6 +56,8 @@ const editor3 = (state: IEditorStore, action) => {
         return changeLimitConfig(state, action.payload);
     case 'EDITOR_AUTOCOMPLETE':
         return autocomplete(state, action.payload);
+    case 'SET_EXTERNAL_OPTIONS':
+        return setExternalOptions(state, action.payload);
     default:
         return state;
     }
@@ -165,7 +168,7 @@ export const onChange = (
         state.onChangeValue(editorStateNext.getCurrentContent(), {plainText});
     }
 
-    const newState = editorStateChangeMiddlewares(state, editorStateNext, contentChanged);
+    const newState = editorStateChangeMiddlewares(state, editorStateNext, contentChanged || force);
 
     if (force) {
         return forceUpdate(newState, keepSelection);
@@ -541,4 +544,22 @@ const autocomplete = (state, {value}) => {
     );
 
     return onChange(state, EditorState.push(editorState, newContent, 'insert-characters'));
+};
+
+const setExternalOptions = (
+    state: IEditorStore,
+    payload: IActionPayloadSetExternalOptions,
+) => {
+    let result: IEditorStore = {
+        ...state,
+        ...payload,
+    };
+
+    result.showToolbar = result.editorFormat?.length > 0 ?? false;
+
+    /**
+     * Forcing change so characters over limit are highlighted
+     * {@see handleOverflowHighlights}
+     */
+    return onChange(result, result.editorState, true, true);
 };

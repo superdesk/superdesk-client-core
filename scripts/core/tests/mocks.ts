@@ -29,6 +29,10 @@ angular.module('superdesk.mocks', [])
             return $q.when(null);
         };
 
+        this.getSync = function() {
+            return {};
+        };
+
         this.getActions = function() {
             return $q.when([]);
         };

@@ -11,7 +11,6 @@ import {createStore, Store} from 'redux';
 import {pick, get, debounce} from 'lodash';
 import {
     PopupTypes,
-    forceUpdate,
     setAbbreviations,
     EditorLimit,
 } from '../actions';
@@ -72,7 +71,7 @@ export interface IEditorStore {
     editorState: EditorState;
     searchTerm: { pattern: string; index: number; caseSensitive: boolean };
     popup: { type: any };
-    readOnly: any;
+    readOnly: boolean;
     locked: boolean;
     showToolbar: any;
     singleLine: any;
@@ -114,6 +113,51 @@ export const getCustomDecorator = (
 };
 
 /**
+ * @param spellcheck ng service or null
+ */
+export function getInitialSpellcheckerData(spellcheck, language: string): IEditorStore['spellchecking'] {
+    const spellcheckerDisabledInConfig = appConfig.features?.useTansaProofing === true;
+
+    if (spellcheck != null) {
+        if (!spellcheckerDisabledInConfig) {
+            spellcheck.setLanguage(language);
+        }
+    }
+
+    return {
+        language: language,
+        enabled:
+            !spellcheckerDisabledInConfig &&
+            spellcheck &&
+            spellcheck.isAutoSpellchecker,
+        inProgress: false,
+        warningsByBlock: {},
+    };
+}
+
+export function initializeSpellchecker(store, spellcheck) {
+    return new Promise((resolve) => {
+        if (spellcheck != null) {
+            Promise.all([
+                spellcheck.getAbbreviationsDict(),
+
+                // after we have the dictionary, force update the editor to highlight typos
+                // if another action is dispatched, `dispatch(forceUpdate())` isn't needed
+                spellcheck.getDict(),
+            ]).then((res) => {
+                const [abbreviations] = res;
+
+                store.dispatch(setAbbreviations(abbreviations || {}));
+
+                setTimeout(() => {
+                    resolve();
+                });
+            });
+        }
+    });
+}
+
+/**
  * @name createEditorStore
  * @description Returns a new redux store.
  * @param {Object} props The properties of the editor (for Angular, the controller instance).
@@ -125,19 +169,6 @@ export default function createEditorStore(
     spellcheck,
     isReact = false,
 ): Store<IEditorStore> {
-    const spellcheckerDisabledInConfig =
-        get(appConfig, 'features.useTansaProofing') === true;
-    let disableSpellchecker = true;
-
-    if (spellcheck != null) {
-        disableSpellchecker =
-            spellcheckerDisabledInConfig || !spellcheck.isAutoSpellchecker;
-
-        if (!spellcheckerDisabledInConfig) {
-            spellcheck.setLanguage(props.language);
-        }
-    }
-
     const content = getInitialContent(props);
 
     const onChangeValue = isReact
@@ -174,15 +205,7 @@ export default function createEditorStore(
             editorFormat: props.editorFormat || [],
             onChangeValue: onChangeValue,
             item: props.item,
-            spellchecking: {
-                language: props.language,
-                enabled:
-                    !spellcheckerDisabledInConfig &&
-                    spellcheck &&
-                    spellcheck.isAutoSpellchecker,
-                inProgress: false,
-                warningsByBlock: {},
-            },
+            spellchecking: getInitialSpellcheckerData(spellcheck, props.language),
             suggestingMode: false,
             invisibles: false,
             svc: props.svc,
@@ -193,13 +216,7 @@ export default function createEditorStore(
         getMiddlewares(),
     );
 
-    if (spellcheck != null) {
-        // after we have the dictionary, force update the editor to highlight typos
-        spellcheck.getDict().finally(() => store.dispatch(forceUpdate()));
-        spellcheck.getAbbreviationsDict().then((abbreviations) => {
-            store.dispatch(setAbbreviations(abbreviations || {}));
-        });
-    }
+    initializeSpellchecker(store, spellcheck);
 
     editor3Stores.push(store);
 
@@ -225,6 +242,18 @@ function generateAnnotations(item) {
     );
 }
 
+export function prepareEditor3StateForExport(contentState: ContentState): ContentState {
+    const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
+    const contentStateCleaned = removeInlineStyles(
+        contentState,
+        decorativeStyles,
+    );
+
+    return prepareHighlightsForExport(
+        EditorState.createWithContent(contentStateCleaned),
+    ).getCurrentContent();
+}
+
 /**
  * @name onChange
  * @params {ContentState} contentState New editor content state.
@@ -240,15 +269,8 @@ export function onChange(contentState, {plainText = false} = {}) {
         throw new Error('pathToValue is required');
     }
 
-    const decorativeStyles = ['HIGHLIGHT', 'HIGHLIGHT_STRONG'];
-    const contentStateCleaned = removeInlineStyles(
-        contentState,
-        decorativeStyles,
-    );
-    const contentStateHighlightsReadyForExport = prepareHighlightsForExport(
-        EditorState.createWithContent(contentStateCleaned),
-    ).getCurrentContent();
-    const rawState = convertToRaw(contentStateHighlightsReadyForExport);
+    const contentStatePreparedForExport = prepareEditor3StateForExport(contentState);
+    const rawState = convertToRaw(contentStatePreparedForExport);
 
     setFieldMetadata(
         this.item,
@@ -280,10 +302,10 @@ export function onChange(contentState, {plainText = false} = {}) {
     if (plainText) {
         objectToUpdate[
             fieldName
-        ] = contentStateHighlightsReadyForExport.getPlainText();
+        ] = contentStatePreparedForExport.getPlainText();
     } else {
         objectToUpdate[fieldName] = editor3StateToHtml(
-            contentStateHighlightsReadyForExport,
+            contentStatePreparedForExport,
         );
         generateAnnotations(this.item);
     }

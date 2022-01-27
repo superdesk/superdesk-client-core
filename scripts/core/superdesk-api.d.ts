@@ -2285,12 +2285,14 @@ declare module 'superdesk-api' {
 
     // CUSTOM FIELD TYPES
 
-    export interface IEditorComponentProps<IValue, IConfig> {
+    export interface IEditorComponentProps<IValue, IConfig, IUserPreferences> {
         language: string;
         value: IValue;
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
+        userPreferences: IUserPreferences | undefined;
+        setUserPreferences(userPreferences: IUserPreferences): void;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {
@@ -2311,10 +2313,10 @@ declare module 'superdesk-api' {
         onChange(config: IConfig): void;
     }
 
-    export interface ICustomFieldType<IValue, IConfig> {
+    export interface ICustomFieldType<IValue, IConfig, IUserPreferences> {
         id: string;
         label: string;
-        editorComponent: React.ComponentClass<IEditorComponentProps<IValue, IConfig>>;
+        editorComponent: React.ComponentClass<IEditorComponentProps<IValue, IConfig, IUserPreferences>>;
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IValue, IConfig>>;
@@ -2335,8 +2337,19 @@ declare module 'superdesk-api' {
          * For example, draft-js uses EditorState for operation, and RawDraftContentState for storage.
          */
 
-        storeValue?(fieldId: string, article: IArticle, value: IValue): IArticle;
-        retrieveStoredValue?(fieldId: string, article: IArticle): IValue;
+        storeValue?(
+            fieldId: string,
+            article: IArticle,
+            value: IValue,
+            config: IConfig,
+            userPreferences: IUserPreferences,
+        ): IArticle;
+        retrieveStoredValue?(
+            fieldId: string,
+            article: IArticle,
+            config: IConfig,
+            userPreferences: IUserPreferences,
+        ): IValue;
     }
 
 

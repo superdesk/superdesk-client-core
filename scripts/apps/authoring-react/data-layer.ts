@@ -16,7 +16,7 @@ export interface IAuthoringFieldV2 {
     id: string;
     name: string;
     fieldType: string;
-    fieldConfig: any;
+    fieldConfig: unknown;
 }
 
 export type IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>;
@@ -115,6 +115,7 @@ interface IAuthoringStorage {
     saveArticle(current: IArticle, original: IArticle): Promise<IArticle>;
     closeAuthoring(current: IArticle, original: IArticle, doClose: () => void): Promise<void>;
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
+    getUserPreferences(): Promise<any>;
     autosave: IAuthoringAutoSave;
 }
 
@@ -220,4 +221,5 @@ export const authoringStorage: IAuthoringStorage = {
             doClose,
         );
     },
+    getUserPreferences: () => ng.get('preferencesService').get(),
 };

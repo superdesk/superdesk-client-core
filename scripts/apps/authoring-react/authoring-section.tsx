@@ -7,6 +7,8 @@ interface IProps {
     language: string;
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
+    userPreferencesForFields: {[fieldId: string]: unknown};
+    setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     readOnly: boolean;
     onChange(fieldId: string, value: unknown): void;
 }
@@ -23,7 +25,7 @@ export class AuthoringSection extends React.PureComponent<IProps> {
 
                         return (
                             <div key={field.id}>
-                                <h4>{field.name}</h4>
+                                <span className="field-label--base">{field.name}</span>
 
                                 <FieldEditorConfig.editorComponent
                                     language={this.props.language}
@@ -33,6 +35,13 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                     }}
                                     readOnly={this.props.readOnly}
                                     config={field.fieldConfig}
+                                    userPreferences={this.props.userPreferencesForFields[field.id]}
+                                    setUserPreferences={(fieldPreferences) => {
+                                        this.props.setUserPreferencesForFields({
+                                            ...this.props.userPreferencesForFields,
+                                            [field.id]: fieldPreferences,
+                                        });
+                                    }}
                                 />
                             </div>
                         );
