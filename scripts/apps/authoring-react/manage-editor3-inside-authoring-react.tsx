@@ -153,7 +153,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
         return (
             <Provider store={store}>
                 <ReactContextForEditor3.Provider value={store}>
-                    <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+                    <div style={{display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'end'}}>
                         {
                             typeof this.props.config.maxLength === 'number' && (
                                 <div style={{display: 'flex', gap: '6px'}}>

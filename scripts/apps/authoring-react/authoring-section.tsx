@@ -25,7 +25,7 @@ export class AuthoringSection extends React.PureComponent<IProps> {
 
                         return (
                             <div key={field.id}>
-                                <span className="field-label--base">{field.name}</span>
+                                <span className="field-label--base" style={{marginBottom: 20}}>{field.name}</span>
 
                                 <FieldEditorConfig.editorComponent
                                     language={this.props.language}

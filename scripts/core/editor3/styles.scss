@@ -218,6 +218,10 @@ $editor-styleButton-size: 3rem;
 		video, audio {
 			display: block;
 		}
+
+		img {
+			max-width: 100%;
+		}
 	}
 	.image-block__image-overlay {
 		@include image-overlay;
