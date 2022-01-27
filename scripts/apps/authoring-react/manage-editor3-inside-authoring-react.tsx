@@ -108,7 +108,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
             const contentState = store.getState().editorState.getCurrentContent();
 
             if (this.props.value.contentState !== contentState) {
-                this.props.setValue({store, contentState});
+                this.props.onChange({store, contentState});
             }
         });
 
@@ -182,7 +182,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
                                                     closeModal={closeModal}
                                                     value={characterLimitConfig.ui}
                                                     onChange={(ui) => {
-                                                        this.props.setUserPreferences({
+                                                        this.props.onUserPreferencesChange({
                                                             ...characterLimitConfig,
                                                             characterLimitMode: ui,
                                                         });

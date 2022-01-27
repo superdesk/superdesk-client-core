@@ -30,13 +30,13 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                 <FieldEditorConfig.editorComponent
                                     language={this.props.language}
                                     value={fieldsData.get(field.id)}
-                                    setValue={(val) => {
+                                    onChange={(val) => {
                                         this.props.onChange(field.id, val);
                                     }}
                                     readOnly={this.props.readOnly}
                                     config={field.fieldConfig}
                                     userPreferences={this.props.userPreferencesForFields[field.id]}
-                                    setUserPreferences={(fieldPreferences) => {
+                                    onUserPreferencesChange={(fieldPreferences) => {
                                         this.props.setUserPreferencesForFields({
                                             ...this.props.userPreferencesForFields,
                                             [field.id]: fieldPreferences,

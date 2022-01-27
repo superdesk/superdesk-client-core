@@ -2286,13 +2286,13 @@ declare module 'superdesk-api' {
     // CUSTOM FIELD TYPES
 
     export interface IEditorComponentProps<IValue, IConfig, IUserPreferences> {
-        language: string;
         value: IValue;
-        setValue: (value: IValue) => void;
+        onChange: (value: IValue) => void;
         readOnly: boolean;
+        language: string;
         config: IConfig;
         userPreferences: IUserPreferences | undefined;
-        setUserPreferences(userPreferences: IUserPreferences): void;
+        onUserPreferencesChange(userPreferences: IUserPreferences): void;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {

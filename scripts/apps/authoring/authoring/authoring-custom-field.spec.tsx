@@ -31,7 +31,7 @@ class TestEditorComponent extends React.PureComponent<IEditorComponentProps<stri
                     type="text"
                     value={this.props.value}
                     onChange={(event) => {
-                        this.props.setValue(event.target.value);
+                        this.props.onChange(event.target.value);
                     }}
                 />
             </div>
