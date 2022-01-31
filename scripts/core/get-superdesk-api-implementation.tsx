@@ -9,7 +9,7 @@ import {
     IUser,
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
-import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
+import {getGenericHttpEntityListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -20,7 +20,7 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
-import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
+import {dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {elasticsearchApi} from './helpers/elasticsearch';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {
@@ -80,6 +80,8 @@ import {showIgnoreCancelSaveDialog} from './ui/components/IgnoreCancelSaveDialog
 import {Editor3Html} from './editor3/Editor3Html';
 import {arrayToTree, treeToArray} from './helpers/tree';
 import {WidgetHeading} from 'apps/dashboard/widget-heading';
+import {connectCrudManagerHttp} from './helpers/crud-manager-http';
+import {GenericArrayListPageComponent} from './helpers/generic-array-list-page-component';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -314,8 +316,9 @@ export function getSuperdeskApiImplementation(
         },
         components: {
             UserHtmlSingleLine,
-            getGenericListPageComponent,
-            connectCrudManager,
+            getGenericHttpEntityListPageComponent,
+            getGenericArrayListPageComponent: () => GenericArrayListPageComponent,
+            connectCrudManagerHttp: connectCrudManagerHttp,
             ListItem,
             ListItemColumn,
             ListItemRow,

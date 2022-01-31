@@ -1,7 +1,10 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {getGenericListPageComponent, GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {
+    getGenericHttpEntityListPageComponent,
+    GenericListPageComponent,
+} from 'core/ui/components/ListPage/generic-list-page';
 import {ListItemColumn, ListItemActionsMenu, ListItem} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
@@ -140,7 +143,7 @@ export class InternalDestinations extends React.Component {
         };
 
         const InternalDestinationsPageComponent =
-            getGenericListPageComponent<IInternalDestination>('internal_destinations', formConfig);
+            getGenericHttpEntityListPageComponent<IInternalDestination>('internal_destinations', formConfig);
 
         return (
             <InternalDestinationsPageComponent

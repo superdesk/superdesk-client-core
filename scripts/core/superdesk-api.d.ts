@@ -880,7 +880,9 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
-    export interface IPropsGenericForm<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+    export type IWithIdentifier = {_id: string};
+
+    export interface IPropsGenericForm<IMeta extends IWithIdentifier, T extends IMeta, TBase = Omit<T, keyof IMeta>> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
         defaultFilters?: Partial<TBase>;
@@ -894,6 +896,7 @@ declare module 'superdesk-api' {
         fieldForSearch?: IFormField; // must be present in formConfig
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
+        disallowSorting?: true;
     }
 
     export enum FormFieldType {
@@ -935,8 +938,10 @@ declare module 'superdesk-api' {
         form: Array<IFormField | IFormGroup>;
     }
 
-
-
+    export interface IPropsGenericArrayListPage<T extends IWithIdentifier> extends IPropsGenericForm<IWithIdentifier, T> {
+        value: Array<T>;
+        onChange(value: Array<T>): void;
+    }
 
     // CRUD MANAGER
 
@@ -947,29 +952,37 @@ declare module 'superdesk-api' {
         direction: 'ascending' | 'descending';
     }
 
+    export interface ICrudManagerResponse<IMeta extends IWithIdentifier, T extends IMeta> {
+        _items: Array<T>;
+        _meta: {
+            max_results: number;
+            page: number;
+            total: number;
+        };
+    }
 
-    export interface ICrudManagerState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
+    export interface ICrudManagerState<IMeta extends IWithIdentifier, Entity extends IMeta> extends ICrudManagerResponse<Meta, Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
 
-    export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
+    export interface ICrudManagerMethods<IMeta extends IWithIdentifier, Entity extends IMeta> {
         read(
             page: number,
             sort: ISortOption,
             filterValues?: ICrudManagerFilters,
-        ): Promise<IRestApiResponse<Entity>>;
+        ): Promise<ICrudManagerResponse<IMeta, Entity>>;
         update(item: Entity): Promise<Entity>;
         create(item: Entity): Promise<Entity>;
         delete(item: Entity): Promise<void>;
-        refresh(): Promise<IRestApiResponse<Entity>>;
-        sort(nextSortOption: ISortOption): Promise<IRestApiResponse<Entity>>;
-        removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
-        goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
+        refresh(): Promise<ICrudManagerResponse<IMeta, Entity>>;
+        sort(nextSortOption: ISortOption): Promise<ICrudManagerResponse<IMeta, Entity>>;
+        removeFilter(fieldName: string): Promise<ICrudManagerResponse<IMeta, Entity>>;
+        goToPage(nextPage: number): Promise<ICrudManagerResponse<IMeta, Entity>>;
     }
 
 
-    export interface ICrudManager<Entity extends IBaseRestApiResponse> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
+    export interface ICrudManager<IMeta extends IWithIdentifier, Entity extends IMeta> extends ICrudManagerState<IMeta, Entity>, ICrudManagerMethods<IMeta, Entity> {
         // allow exposing it as one interface for consumer components
     }
 
@@ -1070,7 +1083,7 @@ declare module 'superdesk-api' {
         flex?: boolean;
     }
 
-    export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+    export interface IGenericListPageComponent<IMeta extends IWithIdentifier, T extends IMeta, TBase = Omit<T, keyof IMeta>> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
@@ -1671,8 +1684,9 @@ declare module 'superdesk-api' {
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup): React.ComponentType<IPropsGenericForm<T>>;
-            connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
+            getGenericHttpEntityListPageComponent<T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup): React.ComponentType<IPropsGenericForm<IBaseRestApiResponse, T>>;
+            getGenericArrayListPageComponent<T extends IWithIdentifier>(): React.ComponentType<IPropsGenericArrayListPage<T>>;
+            connectCrudManagerHttp<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
                 endpoint: string,

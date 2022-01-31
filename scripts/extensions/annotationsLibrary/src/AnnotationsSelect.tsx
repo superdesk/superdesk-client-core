@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {AnnotationSelectList} from './AnnotationSelectList';
 import {AnnotationSelectSingleItem} from './AnnotationSelectSingleItem';
-import {ISuperdesk, ICrudManager} from 'superdesk-api';
+import {ISuperdesk, ICrudManager, IBaseRestApiResponse} from 'superdesk-api';
 import {IKnowledgeBaseItem} from './interfaces';
 
 interface IProps {
     annotationText: string;
-    conceptItems: ICrudManager<IKnowledgeBaseItem>;
+    conceptItems: ICrudManager<IBaseRestApiResponse, IKnowledgeBaseItem>;
     annotationTypeSelect: JSX.Element;
     onCancel(): void;
     onApplyAnnotation(html: string): void;

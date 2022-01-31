@@ -3,6 +3,7 @@ import {
     IFormGroup,
     IGenericListPageComponent,
     ISuperdesk,
+    IBaseRestApiResponse,
 } from 'superdesk-api';
 import {IKnowledgeBaseItem, IKnowledgeBaseItemBase} from './interfaces';
 import {getFields} from './GetFields';
@@ -12,7 +13,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
         render() {
             const {gettext} = superdesk.localization;
             const {
-                getGenericListPageComponent,
+                getGenericHttpEntityListPageComponent,
                 ListItem,
                 ListItemColumn,
                 ListItemActionsMenu,
@@ -36,12 +37,12 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
             };
 
             const AnnotationsLibraryPageComponent =
-                getGenericListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
+                getGenericHttpEntityListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
 
             const renderRow = (
                 key: string,
                 item: IKnowledgeBaseItem,
-                page: IGenericListPageComponent<IKnowledgeBaseItem>,
+                page: IGenericListPageComponent<IBaseRestApiResponse, IKnowledgeBaseItem>,
             ) => (
                 <ListItem key={key} onClick={() => page.openPreview(item._id)}>
                     <ListItemColumn bold noBorder>

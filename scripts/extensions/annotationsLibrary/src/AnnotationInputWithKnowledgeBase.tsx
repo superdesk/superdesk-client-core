@@ -6,11 +6,12 @@ import {
     ICrudManager,
     IPropsAnnotationInputComponent,
     ISuperdesk,
+    IBaseRestApiResponse,
 } from 'superdesk-api';
 import {getFields} from './GetFields';
 
 interface IPropsConnected {
-    conceptItems: ICrudManager<IKnowledgeBaseItem>;
+    conceptItems: ICrudManager<IBaseRestApiResponse, IKnowledgeBaseItem>;
 }
 
 export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
@@ -46,7 +47,9 @@ export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {
         }
     }
 
-    return superdesk.components.connectCrudManager<IPropsAnnotationInputComponent, IPropsConnected, IKnowledgeBaseItem>(
+    const {connectCrudManagerHttp} = superdesk.components;
+
+    return connectCrudManagerHttp<IPropsAnnotationInputComponent, IPropsConnected, IKnowledgeBaseItem>(
         AnnotationInputWithKnowledgeBaseComponent,
         'conceptItems',
         'concept_items',

@@ -4,8 +4,8 @@ import {gettext} from 'core/utils';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {ListItem, ListItemActionsMenu, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
-import {getGenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
-import {IFormField, IFormGroup, IGenericListPageComponent} from 'superdesk-api';
+import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {IFormField, IFormGroup, IGenericListPageComponent, IBaseRestApiResponse} from 'superdesk-api';
 import {Label} from 'superdesk-ui-framework/react/components/Label';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ISystemMessage, RESOURCE} from '..';
@@ -73,7 +73,7 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
         const renderRow = (
             key: string,
             item: ISystemMessage,
-            page: IGenericListPageComponent<ISystemMessage>,
+            page: IGenericListPageComponent<IBaseRestApiResponse, ISystemMessage>,
         ) => (
             <ListItem key={key} onClick={() => page.openPreview(item._id)}>
                 <ListItemColumn ellipsisAndGrow noBorder>
@@ -128,7 +128,7 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
             </ListItem>
         );
 
-        const ListComponent = getGenericListPageComponent<ISystemMessage>(RESOURCE, formConfig);
+        const ListComponent = getGenericHttpEntityListPageComponent<ISystemMessage>(RESOURCE, formConfig);
 
         return (
             <Page title={gettext('System Message')}>

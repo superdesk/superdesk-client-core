@@ -18,9 +18,7 @@ import {
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar, ISortFields} from 'core/ui/components/SortBar';
-import {connectCrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
 import {getFormFieldsRecursive, getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
@@ -33,10 +31,13 @@ import {
     IGenericListPageComponent,
     ICrudManager,
     IFormGroup,
+    IWithIdentifier,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
+import ng from 'core/services/ng';
+import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
 
-interface IState<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+interface IState<IMeta extends IWithIdentifier, T extends IMeta, TBase = Omit<T, keyof IMeta>> {
     previewItemId: string | null;
     editItemId: string | null;
     newItem: {[key: string]: any} | null;
@@ -46,20 +47,19 @@ interface IState<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRest
     refetchDataScheduled: boolean;
 }
 
-interface IPropsConnected<T extends IBaseRestApiResponse> {
-    items?: ICrudManager<T>;
-    modal: any;
-    notify: any;
-    $rootScope: any;
+interface IPropsConnected<T extends IWithIdentifier> {
+    crudManager?: ICrudManager<IWithIdentifier, T>;
 }
 
-export class GenericListPageComponent<T extends IBaseRestApiResponse>
-    extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState<T>>
-    implements IGenericListPageComponent<T>
+export class GenericListPageComponent<T extends IWithIdentifier>
+    extends React.Component<IPropsGenericForm<IWithIdentifier, T> & IPropsConnected<T>, IState<IWithIdentifier, T>>
+    implements IGenericListPageComponent<IWithIdentifier, T>
 {
     searchBarRef: SearchBar | null;
+    modal: any;
+    $rootScope: any;
 
-    constructor(props: IPropsGenericForm<T> & IPropsConnected<T>) {
+    constructor(props: IPropsGenericForm<IWithIdentifier, T> & IPropsConnected<T>) {
         super(props);
 
         // preview and edit mode can enabled at the same time, but only one pane will be displayed at once
@@ -88,23 +88,26 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         this.removeFilter = this.removeFilter.bind(this);
         this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
         this.filter = this.filter.bind(this);
+
+        this.modal = ng.get('modal');
+        this.$rootScope = ng.get('$rootScope');
     }
     openPreview(id) {
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t open a preview while in edit mode',
                 ),
             });
         } else if (this.state.newItem != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t open a preview while in create mode',
                 ),
             });
-        } else if (this.props.items._items.find(({_id}) => _id === id) != null) {
+        } else if (this.props.crudManager._items.find(({_id}) => _id === id) != null) {
             // set previewItemId only if item with id is available in the props.items._items
             this.setState({
                 previewItemId: id,
@@ -129,18 +132,16 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                 return acc;
             }, {}),
         }), () => {
-            this.props.items.removeFilter(fieldName);
+            this.props.crudManager.removeFilter(fieldName);
         });
     }
     deleteItem(item: T) {
-        const deleteNow = () => this.props.items.delete(item).then(() => {
-            this.props.notify.success(gettext('The item has been deleted.'));
-        });
+        const doDelete = () => this.props.crudManager.delete(item);
 
-        this.props.modal.confirm(gettext('Are you sure you want to delete this item?'))
+        this.modal.confirm(gettext('Are you sure you want to delete this item?'))
             .then(() => {
                 if (this.state.editItemId != null) {
-                    this.props.modal.alert({
+                    this.modal.alert({
                         headerText: gettext('Warning'),
                         bodyText: gettext(
                             'Edit mode must closed before you can delete an item.',
@@ -149,15 +150,15 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                 } else if (this.state.previewItemId != null) {
                     this.setState({
                         previewItemId: null,
-                    }, deleteNow);
+                    }, doDelete);
                 } else {
-                    deleteNow();
+                    doDelete();
                 }
             });
     }
     startEditing(id: string) {
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t edit this item, because another item is in edit mode.',
@@ -222,7 +223,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     }
     filter() {
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'The item in edit mode must be closed before you can filter.',
@@ -237,9 +238,9 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
             const {filterValues} = this.state;
             const filtersValidated = this.validateFilters(filterValues);
 
-            this.props.items.read(
+            this.props.crudManager.read(
                 1,
-                this.props.items.activeSortOption,
+                this.props.crudManager.activeSortOption,
                 filtersValidated,
             );
         };
@@ -271,7 +272,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     }
     openNewItemForm() {
         if (this.state.editItemId != null) {
-            this.props.modal.alert({
+            this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
                     'Can\'t add a new item, because another item is in edit mode.',
@@ -290,31 +291,32 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     componentDidMount() {
         const filters = this.props.defaultFilters ? this.validateFilters(this.props.defaultFilters) : {};
 
-        this.props.items.read(1, this.props.defaultSortOption, filters);
+        this.props.crudManager.read(1, this.props.defaultSortOption, filters);
 
         if (this.props.refreshOnEvents != null) {
             this.props.refreshOnEvents.forEach((eventName) => {
-                this.props.$rootScope.$on(eventName, () => {
+                this.$rootScope.$on(eventName, () => {
                     // will update the list using selected filtering / sort options
                     this.refetchDataUsingCurrentFilters();
                 });
             });
         }
     }
+
     componentDidUpdate() {
         if (this.state.refetchDataScheduled && this.state.editItemId == null) {
             this.refetchDataUsingCurrentFilters();
         }
     }
     render() {
-        if (this.props.items._items == null) {
+        if (this.props.crudManager._items == null) {
             // loading
             return null;
         }
 
-        const {activeFilters} = this.props.items;
-        const totalResults = this.props.items._meta.total;
-        const pageSize = this.props.items._meta.max_results;
+        const {activeFilters} = this.props.crudManager;
+        const totalResults = this.props.crudManager._meta.total;
+        const pageSize = this.props.crudManager._meta.max_results;
         const pageCount = Math.ceil(totalResults / pageSize);
 
         const {formConfig, renderRow} = this.props;
@@ -335,7 +337,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
         ];
 
         const getContents = () => {
-            if (this.props.items._items.length === 0) {
+            if (this.props.crudManager._items.length === 0) {
                 if (Object.keys(activeFilters).length > 0) {
                     return (
                         <ListItem noHover>
@@ -360,7 +362,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                         className="sd-list-item-group sd-list-item-group--space-between-items"
                     >
                         {
-                            this.props.items._items.map(
+                            this.props.crudManager._items.map(
                                 (item) => renderRow(item._id, item, this),
                             )
                         }
@@ -415,13 +417,25 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                             )
                         }
 
-                        <div style={{display: 'flex', marginLeft: 'auto'}}>
-                            <SortBar
-                                sortOptions={sortOptions}
-                                selected={this.props.items.activeSortOption}
-                                itemsCount={this.props.items._meta.total}
-                                onSortOptionChange={this.props.items.sort}
-                            />
+                        <div style={{display: 'flex', marginLeft: 'auto', gap: '10px'}}>
+                            {this.props.crudManager._meta.total == null ? null : (
+                                <span style={{display: 'flex', alignItems: 'center'}}>
+                                    <span>{gettext('Total:')}</span>
+                                    &nbsp;
+                                    <span><span className="badge">{this.props.crudManager._meta.total}</span></span>
+                                </span>
+                            )}
+
+                            {
+                                this.props.disallowSorting !== true && (
+                                    <SortBar
+                                        sortOptions={sortOptions}
+                                        selected={this.props.crudManager.activeSortOption}
+                                        itemsCount={this.props.crudManager._meta.total}
+                                        onSortOptionChange={this.props.crudManager.sort}
+                                    />
+                                )
+                            }
 
                             {
                                 this.props.disallowCreatingNewItem === true ? null : (
@@ -488,7 +502,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                     <PageContainerItem shrink>
                         <div style={{margin: 20}}>
                             {
-                                this.props.items._items.length === 0 ? null : (
+                                this.props.crudManager._items.length === 0 ? null : (
                                     <div style={{textAlign: 'center', marginTop: -20}}>
                                         <ReactPaginate
                                             previousLabel={gettext('prev')}
@@ -497,11 +511,11 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                             marginPagesDisplayed={2}
                                             pageRangeDisplayed={5}
                                             onPageChange={({selected}) => {
-                                                if (this.props.items._meta.page !== (selected + 1)) {
-                                                    this.props.items.goToPage(selected + 1);
+                                                if (this.props.crudManager._meta.page !== (selected + 1)) {
+                                                    this.props.crudManager.goToPage(selected + 1);
                                                 }
                                             }}
-                                            initialPage={this.props.items._meta.page - 1}
+                                            initialPage={this.props.crudManager._meta.page - 1}
                                             containerClassName={'bs-pagination'}
                                             activeClassName="active"
                                         />
@@ -518,7 +532,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                         {
                                             Object.keys(activeFilters).map((fieldName, i) => {
                                                 const filterValuePreview = getFormFieldPreviewComponent(
-                                                    this.props.items.activeFilters,
+                                                    this.props.crudManager.activeFilters,
                                                     getFormFieldsFlat(formConfigForFilters).find(
                                                         ({field}) => field === fieldName,
                                                     ),
@@ -559,11 +573,14 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                         }));
                                     }}
                                     item={this.state.newItem}
-                                    onSave={(item: T) => this.props.items.create(item).then((res) => {
-                                        this.props.notify.success(gettext('The item has been created.'));
-                                        this.closeNewItemForm();
-                                        this.openPreview(res._id);
-                                    })}
+                                    onSave={(item: T) => {
+                                        return this.props.crudManager.create(item).then((res) => {
+                                            setTimeout(() => {
+                                                this.closeNewItemForm();
+                                                this.openPreview(res._id);
+                                            });
+                                        });
+                                    }}
                                     onClose={this.closeNewItemForm}
                                     onCancel={this.closeNewItemForm}
                                 />
@@ -582,11 +599,9 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                     operation="editing"
                                     formConfig={formConfig}
                                     item={
-                                        this.props.items._items.find(({_id}) => _id === this.state.editItemId)
+                                        this.props.crudManager._items.find(({_id}) => _id === this.state.editItemId)
                                     }
-                                    onSave={(nextItem) => this.props.items.update(nextItem).then(() => {
-                                        this.props.notify.success(gettext('The item has been updated.'));
-                                    })}
+                                    onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
                                 />
                             </PageContainerItem>
@@ -604,9 +619,9 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                                     operation="editing"
                                     formConfig={formConfig}
                                     item={
-                                        this.props.items._items.find(({_id}) => _id === this.state.previewItemId)
+                                        this.props.crudManager._items.find(({_id}) => _id === this.state.previewItemId)
                                     }
-                                    onSave={(nextItem) => this.props.items.update(nextItem)}
+                                    onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
                                 />
                             </PageContainerItem>
@@ -618,29 +633,26 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
     }
 }
 
-export const getGenericListPageComponent =
+export const getGenericHttpEntityListPageComponent =
     <T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup) =>
-        connectServices<IPropsGenericForm<T>>(
-            connectCrudManager<IPropsGenericForm<T>, IPropsConnected<T>, T>(
-                GenericListPageComponent,
-                'items',
-                resource,
-                (filters: IFormGroup) => {
-                    const formConfigForFilters = getFormGroupForFiltering(formConfig);
-                    const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
-                        .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
+        connectCrudManagerHttp<IPropsGenericForm<IBaseRestApiResponse, T>, T>(
+            GenericListPageComponent,
+            'crudManager',
+            resource,
+            (filters: IFormGroup) => {
+                const formConfigForFilters = getFormGroupForFiltering(formConfig);
+                const fieldTypesLookup = getFormFieldsFlat(formConfigForFilters)
+                    .reduce((accumulator, item) => ({...accumulator, ...{[item.field]: item.type}}), {});
 
-                    let filtersFormatted = {};
+                let filtersFormatted = {};
 
-                    for (let fieldName in filters) {
-                        filtersFormatted[fieldName] = generateFilterForServer(
-                            fieldTypesLookup[fieldName],
-                            filters[fieldName],
-                        );
-                    }
+                for (let fieldName in filters) {
+                    filtersFormatted[fieldName] = generateFilterForServer(
+                        fieldTypesLookup[fieldName],
+                        filters[fieldName],
+                    );
+                }
 
-                    return filtersFormatted;
-                },
-            )
-            , ['modal', '$rootScope', 'notify'],
+                return filtersFormatted;
+            },
         );
