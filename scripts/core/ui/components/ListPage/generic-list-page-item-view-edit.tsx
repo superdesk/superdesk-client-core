@@ -22,6 +22,13 @@ interface IProps {
     editMode: boolean;
     formConfig: IFormGroup;
     item: {[key: string]: any};
+
+    /**
+     * label "save" doesn't work when data source is an array. The array
+     * may be a part of a parent component that has it's own saving mechanism.
+     */
+    labelForSaveButton: string;
+
     onEditModeChange(nextValue: boolean): void;
     onClose: () => void;
     onCancel?: () => void;
@@ -180,7 +187,7 @@ export class GenericListPageItemViewEdit extends React.Component<IProps, IState>
                                         className="btn btn--primary"
                                         data-test-id="item-view-edit--save"
                                     >
-                                        {gettext('Save')}
+                                        {this.props.labelForSaveButton}
                                     </button>
                                 </div>
                             )

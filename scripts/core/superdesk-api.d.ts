@@ -897,6 +897,8 @@ declare module 'superdesk-api' {
         disallowFiltering?: true;
         disallowSorting?: true;
         disallowPagination?: true;
+
+        labelForItemSaveButton?: string;
     }
 
     export enum FormFieldType {

@@ -8,6 +8,7 @@ import {
 } from 'superdesk-api';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {omit} from 'lodash';
+import {gettext} from 'core/utils';
 
 interface IState {
     activeSortOption: ISortOption;
@@ -120,6 +121,7 @@ export class GenericArrayListPageComponent<T>
             <GenericListPageComponent
                 {...omit(this.props, ['value', 'onChange'])} // omit own props
                 disallowPagination={true}
+                labelForItemSaveButton={gettext('Apply')}
                 crudManager={{
                     read: this.read,
                     update: this.update,

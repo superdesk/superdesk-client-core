@@ -335,6 +335,8 @@ export class GenericListPageComponent<T>
             },
         ];
 
+        const labelForSaveButton = this.props.labelForItemSaveButton ?? gettext('Save');
+
         const getContents = () => {
             if (this.props.crudManager._items.length === 0) {
                 if (Object.keys(activeFilters).length > 0) {
@@ -582,6 +584,7 @@ export class GenericListPageComponent<T>
                                     }}
                                     onClose={this.closeNewItemForm}
                                     onCancel={this.closeNewItemForm}
+                                    labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
                         ) : this.state.editItemId != null ? (
@@ -604,6 +607,7 @@ export class GenericListPageComponent<T>
                                     }
                                     onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
+                                    labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
                         ) : this.state.previewItemId != null ? (
@@ -626,6 +630,7 @@ export class GenericListPageComponent<T>
                                     }
                                     onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
+                                    labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
                         ) : null
