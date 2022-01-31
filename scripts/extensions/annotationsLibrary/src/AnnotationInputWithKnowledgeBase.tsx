@@ -6,12 +6,11 @@ import {
     ICrudManager,
     IPropsAnnotationInputComponent,
     ISuperdesk,
-    IBaseRestApiResponse,
 } from 'superdesk-api';
 import {getFields} from './GetFields';
 
 interface IPropsConnected {
-    conceptItems: ICrudManager<IBaseRestApiResponse, IKnowledgeBaseItem>;
+    conceptItems: ICrudManager<IKnowledgeBaseItem>;
 }
 
 export function getAnnotationInputWithKnowledgeBase(superdesk: ISuperdesk) {

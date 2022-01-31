@@ -151,6 +151,7 @@ export class InternalDestinations extends React.Component {
                 formConfig={formConfig}
                 defaultSortOption={{field: 'name', direction: 'ascending'}}
                 fieldForSearch={getNameField()}
+                getId={(item) => item._id}
             />
         );
     }

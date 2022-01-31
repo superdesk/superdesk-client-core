@@ -73,7 +73,7 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
         const renderRow = (
             key: string,
             item: ISystemMessage,
-            page: IGenericListPageComponent<IBaseRestApiResponse, ISystemMessage>,
+            page: IGenericListPageComponent<ISystemMessage>,
         ) => (
             <ListItem key={key} onClick={() => page.openPreview(item._id)}>
                 <ListItemColumn ellipsisAndGrow noBorder>
@@ -136,6 +136,7 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
                     renderRow={renderRow}
                     formConfig={formConfig}
                     defaultSortOption={{field: 'message_title', direction: 'ascending'}}
+                    getId={(item) => item._id}
                 />
             </Page>
         );

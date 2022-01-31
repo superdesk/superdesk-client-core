@@ -3,7 +3,6 @@ import {
     ICrudManagerFilters,
     ICrudManagerMethods,
     ISortOption,
-    IWithIdentifier,
     ICrudManagerResponse,
     IPropsGenericArrayListPage,
 } from 'superdesk-api';
@@ -32,9 +31,9 @@ function getItemsWithMeta(_items) {
     };
 }
 
-export class GenericArrayListPageComponent<T extends IWithIdentifier>
+export class GenericArrayListPageComponent<T>
     extends React.Component<IPropsGenericArrayListPage<T>, IState>
-    implements ICrudManagerMethods<IWithIdentifier, T> {
+    implements ICrudManagerMethods<T> {
     private lastId: number;
     constructor(props: IPropsGenericArrayListPage<T>) {
         super(props);
@@ -53,22 +52,17 @@ export class GenericArrayListPageComponent<T extends IWithIdentifier>
         this.removeFilter = this.removeFilter.bind(this);
         this.goToPage = this.goToPage.bind(this);
 
-        this.addId = this.addId.bind(this);
         this.handleChange = this.handleChange.bind(this);
 
         this.lastId = 0;
     }
 
-    addId(item: T): T & IWithIdentifier {
-        return {...item, _id: (++this.lastId).toString()};
-    }
-
-    handleChange(value: Array<T & IWithIdentifier>) {
+    handleChange(value: Array<T>) {
         this.props.onChange(value);
     }
 
     create(item: T): Promise<T> {
-        const result: Array<T> = [...this.props.value, this.addId(item)];
+        const result: Array<T> = [...this.props.value, item];
 
         return new Promise((resolve) => {
             resolve(item);
@@ -83,31 +77,33 @@ export class GenericArrayListPageComponent<T extends IWithIdentifier>
         page: number,
         sort: ISortOption,
         filterValues?: ICrudManagerFilters,
-    ): Promise<ICrudManagerResponse<IWithIdentifier, T>> {
+    ): Promise<ICrudManagerResponse<T>> {
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
     update(nextItem: T): Promise<T> {
-        this.handleChange(this.props.value.map((item) => item._id === nextItem._id ? nextItem : item));
+        this.handleChange(this.props.value.map(
+            (item) => this.props.getId(item) === this.props.getId(nextItem) ? nextItem : item),
+        );
 
         return Promise.resolve(nextItem);
     }
 
     delete(item: T): Promise<void> {
-        this.handleChange(this.props.value.filter((current) => current._id !== item._id));
+        this.handleChange(this.props.value.filter((current) => this.props.getId(current) !== this.props.getId(item)));
 
         return Promise.resolve();
     }
 
-    refresh(): Promise<ICrudManagerResponse<IWithIdentifier, T>> {
+    refresh(): Promise<ICrudManagerResponse<T>> {
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
-    sort(sortOption: ISortOption): Promise<ICrudManagerResponse<IWithIdentifier, T>> {
+    sort(sortOption: ISortOption): Promise<ICrudManagerResponse<T>> {
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
-    removeFilter(fieldName: string): Promise<ICrudManagerResponse<IWithIdentifier, T>> {
+    removeFilter(fieldName: string): Promise<ICrudManagerResponse<T>> {
         let nextFilters = {...this.state.activeFilters};
 
         delete nextFilters[fieldName];

@@ -19,8 +19,8 @@ export function connectCrudManagerHttp<Props, Entity extends IBaseRestApiRespons
     endpoint: string,
     formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
 ): React.ComponentType<Props> {
-    return class CrudManagerHttp extends React.Component<Props, ICrudManagerState<IBaseRestApiResponse, Entity>>
-        implements ICrudManagerMethods<IBaseRestApiResponse, Entity> {
+    return class CrudManagerHttp extends React.Component<Props, ICrudManagerState<Entity>>
+        implements ICrudManagerMethods<Entity> {
         api: any;
 
         constructor(props) {

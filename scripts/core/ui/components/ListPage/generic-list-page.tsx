@@ -31,35 +31,34 @@ import {
     IGenericListPageComponent,
     ICrudManager,
     IFormGroup,
-    IWithIdentifier,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
 
-interface IState<IMeta extends IWithIdentifier, T extends IMeta, TBase = Omit<T, keyof IMeta>> {
+interface IState<T> {
     previewItemId: string | null;
     editItemId: string | null;
     newItem: {[key: string]: any} | null;
     filtersOpen: boolean;
-    filterValues: Partial<TBase>;
+    filterValues: Partial<T>;
     loading: boolean;
     refetchDataScheduled: boolean;
 }
 
-interface IPropsConnected<T extends IWithIdentifier> {
-    crudManager?: ICrudManager<IWithIdentifier, T>;
+interface IPropsConnected<T> {
+    crudManager?: ICrudManager<T>;
 }
 
-export class GenericListPageComponent<T extends IWithIdentifier>
-    extends React.Component<IPropsGenericForm<IWithIdentifier, T> & IPropsConnected<T>, IState<IWithIdentifier, T>>
-    implements IGenericListPageComponent<IWithIdentifier, T>
+export class GenericListPageComponent<T>
+    extends React.Component<IPropsGenericForm<T> & IPropsConnected<T>, IState<T>>
+    implements IGenericListPageComponent<T>
 {
     searchBarRef: SearchBar | null;
     modal: any;
     $rootScope: any;
 
-    constructor(props: IPropsGenericForm<IWithIdentifier, T> & IPropsConnected<T>) {
+    constructor(props: IPropsGenericForm<T> & IPropsConnected<T>) {
         super(props);
 
         // preview and edit mode can enabled at the same time, but only one pane will be displayed at once
@@ -107,7 +106,7 @@ export class GenericListPageComponent<T extends IWithIdentifier>
                     'Can\'t open a preview while in create mode',
                 ),
             });
-        } else if (this.props.crudManager._items.find(({_id}) => _id === id) != null) {
+        } else if (this.props.crudManager._items.find((item) => this.props.getId(item) === id) != null) {
             // set previewItemId only if item with id is available in the props.items._items
             this.setState({
                 previewItemId: id,
@@ -363,7 +362,7 @@ export class GenericListPageComponent<T extends IWithIdentifier>
                     >
                         {
                             this.props.crudManager._items.map(
-                                (item) => renderRow(item._id, item, this),
+                                (item) => renderRow(this.props.getId(item), item, this),
                             )
                         }
                     </div>
@@ -417,7 +416,7 @@ export class GenericListPageComponent<T extends IWithIdentifier>
                             )
                         }
 
-                        <div style={{display: 'flex', marginLeft: 'auto', gap: '10px'}}>
+                        <div style={{display: 'flex', marginLeft: 'auto', gap: '10px', paddingLeft: 10}}>
                             {this.props.crudManager._meta.total == null ? null : (
                                 <span style={{display: 'flex', alignItems: 'center'}}>
                                     <span>{gettext('Total:')}</span>
@@ -577,7 +576,7 @@ export class GenericListPageComponent<T extends IWithIdentifier>
                                         return this.props.crudManager.create(item).then((res) => {
                                             setTimeout(() => {
                                                 this.closeNewItemForm();
-                                                this.openPreview(res._id);
+                                                this.openPreview(this.props.getId(res));
                                             });
                                         });
                                     }}
@@ -599,7 +598,9 @@ export class GenericListPageComponent<T extends IWithIdentifier>
                                     operation="editing"
                                     formConfig={formConfig}
                                     item={
-                                        this.props.crudManager._items.find(({_id}) => _id === this.state.editItemId)
+                                        this.props.crudManager._items.find(
+                                            (item) => this.props.getId(item) === this.state.editItemId,
+                                        )
                                     }
                                     onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
@@ -619,7 +620,9 @@ export class GenericListPageComponent<T extends IWithIdentifier>
                                     operation="editing"
                                     formConfig={formConfig}
                                     item={
-                                        this.props.crudManager._items.find(({_id}) => _id === this.state.previewItemId)
+                                        this.props.crudManager._items.find(
+                                            (item) => this.props.getId(item) === this.state.previewItemId,
+                                        )
                                     }
                                     onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
@@ -635,7 +638,7 @@ export class GenericListPageComponent<T extends IWithIdentifier>
 
 export const getGenericHttpEntityListPageComponent =
     <T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup) =>
-        connectCrudManagerHttp<IPropsGenericForm<IBaseRestApiResponse, T>, T>(
+        connectCrudManagerHttp<IPropsGenericForm<T>, T>(
             GenericListPageComponent,
             'crudManager',
             resource,
