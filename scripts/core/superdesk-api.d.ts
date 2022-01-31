@@ -896,6 +896,7 @@ declare module 'superdesk-api' {
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
         disallowSorting?: true;
+        disallowPagination?: true;
     }
 
     export enum FormFieldType {

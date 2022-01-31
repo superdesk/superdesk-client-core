@@ -119,6 +119,7 @@ export class GenericArrayListPageComponent<T>
         return (
             <GenericListPageComponent
                 {...omit(this.props, ['value', 'onChange'])} // omit own props
+                disallowPagination={true}
                 crudManager={{
                     read: this.read,
                     update: this.update,

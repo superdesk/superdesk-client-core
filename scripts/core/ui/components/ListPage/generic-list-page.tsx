@@ -501,7 +501,7 @@ export class GenericListPageComponent<T>
                     <PageContainerItem shrink>
                         <div style={{margin: 20}}>
                             {
-                                this.props.crudManager._items.length === 0 ? null : (
+                                this.props.disallowPagination || this.props.crudManager._items.length === 0 ? null : (
                                     <div style={{textAlign: 'center', marginTop: -20}}>
                                         <ReactPaginate
                                             previousLabel={gettext('prev')}
