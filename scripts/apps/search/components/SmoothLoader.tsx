@@ -1,5 +1,6 @@
 import React, {CSSProperties} from 'react';
 import {Loader} from 'superdesk-ui-framework/react/components/Loader';
+import {ListItemLoader} from 'superdesk-ui-framework/react';
 
 interface IProps {
     loading: boolean;
@@ -54,7 +55,7 @@ export class SmoothLoader extends React.Component<IProps> {
                 {
                     loading && (
                         <div style={{height: '100%', position: 'relative'}}>
-                            <Loader overlay />
+                            <ListItemLoader />
                             <div
                                 dangerouslySetInnerHTML={{__html: this.lastSnapshotHtml ?? '<div></div>'}}
                                 style={{height: '100%'}}
