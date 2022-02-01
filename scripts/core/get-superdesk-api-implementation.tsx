@@ -31,6 +31,7 @@ import {
     stringToNumber,
     numberToString,
     notNullOrUndefined,
+    nameof,
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {downloadBlob} from './helpers/utils';
@@ -199,6 +200,7 @@ export function getSuperdeskApiImplementation(
             stringToNumber,
             numberToString,
             notNullOrUndefined,
+            nameof: nameof,
         },
         httpRequestJsonLocal,
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},

@@ -1683,6 +1683,7 @@ declare module 'superdesk-api' {
             stringToNumber(value?: string, radix?: number): number | undefined;
             numberToString(value?: number): string | undefined;
             notNullOrUndefined<T>(x: null | undefined | T): x is T;
+            nameof<T>(name: keyof T): string;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -2167,9 +2168,9 @@ declare module 'superdesk-api' {
         config: IConfig;
     }
 
-    export interface IPreviewComponentProps {
+    export interface IPreviewComponentProps<IValue> {
         item: IArticle;
-        value: any;
+        value: IValue;
     }
 
     // IConfig must be a plain object
@@ -2178,11 +2179,11 @@ declare module 'superdesk-api' {
         onChange(config: IConfig): void;
     }
 
-    export interface ICustomFieldType<IConfig> {
+    export interface ICustomFieldType<IValue, IConfig> {
         id: string;
         label: string;
-        editorComponent: React.ComponentType<IEditorComponentProps<IConfig>>;
-        previewComponent: React.ComponentType<IPreviewComponentProps>;
+        editorComponent: React.ComponentType<IEditorComponentProps<IValue, IConfig>>;
+        previewComponent: React.ComponentType<IPreviewComponentProps<IValue>>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
 
