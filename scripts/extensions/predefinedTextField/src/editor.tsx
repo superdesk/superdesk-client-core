@@ -1,6 +1,7 @@
 import * as React from 'react';
-import {IEditorComponentProps} from 'superdesk-api';
-import {IPredefinedFieldConfig} from './interfaces';
+import {get} from 'lodash';
+import {IEditorComponentProps, IArticle} from 'superdesk-api';
+import {IPredefinedFieldConfig, IExtensionConfigurationOptions} from './interfaces';
 import {Select, Option, Icon} from 'superdesk-ui-framework/react';
 
 import {superdesk} from './superdesk';
@@ -12,6 +13,18 @@ type IProps = IEditorComponentProps<string, IPredefinedFieldConfig>;
 
 interface IState {
     freeText: boolean;
+}
+
+function applyPlaceholders(definition: string, article: IArticle): string {
+    const extensionConfig: IExtensionConfigurationOptions = superdesk.getExtensionConfig();
+
+    let result = definition;
+
+    for (let [placeholderName, pathToValue] of Object.entries(extensionConfig.placeholderMapping ?? {})) {
+        result = result.replace(`{{${placeholderName}}}`, get(article, pathToValue));
+    }
+
+    return result;
 }
 
 export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
@@ -27,7 +40,9 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
         const selectedValue = this.props.value ?? '';
         const options = this.props.config.options ?? [];
 
-        const selectedOption = options.find(({definition}) => definition === this.props.value);
+        const selectedOption = options.find(({definition}) =>
+            applyPlaceholders(definition, this.props.item) === this.props.value);
+
         const fieldReadOnly = this.props.readOnly;
 
         return (
@@ -42,7 +57,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
 
                             if (selected != null) {
                                 this.setState({freeText: false});
-                                this.props.setValue(selected.definition);
+                                this.props.setValue(applyPlaceholders(selected.definition, this.props.item));
                             }
                         }
                     }}
@@ -62,7 +77,10 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
                         return null;
                     }
 
-                    const value = selectedOption?.definition ?? this.props.value;
+                    const value = typeof selectedOption?.definition === 'string'
+                        ? applyPlaceholders(selectedOption.definition, this.props.item)
+                        : this.props.value;
+
                     const freeTextAllowed = this.state.freeText === true || selectedOption == null;
 
                     return (

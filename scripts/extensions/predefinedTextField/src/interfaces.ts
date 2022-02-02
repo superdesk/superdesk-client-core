@@ -6,3 +6,7 @@ export interface IPredefinedFieldOption {
 export interface IPredefinedFieldConfig {
     options: Array<IPredefinedFieldOption>;
 }
+
+export interface IExtensionConfigurationOptions {
+    placeholderMapping?: {[name: string]: string};
+}
