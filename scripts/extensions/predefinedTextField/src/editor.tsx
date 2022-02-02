@@ -39,6 +39,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
     render() {
         const selectedValue = this.props.value ?? '';
         const options = this.props.config.options ?? [];
+        const allowSwitchingToFreeText = this.props.config.allowSwitchingToFreeText ?? false;
 
         const selectedOption = options.find(({definition}) =>
             applyPlaceholders(definition, this.props.item) === this.props.value);
@@ -89,7 +90,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
 
                             <div style={{width: '100%', display: 'flex', alignItems: 'top'}}>
                                 {
-                                    (!fieldReadOnly && freeTextAllowed !== true) && (
+                                    (allowSwitchingToFreeText && !fieldReadOnly && freeTextAllowed !== true) && (
                                         <div>
                                             <button
                                                 title={gettext('Use custom value')}

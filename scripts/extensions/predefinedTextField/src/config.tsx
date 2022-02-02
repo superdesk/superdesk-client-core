@@ -1,8 +1,10 @@
 import * as React from 'react';
 import {IConfigComponentProps, IFormField, IFormGroup, IGenericListPageComponent} from 'superdesk-api';
-import {IPredefinedFieldConfig, IPredefinedFieldOption} from './interfaces';
+import {IPredefinedFieldConfig, IPredefinedFieldOption, IExtensionConfigurationOptions} from './interfaces';
+import {Tag, Checkbox} from 'superdesk-ui-framework/react';
 
 import {superdesk} from './superdesk';
+import {noop} from 'lodash';
 const {gettext} = superdesk.localization;
 const {nameof} = superdesk.helpers;
 
@@ -44,7 +46,7 @@ export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentP
         const GenericArrayListPageComponent = getGenericArrayListPageComponent<IPredefinedFieldOption>();
 
         const value = this.props.config?.options ?? [];
-        const getId = (item: IPredefinedFieldOption) => value.indexOf(item).toString();
+        const getId = (item: IPredefinedFieldOption) => item._id;
 
         const renderRow = (
             key: string,
@@ -86,25 +88,74 @@ export class PredefinedFieldConfig extends React.PureComponent<IConfigComponentP
             </ListItem>
         );
 
-        return (
-            <GenericArrayListPageComponent
-                defaultSortOption={{field: nameof<IPredefinedFieldOption>('title'), direction: 'ascending'}}
-                formConfig={formConfig}
-                renderRow={renderRow}
-                defaultFilters={{}}
-                disallowSorting
-                disallowFiltering
-                value={value}
-                onChange={(val) => {
-                    const nextConfig: IPredefinedFieldConfig = {
-                        ...this.props.config,
-                        options: val,
-                    };
+        const extensionConfig: IExtensionConfigurationOptions = superdesk.getExtensionConfig();
+        const availablePlaceholders =
+            Object.keys(extensionConfig.placeholderMapping ?? {})
+                .map((val) => `{{${val}}}`);
 
-                    this.props.onChange(nextConfig);
-                }}
-                getId={getId}
-            />
+        return (
+            <div>
+                <div className="form-label">{gettext('Configure predefined values')}</div>
+
+                {
+                    availablePlaceholders.length > 0 && (
+                        <div>
+                            {gettext('The following placeholders are available to be used in definitions:')}
+                            {' '}
+                            {
+                                availablePlaceholders.map((placeholder) => (
+                                    <Tag
+                                        key={placeholder}
+                                        text={placeholder}
+                                        readOnly
+                                        onClick={noop}
+                                    />
+                                ))
+                            }
+
+                            <br />
+                            <br />
+                        </div>
+                    )
+                }
+
+                <GenericArrayListPageComponent
+                    defaultSortOption={{field: nameof<IPredefinedFieldOption>('title'), direction: 'ascending'}}
+                    formConfig={formConfig}
+                    renderRow={renderRow}
+                    defaultFilters={{}}
+                    disallowSorting
+                    disallowFiltering
+                    value={value}
+                    getNewItemTemplate={() => {
+                        const ids = value.map(({_id: id}) => parseInt(id, 10));
+
+                        return ({
+                            _id: value.length < 1 ? '1' : (Math.max(...ids) + 1).toString(),
+                        });
+                    }}
+                    onChange={(val) => {
+                        const nextConfig: IPredefinedFieldConfig = {
+                            ...this.props.config,
+                            options: val,
+                        };
+
+                        this.props.onChange(nextConfig);
+                    }}
+                    getId={getId}
+                />
+
+                <Checkbox
+                    label={{side: 'right', text: gettext('Allow switching to free text input')}}
+                    checked={this.props.config?.allowSwitchingToFreeText ?? false}
+                    onChange={(allowSwitchingToFreeText) => {
+                        this.props.onChange({
+                            ...this.props.config,
+                            allowSwitchingToFreeText,
+                        });
+                    }}
+                />
+            </div>
         );
     }
 }
