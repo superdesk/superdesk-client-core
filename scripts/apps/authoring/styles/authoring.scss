@@ -677,44 +677,13 @@ $authoring-toolbar-spacing: 10px;
 }
 
 .authoring-header__toggle {
-    position: absolute;
-    width: 37px;
-    height: 25px;
-    border: 0;
-    padding: 0 0 4px;
-    left: 50%;
-    margin-left: -18.5px;
-    bottom: -25px;
-    background-color: var(--authoringHeaderBG);
-    z-index: 3;
-    line-height: 0;
-    border-radius: 0 0 22px 22px;
-    box-shadow: 0 -2px 0 0 var(--authoringHeaderBG), 0 1px 3px 0 rgba(0,0,0,0.3);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    @include transition(all ease-in 0.12s);
-    i { 
-        opacity: 0.75;
-    }
-    &:hover {
-        height: 32px;
-        bottom: -32px;
-        padding-top: 2px;
-        i { 
-            opacity: 1;
-        }
-    }
-    i { 
-        height: 15px;
-        @include transition(all 0.5s);
-         
-    }
-    &.active {
-        i { 
-            @include rotate(180deg);
-        }
-    }
+    --toggleBG: var(--authoringHeaderBG);
+    --toggleWidth: 37px;
+    --toggleHeight: 25px;
+    --toggleHeigh--Hover: 32px;
+    --toggleBorderColor: transparent;
+    @include header-toggle;
+
 }
 
 .authoring-header__row {

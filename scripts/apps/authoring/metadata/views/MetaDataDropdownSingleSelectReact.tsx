@@ -23,7 +23,7 @@ export class MetaDataDropdownSingleSelectReact extends React.PureComponent<IProp
         )?.option.qcode ?? '';
 
         return (
-            <div className="sd-line-input sd-line-input--is-select">
+            <div className="sd-line-input sd-line-input--no-label sd-line-input--is-select">
                 <select
                     value={selectedValue}
                     onChange={(event) => {

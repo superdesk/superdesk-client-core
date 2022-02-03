@@ -455,6 +455,11 @@
             font-size: 3rem;
         }
     }
+    sd-user-avatar {
+        & > div {
+            display: contents;
+        }
+    }
 
 }
 

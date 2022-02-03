@@ -28,6 +28,7 @@ import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {getInitialValues} from '../generic-form/get-initial-values';
 import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
+import {SubNav} from 'superdesk-ui-framework';
 import {
     IBaseRestApiResponse,
     IPropsGenericForm,
@@ -372,7 +373,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%'}}>
-                <div className="subnav">
+                <SubNav>
                     <div
                         style={{
                             display: 'flex',
@@ -440,7 +441,7 @@ export class GenericListPageComponent<T extends IBaseRestApiResponse>
                             }
                         </div>
                     </div>
-                </div>
+                </SubNav>
                 <PageContainer>
                     {
                         this.state.filtersOpen ? (

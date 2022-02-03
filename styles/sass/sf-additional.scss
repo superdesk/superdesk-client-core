@@ -204,7 +204,7 @@
         background: none;
         display: flex;
         white-space: nowrap;
-        border-right: 1px solid var(--sd-colour-line--light);
+        border-right: 1px solid var(--sd-colour-line--light) !important;
         transition: all 0.3s ease;
         input {
             height: 28px;
@@ -1273,14 +1273,11 @@
     display: flex;
     align-items: center;
     white-space: nowrap;
-    margin: 0 5px;
-    padding: 0 10px;
-
-    > * + * {
-        margin-left: 4px;
-    }
+    margin: 0 8px;
+    padding: 0 8px;
+    gap: 8px;
     .lab {
-        margin-right: 10px;
+        margin-inline-end: 8px;
     }
     .dropdown__toggle {
         color: $sd-text;
@@ -1640,7 +1637,7 @@
 // Activiites
 // ---------------------------------------------
 .item-field {
-    border-left: 1px solid #d8d8d8;
+    //border-left: 1px solid #d8d8d8;
     display: inline-block;
     span {
         display: none;
@@ -1653,7 +1650,7 @@
     }
     &:hover {
         background: hsla(0, 0%, 0%, 0.1);
-        border-color: #e0e0e0;
+        //border-color: #e0e0e0;
     }
     &.disabled {
         cursor: default;

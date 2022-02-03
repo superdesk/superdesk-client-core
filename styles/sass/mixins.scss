@@ -546,3 +546,44 @@ $enable-transitions: true !default;
         background-color: var(--sd-colour-bg__searchbar);
     }
 }
+
+@mixin header-toggle {
+    position: absolute;
+    width: var(--toggleWidth);
+    height: var(--toggleHeight);
+    border: 0;
+    padding: 0 0 4px;
+    left: 50%;
+    margin-inline-start: calc(-1 * (var(--toggleWidth) / 2)) ;
+    bottom: calc(-1 * var(--toggleHeight));
+    background-color: var(--toggleBG);
+    z-index: 3;
+    line-height: 0;
+    border-radius: 0 0 var(--b-radius--full) var(--b-radius--full);
+    box-shadow: 0 -2px 0 0 var(--toggleBG), 0 1px 3px 0 rgba(0,0,0,0.3);
+    border: 1px solid var(--toggleBorderColor);
+    border-top: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s ease-in;
+    i { 
+        height: 15px;
+        color: $sd-text;
+        opacity: 0.75;
+        transition: all 0.5s;
+    }
+    &:hover {
+        height: var(--toggleHeigh--Hover);
+        bottom: calc(-1 * var(--toggleHeigh--Hover));
+        padding-top: 2px;
+        i { 
+            opacity: 1;
+        }
+    }
+    &.active {
+        i { 
+            @include rotate(180deg);
+        }
+    }
+}

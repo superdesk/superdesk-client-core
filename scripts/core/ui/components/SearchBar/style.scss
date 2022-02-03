@@ -2,7 +2,7 @@
     .search-handler {
         display: flex;
         height: 48px;
-        border-left: 1px solid var(--sd-colour-line--light);
+        border-left: 1px solid var(--sd-colour-line--light) !important;
         input {
             flex-grow: 1;
         }

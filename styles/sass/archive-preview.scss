@@ -1125,40 +1125,12 @@ $lightbox-composite-condensed : 100px;
             }
         }
     .preview-header__toggle {
-        position: absolute;
-        width: 27px;
-        height: 20px;
-        border: 0;
-        padding: 0 0 4px;
-        left: 50%;
-        margin-left: -10.5px;
-        bottom: -20px;
-        background-color: var(--previewHeaderBG);
-        z-index: 3;
-        line-height: 0;
-        border-radius: 0 0 18px 18px;
-        box-shadow: 0 -2px 0 0 var(--previewHeaderBG), 0 1px 3px 0 rgba(0, 0, 0, 0.3);
-        border: 1px solid var(--sd-shadow-outline--2);
-        border-top: none;
-        transition: all ease-in 0.12s;
-        i { 
-            height: 15px;
-            color: $sd-text;
-            opacity: 0.75;
-        }
-        &:hover {
-            height: 24px;
-            bottom: -24px;
-            padding-top: 2px;
-            i { 
-                opacity: 1;
-            }
-        }
-        &.active {
-            i { 
-                transform: rotate(180deg);
-            }
-        }
+        --toggleBG: var(--previewHeaderBG);
+        --toggleWidth: 31px;
+        --toggleHeight: 20px;
+        --toggleHeigh--Hover: 24px;
+        --toggleBorderColor: var(--sd-shadow-outline--2);
+        @include header-toggle;
     }
     
     .preview-header__timestamp {

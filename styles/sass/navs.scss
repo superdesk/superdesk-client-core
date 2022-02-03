@@ -368,6 +368,10 @@
         display: contents !important;
         padding: 0 !important;
     }
+    &.page-nav-title--flex {
+        display: flex;
+        align-items: center;
+    }
 }
 .subnav__desk-stage {
     flex-grow: 1;

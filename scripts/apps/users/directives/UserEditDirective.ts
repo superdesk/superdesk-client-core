@@ -33,6 +33,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
             metadata.initialize().then(() => {
                 scope.metadata = metadata.values;
             });
+            scope.activeNavigation = null;
             scope.privileges = privileges.privileges;
             scope.features = features;
             scope.usernamePattern = appConfig.user?.username_pattern != null ?
@@ -108,6 +109,18 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                     scope.user.picture_url = avatar; // prevent replacing Avatar which would get into diff
                 });
             };
+
+            scope.goTo = function(id) {
+                document.getElementById(id).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                scope.activeNavigation = id;
+            }
+
+            scope.checkNavigation = function(id) {
+                return scope.activeNavigation === id;
+            }
 
             function validateField(response, field) {
                 if (scope.userForm?.[field]) {

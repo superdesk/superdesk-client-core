@@ -41,6 +41,7 @@ export function UserPreferencesDirective(
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
         link: function(scope, element, attrs) {
             const userLang = getUserInterfaceLanguage().replace('_', '-');
+            scope.activeNavigation = null;
 
             /*
              * Set this to true after adding all the preferences to the scope. If done before, then the
@@ -64,6 +65,18 @@ export function UserPreferencesDirective(
 
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
             };
+
+            scope.goTo = function(id) {
+                document.getElementById(id).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                scope.activeNavigation = id;
+            }
+
+            scope.checkNavigation = function(id) {
+                return scope.activeNavigation === id;
+            }
 
             userList.getUser(scope.user._id, true).then((u) => {
                 scope.user = u;

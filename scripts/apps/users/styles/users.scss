@@ -167,14 +167,16 @@
                         li {
                             height: 40px;
                             width: 40px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
                             line-height: 40px;
                             text-align: center;
-                            border-left: 1px solid var(--sd-item__main-Bg--hover);
                             span {
                                 display: none;
                             }
                             &:hover {
-                                background-color: var(--sd-item__main-Bg--hover);
+                                background-color: transparent;
                             }
                         }
                     }
@@ -183,7 +185,9 @@
 
             &:hover {
                 > div.action .item-functions {
-                    display: block;
+                    display: flex;
+                    align-items: center;
+
                 }
             }
 
@@ -210,79 +214,113 @@
     User detail pane
 ====================================================
 */
-
+.preferences__content {
+    .simple-list--users {
+        > .simple-list__item:first-child {
+            padding-top: 0;
+        }
+    }
+}
 .user-details-pane {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
     position: relative;
     width: 100%;
-    height: calc(100% - 48px);
+    height: 100%;
 
-    .profile-info {
-        position: absolute;
-        top: 0; bottom: 0;
-        left: 0; right: 0;
-        overflow: auto;
+    .profile-info,
+    .preferences {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        grid-template-rows: 1fr;
+    }
+    .profile-info__content,
+    .preferences__content {
+        padding: 24px 0 0 0;
+        overflow-y: auto;
+    }
+
+    .preferences__content {
+        padding: 24px 20px;
+
+    }
+    .profile-info__navigation,
+    .preferences__navigation {
+        position: relative;
+        overflow-y: auto;
+        width: 216px;
+        .sd-left-nav {
+            position: fixed;
+        }
+    }
+
+    > header {
+        grid-row: 1 / 2;
+        height: 48px;
+        border-bottom: none;
+        z-index: 1;
+        .nav-tabs {
+            padding: 0 10px;
+        }
+    }
+    > .content {
+        //position: relative;
+        grid-row: 2 / 3;
+        height: 100%;
+        padding: 0;
+        overflow-y: auto;
+        background-color: var(--sd-colour-panel-bg--100);
+    }
+    .action-bar {
+        top: -48px;
+        &.show { 
+            top:0;
+            z-index: 2; 
+        }
     }
 
     .header-info {
-        background-color: var(--sd-colour-interactive--alpha-10);
-        padding: 20px 0 0;
+        //background-color: var(--sd-colour-interactive--alpha-10);
+        padding: 0;
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
         h2 { //used as user's full name
             text-align: center;
-            font-size: 18px;
-            line-height: 20px;
+            font-size: 23px;
+            line-height: 1;
             margin: 10px 0 4px 0;
             padding: 0 20px;
         }
         h5 { //used as user's username
             text-align: center;
-            font-size: 14px;
+            font-size: 18px;
             font-weight: normal;
-            line-height: 16px;
-            padding: 0 20px;
-            margin-bottom: 10px;
-            color: var(--color-text-light);
+            line-height: 1;
+            padding: 2px 0;
+            margin-bottom: 6px;
+            color: var(--sd-colour-interactive);
         }
-
-        .active {
-            position: absolute;
-            top: 20px;
-            right: 15px;
+        .field__member_since {
+            display: flex;
+            margin: 0 auto;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
-        .user-roles {
-            list-style-type: none;
-            margin: 15px 0;
-            padding: 0;
-            li {
-                display: inline-block;
-                border-radius: 3px;
-                padding: 2px 10px;
-                background: #b2b2b2;
-                color: #fff;
-                font-size: 11px;
-                margin-right: 3px;
-            }
-        }
-
     }
-
     .date-time {
         color: var(--color-text-light);
         font-weight: 300;
     }
-    // .change-btn {
-    //     color: sd
-    // }
-
     .details-info {
-        flex-grow: 1;
-        overflow: auto;
-        padding: 20px;
+        padding: 0 20px;
         position: relative;
+        scroll-behavior: smooth;
     }
-
     .error-holder {
         height: 40px;
         margin: 0 -20px;
@@ -290,7 +328,6 @@
             padding: 10px 20px;
         }
     }
-
     .validation-error {
         color: #ab3434;
         font-size: 12px;
@@ -305,12 +342,18 @@
         display: flex;
         position: relative;
         justify-content: center;
-
-        .disabled-label {
-            position: absolute;
-            bottom: 15%;
-            left: 40%;
-            border: 1px solid #fff;
+        position: relative;
+    }
+    .profile-pic__change {
+        position: absolute;
+        bottom: -2px;
+        inset-inline-end: -4px;
+        background-color: var(--sd-item__main-Bg);
+        border-radius: var(--b-radius--full);
+        opacity: 0.75;
+        transition: opacity 0.2s ease;
+        &:hover {
+            opacity: 1;
         }
     }
 
@@ -326,6 +369,7 @@
         }
     }
 } //end of user detail pane
+
 
 
 // USER PROFILE PAGE IN MODAL
@@ -374,21 +418,24 @@ Profile page styles
 */
 .user-profile-page {
     .user-details-pane {
-        top: 0;
+        //top: 0;
         padding: 0;
         height: 100%;
     }
 }
 
 .profile-activity-container {
-    position: absolute;
-    left: 0px;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    //position: absolute;
+    //left: 0px;
+    //right: 0;
+    //top: 0;
+    //bottom: 0;
     padding: 0;
     background-color: $background-main;
-    //overflow-x: hidden;
+    height: 100%;
+    display: flex;
+    overflow-y: auto;
+    overflow-x: hidden;
 
 
     &::-webkit-scrollbar {
@@ -407,7 +454,7 @@ Profile page styles
     .profile-activity {
         height: 100%;
         overflow: auto;
-        max-width: 500px;
+        width: clamp(200px, 40vw, 380px);
         display: grid;
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr;
@@ -501,54 +548,43 @@ Profile page styles
         }
     }
 }
+.page-nav-title--users {
+    gap: 4px;
+    sd-user-avatar {
+        margin-inline-start: -8px;
+        margin-inline-end: 8px;
+    }
+}
+
 
 .user-profile-page {
     overflow: auto;
+    // grid test
+    display:grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+
+
+    // end test
     .form-content {
-        position: absolute;
-        top: 0; left: 0; bottom: 0;
-        width: 600px;
+        //position: absolute;
+        //top: 0; left: 0; bottom: 0;
+        grid-column: 1 / 2;
+        width: 900px;
         background: var(--sd-item__main-Bg);
         border-right: 1px solid var(--sd-colour-line--light);
         box-shadow: 0 0 5px 0 hsla(0, 0%, 0%, 0.12);
         z-index: 2;
-    }
-
-    .user-details-pane {
-        > header {
-            height: 48px;
-            border-bottom: none;
-            .nav-tabs {
-                padding: 0 10px;
-            }
-        }
-        > .content {
-            position: absolute;
-            top: 48px;
-            left: 0; right: 0; bottom: 0;
-            padding: 0;
-
-            .inner-content {
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                overflow: auto;
-            }
-        }
-
-        .action-bar {
-            top: -96px;
-            &.show { top:-48px; }
-        }
+        overflow-y: auto;
     }
 
     .other-content {
-        position: absolute;
-        top: 0; left: 600px; bottom: 0; right: 0;
+        //position: absolute;
+        //top: 0; left: 600px; bottom: 0; right: 0;
+        grid-column: 2 / 3;
         z-index: 1;
         background: $background-main;
+        overflow-y: auto;
 
         .tablist-container {
             width: 100%;
@@ -685,17 +721,23 @@ Profile page styles
     }
 
     [sd-meta-dropdown] {
+        .dropdown {
+            display: block;
+            .dropdown__menu {
+                width: 100%;
+            }
+        }
         .dropdown__toggle {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 0.2rem !important;
+            padding: 0 0.4rem !important;
             min-width: 240px;
             .dropdown__caret {
                 display: block;
                 flex-grow: 0;
                 flex-shrink: 0;
-                margin: 0 !important;
+                margin: 0 4px 0 auto !important;
             }
         }
     }
@@ -741,4 +783,24 @@ Profile page styles
     color:#333;
     font-weight: 300;
     letter-spacing: 0.02em;
+}
+
+.preview-pane {
+    .user-details-pane {
+        overflow-y: auto;
+        position: static;
+        .profile-info__navigation {
+            width: auto;
+            .sd-left-nav {
+                display: none;
+            }
+        }
+        .action-bar {
+            top: -48px;
+            &.show { 
+                top: 0px;
+                z-index: 1;
+            }
+        }
+    }
 }

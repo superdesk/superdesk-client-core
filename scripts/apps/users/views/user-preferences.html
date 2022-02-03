@@ -6,189 +6,431 @@
     </div>
 
     <div class="preferences form-flat inner-content" ng-init="val = true">
-        <ul class="simple-list simple-list--comfortable simple-list--dotted simple-list--no-border-b simple-list--no-border-t sd-padding--2">
-
-            <li class="simple-list__item"
-                ng-repeat="(id, p) in preferences track by id"
-                ng-if="showCategory(p) && (p.allowed || id === 'feature:preview' || id === 'singleline:view')">
-                <div class="user-preferences__heading">{{ p.category }}</div>
-                <div sd-info-item>
-
-                    <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview' || id === 'singleline:view'">
-                        <span sd-switch ng-hide="p.allowed" ng-model="p.enabled"></span>
-                        <label class="form-label">{{ :: p.label | translate }}</label>
+        <div class="preferences__navigation">
+            <nav class="sd-left-nav sd-left-nav--blanc sd-width--xxx-small sd-margin-t--3">
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': !activeNavigation || checkNavigation('feature-preview')}" ng-click="goTo('feature-preview')" translate>Feature preview</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('view-formats')}" ng-click="goTo('view-formats')" translate>View formats</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('notifications')}" ng-click="goTo('notifications')" translate>Notifications</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('article-defaults')}" ng-click="goTo('article-defaults')" ng-hide="profileConfig.defaults === false" translate>Article defaults</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('prefered-categories')}" ng-click="goTo('prefered-categories')" ng-hide="profileConfig.category === false" translate>Categories</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('prefered-desks')}" ng-click="goTo('prefered-desks')" ng-hide="profileConfig.desks === false" translate>Desks</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('planning-prefs')}" ng-click="goTo('planning-prefs')" ng-if="showPlanning()" translate>Planning</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('vocabulary-values')}" ng-click="goTo('vocabulary-values')" ng-if="profileConfig.desks !== false" translate>Vocabulary values</button>
+                <button class="sd-left-nav__btn" ng-class="{'sd-left-nav__btn--active': checkNavigation('appearance')}" ng-click="goTo('appearance')" translate>Appearance</button>
+            </nav>
+        </div>
+        <div class="preferences__content">
+            <ul class="simple-list simple-list--comfortable simple-list--fixedW-large simple-list--users">
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
+                    <h3 id="feature-preview" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3">Feature preview</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <ul class="simple-list simple-list--comfortable simple-list--dotted simple-list--no-border-b simple-list--no-border-t sd-padding--2">
+                            <li class="simple-list__item simple-list__item--stacked"
+                                ng-repeat="(id, p) in preferences track by id"
+                                ng-if="showCategory(p) && (p.allowed || id === 'feature:preview' || id === 'singleline:view')">
+                                <div sd-info-item>
+                                    <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview' || id === 'singleline:view'">
+                                        <span sd-switch ng-hide="p.allowed" ng-model="p.enabled"></span>
+                                        <label class="form-label">{{ :: p.label | translate }}</label>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
+                </li>
 
-                    <span ng-show="p.allowed">
-                        <label class="form-label">{{ :: p.label | translate }}</label>
-                        <div class="sd-check__group">
-                            <sd-check ng-repeat="i in p.allowed"
-                                ng-model="p.view"
-                                label-position="inside"
-                                type="radio"
-                                data-icon="{{getIcon(i)}}"
-                                ng-value="{{i}}">{{ valueLabel(i) }}</sd-check>
-                        </div>
-                    </span>
-                </div>
-            </li>
-
-            <li class="simple-list__item">
-                <div class="user-preferences__heading" translate>Notifications</div>
-                <div class="form__row form__row--s-padding" sd-info-item>
-                    <span ng-hide="preferences['email:notification'].allowed" sd-switch ng-model="preferences['email:notification'].enabled"></span>
-                    <label>{{ :: preferences['email:notification'].label | translate }}</label>
-                </div>
-                <div class="form__row form__row--s-padding" sd-info-item>
-                    <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
-                    <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
-                </div>
-                <div class="form__row form__row--s-padding" sd-info-item ng-hide="!$root.config.features.slackNotifications">
-                    <span ng-hide="preferences['slack:notification'].allowed" sd-switch ng-model="preferences['slack:notification'].enabled"></span>
-                    <label>{{ :: preferences['slack:notification'].label | translate }}</label>
-                </div>
-            </li>
-
-            <li class="simple-list__item terms-box" ng-hide="profileConfig.defaults === false">
-                <div class="user-preferences__heading" translate>Article Defaults</div>
-                <div class="form-label">{{ 'Dateline'  | translate}} / {{ :: preferences['dateline:located'].label | translate}}</div>
-
-                <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.located === false">
-                    <div class="form__row">
-                        <span sd-meta-locators
-                            data-item="preferences['dateline:located']"
-                            data-field="located"
-                            data-postprocessing="changeDatelinePreview(item, city)"
-                            data-keepinput="true"></span>
-                        <div sd-info-item class="dateline_preview" ng-hide="!datelinePreview">
-                            <span>{{ datelinePreview | previewDateline:datelineSource}} </span>
-                        </div>
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
+                    <h3 id="view-formats" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3">View formats</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <p class="sd-text sd-text--normal sd-text-align--left sd-text--sans sd-text-color--light">Select the prefered default view format for specific areas of Superdesks interface. The sections 
+                            will always open in the selected view format, but can be always changed using the view option dropdown in each section.</p>
+                        <ul class="simple-list simple-list--compact simple-list--dotted  sd-margin-t--3 sd-margin-b--0 sd-padding-b--0">
+                            <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start"
+                                ng-repeat="(id, p) in preferences track by id"
+                                ng-if="showCategory(p) && (p.allowed || id === 'feature:preview' || id === 'singleline:view')">
+                                <h4 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h4 sd-margin-b--0-5">{{ p.category }}</h4>
+                                <div sd-info-item>
+                                    <span ng-show="p.allowed">
+                                        <div class="sd-check__group">
+                                            <sd-check ng-repeat="i in p.allowed"
+                                                ng-model="p.view"
+                                                label-position="inside"
+                                                type="radio"
+                                                data-icon="{{getIcon(i)}}"
+                                                ng-value="{{i}}">{{ valueLabel(i) }}</sd-check>
+                                        </div>
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                </div>
+                </li>
 
-                <div sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.place === false">
-                    <label class="form-label">{{ :: preferences['article:default:place'].label | translate}}</label>
-                    <div class="form__row form__row--s-padding">
-                        <span sd-meta-dropdown
-                              data-item="preferences['article:default:place']"
-                              data-field="place"
-                              data-list="locators"
-                              data-change="articleDefaultsChanged(item)"></span>
-                    </div>
-                </div>
-            </li>
-
-            <li class="simple-list__item" ng-hide="profileConfig.category === false">
-                <div class="user-preferences__heading">
-                    {{ preferences['categories:preferred'].category }}
-                </div>
-
-                <div sd-info-item>
-                    <label>
-                        {{ :: preferences['categories:preferred'].label | translate}}
-                    </label>
-                    <p class="discreet" translate>
-                        By selecting the categories you are interested in, the system will only display these in a menu for setting the content item's categories (along with any of its existing categories).
-                    </p>
-
-                    <div class="preferences__actions">
-                        <a ng-click="checkAll()"
-                           class="preferences__action-link"
-                           title="{{:: 'Select all categories' | translate}}"
-                           translate>all</a>
-
-                        <span class="preferences__action-spacer"></span>
-
-                        <a ng-click="checkNone()"
-                           class="preferences__action-link"
-                           title="{{:: 'Clear all selected' | translate}}"
-                           translate>none</a>
-
-                        <span class="preferences__action-spacer"></span>
-
-                        <a ng-click="checkDefault()"
-                           class="preferences__action-link"
-                           title="{{:: 'Select default categories only' | translate}}"
-                           translate>default</a>
-                    </div>
-                    <div class="sd-check__group">
-                        <span ng-repeat="cat in categories track by cat.qcode">
-                            <sd-check ng-model="cat.selected"
-                                label-position="inside"
-                                id="cat_{{::cat.qcode}}"
-                                ng-value="{{cat.qcode}}">
-                                {{:: cat.name }}
-                            </sd-check>
-                        </span>
-                    </div>
-                </div>
-            </li>
-
-            <li class="simple-list__item" ng-hide="profileConfig.desks === false">
-                <div class="user-preferences__heading">
-                    {{ :: preferences['desks:preferred'].category }}
-                </div>
-                <div sd-info-item>
-                    <label>
-                        {{ :: preferences['desks:preferred'].label | translate}}
-                    </label>
-                    <p class="discreet" translate>
-                        By selecting the desks as your preferred desks, they appear first in the order when sending or publishing items.
-                    </p>
-
-                    <div class="sd-check__group sd-check__group--grid">
-                        <div  ng-repeat="desk in desks track by desk._id">
-                            <sd-check ng-model="desk.selected"
-                                label-position="inside"
-                                id="{{desk._id}}"
-                                ng-value="'{{desk._id}}'">
-                                {{desk.name}}
-                            </sd-check>
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
+                    <h3 id="notifications" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>Notifications</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <div class="sd-switch__group sd-switch__group--vertical">
+                            <div sd-info-item>
+                                <span ng-hide="preferences['email:notification'].allowed" sd-switch ng-model="preferences['email:notification'].enabled"></span>
+                                <label>{{ :: preferences['email:notification'].label | translate }}</label>
+                            </div>
+                            <div sd-info-item>
+                                <span ng-hide="preferences['desktop:notification'].allowed" sd-switch ng-model="preferences['desktop:notification'].enabled"></span>
+                                <label>{{ :: preferences['desktop:notification'].label | translate }}</label>
+                            </div>
+                            <div sd-info-item ng-hide="!$root.config.features.slackNotifications">
+                                <span ng-hide="preferences['slack:notification'].allowed" sd-switch ng-model="preferences['slack:notification'].enabled"></span>
+                                <label>{{ :: preferences['slack:notification'].label | translate }}</label>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </li>
-            <li class="simple-list__item" ng-if="showPlanning()">
-                <div class="user-preferences__heading" translate>Planning</div>
-                <div sd-info-item ng-if="calendars.length">
-                    <label class="form-label" translate>Default Calendar</label>
-                    <div class="form__row form__row--s-padding">
-                        <span sd-meta-dropdown
-                              data-item="preferences['planning:calendar'].calendar"
-                              data-list="calendars"
-                              data-key="qcode"
-                              data-field="qcode"
-                              data-change="articleDefaultsChanged(item)"></span>
-                    </div>
-                </div>
-                <div sd-info-item ng-if="agendas.length">
-                    <label class="form-label" translate>Default Agenda</label>
-                    <div class="form__row form__row--s-padding">
-                        <span sd-meta-dropdown
-                              data-item="preferences['planning:agenda'].agenda"
-                              data-list="agendas"
-                              data-key="name"
-                              data-field="name"
-                              data-change="articleDefaultsChanged(item)"></span>
-                    </div>
-                </div>
-                <div sd-info-item ng-if="eventsPlanningFilters">
-                    <label class="form-label" translate>Default Events & Planning Filter</label>
-                    <div class="form__row form__row--s-padding">
-                        <span sd-meta-dropdown
-                              data-item="preferences['planning:events_planning_filter'].filter"
-                              data-list="eventsPlanningFilters"
-                              data-key="qcode"
-                              data-field="qcode"
-                              data-change="articleDefaultsChanged(item)"></span>
-                    </div>
-                </div>
-            </li>
+                </li>
 
-            <li class="simple-list__item terms-box" ng-if="profileConfig.desks !== false">
-                <div class="user-preferences__heading" translate>Preferred values for vocabularies</div>
-                <div sd-info-item sd-prefered-cv-items-config ng-model="preferences['cvs:preferred_items'].value"></div>
-            </li>
-        </ul>
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start" ng-hide="profileConfig.defaults === false">
+                    <h3 id="article-defaults" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>Article Defaults</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <div class="sd-display--contents" sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.located === false">
+                            <div class="form-label">{{ 'Dateline'  | translate}} / {{ :: preferences['dateline:located'].label | translate}}</div>
+                            <div class="form__group form__group--default form__group--mb-3">
+                                <div class="form__item">
+                                    <span sd-meta-locators
+                                        data-item="preferences['dateline:located']"
+                                        data-field="located"
+                                        data-postprocessing="changeDatelinePreview(item, city)"
+                                        data-keepinput="true"></span>
+                                    <div sd-info-item class="dateline_preview" ng-hide="!datelinePreview">
+                                        <span>{{ datelinePreview | previewDateline:datelineSource}} </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        <div class="sd-display--contents" sd-info-item ng-if="preferencesLoaded === true" ng-hide="profileConfig.place === false">
+                            <label class="form-label">{{ :: preferences['article:default:place'].label | translate}}</label>
+                            <div class="form__group form__group--default form__group--mb-3">
+                                <div class="form__item">
+                                    <span sd-meta-dropdown
+                                        data-item="preferences['article:default:place']"
+                                        data-field="place"
+                                        data-list="locators"
+                                        data-change="articleDefaultsChanged(item)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start" ng-hide="profileConfig.category === false">
+                    <h3 id="prefered-categories" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-txt-transform--capitalize">{{ preferences['categories:preferred'].category }}</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <div sd-info-item>
+                            <h4 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h4 sd-margin-b--0-5">
+                                {{ :: preferences['categories:preferred'].label | translate}}
+                            </h4>
+                            <p class="sd-text sd-text--normal sd-text-align--left sd-text--sans sd-text-color--light" translate>
+                                By selecting the categories you are interested in, the system will only display these in a menu for setting the content item's categories (along with any of its existing categories).
+                            </p>
+                            <div class="button-group button-group--start button-group--comfort sd-margin-y--2">
+                                <a ng-click="checkAll()"
+                                   class="btn btn--primary btn--text-only"
+                                   title="{{:: 'Select all categories' | translate}}"
+                                   translate>all</a>
+                                <div class="button-group__divider button-group__divider--small button-group__divider--border"></div>
+        
+                                <a ng-click="checkNone()"
+                                   class="btn btn--primary btn--text-only"
+                                   title="{{:: 'Clear all selected' | translate}}"
+                                   translate>none</a>
+                                <div class="button-group__divider button-group__divider--small button-group__divider--border"></div>
+        
+                                <a ng-click="checkDefault()"
+                                   class="btn btn--primary btn--text-only"
+                                   title="{{:: 'Select default categories only' | translate}}"
+                                   translate>default</a>
+                            </div>
+                            <div class="sd-check__group">
+                                <span ng-repeat="cat in categories track by cat.qcode">
+                                    <sd-check ng-model="cat.selected"
+                                        label-position="inside"
+                                        id="cat_{{::cat.qcode}}"
+                                        ng-value="{{cat.qcode}}">
+                                        {{:: cat.name }}
+                                    </sd-check>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start" ng-hide="profileConfig.desks === false">
+                    <h3 id="prefered-desks" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-txt-transform--capitalize">{{ :: preferences['desks:preferred'].category }}</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <div sd-info-item>
+                            <h4 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h4 sd-margin-b--0-5">
+                                {{ :: preferences['desks:preferred'].label | translate}}
+                            </h4>
+                            <p class="sd-text sd-text--normal sd-text-align--left sd-text--sans sd-text-color--light" translate>
+                                By selecting the desks as your preferred desks, they appear first in the order when sending or publishing items.
+                            </p>
+                            <div class="sd-check__group sd-check__group--grid">
+                                <div  ng-repeat="desk in desks track by desk._id">
+                                    <sd-check ng-model="desk.selected"
+                                        label-position="inside"
+                                        id="{{desk._id}}"
+                                        ng-value="'{{desk._id}}'">
+                                        {{desk.name}}
+                                    </sd-check>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start" ng-if="showPlanning()">
+                    <h3 id="planning-prefs" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-txt-transform--capitalize" translate>Planning</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <div sd-info-item ng-if="calendars.length" class="sd-display--contents">
+                            <label class="form-label" translate>Default Calendar</label>
+                            <div class="form__group form__group--default form__group--mb-1">
+                                <div class="form__item">
+                                    <span sd-meta-dropdown
+                                        data-item="preferences['planning:calendar'].calendar"
+                                        data-list="calendars"
+                                        data-key="qcode"
+                                        data-field="qcode"
+                                        data-change="articleDefaultsChanged(item)"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div sd-info-item ng-if="agendas.length" class="sd-display--contents">
+                            <label class="form-label" translate>Default Agenda</label>
+                            <div class="form__group form__group--default form__group--mb-1">
+                                <div class="form__item">
+                                    <span sd-meta-dropdown
+                                        data-item="preferences['planning:agenda'].agenda"
+                                        data-list="agendas"
+                                        data-key="name"
+                                        data-field="name"
+                                        data-change="articleDefaultsChanged(item)"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div sd-info-item ng-if="eventsPlanningFilters" class="sd-display--contents">
+                            <label class="form-label" translate>Default Events & Planning Filter</label>
+                            <div class="form__group form__group--default form__group--mb-0">
+                                <div class="form__item">
+                                    <span sd-meta-dropdown
+                                        data-item="preferences['planning:events_planning_filter'].filter"
+                                        data-list="eventsPlanningFilters"
+                                        data-key="qcode"
+                                        data-field="qcode"
+                                        data-change="articleDefaultsChanged(item)"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start" ng-if="profileConfig.desks !== false">
+                    <h3 id="vocabulary-values" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3 sd-txt-transform--capitalize" translate>Vocabulary values</h3>
+                    <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
+                        <div class="sd-display--contents" sd-info-item sd-prefered-cv-items-config ng-model="preferences['cvs:preferred_items'].value"></div>
+                    </div>
+                </li>
+
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
+                    <h3 id="appearance" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3" translate>Appearance</h3>
+                    <div class="sd-container sd-container--flex sd-container--direction-column sd-panel-bg--000 sd-container--gap-madium sd-shadow--z2 sd-radius--large sd-padding--2">
+                        <h4 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h4 sd-margin-b--0-5" translate>Themes</h4>
+                        <p class="sd-text sd-text--normal sd-text-align--left sd-text--sans sd-text-color--light" translate>Change the appearance of Superdesk across the whole application.</p>
+                        <div class="sd-theme-selector__list  sd-theme-selector__list--small">
+                            <div class="sd-theme-selector__item" tabindex="-1">
+                                <figure class="sd-theme-selector__item-thumb" data-theme="light-ui" aria-hidden="true">
+                                    <svg viewBox="0 0 156 94" xmlns="http://www.w3.org/2000/svg">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="m0 0h156v94h-156z" fill="var(--sd-colour-panel-bg--100)"></path>
+                                            <circle cx="144" cy="33" fill="var(--color-text-lighter)" r="4"></circle>
+                                            <rect fill="var(--sd-colour-interactive)" height="15" rx="2" width="58" x="91" y="71"></rect>
+                                            <g fill="var(--sd-colour-btn-bg-neutral)">
+                                                <rect height="15" rx="2" width="58" x="29" y="52"></rect>
+                                                <rect height="15" rx="2" width="58" x="29" y="71"></rect>
+                                                <rect height="15" rx="2" width="58" x="91" y="52"></rect>
+                                            </g><g fill="#fff">
+                                                <rect height="3" rx="1.5" width="9" x="99" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="130" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="110" y="77"></rect>
+                                            </g>
+                                            <g fill="var(--color-text-light)">
+                                                <rect height="3" rx="1.5" width="9" x="37" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="68" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="48" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="9" x="37" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="68" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="48" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="9" x="99" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="130" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="110" y="58"></rect>
+                                            </g>
+                                            <g fill="var(--color-text)">
+                                                <rect height="4" rx="2" width="11" x="29" y="31"></rect>
+                                                <rect height="4" rx="2" width="14" x="70" y="31"></rect>
+                                                <rect height="4" rx="2" width="23" x="43" y="31"></rect>
+                                            </g>
+                                            <path d="m0 22h22v72h-22z" fill="var(--sd-colour-sidebar-menu--00)"></path>
+                                            <circle cx="11" cy="52" fill="var(--sd-colour-interactive)" r="6"></circle>
+                                            <g fill="var(--color-icon-default)" opacity=".75">
+                                                <circle cx="11" cy="34" r="6"></circle>
+                                                <circle cx="11" cy="70" r="6"></circle>
+                                            </g>
+                                            <path d="m0 0h156v22h-156z" fill="var(--sd-colour-top-menu)"></path>
+                                            <path d="m0 22h156v1h-156z" fill="var(--sd-colour--shadow-line)"></path>
+                                            <g fill="hsla(214, 13%, 65%, 1)" opacity="1">
+                                                <rect height="4" rx="2" width="11" x="31" y="9"></rect>
+                                                <rect height="4" rx="2" width="23" x="45" y="9"></rect>
+                                            </g>
+                                            <path d="m22 44h134v1h-134z" fill="var(--sd-colour-line--medium)"></path>
+                                            <path d="m0 0h22v22h-22z" fill="var(--sd-colour-top-menu__btn)"></path>
+                                            <path d="m15 13v1h-8v-1zm0-3v1h-8v-1zm0-3v1h-8v-1z" fill="#fff"></path>
+                                        </g>
+                                    </svg>
+                                </figure>
+                                <div class="sd-theme-selector__item-action">
+                                    <input type="radio" class="sd-theme-selector__input" id="id390" tabindex="0" name="id39">
+                                    <span class="sd-radio-new"></span>
+                                    <label class="sd-theme-selector__label" for="id390">Light</label>
+                                    <span class="sd-theme-selector__label-text" aria-hidden="true">Light</span>
+                                </div>
+                            </div>
+                            <div class="sd-theme-selector__item" tabindex="-1">
+                                <figure class="sd-theme-selector__item-thumb" data-theme="dark-ui" aria-hidden="true">
+                                    <svg viewBox="0 0 156 94" xmlns="http://www.w3.org/2000/svg">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="m0 0h156v94h-156z" fill="var(--sd-colour-panel-bg--100)"></path>
+                                            <circle cx="144" cy="33" fill="var(--color-text-lighter)" r="4"></circle>
+                                            <rect fill="var(--sd-colour-interactive)" height="15" rx="2" width="58" x="91" y="71"></rect>
+                                            <g fill="var(--sd-colour-btn-bg-neutral)">
+                                                <rect height="15" rx="2" width="58" x="29" y="52"></rect>
+                                                <rect height="15" rx="2" width="58" x="29" y="71"></rect>
+                                                <rect height="15" rx="2" width="58" x="91" y="52"></rect>
+                                            </g>
+                                            <g fill="#fff">
+                                                <rect height="3" rx="1.5" width="9" x="99" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="130" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="110" y="77"></rect>
+                                            </g>
+                                            <g fill="var(--color-text-light)">
+                                                <rect height="3" rx="1.5" width="9" x="37" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="68" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="48" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="9" x="37" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="68" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="48" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="9" x="99" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="130" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="110" y="58"></rect>
+                                            </g>
+                                            <g fill="var(--color-text)">
+                                                <rect height="4" rx="2" width="11" x="29" y="31"></rect>
+                                                <rect height="4" rx="2" width="14" x="70" y="31"></rect>
+                                                <rect height="4" rx="2" width="23" x="43" y="31"></rect>
+                                            </g>
+                                            <path d="m0 22h22v72h-22z" fill="var(--sd-colour-sidebar-menu--00)"></path>
+                                            <circle cx="11" cy="52" fill="var(--sd-colour-interactive)" r="6"></circle>
+                                            <g fill="var(--color-icon-default)" opacity=".75">
+                                                <circle cx="11" cy="34" r="6"></circle>
+                                                <circle cx="11" cy="70" r="6"></circle>
+                                            </g>
+                                            <path d="m0 0h156v22h-156z" fill="var(--sd-colour-top-menu)"></path>
+                                            <path d="m0 22h156v1h-156z" fill="var(--sd-colour--shadow-line)"></path>
+                                            <g fill="hsla(214, 13%, 65%, 1)" opacity="1">
+                                                <rect height="4" rx="2" width="11" x="31" y="9"></rect>
+                                                <rect height="4" rx="2" width="23" x="45" y="9"></rect>
+                                            </g>
+                                            <path d="m22 44h134v1h-134z" fill="var(--sd-colour-line--medium)"></path>
+                                            <path d="m0 0h22v22h-22z" fill="var(--sd-colour-top-menu__btn)"></path>
+                                            <path d="m15 13v1h-8v-1zm0-3v1h-8v-1zm0-3v1h-8v-1z" fill="#fff"></path>
+                                        </g>
+                                    </svg>
+                                </figure>
+                                <div class="sd-theme-selector__item-action">
+                                    <input type="radio" class="sd-theme-selector__input" id="id391" tabindex="0" name="id39">
+                                    <span class="sd-radio-new"></span>
+                                    <label class="sd-theme-selector__label" for="id391">Dark</label>
+                                    <span class="sd-theme-selector__label-text" aria-hidden="true">Dark</span>
+                                </div>
+                            </div>
+                            <div class="sd-theme-selector__item" tabindex="-1">
+                                <figure class="sd-theme-selector__item-thumb" data-theme="contrast-light-ui" aria-hidden="true">
+                                    <svg viewBox="0 0 156 94" xmlns="http://www.w3.org/2000/svg">
+                                        <g fill="none" fill-rule="evenodd">
+                                            <path d="m0 0h156v94h-156z" fill="var(--sd-colour-panel-bg--100)"></path>
+                                            <circle cx="144" cy="33" fill="var(--color-text-lighter)" r="4"></circle>
+                                            <rect fill="var(--sd-colour-interactive)" height="15" rx="2" width="58" x="91" y="71"></rect>
+                                            <g fill="var(--sd-colour-btn-bg-neutral)">
+                                                <rect height="15" rx="2" width="58" x="29" y="52"></rect>
+                                                <rect height="15" rx="2" width="58" x="29" y="71"></rect>
+                                                <rect height="15" rx="2" width="58" x="91" y="52"></rect>
+                                            </g>
+                                            <g fill="#fff">
+                                                <rect height="3" rx="1.5" width="9" x="99" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="130" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="110" y="77"></rect>
+                                            </g>
+                                            <g fill="var(--color-text-light)">
+                                                <rect height="3" rx="1.5" width="9" x="37" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="68" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="48" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="9" x="37" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="68" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="48" y="77"></rect>
+                                                <rect height="3" rx="1.5" width="9" x="99" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="11" x="130" y="58"></rect>
+                                                <rect height="3" rx="1.5" width="18" x="110" y="58"></rect>
+                                            </g>
+                                            <g fill="var(--color-text)">
+                                                <rect height="4" rx="2" width="11" x="29" y="31"></rect>
+                                                <rect height="4" rx="2" width="14" x="70" y="31"></rect>
+                                                <rect height="4" rx="2" width="23" x="43" y="31"></rect>
+                                            </g>
+                                            <path d="m0 22h22v72h-22z" fill="var(--sd-colour-sidebar-menu--00)"></path>
+                                            <circle cx="11" cy="52" fill="var(--sd-colour-interactive)" r="6"></circle>
+                                            <g fill="var(--color-icon-default)" opacity=".75">
+                                                <circle cx="11" cy="34" r="6"></circle>
+                                                <circle cx="11" cy="70" r="6"></circle>
+                                            </g>
+                                            <path d="m0 0h156v22h-156z" fill="var(--sd-colour-top-menu)"></path>
+                                            <path d="m0 22h156v1h-156z" fill="var(--sd-colour--shadow-line)"></path>
+                                            <g fill="hsla(214, 13%, 65%, 1)" opacity="1">
+                                                <rect height="4" rx="2" width="11" x="31" y="9"></rect>
+                                                <rect height="4" rx="2" width="23" x="45" y="9"></rect>
+                                            </g>
+                                            <path d="m22 44h134v1h-134z" fill="var(--sd-colour-line--medium)"></path>
+                                            <path d="m0 0h22v22h-22z" fill="var(--sd-colour-top-menu__btn)"></path>
+                                            <path d="m15 13v1h-8v-1zm0-3v1h-8v-1zm0-3v1h-8v-1z" fill="#fff"></path>
+                                        </g>
+                                    </svg>
+                                </figure>
+                                <div class="sd-theme-selector__item-action">
+                                    <input type="radio" class="sd-theme-selector__input" id="id392" tabindex="0" name="id39" disabled="">
+                                    <span class="sd-radio-new"></span>
+                                    <label class="sd-theme-selector__label" for="id392">High Contrast</label>
+                                    <span class="sd-theme-selector__label-text" aria-hidden="true">High Contrast</span>
+                                </div>
+                            </div>
+                        </div>
+        
+                    </div>
+                </li>
+
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
+
+                </li>
+
+                <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start">
+
+                </li>
+
+            </ul>
+        </div>
     </div>
 </form>
