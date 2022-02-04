@@ -86,7 +86,7 @@ export const gettext = (
     let translated = i18n.gettext(text);
 
     Object.keys(params ?? {}).forEach((param) => {
-        translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`), params[param]);
+        translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`, 'g'), params[param]);
     });
 
     return translated;
@@ -226,4 +226,28 @@ export function getWeekDayIndex(weekday: IWeekday): number {
 
 export function isElasticDateFormat(date: string) {
     return date.startsWith('now+') || date.startsWith('now-');
+}
+
+export function isScrolledIntoViewVertically(element: HTMLElement, container: HTMLElement): boolean {
+    const elementTop = element.offsetTop;
+    const elementBottom = element.offsetTop + element.offsetHeight;
+
+    const topVisible = elementTop >= container.scrollTop;
+    const bottomVisible = elementBottom < container.scrollTop + container.offsetHeight;
+
+    return topVisible && bottomVisible;
+}
+
+export function downloadFile(data: string, mimeType: string, fileName: string) {
+    const a = document.createElement('a');
+
+    document.body.appendChild(a);
+    const blob = new Blob([data], {type: mimeType}),
+        url = window.URL.createObjectURL(blob);
+
+    a.href = url;
+    a.download = fileName;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
 }

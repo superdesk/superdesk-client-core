@@ -30,6 +30,7 @@ import {
 } from '../../ui';
 import {VersionUserDateLines} from '../common/versionUserDateLines';
 import {getPreviewComponent} from './preview';
+import {showImagePreviewModal} from './assetImagePreviewFullScreen';
 
 // Utils
 import {getHumanReadableFileSize} from '../../utils/ui';
@@ -70,6 +71,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
         this.onEditAsset = this.onEditAsset.bind(this);
         this.onDownloadSingleAssetCompressedBinary = this.onDownloadSingleAssetCompressedBinary.bind(this);
         this.onDeleteAsset = this.onDeleteAsset.bind(this);
+        this.onAssetImagePreview = this.onAssetImagePreview.bind(this);
     }
 
     onEditAsset(): void {
@@ -82,6 +84,10 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
 
     onDownloadSingleAssetCompressedBinary(): void {
         downloadAssetBinary(this.props.asset!);
+    }
+
+    onAssetImagePreview(asset: IAssetItem): void {
+        showImagePreviewModal(asset!);
     }
 
     render() {
@@ -102,6 +108,10 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
             {
                 action: ASSET_ACTIONS.DELETE,
                 onSelect: this.onDeleteAsset,
+            },
+            {
+                action: ASSET_ACTIONS.VIEW_FULL_SCREEN,
+                onSelect: this.onAssetImagePreview,
             },
             ];
 
@@ -191,6 +201,7 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                                 <FormLabel text={gettext('Set')} style="light" />
                                 <Text>{this.props.setName}</Text>
                             </FormRow>
+
                             <FormRow>
                                 <FormLabel text={gettext('Tags')} style="light" />
                                 {this.props.asset.tags?.map((tag) => (

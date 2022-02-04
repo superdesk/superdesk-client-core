@@ -7,8 +7,8 @@ import {
     IPreviewComponentProps,
 } from 'superdesk-api';
 import {getDateTimeField} from './getDateTimeField';
-import {getTemplateDateTimeField} from './getTemplateDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
+import {getToggleDateTimeField} from './getToggleTemplateDateTimeField';
 
 export function isDateValue(value: string | undefined | null) {
     if (value == null) {
@@ -42,6 +42,12 @@ export const defaultDateTimeConfig: IDateTimeFieldConfig = {
     increment_steps: [],
 };
 
+function onTemplateCreate(_value: string, config: IDateTimeFieldConfig) {
+    const initialOffset = config.initial_offset_minutes;
+
+    return `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
+}
+
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
@@ -55,7 +61,8 @@ const extension: IExtension = {
                         editorComponent: getDateTimeField(superdesk),
                         previewComponent: getDateTimePreviewComponent(superdesk),
                         configComponent: getConfigComponent(superdesk),
-                        templateEditorComponent: getTemplateDateTimeField(superdesk),
+                        templateEditorComponent: getToggleDateTimeField(superdesk),
+                        onTemplateCreate: onTemplateCreate,
                     },
                 ],
             },

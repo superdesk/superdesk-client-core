@@ -42,7 +42,8 @@
                 <span class="authoring-header__label" translate translate-n="item.word_count" translate-plural="WORDS">WORD</span>
             </div>
             <div ng-if="item.signal">
-                <span class="signal">{{ item.signal}}</span>
+                <span class="authoring-header__label" translate>SIGNAL</span>
+                <span class="signal authoring-header__value" ng-repeat="signal in item.signal">{{ signal.name || signal.qcode }}</span>
             </div>
             <div>
                 <span class="authoring-header__label" translate>SOURCE</span>
@@ -343,7 +344,6 @@
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
-                        data-cv="categoriesVocabulary"
                         data-set-language="true"
                         tabindex="{{editor.anpa_category.order}}">
                     </div>
@@ -354,14 +354,11 @@
                         data-item="item"
                         data-field="anpa_category"
                         data-list="availableCategories"
-                        data-cv="categoriesVocabulary"
                         ng-disabled="!_editable || schema.anpa_category.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         tabindex="{{editor.anpa_category.order}}"
-                        data-key="qcode"
-                        class="boxed-input"
-                        >
+                        class="boxed-input">
                    </div>
 
                     <div class="authoring-header__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
@@ -453,6 +450,11 @@
                 sd-validation-error="error[field._id.toLowerCase()]">
 
                 <label class="authoring-header__item-label">{{field.display_name}}</label>
+                <span ng-if="schema[field._id].maxlength || schema[field._id].minlength">
+                    <sd-character-count data-item="item.extra[field._id]" data-html="true" data-limit="schema[field._id].maxlength"></sd-character-count>
+                </span>
+                <sd-validate-characters ng-if="schema[field._id].validate_characters"
+                    class="disallowed-char-error" item="item.extra[field._id]" field="field.display_name"></sd-validate-characters>
                 <div class="authoring-header__input-holder">
                     <div sd-editor3
                         class="authoring-header__input-editor3"
@@ -514,7 +516,7 @@
             </div>
 
             <!-- custom fields from extensions API -->
-            <div class="authoring-header__item"
+            <div class="authoring-header__item authoring-header__item-start"
                 ng-repeat="field in fields track by field._id"
                 ng-if="field.custom_field_type != null && editor[field._id].section === 'header'"
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"
@@ -532,6 +534,19 @@
                         editable="_editable && schema[field._id].readonly !== true"
                         template="template"
                     ></sd-authoring-custom-field>
+                </div>
+            </div>
+
+            <!-- custom preview field from extensions API -->
+            <div class="authoring-header__item"
+                ng-repeat="field in previewFields track by field._id"
+                order="{{ field.order }}">
+                <label class="authoring-header__item-label">{{field.label}}</label>
+                <div class="authoring-header__input-holder">
+                    <sd-header-component-field
+                        item="item"
+                        component="field.component"
+                    ></sd-header-component-field>
                 </div>
             </div>
 

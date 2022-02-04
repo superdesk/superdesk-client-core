@@ -360,9 +360,10 @@ function MetaDropdownDirective($filter, metadata) {
 
             scope.select = function(item) {
                 var fieldObject: {[fieldId: string]: any} = {};
+                const isMultiInputField = scope.multiInputFields.includes(scope.field);
 
                 if (item) {
-                    if (!scope.multiInputFields.includes(scope.field)) {
+                    if (!isMultiInputField) {
                         // single input field
                         // we use 'name' attribute for string fields and the whole object for other fields
                         fieldObject[scope.field] = scope.key ? item[scope.key] : (item.name || item);
@@ -381,6 +382,8 @@ function MetaDropdownDirective($filter, metadata) {
                     // if there is cv as well as field don't set fieldObject[scope.field] to null.
                     // as in the backend it is set to "nullable: false" for ex: subject.
                     fieldObject[scope.field] = scope.item[scope.field].filter((v) => v.scheme !== scope.cv._id);
+                } else if (isMultiInputField) {
+                    fieldObject[scope.field] = [];
                 } else {
                     fieldObject[scope.field] = null;
                 }
@@ -1330,7 +1333,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
         getAllCustomVocabulariesForArticleHeader: function(editor, schema) {
             return this.fetchMetadataValues().then(() => {
                 const customVocabulariesForArticleHeader = this.cvs.filter(
-                    (cv) => cv.items.length && cv.service && (editor[cv._id] || schema[cv._id]),
+                    (cv) => cv.field_type == null && cv.service && (editor[cv._id] || schema[cv._id]),
                 );
 
                 const customTextAndDateVocabularies = this.cvs.filter(

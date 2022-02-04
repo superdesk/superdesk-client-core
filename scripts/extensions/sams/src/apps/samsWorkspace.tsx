@@ -54,6 +54,7 @@ import {AssetFilterPanel} from '../components/assets/assetFilterPanel';
 import {WorkspaceSubnav} from '../components/workspaceSubnav';
 import {AssetPreviewPanel} from '../components/assets/assetPreviewPanel';
 import {AssetEditorPanel} from '../components/assets/assetEditorPanel';
+import {showImagePreviewModal} from '../components/assets/assetImagePreviewFullScreen';
 
 interface IProps {
     assets: Array<IAssetItem>;
@@ -159,6 +160,7 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
         this.onUpdateMultipleSelectedAssetIds = this.onUpdateMultipleSelectedAssetIds.bind(this);
         this.onDeleteAsset = this.onDeleteAsset.bind(this);
         this.onEditAsset = this.onEditAsset.bind(this);
+        this.onAssetImagePreview = this.onAssetImagePreview.bind(this);
     }
 
     onDeleteAsset(asset: IAssetItem): void {
@@ -179,6 +181,10 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
 
     onUpdateMultipleSelectedAssetIds(asset: IAssetItem) {
         this.props.updateMultipleSelectedAssetIds(asset);
+    }
+
+    onAssetImagePreview(asset: IAssetItem): void {
+        showImagePreviewModal(asset!);
     }
 
     onScroll(event: React.UIEvent<HTMLDivElement>) {
@@ -236,6 +242,10 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
             {
                 action: ASSET_ACTIONS.DELETE,
                 onSelect: this.onDeleteAsset,
+            },
+            {
+                action: ASSET_ACTIONS.VIEW_FULL_SCREEN,
+                onSelect: this.onAssetImagePreview,
             },
             ];
 

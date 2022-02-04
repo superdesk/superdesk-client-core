@@ -76,6 +76,13 @@ declare module 'superdesk-api' {
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 
+    export interface AuthoringHeaderItem {
+        _id: string;
+        label: string;
+        order: number;
+        component: React.ComponentType<{article: IArticle}>;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -86,6 +93,7 @@ declare module 'superdesk-api' {
             articleGridItemWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringTopbarWidgets?: Array<React.ComponentType<{article: IArticle}>>;
             authoringSideWidgets?: Array<IAuthoringSideWidget>;
+            authoringHeaderComponents?: Array<AuthoringHeaderItem>;
             authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -1043,6 +1051,10 @@ declare module 'superdesk-api' {
         countLines?(plainText: string, lineLength: number): number;
     }
 
+    export interface IConfigurableAlgorithms {
+        countLines?(plainText: string, lineLength: number): number;
+    }
+
     export interface IListItemProps {
         onClick?(): void;
         className?: string;
@@ -1102,6 +1114,7 @@ declare module 'superdesk-api' {
     export interface IDropZoneComponentProps {
         label?: string;
         className?: string;
+        multiple?: boolean;
         onDrop: (event: DragEvent) => void;
         canDrop: (event: DragEvent) => boolean;
 
@@ -1383,7 +1396,7 @@ declare module 'superdesk-api' {
         patch<T extends IBaseRestApiResponse>(endpoint, current: T, next: Partial<T>): Promise<T>;
         patchRaw<T extends IBaseRestApiResponse>(endpoint, id: T['_id'], etag: T['_etag'], patch: Partial<T>): Promise<T>;
         delete<T extends IBaseRestApiResponse>(endpoint, item: T): Promise<void>;
-        uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress: (event: ProgressEvent) => void): Promise<T>;
+        uploadFileWithProgress<T>(endpoint: string, data: FormData, onProgress?: (event: ProgressEvent) => void): Promise<T>;
         createProvider: (requestFactory: IRequestFactory, responseHandler: IResponseHandler, listenTo?: IListenTo) => IDataProvider;
     }
 
@@ -1939,6 +1952,10 @@ declare module 'superdesk-api' {
         oidc_auth: any;
         keycloak_config: any;
 
+        /**
+         * Enable autocomplete for supported text fields in authoring.
+         * Values of published items are used for autocomplete suggestions.
+         */
         archive_autocomplete: boolean;
 
         /** allow updates for items which aren't published yet */
@@ -1995,7 +2012,14 @@ declare module 'superdesk-api' {
             confirmMediaOnUpdate?: any;
             noMissingLink?: any;
             hideRoutedDesks?: any;
-            autorefreshContent?: any;
+
+            /**
+             * If set to false, a refresh icon will be displayed
+             * instead of reloading the list automatically
+             * when items are created/deleted
+             */
+            autorefreshContent?: boolean;
+
             elasticHighlight?: any;
             onlyEditor3?: any;
             nestedItemsInOutputStage?: boolean;
@@ -2197,7 +2221,6 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
-        template?: ITemplate;
     }
 
     export interface IPreviewComponentProps {
@@ -2218,6 +2241,9 @@ declare module 'superdesk-api' {
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
+
+        // may intercept template creation and return modified value
+        onTemplateCreate?(value: any, config: IConfig): any;
     }
 
 
