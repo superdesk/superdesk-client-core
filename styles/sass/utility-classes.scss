@@ -169,12 +169,29 @@ ul.list-view.list-without-items {
 }
 
 // spacing
-.sd-spacer--horizontal-medium > * + * {
-    margin-left: 10px;
+
+.sd-spacer--horizontal-4 > * + * {
+    margin-left: 4px;
 }
 
-.sd-spacer--vertical-medium > * + * {
-    margin-top: 10px;
+.sd-spacer--vertical-4 > * + * {
+    margin-top: 4px;
+}
+
+.sd-spacer--horizontal-8 > * + * {
+    margin-left: 8px;
+}
+
+.sd-spacer--vertical-8 > * + * {
+    margin-top: 8px;
+}
+
+.sd-spacer--horizontal-16 > * + * {
+    margin-left: 16px;
+}
+
+.sd-spacer--vertical-16 > * + * {
+    margin-top: 16px;
 }
 
 .css-table {

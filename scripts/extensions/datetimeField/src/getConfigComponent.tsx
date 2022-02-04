@@ -15,11 +15,11 @@ export function getConfigComponent(superdesk: ISuperdesk) {
             const {onChange} = this.props;
 
             return (
-                <Spacer type="vertical" spacing="medium">
+                <Spacer type="vertical" spacing="8">
                     <div>
                         <FormLabel text={gettext('Initial time offset')} />
 
-                        <Spacer type="horizontal" spacing="medium" align="end">
+                        <Spacer type="horizontal" spacing="8" align="end">
                             <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
                                 <input
                                     className="sd-line-input__input"
@@ -43,7 +43,7 @@ export function getConfigComponent(superdesk: ISuperdesk) {
 
                         {
                             config.increment_steps.map((value, i) => (
-                                <Spacer type="horizontal" spacing="medium" align="center" key={i}>
+                                <Spacer type="horizontal" spacing="8" align="center" key={i}>
                                     <IconButton
                                         icon="remove-sign"
                                         ariaValue={gettext('Remove')}
@@ -55,7 +55,7 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                                         }}
                                     />
 
-                                    <Spacer type="horizontal" spacing="medium" align="end" key={i}>
+                                    <Spacer type="horizontal" spacing="8" align="end" key={i}>
                                         <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
                                             <input
                                                 className="sd-line-input__input"

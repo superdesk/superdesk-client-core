@@ -55,10 +55,10 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                 const datePickerLocale = getLocaleForDatePicker(language);
 
                 return (
-                    <Spacer type="horizontal" align="center" spacing="medium">
+                    <Spacer type="horizontal" align="center" spacing="8">
                         {checkbox}
 
-                        <Spacer type="horizontal" align="stretch" spacing="medium">
+                        <Spacer type="horizontal" align="stretch" spacing="8">
                             <DatePickerISO
                                 dateFormat={superdesk.instance.config.view.dateformat}
                                 locale={datePickerLocale}
