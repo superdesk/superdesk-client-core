@@ -25,7 +25,15 @@ import {Editor3} from 'core/editor3/components';
 import {noop} from 'lodash';
 import {EDITOR3_RICH_FORMATTING_OPTIONS} from 'apps/workspace/content/components/get-content-profiles-form-config';
 import {MultiSelect} from 'core/ui/components/MultiSelect';
-import {setExternalOptions, EditorLimit} from 'core/editor3/actions';
+import {
+    setExternalOptions,
+    EditorLimit,
+    setHighlightCriteria,
+    findPrev,
+    findNext,
+    replace,
+    replaceAll,
+} from 'core/editor3/actions';
 import {Checkbox} from 'superdesk-ui-framework/react';
 import {ReactContextForEditor3} from 'core/editor3/directive';
 import {
@@ -39,6 +47,7 @@ import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
+import {addEditorEventListener} from './authoring-react-editor-events';
 
 interface IEditor3Config {
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
@@ -68,6 +77,8 @@ interface IState {
 }
 
 class Editor3Component extends React.PureComponent<IProps, IState> {
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+
     constructor(props: IProps) {
         super(props);
 
@@ -75,7 +86,10 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
             ready: false,
         };
 
+        this.eventListenersToRemoveBeforeUnmounting = [];
+
         this.getCharacterLimitPreference = this.getCharacterLimitPreference.bind(this);
+        this.syncPropsWithReduxStore = this.syncPropsWithReduxStore.bind(this);
     }
 
     getCharacterLimitPreference(): EditorLimit | null {
@@ -129,6 +143,72 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
                 this.setState({ready: true});
             });
         });
+
+        /**
+         *
+         * FIND AND REPLACE
+         *
+         */
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addEditorEventListener('find_and_replace__find', (event) => {
+                const {editorId, text, caseSensitive} = event.detail;
+
+                if (editorId !== this.props.editorId) {
+                    return;
+                }
+
+                this.props.value.store.dispatch(
+                    setHighlightCriteria({diff: {[text]: null}, caseSensitive}),
+                );
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addEditorEventListener('find_and_replace__find_prev', (event) => {
+                const {editorId} = event.detail;
+
+                if (editorId !== this.props.editorId) {
+                    return;
+                }
+
+                this.props.value.store.dispatch(findPrev());
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addEditorEventListener('find_and_replace__find_next', (event) => {
+                const {editorId} = event.detail;
+
+                if (editorId !== this.props.editorId) {
+                    return;
+                }
+
+                this.props.value.store.dispatch(findNext());
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addEditorEventListener('find_and_replace__replace', (event) => {
+                const {editorId, replaceWith, replaceAllMatches} = event.detail;
+
+                if (editorId !== this.props.editorId) {
+                    return;
+                }
+
+                if (replaceAllMatches) {
+                    this.props.value.store.dispatch(replaceAll(replaceWith));
+                } else {
+                    this.props.value.store.dispatch(replace(replaceWith));
+                }
+            }),
+        );
+    }
+
+    componentWillUnmount() {
+        for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
+            fn();
+        }
     }
 
     componentDidUpdate(prevProps: IProps) {

@@ -94,6 +94,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                     ) :
                     (
                         <FieldType.editorComponent
+                            editorId={field._id}
                             language={item.language}
                             value={this.state.value}
                             onChange={(value) => this.setValue(value)}

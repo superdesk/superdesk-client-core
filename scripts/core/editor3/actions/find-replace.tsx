@@ -1,3 +1,5 @@
+import {IPayloadSetHighlightsCriteria} from '../reducers/find-replace';
+
 /**
  * @ngdoc method
  * @name findNext
@@ -32,17 +34,10 @@ export function replace(withTxt) {
     };
 }
 
-/**
- * @ngdoc method
- * @name replaceAll
- * @param {String} from Text to replace from
- * @param {String} to Text to replace to
- * @description Creates the action to replace all occurences of from to to.
- */
-export function replaceAll(withTxt) {
+export function replaceAll(replaceText: string) {
     return {
         type: 'HIGHLIGHTS_REPLACE_ALL',
-        payload: withTxt,
+        payload: replaceText,
     };
 }
 
@@ -60,9 +55,9 @@ export function renderHighlights() {
  * @name setSearchSettings
  * @description Creates the action to set new search settings
  */
-export function setHighlightCriteria(opts) {
+export function setHighlightCriteria(payload: IPayloadSetHighlightsCriteria) {
     return {
         type: 'HIGHLIGHTS_CRITERIA',
-        payload: opts,
+        payload,
     };
 }

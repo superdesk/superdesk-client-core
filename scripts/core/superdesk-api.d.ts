@@ -2289,6 +2289,12 @@ declare module 'superdesk-api' {
     // CUSTOM FIELD TYPES
 
     export interface IEditorComponentProps<IValue, IConfig, IUserPreferences> {
+        /**
+         * editorId is needed in order for certain actions to only be applied to
+         * a particular editor in case many are present at once e.g. find and replace
+         */
+        editorId: string;
+
         value: IValue;
         onChange: (value: IValue) => void;
         readOnly: boolean;

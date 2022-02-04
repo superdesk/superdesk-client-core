@@ -127,6 +127,11 @@ const findPrev = (state) => {
     });
 };
 
+export interface IPayloadSetHighlightsCriteria {
+    diff: {[from: string]: string}; // from / to strings
+    caseSensitive: boolean;
+}
+
 /**
  * @name setCriteria
  * @param {Object} state
@@ -134,7 +139,8 @@ const findPrev = (state) => {
  * @param {boolean} caseSensitive
  * @description Sets the highlight criteria diff and case sensitivity.
  */
-const setCriteria = (state, {diff, caseSensitive}) => {
+const setCriteria = (state, payload: IPayloadSetHighlightsCriteria) => {
+    const {diff, caseSensitive} = payload;
     // If a new pattern is entered, the FindReplaceDirective calls selectNext, so the
     // index needs to become -1. See apps/authoring/editor/find-replace.js.
     // Otherwise, if only the sensitivity is changed, we reset to 0.
