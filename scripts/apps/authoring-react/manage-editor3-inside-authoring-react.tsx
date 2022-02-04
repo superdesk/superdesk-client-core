@@ -48,6 +48,7 @@ import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTim
 import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 import {addEditorEventListener} from './authoring-react-editor-events';
+import {getAutocompleteSuggestions} from 'core/helpers/editor';
 
 interface IEditor3Config {
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
@@ -74,6 +75,8 @@ interface IState {
      * Initial spellchecking is done on `componentDidMount` and wouldn't work otherwise.
      */
     ready: boolean;
+
+    autocompleteSuggestions: Array<string>;
 }
 
 class Editor3Component extends React.PureComponent<IProps, IState> {
@@ -84,6 +87,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
 
         this.state = {
             ready: false,
+            autocompleteSuggestions: [],
         };
 
         this.eventListenersToRemoveBeforeUnmounting = [];
@@ -139,8 +143,13 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
 
             this.syncPropsWithReduxStore();
 
-            initializeSpellchecker(store, spellcheck).then(() => {
-                this.setState({ready: true});
+            Promise.all([
+                getAutocompleteSuggestions(this.props.editorId, this.props.language),
+                initializeSpellchecker(store, spellcheck),
+            ]).then((res) => {
+                const [autocompleteSuggestions] = res;
+
+                this.setState({ready: true, autocompleteSuggestions});
             });
         });
 
@@ -283,10 +292,10 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
                     </div>
 
                     <Editor3
-                        scrollContainer="window"
+                        scrollContainer=".sd-editor-content__main-container"
                         singleLine={config.plainText ?? false}
                         cleanPastedHtml={config.cleanPastedHtml ?? false}
-                        autocompleteSuggestions={undefined}
+                        autocompleteSuggestions={this.state.autocompleteSuggestions}
                     />
                 </ReactContextForEditor3.Provider>
             </Provider>

@@ -12,31 +12,12 @@ import {getContentStateFromHtml} from './html/from-html';
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 
 import ng from 'core/services/ng';
-import {RICH_FORMATTING_OPTION, IRestApiResponse} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
-import {httpRequestJsonLocal} from 'core/helpers/network';
-import {appConfig} from 'appConfig';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
-
-function getAutocompleteSuggestions(field: string, language: string): Promise<Array<string>> {
-    const supportedFields = ['slugline'];
-
-    if (
-        appConfig.archive_autocomplete
-        && supportedFields.includes(field)
-    ) {
-        return httpRequestJsonLocal({
-            method: 'GET',
-            path: `/archive_autocomplete?field=${field}&language=${language}`,
-        }).then((res: IRestApiResponse<{value: string}>) => {
-            return res._items.map(({value}) => value);
-        });
-    } else {
-        return Promise.resolve([]);
-    }
-}
+import {getAutocompleteSuggestions} from 'core/helpers/editor';
 
 /**
  * @ngdoc directive
