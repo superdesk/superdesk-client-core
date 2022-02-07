@@ -1218,7 +1218,7 @@ export function MetadataService(api, subscribersService, vocabularies, $rootScop
                             name: role.name,
                             parent: user._id,
                             sub_label: user.display_name,
-                            public: user.public});
+                            private: user.private});
                     });
                 });
                 self.values.authors = $filter('sortByName')(self.values.authors);

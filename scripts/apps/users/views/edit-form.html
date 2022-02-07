@@ -46,7 +46,7 @@
                 <div sd-info-item class="user_type form__row" ng-if="privileges.users && isNetworkSubscription()" style="margin-bottom: 20px;">
                     <sd-check ng-true-value="administrator" ng-false-value="user" ng-model="user.user_type" name="user_type" id="user_type">{{ :: 'Administrator'|translate }}</sd-check>
                     <sd-check ng-model="user.is_author" name="user_author" id="user_author">{{ :: 'Author'|translate }}</sd-check>
-                    <sd-check ng-if="user.is_author" ng-model="user.public" name="user_public" id="user_public">{{'Public' | translate }}</sd-check>
+                    <sd-check ng-if="user.is_author" ng-model="user.private" name="user_private" id="user_private">{{'Private' | translate }}</sd-check>
                 </div>
 
                 <div class="form__row field__full_name" sd-info-item ng-show="user._id">
