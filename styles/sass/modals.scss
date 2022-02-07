@@ -31,19 +31,17 @@
 // > used for upload avatar task
 $split-modal-sidebar : 200px;
 .split-popup {
-    //min-height: 270px;
-    height: 400px;
-    max-height: 400px;
+    min-height: 400px;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: auto 1fr;
     .sidebar {
-        position: absolute;
-        top:0; left: 0; bottom: 0;
         width: $split-modal-sidebar;
-        border-right: 1px solid #ddd;
+        border-right: 1px solid var(--sd-colour-line--medium);
+        grid-column: 1 / 2;
     }
     .main {
-        position: absolute;
-        top:0; right: 0; bottom: 0;
-        left: $split-modal-sidebar;
+        grid-column: 2 / 3;
     }
 }
 

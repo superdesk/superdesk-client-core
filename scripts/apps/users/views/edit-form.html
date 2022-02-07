@@ -53,7 +53,7 @@
                                 <span for="created" translate>Member since</span>
                                 <span id="created" class="info-value date-time" sd-reldate datetime="user._created"></span>
                             </div>
-                            <div class="button-group button-group--center button-group--compact sd-margin-b--2">
+                            <div class="button-group button-group--center button-group--compact sd-margin-b--2 sd-flex--wrap sd-flex--justify-center">
                                 <div class="tag-label" ng-if="roles[user.role]" translate>{{roles[user.role].name}}</div>
                                 <div class="tag-label" ng-show="user.is_author" translate>Author</div>
                                 <div class="tag-label tag-label--highlight1" ng-show="user.user_type == 'administrator'" translate>Administrator</div>
@@ -229,7 +229,7 @@
                                     <select class="sd-input__select" ng-focus="focused()" ng-model="user.language" name="user_language" id="user_language" ng-options="lang.code as lang.nativeName for lang in languages"></select>
                                     <div class="sd-input__message-box">
                                         <div class="sd-input__hint">
-                                            <a href="https://www.transifex.com/projects/p/superdesk/" target="_blank" class="sd-blue">{{ :: "Help us translate Superdesk" | translate }}</a>
+                                            <a href="https://www.transifex.com/projects/p/superdesk/" target="_blank">{{ :: "Help us translate Superdesk" | translate }}</a>
                                         </div>
                                     </div>
                                 </div>

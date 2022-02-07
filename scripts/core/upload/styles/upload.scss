@@ -28,99 +28,66 @@ user avatar uploader
     }
     .sidebar {
         width: 200px;
-        ul {
-            li {
-                border-bottom: 1px solid #eee;
-                padding: 7px 10px 7px 20px;
-                height: 36px;
-                line-height: 22px;
-                font-size: 13px;
-                @include box-sizing(border-box);
-                a {
-                    color: #3599b6;
-                    text-decoration: none;
-                }
-                i {
-                    float: right;
-                    @include opacity(40);
-                    margin-top:2px;
-                    margin-right: 4px;
-                    @include transition(margin-right ease 0.2s);
-                }
-                [class^="icon-"] {
-                    float: left;
-                    margin-right: 10px;
-                }
-                &:hover {
-                    cursor: pointer;
-                    background: #f4f4f4;
-                    i {
-                        margin-right: 0;
-                    }
-                    [class^="icon-"] {
-                        margin-right: 10px;
-                    }
-                }
-                &.active {
-                    background-color: white;
-                    border-right: 1px solid white;
-                    margin-right: -1px;
-                    a {
-                        color: #333;
-                    }
-                    i {
-                        margin-right: 0px;
-                    }
-                    [class^="icon-"] {
-                        margin-right: 10px;
-                        @include opacity(100);
-                    }
-                    &:hover {
-                        background: #fff;
-                    }
-                }
+        display: flex;
+        flex-direction: column;
+
+        .split-popup__nav-item {
+            border-bottom: 1px solid var(--sd-colour-line--x-light);
+            padding-inline-start: 16px;
+            padding-inline-end: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            height: 40px;
+            font-size: calc(var(--text-size--base) * 1.2);
+            a {
+                color: var(--sd-colour-interactive);
+                text-decoration: none;
             }
-        }
-        .remove-avatar {
-            padding: 7px 10px 7px 20px;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            border-top: 1px solid #eee;
-            i {
-                opacity: 0.4;
-                float: left;
-                margin-right: 10px;
-            }
-            .sd-checkbox {
-                float: right;
-                margin: 2px 0 0 0;
-            }
-            span {
-                vertical-align: middle;
-            }
-            label {
-                font-size: 11px;
-                color: $grayLight;
-                margin: 0;
+            [class^="icon-"] {
+                margin-right: $sd-base-increment;
+                opacity: 0.75;
+                color: inherit;
             }
             &:hover {
-                background: #f4f4f4;
+                background-color: var(--sd-colour-interactive--alpha-20);
+                cursor: pointer;
             }
             &.active {
-                i {
+                background-color: var(--sd-colour-interactive--alpha-10);
+                color: var(--sd-colour-interactive);
+                a {
+                    color: var(--sd-colour-interactive);
+                }
+                [class^="icon-"] {
                     opacity: 1;
+                }
+            }
+            &.remove-avatar {
+                margin-top: auto;
+                border-top: 1px solid var(--sd-colour-line--x-light);
+                border-bottom: none;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding-block-start: 6px;
+                padding-block-end: 6px;
+                height: auto;
+                gap: 2px;
+                .remove-avatar__inner {
+                    display: flex;
+                }
+                small {
+                    font-size: 12px;
+                    color: var(--color-text-lighter);
                 }
             }
         }
     }
     .main {
         padding: 20px;
-        overflow: visible;
         overflow: auto;
-        background-color: white;
-
+        position: relative;
         .computer {
             height: 100%;
             .dropzone {
@@ -147,34 +114,41 @@ user avatar uploader
                     input::-webkit-file-upload-button {
                       visibility: hidden;
                     }
+                    input[type="file"] {
+                        padding-top: 4px;
+                        font-size: 13px;
+                        background-color: transparent;
+                        height: 32px;
+                        color: var(--color-text);
+                    }
                     input:before {
-                      content: attr(label);
-                      display: inline-block;
-                      background: -webkit-linear-gradient(top, #f9f9f9, #fff);
-                      border: 1px solid #d0d0d0;
-                      border-radius: 2px;
-                      padding: 0 10px;
-                      outline: none;
-                      white-space: nowrap;
-                      -webkit-user-select: none;
-                      text-shadow: 1px 1px #fff;
-                      font-size: 12px;
-                      color: #787878;
-                      @include box-sizing(border-box);
-                      width: 100%;
-                      text-align: center;
-                      cursor: pointer !important;
+                        content: attr(label);
+                        display: inline-block;
+                        background: -webkit-linear-gradient(top, #f9f9f9, #fff);
+                        border: 1px solid #d0d0d0;
+                        border-radius: 2px;
+                        padding: 0 10px;
+                        outline: none;
+                        white-space: nowrap;
+                        -webkit-user-select: none;
+                        text-shadow: 1px 1px #fff;
+                        font-size: 12px;
+                        color: #787878;
+                        @include box-sizing(border-box);
+                        width: 100%;
+                        text-align: center;
+                        cursor: pointer !important;
                     }
                     input:focus {
                         outline: none !important;
                     }
                     input:hover:before {
-                      border-color: #c0c0c0;
-                      cursor: pointer !important;
+                        border-color: #c0c0c0;
+                        cursor: pointer !important;
                     }
                     input:active:before {
-                      background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
-                      outline: none;
+                        background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+                        outline: none;
                     }
                 }
             }

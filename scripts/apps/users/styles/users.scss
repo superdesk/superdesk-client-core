@@ -56,7 +56,7 @@
 
         > li {
             height: 40px;
-            border-bottom: 1px solid var(--sd-colour-line--medium);
+            border-bottom: 1px solid var(--sd-colour-line--light);
             position: relative;
             clear: both;
 
@@ -234,6 +234,8 @@
         display: grid;
         grid-template-columns: auto 1fr;
         grid-template-rows: 1fr;
+        max-width: 1000px;
+        min-width: 600px;
     }
     .profile-info__content,
     .preferences__content {
@@ -540,7 +542,7 @@ Profile page styles
 
 .user-details-pane {
     .action-bar {
-        background: scale-color($sd-blue, $lightness: 80%);
+        background: var(--sd-colour-bg__sliding-toolbar);
         box-shadow: 0 1px 2px 0 hsla(0, 0%, 0%, 0);
         border-bottom: none;
         &.show {
@@ -561,16 +563,14 @@ Profile page styles
     overflow: auto;
     // grid test
     display:grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr auto;
     grid-template-rows: 1fr;
 
 
     // end test
     .form-content {
-        //position: absolute;
-        //top: 0; left: 0; bottom: 0;
         grid-column: 1 / 2;
-        width: 900px;
+        //width: 900px;
         background: var(--sd-item__main-Bg);
         border-right: 1px solid var(--sd-colour-line--light);
         box-shadow: 0 0 5px 0 hsla(0, 0%, 0%, 0.12);
@@ -789,10 +789,21 @@ Profile page styles
     .user-details-pane {
         overflow-y: auto;
         position: static;
+        .profile-info {
+            min-width: auto;
+            background-color: transparent;
+        }
         .profile-info__navigation {
             width: auto;
             .sd-left-nav {
                 display: none;
+            }
+        }
+        .profile-info__content {
+            padding-top: 16px;
+            padding-bottom: 32px;
+            .details-info {
+                padding-inline: 16px;
             }
         }
         .action-bar {

@@ -1,18 +1,20 @@
-<div class="modal__header">
-    <button type="button" class="modal__close pull-right" ng-click="reject()"><i class="icon-close-small"></i></button>
-    <h3 class="modal__heading">{{ activity.label|translate }}</h3>    
+<div class="modal__header modal__header--flex">
+    <h3 class="modal__heading">{{ activity.label|translate }}</h3>
+    <button type="button" class="icn-btn" ng-click="reject()"><i class="icon-close-small"></i></button>    
 </div>
 
 <div class="modal__body split-popup no-padding">
     <aside class="sidebar">
-        <ul>
-            <li ng-repeat="method in methods" ng-click="activate(method)" ng-class="{active: active === method}">
+        <ul class="split-popup__nav">
+            <li class="split-popup__nav-item" ng-repeat="method in methods" ng-click="activate(method)" ng-class="{active: active === method}">
                 <i class="icon-{{ method.id }}"></i> {{ method.label | translate }}
             </li>
         </ul>
-        <div class="remove-avatar" ng-click="removeImage()" ng-show="locals.data.picture_url">
-            <i class="icon-trash"></i><span class="ng-scope" translate>No image</span>
-            <label translate>shows your initials instead</label>
+        <div class="split-popup__nav-item remove-avatar" ng-click="removeImage()" ng-show="locals.data.picture_url">
+            <span class="remove-avatar__inner">
+                <i class="icon-trash"></i><span class="ng-scope" translate>No image</span>
+            </span>
+            <small translate>Shows your initials instead</small>
         </div>
     </aside>
 
@@ -38,9 +40,13 @@
         </div>
 
         <div class="web" ng-if="active.id == 'globe' && (!preview.cords || progress.width)">
-            <label translate>Enter web url</label>
-            <input type="url" ng-model="url" ng-change="preview.url = url">
-            <label translate ng-if="url">Provided image URL is not valid.</label>
+            <div class="sd-input">
+                <label class="sd-input__label" for="last-name" translate>Enter web url</label>
+                <input class="sd-input__input" type="url" ng-model="url" ng-change="preview.url = url">
+                <div class="sd-input__message-box">
+                    <div class="sd-input__message" ng-if="url" translate>Provided image URL is not valid.</div>
+                </div>
+            </div>
         </div>
 
         <div class="preview" ng-if="preview.url" ng-hide="!preview.cords || progress.width">
