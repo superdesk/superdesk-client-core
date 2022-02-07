@@ -4,17 +4,19 @@ import {IArticle} from 'superdesk-api';
 import {IAuthoringAutoSave, omitFields} from './data-layer';
 
 export class AutoSaveHttp implements IAuthoringAutoSave {
-    autoSaveThrottled: ((getItem: () => IArticle) => void) & Cancelable;
+    autoSaveThrottled: ((getItem: () => IArticle, callback: (autosaved: IArticle) => void) => void) & Cancelable;
 
     constructor(delay: number) {
         this.autoSaveThrottled = throttle(
-            (getItem: () => IArticle) => {
+            (getItem, callback) => {
                 const item = getItem();
 
                 httpRequestJsonLocal<IArticle>({
                     method: 'POST',
                     path: '/archive_autosave',
                     payload: omitFields(item),
+                }).then((res) => {
+                    callback(res);
                 });
             },
             delay,
@@ -29,18 +31,18 @@ export class AutoSaveHttp implements IAuthoringAutoSave {
         });
     }
 
-    delete(item: IArticle) {
+    delete(id: IArticle['_id'], etag: IArticle['_etag']) {
         return httpRequestRawLocal<IArticle>({
             method: 'DELETE',
-            path: `/archive_autosave/${item._id}`,
+            path: `/archive_autosave/${id}`,
             headers: {
-                'If-Match': item._etag,
+                'If-Match': etag,
             },
         }).then(() => undefined);
     }
 
-    schedule(getItem) {
-        this.autoSaveThrottled(getItem);
+    schedule(getItem: () => IArticle, callback: (autosaved: IArticle) => void) {
+        this.autoSaveThrottled(getItem, callback);
     }
 
     cancel() {

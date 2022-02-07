@@ -127,6 +127,7 @@ function getInitialState(
         loading: false,
         itemOriginal: itemOriginal,
         itemWithChanges: itemWithChanges,
+        autosaveEtag: item.autosaved?._etag ?? null,
         fieldsDataOriginal: fieldsOriginal,
         fieldsDataWithChanges: itemOriginal === itemWithChanges
             ? fieldsOriginal
@@ -146,6 +147,7 @@ interface IStateLoaded {
     initialized: true;
     itemOriginal: IArticle;
     itemWithChanges: IArticle;
+    autosaveEtag: IArticle['_etag'] | null;
     fieldsDataOriginal: Map<string, unknown>;
     fieldsDataWithChanges: Map<string, unknown>;
     profile: IContentProfileV2;
@@ -278,7 +280,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
      * This is a relatively computationally expensive operation that serializes all fields.
      * It is meant to be called when an article is to be saved/autosaved.
      */
-    computeLatestArticle() {
+    computeLatestArticle(): IArticle {
         const state = this.state;
 
         if (state.initialized !== true) {
@@ -513,25 +515,29 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     componentDidUpdate(_prevProps, prevState: IState) {
+        const state = this.state;
+
         if (
-            this.state.initialized
+            state.initialized
             && prevState.initialized
-            && sdApi.article.isLockedInCurrentSession(this.state.itemOriginal)
+            && sdApi.article.isLockedInCurrentSession(state.itemOriginal)
         ) {
-            const articleChanged = (this.state.itemWithChanges !== prevState.itemWithChanges)
-                || (this.state.fieldsDataWithChanges !== prevState.fieldsDataWithChanges);
+            const articleChanged = (state.itemWithChanges !== prevState.itemWithChanges)
+                || (state.fieldsDataWithChanges !== prevState.fieldsDataWithChanges);
 
             if (articleChanged) {
                 if (this.hasUnsavedChanges()) {
-                    authoringStorage.autosave.schedule(() => {
-                        return this.computeLatestArticle();
-                    });
-                } else {
-                    /**
-                     * If article has changed, but there are no unsaved changes, it means
-                     * saving itself triggered the change. Autosaved data then has to be removed.
-                     */
-                    authoringStorage.autosave.delete(this.state.itemWithChanges);
+                    authoringStorage.autosave.schedule(
+                        () => {
+                            return this.computeLatestArticle();
+                        },
+                        (autosaved) => {
+                            this.setState({
+                                ...state,
+                                autosaveEtag: autosaved._etag,
+                            });
+                        },
+                    );
                 }
             }
         }
@@ -572,7 +578,10 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     save(state: IStateLoaded): Promise<IArticle> {
-        authoringStorage.autosave.delete(state.itemOriginal);
+        if (this.state.initialized && this.state.autosaveEtag != null) {
+            authoringStorage.autosave.cancel();
+            authoringStorage.autosave.delete(state.itemOriginal['_id'], this.state.autosaveEtag);
+        }
 
         this.setState({
             ...state,
@@ -580,12 +589,11 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         });
 
         return authoringStorage.saveArticle(this.computeLatestArticle(), state.itemOriginal).then((item: IArticle) => {
-            const nextState: IStateLoaded = {
-                ...state,
-                loading: false,
-                itemOriginal: Object.freeze(item),
-                itemWithChanges: item,
-            };
+            const nextState = getInitialState(
+                {saved: item, autosaved: item},
+                state.profile,
+                state.userPreferencesForFields,
+            );
 
             this.setState(nextState);
 
@@ -612,7 +620,14 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     discardUnsavedChanges(state: IStateLoaded): Promise<void> {
-        return authoringStorage.autosave.delete(state.itemWithChanges).then(() => {
+        return (() => {
+            if (state.autosaveEtag != null) {
+                authoringStorage.autosave.cancel();
+                return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
+            } else {
+                return Promise.resolve();
+            }
+        })().then(() => {
             return new Promise((resolve) => {
                 const stateNext: IStateLoaded = {
                     ...state,
@@ -636,6 +651,11 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         authoringStorage.closeAuthoring(
             this.computeLatestArticle(),
             state.itemOriginal,
+            () => {
+                authoringStorage.autosave.cancel();
+
+                return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
+            },
             () => this.props.onClose(),
         ).then(() => {
             /**

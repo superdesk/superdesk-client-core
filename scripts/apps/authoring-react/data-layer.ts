@@ -91,7 +91,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
 export interface IAuthoringAutoSave {
     get(id: IArticle['_id']): Promise<IArticle>;
-    delete(item: IArticle): Promise<void>;
+    delete(id: IArticle['_id'], etag: IArticle['_etag']): Promise<void>;
     cancel(): void;
 
     /**
@@ -99,7 +99,7 @@ export interface IAuthoringAutoSave {
      * In order to get the latest article, data has to be serialized. Using a function
      * allows to only do it once after timeout passes, instead of on every character change.
      */
-    schedule(getItem: () => IArticle): void;
+    schedule(getItem: () => IArticle, callback: (autosaved: IArticle) => void): void;
 }
 
 /**
@@ -113,7 +113,12 @@ interface IAuthoringStorage {
     unlock(itemId: IArticle['_id']): Promise<IArticle>;
     getArticle(id: string): Promise<{saved: IArticle | null, autosaved: IArticle | null}>;
     saveArticle(current: IArticle, original: IArticle): Promise<IArticle>;
-    closeAuthoring(current: IArticle, original: IArticle, doClose: () => void): Promise<void>;
+    closeAuthoring(
+        current: IArticle,
+        original: IArticle,
+        cancelAutosave: () => Promise<void>,
+        doClose: () => void,
+    ): Promise<void>;
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
     getUserPreferences(): Promise<any>;
     autosave: IAuthoringAutoSave;
@@ -197,14 +202,9 @@ export const authoringStorage: IAuthoringStorage = {
         });
     },
     getContentProfile,
-    closeAuthoring: (current, original, doClose) => {
+    closeAuthoring: (current, original, cancelAutosave, doClose) => {
         const diff = generatePatch(original, current);
         const hasUnsavedChanges = Object.keys(diff).length > 0;
-        const cancelAutoSave = () => {
-            authoringStorage.autosave.cancel();
-
-            return authoringStorage.autosave.delete(current);
-        };
 
         const unlockArticle = (id: string) => httpRequestJsonLocal<void>({
             method: 'POST',
@@ -217,7 +217,7 @@ export const authoringStorage: IAuthoringStorage = {
             hasUnsavedChanges,
             () => authoringStorage.saveArticle(current, original).then(() => undefined),
             () => unlockArticle(original._id),
-            cancelAutoSave,
+            cancelAutosave,
             doClose,
         );
     },

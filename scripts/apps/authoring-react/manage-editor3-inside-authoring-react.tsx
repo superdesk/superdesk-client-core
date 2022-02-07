@@ -382,6 +382,7 @@ export function registerEditor3AsCustomField() {
                     {
                         editorState: rawContentState ?? convertToRaw(ContentState.createFromText('')),
                         onChange: noop,
+                        language: article.language,
                     },
                     ng.get('spellcheck'),
                     true,
@@ -415,10 +416,13 @@ export function registerEditor3AsCustomField() {
                         ...(article.fields_meta ?? {}),
                         [fieldId]: {
                             draftjsState: [rawContentState],
-                            annotations: annotations,
                         },
                     },
                 };
+
+                if (annotations.length > 0) {
+                    articleUpdated.fields_meta[fieldId].annotations = annotations;
+                }
 
                 /**
                  * Output generated value to hardcoded fields
