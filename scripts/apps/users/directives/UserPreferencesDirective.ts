@@ -41,7 +41,19 @@ export function UserPreferencesDirective(
         templateUrl: asset.templateUrl('apps/users/views/user-preferences.html'),
         link: function(scope, element, attrs) {
             const userLang = getUserInterfaceLanguage().replace('_', '-');
+            const body = angular.element('body');
+
             scope.activeNavigation = null;
+            scope.activeTheme = localStorage.getItem('theme');
+
+            scope.$watch('activeTheme', (val) => {
+                if (!val) {
+                    return;
+                }
+
+                localStorage.setItem('theme', val);
+                body.attr('data-theme', val);
+            });
 
             /*
              * Set this to true after adding all the preferences to the scope. If done before, then the

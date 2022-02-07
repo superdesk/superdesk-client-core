@@ -54,7 +54,7 @@
                                 <span id="created" class="info-value date-time" sd-reldate datetime="user._created"></span>
                             </div>
                             <div class="button-group button-group--center button-group--compact sd-margin-b--2">
-                                <div class="tag-label" translate>{{user.role | json}}</div>
+                                <div class="tag-label" ng-if="roles[user.role]" translate>{{roles[user.role].name}}</div>
                                 <div class="tag-label" ng-show="user.is_author" translate>Author</div>
                                 <div class="tag-label tag-label--highlight1" ng-show="user.user_type == 'administrator'" translate>Administrator</div>
                             </div>

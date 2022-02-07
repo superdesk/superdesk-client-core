@@ -66,7 +66,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
             api('roles').query()
                 .then((result) => {
-                    scope.roles = result._items;
+                    scope.roles = _.keyBy(result._items, '_id');
                 });
             // get available translation languages
             var noBaseLanguage = true;
