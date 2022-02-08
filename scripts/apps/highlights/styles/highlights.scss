@@ -82,19 +82,18 @@
     margin: 6px 0 0 0;
     background-color: $black !important;
     border-radius: 4px;
-    max-width: 250px;
+    max-width: 700px;
     min-width: 180px;
+    overflow-y: auto;
     &:before {
         display: none;
     }
+
     li {
         position: relative;
         color: $white;
         padding: 0.4rem 1.2rem;
         width: 100%;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
         display: flex;
         flex-direction: row; 
         align-items: center;
