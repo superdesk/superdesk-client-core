@@ -1,5 +1,5 @@
 import React from 'react';
-import {IFieldsV2} from './data-layer';
+import {IFieldsV2} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {Map} from 'immutable';
 

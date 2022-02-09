@@ -3,6 +3,8 @@
 declare module 'superdesk-api' {
     // TYPESCRIPT TYPES
 
+    type OrderedMap<K, V> = import('immutable').OrderedMap<K, V>;
+
     export interface DeepReadonlyArray<T> extends ReadonlyArray<DeepReadonly<T>> {};
 
     export type DeepReadonlyObject<T> = {
@@ -21,6 +23,24 @@ declare module 'superdesk-api' {
     export type IArrayKeyed<T> = Array<{key: string; value: T}>;
 
     export type ICallable = (...args: Array<any>) => any;
+
+
+    // AUTHORING-REACT
+
+    export interface IAuthoringFieldV2 {
+        id: string;
+        name: string;
+        fieldType: string;
+        fieldConfig: unknown;
+    }
+
+    export type IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>;
+
+    export interface IContentProfileV2 {
+        name: string;
+        header: IFieldsV2;
+        content: IFieldsV2;
+    }
 
 
     // EXTENSIONS
@@ -78,7 +98,7 @@ declare module 'superdesk-api' {
         label: string;
         order: number; // Integer.
         icon: string;
-        component: React.ComponentType<{article: IArticle}>;
+        component: React.ComponentType<{article: IArticle, contentProfile?: IContentProfileV2; fieldsData?: OrderedMap<string, unknown>}>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 

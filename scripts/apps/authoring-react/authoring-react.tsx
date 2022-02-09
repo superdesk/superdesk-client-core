@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 
 import React from 'react';
-import {IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {IArticle, IExtensionActivationResult, IAuthoringFieldV2, IContentProfileV2} from 'superdesk-api';
 import {
     Button,
     ButtonGroup,
@@ -13,7 +13,7 @@ import {
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {gettext} from 'core/utils';
-import {IContentProfileV2, authoringStorage, IAuthoringFieldV2} from './data-layer';
+import {authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {EditorTest} from './ui-framework-authoring-test';
@@ -1051,6 +1051,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                         ? (
                                             <OpenWidgetComponent
                                                 article={{...state.itemWithChanges}}
+                                                contentProfile={state.profile}
+                                                fieldsData={state.fieldsDataWithChanges}
                                             />
                                         )
                                         : undefined
@@ -1061,6 +1063,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                         ? (
                                             <OpenWidgetComponent
                                                 article={{...state.itemWithChanges}}
+                                                contentProfile={state.profile}
+                                                fieldsData={state.fieldsDataWithChanges}
                                             />
                                         )
                                         : undefined

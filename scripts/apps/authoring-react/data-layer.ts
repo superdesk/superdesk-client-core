@@ -1,5 +1,5 @@
 import {OrderedMap} from 'immutable';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldsV2, IContentProfileV2} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {dataApi} from 'core/helpers/CrudManager';
@@ -11,21 +11,6 @@ import {AutoSaveHttp} from './auto-save-http';
 import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
-
-export interface IAuthoringFieldV2 {
-    id: string;
-    name: string;
-    fieldType: string;
-    fieldConfig: unknown;
-}
-
-export type IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>;
-
-export interface IContentProfileV2 {
-    name: string;
-    header: IFieldsV2;
-    content: IFieldsV2;
-}
 
 function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
     interface IFakeScope {
