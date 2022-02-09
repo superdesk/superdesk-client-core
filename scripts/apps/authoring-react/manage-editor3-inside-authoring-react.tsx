@@ -94,6 +94,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
 
         this.getCharacterLimitPreference = this.getCharacterLimitPreference.bind(this);
         this.syncPropsWithReduxStore = this.syncPropsWithReduxStore.bind(this);
+        this.initializeEditor = this.initializeEditor.bind(this);
     }
 
     getCharacterLimitPreference(): EditorLimit | null {
@@ -123,16 +124,15 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
         }));
     }
 
-    componentDidMount() {
+    /**
+     * Can be called multiple times.
+     */
+    initializeEditor() {
+        if (this.state.ready === true) {
+            this.setState({ready: false});
+        }
+
         const store = this.props.value.store;
-
-        store.subscribe(() => {
-            const contentState = store.getState().editorState.getCurrentContent();
-
-            if (this.props.value.contentState !== contentState) {
-                this.props.onChange({store, contentState});
-            }
-        });
 
         const spellcheck = ng.get('spellcheck');
 
@@ -150,8 +150,28 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
                 const [autocompleteSuggestions] = res;
 
                 this.setState({ready: true, autocompleteSuggestions});
+
+                /**
+                 * Avoid triggering `onChange` when nothing has actually changed.
+                 * Spellchecker modifies inline styles (instead of being implemented as a decorator)
+                 * and thus makes it impossible to check in a performant manner whether there
+                 * were any actual changes when comparing 2 content states.
+                 */
+                setTimeout(() => {
+                    store.subscribe(() => {
+                        const contentState = store.getState().editorState.getCurrentContent();
+
+                        if (this.props.value.contentState !== contentState) {
+                            this.props.onChange({store, contentState});
+                        }
+                    });
+                }, 1000);
             });
         });
+    }
+
+    componentDidMount() {
+        this.initializeEditor();
 
         /**
          *
@@ -221,7 +241,9 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
     }
 
     componentDidUpdate(prevProps: IProps) {
-        if (
+        if (this.props.value.store !== prevProps.value.store) {
+            this.initializeEditor();
+        } else if (
             this.props.config !== prevProps.config
             || this.props.readOnly !== prevProps.readOnly
             || this.props.userPreferences !== prevProps.userPreferences
