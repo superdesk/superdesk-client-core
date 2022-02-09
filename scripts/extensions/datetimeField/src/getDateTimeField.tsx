@@ -26,11 +26,11 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                     value={this.props.value != null}
                     onChange={(value) => {
                         if (value) {
-                            this.props.setValue(
+                            this.props.onChange(
                                 dateToServerString(addMinutes(new Date(), this.props.config.initial_offset_minutes)),
                             );
                         } else {
-                            this.props.setValue(null);
+                            this.props.onChange(null);
                         }
                     }}
                 />
@@ -65,13 +65,13 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                 value={day}
                                 onChange={(dateString) => {
                                     if (dateString === '') {
-                                        this.props.setValue(null);
+                                        this.props.onChange(null);
                                         return;
                                     }
 
                                     const [yearStr, monthStr, dayStr] = dateString.split('-');
 
-                                    this.props.setValue(
+                                    this.props.onChange(
                                         dateToServerString(
                                             set(
                                                 date,
@@ -95,7 +95,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                     onChange={(value) => {
                                         const [hours, minutes] = value.split(':');
 
-                                        this.props.setValue(
+                                        this.props.onChange(
                                             dateToServerString(
                                                 set(
                                                     date,
@@ -149,7 +149,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                                         disabled={date == null}
                                                         onClick={() => {
                                                             if (date != null) {
-                                                                this.props.setValue(
+                                                                this.props.onChange(
                                                                     dateToServerString(addMinutes(date, step)),
                                                                 );
                                                             }
