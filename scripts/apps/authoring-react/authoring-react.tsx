@@ -673,11 +673,28 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         const item = state.itemWithChanges;
         const itemState: ITEM_STATE = item.state;
 
+        const saveButton: IExtensionActivationResult['contributions']['authoringTopbarWidgets'][0] = {
+            group: 'end',
+            priority: 0.2,
+            component: () => (
+                <Button
+                    text={gettext('Save')}
+                    style="filled"
+                    type="primary"
+                    disabled={!this.hasUnsavedChanges()}
+                    onClick={() => {
+                        this.save(state);
+                    }}
+                />
+            ),
+            availableOffline: true,
+        };
+
         switch (itemState) {
         case ITEM_STATE.DRAFT:
             return {
                 readOnly: false,
-                actions: [],
+                actions: [saveButton],
             };
 
         case ITEM_STATE.SUBMITTED:
@@ -688,22 +705,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             const actions: IExtensionActivationResult['contributions']['authoringTopbarWidgets'] = [];
 
             if (sdApi.article.isLockedInCurrentSession(item)) {
-                actions.push({
-                    group: 'end',
-                    priority: 0.2,
-                    component: () => (
-                        <Button
-                            text={gettext('Save')}
-                            style="filled"
-                            type="primary"
-                            disabled={!this.hasUnsavedChanges()}
-                            onClick={() => {
-                                this.save(state);
-                            }}
-                        />
-                    ),
-                    availableOffline: true,
-                });
+                actions.push(saveButton);
             }
 
             if (
