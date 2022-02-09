@@ -10,7 +10,7 @@ function getReadingTime(input: string, language: string): number {
 
     const numWords = compact(input.split(/\s+/)).length || 0;
 
-    return numWords / 250;
+    return Math.ceil(numWords / 250);
 }
 
 export function getReadingTimeText(text: string, language: string) {
