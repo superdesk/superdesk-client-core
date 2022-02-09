@@ -54,7 +54,7 @@ interface IEditor3Config {
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
     minLength?: number;
     maxLength?: number;
-    plainText?: boolean;
+    singleLine?: boolean; // also limits to plain text
     cleanPastedHtml?: boolean;
 }
 
@@ -114,7 +114,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
 
         store.dispatch(setExternalOptions({
             editorFormat: this.props.config.editorFormat ?? [],
-            singleLine: this.props.config.plainText ?? false,
+            singleLine: this.props.config.singleLine ?? false,
             readOnly: this.props.readOnly ?? false,
             spellchecking: getInitialSpellcheckerData(spellcheck, this.props.language),
             limitConfig: this.getCharacterLimitPreference(),
@@ -315,7 +315,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
 
                     <Editor3
                         scrollContainer=".sd-editor-content__main-container"
-                        singleLine={config.plainText ?? false}
+                        singleLine={config.singleLine ?? false}
                         cleanPastedHtml={config.cleanPastedHtml ?? false}
                         autocompleteSuggestions={this.state.autocompleteSuggestions}
                     />
@@ -363,12 +363,13 @@ class Editor3ConfigComponent extends React.PureComponent<IConfigComponentProps<I
                 />
 
                 <br />
+                <br />
 
                 <Checkbox
                     label={{text: gettext('Single line')}}
-                    checked={this.props.config?.plainText ?? false}
+                    checked={this.props.config?.singleLine ?? false}
                     onChange={(val) => {
-                        this.props.onChange({...this.props.config, plainText: val});
+                        this.props.onChange({...this.props.config, singleLine: val});
                     }}
                 />
 
@@ -423,7 +424,7 @@ export function registerEditor3AsCustomField() {
                 const rawContentState = convertToRaw(contentState);
 
                 const generatedValue = (() => {
-                    if (config.plainText) {
+                    if (config.singleLine) {
                         return contentState.getPlainText();
                     } else {
                         return editor3StateToHtml(contentState);
