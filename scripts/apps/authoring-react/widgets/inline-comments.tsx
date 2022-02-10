@@ -1,9 +1,11 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
 import {IAuthoringSideWidget, IExtensionActivationResult, IUser} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, EmptyState} from 'superdesk-ui-framework/react';
 import {IEditor3Value} from '../manage-editor3-inside-authoring-react';
 import {getCustomEditor3Data, getCustomMetadataFromContentState} from 'core/editor3/helpers/editor3CustomData';
 import {getHighlightsConfig} from 'core/editor3/highlightsConfig';
@@ -41,49 +43,181 @@ interface IInlineComment {
     };
 }
 
+class Comment extends React.PureComponent<{comment: IInlineComment}> {
+    render() {
+        const {comment} = this.props;
+        const user =
+            store.getState().users.entities[comment.authorId];
+
+        return (
+            <Card>
+                <Spacer h gap="8" justifyContent="start" noGrow>
+                    <UserAvatar user={user} />
+
+                    <div>
+                        <strong>{user.display_name}</strong>:
+                        &nbsp;
+                        {comment.msg}
+
+                        <div>
+                            <TimeElem date={comment.date} />
+                        </div>
+                    </div>
+                </Spacer>
+
+                {
+                    comment.commentedText != null && (
+                        <div
+                            className="commented-text"
+                            style={{
+                                paddingTop: 10,
+                                marginBottom: 0,
+                            }}
+                        >
+                            <div>
+                                {gettext('Selected text:')}
+                            </div>
+
+                            <strong
+                                title={comment.commentedText}
+                            >
+                                {comment.commentedText}
+                            </strong>
+                        </div>
+                    )
+                }
+            </Card>
+        );
+    }
+}
+
 class InlineCommentsWidget extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
+        this.getEditor3Fields = this.getEditor3Fields.bind(this);
+        this.getResolvedComments = this.getResolvedComments.bind(this);
+        this.getUnresolvedComments = this.getUnresolvedComments.bind(this);
+
         this.state = {
-            selectedTab: 'unresolved',
+            selectedTab: this.getUnresolvedComments().length < 1 ? 'resolved' : 'unresolved',
         };
     }
 
-    render() {
-        const {contentProfile, fieldsData} = this.props;
+    getEditor3Fields() {
+        const {contentProfile} = this.props;
         const allFields = contentProfile.header.merge(contentProfile.content);
-        const editor3Fields = allFields.filter((field) => field.fieldType === 'editor3');
+
+        return allFields.filter((field) => field.fieldType === 'editor3').toArray();
+    }
+
+    getResolvedComments() {
+        const {fieldsData} = this.props;
+
+        return this.getEditor3Fields().map((field) => {
+            const value = fieldsData.get(field.id) as IEditor3Value;
+
+            return {
+                fieldId: field.id,
+                comments: (getCustomEditor3Data(
+                    value.contentState,
+                    'RESOLVED_COMMENTS_HISTORY',
+                ) ?? []).map((item) => item.data as IInlineComment),
+            };
+        }).filter(({comments}) => comments.length > 0);
+    }
+
+    getUnresolvedComments() {
+        const {fieldsData} = this.props;
+
+        return this.getEditor3Fields().map((field) => {
+            const value = fieldsData.get(field.id) as IEditor3Value;
+
+            return {
+                fieldId: field.id,
+                comments: getCustomMetadataFromContentState(
+                    value.contentState,
+                    getHighlightsConfig().COMMENT.type,
+                ).map((item) => item.obj.data as IInlineComment),
+            };
+        }).filter(({comments}) => comments.length > 0);
+    }
+
+    render() {
+        const {contentProfile} = this.props;
+        const allFields = contentProfile.header.merge(contentProfile.content);
+        const unresolvedComments = this.getUnresolvedComments();
+        const resolvedComments = this.getResolvedComments();
 
         const commentsByField = (() => {
             if (this.state.selectedTab === 'unresolved') {
-                return editor3Fields.map((field) => {
-                    const value = fieldsData.get(field.id) as IEditor3Value;
-
-                    return {
-                        fieldId: field.id,
-                        comments: getCustomMetadataFromContentState(
-                            value.contentState,
-                            getHighlightsConfig().COMMENT.type,
-                        ).map((item) => item.obj.data as IInlineComment),
-                    };
-                }).toArray();
+                return unresolvedComments;
             } else if (this.state.selectedTab === 'resolved') {
-                return editor3Fields.map((field) => {
-                    const value = fieldsData.get(field.id) as IEditor3Value;
-
-                    return {
-                        fieldId: field.id,
-                        comments: (getCustomEditor3Data(
-                            value.contentState,
-                            'RESOLVED_COMMENTS_HISTORY',
-                        ) ?? []).map((item) => item.data as IInlineComment),
-                    };
-                }).toArray();
+                return resolvedComments;
             } else {
                 assertNever(this.state.selectedTab);
             }
-        })().filter(({comments}) => comments.length > 0);
+        })();
+
+        const hasComments = resolvedComments.length > 0 || unresolvedComments.length > 0;
+
+        const widgetBody: JSX.Element = hasComments
+            ? (
+                <div>
+                    <Spacer h gap="8" justifyContent="center" noGrow>
+                        <Button
+                            text={`${gettext('Unresolved')} (${unresolvedComments.length})`}
+                            onClick={() => {
+                                this.setState({selectedTab: 'unresolved'});
+                            }}
+                            type={this.state.selectedTab === 'unresolved' ? 'primary' : undefined}
+                        />
+
+                        <Button
+                            text={`${gettext('Resolved')} (${resolvedComments.length})`}
+                            onClick={() => {
+                                this.setState({selectedTab: 'resolved'});
+                            }}
+                            type={this.state.selectedTab === 'resolved' ? 'primary' : undefined}
+                        />
+                    </Spacer>
+
+                    <SpacerInline v gap="16" />
+
+                    <Spacer v gap="16">
+                        {
+                            commentsByField.map(({fieldId, comments}, i) => {
+                                return (
+                                    <div key={i}>
+                                        <div className="field-label--base">
+                                            {allFields.get(fieldId).name}
+                                        </div>
+
+                                        <SpacerInline v gap="8" />
+
+                                        <Spacer v gap="8">
+                                            {
+                                                comments.map((comment, j) => (
+                                                    <Comment
+                                                        key={j}
+                                                        comment={comment}
+                                                    />
+                                                ))
+                                            }
+                                        </Spacer>
+                                    </div>
+                                );
+                            })
+                        }
+                    </Spacer>
+                </div>
+            )
+            : (
+                <EmptyState
+                    title={gettext('No comments have been posted')}
+                    illustration="3"
+                />
+            );
 
         return (
             <AuthoringWidgetLayout
@@ -93,87 +227,8 @@ class InlineCommentsWidget extends React.PureComponent<IProps, IState> {
                         editMode={false}
                     />
                 )}
-                body={(
-                    <div>
-                        <Spacer h gap="8" justifyContent="center" noGrow>
-                            <Button
-                                text={gettext('Unresolved')}
-                                onClick={() => {
-                                    this.setState({selectedTab: 'unresolved'});
-                                }}
-                                type={this.state.selectedTab === 'unresolved' ? 'primary' : undefined}
-                            />
-
-                            <Button
-                                text={gettext('Resolved')}
-                                onClick={() => {
-                                    this.setState({selectedTab: 'resolved'});
-                                }}
-                                type={this.state.selectedTab === 'resolved' ? 'primary' : undefined}
-                            />
-                        </Spacer>
-
-                        <SpacerInline v gap="16" />
-
-                        <Spacer v gap="16">
-                            {
-                                commentsByField.map(({fieldId, comments}, i) => {
-                                    return (
-                                        <div key={i}>
-                                            <div className="field-label--base">
-                                                {allFields.get(fieldId).name}
-                                            </div>
-
-                                            <SpacerInline v gap="8" />
-
-                                            <Spacer v gap="8">
-                                                {
-                                                    comments.map((comment, j) => {
-                                                        const user = store.getState().users.entities[comment.authorId];
-
-                                                        return (
-                                                            <Card key={j}>
-                                                                <Spacer h gap="8" justifyContent="start" noGrow>
-                                                                    <UserAvatar user={user} />
-
-                                                                    <div>
-                                                                        <strong>{user.display_name}</strong>:&nbsp;
-                                                                        {comment.msg}
-
-                                                                        <div>
-                                                                            <TimeElem date={comment.date} />
-                                                                        </div>
-                                                                    </div>
-                                                                </Spacer>
-
-                                                                {
-                                                                    comment.commentedText != null && (
-                                                                        <div
-                                                                            className="commented-text"
-                                                                            style={{paddingTop: 10, marginBottom: 0}}
-                                                                        >
-                                                                            <div>{gettext('Selected text:')}</div>
-
-                                                                            <strong
-                                                                                title={comment.commentedText}
-                                                                            >
-                                                                                {comment.commentedText}
-                                                                            </strong>
-                                                                        </div>
-                                                                    )
-                                                                }
-                                                            </Card>
-                                                        );
-                                                    })
-                                                }
-                                            </Spacer>
-                                        </div>
-                                    );
-                                })
-                            }
-                        </Spacer>
-                    </div>
-                )}
+                body={widgetBody}
+                background="grey"
             />
         );
     }

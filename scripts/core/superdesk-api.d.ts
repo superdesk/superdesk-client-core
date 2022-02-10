@@ -91,6 +91,9 @@ declare module 'superdesk-api' {
         header?: JSX.Element;
         body: JSX.Element;
         footer?: JSX.Element;
+
+        // only works react based authoring
+        background?: 'light' | 'grey';
     }
 
     export interface IAuthoringSideWidget {
