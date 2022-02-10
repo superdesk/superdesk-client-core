@@ -2,21 +2,23 @@ import {registerInternalExtension} from 'core/helpers/register-internal-extensio
 // import {getDemoWidget} from './widgets/demo-widget';
 import {getFindAndReplaceWidget} from './widgets/find-and-replace';
 import {getInlineCommentsWidget} from './widgets/inline-comments';
+import {IExtensionActivationResult} from 'superdesk-api';
+import {appConfig} from 'appConfig';
 
 const authoringReactWidgetsExtension = 'authoring-react-widgets';
 
 export function registerAuthoringReactWidgets() {
+    const sidebarWidgets: IExtensionActivationResult['contributions']['authoringSideWidgets'] = [
+        getFindAndReplaceWidget(),
+    ];
+
+    if ((appConfig.features.editorInlineComments ?? true) === true) {
+        sidebarWidgets.push(getInlineCommentsWidget());
+    }
+
     registerInternalExtension(authoringReactWidgetsExtension, {
         contributions: {
-            authoringSideWidgets: [
-                /**
-                 * Uncomment to test it.
-                 */
-                // getDemoWidget(),
-
-                getFindAndReplaceWidget(),
-                getInlineCommentsWidget(),
-            ],
+            authoringSideWidgets: sidebarWidgets,
         },
     });
 }

@@ -186,6 +186,7 @@ export function getInlineCommentsWidget() {
         order: 2,
         icon: 'comments',
         component: InlineCommentsWidget,
+        isAllowed: (item) => item._type !== 'legal_archive',
     };
 
     return metadataWidget;
