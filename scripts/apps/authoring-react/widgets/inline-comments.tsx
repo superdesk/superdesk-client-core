@@ -12,6 +12,7 @@ import {Card} from 'core/ui/components/Card';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {TimeElem} from 'apps/search/components';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Inline comments');
@@ -93,8 +94,8 @@ class InlineCommentsWidget extends React.PureComponent<IProps, IState> {
                     />
                 )}
                 body={(
-                    <div style={{display: 'flex', gap: 16, flexDirection: 'column'}}>
-                        <div style={{display: 'flex', gap: 8, justifyContent: 'center'}}>
+                    <div>
+                        <Spacer h gap="8" justifyContent="center" noGrow>
                             <Button
                                 text={gettext('Unresolved')}
                                 onClick={() => {
@@ -110,66 +111,67 @@ class InlineCommentsWidget extends React.PureComponent<IProps, IState> {
                                 }}
                                 type={this.state.selectedTab === 'resolved' ? 'primary' : undefined}
                             />
-                        </div>
+                        </Spacer>
 
-                        <div style={{display: 'flex', flexDirection: 'column', gap: 20}}>
+                        <SpacerInline v gap="16" />
+
+                        <Spacer v gap="16">
                             {
                                 commentsByField.map(({fieldId, comments}, i) => {
                                     return (
-                                        <div key={i} style={{display: 'flex', flexDirection: 'column', gap: 10}}>
-                                            <div>
-                                                <div className="field-label--base">
-                                                    {allFields.get(fieldId).name}
-                                                </div>
+                                        <div key={i}>
+                                            <div className="field-label--base">
+                                                {allFields.get(fieldId).name}
                                             </div>
 
-                                            {
-                                                comments.map((comment, j) => {
-                                                    const user = store.getState().users.entities[comment.authorId];
+                                            <SpacerInline v gap="8" />
 
-                                                    return (
-                                                        <Card key={j}>
-                                                            <div style={{display: 'flex', gap: 10}}>
-                                                                <div>
+                                            <Spacer v gap="8">
+                                                {
+                                                    comments.map((comment, j) => {
+                                                        const user = store.getState().users.entities[comment.authorId];
+
+                                                        return (
+                                                            <Card key={j}>
+                                                                <Spacer h gap="8" justifyContent="start" noGrow>
                                                                     <UserAvatar user={user} />
-                                                                </div>
-
-                                                                <div>
-                                                                    <strong>{user.display_name}</strong>:&nbsp;
-                                                                    {comment.msg}
 
                                                                     <div>
-                                                                        <TimeElem date={comment.date} />
+                                                                        <strong>{user.display_name}</strong>:&nbsp;
+                                                                        {comment.msg}
+
+                                                                        <div>
+                                                                            <TimeElem date={comment.date} />
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            </div>
+                                                                </Spacer>
 
-                                                            {
-                                                                comment.commentedText != null && (
-                                                                    <div
-                                                                        className="commented-text"
-                                                                        style={{paddingTop: 10, marginBottom: 0}}
-                                                                    >
-                                                                        <div>{gettext('Selected text:')}</div>
-
-                                                                        <strong
-                                                                            title={comment.commentedText}
+                                                                {
+                                                                    comment.commentedText != null && (
+                                                                        <div
+                                                                            className="commented-text"
+                                                                            style={{paddingTop: 10, marginBottom: 0}}
                                                                         >
-                                                                            {comment.commentedText}
-                                                                        </strong>
-                                                                    </div>
-                                                                )
-                                                            }
+                                                                            <div>{gettext('Selected text:')}</div>
 
-                                                        </Card>
-                                                    );
-                                                })
-                                            }
+                                                                            <strong
+                                                                                title={comment.commentedText}
+                                                                            >
+                                                                                {comment.commentedText}
+                                                                            </strong>
+                                                                        </div>
+                                                                    )
+                                                                }
+                                                            </Card>
+                                                        );
+                                                    })
+                                                }
+                                            </Spacer>
                                         </div>
                                     );
                                 })
                             }
-                        </div>
+                        </Spacer>
                     </div>
                 )}
             />

@@ -7,7 +7,7 @@ import {Button, FormLabel, IconButton} from 'superdesk-ui-framework/react';
 
 export function getConfigComponent(superdesk: ISuperdesk) {
     const gettext = superdesk.localization.gettext;
-    const {Spacer} = superdesk.components;
+    const {Spacer, SpacerInline} = superdesk.components;
 
     return class DateTimeFieldConfig extends React.PureComponent<IConfigComponentProps<IDateTimeFieldConfig>> {
         render() {
@@ -15,11 +15,13 @@ export function getConfigComponent(superdesk: ISuperdesk) {
             const {onChange} = this.props;
 
             return (
-                <Spacer type="vertical" spacing="8">
+                <div>
                     <div>
                         <FormLabel text={gettext('Initial time offset')} />
 
-                        <Spacer type="horizontal" spacing="8" align="end">
+                        <SpacerInline v gap="8" />
+
+                        <Spacer h gap="8" justifyContent="start" noGrow>
                             <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
                                 <input
                                     className="sd-line-input__input"
@@ -38,12 +40,16 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                         </Spacer>
                     </div>
 
-                    <div>
-                        <FormLabel text={gettext('Time increment steps')} />
+                    <SpacerInline v gap="16" />
 
+                    <FormLabel text={gettext('Time increment steps')} />
+
+                    <SpacerInline v gap="8" />
+
+                    <Spacer v gap="8">
                         {
                             config.increment_steps.map((value, i) => (
-                                <Spacer type="horizontal" spacing="8" align="center" key={i}>
+                                <Spacer h gap="8" justifyContent="start" noGrow key={i}>
                                     <IconButton
                                         icon="remove-sign"
                                         ariaValue={gettext('Remove')}
@@ -55,37 +61,37 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                                         }}
                                     />
 
-                                    <Spacer type="horizontal" spacing="8" align="end" key={i}>
-                                        <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
-                                            <input
-                                                className="sd-line-input__input"
-                                                type="number"
-                                                value={value}
-                                                onChange={(event) => {
-                                                    const nextIncrementSteps = config.increment_steps
-                                                        .map((_value, j) => {
-                                                            if (j === i) {
-                                                                return parseInt(event.target.value, 10);
-                                                            } else {
-                                                                return _value;
-                                                            }
-                                                        });
-
-                                                    onChange({
-                                                        ...config,
-                                                        increment_steps: nextIncrementSteps,
+                                    <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
+                                        <input
+                                            className="sd-line-input__input"
+                                            type="number"
+                                            value={value}
+                                            onChange={(event) => {
+                                                const nextIncrementSteps = config.increment_steps
+                                                    .map((_value, j) => {
+                                                        if (j === i) {
+                                                            return parseInt(event.target.value, 10);
+                                                        } else {
+                                                            return _value;
+                                                        }
                                                     });
-                                                }}
-                                                style={{width: 54}}
-                                            />
-                                        </div>
 
-                                        {gettext('minutes')}
-                                    </Spacer>
+                                                onChange({
+                                                    ...config,
+                                                    increment_steps: nextIncrementSteps,
+                                                });
+                                            }}
+                                            style={{width: 54}}
+                                        />
+                                    </div>
+
+                                    <span>{gettext('minutes')}</span>
                                 </Spacer>
                             ))
                         }
-                    </div>
+                    </Spacer>
+
+                    <SpacerInline v gap="16" />
 
                     <Button
                         text={gettext('Add step')}
@@ -98,7 +104,7 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                             });
                         }}
                     />
-                </Spacer>
+                </div>
             );
         }
     };

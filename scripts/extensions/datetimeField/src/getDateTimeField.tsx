@@ -55,10 +55,10 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                 const datePickerLocale = getLocaleForDatePicker(language);
 
                 return (
-                    <Spacer type="horizontal" align="center" spacing="8">
+                    <Spacer h gap="8" justifyContent="start" noGrow>
                         {checkbox}
 
-                        <Spacer type="horizontal" align="stretch" spacing="8">
+                        <Spacer h gap="8">
                             <DatePickerISO
                                 dateFormat={superdesk.instance.config.view.dateformat}
                                 locale={datePickerLocale}
@@ -115,7 +115,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                             steps.length < 1
                                 ? null
                                 : (
-                                    <div>
+                                    <Spacer h gap="4" justifyContent="start" noGrow>
                                         {
                                             steps.map((step, i) => {
                                                 const stepAbsolute = Math.abs(step);
@@ -161,7 +161,7 @@ export function getDateTimeField(superdesk: ISuperdesk) {
                                                 );
                                             })
                                         }
-                                    </div>
+                                    </Spacer>
                                 )
                         }
                     </Spacer>

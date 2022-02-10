@@ -1283,10 +1283,19 @@ declare module 'superdesk-api' {
         name: string;
     }
 
+    export interface IPropsSpacerInline {
+        h?: boolean; // horizontal
+        v?: boolean; // vertical
+        gap: '4' | '8' | '16' | '32' | '64';
+    }
+
     export interface IPropsSpacer {
-        type: 'horizontal' | 'vertical';
-        spacing: '4' | '8' | '16';
-        align?: 'start' | 'end' | 'center' | 'stretch';
+        h?: boolean; // horizontal
+        v?: boolean; // vertical
+        gap: '4' | '8' | '16' | '32' | '64';
+        justifyContent?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' | 'stretch';
+        alignItems?: 'start' | 'end' | 'center' | 'stretch';
+        noGrow?: boolean;
         children: Array<React.ReactNode>;
     }
 
@@ -1867,6 +1876,7 @@ declare module 'superdesk-api' {
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
+            SpacerInline: React.ComponentType<IPropsSpacerInline>;
             Editor3Html: React.ComponentType<IEditor3HtmlProps>;
             AuthoringWidgetHeading: React.ComponentType<IPropsWidgetHeading>;
             AuthoringWidgetLayout: React.ComponentType<IAuthoringWidgetLayoutProps>;

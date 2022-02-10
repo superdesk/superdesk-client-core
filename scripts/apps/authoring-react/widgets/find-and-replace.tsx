@@ -74,7 +74,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
                     />
                 )}
                 body={(
-                    <Spacer type="vertical" spacing="16" align="stretch">
+                    <Spacer v gap="16">
                         <Input
                             label={gettext('Find')}
                             value={this.state.findValue}
@@ -102,7 +102,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
                         />
 
                         <div className="space-between">
-                            <Spacer type="horizontal" spacing="4">
+                            <Spacer h gap="4" justifyContent="start" noGrow>
                                 <IconButton
                                     ariaValue={gettext('Previous match')}
                                     onClick={() => {
@@ -120,7 +120,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
                                 />
                             </Spacer>
 
-                            <Spacer type="horizontal" spacing="4">
+                            <Spacer h gap="4" justifyContent="start" noGrow>
                                 <Button
                                     text={gettext('Replace')}
                                     onClick={() => {

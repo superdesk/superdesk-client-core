@@ -62,7 +62,7 @@ import {dispatchInternalEvent} from './internal-events';
 import {Icon} from './ui/components/Icon2';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import ng from 'core/services/ng';
-import {Spacer} from './ui/components/Spacer';
+import {Spacer, SpacerInline} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
 import {httpRequestJsonLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
@@ -320,6 +320,7 @@ export function getSuperdeskApiImplementation(
             IconBig,
             getDropdownTree: () => DropdownTree,
             Spacer,
+            SpacerInline,
             getLiveQueryHOC: () => WithLiveQuery,
             WithLiveResources,
             Editor3Html,
