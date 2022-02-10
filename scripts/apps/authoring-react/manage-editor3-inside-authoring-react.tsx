@@ -58,7 +58,7 @@ interface IEditor3Config {
     cleanPastedHtml?: boolean;
 }
 
-interface IValue {
+export interface IEditor3Value {
     store: Store<IEditorStore>;
     contentState: ContentState;
 }
@@ -67,7 +67,7 @@ interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
 }
 
-type IProps = IEditorComponentProps<IValue, IEditor3Config, IUserPreferences>;
+type IProps = IEditorComponentProps<IEditor3Value, IEditor3Config, IUserPreferences>;
 
 interface IState {
     /**
@@ -390,7 +390,7 @@ class Editor3ConfigComponent extends React.PureComponent<IConfigComponentProps<I
 const editor3AuthoringReact = 'editor3--authoring-react';
 
 export function registerEditor3AsCustomField() {
-    const customFields: Array<ICustomFieldType<IValue, IEditor3Config, IUserPreferences>> = [
+    const customFields: Array<ICustomFieldType<IEditor3Value, IEditor3Config, IUserPreferences>> = [
         {
             id: 'editor3',
             label: gettext('Editor3 (authoring-react)'),

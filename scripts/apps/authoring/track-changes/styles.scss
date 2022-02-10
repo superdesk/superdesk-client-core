@@ -9,18 +9,6 @@
         .item {
             padding: 1rem;
 
-            .commented-text {
-                margin-bottom: 1rem;
-                color: $grayLight;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-                overflow: hidden;
-
-                .text {
-                    font-weight: bold;
-                }
-            }
-
             .accepted {
                 margin-left: 1rem;
             }
@@ -56,5 +44,17 @@
               font-size: 5.2rem;
             }
         }
+    }
+}
+
+.commented-text {
+    margin-bottom: 1rem;
+    color: $grayLight;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    .text {
+        font-weight: bold;
     }
 }

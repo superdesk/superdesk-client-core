@@ -18,14 +18,16 @@ export class AuthoringSection extends React.PureComponent<IProps> {
         const {fields, fieldsData} = this.props;
 
         return (
-            <div>
+            <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
                 {
                     fields.map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
 
                         return (
                             <div key={field.id}>
-                                <span className="field-label--base" style={{marginBottom: 20}}>{field.name}</span>
+                                <span className="field-label--base" style={{marginBottom: 20}}>
+                                    {field.name}
+                                </span>
 
                                 <FieldEditorConfig.editorComponent
                                     editorId={field.id}

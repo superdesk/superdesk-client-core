@@ -1,6 +1,7 @@
 import {registerInternalExtension} from 'core/helpers/register-internal-extension';
 // import {getDemoWidget} from './widgets/demo-widget';
 import {getFindAndReplaceWidget} from './widgets/find-and-replace';
+import {getInlineCommentsWidget} from './widgets/inline-comments';
 
 const authoringReactWidgetsExtension = 'authoring-react-widgets';
 
@@ -14,6 +15,7 @@ export function registerAuthoringReactWidgets() {
                 // getDemoWidget(),
 
                 getFindAndReplaceWidget(),
+                getInlineCommentsWidget(),
             ],
         },
     });
