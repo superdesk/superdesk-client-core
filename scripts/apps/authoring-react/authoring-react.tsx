@@ -820,7 +820,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         const widgetsFromExtensions = Object.values(extensions)
             .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
-            .filter((widget) => widget.isAllowed?.(state.itemWithChanges) ?? true);
+            .filter((widget) => widget.isAllowed?.(state.itemWithChanges) ?? true)
+            .sort((a, b) => a.order - b.order);
 
         const sidebarTabs: Array<ISideBarTab> = widgetsFromExtensions.map((widget) => ({
             icon: widget.icon,
