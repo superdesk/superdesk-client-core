@@ -6,6 +6,7 @@ import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 import classNames from 'classnames';
 import {Loader} from './Loader';
+import {Spacer} from './Spacer';
 
 interface IOption {
     label: string;
@@ -47,7 +48,7 @@ export function showOptionsModal(title: string, message: string, options: Array<
                             )
                         }
 
-                        <div>
+                        <Spacer h gap="4" justifyContent="start" noGrow>
                             {
                                 options.map(({label, highlightOption, onSelect}) => (
                                     <button
@@ -65,7 +66,7 @@ export function showOptionsModal(title: string, message: string, options: Array<
                                     </button>
                                 ))
                             }
-                        </div>
+                        </Spacer>
                     </ModalFooter>
                 </Modal>
             );
