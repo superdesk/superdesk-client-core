@@ -4,6 +4,7 @@ import {getFindAndReplaceWidget} from './widgets/find-and-replace';
 import {getInlineCommentsWidget} from './widgets/inline-comments';
 import {IExtensionActivationResult} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {getSuggestionsWidget} from './widgets/suggestions';
 
 const authoringReactWidgetsExtension = 'authoring-react-widgets';
 
@@ -14,6 +15,10 @@ export function registerAuthoringReactWidgets() {
 
     if ((appConfig.features.editorInlineComments ?? true) === true) {
         sidebarWidgets.push(getInlineCommentsWidget());
+    }
+
+    if ((appConfig.features.editorSuggestions ?? true) === true) {
+        sidebarWidgets.push(getSuggestionsWidget());
     }
 
     registerInternalExtension(authoringReactWidgetsExtension, {

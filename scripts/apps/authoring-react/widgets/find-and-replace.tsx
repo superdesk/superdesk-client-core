@@ -165,7 +165,7 @@ export function getFindAndReplaceWidget() {
     const metadataWidget: IAuthoringSideWidget = {
         _id: 'find-and-replace-widget',
         label: getLabel(),
-        order: 2,
+        order: 1,
         icon: 'find-replace',
         component: FindAndReplaceWidget,
     };

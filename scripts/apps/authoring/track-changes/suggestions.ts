@@ -34,7 +34,7 @@ function convertUsersArrayToObject(users) {
     return usersObj;
 }
 
-function getLocalizedTypeText(type, blockType) {
+export function getLocalizedTypeText(type, blockType) {
     const description = Highlights.getHighlightDescription(type);
     const blockStyleDescription = Highlights.getBlockStylesDescription(blockType);
     const space = blockStyleDescription !== '' ? ' ' : '';

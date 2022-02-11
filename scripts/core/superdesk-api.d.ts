@@ -365,7 +365,7 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
-        _type?: 'ingest' | 'archive' | 'published' | 'archived' | 'legal_archive' | 'externalsource' | string;
+        _type?: 'ingest' | 'archive' | 'archived' | 'published' | 'archived' | 'legal_archive' | 'externalsource' | string;
         uri?: string; // uri is external id which stays when image is fetched from provider/ingest
         guid: string;
         family_id: string;
