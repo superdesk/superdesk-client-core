@@ -22,17 +22,6 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
 
         this.closeOnClick = this.closeOnClick.bind(this);
         this.closeOnScroll = throttle(this.closeOnScroll.bind(this), 200);
-
-        this.positionOnce = once((el) => {
-            this.popper = createPopper(
-                this.props.referenceElement,
-                el,
-                {
-                    placement: 'bottom',
-                    modifiers: [maxSize, applyMaxSize],
-                },
-            );
-        });
     }
 
     closeOnClick(event: MouseEvent) {
@@ -61,13 +50,24 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
     componentDidMount() {
         window.addEventListener('click', this.closeOnClick);
         window.addEventListener('scroll', this.closeOnScroll, true);
+
+        if (this.wrapperEl != null) {
+            this.popper = createPopper(
+                this.props.referenceElement,
+                this.wrapperEl,
+                {
+                    placement: 'bottom',
+                    modifiers: [maxSize, applyMaxSize],
+                },
+            );
+        }
     }
 
     componentWillUnmount() {
         window.removeEventListener('click', this.closeOnClick);
         window.removeEventListener('scroll', this.closeOnScroll, true);
 
-        this.popper.destroy();
+        this.popper.destroy?.();
     }
 
     render() {
@@ -75,12 +75,6 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
             <div
                 ref={(el) => {
                     this.wrapperEl = el;
-
-                    if (el != null) {
-                        if (el != null) {
-                            this.positionOnce(el);
-                        }
-                    }
                 }}
                 style={{zIndex: this.props.zIndex ?? 1}}
             >
