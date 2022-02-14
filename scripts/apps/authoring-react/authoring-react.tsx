@@ -1,7 +1,13 @@
 /* eslint-disable no-case-declarations */
 
 import React from 'react';
-import {IArticle, IExtensionActivationResult, IAuthoringFieldV2, IContentProfileV2} from 'superdesk-api';
+import {
+    IArticle,
+    IExtensionActivationResult,
+    IAuthoringFieldV2,
+    IContentProfileV2,
+    IArticleAction,
+} from 'superdesk-api';
 import {
     Button,
     ButtonGroup,
@@ -45,6 +51,7 @@ import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
+import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 
 function getFieldsData(
     item: IArticle,
@@ -101,6 +108,8 @@ function serializeFieldsDataAndApplyOnArticle(
     return result;
 }
 
+const SPELLCHECKER_PREFERENCE = 'spellchecker:status';
+
 interface IProps {
     itemId: IArticle['_id'];
     onClose(): void;
@@ -110,6 +119,7 @@ function getInitialState(
     item: {saved: IArticle; autosaved: IArticle},
     profile: IContentProfileV2,
     userPreferencesForFields: IStateLoaded['userPreferencesForFields'],
+    spellcheckerEnabled: boolean,
 ): IStateLoaded {
     const allFields = profile.header.merge(profile.content);
 
@@ -138,6 +148,7 @@ function getInitialState(
             ),
         profile: profile,
         userPreferencesForFields,
+        spellcheckerEnabled,
     };
 
     return initialState;
@@ -156,6 +167,7 @@ interface IStateLoaded {
         name: string;
         pinned: boolean;
     };
+    spellcheckerEnabled: boolean;
 
     /**
      * Prevents changes to state while async operation is in progress(e.g. saving).
@@ -274,6 +286,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
         widgetReactIntegration.WidgetLayoutComponent = AuthoringWidgetLayoutComponent;
+
+        this.eventListenersToRemoveBeforeUnmounting = [];
     }
 
     /**
@@ -337,7 +351,17 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         ).then((res) => {
             const [{item, profile}, userPreferences] = res;
 
-            const initialState = getInitialState(item, profile, userPreferences[AUTHORING_FIELD_PREFERENCES] ?? {});
+            const spellcheckerEnabled =
+                userPreferences[SPELLCHECKER_PREFERENCE].enabled
+                ?? userPreferences[SPELLCHECKER_PREFERENCE].default
+                ?? true;
+
+            const initialState = getInitialState(
+                item,
+                profile,
+                userPreferences[AUTHORING_FIELD_PREFERENCES] ?? {},
+                spellcheckerEnabled,
+            );
 
             dispatchCustomEvent('articleEditStart', initialState.itemWithChanges);
 
@@ -358,7 +382,11 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             }
         });
 
-        this.eventListenersToRemoveBeforeUnmounting = [];
+        this.eventListenersToRemoveBeforeUnmounting.push(addEditorEventListener('spellchecker__request_status', () => {
+            if (this.state.initialized) {
+                dispatchEditorEvent('spellchecker__set_status', this.state.spellcheckerEnabled);
+            }
+        }));
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addInternalEventListener(
@@ -494,7 +522,12 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 }
 
                 authoringStorage.getArticle(state.itemOriginal._id).then((item) => {
-                    this.setState(getInitialState(item, state.profile, state.userPreferencesForFields));
+                    this.setState(getInitialState(
+                        item,
+                        state.profile,
+                        state.userPreferencesForFields,
+                        state.spellcheckerEnabled,
+                    ));
                 });
             }),
         );
@@ -593,6 +626,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 {saved: item, autosaved: item},
                 state.profile,
                 state.userPreferencesForFields,
+                state.spellcheckerEnabled,
             );
 
             this.setState(nextState);
@@ -896,7 +930,56 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 priority: 0.4,
                 component: () => {
                     return (
-                        <AuthoringActionsMenu item={state.itemWithChanges} />
+                        <AuthoringActionsMenu
+                            item={state.itemWithChanges}
+                            getCoreActions={() => {
+                                const coreActions: Array<IArticleAction> = [];
+
+                                if (state.spellcheckerEnabled) {
+                                    const nextValue = false;
+
+                                    coreActions.push({
+                                        label: gettext('Disable spellchecker'),
+                                        onTrigger: () => {
+                                            this.setState({
+                                                ...state,
+                                                spellcheckerEnabled: nextValue,
+                                            });
+
+                                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                            preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                type: 'bool',
+                                                enabled: nextValue,
+                                                default: true,
+                                            });
+                                        },
+                                    });
+                                } else {
+                                    coreActions.push({
+                                        label: gettext('Enable spellchecker'),
+                                        onTrigger: () => {
+                                            const nextValue = true;
+
+                                            this.setState({
+                                                ...state,
+                                                spellcheckerEnabled: true,
+                                            });
+
+                                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+
+                                            preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                type: 'bool',
+                                                enabled: nextValue,
+                                                default: true,
+                                            });
+                                        },
+                                    });
+                                }
+
+                                return coreActions;
+                            }}
+                        />
                     );
                 },
                 availableOffline: true,

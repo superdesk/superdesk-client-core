@@ -8,6 +8,7 @@ import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 
 interface IProps {
     item: IArticle;
+    getCoreActions: () => Array<IArticleAction>;
 }
 
 interface IState {
@@ -26,8 +27,8 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     }
 
     getActions() {
-        getArticleActionsFromExtensions(this.props.item).then((actions) => {
-            this.setState({actions});
+        getArticleActionsFromExtensions(this.props.item).then((actionsFromExtensions) => {
+            this.setState({actions: [...this.props.getCoreActions(), ...actionsFromExtensions]});
         });
     }
 

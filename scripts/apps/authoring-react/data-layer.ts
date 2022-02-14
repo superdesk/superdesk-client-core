@@ -123,6 +123,7 @@ export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
         '_current_version',
         'original_id',
         'ingest_version',
+        'refs',
     ];
 
     const baseApiFields = [

@@ -33,6 +33,7 @@ import {
     findNext,
     replace,
     replaceAll,
+    setSpellcheckerStatus,
 } from 'core/editor3/actions';
 import {Checkbox} from 'superdesk-ui-framework/react';
 import {ReactContextForEditor3} from 'core/editor3/directive';
@@ -47,7 +48,7 @@ import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
-import {addEditorEventListener} from './authoring-react-editor-events';
+import {addEditorEventListener, dispatchEditorEvent} from './authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
 
 interface IEditor3Config {
@@ -77,6 +78,8 @@ interface IState {
     ready: boolean;
 
     autocompleteSuggestions: Array<string>;
+
+    spellcheckerEnabled: boolean;
 }
 
 class Editor3Component extends React.PureComponent<IProps, IState> {
@@ -88,6 +91,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
         this.state = {
             ready: false,
             autocompleteSuggestions: [],
+            spellcheckerEnabled: false,
         };
 
         this.eventListenersToRemoveBeforeUnmounting = [];
@@ -110,7 +114,7 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
 
     syncPropsWithReduxStore() {
         const store = this.props.value.store;
-        const spellcheck = ng.get('spellcheck');
+        const spellcheck = this.state.spellcheckerEnabled ? ng.get('spellcheck') : null;
 
         store.dispatch(setExternalOptions({
             editorFormat: this.props.config.editorFormat ?? [],
@@ -150,6 +154,13 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
                 const [autocompleteSuggestions] = res;
 
                 this.setState({ready: true, autocompleteSuggestions});
+
+                /**
+                 * If `spellchecker__set_status` is dispatched on `componentDidMount` in AuthoringReact,
+                 * the event is fired before this component mounts and starts listening to the event.
+                 * Because of this, requesting status explicitly is needed.
+                 */
+                dispatchEditorEvent('spellchecker__request_status', null);
 
                 /**
                  * Avoid triggering `onChange` when nothing has actually changed.
@@ -230,6 +241,12 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
                 } else {
                     this.props.value.store.dispatch(replace(replaceWith));
                 }
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addEditorEventListener('spellchecker__set_status', (event) => {
+                this.props.value.store.dispatch(setSpellcheckerStatus(event.detail));
             }),
         );
     }

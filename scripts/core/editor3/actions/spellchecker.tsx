@@ -13,7 +13,7 @@ export function replaceWord(data: IReplaceWordData) {
     };
 }
 
-export function setSpellcheckerStatus(enabled: boolean) {
+export function setSpellcheckerStatus(enabled: boolean): any {
     if (enabled) {
         return reloadSpellcheckerWarnings();
     } else {

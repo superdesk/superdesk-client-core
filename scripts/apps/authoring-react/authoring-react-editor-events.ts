@@ -17,6 +17,9 @@ interface IAuthoringReactEditorEvents {
         replaceWith: string;
         replaceAllMatches: boolean;
     };
+
+    spellchecker__request_status: null;
+    spellchecker__set_status: boolean;
 }
 
 export function addEditorEventListener<T extends keyof IAuthoringReactEditorEvents>(
