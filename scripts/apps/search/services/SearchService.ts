@@ -667,10 +667,20 @@ export function SearchService($location, session, multi,
             this.filter({not: {term: {state: 'scheduled'}}});
         }
 
-        // remove other users drafts.
-        this.filter({or: [{and: [{term: {state: 'draft'}},
-            {term: {original_creator: session.identity._id}}]},
-        {not: {terms: {state: ['draft']}}}]});
+        /**
+         * Filter out items in personal space except for current user
+         */
+        this.filter({
+            or: [
+                {
+                    and: [
+                        {exists: {field: 'task.desk'}},
+                        {term: {original_creator: session.identity._id}},
+                    ],
+                },
+                {not: {exists: {field: 'task.desk'}}},
+            ],
+        });
 
         // this is needed for archived collection
         this.filter({not: {term: {package_type: 'takes'}}});
