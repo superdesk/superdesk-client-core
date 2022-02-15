@@ -1,18 +1,40 @@
 import React from 'react';
+import {Map} from 'immutable';
 import {Menu} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
-import {IArticle, IArticleAction} from 'superdesk-api';
+import {IArticle, IArticleAction, IExtensionActivationResult, IContentProfileV2} from 'superdesk-api';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
-import {groupBy} from 'lodash';
+import {groupBy, flatMap} from 'lodash';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
+import {extensions} from 'appConfig';
 
 interface IProps {
     item: IArticle;
+    contentProfile: IContentProfileV2;
+    fieldsData: Map<string, unknown>;
     getCoreActions: () => Array<IArticleAction>;
 }
 
 interface IState {
     actions: Array<IArticleAction> | null;
+}
+
+function getAuthoringActionsFromExtensions(
+    item: IArticle,
+    contentProfile: IContentProfileV2,
+    fieldsData: Map<string, unknown>,
+): Promise<Array<IArticleAction>> {
+    const actionGetters
+        : Array<IExtensionActivationResult['contributions']['getAuthoringActions']>
+    = flatMap(
+        Object.values(extensions),
+        (extension) => extension.activationResult.contributions?.getAuthoringActions ?? [],
+    );
+
+    return Promise.all(actionGetters.map((getPromise) => getPromise(item, contentProfile, fieldsData)))
+        .then((res) => {
+            return flatMap(res);
+        });
 }
 
 export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
@@ -27,8 +49,15 @@ export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
     }
 
     getActions() {
-        getArticleActionsFromExtensions(this.props.item).then((actionsFromExtensions) => {
-            this.setState({actions: [...this.props.getCoreActions(), ...actionsFromExtensions]});
+        Promise.all([
+            getAuthoringActionsFromExtensions(this.props.item, this.props.contentProfile, this.props.fieldsData),
+            getArticleActionsFromExtensions(this.props.item),
+        ]).then((res) => {
+            const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
+
+            this.setState({actions: [
+                ...this.props.getCoreActions(), ...authoringActionsFromExtensions, ...articleActionsFromExtensions,
+            ]});
         });
     }
 

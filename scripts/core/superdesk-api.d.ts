@@ -138,6 +138,13 @@ declare module 'superdesk-api' {
 
             authoringSideWidgets?: Array<IAuthoringSideWidget>;
             authoringHeaderComponents?: Array<AuthoringHeaderItem>;
+
+            getAuthoringActions?(
+                article: IArticle,
+                contentProfile: IContentProfileV2,
+                fieldsData: import('immutable').Map<string, unknown>,
+            ): Promise<Array<IArticleAction>>;
+
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;

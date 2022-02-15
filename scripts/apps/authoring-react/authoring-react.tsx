@@ -932,49 +932,53 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                     return (
                         <AuthoringActionsMenu
                             item={state.itemWithChanges}
+                            contentProfile={state.profile}
+                            fieldsData={state.fieldsDataWithChanges}
                             getCoreActions={() => {
                                 const coreActions: Array<IArticleAction> = [];
 
-                                if (state.spellcheckerEnabled) {
-                                    const nextValue = false;
+                                if (appConfig.features.useTansaProofing !== true) {
+                                    if (state.spellcheckerEnabled) {
+                                        const nextValue = false;
 
-                                    coreActions.push({
-                                        label: gettext('Disable spellchecker'),
-                                        onTrigger: () => {
-                                            this.setState({
-                                                ...state,
-                                                spellcheckerEnabled: nextValue,
-                                            });
+                                        coreActions.push({
+                                            label: gettext('Disable spellchecker'),
+                                            onTrigger: () => {
+                                                this.setState({
+                                                    ...state,
+                                                    spellcheckerEnabled: nextValue,
+                                                });
 
-                                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+                                                dispatchEditorEvent('spellchecker__set_status', nextValue);
 
-                                            preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                type: 'bool',
-                                                enabled: nextValue,
-                                                default: true,
-                                            });
-                                        },
-                                    });
-                                } else {
-                                    coreActions.push({
-                                        label: gettext('Enable spellchecker'),
-                                        onTrigger: () => {
-                                            const nextValue = true;
+                                                preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                    type: 'bool',
+                                                    enabled: nextValue,
+                                                    default: true,
+                                                });
+                                            },
+                                        });
+                                    } else {
+                                        coreActions.push({
+                                            label: gettext('Enable spellchecker'),
+                                            onTrigger: () => {
+                                                const nextValue = true;
 
-                                            this.setState({
-                                                ...state,
-                                                spellcheckerEnabled: true,
-                                            });
+                                                this.setState({
+                                                    ...state,
+                                                    spellcheckerEnabled: true,
+                                                });
 
-                                            dispatchEditorEvent('spellchecker__set_status', nextValue);
+                                                dispatchEditorEvent('spellchecker__set_status', nextValue);
 
-                                            preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                type: 'bool',
-                                                enabled: nextValue,
-                                                default: true,
-                                            });
-                                        },
-                                    });
+                                                preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                    type: 'bool',
+                                                    enabled: nextValue,
+                                                    default: true,
+                                                });
+                                            },
+                                        });
+                                    }
                                 }
 
                                 return coreActions;

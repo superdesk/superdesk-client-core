@@ -8,6 +8,7 @@ import {
     IConfigComponentProps,
     RICH_FORMATTING_OPTION,
     IArticle,
+    IArticleAction,
 } from 'superdesk-api';
 import {gettext, gettextPlural} from 'core/utils';
 import {convertToRaw, ContentState} from 'draft-js';
@@ -50,6 +51,8 @@ import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 import {addEditorEventListener, dispatchEditorEvent} from './authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
+import {appConfig} from 'appConfig';
+import {runTansa} from './editor3-tansa-integration';
 
 interface IEditor3Config {
     editorFormat?: Array<RICH_FORMATTING_OPTION>;
@@ -483,6 +486,20 @@ export function registerEditor3AsCustomField() {
 
     const result: IExtensionActivationResult = {
         contributions: {
+            getAuthoringActions: (article, contentProfile, fieldsData) => {
+                if (appConfig.features.useTansaProofing === true) {
+                    const checkSpellingAction: IArticleAction = {
+                        label: gettext('Check spelling'),
+                        onTrigger: () => {
+                            runTansa(contentProfile, fieldsData);
+                        },
+                    };
+
+                    return Promise.resolve([checkSpellingAction]);
+                } else {
+                    return Promise.resolve([]);
+                }
+            },
             customFieldTypes: customFields,
         },
     };
