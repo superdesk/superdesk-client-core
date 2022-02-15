@@ -672,13 +672,8 @@ export function SearchService($location, session, multi,
          */
         this.filter({
             or: [
-                {
-                    and: [
-                        {exists: {field: 'task.desk'}},
-                        {term: {original_creator: session.identity._id}},
-                    ],
-                },
-                {not: {exists: {field: 'task.desk'}}},
+                {exists: {field: 'task.desk'}},
+                {term: {'task.user': session.identity._id}},
             ],
         });
 
