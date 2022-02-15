@@ -21,6 +21,10 @@ export default function MediaFieldsController($q, metadata) {
             return {schema_field: 'authors', items: metadata.values.authors, field_type: 'authors'};
         }
 
+        if (cv == null && field === 'anpa_category') {
+            return {schema_field: 'anpa_category', selection_type: 'multi selection', items: metadata.values.categories};
+        }
+
         return cv;
     }
 

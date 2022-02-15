@@ -47,8 +47,7 @@ export function validateMediaFieldsThrows(validator, metadata, schema, getLabelF
 
         // eslint-disable-next-line no-useless-escape
         const regex = new RegExp('^\<*br\/*\>*$', 'i');
-
-        if (!value || value.match(regex)) {
+        if (!Array.isArray(value) && (!value || value.match(regex))) {
             raiseError(key);
         }
     });
