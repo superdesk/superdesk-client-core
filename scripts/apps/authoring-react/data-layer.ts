@@ -169,6 +169,16 @@ export const authoringStorage: IAuthoringStorage = {
 
             const diff = generatePatch(original, _current);
 
+            // when object has changes, send entire object to avoid server dropping keys
+            if (diff.fields_meta != null) {
+                diff.fields_meta = _current.fields_meta;
+            }
+
+            // when object has changes, send entire object to avoid server dropping keys
+            if (diff.extra != null) {
+                diff.fields_meta = _current.extra;
+            }
+
             const queryString = appConfig.features.publishFromPersonal === true
                 ? '?publish_from_personal=true'
                 : '';
