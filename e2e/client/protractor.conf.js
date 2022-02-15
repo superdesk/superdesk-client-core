@@ -52,7 +52,7 @@ var config = {
 
     directConnect: true,
 
-    chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER + '/chromedriver') : null,
+    //chromeDriver: process.env.CHROMEWEBDRIVER ? (process.env.CHROMEWEBDRIVER + '/chromedriver') : null,
 
     onPrepare: function() {
         require('./specs/helpers/setup').setup({fixture_profile: 'app_prepopulate_data'});
