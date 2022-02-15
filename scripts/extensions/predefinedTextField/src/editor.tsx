@@ -21,7 +21,7 @@ function applyPlaceholders(definition: string, article: IArticle): string {
     let result = definition;
 
     for (let [placeholderName, pathToValue] of Object.entries(extensionConfig.placeholderMapping ?? {})) {
-        result = result.replace(`{{${placeholderName}}}`, get(article, pathToValue));
+        result = result.replace(`{{${placeholderName}}}`, get(article, pathToValue, ''));
     }
 
     return result;
