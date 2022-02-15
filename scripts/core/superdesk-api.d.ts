@@ -235,6 +235,8 @@ declare module 'superdesk-api' {
         user: IUser;
         role?: string;
         parent?: string;
+        sub_label?: string;
+        private?: boolean; //Author wants to be publicly visible or hidden [SDBELGA-605]
     }
 
     // to use as a value, use enum inside 'scripts/apps/search/interfaces.ts'
