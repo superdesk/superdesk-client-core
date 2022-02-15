@@ -22,7 +22,8 @@ export default function MediaFieldsController($q, metadata) {
         }
 
         if (cv == null && field === 'anpa_category') {
-            return {schema_field: 'anpa_category', selection_type: 'multi selection', items: metadata.values.categories};
+            return {schema_field: 'anpa_category', selection_type: 'multi selection',
+                items: metadata.values.categories};
         }
 
         return cv;
