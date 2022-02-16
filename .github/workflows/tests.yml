@@ -49,6 +49,10 @@ jobs:
       run: npm install && npm run build && npm run specs--compile && npm run start-client-server
       working-directory: e2e/client
     
+    - name: Install webdriver
+      run: ./node_modules/.bin/webdriver-manager update --chrome --versions.chrome 97.0.4692.71
+      working-directory: e2e/client
+    
     - name: Protractor
       run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
       env:
