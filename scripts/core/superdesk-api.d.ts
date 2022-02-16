@@ -932,6 +932,8 @@ declare module 'superdesk-api' {
         // Allows initializing a new item with some fields already filled.
         getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<T>;
 
+        getNoItemsPlaceholder?(page: IGenericListPageComponent<T>): JSX.Element;
+
         refreshOnEvents?: Array<string>;
 
         fieldForSearch?: IFormField; // must be present in formConfig

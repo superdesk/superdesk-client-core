@@ -16,7 +16,7 @@ import {IContentProfileType} from '../controllers/ContentProfilesController';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import {Button, IconButton, Dropdown} from 'superdesk-ui-framework/react';
+import {IconButton} from 'superdesk-ui-framework/react';
 import {groupBy} from 'lodash';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import ng from 'core/services/ng';
@@ -24,6 +24,7 @@ import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getContentProfileFormConfig} from './get-content-profiles-form-config';
 import {getEditorConfig} from './get-editor-config';
 import {WidgetsConfig} from './WidgetsConfig';
+import {NewFieldSelect} from './new-field-select';
 
 // should be stored in schema rather than editor section of the content profile
 // but the fields should be editable via GUI
@@ -114,27 +115,6 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
         const {sortingInProgress, setIndexForNewItem, getLabel, availableIds} = this.props.wrapper.additionalProps;
         const isLast = index === page.getItemsCount() - 1;
 
-        const newFieldSelect = (newItemIndex) => (
-            <Dropdown
-                append={true}
-                items={availableIds.map(({id, label}) => ({
-                    label: label,
-                    onSelect: () => {
-                        setIndexForNewItem(newItemIndex);
-                        page.openNewItemForm({_id: id});
-                    },
-                }))}
-            >
-                <Button
-                    icon="plus-large"
-                    text={gettext('Add new field')}
-                    shape="round"
-                    iconOnly={true}
-                    onClick={() => false}
-                />
-            </Dropdown>
-        );
-
         return (
             <div
                 className={'sd-list-item sd-shadow--z1' + (inEditMode ? ' sd-list-item--activated' : '')}
@@ -159,7 +139,13 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     top: '-19px',
                                 }}
                             >
-                                {newFieldSelect(index)}
+                                <NewFieldSelect
+                                    availableFields={availableIds}
+                                    onSelect={(selectedId) => {
+                                        setIndexForNewItem(index);
+                                        page.openNewItemForm({_id: selectedId});
+                                    }}
+                                />
                             </div>
                         )
                         : null
@@ -195,7 +181,13 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     bottom: '-17px',
                                 }}
                             >
-                                {newFieldSelect(index + 1)}
+                                <NewFieldSelect
+                                    availableFields={availableIds}
+                                    onSelect={(selectedId) => {
+                                        setIndexForNewItem(index + 1);
+                                        page.openNewItemForm({_id: selectedId});
+                                    }}
+                                />
                             </div>
                         )
                         : null
@@ -603,6 +595,10 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                 })
                 .map((id) => ({id, label: getLabel(id)}));
 
+            const setIndexForNewItem = (index) => {
+                this.setState({insertNewItemAtIndex: index});
+            };
+
             return (
                 <div>
                     {tabs}
@@ -622,14 +618,24 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                         additionalProps={{
                             sortingInProgress,
                             availableIds,
-                            setIndexForNewItem: (index) => {
-                                this.setState({insertNewItemAtIndex: index});
-                            },
+                            setIndexForNewItem,
                             getLabel,
                         }}
                         disallowFiltering
                         disallowCreatingNewItem
                         contentMargin={0}
+                        getNoItemsPlaceholder={(page) => (
+                            <div style={{display: 'flex', alignItems: 'center', padding: 10, gap: 20}}>
+                                {gettext('There are no items yet.')}
+                                <NewFieldSelect
+                                    availableFields={availableIds}
+                                    onSelect={(selectedId) => {
+                                        setIndexForNewItem(0);
+                                        page.openNewItemForm({_id: selectedId});
+                                    }}
+                                />
+                            </div>
+                        )}
                     />
                 </div>
             );

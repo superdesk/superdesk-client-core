@@ -405,7 +405,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                     return (
                         <ListItem noHover>
                             <ListItemColumn>
-                                {gettext('There are no items yet.')}
+                                {this.props.getNoItemsPlaceholder?.(page) ?? gettext('There are no items yet.')}
                             </ListItemColumn>
                         </ListItem>
                     );
