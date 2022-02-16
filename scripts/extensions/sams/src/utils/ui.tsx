@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Provider} from 'react-redux';
 
 // Types
-import {ASSET_SORT_FIELD, ASSET_STATE, DATA_UNIT} from '../interfaces';
+import {ASSET_SORT_FIELD, ASSET_STATE, DATA_UNIT, IAssetItem, RENDITION} from '../interfaces';
 import {superdeskApi} from '../apis';
 
 // Redux Actions & Selectors
@@ -116,4 +116,12 @@ export function getAssetListSortFieldText(field: ASSET_SORT_FIELD): string {
     }
 
     superdeskApi.helpers.assertNever(field);
+}
+
+export function getAssetRenditionDimension(asset: IAssetItem, rendition: RENDITION) {
+    const {gettext} = superdeskApi.localization;
+
+    const dimensions = asset.renditions.find((r) => r?.name === rendition)?.params!;
+
+    return gettext('{{width}} * {{height}}', {width: dimensions?.width, height: dimensions?.height});
 }

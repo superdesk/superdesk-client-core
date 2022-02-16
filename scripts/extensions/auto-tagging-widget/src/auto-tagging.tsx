@@ -26,6 +26,13 @@ interface IAutoTaggingResponse {
 interface IAutoTaggingSearchResult {
     result: {
         tags: IServerResponse;
+
+        /**
+         * When search is performed, this will contain
+         * all parents of items that matched the search query
+         * and were returned in `tags` section.
+         */
+        broader?: IServerResponse;
     };
 }
 
@@ -55,8 +62,35 @@ function tagAlreadyExists(data: IEditableData, qcode: string): boolean {
     return data.changes.analysis.has(qcode);
 }
 
-function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
+export function hasConfig(key: string, iMatricsFields: IIMatricsFields) {
     return iMatricsFields[key] != null;
+}
+
+export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
+    const items = data.changes.analysis;
+
+    const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
+
+    const entities = items.filter((tag) => isEntity(tag));
+    const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
+
+    const entitiesGroupedAndSortedByConfig = entitiesGrouped
+        .filter((_, key) => hasConfig(key, iMatricsConfig.entities))
+        .sortBy((_, key) => iMatricsConfig.entities[key].order,
+            (a, b) => a - b);
+
+    const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
+        .filter((_, key) => !hasConfig(key, iMatricsConfig.entities))
+        .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
+            (a, b) => a.localeCompare(b));
+
+    const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
+        .concat(entitiesGroupedAndSortedNotInConfig);
+
+    const others = items.filter((tag) => isEntity(tag) === false);
+    const othersGrouped = others.groupBy((tag) => tag.group.value);
+
+    return {entitiesGroupedAndSorted, othersGrouped};
 }
 
 function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
@@ -233,9 +267,39 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.setState({newItem: null});
         }
-        insertTagFromSearch(tag: ITagUi, data: IEditableData) {
+        insertTagFromSearch(tag: ITagUi, data: IEditableData, searchResponse: IAutoTaggingSearchResult) {
+            /**
+             * Contains parents of all items returned in search results,
+             * not only the one that was eventually chosen
+             */
+            const parentsMixed = searchResponse?.result?.broader != null
+                ? toClientFormat(searchResponse.result.broader)
+                : OrderedMap<string, ITagUi>();
+
+            const parentsForChosenTag: Array<ITagUi> = [];
+
+            let latestParent = tag;
+
+            while (latestParent?.parent != null) {
+                const nextParent = parentsMixed.get(latestParent.parent);
+
+                if (nextParent != null) {
+                    parentsForChosenTag.push(nextParent);
+                }
+
+                latestParent = nextParent;
+            }
+
+            let result: OrderedMap<string, ITagUi> = data.changes.analysis;
+
+            result = result.set(tag.qcode, tag);
+
+            for (const parent of parentsForChosenTag) {
+                result = result.set(parent.qcode, parent);
+            }
+
             this.updateTags(
-                data.changes.analysis.set(tag.qcode, tag),
+                result,
                 data,
             );
         }
@@ -387,7 +451,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                         <div style={{flexGrow: 1}}>
                                             <Autocomplete
                                                 value={''}
-                                                keyValue="name"
+                                                keyValue="keyValue"
                                                 items={[]}
                                                 search={(searchString, callback) => {
                                                     let cancelled = false;
@@ -411,7 +475,20 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                                 ) !== true,
                                                             );
 
-                                                            callback(withoutExistingTags);
+                                                            const withResponse = withoutExistingTags.map(
+                                                                (tag) => ({
+                                                                    // required for Autocomplete component
+                                                                    keyValue: tag.name,
+
+                                                                    tag,
+
+                                                                    // required to be able to
+                                                                    // get all parents when an item is selected
+                                                                    entireResponse: res,
+                                                                }),
+                                                            );
+
+                                                            callback(withResponse);
                                                         }
                                                     });
 
@@ -422,7 +499,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     };
                                                 }}
                                                 listItemTemplate={(__item: any) => {
-                                                    const _item: ITagUi = __item;
+                                                    const _item: ITagUi = __item.tag;
 
                                                     return (
                                                         <div className="auto-tagging-widget__autocomplete-item">
@@ -443,9 +520,11 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     );
                                                 }}
                                                 onSelect={(_value: any) => {
-                                                    const value = _value as ITagUi;
+                                                    const tag: ITagUi = _value.tag;
+                                                    const entireResponse: IAutoTaggingSearchResult =
+                                                        _value.entireResponse;
 
-                                                    this.insertTagFromSearch(value, data);
+                                                    this.insertTagFromSearch(tag, data, entireResponse);
                                                     // TODO: clear autocomplete?
                                                 }}
                                                 onChange={noop}
@@ -490,29 +569,12 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                     />
                                 );
                             } else {
-                                const items = data.changes.analysis;
+                                const {
+                                    entitiesGroupedAndSorted,
+                                    othersGrouped,
+                                } = getAutoTaggingData(data, this.iMatricsFields);
+
                                 const savedTags = data.original.analysis.keySeq().toSet();
-
-                                const isEntity = (tag: ITagUi) => entityGroups.has(tag.group.value);
-
-                                const entities = items.filter((tag) => isEntity(tag));
-                                const entitiesGrouped = entities.groupBy((tag) => tag?.group.value);
-
-                                const entitiesGroupedAndSortedByConfig = entitiesGrouped
-                                    .filter((_, key) => hasConfig(key, this.iMatricsFields.entities))
-                                    .sortBy((_, key) => this.iMatricsFields.entities[key].order,
-                                        (a, b) => a - b);
-
-                                const entitiesGroupedAndSortedNotInConfig = entitiesGrouped
-                                    .filter((_, key) => !hasConfig(key, this.iMatricsFields.entities))
-                                    .sortBy((_, key) => key!.toString().toLocaleLowerCase(),
-                                        (a, b) => a.localeCompare(b));
-
-                                const entitiesGroupedAndSorted = entitiesGroupedAndSortedByConfig
-                                    .concat(entitiesGroupedAndSortedNotInConfig);
-
-                                const others = items.filter((tag) => isEntity(tag) === false);
-                                const othersGrouped = others.groupBy((tag) => tag.group.value);
 
                                 let allGrouped = OrderedMap<string, JSX.Element>();
 
@@ -609,9 +671,6 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                                     tagAlreadyExists={
                                                         (qcode) => tagAlreadyExists(data, qcode)
                                                     }
-                                                    insertTagFromSearch={(tag: ITagUi) => {
-                                                        this.insertTagFromSearch(tag, data);
-                                                    }}
                                                 />
                                             )
                                         }

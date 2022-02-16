@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {
     EditorState,
     convertFromRaw,

@@ -621,6 +621,30 @@ $editor-styleButton-size: 3rem;
 	}
 }
 
+.editor3-autocomplete {
+	z-index: 1050;
+	overflow-y: auto;
+	background: #fff;
+	box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+
+	.item {
+		display: block;
+		width: 100%;
+		padding: 0.8rem 1.6rem;
+		text-align: start;
+		border: 2px solid transparent;
+
+		&.selected {
+			background: $sd-hover;
+			border: 2px solid $sd-blue;
+		}
+
+		&:hover {
+			background: $sd-hover;
+		}
+	}
+}
+
 .main-article {
 	.dropdown__menu {
 		color: $sd-text;

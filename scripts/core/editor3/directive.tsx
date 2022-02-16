@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux';
@@ -11,13 +12,33 @@ import {getContentStateFromHtml} from './html/from-html';
 import {changeEditorState, setReadOnly, changeLimitConfig} from './actions';
 
 import ng from 'core/services/ng';
-import {RICH_FORMATTING_OPTION} from 'superdesk-api';
+import {RICH_FORMATTING_OPTION, IRestApiResponse} from 'superdesk-api';
 import {addInternalEventListener} from 'core/internal-events';
 import {
     CHARACTER_LIMIT_UI_PREF,
     CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {FIELD_KEY_SEPARATOR} from './helpers/fieldsMeta';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {appConfig} from 'appConfig';
+
+function getAutocompleteSuggestions(field: string, language: string): Promise<Array<string>> {
+    const supportedFields = ['slugline'];
+
+    if (
+        appConfig.archive_autocomplete
+        && supportedFields.includes(field)
+    ) {
+        return httpRequestJsonLocal({
+            method: 'GET',
+            path: `/archive_autocomplete?field=${field}&language=${language}`,
+        }).then((res: IRestApiResponse<{value: string}>) => {
+            return res._items.map(({value}) => value);
+        });
+    } else {
+        return Promise.resolve([]);
+    }
+}
 
 /**
  * @ngdoc directive
@@ -193,9 +214,13 @@ class Editor3Directive {
 
         const pathValue = this.pathToValue.split(FIELD_KEY_SEPARATOR)[1];
 
-        ng.get('preferencesService')
-            .get()
-            .then((userPreferences) => {
+        Promise.all([
+            ng.get('preferencesService').get(),
+            getAutocompleteSuggestions(this.pathToValue, this.language),
+        ])
+            .then((res) => {
+                const [userPreferences, autocompleteSuggestions] = res;
+
                 // defaults
                 this.language = this.language || 'en';
                 this.readOnly = this.readOnly || false;
@@ -210,6 +235,7 @@ class Editor3Directive {
                 this.$rootScope = $rootScope;
                 this.$scope = $scope;
                 this.svc = {};
+                this.limit = this.limit || null;
                 this.limitBehavior =
                     userPreferences[CHARACTER_LIMIT_UI_PREF]?.[
                         pathValue || this.pathToValue
@@ -229,6 +255,7 @@ class Editor3Directive {
                                     scrollContainer={this.scrollContainer}
                                     singleLine={this.singleLine}
                                     cleanPastedHtml={this.cleanPastedHtml}
+                                    autocompleteSuggestions={autocompleteSuggestions}
                                 />
                             </EditorStore.Provider>
                         </Provider>,
@@ -300,6 +327,17 @@ class Editor3Directive {
                 $scope.$watch('vm.readOnly', (val, old) => {
                     if (val !== old) {
                         store.dispatch(setReadOnly(val));
+                    }
+                });
+
+                // bind the directive limit attribute bi-directionally between Angular and Redux.
+                $scope.$watch('vm.limit', (val, old) => {
+                    // tslint:disable-next-line:triple-equals
+                    if (val != old) { // keep `!=` cause `!==` will trigger with null !== undefined
+                        store.dispatch(changeLimitConfig({
+                            chars: val,
+                            ui: this.limitBehavior,
+                        }));
                     }
                 });
 

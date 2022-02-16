@@ -37,6 +37,8 @@ import {RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {preventInputWhenLimitIsPassed} from '../helpers/characters-limit';
 import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlights';
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
+import {Editor3Autocomplete} from './Editor3Autocomplete';
+import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 
 const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
     'application/superdesk.item.picture',
@@ -59,6 +61,7 @@ const VALID_MEDIA_TYPES = [
 ];
 
 export const EDITOR_GLOBAL_REFS = 'editor3-refs';
+const editor3AutocompleteClassName = 'editor3-autocomplete';
 
 /**
  * Get valid media type from event dataTransfer types
@@ -127,6 +130,7 @@ interface IProps {
     cleanPastedHtml?: boolean;
     limit?: number;
     limitBehavior?: CharacterLimitUiBehavior;
+    autocompleteSuggestions?: Array<string>;
     onCreateAddSuggestion?(chars): void;
     onCreateDeleteSuggestion?(type): void;
     onPasteFromSuggestingMode?(): void;
@@ -141,6 +145,12 @@ interface IProps {
 
 interface IState {
     draggingInProgress: boolean;
+
+    /**
+     * Only content changes are tracked (addition/removal of chars, whitespace).
+     * Metadata changes(styles, entities) are not tracked.
+     */
+    contentChangesAfterLastFocus: number;
 }
 
 /**
@@ -160,7 +170,11 @@ export class Editor3Component extends React.Component<IProps, IState> {
     static defaultProps: any;
 
     editorKey: any;
-    editorNode: any;
+
+    // Use an object otherwise a second render will be required after mounting
+    // to use this reference in a render property to a component.
+    editorNode: React.MutableRefObject<HTMLDivElement>;
+
     div: any;
     editor: any;
     spellcheckCancelFn: () => void;
@@ -171,7 +185,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
         super(props);
 
         this.editorKey = null;
-        this.editorNode = undefined;
+        this.editorNode = React.createRef();
 
         this.focus = this.focus.bind(this);
         this.onDragOver = this.onDragOver.bind(this);
@@ -190,6 +204,7 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
         this.state = {
             draggingInProgress: false,
+            contentChangesAfterLastFocus: 0,
         };
     }
 
@@ -263,6 +278,16 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
     keyBindingFn(e) {
         const {key, shiftKey} = e;
+
+        if (key === 'ArrowDown' || key === 'ArrowUp') {
+            const autocompleteEl = document.querySelector(`.${editor3AutocompleteClassName}`) as HTMLElement | null;
+
+            if (autocompleteEl != null) {
+                autocompleteEl.focus();
+                e.preventDefault();
+                return '';
+            }
+        }
 
         if (key === 'Enter' && shiftKey) {
             return 'soft-newline';
@@ -374,6 +399,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
             newState = EditorState.redo(editorState);
             break;
         case 'backspace': {
+            this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
+
             if (suggestingMode) {
                 // prevent to change other user suggestion that is before current position
                 if (!Suggestions.allowEditSuggestionOnLeft(editorState, author)) {
@@ -420,6 +447,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
      * This logic stops that behavior.
      */
     handleBeforeInput(chars: string, editorState: EditorState) {
+        this.setState({contentChangesAfterLastFocus: this.state.contentChangesAfterLastFocus + 1});
+
         const author = getCurrentAuthor();
         const {onChange, suggestingMode, onCreateAddSuggestion} = this.props;
 
@@ -490,7 +519,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
         this.editorKey = this.editor === null ? null : this.editor._editorKey;
 
         // eslint-disable-next-line react/no-find-dom-node
-        this.editorNode = this.editor === null ? undefined : ReactDOM.findDOMNode(this.editor);
+        this.editorNode.current = this.editor === null ?
+            undefined :
+            ReactDOM.findDOMNode(this.editor) as HTMLDivElement;
     }
 
     componentWillUnmount() {
@@ -570,6 +601,9 @@ export class Editor3Component extends React.Component<IProps, IState> {
                 // "dragend" event won't fire if an item is dropped inside draft-js field
                 // it's handled there separately
                 onDragEnd={this.onDragEnd}
+                onFocus={() => {
+                    this.setState({contentChangesAfterLastFocus: 0});
+                }}
             >
                 {
                     showToolbar && this.state.draggingInProgress !== true
@@ -607,8 +641,8 @@ export class Editor3Component extends React.Component<IProps, IState> {
 
                             const selectionRect = getVisibleSelectionRect(window);
 
-                            if (this.editorNode != null && selectionRect != null) {
-                                this.editorNode.dataset.editorSelectionRect = JSON.stringify(selectionRect);
+                            if (this.editorNode?.current != null && selectionRect != null) {
+                                this.editorNode.current.dataset.editorSelectionRect = JSON.stringify(selectionRect);
                             }
 
                             onChange(editorStateNext);
@@ -619,7 +653,31 @@ export class Editor3Component extends React.Component<IProps, IState> {
                         ref={(editor) => this.handleRefs(editor)}
                         spellCheck={appConfig.editor3.browserSpellCheck}
                         stripPastedStyles={cleanPastedHtml}
+                        onBlur={(event: any) => {
+                            if (
+                                event?.relatedTarget == null
+                                || querySelectorParent(
+                                    event.relatedTarget,
+                                    `.${editor3AutocompleteClassName}`,
+                                    {self: true},
+                                ) == null
+                            ) { // check whether focus went to autocomplete or to an item inside it
+                                this.setState({contentChangesAfterLastFocus: 0});
+                            }
+                        }}
                     />
+
+                    {
+                        this.state.contentChangesAfterLastFocus > 0 && (
+                            <Editor3Autocomplete
+                                editorState={editorState}
+                                editorNode={this.editorNode.current}
+                                dispatch={this.props.dispatch}
+                                autocompleteSuggestions={this.props.autocompleteSuggestions}
+                                className={editor3AutocompleteClassName}
+                            />
+                        )
+                    }
 
                     {this.props.loading && <div className="loading-overlay active" />}
                 </div>

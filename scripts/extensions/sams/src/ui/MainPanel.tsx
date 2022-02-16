@@ -4,6 +4,9 @@ export interface IMainPanelProps {
     children?: React.ReactNode;
     className?: string;
     onScroll?(event: React.UIEvent<HTMLDivElement>): void;
+
+    // ... other props
+    style?: React.CSSProperties;
 }
 
 export class MainPanel extends React.PureComponent<IMainPanelProps> {
@@ -13,7 +16,7 @@ export class MainPanel extends React.PureComponent<IMainPanelProps> {
             `sd-main-content-grid__content ${this.props.className}`;
 
         return (
-            <div className={className} onScroll={this.props.onScroll}>
+            <div className={className} onScroll={this.props.onScroll} style={this.props.style}>
                 {this.props.children}
             </div>
         );

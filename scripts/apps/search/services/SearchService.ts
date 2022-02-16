@@ -3,6 +3,7 @@ import {
     getExcludeFacets,
     CORE_PROJECTED_FIELDS,
     DEFAULT_LIST_CONFIG,
+    UI_PROJECTED_FIELD_MAPPINGS,
 } from 'apps/search/constants';
 
 import _ from 'lodash';
@@ -83,6 +84,27 @@ export function generateTrackByIdentifier(
     item: IArticle | Pick<IArticle, '_id' | 'state' | '_current_version'>,
 ): string {
     return getTrackByIdentifier(item._id, item.state !== ITEM_STATE.INGESTED ? item._current_version : null);
+}
+
+/**
+ * Determine if refresh button needs to be shown.
+ * It is shown if items are added/removed or order has changed.
+ */
+export function showRefresh(currentItems: Array<IArticle> | null, newItems: Array<IArticle>) {
+    if (newItems.length !== currentItems?.length) {
+        return true;
+    }
+
+    for (let i = 0; i < newItems.length; i++) {
+        const _new = newItems[i];
+        const _current = currentItems[i];
+
+        if (_new._id !== _current?._id) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 /**
@@ -693,32 +715,6 @@ export function SearchService($location, session, multi,
         });
     }
 
-    /*
-     * To determine if refresh button needs to be shown, i-e:
-     * when any difference found in scopeItems and recently fetched newItems
-     *
-     * @param {Object} data - {newItems, scopeItems, scrollTop, isItemPreviewing}
-     */
-    this.canShowRefresh = function(data) {
-        var _showRefresh, diff = [];
-
-        if (data.scopeItems) {
-            // determine if items are different (in terms of added or removed) in scope items from
-            // fetched new items or vice versa.
-            diff = compareWith(data.scopeItems, data.newItems);
-            if (_.isEmpty(diff)) {
-                diff = compareWith(data.newItems, data.scopeItems);
-            }
-        }
-
-        if (!_.isEmpty(diff)) {
-            // if different, then determine _showReferesh, such that, if item is previewing or scroll in not on top.
-            _showRefresh = data.isItemPreviewing || !!data.scrollTop;
-        }
-
-        return _showRefresh;
-    };
-
     /**
      * @ngdoc method
      * @name search#mergeHighlightFields
@@ -889,18 +885,6 @@ export function SearchService($location, session, multi,
      * @description Returns the list of fields to be used in projections
      */
     this.getProjectedFields = function() {
-        const UI_PROJECTED_FIELD_MAPPINGS = {
-            wordcount: 'word_count',
-            takekey: 'anpa_take_key',
-            update: 'correction_sequence',
-            provider: 'ingest_provider',
-            category: 'anpa_category',
-            versioncreator: 'version_creator',
-            markedDesks: 'marked_desks',
-            queueError: 'error_message',
-            used: ['used', 'used_updated', 'used_count'],
-        };
-
         const uiConfig = appConfig.list || DEFAULT_LIST_CONFIG;
 
         const uiFields = [

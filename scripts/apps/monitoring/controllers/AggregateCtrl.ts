@@ -263,9 +263,9 @@ export function AggregateCtrl($scope, desks, workspaces, preferencesService, sto
             (settings.groups.length > 0 ? settings.groups : getDefaultGroups(settings))
                 .filter((card) => {
                     if (card.type === 'stage') { // filter out deleted stages
-                        var stage = self.stageLookup[card._id];
-
-                        return stage != null;
+                        return self.stageLookup[card._id] != null;
+                    } else if (card.type === 'search') { // filter out deleted searches
+                        return self.searchLookup[card._id] != null;
                     } else {
                         return true;
                     }

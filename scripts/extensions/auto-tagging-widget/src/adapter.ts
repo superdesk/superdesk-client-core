@@ -7,6 +7,7 @@ export interface ITagBase {
     description?: string;
     qcode: string;
     parent?: string;
+    scheme?: string;
     source?: string;
     altids: {[key: string]: string};
     aliases?: Array<string>;
@@ -15,7 +16,6 @@ export interface ITagBase {
 
 export interface ISubjectTag extends ITagBase {
     parent?: string;
-    scheme: string;
 }
 
 export interface IServerResponse {
@@ -57,7 +57,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
             parent,
             group: {
                 kind: 'scheme',
-                value: item.scheme,
+                value: item.scheme || '',
             },
         };
 
@@ -88,7 +88,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
 
     others.forEach(({group, items}) => {
         items.forEach((item) => {
-            const {name, description, qcode, source, altids, aliases, original_source} = item;
+            const {name, description, qcode, source, altids, aliases, original_source, scheme} = item;
 
             const tag: ITagUi = {
                 name,
@@ -98,6 +98,7 @@ export function toClientFormat(response: IServerResponse): OrderedMap<string, IT
                 altids,
                 aliases,
                 original_source,
+                scheme,
                 group: {
                     kind: 'visual',
                     value: group,
@@ -147,7 +148,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 result[groupValue] = [];
             }
 
-            const {name, description, qcode, source, altids, aliases, original_source} = item;
+            const {name, description, qcode, source, altids, aliases, original_source, scheme} = item;
 
             const tagBase: ITagBase = {
                 name,
@@ -157,6 +158,7 @@ export function toServerFormat(items: OrderedMap<string, ITagUi>, superdesk: ISu
                 altids,
                 aliases,
                 original_source,
+                scheme,
             };
 
             result[groupValue]!.push(tagBase);

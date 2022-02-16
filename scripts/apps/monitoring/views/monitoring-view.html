@@ -3,7 +3,7 @@
         <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'monitoring'" translate>Monitoring</h2>
         <h2 id="monitoring-heading" class="a11y-only" ng-if="type === 'spike'" translate>Spiked items</h2>
         <div class="preview-layout monitoring-preview-layout" sd-media-query min-width="700" element-class="narrowList" data-test-id="monitoring-view">
-            <div class="content-list monitoring__content" ng-if="!aggregate.loading">
+            <div class="content-list monitoring__content" ng-class="{'sd-loader': aggregate.loading}">
                 <div class="monitoring__toolbar-container" ng-if="hideMonitoringToolbar1 !== true || hideMonitoringToolbar2 !== true">
                     <div class="subnav" ng-if="hideMonitoringToolbar1 !== true">
                         <div class="flat-searchbar monitoring-backlink" ng-if="monitoring.singleGroup">
@@ -254,7 +254,7 @@
                     </div>
                 </div>
 
-                <div class="monitoring__main-content">
+                <div class="monitoring__main-content" ng-if="!aggregate.loading">
                     <div class="sd-column-box--3">
                         <div ng-style="{{contentStyle}}" class="sd-column-box__main-column">
                             <!-- list view -->

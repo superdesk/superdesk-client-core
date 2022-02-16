@@ -1,4 +1,4 @@
-import {gettext} from 'core/utils';
+import {gettext, gettextPlural} from 'core/utils';
 
 /**
  * @ngdoc service
