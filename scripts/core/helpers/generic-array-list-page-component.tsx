@@ -3,7 +3,7 @@ import {
     ICrudManagerFilters,
     ICrudManagerMethods,
     ISortOption,
-    ICrudManagerResponse,
+    ICrudManagerData,
     IPropsGenericArrayListPage,
 } from 'superdesk-api';
 import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
@@ -78,7 +78,7 @@ export class GenericArrayListPageComponent<T>
         page: number,
         sort: ISortOption,
         filterValues?: ICrudManagerFilters,
-    ): Promise<ICrudManagerResponse<T>> {
+    ): Promise<ICrudManagerData<T>> {
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
@@ -96,15 +96,15 @@ export class GenericArrayListPageComponent<T>
         return Promise.resolve();
     }
 
-    refresh(): Promise<ICrudManagerResponse<T>> {
+    refresh(): Promise<ICrudManagerData<T>> {
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
-    sort(sortOption: ISortOption): Promise<ICrudManagerResponse<T>> {
+    sort(sortOption: ISortOption): Promise<ICrudManagerData<T>> {
         return Promise.resolve(getItemsWithMeta(this.props.value));
     }
 
-    removeFilter(fieldName: string): Promise<ICrudManagerResponse<T>> {
+    removeFilter(fieldName: string): Promise<ICrudManagerData<T>> {
         let nextFilters = {...this.state.activeFilters};
 
         delete nextFilters[fieldName];

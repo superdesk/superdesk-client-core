@@ -956,7 +956,7 @@ declare module 'superdesk-api' {
         direction: 'ascending' | 'descending';
     }
 
-    export interface ICrudManagerResponse<T> {
+    export interface ICrudManagerData<T> {
         _items: Array<T>;
         _meta: {
             max_results: number;
@@ -965,7 +965,7 @@ declare module 'superdesk-api' {
         };
     }
 
-    export interface ICrudManagerState<Entity> extends ICrudManagerResponse<Entity> {
+    export interface ICrudManagerState<Entity> extends ICrudManagerData<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
@@ -975,14 +975,14 @@ declare module 'superdesk-api' {
             page: number,
             sort: ISortOption,
             filterValues?: ICrudManagerFilters,
-        ): Promise<ICrudManagerResponse<Entity>>;
+        ): Promise<ICrudManagerData<Entity>>;
         update(item: Entity): Promise<Entity>;
         create(item: Entity): Promise<Entity>;
         delete(item: Entity): Promise<void>;
-        refresh(): Promise<ICrudManagerResponse<Entity>>;
-        sort(nextSortOption: ISortOption): Promise<ICrudManagerResponse<Entity>>;
-        removeFilter(fieldName: string): Promise<ICrudManagerResponse<Entity>>;
-        goToPage(nextPage: number): Promise<ICrudManagerResponse<Entity>>;
+        refresh(): Promise<ICrudManagerData<Entity>>;
+        sort(nextSortOption: ISortOption): Promise<ICrudManagerData<Entity>>;
+        removeFilter(fieldName: string): Promise<ICrudManagerData<Entity>>;
+        goToPage(nextPage: number): Promise<ICrudManagerData<Entity>>;
     }
 
 
