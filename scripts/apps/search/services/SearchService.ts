@@ -668,13 +668,16 @@ export function SearchService($location, session, multi,
         }
 
         /**
-         * Filter out items in personal space except for current user
+         * Filter out personal items that don't belong to current user.
          */
         this.filter({
-            or: [
-                {exists: {field: 'task.desk'}},
-                {term: {'task.user': session.identity._id}},
-            ],
+            not: {
+                and: [ // matches personal items that belong to other users
+                    {not: {exists: {field: 'task.desk'}}},
+                    {exists: {field: 'task.user'}},
+                    {not: {term: {'task.user': session.identity._id}}},
+                ],
+            },
         });
 
         // this is needed for archived collection
