@@ -1,13 +1,21 @@
 /* eslint-disable newline-per-chained-call */
 
-import {element, by, ElementFinder, browser} from 'protractor';
+import {el} from '@superdesk/end-to-end-testing-helpers';
+import {element, by, ElementFinder, browser, ExpectedConditions as EC} from 'protractor';
 import {nav} from './utils';
+
+const clickButton = (label) => {
+    const button = element(by.buttonText(label));
+
+    browser.wait(EC.elementToBeClickable(button), 1000);
+    button.click();
+};
 
 class ContentProfiles {
     list: any;
     openContentProfileSettings: () => void;
     add: () => void;
-    addNew: (name: any) => void;
+    addNew: (name: string, type: 'text' | 'picture') => void;
     getNameElement: () => ElementFinder;
     save: () => void;
     getRow: (name: any) => any;
@@ -19,6 +27,8 @@ class ContentProfiles {
     setRequired: (fieldName: any) => void;
     cancel: () => void;
     openAddFieldDropdown: () => void;
+    editContentFields: () => void;
+    editHeaderFields: () => void;
 
     constructor() {
         /** List of content profiles on settings page **/
@@ -38,9 +48,14 @@ class ContentProfiles {
             element(by.id('add-new-content-profile')).click();
         };
 
-        this.addNew = (name) => {
+        this.addNew = (name, type) => {
+            const modal = element(by.className('modal__body'));
+            const typeIcon = modal.element(by.className('icon-' + type));
+
             this.add();
             this.getNameElement().sendKeys(name);
+            browser.wait(EC.elementToBeClickable(typeIcon), 1000);
+            typeIcon.click();
             this.save();
         };
 
@@ -129,12 +144,18 @@ class ContentProfiles {
          * @param {string} name of field
          **/
         this.setRequired = function(fieldName) {
-            const requiredCheckbox = element(by.cssContainingText('.title', fieldName))
-                .element(by.xpath('..'))
-                .element(by.xpath('..'))
-                .element(by.model('model.schema[id].required'));
+            const field = element(by.cssContainingText('.sd-list-item', fieldName));
+            const saveButton = el(['item-view-edit--save']);
+            const requiredLabel = element(by.cssContainingText('.form__row', 'Required')).element(by.tagName('label'));
 
-            requiredCheckbox.click();
+            browser.actions().mouseMove(field).perform();
+            field.click();
+
+            browser.wait(EC.elementToBeClickable(requiredLabel), 1000);
+            requiredLabel.click();
+
+            browser.wait(EC.elementToBeClickable(saveButton), 1000);
+            saveButton.click();
         };
 
         /**
@@ -148,10 +169,18 @@ class ContentProfiles {
          * Open first add field dropdown
          */
         this.openAddFieldDropdown = () => {
-            element.all(by.className('dropdown--add-more'))
-                .filter((el) => el.isDisplayed())
+            element.all(by.className('icon-plus-large'))
+                .filter((elem) => elem.isDisplayed())
                 .first()
-                .element(by.tagName('button')).click();
+                .click();
+        };
+
+        this.editContentFields = () => {
+            clickButton('Content fields');
+        };
+
+        this.editHeaderFields = () => {
+            clickButton('Header fields');
         };
     }
 }

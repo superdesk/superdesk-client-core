@@ -21,6 +21,7 @@ describe('templates', () => {
         templates.openTemplatesSettings();
         templates.add();
         templates.getTemplateNameElement().sendKeys('New Template');
+        templates.selectProfile('Text');
         templates.setTemplateType('string:create');
         templates.selectDesk('Politic Desk');
         templates.selectDesk('Sports Desk');
@@ -60,6 +61,7 @@ describe('templates', () => {
         templates.openTemplatesSettings();
         templates.add();
         templates.getTemplateNameElement().sendKeys('Second New Template');
+        templates.selectProfile('Text');
         templates.setTemplateType('string:create');
         templates.selectDesk('Politic Desk');
         templates.selectDesk('Sports Desk');

@@ -35,8 +35,8 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 selectDesk(null);
             });
 
-            content.getTypes('text').then(() => {
-                $scope.content_types = content.types;
+            content.getTypes('text').then((contentTypes) => {
+                $scope.content_types = contentTypes;
             });
 
             /*

@@ -12,10 +12,9 @@ describe('Content profiles', () => {
     it('creates corresponding template', () => {
         // create a new content profile
         contentProfiles.openContentProfileSettings();
-        contentProfiles.addNew('Simple');
+        contentProfiles.addNew('Simple', 'text');
         contentProfiles.toggleEnable();
-        element(by.buttonText('Content fields')).click();
-        contentProfiles.disableField('Abstract');
+        contentProfiles.editContentFields();
         contentProfiles.update();
         templates.openTemplatesSettings();
         expect(templates.getListCount()).toBeGreaterThan(2);
@@ -38,7 +37,6 @@ describe('Content profiles', () => {
         templates.openTemplatesSettings();
         expect(templates.getListCount()).toBeGreaterThan(2);
         templates.edit('Simple');
-        expect(authoring.getAbstractFieldCount()).toEqual(1);
         expect(templates.getContentProfile()).toEqual('');
         templates.cancel();
     });
@@ -46,11 +44,8 @@ describe('Content profiles', () => {
     it('displays defined fields in authoring', () => {
         // create a new content profile
         contentProfiles.openContentProfileSettings();
-        contentProfiles.addNew('Simple');
+        contentProfiles.addNew('Simple', 'text');
         contentProfiles.toggleEnable();
-        element(by.buttonText('Content fields')).click();
-        contentProfiles.disableField('Abstract');
-        element(by.buttonText('Header fields')).click();
         contentProfiles.setRequired('Ed. Note');
         contentProfiles.update();
         templates.openTemplatesSettings();
@@ -90,9 +85,9 @@ describe('Content profiles', () => {
         expect(metadata.items().count()).toBe(1);
 
         contentProfiles.openContentProfileSettings();
-        contentProfiles.addNew('Simple');
+        contentProfiles.addNew('Simple', 'text');
 
-        element(by.buttonText('Content fields')).click();
+        contentProfiles.editContentFields();
 
         const btns = element.all(by.partialButtonText(FIELD_LABEL));
 

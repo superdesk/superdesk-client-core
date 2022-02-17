@@ -38,6 +38,7 @@ class Templates {
     getRow: (name: any) => any;
     getValidationElement: any;
     getListCount: () => any;
+    selectProfile: (name: string) => void;
 
     constructor() {
         /** List of templates on template settings list **/
@@ -299,6 +300,10 @@ class Templates {
          **/
         this.getListCount = function() {
             return this.list.count();
+        };
+
+        this.selectProfile = (name) => {
+            element(by.id('template-profile')).element(by.cssContainingText('option', name)).click();
         };
     }
 }

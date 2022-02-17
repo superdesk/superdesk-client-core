@@ -207,7 +207,7 @@ describe('desks', () => {
         contentProfiles.openContentProfileSettings();
         contentProfiles.edit('testing');
         contentProfiles.setRequired('Subject');
-        element(by.buttonText('Content fields')).click();
+        contentProfiles.editContentFields();
         contentProfiles.setRequired('Body HTML');
         contentProfiles.update();
 
