@@ -537,6 +537,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                             ...item,
                             _id: item._id,
                             id: item._id,
+                            section: this.state.selectedSection,
                         };
 
                         this.setState(
