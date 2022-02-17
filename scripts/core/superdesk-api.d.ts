@@ -882,20 +882,25 @@ declare module 'superdesk-api' {
 
     // GENERIC FORM
 
-    export interface IPropsGenericForm<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+    export interface IPropsGenericForm<T> {
         formConfig: IFormGroup;
         defaultSortOption: ISortOption;
-        defaultFilters?: Partial<TBase>;
+        defaultFilters?: Partial<T>;
         renderRow(key: string, item: T, page: IGenericListPageComponent<T>): JSX.Element;
+        getId(item: T): string;
 
         // Allows initializing a new item with some fields already filled.
-        getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<TBase>;
+        getNewItemTemplate?(page: IGenericListPageComponent<T>): Partial<T>;
 
         refreshOnEvents?: Array<string>;
 
         fieldForSearch?: IFormField; // must be present in formConfig
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
+        disallowSorting?: true;
+        disallowPagination?: true;
+
+        labelForItemSaveButton?: string;
     }
 
     export enum FormFieldType {
@@ -937,8 +942,10 @@ declare module 'superdesk-api' {
         form: Array<IFormField | IFormGroup>;
     }
 
-
-
+    export interface IPropsGenericArrayListPage<T> extends IPropsGenericForm<T> {
+        value: Array<T>;
+        onChange(value: Array<T>): void;
+    }
 
     // CRUD MANAGER
 
@@ -949,29 +956,37 @@ declare module 'superdesk-api' {
         direction: 'ascending' | 'descending';
     }
 
+    export interface ICrudManagerData<T> {
+        _items: Array<T>;
+        _meta: {
+            max_results: number;
+            page: number;
+            total: number;
+        };
+    }
 
-    export interface ICrudManagerState<Entity extends IBaseRestApiResponse> extends IRestApiResponse<Entity> {
+    export interface ICrudManagerState<Entity> extends ICrudManagerData<Entity> {
         activeFilters: ICrudManagerFilters;
         activeSortOption?: ISortOption;
     }
 
-    export interface ICrudManagerMethods<Entity extends IBaseRestApiResponse> {
+    export interface ICrudManagerMethods<Entity> {
         read(
             page: number,
             sort: ISortOption,
             filterValues?: ICrudManagerFilters,
-        ): Promise<IRestApiResponse<Entity>>;
+        ): Promise<ICrudManagerData<Entity>>;
         update(item: Entity): Promise<Entity>;
         create(item: Entity): Promise<Entity>;
         delete(item: Entity): Promise<void>;
-        refresh(): Promise<IRestApiResponse<Entity>>;
-        sort(nextSortOption: ISortOption): Promise<IRestApiResponse<Entity>>;
-        removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>>;
-        goToPage(nextPage: number): Promise<IRestApiResponse<Entity>>;
+        refresh(): Promise<ICrudManagerData<Entity>>;
+        sort(nextSortOption: ISortOption): Promise<ICrudManagerData<Entity>>;
+        removeFilter(fieldName: string): Promise<ICrudManagerData<Entity>>;
+        goToPage(nextPage: number): Promise<ICrudManagerData<Entity>>;
     }
 
 
-    export interface ICrudManager<Entity extends IBaseRestApiResponse> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
+    export interface ICrudManager<Entity> extends ICrudManagerState<Entity>, ICrudManagerMethods<Entity> {
         // allow exposing it as one interface for consumer components
     }
 
@@ -1072,7 +1087,7 @@ declare module 'superdesk-api' {
         flex?: boolean;
     }
 
-    export interface IGenericListPageComponent<T extends IBaseRestApiResponse, TBase = Omit<T, keyof IBaseRestApiResponse>> {
+    export interface IGenericListPageComponent<T> {
         openPreview(id: string): void;
         startEditing(id: string): void;
         closePreview(): void;
@@ -1081,7 +1096,7 @@ declare module 'superdesk-api' {
         openNewItemForm(): void;
         closeNewItemForm(): void;
         deleteItem(item: T): void;
-        getActiveFilters(): Partial<TBase>;
+        getActiveFilters(): Partial<T>;
         removeFilter(fieldName: string): void;
     }
 
@@ -1670,11 +1685,13 @@ declare module 'superdesk-api' {
             stringToNumber(value?: string, radix?: number): number | undefined;
             numberToString(value?: number): string | undefined;
             notNullOrUndefined<T>(x: null | undefined | T): x is T;
+            nameof<T>(name: keyof T): string;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
-            getGenericListPageComponent<T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup): React.ComponentType<IPropsGenericForm<T>>;
-            connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
+            getGenericHttpEntityListPageComponent<T extends IBaseRestApiResponse>(resource: string, formConfig: IFormGroup): React.ComponentType<IPropsGenericForm<T>>;
+            getGenericArrayListPageComponent<T>(): React.ComponentType<IPropsGenericArrayListPage<T>>;
+            connectCrudManagerHttp<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
                 WrappedComponent: React.ComponentType<Props & PropsToConnect>,
                 name: string,
                 endpoint: string,
@@ -2153,9 +2170,9 @@ declare module 'superdesk-api' {
         config: IConfig;
     }
 
-    export interface IPreviewComponentProps {
+    export interface IPreviewComponentProps<IValue> {
         item: IArticle;
-        value: any;
+        value: IValue;
     }
 
     // IConfig must be a plain object
@@ -2164,11 +2181,11 @@ declare module 'superdesk-api' {
         onChange(config: IConfig): void;
     }
 
-    export interface ICustomFieldType<IConfig> {
+    export interface ICustomFieldType<IValue, IConfig> {
         id: string;
         label: string;
-        editorComponent: React.ComponentType<IEditorComponentProps<IConfig>>;
-        previewComponent: React.ComponentType<IPreviewComponentProps>;
+        editorComponent: React.ComponentType<IEditorComponentProps<IValue, IConfig>>;
+        previewComponent: React.ComponentType<IPreviewComponentProps<IValue>>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
 

@@ -12,7 +12,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
         render() {
             const {gettext} = superdesk.localization;
             const {
-                getGenericListPageComponent,
+                getGenericHttpEntityListPageComponent,
                 ListItem,
                 ListItemColumn,
                 ListItemActionsMenu,
@@ -36,7 +36,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
             };
 
             const AnnotationsLibraryPageComponent =
-                getGenericListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
+                getGenericHttpEntityListPageComponent<IKnowledgeBaseItem>('concept_items', formConfig);
 
             const renderRow = (
                 key: string,
@@ -109,6 +109,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                             ? {}
                             : {language: superdesk.instance.config.default_language}
                     }
+                    getId={(item) => item._id}
                 />
             );
         }
