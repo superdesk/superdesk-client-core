@@ -156,6 +156,9 @@ describe('superdesk.apps.workspace.content', () => {
             }));
             var errorFn = spyOn(notify, 'error');
             var scope = $rootScope.$new();
+
+            scope.new = {type: 'text'};
+
             var ctrl = $controller('ContentProfilesController', {$scope: scope});
 
             ctrl.save();

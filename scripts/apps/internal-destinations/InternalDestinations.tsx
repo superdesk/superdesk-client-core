@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {getGenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {ListItemColumn, ListItemActionsMenu, ListItem} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
 import {IInternalDestination} from 'superdesk-interfaces/InternalDestination';
@@ -141,7 +141,7 @@ export class InternalDestinations extends React.Component {
         };
 
         const InternalDestinationsPageComponent =
-            getGenericListPageComponent<IInternalDestination, never>(
+            getGenericHttpEntityListPageComponent<IInternalDestination, never>(
                 'internal_destinations',
                 formConfig,
                 {field: 'name', direction: 'ascending'},
@@ -152,6 +152,8 @@ export class InternalDestinations extends React.Component {
                 ItemComponent={ItemComponent}
                 getFormConfig={() => formConfig}
                 fieldForSearch={getNameField()}
+                getId={(item) => item._id}
+                defaultSortOption={{field: 'name', direction: 'ascending'}}
             />
         );
     }

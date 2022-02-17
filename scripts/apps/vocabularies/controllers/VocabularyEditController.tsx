@@ -228,7 +228,7 @@ export function VocabularyEditController(
     $scope.setCustomFieldConfig = (config) => {
         $scope.vocabulary.custom_field_config = config;
         $scope.editForm.$setDirty();
-        $scope.$apply();
+        $scope.$applyAsync();
     };
 
     let placeholderElement = null;
