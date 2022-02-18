@@ -1042,6 +1042,7 @@ declare module 'superdesk-api' {
         disallowCreatingNewItem?: true;
         disallowFiltering?: true;
         disallowSorting?: true;
+        hideItemsCount?: true;
 
         /**
          * Dynamic schema is supported in order to display additional fields depending on values of current fields.

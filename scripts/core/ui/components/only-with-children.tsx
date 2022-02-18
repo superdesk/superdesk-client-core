@@ -19,10 +19,10 @@ type IProps = IWrapper | IDirectElement;
 function hasChildren(children) {
     if (Array.isArray(children)) {
         return children.some((child) => hasChildren(child));
-    } else if (children?.type?.name === 'OnlyWithChildren' && children?.props?.children != null) {
+    } else if (children?.type?.name === 'OnlyWithChildren' && children?.props?.hasOwnProperty('children')) {
         return hasChildren(children.props.children);
     } else {
-        return children != null;
+        return children != null && children !== false;
     }
 }
 

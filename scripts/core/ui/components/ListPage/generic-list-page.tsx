@@ -473,14 +473,16 @@ export class GenericListPageComponent<T, P>
                         )
                     }
 
-                    <div style={{display: 'flex', marginLeft: 'auto', gap: '10px', paddingInline: 20}}>
-                        {this.props.crudManager._meta.total == null ? null : (
-                            <span style={{display: 'flex', alignItems: 'center'}}>
-                                <span>{gettext('Total:')}</span>
-                                &nbsp;
-                                <span><span className="badge">{this.props.crudManager._meta.total}</span></span>
-                            </span>
-                        )}
+                    <OnlyWithChildren style={{display: 'flex', marginLeft: 'auto', gap: '10px', paddingInline: 20}}>
+                        {
+                            (this.props.hideItemsCount !== true && this.props.crudManager._meta.total != null) && (
+                                <span style={{display: 'flex', alignItems: 'center'}}>
+                                    <span>{gettext('Total:')}</span>
+                                    &nbsp;
+                                    <span><span className="badge">{this.props.crudManager._meta.total}</span></span>
+                                </span>
+                            )
+                        }
 
                         {
                             this.props.disallowSorting !== true && (
@@ -492,7 +494,7 @@ export class GenericListPageComponent<T, P>
                                 />
                             )
                         }
-                    </div>
+                    </OnlyWithChildren>
 
                     {
                         this.props.disallowCreatingNewItem === true ? null : (
