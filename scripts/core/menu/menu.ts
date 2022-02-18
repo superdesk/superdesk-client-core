@@ -46,6 +46,22 @@ angular.module('superdesk.core.menu', [
 
             this.flags = superdeskFlags.flags;
 
+            /**
+             * `$scope.popup` is true when an article is opened in full screen in new window
+             * `hideMonitoring` is true when authoring view is switched to full screen in the same window
+             */
+            function shouldRenderMonitoring() {
+                return $scope.popup !== true && superdeskFlags.flags.hideMonitoring !== true;
+            }
+
+            $scope.renderMonitoring = shouldRenderMonitoring();
+
+            $scope.$watch(shouldRenderMonitoring, (renderMonitoring) => {
+                if ($scope.renderMonitoring !== renderMonitoring) {
+                    $scope.renderMonitoring = renderMonitoring;
+                }
+            });
+
             $scope.$watch(function currentRoute() {
                 return $route.current;
             }, (route) => {

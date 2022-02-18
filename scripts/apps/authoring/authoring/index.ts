@@ -26,6 +26,7 @@ import {AuthoringWorkspaceService} from './services';
 import {AuthoringMediaActions} from './authoring-media-actions';
 import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete';
 import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
+import {HeaderComponentField} from './header-component-field';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
@@ -142,6 +143,13 @@ angular.module('superdesk.apps.authoring', [
         reactToAngular1(
             AuthoringCustomField,
             ['item', 'field', 'editable', 'onChange', 'template'],
+        ),
+    )
+
+    .component('sdHeaderComponentField',
+        reactToAngular1(
+            HeaderComponentField,
+            ['item', 'component'],
         ),
     )
 
