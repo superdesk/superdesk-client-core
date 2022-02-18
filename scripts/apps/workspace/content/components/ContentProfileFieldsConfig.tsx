@@ -555,7 +555,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                             </div>
                         )}
                         getId={(item) => item.id}
-                        hiddenFields={[nameof<IContentProfileField>('id')]}
+                        hiddenFields={[nameof<IContentProfileField>('id'), nameof<IContentProfileField>('section')]}
                         newItemIndex={this.state.insertNewItemAtIndex}
                     />
                 </div>
