@@ -2148,7 +2148,6 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
-        template?: ITemplate;
     }
 
     export interface IPreviewComponentProps {
@@ -2169,6 +2168,9 @@ declare module 'superdesk-api' {
         previewComponent: React.ComponentType<IPreviewComponentProps>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IConfig>>;
+
+        // may intercept template creation and return modified value
+        onTemplateCreate?(value: any, config: IConfig): any;
     }
 
 

@@ -516,7 +516,7 @@
             </div>
 
             <!-- custom fields from extensions API -->
-            <div class="authoring-header__item"
+            <div class="authoring-header__item authoring-header__item-start"
                 ng-repeat="field in fields track by field._id"
                 ng-if="field.custom_field_type != null && editor[field._id].section === 'header'"
                 sd-width="{{ editor[field._id].sdWidth || 'full' }}"

@@ -5,9 +5,10 @@ import {GET_LABEL_MAP, getLabelForStage} from '../../workspace/content/constants
 import {isPublished} from 'apps/archive/utils';
 import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/AuthoringWorkspaceService';
 import {DESK_OUTPUT} from 'apps/desks/constants';
-import {appConfig, extensions} from 'appConfig';
+import {appConfig} from 'appConfig';
 import {IMonitoringFilter, IRestApiResponse, IArticle} from 'superdesk-api';
 import {getExtensionSections} from '../services/CardsService';
+import {showRefresh} from 'apps/search/services/SearchService';
 
 function translateCustomSorts(customSorts: GroupSortOptions) {
     const translated = {};
@@ -518,21 +519,6 @@ export function MonitoringGroup(
                 return items;
             }
 
-            // Determine if item is previewing for its respective view type.
-            function isItemPreviewing() {
-                if (scope.group.type === 'spike') {
-                    return monitoring.previewItem &&
-                        monitoring.previewItem.task.desk === scope.group._id;
-                } else if (scope.group.type === 'highlights') {
-                    return monitoring.previewItem &&
-                        _.includes(monitoring.previewItem.highlights, monitoring.queryParam.highlight);
-                } else if (scope.group.type === 'search') {
-                    return !!monitoring.previewItem;
-                }
-
-                return monitoring.previewItem && monitoring.previewItem.task.stage === scope.group._id;
-            }
-
             function queryItems(event?, data?, params?) {
                 var originalQuery;
 
@@ -627,16 +613,10 @@ export function MonitoringGroup(
                         }
 
                         if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
-                            var itemPreviewing = isItemPreviewing();
-
-                            var _data = {
-                                newItems: items,
-                                scopeItems: scopeItemsSaved,
-                                scrollTop: containerElem.scrollTop(),
-                                isItemPreviewing: itemPreviewing,
-                            };
-
-                            monitoring.showRefresh = scope.showRefresh = search.canShowRefresh(_data);
+                            monitoring.showRefresh = scope.showRefresh = showRefresh(
+                                (scopeItemsSaved?._items ?? []),
+                                items._items,
+                            );
                         }
 
                         if (!scope.showRefresh || data && data.force) {
@@ -651,6 +631,9 @@ export function MonitoringGroup(
                             // update scope items only with the matching fetched items
                             scope.items = search.updateItems(items, scopeItemsSaved);
                         }
+                    }).finally(() => {
+                        // reset page size to default
+                        criteria.source.size = PAGE_SIZE;
                     });
             }
 
@@ -695,7 +678,7 @@ export function MonitoringGroup(
                 })()
                     .then((items) => {
                         scope.$applyAsync(() => {
-                            if (scope.total !== items._meta.total) {
+                            if (!scope.showRefresh && scope.total !== items._meta.total) {
                                 scope.total = items._meta.total;
                             }
                             let onlyHighlighted = scope.group.type === 'highlights'

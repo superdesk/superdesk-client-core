@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
-import {ISearchOptions} from '../services/SearchService';
+import {ISearchOptions, showRefresh} from '../services/SearchService';
 import {IPackagesService} from 'types/Services/Packages';
 
 SearchResults.$inject = [
@@ -246,7 +246,7 @@ export function SearchResults(
                             isItemPreviewing: !!scope.selected.preview,
                         };
 
-                        scope.showRefresh = search.canShowRefresh(_data);
+                        scope.showRefresh = showRefresh((scope.items?._items ?? []), items._items);
                     }
 
                     if (!scope.showRefresh || data && data.force) {
