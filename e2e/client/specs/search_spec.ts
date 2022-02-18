@@ -246,6 +246,7 @@ describe('search', () => {
         expect(authoring.getBodyInnerHtml()).toContain('sderror sdhilite');
         authoring.save();
         authoring.close();
+
         // now test 'ctrl+0' shortcut that triggers story search dialog box
         browser.actions().sendKeys(protractor.Key.chord(protractor.Key.CONTROL, '0')).perform();
         browser.sleep(200);
@@ -253,10 +254,11 @@ describe('search', () => {
 
         expect(storyNameEl.isPresent()).toBe(true);
         storyNameEl.click();
-        browser.actions().sendKeys('item1-in-archived').perform();
+        browser.actions().sendKeys('item4').perform();
         browser.actions().sendKeys(protractor.Key.ENTER).perform();
         browser.sleep(200);
-        expect(authoring.getHeaderSluglineText()).toBe('item1 slugline');
+
+        expect(authoring.getHeaderSluglineText()).toBe('item4 slugline');
         authoring.close();
     });
 
