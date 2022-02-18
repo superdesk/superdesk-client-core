@@ -48,7 +48,7 @@ export function validateMediaFieldsThrows(validator, metadata, schema, getLabelF
         // eslint-disable-next-line no-useless-escape
         const regex = new RegExp('^\<*br\/*\>*$', 'i');
 
-        if (!value || value.match(regex)) {
+        if (!Array.isArray(value) && (!value || value.match(regex))) {
             raiseError(key);
         }
     });
@@ -102,7 +102,6 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
     $scope.toggleShowMetadata = (value) => {
         $scope.showMetadata = value;
     };
-
     if ($scope.data.renditions) {
         $scope.data.renditions.forEach((rendition) => {
             const original = $scope.data.item.renditions.original;
@@ -622,4 +621,10 @@ export function ChangeImageController($scope, notify, _, api, $rootScope, $q, co
             $scope.saveCrops(); // save it as defaults
         }
     }
+
+    $rootScope.$on('point-of-interest--updated', (e, onChange) => {
+        $scope.$applyAsync(() => {
+            $scope.crops.isDirty = onChange;
+        });
+    });
 }

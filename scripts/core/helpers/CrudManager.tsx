@@ -1,16 +1,11 @@
-/* eslint-disable react/display-name */
 import {appConfig} from 'appConfig';
 import ng from 'core/services/ng';
 import {generate} from 'json-merge-patch';
 import {isObject, keyBy, partition} from 'lodash';
-import React from 'react';
 import {
     IBaseRestApiResponse,
-    ICrudManagerState,
-    ICrudManagerMethods,
     ISortOption,
     ICrudManagerFilters,
-    IRestApiResponse,
     IDataApi,
     IQueryElasticParameters,
     IArticleQueryResult,
@@ -20,7 +15,6 @@ import {
 } from 'superdesk-api';
 import {DataProvider} from './data-provider';
 import {httpRequestJsonLocal, httpRequestVoidLocal, httpRequestRawLocal, uploadFileWithProgress} from './network';
-import {connectServices} from './ReactRenderAsync';
 import {ignoreAbortError} from '../SuperdeskReactComponent';
 
 export function queryElastic(
@@ -333,129 +327,3 @@ export const dataApi: IDataApi = {
     createProvider: (requestFactory, responseHandler, listenTo) =>
         new DataProvider(requestFactory, responseHandler, listenTo),
 };
-
-export function connectCrudManager<Props, PropsToConnect, Entity extends IBaseRestApiResponse>(
-    // type stoped working after react 16.8 upgrade. See if it's fixed by a future React types or TypeScript update
-    WrappedComponent, // : React.ComponentType<Props & PropsToConnect>
-    name: string,
-    endpoint: string,
-    formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
-): React.ComponentType<Props> {
-    const component = class extends React.Component<Props, ICrudManagerState<Entity>>
-        implements ICrudManagerMethods<Entity> {
-        api: any;
-
-        constructor(props) {
-            super(props);
-
-            this.api = props.api(endpoint);
-
-            this.state = {
-                _items: null,
-                _meta: null,
-                _links: null,
-                activeSortOption: null,
-                activeFilters: {},
-            };
-
-            this.create = this.create.bind(this);
-            this.read = this.read.bind(this);
-            this.update = this.update.bind(this);
-            this.delete = this.delete.bind(this);
-            this.refresh = this.refresh.bind(this);
-            this.sort = this.sort.bind(this);
-            this.removeFilter = this.removeFilter.bind(this);
-            this.goToPage = this.goToPage.bind(this);
-        }
-
-        create(item: Entity): Promise<Entity> {
-            // creating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return dataApi.create<Entity>(endpoint, item).then((res) => this.refresh().then(() => res));
-        }
-
-        read(
-            page: number,
-            sortOption: ISortOption,
-            filterValues: ICrudManagerFilters = {},
-        ): Promise<IRestApiResponse<Entity>> {
-            return dataApi.query(
-                endpoint,
-                page,
-                sortOption,
-                filterValues,
-                undefined,
-                formatFiltersForServer,
-            )
-                .then((res: IRestApiResponse<Entity>) => new Promise((resolve) => {
-                    this.setState({
-                        ...res,
-                        activeSortOption: sortOption,
-                        activeFilters: filterValues,
-                    }, () => {
-                        resolve(res);
-                    });
-                }));
-        }
-
-        update(nextItem: Entity): Promise<Entity> {
-            const currentItem = this.state._items.find(({_id}) => _id === nextItem._id);
-
-            // updating an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return dataApi.patch<Entity>(endpoint, currentItem, nextItem)
-                .then((res) => this.refresh().then(() => res));
-        }
-
-        delete(item: Entity): Promise<void> {
-            // deleting an item impacts sorting/filtering/pagination. Data is re-fetched to correct it.
-            return dataApi.delete(endpoint, item).then(() => this.refresh().then(() => undefined));
-        }
-
-        refresh(): Promise<IRestApiResponse<Entity>> {
-            return this.read(this.state._meta.page, this.state.activeSortOption, this.state.activeFilters);
-        }
-
-        sort(sortOption: ISortOption): Promise<IRestApiResponse<Entity>> {
-            return this.read(1, sortOption);
-        }
-
-        removeFilter(fieldName: string): Promise<IRestApiResponse<Entity>> {
-            let nextFilters = {...this.state.activeFilters};
-
-            delete nextFilters[fieldName];
-
-            return this.read(1, this.state.activeSortOption, nextFilters);
-        }
-
-        goToPage(nextPage: number) {
-            return this.read(nextPage, this.state.activeSortOption, this.state.activeFilters);
-        }
-
-        render() {
-            // workaround for typescript bug
-            // https://github.com/Microsoft/TypeScript/issues/28748#issuecomment-450497274
-            const fixedProps = this.props as any;
-
-            return (
-                <WrappedComponent
-                    {
-                    ...{
-                        [name]: {
-                            ...this.state,
-                            create: this.create,
-                            read: this.read,
-                            update: this.update,
-                            delete: this.delete,
-                            sort: this.sort,
-                            removeFilter: this.removeFilter,
-                            goToPage: this.goToPage,
-                        },
-                    }
-                    }
-                    {...fixedProps}
-                />
-            );
-        }
-    };
-
-    return connectServices(component, ['api']);
-}

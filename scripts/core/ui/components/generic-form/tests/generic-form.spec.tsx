@@ -59,10 +59,13 @@ describe('generic form', () => {
     const message = 'error-q7w8e9r';
 
     beforeEach(mockDataApi);
+    beforeEach(window.module('superdesk.apps.desks'));
 
     getAllInputTypes()
         .forEach((type: FormFieldType) => {
-            it(`${type} should render error messages`, (done) => {
+            it(`${type} should render error messages`, (done) => inject((desks) => {
+                desks.desks = {_items: []};
+
                 const Component = getFormFieldComponent(type);
 
                 const wrapper = mount(
@@ -86,12 +89,14 @@ describe('generic form', () => {
 
                     done();
                 });
-            });
+            }));
         });
 
     getAllInputTypes()
         .forEach((type: FormFieldType) => {
-            it(`${type} should add a classname for required fields`, (done) => {
+            it(`${type} should add a classname for required fields`, (done) => inject((desks) => {
+                desks.desks = {_items: []};
+
                 const Component = getFormFieldComponent(type);
 
                 const wrapper = mount(
@@ -114,6 +119,6 @@ describe('generic form', () => {
 
                     done();
                 });
-            });
+            }));
         });
 });

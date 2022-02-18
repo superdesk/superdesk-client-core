@@ -1,5 +1,5 @@
-export function nameof<T>(name: keyof T) {
-    return name;
+export function nameof<T>(name: keyof T): string {
+    return name.toString();
 }
 
 // eslint-disable-next-line space-infix-ops

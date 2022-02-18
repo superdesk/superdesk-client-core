@@ -28,6 +28,7 @@ import {sdStaticAutocompleteDirective} from './directives/sd-static-autocomplete
 import {VideoThumbnailEditor} from './components/video-thumbnail-editor';
 import {FullPreviewDirective} from './directives/FullPreviewDirective';
 import {FullPreviewItemDirective} from './directives/FullPreviewItemDirective';
+import {HeaderComponentField} from './header-component-field';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {FullPreview} from '../preview/fullPreview';
@@ -147,6 +148,13 @@ angular.module('superdesk.apps.authoring', [
         reactToAngular1(
             AuthoringCustomField,
             ['item', 'field', 'editable', 'onChange', 'template'],
+        ),
+    )
+
+    .component('sdHeaderComponentField',
+        reactToAngular1(
+            HeaderComponentField,
+            ['item', 'component'],
         ),
     )
 
