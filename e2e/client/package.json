@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "npx @superdesk/build-tools build-root-repo ./",
+    "server": "grunt server",
     "start-client-server": "http-server dist -p 9000 -s &",
     "stop-client-server": "fuser -k 9000/tcp",
     "protractor": "node run-end-to-end-tests.js",
