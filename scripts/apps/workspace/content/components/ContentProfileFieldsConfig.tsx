@@ -51,6 +51,7 @@ interface IAdditionalProps {
         setIndexForNewItem(index: number): void;
         getLabel(id: string): string;
         availableIds: Array<{id: string; label: string}>;
+        selectedSection: keyof typeof IContentProfileSection;
     };
 }
 
@@ -109,7 +110,13 @@ type IPropsItem = IPropsGenericFormItemComponent<IContentProfileFieldWithSystemI
 class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
     render() {
         const {item, page, index, inEditMode, getId} = this.props.wrapper;
-        const {sortingInProgress, setIndexForNewItem, getLabel, availableIds} = this.props.wrapper.additionalProps;
+        const {
+            sortingInProgress,
+            setIndexForNewItem,
+            getLabel,
+            availableIds,
+            selectedSection,
+        } = this.props.wrapper.additionalProps;
         const isLast = index === page.getItemsCount() - 1;
 
         return (
@@ -140,7 +147,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     availableFields={availableIds}
                                     onSelect={(selectedId) => {
                                         setIndexForNewItem(index);
-                                        page.openNewItemForm({id: selectedId});
+                                        page.openNewItemForm(getNewItemTemplate(selectedId, selectedSection));
                                     }}
                                 />
                             </div>
@@ -182,7 +189,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     availableFields={availableIds}
                                     onSelect={(selectedId) => {
                                         setIndexForNewItem(index + 1);
-                                        page.openNewItemForm({id: selectedId});
+                                        page.openNewItemForm(getNewItemTemplate(selectedId, selectedSection));
                                     }}
                                 />
                             </div>
@@ -215,6 +222,16 @@ class ItemsContainerBase extends React.PureComponent {
             </div>
         );
     }
+}
+
+function getNewItemTemplate(
+    fieldId: string,
+    section: keyof typeof IContentProfileSection,
+): Partial<IContentProfileField> {
+    return {
+        id: fieldId,
+        section: section,
+    };
 }
 
 const ItemsContainerBaseSortable = SortableContainer(ItemsContainerBase);
@@ -470,7 +487,7 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                 </React.Fragment>
             );
         } else {
-            const {sortingInProgress} = this.state;
+            const {sortingInProgress, selectedSection} = this.state;
             const fields = this.state.fields[this.state.selectedSection];
 
             const getLabel = (id) => {
@@ -515,10 +532,12 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                             availableIds,
                             setIndexForNewItem,
                             getLabel,
+                            selectedSection,
                         }}
                         disallowFiltering
                         disallowSorting
                         disallowCreatingNewItem
+                        hideItemsCount
                         contentMargin={0}
                         getNoItemsPlaceholder={(page) => (
                             <div style={{display: 'flex', alignItems: 'center', padding: 10, gap: 20}}>
@@ -527,7 +546,10 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                                     availableFields={availableIds}
                                     onSelect={(selectedId) => {
                                         setIndexForNewItem(0);
-                                        page.openNewItemForm({id: selectedId});
+                                        page.openNewItemForm(getNewItemTemplate(
+                                            selectedId,
+                                            this.state.selectedSection,
+                                        ));
                                     }}
                                 />
                             </div>
