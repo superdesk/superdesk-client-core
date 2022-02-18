@@ -415,7 +415,7 @@ export function registerEditor3AsCustomField() {
             id: 'editor3',
             label: gettext('Editor3 (authoring-react)'),
             editorComponent: Editor3Component,
-            previewComponent: Editor3Component,
+            previewComponent: () => null, // TODO:
             configComponent: Editor3ConfigComponent,
 
             retrieveStoredValue: (fieldId, article) => {

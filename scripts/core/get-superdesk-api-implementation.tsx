@@ -9,7 +9,6 @@ import {
     IUser,
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
-import {getGenericListPageComponent} from './ui/components/ListPage/generic-list-page';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -20,7 +19,7 @@ import {
 } from './ui/components/generic-form/interfaces/form';
 import {UserHtmlSingleLine} from './helpers/UserHtmlSingleLine';
 import {Row, Item, Column} from './ui/components/List';
-import {connectCrudManager, dataApi, dataApiByEntity} from './helpers/CrudManager';
+import {dataApi, dataApiByEntity} from './helpers/CrudManager';
 import {elasticsearchApi} from './helpers/elasticsearch';
 import {generateFilterForServer} from './ui/components/generic-form/generate-filter-for-server';
 import {
@@ -31,6 +30,7 @@ import {
     stringToNumber,
     numberToString,
     notNullOrUndefined,
+    nameof,
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {downloadBlob} from './helpers/utils';
@@ -82,6 +82,9 @@ import {arrayToTree, treeToArray} from './helpers/tree';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {patchArticle} from 'api/article-patch';
+import {connectCrudManagerHttp} from './helpers/crud-manager-http';
+import {GenericArrayListPageComponent} from './helpers/generic-array-list-page-component';
+import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -199,6 +202,7 @@ export function getSuperdeskApiImplementation(
             stringToNumber,
             numberToString,
             notNullOrUndefined,
+            nameof: nameof,
         },
         httpRequestJsonLocal,
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
@@ -287,8 +291,9 @@ export function getSuperdeskApiImplementation(
         },
         components: {
             UserHtmlSingleLine,
-            getGenericListPageComponent,
-            connectCrudManager,
+            getGenericHttpEntityListPageComponent,
+            getGenericArrayListPageComponent: () => GenericArrayListPageComponent,
+            connectCrudManagerHttp: connectCrudManagerHttp,
             ListItem,
             ListItemColumn,
             ListItemRow,

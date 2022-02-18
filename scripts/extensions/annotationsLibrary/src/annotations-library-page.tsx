@@ -14,7 +14,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
         render() {
             const {gettext} = superdesk.localization;
             const {
-                getGenericListPageComponent,
+                getGenericHttpEntityListPageComponent,
                 ListItem,
                 ListItemColumn,
                 ListItemActionsMenu,
@@ -38,7 +38,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
             };
 
             const AnnotationsLibraryPageComponent =
-                getGenericListPageComponent<IKnowledgeBaseItem, never>(
+                getGenericHttpEntityListPageComponent<IKnowledgeBaseItem, never>(
                     'concept_items',
                     formConfig,
                     {field: 'name', direction: 'ascending'},
@@ -88,6 +88,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
 
             return (
                 <AnnotationsLibraryPageComponent
+                    defaultSortOption={{field: 'name', direction: 'ascending'}}
                     getFormConfig={() => formConfig}
                     ItemComponent={ItemComponent}
                     getNewItemTemplate={(page) => {
@@ -117,6 +118,7 @@ export function getAnnotationsLibraryPage(superdesk: ISuperdesk) {
                             : {language: superdesk.instance.config.default_language}
                     }
                     hiddenFields={['cpnat_type']}
+                    getId={(item) => item._id}
                 />
             );
         }

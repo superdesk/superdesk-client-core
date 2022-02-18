@@ -1,9 +1,6 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {
-    ICrudManager,
-    ICrudManagerResponse,
-    IItemWithId,
     IPropsGenericFormItemComponent,
     IPropsGenericFormContainer,
     IContentProfile,
@@ -11,12 +8,11 @@ import {
     IVocabulary,
 } from 'superdesk-api';
 
-import {gettext, arrayInsert, arrayMove} from 'core/utils';
+import {gettext, arrayMove} from 'core/utils';
 import {IContentProfileType} from '../controllers/ContentProfilesController';
-import {assertNever} from 'core/helpers/typescript-helpers';
-import {GenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {assertNever, nameof} from 'core/helpers/typescript-helpers';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
-import {Button, IconButton, Dropdown} from 'superdesk-ui-framework/react';
+import {IconButton} from 'superdesk-ui-framework/react';
 import {groupBy} from 'lodash';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
 import ng from 'core/services/ng';
@@ -24,6 +20,8 @@ import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getContentProfileFormConfig} from './get-content-profiles-form-config';
 import {getEditorConfig} from './get-editor-config';
 import {WidgetsConfig} from './WidgetsConfig';
+import {NewFieldSelect} from './new-field-select';
+import {GenericArrayListPageComponent} from 'core/helpers/generic-array-list-page-component';
 
 // should be stored in schema rather than editor section of the content profile
 // but the fields should be editable via GUI
@@ -68,7 +66,7 @@ interface IState {
     selectedSection: keyof typeof IContentProfileSection;
     activeTab: IState['selectedSection'] | 'widgets';
     sortingInProgress: boolean;
-    insertNewItemAtIndex: number | null;
+    insertNewItemAtIndex: number | undefined;
     vocabularies: Array<IVocabulary>;
     editor: IContentProfileEditorConfig | null;
     schema: any | null;
@@ -110,30 +108,9 @@ type IPropsItem = IPropsGenericFormItemComponent<IContentProfileFieldWithSystemI
 // wrapper is used because sortable HOC considers `index` to be its internal prop and doesn't forward it
 class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
     render() {
-        const {item, page, index, inEditMode} = this.props.wrapper;
+        const {item, page, index, inEditMode, getId} = this.props.wrapper;
         const {sortingInProgress, setIndexForNewItem, getLabel, availableIds} = this.props.wrapper.additionalProps;
         const isLast = index === page.getItemsCount() - 1;
-
-        const newFieldSelect = (newItemIndex) => (
-            <Dropdown
-                append={true}
-                items={availableIds.map(({id, label}) => ({
-                    label: label,
-                    onSelect: () => {
-                        setIndexForNewItem(newItemIndex);
-                        page.openNewItemForm({_id: id});
-                    },
-                }))}
-            >
-                <Button
-                    icon="plus-large"
-                    text={gettext('Add new field')}
-                    shape="round"
-                    iconOnly={true}
-                    onClick={() => false}
-                />
-            </Dropdown>
-        );
 
         return (
             <div
@@ -143,7 +120,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                         querySelectorParent(e.target, 'select', {self: true}) == null
                         && querySelectorParent(e.target, 'button', {self: true}) == null
                     ) {
-                        page.startEditing(item._id);
+                        page.startEditing(getId(item));
                     }
                 }}
             >
@@ -159,7 +136,13 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     top: '-19px',
                                 }}
                             >
-                                {newFieldSelect(index)}
+                                <NewFieldSelect
+                                    availableFields={availableIds}
+                                    onSelect={(selectedId) => {
+                                        setIndexForNewItem(index);
+                                        page.openNewItemForm({id: selectedId});
+                                    }}
+                                />
                             </div>
                         )
                         : null
@@ -195,7 +178,13 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                                     bottom: '-17px',
                                 }}
                             >
-                                {newFieldSelect(index + 1)}
+                                <NewFieldSelect
+                                    availableFields={availableIds}
+                                    onSelect={(selectedId) => {
+                                        setIndexForNewItem(index + 1);
+                                        page.openNewItemForm({id: selectedId});
+                                    }}
+                                />
                             </div>
                         )
                         : null
@@ -230,44 +219,25 @@ class ItemsContainerBase extends React.PureComponent {
 
 const ItemsContainerBaseSortable = SortableContainer(ItemsContainerBase);
 
-export type IContentProfileFieldWithSystemId = IContentProfileField & IItemWithId;
-
-function stripSystemId(item: IContentProfileFieldWithSystemId): IContentProfileField {
-    const copy = {...item};
-
-    delete copy['_id'];
-
-    return copy;
-}
+export type IContentProfileFieldWithSystemId = IContentProfileField;
 
 function isFieldEnabled(editor: IContentProfileEditorConfig, field: string) {
     return editor[field]?.enabled ?? false;
 }
 
-export class Heelo extends React.Component<IProps, IState> {
-    render() {
-        return (<div>woo</div>);
-    }
-}
-
 export class ContentProfileFieldsConfig extends React.Component<IProps, IState> {
-    private generateKey: () => string;
-    private lastKey: number;
     private ItemsContainerComponent: React.ComponentType<IPropsGenericFormContainer<IContentProfileFieldWithSystemId>>;
     private isAllowedForSection: any;
 
     constructor(props: IProps) {
         super(props);
 
-        this.lastKey = 0;
-        this.generateKey = () => (++this.lastKey).toString();
-
         this.state = {
             fields: null,
             activeTab: getAllContentProfileSections()[0],
             selectedSection: getAllContentProfileSections()[0],
             sortingInProgress: false,
-            insertNewItemAtIndex: null,
+            insertNewItemAtIndex: undefined,
             editor: null,
             schema: null,
             vocabularies: [],
@@ -503,93 +473,6 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
             const {sortingInProgress} = this.state;
             const fields = this.state.fields[this.state.selectedSection];
 
-            const fieldsResponse: ICrudManagerResponse<IContentProfileFieldWithSystemId> = {
-                _items: fields.map((field) => ({...field, _id: field.id})),
-                _meta: {total: fields.length, page: 1, max_results: fields.length},
-            };
-
-            const crudManagerForContentProfileFields: ICrudManager<IContentProfileFieldWithSystemId> = {
-                activeFilters: {},
-                read: () => Promise.resolve(fieldsResponse),
-                update: (item) => {
-                    const itemWithId = {...item, id: item._id};
-
-                    return new Promise((resolve) => {
-                        this.setState(
-                            {
-                                fields: this.updateCurrentFields(
-                                    (_fields) => {
-                                        return _fields.map((field) => {
-                                            if (field.id === itemWithId._id) {
-                                                return stripSystemId(itemWithId);
-                                            } else {
-                                                return field;
-                                            }
-                                        });
-                                    },
-                                ),
-                            },
-                            () => {
-                                resolve(item);
-                            },
-                        );
-                    });
-                },
-                create: (item) => {
-                    if (item._id == null) {
-                        throw new Error('id must be provided');
-                    }
-
-                    return new Promise((resolve) => {
-                        const itemWithId: IContentProfileFieldWithSystemId = {
-                            ...item,
-                            _id: item._id,
-                            id: item._id,
-                        };
-
-                        this.setState(
-                            {
-                                insertNewItemAtIndex: null,
-                                fields: this.updateCurrentFields(
-                                    (_fields) => {
-                                        return arrayInsert(
-                                            _fields,
-                                            stripSystemId(itemWithId),
-                                            this.state.insertNewItemAtIndex ?? 0,
-                                        );
-                                    },
-                                ),
-                            },
-                            () => {
-                                resolve(itemWithId);
-                            },
-                        );
-                    });
-                },
-                delete: (item) => {
-                    return new Promise((resolve) => {
-                        this.setState(
-                            {
-                                fields: this.updateCurrentFields(
-                                    (_fields) => _fields.filter(
-                                        (field) => field.id !== item._id,
-                                    ),
-                                ),
-                            },
-                            () => {
-                                resolve();
-                            },
-                        );
-                    });
-                },
-                refresh: () => Promise.resolve(fieldsResponse),
-                sort: () => Promise.resolve(fieldsResponse),
-                removeFilter: () => Promise.resolve(fieldsResponse),
-                goToPage: () => Promise.resolve(fieldsResponse),
-                _items: fieldsResponse._items,
-                _meta: fieldsResponse._meta,
-            };
-
             const getLabel = (id) => {
                 return this.state.editor[id]?.field_name ?? getLabelForFieldId(id, this.state.vocabularies);
             };
@@ -603,12 +486,16 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                 })
                 .map((id) => ({id, label: getLabel(id)}));
 
+            const setIndexForNewItem = (index) => {
+                this.setState({insertNewItemAtIndex: index});
+            };
+
             return (
                 <div>
                     {tabs}
 
-                    <GenericListPageComponent
-                        getFormConfig={(item?) => {
+                    <GenericArrayListPageComponent
+                        getFormConfig={(item) => {
                             return getContentProfileFormConfig(
                                 this.state.editor,
                                 this.state.schema,
@@ -616,20 +503,38 @@ export class ContentProfileFieldsConfig extends React.Component<IProps, IState> 
                                 item,
                             );
                         }}
+                        defaultSortOption={{field: nameof<IContentProfileField>('field_name'), direction: 'ascending'}}
+                        value={fields}
+                        onChange={(val) => {
+                            this.setState({fields: this.updateCurrentFields(() => val)});
+                        }}
                         ItemComponent={ItemComponent}
                         ItemsContainerComponent={this.ItemsContainerComponent}
-                        items={crudManagerForContentProfileFields}
                         additionalProps={{
                             sortingInProgress,
                             availableIds,
-                            setIndexForNewItem: (index) => {
-                                this.setState({insertNewItemAtIndex: index});
-                            },
+                            setIndexForNewItem,
                             getLabel,
                         }}
                         disallowFiltering
+                        disallowSorting
                         disallowCreatingNewItem
                         contentMargin={0}
+                        getNoItemsPlaceholder={(page) => (
+                            <div style={{display: 'flex', alignItems: 'center', padding: 10, gap: 20}}>
+                                {gettext('There are no items yet.')}
+                                <NewFieldSelect
+                                    availableFields={availableIds}
+                                    onSelect={(selectedId) => {
+                                        setIndexForNewItem(0);
+                                        page.openNewItemForm({id: selectedId});
+                                    }}
+                                />
+                            </div>
+                        )}
+                        getId={(item) => item.id}
+                        hiddenFields={[nameof<IContentProfileField>('id')]}
+                        newItemIndex={this.state.insertNewItemAtIndex}
                     />
                 </div>
             );

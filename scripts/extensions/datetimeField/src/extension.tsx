@@ -21,7 +21,7 @@ export function isDateValue(value: string | undefined | null) {
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {
     const {formatDateTime} = superdesk.localization;
 
-    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps> {
+    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps<string>> {
         render() {
             if (this.props.value == null) {
                 return null;

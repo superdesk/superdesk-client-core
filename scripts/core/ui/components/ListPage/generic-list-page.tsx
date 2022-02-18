@@ -19,7 +19,6 @@ import {
 import {SearchBar} from 'core/ui/components';
 import {Button} from 'core/ui/components/Nav';
 import {SortBar, ISortFields} from 'core/ui/components/SortBar';
-import {connectCrudManager} from 'core/helpers/CrudManager';
 import {TagLabel} from 'core/ui/components/TagLabel';
 import {getFormGroupForFiltering} from 'core/ui/components/generic-form/get-form-group-for-filtering';
 import {getFormFieldsRecursive, getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
@@ -28,7 +27,6 @@ import {getInitialValues} from '../generic-form/get-initial-values';
 import {generateFilterForServer} from '../generic-form/generate-filter-for-server';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 import {
-    IItemWithId,
     IPropsGenericForm,
     IGenericListPageComponent,
     ICrudManager,
@@ -39,8 +37,9 @@ import {
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {OnlyWithChildren} from '../only-with-children';
+import {connectCrudManagerHttp} from 'core/helpers/crud-manager-http';
 
-interface IState<T extends IItemWithId> {
+interface IState<T> {
     previewItemId: string | null;
     editItemId: string | null;
     newItem: Partial<T> | null;
@@ -50,8 +49,8 @@ interface IState<T extends IItemWithId> {
     refetchDataScheduled: boolean;
 }
 
-export interface IPropsConnected<T extends IItemWithId> {
-    items?: ICrudManager<T>;
+export interface IPropsConnected<T> {
+    crudManager?: ICrudManager<T>;
 }
 
 class DefaultItemsContainerComponent extends React.PureComponent {
@@ -84,7 +83,7 @@ const subNavWrapper: React.ComponentType = (props) => (
     </div>
 );
 
-export class GenericListPageComponent<T extends IItemWithId, P>
+export class GenericListPageComponent<T, P>
     extends React.Component<IPropsGenericForm<T, P> & IPropsConnected<T>, IState<T>>
     implements IGenericListPageComponent<T>
 {
@@ -145,7 +144,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                     'Can\'t open a preview while in create mode',
                 ),
             });
-        } else if (this.props.items._items.find(({_id}) => _id === id) != null) {
+        } else if (this.props.crudManager._items.find((item) => this.props.getId(item) === id) != null) {
             // set previewItemId only if item with id is available in the props.items._items
             this.setState({
                 previewItemId: id,
@@ -170,18 +169,16 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                 return acc;
             }, {}),
         }), () => {
-            this.props.items.removeFilter(fieldName);
+            this.props.crudManager.removeFilter(fieldName);
         });
     }
 
     getItemsCount() {
-        return this.props.items?._items?.length ?? 0;
+        return this.props.crudManager?._items?.length ?? 0;
     }
 
     deleteItem(item: T) {
-        const deleteNow = () => this.props.items.delete(item).then(() => {
-            this.notify.success(gettext('The item has been deleted.'));
-        });
+        const doDelete = () => this.props.crudManager.delete(item);
 
         this.modal.confirm(gettext('Are you sure you want to delete this item?'))
             .then(() => {
@@ -195,9 +192,9 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                 } else if (this.state.previewItemId != null) {
                     this.setState({
                         previewItemId: null,
-                    }, deleteNow);
+                    }, doDelete);
                 } else {
-                    deleteNow();
+                    doDelete();
                 }
             });
     }
@@ -283,9 +280,9 @@ export class GenericListPageComponent<T extends IItemWithId, P>
             const {filterValues} = this.state;
             const filtersValidated = this.validateFilters(filterValues);
 
-            this.props.items.read(
+            this.props.crudManager.read(
                 1,
-                this.props.items.activeSortOption,
+                this.props.crudManager.activeSortOption,
                 filtersValidated,
             );
         };
@@ -337,7 +334,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
     componentDidMount() {
         const filters = this.props.defaultFilters ? this.validateFilters(this.props.defaultFilters) : {};
 
-        this.props.items.read(1, this.props.items.activeSortOption, filters);
+        this.props.crudManager.read(1, this.props.defaultSortOption, filters);
 
         if (this.props.refreshOnEvents != null) {
             this.props.refreshOnEvents.forEach((eventName) => {
@@ -348,22 +345,23 @@ export class GenericListPageComponent<T extends IItemWithId, P>
             });
         }
     }
+
     componentDidUpdate() {
         if (this.state.refetchDataScheduled && this.state.editItemId == null) {
             this.refetchDataUsingCurrentFilters();
         }
     }
     render() {
-        const {items, additionalProps} = this.props;
+        const {additionalProps} = this.props;
 
-        if (items._items == null) {
+        if (this.props.crudManager._items == null) {
             // loading
             return null;
         }
 
-        const {activeFilters} = items;
-        const totalResults = items._meta.total;
-        const pageSize = items._meta.max_results;
+        const {activeFilters} = this.props.crudManager;
+        const totalResults = this.props.crudManager._meta.total;
+        const pageSize = this.props.crudManager._meta.max_results;
         const pageCount = Math.ceil(totalResults / pageSize);
 
         const {getFormConfig, ItemComponent} = this.props;
@@ -391,8 +389,10 @@ export class GenericListPageComponent<T extends IItemWithId, P>
             getItemsCount: this.getItemsCount,
         };
 
+        const labelForSaveButton = this.props.labelForItemSaveButton ?? gettext('Save');
+
         const getContents = () => {
-            if (items._items.length === 0) {
+            if (this.props.crudManager._items.length === 0) {
                 if (Object.keys(activeFilters).length > 0) {
                     return (
                         <ListItem noHover>
@@ -405,7 +405,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                     return (
                         <ListItem noHover>
                             <ListItemColumn>
-                                {gettext('There are no items yet.')}
+                                {this.props.getNoItemsPlaceholder?.(page) ?? gettext('There are no items yet.')}
                             </ListItemColumn>
                         </ListItem>
                     );
@@ -414,14 +414,15 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                 return (
                     <ItemsContainerComponent page={page} additionalProps={additionalProps}>
                         {
-                            items._items.map(
+                            this.props.crudManager._items.map(
                                 (item, i) => (
                                     <ItemComponent
-                                        key={item._id}
+                                        key={this.props.getId(item)}
                                         item={item}
                                         page={page}
-                                        inEditMode={this.state.editItemId === item._id}
+                                        inEditMode={this.state.editItemId === this.props.getId(item)}
                                         index={i}
+                                        getId={this.props.getId}
                                         additionalProps={additionalProps}
                                     />
                                 ),
@@ -432,8 +433,10 @@ export class GenericListPageComponent<T extends IItemWithId, P>
             }
         };
 
+        const showPagination = this.props.crudManager._meta.total > this.props.crudManager._items.length;
+
         return (
-            <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+            <div style={{display: 'flex', flexDirection: 'column', width: '100%', height: '100%'}}>
                 <OnlyWithChildren wrapper={subNavWrapper}>
                     {
                         this.props.disallowFiltering ? null : (
@@ -470,34 +473,45 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                         )
                     }
 
-                    <OnlyWithChildren style={{display: 'flex', marginLeft: 'auto'}}>
+                    <div style={{display: 'flex', marginLeft: 'auto', gap: '10px', paddingInline: 20}}>
+                        {this.props.crudManager._meta.total == null ? null : (
+                            <span style={{display: 'flex', alignItems: 'center'}}>
+                                <span>{gettext('Total:')}</span>
+                                &nbsp;
+                                <span><span className="badge">{this.props.crudManager._meta.total}</span></span>
+                            </span>
+                        )}
+
                         {
-                            items.activeSortOption == null ? null : (
+                            this.props.disallowSorting !== true && (
                                 <SortBar
                                     sortOptions={sortOptions}
-                                    selected={items.activeSortOption}
-                                    itemsCount={items._meta.total}
-                                    onSortOptionChange={items.sort}
+                                    selected={this.props.crudManager.activeSortOption}
+                                    itemsCount={this.props.crudManager._meta.total}
+                                    onSortOptionChange={this.props.crudManager.sort}
                                 />
                             )
                         }
+                    </div>
 
-                        {
-                            this.props.disallowCreatingNewItem === true ? null : (
-                                <div>
-                                    <Button
-                                        onClick={() => this.openNewItemForm()}
-                                        className="sd-create-btn dropdown-toggle"
-                                        icon="icon-plus-large"
-                                        data-test-id="list-page--add-item"
-                                    >
-                                        <span className="circle" />
-                                    </Button>
-                                </div>
-                            )
-                        }
-                    </OnlyWithChildren>
+                    {
+                        this.props.disallowCreatingNewItem === true ? null : (
+                            <div>
+                                <Button
+                                    onClick={() => {
+                                        this.openNewItemForm();
+                                    }}
+                                    className="sd-create-btn dropdown-toggle"
+                                    icon="icon-plus-large"
+                                    data-test-id="list-page--add-item"
+                                >
+                                    <span className="circle" />
+                                </Button>
+                            </div>
+                        )
+                    }
                 </OnlyWithChildren>
+
                 <PageContainer>
                     {
                         this.state.filtersOpen ? (
@@ -548,7 +562,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                     <PageContainerItem shrink>
                         <div style={{margin: this.props.contentMargin ?? 20}}>
                             {
-                                items._meta.max_results === items._meta.total || items._items.length === 0 ? null : (
+                                showPagination && (
                                     <div style={{textAlign: 'center', marginTop: -20}}>
                                         <ReactPaginate
                                             previousLabel={gettext('prev')}
@@ -557,11 +571,11 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                             marginPagesDisplayed={2}
                                             pageRangeDisplayed={5}
                                             onPageChange={({selected}) => {
-                                                if (items._meta.page !== (selected + 1)) {
-                                                    items.goToPage(selected + 1);
+                                                if (this.props.crudManager._meta.page !== (selected + 1)) {
+                                                    this.props.crudManager.goToPage(selected + 1);
                                                 }
                                             }}
-                                            initialPage={items._meta.page - 1}
+                                            initialPage={this.props.crudManager._meta.page - 1}
                                             containerClassName={'bs-pagination'}
                                             activeClassName="active"
                                         />
@@ -582,7 +596,7 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                                 );
 
                                                 const filterValuePreview = getFormFieldPreviewComponent(
-                                                    items.activeFilters,
+                                                    this.props.crudManager.activeFilters,
                                                     currentField,
                                                 );
 
@@ -622,13 +636,17 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                             newItem: null,
                                         }));
                                     }}
-                                    onSave={(item: T) => items.create(item).then((res) => {
-                                        this.notify.success(gettext('The item has been created.'));
-                                        this.closeNewItemForm();
-                                        this.openPreview(res._id);
-                                    })}
+                                    onSave={(item: T) => {
+                                        return this.props.crudManager.create(item).then((res) => {
+                                            setTimeout(() => {
+                                                this.closeNewItemForm();
+                                                this.openPreview(this.props.getId(res));
+                                            });
+                                        });
+                                    }}
                                     onClose={this.closeNewItemForm}
                                     onCancel={this.closeNewItemForm}
+                                    labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
                         ) : this.state.editItemId != null ? (
@@ -644,12 +662,13 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                             editItemId: null,
                                         }));
                                     }}
-                                    item={items._items.find(({_id}) => _id === this.state.editItemId)}
+                                    item={this.props.crudManager._items.find(
+                                        (item) => this.props.getId(item) === this.state.editItemId,
+                                    )}
                                     getFormConfig={getFormConfig}
-                                    onSave={(nextItem) => items.update(nextItem).then(() => {
-                                        this.notify.success(gettext('The item has been updated.'));
-                                    })}
+                                    onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
+                                    labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
                         ) : this.state.previewItemId != null ? (
@@ -665,10 +684,13 @@ export class GenericListPageComponent<T extends IItemWithId, P>
                                             editItemId: prevState.previewItemId,
                                         }));
                                     }}
-                                    item={items._items.find(({_id}) => _id === this.state.previewItemId)}
+                                    item={this.props.crudManager._items.find(
+                                        (item) => this.props.getId(item) === this.state.previewItemId,
+                                    )}
                                     getFormConfig={getFormConfig}
-                                    onSave={(nextItem) => items.update(nextItem)}
+                                    onSave={(nextItem) => this.props.crudManager.update(nextItem)}
                                     onClose={this.closePreview}
+                                    labelForSaveButton={labelForSaveButton}
                                 />
                             </PageContainerItem>
                         ) : null
@@ -679,15 +701,15 @@ export class GenericListPageComponent<T extends IItemWithId, P>
     }
 }
 
-export const getGenericListPageComponent = <T extends IBaseRestApiResponse, P>(
+export const getGenericHttpEntityListPageComponent = <T extends IBaseRestApiResponse, P>(
     resource: string,
     formConfig: IFormGroup,
     defaultSortOption?: ISortOption,
     additionalProps?: P,
 ) => {
-    var Component = connectCrudManager<IPropsGenericForm<T, P>, IPropsConnected<T>, T>(
+    var Component = connectCrudManagerHttp<IPropsGenericForm<T, P>, T>(
         GenericListPageComponent,
-        'items',
+        'crudManager',
         resource,
         defaultSortOption,
         (filters: IFormGroup) => {

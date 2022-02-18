@@ -5,7 +5,7 @@ import {gettext} from 'core/utils';
 import {FormFieldType} from 'core/ui/components/generic-form/interfaces/form';
 import {ListItem, ListItemActionsMenu, ListItemColumn, ListItemRow} from 'core/components/ListItem';
 import {getFormFieldPreviewComponent} from 'core/ui/components/generic-form/form-field';
-import {getGenericListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {IFormField, IFormGroup, IPropsGenericFormItemComponent} from 'superdesk-api';
 import {Label} from 'superdesk-ui-framework/react/components/Label';
 import {assertNever} from 'core/helpers/typescript-helpers';
@@ -140,7 +140,7 @@ class ItemComponent extends React.PureComponent<IPropsGenericFormItemComponent<I
 export class SystemMessagesSettingsComponent extends React.PureComponent {
     render() {
         const formConfig = getFormConfig();
-        const ListComponent = getGenericListPageComponent<ISystemMessage, never>(
+        const ListComponent = getGenericHttpEntityListPageComponent<ISystemMessage, never>(
             RESOURCE,
             formConfig,
             {field: 'message_title', direction: 'ascending'},
@@ -151,6 +151,8 @@ export class SystemMessagesSettingsComponent extends React.PureComponent {
                 <ListComponent
                     ItemComponent={ItemComponent}
                     getFormConfig={() => formConfig}
+                    defaultSortOption={{field: 'message_title', direction: 'ascending'}}
+                    getId={(item) => item._id}
                 />
             </Page>
         );

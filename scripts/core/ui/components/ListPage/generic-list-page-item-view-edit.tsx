@@ -27,6 +27,12 @@ interface IProps<T> {
     onClose: () => void;
     onCancel?: () => void;
     onSave: (nextItem) => Promise<any>;
+
+    /**
+     * label "save" doesn't work when data source is an array. The array
+     * may be a part of a parent component that has it's own saving mechanism.
+     */
+     labelForSaveButton: string;
 }
 
 interface IIssues {
@@ -46,8 +52,8 @@ function getInitialState<T>(props: IProps<T>) {
 }
 
 export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, IState<T>> {
-    _mounted: boolean;
-    modal: any;
+    private _mounted: boolean;
+    private modal: any;
 
     constructor(props) {
         super(props);
@@ -197,6 +203,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
                 }
             });
     }
+
     render() {
         return (
             <SidePanel side="right" width={360} data-test-id="item-view-edit">
@@ -219,7 +226,7 @@ export class GenericListPageItemViewEdit<T> extends React.Component<IProps<T>, I
                                         className="btn btn--primary"
                                         data-test-id="item-view-edit--save"
                                     >
-                                        {gettext('Save')}
+                                        {this.props.labelForSaveButton}
                                     </button>
                                 </div>
                             )

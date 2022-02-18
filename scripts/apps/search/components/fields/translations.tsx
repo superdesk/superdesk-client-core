@@ -1,27 +1,47 @@
 import React from 'react';
-import ng from 'core/services/ng';
 import {gettext, gettextPlural} from 'core/utils';
 import {IArticle} from 'superdesk-api';
-import {TranslationsList} from './translations-list';
-import {ItemListPopup} from '../item-list-popup';
+import {TranslationsListWrapper} from '../translations-list-wrapper';
+import {showPopup} from 'core/ui/components/popup';
 
 interface IProps {
     item: IArticle;
 }
 
-interface IState {
-    popup?: {
-        ids: Array<IArticle['_id']>;
-        label: string;
-        target: HTMLElement;
-    };
-}
-
-export class Translations extends React.PureComponent<IProps, IState> {
-    constructor(props) {
+export class Translations extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
         super(props);
-        this.state = {popup: null};
-        this.closePopup = this.closePopup.bind(this);
+
+        this.renderOriginalArticle = this.renderOriginalArticle.bind(this);
+        this.renderTranslations = this.renderTranslations.bind(this);
+    }
+
+    renderOriginalArticle(referenceElement: HTMLElement) {
+        showPopup(
+            referenceElement,
+            'bottom',
+            ({closePopup}) => (
+                <TranslationsListWrapper
+                    ids={[this.props.item.translated_from]}
+                    label={gettext('Original Article')}
+                    close={closePopup}
+                />
+            ),
+        );
+    }
+
+    renderTranslations(referenceElement: HTMLElement) {
+        showPopup(
+            referenceElement,
+            'bottom',
+            ({closePopup}) => (
+                <TranslationsListWrapper
+                    ids={this.props.item.translations}
+                    label={gettext('Translations')}
+                    close={closePopup}
+                />
+            ),
+        );
     }
 
     render() {
@@ -32,7 +52,7 @@ export class Translations extends React.PureComponent<IProps, IState> {
                         key="translated"
                         className="label label--hollow"
                         onClick={(event) => {
-                            this.renderOriginalArticle(event.target);
+                            this.renderOriginalArticle(event.target as HTMLElement);
                         }}
                     >
                         {gettext('translation')}
@@ -44,7 +64,7 @@ export class Translations extends React.PureComponent<IProps, IState> {
                         key="translations"
                         className="text-link"
                         onClick={(event) => {
-                            this.renderTranslations(event.target);
+                            this.renderTranslations(event.target as HTMLElement);
                         }}
                     >
                         {'('}<b>{this.props.item.translations.length}</b>{')'}
@@ -52,47 +72,7 @@ export class Translations extends React.PureComponent<IProps, IState> {
                         {gettextPlural(this.props.item.translations.length, 'translation', 'translations')}
                     </button>
                 )}
-
-                {this.state.popup != null && (
-                    <ItemListPopup
-                        key="popup"
-                        target={this.state.popup.target}
-                        label={this.state.popup.label}
-                        close={this.closePopup}
-                    >
-                        <TranslationsList
-                            ids={this.state.popup.ids}
-                            onClick={(item) => {
-                                ng.get('$rootScope').$broadcast('broadcast:preview', {item});
-                            }}
-                        />
-                    </ItemListPopup>
-                )}
             </React.Fragment>
         );
-    }
-
-    renderOriginalArticle(elem: EventTarget) {
-        this.setState({
-            popup: {
-                label: gettext('Original Article'),
-                ids: [this.props.item.translated_from],
-                target: elem as HTMLElement,
-            },
-        });
-    }
-
-    renderTranslations(elem: EventTarget) {
-        this.setState({
-            popup: {
-                label: gettext('Translations'),
-                ids: this.props.item.translations,
-                target: elem as HTMLElement,
-            },
-        });
-    }
-
-    closePopup() {
-        this.setState({popup: null});
     }
 }

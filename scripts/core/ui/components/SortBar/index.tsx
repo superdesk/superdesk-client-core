@@ -23,15 +23,7 @@ export class SortBar extends React.Component<IProps, any> {
         );
 
         return (
-            <div className="sortbar" data-test-id="sortbar">
-                {this.props.itemsCount == null ? null : (
-                    <span>
-                        <span>{gettext('Total:')}</span>
-                        {' '}
-                        <span><span className="badge">{this.props.itemsCount}</span></span>
-                        {' '}
-                    </span>
-                )}
+            <div style={{display: 'flex', alignItems: 'center'}} data-test-id="sortbar">
                 <DropdownTree
                     getToggleElement={(isOpen, onClick) => (
                         <button
