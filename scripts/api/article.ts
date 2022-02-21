@@ -10,13 +10,16 @@ import {sendItems} from './article-send';
 import {duplicateItems} from './article-duplicate';
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
+import {KILLED_STATES, ITEM_STATE, PUBLISHED_STATES} from 'apps/archive/constants';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
 const isLockedInOtherSession = (_article: IArticle) => isLocked(_article) && !isLockedInCurrentSession(_article);
 const isLockedByCurrentUser = (_article: IArticle) => _article.lock_user === ng.get('session').identity._id;
 const isLockedByOtherUser = (_article: IArticle) => isLocked(_article) && !isLockedByCurrentUser(_article);
-const isPublished = (_article: IArticle) => _article.item_id != null;
+const isPublished = (item: IArticle, includeScheduled = true) =>
+    PUBLISHED_STATES.includes(item.state) &&
+    (includeScheduled || item.state !== ITEM_STATE.SCHEDULED);
 const isArchived = (_article: IArticle) => _article._type === 'archived';
 const isPersonal = (_article: IArticle) =>
     _article.task == null || _article.task.desk == null || _article.task.stage == null;
@@ -33,6 +36,14 @@ const getPackageItemIds = (item: IArticle): Array<IArticle['_id']> => {
 
     return ids;
 };
+
+/**
+ * Test if an item was published, but is not published anymore.
+ */
+export const isKilled = (item: IArticle) => KILLED_STATES.includes(item.state);
+
+export const isIngested = (item: IArticle) =>
+    item.state === ITEM_STATE.INGESTED;
 
 function canPublish(item: IArticle): boolean {
     const deskId = item?.task?.desk;
@@ -157,7 +168,14 @@ interface IArticleApi {
     isLockedByCurrentUser(article: IArticle): boolean;
     isLockedByOtherUser(article: IArticle): boolean;
     isArchived(article: IArticle): boolean;
-    isPublished(article: IArticle): boolean;
+
+    /**
+     * @param includeScheduled defaults to true
+     */
+    isPublished(article: IArticle, includeScheduled?: boolean): boolean;
+
+    isKilled(article: IArticle): boolean;
+    isIngested(article: IArticle): boolean;
     isPersonal(article: IArticle): boolean;
     getPackageItemIds(item: IArticle): Array<IArticle['_id']>;
     patch(
@@ -204,6 +222,8 @@ export const article: IArticleApi = {
     isLockedByOtherUser,
     isArchived,
     isPublished,
+    isKilled,
+    isIngested,
     isPersonal,
     getPackageItemIds,
     patch: patchArticle,

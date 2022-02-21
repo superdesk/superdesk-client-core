@@ -8,6 +8,13 @@ interface IInternalEvents {
     };
     saveArticleInEditMode: void;
     dangerouslyOverwriteAuthoringData: Partial<IArticle>;
+
+    /**
+     * Unsaved changes will be lost.
+     * Only applies to authoring-react.
+     */
+    dangerouslyForceReloadAuthoring: void;
+
     changeUserPreferences: {[preferenceId: string]: any};
     openExportView: Array<IArticle['_id']>;
     extensionsHaveLoaded: true;

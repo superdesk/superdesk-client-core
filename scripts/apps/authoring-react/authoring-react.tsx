@@ -531,6 +531,25 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 });
             }),
         );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addInternalEventListener('dangerouslyForceReloadAuthoring', () => {
+                const state = this.state;
+
+                if (state.initialized !== true) {
+                    return;
+                }
+
+                authoringStorage.getArticle(state.itemOriginal._id).then((item) => {
+                    this.setState(getInitialState(
+                        item,
+                        state.profile,
+                        state.userPreferencesForFields,
+                        state.spellcheckerEnabled,
+                    ));
+                });
+            }),
+        );
     }
 
     componentWillUnmount() {
@@ -576,10 +595,10 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         }
     }
 
-    handleUnsavedChanges(state: IStateLoaded): Promise<Array<IArticle>> {
+    handleUnsavedChanges(state: IStateLoaded): Promise<IArticle> {
         return new Promise((resolve, reject) => {
             if (!this.hasUnsavedChanges()) {
-                resolve([state.itemOriginal]);
+                resolve(state.itemOriginal);
                 return;
             }
 
@@ -592,7 +611,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         closePromptFn();
 
                         if (this.state.initialized) {
-                            resolve([this.state.itemOriginal]);
+                            resolve(this.state.itemOriginal);
                         }
                     });
                 } else if (action === IUnsavedChangesActionWithSaving.save) {
@@ -600,7 +619,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         closePromptFn();
 
                         if (this.state.initialized) {
-                            resolve([this.state.itemOriginal]);
+                            resolve(this.state.itemOriginal);
                         }
                     });
                 } else {
@@ -1014,7 +1033,9 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                         items={panelState.items}
                                         tabs={panelState.tabs}
                                         activeTab={panelState.activeTab}
-                                        handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
+                                        handleUnsavedChanges={
+                                            () => this.handleUnsavedChanges(state).then((res) => [res])
+                                        }
                                         onClose={panelActions.closePanel}
                                         markupV2
                                     />
@@ -1141,6 +1162,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 article={{...state.itemWithChanges}}
                                                 contentProfile={state.profile}
                                                 fieldsData={state.fieldsDataWithChanges}
+                                                readOnly={readOnly}
+                                                handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
                                             />
                                         )
                                         : undefined
@@ -1153,6 +1176,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 article={{...state.itemWithChanges}}
                                                 contentProfile={state.profile}
                                                 fieldsData={state.fieldsDataWithChanges}
+                                                readOnly={readOnly}
+                                                handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
                                             />
                                         )
                                         : undefined

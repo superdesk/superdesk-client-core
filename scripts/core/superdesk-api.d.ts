@@ -101,7 +101,20 @@ declare module 'superdesk-api' {
         label: string;
         order: number; // Integer.
         icon: string;
-        component: React.ComponentType<{article: IArticle, contentProfile?: IContentProfileV2; fieldsData?: OrderedMap<string, unknown>}>;
+        component: React.ComponentType<{
+            article: IArticle;
+
+            // other props below are specific to authoring-react implementation
+
+            readOnly: boolean;
+            contentProfile?: IContentProfileV2;
+            fieldsData?: OrderedMap<string, unknown>;
+
+            /**
+             * Will prompt user to save changes. The promise will get rejected if user cancels saving.
+             */
+            handleUnsavedChanges(): Promise<IArticle>;
+        }>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
 
@@ -1318,6 +1331,13 @@ declare module 'superdesk-api' {
         justifyContent?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' | 'stretch';
         alignItems?: 'start' | 'end' | 'center' | 'stretch';
         noGrow?: boolean;
+
+        /**
+         * Will not wrap children in div elements.
+         * `noGrow` prop would then not be relevant.
+         */
+        noWrap?: boolean;
+
         children: Array<React.ReactNode>;
     }
 

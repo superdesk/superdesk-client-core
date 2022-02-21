@@ -1,3 +1,7 @@
+/**
+ * TODO: delete this file and update usages to use sdApi instead
+ */
+
 import {IArticle} from 'superdesk-api';
 import {PUBLISHED_STATES, KILLED_STATES, ITEM_STATE} from './constants';
 

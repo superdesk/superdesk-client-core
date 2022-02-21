@@ -267,9 +267,9 @@ export function getItemLabel(item: IArticle): string {
     const headlineTrimmed = item.headline?.trim();
     const sluglineTrimmed = item.slugline?.trim();
 
-    if (headlineTrimmed.length > 0) {
+    if (headlineTrimmed?.length > 0) {
         return headlineTrimmed;
-    } else if (sluglineTrimmed.length > 0) {
+    } else if (sluglineTrimmed?.length > 0) {
         return sluglineTrimmed;
     } else {
         return `[${gettext('Untitled')}]`;

@@ -109,7 +109,10 @@ interface IAuthoringStorage {
     autosave: IAuthoringAutoSave;
 }
 
-export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
+export function omitFields(
+    item: Partial<IArticle>,
+    omitId: boolean = false, // useful when patching
+): Partial<IArticle> {
     /**
      * TODO: try getting rid of these when angular based monitoring is dropped.
      * When sending patches, these fields will automatically be excluded by patching algorithm
@@ -133,6 +136,10 @@ export function omitFields(item: Partial<IArticle>): Partial<IArticle> {
         '_etag',
         '_status',
     ];
+
+    if (omitId) {
+        baseApiFields.push('_id');
+    }
 
     return {...omit(item, [...customFields, ...baseApiFields])};
 }

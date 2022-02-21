@@ -5,7 +5,7 @@ import {IPropsSpacer, IPropsSpacerInline} from 'superdesk-api';
 
 export class Spacer extends React.PureComponent<IPropsSpacer> {
     render() {
-        const {h, v, gap, justifyContent, alignItems, noGrow} = this.props;
+        const {h, v, gap, justifyContent, alignItems, noGrow, noWrap} = this.props;
 
         const justifyContentDefault: IPropsSpacer['justifyContent'] = h ? 'space-between' : 'start';
         const alignItemsDefault: IPropsSpacer['alignItems'] = h ? 'center' : 'start';
@@ -21,7 +21,7 @@ export class Spacer extends React.PureComponent<IPropsSpacer> {
                     width: noGrow === true ? undefined : '100%',
                 }}
             >
-                {this.props.children.map((el, i) => (
+                {this.props.children.map((el, i) => noWrap ? el : (
                     <div
                         key={i}
                         style={{
@@ -43,7 +43,7 @@ export class SpacerInline extends React.PureComponent<IPropsSpacerInline> {
         return (
             <span
                 style={{
-                    display: 'block',
+                    display: h === true ? 'inline-block' : 'block',
                     width: h === true ? `${gap}px` : undefined,
                     height: v === true ? `${gap}px` : undefined,
                 }}
