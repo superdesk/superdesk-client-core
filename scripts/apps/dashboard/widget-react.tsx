@@ -16,7 +16,16 @@ export class WidgetReact extends React.PureComponent<IProps> {
         const key = this.props.article.lock_session ?? Math.random().toString();
 
         return (
-            <Component key={key} article={this.props.article} />
+            <Component
+                key={key}
+                article={this.props.article}
+
+                // below props are only relevant for authoring-react
+                readOnly={undefined}
+                contentProfile={undefined}
+                fieldsData={undefined}
+                handleUnsavedChanges={undefined}
+            />
         );
     }
 }

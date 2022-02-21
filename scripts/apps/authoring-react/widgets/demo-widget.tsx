@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAuthoringSideWidget, IArticle} from 'superdesk-api';
+import {IAuthoringSideWidget, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {Button} from 'superdesk-ui-framework';
 import {sdApi} from 'api';
 import {gettext} from 'core/utils';
@@ -9,7 +9,11 @@ import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Demo widget');
 
-class DemoWidget extends React.PureComponent<{article: IArticle}> {
+type IProps = React.ComponentProps<
+    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
+>;
+
+class DemoWidget extends React.PureComponent<IProps> {
     render() {
         return (
             <AuthoringWidgetLayout
@@ -43,7 +47,7 @@ class DemoWidget extends React.PureComponent<{article: IArticle}> {
 
 export function getDemoWidget() {
     const metadataWidget: IAuthoringSideWidget = {
-        _id: 'metadata',
+        _id: 'demo-widget',
         label: getLabel(),
         order: 2,
         icon: 'info',
