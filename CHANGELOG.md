@@ -1,5 +1,9 @@
 # Superdesk Client Changelog
 
+## [2.4.0] 2022-02-23
+
+[Changes](https://github.com/superdesk/superdesk-client-core/milestone/94?closed=1)
+
 ## [2.3.3] 2021-12-21
 
 [Changes](https://github.com/superdesk/superdesk-client-core/milestone/99?closed=1)
