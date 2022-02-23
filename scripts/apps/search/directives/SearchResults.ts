@@ -303,7 +303,14 @@ export function SearchResults(
                 });
             }
 
-            scope.$on('refresh:list', (event, group) => {
+            scope.$on('refresh:list', (event, group, options) => {
+                /**
+                 * When manual refreshing is enabled, scrolling should not automatically refresh the list.
+                 */
+                if (scope.showRefresh === true && options.event_origin === 'scroll') {
+                    return;
+                }
+
                 scope.refreshList();
             });
 
