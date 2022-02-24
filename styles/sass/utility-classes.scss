@@ -247,3 +247,23 @@ ul.list-view.list-without-items {
         color: inherit;
     }
 }
+
+.html-diff {
+    ins, del {
+        text-decoration: auto;
+
+        &.mod {
+            border-bottom: 2px solid orange;
+        }
+    }
+
+    del.diffmod,
+    del.diffdel {
+        background-color: #ffe6e6;
+    }
+
+    ins.diffmod,
+    ins.diffins {
+        background-color: #e6ffe6;
+    }
+}

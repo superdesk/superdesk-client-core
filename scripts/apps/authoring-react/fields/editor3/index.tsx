@@ -5,15 +5,12 @@ import {
     IExtensionActivationResult,
     IEditorComponentProps,
     ICustomFieldType,
-    IConfigComponentProps,
-    RICH_FORMATTING_OPTION,
     IArticle,
     IArticleAction,
 } from 'superdesk-api';
 import {gettext, gettextPlural} from 'core/utils';
 import {convertToRaw, ContentState} from 'draft-js';
 import createEditorStore, {
-    IEditorStore,
     initializeSpellchecker,
     getInitialSpellcheckerData,
     prepareEditor3StateForExport,
@@ -21,11 +18,8 @@ import createEditorStore, {
 } from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {Provider} from 'react-redux';
-import {Store} from 'redux';
 import {Editor3} from 'core/editor3/components';
 import {noop} from 'lodash';
-import {EDITOR3_RICH_FORMATTING_OPTIONS} from 'apps/workspace/content/components/get-content-profiles-form-config';
-import {MultiSelect} from 'core/ui/components/MultiSelect';
 import {
     setExternalOptions,
     EditorLimit,
@@ -36,7 +30,6 @@ import {
     replaceAll,
     setSpellcheckerStatus,
 } from 'core/editor3/actions';
-import {Checkbox} from 'superdesk-ui-framework/react';
 import {ReactContextForEditor3} from 'core/editor3/directive';
 import {
     DEFAULT_UI_FOR_EDITOR_LIMIT,
@@ -49,23 +42,14 @@ import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
-import {addEditorEventListener, dispatchEditorEvent} from './authoring-react-editor-events';
+import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
 import {appConfig} from 'appConfig';
-import {runTansa} from './editor3-tansa-integration';
-
-interface IEditor3Config {
-    editorFormat?: Array<RICH_FORMATTING_OPTION>;
-    minLength?: number;
-    maxLength?: number;
-    singleLine?: boolean; // also limits to plain text
-    cleanPastedHtml?: boolean;
-}
-
-export interface IEditor3Value {
-    store: Store<IEditorStore>;
-    contentState: ContentState;
-}
+import {runTansa} from '../../editor3-tansa-integration';
+import {IEditor3Value, IEditor3Config} from './interfaces';
+import {Difference} from './difference';
+import {Preview} from './preview';
+import {Config} from './config';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -345,78 +329,15 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
     }
 }
 
-class Editor3ConfigComponent extends React.PureComponent<IConfigComponentProps<IEditor3Config>> {
-    render() {
-        return (
-            <div>
-                <div>{gettext('Formatting options')}</div>
-                <MultiSelect
-                    items={EDITOR3_RICH_FORMATTING_OPTIONS.map((label) => ({id: label, label}))}
-                    values={this.props.config?.editorFormat ?? []}
-                    onChange={(editorFormat: Array<RICH_FORMATTING_OPTION>) => {
-                        this.props.onChange({...this.props.config, editorFormat});
-                    }}
-                />
-
-                <br />
-
-                <div>{gettext('Minimum length')}</div>
-
-                <input
-                    type="number"
-                    value={this.props.config.minLength}
-                    onChange={(event) => {
-                        this.props.onChange({...this.props.config, minLength: parseInt(event.target.value, 10)});
-                    }}
-                />
-
-                <br />
-
-                <div>{gettext('Maximum length')}</div>
-
-                <input
-                    type="number"
-                    value={this.props.config.maxLength}
-                    onChange={(event) => {
-                        this.props.onChange({...this.props.config, maxLength: parseInt(event.target.value, 10)});
-                    }}
-                />
-
-                <br />
-                <br />
-
-                <Checkbox
-                    label={{text: gettext('Single line')}}
-                    checked={this.props.config?.singleLine ?? false}
-                    onChange={(val) => {
-                        this.props.onChange({...this.props.config, singleLine: val});
-                    }}
-                />
-
-                <br />
-
-                <Checkbox
-                    label={{text: gettext('Clean pasted HTML')}}
-                    checked={this.props.config?.cleanPastedHtml ?? false}
-                    onChange={(val) => {
-                        this.props.onChange({...this.props.config, cleanPastedHtml: val});
-                    }}
-                />
-            </div>
-        );
-    }
-}
-
-const editor3AuthoringReact = 'editor3--authoring-react';
-
 export function registerEditor3AsCustomField() {
     const customFields: Array<ICustomFieldType<IEditor3Value, IEditor3Config, IUserPreferences>> = [
         {
             id: 'editor3',
             label: gettext('Editor3 (authoring-react)'),
             editorComponent: Editor3Component,
-            previewComponent: () => null, // TODO:
-            configComponent: Editor3ConfigComponent,
+            previewComponent: Preview,
+            differenceComponent: Difference,
+            configComponent: Config,
 
             retrieveStoredValue: (fieldId, article) => {
                 const rawContentState = article.fields_meta?.[fieldId]?.['draftjsState'][0];
@@ -504,5 +425,5 @@ export function registerEditor3AsCustomField() {
         },
     };
 
-    registerInternalExtension(editor3AuthoringReact, result);
+    registerInternalExtension('editor3--authoring-react', result);
 }

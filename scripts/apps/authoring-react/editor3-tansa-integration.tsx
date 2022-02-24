@@ -1,8 +1,8 @@
 import {IContentProfileV2} from 'superdesk-api';
 import {Map} from 'immutable';
-import {IEditor3Value} from './manage-editor3-inside-authoring-react';
 import {getTansaHtml} from 'core/editor3/helpers/tansa';
 import {setHtmlFromTansa} from 'core/editor3/actions';
+import {IEditor3Value} from './fields/editor3/interfaces';
 
 const TANSA_PROOFING_ATTRIBUTE = 'tansa-proofing';
 

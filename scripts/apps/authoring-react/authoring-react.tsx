@@ -53,7 +53,7 @@ import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 
-function getFieldsData(
+export function getFieldsData(
     item: IArticle,
     fields: Map<string, IAuthoringFieldV2>,
     userPreferencesForFields: {[key: string]: unknown},

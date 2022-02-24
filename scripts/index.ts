@@ -23,7 +23,7 @@ import {i18n} from 'core/utils';
 import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
 import {merge} from 'lodash';
 import {registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
-import {registerEditor3AsCustomField} from 'apps/authoring-react/manage-editor3-inside-authoring-react';
+import {registerEditor3AsCustomField} from 'apps/authoring-react/fields/editor3';
 
 let body = angular.element('body');
 

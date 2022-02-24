@@ -19,6 +19,7 @@ export class Spacer extends React.PureComponent<IPropsSpacer> {
                     justifyContent: justifyContent ?? justifyContentDefault,
                     alignItems: alignItems ?? alignItemsDefault,
                     width: noGrow === true ? undefined : '100%',
+                    ...(this.props.style ?? {}),
                 }}
             >
                 {this.props.children.map((el, i) => noWrap ? el : (

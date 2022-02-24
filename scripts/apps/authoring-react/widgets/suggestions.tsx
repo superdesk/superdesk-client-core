@@ -6,7 +6,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {EmptyState, Label} from 'superdesk-ui-framework/react';
-import {IEditor3Value} from '../manage-editor3-inside-authoring-react';
+import {IEditor3Value} from '../fields/editor3/interfaces';
 import {getCustomEditor3Data} from 'core/editor3/helpers/editor3CustomData';
 import {store} from 'core/data';
 import {Card} from 'core/ui/components/Card';

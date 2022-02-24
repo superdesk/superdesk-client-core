@@ -65,6 +65,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
         }
 
         const profile: IContentProfileV2 = {
+            id: item.profile,
             name: 'test content profile',
             header: headerFields,
             content: contentFields,

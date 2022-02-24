@@ -1,7 +1,15 @@
 import React from 'react';
 
-export const ModalBody: React.StatelessComponent = (props) => (
-    <div className="modal__body" data-test-id="modal-body">
-        {props.children}
-    </div>
-);
+interface IProps {
+    style?: React.CSSProperties;
+}
+
+export class ModalBody extends React.PureComponent<IProps> {
+    render() {
+        return (
+            <div className="modal__body" data-test-id="modal-body" style={this.props.style}>
+                {this.props.children}
+            </div>
+        );
+    }
+}
