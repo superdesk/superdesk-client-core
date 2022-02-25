@@ -10,13 +10,16 @@ export class WidgetHeaderComponent extends React.PureComponent<IWidgetIntegratio
             widget,
             pinned,
             pinWidget,
+            customContent,
         } = this.props;
 
         return (
             <Layout.PanelHeader
-                title={this.props.widgetName}
+                title={customContent == null ? this.props.widgetName : ''}
                 onClose={() => this.props.closeWidget()}
             >
+                {customContent ?? null}
+
                 <ButtonGroup align="end">
                     <button
                         className={

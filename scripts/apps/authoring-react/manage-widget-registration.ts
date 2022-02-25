@@ -5,14 +5,14 @@ import {getInlineCommentsWidget} from './widgets/inline-comments';
 import {IExtensionActivationResult} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {getSuggestionsWidget} from './widgets/suggestions';
-import {getVersionsHistoryWidget} from './widgets/versions-history';
+import {getVersionsAndItemHistoryWidget} from './widgets/versions-and-item-history';
 
 const authoringReactWidgetsExtension = 'authoring-react-widgets';
 
 export function registerAuthoringReactWidgets() {
     const sidebarWidgets: IExtensionActivationResult['contributions']['authoringSideWidgets'] = [
         getFindAndReplaceWidget(),
-        getVersionsHistoryWidget(),
+        getVersionsAndItemHistoryWidget(),
     ];
 
     if ((appConfig.features.editorInlineComments ?? true) === true) {

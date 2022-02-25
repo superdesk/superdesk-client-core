@@ -1206,6 +1206,9 @@ declare module 'superdesk-api' {
     export interface IPropsWidgetHeading {
         widgetName: string;
         editMode: boolean;
+
+        // will only work for authoring-react
+        customContent?: JSX.Element;
     }
 
     export interface IGridComponentProps {

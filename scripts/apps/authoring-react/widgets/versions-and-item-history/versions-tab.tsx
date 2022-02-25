@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-    IAuthoringSideWidget,
     IArticle,
     IExtensionActivationResult,
     IRestApiResponse,
@@ -8,8 +7,6 @@ import {
     IStage,
 } from 'superdesk-api';
 import {gettext, getItemLabel} from 'core/utils';
-import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
-import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {Card} from 'core/ui/components/Card';
 import {TimeElem} from 'apps/search/components';
@@ -32,9 +29,6 @@ const loadingState: IState = {
     selectedForComparison: [],
 };
 
-// Can't call `gettext` in the top level
-const getLabel = () => gettext('Versions and history');
-
 type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
 >;
@@ -46,7 +40,7 @@ interface IState {
     selectedForComparison: Array<IArticle>;
 }
 
-class VersionsHistoryWidget extends React.PureComponent<IProps, IState> {
+export class VersionsTab extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
@@ -140,166 +134,143 @@ class VersionsHistoryWidget extends React.PureComponent<IProps, IState> {
             store.getState().users.entities;
 
         return (
-            <AuthoringWidgetLayout
-                header={(
-                    <AuthoringWidgetHeading
-                        widgetName={getLabel()}
-                        editMode={false}
-                    />
-                )}
-                body={(
-                    <Spacer v gap="8" noWrap alignItems="stretch">
-                        <Spacer h gap="8" justifyContent="space-between" noGrow>
-                            <Spacer h gap="8" justifyContent="start" noGrow>
-                                {gettext('Selected: {{n}}', {n: selectedForComparison.length})}
-
-                                {
-                                    selectedForComparison.length > 0 && (
-                                        <Button
-                                            text={gettext('Clear')}
-                                            onClick={() => {
-                                                this.setState({selectedForComparison: []});
-                                            }}
-                                            style="hollow"
-                                            size="small"
-                                        />
-                                    )
-                                }
-                            </Spacer>
-
-                            <Button
-                                text={gettext('Compare')}
-                                disabled={selectedForComparison.length !== 2}
-                                onClick={() => {
-                                    this.compareVersions();
-                                }}
-                                type="primary"
-                                size="small"
-                            />
-                        </Spacer>
+            <Spacer v gap="8" noWrap alignItems="stretch">
+                <Spacer h gap="8" justifyContent="space-between" noGrow>
+                    <Spacer h gap="8" justifyContent="start" noGrow>
+                        {gettext('Selected: {{n}}', {n: selectedForComparison.length})}
 
                         {
-                            versions.map((item, i) => {
-                                const canRevert = i !== 0 && !readOnly && !sdApi.article.isPublished(item);
+                            selectedForComparison.length > 0 && (
+                                <Button
+                                    text={gettext('Clear')}
+                                    onClick={() => {
+                                        this.setState({selectedForComparison: []});
+                                    }}
+                                    style="hollow"
+                                    size="small"
+                                />
+                            )
+                        }
+                    </Spacer>
 
-                                return (
-                                    <Card key={i}>
+                    <Button
+                        text={gettext('Compare')}
+                        disabled={selectedForComparison.length !== 2}
+                        onClick={() => {
+                            this.compareVersions();
+                        }}
+                        type="primary"
+                        size="small"
+                    />
+                </Spacer>
+
+                {
+                    versions.map((item, i) => {
+                        const canRevert = i !== 0 && !readOnly && !sdApi.article.isPublished(item);
+
+                        return (
+                            <Card key={i}>
+                                <Spacer h gap="8" justifyContent="space-between" noGrow>
+                                    <TimeElem date={item._created} />
+                                    <span>
+                                        {
+                                            gettext('by {{user}}', {
+                                                user: userEntities[item.version_creator].display_name,
+                                            })
+                                        }
+                                    </span>
+                                </Spacer>
+
+                                <SpacerInline v gap="8" />
+
+                                <div>
+                                    <strong>{getItemLabel(item)}</strong>
+                                </div>
+
+                                <SpacerInline v gap="8" />
+
+                                {
+                                    item.task.desk != null && (
                                         <Spacer h gap="8" justifyContent="space-between" noGrow>
-                                            <TimeElem date={item._created} />
-                                            <span>
-                                                {
-                                                    gettext('by {{user}}', {
-                                                        user: userEntities[item.version_creator].display_name,
-                                                    })
-                                                }
-                                            </span>
+                                            <span>{desks.get(item.task.desk).name}</span>
+                                            <span>{stages.get(item.task.stage).name}</span>
                                         </Spacer>
+                                    )
+                                }
 
-                                        <SpacerInline v gap="8" />
+                                <SpacerInline v gap="8" />
 
+                                <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
+                                    <div>
+                                        {gettext('version: {{n}}', {n: item._current_version})}
+                                    </div>
+
+                                    <div style={{display: 'flex'}}>
+                                        <StateComponent item={item} />
+                                    </div>
+                                </Spacer>
+
+                                <SpacerInline v gap="8" />
+
+                                <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow>
+                                    <div>
+                                        <Checkbox
+                                            label={{text: gettext('Select for comparison'), hidden: true}}
+                                            checked={selectedForComparison.includes(item)}
+                                            onChange={(val) => {
+                                                if (val === true) {
+                                                    this.setState({
+                                                        selectedForComparison:
+                                                            selectedForComparison.concat(item),
+                                                    });
+                                                } else {
+                                                    this.setState({
+                                                        selectedForComparison:
+                                                            selectedForComparison.filter(
+                                                                (_item) => _item !== item,
+                                                            ),
+                                                    });
+                                                }
+                                            }}
+                                        />
+                                    </div>
+
+                                    <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
                                         <div>
-                                            <strong>{getItemLabel(item)}</strong>
+                                            <Button
+                                                text={gettext('Preview')}
+                                                onClick={() => {
+                                                    previewArticle(
+                                                        gettext('version {{n}}', {n: item._current_version}),
+                                                        item,
+                                                    );
+                                                }}
+                                                style="hollow"
+                                                size="small"
+                                            />
                                         </div>
 
-                                        <SpacerInline v gap="8" />
-
                                         {
-                                            item.task.desk != null && (
-                                                <Spacer h gap="8" justifyContent="space-between" noGrow>
-                                                    <span>{desks.get(item.task.desk).name}</span>
-                                                    <span>{stages.get(item.task.stage).name}</span>
-                                                </Spacer>
-                                            )
-                                        }
-
-                                        <SpacerInline v gap="8" />
-
-                                        <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
-                                            <div>
-                                                {gettext('version: {{n}}', {n: item._current_version})}
-                                            </div>
-
-                                            <div style={{display: 'flex'}}>
-                                                <StateComponent item={item} />
-                                            </div>
-                                        </Spacer>
-
-                                        <SpacerInline v gap="8" />
-
-                                        <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow>
-                                            <div>
-                                                <Checkbox
-                                                    label={{text: gettext('Select for comparison'), hidden: true}}
-                                                    checked={selectedForComparison.includes(item)}
-                                                    onChange={(val) => {
-                                                        if (val === true) {
-                                                            this.setState({
-                                                                selectedForComparison:
-                                                                    selectedForComparison.concat(item),
-                                                            });
-                                                        } else {
-                                                            this.setState({
-                                                                selectedForComparison:
-                                                                    selectedForComparison.filter(
-                                                                        (_item) => _item !== item,
-                                                                    ),
-                                                            });
-                                                        }
-                                                    }}
-                                                />
-                                            </div>
-
-                                            <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
+                                            canRevert && (
                                                 <div>
                                                     <Button
-                                                        text={gettext('Preview')}
+                                                        text={gettext('Revert')}
                                                         onClick={() => {
-                                                            previewArticle(
-                                                                gettext('version {{n}}', {n: item._current_version}),
-                                                                item,
-                                                            );
+                                                            this.revert(item);
                                                         }}
                                                         style="hollow"
                                                         size="small"
                                                     />
                                                 </div>
-
-                                                {
-                                                    canRevert && (
-                                                        <div>
-                                                            <Button
-                                                                text={gettext('Revert')}
-                                                                onClick={() => {
-                                                                    this.revert(item);
-                                                                }}
-                                                                style="hollow"
-                                                                size="small"
-                                                            />
-                                                        </div>
-                                                    )
-                                                }
-                                            </Spacer>
-                                        </Spacer>
-                                    </Card>
-                                );
-                            })
-                        }
-                    </Spacer>
-                )}
-                background="grey"
-            />
+                                            )
+                                        }
+                                    </Spacer>
+                                </Spacer>
+                            </Card>
+                        );
+                    })
+                }
+            </Spacer>
         );
     }
-}
-
-export function getVersionsHistoryWidget() {
-    const widget: IAuthoringSideWidget = {
-        _id: 'versions-history',
-        label: getLabel(),
-        order: 4,
-        icon: 'history',
-        component: VersionsHistoryWidget,
-    };
-
-    return widget;
 }

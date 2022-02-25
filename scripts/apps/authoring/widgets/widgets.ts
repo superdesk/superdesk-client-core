@@ -102,6 +102,13 @@ export interface IWidgetIntegrationComponentProps {
     editMode: boolean;
     pinWidget(widget: any): void;
     closeWidget(): void;
+
+    /**
+     * Only available in authoring-react.
+     * If used, widgetName will not be shown.
+     * Required for displaying multiple sections for the same widget.
+     */
+    customContent?: JSX.Element;
 }
 
 /**
