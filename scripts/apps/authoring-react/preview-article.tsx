@@ -8,10 +8,10 @@ interface IProps {
     article: IArticle;
     profile: IContentProfileV2;
     fieldsData: Map<string, any>;
-    fieldPadding: number;
+    fieldPadding?: number;
 }
 
-export class ViewArticle extends React.PureComponent<IProps> {
+export class PreviewArticle extends React.PureComponent<IProps> {
     render() {
         const {article, profile, fieldsData, fieldPadding} = this.props;
         const allFields = profile.header.merge(profile.content);
@@ -23,7 +23,7 @@ export class ViewArticle extends React.PureComponent<IProps> {
                         const FieldEditorConfig = getField(field.fieldType);
 
                         return (
-                            <div key={field.id} style={{padding: fieldPadding}}>
+                            <div key={field.id} style={{padding: fieldPadding ?? 0}}>
                                 <span
                                     className="field-label--base"
                                     style={{marginBottom: 20}}

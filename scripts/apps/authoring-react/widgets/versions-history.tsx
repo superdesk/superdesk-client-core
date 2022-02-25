@@ -16,17 +16,20 @@ import {TimeElem} from 'apps/search/components';
 import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
 import {store} from 'core/data';
 import {StateComponent} from 'apps/search/components/fields/state';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, Checkbox} from 'superdesk-ui-framework/react';
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 import {Map} from 'immutable';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {omitFields} from '../data-layer';
+import {compareArticles} from '../compare-articles/compare-articles';
+import {previewArticle} from '../preview-article-modal';
 
 const loadingState: IState = {
     versions: 'loading',
     desks: Map(),
     stages: Map(),
+    selectedForComparison: [],
 };
 
 // Can't call `gettext` in the top level
@@ -40,6 +43,7 @@ interface IState {
     versions: Array<IArticle> | 'loading';
     desks: Map<string, IDesk>;
     stages: Map<string, IStage>;
+    selectedForComparison: Array<IArticle>;
 }
 
 class VersionsHistoryWidget extends React.PureComponent<IProps, IState> {
@@ -48,8 +52,9 @@ class VersionsHistoryWidget extends React.PureComponent<IProps, IState> {
 
         this.state = loadingState;
 
-        this.revert = this.revert.bind(this);
         this.initialize = this.initialize.bind(this);
+        this.revert = this.revert.bind(this);
+        this.compareVersions = this.compareVersions.bind(this);
     }
 
     initialize() {
@@ -102,6 +107,23 @@ class VersionsHistoryWidget extends React.PureComponent<IProps, IState> {
         });
     }
 
+    compareVersions() {
+        const [item1, item2] = this.state.selectedForComparison;
+
+        compareArticles(
+            {
+                label: gettext('version {{n}}', {n: item1._current_version}),
+                article: item1,
+            },
+            {
+                label: gettext('version {{n}}', {n: item2._current_version}),
+                article: item2,
+            },
+        );
+
+        this.setState({selectedForComparison: []});
+    }
+
     componentDidMount() {
         this.initialize();
     }
@@ -111,7 +133,7 @@ class VersionsHistoryWidget extends React.PureComponent<IProps, IState> {
             return null;
         }
 
-        const {versions, desks, stages} = this.state;
+        const {versions, desks, stages, selectedForComparison} = this.state;
         const {readOnly} = this.props;
 
         const userEntities =
@@ -126,7 +148,36 @@ class VersionsHistoryWidget extends React.PureComponent<IProps, IState> {
                     />
                 )}
                 body={(
-                    <Spacer v gap="8">
+                    <Spacer v gap="8" noWrap alignItems="stretch">
+                        <Spacer h gap="8" justifyContent="space-between" noGrow>
+                            <Spacer h gap="8" justifyContent="start" noGrow>
+                                {gettext('Selected: {{n}}', {n: selectedForComparison.length})}
+
+                                {
+                                    selectedForComparison.length > 0 && (
+                                        <Button
+                                            text={gettext('Clear')}
+                                            onClick={() => {
+                                                this.setState({selectedForComparison: []});
+                                            }}
+                                            style="hollow"
+                                            size="small"
+                                        />
+                                    )
+                                }
+                            </Spacer>
+
+                            <Button
+                                text={gettext('Compare')}
+                                disabled={selectedForComparison.length !== 2}
+                                onClick={() => {
+                                    this.compareVersions();
+                                }}
+                                type="primary"
+                                size="small"
+                            />
+                        </Spacer>
+
                         {
                             versions.map((item, i) => {
                                 const canRevert = i !== 0 && !readOnly && !sdApi.article.isPublished(item);
@@ -164,30 +215,70 @@ class VersionsHistoryWidget extends React.PureComponent<IProps, IState> {
                                         <SpacerInline v gap="8" />
 
                                         <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
-                                            <Spacer h gap="8" justifyContent="start" alignItems="center" noWrap>
+                                            <div>
+                                                {gettext('version: {{n}}', {n: item._current_version})}
+                                            </div>
+
+                                            <div style={{display: 'flex'}}>
+                                                <StateComponent item={item} />
+                                            </div>
+                                        </Spacer>
+
+                                        <SpacerInline v gap="8" />
+
+                                        <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow>
+                                            <div>
+                                                <Checkbox
+                                                    label={{text: gettext('Select for comparison'), hidden: true}}
+                                                    checked={selectedForComparison.includes(item)}
+                                                    onChange={(val) => {
+                                                        if (val === true) {
+                                                            this.setState({
+                                                                selectedForComparison:
+                                                                    selectedForComparison.concat(item),
+                                                            });
+                                                        } else {
+                                                            this.setState({
+                                                                selectedForComparison:
+                                                                    selectedForComparison.filter(
+                                                                        (_item) => _item !== item,
+                                                                    ),
+                                                            });
+                                                        }
+                                                    }}
+                                                />
+                                            </div>
+
+                                            <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
                                                 <div>
-                                                    {gettext('version: {{n}}', {n: item._current_version})}
+                                                    <Button
+                                                        text={gettext('Preview')}
+                                                        onClick={() => {
+                                                            previewArticle(
+                                                                gettext('version {{n}}', {n: item._current_version}),
+                                                                item,
+                                                            );
+                                                        }}
+                                                        style="hollow"
+                                                        size="small"
+                                                    />
                                                 </div>
 
-                                                <div style={{display: 'flex'}}>
-                                                    <StateComponent item={item} />
-                                                </div>
+                                                {
+                                                    canRevert && (
+                                                        <div>
+                                                            <Button
+                                                                text={gettext('Revert')}
+                                                                onClick={() => {
+                                                                    this.revert(item);
+                                                                }}
+                                                                style="hollow"
+                                                                size="small"
+                                                            />
+                                                        </div>
+                                                    )
+                                                }
                                             </Spacer>
-
-                                            {
-                                                canRevert && (
-                                                    <div>
-                                                        <Button
-                                                            text={gettext('revert')}
-                                                            onClick={() => {
-                                                                this.revert(item);
-                                                            }}
-                                                            style="hollow"
-                                                            size="small"
-                                                        />
-                                                    </div>
-                                                )
-                                            }
                                         </Spacer>
                                     </Card>
                                 );

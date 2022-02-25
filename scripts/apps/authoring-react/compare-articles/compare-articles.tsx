@@ -2,6 +2,7 @@ import React from 'react';
 import {Map} from 'immutable';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
+import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {IArticle, IContentProfileV2} from 'superdesk-api';
 import {showModal} from 'core/services/modalService';
 import {authoringStorage} from '../data-layer';
@@ -9,8 +10,7 @@ import {getFieldsData} from '../authoring-react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {Button} from 'superdesk-ui-framework/react';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {ViewArticle} from './view-article';
+import {PreviewArticle} from '../preview-article';
 import {ViewDifference} from './view-difference';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {preferences} from 'api/preferences';
@@ -92,7 +92,7 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
         const scrollableColumnCss: React.CSSProperties = {
             display: 'flex',
             flexDirection: 'column',
-            flexGrow: 1,
+            flex: 1,
             height: '100%',
             overflowY: 'auto',
             background: 'white',
@@ -144,7 +144,7 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
                             {
                                 primaryColumnShown && (
                                     <div style={scrollableColumnCss}>
-                                        <ViewArticle
+                                        <PreviewArticle
                                             article={article1}
                                             profile={profile1}
                                             fieldsData={fieldsData1}
@@ -157,7 +157,7 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
                             {
                                 secondaryColumnShown && (
                                     <div style={scrollableColumnCss}>
-                                        <ViewArticle
+                                        <PreviewArticle
                                             article={article2}
                                             profile={profile2}
                                             fieldsData={fieldsData2}
