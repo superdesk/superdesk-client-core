@@ -21,9 +21,9 @@ import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 import {Map} from 'immutable';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
-import {omitFields} from '../data-layer';
-import {compareArticles} from '../compare-articles/compare-articles';
-import {previewArticle} from '../preview-article-modal';
+import {omitFields} from '../../data-layer';
+import {compareArticles} from '../../compare-articles/compare-articles';
+import {previewArticle} from '../../preview-article-modal';
 
 const loadingState: IState = {
     versions: 'loading',
