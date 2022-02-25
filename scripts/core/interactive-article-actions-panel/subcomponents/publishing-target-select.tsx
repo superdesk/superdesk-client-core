@@ -63,7 +63,7 @@ export class PublishingTargetSelect extends React.PureComponent<IProps> {
     render() {
         const metadata = ng.get('metadata');
         const subscribers: Array<{_id: string; name: string}> = metadata.values.customSubscribers;
-        const regions: Array<IRegion> = metadata.values.geographical_restrictions;
+        const regions: Array<IRegion> = metadata.values.geographical_restrictions ?? [];
         const subscriberTypes: Array<ISubscriberType> = metadata.values.subscriberTypes;
 
         return (
