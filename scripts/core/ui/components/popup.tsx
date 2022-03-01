@@ -56,7 +56,7 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
                 this.props.referenceElement,
                 this.wrapperEl,
                 {
-                    placement: 'bottom',
+                    placement: this.props.placement,
                     modifiers: [maxSize, applyMaxSize],
                 },
             );
