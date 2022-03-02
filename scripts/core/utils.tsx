@@ -1,3 +1,4 @@
+import React from 'react';
 import gettextjs from 'gettext.js';
 import {debugInfo, getUserInterfaceLanguage} from 'appConfig';
 import {IVocabularyItem, IArticle, IBaseRestApiResponse} from 'superdesk-api';
@@ -68,11 +69,68 @@ export const getSuperdeskType = (event, supportExternalFiles = true) =>
         name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
     );
 
+/**
+ * Works the same way as `gettext`, except that it's possible to also use React components
+ * as placeholders, not only strings.
+ */
+const gettextReact = (
+    text: string,
+    params: {[placeholder: string]: string | number | React.ComponentType},
+): Array<JSX.Element> => {
+    let matches: Array<{index: number, str: string, placeholder: string}> = [];
+
+    for (const placeholder of Object.keys(params)) {
+        /**
+         * Multiple instances of a placeholder might be present.
+         * Different placeholders may be mixed in between of each other.
+         * The loop below will find all instances and push to `matches`.
+         */
+        let lastIndex = 0;
+
+        let match = text.slice(lastIndex, text.length).match(new RegExp(`{{\\s*${placeholder}\\s*}}`));
+
+        while (match != null) {
+            matches.push({index: lastIndex + match.index, str: match['0'], placeholder: placeholder});
+
+            lastIndex += match.index + match['0'].length;
+            match = text.slice(lastIndex, text.length).match(new RegExp(`{{\\s*${placeholder}\\s*}}`));
+        }
+    }
+
+    matches = matches.sort((a, b) => a.index - b.index);
+
+    const result: Array<JSX.Element> = [];
+
+    let fromIndex = 0;
+
+    for (const match of matches) {
+        const plainText = text.slice(fromIndex, match.index);
+
+        result.push(<span key={fromIndex + '-str'}>{plainText}</span>);
+
+        const Replacement = params[match.placeholder];
+
+        if (typeof Replacement === 'function') {
+            result.push(<Replacement key={fromIndex} />);
+        } else {
+            result.push(<span key={fromIndex}>{Replacement}</span>);
+        }
+
+        fromIndex = match.index + match.str.length;
+    }
+
+    const endText = text.slice(fromIndex, text.length);
+
+    result.push(<span key={fromIndex}>{endText}</span>);
+
+    return result;
+};
+
 // example: gettext('Item was locked by {{user}}.', {user: 'John Doe'});
 export const gettext = (
     text: string,
-    params: {[key: string]: string | number} = {},
-): string => {
+    params: {[placeholder: string]: string | number | React.ComponentType} = {},
+) => {
     if (!text) {
         return '';
     }
@@ -86,11 +144,17 @@ export const gettext = (
 
     let translated = i18n.gettext(text);
 
-    Object.keys(params ?? {}).forEach((param) => {
-        translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`, 'g'), params[param]);
-    });
+    const hasReactPlaceholders = Object.values(params).some((val) => typeof val === 'function');
 
-    return translated;
+    if (hasReactPlaceholders) {
+        return gettextReact(translated, params);
+    } else {
+        Object.keys(params ?? {}).forEach((param) => {
+            translated = translated.replace(new RegExp(`{{\\s*${param}\\s*}}`, 'g'), params[param]);
+        });
+
+        return translated;
+    }
 };
 
 /*
