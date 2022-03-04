@@ -329,101 +329,79 @@ class Editor3Component extends React.PureComponent<IProps, IState> {
     }
 }
 
-export function registerEditor3AsCustomField() {
-    const customFields: Array<ICustomFieldType<IEditor3Value, IEditor3Config, IUserPreferences>> = [
-        {
-            id: 'editor3',
-            label: gettext('Editor3 (authoring-react)'),
-            editorComponent: Editor3Component,
-            previewComponent: Preview,
-            differenceComponent: Difference,
-            configComponent: Config,
+export function getEditor3Field(): ICustomFieldType<IEditor3Value, IEditor3Config, IUserPreferences> {
+    const field: ICustomFieldType<IEditor3Value, IEditor3Config, IUserPreferences> = {
+        id: 'editor3',
+        label: gettext('Editor3 (authoring-react)'),
+        editorComponent: Editor3Component,
+        previewComponent: Preview,
+        differenceComponent: Difference,
+        configComponent: Config,
 
-            retrieveStoredValue: (fieldId, article) => {
-                const rawContentState = article.fields_meta?.[fieldId]?.['draftjsState'][0];
+        retrieveStoredValue: (fieldId, article) => {
+            const rawContentState = article.fields_meta?.[fieldId]?.['draftjsState'][0];
 
-                const store = createEditorStore(
-                    {
-                        editorState: rawContentState ?? convertToRaw(ContentState.createFromText('')),
-                        onChange: noop,
-                        language: article.language,
-                    },
-                    ng.get('spellcheck'),
-                    true,
-                );
+            const store = createEditorStore(
+                {
+                    editorState: rawContentState ?? convertToRaw(ContentState.createFromText('')),
+                    onChange: noop,
+                    language: article.language,
+                },
+                ng.get('spellcheck'),
+                true,
+            );
 
-                return {
-                    store,
-                    contentState: store.getState().editorState.getCurrentContent(),
-                };
-            },
-
-            storeValue: (fieldId, article, value, config) => {
-                const contentState = prepareEditor3StateForExport(
-                    value.store.getState().editorState.getCurrentContent(),
-                );
-                const rawContentState = convertToRaw(contentState);
-
-                const generatedValue = (() => {
-                    if (config.singleLine) {
-                        return contentState.getPlainText();
-                    } else {
-                        return editor3StateToHtml(contentState);
-                    }
-                })();
-
-                const annotations = getAnnotationsForField(article, fieldId);
-
-                const articleUpdated: IArticle = {
-                    ...article,
-                    fields_meta: {
-                        ...(article.fields_meta ?? {}),
-                        [fieldId]: {
-                            draftjsState: [rawContentState],
-                        },
-                    },
-                };
-
-                if (annotations.length > 0) {
-                    articleUpdated.fields_meta[fieldId].annotations = annotations;
-                }
-
-                /**
-                 * Output generated value to hardcoded fields
-                 */
-                if (CONTENT_FIELDS_DEFAULTS[fieldId] != null) {
-                    articleUpdated[fieldId] = generatedValue;
-                }
-
-                // keep compatibility with existing output format
-                if (fieldId === 'body_html') {
-                    articleUpdated.annotations = annotations;
-                }
-
-                return articleUpdated;
-            },
+            return {
+                store,
+                contentState: store.getState().editorState.getCurrentContent(),
+            };
         },
-    ];
 
-    const result: IExtensionActivationResult = {
-        contributions: {
-            getAuthoringActions: (article, contentProfile, fieldsData) => {
-                if (appConfig.features.useTansaProofing === true) {
-                    const checkSpellingAction: IArticleAction = {
-                        label: gettext('Check spelling'),
-                        onTrigger: () => {
-                            runTansa(contentProfile, fieldsData);
-                        },
-                    };
+        storeValue: (fieldId, article, value, config) => {
+            const contentState = prepareEditor3StateForExport(
+                value.store.getState().editorState.getCurrentContent(),
+            );
+            const rawContentState = convertToRaw(contentState);
 
-                    return Promise.resolve([checkSpellingAction]);
+            const generatedValue = (() => {
+                if (config.singleLine) {
+                    return contentState.getPlainText();
                 } else {
-                    return Promise.resolve([]);
+                    return editor3StateToHtml(contentState);
                 }
-            },
-            customFieldTypes: customFields,
+            })();
+
+            const annotations = getAnnotationsForField(article, fieldId);
+
+            const articleUpdated: IArticle = {
+                ...article,
+                fields_meta: {
+                    ...(article.fields_meta ?? {}),
+                    [fieldId]: {
+                        draftjsState: [rawContentState],
+                    },
+                },
+            };
+
+            if (annotations.length > 0) {
+                articleUpdated.fields_meta[fieldId].annotations = annotations;
+            }
+
+            /**
+             * Output generated value to hardcoded fields
+             */
+            if (CONTENT_FIELDS_DEFAULTS[fieldId] != null) {
+                articleUpdated[fieldId] = generatedValue;
+            }
+
+            // keep compatibility with existing output format
+            if (fieldId === 'body_html') {
+                articleUpdated.annotations = annotations;
+            }
+
+            return articleUpdated;
         },
     };
 
-    registerInternalExtension('editor3--authoring-react', result);
+    return field;
 }
