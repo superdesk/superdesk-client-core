@@ -6,7 +6,7 @@ import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {gettext} from 'core/utils';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {Radio, CheckGroup} from 'superdesk-ui-framework';
+import {RadioGroup, CheckGroup} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
@@ -135,7 +135,7 @@ export class CharacterCountConfigModal extends React.PureComponent<IModalProps, 
                         )}
                     </p>
                     <CheckGroup orientation="vertical">
-                        <Radio
+                        <RadioGroup
                             value={this.state.radioValue}
                             options={[
                                 {

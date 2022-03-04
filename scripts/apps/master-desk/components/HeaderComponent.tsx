@@ -3,7 +3,7 @@ import ng from 'core/services/ng';
 import {IDesk} from 'superdesk-api';
 import {
     CheckButtonGroup,
-    RadioButton,
+    RadioButtonGroup,
     Switch,
     Dropdown,
     NavButton,
@@ -195,7 +195,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
 
                     <ButtonGroup align="end" padded={true}>
                         <CheckButtonGroup>
-                            <RadioButton
+                            <RadioButtonGroup
                                 value={this.props.activeTab}
                                 options={tabs}
                                 onChange={(value: IMasterDeskTab) => this.changeTab(value)}
@@ -228,6 +228,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                 <label>{gettext('Show all')}</label>
                                 <div className="pull-right">
                                     <Switch
+                                        label={{hidden: true, text: gettext('Show all')}}
                                         value={this.state.showAllDesks}
                                         onChange={() => this.toggleShowAll()}
                                     />
@@ -239,6 +240,7 @@ export class HeaderComponent extends React.Component<IProps, IState> {
                                     <label>{item.name}</label>
                                     <div className="pull-right">
                                         <Switch
+                                            label={{hidden: true, text: gettext('Toggle desk')}}
                                             value={this.isDeskActive(item)}
                                             onChange={() => this.toggleDesk(item)}
                                         />

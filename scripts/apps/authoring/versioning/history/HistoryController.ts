@@ -14,7 +14,6 @@ HistoryController.$inject = [
     '$q',
     'archiveService',
     'authoringWorkspace',
-    'gettext',
 ];
 
 export type PublishType = 'publish' | 'kill' | 'correct' | 'takedown' | 'resend' | 'unpublish';
@@ -209,7 +208,6 @@ export function HistoryController(
     $q,
     archiveService,
     authoringWorkspace: AuthoringWorkspaceService,
-    gettext,
 ) {
     $scope.highlightsById = {};
     $scope.historyItems = null;

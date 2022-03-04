@@ -38,10 +38,10 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                     }}
                                     readOnly={this.props.readOnly}
                                     config={field.fieldConfig}
-                                    userPreferences={this.props.userPreferencesForFields[field.id]}
+                                    userPreferences={this.props.userPreferencesForFields[field.id] ?? {}}
                                     onUserPreferencesChange={(fieldPreferences) => {
                                         this.props.setUserPreferencesForFields({
-                                            ...this.props.userPreferencesForFields,
+                                            ...(this.props.userPreferencesForFields ?? {}),
                                             [field.id]: fieldPreferences,
                                         });
                                     }}

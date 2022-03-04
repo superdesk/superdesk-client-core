@@ -144,8 +144,8 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                             this.updateItemMeta(index, 'internal', value);
                                                         }}
                                                         disabled={this.state.saving}
+                                                        label={{text: gettext('Internal')}}
                                                     />
-                                                    <label>{gettext('Internal')}</label>
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
