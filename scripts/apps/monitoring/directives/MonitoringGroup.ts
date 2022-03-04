@@ -364,7 +364,7 @@ export function MonitoringGroup(
                 /**
                  * When manual refreshing is enabled, scrolling should not automatically refresh the list.
                  */
-                if (scope.showRefresh === true && options.event_origin === 'scroll') {
+                if (scope.showRefresh === true && options?.event_origin === 'scroll') {
                     return;
                 }
 
