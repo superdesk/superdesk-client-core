@@ -150,7 +150,7 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
                                 notify.pop();
                                 notify.success(gettext('user saved.'));
                                 scope.onsave({user: scope.origUser});
-
+                                metadata.fetchAuthors(self);
                                 if (scope.user._id === session.identity._id) {
                                     session.updateIdentity(scope.origUser);
                                 }

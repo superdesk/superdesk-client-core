@@ -19,6 +19,14 @@ if (appConfig.ui == null) {
     }
 }
 
+if (appConfig.features == null) {
+    appConfig.features = {};
+}
+
+if (appConfig.features.autorefreshContent == null) {
+    appConfig.features.autorefreshContent = true; // default to true
+}
+
 export const dashboardRoute = '/workspace';
 export const IDENTITY_KEY = 'sess:user';
 

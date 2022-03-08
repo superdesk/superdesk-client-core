@@ -1,3 +1,4 @@
+import 'web-animations-js'; // polyfill for Element.animate()
 import 'jquery';
 import 'jquery-ui/jquery-ui';
 import 'jquery-jcrop';
