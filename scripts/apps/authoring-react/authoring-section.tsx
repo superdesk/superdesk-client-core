@@ -13,6 +13,8 @@ interface IProps {
     onChange(fieldId: string, value: unknown): void;
 }
 
+const defaultUserPreferences = {};
+
 export class AuthoringSection extends React.PureComponent<IProps> {
     render() {
         const {fields, fieldsData} = this.props;
@@ -38,7 +40,9 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                     }}
                                     readOnly={this.props.readOnly}
                                     config={field.fieldConfig}
-                                    userPreferences={this.props.userPreferencesForFields[field.id] ?? {}}
+                                    userPreferences={
+                                        this.props.userPreferencesForFields[field.id] ?? defaultUserPreferences
+                                    }
                                     onUserPreferencesChange={(fieldPreferences) => {
                                         this.props.setUserPreferencesForFields({
                                             ...(this.props.userPreferencesForFields ?? {}),

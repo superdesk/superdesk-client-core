@@ -8,14 +8,16 @@ import {EDITOR3_RICH_FORMATTING_OPTIONS} from 'apps/workspace/content/components
 
 export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Config>> {
     render() {
+        const config = this.props.config ?? {};
+
         return (
             <div>
                 <div>{gettext('Formatting options')}</div>
                 <MultiSelect
                     items={EDITOR3_RICH_FORMATTING_OPTIONS.map((label) => ({id: label, label}))}
-                    values={this.props.config?.editorFormat ?? []}
+                    values={config?.editorFormat ?? []}
                     onChange={(editorFormat: Array<RICH_FORMATTING_OPTION>) => {
-                        this.props.onChange({...this.props.config, editorFormat});
+                        this.props.onChange({...config, editorFormat});
                     }}
                 />
 
@@ -25,9 +27,9 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
 
                 <input
                     type="number"
-                    value={this.props.config.minLength}
+                    value={config.minLength}
                     onChange={(event) => {
-                        this.props.onChange({...this.props.config, minLength: parseInt(event.target.value, 10)});
+                        this.props.onChange({...config, minLength: parseInt(event.target.value, 10)});
                     }}
                 />
 
@@ -37,9 +39,9 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
 
                 <input
                     type="number"
-                    value={this.props.config.maxLength}
+                    value={config.maxLength}
                     onChange={(event) => {
-                        this.props.onChange({...this.props.config, maxLength: parseInt(event.target.value, 10)});
+                        this.props.onChange({...config, maxLength: parseInt(event.target.value, 10)});
                     }}
                 />
 
@@ -48,9 +50,9 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
 
                 <Checkbox
                     label={{text: gettext('Single line')}}
-                    checked={this.props.config?.singleLine ?? false}
+                    checked={config?.singleLine ?? false}
                     onChange={(val) => {
-                        this.props.onChange({...this.props.config, singleLine: val});
+                        this.props.onChange({...config, singleLine: val});
                     }}
                 />
 
@@ -58,9 +60,9 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
 
                 <Checkbox
                     label={{text: gettext('Clean pasted HTML')}}
-                    checked={this.props.config?.cleanPastedHtml ?? false}
+                    checked={config?.cleanPastedHtml ?? false}
                     onChange={(val) => {
-                        this.props.onChange({...this.props.config, cleanPastedHtml: val});
+                        this.props.onChange({...config, cleanPastedHtml: val});
                     }}
                 />
             </div>
