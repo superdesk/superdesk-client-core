@@ -136,3 +136,16 @@ export function arrayMove<T>(arr: Array<T>, from: number, to: number): Array<T> 
 
     return copy;
 }
+
+/**
+ * Returns 'black' or 'white' depending on contrast of the background color.
+ * @param backgroundColor - 6 characters long hex code starting with #
+ */
+export function getTextColor(backgroundColor: string): 'black' | 'white' {
+    const r = parseInt(backgroundColor.substr(1, 2), 16);
+    const g = parseInt(backgroundColor.substr(3, 2), 16);
+    const b = parseInt(backgroundColor.substr(5, 2), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+    return (yiq >= 128) ? 'black' : 'white';
+}

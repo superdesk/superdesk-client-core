@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {IDropdownConfig, IDropdownOption} from '.';
+import {getTextColor} from 'core/helpers/utils';
 
 interface IProps {
     option: IDropdownOption;
@@ -18,6 +19,7 @@ export class DropdownItemTemplate extends React.PureComponent<IProps> {
             aspectRatio: '1',
             height: '1.5em',
             backgroundColor: option.color ?? 'transparent',
+            color: option.color == null ? 'black' : getTextColor(option.color),
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
