@@ -35,6 +35,8 @@ export class Config extends React.PureComponent<IConfigComponentProps<IDropdownC
                 newItemTemplate,
             ],
             roundCorners: false,
+            readOnly: false,
+            required: false,
         };
 
         return config;

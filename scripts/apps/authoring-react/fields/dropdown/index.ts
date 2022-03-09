@@ -1,4 +1,4 @@
-import {ICustomFieldType} from 'superdesk-api';
+import {ICustomFieldType, ICommonFieldConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Editor} from './editor';
 import {Config} from './config';
@@ -13,7 +13,7 @@ export interface IDropdownOption {
     color?: string;
 }
 
-export interface IDropdownConfig {
+export interface IDropdownConfig extends ICommonFieldConfig {
     type: 'text' | 'number';
     options: Array<IDropdownOption>;
     roundCorners: boolean;

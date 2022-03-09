@@ -13,9 +13,10 @@ import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {gettext} from 'core/utils';
 import {IDropdownConfig} from './fields/dropdown';
+import {IEditor3Config} from './fields/editor3/interfaces';
 
 const convertToFieldV2: {[key: string]: (editor, schema) => IAuthoringFieldV2} = {
-    priority: (editor, schema) => {
+    priority: (fieldEditor, fieldSchema) => {
         const vocabulary = ng.get('vocabularies').getVocabularySync('priority');
 
         // HAS TO BE SYNCED WITH styles/sass/labels.scss
@@ -30,6 +31,8 @@ const convertToFieldV2: {[key: string]: (editor, schema) => IAuthoringFieldV2} =
         };
 
         const fieldConfig: IDropdownConfig = {
+            readOnly: fieldEditor.readonly,
+            required: fieldEditor.required,
             type: 'number',
             options: vocabulary.items.map(({name, qcode, color}) => {
                 const option: IDropdownConfig['options'][0] = {
@@ -52,7 +55,7 @@ const convertToFieldV2: {[key: string]: (editor, schema) => IAuthoringFieldV2} =
 
         return fieldV2;
     },
-    urgency: (editor, schema) => {
+    urgency: (fieldEditor, fieldSchema) => {
         const vocabulary = ng.get('vocabularies').getVocabularySync('urgency');
 
         // HAS TO BE SYNCED WITH styles/sass/labels.scss
@@ -66,6 +69,8 @@ const convertToFieldV2: {[key: string]: (editor, schema) => IAuthoringFieldV2} =
         };
 
         const fieldConfig: IDropdownConfig = {
+            readOnly: fieldEditor.readonly,
+            required: fieldEditor.required,
             type: 'number',
             options: vocabulary.items.map(({name, qcode, color}) => {
                 const option: IDropdownConfig['options'][0] = {
@@ -83,6 +88,26 @@ const convertToFieldV2: {[key: string]: (editor, schema) => IAuthoringFieldV2} =
             id: 'urgency',
             name: gettext('Urgency'),
             fieldType: 'dropdown',
+            fieldConfig,
+        };
+
+        return fieldV2;
+    },
+    slugline: (fieldEditor, fieldSchema) => {
+        const fieldConfig: IEditor3Config = {
+            readOnly: fieldEditor.readonly,
+            required: fieldEditor.required,
+            editorFormat: [],
+            minLength: fieldSchema?.minlength,
+            maxLength: fieldSchema?.maxlength,
+            cleanPastedHtml: fieldSchema?.cleanPastedHTML,
+            singleLine: true,
+        };
+
+        const fieldV2: IAuthoringFieldV2 = {
+            id: 'slugline',
+            name: gettext('Slugline'),
+            fieldType: 'editor3',
             fieldConfig,
         };
 
@@ -128,7 +153,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
             const fieldV2: IAuthoringFieldV2 = (() => {
                 if (convertToFieldV2.hasOwnProperty(fieldId)) { // main, hardcoded fields
-                    return convertToFieldV2[fieldId](editor, schema);
+                    return convertToFieldV2[fieldId](editor[fieldId] ?? {}, schema[fieldId] ?? {});
                 } else { // custom fields
                     const f: IAuthoringFieldV2 = {
                         id: fieldId,

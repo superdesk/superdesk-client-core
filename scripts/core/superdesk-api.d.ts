@@ -2405,8 +2405,12 @@ declare module 'superdesk-api' {
         value2: IValue;
     }
 
-    // IConfig must be a plain object
-    export interface IConfigComponentProps<IConfig extends {}> {
+    export interface ICommonFieldConfig {
+        readOnly?: boolean;
+        required?: boolean;
+    }
+
+    export interface IConfigComponentProps<IConfig extends ICommonFieldConfig> {
         config: IConfig | null;
         onChange(config: IConfig): void;
     }

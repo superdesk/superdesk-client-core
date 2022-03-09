@@ -87,7 +87,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         store.dispatch(setExternalOptions({
             editorFormat: this.props.config.editorFormat ?? [],
             singleLine: this.props.config.singleLine ?? false,
-            readOnly: this.props.readOnly ?? false,
+            readOnly: this.props.readOnly || this.props.config.readOnly,
             spellchecking: getInitialSpellcheckerData(spellcheck, this.props.language),
             limitConfig: this.getCharacterLimitPreference(),
             item: {
@@ -231,6 +231,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         } else if (
             this.props.config !== prevProps.config
             || this.props.readOnly !== prevProps.readOnly
+            || this.props.config.readOnly !== prevProps.config.readOnly
             || this.props.userPreferences !== prevProps.userPreferences
             || this.props.language !== prevProps.language
         ) {
