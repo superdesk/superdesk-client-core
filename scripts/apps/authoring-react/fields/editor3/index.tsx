@@ -83,14 +83,12 @@ export function getEditor3Field(): ICustomFieldType<IEditor3Value, IEditor3Confi
                 articleUpdated.fields_meta[fieldId].annotations = annotations;
             }
 
-            /**
-             * Output generated value to hardcoded fields
-             */
-            if (CONTENT_FIELDS_DEFAULTS[fieldId] != null) {
-                articleUpdated[fieldId] = generatedValue;
-            }
+            articleUpdated.extra = {
+                ...(articleUpdated.extra ?? {}),
+                [fieldId]: generatedValue,
+            };
 
-            // keep compatibility with existing output format
+            // Keep compatibility with existing output format.
             if (fieldId === 'body_html') {
                 articleUpdated.annotations = annotations;
             }

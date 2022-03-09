@@ -11,6 +11,84 @@ import {AutoSaveHttp} from './auto-save-http';
 import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
+import {gettext} from 'core/utils';
+import {IDropdownConfig} from './fields/dropdown';
+
+const convertToFieldV2: {[key: string]: (editor, schema) => IAuthoringFieldV2} = {
+    priority: (editor, schema) => {
+        const vocabulary = ng.get('vocabularies').getVocabularySync('priority');
+
+        // HAS TO BE SYNCED WITH styles/sass/labels.scss
+        var defaultPriorityColors = {
+            0: '#cccccc',
+            1: '#b82f00',
+            2: '#de6237',
+            3: '#e49c56',
+            4: '#edc175',
+            5: '#b6c28b',
+            6: '#c0c9a1',
+        };
+
+        const fieldConfig: IDropdownConfig = {
+            type: 'number',
+            options: vocabulary.items.map(({name, qcode, color}) => {
+                const option: IDropdownConfig['options'][0] = {
+                    id: qcode,
+                    label: name,
+                    color: color ?? defaultPriorityColors[name] ?? undefined,
+                };
+
+                return option;
+            }),
+            roundCorners: false,
+        };
+
+        const fieldV2: IAuthoringFieldV2 = {
+            id: 'priority',
+            name: gettext('Priority'),
+            fieldType: 'dropdown',
+            fieldConfig,
+        };
+
+        return fieldV2;
+    },
+    urgency: (editor, schema) => {
+        const vocabulary = ng.get('vocabularies').getVocabularySync('urgency');
+
+        // HAS TO BE SYNCED WITH styles/sass/labels.scss
+        var defaultUrgencyColors = {
+            0: '#cccccc',
+            1: '#01405b',
+            2: '#005e84',
+            3: '#3684a4',
+            4: '#64a4bf',
+            5: '#a1c6d8',
+        };
+
+        const fieldConfig: IDropdownConfig = {
+            type: 'number',
+            options: vocabulary.items.map(({name, qcode, color}) => {
+                const option: IDropdownConfig['options'][0] = {
+                    id: qcode,
+                    label: name,
+                    color: color ?? defaultUrgencyColors[name] ?? undefined,
+                };
+
+                return option;
+            }),
+            roundCorners: true,
+        };
+
+        const fieldV2: IAuthoringFieldV2 = {
+            id: 'urgency',
+            name: gettext('Urgency'),
+            fieldType: 'dropdown',
+            fieldConfig,
+        };
+
+        return fieldV2;
+    },
+};
 
 function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
     interface IFakeScope {
@@ -27,7 +105,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
     ]).then((res) => {
         const [getLabelForFieldId] = res;
 
-        const {editor, fields} = fakeScope;
+        const {editor, fields, schema} = fakeScope;
 
         const fieldsOrdered =
             Object.keys(editor)
@@ -48,12 +126,20 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
         for (const {fieldId, editorItem} of fieldsOrdered) {
             const field = fields.find(({_id}) => _id === fieldId);
 
-            const fieldV2: IAuthoringFieldV2 = {
-                id: fieldId,
-                name: getLabelForFieldId(fieldId),
-                fieldType: field.custom_field_type,
-                fieldConfig: field.custom_field_config,
-            };
+            const fieldV2: IAuthoringFieldV2 = (() => {
+                if (convertToFieldV2.hasOwnProperty(fieldId)) { // main, hardcoded fields
+                    return convertToFieldV2[fieldId](editor, schema);
+                } else { // custom fields
+                    const f: IAuthoringFieldV2 = {
+                        id: fieldId,
+                        name: getLabelForFieldId(fieldId),
+                        fieldType: field.custom_field_type,
+                        fieldConfig: field.custom_field_config,
+                    };
+
+                    return f;
+                }
+            })();
 
             if (editorItem.section === 'header') {
                 headerFields = headerFields.set(fieldV2.id, fieldV2);
@@ -145,19 +231,79 @@ export function omitFields(
     return {...omit(item, [...customFields, ...baseApiFields])};
 }
 
+interface IAuthoringReactArticleAdapter {
+    /**
+     * Remove changes done for authoring-react
+    */
+    fromAuthoringReact<T extends Partial<IArticle>>(article: T): T;
+
+    /**
+     * Apply changes required for for authoring-react
+    */
+    toAuthoringReact<T extends Partial<IArticle>>(article: T): T;
+}
+
+/**
+ * AuthoringV2 treats all fields as custom fields and stores them in IArticle['extra'].
+ * We need to move the main fields to the top level of IArticle so they are accessible
+ * by the rest of superdesk code.
+ */
+const adapter: IAuthoringReactArticleAdapter = {
+    fromAuthoringReact: (_article) => {
+        // making a copy in order to do immutable updates
+        const article = {..._article};
+
+        if (_article.extra != null) {
+            article.extra = {..._article.extra ?? {}};
+
+            for (const fieldId of Object.keys(convertToFieldV2)) {
+                if (article.extra.hasOwnProperty(fieldId) ?? false) {
+                    article[fieldId] = article.extra[fieldId];
+
+                    delete article.extra[fieldId];
+                }
+            }
+        }
+
+        return article;
+    },
+    toAuthoringReact: (_article) => {
+        // making a copy in order to do immutable updates
+        const article = {..._article};
+
+        if (_article.extra != null) {
+            article.extra = {..._article.extra};
+        }
+
+        for (const fieldId of Object.keys(convertToFieldV2)) {
+            if (article.hasOwnProperty(fieldId)) {
+                if (article.extra == null) {
+                    article.extra = {};
+                }
+
+                article.extra[fieldId] = article[fieldId];
+            }
+        }
+
+        return article;
+    },
+};
+
 export const authoringStorage: IAuthoringStorage = {
     autosave: new AutoSaveHttp(AUTOSAVE_TIMEOUT),
     getArticle: (id) => {
         // TODO: take published items into account
 
-        return dataApi.findOne<IArticle>('archive', id).then((saved) => {
+        return dataApi.findOne<IArticle>('archive', id).then((_saved) => {
+            const saved = adapter.toAuthoringReact(_saved);
+
             if (sdApi.article.isLockedInOtherSession(saved)) {
                 return {saved, autosaved: null};
             } else if (sdApi.article.isLockedInCurrentSession(saved)) {
                 return new Promise<IArticle>((resolve) => {
                     authoringStorage.autosave.get(id)
-                        .then((autosaved) => {
-                            resolve(autosaved);
+                        .then((_autosaved) => {
+                            resolve(adapter.toAuthoringReact(_autosaved));
                         })
                         .catch(() => {
                             resolve(null);
@@ -168,14 +314,14 @@ export const authoringStorage: IAuthoringStorage = {
             }
         });
     },
-    lock: sdApi.article.lock,
-    unlock: sdApi.article.unlock,
+    lock: (id: IArticle['_id']) => sdApi.article.lock(id).then((article) => adapter.toAuthoringReact(article)),
+    unlock: (id: IArticle['_id']) => sdApi.article.unlock(id).then((article) => adapter.toAuthoringReact(article)),
     saveArticle: (current, original) => {
         return authoringApiCommon.saveBefore(current, original).then((_current) => {
             const id = original._id;
             const etag = original._etag;
 
-            const diff = generatePatch(original, _current);
+            let diff = generatePatch(original, _current);
 
             // when object has changes, send entire object to avoid server dropping keys
             if (diff.fields_meta != null) {
@@ -186,6 +332,8 @@ export const authoringStorage: IAuthoringStorage = {
             if (diff.extra != null) {
                 diff.extra = _current.extra;
             }
+
+            diff = adapter.fromAuthoringReact(diff);
 
             const queryString = appConfig.features.publishFromPersonal === true
                 ? '?publish_from_personal=true'
@@ -201,7 +349,7 @@ export const authoringStorage: IAuthoringStorage = {
             }).then((next) => {
                 authoringApiCommon.saveAfter(next, original);
 
-                return next;
+                return adapter.toAuthoringReact(next);
             });
         });
     },

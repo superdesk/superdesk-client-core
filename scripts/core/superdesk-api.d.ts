@@ -609,6 +609,7 @@ declare module 'superdesk-api' {
         target_regions?: Array<{name: string; qcode: string; allow: boolean}>;
         target_types?: Array<{name: string; qcode: string; allow: boolean}>;
 
+        // write-only on the client. Copy of body_html annotations. Original is in fields_meta['body_html']
         annotations?: Array<{id: number; type: string; body: string}>;
 
         // holds info on packages
