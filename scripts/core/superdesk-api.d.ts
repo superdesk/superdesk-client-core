@@ -2092,6 +2092,7 @@ declare module 'superdesk-api' {
             type: string;
             name: string;
             config: any;
+            template_url?: string;
         }>;
 
         userOnlineMinutes: number;
