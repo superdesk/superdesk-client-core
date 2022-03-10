@@ -136,7 +136,7 @@ export function getInitialSpellcheckerData(spellcheck, language: string): IEdito
 }
 
 export function initializeSpellchecker(store, spellcheck) {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
         if (spellcheck != null) {
             Promise.all([
                 spellcheck.getAbbreviationsDict(),

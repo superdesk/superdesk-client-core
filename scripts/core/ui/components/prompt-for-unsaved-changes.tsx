@@ -1,3 +1,5 @@
+/* eslint-disable no-redeclare */
+
 import {showOptionsModal} from './options-modal';
 import {gettext} from 'core/utils';
 

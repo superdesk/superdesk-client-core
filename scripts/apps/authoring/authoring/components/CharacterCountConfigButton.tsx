@@ -76,6 +76,8 @@ export class CharacterCountConfigButton extends React.Component<
             return null;
         }
 
+        const fieldPrefs = this.state.preferences[AUTHORING_FIELD_PREFERENCES];
+
         return (
             <button
                 className="char-count-config-button"
@@ -83,10 +85,7 @@ export class CharacterCountConfigButton extends React.Component<
                     showModal((props) => (
                         <CharacterCountConfigModal
                             closeModal={props.closeModal}
-                            value={
-                                this.state.preferences[AUTHORING_FIELD_PREFERENCES]
-                                    ?.[this.props.field].characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT
-                            }
+                            value={fieldPrefs?.[this.props.field].characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT}
                             onChange={this.onModalValueChange}
                         />
                     ));
