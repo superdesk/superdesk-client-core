@@ -11,110 +11,10 @@ import {AutoSaveHttp} from './auto-save-http';
 import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
-import {gettext} from 'core/utils';
-import {IDropdownConfig} from './fields/dropdown';
-import {IEditor3Config} from './fields/editor3/interfaces';
-
-const convertToFieldV2: {[key: string]: (editor, schema) => IAuthoringFieldV2} = {
-    priority: (fieldEditor, fieldSchema) => {
-        const vocabulary = ng.get('vocabularies').getVocabularySync('priority');
-
-        // HAS TO BE SYNCED WITH styles/sass/labels.scss
-        var defaultPriorityColors = {
-            0: '#cccccc',
-            1: '#b82f00',
-            2: '#de6237',
-            3: '#e49c56',
-            4: '#edc175',
-            5: '#b6c28b',
-            6: '#c0c9a1',
-        };
-
-        const fieldConfig: IDropdownConfig = {
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
-            type: 'number',
-            options: vocabulary.items.map(({name, qcode, color}) => {
-                const option: IDropdownConfig['options'][0] = {
-                    id: qcode,
-                    label: name,
-                    color: color ?? defaultPriorityColors[name] ?? undefined,
-                };
-
-                return option;
-            }),
-            roundCorners: false,
-        };
-
-        const fieldV2: IAuthoringFieldV2 = {
-            id: 'priority',
-            name: gettext('Priority'),
-            fieldType: 'dropdown',
-            fieldConfig,
-        };
-
-        return fieldV2;
-    },
-    urgency: (fieldEditor, fieldSchema) => {
-        const vocabulary = ng.get('vocabularies').getVocabularySync('urgency');
-
-        // HAS TO BE SYNCED WITH styles/sass/labels.scss
-        var defaultUrgencyColors = {
-            0: '#cccccc',
-            1: '#01405b',
-            2: '#005e84',
-            3: '#3684a4',
-            4: '#64a4bf',
-            5: '#a1c6d8',
-        };
-
-        const fieldConfig: IDropdownConfig = {
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
-            type: 'number',
-            options: vocabulary.items.map(({name, qcode, color}) => {
-                const option: IDropdownConfig['options'][0] = {
-                    id: qcode,
-                    label: name,
-                    color: color ?? defaultUrgencyColors[name] ?? undefined,
-                };
-
-                return option;
-            }),
-            roundCorners: true,
-        };
-
-        const fieldV2: IAuthoringFieldV2 = {
-            id: 'urgency',
-            name: gettext('Urgency'),
-            fieldType: 'dropdown',
-            fieldConfig,
-        };
-
-        return fieldV2;
-    },
-    slugline: (fieldEditor, fieldSchema) => {
-        const fieldConfig: IEditor3Config = {
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
-            editorFormat: [],
-            minLength: fieldSchema?.minlength,
-            maxLength: fieldSchema?.maxlength,
-            cleanPastedHtml: fieldSchema?.cleanPastedHTML,
-            singleLine: true,
-            disallowedCharacters: appConfig.disallowed_characters ?? [],
-        };
-
-        const fieldV2: IAuthoringFieldV2 = {
-            id: 'slugline',
-            name: gettext('Slugline'),
-            fieldType: 'editor3',
-            fieldConfig,
-        };
-
-        return fieldV2;
-    },
-};
+import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
+import {getFieldsAdapter} from './fields/fields-adapter';
+import {IOldCustomFieldId} from './interfaces';
+import {getArticleAdapter} from './article-adapter';
 
 function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
     interface IFakeScope {
@@ -127,9 +27,11 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
     return Promise.all([
         getLabelNameResolver(),
+        getCustomFieldVocabularies(),
         ng.get('content').setupAuthoring(item.profile, fakeScope, item),
     ]).then((res) => {
-        const [getLabelForFieldId] = res;
+        const [getLabelForFieldId, customFieldVocabularies] = res;
+        const fieldsAdapter = getFieldsAdapter(customFieldVocabularies);
 
         const {editor, fields, schema} = fakeScope;
 
@@ -153,8 +55,8 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
             const field = fields.find(({_id}) => _id === fieldId);
 
             const fieldV2: IAuthoringFieldV2 = (() => {
-                if (convertToFieldV2.hasOwnProperty(fieldId)) { // main, hardcoded fields
-                    return convertToFieldV2[fieldId](editor[fieldId] ?? {}, schema[fieldId] ?? {});
+                if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
+                    return fieldsAdapter[fieldId](editor[fieldId] ?? {}, schema[fieldId] ?? {});
                 } else { // custom fields
                     const f: IAuthoringFieldV2 = {
                         id: fieldId,
@@ -257,70 +159,17 @@ export function omitFields(
     return {...omit(item, [...customFields, ...baseApiFields])};
 }
 
-interface IAuthoringReactArticleAdapter {
-    /**
-     * Remove changes done for authoring-react
-    */
-    fromAuthoringReact<T extends Partial<IArticle>>(article: T): T;
-
-    /**
-     * Apply changes required for for authoring-react
-    */
-    toAuthoringReact<T extends Partial<IArticle>>(article: T): T;
-}
-
-/**
- * AuthoringV2 treats all fields as custom fields and stores them in IArticle['extra'].
- * We need to move the main fields to the top level of IArticle so they are accessible
- * by the rest of superdesk code.
- */
-const adapter: IAuthoringReactArticleAdapter = {
-    fromAuthoringReact: (_article) => {
-        // making a copy in order to do immutable updates
-        const article = {..._article};
-
-        if (_article.extra != null) {
-            article.extra = {..._article.extra ?? {}};
-
-            for (const fieldId of Object.keys(convertToFieldV2)) {
-                if (article.extra.hasOwnProperty(fieldId) ?? false) {
-                    article[fieldId] = article.extra[fieldId];
-
-                    delete article.extra[fieldId];
-                }
-            }
-        }
-
-        return article;
-    },
-    toAuthoringReact: (_article) => {
-        // making a copy in order to do immutable updates
-        const article = {..._article};
-
-        if (_article.extra != null) {
-            article.extra = {..._article.extra};
-        }
-
-        for (const fieldId of Object.keys(convertToFieldV2)) {
-            if (article.hasOwnProperty(fieldId)) {
-                if (article.extra == null) {
-                    article.extra = {};
-                }
-
-                article.extra[fieldId] = article[fieldId];
-            }
-        }
-
-        return article;
-    },
-};
-
 export const authoringStorage: IAuthoringStorage = {
     autosave: new AutoSaveHttp(AUTOSAVE_TIMEOUT),
     getArticle: (id) => {
         // TODO: take published items into account
 
-        return dataApi.findOne<IArticle>('archive', id).then((_saved) => {
+        return Promise.all([
+            dataApi.findOne<IArticle>('archive', id),
+            getArticleAdapter(),
+        ]).then((res) => {
+            const [_saved, adapter] = res;
+
             const saved = adapter.toAuthoringReact(_saved);
 
             if (sdApi.article.isLockedInOtherSession(saved)) {
@@ -340,42 +189,62 @@ export const authoringStorage: IAuthoringStorage = {
             }
         });
     },
-    lock: (id: IArticle['_id']) => sdApi.article.lock(id).then((article) => adapter.toAuthoringReact(article)),
-    unlock: (id: IArticle['_id']) => sdApi.article.unlock(id).then((article) => adapter.toAuthoringReact(article)),
+    lock: (id: IArticle['_id']) => {
+        return Promise.all([
+            sdApi.article.lock(id),
+            getArticleAdapter(),
+        ]).then((res) => {
+            const [article, adapter] = res;
+
+            return adapter.toAuthoringReact(article);
+        });
+    },
+    unlock: (id: IArticle['_id']) => {
+        return Promise.all([
+            sdApi.article.unlock(id),
+            getArticleAdapter(),
+        ]).then((res) => {
+            const [article, adapter] = res;
+
+            return adapter.toAuthoringReact(article);
+        });
+    },
     saveArticle: (current, original) => {
-        return authoringApiCommon.saveBefore(current, original).then((_current) => {
-            const id = original._id;
-            const etag = original._etag;
+        return getArticleAdapter().then((adapter) => {
+            return authoringApiCommon.saveBefore(current, original).then((_current) => {
+                const id = original._id;
+                const etag = original._etag;
 
-            let diff = generatePatch(original, _current);
+                let diff = generatePatch(original, _current);
 
-            // when object has changes, send entire object to avoid server dropping keys
-            if (diff.fields_meta != null) {
-                diff.fields_meta = _current.fields_meta;
-            }
+                // when object has changes, send entire object to avoid server dropping keys
+                if (diff.fields_meta != null) {
+                    diff.fields_meta = _current.fields_meta;
+                }
 
-            // when object has changes, send entire object to avoid server dropping keys
-            if (diff.extra != null) {
-                diff.extra = _current.extra;
-            }
+                // when object has changes, send entire object to avoid server dropping keys
+                if (diff.extra != null) {
+                    diff.extra = _current.extra;
+                }
 
-            diff = adapter.fromAuthoringReact(diff);
+                diff = adapter.fromAuthoringReact(diff);
 
-            const queryString = appConfig.features.publishFromPersonal === true
-                ? '?publish_from_personal=true'
-                : '';
+                const queryString = appConfig.features.publishFromPersonal === true
+                    ? '?publish_from_personal=true'
+                    : '';
 
-            return httpRequestJsonLocal<IArticle>({
-                method: 'PATCH',
-                path: `/archive/${id}${queryString}`,
-                payload: omitFields(diff),
-                headers: {
-                    'If-Match': etag,
-                },
-            }).then((next) => {
-                authoringApiCommon.saveAfter(next, original);
+                return httpRequestJsonLocal<IArticle>({
+                    method: 'PATCH',
+                    path: `/archive/${id}${queryString}`,
+                    payload: omitFields(diff),
+                    headers: {
+                        'If-Match': etag,
+                    },
+                }).then((next) => {
+                    authoringApiCommon.saveAfter(next, original);
 
-                return adapter.toAuthoringReact(next);
+                    return adapter.toAuthoringReact(next);
+                });
             });
         });
     },

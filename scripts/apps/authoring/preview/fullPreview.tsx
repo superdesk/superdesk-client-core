@@ -2,7 +2,7 @@ import React from 'react';
 import {IArticle, IVocabulary} from 'superdesk-api';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ARTICLE_HEADER_FIELDS, ARTICLE_COMMON_FIELDS} from 'apps/workspace/content/components/get-editor-config';
-import {dataApi} from 'core/helpers/CrudManager';
+import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {PreviewFieldType} from './previewFieldByType';
 import {IAuthoringField} from './types';
 import {getAuthoringField} from './getAuthoringField';
@@ -41,23 +41,13 @@ export class FullPreview extends React.Component<IProps, IState> {
         dispatchCustomEvent('articlePreviewStart', this.props.item);
 
         Promise.all([
-            dataApi.query<IVocabulary>(
-                'vocabularies',
-                1,
-                {field: 'display_name', direction: 'ascending'},
-                {
-                    $or: [
-                        {field_type: {$exists: true, $ne: null}},
-                        {custom_field_type: {$exists: true, $ne: null}},
-                    ],
-                },
-            ),
+            getCustomFieldVocabularies(),
             getLabelNameResolver(),
-        ]).then(([res, getLabel]) => {
+        ]).then(([customFieldVocabularies, getLabel]) => {
             this.getLabel = getLabel;
 
             this.setState({
-                customFieldVocabularies: res._items,
+                customFieldVocabularies,
                 loading: false,
             });
         });

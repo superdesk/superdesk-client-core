@@ -797,6 +797,7 @@ declare module 'superdesk-api' {
                 published?: boolean;
             };
             multiple_items?: { enabled: boolean; max_items: number };
+            single?: boolean; // used for custom text fields
         };
         custom_field_type?: string;
         custom_field_config?: { [key: string]: any };
