@@ -250,6 +250,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const plainText = this.props.value.contentState.getPlainText();
         const wordCount = countWords(plainText);
         const readingTime: string = getReadingTimeText(plainText, this.props.language);
+        const invalidCharsDetected = (config.disallowedCharacters ?? []).filter((char) => plainText.includes(char));
 
         return (
             <Provider store={store}>
@@ -298,6 +299,21 @@ export class Editor extends React.PureComponent<IProps, IState> {
                             )
                         }
                     </div>
+
+                    {
+                        invalidCharsDetected.length > 0 && (
+                            <div style={{display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'end'}}>
+                                <div className="editor3-invalid-chars-error">
+                                    {gettextPlural(
+                                        invalidCharsDetected.length,
+                                        'Character {{chars}} is not allowed',
+                                        'The following characters are not allowed {{chars}}',
+                                        {chars: invalidCharsDetected.join(' ')},
+                                    )}
+                                </div>
+                            </div>
+                        )
+                    }
 
                     <Editor3
                         scrollContainer=".sd-editor-content__main-container"

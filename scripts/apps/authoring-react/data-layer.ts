@@ -102,6 +102,7 @@ const convertToFieldV2: {[key: string]: (editor, schema) => IAuthoringFieldV2} =
             maxLength: fieldSchema?.maxlength,
             cleanPastedHtml: fieldSchema?.cleanPastedHTML,
             singleLine: true,
+            disallowedCharacters: appConfig.disallowed_characters ?? [],
         };
 
         const fieldV2: IAuthoringFieldV2 = {

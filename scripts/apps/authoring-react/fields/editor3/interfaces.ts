@@ -14,4 +14,5 @@ export interface IEditor3Config extends ICommonFieldConfig {
     maxLength?: number;
     singleLine?: boolean; // also limits to plain text
     cleanPastedHtml?: boolean;
+    disallowedCharacters?: Array<string>;
 }

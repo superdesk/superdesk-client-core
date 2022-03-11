@@ -701,6 +701,12 @@ $authoring-toolbar-spacing: 10px;
     }
 }
 
+.editor3-invalid-chars-error {
+    font-size: 12px;
+    font-style: italic;
+    color: $red;
+}
+
 .authoring-header__item {
     display: flex;
     align-items: center;
