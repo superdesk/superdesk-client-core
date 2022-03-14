@@ -24,6 +24,7 @@ import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
 import {merge} from 'lodash';
 import {registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
 import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
+import ng from 'core/services/ng';
 
 let body = angular.element('body');
 
@@ -220,6 +221,9 @@ export function startApp(
             if (appConfig.features.useTansaProofing) {
                 setupTansa();
             }
+
+            // preload vocabularies
+            ng.get('vocabularies').getAllActiveVocabularies();
         });
 }
 

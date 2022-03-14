@@ -1,7 +1,7 @@
-import {ICustomFieldType, ICommonFieldConfig} from 'superdesk-api';
+import {ICustomFieldType, ICommonFieldConfig, IVocabulary} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Editor} from './editor';
-import {Config} from './config';
+import {Config} from './config-main';
 import {Preview} from './preview';
 import {Difference} from './difference';
 
@@ -13,11 +13,19 @@ export interface IDropdownOption {
     color?: string;
 }
 
-export interface IDropdownConfig extends ICommonFieldConfig {
+export interface IDropdownDataVocabulary extends ICommonFieldConfig {
+    source: 'vocabulary';
+    vocabularyId: IVocabulary['_id'];
+}
+
+export interface IDropdownDataCustom extends ICommonFieldConfig {
+    source: 'manual-entry';
     type: 'text' | 'number';
     options: Array<IDropdownOption>;
     roundCorners: boolean;
 }
+
+export type IDropdownConfig = IDropdownDataCustom | IDropdownDataVocabulary;
 
 export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownConfig, never> {
     const field: ICustomFieldType<IDropdownValue, IDropdownConfig, never> = {

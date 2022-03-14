@@ -2,6 +2,7 @@ import * as React from 'react';
 import {IDropdownValue, IDropdownConfig} from '.';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
 import {DropdownItemTemplate} from './dropdown-item-template';
+import {getOptions} from './get-options';
 
 interface IProps {
     config: IDropdownConfig;
@@ -12,7 +13,7 @@ interface IProps {
 export class Dropdown extends React.PureComponent<IProps> {
     render() {
         const {config} = this.props;
-        const {options} = config;
+        const options = getOptions(config);
 
         return (
             <SelectFilterable
@@ -24,6 +25,7 @@ export class Dropdown extends React.PureComponent<IProps> {
                 getLabel={(item) => item?.label}
                 itemTemplate={(item) => <DropdownItemTemplate option={item.option} config={config} />}
                 zIndex={1050}
+                disabled={config.readOnly === true}
             />
         );
     }

@@ -1,5 +1,5 @@
 import {OrderedMap} from 'immutable';
-import {IArticle, IAuthoringFieldV2, IFieldsV2, IContentProfileV2} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldsV2, IContentProfileV2, IVocabulary} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {dataApi} from 'core/helpers/CrudManager';
@@ -122,6 +122,7 @@ interface IAuthoringStorage {
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
     getUserPreferences(): Promise<any>;
     autosave: IAuthoringAutoSave;
+    getVocabularies(): OrderedMap<string, IVocabulary>;
 }
 
 export function omitFields(
@@ -269,4 +270,9 @@ export const authoringStorage: IAuthoringStorage = {
         );
     },
     getUserPreferences: () => ng.get('preferencesService').get(),
+    getVocabularies: () => OrderedMap<string, IVocabulary>(
+        ng.get('vocabularies').getAllVocabulariesSync().map(
+            (vocabulary) => [vocabulary._id, vocabulary],
+        ),
+    ),
 };

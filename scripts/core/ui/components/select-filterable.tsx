@@ -8,6 +8,7 @@ interface IProps<T> {
     onChange(value: T): void;
     getLabel(item: T): string;
     required?: boolean;
+    disabled?: boolean;
     itemTemplate?: React.ComponentType<{option: T | null}>;
     zIndex?: number;
 }
@@ -39,6 +40,7 @@ export class SelectFilterable<T> extends React.PureComponent<IProps<T>> {
                 onChange={(item) => {
                     this.props.onChange(item);
                 }}
+                disabled={this.props.disabled}
                 width="100%"
                 required={required}
                 zIndex={this.props.zIndex}

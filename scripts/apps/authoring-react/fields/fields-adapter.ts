@@ -1,5 +1,5 @@
 import {IAuthoringFieldV2, IVocabulary} from 'superdesk-api';
-import {IDropdownConfig} from './dropdown';
+import {IDropdownDataCustom, IDropdownDataVocabulary} from './dropdown';
 import {IEditor3Config} from './editor3/interfaces';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
@@ -28,12 +28,13 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                 6: '#c0c9a1',
             };
 
-            const fieldConfig: IDropdownConfig = {
+            const fieldConfig: IDropdownDataCustom = {
+                source: 'manual-entry',
                 readOnly: fieldEditor.readonly,
                 required: fieldEditor.required,
                 type: 'number',
                 options: vocabulary.items.map(({name, qcode, color}) => {
-                    const option: IDropdownConfig['options'][0] = {
+                    const option: IDropdownDataCustom['options'][0] = {
                         id: qcode,
                         label: name,
                         color: color ?? defaultPriorityColors[name] ?? undefined,
@@ -66,12 +67,13 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                 5: '#a1c6d8',
             };
 
-            const fieldConfig: IDropdownConfig = {
+            const fieldConfig: IDropdownDataCustom = {
+                source: 'manual-entry',
                 readOnly: fieldEditor.readonly,
                 required: fieldEditor.required,
                 type: 'number',
                 options: vocabulary.items.map(({name, qcode, color}) => {
-                    const option: IDropdownConfig['options'][0] = {
+                    const option: IDropdownDataCustom['options'][0] = {
                         id: qcode,
                         label: name,
                         color: color ?? defaultUrgencyColors[name] ?? undefined,
@@ -107,6 +109,23 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                 id: 'slugline',
                 name: gettext('Slugline'),
                 fieldType: 'editor3',
+                fieldConfig,
+            };
+
+            return fieldV2;
+        },
+        language: (fieldEditor, fieldSchema) => {
+            const fieldConfig: IDropdownDataVocabulary = {
+                readOnly: fieldEditor.readonly,
+                required: fieldEditor.required,
+                source: 'vocabulary',
+                vocabularyId: 'languages',
+            };
+
+            const fieldV2: IAuthoringFieldV2 = {
+                id: 'language',
+                name: gettext('Language'),
+                fieldType: 'dropdown',
                 fieldConfig,
             };
 

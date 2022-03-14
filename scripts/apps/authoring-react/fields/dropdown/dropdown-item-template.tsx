@@ -23,7 +23,7 @@ export class DropdownItemTemplate extends React.PureComponent<IProps> {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: config.roundCorners ? '999px' : '2px',
+            borderRadius: config.source === 'manual-entry' && config.roundCorners ? '999px' : '2px',
             padding: '4px',
             whiteSpace: 'nowrap',
         };
