@@ -100,7 +100,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                 editorFormat: [],
                 minLength: fieldSchema?.minlength,
                 maxLength: fieldSchema?.maxlength,
-                cleanPastedHtml: fieldSchema?.cleanPastedHTML,
+                cleanPastedHtml: fieldEditor?.cleanPastedHTML,
                 singleLine: true,
                 disallowedCharacters: appConfig.disallowed_characters ?? [],
             };
@@ -108,6 +108,27 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
             const fieldV2: IAuthoringFieldV2 = {
                 id: 'slugline',
                 name: gettext('Slugline'),
+                fieldType: 'editor3',
+                fieldConfig,
+            };
+
+            return fieldV2;
+        },
+        body_html: (fieldEditor, fieldSchema) => {
+            const fieldConfig: IEditor3Config = {
+                readOnly: fieldEditor.readonly,
+                required: fieldEditor.required,
+                editorFormat: fieldEditor.formatOptions ?? [],
+                minLength: fieldSchema?.minlength,
+                maxLength: fieldSchema?.maxlength,
+                cleanPastedHtml: fieldEditor?.cleanPastedHTML,
+                singleLine: false,
+                disallowedCharacters: [],
+            };
+
+            const fieldV2: IAuthoringFieldV2 = {
+                id: 'body_html',
+                name: gettext('Body HTML'),
                 fieldType: 'editor3',
                 fieldConfig,
             };
@@ -142,7 +163,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                     editorFormat: fieldEditor.formatOptions ?? [],
                     minLength: fieldSchema?.minlength,
                     maxLength: fieldSchema?.maxlength,
-                    cleanPastedHtml: fieldSchema?.cleanPastedHTML,
+                    cleanPastedHtml: fieldEditor?.cleanPastedHTML,
                     singleLine: vocabulary.field_options?.single,
                     disallowedCharacters: [],
                 };
