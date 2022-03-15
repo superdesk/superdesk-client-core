@@ -6,6 +6,7 @@ import {IRestApiResponse} from 'superdesk-api';
 
 interface IScope extends ng.IScope {
     value: string;
+    readonly: boolean;
     field: string;
     language: string;
     available: Array<string>;
@@ -24,11 +25,16 @@ export const sdStaticAutocompleteDirective = () => ({
         value: '=',
         language: '=',
         debounce: '=',
+        readonly: '=',
         onSelect: '&',
     },
     link: (scope: IScope, elem) => {
         scope.available = [];
         scope.suggestions = [];
+
+        if (scope.readonly === true) {
+            return;
+        }
 
         let loaded = null;
 
