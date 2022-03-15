@@ -23,7 +23,8 @@ export class PreviewSubject extends React.PureComponent<IProps> {
                         <span
                             key={subj.scheme + ':' + subj.qcode}
                             className="tag-label"
-                            title={subj.name} // longer names might not fit the area
+                            title={getVocabularyItemNameTranslated(subj, this.props.item.language)}
+                            // longer names might not fit the area
                         >{getVocabularyItemNameTranslated(subj, this.props.item.language)}</span>,
                     );
                 });
