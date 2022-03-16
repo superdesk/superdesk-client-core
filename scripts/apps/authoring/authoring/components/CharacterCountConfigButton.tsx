@@ -26,10 +26,7 @@ interface IState {
     preferences: any;
 }
 
-export class CharacterCountConfigButton extends React.Component<
-    IProps,
-    IState
-> {
+export class CharacterCountConfigButton extends React.Component<IProps, IState> {
     preferencesService: any;
 
     constructor(props) {
@@ -85,7 +82,7 @@ export class CharacterCountConfigButton extends React.Component<
                     showModal((props) => (
                         <CharacterCountConfigModal
                             closeModal={props.closeModal}
-                            value={fieldPrefs?.[this.props.field].characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT}
+                            value={fieldPrefs?.[this.props.field]?.characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT}
                             onChange={this.onModalValueChange}
                         />
                     ));

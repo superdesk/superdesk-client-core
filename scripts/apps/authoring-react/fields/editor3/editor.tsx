@@ -17,6 +17,7 @@ import {
     replace,
     replaceAll,
     setSpellcheckerStatus,
+    changeLimitConfig,
 } from 'core/editor3/actions';
 import {ReactContextForEditor3} from 'core/editor3/directive';
 import {
@@ -284,10 +285,14 @@ export class Editor extends React.PureComponent<IProps, IState> {
                                                     closeModal={closeModal}
                                                     value={characterLimitConfig.ui}
                                                     onChange={(ui) => {
-                                                        this.props.onUserPreferencesChange({
+                                                        const nextValue: EditorLimit = {
                                                             ...characterLimitConfig,
-                                                            characterLimitMode: ui,
-                                                        });
+                                                            ui: ui,
+                                                        };
+
+                                                        this.props.onUserPreferencesChange({characterLimitMode: ui});
+
+                                                        this.props.value.store.dispatch(changeLimitConfig(nextValue));
                                                     }}
                                                 />
                                             ));

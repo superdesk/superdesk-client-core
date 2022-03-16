@@ -13,9 +13,8 @@ import {replaceWord} from './spellchecker';
 import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
 import {insertEntity} from '../helpers/draftInsertEntity';
-import {handleOverflowHighlights} from '../helpers/characters-limit';
 import {logger} from 'core/services/logger';
-import {IActionPayloadSetExternalOptions} from '../actions';
+import {EditorLimit, IActionPayloadSetExternalOptions} from '../actions';
 
 /**
  * @description Contains the list of editor related reducers.
@@ -97,23 +96,41 @@ export const forceUpdate = (state, keepSelection = false) => {
     };
 };
 
-function clearSpellcheckInfo(stateCurrent: IEditorStore, editorStateNext: EditorState): EditorState {
-    if (stateCurrent.editorState.getCurrentContent() === editorStateNext.getCurrentContent()) {
+function updateDecorators(
+    stateCurrent: IEditorStore,
+    editorStateNext: EditorState,
+    force: boolean = false, // required to redecorate text limit overflow after option is toggled
+): EditorState {
+    const contentChanged = stateCurrent.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
+
+    if (!contentChanged && !force) {
         return editorStateNext;
-    } else {
-        // Clear only when content changes. Otherwise, it will get cleared on caret changes, but
-        // won't get repopulated, because spellchecker only runs when content changes.
-        return EditorState.set(
-            editorStateNext,
-            {
-                decorator: getDecorators(
-                    stateCurrent?.spellchecking?.language,
-                    null,
-                    stateCurrent.limitConfig,
-                ),
-            },
-        );
     }
+
+    /*
+        Spellchecker info must be cleared on contentState change because:
+        1. User might have deleted a piece of text marked by spellchecker
+        when the decorator runs again, it will attempt to decorate the same ranges
+        and will crash, because that content is no longer there.
+        2. User might insert content before spellchecker decorated content which
+        will make offsets inaccurate and when the decorator runs again
+        it will decorate the wrong ranges.
+
+        Clear only when content changes. Otherwise, it will get cleared on caret changes, but
+        won't get repopulated, because spellchecker only runs when content changes.
+    */
+    const spellcheckWarnings = contentChanged ? {} : stateCurrent.spellchecking?.warningsByBlock;
+
+    return EditorState.set(
+        editorStateNext,
+        {
+            decorator: getDecorators(
+                stateCurrent?.spellchecking?.language,
+                spellcheckWarnings,
+                stateCurrent.limitConfig,
+            ),
+        },
+    );
 }
 
 export function editorStateChangeMiddlewares(state, editorState: EditorState, contentChanged: boolean) {
@@ -122,13 +139,6 @@ export function editorStateChangeMiddlewares(state, editorState: EditorState, co
     newState = applyAbbreviations({
         ...state, editorState,
     });
-
-    if (contentChanged && (state.limitConfig?.ui === 'highlight' || state.limitConfig?.ui === 'limit')) {
-        newState = {
-            ...state,
-            editorState: handleOverflowHighlights(newState.editorState, state.limitConfig?.chars),
-        };
-    }
 
     return newState;
 }
@@ -154,17 +164,8 @@ export const onChange = (
     force = false, // TODO: Remove `force` once Draft v0.11.0 is in
     keepSelection = false,
     skipOnChange = false,
-) => {
-    /*
-        Spellchecker info must be cleared on contentState change because:
-        1. User might have deleted a piece of text marked by spellchecker
-        when the decorator runs again, it will attempt to decorate the same ranges
-        and will crash, because that content is no longer there.
-        2. User might insert content before spellchecker decorated content which
-        will make offsets inaccurate and when the decorator runs again
-        it will decorate the wrong ranges.
-    */
-    const editorStateNext = clearSpellcheckInfo(state, newEditorState);
+): IEditorStore => {
+    let editorStateNext = updateDecorators(state, newEditorState);
 
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 
@@ -508,10 +509,15 @@ const applyEmbed = (state, {code, targetBlockKey}) => {
 
 const setLoading = (state, loading) => ({...state, loading});
 
-const changeLimitConfig = (state: IEditorStore, limitConfig) => {
-    const editorState = handleOverflowHighlights(state.editorState, limitConfig.chars);
+const changeLimitConfig = (state: IEditorStore, limitConfig: EditorLimit) => {
+    const limitConfigApplied: IEditorStore = {...state, limitConfig};
 
-    return {...state, limitConfig, editorState};
+    const redecorated: IEditorStore = {
+        ...limitConfigApplied,
+        editorState: updateDecorators(limitConfigApplied, state.editorState, true),
+    };
+
+    return redecorated;
 };
 
 const pushState = (state: IEditorStore, contentState: ContentState) => {
@@ -563,9 +569,5 @@ const setExternalOptions = (
 
     result.showToolbar = result.editorFormat?.length > 0 ?? false;
 
-    /**
-     * Forcing change so characters over limit are highlighted
-     * {@see handleOverflowHighlights}
-     */
-    return onChange(result, result.editorState, true, true);
+    return onChange(result, result.editorState);
 };

@@ -43,7 +43,6 @@ import {
     CharacterLimitUiBehavior,
     DEFAULT_UI_FOR_EDITOR_LIMIT,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {handleOverflowHighlights} from '../helpers/characters-limit';
 import {getMiddlewares} from 'core/redux-utils';
 import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
 import {CompositeDecoratorCustom} from './composite-decorator-custom';
@@ -195,8 +194,6 @@ export default function createEditorStore(
         content,
         getDecorators(),
     );
-
-    editorState = handleOverflowHighlights(editorState, limitConfig?.chars);
 
     const store: Store<IEditorStore> = createStore<IEditorStore, any, any, any>(
         reducers,

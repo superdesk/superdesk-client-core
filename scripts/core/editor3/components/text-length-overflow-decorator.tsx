@@ -11,7 +11,7 @@ type IResult = {[blockKey: string]: {from: number; to: number}};
 class Component extends React.Component<IProps> {
     render() {
         return (
-            <span style={{borderBottom: '2px solid red'}}>{this.props.children}</span>
+            <span style={{color: '#ff0000'}}>{this.props.children}</span>
         );
     }
 }
