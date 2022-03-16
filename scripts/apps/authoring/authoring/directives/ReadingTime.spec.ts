@@ -2,6 +2,10 @@ import {repeat} from 'lodash';
 
 describe('sd-reading-time', () => {
     beforeEach(window.module('superdesk.apps.authoring'));
+    beforeEach(window.module('superdesk.apps.spellcheck'));
+    beforeEach(inject(($httpBackend) => {
+        $httpBackend.whenGET(/api$/).respond({_links: {child: []}});
+    }));
 
     it('can estimate reading time in japanese', inject(($compile, $rootScope) => {
         const scope = $rootScope.$new();
@@ -9,11 +13,11 @@ describe('sd-reading-time', () => {
 
         scope.content = repeat('x', 5000);
         scope.$digest();
-        expect(elem.text()).toBe('less than one minute read');
+        expect(elem.text()).toBe('1 min read');
 
         scope.language = 'ja';
         scope.$digest();
-        expect(elem.text()).toBe('8 min read');
+        expect(elem.text()).toBe('9 min read');
 
         scope.content = repeat(' ', 5000);
         scope.$digest();

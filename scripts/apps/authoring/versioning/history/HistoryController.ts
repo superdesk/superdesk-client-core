@@ -212,6 +212,9 @@ export function HistoryController(
     $scope.highlightsById = {};
     $scope.historyItems = null;
 
+    // add to scope so it can be mocked in unit tests
+    $scope.getHistoryItems = getHistoryItems;
+
     /**
      * @ngdoc method
      * @name HistoryController#fetchHistory
@@ -220,7 +223,7 @@ export function HistoryController(
      */
     const fetchHistory = () => {
         initializeServices().then(() => {
-            getHistoryItems($scope.item).then((result) => {
+            $scope.getHistoryItems($scope.item).then((result) => {
                 $scope.historyItems = result;
                 $scope.$applyAsync();
             });
