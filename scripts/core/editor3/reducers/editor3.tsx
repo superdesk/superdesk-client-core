@@ -8,7 +8,7 @@ import {
 } from 'draft-js';
 import {setTansaHtml} from '../helpers/tansa';
 import {addMedia} from './toolbar';
-import {getCustomDecorator, IEditorStore} from '../store';
+import {getDecorators, IEditorStore} from '../store';
 import {replaceWord} from './spellchecker';
 import {DELETE_SUGGESTION} from '../highlightsConfig';
 import {moveBlockWithoutDispatching} from '../helpers/draftMoveBlockWithoutDispatching';
@@ -97,15 +97,21 @@ export const forceUpdate = (state, keepSelection = false) => {
     };
 };
 
-function clearSpellcheckInfo(editorStateCurrent: EditorState, editorStateNext: EditorState): EditorState {
-    if (editorStateCurrent.getCurrentContent() === editorStateNext.getCurrentContent()) {
+function clearSpellcheckInfo(stateCurrent: IEditorStore, editorStateNext: EditorState): EditorState {
+    if (stateCurrent.editorState.getCurrentContent() === editorStateNext.getCurrentContent()) {
         return editorStateNext;
     } else {
         // Clear only when content changes. Otherwise, it will get cleared on caret changes, but
         // won't get repopulated, because spellchecker only runs when content changes.
         return EditorState.set(
             editorStateNext,
-            {decorator: getCustomDecorator()},
+            {
+                decorator: getDecorators(
+                    stateCurrent?.spellchecking?.language,
+                    null,
+                    stateCurrent.limitConfig,
+                ),
+            },
         );
     }
 }
@@ -158,7 +164,7 @@ export const onChange = (
         will make offsets inaccurate and when the decorator runs again
         it will decorate the wrong ranges.
     */
-    const editorStateNext = clearSpellcheckInfo(state.editorState, newEditorState);
+    const editorStateNext = clearSpellcheckInfo(state, newEditorState);
 
     const contentChanged = state.editorState.getCurrentContent() !== editorStateNext.getCurrentContent();
 

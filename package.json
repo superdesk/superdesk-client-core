@@ -31,7 +31,7 @@
     "@metadata/exif": "github:superdesk/exif#431066d",
     "@popperjs/core": "2.10.2",
     "@types/angular": "1.6.50",
-    "@types/draft-js": "0.10.29",
+    "@types/draft-js": "0.11.5",
     "@types/enzyme": "3.9.1",
     "@types/lodash": "4.14.117",
     "@types/react": "16.8.23",

@@ -45,6 +45,8 @@ import {
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {handleOverflowHighlights} from '../helpers/characters-limit';
 import {getMiddlewares} from 'core/redux-utils';
+import {getTextLimitHighlightDecorator} from '../components/text-length-overflow-decorator';
+import {CompositeDecoratorCustom} from './composite-decorator-custom';
 
 export const ignoreInternalAnnotationFields = (annotations) =>
     annotations.map((annotation) => pick(annotation, ['id', 'type', 'body']));
@@ -97,9 +99,10 @@ export interface IEditorStore {
 
 let editor3Stores = [];
 
-export const getCustomDecorator = (
+export const getDecorators = (
     language?: string,
-    spellcheckWarnings: ISpellcheckWarningsByBlock = null,
+    spellcheckWarnings?: ISpellcheckWarningsByBlock,
+    limitConfig?: EditorLimit,
 ) => {
     const decorators: Array<{strategy: any, component: any}> = [LinkDecorator];
 
@@ -109,7 +112,13 @@ export const getCustomDecorator = (
         );
     }
 
-    return new CompositeDecorator(decorators);
+    if (limitConfig?.ui === 'highlight' && typeof limitConfig?.chars === 'number') {
+        decorators.push(
+            getTextLimitHighlightDecorator(limitConfig.chars),
+        );
+    }
+
+    return new CompositeDecoratorCustom(decorators);
 };
 
 /**
@@ -184,7 +193,7 @@ export default function createEditorStore(
 
     let editorState = EditorState.createWithContent(
         content,
-        getCustomDecorator(),
+        getDecorators(),
     );
 
     editorState = handleOverflowHighlights(editorState, limitConfig?.chars);
