@@ -44,14 +44,19 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
         const selectedOption = options.find(({definition}) =>
             applyPlaceholders(definition, this.props.item) === this.props.value);
 
+        const freeTextMode = this.state.freeText === true || selectedOption == null;
+
         const fieldReadOnly = this.props.readOnly;
 
         return (
             <div>
                 <Select
                     value={selectedOption?.title ?? ''}
+                    label={gettext('Select from a predefined value')}
+                    inlineLabel
+                    labelHidden
                     onChange={(title) => {
-                        if (title === '') {
+                        if (title === '' && !freeTextMode) {
                             this.props.setValue('');
                         } else {
                             const selected = options.find((option) => option.title === title);
@@ -74,7 +79,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
                 </Select>
 
                 {(() => {
-                    if (selectedValue === '') {
+                    if (selectedValue === '' && !freeTextMode) {
                         return null;
                     }
 
@@ -82,15 +87,13 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
                         ? applyPlaceholders(selectedOption.definition, this.props.item)
                         : this.props.value;
 
-                    const freeTextAllowed = this.state.freeText === true || selectedOption == null;
-
                     return (
                         <div>
                             <br />
 
                             <div style={{width: '100%', display: 'flex', alignItems: 'top'}}>
                                 {
-                                    (allowSwitchingToFreeText && !fieldReadOnly && freeTextAllowed !== true) && (
+                                    (allowSwitchingToFreeText && !fieldReadOnly && freeTextMode !== true) && (
                                         <div>
                                             <button
                                                 title={gettext('Use custom value')}
@@ -110,7 +113,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
                                         onChange={(val) => {
                                             this.props.setValue(val);
                                         }}
-                                        readOnly={fieldReadOnly || freeTextAllowed !== true}
+                                        readOnly={fieldReadOnly || freeTextMode !== true}
                                     />
                                 </div>
                             </div>
