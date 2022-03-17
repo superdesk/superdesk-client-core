@@ -15,7 +15,9 @@ export function AdminPublishSettingsService(api) {
             return _fetch('io_errors', criteria);
         },
         registerTransmissionService: function(name, props) {
-            const templateUrl = transmissionTypes[name] != null ? transmissionTypes[name].templateUrl : '';
+            const templateUrl = transmissionTypes[name] != null ?
+                transmissionTypes[name].templateUrl :
+                props.templateUrl || '';
 
             this.transmissionServicesMap[name] = {
                 delivery_type: name,
@@ -35,6 +37,7 @@ export function AdminPublishSettingsService(api) {
         service.registerTransmissionService(data.type, {
             label: data.name,
             config: data.config,
+            templateUrl: data.template_url || '',
         });
     });
 

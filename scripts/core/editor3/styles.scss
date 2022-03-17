@@ -925,3 +925,12 @@ $editor-styleButton-size: 3rem;
 		display: none;
 	}
 }
+.table-controls.Editor3-controls{
+	position: sticky;
+	top: 0;
+	left: auto;
+	right: auto;
+	z-index: 10;
+	box-shadow: 0px 1px 5px #00000066;
+	background-color: #f8f8f8;
+}
