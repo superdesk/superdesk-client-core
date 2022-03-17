@@ -399,7 +399,7 @@ declare module 'superdesk-api' {
         keywords?: any;
         language: any;
         slugline: string;
-        genre: any;
+        genre: Array<{qcode: string; name: string}>;
         anpa_take_key?: any;
 
         place: Array<ISubject>;

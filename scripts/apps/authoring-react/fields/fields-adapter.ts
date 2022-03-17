@@ -1,4 +1,4 @@
-import {IAuthoringFieldV2, IVocabulary} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IVocabulary} from 'superdesk-api';
 import {IDropdownDataCustom, IDropdownDataVocabulary} from './dropdown';
 import {IEditor3Config} from './editor3/interfaces';
 import {appConfig} from 'appConfig';
@@ -6,7 +6,17 @@ import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {IOldCustomFieldId} from '../interfaces';
 
-type IFieldsAdapter = {[key: string]: (editor, schema) => IAuthoringFieldV2};
+interface IFieldAdapter {
+    getFieldV2: (
+        fieldEditor,
+        fieldSchema,
+    ) => IAuthoringFieldV2;
+
+    saveData?<T extends Partial<IArticle>>(value: unknown, item: T): T;
+    getSavedData?<T extends Partial<IArticle>>(item: T): unknown;
+}
+
+type IFieldsAdapter = {[key: string]: IFieldAdapter};
 
 /**
  * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
@@ -14,149 +24,114 @@ type IFieldsAdapter = {[key: string]: (editor, schema) => IAuthoringFieldV2};
  */
 export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): IFieldsAdapter {
     const adapter: IFieldsAdapter = {
-        priority: (fieldEditor, fieldSchema) => {
-            const vocabulary = ng.get('vocabularies').getVocabularySync('priority');
+        priority: {
+            getFieldV2: (fieldEditor, fieldSchema) => {
+                const vocabulary = ng.get('vocabularies').getVocabularySync('priority');
 
-            // HAS TO BE SYNCED WITH styles/sass/labels.scss
-            var defaultPriorityColors = {
-                0: '#cccccc',
-                1: '#b82f00',
-                2: '#de6237',
-                3: '#e49c56',
-                4: '#edc175',
-                5: '#b6c28b',
-                6: '#c0c9a1',
-            };
+                // HAS TO BE SYNCED WITH styles/sass/labels.scss
+                var defaultPriorityColors = {
+                    0: '#cccccc',
+                    1: '#b82f00',
+                    2: '#de6237',
+                    3: '#e49c56',
+                    4: '#edc175',
+                    5: '#b6c28b',
+                    6: '#c0c9a1',
+                };
 
-            const fieldConfig: IDropdownDataCustom = {
-                source: 'manual-entry',
-                readOnly: fieldEditor.readonly,
-                required: fieldEditor.required,
-                type: 'number',
-                options: vocabulary.items.map(({name, qcode, color}) => {
-                    const option: IDropdownDataCustom['options'][0] = {
-                        id: qcode,
-                        label: name,
-                        color: color ?? defaultPriorityColors[name] ?? undefined,
-                    };
+                const fieldConfig: IDropdownDataCustom = {
+                    source: 'manual-entry',
+                    readOnly: fieldEditor.readonly,
+                    required: fieldEditor.required,
+                    type: 'number',
+                    options: vocabulary.items.map(({name, qcode, color}) => {
+                        const option: IDropdownDataCustom['options'][0] = {
+                            id: qcode,
+                            label: name,
+                            color: color ?? defaultPriorityColors[name] ?? undefined,
+                        };
 
-                    return option;
-                }),
-                roundCorners: false,
-            };
+                        return option;
+                    }),
+                    roundCorners: false,
+                };
 
-            const fieldV2: IAuthoringFieldV2 = {
-                id: 'priority',
-                name: gettext('Priority'),
-                fieldType: 'dropdown',
-                fieldConfig,
-            };
+                const fieldV2: IAuthoringFieldV2 = {
+                    id: 'priority',
+                    name: gettext('Priority'),
+                    fieldType: 'dropdown',
+                    fieldConfig,
+                };
 
-            return fieldV2;
+                return fieldV2;
+            },
         },
-        urgency: (fieldEditor, fieldSchema) => {
-            const vocabulary = ng.get('vocabularies').getVocabularySync('urgency');
+        urgency: {
+            getFieldV2: (fieldEditor, fieldSchema) => {
+                const vocabulary = ng.get('vocabularies').getVocabularySync('urgency');
 
-            // HAS TO BE SYNCED WITH styles/sass/labels.scss
-            var defaultUrgencyColors = {
-                0: '#cccccc',
-                1: '#01405b',
-                2: '#005e84',
-                3: '#3684a4',
-                4: '#64a4bf',
-                5: '#a1c6d8',
-            };
+                // HAS TO BE SYNCED WITH styles/sass/labels.scss
+                var defaultUrgencyColors = {
+                    0: '#cccccc',
+                    1: '#01405b',
+                    2: '#005e84',
+                    3: '#3684a4',
+                    4: '#64a4bf',
+                    5: '#a1c6d8',
+                };
 
-            const fieldConfig: IDropdownDataCustom = {
-                source: 'manual-entry',
-                readOnly: fieldEditor.readonly,
-                required: fieldEditor.required,
-                type: 'number',
-                options: vocabulary.items.map(({name, qcode, color}) => {
-                    const option: IDropdownDataCustom['options'][0] = {
-                        id: qcode,
-                        label: name,
-                        color: color ?? defaultUrgencyColors[name] ?? undefined,
-                    };
+                const fieldConfig: IDropdownDataCustom = {
+                    source: 'manual-entry',
+                    readOnly: fieldEditor.readonly,
+                    required: fieldEditor.required,
+                    type: 'number',
+                    options: vocabulary.items.map(({name, qcode, color}) => {
+                        const option: IDropdownDataCustom['options'][0] = {
+                            id: qcode,
+                            label: name,
+                            color: color ?? defaultUrgencyColors[name] ?? undefined,
+                        };
 
-                    return option;
-                }),
-                roundCorners: true,
-            };
+                        return option;
+                    }),
+                    roundCorners: true,
+                };
 
-            const fieldV2: IAuthoringFieldV2 = {
-                id: 'urgency',
-                name: gettext('Urgency'),
-                fieldType: 'dropdown',
-                fieldConfig,
-            };
+                const fieldV2: IAuthoringFieldV2 = {
+                    id: 'urgency',
+                    name: gettext('Urgency'),
+                    fieldType: 'dropdown',
+                    fieldConfig,
+                };
 
-            return fieldV2;
+                return fieldV2;
+            },
         },
-        slugline: (fieldEditor, fieldSchema) => {
-            const fieldConfig: IEditor3Config = {
-                readOnly: fieldEditor.readonly,
-                required: fieldEditor.required,
-                editorFormat: [],
-                minLength: fieldSchema?.minlength,
-                maxLength: fieldSchema?.maxlength,
-                cleanPastedHtml: fieldEditor?.cleanPastedHTML,
-                singleLine: true,
-                disallowedCharacters: appConfig.disallowed_characters ?? [],
-            };
+        slugline: {
+            getFieldV2: (fieldEditor, fieldSchema) => {
+                const fieldConfig: IEditor3Config = {
+                    readOnly: fieldEditor.readonly,
+                    required: fieldEditor.required,
+                    editorFormat: [],
+                    minLength: fieldSchema?.minlength,
+                    maxLength: fieldSchema?.maxlength,
+                    cleanPastedHtml: fieldEditor?.cleanPastedHTML,
+                    singleLine: true,
+                    disallowedCharacters: appConfig.disallowed_characters ?? [],
+                };
 
-            const fieldV2: IAuthoringFieldV2 = {
-                id: 'slugline',
-                name: gettext('Slugline'),
-                fieldType: 'editor3',
-                fieldConfig,
-            };
+                const fieldV2: IAuthoringFieldV2 = {
+                    id: 'slugline',
+                    name: gettext('Slugline'),
+                    fieldType: 'editor3',
+                    fieldConfig,
+                };
 
-            return fieldV2;
+                return fieldV2;
+            },
         },
-        body_html: (fieldEditor, fieldSchema) => {
-            const fieldConfig: IEditor3Config = {
-                readOnly: fieldEditor.readonly,
-                required: fieldEditor.required,
-                editorFormat: fieldEditor.formatOptions ?? [],
-                minLength: fieldSchema?.minlength,
-                maxLength: fieldSchema?.maxlength,
-                cleanPastedHtml: fieldEditor?.cleanPastedHTML,
-                singleLine: false,
-                disallowedCharacters: [],
-            };
-
-            const fieldV2: IAuthoringFieldV2 = {
-                id: 'body_html',
-                name: gettext('Body HTML'),
-                fieldType: 'editor3',
-                fieldConfig,
-            };
-
-            return fieldV2;
-        },
-        language: (fieldEditor, fieldSchema) => {
-            const fieldConfig: IDropdownDataVocabulary = {
-                readOnly: fieldEditor.readonly,
-                required: fieldEditor.required,
-                source: 'vocabulary',
-                vocabularyId: 'languages',
-            };
-
-            const fieldV2: IAuthoringFieldV2 = {
-                id: 'language',
-                name: gettext('Language'),
-                fieldType: 'dropdown',
-                fieldConfig,
-            };
-
-            return fieldV2;
-        },
-    };
-
-    for (const vocabulary of customFieldVocabularies) {
-        if (vocabulary.field_type === 'text') {
-            adapter[vocabulary._id] = (fieldEditor, fieldSchema) => {
+        body_html: {
+            getFieldV2: (fieldEditor, fieldSchema) => {
                 const fieldConfig: IEditor3Config = {
                     readOnly: fieldEditor.readonly,
                     required: fieldEditor.required,
@@ -164,18 +139,97 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                     minLength: fieldSchema?.minlength,
                     maxLength: fieldSchema?.maxlength,
                     cleanPastedHtml: fieldEditor?.cleanPastedHTML,
-                    singleLine: vocabulary.field_options?.single,
+                    singleLine: false,
                     disallowedCharacters: [],
                 };
 
                 const fieldV2: IAuthoringFieldV2 = {
-                    id: vocabulary._id,
-                    name: vocabulary.display_name,
+                    id: 'body_html',
+                    name: gettext('Body HTML'),
                     fieldType: 'editor3',
                     fieldConfig,
                 };
 
                 return fieldV2;
+            },
+        },
+        language: {
+            getFieldV2: (fieldEditor, fieldSchema) => {
+                const fieldConfig: IDropdownDataVocabulary = {
+                    readOnly: fieldEditor.readonly,
+                    required: fieldEditor.required,
+                    source: 'vocabulary',
+                    vocabularyId: 'languages',
+                };
+
+                const fieldV2: IAuthoringFieldV2 = {
+                    id: 'language',
+                    name: gettext('Language'),
+                    fieldType: 'dropdown',
+                    fieldConfig,
+                };
+
+                return fieldV2;
+            },
+        },
+        genre: {
+            // TODO: it should work to select multiple values
+            getFieldV2: (fieldEditor, fieldSchema) => {
+                const fieldConfig: IDropdownDataVocabulary = {
+                    readOnly: fieldEditor.readonly,
+                    required: fieldEditor.required,
+                    source: 'vocabulary',
+                    vocabularyId: 'genre',
+                };
+
+                const fieldV2: IAuthoringFieldV2 = {
+                    id: 'genre',
+                    name: gettext('Genre'),
+                    fieldType: 'dropdown',
+                    fieldConfig,
+                };
+
+                return fieldV2;
+            },
+            getSavedData: (article) => {
+                return article.genre[0].qcode;
+            },
+            saveData: (value: string, article) => {
+                const vocabulary: IVocabulary = ng.get('vocabularies').getVocabularySync('genre');
+                const vocabularyItem = vocabulary.items.find(({qcode}) => qcode === value);
+
+                return {
+                    ...article,
+                    genre: [{qcode: value, name: vocabularyItem.name}],
+                };
+            },
+        },
+    };
+
+    for (const vocabulary of customFieldVocabularies) {
+        if (vocabulary.field_type === 'text') {
+            adapter[vocabulary._id] = {
+                getFieldV2: (fieldEditor, fieldSchema) => {
+                    const fieldConfig: IEditor3Config = {
+                        readOnly: fieldEditor.readonly,
+                        required: fieldEditor.required,
+                        editorFormat: fieldEditor.formatOptions ?? [],
+                        minLength: fieldSchema?.minlength,
+                        maxLength: fieldSchema?.maxlength,
+                        cleanPastedHtml: fieldEditor?.cleanPastedHTML,
+                        singleLine: vocabulary.field_options?.single,
+                        disallowedCharacters: [],
+                    };
+
+                    const fieldV2: IAuthoringFieldV2 = {
+                        id: vocabulary._id,
+                        name: vocabulary.display_name,
+                        fieldType: 'editor3',
+                        fieldConfig,
+                    };
+
+                    return fieldV2;
+                },
             };
         }
     }

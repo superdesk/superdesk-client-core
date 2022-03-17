@@ -56,7 +56,7 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
             const fieldV2: IAuthoringFieldV2 = (() => {
                 if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
-                    return fieldsAdapter[fieldId](editor[fieldId] ?? {}, schema[fieldId] ?? {});
+                    return fieldsAdapter[fieldId].getFieldV2(editor[fieldId] ?? {}, schema[fieldId] ?? {});
                 } else { // custom fields
                     const f: IAuthoringFieldV2 = {
                         id: fieldId,

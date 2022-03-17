@@ -42,18 +42,33 @@ export function getArticleAdapter(): Promise<IAuthoringReactArticleAdapter> {
         const adapter: IAuthoringReactArticleAdapter = {
             fromAuthoringReact: (_article) => {
                 // making a copy in order to do immutable updates
-                const article = {..._article};
+                let article = {..._article};
 
-                // move fields to article root
+                // move fields to article root (except for fields with a custom adapter)
                 if (_article.extra != null) {
                     article.extra = {..._article.extra ?? {}};
 
                     for (const fieldId of rootFieldsToMove) {
-                        if (article.extra.hasOwnProperty(fieldId) ?? false) {
+                        const fieldHasCustomAdapter = fieldsAdapter[fieldId]?.saveData != null;
+
+                        if (!fieldHasCustomAdapter && article.extra.hasOwnProperty(fieldId)) {
                             article[fieldId] = article.extra[fieldId];
 
                             delete article.extra[fieldId];
                         }
+                    }
+                }
+
+                // run field adapters
+                for (const fieldId of Object.keys(fieldsAdapter)) {
+                    const fieldAdapter = fieldsAdapter[fieldId];
+
+                    if (fieldAdapter?.saveData != null && (article.extra?.hasOwnProperty(fieldId) ?? false)) {
+                        const fieldValue = article.extra[fieldId];
+
+                        delete article.extra[fieldId];
+
+                        article = fieldAdapter.saveData(fieldValue, article);
                     }
                 }
 
@@ -71,7 +86,7 @@ export function getArticleAdapter(): Promise<IAuthoringReactArticleAdapter> {
                 return article;
             },
             toAuthoringReact: (_article) => {
-                const article = {..._article}; // ensure immutability
+                let article = {..._article}; // ensure immutability
 
                 if (_article.extra != null) { // ensure immutability
                     article.extra = {..._article.extra};
@@ -81,14 +96,29 @@ export function getArticleAdapter(): Promise<IAuthoringReactArticleAdapter> {
                     article.fields_meta = {..._article.fields_meta};
                 }
 
-                // Moving fields from authoring root to extra
+                // Moving fields from authoring root to extra (except for fields with a custom adapter)
                 for (const fieldId of rootFieldsToMove) {
-                    if (article.hasOwnProperty(fieldId)) {
+                    const fieldHasCustomAdapter = fieldsAdapter[fieldId]?.getSavedData != null;
+
+                    if (!fieldHasCustomAdapter && article.hasOwnProperty(fieldId)) {
                         if (article.extra == null) {
                             article.extra = {};
                         }
 
                         article.extra[fieldId] = article[fieldId];
+                    }
+                }
+
+                // run field adapters
+                for (const fieldId of Object.keys(fieldsAdapter)) {
+                    const fieldAdapter = fieldsAdapter[fieldId];
+
+                    if (fieldAdapter?.getSavedData != null) {
+                        if (article.extra == null) {
+                            article.extra = {};
+                        }
+
+                        article.extra[fieldId] = fieldAdapter.getSavedData(article);
                     }
                 }
 
