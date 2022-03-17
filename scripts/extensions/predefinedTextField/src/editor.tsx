@@ -51,7 +51,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
         return (
             <div>
                 <Select
-                    label={gettext('Predefined Text Options')}
+                    label={gettext('Select from a predefined value')}
                     labelHidden={true}
                     inlineLabel={true}
                     value={selectedOption?.title ?? ''}
