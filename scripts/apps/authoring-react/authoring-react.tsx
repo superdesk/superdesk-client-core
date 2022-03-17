@@ -211,6 +211,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
         this.computeLatestArticle = this.computeLatestArticle.bind(this);
         this.setUserPreferences = this.setUserPreferences.bind(this);
+        this.cancelAutosave = this.cancelAutosave.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -288,6 +289,16 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         widgetReactIntegration.WidgetLayoutComponent = AuthoringWidgetLayoutComponent;
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+    }
+
+    cancelAutosave(): Promise<void> {
+        authoringStorage.autosave.cancel();
+
+        if (this.state.initialized && this.state.autosaveEtag != null) {
+            return authoringStorage.autosave.delete(this.state.itemOriginal['_id'], this.state.autosaveEtag);
+        } else {
+            return Promise.resolve();
+        }
     }
 
     /**
@@ -630,27 +641,27 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     save(state: IStateLoaded): Promise<IArticle> {
-        if (this.state.initialized && this.state.autosaveEtag != null) {
-            authoringStorage.autosave.cancel();
-            authoringStorage.autosave.delete(state.itemOriginal['_id'], this.state.autosaveEtag);
-        }
+        return this.cancelAutosave().then(() => {
+            this.setState({
+                ...state,
+                loading: true,
+            });
 
-        this.setState({
-            ...state,
-            loading: true,
-        });
+            return authoringStorage.saveArticle(
+                this.computeLatestArticle(),
+                state.itemOriginal,
+            ).then((item: IArticle) => {
+                const nextState = getInitialState(
+                    {saved: item, autosaved: item},
+                    state.profile,
+                    state.userPreferencesForFields,
+                    state.spellcheckerEnabled,
+                );
 
-        return authoringStorage.saveArticle(this.computeLatestArticle(), state.itemOriginal).then((item: IArticle) => {
-            const nextState = getInitialState(
-                {saved: item, autosaved: item},
-                state.profile,
-                state.userPreferencesForFields,
-                state.spellcheckerEnabled,
-            );
+                this.setState(nextState);
 
-            this.setState(nextState);
-
-            return item;
+                return item;
+            });
         });
     }
 
@@ -673,14 +684,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     discardUnsavedChanges(state: IStateLoaded): Promise<void> {
-        return (() => {
-            if (state.autosaveEtag != null) {
-                authoringStorage.autosave.cancel();
-                return authoringStorage.autosave.delete(state.itemOriginal._id, state.autosaveEtag);
-            } else {
-                return Promise.resolve();
-            }
-        })().then(() => {
+        return this.cancelAutosave().then(() => {
             return new Promise((resolve) => {
                 const stateNext: IStateLoaded = {
                     ...state,
