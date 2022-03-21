@@ -10,11 +10,11 @@ interface IPropsPositioner {
     placement: Placement;
     zIndex?: number;
     onClose(): void;
+    closeOnHoverEnd?: boolean;
 }
 
 class PopupPositioner extends React.PureComponent<IPropsPositioner> {
     private wrapperEl: HTMLDivElement;
-    private positionOnce: (el: HTMLElement) => void;
     private popper: PopperInstance;
 
     constructor(props: IPropsPositioner) {
@@ -22,6 +22,7 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
 
         this.closeOnClick = this.closeOnClick.bind(this);
         this.closeOnScroll = throttle(this.closeOnScroll.bind(this), 200);
+        this.closeOnMouseLeave = this.closeOnMouseLeave.bind(this);
     }
 
     closeOnClick(event: MouseEvent) {
@@ -47,9 +48,24 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
         }
     }
 
+    closeOnMouseLeave(event: MouseEvent) {
+        if (this.wrapperEl == null) {
+            return;
+        }
+
+        if (this.wrapperEl.contains(event.target as Node) !== true) {
+            this.props.onClose();
+        }
+    }
+
     componentDidMount() {
         window.addEventListener('click', this.closeOnClick);
         window.addEventListener('scroll', this.closeOnScroll, true);
+
+        if (this.props.closeOnHoverEnd && this.wrapperEl != null) {
+            this.props.referenceElement.addEventListener('mouseleave', this.closeOnMouseLeave);
+            this.wrapperEl.addEventListener('mouseleave', this.closeOnMouseLeave);
+        }
 
         if (this.wrapperEl != null) {
             this.popper = createPopper(
@@ -66,6 +82,11 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
     componentWillUnmount() {
         window.removeEventListener('click', this.closeOnClick);
         window.removeEventListener('scroll', this.closeOnScroll, true);
+
+        if (this.props.closeOnHoverEnd && this.wrapperEl != null) {
+            this.props.referenceElement.removeEventListener('mouseleave', this.closeOnMouseLeave);
+            this.wrapperEl.removeEventListener('mouseleave', this.closeOnMouseLeave);
+        }
 
         this.popper.destroy?.();
     }
@@ -90,8 +111,9 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
 export function showPopup(
     referenceElement: HTMLElement,
     placement: Placement,
-    Component: React.ComponentType<{closePopup(): void}>,
+    Component: React.ComponentType<{ closePopup(): void }>,
     zIndex?: number,
+    closeOnHoverEnd?: boolean,
 ) {
     const el = document.createElement('div');
 
@@ -109,6 +131,7 @@ export function showPopup(
                 placement={placement}
                 onClose={onClose}
                 zIndex={zIndex}
+                closeOnHoverEnd={closeOnHoverEnd || false}
             >
                 <Component
                     closePopup={onClose}
