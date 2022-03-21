@@ -26,6 +26,7 @@ import {DropdownMenuDivider} from './dropdown-menu-divider';
 import {NavTabs} from './nav-tabs';
 import {DropZone} from './drop-zone';
 import {PlainTextEditor} from './PlainTextEditor/PlainTextEditor';
+import UserPopup from './UserPopup';
 
 export {
     List,
@@ -56,4 +57,5 @@ export {
     NavTabs,
     DropZone,
     PlainTextEditor,
+    UserPopup,
 };
