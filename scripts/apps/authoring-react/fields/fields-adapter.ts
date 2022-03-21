@@ -1,4 +1,5 @@
-import {IArticle, IAuthoringFieldV2, IVocabulary} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IVocabulary, IVocabularyItem} from 'superdesk-api';
+import {Map} from 'immutable';
 import {IDropdownDataCustom, IDropdownDataVocabulary} from './dropdown';
 import {IEditor3Config} from './editor3/interfaces';
 import {appConfig} from 'appConfig';
@@ -54,6 +55,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                         return option;
                     }),
                     roundCorners: false,
+                    multiple: false,
                 };
 
                 const fieldV2: IAuthoringFieldV2 = {
@@ -95,6 +97,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                         return option;
                     }),
                     roundCorners: true,
+                    multiple: false,
                 };
 
                 const fieldV2: IAuthoringFieldV2 = {
@@ -160,6 +163,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                     required: fieldEditor.required,
                     source: 'vocabulary',
                     vocabularyId: 'languages',
+                    multiple: false,
                 };
 
                 const fieldV2: IAuthoringFieldV2 = {
@@ -180,6 +184,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                     required: fieldEditor.required,
                     source: 'vocabulary',
                     vocabularyId: 'genre',
+                    multiple: true,
                 };
 
                 const fieldV2: IAuthoringFieldV2 = {
@@ -192,15 +197,17 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                 return fieldV2;
             },
             getSavedData: (article) => {
-                return article.genre[0].qcode;
+                return article.genre.map(({qcode}) => qcode);
             },
-            saveData: (value: string, article) => {
+            saveData: (values: Array<string>, article) => {
                 const vocabulary: IVocabulary = ng.get('vocabularies').getVocabularySync('genre');
-                const vocabularyItem = vocabulary.items.find(({qcode}) => qcode === value);
+                const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(
+                    vocabulary.items.map((item) => [item.qcode, item]),
+                );
 
                 return {
                     ...article,
-                    genre: [{qcode: value, name: vocabularyItem.name}],
+                    genre: values.map((qcode) => ({qcode, name: vocabularyItems.get(qcode)?.name ?? ''})),
                 };
             },
         },

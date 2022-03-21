@@ -1,3 +1,4 @@
+import {SpacerInline} from 'core/ui/components/Spacer';
 import * as React from 'react';
 import {IPreviewComponentProps} from 'superdesk-api';
 import {IDropdownValue, IDropdownConfig} from '.';
@@ -10,10 +11,25 @@ export class Preview extends React.PureComponent<IProps> {
     render() {
         const {config, value} = this.props;
         const options = getOptions(config);
-        const option = value == null ? null : options.find((_option) => _option.id === value);
+        const optionsToPreview =
+            (Array.isArray(value) ? value : [value])
+                .map((val) => options.find((_option) => _option.id === val));
 
         return (
-            <DropdownItemTemplate option={option} config={config} />
+            <div>
+                {
+                    optionsToPreview.map((option, i) => (
+                        <span key={i}>
+                            {
+                                i !== 0 && (
+                                    <SpacerInline h gap="4" />
+                                )
+                            }
+                            <DropdownItemTemplate option={option} config={config} />
+                        </span>
+                    ))
+                }
+            </div>
         );
     }
 }

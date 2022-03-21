@@ -16,11 +16,11 @@ export class DropdownItemTemplate extends React.PureComponent<IProps> {
         }
 
         const itemStyle: React.CSSProperties = {
-            aspectRatio: '1',
             height: '1.5em',
+            minWidth: '1.5em',
             backgroundColor: option.color ?? 'transparent',
             color: option.color == null ? 'black' : getTextColor(option.color),
-            display: 'flex',
+            display: 'inline-flex',
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: config.source === 'manual-entry' && config.roundCorners ? '999px' : '2px',

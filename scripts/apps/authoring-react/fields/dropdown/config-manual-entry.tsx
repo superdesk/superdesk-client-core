@@ -2,14 +2,9 @@ import * as React from 'react';
 import {RadioButtonGroup, Button, IconButton, Checkbox, Alert} from 'superdesk-ui-framework/react';
 import {IConfigComponentProps} from 'superdesk-api';
 import {gettext, arrayMove} from 'core/utils';
-import {IDropdownValue, IDropdownOption, IDropdownDataCustom} from '.';
+import {IDropdownOption, IDropdownDataCustom} from '.';
 import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
-import {Dropdown} from './dropdown';
 import {assertNever, isNumeric} from 'core/helpers/typescript-helpers';
-
-interface IState {
-    previewValue: IDropdownValue | null;
-}
 
 const newItemTemplate: IDropdownOption = {
     id: null,
@@ -18,7 +13,7 @@ const newItemTemplate: IDropdownOption = {
 
 type IDropdownConfig = IDropdownDataCustom;
 
-export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps<IDropdownConfig>, IState> {
+export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps<IDropdownConfig>> {
     constructor(props) {
         super(props);
 
@@ -37,6 +32,7 @@ export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps
             options: [
                 newItemTemplate,
             ],
+            multiple: false,
             roundCorners: false,
             readOnly: false,
             required: false,
@@ -266,18 +262,6 @@ export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps
                         </div>
                     )
                 }
-
-                <div>
-                    <label className="form-label">{gettext('Configuration preview')}</label>
-
-                    <Dropdown
-                        config={config}
-                        value={this.state.previewValue}
-                        onChange={(val) => {
-                            this.setState({previewValue: val});
-                        }}
-                    />
-                </div>
             </Spacer>
         );
     }

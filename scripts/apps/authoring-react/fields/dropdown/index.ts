@@ -5,10 +5,10 @@ import {Config} from './config-main';
 import {Preview} from './preview';
 import {Difference} from './difference';
 
-export type IDropdownValue = string | number;
+export type IDropdownValue = string | number | Array<string | number>;
 
 export interface IDropdownOption {
-    id: IDropdownValue;
+    id: string | number;
     label: string;
     color?: string;
 }
@@ -16,6 +16,7 @@ export interface IDropdownOption {
 export interface IDropdownDataVocabulary extends ICommonFieldConfig {
     source: 'vocabulary';
     vocabularyId: IVocabulary['_id'];
+    multiple: boolean;
 }
 
 export interface IDropdownDataCustom extends ICommonFieldConfig {
@@ -23,6 +24,7 @@ export interface IDropdownDataCustom extends ICommonFieldConfig {
     type: 'text' | 'number';
     options: Array<IDropdownOption>;
     roundCorners: boolean;
+    multiple: boolean;
 }
 
 export type IDropdownConfig = IDropdownDataCustom | IDropdownDataVocabulary;

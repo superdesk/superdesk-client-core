@@ -21,6 +21,7 @@ import {dispatchInternalEvent} from 'core/internal-events';
 import {omitFields} from '../../data-layer';
 import {compareArticles} from '../../compare-articles/compare-articles';
 import {previewArticle} from '../../preview-article-modal';
+import {getArticleAdapter} from '../../article-adapter';
 
 const loadingState: IState = {
     versions: 'loading',
@@ -52,11 +53,14 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
     }
 
     initialize() {
-        httpRequestJsonLocal<IRestApiResponse<IArticle>>({
-            method: 'GET',
-            path: `/archive/${this.props.article._id}?version=all`,
-        }).then((res) => {
-            const items = res._items;
+        Promise.all([
+            httpRequestJsonLocal<IRestApiResponse<IArticle>>({
+                method: 'GET',
+                path: `/archive/${this.props.article._id}?version=all`,
+            }),
+            getArticleAdapter(),
+        ]).then(([res, adapter]) => {
+            const items = res._items.map((item) => adapter.toAuthoringReact(item));
 
             const deskIds = items.map((item) => item.task?.desk).filter(notNullOrUndefined);
             const stageIds = items.map((item) => item.task?.stage).filter(notNullOrUndefined);
@@ -74,7 +78,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                 ),
             ]).then(([resDesks, resStages]) => {
                 this.setState({
-                    versions: res._items.reverse(),
+                    versions: items.reverse(),
                     desks: Map(resDesks._items.map((item) => [item._id, item])),
                     stages: Map(resStages._items.map((item) => [item._id, item])),
                 });
