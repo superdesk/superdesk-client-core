@@ -2,6 +2,15 @@ import notifySaveError from '../helpers';
 import {gettext} from 'core/utils';
 import {getTemplateFilters} from '../constants';
 import {dataApi} from 'core/helpers/CrudManager';
+import {IArticle} from 'superdesk-api';
+
+const defaultTemplate: Partial<IArticle> = {
+    type: 'text',
+    headline: '',
+    abstract: '',
+    byline: '',
+    body_html: '',
+};
 
 TemplatesDirective.$inject = ['notify', 'api', 'templates', 'modal', 'desks', 'weekdays',
     'content', '$filter', 'session', 'lodash'];
@@ -271,12 +280,7 @@ export function TemplatesDirective(notify, api, templates, modal, desks, weekday
                 $scope.origTemplate = template || {template_type: 'create', is_public: true};
                 $scope.template = _.create($scope.origTemplate);
                 $scope.template.schedule = $scope.origTemplate.schedule || {};
-                $scope.template.data = $scope.origTemplate.data || {
-                    headline: '',
-                    abstract: '',
-                    byline: '',
-                    body_html: '',
-                };
+                $scope.template.data = $scope.origTemplate.data || defaultTemplate;
                 $scope.template.template_desks = $scope.origTemplate.template_desks || [];
                 $scope.template_desk = $scope.template.template_desks.length > 0 ?
                     $scope.template.template_desks[0] : '';
