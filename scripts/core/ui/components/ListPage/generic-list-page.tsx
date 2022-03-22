@@ -121,6 +121,8 @@ export class GenericListPageComponent<T, P>
         this.getActiveFilters = this.getActiveFilters.bind(this);
         this.removeFilter = this.removeFilter.bind(this);
         this.getItemsCount = this.getItemsCount.bind(this);
+        this.itemIsBeingCreated = this.itemIsBeingCreated.bind(this);
+        this.itemIsBeingEdited = this.itemIsBeingEdited.bind(this);
 
         this.refetchDataUsingCurrentFilters = this.refetchDataUsingCurrentFilters.bind(this);
         this.filter = this.filter.bind(this);
@@ -346,11 +348,20 @@ export class GenericListPageComponent<T, P>
         }
     }
 
+    itemIsBeingEdited() {
+        return this.state.editItemId != null;
+    }
+
+    itemIsBeingCreated() {
+        return this.state.newItem != null;
+    }
+
     componentDidUpdate() {
         if (this.state.refetchDataScheduled && this.state.editItemId == null) {
             this.refetchDataUsingCurrentFilters();
         }
     }
+
     render() {
         const {additionalProps} = this.props;
 
@@ -387,8 +398,8 @@ export class GenericListPageComponent<T, P>
             getActiveFilters: this.getActiveFilters,
             removeFilter: this.removeFilter,
             getItemsCount: this.getItemsCount,
-            itemIsBeingEdited: this.state.editItemId != null,
-            itemIsBeingCreated: this.state.newItem != null,
+            itemIsBeingEdited: () => this.state.editItemId != null,
+            itemIsBeingCreated: () => this.state.newItem != null,
         };
 
         const labelForSaveButton = this.props.labelForItemSaveButton ?? gettext('Save');
