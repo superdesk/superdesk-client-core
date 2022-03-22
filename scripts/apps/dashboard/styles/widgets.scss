@@ -41,6 +41,7 @@
                 min-height: 5.6rem;
                 border-bottom: 1px solid var(--sd-colour-line--light);
                 background-color: var(--sd-item__main-Bg);
+                border-radius: var(--b-radius--medium) var(--b-radius--medium) 0 0;
                 &:hover {
                     border-bottom: 1px solid var(--sd-colour-line--light);
                     background-color: var(--sd-item__main-Bg--hover);

@@ -358,7 +358,7 @@
 .sortbar {
     .label-total {
         margin: 0 $sd-base-increment / 2;
-        background-color: $grayText;
+        background-color: var(--sd-colour-bg--09);
     }
 }
 

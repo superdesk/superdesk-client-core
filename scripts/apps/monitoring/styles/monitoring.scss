@@ -85,25 +85,28 @@
                 overflow-y: auto;
                 box-shadow: $block-shadow-depth-2;
                 &:focus {
-                    @include box-shadow(0px 0px 10px 0px darken(#c6c6c6, 20%));
+                    box-shadow: 0 0 10px 0 hsla(0, 0%, 0%, 0.32);
+                    outline: 1px solid var(--sd-colour-line--strong);
                 }
                 .compact-view, .mlist-view {
                     box-shadow: none;
                 }
                 &.refresh {
-                    border: solid thin $blue;
-                    @include box-shadow(0px 0px 10px 0px rgba(93,155,192,1));
+                    border: 1px solid var(--sd-colour-interactive);
+                    box-shadow: 0 0 10px 0 var(--sd-colour-interactive);
                 }
                 .list-view {
                     margin-bottom: 0;
-                    &.list-without-items {
-                        height: 38px !important;
-                        li {
-                            line-height: 38px;
-                            text-align: center;
-                            color: #999;
-                        }
-                    }
+                    // &.list-without-items {
+                    //     li {
+                    //         height: 40px;
+                    //         display: flex;
+                    //         align-items: center;
+                    //         justify-content: center;
+                    //         text-align: center;
+                    //         color: var(--color-text-lighter);
+                    //     }
+                    // }
                 }
             }
 

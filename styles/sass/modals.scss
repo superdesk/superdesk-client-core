@@ -16,7 +16,6 @@
             flex-direction: column;
             overflow-y: auto;
         }
-        .modal__header,
         .modal__footer {
             display: block;
         }
@@ -375,11 +374,12 @@ $sd-leftNavBtn-transition: background-color 0.2s ease-out, color 0.1s ease-out;
     }
 }
 
-.modal-footer--flex {
-    border: 1px solid var(--color-line__modal);
-    padding: 0.8rem 1.6rem;
-
+.modal-footer--flex,
+.modal__footer--flex {
+    // border: 1px solid var(--color-line__modal);
+    // padding: $sd-base-increment $sd-base-increment * 2;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: $sd-base-increment / 2;
 }

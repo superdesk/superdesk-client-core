@@ -153,8 +153,8 @@ $state-color-red:      hsl(7, 100%, 37%);
 $state-color-embargo:  hsl(337, 100%, 60%);
 
 //Box shadows
-$block-shadow-depth-1: 0px 1px 2px 0 rgba(0, 0, 0, 0.12);
-$block-shadow-depth-2: 0px 1px 4px 0 rgba(0, 0, 0, 0.2);
+$block-shadow-depth-1: 0px 1px 2px 0 hsla(0, 0%, 0%, 0.12);
+$block-shadow-depth-2: 0px 1px 4px 0 hsla(0, 0%, 0%, 0.2);
 
 // Widgets
 $widget_archive:       #3f51b5;

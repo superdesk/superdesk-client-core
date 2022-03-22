@@ -11,79 +11,74 @@
         background: var(--sd-colour-panel-bg--100);
     }
 
-    .article-versions {
-        position: absolute;
-        left: 0; top:50px; right: 0;
-        overflow: auto;
-        bottom: 0;
+    // .article-versions {
+    //     .versions-list {
+    //         padding: 12px;
+    //         .item {
+    //             margin-bottom: 12px;
+    //             .header {
+    //                 font-size: 12px;
+    //                 .user {
+    //                     float: right;
+    //                     color: $sd-text-light;
+    //                 }
+    //             }
+    //               .desk-details {
+    //                 font-size: 11px;
+    //             }
+    //             .footer {
+    //                 font-size: 12px;
+    //                 display: flex;
+    //                 align-items: center;
+    //                 em {
+    //                     color: $sd-text-lighter;
+    //                 }
+    //                 .state-label {
+    //                     float: none;
+    //                     margin-left: 10px;
+    //                 }
+    //             }
+    //             h6 {
+    //                 @include text-semibold();
+    //                 font-size: 15px;
+    //                 height: 18px;
+    //                 color: $sd-text;
+    //                 overflow: hidden;
+    //                 white-space: nowrap;
+    //                 text-overflow: ellipsis;
+    //                 text-transform: none;
+    //                 margin: 5px 0;
+    //                 &.no-title {
+    //                     color: $sd-text-lighter;
+    //                     font-weight: normal;
+    //                 }
+    //             }
+    //             .content {
+    //                 font-size: 13px;
+    //                 color: $sd-text-light;
+    //                 line-height: 20px;
+    //                 max-height: 40px;
+    //                 overflow: hidden;
+    //             }
 
-        .versions-list {
-            padding: 12px;
-            .item {
-                margin-bottom: 12px;
-                .header {
-                    font-size: 12px;
-                    .user {
-                        float: right;
-                        color: $sd-text-light;
-                    }
-                }
-                  .desk-details {
-                    font-size: 11px;
-                }
-                .footer {
-                    font-size: 12px;
-                    display: flex;
-                    align-items: center;
-                    em {
-                        color: $sd-text-lighter;
-                    }
-                    .state-label {
-                        float: none;
-                        margin-left: 10px;
-                    }
-                }
-                h6 {
-                    @include text-semibold();
-                    font-size: 15px;
-                    height: 18px;
-                    color: $sd-text;
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    text-transform: none;
-                    margin: 5px 0;
-                    &.no-title {
-                        color: $sd-text-lighter;
-                        font-weight: normal;
-                    }
-                }
-                .content {
-                    font-size: 13px;
-                    color: $sd-text-light;
-                    line-height: 20px;
-                    max-height: 40px;
-                    overflow: hidden;
-                }
+    //             &:hover {
+    //                 cursor: pointer;
+    //             }
 
-                &:hover {
-                    cursor: pointer;
-                }
+    //         }
 
-            }
+    //         &.draft {
+    //             background: none;
+    //             border-color: var(--sd-colour-line--light);
 
-            &.draft {
-                background: none;
-                border-color: var(--sd-colour-line--light);
+    //             &.selected {
+    //                 background: hsla(0, 0%, 20%, 0.1);
+    //             }
 
-                &.selected {
-                    background: hsla(0, 0%, 20%, 0.1);
-                }
-
-                .close {
-                    margin-left: 5px;
-                }
-            }
-        }
-    }
+    //             .close {
+    //                 margin-left: 5px;
+    //             }
+    //         }
+    //     }
+    // }
 }

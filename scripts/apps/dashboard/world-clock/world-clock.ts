@@ -125,7 +125,7 @@ angular.module('superdesk.apps.dashboard.world-clock', [
 
                 var svg = d3.select(element[0])
                     .append('svg')
-                    .attr('widgth', width)
+                    .attr('width', width)
                     .attr('height', height);
 
                 var clock = svg.append('g')

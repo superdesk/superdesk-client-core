@@ -47,7 +47,7 @@ export function showOptionsModal(title: string, message: string, options: Array<
                             )
                         }
 
-                        <div>
+                        <div className='button-group button-group--end'>
                             {
                                 options.map(({label, highlightOption, onSelect}) => (
                                     <button

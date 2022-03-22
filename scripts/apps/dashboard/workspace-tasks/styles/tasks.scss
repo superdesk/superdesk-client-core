@@ -204,105 +204,105 @@ TASK PAGE
     }
 }
 
-.workspace-tasks {
-    .preview-pane {
+// .workspace-tasks {
+//     .preview-pane {
 
-        .action-menu {
-            width: 94px !important;
-            .change {
-                border: 0;
-                background: 0;
-                padding: 14px;
-                float: left;
-            }
-        }
-        header {
-            p {
-                line-height: $nav-height;
-                color: $grayLight;
-                max-width: 345px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-            }
-        }
-        .content {
-            padding: 20px;
-        }
+//         .action-menu {
+//             width: 94px !important;
+//             .change {
+//                 border: 0;
+//                 background: 0;
+//                 padding: 14px;
+//                 float: left;
+//             }
+//         }
+//         header {
+//             p {
+//                 line-height: $nav-height;
+//                 color: $grayLight;
+//                 max-width: 345px;
+//                 overflow: hidden;
+//                 text-overflow: ellipsis;
+//                 white-space: nowrap;
+//             }
+//         }
+//         .content {
+//             padding: 20px;
+//         }
 
-        textarea {
-            height: 32px;
-            border-color: #ddd !important;
-            &:focus {
-                border-color: #ddd !important;
-                @include box-shadow(none !important);
-            }
-        }
+//         textarea {
+//             height: 32px;
+//             border-color: #ddd !important;
+//             &:focus {
+//                 border-color: #ddd !important;
+//                 @include box-shadow(none !important);
+//             }
+//         }
 
-        .title {
-            font-size: 16px;
-            @include text-semibold();
-            line-height: 24px;
-            color: $sd-text;
-            margin: 0 0 15px 0;
-        }
+//         .title {
+//             font-size: 16px;
+//             @include text-semibold();
+//             line-height: 24px;
+//             color: $sd-text;
+//             margin: 0 0 15px 0;
+//         }
 
-        .description {
-            font-size: 14px;
-            margin-bottom: 15px;
-            line-height: 22px;
-            color:$sd-text;
-        }
+//         .description {
+//             font-size: 14px;
+//             margin-bottom: 15px;
+//             line-height: 22px;
+//             color:$sd-text;
+//         }
 
-        .assignee-container {
-            background: #eee;
-            padding: 10px;
-            @include border-radius(3px);
-            margin-bottom: 10px;
-            @include clearfix();
-            .assignee-name {
-                margin: 0;
-                line-height: 30px;
-                float: left;
-            }
-        }
+//         .assignee-container {
+//             background: #eee;
+//             padding: 10px;
+//             @include border-radius(3px);
+//             margin-bottom: 10px;
+//             @include clearfix();
+//             .assignee-name {
+//                 margin: 0;
+//                 line-height: 30px;
+//                 float: left;
+//             }
+//         }
 
-        .assignee-box {
-            margin-bottom: 10px;
-        }
+//         .assignee-box {
+//             margin-bottom: 10px;
+//         }
 
 
-        .task-labels {
-            margin-top: 0;
-            margin-bottom: 15px;
+//         .task-labels {
+//             margin-top: 0;
+//             margin-bottom: 15px;
 
-            .icon-desk-time {
-                vertical-align: middle;
-            }
-        }
+//             .icon-desk-time {
+//                 vertical-align: middle;
+//             }
+//         }
 
-        .time-edit {
-            margin-top: 5px;
-            margin-bottom: 10px;
-            @include clearfix();
-            .field {
-                float: left;
-                width: 50%;
-                @include border-box();
-                &:first-child {
-                    padding-right: 5px;
-                }
-                &:last-child {
-                    padding-left: 5px;
-                }
-            }
-            input {
-                @include border-box();
-                width: 100%;
-            }
-        }
-    }
-}
+//         .time-edit {
+//             margin-top: 5px;
+//             margin-bottom: 10px;
+//             @include clearfix();
+//             .field {
+//                 float: left;
+//                 width: 50%;
+//                 @include border-box();
+//                 &:first-child {
+//                     padding-right: 5px;
+//                 }
+//                 &:last-child {
+//                     padding-left: 5px;
+//                 }
+//             }
+//             input {
+//                 @include border-box();
+//                 width: 100%;
+//             }
+//         }
+//     }
+// }
 
 .create-task-popup {
 

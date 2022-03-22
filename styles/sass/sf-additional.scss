@@ -1709,27 +1709,34 @@
 // ---------------------------------------------
 
 .list-group {
-    @include box-sizing(border-box);
-    width: 300px;
     .list-group-item {
-        padding: 10px 15px;
-        border: 1px solid #ddd;
+        padding: 0 8px 0 16px;
+        border: 1px solid var(--sd-colour-line--light);
         border-width: 0 1px 1px 1px;
-        background-color: #fff;
+        background-color: var(--sd-item__main-Bg);
+        display: flex;
+        align-items: center;
+        min-height: 4.2rem;
         &:first-child {
             border-width: 1px;
-            @include border-radius(5px 5px 0 0);
+            border-radius: var(--b-radius--medium) var(--b-radius--medium) 0 0;
         }
         &:last-child {
-            @include border-radius(0 0 5px 5px);
+            border-radius: 0 0 var(--b-radius--medium) var(--b-radius--medium);
         }
         &:hover {
-            background-color: #f4f4f4;
+            background-color: var(--sd-item__main-Bg--hover);
             cursor: pointer;
         }
         a {
             text-decoration: none;
-            color:#444;
+            color: var(--color-text);
+        }
+        &--no-click {
+            &:hover {
+                cursor: default;
+                background-color: var(--sd-item__main-Bg);
+            }
         }
     }
 }
@@ -1741,22 +1748,20 @@
     overflow-y: auto;
     width: 100%;
     max-height: 100%;
-    min-height: 100%;
-    box-sizing: border-box;
 }
 .scroll-shadow {
     height: 0;
     .inner {
-        background: -webkit-gradient(linear,left top,left bottom,from(rgba(0,0,0,.10)),to(transparent));
+        background: -webkit-gradient(linear,left top,left bottom,from(hsla(0, 0%, 0%, 0.1)),to(transparent));
         height: 4px;
         position: relative;
         z-index: 503;
-        @include transition(linear .1s all);
-        @include opacity(0);
+        transition: linear .1s all;
+        opacity: 0;
     }
     &.shadow {
         .inner {
-            @include opacity(100);
+            opacity: 1;
         }
     }
 }
@@ -2244,9 +2249,9 @@ sd-multi-image-edit {
         background-color: var(--sd-colour-panel-bg--100);
     }
     .sd-widget .widget-header .widget-title {
-        line-height: 100%;
+        line-height: 1;
         font-size: 1.4rem;
-        padding: 0 1rem;
+        padding: 0 1.2rem;
     }
     .sd-widget.related-item .existing-items {
         top: -35px;

@@ -1,6 +1,7 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import {OrderedMap} from 'immutable';
+import {EmptyState} from 'superdesk-ui-framework/react';
 
 interface IProps<T> {
     pageSize: number;
@@ -176,7 +177,7 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
 
         return (
             <div
-                style={{display: 'flex', flexDirection: 'column', maxHeight: '100%', position: 'relative'}}
+                style={{display: 'flex', flexDirection: 'column', maxHeight: '100%'}}
                 data-test-id={this.props['data-test-id']}
             >
                 <div
@@ -211,11 +212,24 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                         } else if (this.allItemsLoaded()) {
                             if (this.getLoadedItemsCount() === 0) {
                                 return (
-                                    <div style={messageStyles}>{gettext('There are currently no items.')}</div>
+                                    // <div style={messageStyles}>
+                                    //     <div className='label label--large label--translucent label--no-transform'>{gettext('There are currently no items.')}</div>
+                                    // </div>
+                                    <div className="content-state__empty-container content-state__empty-container--absolute">
+                                    <div className="content-state__empty-info">
+                                        <figure className="content-state__image content-state__image--large">
+                                            <img src="./node_modules/superdesk-ui-framework/app/img/empty_states/empty-state--large-3.svg" alt="" />
+                                        </figure>
+                                        <h3 className="content-state__heading">{gettext('There are currently no items')}</h3>
+                                    </div>
+                                </div>
+
                                 );
                             } else {
                                 return (
-                                    <div style={messageStyles}>{gettext('All items have been loaded.')}</div>
+                                    <div style={messageStyles}>
+                                        <div className='label label--large label--translucent label--no-transform'>{gettext('All items have been loaded')}</div>
+                                    </div>
                                 );
                             }
                         } else {

@@ -86,24 +86,29 @@
 
 .content-item-preview {
     .item-locked {
-        @include border-box();
-        @include border-radius(14px);
-        height: 28px;
-        line-height: 24px;
-        margin: 4px 0 20px 0;
+        border-radius: 9999px;
+        height: 3.2rem;
+        margin: $sd-base-increment 0 $sd-base-increment * 3 0;
         .lock-sign {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
-            @include border-radius(50%);
-            margin-right: 10px;
-            background: #f4cccd;
-            display: inline-block;
+            width: 3.2rem;
+            height: 3.2rem;
+            min-width: 3.2rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.2rem;
+            background-color: hsla(358, 80%, 50%, 0.16);
             text-align: center;
-            line-height: 30px;
+            flex-shrink: 0;
+            flex-grow: 0;
+            .icon-lock {
+                color: hsla(358, 80%, 50%, 1);
+            }
         }
         .locked-content {
             display: flex;
+            align-items: center;
         }
 
         em {
@@ -111,30 +116,29 @@
             vertical-align: top;
         }
         time {
-            //.text-semibold();
-            position: relative;
-            top:-5px;
-            font-size: 11px;
-            color: $grayLight;
-            padding-left: 38px;
+            font-size: 12px;
+            color: var(--color-text-light);
             display: inline-block;
         }
         .text {
             @include text-semibold();
-            color: $gray;
             flex-grow: 1;
             margin-top: 2px;
             padding-right: 6px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            color: #e51b22;
+            color: hsla(358, 80%, 50%, 1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         .btn {
             display: none;
-            @include border-radius(0 14px 14px 0);
-            padding-left: 5%;
-            border-left: 1px solid #fff;
+            border-radius: 0 999px 999px 0;
+            padding-inline-start: 2.4rem;
+            padding-inline-end: 2.4rem;
+            font-weight: 500;
         }
         &:hover {
             background: $sd-background;
@@ -362,14 +366,12 @@
     .metadata-view,
     .article-versions {
         position: absolute;
-        top:0; left: 0; right: 0; bottom: 0;
+        top:0; 
+        left: 0; 
+        right: 0; 
+        bottom: 0;
         padding: 2.4rem 2.4rem $bottom-view-padding;
         overflow: auto;
-    }
-    .article-versions {
-        padding-top: 10px;
-        padding-right: 10px;
-        padding-left: 10px;
     }
     .related-item-view, .mediaUsed {
         position: absolute;
