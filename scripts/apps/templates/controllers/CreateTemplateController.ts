@@ -33,19 +33,20 @@ function applyMiddleware(_item: IArticle, content, vocabularies): Promise<IArtic
                     const config = vocabulary.custom_field_config ?? {};
                     const customField = fieldTypes[vocabulary.custom_field_type];
 
-                    itemNext = {
-                        ...itemNext,
-                        extra: {
-                            ...itemNext.extra,
-                            [fieldId]: customField.onTemplateCreate(
-                                itemNext?.extra?.[fieldId],
-                                config,
-                            ),
-                        },
-                    };
+                    if (!itemNext?.extra?.[fieldId] === null) {
+                        itemNext = {
+                            ...itemNext,
+                            extra: {
+                                ...itemNext.extra,
+                                [fieldId]: customField.onTemplateCreate(
+                                    itemNext?.extra?.[fieldId],
+                                    config,
+                                ),
+                            },
+                        };
+                    }
                 }
             }
-
             return itemNext;
         });
     });
