@@ -1580,7 +1580,7 @@ describe('authoring actions', () => {
             var itemActions = authoring.itemActions(item);
 
             allowedActions(itemActions, ['save', 'edit', 'duplicate', 'duplicateTo', 'spike', 'add_to_current',
-                'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export', 'set_label']);
+                'mark_item_for_highlight', 'multi_edit', 'publish', 'send', 'export', 'set_label', 're_write']);
         }));
 
     it('Can do edit for scheduled item.',

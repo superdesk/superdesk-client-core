@@ -1,3 +1,4 @@
+import {getVocabularyItemNameTranslated} from 'core/utils';
 import React from 'react';
 import {IArticle, IVocabulary} from 'superdesk-api';
 
@@ -22,8 +23,9 @@ export class PreviewSubject extends React.PureComponent<IProps> {
                         <span
                             key={subj.scheme + ':' + subj.qcode}
                             className="tag-label"
-                            title={subj.name} // longer names might not fit the area
-                        >{subj.name}</span>,
+                            title={getVocabularyItemNameTranslated(subj, this.props.item.language)}
+                            // longer names might not fit the area
+                        >{getVocabularyItemNameTranslated(subj, this.props.item.language)}</span>,
                     );
                 });
         });

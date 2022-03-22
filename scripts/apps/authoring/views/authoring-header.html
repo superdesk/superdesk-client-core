@@ -14,7 +14,7 @@
 
 -->
 
-<div class="authoring-header" ng-class="{active: !isCollapsed}">
+<div class="authoring-header" ng-style="headerElStyles">
     <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
         <div class="authoring-header__general-info">
             <div>
@@ -102,6 +102,7 @@
                     data-value="item.slugline"
                     data-language="item.language"
                     data-on-select="item.slugline = suggestion; autosave(item)"
+                    data-readonly="!_editable || schema.slugline.readonly === true"
                     >
                     <input type="text"
                         tansa-scope-sync
@@ -630,5 +631,8 @@
             </div>
         </div>
     </div>
-        <button class="authoring-header__toggle" ng-class="{active: isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
+</div>
+
+<div class="authoring-header__toggle-container">
+    <button class="authoring-header__toggle" ng-class="{active: isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>    
 </div>

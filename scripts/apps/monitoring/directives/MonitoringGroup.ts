@@ -360,7 +360,14 @@ export function MonitoringGroup(
             });
 
             // refreshes the list for matching group or view type only or if swimlane view is ON.
-            scope.$on('refresh:list', (event, group) => {
+            scope.$on('refresh:list', (event, group, options) => {
+                /**
+                 * When manual refreshing is enabled, scrolling should not automatically refresh the list.
+                 */
+                if (scope.showRefresh === true && options?.event_origin === 'scroll') {
+                    return;
+                }
+
                 const currentScope: IScope = event.currentScope as IScope;
                 const _viewType = currentScope.viewType || '';
                 const viewTypeMatches = [

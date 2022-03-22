@@ -1,6 +1,6 @@
 {
   "name": "superdesk-core",
-  "version": "2.4.0-dev.0",
+  "version": "2.5.0-dev.0",
   "license": "AGPL-3.0",
   "repository": {
     "type": "git",
@@ -120,11 +120,12 @@
     "sass-loader": "6.0.6",
     "shortid": "2.2.8",
     "style-loader": "0.20.2",
-    "superdesk-ui-framework": "2.4.16",
+    "superdesk-ui-framework": "2.4.20",
     "ts-loader": "3.5.0",
     "tslint": "5.11.0",
     "typescript": "3.9.7",
     "uuid": "8.3.1",
+    "web-animations-js": "^2.3.2",
     "webpack": "3.11.0",
     "webpack-dev-server": "2.11.1"
   },

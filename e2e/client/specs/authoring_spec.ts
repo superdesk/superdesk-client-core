@@ -18,6 +18,7 @@ import {authoring} from './helpers/authoring';
 
 import {el, ECE, els, hover, selectFilesForUpload} from '@superdesk/end-to-end-testing-helpers';
 import {getAbsoluteFilePath} from './utils';
+import {selectFromMetaTermsDropdown} from './helpers/dropdown-terms';
 
 function uploadMedia(imagePathAbsolute) {
     el(['media-gallery--upload-placeholder']).click();
@@ -27,8 +28,15 @@ function uploadMedia(imagePathAbsolute) {
 
     el(['media-metadata-editor', 'field--headline'], by.tagName('[contenteditable]'))
         .sendKeys('image headline');
+    el(['media-metadata-editor', 'field--slugline'], by.tagName('[contenteditable]'))
+        .sendKeys('image headline');
     el(['media-metadata-editor', 'field--alt_text'], by.tagName('[contenteditable]'))
         .sendKeys('image alt text');
+
+    selectFromMetaTermsDropdown('anpa_category', ['Finance']);
+
+    selectFromMetaTermsDropdown('subject', ['arts, culture and entertainment', 'archaeology']);
+
     el(['media-metadata-editor', 'field--description_text'], by.tagName('[contenteditable]'))
         .sendKeys('image description');
 
