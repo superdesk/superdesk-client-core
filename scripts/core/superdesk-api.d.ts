@@ -1159,6 +1159,8 @@ declare module 'superdesk-api' {
         getActiveFilters(): Partial<T>;
         removeFilter(fieldName: string): void;
         getItemsCount(): number;
+        itemIsBeingEdited: boolean;
+        itemIsBeingCreated: boolean;
     }
 
     export interface IPropsSelectUser {

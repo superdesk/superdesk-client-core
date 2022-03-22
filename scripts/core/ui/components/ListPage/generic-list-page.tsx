@@ -313,7 +313,7 @@ export class GenericListPageComponent<T, P>
         this.setState({filtersOpen: nextValue});
     }
     openNewItemForm(initialValues?: {[key: string]: any}) {
-        if (this.state.editItemId != null) {
+        if (this.state.editItemId != null || this.state.newItem != null) {
             this.modal.alert({
                 headerText: gettext('Warning'),
                 bodyText: gettext(
@@ -387,6 +387,8 @@ export class GenericListPageComponent<T, P>
             getActiveFilters: this.getActiveFilters,
             removeFilter: this.removeFilter,
             getItemsCount: this.getItemsCount,
+            itemIsBeingEdited: this.state.editItemId != null,
+            itemIsBeingCreated: this.state.newItem != null,
         };
 
         const labelForSaveButton = this.props.labelForItemSaveButton ?? gettext('Save');
