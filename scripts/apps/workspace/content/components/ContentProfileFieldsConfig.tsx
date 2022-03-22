@@ -121,8 +121,8 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
         const canAddNewField =
             availableIds.length > 0
             && !sortingInProgress
-            && !page.itemIsBeingEdited
-            && !page.itemIsBeingCreated;
+            && !page.itemIsBeingEdited()
+            && !page.itemIsBeingCreated();
 
         return (
             <div
