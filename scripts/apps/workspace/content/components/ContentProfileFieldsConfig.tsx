@@ -132,7 +132,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                 }}
             >
                 {
-                    !sortingInProgress
+                    !sortingInProgress && availableIds.length > 0
                         ? (
                             <div
                                 style={{
@@ -174,7 +174,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                 </div>
 
                 {
-                    !sortingInProgress && isLast
+                    !sortingInProgress && availableIds.length > 0 && isLast
                         ? (
                             <div
                                 style={{
