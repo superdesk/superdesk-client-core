@@ -778,7 +778,9 @@ declare module 'superdesk-api' {
         single_value?: boolean;
         schema_field?: string;
         dependent?: boolean;
-        service: {};
+        service: {
+            [key: string]: any;
+        };
         priority?: number;
         unique_field: string;
         schema: {};

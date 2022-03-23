@@ -1,6 +1,6 @@
 import {IArticle, IAuthoringFieldV2, IVocabulary, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
-import {IDropdownDataCustom, IDropdownDataVocabulary} from './dropdown';
+import {IDropdownDataCustom, IDropdownDataVocabulary, IDropdownValue} from './dropdown';
 import {IEditor3Config} from './editor3/interfaces';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
@@ -18,6 +18,12 @@ interface IFieldAdapter {
 }
 
 type IFieldsAdapter = {[key: string]: IFieldAdapter};
+
+function isMultiple(vocabularyId): boolean {
+    const vocabulary: IVocabulary = ng.get('vocabularies').getVocabularySync(vocabularyId);
+
+    return vocabulary?.service?.all === 1;
+}
 
 /**
  * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
@@ -177,14 +183,15 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
             },
         },
         genre: {
-            // TODO: it should work to select multiple values
             getFieldV2: (fieldEditor, fieldSchema) => {
+                const multiple = isMultiple('genre');
+
                 const fieldConfig: IDropdownDataVocabulary = {
                     readOnly: fieldEditor.readonly,
                     required: fieldEditor.required,
                     source: 'vocabulary',
                     vocabularyId: 'genre',
-                    multiple: true,
+                    multiple: multiple,
                 };
 
                 const fieldV2: IAuthoringFieldV2 = {
@@ -197,18 +204,33 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                 return fieldV2;
             },
             getSavedData: (article) => {
-                return article.genre.map(({qcode}) => qcode);
+                const multiple = isMultiple('genre');
+
+                if (multiple) {
+                    return article.genre.map(({qcode}) => qcode);
+                } else {
+                    return article.genre.map(({qcode}) => qcode)[0];
+                }
             },
-            saveData: (values: Array<string>, article) => {
+            saveData: (val: IDropdownValue, article) => {
                 const vocabulary: IVocabulary = ng.get('vocabularies').getVocabularySync('genre');
                 const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(
                     vocabulary.items.map((item) => [item.qcode, item]),
                 );
 
-                return {
-                    ...article,
-                    genre: values.map((qcode) => ({qcode, name: vocabularyItems.get(qcode)?.name ?? ''})),
-                };
+                if (Array.isArray(val)) {
+                    return {
+                        ...article,
+                        genre: val.map((qcode) => ({qcode, name: vocabularyItems.get(qcode.toString())?.name ?? ''})),
+                    };
+                } else {
+                    const qcode = val;
+
+                    return {
+                        ...article,
+                        genre: [{qcode, name: vocabularyItems.get(qcode.toString())?.name ?? ''}],
+                    };
+                }
             },
         },
     };
