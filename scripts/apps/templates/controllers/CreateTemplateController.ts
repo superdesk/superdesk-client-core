@@ -10,7 +10,7 @@ import {IArticle, ICustomFieldType, IVocabulary} from 'superdesk-api';
  */
 function applyMiddleware(_item: IArticle, content, vocabularies): Promise<IArticle> {
     // Custom field types with `onTemplateCreate` defined. From all extensions.
-    const fieldTypes: {[id: string]: ICustomFieldType<any, any>} = {};
+    const fieldTypes: { [id: string]: ICustomFieldType<any, any> } = {};
 
     Object.values(extensions).forEach((ext) => {
         ext?.activationResult?.contributions?.customFieldTypes?.forEach((customField: ICustomFieldType<any, any>) => {
@@ -33,18 +33,16 @@ function applyMiddleware(_item: IArticle, content, vocabularies): Promise<IArtic
                     const config = vocabulary.custom_field_config ?? {};
                     const customField = fieldTypes[vocabulary.custom_field_type];
 
-                    if (!itemNext?.extra?.[fieldId] === null) {
-                        itemNext = {
-                            ...itemNext,
-                            extra: {
-                                ...itemNext.extra,
-                                [fieldId]: customField.onTemplateCreate(
-                                    itemNext?.extra?.[fieldId],
-                                    config,
-                                ),
-                            },
-                        };
-                    }
+                    itemNext = {
+                        ...itemNext,
+                        extra: {
+                            ...itemNext.extra,
+                            [fieldId]: customField.onTemplateCreate(
+                                itemNext?.extra?.[fieldId],
+                                config,
+                            ),
+                        },
+                    };
                 }
             }
             return itemNext;
