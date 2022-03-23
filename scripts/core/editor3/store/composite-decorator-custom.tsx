@@ -5,15 +5,13 @@ import React from 'react';
 import {CompositeDecorator, ContentBlock, ContentState} from 'draft-js';
 import {List} from 'immutable';
 
-type IDecoration = string | null;
-
 /**
  * Replacement for {@see CompositeDecorator} that supports
  * multiple decorations for a single character.
  */
 export class CompositeDecoratorCustom {
     // Supports both - standard and composite decorators
-    private decorators: Array<any>;
+    private decorators: Array<CompositeDecorator>;
 
     constructor(decorators: Array<any> = []) {
         this.decorators = decorators.map((decorator) => {
@@ -26,26 +24,34 @@ export class CompositeDecoratorCustom {
         });
     }
 
-    getDecorations(block: ContentBlock, contentState: ContentState) {
+    getDecorations(block: ContentBlock, contentState: ContentState): List<string> {
         const blockLength = block.getText().length;
+        const decorationsByDecoratorIndex = {};
 
-        // Array of decorations for each character in the block
-        const result: Array<Array<IDecoration>> = [];
+        this.decorators.forEach((decorator, index) => {
+            decorationsByDecoratorIndex[index] = decorator.getDecorations(block, contentState);
+        });
+
+        let result: List<string> = List();
 
         for (let charIndex = 0; charIndex < blockLength; charIndex++) {
-            result.push(
-                this.decorators.map((decorator) => decorator.getDecorations(block, contentState).get(charIndex)),
+            result = result.push(
+                JSON.stringify(
+                    this.decorators.map(
+                        (_, decoratorIndex) => decorationsByDecoratorIndex[decoratorIndex].get(charIndex),
+                    ),
+                ),
             );
         }
 
-        return List(result.map((decorator) => JSON.stringify(decorator)));
+        return result;
     }
 
     /**
      * @param key - stringified Array<IDecoration>
      */
     getComponentForKey(key: string) {
-        const decorations: Array<string> = JSON.parse(key);
+        const decorations: Array<string | null> = JSON.parse(key);
 
         return (props) => {
             const {decoratorProps, ...compositionProps} = props;
