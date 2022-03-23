@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Dropdown} from 'superdesk-ui-framework/react';
+import {Button, Menu} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 interface IProps {
@@ -12,23 +12,24 @@ export class NewFieldSelect extends React.PureComponent<IProps> {
         const {availableFields} = this.props;
 
         return (
-            <Dropdown
-                append={true}
+            <Menu
                 items={availableFields.map(({id, label}) => ({
                     label: label,
-                    onSelect: () => {
+                    onClick: () => {
                         this.props.onSelect(id);
                     },
                 }))}
             >
-                <Button
-                    icon="plus-large"
-                    text={gettext('Add new field')}
-                    shape="round"
-                    iconOnly={true}
-                    onClick={() => false}
-                />
-            </Dropdown>
+                {(toggle) => (
+                    <Button
+                        icon="plus-large"
+                        text={gettext('Add new field')}
+                        shape="round"
+                        iconOnly={true}
+                        onClick={(e) => toggle(e)}
+                    />
+                )}
+            </Menu>
         );
     }
 }

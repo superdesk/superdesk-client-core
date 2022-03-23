@@ -118,6 +118,11 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
             selectedSection,
         } = this.props.wrapper.additionalProps;
         const isLast = index === page.getItemsCount() - 1;
+        const canAddNewField =
+            availableIds.length > 0
+            && !sortingInProgress
+            && !page.itemIsBeingEdited()
+            && !page.itemIsBeingCreated();
 
         return (
             <div
@@ -132,7 +137,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                 }}
             >
                 {
-                    !sortingInProgress
+                    canAddNewField
                         ? (
                             <div
                                 style={{
@@ -174,7 +179,7 @@ class ItemBase extends React.PureComponent<{wrapper: IPropsItem}> {
                 </div>
 
                 {
-                    !sortingInProgress && isLast
+                    canAddNewField && isLast
                         ? (
                             <div
                                 style={{

@@ -52,7 +52,7 @@
 </div>
 
 <div class="field"
-     ng-if="schema.sms && item._type !== 'archived' && !isMediaType"
+     ng-if="schema.sms && item._type !== 'archived'"
      sd-width="{{editor.sms.sdWidth|| 'full'}}"
      order="{{editor.sms.order}}"
      sd-validation-error="error.sms"
@@ -187,7 +187,7 @@
 <!--This article-edit view is used by templates as well.
     ng-if is used to hide dateline for the template create/edit screen.-->
 <div class="field"
-     ng-show="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline && !isMediaType"
+     ng-show="item._type !== 'archived' && (!template || template.template_type !== 'kill') && schema.dateline"
      order="{{editor.dateline.order}}"
      sd-validation-error="error.dateline"
      data-required="schema.dateline.required"
@@ -248,7 +248,7 @@
 <div contenteditable="true" id="editor3Tansa" tansa-proofing="true"  style="position: fixed; top: -1000px; left: -1000px; height: 150px; width: 500px; display: block;"></div>
 
 <div class="field body"
-     ng-if="!isMediaType && schema.body_html"
+     ng-if="schema.body_html"
      order="{{editor.body_html.order}}"
      sd-validation-error="error.body_html"
      data-required="schema.body_html.required"
@@ -387,7 +387,7 @@
 </div>
 
 <div class="field"
-     ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite' && !isMediaType"
+     ng-if="schema.footer && metadata.footers && item._type !== 'archived' && item.type !== 'composite'"
      sd-validation-error="error.body_footer_value"
      data-required="schema.footer.required"
      order="{{editor.footer.order}}"
