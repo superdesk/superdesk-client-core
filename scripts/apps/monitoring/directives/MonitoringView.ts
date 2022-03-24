@@ -19,7 +19,7 @@ interface IScope extends ng.IScope {
     shouldRefresh: boolean;
     type: any;
     group: any;
-    refreshGroup(group?: any);
+    refreshGroup(group?: any, triggeredByScrolling?: boolean);
     isActiveGroup: (group: any) => boolean;
     switchView: (value: any, swimlane?: any) => void;
     gettext: (text: any, params?: any) => any;
@@ -246,7 +246,7 @@ export function MonitoringView(
                 }
 
                 if (scope.monitoring.viewColumn && containerElem[0].scrollTop === 0) {
-                    scope.refreshGroup(scope.group);
+                    scope.refreshGroup(scope.group, true);
                 }
 
                 $timeout.cancel(updateTimeout);
@@ -285,8 +285,8 @@ export function MonitoringView(
             }
 
             // force refresh on refresh button click when in specific view such as single, highlights or spiked.
-            scope.refreshGroup = function(group) {
-                scope.$broadcast('refresh:list', group);
+            scope.refreshGroup = function(group, triggeredByScrolling?: boolean) {
+                scope.$broadcast('refresh:list', group, triggeredByScrolling ? {event_origin: 'scroll'} : undefined);
             };
 
             scope.$on('$destroy', () => {
