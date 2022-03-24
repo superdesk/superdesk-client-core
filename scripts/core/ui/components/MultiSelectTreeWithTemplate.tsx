@@ -1,3 +1,11 @@
+/**
+ * FIXME: THIS IS A PLACEHOLDER COMPONENT FOR TESTING ONLY
+ *
+ * It should be replaced by a proper implementation before merging to develop
+ * https://github.com/superdesk/superdesk-ui-framework/issues/597
+ */
+
+import {assertNever} from 'core/helpers/typescript-helpers';
 import React from 'react';
 import {ITreeNode} from 'superdesk-api';
 import {MultiSelectTemplate} from './multi-select-tree-with-template-tree-only';
@@ -47,37 +55,74 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
         const {values, onChange, getId} = props;
         const ValueTemplate = this.props.valueTemplate ?? this.props.optionTemplate;
 
-        if (props.kind !== 'synchronous') {
-            return null;
-        }
+        const input = (() => {
+            if (props.kind === 'synchronous') {
+                return (
+                    <button
+                        onClick={(event) => {
+                            showPopup(
+                                event.target as HTMLElement,
+                                'bottom-start',
+                                ({closePopup}) => (
+                                    <MultiSelectTemplate
+                                        options={props.getOptions().nodes}
+                                        values={props.values}
+                                        onChange={(val) => {
+                                            this.props.onChange(val);
+                                            closePopup();
+                                        }}
+                                        optionTemplate={props.optionTemplate}
+                                    />
+                                ),
+                                999,
+                            );
+                        }}
+                    >
+                        +
+                    </button>
+                );
+            } else if (props.kind === 'asynchronous') {
+                return (
+                    <button
+                        onClick={(event) => {
+                            const {target} = event;
+
+                            props.searchOptions('paris', (result) => {
+                                showPopup(
+                                    target as HTMLElement,
+                                    'bottom-start',
+                                    ({closePopup}) => (
+                                        <div>
+                                            <MultiSelectTemplate
+                                                options={result.nodes}
+                                                values={props.values}
+                                                onChange={(val) => {
+                                                    this.props.onChange(val);
+                                                    closePopup();
+                                                }}
+                                                optionTemplate={props.optionTemplate}
+                                            />
+                                        </div>
+                                    ),
+                                    999,
+                                );
+                            });
+                        }}
+                    >
+                        +
+                    </button>
+                );
+            } else {
+                assertNever(props);
+            }
+        })();
 
         return (
             <div>
-                <button
-                    onClick={(event) => {
-                        showPopup(
-                            event.target as HTMLElement,
-                            'bottom-start',
-                            ({closePopup}) => (
-                                <MultiSelectTemplate
-                                    options={props.getOptions().nodes}
-                                    values={props.values}
-                                    onChange={(val) => {
-                                        this.props.onChange(val);
-                                        closePopup();
-                                    }}
-                                    optionTemplate={props.optionTemplate}
-                                />
-                            ),
-                            999,
-                        );
-                    }}
-                >
-                    +
-                </button>
+                {input}
 
                 {
-                    values.map((item, i) => (
+                    (Array.isArray(values) ? values : []).map((item, i) => (
                         <span key={i}>
                             <ValueTemplate item={item} />
                             <button

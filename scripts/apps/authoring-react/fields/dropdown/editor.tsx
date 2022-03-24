@@ -14,6 +14,7 @@ export class Editor extends React.PureComponent<IProps> {
                 onChange={(val) => {
                     this.props.onChange(val);
                 }}
+                language={this.props.language}
             />
         );
     }

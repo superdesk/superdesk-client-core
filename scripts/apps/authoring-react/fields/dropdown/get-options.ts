@@ -14,6 +14,8 @@ export function getOptions(config: IDropdownConfig): Array<IDropdownOption> {
         );
 
         return options;
+    } else if (config.source === 'remote-source') {
+        throw new Error('Will not be called in case remote sources are used');
     } else {
         assertNever(config);
     }

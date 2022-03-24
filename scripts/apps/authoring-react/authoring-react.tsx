@@ -469,7 +469,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 };
 
                 if (state.initialized) {
-                    if (!this.hasUnsavedChanges) {
+                    if (!this.hasUnsavedChanges()) {
                         /**
                          * if object references are the same before patching
                          * they should be the same after patching too
@@ -676,7 +676,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             authoringStorage.lock(_id).then((res) => {
                 this.setState({
                     ...state,
-                    itemOriginal: Object.freeze(res),
+                    itemOriginal: res,
                     itemWithChanges: res,
                 });
             });

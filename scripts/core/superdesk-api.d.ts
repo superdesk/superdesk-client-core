@@ -808,6 +808,7 @@ declare module 'superdesk-api' {
         preffered_items?: boolean;
         tags?: Array<IVocabularyTag>;
         disable_entire_category_selection?: boolean;
+        selection_type?: any;
     }
 
     export type IContentProfileEditorConfig = {

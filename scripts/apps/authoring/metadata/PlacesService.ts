@@ -1,20 +1,28 @@
 import {omit} from 'lodash';
 
-interface IGeoname {
+export interface IGeoName {
     /** name of the place, eg. Prague */
     name: string;
 
+    /** geonames id, eg. "3073494" */
+    code: string;
+
     state: string;
     state_code: string;
+    region?: string;
+    region_code?: string;
 
     country: string;
     country_code: string;
+    feature_class?: string;
+
+    location?: {
+        lat: number;
+        lan: number;
+    };
 
     /** timezone identifier, eg. Europe/Prague */
     tz: string;
-
-    /** geonames id, eg. "3073494" */
-    code: string;
 
     scheme: 'geonames';
 }
@@ -41,7 +49,7 @@ interface ILocated {
     code: string;
 
     /** geonames place data */
-    place?: IGeoname;
+    place?: IGeoName;
 }
 
 /**
@@ -57,7 +65,7 @@ export interface IPlacesService {
      * @param query must be included in place name
      * @param lang ISO-639 2-letter language code (en)
      */
-    searchDateline: (query: string, lang: string) => Promise<Array<IGeoname>>;
+    searchDateline: (query: string, lang: string) => Promise<Array<IGeoName>>;
 
     /**
      * Search for place using geonames
@@ -70,7 +78,7 @@ export interface IPlacesService {
 
 PlacesServiceFactory.$inject = ['api', 'features', 'metadata'];
 export default function PlacesServiceFactory(api, features, metadata) {
-    const geonameToCity = (data: IGeoname): ILocated => ({
+    const geonameToCity = (data: IGeoName): ILocated => ({
         dateline: 'city',
         country_code: data.country_code,
         tz: data.tz,

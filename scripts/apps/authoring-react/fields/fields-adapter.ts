@@ -1,11 +1,15 @@
-import {IArticle, IAuthoringFieldV2, IVocabulary, IVocabularyItem} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IRestApiResponse, IVocabulary, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
-import {IDropdownDataCustom, IDropdownDataVocabulary, IDropdownValue} from './dropdown';
+import {IDropdownDataCustom, IDropdownDataRemoteSource, IDropdownDataVocabulary, IDropdownValue} from './dropdown';
 import {IEditor3Config} from './editor3/interfaces';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';
 import {IOldCustomFieldId} from '../interfaces';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {IGeoName} from 'apps/authoring/metadata/PlacesService';
+import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
+import {getVocabularySelectionTypes} from 'apps/vocabularies/constants';
 
 interface IFieldAdapter {
     getFieldV2: (
@@ -23,6 +27,15 @@ function isMultiple(vocabularyId): boolean {
     const vocabulary: IVocabulary = ng.get('vocabularies').getVocabularySync(vocabularyId);
 
     return vocabulary?.service?.all === 1;
+}
+
+function isMultipleV2(vocabularyId) {
+    const vocabulary: IVocabulary = ng.get('vocabularies').getVocabularySync(vocabularyId);
+
+    const isSingle = vocabulary.selection_type === getVocabularySelectionTypes().SINGLE_SELECTION.id;
+    const _isMultiple = !isSingle;
+
+    return _isMultiple;
 }
 
 /**
@@ -233,6 +246,113 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                 }
             },
         },
+        place: (() => {
+            const useGeoNamesApi = ng.get('features').places_autocomplete;
+
+            if (useGeoNamesApi) {
+                return {
+                    getFieldV2: (fieldEditor, fieldSchema) => {
+                        const fieldConfig: IDropdownDataRemoteSource = {
+                            readOnly: fieldEditor.readonly,
+                            required: fieldEditor.required,
+                            source: 'remote-source',
+                            searchOptions: (searchTerm, language, callback) => {
+                                httpRequestJsonLocal<IRestApiResponse<IGeoName>>({
+                                    method: 'GET',
+                                    path: '/places_autocomplete',
+                                    urlParams: {
+                                        lang: language,
+                                        name: searchTerm,
+                                    },
+                                }).then((res) => {
+                                    const tree: ITreeWithLookup<IGeoName> = {
+                                        nodes: res._items.map((item) => ({value: item})),
+                                        lookup: {},
+                                    };
+
+                                    callback(tree);
+                                });
+                            },
+                            getId: (option: IGeoName) => option.code,
+                            getLabel: (option: IGeoName) => option.name,
+                            multiple: true,
+                        };
+
+                        const fieldV2: IAuthoringFieldV2 = {
+                            id: 'place',
+                            name: gettext('Place'),
+                            fieldType: 'dropdown',
+                            fieldConfig,
+                        };
+
+                        return fieldV2;
+                    },
+                    getSavedData: (article) => {
+                        return article.place;
+                    },
+                    saveData: (val: IDropdownValue, article) => {
+                        return {
+                            ...article,
+                            place: val,
+                        };
+                    },
+                };
+            } else { // use "locators" vocabulary
+                return {
+                    getFieldV2: (fieldEditor, fieldSchema) => {
+                        const multiple = isMultipleV2('locators');
+
+                        const fieldConfig: IDropdownDataVocabulary = {
+                            readOnly: fieldEditor.readonly,
+                            required: fieldEditor.required,
+                            source: 'vocabulary',
+                            vocabularyId: 'locators',
+                            multiple: multiple,
+                        };
+
+                        const fieldV2: IAuthoringFieldV2 = {
+                            id: 'place',
+                            name: gettext('Place'),
+                            fieldType: 'dropdown',
+                            fieldConfig,
+                        };
+
+                        return fieldV2;
+                    },
+                    getSavedData: (article) => {
+                        const multiple = isMultipleV2('locators');
+
+                        if (multiple) {
+                            return article.place.map(({qcode}) => qcode);
+                        } else {
+                            return article.place.map(({qcode}) => qcode)[0];
+                        }
+                    },
+                    saveData: (val: IDropdownValue, article) => {
+                        const vocabulary: IVocabulary = ng.get('vocabularies').getVocabularySync('locators');
+                        const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(
+                            vocabulary.items.map((item) => [item.qcode, item]),
+                        );
+
+                        if (Array.isArray(val)) {
+                            return {
+                                ...article,
+                                place: val.map(
+                                    (qcode) => ({qcode, name: vocabularyItems.get(qcode.toString())?.name ?? ''}),
+                                ),
+                            };
+                        } else {
+                            const qcode = val;
+
+                            return {
+                                ...article,
+                                place: [{qcode, name: vocabularyItems.get(qcode.toString())?.name ?? ''}],
+                            };
+                        }
+                    },
+                };
+            }
+        })(),
     };
 
     for (const vocabulary of customFieldVocabularies) {
