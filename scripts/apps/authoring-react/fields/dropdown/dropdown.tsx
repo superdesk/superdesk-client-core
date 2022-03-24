@@ -26,7 +26,11 @@ export class Dropdown extends React.PureComponent<IProps> {
 
             return (
                 <MultiSelectTreeWithTemplate
-                    options={options.map((option) => ({value: option}))}
+                    kind="synchronous"
+                    getOptions={() => ({
+                        nodes: options.map((option) => ({value: option})),
+                        lookup: {},
+                    })}
                     values={selected}
                     onChange={(_values) => {
                         this.props.onChange(_values.map((val) => val.id));

@@ -1,24 +1,55 @@
 import React from 'react';
 import {ITreeNode} from 'superdesk-api';
+import {MultiSelectTemplate} from './multi-select-tree-with-template-tree-only';
 import {showPopup} from './popupNew';
 
-interface IProps<T> {
-    options: Array<ITreeNode<T>>;
+export interface ITreeWithLookup<T> {
+    nodes: Array<ITreeNode<T>>;
+    lookup: {
+        [id: string]: ITreeNode<T>;
+    };
+}
+
+interface IPropsBase<T> {
     values: Array<T>;
     onChange(values: Array<T>): void;
     optionTemplate: React.ComponentType<{item: T}>;
-    valueTemplate?: React.ComponentType<{item: T}>;
+    valueTemplate?: React.ComponentType<{item: T}>; // not required, it should fallback `optionTemplate` if not provided
     getId(item: T): string;
     getLabel(item: T): string;
+    allowMultiple?: boolean;
     readOnly?: boolean;
-    required?: boolean;
 }
+
+interface IPropsSync<T> extends IPropsBase<T> {
+    kind: 'synchronous';
+    getOptions(): ITreeWithLookup<T>;
+}
+
+type ICancelFn = () => void;
+
+interface IPropsAsync<T> extends IPropsBase<T> {
+    kind: 'asynchronous';
+
+    /**
+     * The function will be called when a search is initiated from UI.
+     * `callback` will be invoked with matching options after they are retrieved.
+     * A function to cancel the asynchronous search is returned.
+     */
+    searchOptions(term: string, callback: (options: ITreeWithLookup<T>) => void): ICancelFn;
+}
+
+type IProps<T> = IPropsSync<T> | IPropsAsync<T>;
 
 export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T>> {
     render() {
-        const {options, values, onChange, getId} = this.props;
-        const OptionTemplate = this.props.optionTemplate;
+        const {props} = this;
+        const {values, onChange, getId} = props;
         const ValueTemplate = this.props.valueTemplate ?? this.props.optionTemplate;
+
+        if (props.kind !== 'synchronous') {
+            return null;
+        }
 
         return (
             <div>
@@ -28,22 +59,15 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                             event.target as HTMLElement,
                             'bottom-start',
                             ({closePopup}) => (
-                                <div style={{background: 'white', padding: 10, border: '1px solid red'}}>
-                                    {
-                                        options.map((item, i) => (
-                                            <div key={i}>
-                                                <button
-                                                    onClick={() => {
-                                                        onChange(values.concat(item.value));
-                                                        closePopup();
-                                                    }}
-                                                >
-                                                    <OptionTemplate item={item.value} />
-                                                </button>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
+                                <MultiSelectTemplate
+                                    options={props.getOptions().nodes}
+                                    values={props.values}
+                                    onChange={(val) => {
+                                        this.props.onChange(val);
+                                        closePopup();
+                                    }}
+                                    optionTemplate={props.optionTemplate}
+                                />
                             ),
                             999,
                         );

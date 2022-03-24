@@ -59,7 +59,7 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
     }
 
     componentDidMount() {
-        window.addEventListener('click', this.closeOnClick);
+        window.addEventListener('click', this.closeOnClick, {capture: true});
         window.addEventListener('scroll', this.closeOnScroll, true);
 
         if (this.props.closeOnHoverEnd && this.wrapperEl != null) {
