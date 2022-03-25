@@ -2,7 +2,7 @@ import * as React from 'react';
 import {RadioButtonGroup, Button, IconButton, Checkbox, Alert} from 'superdesk-ui-framework/react';
 import {IConfigComponentProps} from 'superdesk-api';
 import {gettext, arrayMove} from 'core/utils';
-import {IDropdownOption, IDropdownDataCustom} from '.';
+import {IDropdownOption, IDropdownConfigManualSource} from '..';
 import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
 import {assertNever, isNumeric} from 'core/helpers/typescript-helpers';
 
@@ -11,7 +11,7 @@ const newItemTemplate: IDropdownOption = {
     label: '',
 };
 
-type IDropdownConfig = IDropdownDataCustom;
+type IDropdownConfig = IDropdownConfigManualSource;
 
 export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps<IDropdownConfig>> {
     constructor(props) {

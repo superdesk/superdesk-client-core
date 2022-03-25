@@ -1,21 +1,32 @@
 import * as React from 'react';
-import {IDropdownValue, IDropdownConfig} from '.';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
-import {DropdownItemTemplate} from './dropdown-item-template';
-import {getOptions} from './get-options';
 import {MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWithTemplate';
+import {IDropdownConfigManualSource, IDropdownConfigVocabulary, IDropdownValue} from '.';
+import {DropdownItemTemplate} from './dropdown-item-template';
+import {getOptions} from './dropdown-vocabulary/get-options';
+import {assertNever} from 'core/helpers/typescript-helpers';
 
 interface IProps {
-    config: IDropdownConfig;
+    config: IDropdownConfigManualSource | IDropdownConfigVocabulary;
     value: IDropdownValue;
+    language: string;
     onChange(value: IDropdownValue): void;
 }
 
-export class Dropdown extends React.PureComponent<IProps> {
+export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IProps> {
     render() {
         const {config} = this.props;
         const values = this.props.value;
-        const options = getOptions(config);
+
+        const options = (() => {
+            if (config.source === 'manual-entry') {
+                return config.options;
+            } else if (config.source === 'vocabulary') {
+                return getOptions(config);
+            } else {
+                assertNever(config);
+            }
+        })();
 
         if (config.multiple) {
             if (!Array.isArray(values)) {
@@ -35,8 +46,8 @@ export class Dropdown extends React.PureComponent<IProps> {
                     onChange={(_values) => {
                         this.props.onChange(_values.map((val) => val.id));
                     }}
-                    optionTemplate={({item}) => <span style={{border: '1px dotted blue'}}>{item.label}</span>}
-                    valueTemplate={({item}) => <span style={{border: '1px dotted green'}}>{item.label}</span>}
+                    optionTemplate={({item}) => <DropdownItemTemplate option={item} config={config} />}
+                    valueTemplate={({item}) => <DropdownItemTemplate option={item} config={config} />}
                     getId={(option) => option.id.toString()}
                     getLabel={(option) => option.label}
                 />

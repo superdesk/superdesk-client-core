@@ -1,14 +1,16 @@
 import * as React from 'react';
 import {IConfigComponentProps} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IDropdownConfig, IDropdownDataCustom, IDropdownDataVocabulary, IDropdownValue} from '.';
+import {IDropdownConfig, IDropdownConfigManualSource, IDropdownConfigVocabulary, IDropdownValue} from '.';
 import {TabList} from 'core/ui/components/tabs';
-import {ConfigManualEntry} from './config-manual-entry';
-import {ConfigFromVocabulary} from './config-use-vocabulary';
+import {ConfigManualEntry} from './dropdown-manual-entry/config';
+import {ConfigFromVocabulary} from './dropdown-vocabulary/config';
 import {SpacerInline} from 'core/ui/components/Spacer';
 import {Checkbox} from 'superdesk-ui-framework/react';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {Dropdown} from './dropdown';
+import {EditorManualEntry} from './dropdown-manual-entry/editor';
+import {getUserInterfaceLanguage} from 'appConfig';
+import {EditorVocabulary} from './dropdown-vocabulary/editor';
 
 type IProps = IConfigComponentProps<IDropdownConfig>;
 
@@ -33,7 +35,7 @@ export class Config extends React.PureComponent<IProps, IState> {
 
         const config = (() => {
             if (this.state.source === 'manual-entry') {
-                const defaults: IDropdownDataCustom = {
+                const defaults: IDropdownConfigManualSource = {
                     source: 'manual-entry',
                     type: 'text',
                     options: [],
@@ -41,23 +43,26 @@ export class Config extends React.PureComponent<IProps, IState> {
                     multiple: false,
                 };
 
-                const currentConfig: IDropdownDataCustom = this.props.config?.source === 'manual-entry'
+                const currentConfig: IDropdownConfigManualSource = this.props.config?.source === 'manual-entry'
                     ? this.props.config // has value set already
                     : defaults;
 
                 return currentConfig;
             } else if (this.state.source === 'vocabulary') {
-                const defaults: IDropdownDataVocabulary = {
+                const defaults: IDropdownConfigVocabulary = {
                     source: 'vocabulary',
                     vocabularyId: null,
                     multiple: false,
                 };
 
-                const currentConfig: IDropdownDataVocabulary = this.props.config?.source === 'vocabulary'
+                const currentConfig: IDropdownConfigVocabulary = this.props.config?.source === 'vocabulary'
                     ? this.props.config // has value set already
                     : defaults;
 
                 return currentConfig;
+            } else if (this.state.source === 'remote-source') {
+                // dropdowns based on a remote source are not configurable via UI
+                return null;
             } else {
                 assertNever(this.state.source);
             }
@@ -129,12 +134,13 @@ export class Config extends React.PureComponent<IProps, IState> {
                             <div>
                                 <label className="form-label">{gettext('Configuration preview')}</label>
 
-                                <Dropdown
+                                <EditorManualEntry
                                     config={config}
                                     value={this.state.previewValue}
                                     onChange={(val) => {
                                         this.setState({previewValue: val});
                                     }}
+                                    language={getUserInterfaceLanguage()}
                                 />
                             </div>
                         );
@@ -147,12 +153,13 @@ export class Config extends React.PureComponent<IProps, IState> {
                             <div>
                                 <label className="form-label">{gettext('Configuration preview')}</label>
 
-                                <Dropdown
+                                <EditorVocabulary
                                     config={config}
                                     value={this.state.previewValue}
                                     onChange={(val) => {
                                         this.setState({previewValue: val});
                                     }}
+                                    language={getUserInterfaceLanguage()}
                                 />
                             </div>
                         );

@@ -1,35 +1,45 @@
-import {SpacerInline} from 'core/ui/components/Spacer';
 import * as React from 'react';
 import {IPreviewComponentProps} from 'superdesk-api';
+import {assertNever} from 'core/helpers/typescript-helpers';
 import {IDropdownValue, IDropdownConfig} from '.';
-import {DropdownItemTemplate} from './dropdown-item-template';
-import {getOptions} from './get-options';
+import {PreviewManualEntry} from './dropdown-manual-entry/preview';
+import {PreviewRemoteSource} from './dropdown-remote-source/preview';
+import {PreviewVocabulary} from './dropdown-vocabulary/preview';
 
 type IProps = IPreviewComponentProps<IDropdownValue, IDropdownConfig>;
 
 export class Preview extends React.PureComponent<IProps> {
     render() {
-        const {config, value} = this.props;
-        const options = getOptions(config);
-        const optionsToPreview =
-            (Array.isArray(value) ? value : [value])
-                .map((val) => options.find((_option) => _option.id === val));
+        const {item, value, config} = this.props;
+        const {source} = config;
 
-        return (
-            <div>
-                {
-                    optionsToPreview.map((option, i) => (
-                        <span key={i}>
-                            {
-                                i !== 0 && (
-                                    <SpacerInline h gap="4" />
-                                )
-                            }
-                            <DropdownItemTemplate option={option} config={config} />
-                        </span>
-                    ))
-                }
-            </div>
-        );
+        switch (source) {
+        case 'manual-entry':
+            return (
+                <PreviewManualEntry
+                    item={item}
+                    value={value}
+                    config={config}
+                />
+            );
+        case 'vocabulary':
+            return (
+                <PreviewVocabulary
+                    item={item}
+                    value={value}
+                    config={config}
+                />
+            );
+        case 'remote-source':
+            return (
+                <PreviewRemoteSource
+                    item={item}
+                    value={value}
+                    config={config}
+                />
+            );
+        default:
+            assertNever(source);
+        }
     }
 }

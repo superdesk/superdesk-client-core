@@ -1,11 +1,11 @@
 import * as React from 'react';
 import {IConfigComponentProps} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IDropdownDataVocabulary} from '.';
+import {IDropdownConfigVocabulary} from '..';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
 import {authoringStorage} from 'apps/authoring-react/data-layer';
 
-type IDropdownConfig = IDropdownDataVocabulary;
+type IDropdownConfig = IDropdownConfigVocabulary;
 
 export class ConfigFromVocabulary extends React.PureComponent<IConfigComponentProps<IDropdownConfig>> {
     constructor(props) {

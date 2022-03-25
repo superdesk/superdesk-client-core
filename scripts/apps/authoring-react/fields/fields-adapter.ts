@@ -1,6 +1,11 @@
 import {IArticle, IAuthoringFieldV2, IRestApiResponse, IVocabulary, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
-import {IDropdownDataCustom, IDropdownDataRemoteSource, IDropdownDataVocabulary, IDropdownValue} from './dropdown';
+import {
+    IDropdownConfigManualSource,
+    IDropdownConfigRemoteSource,
+    IDropdownConfigVocabulary,
+    IDropdownValue,
+} from './dropdown';
 import {IEditor3Config} from './editor3/interfaces';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
@@ -59,13 +64,13 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                     6: '#c0c9a1',
                 };
 
-                const fieldConfig: IDropdownDataCustom = {
+                const fieldConfig: IDropdownConfigManualSource = {
                     source: 'manual-entry',
                     readOnly: fieldEditor.readonly,
                     required: fieldEditor.required,
                     type: 'number',
                     options: vocabulary.items.map(({name, qcode, color}) => {
-                        const option: IDropdownDataCustom['options'][0] = {
+                        const option: IDropdownConfigManualSource['options'][0] = {
                             id: qcode,
                             label: name,
                             color: color ?? defaultPriorityColors[name] ?? undefined,
@@ -101,13 +106,13 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                     5: '#a1c6d8',
                 };
 
-                const fieldConfig: IDropdownDataCustom = {
+                const fieldConfig: IDropdownConfigManualSource = {
                     source: 'manual-entry',
                     readOnly: fieldEditor.readonly,
                     required: fieldEditor.required,
                     type: 'number',
                     options: vocabulary.items.map(({name, qcode, color}) => {
-                        const option: IDropdownDataCustom['options'][0] = {
+                        const option: IDropdownConfigManualSource['options'][0] = {
                             id: qcode,
                             label: name,
                             color: color ?? defaultUrgencyColors[name] ?? undefined,
@@ -177,7 +182,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
         },
         language: {
             getFieldV2: (fieldEditor, fieldSchema) => {
-                const fieldConfig: IDropdownDataVocabulary = {
+                const fieldConfig: IDropdownConfigVocabulary = {
                     readOnly: fieldEditor.readonly,
                     required: fieldEditor.required,
                     source: 'vocabulary',
@@ -199,7 +204,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
             getFieldV2: (fieldEditor, fieldSchema) => {
                 const multiple = isMultiple('genre');
 
-                const fieldConfig: IDropdownDataVocabulary = {
+                const fieldConfig: IDropdownConfigVocabulary = {
                     readOnly: fieldEditor.readonly,
                     required: fieldEditor.required,
                     source: 'vocabulary',
@@ -252,7 +257,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
             if (useGeoNamesApi) {
                 return {
                     getFieldV2: (fieldEditor, fieldSchema) => {
-                        const fieldConfig: IDropdownDataRemoteSource = {
+                        const fieldConfig: IDropdownConfigRemoteSource = {
                             readOnly: fieldEditor.readonly,
                             required: fieldEditor.required,
                             source: 'remote-source',
@@ -302,7 +307,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                     getFieldV2: (fieldEditor, fieldSchema) => {
                         const multiple = isMultipleV2('locators');
 
-                        const fieldConfig: IDropdownDataVocabulary = {
+                        const fieldConfig: IDropdownConfigVocabulary = {
                             readOnly: fieldEditor.readonly,
                             required: fieldEditor.required,
                             source: 'vocabulary',
