@@ -45,6 +45,7 @@ function applyMiddleware(_item: IArticle, content, vocabularies): Promise<IArtic
                     };
                 }
             }
+
             return itemNext;
         });
     });
