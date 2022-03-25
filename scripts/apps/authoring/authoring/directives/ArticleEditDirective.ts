@@ -35,6 +35,7 @@ interface IScope extends ng.IScope {
     articleEdit: any;
     dirty: boolean;
     extra: any;
+    refreshTrigger: number;
     autosave(item: any): any;
     modifySignOff(item: any): void;
     updateDateline(item: any, city: any): void;
@@ -422,6 +423,7 @@ export function ArticleEditDirective(
                         scope.item.body_footer = scope.item.body_footer + scope.extra.body_footer_value.value;
                         mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
+                        scope.refreshTrigger++;
                     }
 
                     // first option should always be selected, as multiple helplines could be added in footer
