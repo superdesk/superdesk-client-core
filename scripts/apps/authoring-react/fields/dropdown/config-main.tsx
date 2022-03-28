@@ -5,7 +5,7 @@ import {IDropdownConfig, IDropdownConfigManualSource, IDropdownConfigVocabulary,
 import {TabList} from 'core/ui/components/tabs';
 import {ConfigManualEntry} from './dropdown-manual-entry/config';
 import {ConfigFromVocabulary} from './dropdown-vocabulary/config';
-import {SpacerInline} from 'core/ui/components/Spacer';
+import {SpacerBlock} from 'core/ui/components/Spacer';
 import {Checkbox} from 'superdesk-ui-framework/react';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {EditorManualEntry} from './dropdown-manual-entry/editor';
@@ -90,7 +90,7 @@ export class Config extends React.PureComponent<IProps, IState> {
                     }}
                 />
 
-                <SpacerInline v gap="16" />
+                <SpacerBlock v gap="16" />
 
                 {(() => {
                     if (config.source === 'manual-entry') {
@@ -112,7 +112,7 @@ export class Config extends React.PureComponent<IProps, IState> {
                     }
                 })()}
 
-                <SpacerInline v gap="16" />
+                <SpacerBlock v gap="16" />
 
                 {
                     <div>
@@ -129,7 +129,7 @@ export class Config extends React.PureComponent<IProps, IState> {
                     </div>
                 }
 
-                <SpacerInline v gap="16" />
+                <SpacerBlock v gap="16" />
 
                 {(() => {
                     if (config.source === 'manual-entry') {

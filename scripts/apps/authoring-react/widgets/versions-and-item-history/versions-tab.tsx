@@ -10,7 +10,7 @@ import {gettext, getItemLabel} from 'core/utils';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {Card} from 'core/ui/components/Card';
 import {TimeElem} from 'apps/search/components';
-import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {store} from 'core/data';
 import {StateComponent} from 'apps/search/components/fields/state';
 import {Button, Checkbox} from 'superdesk-ui-framework/react';
@@ -185,13 +185,13 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                                     </span>
                                 </Spacer>
 
-                                <SpacerInline v gap="8" />
+                                <SpacerBlock v gap="8" />
 
                                 <div>
                                     <strong>{getItemLabel(item)}</strong>
                                 </div>
 
-                                <SpacerInline v gap="8" />
+                                <SpacerBlock v gap="8" />
 
                                 {
                                     item.task.desk != null && (
@@ -202,7 +202,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                                     )
                                 }
 
-                                <SpacerInline v gap="8" />
+                                <SpacerBlock v gap="8" />
 
                                 <Spacer h gap="8" justifyContent="space-between" alignItems="center" noWrap>
                                     <div>
@@ -214,7 +214,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                                     </div>
                                 </Spacer>
 
-                                <SpacerInline v gap="8" />
+                                <SpacerBlock v gap="8" />
 
                                 <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow>
                                     <div>

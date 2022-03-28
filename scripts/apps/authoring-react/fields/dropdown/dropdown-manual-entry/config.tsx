@@ -3,7 +3,7 @@ import {RadioButtonGroup, Button, IconButton, Checkbox, Alert} from 'superdesk-u
 import {IConfigComponentProps} from 'superdesk-api';
 import {gettext, arrayMove} from 'core/utils';
 import {IDropdownOption, IDropdownConfigManualSource} from '..';
-import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {assertNever, isNumeric} from 'core/helpers/typescript-helpers';
 
 const newItemTemplate: IDropdownOption = {
@@ -226,14 +226,14 @@ export class ConfigManualEntry extends React.PureComponent<IConfigComponentProps
                     {
                         error != null && (
                             <React.Fragment>
-                                <SpacerInline v gap="16" />
+                                <SpacerBlock v gap="16" />
 
                                 <Alert type="alert" size="small">{error}</Alert>
                             </React.Fragment>
                         )
                     }
 
-                    <SpacerInline v gap="16" />
+                    <SpacerBlock v gap="16" />
 
                     <Button
                         text={gettext('Add')}

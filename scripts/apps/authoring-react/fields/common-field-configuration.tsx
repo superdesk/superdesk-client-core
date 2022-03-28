@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Checkbox} from 'superdesk-ui-framework/react';
 import {ICommonFieldConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {SpacerInline} from 'core/ui/components/Spacer';
+import {SpacerBlock} from 'core/ui/components/Spacer';
 
 interface IProps<T> {
     config?: T;
@@ -23,7 +23,7 @@ export class CommonFieldConfiguration<T extends ICommonFieldConfig> extends Reac
                     }}
                 />
 
-                <SpacerInline v gap="16" />
+                <SpacerBlock v gap="16" />
 
                 <Checkbox
                     label={{text: gettext('Read-only')}}

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IPropsSpacer, IPropsSpacerInline, IPropsSpacerInlineFlex} from 'superdesk-api';
+import {IPropsSpacer, ISpacerBlock, IPropsSpacerInlineFlex} from 'superdesk-api';
 
 export class Spacer extends React.PureComponent<IPropsSpacer> {
     render() {
@@ -37,7 +37,10 @@ export class Spacer extends React.PureComponent<IPropsSpacer> {
     }
 }
 
-export class SpacerInline extends React.PureComponent<IPropsSpacerInline> {
+/**
+ * Renders a standalone spacing block - similar to <br />
+ */
+export class SpacerBlock extends React.PureComponent<ISpacerBlock> {
     render() {
         const {gap, h, v} = this.props;
 
@@ -53,6 +56,11 @@ export class SpacerInline extends React.PureComponent<IPropsSpacerInline> {
     }
 }
 
+/**
+ * Is meant to produce spacing similar to inline-block,
+ * but also allows setting primary and secondary gaps.
+ * If primary direction is horizontal, secondary gap means vertical.
+ */
 export class SpacerInlineFlex extends React.PureComponent<IPropsSpacerInlineFlex> {
     render() {
         const {gap, gapSecondary, h, v} = this.props;

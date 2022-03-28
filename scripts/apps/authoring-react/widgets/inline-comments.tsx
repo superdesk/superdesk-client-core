@@ -14,7 +14,7 @@ import {Card} from 'core/ui/components/Card';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {TimeElem} from 'apps/search/components';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Inline comments');
@@ -182,7 +182,7 @@ class InlineCommentsWidget extends React.PureComponent<IProps, IState> {
                         />
                     </Spacer>
 
-                    <SpacerInline v gap="16" />
+                    <SpacerBlock v gap="16" />
 
                     <Spacer v gap="16">
                         {
@@ -193,7 +193,7 @@ class InlineCommentsWidget extends React.PureComponent<IProps, IState> {
                                             {allFields.get(fieldId).name}
                                         </div>
 
-                                        <SpacerInline v gap="8" />
+                                        <SpacerBlock v gap="8" />
 
                                         <Spacer v gap="8">
                                             {

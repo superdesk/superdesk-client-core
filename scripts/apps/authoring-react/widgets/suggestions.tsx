@@ -12,7 +12,7 @@ import {store} from 'core/data';
 import {Card} from 'core/ui/components/Card';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {TimeElem} from 'apps/search/components';
-import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {getLocalizedTypeText} from 'apps/authoring/track-changes/suggestions';
 
 // Can't call `gettext` in the top level
@@ -80,7 +80,7 @@ class Suggestion extends React.PureComponent<{suggestion: ISuggestion}> {
                     </div>
                 </Spacer>
 
-                <SpacerInline v gap="8" />
+                <SpacerBlock v gap="8" />
 
                 <div>
                     {
@@ -122,7 +122,7 @@ class Suggestion extends React.PureComponent<{suggestion: ISuggestion}> {
                     }
                 </div>
 
-                <SpacerInline v gap="8" />
+                <SpacerBlock v gap="8" />
 
                 <div>
                     {
@@ -188,7 +188,7 @@ class SuggestionsWidget extends React.PureComponent<IProps> {
                                             {allFields.get(fieldId).name}
                                         </div>
 
-                                        <SpacerInline v gap="8" />
+                                        <SpacerBlock v gap="8" />
 
                                         <Spacer v gap="8">
                                             {

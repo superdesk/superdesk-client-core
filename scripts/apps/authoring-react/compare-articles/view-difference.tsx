@@ -1,7 +1,7 @@
 import React from 'react';
 import {Map} from 'immutable';
 import {IContentProfileV2, IArticle} from 'superdesk-api';
-import {Spacer, SpacerInline} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {getField} from 'apps/fields';
 import {Alert} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
@@ -81,7 +81,7 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                             }
                                         </Alert>
 
-                                        <SpacerInline v gap="16" />
+                                        <SpacerBlock v gap="16" />
 
                                         <div>
                                             <FieldEditorConfig.previewComponent

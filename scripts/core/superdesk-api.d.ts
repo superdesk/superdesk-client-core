@@ -1329,7 +1329,7 @@ declare module 'superdesk-api' {
         name: string;
     }
 
-    export interface IPropsSpacerInline {
+    export interface ISpacerBlock {
         h?: boolean; // horizontal
         v?: boolean; // vertical
         gap: '4' | '8' | '16' | '32' | '64';
@@ -1941,7 +1941,8 @@ declare module 'superdesk-api' {
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
-            SpacerInline: React.ComponentType<IPropsSpacerInline>;
+            SpacerBlock: React.ComponentType<ISpacerBlock>;
+            SpacerInlineFlex: React.ComponentType<IPropsSpacerInlineFlex>;
             Editor3Html: React.ComponentType<IEditor3HtmlProps>;
             AuthoringWidgetHeading: React.ComponentType<IPropsWidgetHeading>;
             AuthoringWidgetLayout: React.ComponentType<IAuthoringWidgetLayoutProps>;
