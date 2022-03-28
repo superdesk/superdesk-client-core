@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IPropsSpacer, IPropsSpacerInline} from 'superdesk-api';
+import {IPropsSpacer, IPropsSpacerInline, IPropsSpacerInlineFlex} from 'superdesk-api';
 
 export class Spacer extends React.PureComponent<IPropsSpacer> {
     render() {
@@ -49,6 +49,34 @@ export class SpacerInline extends React.PureComponent<IPropsSpacerInline> {
                     height: v === true ? `${gap}px` : undefined,
                 }}
             />
+        );
+    }
+}
+
+export class SpacerInlineFlex extends React.PureComponent<IPropsSpacerInlineFlex> {
+    render() {
+        const {gap, gapSecondary, h, v} = this.props;
+
+        const style: React.CSSProperties = {display: 'inline-flex', flexWrap: 'wrap'};
+
+        if (h) {
+            style.columnGap = `${gap}px`;
+
+            if (gapSecondary != null) {
+                style.rowGap = `${gapSecondary}px`;
+            }
+        } else if (v) {
+            style.rowGap = `${gap}px`;
+
+            if (gapSecondary != null) {
+                style.columnGap = `${gap}px`;
+            }
+        }
+
+        return (
+            <span style={{...style, ...(this.props.style ?? {})}}>
+                {this.props.children}
+            </span>
         );
     }
 }

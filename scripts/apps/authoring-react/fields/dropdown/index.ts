@@ -35,6 +35,8 @@ export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
     ): void;
     getLabel(item: unknown): string;
     getId(item: unknown): string;
+    optionTemplate?: React.ComponentType<{item: unknown}>;
+    valueTemplate?: React.ComponentType<{item: unknown}>;
     multiple: boolean;
 }
 

@@ -1335,6 +1335,14 @@ declare module 'superdesk-api' {
         gap: '4' | '8' | '16' | '32' | '64';
     }
 
+    export interface IPropsSpacerInlineFlex {
+        h?: boolean; // horizontal
+        v?: boolean; // vertical
+        gap: '4' | '8' | '16' | '32' | '64';
+        gapSecondary?: '4' | '8' | '16' | '32' | '64';
+        style?: React.CSSProperties;
+    }
+
     export interface IPropsSpacer {
         h?: boolean; // horizontal
         v?: boolean; // vertical

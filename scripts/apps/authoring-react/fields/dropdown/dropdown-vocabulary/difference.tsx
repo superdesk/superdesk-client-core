@@ -1,28 +1,39 @@
+/* eslint-disable react/no-multi-comp */
+
 import * as React from 'react';
 import {IDifferenceComponentProps} from 'superdesk-api';
-import {generateHtmlDiff} from 'apps/authoring-react/generate-html-diff';
-import {IDropdownConfigVocabulary, IDropdownValue} from '..';
+import {DifferenceGeneric} from '../../difference-generic';
+import {IDropdownConfigVocabulary, IDropdownOption, IDropdownValue} from '..';
 import {getOptions} from './get-options';
 
 type IProps = IDifferenceComponentProps<IDropdownValue, IDropdownConfigVocabulary>;
+
+function template(props: {item: IDropdownOption}) {
+    return (
+        <span>{props.item.label}</span>
+    );
+}
 
 export class DifferenceVocabulary extends React.PureComponent<IProps> {
     render() {
         const {value1, value2, config} = this.props;
         const options = getOptions(config);
 
-        const values1 =
+        const values1: Array<IDropdownOption> =
             (Array.isArray(value1) ? value1 : [value1])
-                .map((val) => options.find((_option) => _option.id === val).label)
-                .join(',');
+                .map((val) => options.find((_option) => _option.id === val));
 
-        const values2 =
+        const values2: Array<IDropdownOption> =
             (Array.isArray(value2) ? value2 : [value2])
-                .map((val) => options.find((_option) => _option.id === val).label)
-                .join(',');
+                .map((val) => options.find((_option) => _option.id === val));
 
         return (
-            <div dangerouslySetInnerHTML={{__html: generateHtmlDiff(values1, values2)}} />
+            <DifferenceGeneric
+                items1={values1}
+                items2={values2}
+                getId={(item: IDropdownOption) => item.id.toString()}
+                template={template}
+            />
         );
     }
 }

@@ -49,11 +49,13 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                             {field.name}
                                         </span>
 
-                                        <FieldEditorConfig.differenceComponent
-                                            value1={fieldsData1.get(field.id)}
-                                            value2={fieldsData2.get(field.id)}
-                                            config={field.fieldConfig}
-                                        />
+                                        <div>
+                                            <FieldEditorConfig.differenceComponent
+                                                value1={fieldsData1.get(field.id)}
+                                                value2={fieldsData2.get(field.id)}
+                                                config={field.fieldConfig}
+                                            />
+                                        </div>
                                     </div>
                                 );
                             } else {
