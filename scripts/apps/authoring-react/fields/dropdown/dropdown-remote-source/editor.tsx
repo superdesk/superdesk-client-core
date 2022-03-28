@@ -34,6 +34,7 @@ export class EditorRemoteSource extends React.PureComponent<IProps> {
                 valueTemplate={
                     ({item}) => <span style={{border: '1px dotted green'}}>{config.getLabel(item)}</span>
                 }
+                canSelectBranchWithChildren={config.canSelectBranchWithChildren}
                 getId={(option) => config.getId(option)}
                 getLabel={(option) => config.getLabel(option)}
                 allowMultiple={config.multiple}

@@ -1,4 +1,4 @@
-import {ICustomFieldType, ICommonFieldConfig, IVocabulary} from 'superdesk-api';
+import {ICustomFieldType, ICommonFieldConfig, IVocabulary, ITreeNode} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Editor} from './editor';
 import {Config} from './config-main';
@@ -35,6 +35,7 @@ export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
     ): void;
     getLabel(item: unknown): string;
     getId(item: unknown): string;
+    canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
     optionTemplate?: React.ComponentType<{item: unknown}>;
     valueTemplate?: React.ComponentType<{item: unknown}>;
     multiple: boolean;
@@ -45,6 +46,7 @@ export interface IDropdownTreeConfig extends ICommonFieldConfig {
     getItems(): ITreeWithLookup<unknown>;
     getLabel(item: unknown): string;
     getId(item: unknown): string;
+    canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
     optionTemplate?: React.ComponentType<{item: unknown}>;
     valueTemplate?: React.ComponentType<{item: unknown}>;
     multiple: boolean;

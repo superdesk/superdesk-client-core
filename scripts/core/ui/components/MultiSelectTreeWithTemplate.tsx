@@ -25,6 +25,7 @@ interface IPropsBase<T> {
     valueTemplate?: React.ComponentType<{item: T}>; // not required, it should fallback `optionTemplate` if not provided
     getId(item: T): string;
     getLabel(item: T): string;
+    canSelectBranchWithChildren?(branch: ITreeNode<T>): boolean;
     allowMultiple?: boolean;
     readOnly?: boolean;
 }
@@ -52,7 +53,7 @@ type IProps<T> = IPropsSync<T> | IPropsAsync<T>;
 export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T>> {
     render() {
         const {props} = this;
-        const {values, onChange, getId, getLabel} = props;
+        const {values, onChange, getId, getLabel, canSelectBranchWithChildren} = props;
         const optionTemplateDefault: React.ComponentType<{item: T}> = ({item}) => (<span>{getLabel(item)}</span>);
         const OptionTemplate = this.props.optionTemplate ?? optionTemplateDefault;
         const ValueTemplate = this.props.valueTemplate ?? OptionTemplate;
@@ -74,6 +75,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                                             closePopup();
                                         }}
                                         optionTemplate={OptionTemplate}
+                                        canSelectBranchWithChildren={canSelectBranchWithChildren}
                                     />
                                 ),
                                 999,
@@ -103,6 +105,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                                                     closePopup();
                                                 }}
                                                 optionTemplate={OptionTemplate}
+                                                canSelectBranchWithChildren={canSelectBranchWithChildren}
                                             />
                                         </div>
                                     ),

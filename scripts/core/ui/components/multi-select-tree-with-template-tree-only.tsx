@@ -5,6 +5,7 @@ interface IProps<T> {
     options: Array<ITreeNode<T>>;
     values: Array<T>;
     onChange(values: Array<T>): void;
+    canSelectBranchWithChildren?(branch: ITreeNode<T>): boolean;
     optionTemplate: React.ComponentType<{item: T}>;
 }
 
@@ -29,7 +30,7 @@ export class MultiSelectTemplate<T> extends React.PureComponent<IProps<T>, IStat
     render() {
         const options = this.state.currentNode?.children ?? this.props.options;
         const OptionTemplate = this.props.optionTemplate;
-        const {values, onChange} = this.props;
+        const {values, onChange, canSelectBranchWithChildren} = this.props;
 
         return (
             <div style={{background: 'white', padding: 10, border: '1px solid red'}}>
@@ -52,6 +53,11 @@ export class MultiSelectTemplate<T> extends React.PureComponent<IProps<T>, IStat
                                 onClick={() => {
                                     onChange(values.concat(item.value));
                                 }}
+                                disabled={
+                                    item.children?.length > 0 && canSelectBranchWithChildren != null
+                                        ? !canSelectBranchWithChildren(item)
+                                        : false
+                                }
                             >
                                 <OptionTemplate item={item.value} />
                             </button>

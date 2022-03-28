@@ -24,6 +24,7 @@ export class EditorDropdownTree extends React.PureComponent<IProps> {
                 }}
                 getId={(option) => config.getId(option)}
                 getLabel={(option) => config.getLabel(option)}
+                canSelectBranchWithChildren={config.canSelectBranchWithChildren}
                 optionTemplate={config.optionTemplate}
                 valueTemplate={config.valueTemplate}
                 allowMultiple={config.multiple}

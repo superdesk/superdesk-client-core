@@ -417,6 +417,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                                 lookup: {},
                             });
                         },
+                        canSelectBranchWithChildren: () => false,
                         getLabel: (item: IUserOption | IAuthorRole) => item.name,
                         valueTemplate: valueTemplate,
                         getId: (item) => getId(item),
