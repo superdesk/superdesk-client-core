@@ -5,11 +5,17 @@ import {getTextColor} from 'core/helpers/utils';
 interface IProps {
     option: IDropdownOption;
     config: IDropdownConfig;
+
+    /**
+     * Value should be the same for all options in the visual group
+     * Should be true when no items in the visual group have custom background color
+     */
+    noPadding: boolean;
 }
 
 export class DropdownItemTemplate extends React.PureComponent<IProps> {
     render() {
-        const {option, config} = this.props;
+        const {option, noPadding, config} = this.props;
 
         if (option == null) {
             return null;
@@ -24,7 +30,7 @@ export class DropdownItemTemplate extends React.PureComponent<IProps> {
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: config.source === 'manual-entry' && config.roundCorners ? '999px' : '2px',
-            padding: '4px',
+            padding: noPadding ? '0' : '4px',
             whiteSpace: 'nowrap',
         };
 

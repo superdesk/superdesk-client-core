@@ -1,6 +1,8 @@
+import {SpacerInlineFlex} from 'core/ui/components/Spacer';
 import * as React from 'react';
 import {IPreviewComponentProps} from 'superdesk-api';
 import {IDropdownValue, IDropdownConfigRemoteSource} from '..';
+import {getValueTemplate} from './get-value-template';
 
 type IProps = IPreviewComponentProps<IDropdownValue, IDropdownConfigRemoteSource>;
 
@@ -10,16 +12,16 @@ export class PreviewRemoteSource extends React.PureComponent<IProps> {
         const optionsToPreview =
             (Array.isArray(value) ? value : [value]);
 
+        const Template = getValueTemplate(config);
+
         return (
-            <div>
+            <SpacerInlineFlex h gap="8" gapSecondary="8">
                 {
                     optionsToPreview.map((option, i) => (
-                        <span key={i}>
-                            {config.getLabel(option)}
-                        </span>
+                        <Template key={i} item={option} />
                     ))
                 }
-            </div>
+            </SpacerInlineFlex>
         );
     }
 }

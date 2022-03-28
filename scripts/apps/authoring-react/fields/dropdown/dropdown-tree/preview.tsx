@@ -1,6 +1,6 @@
-import {SpacerInline} from 'core/ui/components/Spacer';
 import * as React from 'react';
 import {IPreviewComponentProps} from 'superdesk-api';
+import {SpacerInlineFlex} from 'core/ui/components/Spacer';
 import {IDropdownValue, IDropdownTreeConfig} from '..';
 import {getValueTemplate} from './get-value-template';
 
@@ -15,16 +15,13 @@ export class PreviewDropdownTree extends React.PureComponent<IProps> {
         const Template = getValueTemplate(config);
 
         return (
-            <div>
+            <SpacerInlineFlex h gap="8" gapSecondary="8">
                 {
                     optionsToPreview.map((option, i) => (
-                        <span key={i}>
-                            {i !== 0 && (<SpacerInline h gap="8" />)}
-                            <Template item={option} />
-                        </span>
+                        <Template key={i} item={option} />
                     ))
                 }
-            </div>
+            </SpacerInlineFlex>
         );
     }
 }

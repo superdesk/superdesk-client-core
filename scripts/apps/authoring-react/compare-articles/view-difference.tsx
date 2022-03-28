@@ -83,11 +83,13 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                         <SpacerInline v gap="16" />
 
-                                        <FieldEditorConfig.previewComponent
-                                            item={article2}
-                                            value={fieldsData2.get(field.id)}
-                                            config={field.fieldConfig}
-                                        />
+                                        <div>
+                                            <FieldEditorConfig.previewComponent
+                                                item={article2}
+                                                value={fieldsData2.get(field.id)}
+                                                config={field.fieldConfig}
+                                            />
+                                        </div>
                                     </div>
                                 );
                             }
@@ -104,11 +106,13 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                         {field.name}
                                     </span>
 
-                                    <FieldEditorConfig.previewComponent
-                                        item={article2}
-                                        value={fieldsData2.get(field.id)}
-                                        config={field.fieldConfig}
-                                    />
+                                    <div>
+                                        <FieldEditorConfig.previewComponent
+                                            item={article2}
+                                            value={fieldsData2.get(field.id)}
+                                            config={field.fieldConfig}
+                                        />
+                                    </div>
                                 </div>
                             );
                         }
@@ -131,11 +135,13 @@ export class ViewDifference extends React.PureComponent<IProps> {
                                     {field.name}
                                 </span>
 
-                                <FieldEditorConfig.previewComponent
-                                    item={article1}
-                                    value={fieldsData1.get(field.id)}
-                                    config={field.fieldConfig}
-                                />
+                                <div>
+                                    <FieldEditorConfig.previewComponent
+                                        item={article1}
+                                        value={fieldsData1.get(field.id)}
+                                        config={field.fieldConfig}
+                                    />
+                                </div>
                             </div>
                         );
                     }).toArray()

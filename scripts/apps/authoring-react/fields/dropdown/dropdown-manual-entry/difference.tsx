@@ -19,12 +19,14 @@ export class DifferenceManualEntry extends React.PureComponent<IProps> {
             (Array.isArray(value2) ? value2 : [value2])
                 .map((val) => options.find((_option) => _option.id === val));
 
+        const noPadding = values1.every(({color}) => color == null) && values2.every(({color}) => color == null);
+
         return (
             <DifferenceGeneric
                 items1={values1}
                 items2={values2}
                 getId={(item) => item.id.toString()}
-                template={({item}) => <DropdownItemTemplate option={item} config={config} />}
+                template={({item}) => <DropdownItemTemplate option={item} config={config} noPadding={noPadding} />}
             />
         );
     }

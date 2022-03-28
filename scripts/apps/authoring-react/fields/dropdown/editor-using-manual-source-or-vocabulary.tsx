@@ -34,6 +34,7 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
             }
 
             const selected = options.filter((opt) => (values).includes(opt.id));
+            const noPadding = selected.every(({color}) => color == null);
 
             return (
                 <MultiSelectTreeWithTemplate
@@ -46,8 +47,20 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
                     onChange={(_values) => {
                         this.props.onChange(_values.map((val) => val.id));
                     }}
-                    optionTemplate={({item}) => <DropdownItemTemplate option={item} config={config} />}
-                    valueTemplate={({item}) => <DropdownItemTemplate option={item} config={config} />}
+                    optionTemplate={({item}) => (
+                        <DropdownItemTemplate
+                            option={item}
+                            config={config}
+                            noPadding={false}
+                        />
+                    )}
+                    valueTemplate={({item}) => (
+                        <DropdownItemTemplate
+                            option={item}
+                            config={config}
+                            noPadding={noPadding}
+                        />
+                    )}
                     getId={(option) => option.id.toString()}
                     getLabel={(option) => option.label}
                 />
@@ -61,7 +74,13 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
                         this.props.onChange(option?.id ?? null);
                     }}
                     getLabel={(item) => item?.label}
-                    itemTemplate={(item) => <DropdownItemTemplate option={item.option} config={config} />}
+                    itemTemplate={(item) => (
+                        <DropdownItemTemplate
+                            option={item.option}
+                            config={config}
+                            noPadding={false}
+                        />
+                    )}
                     zIndex={1050}
                     disabled={config.readOnly === true}
                 />

@@ -31,11 +31,13 @@ export class PreviewArticle extends React.PureComponent<IProps> {
                                     {field.name}
                                 </span>
 
-                                <FieldEditorConfig.previewComponent
-                                    item={article}
-                                    value={fieldsData.get(field.id)}
-                                    config={field.fieldConfig}
-                                />
+                                <div>
+                                    <FieldEditorConfig.previewComponent
+                                        item={article}
+                                        value={fieldsData.get(field.id)}
+                                        config={field.fieldConfig}
+                                    />
+                                </div>
                             </div>
                         );
                     }).toArray()
