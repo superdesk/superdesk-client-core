@@ -1,9 +1,19 @@
-import {IArticle, IAuthoringFieldV2, IRestApiResponse, IVocabulary, IVocabularyItem} from 'superdesk-api';
+import * as React from 'react';
+import {
+    IArticle,
+    IAuthor,
+    IAuthoringFieldV2,
+    IRestApiResponse,
+    IUser,
+    IVocabulary,
+    IVocabularyItem,
+} from 'superdesk-api';
 import {Map} from 'immutable';
 import {
     IDropdownConfigManualSource,
     IDropdownConfigRemoteSource,
     IDropdownConfigVocabulary,
+    IDropdownTreeConfig,
     IDropdownValue,
 } from './dropdown';
 import {IEditor3Config} from './editor3/interfaces';
@@ -15,6 +25,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IGeoName} from 'apps/authoring/metadata/PlacesService';
 import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {getVocabularySelectionTypes} from 'apps/vocabularies/constants';
+import {arrayToTree} from 'core/helpers/tree';
 
 interface IFieldAdapter {
     getFieldV2: (
@@ -357,6 +368,78 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                     },
                 };
             }
+        })(),
+        authors: (() => {
+            function valueTemplate({item}) {
+                return (
+                    <span>{item.name}: {item.sub_label}</span>
+                );
+            }
+
+            const getId = (item) => typeof item._id === 'string' ? item._id : JSON.stringify(item._id);
+
+            interface IUserOption {
+                _id: IUser['_id'];
+                name: string;
+                user: IUser;
+            }
+
+            interface IAuthorRole extends IAuthor {
+                parent: IUser['_id'];
+            }
+
+            function isAuthorRole(x: IUserOption | IAuthorRole): x is IAuthorRole {
+                return Array.isArray(x._id);
+            }
+
+            return {
+                getFieldV2: (fieldEditor, fieldSchema) => {
+                    const fieldConfig: IDropdownTreeConfig = {
+                        readOnly: fieldEditor.readonly,
+                        required: fieldEditor.required,
+                        getItems: () => {
+                            const metadata = ng.get('metadata');
+
+                            const authors = arrayToTree(
+                                metadata.values.authors as Array<IUserOption | IAuthorRole>,
+                                (item) => getId(item),
+                                (item) => {
+                                    if (isAuthorRole(item)) {
+                                        return item.parent;
+                                    } else {
+                                        return null;
+                                    }
+                                },
+                            );
+
+                            return ({
+                                nodes: authors.result,
+                                lookup: {},
+                            });
+                        },
+                        getLabel: (item: IUserOption | IAuthorRole) => item.name,
+                        valueTemplate: valueTemplate,
+                        getId: (item) => getId(item),
+                        source: 'dropdown-tree',
+                        multiple: true,
+                    };
+
+                    const fieldV2: IAuthoringFieldV2 = {
+                        id: 'authors',
+                        name: gettext('Authors'),
+                        fieldType: 'dropdown',
+                        fieldConfig,
+                    };
+
+                    return fieldV2;
+                },
+                getSavedData: (article) => {
+                    return article.authors;
+                },
+                saveData: (val: IDropdownValue, article) => {
+                    return {...article, authors: val};
+                },
+            };
         })(),
     };
 

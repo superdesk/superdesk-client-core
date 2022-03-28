@@ -38,6 +38,16 @@ export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
     multiple: boolean;
 }
 
+export interface IDropdownTreeConfig extends ICommonFieldConfig {
+    source: 'dropdown-tree';
+    getItems(): ITreeWithLookup<unknown>;
+    getLabel(item: unknown): string;
+    getId(item: unknown): string;
+    optionTemplate?: React.ComponentType<{item: unknown}>;
+    valueTemplate?: React.ComponentType<{item: unknown}>;
+    multiple: boolean;
+}
+
 export interface IDropdownConfigManualSource extends ICommonFieldConfig {
     source: 'manual-entry';
     type: 'text' | 'number';
@@ -46,7 +56,11 @@ export interface IDropdownConfigManualSource extends ICommonFieldConfig {
     multiple: boolean;
 }
 
-export type IDropdownConfig = IDropdownConfigManualSource | IDropdownConfigVocabulary | IDropdownConfigRemoteSource;
+export type IDropdownConfig =
+    IDropdownConfigManualSource
+    | IDropdownConfigVocabulary
+    | IDropdownConfigRemoteSource
+    | IDropdownTreeConfig;
 
 export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownConfig, never> {
     const field: ICustomFieldType<IDropdownValue, IDropdownConfig, never> = {

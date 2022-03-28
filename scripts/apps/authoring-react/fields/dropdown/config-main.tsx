@@ -63,6 +63,9 @@ export class Config extends React.PureComponent<IProps, IState> {
             } else if (this.state.source === 'remote-source') {
                 // dropdowns based on a remote source are not configurable via UI
                 return null;
+            } else if (this.state.source === 'dropdown-tree') {
+                // tree dropdowns are not configurable via UI
+                return null;
             } else {
                 assertNever(this.state.source);
             }

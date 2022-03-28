@@ -21,7 +21,7 @@ export interface ITreeWithLookup<T> {
 interface IPropsBase<T> {
     values: Array<T>;
     onChange(values: Array<T>): void;
-    optionTemplate: React.ComponentType<{item: T}>;
+    optionTemplate?: React.ComponentType<{item: T}>;
     valueTemplate?: React.ComponentType<{item: T}>; // not required, it should fallback `optionTemplate` if not provided
     getId(item: T): string;
     getLabel(item: T): string;
@@ -52,8 +52,10 @@ type IProps<T> = IPropsSync<T> | IPropsAsync<T>;
 export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T>> {
     render() {
         const {props} = this;
-        const {values, onChange, getId} = props;
-        const ValueTemplate = this.props.valueTemplate ?? this.props.optionTemplate;
+        const {values, onChange, getId, getLabel} = props;
+        const optionTemplateDefault: React.ComponentType<{item: T}> = ({item}) => (<span>{getLabel(item)}</span>);
+        const OptionTemplate = this.props.optionTemplate ?? optionTemplateDefault;
+        const ValueTemplate = this.props.valueTemplate ?? OptionTemplate;
 
         const input = (() => {
             if (props.kind === 'synchronous') {
@@ -71,7 +73,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                                             this.props.onChange(val);
                                             closePopup();
                                         }}
-                                        optionTemplate={props.optionTemplate}
+                                        optionTemplate={OptionTemplate}
                                     />
                                 ),
                                 999,
@@ -100,7 +102,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                                                     this.props.onChange(val);
                                                     closePopup();
                                                 }}
-                                                optionTemplate={props.optionTemplate}
+                                                optionTemplate={OptionTemplate}
                                             />
                                         </div>
                                     ),

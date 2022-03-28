@@ -5,6 +5,7 @@ import {IDropdownValue, IDropdownConfig} from '.';
 import {PreviewManualEntry} from './dropdown-manual-entry/preview';
 import {PreviewRemoteSource} from './dropdown-remote-source/preview';
 import {PreviewVocabulary} from './dropdown-vocabulary/preview';
+import {PreviewDropdownTree} from './dropdown-tree/preview';
 
 type IProps = IPreviewComponentProps<IDropdownValue, IDropdownConfig>;
 
@@ -33,6 +34,14 @@ export class Preview extends React.PureComponent<IProps> {
         case 'remote-source':
             return (
                 <PreviewRemoteSource
+                    item={item}
+                    value={value}
+                    config={config}
+                />
+            );
+        case 'dropdown-tree':
+            return (
+                <PreviewDropdownTree
                     item={item}
                     value={value}
                     config={config}

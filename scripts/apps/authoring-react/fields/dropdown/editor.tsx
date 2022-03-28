@@ -5,6 +5,7 @@ import {EditorManualEntry} from './dropdown-manual-entry/editor';
 import {EditorRemoteSource} from './dropdown-remote-source/editor';
 import {EditorVocabulary} from './dropdown-vocabulary/editor';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {EditorDropdownTree} from './dropdown-tree/editor';
 
 type IProps = IEditorComponentProps<IDropdownValue, IDropdownConfig, never>;
 
@@ -30,6 +31,13 @@ export class Editor extends React.PureComponent<IProps> {
         case 'remote-source':
             return (
                 <EditorRemoteSource
+                    {...this.props}
+                    config={config}
+                />
+            );
+        case 'dropdown-tree':
+            return (
+                <EditorDropdownTree
                     {...this.props}
                     config={config}
                 />
