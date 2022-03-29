@@ -26,6 +26,7 @@ import {IGeoName} from 'apps/authoring/metadata/PlacesService';
 import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {getVocabularySelectionTypes} from 'apps/vocabularies/constants';
 import {arrayToTree} from 'core/helpers/tree';
+import {authoringStorage} from '../data-layer';
 
 interface IFieldAdapter {
     getFieldV2: (
@@ -471,6 +472,77 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
             };
         }
     }
+
+    const customVocabularyIds = new Set(customFieldVocabularies.map(({_id}) => _id));
+
+    authoringStorage.getVocabularies().forEach((vocabulary) => {
+        if (customVocabularyIds.has(vocabulary._id) !== true && vocabulary.selection_type === 'multi selection') {
+            type IOperationalFormat = {qcode: string; name: string; parent?: string};
+
+            adapter[vocabulary._id] = {
+                getFieldV2: (fieldEditor, fieldSchema) => {
+                    const fieldConfig: IDropdownTreeConfig = {
+                        source: 'dropdown-tree',
+                        readOnly: fieldEditor.readonly,
+                        required: fieldEditor.required,
+                        getItems: () => {
+                            const items = arrayToTree(
+                                vocabulary.items,
+                                (item) => item.qcode,
+                                (item) => item.parent ?? null,
+                            );
+
+                            return ({
+                                nodes: items.result,
+                                lookup: {},
+                            });
+                        },
+                        getLabel: (item: IVocabularyItem) => item.name,
+                        getId: (item: IVocabularyItem) => item.qcode,
+                        canSelectBranchWithChildren: () => false,
+                        multiple: true,
+                    };
+
+                    const fieldV2: IAuthoringFieldV2 = {
+                        id: vocabulary._id,
+                        name: vocabulary.display_name,
+                        fieldType: 'dropdown',
+                        fieldConfig,
+                    };
+
+                    return fieldV2;
+                },
+                getSavedData: (article): Array<IOperationalFormat> => {
+                    return (article.subject ?? [])
+                        .filter(({scheme}) => scheme === vocabulary._id)
+                        .map(({qcode, name, parent}) => ({qcode, name, parent}));
+                },
+                saveData: (val: Array<IOperationalFormat>, article) => {
+                    interface IStorageFormat {
+                        qcode: string;
+                        name: string;
+                        parent?: string;
+                        scheme: string;
+                    }
+
+                    return {
+                        ...article,
+                        subject: (article.subject ?? []).concat(
+                            val.map(({qcode, name, parent}) => {
+                                var itemToStore: IStorageFormat = {qcode, name, scheme: vocabulary._id};
+
+                                if (parent != null) {
+                                    itemToStore.parent = parent;
+                                }
+
+                                return itemToStore;
+                            }),
+                        ),
+                    };
+                },
+            };
+        }
+    });
 
     return adapter;
 }

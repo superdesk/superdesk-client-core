@@ -53,10 +53,11 @@ type IProps<T> = IPropsSync<T> | IPropsAsync<T>;
 export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T>> {
     render() {
         const {props} = this;
-        const {values, onChange, getId, getLabel, canSelectBranchWithChildren} = props;
+        const {onChange, getId, getLabel, canSelectBranchWithChildren} = props;
         const optionTemplateDefault: React.ComponentType<{item: T}> = ({item}) => (<span>{getLabel(item)}</span>);
         const OptionTemplate = this.props.optionTemplate ?? optionTemplateDefault;
         const ValueTemplate = this.props.valueTemplate ?? OptionTemplate;
+        const values = Array.isArray(this.props.values) ? this.props.values : [];
 
         const input = (() => {
             if (props.kind === 'synchronous') {
@@ -69,7 +70,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                                 ({closePopup}) => (
                                     <MultiSelectTemplate
                                         options={props.getOptions().nodes}
-                                        values={props.values}
+                                        values={values}
                                         onChange={(val) => {
                                             this.props.onChange(val);
                                             closePopup();
@@ -99,7 +100,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                                         <div>
                                             <MultiSelectTemplate
                                                 options={result.nodes}
-                                                values={props.values}
+                                                values={values}
                                                 onChange={(val) => {
                                                     this.props.onChange(val);
                                                     closePopup();
@@ -127,7 +128,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                 {input}
 
                 {
-                    (Array.isArray(values) ? values : []).map((item, i) => (
+                    values.map((item, i) => (
                         <span key={i}>
                             <ValueTemplate item={item} />
                             <button

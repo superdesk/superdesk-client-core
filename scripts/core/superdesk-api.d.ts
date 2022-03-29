@@ -761,6 +761,7 @@ declare module 'superdesk-api' {
         name?: string;
         qcode?: string;
         is_active?: boolean;
+        parent?: string;
         translations?: {
             name?: {
                 [key: string]: string;
