@@ -760,6 +760,7 @@ declare module 'superdesk-api' {
     export interface IVocabularyItem {
         name?: string;
         qcode?: string;
+        color?: string;
         is_active?: boolean;
         parent?: string;
         translations?: {
