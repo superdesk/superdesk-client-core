@@ -76,7 +76,13 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
     const customVocabularyIds = new Set(customFieldVocabularies.map(({_id}) => _id));
 
     authoringStorage.getVocabularies().forEach((vocabulary) => {
-        if (customVocabularyIds.has(vocabulary._id) !== true && vocabulary.selection_type === 'multi selection') {
+        if (
+            customVocabularyIds.has(vocabulary._id) !== true
+            && (
+                vocabulary.selection_type === 'multi selection'
+                || vocabulary.selection_type === 'single selection'
+            )
+        ) {
             type IOperationalFormat = {qcode: string; name: string; parent?: string};
 
             adapter[vocabulary._id] = {
@@ -100,7 +106,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
                         getLabel: (item: IVocabularyItem) => item.name,
                         getId: (item: IVocabularyItem) => item.qcode,
                         canSelectBranchWithChildren: () => false,
-                        multiple: true,
+                        multiple: vocabulary.selection_type === 'multi selection',
                     };
 
                     const fieldV2: IAuthoringFieldV2 = {
