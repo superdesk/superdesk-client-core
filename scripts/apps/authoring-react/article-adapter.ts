@@ -1,5 +1,5 @@
 import {IArticle} from 'superdesk-api';
-import {getFieldsAdapter} from './fields/fields-adapter';
+import {getFieldsAdapter} from './field-adapters';
 import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {IOldCustomFieldId} from './interfaces';
 

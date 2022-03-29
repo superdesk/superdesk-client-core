@@ -15,8 +15,8 @@ import {
     IDropdownConfigVocabulary,
     IDropdownTreeConfig,
     IDropdownValue,
-} from './dropdown';
-import {IEditor3Config} from './editor3/interfaces';
+} from '../fields/dropdown';
+import {IEditor3Config} from '../fields/editor3/interfaces';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
 import ng from 'core/services/ng';

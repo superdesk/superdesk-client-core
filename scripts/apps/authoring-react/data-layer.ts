@@ -12,7 +12,7 @@ import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
-import {getFieldsAdapter} from './fields/fields-adapter';
+import {getFieldsAdapter} from './field-adapters';
 import {IOldCustomFieldId} from './interfaces';
 import {getArticleAdapter} from './article-adapter';
 
