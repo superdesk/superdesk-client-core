@@ -50,9 +50,9 @@ class Suggestion extends React.PureComponent<{suggestion: ISuggestion}> {
     render() {
         const {suggestionInfo, suggestionText, oldText, resolutionInfo} = this.props.suggestion;
         const suggestionAuthor =
-            store.getState().users.entities[suggestionInfo.author];
+            store.getState().entities.users[suggestionInfo.author];
         const suggestionResolver =
-            store.getState().users.entities[resolutionInfo.resolverUserId];
+            store.getState().entities.users[resolutionInfo.resolverUserId];
 
         return (
             <Card>

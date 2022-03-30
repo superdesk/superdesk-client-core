@@ -23,11 +23,12 @@ interface IInterfacesByResourceType {
 type IStoreResource = typeof resourcesInStore[number];
 
 export type IStoreState = {
-    [Properties in keyof IInterfacesByResourceType]: {
-        entities: {
+    entities: {
+        [Properties in keyof IInterfacesByResourceType]: {
             [key: string]: IInterfacesByResourceType[Properties];
         };
     };
+    subjectCodes: {[qcode: string]: {qcode: string; name: string; parent?: string}};
 };
 
 type IUpdateEntityAction = {
@@ -47,6 +48,11 @@ interface IInitEntityAction {
     };
 }
 
+interface ILoadSubjectCodes {
+    type: 'LOAD_SUBJECT_CODES';
+    payload: IStoreState['subjectCodes'];
+}
+
 interface IUpdateLastUserActiveAction {
     type: 'UPDATE_USER_LAST_ACTIVE';
     payload: IUser['_id'];
@@ -54,12 +60,13 @@ interface IUpdateLastUserActiveAction {
 
 type IUserAction = IUpdateLastUserActiveAction;
 
-type IAction = IUserAction | IUpdateEntityAction | IInitEntityAction;
+type IAction = IUserAction | IUpdateEntityAction | IInitEntityAction | ILoadSubjectCodes;
 
 const initialState: IStoreState = {
-    users: {
-        entities: {},
+    entities: {
+        users: {},
     },
+    subjectCodes: {},
 };
 
 function isStoreResource(resource: any): resource is IStoreResource {
@@ -77,17 +84,27 @@ function reducer(state: IStoreState = initialState, action: IAction): IStoreStat
 
             return {
                 ...state,
-                users: {
-                    entities: {
-                        ...state.users.entities,
+                entities: {
+                    ...state.entities,
+                    users: {
+                        ...state.entities.users,
                         [userId]: {
-                            ...state.users.entities[userId],
+                            ...state.entities.users[userId],
                             last_activity_at: (new Date()).toISOString(),
                         },
                     },
                 },
             };
         })();
+
+    /**
+     * OTHER ACTIONS
+     */
+    case 'LOAD_SUBJECT_CODES':
+        return {
+            ...state,
+            subjectCodes: action.payload,
+        };
 
     /**
      * GENERIC ACTIONS THAT APPLY TO ALL ENTITIES
@@ -98,8 +115,9 @@ function reducer(state: IStoreState = initialState, action: IAction): IStoreStat
 
             return {
                 ...state,
-                [resource]: {
-                    entities: keyBy(items, (entity) => entity._id),
+                entities: {
+                    ...state.entities,
+                    [resource]: keyBy(items, (entity) => entity._id),
                 },
             };
         })();
@@ -111,9 +129,10 @@ function reducer(state: IStoreState = initialState, action: IAction): IStoreStat
 
             return {
                 ...state,
-                [resource]: {
-                    entities: {
-                        ...state[resource].entities,
+                entities: {
+                    ...state.entities,
+                    [resource]: {
+                        ...state.entities[resource],
                         [entity._id]: entity,
                     },
                 },
@@ -153,7 +172,7 @@ addWebsocketEventListener(
         } else if (resource === 'users' &&
             fieldKeys.length === 1 &&
             fieldKeys[0] === 'last_activity_at' &&
-            store.getState().users.entities[_id] != null
+            store.getState().entities.users[_id] != null
         ) {
             // This websocket message is purely to update a User's last_activity_at
             // So manually update the resource rather than sending an API request

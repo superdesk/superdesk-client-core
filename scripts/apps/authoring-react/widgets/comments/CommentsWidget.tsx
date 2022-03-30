@@ -98,7 +98,7 @@ class CommentsWidget extends React.PureComponent<IProps, IState> {
 
     loadUsers = (): Promise<IUserSuggestionData> => {
         return new Promise((resolve) => {
-            const users = store.getState().users.entities;
+            const users = store.getState().entities.users;
             const mentionInputDataUsers: Array<IUserSuggestion> = [];
 
             for (const key in users) {

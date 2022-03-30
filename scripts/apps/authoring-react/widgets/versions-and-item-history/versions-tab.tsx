@@ -135,7 +135,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
         const {readOnly} = this.props;
 
         const userEntities =
-            store.getState().users.entities;
+            store.getState().entities.users;
 
         return (
             <Spacer v gap="8" noWrap alignItems="stretch">

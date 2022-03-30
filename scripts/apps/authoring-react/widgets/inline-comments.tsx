@@ -47,7 +47,7 @@ class Comment extends React.PureComponent<{comment: IInlineComment}> {
     render() {
         const {comment} = this.props;
         const user =
-            store.getState().users.entities[comment.authorId];
+            store.getState().entities.users[comment.authorId];
 
         return (
             <Card>

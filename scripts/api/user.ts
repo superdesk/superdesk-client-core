@@ -1,6 +1,4 @@
 import ng from 'core/services/ng';
-import {IUser} from 'superdesk-api';
-import {httpRequestJsonLocal} from 'core/helpers/network';
 
 function hasPrivilege(privilege: string): boolean {
     const privileges = ng.get('privileges');
@@ -8,14 +6,13 @@ function hasPrivilege(privilege: string): boolean {
     return privileges.userHasPrivileges({[privilege]: 1});
 }
 
-function fetchUser(userId: IUser['_id']): Promise<IUser> {
-    return httpRequestJsonLocal<IUser>({
-        method: 'GET',
-        path: `/users/${userId}`,
-    });
+function isLoggedIn() {
+    const session = ng.get('session');
+
+    return session?.identity?._id != null;
 }
 
 export const user = {
     hasPrivilege,
-    fetch: fetchUser,
+    isLoggedIn,
 };

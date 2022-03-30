@@ -5,6 +5,7 @@ import {IUser, IArticle} from 'superdesk-api';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import {gettext} from 'core/utils';
 import {sdApi} from 'api';
+import {store} from 'core/data';
 
 interface IProps {
     article: IArticle;
@@ -25,9 +26,9 @@ class LockInfoComponent extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        sdApi.user.fetch(this.props.article.lock_user).then((lockOwner) => {
-            this.setState({lockOwner});
-        });
+        const lockOwner = store.getState().entities.users[this.props.article.lock_user];
+
+        this.setState({lockOwner});
     }
 
     render() {

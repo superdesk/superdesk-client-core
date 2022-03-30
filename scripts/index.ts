@@ -21,10 +21,14 @@ import {IExtensionLoader, registerExtensions} from 'core/register-extensions';
 import {setupTansa} from 'apps/tansa';
 import {i18n} from 'core/utils';
 import {configurableAlgorithms} from 'core/ui/configurable-algorithms';
-import {merge} from 'lodash';
+import {keyBy, merge} from 'lodash';
 import {registerAuthoringReactWidgets} from 'apps/authoring-react/manage-widget-registration';
 import {registerAuthoringReactFields} from 'apps/authoring-react/fields/register-fields';
 import ng from 'core/services/ng';
+import {sdApi} from 'api';
+import {httpRequestJsonLocal} from 'core/helpers/network';
+import {store} from 'core/data';
+import {SESSION_EVENTS} from 'core/auth/auth';
 
 let body = angular.element('body');
 
@@ -218,12 +222,23 @@ export function startApp(
 
             window['superdeskIsReady'] = true;
 
-            if (appConfig.features.useTansaProofing) {
-                setupTansa();
-            }
+            const $rootScope = ng.get('$rootScope');
 
-            // preload vocabularies
-            ng.get('vocabularies').getAllActiveVocabularies();
+            $rootScope.$on(SESSION_EVENTS.LOGIN, () => {
+                if (appConfig.features.useTansaProofing) {
+                    setupTansa();
+                }
+
+                // preload vocabularies
+                ng.get('vocabularies').getAllActiveVocabularies();
+
+                httpRequestJsonLocal({method: 'GET', path: '/subjectcodes'}).then(({_items}) => {
+                    store.dispatch({
+                        type: 'LOAD_SUBJECT_CODES',
+                        payload: keyBy(_items, ({qcode}) => qcode),
+                    });
+                });
+            });
         });
 }
 
