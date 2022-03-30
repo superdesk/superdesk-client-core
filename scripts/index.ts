@@ -222,9 +222,7 @@ export function startApp(
 
             window['superdeskIsReady'] = true;
 
-            const $rootScope = ng.get('$rootScope');
-
-            $rootScope.$on(SESSION_EVENTS.LOGIN, () => {
+            if (sdApi.user.isLoggedIn()) {
                 if (appConfig.features.useTansaProofing) {
                     setupTansa();
                 }
@@ -238,7 +236,7 @@ export function startApp(
                         payload: keyBy(_items, ({qcode}) => qcode),
                     });
                 });
-            });
+            }
         });
 }
 

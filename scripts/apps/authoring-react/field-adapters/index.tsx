@@ -16,6 +16,7 @@ import {getPlaceAdapter} from './place';
 import {authors} from './authors';
 import {urgency} from './urgency';
 import {priority} from './priority';
+import {getSubjectAdapter} from './subject';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -42,6 +43,7 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
         place: getPlaceAdapter(),
         priority: priority,
         slugline: slugline,
+        subject: getSubjectAdapter(),
         urgency: urgency,
     };
 
