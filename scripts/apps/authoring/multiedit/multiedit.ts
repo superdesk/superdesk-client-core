@@ -13,7 +13,7 @@ import {isPublished} from 'apps/archive/utils';
 import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {isMediaType} from 'core/helpers/item';
-import { mediaIdGenerator } from '../authoring/services/MediaIdGeneratorService';
+import {mediaIdGenerator} from '../authoring/services/MediaIdGeneratorService';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -210,10 +210,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     scope.origItem = item;
                     scope.item = JSON.parse(JSON.stringify(item));
                     scope._editable = authoring.isEditable(item);
-                    scope.isMediaType = isMediaType(scope.item);  
-                    scope.item.associations = item.association;
-                    initMedia()
-                    
+                    scope.isMediaType = isMediaType(scope.item);
                     if (scope.focus) {
                         $timeout(() => {
                             elem.children().focus();
@@ -230,16 +227,16 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
 
             openItem();
 
-            scope.autosave = function(item) {
-                scope.item.associations = item.associations;
+            scope.autosave = function(item, timeout) {
                 scope.dirty = true;
-                initMedia();
-                return authoring.autosave(cloneDeep(item), scope.origItem)
-                .then(
-                   () => {
-                      initMedia();
-                   },
-               );
+                return authoring.autosave(cloneDeep(item), scope.origItem, timeout)
+                    .then(
+                        () => {
+                            scope.$applyAsync(() => {
+                                initMedia();
+                                notify.success(gettext('Item updated.'));
+                            });
+                        });
             };
 
             scope.$watch('item.flags', (newValue, oldValue) => {
@@ -308,7 +305,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             function addMediaField(fieldId) {
                 var [rootField, index] = mediaIdGenerator.getFieldParts(fieldId);
 
-                if (!_.has(mediaFields, rootField)) {                     
+                if (!_.has(mediaFields, rootField)) {
                     mediaFields[rootField] = [];
                 }
                 mediaFields[rootField].push(index);
@@ -326,7 +323,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             function initMedia() {
                 mediaFields = {};
                 scope.mediaFieldVersions = {};
-                _.forEach(scope.origItem.associations, (association, fieldId) => {
+                _.forEach(scope.item.associations, (association, fieldId) => {
                     if (association && _.findIndex(MEDIA_TYPES, (type) => type === association.type) !== -1
                         && isMediaField(fieldId)) {
                         addMediaField(fieldId);
