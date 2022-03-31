@@ -7,6 +7,7 @@ import {
     IAuthoringFieldV2,
     IContentProfileV2,
     IArticleAction,
+    IVocabularyItem,
 } from 'superdesk-api';
 import {
     Button,
@@ -110,6 +111,11 @@ function serializeFieldsDataAndApplyOnArticle(
 
 const SPELLCHECKER_PREFERENCE = 'spellchecker:status';
 
+const ANPA_CATEGORY = {
+    vocabularyId: 'categories',
+    fieldId: 'anpa_category',
+};
+
 interface IProps {
     itemId: IArticle['_id'];
     onClose(): void;
@@ -212,6 +218,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         this.computeLatestArticle = this.computeLatestArticle.bind(this);
         this.setUserPreferences = this.setUserPreferences.bind(this);
         this.cancelAutosave = this.cancelAutosave.bind(this);
+        this.getVocabularyItems = this.getVocabularyItems.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -343,6 +350,28 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 || (this.state.fieldsDataOriginal !== this.state.fieldsDataWithChanges);
         } else {
             return false;
+        }
+    }
+
+    getVocabularyItems(vocabularyId): Array<IVocabularyItem> {
+        const vocabulary = authoringStorage.getVocabularies().get(vocabularyId);
+
+        if (vocabularyId === ANPA_CATEGORY.vocabularyId) {
+            return vocabulary.items;
+        }
+
+        const anpaCategoryQcodes: Array<string> = this.state.initialized ?
+            (this.state.fieldsDataWithChanges.get(ANPA_CATEGORY.fieldId) as Array<any> ?? [])
+            : [];
+
+        if (vocabulary.service?.all != null) {
+            return vocabulary.items.filter(
+                (vocabularyItem) => anpaCategoryQcodes.some((qcode) => vocabularyItem.service?.[qcode] != null),
+            );
+        } else if (anpaCategoryQcodes.some((qcode) => vocabulary.service?.[qcode] != null)) {
+            return vocabulary.items;
+        } else {
+            return [];
         }
     }
 
@@ -1141,6 +1170,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                     language={state.itemWithChanges.language}
                                                     userPreferencesForFields={state.userPreferencesForFields}
                                                     setUserPreferencesForFields={this.setUserPreferences}
+                                                    getVocabularyItems={this.getVocabularyItems}
                                                     readOnly={readOnly}
                                                 />
                                             </div>
@@ -1154,6 +1184,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 language={state.itemWithChanges.language}
                                                 userPreferencesForFields={state.userPreferencesForFields}
                                                 setUserPreferencesForFields={this.setUserPreferences}
+                                                getVocabularyItems={this.getVocabularyItems}
                                                 readOnly={readOnly}
                                             />
                                         </div>

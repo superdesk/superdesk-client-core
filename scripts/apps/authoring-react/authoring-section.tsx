@@ -1,5 +1,5 @@
 import React from 'react';
-import {IFieldsV2} from 'superdesk-api';
+import {IFieldsV2, IVocabularyItem} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {Map} from 'immutable';
 
@@ -11,6 +11,7 @@ interface IProps {
     setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     readOnly: boolean;
     onChange(fieldId: string, value: unknown): void;
+    getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
 }
 
 const defaultUserPreferences = {};
@@ -49,6 +50,7 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                                             [field.id]: fieldPreferences,
                                         });
                                     }}
+                                    getVocabularyItems={this.props.getVocabularyItems}
                                 />
                             </div>
                         );

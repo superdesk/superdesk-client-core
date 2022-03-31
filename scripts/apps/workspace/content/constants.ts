@@ -93,11 +93,6 @@ export function getLabelForStage(stage: IStage | ICard): string {
     }
 }
 
-export const CV_ALIAS = Object.freeze({
-    locators: 'place',
-    categories: 'anpa_category',
-});
-
 export const EXTRA_SCHEMA_FIELDS = Object.freeze({
     feature_media: {},
     media_description: {},

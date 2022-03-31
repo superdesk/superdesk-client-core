@@ -762,6 +762,9 @@ declare module 'superdesk-api' {
         qcode?: string;
         color?: string;
         is_active?: boolean;
+        service?: {
+            [qcode: string]: 1;
+        };
         parent?: string;
         translations?: {
             name?: {
@@ -2401,6 +2404,13 @@ declare module 'superdesk-api' {
         config: IConfig;
         userPreferences: IUserPreferences | undefined;
         onUserPreferencesChange(userPreferences: IUserPreferences): void;
+
+        /**
+         * Returns a subset of vocabulary items that are available for use.
+         * This is required to implement dependent fields.
+         * At the moment, there are only dependent fields based on anpa_category.
+         */
+        getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {

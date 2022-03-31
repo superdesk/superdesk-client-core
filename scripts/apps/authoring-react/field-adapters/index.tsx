@@ -2,11 +2,9 @@ import {
     IArticle,
     IAuthoringFieldV2,
     IVocabulary,
-    IVocabularyItem,
 } from 'superdesk-api';
-import {IDropdownTreeConfig} from '../fields/dropdown';
+import {IDropdownConfigVocabulary} from '../fields/dropdown';
 import {IEditor3Config} from '../fields/editor3/interfaces';
-import {arrayToTree} from 'core/helpers/tree';
 import {authoringStorage} from '../data-layer';
 import {slugline} from './slugline';
 import {body_html} from './body_html';
@@ -91,25 +89,11 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
 
             adapter[vocabulary._id] = {
                 getFieldV2: (fieldEditor, fieldSchema) => {
-                    const fieldConfig: IDropdownTreeConfig = {
-                        source: 'dropdown-tree',
+                    const fieldConfig: IDropdownConfigVocabulary = {
+                        source: 'vocabulary',
                         readOnly: fieldEditor.readonly,
                         required: fieldEditor.required,
-                        getItems: () => {
-                            const items = arrayToTree(
-                                vocabulary.items,
-                                (item) => item.qcode,
-                                (item) => item.parent ?? null,
-                            );
-
-                            return ({
-                                nodes: items.result,
-                                lookup: {},
-                            });
-                        },
-                        getLabel: (item: IVocabularyItem) => item.name,
-                        getId: (item: IVocabularyItem) => item.qcode,
-                        canSelectBranchWithChildren: () => false,
+                        vocabularyId: vocabulary._id,
                         multiple: vocabulary.selection_type === 'multi selection',
                     };
 

@@ -5,11 +5,13 @@ import {IDropdownConfigManualSource, IDropdownConfigVocabulary, IDropdownValue} 
 import {DropdownItemTemplate} from './dropdown-item-template';
 import {getOptions} from './dropdown-vocabulary/get-options';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {IVocabularyItem, IVocabulary} from 'superdesk-api';
 
 interface IProps {
     config: IDropdownConfigManualSource | IDropdownConfigVocabulary;
     value: IDropdownValue;
     language: string;
+    getVocabularyItems(vocabulary: IVocabulary['_id']): Array<IVocabularyItem>;
     onChange(value: IDropdownValue): void;
 }
 
@@ -22,7 +24,7 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
             if (config.source === 'manual-entry') {
                 return config.options;
             } else if (config.source === 'vocabulary') {
-                return getOptions(config);
+                return getOptions(config, this.props.getVocabularyItems);
             } else {
                 assertNever(config);
             }
