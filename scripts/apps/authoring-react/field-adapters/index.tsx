@@ -17,6 +17,7 @@ import {authors} from './authors';
 import {urgency} from './urgency';
 import {priority} from './priority';
 import {getSubjectAdapter} from './subject';
+import {anpa_category} from './anpa_category';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -36,6 +37,7 @@ type IFieldsAdapter = {[key: string]: IFieldAdapter};
  */
 export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): IFieldsAdapter {
     const adapter: IFieldsAdapter = {
+        anpa_category: anpa_category,
         authors: authors,
         body_html: body_html,
         genre: genre,
