@@ -85,6 +85,7 @@ class InputField extends React.PureComponent<IPropsInputField> {
     render() {
         const {field, item, required} = this.props;
         const value = item[field.key] || '';
+        const valueObj = item[field.key] ?? {};
         const disabled = !item.is_active;
 
         let className = 'sd-line-input sd-line-input--no-margin sd-line-input--no-label sd-line-input--boxed';
@@ -132,7 +133,7 @@ class InputField extends React.PureComponent<IPropsInputField> {
         case 'object': {
             return (
                 <ObjectEditor
-                    value={value}
+                    value={valueObj}
                     disabled={disabled}
                     onChange={(_value) => this.props.update(item, field.key, _value)}
                 />
