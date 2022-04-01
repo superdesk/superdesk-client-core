@@ -257,23 +257,19 @@ export class Editor extends React.PureComponent<IProps, IState> {
             <Provider store={store}>
                 <ReactContextForEditor3.Provider value={store}>
                     <div style={{display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'end'}}>
-                        {
-                            typeof this.props.config.maxLength === 'number' && (
-                                <div style={{display: 'flex', gap: '6px'}}>
-                                    <span className="char-count-base">
-                                        {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
-                                    </span>
+                        <div style={{display: 'flex', gap: '6px'}}>
+                            <span className="char-count-base">
+                                {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
+                            </span>
 
-                                    <CharacterCount2
-                                        limit={this.props.config.maxLength}
-                                        html={false}
-                                        item={this.props.value.contentState.getPlainText()}
-                                    />
+                            <CharacterCount2
+                                limit={this.props.config.maxLength}
+                                html={false}
+                                item={this.props.value.contentState.getPlainText()}
+                            />
 
-                                    <span className="char-count-base">{readingTime}</span>
-                                </div>
-                            )
-                        }
+                            <span className="char-count-base">{readingTime}</span>
+                        </div>
 
                         {
                             characterLimitConfig != null && (
