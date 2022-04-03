@@ -77,66 +77,97 @@ export function getFieldsAdapter(customFieldVocabularies: Array<IVocabulary>): I
 
     const customVocabularyIds = new Set(customFieldVocabularies.map(({_id}) => _id));
 
-    authoringStorage.getVocabularies().forEach((vocabulary) => {
-        if (
-            customVocabularyIds.has(vocabulary._id) !== true
-            && (
-                vocabulary.selection_type === 'multi selection'
-                || vocabulary.selection_type === 'single selection'
-            )
-        ) {
-            type IOperationalFormat = {qcode: string; name: string; parent?: string};
+    authoringStorage.getVocabularies()
+        .filter((vocabulary) => adapter[vocabulary._id] == null)
+        .forEach((vocabulary) => {
+            if (
+                customVocabularyIds.has(vocabulary._id) !== true
+                && (
+                    vocabulary.selection_type === 'multi selection'
+                    || vocabulary.selection_type === 'single selection'
+                )
+            ) {
+                const multiple = vocabulary.selection_type === 'multi selection';
 
-            adapter[vocabulary._id] = {
-                getFieldV2: (fieldEditor, fieldSchema) => {
-                    const fieldConfig: IDropdownConfigVocabulary = {
-                        source: 'vocabulary',
-                        readOnly: fieldEditor.readonly,
-                        required: fieldEditor.required,
-                        vocabularyId: vocabulary._id,
-                        multiple: vocabulary.selection_type === 'multi selection',
-                    };
+                adapter[vocabulary._id] = {
+                    getFieldV2: (fieldEditor, fieldSchema) => {
+                        const fieldConfig: IDropdownConfigVocabulary = {
+                            source: 'vocabulary',
+                            readOnly: fieldEditor.readonly,
+                            required: fieldEditor.required,
+                            vocabularyId: vocabulary._id,
+                            multiple: multiple,
+                        };
 
-                    const fieldV2: IAuthoringFieldV2 = {
-                        id: vocabulary._id,
-                        name: vocabulary.display_name,
-                        fieldType: 'dropdown',
-                        fieldConfig,
-                    };
+                        const fieldV2: IAuthoringFieldV2 = {
+                            id: vocabulary._id,
+                            name: vocabulary.display_name,
+                            fieldType: 'dropdown',
+                            fieldConfig,
+                        };
 
-                    return fieldV2;
-                },
-                getSavedData: (article): Array<IOperationalFormat> => {
-                    return (article.subject ?? [])
-                        .filter(({scheme}) => scheme === vocabulary._id)
-                        .map(({qcode, name, parent}) => ({qcode, name, parent}));
-                },
-                saveData: (val: Array<IOperationalFormat>, article) => {
-                    interface IStorageFormat {
-                        qcode: string;
-                        name: string;
-                        parent?: string;
-                        scheme: string;
-                    }
+                        return fieldV2;
+                    },
+                    getSavedData: (article): Array<string> | string => {
+                        const values = (article.subject ?? [])
+                            .filter(({scheme}) => scheme === vocabulary._id)
+                            .map(({qcode}) => {
+                                return qcode;
+                            });
 
-                    return {
-                        ...article,
-                        subject: (article.subject ?? []).concat(
-                            val.map(({qcode, name, parent}) => {
-                                var itemToStore: IStorageFormat = {qcode, name, scheme: vocabulary._id};
+                        if (multiple) {
+                            return values;
+                        } else {
+                            return values[0];
+                        }
+                    },
+                    saveData: (val: string | Array<string>, article) => {
+                        interface IStorageFormat {
+                            qcode: string;
+                            name: string;
+                            parent?: string;
+                            scheme: string;
+                        }
 
-                                if (parent != null) {
-                                    itemToStore.parent = parent;
-                                }
+                        const qcodes = new Set((() => {
+                            if (val == null) {
+                                return [];
+                            } else if (Array.isArray(val)) {
+                                return val;
+                            } else {
+                                return [val];
+                            }
+                        })());
 
-                                return itemToStore;
-                            }),
-                        ),
-                    };
-                },
-            };
-        }
-    });
+                        const vocabularyItems = vocabulary.items.filter(
+                            (_voc) => qcodes.has(_voc.qcode),
+                        );
+
+                        return {
+                            ...article,
+                            subject:
+                            (article.subject ?? [])
+                                .filter(({scheme}) => scheme !== vocabulary._id)
+                                .concat(
+                                    vocabularyItems.map(({qcode, name, parent}) => {
+                                        var itemToStore: IStorageFormat = {
+                                            qcode: qcode,
+                                            name: name,
+                                            scheme: vocabulary._id,
+                                        };
+
+                                        if (parent != null) {
+                                            itemToStore.parent = parent;
+                                        }
+
+                                        return itemToStore;
+                                    }),
+                                ),
+                        };
+                    },
+                };
+            }
+        });
 
     return adapter;
 }

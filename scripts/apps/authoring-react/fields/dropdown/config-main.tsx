@@ -8,9 +8,6 @@ import {ConfigFromVocabulary} from './dropdown-vocabulary/config';
 import {SpacerBlock} from 'core/ui/components/Spacer';
 import {Checkbox} from 'superdesk-ui-framework/react';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {EditorManualEntry} from './dropdown-manual-entry/editor';
-import {getUserInterfaceLanguage} from 'appConfig';
-import {EditorVocabulary} from './dropdown-vocabulary/editor';
 
 type IProps = IConfigComponentProps<IDropdownConfig>;
 
@@ -128,48 +125,6 @@ export class Config extends React.PureComponent<IProps, IState> {
                         />
                     </div>
                 }
-
-                <SpacerBlock v gap="16" />
-
-                {(() => {
-                    if (config.source === 'manual-entry') {
-                        return (
-                            <div>
-                                <label className="form-label">{gettext('Configuration preview')}</label>
-
-                                <EditorManualEntry
-                                    config={config}
-                                    value={this.state.previewValue}
-                                    onChange={(val) => {
-                                        this.setState({previewValue: val});
-                                    }}
-                                    language={getUserInterfaceLanguage()}
-                                />
-                            </div>
-                        );
-                    } else if (config.source === 'vocabulary') {
-                        if (config.vocabularyId == null) {
-                            return null;
-                        }
-
-                        return (
-                            <div>
-                                <label className="form-label">{gettext('Configuration preview')}</label>
-
-                                <EditorVocabulary
-                                    config={config}
-                                    value={this.state.previewValue}
-                                    onChange={(val) => {
-                                        this.setState({previewValue: val});
-                                    }}
-                                    language={getUserInterfaceLanguage()}
-                                />
-                            </div>
-                        );
-                    } else {
-                        assertNever(config);
-                    }
-                })()}
             </div>
         );
     }

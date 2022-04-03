@@ -366,7 +366,13 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
         if (vocabulary.service?.all != null) {
             return vocabulary.items.filter(
-                (vocabularyItem) => anpaCategoryQcodes.some((qcode) => vocabularyItem.service?.[qcode] != null),
+                (vocabularyItem) => {
+                    if (vocabularyItem.service == null) {
+                        return true;
+                    } else {
+                        return anpaCategoryQcodes.some((qcode) => vocabularyItem.service[qcode] != null);
+                    }
+                },
             );
         } else if (anpaCategoryQcodes.some((qcode) => vocabulary.service?.[qcode] != null)) {
             return vocabulary.items;

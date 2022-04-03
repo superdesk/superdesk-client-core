@@ -116,6 +116,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                                     },
                                 });
                             }}
+                            getVocabularyItems={() => []} // only used in authoring-react
                         />
                     )
                 }
