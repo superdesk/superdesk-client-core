@@ -10,7 +10,6 @@ export enum IContentProfileType {
     image = 'image',
     audio = 'audio',
     video = 'video',
-    package = 'package',
 }
 
 const allContentProfileTypes: Array<IContentProfileType> =
@@ -47,8 +46,6 @@ function getContentProfileIcon(type: IContentProfileType): string {
         return 'icon-audio';
     case IContentProfileType.video:
         return 'icon-video';
-    case IContentProfileType.package:
-        return 'icon-composite';
     default:
         return 'icon-text';
     }
@@ -64,8 +61,6 @@ function getLabelForContentProfileType(type: IContentProfileType): string {
         return gettext('Audio');
     case IContentProfileType.video:
         return gettext('Video');
-    case IContentProfileType.package:
-        return gettext('Package');
     default:
         return assertNever(type);
     }
