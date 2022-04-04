@@ -1,5 +1,6 @@
+/* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IFieldsV2, IVocabularyItem} from 'superdesk-api';
+import {IEditorComponentContainerProps, IFieldsV2, IVocabularyItem} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {Map} from 'immutable';
 
@@ -7,10 +8,11 @@ interface IProps {
     language: string;
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
-    userPreferencesForFields: {[fieldId: string]: unknown};
-    setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
-    readOnly: boolean;
     onChange(fieldId: string, value: unknown): void;
+    readOnly: boolean;
+    userPreferencesForFields: {[fieldId: string]: unknown};
+    useHeaderLayout?: boolean;
+    setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
 }
 
@@ -26,33 +28,96 @@ export class AuthoringSection extends React.PureComponent<IProps> {
                     fields.map((field) => {
                         const FieldEditorConfig = getField(field.fieldType);
 
-                        return (
-                            <div key={field.id}>
-                                <span className="field-label--base" style={{marginBottom: 20}}>
-                                    {field.name}
-                                </span>
+                        class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
+                            render() {
+                                const {miniToolbar} = this.props;
 
-                                <FieldEditorConfig.editorComponent
-                                    editorId={field.id}
-                                    language={this.props.language}
-                                    value={fieldsData.get(field.id)}
-                                    onChange={(val) => {
-                                        this.props.onChange(field.id, val);
-                                    }}
-                                    readOnly={this.props.readOnly}
-                                    config={field.fieldConfig}
-                                    userPreferences={
-                                        this.props.userPreferencesForFields[field.id] ?? defaultUserPreferences
-                                    }
-                                    onUserPreferencesChange={(fieldPreferences) => {
-                                        this.props.setUserPreferencesForFields({
-                                            ...(this.props.userPreferencesForFields ?? {}),
-                                            [field.id]: fieldPreferences,
-                                        });
-                                    }}
-                                    getVocabularyItems={this.props.getVocabularyItems}
-                                />
-                            </div>
+                                return (
+                                    <div>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'start',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div>
+                                                <span className="form-label">
+                                                    {field.name}
+                                                </span>
+                                            </div>
+
+                                            <div style={{flexGrow: 1}}>
+                                                {this.props.children}
+
+                                                {
+                                                    miniToolbar != null && (
+                                                        <div>{miniToolbar}</div>
+                                                    )
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            }
+                        }
+
+                        class ContentLayout extends React.PureComponent<IEditorComponentContainerProps> {
+                            render() {
+                                const {miniToolbar} = this.props;
+
+                                return (
+                                    <div>
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                marginBottom: 15,
+                                            }}
+                                        >
+                                            <div>
+                                                <span className="field-label--base" >
+                                                    {field.name}
+                                                </span>
+                                            </div>
+
+                                            {
+                                                miniToolbar != null && (
+                                                    <div>{miniToolbar}</div>
+                                                )
+                                            }
+                                        </div>
+
+                                        {this.props.children}
+                                    </div>
+                                );
+                            }
+                        }
+
+                        return (
+                            <FieldEditorConfig.editorComponent
+                                key={field.id}
+                                editorId={field.id}
+                                container={this.props.useHeaderLayout ? HeaderLayout : ContentLayout}
+                                language={this.props.language}
+                                value={fieldsData.get(field.id)}
+                                onChange={(val) => {
+                                    this.props.onChange(field.id, val);
+                                }}
+                                readOnly={this.props.readOnly}
+                                config={field.fieldConfig}
+                                userPreferences={
+                                    this.props.userPreferencesForFields[field.id] ?? defaultUserPreferences
+                                }
+                                onUserPreferencesChange={(fieldPreferences) => {
+                                    this.props.setUserPreferencesForFields({
+                                        ...(this.props.userPreferencesForFields ?? {}),
+                                        [field.id]: fieldPreferences,
+                                    });
+                                }}
+                                getVocabularyItems={this.props.getVocabularyItems}
+                            />
                         );
                     }).toArray()
                 }

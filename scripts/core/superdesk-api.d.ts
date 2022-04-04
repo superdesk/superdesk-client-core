@@ -2390,12 +2390,29 @@ declare module 'superdesk-api' {
 
     // CUSTOM FIELD TYPES
 
+    export interface IEditorComponentContainerProps {
+        /**
+         * miniToolbar is meant for displaying a small amount of details like character count.
+         * It's implemented as a separate prop, in order to allow flexible layout options.
+         * (it will be rendered in different DOM locations depending if field is in header or content section)
+         */
+        miniToolbar?: JSX.Element;
+    }
+
     export interface IEditorComponentProps<IValue, IConfig, IUserPreferences> {
         /**
          * editorId is needed in order for certain actions to only be applied to
          * a particular editor in case many are present at once e.g. find and replace
          */
         editorId: string;
+
+        /**
+         * All editor components must return a container(or null) from a render method. (main content goes as props.children)
+         * This is required to:
+         *   - allow parent component to control the location of toolbar in the DOM
+         *   - allows editors to hide an editor entirely in certain cases. (needed for anpa_category)
+         */
+        container: React.ComponentType<IEditorComponentContainerProps>;
 
         value: IValue;
         onChange: (value: IValue) => void;

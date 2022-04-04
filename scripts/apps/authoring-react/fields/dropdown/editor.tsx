@@ -12,38 +12,45 @@ type IProps = IEditorComponentProps<IDropdownValue, IDropdownConfig, never>;
 export class Editor extends React.PureComponent<IProps> {
     render() {
         const {config} = this.props;
+        const Container = this.props.container;
 
-        switch (config.source) {
-        case 'manual-entry':
-            return (
-                <EditorManualEntry
-                    {...this.props}
-                    config={config}
-                />
-            );
-        case 'vocabulary':
-            return (
-                <EditorVocabulary
-                    {...this.props}
-                    config={config}
-                />
-            );
-        case 'remote-source':
-            return (
-                <EditorRemoteSource
-                    {...this.props}
-                    config={config}
-                />
-            );
-        case 'dropdown-tree':
-            return (
-                <EditorDropdownTree
-                    {...this.props}
-                    config={config}
-                />
-            );
-        default:
-            assertNever(config);
-        }
+        return (
+            <Container>
+                {(() => {
+                    switch (config.source) {
+                    case 'manual-entry':
+                        return (
+                            <EditorManualEntry
+                                {...this.props}
+                                config={config}
+                            />
+                        );
+                    case 'vocabulary':
+                        return (
+                            <EditorVocabulary
+                                {...this.props}
+                                config={config}
+                            />
+                        );
+                    case 'remote-source':
+                        return (
+                            <EditorRemoteSource
+                                {...this.props}
+                                config={config}
+                            />
+                        );
+                    case 'dropdown-tree':
+                        return (
+                            <EditorDropdownTree
+                                {...this.props}
+                                config={config}
+                            />
+                        );
+                    default:
+                        assertNever(config);
+                    }
+                })()}
+            </Container>
+        );
     }
 }

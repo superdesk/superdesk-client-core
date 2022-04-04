@@ -1175,6 +1175,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                     onChange={this.handleFieldChange}
                                                     language={state.itemWithChanges.language}
                                                     userPreferencesForFields={state.userPreferencesForFields}
+                                                    useHeaderLayout
                                                     setUserPreferencesForFields={this.setUserPreferences}
                                                     getVocabularyItems={this.getVocabularyItems}
                                                     readOnly={readOnly}

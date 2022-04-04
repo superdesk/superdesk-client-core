@@ -245,6 +245,8 @@ export class Editor extends React.PureComponent<IProps, IState> {
             return null;
         }
 
+        const Container = this.props.container;
+
         const store = this.props.value.store;
         const {config} = this.props;
         const characterLimitConfig = this.getCharacterLimitPreference();
@@ -253,77 +255,94 @@ export class Editor extends React.PureComponent<IProps, IState> {
         const readingTime: string = getReadingTimeText(plainText, this.props.language);
         const invalidCharsDetected = (config.disallowedCharacters ?? []).filter((char) => plainText.includes(char));
 
-        return (
-            <Provider store={store}>
-                <ReactContextForEditor3.Provider value={store}>
-                    <div style={{display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'end'}}>
-                        <div style={{display: 'flex', gap: '6px'}}>
-                            <span className="char-count-base">
-                                {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
-                            </span>
+        const miniToolbar = (
+            <div>
+                <div style={{display: 'flex', gap: '10px', alignItems: 'center'}}>
+                    <div style={{display: 'flex', gap: '6px'}}>
+                        <span className="char-count-base">
+                            {gettextPlural(wordCount, 'one word', '{{x}} words', {x: wordCount})}
+                        </span>
 
-                            <CharacterCount2
-                                limit={this.props.config.maxLength}
-                                html={false}
-                                item={this.props.value.contentState.getPlainText()}
-                            />
+                        <CharacterCount2
+                            limit={this.props.config.maxLength}
+                            html={false}
+                            item={this.props.value.contentState.getPlainText()}
+                        />
 
-                            <span className="char-count-base">{readingTime}</span>
-                        </div>
-
-                        {
-                            characterLimitConfig != null && (
-                                <div>
-                                    <button
-                                        onClick={() => {
-                                            showModal(({closeModal}) => (
-                                                <CharacterCountConfigModal
-                                                    closeModal={closeModal}
-                                                    value={characterLimitConfig.ui}
-                                                    onChange={(ui) => {
-                                                        const nextValue: EditorLimit = {
-                                                            ...characterLimitConfig,
-                                                            ui: ui,
-                                                        };
-
-                                                        this.props.onUserPreferencesChange({characterLimitMode: ui});
-
-                                                        this.props.value.store.dispatch(changeLimitConfig(nextValue));
-                                                    }}
-                                                />
-                                            ));
-                                        }}
-                                    >
-                                        <i className="icon-settings" />
-                                    </button>
-                                </div>
-                            )
-                        }
+                        <span className="char-count-base">{readingTime}</span>
                     </div>
 
                     {
-                        invalidCharsDetected.length > 0 && (
-                            <div style={{display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'end'}}>
-                                <div className="editor3-invalid-chars-error">
-                                    {gettextPlural(
-                                        invalidCharsDetected.length,
-                                        'Character {{chars}} is not allowed',
-                                        'The following characters are not allowed {{chars}}',
-                                        {chars: invalidCharsDetected.join(' ')},
-                                    )}
-                                </div>
+                        characterLimitConfig != null && (
+                            <div>
+                                <button
+                                    onClick={() => {
+                                        showModal(({closeModal}) => (
+                                            <CharacterCountConfigModal
+                                                closeModal={closeModal}
+                                                value={characterLimitConfig.ui}
+                                                onChange={(ui) => {
+                                                    const nextValue: EditorLimit = {
+                                                        ...characterLimitConfig,
+                                                        ui: ui,
+                                                    };
+
+                                                    this.props.onUserPreferencesChange({
+                                                        characterLimitMode: ui,
+                                                    });
+
+                                                    this.props.value.store.dispatch(
+                                                        changeLimitConfig(nextValue),
+                                                    );
+                                                }}
+                                            />
+                                        ));
+                                    }}
+                                >
+                                    <i className="icon-settings" />
+                                </button>
                             </div>
                         )
                     }
+                </div>
 
-                    <Editor3
-                        scrollContainer=".sd-editor-content__main-container"
-                        singleLine={config.singleLine ?? false}
-                        cleanPastedHtml={config.cleanPastedHtml ?? false}
-                        autocompleteSuggestions={this.state.autocompleteSuggestions}
-                    />
-                </ReactContextForEditor3.Provider>
-            </Provider>
+                {
+                    invalidCharsDetected.length > 0 && (
+                        <div
+                            style={{
+                                display: 'flex',
+                                gap: '10px',
+                                alignItems: 'center',
+                                justifyContent: 'end',
+                            }}
+                        >
+                            <div className="editor3-invalid-chars-error">
+                                {gettextPlural(
+                                    invalidCharsDetected.length,
+                                    'Character {{chars}} is not allowed',
+                                    'The following characters are not allowed {{chars}}',
+                                    {chars: invalidCharsDetected.join(' ')},
+                                )}
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+        );
+
+        return (
+            <Container miniToolbar={miniToolbar}>
+                <Provider store={store}>
+                    <ReactContextForEditor3.Provider value={store}>
+                        <Editor3
+                            scrollContainer=".sd-editor-content__main-container"
+                            singleLine={config.singleLine ?? false}
+                            cleanPastedHtml={config.cleanPastedHtml ?? false}
+                            autocompleteSuggestions={this.state.autocompleteSuggestions}
+                        />
+                    </ReactContextForEditor3.Provider>
+                </Provider>
+            </Container>
         );
     }
 }

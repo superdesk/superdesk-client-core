@@ -60,7 +60,7 @@ export function CharacterCount2(props: IProps) {
                     /{limit}
                 </span>
             )}
-
+            &nbsp;
             {gettext('characters')}
         </span>
     );
