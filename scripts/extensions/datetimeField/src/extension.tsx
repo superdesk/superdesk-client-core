@@ -45,7 +45,11 @@ export const defaultDateTimeConfig: IDateTimeFieldConfig = {
 function onTemplateCreate(_value: string, config: IDateTimeFieldConfig) {
     const initialOffset = config.initial_offset_minutes;
 
-    return `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
+    if (_value == null) {
+        return null;
+    } else {
+        return `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
+    }
 }
 
 const extension: IExtension = {
