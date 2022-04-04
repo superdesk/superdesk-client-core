@@ -424,8 +424,21 @@ export function SearchResults(
 
                 if (item) {
                     if (item._type === 'externalsource') {
-                        processPreview(item);
-                        return;
+                        var item_id = item.extra ? item.extra.itemid : false;
+
+                        if (item_id && item.guid) {
+                            criteria.params = {
+                                'detailed_info': {
+                                    'newsItemId': item.extra.itemid,
+                                    'guid': item.guid,
+                                }};
+                            return api.query(getProvider(criteria), criteria).then((item_) => {
+                                processPreview(item_._items[0]);
+                            });
+                        } else {
+                            processPreview(item);
+                            return;
+                        }
                     }
 
                     scope.loading = true;
