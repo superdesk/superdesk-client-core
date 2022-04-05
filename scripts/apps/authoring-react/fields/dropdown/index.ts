@@ -17,6 +17,7 @@ export type IDropdownValue = unknown;
 export interface IDropdownOption {
     id: string | number;
     label: string;
+    parent?: IDropdownOption['id'];
     color?: string;
 }
 
