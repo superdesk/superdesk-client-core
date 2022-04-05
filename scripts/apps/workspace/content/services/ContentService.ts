@@ -359,15 +359,20 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * Setup authoring scope for item
      */
     this.setupAuthoring = (profileId, scope, item: IArticle) => {
-        if (profileId == null && item.type !== 'composite') {
-            throw new Error('profile ID must be provided');
-        }
+        if (item.type === 'composite') {
+            return Promise.resolve({editor: {}, schema: {}, fields: []});
+        } else {
+            if (profileId == null) {
+                throw new Error('profile ID must be provided');
+            }
 
-        return this.getType(profileId).then((profile) => {
-            scope.schema = this.schema(profile, item.type);
-            scope.editor = this.editor(profile, item.type);
-            scope.fields = this.fields(profile);
-            return profile;
-        });
+            return this.getType(profileId).then((profile) => {
+                scope.schema = this.schema(profile, item.type);
+                scope.editor = this.editor(profile, item.type);
+                scope.fields = this.fields(profile);
+
+                return profile;
+            });
+        }
     };
 }
