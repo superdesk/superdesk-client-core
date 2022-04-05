@@ -25,118 +25,117 @@ interface IAuthoringReactArticleAdapter {
  *  to prevent possible conflicts of field IDs. It seems though, that validation is in place
  *  to prevent duplicate IDs, thus prefixing was never necessary. Adapter removes the prefixes.
  */
-export function getArticleAdapter(): Promise<IAuthoringReactArticleAdapter> {
-    return getCustomFieldVocabularies().then((customFieldVocabularies) => {
-        const fieldsAdapter = getFieldsAdapter(customFieldVocabularies);
+export function getArticleAdapter(): IAuthoringReactArticleAdapter {
+    const customFieldVocabularies = getCustomFieldVocabularies();
+    const fieldsAdapter = getFieldsAdapter();
 
-        const oldFormatCustomFieldIds: Set<IOldCustomFieldId> = new Set(
-            customFieldVocabularies
-                .filter((vocabulary) => vocabulary.field_type === 'text')
-                .map((vocabulary) => vocabulary._id),
-        );
+    const oldFormatCustomFieldIds: Set<IOldCustomFieldId> = new Set(
+        customFieldVocabularies
+            .filter((vocabulary) => vocabulary.field_type === 'text')
+            .map((vocabulary) => vocabulary._id),
+    );
 
-        const rootFieldsToMove =
-            Object.keys(fieldsAdapter)
-                .filter((fieldId) => oldFormatCustomFieldIds.has(fieldId) !== true);
+    const rootFieldsToMove =
+        Object.keys(fieldsAdapter)
+            .filter((fieldId) => oldFormatCustomFieldIds.has(fieldId) !== true);
 
-        const adapter: IAuthoringReactArticleAdapter = {
-            fromAuthoringReact: (_article) => {
-                // making a copy in order to do immutable updates
-                let article = {..._article};
+    const adapter: IAuthoringReactArticleAdapter = {
+        fromAuthoringReact: (_article) => {
+            // making a copy in order to do immutable updates
+            let article = {..._article};
 
-                // move fields to article root (except for fields with a custom adapter)
-                if (_article.extra != null) {
-                    article.extra = {..._article.extra ?? {}};
+            // move fields to article root (except for fields with a custom adapter)
+            if (_article.extra != null) {
+                article.extra = {..._article.extra ?? {}};
 
-                    for (const fieldId of rootFieldsToMove) {
-                        const fieldHasCustomAdapter = fieldsAdapter[fieldId]?.saveData != null;
+                for (const fieldId of rootFieldsToMove) {
+                    const fieldHasCustomAdapter = fieldsAdapter[fieldId]?.saveData != null;
 
-                        if (!fieldHasCustomAdapter && article.extra.hasOwnProperty(fieldId)) {
-                            article[fieldId] = article.extra[fieldId];
-
-                            delete article.extra[fieldId];
-                        }
-                    }
-                }
-
-                // run field adapters
-                for (const fieldId of Object.keys(fieldsAdapter)) {
-                    const fieldAdapter = fieldsAdapter[fieldId];
-
-                    if (fieldAdapter?.saveData != null && (article.extra?.hasOwnProperty(fieldId) ?? false)) {
-                        const fieldValue = article.extra[fieldId];
+                    if (!fieldHasCustomAdapter && article.extra.hasOwnProperty(fieldId)) {
+                        article[fieldId] = article.extra[fieldId];
 
                         delete article.extra[fieldId];
-
-                        article = fieldAdapter.saveData(fieldValue, article);
                     }
                 }
+            }
 
-                // Add prefixes
-                for (const fieldId of Array.from(oldFormatCustomFieldIds)) {
-                    const withPrefix = `extra>${fieldId}`;
+            // run field adapters
+            for (const fieldId of Object.keys(fieldsAdapter)) {
+                const fieldAdapter = fieldsAdapter[fieldId];
 
-                    if (article.fields_meta?.hasOwnProperty(fieldId)) {
-                        article.fields_meta[withPrefix] = article.fields_meta[fieldId];
+                if (fieldAdapter?.saveData != null && (article.extra?.hasOwnProperty(fieldId) ?? false)) {
+                    const fieldValue = article.extra[fieldId];
 
-                        delete article.fields_meta[fieldId];
+                    delete article.extra[fieldId];
+
+                    article = fieldAdapter.saveData(fieldValue, article);
+                }
+            }
+
+            // Add prefixes
+            for (const fieldId of Array.from(oldFormatCustomFieldIds)) {
+                const withPrefix = `extra>${fieldId}`;
+
+                if (article.fields_meta?.hasOwnProperty(fieldId)) {
+                    article.fields_meta[withPrefix] = article.fields_meta[fieldId];
+
+                    delete article.fields_meta[fieldId];
+                }
+            }
+
+            return article;
+        },
+        toAuthoringReact: (_article) => {
+            let article = {..._article}; // ensure immutability
+
+            if (_article.extra != null) { // ensure immutability
+                article.extra = {..._article.extra};
+            }
+
+            if (_article.fields_meta != null) { // ensure immutability
+                article.fields_meta = {..._article.fields_meta};
+            }
+
+            // Moving fields from authoring root to extra (except for fields with a custom adapter)
+            for (const fieldId of rootFieldsToMove) {
+                const fieldHasCustomAdapter = fieldsAdapter[fieldId]?.getSavedData != null;
+
+                if (!fieldHasCustomAdapter && article.hasOwnProperty(fieldId)) {
+                    if (article.extra == null) {
+                        article.extra = {};
                     }
+
+                    article.extra[fieldId] = article[fieldId];
                 }
+            }
 
-                return article;
-            },
-            toAuthoringReact: (_article) => {
-                let article = {..._article}; // ensure immutability
+            // run field adapters
+            for (const fieldId of Object.keys(fieldsAdapter)) {
+                const fieldAdapter = fieldsAdapter[fieldId];
 
-                if (_article.extra != null) { // ensure immutability
-                    article.extra = {..._article.extra};
-                }
-
-                if (_article.fields_meta != null) { // ensure immutability
-                    article.fields_meta = {..._article.fields_meta};
-                }
-
-                // Moving fields from authoring root to extra (except for fields with a custom adapter)
-                for (const fieldId of rootFieldsToMove) {
-                    const fieldHasCustomAdapter = fieldsAdapter[fieldId]?.getSavedData != null;
-
-                    if (!fieldHasCustomAdapter && article.hasOwnProperty(fieldId)) {
-                        if (article.extra == null) {
-                            article.extra = {};
-                        }
-
-                        article.extra[fieldId] = article[fieldId];
+                if (fieldAdapter?.getSavedData != null) {
+                    if (article.extra == null) {
+                        article.extra = {};
                     }
+
+                    article.extra[fieldId] = fieldAdapter.getSavedData(article);
                 }
+            }
 
-                // run field adapters
-                for (const fieldId of Object.keys(fieldsAdapter)) {
-                    const fieldAdapter = fieldsAdapter[fieldId];
+            // remove prefixes
+            for (const fieldId of Array.from(oldFormatCustomFieldIds)) {
+                const withPrefix = `extra>${fieldId}`;
 
-                    if (fieldAdapter?.getSavedData != null) {
-                        if (article.extra == null) {
-                            article.extra = {};
-                        }
+                if (article.fields_meta?.hasOwnProperty(withPrefix)) {
+                    article.fields_meta[fieldId] = article.fields_meta[withPrefix];
 
-                        article.extra[fieldId] = fieldAdapter.getSavedData(article);
-                    }
+                    delete article.fields_meta[withPrefix];
                 }
+            }
 
-                // remove prefixes
-                for (const fieldId of Array.from(oldFormatCustomFieldIds)) {
-                    const withPrefix = `extra>${fieldId}`;
+            return article;
+        },
+    };
 
-                    if (article.fields_meta?.hasOwnProperty(withPrefix)) {
-                        article.fields_meta[fieldId] = article.fields_meta[withPrefix];
-
-                        delete article.fields_meta[withPrefix];
-                    }
-                }
-
-                return article;
-            },
-        };
-
-        return adapter;
-    });
+    return adapter;
 }

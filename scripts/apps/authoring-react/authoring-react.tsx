@@ -364,7 +364,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             (this.state.fieldsDataWithChanges.get(ANPA_CATEGORY.fieldId) as Array<any> ?? [])
             : [];
 
-        if (vocabulary.service?.all != null) {
+        if (vocabulary.service == null || vocabulary.service?.all != null) {
             return vocabulary.items.filter(
                 (vocabularyItem) => {
                     if (vocabularyItem.service == null) {

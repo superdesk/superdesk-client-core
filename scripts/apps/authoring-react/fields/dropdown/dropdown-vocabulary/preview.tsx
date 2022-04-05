@@ -1,3 +1,4 @@
+import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 import {SpacerInlineFlex} from 'core/ui/components/Spacer';
 import * as React from 'react';
 import {IPreviewComponentProps} from 'superdesk-api';
@@ -13,7 +14,8 @@ export class PreviewVocabulary extends React.PureComponent<IProps> {
         const options = getOptions(config);
         const optionsToPreview =
             (Array.isArray(value) ? value : [value])
-                .map((val) => options.find((_option) => _option.id === val));
+                .map((val) => options.lookup[val]?.value)
+                .filter(notNullOrUndefined);
         const noPadding = optionsToPreview.every(({color}) => color == null);
 
         return (

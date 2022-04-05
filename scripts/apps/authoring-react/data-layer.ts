@@ -11,7 +11,6 @@ import {AutoSaveHttp} from './auto-save-http';
 import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
-import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {getFieldsAdapter} from './field-adapters';
 import {IOldCustomFieldId} from './interfaces';
 import {getArticleAdapter} from './article-adapter';
@@ -27,11 +26,10 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
     return Promise.all([
         getLabelNameResolver(),
-        getCustomFieldVocabularies(),
         ng.get('content').setupAuthoring(item.profile, fakeScope, item),
     ]).then((res) => {
-        const [getLabelForFieldId, customFieldVocabularies] = res;
-        const fieldsAdapter = getFieldsAdapter(customFieldVocabularies);
+        const [getLabelForFieldId] = res;
+        const fieldsAdapter = getFieldsAdapter();
 
         const {editor, fields, schema} = fakeScope;
 
@@ -143,6 +141,7 @@ export function omitFields(
         'original_id',
         'ingest_version',
         'refs',
+        'linked_in_packages',
     ];
 
     const baseApiFields = [
@@ -165,11 +164,8 @@ export const authoringStorage: IAuthoringStorage = {
     getArticle: (id) => {
         // TODO: take published items into account
 
-        return Promise.all([
-            dataApi.findOne<IArticle>('archive', id),
-            getArticleAdapter(),
-        ]).then((res) => {
-            const [_saved, adapter] = res;
+        return dataApi.findOne<IArticle>('archive', id).then((_saved) => {
+            const adapter = getArticleAdapter();
 
             const saved = adapter.toAuthoringReact(_saved);
 
@@ -191,61 +187,55 @@ export const authoringStorage: IAuthoringStorage = {
         });
     },
     lock: (id: IArticle['_id']) => {
-        return Promise.all([
-            sdApi.article.lock(id),
-            getArticleAdapter(),
-        ]).then((res) => {
-            const [article, adapter] = res;
+        return sdApi.article.lock(id).then((article) => {
+            const adapter = getArticleAdapter();
 
             return adapter.toAuthoringReact(article);
         });
     },
     unlock: (id: IArticle['_id']) => {
-        return Promise.all([
-            sdApi.article.unlock(id),
-            getArticleAdapter(),
-        ]).then((res) => {
-            const [article, adapter] = res;
+        return sdApi.article.unlock(id).then((article) => {
+            const adapter = getArticleAdapter();
 
             return adapter.toAuthoringReact(article);
         });
     },
     saveArticle: (current, original) => {
-        return getArticleAdapter().then((adapter) => {
-            return authoringApiCommon.saveBefore(current, original).then((_current) => {
-                const id = original._id;
-                const etag = original._etag;
+        const adapter = getArticleAdapter();
 
-                let diff = generatePatch(original, _current);
+        return authoringApiCommon.saveBefore(current, original).then((_current) => {
+            const id = original._id;
+            const etag = original._etag;
 
-                // when object has changes, send entire object to avoid server dropping keys
-                if (diff.fields_meta != null) {
-                    diff.fields_meta = _current.fields_meta;
-                }
+            let diff = generatePatch(original, _current);
 
-                // when object has changes, send entire object to avoid server dropping keys
-                if (diff.extra != null) {
-                    diff.extra = _current.extra;
-                }
+            // when object has changes, send entire object to avoid server dropping keys
+            if (diff.fields_meta != null) {
+                diff.fields_meta = _current.fields_meta;
+            }
 
-                diff = adapter.fromAuthoringReact(diff);
+            // when object has changes, send entire object to avoid server dropping keys
+            if (diff.extra != null) {
+                diff.extra = _current.extra;
+            }
 
-                const queryString = appConfig.features.publishFromPersonal === true
-                    ? '?publish_from_personal=true'
-                    : '';
+            diff = adapter.fromAuthoringReact(diff);
 
-                return httpRequestJsonLocal<IArticle>({
-                    method: 'PATCH',
-                    path: `/archive/${id}${queryString}`,
-                    payload: omitFields(diff),
-                    headers: {
-                        'If-Match': etag,
-                    },
-                }).then((next) => {
-                    authoringApiCommon.saveAfter(next, original);
+            const queryString = appConfig.features.publishFromPersonal === true
+                ? '?publish_from_personal=true'
+                : '';
 
-                    return adapter.toAuthoringReact(next);
-                });
+            return httpRequestJsonLocal<IArticle>({
+                method: 'PATCH',
+                path: `/archive/${id}${queryString}`,
+                payload: omitFields(diff),
+                headers: {
+                    'If-Match': etag,
+                },
+            }).then((next) => {
+                authoringApiCommon.saveAfter(next, original);
+
+                return adapter.toAuthoringReact(next);
             });
         });
     },

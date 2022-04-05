@@ -4,6 +4,7 @@ import {gettext} from 'core/utils';
 import {IDropdownConfigVocabulary} from '..';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
 import {authoringStorage} from 'apps/authoring-react/data-layer';
+import {sdApi} from 'api';
 
 type IDropdownConfig = IDropdownConfigVocabulary;
 
@@ -30,7 +31,9 @@ export class ConfigFromVocabulary extends React.PureComponent<IConfigComponentPr
                 <SelectFilterable
                     items={
                         authoringStorage.getVocabularies().toArray()
-                            .filter(({field_type}) => field_type == null)
+                            .filter(
+                                (vocabulary) => !sdApi.vocabularies.isCustomFieldVocabulary(vocabulary),
+                            )
                     }
                     value={authoringStorage.getVocabularies().get(this.props.config.vocabularyId)}
                     onChange={(vocabulary) => {

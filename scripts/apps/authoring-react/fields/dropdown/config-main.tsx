@@ -21,7 +21,7 @@ export class Config extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            source: props.config?.source ?? 'manual-entry',
+            source: props.config?.source ?? 'vocabulary',
             previewValue: undefined,
         };
     }
@@ -73,12 +73,12 @@ export class Config extends React.PureComponent<IProps, IState> {
                 <TabList
                     tabs={[
                         {
-                            id: sourceManualEntry,
-                            label: gettext('Manual entry'),
-                        },
-                        {
                             id: sourceVocabulary,
                             label: gettext('Vocabulary'),
+                        },
+                        {
+                            id: sourceManualEntry,
+                            label: gettext('Manual entry'),
                         },
                     ]}
                     selected={this.state.source}

@@ -5,6 +5,7 @@ import {IDifferenceComponentProps} from 'superdesk-api';
 import {DifferenceGeneric} from '../../difference-generic';
 import {IDropdownConfigVocabulary, IDropdownOption, IDropdownValue} from '..';
 import {getOptions} from './get-options';
+import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 
 type IProps = IDifferenceComponentProps<IDropdownValue, IDropdownConfigVocabulary>;
 
@@ -21,11 +22,13 @@ export class DifferenceVocabulary extends React.PureComponent<IProps> {
 
         const values1: Array<IDropdownOption> =
             (Array.isArray(value1) ? value1 : [value1])
-                .map((val) => options.find((_option) => _option.id === val));
+                .map((val) => options.lookup[val]?.value)
+                .filter(notNullOrUndefined);
 
         const values2: Array<IDropdownOption> =
             (Array.isArray(value2) ? value2 : [value2])
-                .map((val) => options.find((_option) => _option.id === val));
+                .map((val) => options.lookup[val]?.value)
+                .filter(notNullOrUndefined);
 
         return (
             <DifferenceGeneric
