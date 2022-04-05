@@ -8,7 +8,7 @@ import {IArticle, ISuperdesk} from 'superdesk-api';
 import {getTagsListComponent} from './tag-list';
 import {getNewItemComponent} from './new-item';
 import {ITagUi} from './types';
-import {toClientFormat, IServerResponse} from './adapter';
+import {toClientFormat, IServerResponse, toServerFormat} from './adapter';
 import {SOURCE_IMATRICS} from './constants';
 import {getGroups} from './groups';
 import {getAutoTaggingVocabularyLabels} from './common';
@@ -181,6 +181,7 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
             this.createNewTag = this.createNewTag.bind(this);
             this.insertTagFromSearch = this.insertTagFromSearch.bind(this);
             this.reload = this.reload.bind(this);
+            this.save = this.save.bind(this);
             this.isDirty = memoize((a, b) => Object.keys(generatePatch(a, b)).length > 0);
         }
         runAnalysis() {
@@ -311,6 +312,43 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
 
             this.initializeData(false);
         }
+        save() {
+            const {data} = this.state;
+
+            if (data === 'loading' || data === 'not-initialized') {
+                return;
+            }
+
+            superdesk.entities.article.patch(
+                this.props.article,
+                createTagsPatch(this.props.article, data.changes.analysis, superdesk),
+            ).then(() => {
+                this.reload();
+                this.sendFeedback(this.props.article, data.changes.analysis);
+            });
+        }
+        sendFeedback(article: IArticle, tags: IAutoTaggingResponse['analysis']): Promise<any> {
+            const {guid, language, headline, body_html, abstract} = article;
+
+            return httpRequestJsonLocal<{analysis: IServerResponse}>({
+                method: 'POST',
+                path: '/ai_data_op/',
+                payload: {
+                    service: 'imatrics',
+                    operation: 'feedback',
+                    data: {
+                        item: {
+                            guid,
+                            language,
+                            headline,
+                            body_html,
+                            abstract,
+                        },
+                        tags: toServerFormat(tags, superdesk),
+                    },
+                },
+            });
+        }
         componentDidMount() {
             this._mounted = true;
 
@@ -397,23 +435,14 @@ export function getAutoTaggingComponent(superdesk: ISuperdesk, label: string) {
                                 <div>
                                     <button
                                         className="btn btn--primary"
-                                        onClick={() => {
-                                            superdesk.entities.article.patch(
-                                                this.props.article,
-                                                createTagsPatch(this.props.article, data.changes.analysis, superdesk),
-                                            ).then(() => {
-                                                this.reload();
-                                            });
-                                        }}
+                                        onClick={this.save}
                                     >
                                         {gettext('Save')}
                                     </button>
 
                                     <button
                                         className="btn"
-                                        onClick={() => {
-                                            this.reload();
-                                        }}
+                                        onClick={this.reload}
                                     >
                                         {gettext('Cancel')}
                                     </button>
