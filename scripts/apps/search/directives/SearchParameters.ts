@@ -485,33 +485,6 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
                 }
             };
 
-            /*
-            * Functions for content Type (Belga 360)
-            */
-            function initializeTypes(item) {
-                scope.selecteditems.types = [];
-                if (item) {
-                    item.forEach((keyword) => {
-                        scope.selecteditems.types.push({'name': keyword, 'qcode': keyword, scheme: null});
-                    });
-                }
-            }
-            scope.setParamsTypes = function(items, type) {
-                scope.params['types'] = [];
-                if (items[type].length) {
-                    scope.fields[type] = items[type];
-                    items[type].forEach((item) => {
-                        scope.params['types'].push(item.name);
-                    },
-                    );
-                } else {
-                    delete scope.params.types;
-                    delete scope.fields[type];
-                }
-            };
-
-            initializeTypes(scope.params['types']);
-
             scope.getTemplate = (providerType) => `search-panel-${providerType}.html`;
 
             scope.hasTemplate = (providerType) =>
