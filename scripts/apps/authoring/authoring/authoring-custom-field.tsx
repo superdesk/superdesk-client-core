@@ -100,8 +100,8 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                             onChange={(value) => this.setValue(value)}
                             readOnly={!editable}
                             config={field.custom_field_config}
-                            userPreferences={preferencesForFields[field._id]}
-                            onUserPreferencesChange={(val) => {
+                            editorPreferences={preferencesForFields[field._id]}
+                            onEditorPreferencesChange={(val) => {
                                 const nextFieldPreferences = {
                                     ...preferencesForFields,
                                     [field._id]: val,

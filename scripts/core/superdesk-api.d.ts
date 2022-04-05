@@ -2410,7 +2410,7 @@ declare module 'superdesk-api' {
         miniToolbar?: JSX.Element;
     }
 
-    export interface IEditorComponentProps<IValue, IConfig, IUserPreferences> {
+    export interface IEditorComponentProps<IValue, IConfig, IEditorPreferences> {
         /**
          * editorId is needed in order for certain actions to only be applied to
          * a particular editor in case many are present at once e.g. find and replace
@@ -2430,8 +2430,13 @@ declare module 'superdesk-api' {
         readOnly: boolean;
         language: string;
         config: IConfig;
-        userPreferences: IUserPreferences | undefined;
-        onUserPreferencesChange(userPreferences: IUserPreferences): void;
+
+        /**
+         * Allow persisting editor-specific settings,
+         * for example whether to highlight characters that exceed the limit or block further typing.
+         */
+        editorPreferences: IEditorPreferences | undefined;
+        onEditorPreferencesChange(userPreferences: IEditorPreferences): void;
 
         /**
          * Returns a subset of vocabulary items that are available for use.

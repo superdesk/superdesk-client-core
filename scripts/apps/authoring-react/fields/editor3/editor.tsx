@@ -76,7 +76,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         }
 
         return {
-            ui: this.props.userPreferences.characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT,
+            ui: this.props.editorPreferences.characterLimitMode ?? DEFAULT_UI_FOR_EDITOR_LIMIT,
             chars: this.props.config.maxLength,
         };
     }
@@ -233,7 +233,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
             this.props.config !== prevProps.config
             || this.props.readOnly !== prevProps.readOnly
             || this.props.config.readOnly !== prevProps.config.readOnly
-            || this.props.userPreferences !== prevProps.userPreferences
+            || this.props.editorPreferences !== prevProps.editorPreferences
             || this.props.language !== prevProps.language
         ) {
             this.syncPropsWithReduxStore();
@@ -287,7 +287,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
                                                         ui: ui,
                                                     };
 
-                                                    this.props.onUserPreferencesChange({
+                                                    this.props.onEditorPreferencesChange({
                                                         characterLimitMode: ui,
                                                     });
 
