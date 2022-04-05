@@ -762,9 +762,20 @@ declare module 'superdesk-api' {
         qcode?: string;
         color?: string;
         is_active?: boolean;
+
+        /**
+         * `service` field enables dependent fields when selecting values from vocabularies in authoring.
+         * Dependent fields mean that available values for one field depend on a value of another field.
+         * The main field is anpa_category and it doesn't have `service` property.
+         * Items in other vocabularies may specify which `anpa_category` needs to be selected
+         * in order for certain vocabulary items to be selectable.
+         * For example, if a vocabulary item has `service: {"arts": 1}`, it will only be available for selection
+         * if authoring field with ID `anpa_category` has item with qcode "arts" selected.
+         */
         service?: {
             [qcode: string]: 1;
         };
+
         parent?: string;
         translations?: {
             name?: {
