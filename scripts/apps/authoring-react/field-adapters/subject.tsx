@@ -35,7 +35,7 @@ export function getSubjectAdapter(): IFieldAdapter {
                 getItems,
                 getLabel: (item: ISubjectCode) => item.name,
                 getId: (item: ISubjectCode) => item.qcode,
-                canSelectBranchWithChildren: () => false,
+                canSelectBranchWithChildren: () => true,
                 multiple: true,
             };
 
