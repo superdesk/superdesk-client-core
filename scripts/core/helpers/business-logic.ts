@@ -3,7 +3,7 @@ import ng from 'core/services/ng';
 import {sdApi} from 'api';
 
 export function getCustomFieldVocabularies(): Array<IVocabulary> {
-    const allVocabularies: Array<IVocabulary> = ng.get('vocabularies').getAllVocabulariesSync().toArray();
+    const allVocabularies: Array<IVocabulary> = ng.get('vocabularies').getAllVocabulariesSync();
 
     return allVocabularies.filter((vocabulary) => sdApi.vocabularies.isCustomFieldVocabulary(vocabulary));
 }

@@ -40,10 +40,9 @@ export class FullPreview extends React.Component<IProps, IState> {
     componentDidMount() {
         dispatchCustomEvent('articlePreviewStart', this.props.item);
 
-        Promise.all([
-            getCustomFieldVocabularies(),
-            getLabelNameResolver(),
-        ]).then(([customFieldVocabularies, getLabel]) => {
+        getLabelNameResolver().then((getLabel) => {
+            const customFieldVocabularies = getCustomFieldVocabularies();
+
             this.getLabel = getLabel;
 
             this.setState({
