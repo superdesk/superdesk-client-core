@@ -357,8 +357,8 @@ export function ContentService(api, templates, desks, packages: IPackagesService
     /**
      * Setup authoring scope for item
      */
-    this.setupAuthoring = (profileId, scope, item) => {
-        if (profileId == null) {
+    this.setupAuthoring = (profileId, scope, item: IArticle) => {
+        if (profileId == null && item.type !== 'composite') {
             throw new Error('profile ID must be provided');
         }
 

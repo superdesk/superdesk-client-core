@@ -35,6 +35,7 @@ interface IScope extends ng.IScope {
     articleEdit: any;
     dirty: boolean;
     extra: any;
+    refreshTrigger: number;
     autosave(item: any): any;
     modifySignOff(item: any): void;
     updateDateline(item: any, city: any): void;
@@ -409,6 +410,7 @@ export function ArticleEditDirective(
                         scope.item.body_footer = scope.item.body_footer + scope.extra.body_footer_value.value;
                         mainEditScope.dirty = true;
                         autosave.save(scope.item, scope.origItem);
+                        scope.refreshTrigger++;
                     }
 
                     scope.refresh(); // reload footer editorState from HTML that was set here
