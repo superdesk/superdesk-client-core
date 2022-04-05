@@ -184,14 +184,22 @@ export function AuthoringDirective(
              * Get the Current Template for the item.
             */
             function getCurrentTemplate() {
-                if (typeof $scope.item?.template !== 'string') {
-                    logger.error(new Error('template must be present'));
-                    return;
+                const item: IArticle | null = $scope.item;
+
+                if (item.type === 'composite') {
+                    $scope.currentTemplate = {};
+                } else {
+                    if (typeof item?.template !== 'string') {
+                        logger.error(new Error('template must be present'));
+                        $scope.currentTemplate = {};
+                        return;
+                    }
+
+                    api('content_templates').getById(item.template)
+                        .then((result) => {
+                            $scope.currentTemplate = result;
+                        });
                 }
-                api('content_templates').getById($scope.item.template)
-                    .then((result) => {
-                        $scope.currentTemplate = result;
-                    });
             }
 
             /**
