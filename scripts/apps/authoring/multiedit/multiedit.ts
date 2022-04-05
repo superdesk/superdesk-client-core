@@ -13,7 +13,7 @@ import {isPublished} from 'apps/archive/utils';
 import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {isMediaType} from 'core/helpers/item';
-import {mediaIdGenerator} from '../authoring/services/MediaIdGeneratorService';
+import {InitializeMedia} from '../authoring/services/InitializeMediaService';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -191,20 +191,6 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                 }
             });
 
-            scope.getNewMediaFieldId = (fieldId) => {
-                var field = _.find(scope.fields, (_field) => _field._id === fieldId);
-                var multipleItems = field ? _.get(field, 'field_options.multiple_items.enabled') : false;
-                var parts = mediaIdGenerator.getFieldParts(fieldId);
-                var newIndex = multipleItems ? 1 : null;
-
-                if (_.has(mediaFields, parts[0])) {
-                    var fieldVersions = mediaFields[parts[0]];
-
-                    newIndex = fieldVersions.length ? 1 + fieldVersions[0] : 1;
-                }
-                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex == null ? null : newIndex.toString());
-            };
-
             function openItem() {
                 authoring.open(scope.article).then((item) => {
                     scope.origItem = item;
@@ -220,7 +206,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
 
                     content.setupAuthoring(scope.item.profile, scope, scope.item).then((contentType) => {
                         scope.contentType = contentType;
-                        initMedia();
+                        InitializeMedia.initMedia(scope);
                     });
                 });
             }
@@ -233,7 +219,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     .then(
                         () => {
                             scope.$applyAsync(() => {
-                                initMedia();
+                                InitializeMedia.initMedia(scope);
                                 notify.success(gettext('Item updated.'));
                             });
                         });
@@ -249,7 +235,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
             scope.save = function() {
                 return authoring.save(scope.origItem, cloneDeep(scope.item)).then((res) => {
                     scope.dirty = false;
-                    initMedia();
+                    InitializeMedia.initMedia(scope);
 
                     notify.success(gettext('Item updated.'));
 
@@ -266,78 +252,6 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     return isPublished(item);
                 }
             };
-
-            function isMediaField(fieldId) {
-                var parts = mediaIdGenerator.getFieldParts(fieldId);
-                var field = _.find(scope.fields, (_field) => _field._id === parts[0]);
-
-                return field && field.field_type === 'media';
-            }
-
-            function computeMediaFieldVersions(fieldId) {
-                scope.mediaFieldVersions[fieldId] = [];
-                var field = _.find(scope.fields, (_field) => _field._id === fieldId);
-
-                if (field) {
-                    var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
-                    var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
-
-                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length <= maxItems) {
-                        addMediaFieldVersion(fieldId, scope.getNewMediaFieldId(fieldId));
-                    }
-                    _.forEach(mediaFields[fieldId], (version) => {
-                        addMediaFieldVersion(fieldId, mediaIdGenerator.getFieldVersionName(fieldId, version));
-                    });
-                }
-            }
-
-            function addMediaFieldVersion(fieldId, fieldVersion) {
-                var field = {fieldId: fieldVersion};
-
-                if (_.has(scope.item.associations, fieldVersion)) {
-                    field[fieldVersion] = scope.item.associations[fieldVersion];
-                } else {
-                    field[fieldVersion] = null;
-                }
-                scope.mediaFieldVersions[fieldId].push(field);
-            }
-
-            function addMediaField(fieldId) {
-                var [rootField, index] = mediaIdGenerator.getFieldParts(fieldId);
-
-                if (!_.has(mediaFields, rootField)) {
-                    mediaFields[rootField] = [];
-                }
-                mediaFields[rootField].push(index);
-                mediaFields[rootField].sort((a, b) => {
-                    if (b === null || b === undefined) {
-                        return -1;
-                    }
-                    if (a === null || a === undefined) {
-                        return 1;
-                    }
-                    return b - a;
-                });
-            }
-
-            function initMedia() {
-                mediaFields = {};
-                scope.mediaFieldVersions = {};
-                _.forEach(scope.item.associations, (association, fieldId) => {
-                    if (association && _.findIndex(MEDIA_TYPES, (type) => type === association.type) !== -1
-                        && isMediaField(fieldId)) {
-                        addMediaField(fieldId);
-                    }
-                });
-
-                if (scope.contentType && scope.contentType.schema) {
-                    _.forEach(scope.fields, (field) => {
-                        if (isMediaField(field._id)) {
-                            computeMediaFieldVersions(field._id);
-                        }
-                    });
-                }
-            }
         },
     };
 }
