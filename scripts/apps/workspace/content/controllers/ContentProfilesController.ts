@@ -30,6 +30,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         $scope.editing.form.widgets_config = nextWidgetsConfig;
         $scope.$applyAsync(() => {
             $scope.ngForm.$dirty = true;
+            this.savingInProgress = true;
         });
     };
 
@@ -150,7 +151,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         var e = $scope.editing;
         var diff = {};
 
-        $scope.ngForm.$dirty = false;
+        this.savingInProgress = false;
         Object.keys(e.form).forEach((k) => {
             if (!isEqual(e.form[k], e.original[k])) {
                 diff[k] = e.form[k];
