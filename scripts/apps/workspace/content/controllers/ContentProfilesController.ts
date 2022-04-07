@@ -30,7 +30,6 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         $scope.editing.form.widgets_config = nextWidgetsConfig;
         $scope.$applyAsync(() => {
             $scope.ngForm.$dirty = true;
-            this.savingInProgress = true;
         });
     };
 
@@ -151,7 +150,7 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         var e = $scope.editing;
         var diff = {};
 
-        this.savingInProgress = false;
+        this.savingInProgress = true;
         Object.keys(e.form).forEach((k) => {
             if (!isEqual(e.form[k], e.original[k])) {
                 diff[k] = e.form[k];
@@ -160,7 +159,8 @@ export function ContentProfilesController($scope, $location, notify, content, mo
 
         content.updateProfile(e.original, diff)
             .then(refreshList.bind(this, false), reportError)
-            .then(this.toggleEdit.bind(this, null));
+            .then(this.toggleEdit.bind(this, null))
+            .then(this.savingInProgress = false);
     };
 
     /**
