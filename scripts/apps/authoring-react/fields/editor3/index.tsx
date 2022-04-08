@@ -20,6 +20,7 @@ import {Difference} from './difference';
 import {Preview} from './preview';
 import {Config} from './config';
 import {Editor} from './editor';
+import {replaceAllForEachBlock} from 'core/editor3/helpers/find-replace';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -54,9 +55,19 @@ export function getEditor3Field(): ICustomFieldType<IEditor3Value, IEditor3Confi
         },
 
         storeValue: (fieldId, article, value, config) => {
-            const contentState = prepareEditor3StateForExport(
+            let contentState = prepareEditor3StateForExport(
                 value.store.getState().editorState.getCurrentContent(),
             );
+
+            // trim whitespace at the beginning of each block
+            contentState = replaceAllForEachBlock(contentState, /^\s+/g, '');
+
+            // trim whitespace at the end of each block
+            contentState = replaceAllForEachBlock(contentState, /\s+$/g, '');
+
+            // replace multiple spaces with a single space
+            contentState = replaceAllForEachBlock(contentState, /\s\s+/g, ' ');
+
             const rawContentState = convertToRaw(contentState);
 
             const generatedValue = (() => {

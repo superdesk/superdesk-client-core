@@ -1,4 +1,4 @@
-import {Modifier, EditorState, EditorChangeType, SelectionState} from 'draft-js';
+import {Modifier, EditorState, EditorChangeType, SelectionState, ContentState} from 'draft-js';
 import {getData, setDataForContent, getCell, setCell} from './table';
 import {escapeRegExp} from 'core/utils';
 
@@ -245,3 +245,38 @@ const createSelection = (key: string, start: number, end: number): SelectionStat
         anchorOffset: start,
         focusOffset: end,
     }) as SelectionState;
+
+export function replaceAllForEachBlock(
+    contentState: ContentState,
+    regex: RegExp, // a global regex must be passed
+    replaceWith: string,
+): ContentState {
+    let result: ContentState = contentState;
+
+    for (const block of contentState.getBlocksAsArray()) {
+        const blockKey = block.getKey();
+
+        const matches: Array<{index: number; text: string}> =
+            Array.from(block.getText().matchAll(regex))
+                .map((match) => ({index: match.index, text: match[0]}));
+
+        let offsetCorrection = 0;
+
+        const correctOffset = (n) => n + offsetCorrection;
+
+        for (const match of matches) {
+            const rangeToReplace = new SelectionState({
+                anchorKey: blockKey,
+                anchorOffset: correctOffset(match.index),
+                focusKey: blockKey,
+                focusOffset: correctOffset(match.index + match.text.length),
+            });
+
+            result = Modifier.replaceText(result, rangeToReplace, replaceWith);
+
+            offsetCorrection += replaceWith.length - match.text.length;
+        }
+    }
+
+    return result;
+}
