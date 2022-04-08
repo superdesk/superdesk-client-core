@@ -20,6 +20,7 @@ import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {sdApi} from 'api';
 import {headline} from './headline';
 import {abstract} from './abstract';
+import {ednote} from './ednote';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -44,6 +45,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
         anpa_category: anpa_category,
         authors: authors,
         body_html: body_html,
+        ednote: ednote,
         genre: genre,
         headline: headline,
         language: language,
