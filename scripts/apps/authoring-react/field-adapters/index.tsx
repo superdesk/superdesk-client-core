@@ -18,6 +18,8 @@ import {getSubjectAdapter} from './subject';
 import {anpa_category} from './anpa_category';
 import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {sdApi} from 'api';
+import {headline} from './headline';
+import {abstract} from './abstract';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -38,10 +40,12 @@ type IFieldsAdapter = {[key: string]: IFieldAdapter};
 export function getFieldsAdapter(): IFieldsAdapter {
     const customFieldVocabularies = getCustomFieldVocabularies();
     const adapter: IFieldsAdapter = {
+        abstract: abstract,
         anpa_category: anpa_category,
         authors: authors,
         body_html: body_html,
         genre: genre,
+        headline: headline,
         language: language,
         place: getPlaceAdapter(),
         priority: priority,
