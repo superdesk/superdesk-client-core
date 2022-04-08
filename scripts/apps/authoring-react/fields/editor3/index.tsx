@@ -3,7 +3,7 @@ import {
     IArticle,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {convertToRaw, ContentState} from 'draft-js';
+import {convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
 import createEditorStore, {
     prepareEditor3StateForExport,
     getAnnotationsForField,
@@ -21,6 +21,7 @@ import {Preview} from './preview';
 import {Config} from './config';
 import {Editor} from './editor';
 import {replaceAllForEachBlock} from 'core/editor3/helpers/find-replace';
+import {getFieldsAdapter} from 'apps/authoring-react/field-adapters';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
@@ -36,11 +37,31 @@ export function getEditor3Field(): ICustomFieldType<IEditor3Value, IEditor3Confi
         configComponent: Config,
 
         retrieveStoredValue: (fieldId, article) => {
-            const rawContentState = article.fields_meta?.[fieldId]?.['draftjsState'][0];
+            const rawContentState: RawDraftContentState = (() => {
+                const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState'][0];
+                const fieldsAdapter = getFieldsAdapter();
+
+                if (fromFieldsMeta != null) {
+                    return fromFieldsMeta;
+                } else if (
+                    fieldsAdapter[fieldId] != null
+                    && typeof article[fieldId] === 'string'
+                    && article[fieldId].length > 0
+                ) {
+                    /**
+                     * This is only for compatibility with angular based authoring.
+                     * create raw content state in case only text value is present.
+                     */
+
+                    return convertToRaw(ContentState.createFromText(article[fieldId]));
+                } else {
+                    return convertToRaw(ContentState.createFromText(''));
+                }
+            })();
 
             const store = createEditorStore(
                 {
-                    editorState: rawContentState ?? convertToRaw(ContentState.createFromText('')),
+                    editorState: rawContentState,
                     onChange: noop,
                     language: article.language,
                 },
