@@ -160,7 +160,9 @@ export function ContentProfilesController($scope, $location, notify, content, mo
         content.updateProfile(e.original, diff)
             .then(refreshList.bind(this, false), reportError)
             .then(this.toggleEdit.bind(this, null))
-            .then(this.savingInProgress = false);
+            .then(() => {
+                this.savingInProgress = false;
+            });
     };
 
     /**
