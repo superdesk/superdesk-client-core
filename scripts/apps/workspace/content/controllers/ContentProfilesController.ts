@@ -7,7 +7,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 
 export enum IContentProfileType {
     text = 'text',
-    image = 'image',
+    picture = 'picture',
     audio = 'audio',
     video = 'video',
 }
@@ -40,7 +40,7 @@ function getContentProfileIcon(type: IContentProfileType): string {
     switch (type) {
     case IContentProfileType.text:
         return 'icon-text';
-    case IContentProfileType.image:
+    case IContentProfileType.picture:
         return 'icon-picture';
     case IContentProfileType.audio:
         return 'icon-audio';
@@ -55,8 +55,8 @@ function getLabelForContentProfileType(type: IContentProfileType): string {
     switch (type) {
     case IContentProfileType.text:
         return gettext('Text');
-    case IContentProfileType.image:
-        return gettext('Image');
+    case IContentProfileType.picture:
+        return gettext('Picture');
     case IContentProfileType.audio:
         return gettext('Audio');
     case IContentProfileType.video:
