@@ -1,5 +1,4 @@
 import {IArticle} from 'superdesk-api';
-import {getFieldsAdapter} from './field-adapters';
 import {getCustomFieldVocabularies} from 'core/helpers/business-logic';
 import {IOldCustomFieldId} from './interfaces';
 
@@ -27,7 +26,6 @@ interface IAuthoringReactArticleAdapter {
  */
 export function getArticleAdapter(): IAuthoringReactArticleAdapter {
     const customFieldVocabularies = getCustomFieldVocabularies();
-    const fieldsAdapter = getFieldsAdapter();
 
     const oldFormatCustomFieldIds: Set<IOldCustomFieldId> = new Set(
         customFieldVocabularies
@@ -35,42 +33,10 @@ export function getArticleAdapter(): IAuthoringReactArticleAdapter {
             .map((vocabulary) => vocabulary._id),
     );
 
-    const rootFieldsToMove =
-        Object.keys(fieldsAdapter)
-            .filter((fieldId) => oldFormatCustomFieldIds.has(fieldId) !== true);
-
     const adapter: IAuthoringReactArticleAdapter = {
         fromAuthoringReact: (_article) => {
             // making a copy in order to do immutable updates
             let article = {..._article};
-
-            // move fields to article root (except for fields with a custom adapter)
-            if (_article.extra != null) {
-                article.extra = {..._article.extra ?? {}};
-
-                for (const fieldId of rootFieldsToMove) {
-                    const fieldHasCustomAdapter = fieldsAdapter[fieldId]?.saveData != null;
-
-                    if (!fieldHasCustomAdapter && article.extra.hasOwnProperty(fieldId)) {
-                        article[fieldId] = article.extra[fieldId];
-
-                        delete article.extra[fieldId];
-                    }
-                }
-            }
-
-            // run field adapters
-            for (const fieldId of Object.keys(fieldsAdapter)) {
-                const fieldAdapter = fieldsAdapter[fieldId];
-
-                if (fieldAdapter?.saveData != null && (article.extra?.hasOwnProperty(fieldId) ?? false)) {
-                    const fieldValue = article.extra[fieldId];
-
-                    delete article.extra[fieldId];
-
-                    article = fieldAdapter.saveData(fieldValue, article);
-                }
-            }
 
             // Add prefixes
             for (const fieldId of Array.from(oldFormatCustomFieldIds)) {
@@ -88,38 +54,8 @@ export function getArticleAdapter(): IAuthoringReactArticleAdapter {
         toAuthoringReact: (_article) => {
             let article = {..._article}; // ensure immutability
 
-            if (_article.extra != null) { // ensure immutability
-                article.extra = {..._article.extra};
-            }
-
             if (_article.fields_meta != null) { // ensure immutability
                 article.fields_meta = {..._article.fields_meta};
-            }
-
-            // Moving fields from authoring root to extra (except for fields with a custom adapter)
-            for (const fieldId of rootFieldsToMove) {
-                const fieldHasCustomAdapter = fieldsAdapter[fieldId]?.getSavedData != null;
-
-                if (!fieldHasCustomAdapter && article.hasOwnProperty(fieldId)) {
-                    if (article.extra == null) {
-                        article.extra = {};
-                    }
-
-                    article.extra[fieldId] = article[fieldId];
-                }
-            }
-
-            // run field adapters
-            for (const fieldId of Object.keys(fieldsAdapter)) {
-                const fieldAdapter = fieldsAdapter[fieldId];
-
-                if (fieldAdapter?.getSavedData != null) {
-                    if (article.extra == null) {
-                        article.extra = {};
-                    }
-
-                    article.extra[fieldId] = fieldAdapter.getSavedData(article);
-                }
             }
 
             // remove prefixes

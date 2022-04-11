@@ -53,6 +53,7 @@ import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
+import {getFieldsAdapter} from './field-adapters';
 
 export function getFieldsData(
     item: IArticle,
@@ -62,8 +63,12 @@ export function getFieldsData(
     return fields.map((field) => {
         const fieldEditor = getField(field.fieldType);
 
+        const fieldsAdapter = getFieldsAdapter();
+
         const storageValue = (() => {
-            if (fieldEditor.retrieveStoredValue != null) {
+            if (fieldsAdapter[field.id]?.getSavedData != null) {
+                return fieldsAdapter[field.id].getSavedData(item);
+            } else if (fieldEditor.retrieveStoredValue != null) {
                 return fieldEditor.retrieveStoredValue(
                     field.id,
                     item,
@@ -102,6 +107,7 @@ function serializeFieldsDataAndApplyOnArticle(
     fieldsProfile.forEach((field) => {
         const fieldEditor = getField(field.fieldType);
         const valueOperational = fieldsData.get(field.id);
+        const fieldsAdapter = getFieldsAdapter();
 
         const storageValue = (() => {
             if (fieldEditor.toStorageFormat != null) {
@@ -114,7 +120,9 @@ function serializeFieldsDataAndApplyOnArticle(
             }
         })();
 
-        if (fieldEditor.storeValue != null) {
+        if (fieldsAdapter[field.id]?.saveData != null) {
+            result = fieldsAdapter[field.id].saveData(storageValue, result);
+        } else if (fieldEditor.storeValue != null) {
             result = fieldEditor.storeValue(
                 field.id,
                 result,
