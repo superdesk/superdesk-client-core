@@ -45,10 +45,10 @@ export const urgency: IFieldAdapter = {
 
         return fieldV2;
     },
-    getSavedData: (article) => {
+    retrieveStoredValue: (article) => {
         return article.urgency;
     },
-    saveData: (value, article) => {
+    storeValue: (value, article) => {
         return {
             ...article,
             urgency: value,

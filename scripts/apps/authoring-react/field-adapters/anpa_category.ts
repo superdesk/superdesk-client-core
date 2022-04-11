@@ -29,7 +29,7 @@ export const anpa_category: IFieldAdapter = {
 
         return fieldV2;
     },
-    getSavedData: (article) => {
+    retrieveStoredValue: (article) => {
         const multiple = isMultipleV2(vocabularyId);
         const values = (article.anpa_category ?? []).map(({qcode}) => qcode);
 
@@ -39,7 +39,7 @@ export const anpa_category: IFieldAdapter = {
             return values[0] ?? null;
         }
     },
-    saveData: (val: IDropdownValue, article) => {
+    storeValue: (val: IDropdownValue, article) => {
         const vocabulary = authoringStorage.getVocabularies().get(vocabularyId);
 
         const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(

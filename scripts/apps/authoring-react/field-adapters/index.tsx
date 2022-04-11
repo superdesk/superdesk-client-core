@@ -1,6 +1,7 @@
 import {
     IArticle,
     IAuthoringFieldV2,
+    ICustomFieldType,
     IVocabulary,
 } from 'superdesk-api';
 import {IDropdownConfigVocabulary} from '../fields/dropdown';
@@ -28,8 +29,15 @@ export interface IFieldAdapter {
         fieldSchema,
     ) => IAuthoringFieldV2;
 
-    saveData?<T extends Partial<IArticle>>(value: unknown, item: T): T;
-    getSavedData?<T extends Partial<IArticle>>(item: T): unknown;
+    /**
+     * If defined, {@link ICustomFieldType.storeValue} will not be used
+     */
+    storeValue?<T extends Partial<IArticle>>(value: unknown, item: T): T;
+
+    /**
+     * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
+     */
+    retrieveStoredValue?<T extends Partial<IArticle>>(item: T): unknown;
 }
 
 type IFieldsAdapter = {[key: string]: IFieldAdapter};
@@ -111,7 +119,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
 
                     return fieldV2;
                 },
-                getSavedData: (article): Array<string> | string => {
+                retrieveStoredValue: (article): Array<string> | string => {
                     const values = (article.subject ?? [])
                         .filter(({scheme}) => scheme === vocabulary._id)
                         .map(({qcode}) => {
@@ -124,7 +132,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
                         return values[0];
                     }
                 },
-                saveData: (val: string | Array<string>, article) => {
+                storeValue: (val: string | Array<string>, article) => {
                     interface IStorageFormat {
                         qcode: string;
                         name: string;

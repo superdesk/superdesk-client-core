@@ -2506,14 +2506,14 @@ declare module 'superdesk-api' {
          * HTML or plaintext version of the data in another location, and possibly annotations in third location.
          */
 
-        storeValue?(
+        storeValue?( // will only be used if IFieldAdapter['storeValue'] is not defined
             fieldId: string,
             article: IArticle,
             value: IValueStorage,
             config: IConfig,
             userPreferences: IUserPreferences,
         ): IArticle;
-        retrieveStoredValue?(
+        retrieveStoredValue?( // will only be used if IFieldAdapter['retrieveStoredValue'] is not defined
             fieldId: string,
             article: IArticle,
             config: IConfig,

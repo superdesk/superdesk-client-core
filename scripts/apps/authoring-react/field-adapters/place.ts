@@ -51,10 +51,10 @@ export function getPlaceAdapter(): IFieldAdapter {
 
                 return fieldV2;
             },
-            getSavedData: (article) => {
+            retrieveStoredValue: (article) => {
                 return article.place;
             },
-            saveData: (val: IDropdownValue, article) => {
+            storeValue: (val: IDropdownValue, article) => {
                 return {
                     ...article,
                     place: val,
@@ -83,7 +83,7 @@ export function getPlaceAdapter(): IFieldAdapter {
 
                 return fieldV2;
             },
-            getSavedData: (article) => {
+            retrieveStoredValue: (article) => {
                 const multiple = isMultipleV2('locators');
 
                 if (multiple) {
@@ -92,7 +92,7 @@ export function getPlaceAdapter(): IFieldAdapter {
                     return article.place.map(({qcode}) => qcode)[0];
                 }
             },
-            saveData: (val: IDropdownValue, article) => {
+            storeValue: (val: IDropdownValue, article) => {
                 const vocabulary = authoringStorage.getVocabularies().get('locators');
                 const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(
                     vocabulary.items.map((item) => [item.qcode, item]),

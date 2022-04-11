@@ -48,12 +48,12 @@ export function getSubjectAdapter(): IFieldAdapter {
 
             return fieldV2;
         },
-        getSavedData: (article): Array<ISubjectCode> => {
+        retrieveStoredValue: (article): Array<ISubjectCode> => {
             return (article.subject ?? [])
                 .filter(({scheme}) => scheme == null) // filter out custom vocabulary data
                 .map(({qcode, name, parent}) => ({qcode, name, parent}));
         },
-        saveData: (val: Array<ISubjectCode>, article) => {
+        storeValue: (val: Array<ISubjectCode>, article) => {
             interface IStorageFormat {
                 qcode: string;
                 name: string;

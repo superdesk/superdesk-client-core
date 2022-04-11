@@ -70,10 +70,10 @@ export const authors: IFieldAdapter = {
 
         return fieldV2;
     },
-    getSavedData: (article) => {
+    retrieveStoredValue: (article) => {
         return article.authors;
     },
-    saveData: (val: IDropdownValue, article) => {
+    storeValue: (val: IDropdownValue, article) => {
         return {...article, authors: val};
     },
 };

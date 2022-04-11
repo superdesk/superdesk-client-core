@@ -27,7 +27,7 @@ export const genre: IFieldAdapter = {
 
         return fieldV2;
     },
-    getSavedData: (article) => {
+    retrieveStoredValue: (article) => {
         const multiple = isMultiple('genre');
 
         if (multiple) {
@@ -36,7 +36,7 @@ export const genre: IFieldAdapter = {
             return article.genre.map(({qcode}) => qcode)[0];
         }
     },
-    saveData: (val: IDropdownValue, article) => {
+    storeValue: (val: IDropdownValue, article) => {
         const vocabulary = authoringStorage.getVocabularies().get('genre');
 
         const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(

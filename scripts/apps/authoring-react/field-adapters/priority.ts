@@ -46,10 +46,10 @@ export const priority: IFieldAdapter = {
 
         return fieldV2;
     },
-    getSavedData: (article) => {
+    retrieveStoredValue: (article) => {
         return article.priority;
     },
-    saveData: (value, article) => {
+    storeValue: (value, article) => {
         return {
             ...article,
             priority: value,
