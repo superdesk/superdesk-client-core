@@ -22,4 +22,13 @@ export const language: IFieldAdapter = {
 
         return fieldV2;
     },
+    getSavedData: (article) => {
+        return article.language;
+    },
+    saveData: (value, article) => {
+        return {
+            ...article,
+            language: value,
+        };
+    },
 };

@@ -46,4 +46,13 @@ export const priority: IFieldAdapter = {
 
         return fieldV2;
     },
+    getSavedData: (article) => {
+        return article.priority;
+    },
+    saveData: (value, article) => {
+        return {
+            ...article,
+            priority: value,
+        };
+    },
 };

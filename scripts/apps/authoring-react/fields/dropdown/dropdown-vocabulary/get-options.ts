@@ -32,7 +32,7 @@ export function getOptions(
             ({id}) => id.toString(),
             ({parent}) => parent?.toString(),
         ).result,
-        lookup: keyBy(options.map((opt) => ({value: opt})), (opt) => opt.value.toString()),
+        lookup: keyBy(options.map((opt) => ({value: opt})), (opt) => opt.value.id.toString()),
     };
 
     return tree;
