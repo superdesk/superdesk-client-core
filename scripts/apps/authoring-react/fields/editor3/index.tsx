@@ -6,7 +6,7 @@ import {gettext} from 'core/utils';
 import {convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
 import createEditorStore, {
     prepareEditor3StateForExport,
-    getAnnotationsForField,
+    getAnnotationsForStorage,
 } from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {noop} from 'lodash';
@@ -99,7 +99,7 @@ export function getEditor3Field(): ICustomFieldType<IEditor3Value, IEditor3Confi
                 }
             })();
 
-            const annotations = getAnnotationsForField(article, fieldId);
+            const annotations = getAnnotationsForStorage(contentState);
 
             const articleUpdated: IArticle = {
                 ...article,

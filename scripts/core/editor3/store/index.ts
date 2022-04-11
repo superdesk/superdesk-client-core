@@ -21,7 +21,7 @@ import {
     FIELD_KEY_SEPARATOR,
 } from '../helpers/fieldsMeta';
 import {getContentStateFromHtml} from '../html/from-html';
-import {getAnnotationsFromItem} from '../helpers/editor3CustomData';
+import {getAnnotationsFromContentState, getAnnotationsFromItem} from '../helpers/editor3CustomData';
 import {
     initializeHighlights,
     prepareHighlightsForExport,
@@ -240,6 +240,12 @@ export function unsetStore() {
 export function getAnnotationsForField(item: IArticle, fieldId: string) {
     return ignoreInternalAnnotationFields(
         getAnnotationsFromItem(item, fieldId),
+    );
+}
+
+export function getAnnotationsForStorage(contentState: ContentState) {
+    return ignoreInternalAnnotationFields(
+        getAnnotationsFromContentState(contentState),
     );
 }
 
