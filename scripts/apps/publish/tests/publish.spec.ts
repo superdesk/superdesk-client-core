@@ -274,7 +274,7 @@ describe('publish queue', () => {
 
     it('can observe pagination and load page data', inject(($rootScope, api, $q) => {
         $scope.pageSize = 1;
-        $scope.page = 2;
+        $scope.pagination.page = 2;
 
         var pagedPublishQueue = {_items: [publishQueue._items[1]], _meta: {total: 3}};
 
