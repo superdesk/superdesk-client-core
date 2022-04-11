@@ -265,14 +265,35 @@ export function replaceAllForEachBlock(
         const correctOffset = (n) => n + offsetCorrection;
 
         for (const match of matches) {
+            const anchorOffset = correctOffset(match.index);
+            const focusOffset = correctOffset(match.index + match.text.length);
             const rangeToReplace = new SelectionState({
                 anchorKey: blockKey,
-                anchorOffset: correctOffset(match.index),
+                anchorOffset,
                 focusKey: blockKey,
-                focusOffset: correctOffset(match.index + match.text.length),
+                focusOffset,
             });
 
-            result = Modifier.replaceText(result, rangeToReplace, replaceWith);
+            const firstCharStyle = block.getInlineStyleAt(anchorOffset);
+
+            let consistentStyle = true;
+
+            for (let i = anchorOffset + 1; i <= focusOffset; i++) {
+                const charStyles = block.getInlineStyleAt(i);
+
+                // eslint-disable-next-line max-depth
+                if (charStyles.equals(firstCharStyle) !== true) {
+                    consistentStyle = false;
+                    break;
+                }
+            }
+
+            result = Modifier.replaceText(
+                result,
+                rangeToReplace,
+                replaceWith,
+                consistentStyle ? firstCharStyle : undefined,
+            );
 
             offsetCorrection += replaceWith.length - match.text.length;
         }
