@@ -13,11 +13,11 @@ describe('sd-reading-time', () => {
 
         scope.content = repeat('x', 5000);
         scope.$digest();
-        expect(elem.text()).toBe('1 min read');
+        expect(elem.text()).toBe('less than one minute read');
 
         scope.language = 'ja';
         scope.$digest();
-        expect(elem.text()).toBe('9 min read');
+        expect(elem.text()).toBe('8 min read');
 
         scope.content = repeat(' ', 5000);
         scope.$digest();

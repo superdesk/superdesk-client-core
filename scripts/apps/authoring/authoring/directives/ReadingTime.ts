@@ -5,12 +5,12 @@ import {gettext} from 'core/utils';
 
 function getReadingTime(input: string, language: string): number {
     if (language && language.startsWith('ja')) {
-        return Math.ceil(filter(input, (x) => !!trim(x)).length / (appConfig.japanese_characters_per_minute || 600));
+        return Math.floor(filter(input, (x) => !!trim(x)).length / (appConfig.japanese_characters_per_minute || 600));
     }
 
     const numWords = compact(input.split(/\s+/)).length || 0;
 
-    return Math.ceil(numWords / 250);
+    return Math.floor(numWords / 250);
 }
 
 export function getReadingTimeText(text: string, language: string) {
