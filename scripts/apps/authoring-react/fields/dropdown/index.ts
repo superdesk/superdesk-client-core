@@ -67,8 +67,8 @@ export type IDropdownConfig =
     | IDropdownConfigRemoteSource
     | IDropdownTreeConfig;
 
-export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownConfig, never> {
-    const field: ICustomFieldType<IDropdownValue, IDropdownConfig, never> = {
+export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownValue, IDropdownConfig, never> {
+    const field: ICustomFieldType<IDropdownValue, IDropdownValue, IDropdownConfig, never> = {
         id: 'dropdown',
         label: gettext('Dropdown (authoring-react)'),
         editorComponent: Editor,

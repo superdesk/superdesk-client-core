@@ -2476,36 +2476,40 @@ declare module 'superdesk-api' {
         onChange(config: IConfig): void;
     }
 
-    export interface ICustomFieldType<IValue, IConfig, IUserPreferences> {
+    export interface ICustomFieldType<IValueOperational, IValueStorage, IConfig, IUserPreferences> {
         id: string;
         label: string;
-        editorComponent: React.ComponentClass<IEditorComponentProps<IValue, IConfig, IUserPreferences>>;
-        previewComponent: React.ComponentType<IPreviewComponentProps<IValue>>;
+        editorComponent: React.ComponentClass<IEditorComponentProps<IValueOperational, IConfig, IUserPreferences>>;
+        previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational>>;
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
-        templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IValue, IConfig>>;
+        templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IValueOperational, IConfig>>;
 
-        differenceComponent?: React.ComponentType<IDifferenceComponentProps<IValue, IConfig>>;
+        differenceComponent?: React.ComponentType<IDifferenceComponentProps<IValueOperational, IConfig>>;
 
         // may intercept template creation and return modified value
         onTemplateCreate?(value: any, config: IConfig): any;
+        
+        /**
+         * Allows to use different formats for storage and operation.
+         * For example, draft-js uses EditorState for operation, and RawDraftContentState for storage.
+         */
+
+        toStorageFormat?(valueOperational: IValueOperational, config: IConfig): IValueStorage;
+        toOperationalFormat?(valueStorage: IValueStorage, config: IConfig, article: IArticle): IValueOperational;
+
 
         /**
-         * The APIs below serve 2 functions:
-         * 
-         * 1. Allows to customize where values are stored
+         * Allows to customize where values are stored.
          * By default, custom fields are stored in IArticle['extra'].
          * Some fields may require a different storing strategy.
          * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
-         * and also HTML version of the data in another location.
-         *
-         * 2. Allows to use different formats for storage and operation.
-         * For example, draft-js uses EditorState for operation, and RawDraftContentState for storage.
+         * HTML or plaintext version of the data in another location, and possibly annotations in third location.
          */
 
         storeValue?(
             fieldId: string,
             article: IArticle,
-            value: IValue,
+            value: IValueStorage,
             config: IConfig,
             userPreferences: IUserPreferences,
         ): IArticle;
@@ -2514,7 +2518,7 @@ declare module 'superdesk-api' {
             article: IArticle,
             config: IConfig,
             userPreferences: IUserPreferences,
-        ): IValue;
+        ): IValueStorage;
     }
 
 

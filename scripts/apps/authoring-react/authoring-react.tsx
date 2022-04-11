@@ -62,16 +62,32 @@ export function getFieldsData(
     return fields.map((field) => {
         const fieldEditor = getField(field.fieldType);
 
-        if (fieldEditor.retrieveStoredValue != null) {
-            return fieldEditor.retrieveStoredValue(
-                field.id,
-                item,
-                field.fieldConfig,
-                userPreferencesForFields[field.id],
-            );
-        } else {
-            return item.extra?.[field.id] ?? null;
-        }
+        const storageValue = (() => {
+            if (fieldEditor.retrieveStoredValue != null) {
+                return fieldEditor.retrieveStoredValue(
+                    field.id,
+                    item,
+                    field.fieldConfig,
+                    userPreferencesForFields[field.id],
+                );
+            } else {
+                return item.extra?.[field.id] ?? null;
+            }
+        })();
+
+        const operationalValue = (() => {
+            if (fieldEditor.toOperationalFormat != null) {
+                return fieldEditor.toOperationalFormat(
+                    storageValue,
+                    field.fieldConfig,
+                    item,
+                );
+            } else {
+                return storageValue;
+            }
+        })();
+
+        return operationalValue;
     }).toMap();
 }
 
@@ -85,13 +101,24 @@ function serializeFieldsDataAndApplyOnArticle(
 
     fieldsProfile.forEach((field) => {
         const fieldEditor = getField(field.fieldType);
-        const fieldValue = fieldsData.get(field.id);
+        const valueOperational = fieldsData.get(field.id);
+
+        const storageValue = (() => {
+            if (fieldEditor.toStorageFormat != null) {
+                return fieldEditor.toStorageFormat(
+                    valueOperational,
+                    field.fieldConfig,
+                );
+            } else {
+                return valueOperational;
+            }
+        })();
 
         if (fieldEditor.storeValue != null) {
             result = fieldEditor.storeValue(
                 field.id,
                 result,
-                fieldValue,
+                storageValue,
                 field.fieldConfig,
                 userPreferencesForFields[field.id],
             );
@@ -100,7 +127,7 @@ function serializeFieldsDataAndApplyOnArticle(
                 ...result,
                 extra: {
                     ...(result.extra ?? {}),
-                    [field.id]: fieldValue,
+                    [field.id]: storageValue,
                 },
             };
         }

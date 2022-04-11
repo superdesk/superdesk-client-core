@@ -6,7 +6,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {EmptyState, Label} from 'superdesk-ui-framework/react';
-import {IEditor3Value} from '../fields/editor3/interfaces';
+import {IEditor3ValueOperational} from '../fields/editor3/interfaces';
 import {getCustomEditor3Data} from 'core/editor3/helpers/editor3CustomData';
 import {store} from 'core/data';
 import {Card} from 'core/ui/components/Card';
@@ -159,7 +159,7 @@ class SuggestionsWidget extends React.PureComponent<IProps> {
         const {fieldsData} = this.props;
 
         return this.getEditor3Fields().map((field) => {
-            const value = fieldsData.get(field.id) as IEditor3Value;
+            const value = fieldsData.get(field.id) as IEditor3ValueOperational;
 
             return {
                 fieldId: field.id,

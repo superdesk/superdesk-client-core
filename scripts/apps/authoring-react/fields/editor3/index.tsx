@@ -6,35 +6,78 @@ import {gettext} from 'core/utils';
 import {convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
 import createEditorStore, {
     prepareEditor3StateForExport,
-    getAnnotationsForStorage,
 } from 'core/editor3/store';
 import ng from 'core/services/ng';
 import {noop} from 'lodash';
 import {
     CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {CONTENT_FIELDS_DEFAULTS} from 'apps/authoring/authoring/helpers';
-import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
-import {IEditor3Value, IEditor3Config} from './interfaces';
+import {IEditor3ValueOperational, IEditor3Config, IEditor3ValueStorage} from './interfaces';
 import {Difference} from './difference';
 import {Preview} from './preview';
 import {Config} from './config';
 import {Editor} from './editor';
 import {replaceAllForEachBlock} from 'core/editor3/helpers/find-replace';
 import {getFieldsAdapter} from 'apps/authoring-react/field-adapters';
+import {computeDerivedProperties} from './compute-derived-properties';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
 }
 
-export function getEditor3Field(): ICustomFieldType<IEditor3Value, IEditor3Config, IUserPreferences> {
-    const field: ICustomFieldType<IEditor3Value, IEditor3Config, IUserPreferences> = {
+export function getEditor3Field()
+: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> {
+    const field: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> = {
         id: 'editor3',
         label: gettext('Editor3 (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,
         differenceComponent: Difference,
         configComponent: Config,
+
+        toStorageFormat: (valueOperational: IEditor3ValueOperational, config: IEditor3Config): IEditor3ValueStorage => {
+            let contentState = prepareEditor3StateForExport(
+                valueOperational.store.getState().editorState.getCurrentContent(),
+            );
+
+            // trim whitespace at the beginning of each block
+            contentState = replaceAllForEachBlock(contentState, /^\s+/g, '');
+
+            // trim whitespace at the end of each block
+            contentState = replaceAllForEachBlock(contentState, /\s+$/g, '');
+
+            // replace multiple spaces with a single space
+            contentState = replaceAllForEachBlock(contentState, /\s\s+/g, ' ');
+
+            const storageValue: IEditor3ValueStorage = {
+                rawContentState: convertToRaw(contentState),
+            };
+
+            return storageValue;
+        },
+
+        toOperationalFormat: (
+            value: IEditor3ValueStorage,
+            config: IEditor3Config,
+            article: IArticle,
+        ): IEditor3ValueOperational => {
+            const store = createEditorStore(
+                {
+                    editorState: value.rawContentState,
+                    onChange: noop,
+                    language: article.language,
+                },
+                ng.get('spellcheck'),
+                true,
+            );
+
+            const result: IEditor3ValueOperational = {
+                store,
+                contentState: store.getState().editorState.getCurrentContent(),
+            };
+
+            return result;
+        },
 
         retrieveStoredValue: (fieldId, article) => {
             const rawContentState: RawDraftContentState = (() => {
@@ -59,47 +102,21 @@ export function getEditor3Field(): ICustomFieldType<IEditor3Value, IEditor3Confi
                 }
             })();
 
-            const store = createEditorStore(
-                {
-                    editorState: rawContentState,
-                    onChange: noop,
-                    language: article.language,
-                },
-                ng.get('spellcheck'),
-                true,
-            );
-
-            return {
-                store,
-                contentState: store.getState().editorState.getCurrentContent(),
+            const result: IEditor3ValueStorage = {
+                rawContentState,
             };
+
+            return result;
         },
 
         storeValue: (fieldId, article, value, config) => {
-            let contentState = prepareEditor3StateForExport(
-                value.store.getState().editorState.getCurrentContent(),
+            const rawContentState = value.rawContentState;
+
+            const {stringValue, annotations} = computeDerivedProperties(
+                rawContentState,
+                config,
+                article,
             );
-
-            // trim whitespace at the beginning of each block
-            contentState = replaceAllForEachBlock(contentState, /^\s+/g, '');
-
-            // trim whitespace at the end of each block
-            contentState = replaceAllForEachBlock(contentState, /\s+$/g, '');
-
-            // replace multiple spaces with a single space
-            contentState = replaceAllForEachBlock(contentState, /\s\s+/g, ' ');
-
-            const rawContentState = convertToRaw(contentState);
-
-            const generatedValue = (() => {
-                if (config.singleLine) {
-                    return contentState.getPlainText();
-                } else {
-                    return editor3StateToHtml(contentState);
-                }
-            })();
-
-            const annotations = getAnnotationsForStorage(contentState);
 
             const articleUpdated: IArticle = {
                 ...article,
@@ -117,7 +134,7 @@ export function getEditor3Field(): ICustomFieldType<IEditor3Value, IEditor3Confi
 
             articleUpdated.extra = {
                 ...(articleUpdated.extra ?? {}),
-                [fieldId]: generatedValue,
+                [fieldId]: stringValue,
             };
 
             // Keep compatibility with existing output format.

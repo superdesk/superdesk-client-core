@@ -2,7 +2,7 @@ import {IContentProfileV2} from 'superdesk-api';
 import {Map} from 'immutable';
 import {getTansaHtml} from 'core/editor3/helpers/tansa';
 import {setHtmlFromTansa} from 'core/editor3/actions';
-import {IEditor3Value} from './fields/editor3/interfaces';
+import {IEditor3ValueOperational} from './fields/editor3/interfaces';
 
 const TANSA_PROOFING_ATTRIBUTE = 'tansa-proofing';
 
@@ -27,7 +27,7 @@ export function runTansa(contentProfile: IContentProfileV2, fieldsData: Map<stri
     let textByField = Map<string, string>();
 
     for (const field of editor3Fields) {
-        const {store} = fieldsData.get(field.id) as IEditor3Value;
+        const {store} = fieldsData.get(field.id) as IEditor3ValueOperational;
         const editorState = store.getState().editorState;
 
         textByField = textByField.set(field.id, getTansaHtml(editorState));
@@ -55,7 +55,7 @@ export function runTansa(contentProfile: IContentProfileV2, fieldsData: Map<stri
                 const htmlBefore = textByField.get(field.id);
 
                 if (htmlBefore !== htmlAfter) {
-                    const {store} = fieldsData.get(field.id) as IEditor3Value;
+                    const {store} = fieldsData.get(field.id) as IEditor3ValueOperational;
 
                     store.dispatch(setHtmlFromTansa(htmlAfter, false));
                 }

@@ -6,7 +6,7 @@ import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {Button, EmptyState} from 'superdesk-ui-framework/react';
-import {IEditor3Value} from '../fields/editor3/interfaces';
+import {IEditor3ValueOperational} from '../fields/editor3/interfaces';
 import {getCustomEditor3Data, getCustomMetadataFromContentState} from 'core/editor3/helpers/editor3CustomData';
 import {getHighlightsConfig} from 'core/editor3/highlightsConfig';
 import {store} from 'core/data';
@@ -115,7 +115,7 @@ class InlineCommentsWidget extends React.PureComponent<IProps, IState> {
         const {fieldsData} = this.props;
 
         return this.getEditor3Fields().map((field) => {
-            const value = fieldsData.get(field.id) as IEditor3Value;
+            const value = fieldsData.get(field.id) as IEditor3ValueOperational;
 
             return {
                 fieldId: field.id,
@@ -131,7 +131,7 @@ class InlineCommentsWidget extends React.PureComponent<IProps, IState> {
         const {fieldsData} = this.props;
 
         return this.getEditor3Fields().map((field) => {
-            const value = fieldsData.get(field.id) as IEditor3Value;
+            const value = fieldsData.get(field.id) as IEditor3ValueOperational;
 
             return {
                 fieldId: field.id,

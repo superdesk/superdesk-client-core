@@ -10,11 +10,11 @@ import {IArticle, ICustomFieldType, IVocabulary} from 'superdesk-api';
  */
 function applyMiddleware(_item: IArticle, content, vocabularies): Promise<IArticle> {
     // Custom field types with `onTemplateCreate` defined. From all extensions.
-    const fieldTypes: {[id: string]: ICustomFieldType<any, any, any>} = {};
+    const fieldTypes: {[id: string]: ICustomFieldType<any, any, any, any>} = {};
 
     Object.values(extensions).forEach((ext) => {
         ext?.activationResult?.contributions?.customFieldTypes?.forEach(
-            (customField: ICustomFieldType<any, any, any>) => {
+            (customField: ICustomFieldType<any, any, any, any>) => {
                 if (customField.onTemplateCreate != null) {
                     fieldTypes[customField.id] = customField;
                 }
