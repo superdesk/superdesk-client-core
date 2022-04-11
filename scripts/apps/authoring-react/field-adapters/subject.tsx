@@ -63,17 +63,15 @@ export function getSubjectAdapter(): IFieldAdapter {
 
             return {
                 ...article,
-                subject: (article.subject ?? []).concat(
-                    val.map(({qcode, name, parent}) => {
-                        var itemToStore: IStorageFormat = {qcode, name, parent, scheme: null};
+                subject: val.map(({qcode, name, parent}) => {
+                    var itemToStore: IStorageFormat = {qcode, name, parent, scheme: null};
 
-                        if (parent != null) {
-                            itemToStore.parent = parent;
-                        }
+                    if (parent != null) {
+                        itemToStore.parent = parent;
+                    }
 
-                        return itemToStore;
-                    }),
-                ),
+                    return itemToStore;
+                }),
             };
         },
     };
