@@ -121,7 +121,7 @@ function serializeFieldsDataAndApplyOnArticle(
         })();
 
         if (fieldsAdapter[field.id]?.storeValue != null) {
-            result = fieldsAdapter[field.id].storeValue(storageValue, result);
+            result = fieldsAdapter[field.id].storeValue(storageValue, result, field.fieldConfig);
         } else if (fieldEditor.storeValue != null) {
             result = fieldEditor.storeValue(
                 field.id,

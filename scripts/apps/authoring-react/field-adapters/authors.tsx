@@ -3,7 +3,7 @@ import ng from 'core/services/ng';
 import {IAuthor, IAuthoringFieldV2, IUser} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
-import {IDropdownTreeConfig, IDropdownValue} from '../fields/dropdown';
+import {IDropdownTreeConfig} from '../fields/dropdown';
 import {arrayToTree} from 'core/helpers/tree';
 
 function valueTemplate({item}) {
@@ -73,7 +73,7 @@ export const authors: IFieldAdapter = {
     retrieveStoredValue: (article) => {
         return article.authors;
     },
-    storeValue: (val: IDropdownValue, article) => {
+    storeValue: (val: Array<IAuthor>, article) => {
         return {...article, authors: val};
     },
 };

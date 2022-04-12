@@ -25,6 +25,33 @@ interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
 }
 
+export function storeEditor3ValueBase(fieldId, article, value, config)
+: {article: IArticle; stringValue: string; annotations: Array<any>} {
+    const rawContentState = value.rawContentState;
+
+    const {stringValue, annotations} = computeDerivedProperties(
+        rawContentState,
+        config,
+        article,
+    );
+
+    const articleUpdated: IArticle = {
+        ...article,
+        fields_meta: {
+            ...(article.fields_meta ?? {}),
+            [fieldId]: {
+                draftjsState: [rawContentState],
+            },
+        },
+    };
+
+    if (annotations.length > 0) {
+        articleUpdated.fields_meta[fieldId].annotations = annotations;
+    }
+
+    return {article: articleUpdated, stringValue, annotations};
+}
+
 export function getEditor3Field()
 : ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> {
     const field: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> = {
@@ -110,37 +137,13 @@ export function getEditor3Field()
         },
 
         storeValue: (fieldId, article, value, config) => {
-            const rawContentState = value.rawContentState;
-
-            const {stringValue, annotations} = computeDerivedProperties(
-                rawContentState,
-                config,
-                article,
-            );
-
-            const articleUpdated: IArticle = {
-                ...article,
-                fields_meta: {
-                    ...(article.fields_meta ?? {}),
-                    [fieldId]: {
-                        draftjsState: [rawContentState],
-                    },
-                },
-            };
-
-            if (annotations.length > 0) {
-                articleUpdated.fields_meta[fieldId].annotations = annotations;
-            }
+            const result = storeEditor3ValueBase(fieldId, article, value, config);
+            const articleUpdated = {...result.article};
 
             articleUpdated.extra = {
                 ...(articleUpdated.extra ?? {}),
-                [fieldId]: stringValue,
+                [fieldId]: result.stringValue,
             };
-
-            // Keep compatibility with existing output format.
-            if (fieldId === 'body_html') {
-                articleUpdated.annotations = annotations;
-            }
 
             return articleUpdated;
         },

@@ -33,12 +33,12 @@ export interface IFieldAdapter {
     /**
      * If defined, {@link ICustomFieldType.storeValue} will not be used
      */
-    storeValue?<T extends Partial<IArticle>>(value: unknown, item: T): T;
+    storeValue?(value: unknown, article: IArticle, config: unknown): IArticle;
 
     /**
      * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
      */
-    retrieveStoredValue?<T extends Partial<IArticle>>(item: T): unknown;
+    retrieveStoredValue?(item: IArticle): unknown;
 }
 
 type IFieldsAdapter = {[key: string]: IFieldAdapter};

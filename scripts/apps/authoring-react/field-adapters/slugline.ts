@@ -3,6 +3,7 @@ import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
 import {IEditor3Config} from '../fields/editor3/interfaces';
+import {storeEditor3ValueBase} from '../fields/editor3';
 
 export const slugline: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
@@ -25,5 +26,20 @@ export const slugline: IFieldAdapter = {
         };
 
         return fieldV2;
+    },
+
+    storeValue: (value, item, config) => {
+        const result = storeEditor3ValueBase(
+            'slugline',
+            item,
+            value,
+            config,
+        );
+
+        const articleUpdated = {...result.article};
+
+        articleUpdated.slugline = result.stringValue;
+
+        return articleUpdated;
     },
 };

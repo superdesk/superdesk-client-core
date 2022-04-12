@@ -2,6 +2,7 @@ import {IAuthoringFieldV2} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
 import {IEditor3Config} from '../fields/editor3/interfaces';
+import {storeEditor3ValueBase} from '../fields/editor3';
 
 export const ednote: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
@@ -24,5 +25,20 @@ export const ednote: IFieldAdapter = {
         };
 
         return fieldV2;
+    },
+
+    storeValue: (value, item, config) => {
+        const result = storeEditor3ValueBase(
+            'ednote',
+            item,
+            value,
+            config,
+        );
+
+        const articleUpdated = {...result.article};
+
+        articleUpdated.ednote = result.stringValue;
+
+        return articleUpdated;
     },
 };

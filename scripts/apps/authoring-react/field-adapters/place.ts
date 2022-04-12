@@ -1,5 +1,5 @@
 import {Map} from 'immutable';
-import {IAuthoringFieldV2, IRestApiResponse, IVocabularyItem} from 'superdesk-api';
+import {IAuthoringFieldV2, IRestApiResponse, ISubject, IVocabularyItem} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
 import {IDropdownConfigRemoteSource, IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
@@ -54,7 +54,7 @@ export function getPlaceAdapter(): IFieldAdapter {
             retrieveStoredValue: (article) => {
                 return article.place;
             },
-            storeValue: (val: IDropdownValue, article) => {
+            storeValue: (val: Array<ISubject>, article) => {
                 return {
                     ...article,
                     place: val,
