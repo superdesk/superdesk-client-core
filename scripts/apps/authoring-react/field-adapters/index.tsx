@@ -22,6 +22,7 @@ import {sdApi} from 'api';
 import {headline} from './headline';
 import {abstract} from './abstract';
 import {ednote} from './ednote';
+import {anpa_take_key} from './anpa_take_key';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -51,6 +52,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
     const adapter: IFieldsAdapter = {
         abstract: abstract,
         anpa_category: anpa_category,
+        anpa_take_key: anpa_take_key,
         authors: authors,
         body_html: body_html,
         ednote: ednote,
