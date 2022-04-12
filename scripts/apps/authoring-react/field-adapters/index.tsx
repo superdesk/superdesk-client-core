@@ -2,7 +2,6 @@ import {
     IArticle,
     IAuthoringFieldV2,
     ICustomFieldType,
-    IVocabulary,
 } from 'superdesk-api';
 import {IDropdownConfigVocabulary} from '../fields/dropdown';
 import {IEditor3Config} from '../fields/editor3/interfaces';
@@ -23,6 +22,7 @@ import {headline} from './headline';
 import {abstract} from './abstract';
 import {ednote} from './ednote';
 import {anpa_take_key} from './anpa_take_key';
+import {byline} from './byline';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -55,6 +55,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
         anpa_take_key: anpa_take_key,
         authors: authors,
         body_html: body_html,
+        byline: byline,
         ednote: ednote,
         genre: genre,
         headline: headline,
