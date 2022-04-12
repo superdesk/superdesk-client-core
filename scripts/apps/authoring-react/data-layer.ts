@@ -24,6 +24,22 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
 
     let fakeScope: Partial<IFakeScope> = {};
 
+    /**
+     * Some fields require restructuring to work well in authoring-react.
+     * When angular based authoring is removed, an update script should be written,
+     * and this restructuring code dropped.
+     */
+    function adjustId(fieldId: string): string {
+        switch (fieldId) {
+        case 'sms':
+            // in content profile the field ID is "sms"
+            // but value is written to `IArticle['sms_message']`
+            return 'sms_message';
+        default:
+            return fieldId;
+        }
+    }
+
     return Promise.all([
         getLabelNameResolver(),
         ng.get('content').setupAuthoring(item.profile, fakeScope, item),
@@ -49,13 +65,19 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
         let headerFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
         let contentFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
 
-        for (const {fieldId, editorItem} of fieldsOrdered) {
-            const field = fields.find(({_id}) => _id === fieldId);
+        for (const _field of fieldsOrdered) {
+            const {editorItem} = _field;
+            const fieldId = adjustId(_field.fieldId);
 
             const fieldV2: IAuthoringFieldV2 = (() => {
                 if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
-                    return fieldsAdapter[fieldId].getFieldV2(editor[fieldId] ?? {}, schema[fieldId] ?? {});
+                    const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
+                    const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
+
+                    return fieldsAdapter[fieldId].getFieldV2(fieldEditor, fieldSchema);
                 } else { // custom fields
+                    const field = fields.find(({_id}) => _id === fieldId);
+
                     const f: IAuthoringFieldV2 = {
                         id: fieldId,
                         name: getLabelForFieldId(fieldId),

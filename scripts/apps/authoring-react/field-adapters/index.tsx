@@ -23,6 +23,7 @@ import {abstract} from './abstract';
 import {ednote} from './ednote';
 import {anpa_take_key} from './anpa_take_key';
 import {byline} from './byline';
+import {sms_message} from './sms_message';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -63,6 +64,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
         place: getPlaceAdapter(),
         priority: priority,
         slugline: slugline,
+        sms_message: sms_message,
         subject: getSubjectAdapter(),
         urgency: urgency,
     };
