@@ -5,13 +5,12 @@ import {IFieldAdapter} from '.';
 import {IDropdownConfigRemoteSource, IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultiple} from './utilities';
 import {authoringStorage} from '../data-layer';
-import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IGeoName} from 'apps/authoring/metadata/PlacesService';
 import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
 
 export function getPlaceAdapter(): IFieldAdapter {
-    const useGeoNamesApi = ng.get('features').places_autocomplete;
+    const useGeoNamesApi = authoringStorage.hasFeature('places_autocomplete');
 
     if (useGeoNamesApi) {
         return {

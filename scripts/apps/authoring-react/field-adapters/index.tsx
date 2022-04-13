@@ -44,12 +44,7 @@ export interface IFieldAdapter {
 
 type IFieldsAdapter = {[key: string]: IFieldAdapter};
 
-/**
- * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
- * to {@link IAuthoringFieldV2}
- */
-export function getFieldsAdapter(): IFieldsAdapter {
-    const customFieldVocabularies = getCustomFieldVocabularies();
+export function getBaseFieldsAdapter(): IFieldsAdapter {
     const adapter: IFieldsAdapter = {
         abstract: abstract,
         anpa_category: anpa_category,
@@ -68,6 +63,17 @@ export function getFieldsAdapter(): IFieldsAdapter {
         subject: getSubjectAdapter(),
         urgency: urgency,
     };
+
+    return adapter;
+}
+
+/**
+ * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
+ * to {@link IAuthoringFieldV2}
+ */
+export function getFieldsAdapter(): IFieldsAdapter {
+    const customFieldVocabularies = getCustomFieldVocabularies();
+    const adapter: IFieldsAdapter = getBaseFieldsAdapter();
 
     for (const vocabulary of customFieldVocabularies) {
         if (vocabulary.field_type === 'text') {

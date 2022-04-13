@@ -149,7 +149,7 @@ export interface IAuthoringAutoSave {
  * Alternative implementation can be used
  * to enable offline support.
  */
-interface IAuthoringStorage {
+export interface IAuthoringStorage {
     lock(itemId: IArticle['_id']): Promise<IArticle>;
     unlock(itemId: IArticle['_id']): Promise<IArticle>;
     getArticle(id: string): Promise<{saved: IArticle | null, autosaved: IArticle | null}>;
@@ -164,6 +164,7 @@ interface IAuthoringStorage {
     getUserPreferences(): Promise<any>;
     autosave: IAuthoringAutoSave;
     getVocabularies(): OrderedMap<string, IVocabulary>;
+    hasFeature(name: string): boolean;
 }
 
 export function omitFields(
@@ -308,4 +309,5 @@ export const authoringStorage: IAuthoringStorage = {
             (vocabulary) => [vocabulary._id, vocabulary],
         ),
     ),
+    hasFeature: (name) => ng.get('features')[name] != null,
 };
