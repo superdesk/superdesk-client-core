@@ -3,12 +3,12 @@ import {IAuthoringFieldV2, IVocabularyItem} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
 import {IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
-import {isMultiple} from './utilities';
+import {isMultipleV2} from './utilities';
 import {authoringStorage} from '../data-layer';
 
 export const genre: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
-        const multiple = isMultiple('genre');
+        const multiple = isMultipleV2('genre');
 
         const fieldConfig: IDropdownConfigVocabulary = {
             source: 'vocabulary',
@@ -26,7 +26,7 @@ export const genre: IFieldAdapter = {
         return fieldV2;
     },
     retrieveStoredValue: (article) => {
-        const multiple = isMultiple('genre');
+        const multiple = isMultipleV2('genre');
 
         if (multiple) {
             return article.genre.map(({qcode}) => qcode);

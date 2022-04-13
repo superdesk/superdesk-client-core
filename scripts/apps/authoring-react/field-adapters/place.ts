@@ -3,7 +3,7 @@ import {IAuthoringFieldV2, IRestApiResponse, ISubject, IVocabularyItem} from 'su
 import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
 import {IDropdownConfigRemoteSource, IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
-import {isMultipleV2} from './utilities';
+import {isMultiple} from './utilities';
 import {authoringStorage} from '../data-layer';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -62,7 +62,7 @@ export function getPlaceAdapter(): IFieldAdapter {
     } else { // use "locators" vocabulary
         return {
             getFieldV2: (fieldEditor, fieldSchema) => {
-                const multiple = isMultipleV2('locators');
+                const multiple = isMultiple('locators');
 
                 const fieldConfig: IDropdownConfigVocabulary = {
                     source: 'vocabulary',
@@ -80,7 +80,7 @@ export function getPlaceAdapter(): IFieldAdapter {
                 return fieldV2;
             },
             retrieveStoredValue: (article) => {
-                const multiple = isMultipleV2('locators');
+                const multiple = isMultiple('locators');
 
                 if (multiple) {
                     return article.place.map(({qcode}) => qcode);

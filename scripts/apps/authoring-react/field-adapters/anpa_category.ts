@@ -2,7 +2,7 @@ import {Map} from 'immutable';
 import {IAuthoringFieldV2, IVocabularyItem} from 'superdesk-api';
 import {IFieldAdapter} from '.';
 import {IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
-import {isMultipleV2} from './utilities';
+import {isMultiple} from './utilities';
 import {authoringStorage} from '../data-layer';
 
 const vocabularyId = 'categories';
@@ -10,7 +10,7 @@ const vocabularyId = 'categories';
 export const anpa_category: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const vocabulary = authoringStorage.getVocabularies().get(vocabularyId);
-        const multiple = isMultipleV2(vocabularyId);
+        const multiple = isMultiple(vocabularyId);
 
         const fieldConfig: IDropdownConfigVocabulary = {
             source: 'vocabulary',
@@ -28,7 +28,7 @@ export const anpa_category: IFieldAdapter = {
         return fieldV2;
     },
     retrieveStoredValue: (article) => {
-        const multiple = isMultipleV2(vocabularyId);
+        const multiple = isMultiple(vocabularyId);
         const values = (article.anpa_category ?? []).map(({qcode}) => qcode);
 
         if (multiple) {
