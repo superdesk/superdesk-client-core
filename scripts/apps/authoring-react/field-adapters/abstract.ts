@@ -7,8 +7,6 @@ import {storeEditor3ValueBase} from '../fields/editor3';
 export const abstract: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const fieldConfig: IEditor3Config = {
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
             editorFormat: fieldEditor.formatOptions ?? [],
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,

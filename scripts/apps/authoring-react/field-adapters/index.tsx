@@ -74,8 +74,6 @@ export function getFieldsAdapter(): IFieldsAdapter {
             adapter[vocabulary._id] = {
                 getFieldV2: (fieldEditor, fieldSchema) => {
                     const fieldConfig: IEditor3Config = {
-                        readOnly: fieldEditor.readonly,
-                        required: fieldEditor.required,
                         editorFormat: fieldEditor.formatOptions ?? [],
                         minLength: fieldSchema?.minlength,
                         maxLength: fieldSchema?.maxlength,
@@ -109,8 +107,6 @@ export function getFieldsAdapter(): IFieldsAdapter {
                 getFieldV2: (fieldEditor, fieldSchema) => {
                     const fieldConfig: IDropdownConfigVocabulary = {
                         source: 'vocabulary',
-                        readOnly: fieldEditor.readonly,
-                        required: fieldEditor.required,
                         vocabularyId: vocabulary._id,
                         multiple: multiple,
                     };

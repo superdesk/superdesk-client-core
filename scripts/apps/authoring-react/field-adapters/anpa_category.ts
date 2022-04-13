@@ -13,8 +13,6 @@ export const anpa_category: IFieldAdapter = {
         const multiple = isMultipleV2(vocabularyId);
 
         const fieldConfig: IDropdownConfigVocabulary = {
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
             source: 'vocabulary',
             vocabularyId: vocabularyId,
             multiple: multiple,

@@ -6,8 +6,6 @@ import {IDropdownConfigVocabulary} from '../fields/dropdown';
 export const language: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const fieldConfig: IDropdownConfigVocabulary = {
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
             source: 'vocabulary',
             vocabularyId: 'languages',
             multiple: false,

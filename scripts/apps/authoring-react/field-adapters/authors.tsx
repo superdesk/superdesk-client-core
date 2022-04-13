@@ -31,8 +31,6 @@ function isAuthorRole(x: IUserOption | IAuthorRole): x is IAuthorRole {
 export const authors: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const fieldConfig: IDropdownTreeConfig = {
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
             getItems: () => {
                 const metadata = ng.get('metadata');
 

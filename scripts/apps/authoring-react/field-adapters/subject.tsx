@@ -30,8 +30,6 @@ export function getSubjectAdapter(): IFieldAdapter {
         getFieldV2: (fieldEditor, fieldSchema) => {
             const fieldConfig: IDropdownTreeConfig = {
                 source: 'dropdown-tree',
-                readOnly: fieldEditor.readonly,
-                required: fieldEditor.required,
                 getItems,
                 getLabel: (item: ISubjectCode) => item.name,
                 getId: (item: ISubjectCode) => item.qcode,

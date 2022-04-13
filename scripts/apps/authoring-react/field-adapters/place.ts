@@ -17,8 +17,6 @@ export function getPlaceAdapter(): IFieldAdapter {
         return {
             getFieldV2: (fieldEditor, fieldSchema) => {
                 const fieldConfig: IDropdownConfigRemoteSource = {
-                    readOnly: fieldEditor.readonly,
-                    required: fieldEditor.required,
                     source: 'remote-source',
                     searchOptions: (searchTerm, language, callback) => {
                         httpRequestJsonLocal<IRestApiResponse<IGeoName>>({
@@ -67,8 +65,6 @@ export function getPlaceAdapter(): IFieldAdapter {
                 const multiple = isMultipleV2('locators');
 
                 const fieldConfig: IDropdownConfigVocabulary = {
-                    readOnly: fieldEditor.readonly,
-                    required: fieldEditor.required,
                     source: 'vocabulary',
                     vocabularyId: 'locators',
                     multiple: multiple,

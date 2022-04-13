@@ -31,7 +31,7 @@ declare module 'superdesk-api' {
         id: string;
         name: string;
         fieldType: string;
-        fieldConfig: ICommonFieldConfig & unknown;
+        fieldConfig: unknown & Partial<ICommonFieldConfig>;
     }
 
     export type IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>;

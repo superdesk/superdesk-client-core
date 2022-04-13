@@ -11,8 +11,6 @@ export const genre: IFieldAdapter = {
         const multiple = isMultiple('genre');
 
         const fieldConfig: IDropdownConfigVocabulary = {
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
             source: 'vocabulary',
             vocabularyId: 'genre',
             multiple: multiple,

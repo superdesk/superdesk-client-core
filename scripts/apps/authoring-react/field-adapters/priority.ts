@@ -21,8 +21,6 @@ export const priority: IFieldAdapter = {
 
         const fieldConfig: IDropdownConfigManualSource = {
             source: 'manual-entry',
-            readOnly: fieldEditor.readonly,
-            required: fieldEditor.required,
             type: 'number',
             options: vocabulary.items.map(({name, qcode, color}) => {
                 const option: IDropdownConfigManualSource['options'][0] = {
