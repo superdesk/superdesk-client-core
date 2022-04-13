@@ -44,6 +44,8 @@ const customField: ICustomFieldType<string, string, string, never> = {
     label: 'Test Field',
     editorComponent: TestEditorComponent,
     previewComponent: () => null,
+    hasValue: (x) => x != null,
+    getEmptyValue: () => null,
 };
 
 describe('custom authoring field', () => {

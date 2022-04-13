@@ -73,6 +73,10 @@ export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownVa
         label: gettext('Dropdown (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,
+        hasValue: (valueOperational: IDropdownValue) => Array.isArray(valueOperational)
+            ? valueOperational.length > 0
+            : valueOperational != null,
+        getEmptyValue: (_article, config) => config.multiple ? [] : null,
         differenceComponent: Difference,
         configComponent: Config,
     };

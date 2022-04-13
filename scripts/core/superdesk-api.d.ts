@@ -31,7 +31,7 @@ declare module 'superdesk-api' {
         id: string;
         name: string;
         fieldType: string;
-        fieldConfig: unknown;
+        fieldConfig: ICommonFieldConfig & unknown;
     }
 
     export type IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>;
@@ -2469,6 +2469,7 @@ declare module 'superdesk-api' {
     export interface ICommonFieldConfig {
         readOnly?: boolean;
         required?: boolean;
+        allow_toggling?: boolean;
     }
 
     export interface IConfigComponentProps<IConfig extends ICommonFieldConfig> {
@@ -2479,11 +2480,22 @@ declare module 'superdesk-api' {
     export interface ICustomFieldType<IValueOperational, IValueStorage, IConfig, IUserPreferences> {
         id: string;
         label: string;
+
         editorComponent: React.ComponentClass<IEditorComponentProps<IValueOperational, IConfig, IUserPreferences>>;
         previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational>>;
+
+        /**
+         * Must return `true` if not empty.
+         */
+        hasValue(valueOperational: IValueOperational): boolean;
+
+        /**
+         * Must return a value that will be considered empty by `hasValue` function.
+         */
+        getEmptyValue(article: IArticle, config: IConfig): IValueOperational;
+
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IValueOperational, IConfig>>;
-
         differenceComponent?: React.ComponentType<IDifferenceComponentProps<IValueOperational, IConfig>>;
 
         // may intercept template creation and return modified value

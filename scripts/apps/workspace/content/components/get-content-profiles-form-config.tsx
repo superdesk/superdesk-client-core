@@ -6,10 +6,13 @@ import {
     FORMATTING_OPTION,
     PLAINTEXT_FORMATTING_OPTION,
     RICH_FORMATTING_OPTION,
+    IContentProfile,
+    ICommonFieldConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IContentProfileFieldWithSystemId} from './ContentProfileFieldsConfig';
 import {appConfig} from 'appConfig';
+import {nameof} from 'core/helpers/typescript-helpers';
 
 const HAS_PLAINTEXT_FORMATTING_OPTIONS = Object.freeze({
     headline: true,
@@ -324,6 +327,15 @@ export function getContentProfileFormConfig(
 
         fields.push(showImageTitleField);
     }
+
+    const showToggle: IFormField = {
+        label: gettext('Allow field to be toggled'),
+        type: FormFieldType.checkbox,
+        field: nameof<ICommonFieldConfig>('allow_toggling'),
+        required: false,
+    };
+
+    fields.push(showToggle);
 
     if (field?.id === 'sms') {
         const prefillSmsField: IFormField = {

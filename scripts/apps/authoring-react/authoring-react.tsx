@@ -173,6 +173,26 @@ function getInitialState(
         userPreferencesForFields,
     );
 
+    const fieldsDataWithChanges: Map<string, unknown> = itemOriginal === itemWithChanges
+        ? fieldsOriginal
+        : getFieldsData(
+            itemWithChanges,
+            allFields,
+            userPreferencesForFields,
+        );
+
+    const toggledFields = {};
+
+    allFields
+        .filter((field) => field.fieldConfig.allow_toggling === true)
+        .forEach((field) => {
+            const val = fieldsDataWithChanges.get(field.id);
+
+            const FieldEditorConfig = getField(field.fieldType);
+
+            toggledFields[field.id] = FieldEditorConfig.hasValue(val);
+        });
+
     const initialState: IStateLoaded = {
         initialized: true,
         loading: false,
@@ -180,20 +200,24 @@ function getInitialState(
         itemWithChanges: itemWithChanges,
         autosaveEtag: item.autosaved?._etag ?? null,
         fieldsDataOriginal: fieldsOriginal,
-        fieldsDataWithChanges: itemOriginal === itemWithChanges
-            ? fieldsOriginal
-            : getFieldsData(
-                itemWithChanges,
-                allFields,
-                userPreferencesForFields,
-            ),
+        fieldsDataWithChanges: fieldsDataWithChanges,
         profile: profile,
+        toggledFields: toggledFields,
         userPreferencesForFields,
         spellcheckerEnabled,
     };
 
     return initialState;
 }
+
+/**
+ * Toggling a field "off" hides it and removes its values.
+ * Toggling to "on", displays field's input and allows setting a value.
+ *
+ * Only fields that have toggling enabled in content profile will be present in this object.
+ * `true` means field is available - `false` - hidden.
+ */
+export type IToggledFields = {[fieldId: string]: boolean};
 
 interface IStateLoaded {
     initialized: true;
@@ -204,6 +228,7 @@ interface IStateLoaded {
     fieldsDataWithChanges: Map<string, unknown>;
     profile: IContentProfileV2;
     userPreferencesForFields: {[key: string]: unknown};
+    toggledFields: IToggledFields;
     openWidget?: {
         name: string;
         pinned: boolean;
@@ -254,6 +279,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         this.setUserPreferences = this.setUserPreferences.bind(this);
         this.cancelAutosave = this.cancelAutosave.bind(this);
         this.getVocabularyItems = this.getVocabularyItems.bind(this);
+        this.toggleField = this.toggleField.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -926,6 +952,37 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         });
     }
 
+    toggleField(fieldId: string) {
+        if (!this.state.initialized) {
+            return;
+        }
+
+        const {profile, itemWithChanges, toggledFields, fieldsDataWithChanges} = this.state;
+        const allFields = profile.header.merge(profile.content);
+        const field = allFields.get(fieldId);
+        const FieldEditorConfig = getField(field.fieldType);
+
+        const toggledValueNext: boolean = !toggledFields[fieldId];
+
+        /**
+         * When toggled to "off", clear current value by setting an empty one.
+         * Removing a value entirely wouldn't work, because our REST API
+         * doesn't support patches that can remove keys.
+         */
+        const fieldValuesNext = toggledValueNext === true
+            ? fieldsDataWithChanges
+            : fieldsDataWithChanges.set(fieldId, FieldEditorConfig.getEmptyValue(itemWithChanges, field.fieldConfig));
+
+        this.setState({
+            ...this.state,
+            toggledFields: {
+                ...toggledFields,
+                [fieldId]: toggledValueNext,
+            },
+            fieldsDataWithChanges: fieldValuesNext,
+        });
+    }
+
     render() {
         const state = this.state;
 
@@ -1213,6 +1270,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                     useHeaderLayout
                                                     setUserPreferencesForFields={this.setUserPreferences}
                                                     getVocabularyItems={this.getVocabularyItems}
+                                                    toggledFields={state.toggledFields}
+                                                    toggleField={this.toggleField}
                                                     readOnly={readOnly}
                                                 />
                                             </div>
@@ -1227,6 +1286,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 userPreferencesForFields={state.userPreferencesForFields}
                                                 setUserPreferencesForFields={this.setUserPreferences}
                                                 getVocabularyItems={this.getVocabularyItems}
+                                                toggledFields={state.toggledFields}
+                                                toggleField={this.toggleField}
                                                 readOnly={readOnly}
                                             />
                                         </div>

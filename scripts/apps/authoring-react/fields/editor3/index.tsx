@@ -52,6 +52,28 @@ export function storeEditor3ValueBase(fieldId, article, value, config)
     return {article: articleUpdated, stringValue, annotations};
 }
 
+function toOperationalFormat(
+    value: IEditor3ValueStorage,
+    article: IArticle,
+): IEditor3ValueOperational {
+    const store = createEditorStore(
+        {
+            editorState: value.rawContentState,
+            onChange: noop,
+            language: article.language,
+        },
+        ng.get('spellcheck'),
+        true,
+    );
+
+    const result: IEditor3ValueOperational = {
+        store,
+        contentState: store.getState().editorState.getCurrentContent(),
+    };
+
+    return result;
+}
+
 export function getEditor3Field()
 : ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> {
     const field: ICustomFieldType<IEditor3ValueOperational, IEditor3ValueStorage, IEditor3Config, IUserPreferences> = {
@@ -59,6 +81,16 @@ export function getEditor3Field()
         label: gettext('Editor3 (authoring-react)'),
         editorComponent: Editor,
         previewComponent: Preview,
+
+        hasValue: (valueOperational) => valueOperational.contentState.getPlainText().trim().length > 0,
+
+        getEmptyValue: (article) => {
+            return toOperationalFormat(
+                {rawContentState: convertToRaw(ContentState.createFromText(''))},
+                article,
+            );
+        },
+
         differenceComponent: Difference,
         configComponent: Config,
 
@@ -88,22 +120,7 @@ export function getEditor3Field()
             config: IEditor3Config,
             article: IArticle,
         ): IEditor3ValueOperational => {
-            const store = createEditorStore(
-                {
-                    editorState: value.rawContentState,
-                    onChange: noop,
-                    language: article.language,
-                },
-                ng.get('spellcheck'),
-                true,
-            );
-
-            const result: IEditor3ValueOperational = {
-                store,
-                contentState: store.getState().editorState.getCurrentContent(),
-            };
-
-            return result;
+            return toOperationalFormat(value, article);
         },
 
         retrieveStoredValue: (fieldId, article) => {

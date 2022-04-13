@@ -1,5 +1,12 @@
 import {OrderedMap} from 'immutable';
-import {IArticle, IAuthoringFieldV2, IFieldsV2, IContentProfileV2, IVocabulary} from 'superdesk-api';
+import {
+    IArticle,
+    IAuthoringFieldV2,
+    IFieldsV2,
+    IContentProfileV2,
+    IVocabulary,
+    ICommonFieldConfig,
+} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {dataApi} from 'core/helpers/CrudManager';
@@ -74,7 +81,21 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
                     const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
                     const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
 
-                    return fieldsAdapter[fieldId].getFieldV2(fieldEditor, fieldSchema);
+                    const f: IAuthoringFieldV2 = fieldsAdapter[fieldId].getFieldV2(fieldEditor, fieldSchema);
+
+                    const commonConfigs: ICommonFieldConfig = {
+                        readOnly: fieldEditor.readonly === true,
+                        required: fieldEditor.required === true,
+                        allow_toggling: fieldEditor.allow_toggling === true,
+                    };
+
+                    return {
+                        ...f,
+                        fieldConfig: {
+                            ...commonConfigs,
+                            ...f.fieldConfig, // adapter should be capable of overwriting common configs
+                        },
+                    };
                 } else { // custom fields
                     const field = fields.find(({_id}) => _id === fieldId);
 
