@@ -46,6 +46,11 @@ export const genre: IFieldAdapter = {
                 ...article,
                 genre: val.map((qcode) => ({qcode, name: vocabularyItems.get(qcode.toString())?.name ?? ''})),
             };
+        } else if (val == null) {
+            return {
+                ...article,
+                genre: null,
+            };
         } else {
             const qcode = val;
 

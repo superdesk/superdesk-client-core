@@ -52,6 +52,11 @@ export const anpa_category: IFieldAdapter = {
                     ...(vocabularyItems.get(qcode.toString()) ?? {}),
                 })),
             };
+        } else if (val == null) {
+            return {
+                ...article,
+                anpa_category: null,
+            };
         } else {
             const qcode = val;
 

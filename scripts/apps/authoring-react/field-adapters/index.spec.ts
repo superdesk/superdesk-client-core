@@ -11,7 +11,17 @@ describe('field adapters', () => {
         const baseAdapter = getBaseFieldsAdapter();
         const dropdownAdapters =
             Object.values(baseAdapter)
-                .filter((adapter) => adapter.getFieldV2({}, {}).fieldType === 'dropdown');
+                .filter((adapter) => {
+                    const fieldAdapter = adapter.getFieldV2({}, {});
+
+                    /**
+                     * Subject only works in multi-select mode,
+                     * thus `null` would never be passed to it.
+                     */
+                    const skipField = fieldAdapter.id === 'subject';
+
+                    return fieldAdapter.fieldType === 'dropdown' && skipField !== true;
+                });
 
         for (const dropdownAdapter of dropdownAdapters) {
             if (dropdownAdapter.storeValue != null) {

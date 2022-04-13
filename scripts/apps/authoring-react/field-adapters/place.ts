@@ -100,6 +100,11 @@ export function getPlaceAdapter(): IFieldAdapter {
                             (qcode) => ({qcode, name: vocabularyItems.get(qcode.toString())?.name ?? ''}),
                         ),
                     };
+                } else if (val == null) {
+                    return {
+                        ...article,
+                        place: null,
+                    };
                 } else {
                     const qcode = val;
 
