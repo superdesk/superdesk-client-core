@@ -489,7 +489,12 @@ declare module 'superdesk-api' {
             master_id?: any; // original story this broadcast version was created from
             status?: any;
         };
-        flags: any;
+        flags: {
+            marked_archived_only?: boolean;
+            marked_for_legal?: boolean;
+            marked_for_not_publication?: boolean;
+            marked_for_sms?: boolean;
+        };
         source: string;
         /** correction counter, is reset on rewrite */
         correction_sequence?: number;

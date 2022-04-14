@@ -76,18 +76,18 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
             const {editorItem} = _field;
             const fieldId = adjustId(_field.fieldId);
 
+            const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
+            const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
+
+            const commonConfigs: ICommonFieldConfig = {
+                readOnly: fieldEditor.readonly === true,
+                required: fieldEditor.required === true,
+                allow_toggling: fieldEditor.allow_toggling === true,
+            };
+
             const fieldV2: IAuthoringFieldV2 = (() => {
                 if (fieldsAdapter.hasOwnProperty(fieldId)) { // main, hardcoded fields
-                    const fieldEditor = editor[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
-                    const fieldSchema = schema[_field.fieldId] ?? {}; // unadjusted fieldId has to be used
-
                     const f: IAuthoringFieldV2 = fieldsAdapter[fieldId].getFieldV2(fieldEditor, fieldSchema);
-
-                    const commonConfigs: ICommonFieldConfig = {
-                        readOnly: fieldEditor.readonly === true,
-                        required: fieldEditor.required === true,
-                        allow_toggling: fieldEditor.allow_toggling === true,
-                    };
 
                     return {
                         ...f,
@@ -103,7 +103,10 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
                         id: fieldId,
                         name: getLabelForFieldId(fieldId),
                         fieldType: field.custom_field_type,
-                        fieldConfig: field.custom_field_config,
+                        fieldConfig: {
+                            ...commonConfigs,
+                            ...(field.custom_field_config ?? {}),
+                        },
                     };
 
                     return f;

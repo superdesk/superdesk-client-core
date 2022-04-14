@@ -14,7 +14,7 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
         return (
             <Spacer v gap="16">
                 <div>
-                    <div>{gettext('Formatting options')}</div>
+                    <div className="form-label">{gettext('Formatting options')}</div>
 
                     <MultiSelect
                         items={EDITOR3_RICH_FORMATTING_OPTIONS.map((label) => ({id: label, label}))}
@@ -26,7 +26,7 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                 </div>
 
                 <div>
-                    <div>{gettext('Minimum length')}</div>
+                    <div className="form-label">{gettext('Minimum length')}</div>
 
                     <input
                         type="number"
@@ -38,7 +38,7 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                 </div>
 
                 <div>
-                    <div>{gettext('Maximum length')}</div>
+                    <div className="form-label">{gettext('Maximum length')}</div>
 
                     <input
                         type="number"
@@ -70,13 +70,35 @@ export class Config extends React.PureComponent<IConfigComponentProps<IEditor3Co
                 </div>
 
                 <div>
-                    <div>{gettext('Disallowed characters')}</div>
+                    <div className="form-label">{gettext('Disallowed characters')}</div>
 
                     <input
                         type="text"
                         value={config.disallowedCharacters?.join('')}
                         onChange={(event) => {
                             this.props.onChange({...config, disallowedCharacters: event.target.value.split('')});
+                        }}
+                    />
+                </div>
+
+                <div>
+                    <div className="form-label">{gettext('Field ID to prefill from')}</div>
+
+                    <p>
+                        {
+                            gettext(
+                                'This field will initialize with the value of specified field'
+                                + ' when toggled from "off" to "on". Only plain-text gets copied.'
+                                + ' Formatting options or links are not preserved.',
+                            )
+                        }
+                    </p>
+
+                    <input
+                        type="text"
+                        value={config.copyFromFieldOnToggle}
+                        onChange={(event) => {
+                            this.props.onChange({...config, copyFromFieldOnToggle: event.target.value});
                         }}
                     />
                 </div>

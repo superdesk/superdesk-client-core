@@ -91,6 +91,20 @@ export function getEditor3Field()
             );
         },
 
+        onToggledOn: ({fieldsData, config, language}) => {
+            const fieldValue: IEditor3ValueOperational | null =
+                config.copyFromFieldOnToggle == null
+                    ? null
+                    : fieldsData.get(config.copyFromFieldOnToggle) as IEditor3ValueOperational | null;
+
+            const plainText = fieldValue?.contentState?.getPlainText() ?? '';
+
+            return editor3ToOperationalFormat(
+                {rawContentState: convertToRaw(ContentState.createFromText(plainText))},
+                language,
+            );
+        },
+
         differenceComponent: Difference,
         configComponent: Config,
 
