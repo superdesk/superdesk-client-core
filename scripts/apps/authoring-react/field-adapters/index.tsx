@@ -40,6 +40,11 @@ export interface IFieldAdapter {
      * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
      */
     retrieveStoredValue?(item: IArticle): unknown;
+
+    /**
+     * Must return a value in operational format.
+     */
+    onToggledOn?: ICustomFieldType<unknown, unknown, unknown, unknown>['onToggledOn'];
 }
 
 type IFieldsAdapter = {[key: string]: IFieldAdapter};

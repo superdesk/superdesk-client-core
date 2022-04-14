@@ -2477,6 +2477,13 @@ declare module 'superdesk-api' {
         onChange(config: IConfig): void;
     }
 
+    export interface ICustomFieldRuntimeData<IConfig, IUserPreferences> {
+        language: string;
+        config: IConfig;
+        editorPreferences: IUserPreferences;
+        fieldsData: Immutable.Map<string, unknown>;
+    }
+
     export interface ICustomFieldType<IValueOperational, IValueStorage, IConfig, IUserPreferences> {
         id: string;
         label: string;
@@ -2493,6 +2500,14 @@ declare module 'superdesk-api' {
          * Must return a value that will be considered empty by `hasValue` function.
          */
         getEmptyValue(article: IArticle, config: IConfig): IValueOperational;
+
+
+        /**
+         * Enables initializing with a custom value when field visibility is toggled from "off" to "on".
+         * 
+         * Also available in field adapters.
+         */
+        onToggledOn?(options: ICustomFieldRuntimeData<IConfig, IUserPreferences>): IValueOperational;
 
         configComponent?: React.ComponentType<IConfigComponentProps<IConfig>>;
         templateEditorComponent?: React.ComponentType<ITemplateEditorComponentProps<IValueOperational, IConfig>>;
@@ -2512,6 +2527,9 @@ declare module 'superdesk-api' {
 
         /**
          * Allows to customize where values are stored.
+         * 
+         * Also available in field adapters.
+         * 
          * By default, custom fields are stored in IArticle['extra'].
          * Some fields may require a different storing strategy.
          * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`

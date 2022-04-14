@@ -52,15 +52,15 @@ export function storeEditor3ValueBase(fieldId, article, value, config)
     return {article: articleUpdated, stringValue, annotations};
 }
 
-function toOperationalFormat(
+export function editor3ToOperationalFormat(
     value: IEditor3ValueStorage,
-    article: IArticle,
+    language: string,
 ): IEditor3ValueOperational {
     const store = createEditorStore(
         {
             editorState: value.rawContentState,
             onChange: noop,
-            language: article.language,
+            language: language,
         },
         ng.get('spellcheck'),
         true,
@@ -85,9 +85,9 @@ export function getEditor3Field()
         hasValue: (valueOperational) => valueOperational.contentState.getPlainText().trim().length > 0,
 
         getEmptyValue: (article) => {
-            return toOperationalFormat(
+            return editor3ToOperationalFormat(
                 {rawContentState: convertToRaw(ContentState.createFromText(''))},
-                article,
+                article.language,
             );
         },
 
@@ -120,7 +120,7 @@ export function getEditor3Field()
             config: IEditor3Config,
             article: IArticle,
         ): IEditor3ValueOperational => {
-            return toOperationalFormat(value, article);
+            return editor3ToOperationalFormat(value, article.language);
         },
 
         retrieveStoredValue: (fieldId, article) => {

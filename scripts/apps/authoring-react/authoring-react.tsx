@@ -961,16 +961,31 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         const allFields = profile.header.merge(profile.content);
         const field = allFields.get(fieldId);
         const FieldEditorConfig = getField(field.fieldType);
+        const fieldsAdapter = getFieldsAdapter();
 
         const toggledValueNext: boolean = !toggledFields[fieldId];
+
+        const onToggledOn = fieldsAdapter[fieldId]?.onToggledOn ?? FieldEditorConfig.onToggledOn;
 
         /**
          * When toggled to "off", clear current value by setting an empty one.
          * Removing a value entirely wouldn't work, because our REST API
          * doesn't support patches that can remove keys.
+         *
+         * When toggled to "on", set value returned from `onToggledOn` if it is defined.
          */
         const fieldValuesNext = toggledValueNext === true
-            ? fieldsDataWithChanges
+            ? onToggledOn == null ?
+                fieldsDataWithChanges
+                : fieldsDataWithChanges.set(
+                    fieldId,
+                    onToggledOn({
+                        language: this.state.itemWithChanges.language,
+                        config: field.fieldConfig,
+                        editorPreferences: this.state.userPreferencesForFields[field.id],
+                        fieldsData: this.state.fieldsDataWithChanges,
+                    }),
+                )
             : fieldsDataWithChanges.set(fieldId, FieldEditorConfig.getEmptyValue(itemWithChanges, field.fieldConfig));
 
         this.setState({
