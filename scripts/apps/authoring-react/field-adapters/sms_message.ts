@@ -11,8 +11,9 @@ export const sms_message: IFieldAdapter = {
             minLength: fieldSchema?.minlength,
             maxLength: fieldSchema?.maxlength,
             cleanPastedHtml: fieldEditor?.cleanPastedHTML,
-            singleLine: false,
+            singleLine: true,
             disallowedCharacters: [],
+            copyFromFieldOnToggle: fieldEditor.sourceField?.length > 0 ? fieldEditor.sourceField : 'abstract',
         };
 
         const fieldV2: IAuthoringFieldV2 = {
@@ -36,6 +37,11 @@ export const sms_message: IFieldAdapter = {
         const articleUpdated = {...result.article};
 
         articleUpdated.sms_message = result.stringValue;
+
+        articleUpdated.flags = {
+            ...(articleUpdated.flags ?? {}),
+            marked_for_sms: articleUpdated.sms_message?.length > 0,
+        };
 
         return articleUpdated;
     },
