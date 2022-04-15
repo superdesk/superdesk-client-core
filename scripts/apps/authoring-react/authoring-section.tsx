@@ -1,14 +1,10 @@
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IEditorComponentContainerProps, IFieldsV2, IVocabularyItem} from 'superdesk-api';
-import {getField} from 'apps/fields';
+import {IFieldsV2, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
 import {IToggledFields} from './authoring-react';
-import {Switch} from 'superdesk-ui-framework/react';
-import {gettext} from 'core/utils';
-import {Spacer} from 'core/ui/components/Spacer';
+import {AuthoringSectionField} from './authoring-section-field';
 
-interface IProps {
+export interface IPropsAuthoringSection {
     language: string;
     fieldsData: Map<string, unknown>;
     fields: IFieldsV2;
@@ -22,132 +18,55 @@ interface IProps {
     getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
 }
 
+/**
+ * A variable is needed in order to use the same object reference
+ * and allow PureComponent to skip re-renders.
+ */
 const defaultUserPreferences = {};
 
-export class AuthoringSection extends React.PureComponent<IProps> {
+export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection> {
+    constructor(props: IPropsAuthoringSection) {
+        super(props);
+
+        this.onEditorPreferencesChange = this.onEditorPreferencesChange.bind(this);
+    }
+
+    onEditorPreferencesChange(fieldId: string, preferences: unknown) {
+        this.props.setUserPreferencesForFields({
+            ...(this.props.userPreferencesForFields ?? {}),
+            [fieldId]: preferences,
+        });
+    }
+
     render() {
-        const {fields, fieldsData, toggledFields, toggleField} = this.props;
+        const {toggledFields} = this.props;
 
         return (
             <div style={{display: 'flex', flexDirection: 'column', gap: '20px'}}>
                 {
-                    fields.map((field) => {
-                        const FieldEditorConfig = getField(field.fieldType);
+                    this.props.fields.map((field) => {
                         const canBeToggled = toggledFields[field.id] != null;
                         const toggledOn = toggledFields[field.id];
 
-                        const toggle = canBeToggled && (
-                            <Switch
-                                label={gettext('Toggle field')}
-                                value={toggledOn}
-                                onChange={() => {
-                                    toggleField(field.id);
-                                }}
+                        return (
+                            <AuthoringSectionField
+                                key={field.id}
+                                field={field}
+                                value={this.props.fieldsData.get(field.id)}
+                                onChange={this.props.onChange}
+                                readOnly={this.props.readOnly}
+                                language={this.props.language}
+                                canBeToggled={canBeToggled}
+                                toggledOn={toggledOn}
+                                toggleField={this.props.toggleField}
+                                editorPreferences={
+                                    this.props.userPreferencesForFields[field.id] ?? defaultUserPreferences
+                                }
+                                onEditorPreferencesChange={this.onEditorPreferencesChange}
+                                useHeaderLayout={this.props.useHeaderLayout}
+                                getVocabularyItems={this.props.getVocabularyItems}
                             />
                         );
-
-                        class HeaderLayout extends React.PureComponent<IEditorComponentContainerProps> {
-                            render() {
-                                const {miniToolbar} = this.props;
-
-                                return (
-                                    <div>
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'start',
-                                                alignItems: 'center',
-                                            }}
-                                        >
-                                            <span className="form-label">
-                                                <Spacer h gap="8" noGrow>
-                                                    <span>{field.name}</span>
-                                                    <span>{toggle}</span>
-                                                </Spacer>
-                                            </span>
-
-                                            <div style={{flexGrow: 1}}>
-                                                {this.props.children}
-
-                                                {
-                                                    miniToolbar != null && (
-                                                        <div>{miniToolbar}</div>
-                                                    )
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            }
-                        }
-
-                        class ContentLayout extends React.PureComponent<IEditorComponentContainerProps> {
-                            render() {
-                                const {miniToolbar} = this.props;
-
-                                return (
-                                    <div>
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center',
-                                                marginBottom: 15,
-                                            }}
-                                        >
-                                            <Spacer h gap="8" noGrow>
-                                                <span className="field-label--base" >
-                                                    {field.name}
-                                                </span>
-
-                                                <span>{toggle}</span>
-                                            </Spacer>
-
-                                            {
-                                                miniToolbar != null && (
-                                                    <div>{miniToolbar}</div>
-                                                )
-                                            }
-                                        </div>
-
-                                        {this.props.children}
-                                    </div>
-                                );
-                            }
-                        }
-
-                        const Container = this.props.useHeaderLayout ? HeaderLayout : ContentLayout;
-
-                        if (canBeToggled && toggledOn === false) {
-                            return (
-                                <Container key={field.id} />
-                            );
-                        } else {
-                            return (
-                                <FieldEditorConfig.editorComponent
-                                    key={field.id}
-                                    editorId={field.id}
-                                    container={Container}
-                                    language={this.props.language}
-                                    value={fieldsData.get(field.id)}
-                                    onChange={(val) => {
-                                        this.props.onChange(field.id, val);
-                                    }}
-                                    readOnly={this.props.readOnly}
-                                    config={field.fieldConfig}
-                                    editorPreferences={
-                                        this.props.userPreferencesForFields[field.id] ?? defaultUserPreferences
-                                    }
-                                    onEditorPreferencesChange={(fieldPreferences) => {
-                                        this.props.setUserPreferencesForFields({
-                                            ...(this.props.userPreferencesForFields ?? {}),
-                                            [field.id]: fieldPreferences,
-                                        });
-                                    }}
-                                    getVocabularyItems={this.props.getVocabularyItems}
-                                />
-                            );
-                        }
                     }).toArray()
                 }
             </div>

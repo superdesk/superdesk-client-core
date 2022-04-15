@@ -1,12 +1,16 @@
 import {ICallable} from 'superdesk-api';
 
-interface ICache {
+interface ICacheItem {
     args: Array<any>;
     result: any;
 }
 
+/**
+ * Memoization function that supports multiple arguments and is memory-efficient
+ * (depending on cache size, which is controlled by maxCacheEntryCount)
+ */
 export function memoize<T extends ICallable>(func: T, maxCacheEntryCount = 1): T {
-    let cache: Array<ICache> = [];
+    let cache: Array<ICacheItem> = [];
 
     return function(...args: Array<any>) {
         var cachedValue = cache.find(
