@@ -21,7 +21,7 @@ import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {gettext} from 'core/utils';
 import {authoringStorage} from './data-layer';
-import {AuthoringSection} from './authoring-section';
+import {AuthoringSection} from './authoring-section/authoring-section';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {EditorTest} from './ui-framework-authoring-test';
 import {extensions, uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';

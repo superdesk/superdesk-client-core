@@ -1,7 +1,7 @@
 import React from 'react';
 import {IFieldsV2, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
-import {IToggledFields} from './authoring-react';
+import {IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
 
 export interface IPropsAuthoringSection {
