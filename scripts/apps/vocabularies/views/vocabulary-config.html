@@ -72,6 +72,15 @@
                         </div>
                     </div>
                     <div class="sd-list-item__action-menu sd-list-item__action-menu--direction-row">
+                      <div>
+                        <button
+                          ng-click="downloadVocabulary(vocabulary)"
+                          sd-tooltip="{{:: 'Download config' | translate }}"
+                          data-test-id="vocabulary-item--start-download"
+                        >
+                          <i class="icon-download"></i>
+                        </button>
+                      </div>
                         <button
                           ng-click="openVocabulary(vocabulary)"
                           sd-tooltip="{{:: 'Edit vocabulary' | translate }}"
@@ -90,6 +99,10 @@
 
     </div>
 </div>
+
+<sd-upload-config-modal>
+
+</sd-upload-config-modal>
 
 <div sd-vocabulary-config-modal ng-if="vocabulary"></div>
 

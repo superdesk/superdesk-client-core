@@ -35,7 +35,6 @@ export class MetaDataDropdownSingleSelectReact extends React.PureComponent<IProp
                     tabIndex={tabIndex}
                     className="sd-line-input__select"
                 >
-                    <option value="" />
                     {
                         optionsWithTranslations.map(({label, value}) => (
                             <option key={value} value={value}>{label}</option>

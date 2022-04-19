@@ -21,7 +21,7 @@ export function isDateValue(value: string | undefined | null) {
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {
     const {formatDateTime} = superdesk.localization;
 
-    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps> {
+    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps<string>> {
         render() {
             if (this.props.value == null) {
                 return null;
@@ -42,6 +42,16 @@ export const defaultDateTimeConfig: IDateTimeFieldConfig = {
     increment_steps: [],
 };
 
+function onTemplateCreate(_value: string, config: IDateTimeFieldConfig) {
+    const initialOffset = config.initial_offset_minutes;
+
+    if (_value == null) {
+        return null;
+    } else {
+        return `{{ now|add_timedelta(minutes=${initialOffset})|iso_datetime }}`;
+    }
+}
+
 const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
@@ -56,6 +66,7 @@ const extension: IExtension = {
                         previewComponent: getDateTimePreviewComponent(superdesk),
                         configComponent: getConfigComponent(superdesk),
                         templateEditorComponent: getToggleDateTimeField(superdesk),
+                        onTemplateCreate: onTemplateCreate,
                     },
                 ],
             },

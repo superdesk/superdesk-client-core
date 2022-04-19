@@ -21,7 +21,7 @@ const sameWidth: Modifier<any, any> = {
     },
 };
 
-const applyMaxSize: Modifier<any, any> = {
+export const applyMaxSize: Modifier<any, any> = {
     name: 'applyMaxSize',
     enabled: true,
     phase: 'beforeWrite',

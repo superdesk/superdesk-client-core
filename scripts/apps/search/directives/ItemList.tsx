@@ -320,7 +320,7 @@ export function ItemList(
                         .some((item) => item.selected === true);
 
                     if (elem[0].scrollTop === 0 && !multiSelectInProgress) {
-                        $rootScope.$broadcast('refresh:list', scope.group);
+                        $rootScope.$broadcast('refresh:list', scope.group, {event_origin: 'scroll'});
                     }
 
                     if (scope.rendering) { // ignore

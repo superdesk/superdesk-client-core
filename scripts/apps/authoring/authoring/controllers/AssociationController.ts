@@ -150,7 +150,8 @@ export class AssociationController {
         let associationKey = scope.carouselItem ? scope.carouselItem.fieldId : customRel || scope.rel;
         const field = associationKey.split('--')[0];
 
-        const isItemBeingAdded = updated != null && scope.item.associations[associationKey] == null;
+        const isItemBeingAdded = updated != null && scope.item.associations &&
+        scope.item?.associations[associationKey] == null;
 
         if (
             isItemBeingAdded

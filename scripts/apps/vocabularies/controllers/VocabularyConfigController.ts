@@ -2,7 +2,9 @@ import {DEFAULT_SCHEMA, getVocabularySelectionTypes, getMediaTypeKeys, getMediaT
 import {IVocabulary, IVocabularyTag} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {remove, reduce} from 'lodash';
-import {gettext} from 'core/utils';
+import {gettext, downloadFile} from 'core/utils';
+import {showModal} from 'core/services/modalService';
+import {UploadConfig} from '../components/UploadConfigModal';
 
 function getOther() {
     return gettext('Other');
@@ -15,6 +17,8 @@ export interface IScope extends IDirectiveScope<void> {
     loading: boolean;
     mediaTypes: object;
     openVocabulary(vocabulary: IVocabulary): void;
+    downloadVocabulary(vocabulary: IVocabulary): void;
+    uploadConfig(): void;
     getVocabulariesForTag(currentTag: IVocabularyTag, tab: string): Array<IVocabulary>;
     existsVocabulariesForTag(currentTag: IVocabularyTag, tab: string): boolean;
     canShowTag(currentTag: IVocabularyTag, tab: string): boolean;
@@ -58,6 +62,22 @@ export function VocabularyConfigController($scope: IScope, $route, $routeParams,
      */
     $scope.openVocabulary = (vocabulary: IVocabulary) => {
         $route.updateParams({id: vocabulary._id});
+    };
+
+    /**
+     * Download vocabulary in json file.
+     *
+     * @param {Object} vocabulary
+     */
+    $scope.downloadVocabulary = (vocabulary: IVocabulary) => {
+        downloadFile(JSON.stringify(vocabulary), 'application/json', vocabulary.display_name);
+    };
+
+    /**
+     * Open modal for upload config file.
+     */
+    $scope.uploadConfig = () => {
+        showModal(UploadConfig($scope.updateVocabulary));
     };
 
     /**

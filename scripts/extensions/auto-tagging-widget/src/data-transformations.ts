@@ -85,8 +85,10 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     qcode,
                     source,
                     altids,
+                    scheme,
                     aliases,
                     original_source,
+                    parent,
                 } = subjectItem;
 
                 const subjectTag: ITagBase = {
@@ -95,6 +97,8 @@ export function getExistingTags(article: IArticle): IServerResponse {
                     qcode,
                     source,
                     altids: altids ?? {},
+                    parent,
+                    scheme,
                     aliases,
                     original_source,
                 };

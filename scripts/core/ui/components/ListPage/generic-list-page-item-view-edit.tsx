@@ -9,26 +9,30 @@ import {
     SidePanelContent,
     SidePanelContentBlock,
 } from 'core/components/SidePanel';
-import {connectServices} from 'core/helpers/ReactRenderAsync';
 import {FormViewEdit} from 'core/ui/components/generic-form/from-group';
 import {IFormGroup} from 'superdesk-api';
 import {isHttpApiError} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import {getFormFieldsFlat} from '../generic-form/get-form-fields-flat';
 import {hasValue} from '../generic-form/has-value';
+import ng from 'core/services/ng';
 
 interface IProps {
     operation: 'editing' | 'creation';
     editMode: boolean;
     formConfig: IFormGroup;
     item: {[key: string]: any};
+
+    /**
+     * label "save" doesn't work when data source is an array. The array
+     * may be a part of a parent component that has it's own saving mechanism.
+     */
+    labelForSaveButton: string;
+
     onEditModeChange(nextValue: boolean): void;
     onClose: () => void;
     onCancel?: () => void;
     onSave: (nextItem) => Promise<any>;
-
-    // connected services
-    modal?: any;
 }
 
 interface IState {
@@ -41,7 +45,9 @@ const getInitialState = (props: IProps) => ({
     issues: {},
 });
 
-class GenericListPageItemViewEditComponent extends React.Component<IProps, IState> {
+export class GenericListPageItemViewEdit extends React.Component<IProps, IState> {
+    private modal: any;
+
     constructor(props) {
         super(props);
 
@@ -52,6 +58,8 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.isFormDirty = this.isFormDirty.bind(this);
         this.handleSave = this.handleSave.bind(this);
+
+        this.modal = ng.get('modal');
     }
     enableEditMode() {
         this.setState({
@@ -82,7 +90,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         (
             this.isFormDirty() === false
                 ? Promise.resolve()
-                : this.props.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
+                : this.modal.confirm(gettext('There are unsaved changes which will be discarded. Continue?'))
         ).then(cancelFn)
             .catch(() => {
             // do nothing
@@ -156,6 +164,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
                 }
             });
     }
+
     render() {
         return (
             <SidePanel side="right" width={360} data-test-id="item-view-edit">
@@ -178,7 +187,7 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
                                         className="btn btn--primary"
                                         data-test-id="item-view-edit--save"
                                     >
-                                        {gettext('Save')}
+                                        {this.props.labelForSaveButton}
                                     </button>
                                 </div>
                             )
@@ -215,8 +224,3 @@ class GenericListPageItemViewEditComponent extends React.Component<IProps, IStat
         );
     }
 }
-
-export const GenericListPageItemViewEdit = connectServices<IProps>(
-    GenericListPageItemViewEditComponent,
-    ['modal'],
-);

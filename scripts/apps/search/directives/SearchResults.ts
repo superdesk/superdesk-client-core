@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
-import {ISearchOptions} from '../services/SearchService';
+import {ISearchOptions, showRefresh} from '../services/SearchService';
 import {IPackagesService} from 'types/Services/Packages';
 
 SearchResults.$inject = [
@@ -246,7 +246,7 @@ export function SearchResults(
                             isItemPreviewing: !!scope.selected.preview,
                         };
 
-                        scope.showRefresh = search.canShowRefresh(_data);
+                        scope.showRefresh = showRefresh((scope.items?._items ?? []), items._items);
                     }
 
                     if (!scope.showRefresh || data && data.force) {
@@ -303,7 +303,14 @@ export function SearchResults(
                 });
             }
 
-            scope.$on('refresh:list', (event, group) => {
+            scope.$on('refresh:list', (event, group, options) => {
+                /**
+                 * When manual refreshing is enabled, scrolling should not automatically refresh the list.
+                 */
+                if (scope.showRefresh === true && options?.event_origin === 'scroll') {
+                    return;
+                }
+
                 scope.refreshList();
             });
 
@@ -417,8 +424,24 @@ export function SearchResults(
 
                 if (item) {
                     if (item._type === 'externalsource') {
-                        processPreview(item);
-                        return;
+                        var preview_id = item.extra?.previewid;
+
+                        if (preview_id) {
+                            criteria.params = {'preview_id': preview_id};
+                            return api.query(getProvider(criteria), criteria).then((item_) => {
+                                if ('_items' in item_ && item_._items[0] !== undefined) {
+                                    processPreview(item_._items[0]);
+                                } else {
+                                    processPreview(item);
+                                }
+                            }, (error) => {
+                                notify.error('Detailed informations is not found for the item : ' + item.guid);
+                                processPreview(item);
+                            });
+                        } else {
+                            processPreview(item);
+                            return;
+                        }
                     }
 
                     scope.loading = true;

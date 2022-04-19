@@ -13,6 +13,7 @@ import {isPublished} from 'apps/archive/utils';
 import _, {cloneDeep} from 'lodash';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {isMediaType} from 'core/helpers/item';
+import {InitializeMedia} from '../authoring/services/InitializeMediaService';
 
 MultieditService.$inject = ['storage', 'superdesk', 'authoringWorkspace', 'referrer', '$location'];
 function MultieditService(storage, superdesk, authoringWorkspace: AuthoringWorkspaceService, referrer, $location) {
@@ -175,12 +176,15 @@ function MultieditDropdownInnerDirective(workqueue, multiEdit) {
     };
 }
 
-MultieditArticleDirective.$inject = ['authoring', 'content', 'multiEdit', 'lock', '$timeout'];
-function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout) {
+MultieditArticleDirective.$inject = ['authoring', 'content', 'multiEdit', 'lock', '$timeout', 'notify'];
+function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout, notify) {
     return {
         templateUrl: 'scripts/apps/authoring/multiedit/views/sd-multiedit-article.html',
         scope: {article: '=', focus: '='},
         link: function(scope, elem) {
+            const MEDIA_TYPES = ['video', 'picture', 'audio'];
+            var mediaFields = {};
+
             scope.$watch('article', (newVal, oldVal) => {
                 if (newVal && newVal !== oldVal) {
                     openItem();
@@ -193,7 +197,6 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     scope.item = JSON.parse(JSON.stringify(item));
                     scope._editable = authoring.isEditable(item);
                     scope.isMediaType = isMediaType(scope.item);
-
                     if (scope.focus) {
                         $timeout(() => {
                             elem.children().focus();
@@ -201,15 +204,25 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     }
                     scope.isLocked = lock.isLocked(item);
 
-                    content.setupAuthoring(scope.item.profile, scope, scope.item);
+                    content.setupAuthoring(scope.item.profile, scope, scope.item).then((contentType) => {
+                        scope.contentType = contentType;
+                        InitializeMedia.initMedia(scope);
+                    });
                 });
             }
 
             openItem();
 
-            scope.autosave = function(item) {
+            scope.autosave = function(item, timeout) {
                 scope.dirty = true;
-                authoring.autosave(cloneDeep(item), scope.origItem);
+                return authoring.autosave(cloneDeep(item), scope.origItem, timeout)
+                    .then(
+                        () => {
+                            scope.$applyAsync(() => {
+                                InitializeMedia.initMedia(scope);
+                                notify.success(gettext('Item updated.'));
+                            });
+                        });
             };
 
             scope.$watch('item.flags', (newValue, oldValue) => {
@@ -219,9 +232,12 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                 }
             }, true);
 
-            scope.save = function(item) {
-                return authoring.save(scope.origItem, cloneDeep(item)).then((res) => {
+            scope.save = function() {
+                return authoring.save(scope.origItem, cloneDeep(scope.item)).then((res) => {
                     scope.dirty = false;
+                    InitializeMedia.initMedia(scope);
+
+                    notify.success(gettext('Item updated.'));
 
                     return res;
                 });

@@ -1,4 +1,4 @@
-<section class="main-section publish-queue">
+<section class="main-section publish-queue" sd-loading="loading">
     <div class="preview-layout" ng-class="{closed: !selected.preview}">
 
         <header class="subnav">
@@ -72,7 +72,7 @@
                     </div>
                 </div>
 
-                <div sd-pagination-alt class="pagination-box subnav__element-grow" data-page="page" data-max-page="maxPage"></div>
+                <div sd-pagination-alt class="pagination-box subnav__element-grow" data-page="pagination.page" data-max-page="maxPage"></div>
 
                 <div class="refresh-box">
                     <span >{{ :: 'Last refreshed at' | translate}}: {{ lastRefreshedAt | date:'dd-MM-yyyy HH:mm:ss' }}</span>

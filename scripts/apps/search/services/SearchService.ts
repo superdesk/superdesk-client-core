@@ -87,6 +87,27 @@ export function generateTrackByIdentifier(
 }
 
 /**
+ * Determine if refresh button needs to be shown.
+ * It is shown if items are added/removed or order has changed.
+ */
+export function showRefresh(currentItems: Array<IArticle> | null, newItems: Array<IArticle>) {
+    if (newItems.length !== currentItems?.length) {
+        return true;
+    }
+
+    for (let i = 0; i < newItems.length; i++) {
+        const _new = newItems[i];
+        const _current = currentItems[i];
+
+        if (_new._id !== _current?._id) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+/**
  * @ngdoc service
  * @module superdesk.apps.search
  * @name search
@@ -646,10 +667,18 @@ export function SearchService($location, session, multi,
             this.filter({not: {term: {state: 'scheduled'}}});
         }
 
-        // remove other users drafts.
-        this.filter({or: [{and: [{term: {state: 'draft'}},
-            {term: {original_creator: session.identity._id}}]},
-        {not: {terms: {state: ['draft']}}}]});
+        /**
+         * Filter out personal items that don't belong to current user.
+         */
+        this.filter({
+            not: {
+                and: [ // matches personal items that belong to other users
+                    {not: {exists: {field: 'task.desk'}}},
+                    {exists: {field: 'task.user'}},
+                    {not: {term: {'task.user': session.identity._id}}},
+                ],
+            },
+        });
 
         // this is needed for archived collection
         this.filter({not: {term: {package_type: 'takes'}}});
@@ -693,32 +722,6 @@ export function SearchService($location, session, multi,
             return !_.find(b._items, {_id: item._id});
         });
     }
-
-    /*
-     * To determine if refresh button needs to be shown, i-e:
-     * when any difference found in scopeItems and recently fetched newItems
-     *
-     * @param {Object} data - {newItems, scopeItems, scrollTop, isItemPreviewing}
-     */
-    this.canShowRefresh = function(data) {
-        var _showRefresh, diff = [];
-
-        if (data.scopeItems) {
-            // determine if items are different (in terms of added or removed) in scope items from
-            // fetched new items or vice versa.
-            diff = compareWith(data.scopeItems, data.newItems);
-            if (_.isEmpty(diff)) {
-                diff = compareWith(data.newItems, data.scopeItems);
-            }
-        }
-
-        if (!_.isEmpty(diff)) {
-            // if different, then determine _showReferesh, such that, if item is previewing or scroll in not on top.
-            _showRefresh = data.isItemPreviewing || !!data.scrollTop;
-        }
-
-        return _showRefresh;
-    };
 
     /**
      * @ngdoc method

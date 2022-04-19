@@ -1,11 +1,14 @@
-import {isNull, isUndefined, find, filter, keys, findIndex, defer, sortBy, map, forEach, startsWith} from 'lodash';
+import {
+    isNull, isUndefined, find, filter, keys, findIndex,
+    defer, sortBy, map, forEach, startsWith, flatMap} from 'lodash';
 import {FIELD_KEY_SEPARATOR} from 'core/editor3/helpers/fieldsMeta';
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {getLabelForFieldId} from 'apps/workspace/helpers/getLabelForFieldId';
 import {getReadOnlyLabel} from './ArticleEditDirective';
 import {translateArticleType, gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
+import {slideUpDown} from 'core/ui/slide-up-down';
 
 AuthoringHeaderDirective.$inject = [
     'api',
@@ -52,12 +55,27 @@ export function AuthoringHeaderDirective(
                 'label',
             ];
 
-            scope.isCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault == null
-                ? false :
-                authoringWorkspace.displayAuthoringHeaderCollapedByDefault;
+            scope.previewFields = flatMap(
+                Object.values(extensions),
+                (extension) => extension.activationResult?.contributions?.authoringHeaderComponents ?? [],
+            );
+
+            const initializeCollapsed = authoringWorkspace.displayAuthoringHeaderCollapedByDefault ?? false;
+
+            scope.headerElStyles = initializeCollapsed ? {display: 'none'} : {};
 
             scope.toggleCollapsed = () => {
                 scope.isCollapsed = !scope.isCollapsed;
+
+                const el = document.querySelector('.authoring-header') as HTMLElement;
+
+                slideUpDown(el, () => {
+                    // has to be reset after first animation
+                    if (Object.keys(scope.headerElStyles).length > 0) {
+                        scope.headerElStyles = {};
+                        scope.$applyAsync();
+                    }
+                });
             };
 
             scope.readOnlyLabel = getReadOnlyLabel();

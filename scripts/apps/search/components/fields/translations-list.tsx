@@ -27,24 +27,22 @@ export class TranslationsList extends React.PureComponent<IProps, IState> {
 
     render() {
         return (
-            <ul className="simple-list" style={{padding: 0, flexGrow: 1}}>
+            <ul className="simple-list" style={{padding: 0}}>
                 {this.state.items.length === 0 && (
                     <li style={{minHeight: this.props.ids.length * 1.5 + 'em'}}>
                         <div className="sd-loader" />
                     </li>
                 )}
-                {this.state.items.map((item) => (
-                    <li key={item._id} className="simple-list__item">
-                        <b className="label label--hollow">{item.language}</b>
-                        &nbsp;
-                        <a
-                            className="sd-overflow-ellipsis"
-                            onClick={() => this.props.onClick(item)}
-                        >
-                            {item.headline || item.slugline}
-                        </a>
-                    </li>
-                ))}
+                {this.state.items.map((item) => {
+                    return (
+                        <li key={item._id} className="simple-list__item space-between" style={{gap: '10px'}}>
+                            <b className="label label--hollow">{item.language}</b>
+                            <a onClick={() => this.props.onClick(item)} style={{cursor: 'pointer'}}>
+                                {item.headline || item.slugline}
+                            </a>
+                        </li>
+                    );
+                })}
             </ul>
         );
     }

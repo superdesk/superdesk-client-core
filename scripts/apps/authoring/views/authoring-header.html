@@ -14,7 +14,7 @@
 
 -->
 
-<div class="authoring-header" ng-class="{active: !isCollapsed}">
+<div class="authoring-header" ng-style="headerElStyles">
     <div class="authoring-header__holder" ng-controller="MetadataWidgetCtrl" ng-if="loaded">
         <div class="authoring-header__general-info">
             <div>
@@ -42,7 +42,8 @@
                 <span class="authoring-header__label" translate translate-n="item.word_count" translate-plural="WORDS">WORD</span>
             </div>
             <div ng-if="item.signal">
-                <span class="signal">{{ item.signal}}</span>
+                <span class="authoring-header__label" translate>SIGNAL</span>
+                <span class="signal authoring-header__value" ng-repeat="signal in item.signal">{{ signal.name || signal.qcode }}</span>
             </div>
             <div>
                 <span class="authoring-header__label" translate>SOURCE</span>
@@ -101,6 +102,7 @@
                     data-value="item.slugline"
                     data-language="item.language"
                     data-on-select="item.slugline = suggestion; autosave(item)"
+                    data-readonly="!_editable || schema.slugline.readonly === true"
                     >
                     <input type="text"
                         tansa-scope-sync
@@ -343,7 +345,6 @@
                         data-header="true"
                         data-change="autosave(item)"
                         data-reload-list="true"
-                        data-cv="categoriesVocabulary"
                         data-set-language="true"
                         tabindex="{{editor.anpa_category.order}}">
                     </div>
@@ -354,14 +355,11 @@
                         data-item="item"
                         data-field="anpa_category"
                         data-list="availableCategories"
-                        data-cv="categoriesVocabulary"
                         ng-disabled="!_editable || schema.anpa_category.readonly === true"
                         data-header="true"
                         data-change="autosave(item)"
                         tabindex="{{editor.anpa_category.order}}"
-                        data-key="qcode"
-                        class="boxed-input"
-                        >
+                        class="boxed-input">
                    </div>
 
                     <div class="authoring-header__hint" ng-if="helper_text.categories">{{helper_text.categories}}</div>
@@ -540,6 +538,19 @@
                 </div>
             </div>
 
+            <!-- custom preview field from extensions API -->
+            <div class="authoring-header__item"
+                ng-repeat="field in previewFields track by field._id"
+                order="{{ field.order }}">
+                <label class="authoring-header__item-label">{{field.label}}</label>
+                <div class="authoring-header__input-holder">
+                    <sd-header-component-field
+                        item="item"
+                        component="field.component"
+                    ></sd-header-component-field>
+                </div>
+            </div>
+
             <div class="authoring-header__item"
                  sd-validation-error="error.company_codes"
                  data-required="schema.company_codes.required"
@@ -620,5 +631,8 @@
             </div>
         </div>
     </div>
-        <button class="authoring-header__toggle" ng-class="{active: isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>
+</div>
+
+<div class="authoring-header__toggle-container">
+    <button class="authoring-header__toggle" ng-class="{active: isCollapsed}" ng-click="toggleCollapsed()" tabindex="-1"><i class="icon-chevron-up-thin"></i></button>    
 </div>

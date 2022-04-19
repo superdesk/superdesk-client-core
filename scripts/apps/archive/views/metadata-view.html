@@ -43,7 +43,7 @@
         </dl>
         <dl ng-if="item.signal">
             <dt translate>Signal</dt>
-            <dd>{{ item.signal }}</dd>
+            <dd ng-repeat="signal in item.signal">{{ signal.name || signal.qcode }}</dd>
         </dl>
         <dl ng-if="item.anpa_category && item.anpa_category.length">
             <dt>{{label('anpa_category')}}</dt>

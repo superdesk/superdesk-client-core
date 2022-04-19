@@ -38,7 +38,7 @@ class TestEditorComponent extends React.PureComponent<IEditorComponentProps<stri
     }
 }
 
-const customField: ICustomFieldType<string> = {
+const customField: ICustomFieldType<string, string> = {
     id: 'test-custom-authoring-field',
     label: 'Test Field',
     editorComponent: TestEditorComponent,
