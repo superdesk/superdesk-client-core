@@ -110,6 +110,13 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
         });
     }
 
+    disableUploadButton() {
+        if (this.state.items[0] != null && this.state.items[0].meta.title && this.state.items[0].meta.description) {
+            return false;
+        }
+        return true;
+    }
+
     render() {
         const ulClass = 'upload-thumbs flex-grid flex-grid--boxed flex-grid--wrap-items flex-grid--small-4';
 
@@ -197,7 +204,11 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                 </ModalBody>
                 <ModalFooter>
                     <span className="pull-left">{gettext('* fields are required')}</span>
-                    <button className="btn btn--primary pull-right" onClick={this.save} disabled={this.state.saving}>
+                    <button
+                        className="btn btn--primary pull-right"
+                        onClick={this.save}
+                        disabled={this.disableUploadButton()}
+                    >
                         {gettext('Upload')}
                     </button>
                     <button className="btn pull-right" onClick={this.props.closeModal} disabled={this.state.saving}>
