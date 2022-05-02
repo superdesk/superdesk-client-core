@@ -424,8 +424,24 @@ export function SearchResults(
 
                 if (item) {
                     if (item._type === 'externalsource') {
-                        processPreview(item);
-                        return;
+                        var preview_id = item.extra?.previewid;
+
+                        if (preview_id) {
+                            criteria.params = {'preview_id': preview_id};
+                            return api.query(getProvider(criteria), criteria).then((item_) => {
+                                if ('_items' in item_ && item_._items[0] !== undefined) {
+                                    processPreview(item_._items[0]);
+                                } else {
+                                    processPreview(item);
+                                }
+                            }, (error) => {
+                                notify.error('Detailed informations is not found for the item : ' + item.guid);
+                                processPreview(item);
+                            });
+                        } else {
+                            processPreview(item);
+                            return;
+                        }
                     }
 
                     scope.loading = true;

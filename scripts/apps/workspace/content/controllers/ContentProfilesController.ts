@@ -7,7 +7,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 
 export enum IContentProfileType {
     text = 'text',
-    image = 'image',
+    picture = 'picture',
     audio = 'audio',
     video = 'video',
 }
@@ -39,7 +39,7 @@ function getContentProfileIcon(type: IContentProfileType): string {
     switch (type) {
     case IContentProfileType.text:
         return 'icon-text';
-    case IContentProfileType.image:
+    case IContentProfileType.picture:
         return 'icon-picture';
     case IContentProfileType.audio:
         return 'icon-audio';
@@ -54,8 +54,8 @@ function getLabelForContentProfileType(type: IContentProfileType): string {
     switch (type) {
     case IContentProfileType.text:
         return gettext('Text');
-    case IContentProfileType.image:
-        return gettext('Image');
+    case IContentProfileType.picture:
+        return gettext('Picture');
     case IContentProfileType.audio:
         return gettext('Audio');
     case IContentProfileType.video:
@@ -258,6 +258,7 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
         var e = $scope.editing;
         var diff = {};
 
+        this.savingInProgress = true;
         Object.keys(e.form).forEach((k) => {
             if (!isEqual(e.form[k], e.original[k])) {
                 diff[k] = e.form[k];
@@ -266,7 +267,10 @@ export function ContentProfilesController($scope: IScope, $location, notify, con
 
         content.updateProfile(e.original, diff)
             .then(refreshList.bind(this, false), reportError)
-            .then(this.toggleEdit.bind(this, null));
+            .then(this.toggleEdit.bind(this, null))
+            .then(() => {
+                this.savingInProgress = false;
+            });
     };
 
     /**
