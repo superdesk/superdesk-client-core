@@ -24,6 +24,7 @@ import {ednote} from './ednote';
 import {anpa_take_key} from './anpa_take_key';
 import {byline} from './byline';
 import {sms_message} from './sms_message';
+import {usageterms} from './usageterms';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -67,6 +68,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter {
         sms_message: sms_message,
         subject: getSubjectAdapter(),
         urgency: urgency,
+        usageterms: usageterms,
     };
 
     return adapter;
