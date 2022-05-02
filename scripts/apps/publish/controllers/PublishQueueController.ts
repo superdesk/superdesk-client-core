@@ -32,10 +32,10 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     $scope.queueSearch = false;
     $scope.selected = {};
     $scope.publish_queue_statuses = ['pending', 'in-progress', 'success', 'error', 'retrying', 'failed', 'canceled'];
+    $scope.pagination = {page: 1};
     $scope.pageSize = 25;
-    $scope.page = 1;
 
-    $scope.$watch('page', () => {
+    $scope.$watch('pagination.page', () => {
         $scope.reload();
     });
 
@@ -61,7 +61,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     */
     $scope.search = function(query) {
         $scope.searchQuery = query;
-        $scope.page = 1;
+        $scope.pagination.page = 1;
         $scope.reload();
     };
 
@@ -69,7 +69,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     * Populates the publish queue and update the flags after fetch operation.
     */
     function populatePublishQueue() {
-        fetchPublishQueue().then((queue) => {
+        return fetchPublishQueue().then((queue) => {
             var queuedItems = queue._items;
 
             _.forEach(queuedItems, (item) => {
@@ -81,6 +81,8 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
             $scope.showResendBtn = false;
             $scope.showCancelSelectionBtn = false;
             $scope.maxPage = Math.ceil(queue._meta.total / $scope.pageSize);
+        }).finally(() => {
+            $scope.loading = false;
         });
     }
     /*
@@ -90,7 +92,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         var criteria = criteria || {};
 
         criteria.max_results = $scope.pageSize;
-        criteria.page = $scope.page;
+        criteria.page = $scope.pagination.page;
 
         var orTerms = null;
 
@@ -139,6 +141,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
     }
 
     $scope.reload = function() {
+        $scope.loading = true;
         $q.all(promises).then(() => {
             populatePublishQueue();
             previewItem();
@@ -226,7 +229,7 @@ export function PublishQueueController($scope, subscribersService, api, $q, noti
         populatePublishQueue();
         $scope.multiSelectCount = 0;
         $scope.selectedQueueItems = [];
-        $scope.page = 1;
+        $scope.pagination.page = 1;
     };
 
     $scope.selectQueuedItem = function(queuedItem) {

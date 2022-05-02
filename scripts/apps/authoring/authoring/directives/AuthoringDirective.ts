@@ -13,13 +13,13 @@ import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {copyJson} from 'core/helpers/utils';
 import {appConfig, extensions} from 'appConfig';
 import {onPublishMiddlewareResult, IExtensionActivationResult, IArticle} from 'superdesk-api';
-import {mediaIdGenerator} from '../services/MediaIdGeneratorService';
 import {addInternalEventListener} from 'core/internal-events';
 import {validateMediaFieldsThrows} from '../controllers/ChangeImageController';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {isMediaType} from 'core/helpers/item';
 import {confirmPublish} from '../services/quick-publish-modal';
+import {InitializeMedia} from '../services/InitializeMediaService';
 
 /**
  * @ngdoc directive
@@ -283,7 +283,8 @@ export function AuthoringDirective(
 
                     notify.success(gettext('Item updated.'));
 
-                    initMedia();
+                    InitializeMedia.initMedia($scope);
+
                     return $scope.origItem;
                 }, (response) => {
                     if (response.status === 412) {
@@ -628,7 +629,9 @@ export function AuthoringDirective(
             };
 
             $scope.openExport = function() {
-                $scope.export = true;
+                return authoring.close($scope.item, $scope.origItem, $scope.save_enabled(), true).then(() => {
+                    $scope.export = true;
+                });
             };
 
             $scope.canExport = function() {
@@ -790,7 +793,7 @@ export function AuthoringDirective(
                         confirmPublish([$scope.item]).then(customButtonAction) :
                         customButtonAction();
                 }
-                initMedia();
+                InitializeMedia.initMedia($scope);
             };
 
             $scope.publishAndContinue = function() {
@@ -801,7 +804,7 @@ export function AuthoringDirective(
                 }, (err) => {
                     notify.error(gettext('Failed to publish and continue.'));
                 });
-                initMedia();
+                InitializeMedia.initMedia($scope);
             };
 
             // Close the current article, create an update of the article and open it in the edit mode.
@@ -1016,7 +1019,7 @@ export function AuthoringDirective(
                     () => {
                         $scope.$applyAsync(() => {
                             authoringWorkspace.addAutosave();
-                            initMedia();
+                            InitializeMedia.initMedia($scope);
                             updateSchema();
                         });
                     },
@@ -1116,7 +1119,7 @@ export function AuthoringDirective(
                         $scope.dirty = false;
                         $scope.closePreview();
                         $scope.item._editable = $scope._editable;
-                        initMedia();
+                        InitializeMedia.initMedia($scope);
                     });
             }
 
@@ -1227,132 +1230,6 @@ export function AuthoringDirective(
                 });
             };
 
-            /**
-             * @ngdoc method
-             * @name sdAuthoring#isMediaField
-             * @private
-             * @description Returns true if the given string is a vocabulary media
-             *              field identifier, false otherwise.
-             * @param {string} fieldId
-             * @return {bool}
-             */
-            function isMediaField(fieldId) {
-                var parts = mediaIdGenerator.getFieldParts(fieldId);
-                var field = _.find($scope.fields, (_field) => _field._id === parts[0]);
-
-                return field && field.field_type === 'media';
-            }
-
-            /**
-             * @ngdoc method
-             * @name sdAuthoring#computeMediaFieldVersions
-             * @private
-             * @description Generates an array of name versions for a given vocabulary
-             *              media field.
-             * @param {string} fieldId
-             */
-            function computeMediaFieldVersions(fieldId) {
-                $scope.mediaFieldVersions[fieldId] = [];
-
-                var field = _.find($scope.fields, (_field) => _field._id === fieldId);
-
-                if (field) {
-                    var multipleItems = _.get(field, 'field_options.multiple_items.enabled');
-                    var maxItems = !multipleItems ? 1 : _.get(field, 'field_options.multiple_items.max_items');
-
-                    if (!maxItems || !mediaFields[fieldId] || mediaFields[fieldId].length <= maxItems) {
-                        addMediaFieldVersion(fieldId, $scope.getNewMediaFieldId(fieldId));
-                    }
-                    _.forEach(mediaFields[fieldId], (version) => {
-                        addMediaFieldVersion(fieldId, mediaIdGenerator.getFieldVersionName(fieldId, version));
-                    });
-                }
-            }
-
-            function addMediaFieldVersion(fieldId, fieldVersion) {
-                var field = {fieldId: fieldVersion};
-
-                if (_.has($scope.item.associations, fieldVersion)) {
-                    field[fieldVersion] = $scope.item.associations[fieldVersion];
-                } else {
-                    field[fieldVersion] = null;
-                }
-                $scope.mediaFieldVersions[fieldId].push(field);
-            }
-
-            /**
-             * @ngdoc method
-             * @name sdAuthoring#addMediaField
-             * @private
-             * @description Adds the version of the given field name to the versions array.
-             * @param {string} fieldId
-             */
-            function addMediaField(fieldId) {
-                var [rootField, index] = mediaIdGenerator.getFieldParts(fieldId);
-
-                if (!_.has(mediaFields, rootField)) {
-                    mediaFields[rootField] = [];
-                }
-                mediaFields[rootField].push(index);
-                mediaFields[rootField].sort((a, b) => {
-                    if (b === null || b === undefined) {
-                        return -1;
-                    }
-                    if (a === null || a === undefined) {
-                        return 1;
-                    }
-                    return b - a;
-                });
-            }
-
-            /**
-             * @ngdoc method
-             * @name sdAuthoring#initMedia
-             * @private
-             * @description Initializes arrays containing the media fields versions.
-             */
-            function initMedia() {
-                mediaFields = {};
-                $scope.mediaFieldVersions = {};
-
-                _.forEach($scope.item.associations, (association, fieldId) => {
-                    if (association && _.findIndex(MEDIA_TYPES, (type) => type === association.type) !== -1
-                        && isMediaField(fieldId)) {
-                        addMediaField(fieldId);
-                    }
-                });
-
-                if ($scope.contentType && $scope.contentType.schema) {
-                    _.forEach($scope.fields, (field) => {
-                        if (isMediaField(field._id)) {
-                            computeMediaFieldVersions(field._id);
-                        }
-                    });
-                }
-            }
-
-            /**
-             * @ngdoc method
-             * @name sdAuthoring#getNewMediaFieldId
-             * @public
-             * @description Returns a new name version for a given media field.
-             * @param {String} fieldId
-             * @return {String}
-             */
-            $scope.getNewMediaFieldId = (fieldId) => {
-                var field = _.find($scope.fields, (_field) => _field._id === fieldId);
-                var multipleItems = field ? _.get(field, 'field_options.multiple_items.enabled') : false;
-                var parts = mediaIdGenerator.getFieldParts(fieldId);
-                var newIndex = multipleItems ? 1 : null;
-
-                if (_.has(mediaFields, parts[0])) {
-                    var fieldVersions = mediaFields[parts[0]];
-
-                    newIndex = fieldVersions.length ? 1 + fieldVersions[0] : 1;
-                }
-                return mediaIdGenerator.getFieldVersionName(parts[0], newIndex == null ? null : newIndex.toString());
-            };
-
             // init
             $scope.content = content;
             $scope.closePreview();
@@ -1386,7 +1263,7 @@ export function AuthoringDirective(
                         $scope.contentType = contentType;
                         authoring.schema = $scope.schema;
                         authoring.editor = $scope.editor;
-                        initMedia();
+                        InitializeMedia.initMedia($scope);
                     })
                     .then(updateSchema);
             });
