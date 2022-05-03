@@ -11,7 +11,15 @@ export class PreviewManualEntry extends React.PureComponent<IProps> {
         const {config, value} = this.props;
         const options = config.options;
         const optionsToPreview =
-            (Array.isArray(value) ? value : [value])
+            (() => {
+                if (value == null) {
+                    return [];
+                } else if (Array.isArray(value)) {
+                    return value;
+                } else {
+                    return [value];
+                }
+            })()
                 .map((val) => options.find((_option) => _option.id === val));
 
         const noPadding = optionsToPreview.every(({color}) => color == null);

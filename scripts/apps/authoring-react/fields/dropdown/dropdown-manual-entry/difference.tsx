@@ -12,11 +12,27 @@ export class DifferenceManualEntry extends React.PureComponent<IProps> {
         const {options} = config;
 
         const values1: Array<IDropdownOption> =
-            (Array.isArray(value1) ? value1 : [value1])
+            (() => {
+                if (value1 == null) {
+                    return [];
+                } else if (Array.isArray(value1)) {
+                    return value1;
+                } else {
+                    return [value1];
+                }
+            })()
                 .map((val) => options.find((_option) => _option.id === val));
 
         const values2: Array<IDropdownOption> =
-            (Array.isArray(value2) ? value2 : [value2])
+            (() => {
+                if (value2 == null) {
+                    return [];
+                } else if (Array.isArray(value2)) {
+                    return value2;
+                } else {
+                    return [value2];
+                }
+            })()
                 .map((val) => options.find((_option) => _option.id === val));
 
         const noPadding = values1.every(({color}) => color == null) && values2.every(({color}) => color == null);
