@@ -25,6 +25,7 @@ import {anpa_take_key} from './anpa_take_key';
 import {byline} from './byline';
 import {sms_message} from './sms_message';
 import {usageterms} from './usageterms';
+import {IDateFieldConfig, IDateShortcut} from '../fields/date/interfaces';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -99,6 +100,29 @@ export function getFieldsAdapter(): IFieldsAdapter {
                         id: vocabulary._id,
                         name: vocabulary.display_name,
                         fieldType: 'editor3',
+                        fieldConfig,
+                    };
+
+                    return fieldV2;
+                },
+            };
+        } else if (vocabulary.field_type === 'date') {
+            adapter[vocabulary._id] = {
+                getFieldV2: (fieldEditor, fieldSchema) => {
+                    const fieldConfig: IDateFieldConfig = {
+                        shortcuts: vocabulary.date_shortcuts.map(({label, value, term}) => {
+                            return {
+                                label,
+                                value,
+                                term: term as IDateShortcut['term'],
+                            };
+                        }),
+                    };
+
+                    const fieldV2: IAuthoringFieldV2 = {
+                        id: vocabulary._id,
+                        name: vocabulary.display_name,
+                        fieldType: 'date',
                         fieldConfig,
                     };
 
