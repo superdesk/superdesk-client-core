@@ -161,6 +161,10 @@ export const formatDate = (date: Date | string) => (
         .format(appConfig.view.dateformat)
 );
 
+export function dateToServerString(date: Date) {
+    return date.toISOString().slice(0, 19) + '+0000';
+}
+
 export function getRelativeOrAbsoluteDateTime(
     datetimeString: string,
     format: string,
@@ -400,9 +404,7 @@ export function getSuperdeskApiImplementation(
                 getClass: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
                 getId: (originalName: string) => getCssNameForExtension(originalName, requestingExtensionId),
             },
-            dateToServerString: (date: Date) => {
-                return date.toISOString().slice(0, 19) + '+0000';
-            },
+            dateToServerString,
             memoize: memoizeLocal,
             generatePatch,
             stripHtmlTags,

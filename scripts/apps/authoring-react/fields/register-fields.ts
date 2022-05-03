@@ -5,6 +5,7 @@ import {runTansa} from '../editor3-tansa-integration';
 import {getEditor3Field} from './editor3';
 import {registerInternalExtension} from 'core/helpers/register-internal-extension';
 import {getDropdownField} from './dropdown';
+import {getDateField} from './date';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
@@ -26,6 +27,7 @@ export function registerAuthoringReactFields() {
             customFieldTypes: [
                 getEditor3Field(),
                 getDropdownField(),
+                getDateField(),
             ],
         },
     };
