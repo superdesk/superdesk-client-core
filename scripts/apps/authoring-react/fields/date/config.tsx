@@ -34,6 +34,7 @@ export class Config extends React.PureComponent<IProps> {
                                 <tr key={i}>
                                     <td>
                                         <Input
+                                            type="text"
                                             label={gettext('Label')}
                                             value={shortcut.label}
                                             onChange={(val) => {

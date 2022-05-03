@@ -169,6 +169,7 @@ export class EditorTest extends React.Component<IProps, IState> {
                                 <Form.FormGroup inlineLabel={true}>
                                     <Form.FormItem>
                                         <Input
+                                            type="text"
                                             label="Slugline"
                                             value="This is some value"
                                             maxLength={30}
@@ -184,6 +185,7 @@ export class EditorTest extends React.Component<IProps, IState> {
                                 <Form.FormGroup inlineLabel={true}>
                                     <Form.FormItem>
                                         <Input
+                                            type="text"
                                             label="Genre"
                                             value="This is some value"
                                             maxLength={30}
@@ -199,6 +201,7 @@ export class EditorTest extends React.Component<IProps, IState> {
                                 <Form.FormGroup marginBottom="0" inlineLabel={true}>
                                     <Form.FormItem>
                                         <Input
+                                            type="text"
                                             label="Subject"
                                             value="This is some value"
                                             maxLength={30}

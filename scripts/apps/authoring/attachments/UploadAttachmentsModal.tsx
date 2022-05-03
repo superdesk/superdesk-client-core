@@ -156,6 +156,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
+                                                        type="text"
                                                         label={gettext('Title')}
                                                         required={true}
                                                         value={item.meta.title}
@@ -167,6 +168,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
+                                                        type="text"
                                                         label={gettext('Description')}
                                                         required={true}
                                                         value={item.meta.description}
@@ -178,6 +180,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
+                                                        type="text"
                                                         label={gettext('File Name')}
                                                         required={true}
                                                         value={item.file.name}
@@ -187,6 +190,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
+                                                        type="text"
                                                         label={gettext('File Size')}
                                                         required={true}
                                                         value={item.file.size.toString()}

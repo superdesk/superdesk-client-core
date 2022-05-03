@@ -76,6 +76,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
                 body={(
                     <Spacer v gap="16">
                         <Input
+                            type="text"
                             label={gettext('Find')}
                             value={this.state.findValue}
                             onChange={(findValue) => {
@@ -85,6 +86,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
                         />
 
                         <Input
+                            type="text"
                             label={gettext('Replace with')}
                             value={this.state.replaceValue}
                             onChange={(replaceValue) => {
