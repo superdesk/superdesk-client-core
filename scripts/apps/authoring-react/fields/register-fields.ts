@@ -6,6 +6,7 @@ import {getEditor3Field} from './editor3';
 import {registerInternalExtension} from 'core/helpers/register-internal-extension';
 import {getDropdownField} from './dropdown';
 import {getDateField} from './date';
+import {getUrlsField} from './urls';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
@@ -28,6 +29,7 @@ export function registerAuthoringReactFields() {
                 getEditor3Field(),
                 getDropdownField(),
                 getDateField(),
+                getUrlsField(),
             ],
         },
     };
