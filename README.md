@@ -153,3 +153,5 @@ You can override default search repos (all set `true` by default).
 - `validatorMediaMetadata`: `object` - describes a fields that are required for media items (images/video). If the field is present in the object then it is displayed.
 - `infoRemovedFields`: `object` - contains fields that should be removed from metadata editing
 - `profileLanguages` - list of languages available in user profile
+
+check e2e
