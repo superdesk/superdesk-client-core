@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, {throttle} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {ISearchOptions, showRefresh} from '../services/SearchService';
@@ -94,6 +94,45 @@ export function SearchResults(
             var criteria = search.query(getSearch(), queryOptions).getCriteria(true),
                 oldQuery = _.omit(getSearch(), '_id');
 
+            let fetchInProgress = false;
+
+            /**
+             * Schedule an update
+             */
+            const queryItems = throttle(
+                (event?, data?) => {
+                    if (isObjectId(scope.search.repo.search) && event != null) {
+                        // external provider, don't refresh on events
+                        return;
+                    }
+
+                    if (scope.search.repo.search !== 'local' && !getSearch().q && !(data && data.force)) {
+                        return; // ignore updates with external content
+                    }
+
+                    if (fetchInProgress) {
+                        // schedule querying again after current query finishes
+                        queryItems(event, data);
+                        return;
+                    }
+
+                    scope.loading = true;
+                    fetchInProgress = true;
+
+                    _queryItems(event, data)
+                        .finally(() => {
+                            scope.$applyAsync(() => {
+                                fetchInProgress = false;
+                            });
+                        });
+                },
+                3000,
+                {
+                    leading: true,
+                    trailing: true,
+                },
+            );
+
             scope.flags = controller.flags;
             scope.selected = scope.selected || {};
             scope.showHistoryTab = true;
@@ -157,39 +196,11 @@ export function SearchResults(
                 render(null, true);
             };
 
-            var nextUpdate;
-
             function updateItem(e, data) {
                 var item = _.find(scope.items._items, {_id: data.item._id});
 
                 if (item) {
                     angular.extend(item, data.item);
-                }
-            }
-
-            /**
-             * Schedule an update if it's not there yet
-             */
-            function queryItems(event?, data?) {
-                if (isObjectId(scope.search.repo.search) && event != null) {
-                    // external provider, don't refresh on events
-                    return;
-                }
-
-                if (!nextUpdate) {
-                    if (scope.search.repo.search !== 'local' && !getSearch().q && !(data && data.force)) {
-                        return; // ignore updates with external content
-                    }
-
-                    scope.loading = true;
-                    nextUpdate = $timeout(() => {
-                        _queryItems(event, data)
-                            .finally(() => {
-                                scope.$applyAsync(() => {
-                                    nextUpdate = null;
-                                });
-                            });
-                    }, 1000, false);
                 }
             }
 
