@@ -27,6 +27,7 @@ import {sms_message} from './sms_message';
 import {usageterms} from './usageterms';
 import {IDateFieldConfig, IDateShortcut} from '../fields/date/interfaces';
 import {IUrlsFieldConfig} from '../fields/urls/interfaces';
+import {IEmbedConfig} from '../fields/embed/interfaces';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -139,6 +140,21 @@ export function getFieldsAdapter(): IFieldsAdapter {
                         id: vocabulary._id,
                         name: vocabulary.display_name,
                         fieldType: 'urls',
+                        fieldConfig,
+                    };
+
+                    return fieldV2;
+                },
+            };
+        } else if (vocabulary.field_type === 'embed') {
+            adapter[vocabulary._id] = {
+                getFieldV2: (fieldEditor, fieldSchema) => {
+                    const fieldConfig: IEmbedConfig = {};
+
+                    const fieldV2: IAuthoringFieldV2 = {
+                        id: vocabulary._id,
+                        name: vocabulary.display_name,
+                        fieldType: 'embed',
                         fieldConfig,
                     };
 
