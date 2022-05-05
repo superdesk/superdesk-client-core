@@ -5,6 +5,7 @@ import {element, browser, by} from 'protractor';
 import {globalSearch} from './helpers/search';
 import {nav, waitForSuperdesk, login} from './helpers/utils';
 import {LoginModal} from './helpers/pages';
+import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 describe('saved_search', () => {
     beforeEach(() => {
@@ -20,8 +21,12 @@ describe('saved_search', () => {
         var priority = globalSearch.getPriorityElementByIndex(0);
 
         priority.click();
-        browser.sleep(100);
-        expect(globalSearch.getItems().count()).toBe(1);
+
+        browser.wait(
+            ECE.hasElementCount(globalSearch.getItems(), 1),
+            2000,
+        );
+
         element(by.id('save_search_init')).click();
         var searchPanel = element(by.className('save-search-panel'));
 
