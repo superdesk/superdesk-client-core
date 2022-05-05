@@ -39,8 +39,8 @@ describe('users', () => {
 
         it('can save and use language preferences', () => {
             userPreferences.setLang('Deutsch');
-            browser.wait(() => userPreferences.btnSave.isDisplayed(), 3000);
-            userPreferences.btnSave.click();
+            browser.sleep(500); // wait for sliding animation
+            el(['save']).click();
 
             browser.sleep(500); // wait for modal
             // click modal confirm to reload
@@ -55,11 +55,9 @@ describe('users', () => {
             browser.sleep(500);
             // go back to original lanuages
             userPreferences.setLang('English');
-            var btnSave = $('.action-bar').element(by.buttonText('Speichern'));
 
-            browser.wait(() => btnSave.isDisplayed(), 3000);
-            browser.sleep(200); // animation
-            btnSave.click();
+            browser.sleep(500); // wait for sliding animation
+            el(['save']).click();
         });
     });
 
@@ -84,7 +82,7 @@ describe('users', () => {
                     el(
                         ['username'],
                         null,
-                        els(['users-list-item']).get(7),
+                        els(['users-list-item']).get(0),
                     ),
                     'johndoe',
                 ),
