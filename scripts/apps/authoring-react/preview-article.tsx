@@ -23,7 +23,7 @@ export class PreviewArticle extends React.PureComponent<IProps> {
                         const FieldEditorConfig = getField(field.fieldType);
 
                         return (
-                            <div key={field.id} style={{padding: fieldPadding ?? 0}}>
+                            <div key={field.id} style={{width: '100%', padding: fieldPadding ?? 0}}>
                                 <span
                                     className="field-label--base"
                                     style={{marginBottom: 20}}
