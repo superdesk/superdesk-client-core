@@ -1,4 +1,4 @@
-import _, {throttle} from 'lodash';
+import _, {debounce} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {ISearchOptions, showRefresh} from '../services/SearchService';
@@ -99,7 +99,7 @@ export function SearchResults(
             /**
              * Schedule an update
              */
-            const queryItems = throttle(
+            const queryItems = debounce(
                 (event?, data?) => {
                     if (isObjectId(scope.search.repo.search) && event != null) {
                         // external provider, don't refresh on events
@@ -126,10 +126,11 @@ export function SearchResults(
                             });
                         });
                 },
-                3000,
+                1000,
                 {
                     leading: true,
                     trailing: true,
+                    maxWait: 3000,
                 },
             );
 
