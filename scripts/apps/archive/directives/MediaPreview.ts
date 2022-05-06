@@ -116,16 +116,13 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
                 elem.off('dragstart');
             });
 
-            scope.checkDuplicateKeywords = function() {
-                let keywords = scope.selected.preview.keywords;
-
-                scope.selected.preview.subjects.forEach((item) => {
-                    if (keywords.includes(item.name)) {
-                        keywords.splice(keywords.indexOf(item.name), 1);
-                    }
-                });
-                return keywords;
-            };
+            if (scope.selected.preview?.keywords && scope.selected.preview?.subject) {
+                scope.uniqueKeywords = scope.selected.preview.keywords.filter(
+                    (keyword) => !scope.selected.preview.subject.map((sub) =>
+                        sub.name).includes(keyword));
+            } else {
+                scope.uniqueKeywords = scope.selected.preview.keywords;
+            }
         },
     };
 }

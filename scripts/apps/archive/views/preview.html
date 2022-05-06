@@ -49,8 +49,8 @@
             <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="subjectPreviewFields.length">
               <div class="tag-label" ng-repeat="author in selected.preview.authors">{{author.role}} : {{author.sub_label}}</div>
             </div>
-            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="checkDuplicateKeywords">
-              <div class="tag-label" ng-repeat="keyword in checkDuplicateKeywords">{{keyword}}</div>
+            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="uniqueKeywords">
+              <div class="tag-label" ng-repeat="keyword in uniqueKeywords">{{keyword}}</div>
             </div>
             <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="subjectPreviewFields.length">
               <sd-preview-subject item="item" fields="subjectPreviewFields"></sd-preview-subject>
