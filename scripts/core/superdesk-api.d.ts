@@ -1271,7 +1271,7 @@ declare module 'superdesk-api' {
         onDrop: (event: DragEvent) => void;
         canDrop: (event: DragEvent) => boolean;
 
-        onFileSelect?: (files: FileList) => void;
+        onFileSelect?: (files: Array<File>) => void;
         fileAccept?: string;
     }
 
