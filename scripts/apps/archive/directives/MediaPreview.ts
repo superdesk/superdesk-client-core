@@ -115,14 +115,6 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
             scope.$on('$destroy', () => {
                 elem.off('dragstart');
             });
-
-            if (scope.selected.preview?.keywords && scope.selected.preview?.subject) {
-                scope.uniqueKeywords = scope.selected.preview.keywords.filter(
-                    (keyword) => !scope.selected.preview.subject.map((sub) =>
-                        sub.name).includes(keyword));
-            } else {
-                scope.uniqueKeywords = scope.selected.preview.keywords;
-            }
         },
     };
 }

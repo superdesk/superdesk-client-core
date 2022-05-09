@@ -16,18 +16,30 @@ export class PreviewSubject extends React.PureComponent<IProps> {
         const subjects = [];
 
         this.props.fields.forEach((field) => {
-            this.props.item.subject
-                .filter((subj) => subj.scheme === field._id && subj.name)
-                .forEach((subj) => {
-                    subjects.push(
+            const fieldSubjects = this.props.item.subject
+                .filter((subj) => subj.scheme === field._id && subj.name);
+
+            fieldSubjects.forEach((subject, index) => {
+                if (index === 0) {
+                    /* Adding the Subject heading only for
+                    first time so that seems scheme subjects are grouped together.*/
+
+                    subjects.push(<div>
                         <span
-                            key={subj.scheme + ':' + subj.qcode}
-                            className="tag-label"
-                            title={getVocabularyItemNameTranslated(subj, this.props.item.language)}
-                            // longer names might not fit the area
-                        >{getVocabularyItemNameTranslated(subj, this.props.item.language)}</span>,
+                            key={subject?.scheme + ':' + subject?.qcode}
+                            className="inline-label"
+                        >{subject?.scheme}</span><br /></div>,
                     );
-                });
+                }
+                subjects.push(
+                    <span
+                        key={subject.scheme + ':' + subject.qcode}
+                        className="tag-label"
+                        title={getVocabularyItemNameTranslated(subject, this.props.item.language)}
+                    // longer names might not fit the area
+                    >{getVocabularyItemNameTranslated(subject, this.props.item.language)}</span>,
+                );
+            });
         });
 
         if (subjects.length === 0) {

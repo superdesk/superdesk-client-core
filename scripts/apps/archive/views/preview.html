@@ -46,11 +46,13 @@
               <span ng-if="item._type === 'archived'" class="stage" tooltip="{{:: 'Archived from' | translate}} {{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{:: 'Archived from' | translate}} {{deskName}}</b> / {{ stage }}</span>
               <span ng-if="item._type !== 'archived'" class="stage" tooltip="{{deskName}} / {{ stage }}" tooltip-placement="bottom" ng-show="stage"><b>{{deskName}}</b> / {{ stage }}</span>
             </div>
-            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="subjectPreviewFields.length">
+            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.authors">
+              <span class="inline-label">Authors</span><br />
               <div class="tag-label" ng-repeat="author in selected.preview.authors">{{author.role}} : {{author.sub_label}}</div>
             </div>
-            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="uniqueKeywords">
-              <div class="tag-label" ng-repeat="keyword in uniqueKeywords">{{keyword}}</div>
+            <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="selected.preview.keywords">
+              <span class="inline-label">Keywords</span><br />
+              <div class="tag-label" ng-repeat="keyword in selected.preview.keywords" title="Keywords">{{keyword}}</div>
             </div>
             <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="subjectPreviewFields.length">
               <sd-preview-subject item="item" fields="subjectPreviewFields"></sd-preview-subject>
