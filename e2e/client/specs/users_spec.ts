@@ -82,7 +82,7 @@ describe('users', () => {
                     el(
                         ['username'],
                         null,
-                        els(['users-list-item']).get(0),
+                        els(['users-list-item']).get(7),
                     ),
                     'johndoe',
                 ),
