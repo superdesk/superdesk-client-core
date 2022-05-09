@@ -22,10 +22,7 @@ describe('saved_search', () => {
 
         priority.click();
 
-        browser.wait(
-            ECE.hasElementCount(globalSearch.getItems(), 1),
-            2000,
-        );
+        globalSearch.waitForItemCount(1);
 
         element(by.id('save_search_init')).click();
         var searchPanel = element(by.className('save-search-panel'));
@@ -39,15 +36,15 @@ describe('saved_search', () => {
     });
 
     it('can save a global search and another user sees it', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
-        expect(globalSearch.getItems().count()).toBe(16);
-        expect(globalSearch.getPriorityElements().count()).toBe(3);
+        globalSearch.waitForItemCount(16);
+        browser.wait(ECE.hasElementCount(globalSearch.getPriorityElements(), 3), 2000);
         var priority = globalSearch.getPriorityElementByIndex(0);
 
         priority.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         element(by.id('save_search_init')).click();
         var searchPanel = element(by.className('save-search-panel'));
 

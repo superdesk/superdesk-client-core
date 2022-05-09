@@ -17,6 +17,7 @@ class GlobalSearch {
     setListView: any;
     setGridView: any;
     getItems: any;
+    waitForItemCount: (n: number) => void;
     getItem: (index: any) => any;
     itemClick: (index: any) => void;
     getTextItem: (index: any) => any;
@@ -117,6 +118,13 @@ class GlobalSearch {
         this.getItems = function() {
             return element.all(by.css('.media-box'));
         };
+
+        this.waitForItemCount = (n: number) => {
+            browser.wait(
+                ECE.hasElementCount(element.all(by.css('.media-box')), n),
+                2000,
+            );
+        },
 
         /**
          * Get the item at 'index' from global

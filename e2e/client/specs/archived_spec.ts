@@ -10,9 +10,9 @@ describe('archived', () => {
     });
 
     it('display items and open an item preview', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.getArchivedContent();
-        expect(globalSearch.getItems().count()).toBe(3);
+        globalSearch.waitForItemCount(3);
         var itemText = globalSearch.getTextItem(0);
 
         globalSearch.itemClick(0);
@@ -20,9 +20,9 @@ describe('archived', () => {
     });
 
     it('open an item in authoring', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.getArchivedContent();
-        expect(globalSearch.getItems().count()).toBe(3);
+        globalSearch.waitForItemCount(3);
         globalSearch.actionOnItem('Open', 0);
         expect(content.getWidgets().count()).toBe(1);
         expect(authoring.close_button.isDisplayed()).toBe(true);
