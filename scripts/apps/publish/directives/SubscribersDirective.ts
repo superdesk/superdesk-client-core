@@ -11,7 +11,6 @@ import {appConfig} from 'appConfig';
  * @requires subscribersService
  * @requires adminPublishSettingsService
  * @requires modal
- * @requires metadata
  * @requires contentFilters
  * @requires $q
  * @requires $filter
@@ -22,12 +21,12 @@ import {appConfig} from 'appConfig';
  */
 SubscribersDirective.$inject = [
     'notify', 'api', 'subscribersService', 'adminPublishSettingsService', 'modal',
-    'metadata', 'contentFilters', '$q', '$filter', 'products', '$rootScope',
+    'contentFilters', '$q', '$filter', 'products', '$rootScope',
 ];
 
 export function SubscribersDirective(
     notify, api, subscribersService, adminPublishSettingsService,
-    modal, metadata, contentFilters, $q, $filter, products, $rootScope,
+    modal, contentFilters, $q, $filter, products, $rootScope,
 ) {
     return {
         scope: {
@@ -47,13 +46,12 @@ export function SubscribersDirective(
             $scope.search = {};
             $scope.highPriorityQueueEnabled = appConfig.high_priority_queue_enabled;
 
-            if (angular.isDefined(metadata.values.subscriber_types)) {
-                $scope.subTypes = metadata.values.subscriber_types;
-            } else {
-                metadata.fetchMetadataValues().then(() => {
-                    $scope.subTypes = metadata.values.subscriber_types;
-                });
-            }
+            api.query('output_formats').then((result) => {
+                $scope.formats = result._items.map((format) => ({
+                    name: format.name,
+                    qcode: format.type,
+                }));
+            });
 
             $scope.statusFilters = [
                 {label: gettext('Active'), value: true, id: 'active'},
@@ -236,7 +234,6 @@ export function SubscribersDirective(
                     }
 
                     $scope.subscriberType = $scope.subscriber.subscriber_type || '';
-                    $scope.changeFormats($scope.subscriberType);
                     initGlobalFilters();
                 }, () => {
                     notify.error(gettext('Subscriber could not be initialized!'));
@@ -276,31 +273,6 @@ export function SubscribersDirective(
             }, true);
 
             $rootScope.$on('subcriber: saveEnabled', () => $scope.saveEnabled = true);
-
-            /**
-             * Invoked when Subscriber Type is changed. Responsible for populating $scope.formats variable.
-             * The $scope.formats variable is used to display format field in destination. The new value is changed.
-             */
-            $scope.changeFormats = function(newSubscriberType) {
-                var formats = _.result(_.find($scope.subTypes, {qcode: newSubscriberType}), 'formats');
-
-                if ($scope.destinations.length > 0 && $scope.subscriberType !== '' &&
-                    $scope.subscriberType !== newSubscriberType) {
-                    var oldFormats = _.result(_.find($scope.subTypes, {qcode: $scope.subscriberType}), 'formats');
-
-                    if (!_.isEqual(oldFormats, formats)) {
-                        notify.error(gettext('Error: Please re-assign new format for each destination as the changed ' +
-                            'subscriber type has formats which are not supported by existing destination(s).'));
-
-                        _.each($scope.destinations, (destination) => {
-                            destination.format = null;
-                        });
-                    }
-                }
-
-                $scope.subscriberType = $scope.subscriber.subscriber_type;
-                $scope.formats = formats;
-            };
 
             // If subscribers list provided don't fetch subscribers
             if (!$scope.subscribersList) {
