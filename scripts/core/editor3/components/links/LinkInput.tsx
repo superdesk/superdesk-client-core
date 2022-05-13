@@ -176,7 +176,7 @@ export class LinkInputComponent extends React.Component<any, any> {
                         onChange={(e) => {
                             this.setState({url: e.target.value});
                         }}
-                        placeholder={gettext('https://')}
+                        placeholder={'https://'}
                     />
                 </div>
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
