@@ -64,7 +64,7 @@ export class LinkInputComponent extends React.Component<any, any> {
             }
         }
 
-        const initialValue = 'https://';
+        const initialValue = '';
 
         this.state = {
             url: this.props.data ? this.props.data.href || initialValue : initialValue,
@@ -176,7 +176,7 @@ export class LinkInputComponent extends React.Component<any, any> {
                         onChange={(e) => {
                             this.setState({url: e.target.value});
                         }}
-                        placeholder={gettext('Insert URL')}
+                        placeholder={gettext('https://')}
                     />
                 </div>
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
