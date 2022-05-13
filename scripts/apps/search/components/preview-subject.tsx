@@ -1,4 +1,4 @@
-import {getVocabularyItemNameTranslated} from 'core/utils';
+import {gettext, getVocabularyItemNameTranslated} from 'core/utils';
 import React from 'react';
 import {IArticle, IArticleField} from 'superdesk-api';
 
@@ -24,11 +24,11 @@ export class PreviewSubject extends React.PureComponent<IProps> {
                     /* Adding the Subject heading only for
                     first time so that seems scheme subjects are grouped together.*/
 
-                    subjects.push(<div>
+                    subjects.push(
                         <span
-                            key={subject?.scheme + ':' + subject?.qcode}
+                            key={field.display_name}
                             className="inline-label"
-                        >{subject?.scheme}</span><br /></div>,
+                        ><br />{gettext(field.display_name)}:</span>,
                     );
                 }
                 subjects.push(

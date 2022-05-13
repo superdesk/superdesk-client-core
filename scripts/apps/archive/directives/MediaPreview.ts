@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {checkRenditions, getAssociationsByFieldId} from 'apps/authoring/authoring/controllers/AssociationController';
 import {IArticleField} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive
@@ -115,6 +116,11 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
             scope.$on('$destroy', () => {
                 elem.off('dragstart');
             });
+
+            scope.preview_headings = {
+                author: gettext('Author'),
+                keywords: gettext('Keywords'),
+            };
         },
     };
 }
