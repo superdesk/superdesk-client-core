@@ -48,11 +48,11 @@
             </div>
             <div class="tag-main" ng-if="selected.preview.authors">
               <span class="inline-label">{{preview_headings.author}}:</span>
-              <span class="tag-label" ng-repeat="author in selected.preview.authors">{{author.role}}:{{author.sub_label}}</span>
+              <span class="tag-label" ng-repeat="author in selected.preview.authors" title="{{author.role}}:{{author.sub_label}}">{{author.role}}:{{author.sub_label}}</span>
             </div>
             <div class="tag-main" ng-if="selected.preview.keywords">
               <span class="inline-label"><br/>{{preview_headings.keywords}}:</span>
-              <span class="tag-label" ng-repeat="keyword in selected.preview.keywords" title="Keywords">{{keyword}}</span>
+              <span class="tag-label" ng-repeat="keyword in selected.preview.keywords" title="{{keyword}}">{{keyword}}</span>
             </div>
             <div class="preview-header__flex-row preview-header__flex-row--single-line" ng-if="subjectPreviewFields.length">
               <sd-preview-subject item="item" fields="subjectPreviewFields"></sd-preview-subject>

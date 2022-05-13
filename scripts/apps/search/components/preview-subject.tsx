@@ -26,7 +26,7 @@ export class PreviewSubject extends React.PureComponent<IProps> {
 
                     subjects.push(
                         <span
-                            key={field.display_name}
+                            key={field._id}
                             className="inline-label"
                         ><br />{gettext(field.display_name)}:</span>,
                     );
