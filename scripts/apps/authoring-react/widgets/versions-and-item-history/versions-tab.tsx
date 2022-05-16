@@ -1,4 +1,5 @@
 import React from 'react';
+import {uniq} from 'lodash';
 import {
     IArticle,
     IExtensionActivationResult,
@@ -62,8 +63,8 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
         ]).then(([res, adapter]) => {
             const items = res._items.map((item) => adapter.toAuthoringReact(item));
 
-            const deskIds = items.map((item) => item.task?.desk).filter(notNullOrUndefined);
-            const stageIds = items.map((item) => item.task?.stage).filter(notNullOrUndefined);
+            const deskIds = uniq(items.map((item) => item.task?.desk).filter(notNullOrUndefined));
+            const stageIds = uniq(items.map((item) => item.task?.stage).filter(notNullOrUndefined));
 
             return Promise.all([
                 httpRequestJsonLocal<IRestApiResponse<IDesk>>({
