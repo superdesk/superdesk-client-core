@@ -116,11 +116,6 @@ export function MediaPreview(api, $rootScope, desks, superdesk, content, storage
             scope.$on('$destroy', () => {
                 elem.off('dragstart');
             });
-
-            scope.preview_headings = {
-                author: gettext('Author'),
-                keywords: gettext('Keywords'),
-            };
         },
     };
 }
