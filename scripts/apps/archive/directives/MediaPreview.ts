@@ -2,6 +2,7 @@ import _ from 'lodash';
 import {checkRenditions, getAssociationsByFieldId} from 'apps/authoring/authoring/controllers/AssociationController';
 import {IArticleField} from 'superdesk-api';
 import {appConfig} from 'appConfig';
+import {gettext} from 'core/utils';
 
 /**
  * @ngdoc directive
