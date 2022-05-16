@@ -8,6 +8,7 @@ import {getDropdownField} from './dropdown';
 import {getDateField} from './date';
 import {getUrlsField} from './urls';
 import {getEmbedField} from './embed';
+import {getMediaField} from './media';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
@@ -32,6 +33,7 @@ export function registerAuthoringReactFields() {
                 getDateField(),
                 getUrlsField(),
                 getEmbedField(),
+                getMediaField(),
             ],
         },
     };

@@ -64,10 +64,13 @@ export function arrayMove<T>(arr: Array<T>, from: number, to: number): Array<T> 
  * @param {Boolean} supportExternalFiles
  * @return {string}
  */
-export const getSuperdeskType = (event, supportExternalFiles = true) =>
-    event.originalEvent.dataTransfer.types.find((name) =>
+export const getSuperdeskType = (event, supportExternalFiles = true) => {
+    const evt = event.originalEvent ?? event;
+
+    return evt.dataTransfer.types.find((name) =>
         name.includes('application/superdesk') || supportExternalFiles && name === 'Files',
     );
+};
 
 /**
  * Works the same way as `gettext`, except that it's possible to also use React components

@@ -267,3 +267,7 @@ ul.list-view.list-without-items {
         background-color: #e6ffe6;
     }
 }
+
+.sd-focusable:focus {
+    outline: 2px solid #5ea9c8;
+}

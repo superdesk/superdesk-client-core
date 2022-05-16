@@ -332,10 +332,24 @@ export function UploadController(
             });
 
             if (uploadOfDisallowedFileTypesAttempted) {
-                const message = gettext('Only the following files are allowed: ')
-                    + ($scope.allowPicture ? gettext('image') : '')
-                    + ($scope.allowVideo ? ', ' + gettext('video') : '')
-                    + ($scope.allowAudio ? ', ' + gettext('audio') : '');
+                const allowedTypes = [];
+
+                if ($scope.allowPicture) {
+                    allowedTypes.push(gettext('image'));
+                }
+
+                if ($scope.allowVideo) {
+                    allowedTypes.push(gettext('video'));
+                }
+
+                if ($scope.allowAudio) {
+                    allowedTypes.push(gettext('audio'));
+                }
+
+                const message = gettext(
+                    'Only the following files are allowed: {{fileTypes}}',
+                    {fileTypes: allowedTypes.join(', ')},
+                );
 
                 notify.error(message);
             }

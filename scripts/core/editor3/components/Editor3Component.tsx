@@ -39,13 +39,7 @@ import {handleBeforeInputHighlights} from '../helpers/handleBeforeInputHighlight
 import {CharacterLimitUiBehavior} from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {Editor3Autocomplete} from './Editor3Autocomplete';
 import {querySelectorParent} from 'core/helpers/dom/querySelectorParent';
-
-const MEDIA_TYPES_TRIGGER_DROP_ZONE = [
-    'application/superdesk.item.picture',
-    'application/superdesk.item.graphic',
-    'application/superdesk.item.video',
-    'application/superdesk.item.audio',
-];
+import {MEDIA_TYPES_TRIGGER_DROP_ZONE} from 'core/constants';
 
 const EVENT_TYPES_TRIGGER_DROP_ZONE = [
     ...MEDIA_TYPES_TRIGGER_DROP_ZONE,

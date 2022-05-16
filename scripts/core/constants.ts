@@ -6,6 +6,15 @@ export const ARTICLE_RELATED_RESOURCE_NAMES = [
     'archive_publish',
 ];
 
+export const SUPERDESK_MEDIA_TYPES = {
+    PICTURE: 'application/superdesk.item.picture',
+    GRAPHIC: 'application/superdesk.item.graphic',
+    VIDEO: 'application/superdesk.item.video',
+    AUDIO: 'application/superdesk.item.audio',
+};
+
+export const MEDIA_TYPES_TRIGGER_DROP_ZONE = Object.values(SUPERDESK_MEDIA_TYPES);
+
 export const AUTOSAVE_TIMEOUT = 3000;
 
 export const AUTHORING_FIELD_PREFERENCES = 'authoring:field_preferences';

@@ -1269,7 +1269,7 @@ declare module 'superdesk-api' {
         className?: string;
         multiple?: boolean;
         onDrop: (event: DragEvent) => void;
-        canDrop: (event: DragEvent) => boolean;
+        canDrop: (event?: DragEvent) => boolean;
 
         onFileSelect?: (files: Array<File>) => void;
         fileAccept?: string;
