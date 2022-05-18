@@ -32,15 +32,10 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
             showMetadata: true,
         };
 
-        /**
-         * Image editing is being done using angularjs implementation that mutates data.
-         * `deepClone` is used to ensure that mutations will not affect data stored in authoring-react.
-         */
-
         ng.get('renditions')
-            .crop(cloneDeep(this.props.item), cropOptions)
+            .crop(this.props.item, cropOptions, {immutable: true})
             .then((res) => {
-                this.props.onChange(cloneDeep(res));
+                this.props.onChange(res);
             });
     }
 
