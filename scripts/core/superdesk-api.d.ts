@@ -1025,6 +1025,7 @@ declare module 'superdesk-api' {
         noPadding?: boolean;
         justifyContent?: string;
         bold?: boolean;
+        title?: string;
     }
 
     export interface IPropsListItemRow {

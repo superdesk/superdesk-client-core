@@ -20,6 +20,7 @@ export class TopMenuDropdownButton extends React.PureComponent<{
 
         return (
             <button
+                title="Marked for me"
                 onClick={onClick}
                 className={classes}
                 data-test-id={this.props['data-test-id']}
