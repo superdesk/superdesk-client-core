@@ -1,6 +1,7 @@
 import React from 'react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {IArticle} from 'superdesk-api';
+import {mediaDetailsPadding} from './constants';
 
 interface IProps {
     renditions: IArticle['renditions'];
@@ -8,6 +9,7 @@ interface IProps {
     removeButton: JSX.Element;
     metadata: JSX.Element;
     paginationBar: JSX.Element;
+    descriptionInput: JSX.Element;
     readOnly: boolean;
 }
 
@@ -19,33 +21,42 @@ export class MediaCarouselAudio extends React.PureComponent<IProps> {
             removeButton,
             metadata,
             paginationBar,
+            descriptionInput,
         } = this.props;
 
         return (
-            <div style={{color: '#fff', padding: 10}}>
-                <div>
-                    <Spacer v gap="32" justifyContent="space-between" noWrap style={{height: '100%'}}>
-                        <Spacer h gap="16" justifyContent="space-between" noWrap>
-                            {title}
-                            {removeButton}
-                        </Spacer>
+            <div>
+                <div className="field--media--carousel">
+                    <div style={{color: '#fff', padding: 10}}>
+                        <Spacer v gap="32" justifyContent="space-between" noWrap style={{height: '100%'}}>
+                            <Spacer h gap="16" justifyContent="space-between" noWrap>
+                                {title}
+                                {removeButton}
+                            </Spacer>
 
-                        <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
-                            <audio controls>
-                                {
-                                    Object.values(renditions).map(({href}) => (
-                                        <source key={href} src={href} />
-                                    ))
-                                }
-                            </audio>
-                        </div>
+                            <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
+                                <audio controls>
+                                    {
+                                        Object.values(renditions).map(({href}) => (
+                                            <source key={href} src={href} />
+                                        ))
+                                    }
+                                </audio>
+                            </div>
 
-                        <Spacer v gap="16" noWrap>
-                            {metadata}
-                            {paginationBar}
+                            <Spacer v gap="16" noWrap>
+                                {metadata}
+                                {paginationBar}
+                            </Spacer>
                         </Spacer>
-                    </Spacer>
+                    </div>
                 </div>
+
+                {
+                    descriptionInput != null && (
+                        <div style={{padding: mediaDetailsPadding}}>{descriptionInput}</div>
+                    )
+                }
             </div>
         );
     }

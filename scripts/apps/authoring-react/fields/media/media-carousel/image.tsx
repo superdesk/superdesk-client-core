@@ -3,8 +3,9 @@ import {IconButton} from 'superdesk-ui-framework/react';
 import ng from 'core/services/ng';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import {cloneDeep} from 'lodash';
 import {IArticle} from 'superdesk-api';
+import {ImageCrops} from './image-crops';
+import {mediaDetailsPadding} from './constants';
 
 interface IProps {
     item: IArticle;
@@ -13,6 +14,8 @@ interface IProps {
     removeButton: JSX.Element;
     metadata: JSX.Element;
     paginationBar: JSX.Element;
+    descriptionInput: JSX.Element;
+    showCrops?: boolean;
     readOnly: boolean;
 }
 
@@ -46,66 +49,93 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
             removeButton,
             metadata,
             paginationBar,
+            descriptionInput,
+            showCrops,
             readOnly,
         } = this.props;
 
         return (
             <div>
-                <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
-                    <img src={item.renditions.viewImage.href} style={{maxHeight: '50vh'}} />
+                <div className="field--media--carousel">
+                    <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
+                        <img src={item.renditions.viewImage.href} style={{maxHeight: '50vh'}} />
+                    </div>
+
+                    <div className="field--media--carousel-overlay">
+                        <Spacer v gap="8" justifyContent="space-between" noWrap style={{height: '100%'}}>
+                            <Spacer h gap="16" justifyContent="space-between" noWrap>
+                                {title}
+                                {removeButton}
+                            </Spacer>
+
+                            {
+                                !readOnly && (
+                                    <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
+                                        <Spacer h gap="8" noGrow>
+                                            <IconButton
+                                                ariaValue={gettext('Edit metadata')}
+                                                icon="pencil"
+                                                style="outlineWhite"
+                                                size="x-large"
+                                                onClick={() => {
+                                                    this.edit('view');
+                                                }}
+                                            />
+
+                                            <IconButton
+                                                ariaValue={gettext('Edit image')}
+                                                icon="switches"
+                                                style="outlineWhite"
+                                                size="x-large"
+                                                onClick={() => {
+                                                    this.edit('image-edit');
+                                                }}
+                                            />
+
+                                            <IconButton
+                                                ariaValue={gettext('Edit crops')}
+                                                icon="crop"
+                                                style="outlineWhite"
+                                                size="x-large"
+                                                onClick={() => {
+                                                    this.edit('crop');
+                                                }}
+                                            />
+                                        </Spacer>
+                                    </div>
+                                )
+                            }
+
+                            <Spacer v gap="16" noWrap>
+                                {metadata}
+                                {paginationBar}
+                            </Spacer>
+                        </Spacer>
+                    </div>
                 </div>
 
-                <div className="field--media--carousel-overlay">
-                    <Spacer v gap="8" justifyContent="space-between" noWrap style={{height: '100%'}}>
-                        <Spacer h gap="16" justifyContent="space-between" noWrap>
-                            {title}
-                            {removeButton}
-                        </Spacer>
+                {
+                    (descriptionInput != null || showCrops != null) && (
+                        <div style={{padding: mediaDetailsPadding}}>
+                            <Spacer v gap="16" noWrap>
+                                {
+                                    descriptionInput != null && (
+                                        <div style={{width: '100%'}}>{descriptionInput}</div>
+                                    )
+                                }
 
-                        {
-                            !readOnly && (
-                                <div style={{display: 'flex', width: '100%', justifyContent: 'center'}}>
-                                    <Spacer h gap="8" noGrow>
-                                        <IconButton
-                                            ariaValue={gettext('Edit metadata')}
-                                            icon="pencil"
-                                            style="outlineWhite"
-                                            size="x-large"
-                                            onClick={() => {
-                                                this.edit('view');
-                                            }}
+                                {
+                                    showCrops != null && (
+                                        <ImageCrops
+                                            renditions={item.renditions ?? {}}
+                                            wrapper={({children}) => <div style={{width: '100%'}}>{children}</div>}
                                         />
-
-                                        <IconButton
-                                            ariaValue={gettext('Edit image')}
-                                            icon="switches"
-                                            style="outlineWhite"
-                                            size="x-large"
-                                            onClick={() => {
-                                                this.edit('image-edit');
-                                            }}
-                                        />
-
-                                        <IconButton
-                                            ariaValue={gettext('Edit crops')}
-                                            icon="crop"
-                                            style="outlineWhite"
-                                            size="x-large"
-                                            onClick={() => {
-                                                this.edit('crop');
-                                            }}
-                                        />
-                                    </Spacer>
-                                </div>
-                            )
-                        }
-
-                        <Spacer v gap="16" noWrap>
-                            {metadata}
-                            {paginationBar}
-                        </Spacer>
-                    </Spacer>
-                </div>
+                                    )
+                                }
+                            </Spacer>
+                        </div>
+                    )
+                }
             </div>
         );
     }

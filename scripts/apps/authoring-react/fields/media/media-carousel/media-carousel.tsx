@@ -2,7 +2,7 @@ import React from 'react';
 import {IconButton, Input} from 'superdesk-ui-framework/react';
 import {IArticle} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {SpacerBlock, Spacer} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {getNoValueLabel} from '../constants';
 import {MediaMetadata} from '../media-metadata';
 import {noop} from 'lodash';
@@ -13,6 +13,7 @@ import {MediaCarouselVideo} from './video';
 interface IProps {
     mediaItems: Array<IArticle>;
     onChange?(mediaItems: Array<IArticle>): void;
+    showPictureCrops: boolean;
     readOnly: boolean;
 }
 
@@ -83,7 +84,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
 
     render() {
         const {currentPage} = this.state;
-        const {mediaItems, readOnly} = this.props;
+        const {mediaItems, readOnly, showPictureCrops} = this.props;
         const onChange = this.props.onChange ?? noop;
 
         const pagesTotal = mediaItems.length;
@@ -165,24 +166,20 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
 
         const descriptionInput = (
             !readOnly && (
-                <div style={{padding: 10}}>
-                    <SpacerBlock v gap="16" />
-
-                    <Input
-                        type="text"
-                        label={gettext('Description')}
-                        value={item.description_text ?? ''}
-                        onChange={(val) => {
-                            onChange(
-                                mediaItems.map(
-                                    (_item, i) => i === currentPage
-                                        ? {..._item, description_text: val}
-                                        : _item,
-                                ),
-                            );
-                        }}
-                    />
-                </div>
+                <Input
+                    type="text"
+                    label={gettext('Description')}
+                    value={item.description_text ?? ''}
+                    onChange={(val) => {
+                        onChange(
+                            mediaItems.map(
+                                (_item, i) => i === currentPage
+                                    ? {..._item, description_text: val}
+                                    : _item,
+                            ),
+                        );
+                    }}
+                />
             )
         );
 
@@ -190,7 +187,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
             <div className="field--media">
                 <div
                     tabIndex={0}
-                    className="field--media--carousel sd-focusable"
+                    className="sd-focusable"
                     onKeyUp={(event) => {
                         if (event.key === 'ArrowRight') {
                             this.next();
@@ -217,6 +214,8 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     removeButton={removeButton}
                                     metadata={metadata}
                                     paginationBar={paginationBar}
+                                    descriptionInput={descriptionInput}
+                                    showCrops={showPictureCrops}
                                     readOnly={readOnly}
                                 />
                             );
@@ -228,6 +227,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     removeButton={removeButton}
                                     metadata={metadata}
                                     paginationBar={paginationBar}
+                                    descriptionInput={descriptionInput}
                                     readOnly={readOnly}
                                 />
                             );
@@ -239,18 +239,13 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     removeButton={removeButton}
                                     metadata={metadata}
                                     paginationBar={paginationBar}
+                                    descriptionInput={descriptionInput}
                                     readOnly={readOnly}
                                 />
                             );
                         }
                     })()}
                 </div>
-
-                {
-                    descriptionInput != null && (
-                        <div>{descriptionInput}</div>
-                    )
-                }
             </div>
         );
     }

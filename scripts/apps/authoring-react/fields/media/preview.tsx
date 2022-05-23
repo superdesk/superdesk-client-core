@@ -11,6 +11,7 @@ export class Preview extends React.PureComponent<IProps> {
             <MediaCarousel
                 mediaItems={this.props.value}
                 readOnly={true}
+                showPictureCrops={this.props.config.showPictureCrops}
             />
         );
     }

@@ -41,6 +41,16 @@ export class Config extends React.PureComponent<IProps> {
 
                 <div>
                     <Checkbox
+                        label={{text: gettext('Show crops for pictures')}}
+                        checked={config.showPictureCrops}
+                        onChange={(val) => {
+                            this.props.onChange({...config, showPictureCrops: val});
+                        }}
+                    />
+                </div>
+
+                <div>
+                    <Checkbox
                         label={{text: gettext('Allow video')}}
                         checked={config.allowVideo}
                         onChange={(val) => {

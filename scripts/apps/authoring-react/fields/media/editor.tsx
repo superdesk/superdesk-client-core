@@ -168,7 +168,7 @@ export class Editor extends React.PureComponent<IProps> {
 
     render() {
         const Container = this.props.container;
-        const {readOnly} = this.props;
+        const {readOnly, config} = this.props;
         const mediaItems = this.getMediaItems();
         const canAddMultipleItems = this.getMaxItemsCount() > 1;
         const allowedMimeTypesForUpload = this.getAllowedMimeTypes();
@@ -188,6 +188,7 @@ export class Editor extends React.PureComponent<IProps> {
                             <MediaCarousel
                                 mediaItems={mediaItems}
                                 onChange={this.props.onChange}
+                                showPictureCrops={config.showPictureCrops}
                                 readOnly={readOnly}
                                 ref={(component) => {
                                     this.mediaCarouselRef = component;
