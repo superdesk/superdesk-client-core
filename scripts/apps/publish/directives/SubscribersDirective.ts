@@ -42,7 +42,6 @@ export function SubscribersDirective(
             $scope.contentFilters = null;
             $scope.apiProducts = null;
             $scope.directProducts = null;
-            $scope.subTypes = null;
             $scope.search = {};
             $scope.highPriorityQueueEnabled = appConfig.high_priority_queue_enabled;
 
@@ -58,6 +57,13 @@ export function SubscribersDirective(
                 {label: gettext('Both'), value: null, id: 'both'},
                 {label: gettext('Inactive'), value: false, id: 'inactive'},
             ];
+
+            $scope.subTypes = [
+                {name: gettext('All'), qcode: 'all'},
+                {name: gettext('Digital/Internet'), qcode: 'digital'},
+                {name: gettext('Wire/Paper'), qcode: 'wire'},
+            ];
+
             $scope.search.subscriber_status = $scope.statusFilters[0];
             /**
              * Fetches all subscribers from backend
