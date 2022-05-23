@@ -15,6 +15,8 @@ interface IProps {
     onChange?(mediaItems: Array<IArticle>): void;
     showPictureCrops: boolean;
     readOnly: boolean;
+    maxItemsAllowed: number;
+    showTitleInput: boolean;
 }
 
 interface IState {
@@ -84,7 +86,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
 
     render() {
         const {currentPage} = this.state;
-        const {mediaItems, readOnly, showPictureCrops} = this.props;
+        const {mediaItems, maxItemsAllowed, readOnly, showPictureCrops, showTitleInput} = this.props;
         const onChange = this.props.onChange ?? noop;
 
         const pagesTotal = mediaItems.length;
@@ -138,7 +140,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
             <MediaMetadata item={item} />
         );
 
-        const paginationBar = (
+        const paginationBar = maxItemsAllowed < 2 ? null : (
             <Spacer h gap="16" justifyContent="space-between" noWrap>
                 <div>
                     <IconButton
@@ -164,7 +166,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
             </Spacer>
         );
 
-        const titleInput = (
+        const titleInput = showTitleInput !== true ? null : (
             !readOnly && (
                 <Input
                     type="text"

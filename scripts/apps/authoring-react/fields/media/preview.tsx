@@ -1,5 +1,6 @@
 import React from 'react';
 import {IPreviewComponentProps} from 'superdesk-api';
+import {maxItemsDefault} from './constants';
 import {IMediaValueOperational, IMediaConfig} from './interfaces';
 import {MediaCarousel} from './media-carousel/media-carousel';
 
@@ -12,6 +13,8 @@ export class Preview extends React.PureComponent<IProps> {
                 mediaItems={this.props.value}
                 readOnly={true}
                 showPictureCrops={this.props.config.showPictureCrops}
+                showTitleInput={this.props.config.showTitleEditingInput}
+                maxItemsAllowed={this.props.config.maxItems ?? maxItemsDefault}
             />
         );
     }

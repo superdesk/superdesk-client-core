@@ -2,7 +2,7 @@ import React from 'react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {VideoComponent} from 'core/ui/components/video';
 import {IArticle} from 'superdesk-api';
-import {mediaDetailsPadding} from './constants';
+import {mediaDetailsPadding} from '../constants';
 
 interface IProps {
     item: IArticle;

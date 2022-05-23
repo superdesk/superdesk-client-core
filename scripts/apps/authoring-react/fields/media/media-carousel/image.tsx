@@ -5,7 +5,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {IArticle} from 'superdesk-api';
 import {ImageCrops} from './image-crops';
-import {mediaDetailsPadding} from './constants';
+import {mediaDetailsPadding} from '../constants';
 
 interface IProps {
     item: IArticle;
@@ -117,7 +117,7 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
                 </div>
 
                 {
-                    (descriptionInput != null || titleInput != null || showCrops != null) && (
+                    (descriptionInput != null || titleInput != null || showCrops === true) && (
                         <div style={{padding: mediaDetailsPadding}}>
                             <Spacer v gap="16" noWrap>
                                 {
@@ -133,7 +133,7 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
                                 }
 
                                 {
-                                    showCrops != null && (
+                                    showCrops === true && (
                                         <ImageCrops
                                             renditions={item.renditions ?? {}}
                                             wrapper={({children}) => <div style={{width: '100%'}}>{children}</div>}

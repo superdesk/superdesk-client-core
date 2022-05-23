@@ -28,6 +28,7 @@ import {usageterms} from './usageterms';
 import {IDateFieldConfig, IDateShortcut} from '../fields/date/interfaces';
 import {IUrlsFieldConfig} from '../fields/urls/interfaces';
 import {IEmbedConfig} from '../fields/embed/interfaces';
+import {feature_media} from './feature_media';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -62,6 +63,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter {
         body_html: body_html,
         byline: byline,
         ednote: ednote,
+        feature_media: feature_media,
         genre: genre,
         headline: headline,
         language: language,

@@ -9,6 +9,7 @@ import {SpacerBlock} from 'core/ui/components/Spacer';
 import {MediaThumbnails} from './media-thumbnails';
 import {SUPERDESK_MEDIA_TYPES} from 'core/constants';
 import {notify} from 'core/notify/notify';
+import {maxItemsDefault} from './constants';
 
 type IProps = IEditorComponentProps<IMediaValueOperational, IMediaConfig, IMediaUserPreferences>;
 
@@ -24,8 +25,8 @@ export class Editor extends React.PureComponent<IProps> {
 
         this.getMediaItems = this.getMediaItems.bind(this);
         this.getAllowedMimeTypes = this.getAllowedMimeTypes.bind(this);
-        this.getMaxItemsCount = this.getMaxItemsCount.bind(this);
-        this.canAddItems = this.canAddItems.bind(this);
+        this.getMaxRemainingItemsCount = this.getMaxRemainingItemsCount.bind(this);
+        this.isMediaTypeAllowed = this.isMediaTypeAllowed.bind(this);
         this.upload = this.upload.bind(this);
         this.handleDragDrop = this.handleDragDrop.bind(this);
     }
@@ -54,7 +55,7 @@ export class Editor extends React.PureComponent<IProps> {
         return acceptFileTypes.join(',');
     }
 
-    private getMaxItemsCount(): number | undefined {
+    private getMaxRemainingItemsCount(): number | undefined {
         const {config} = this.props;
 
         if (config.maxItems == null) {
@@ -67,7 +68,7 @@ export class Editor extends React.PureComponent<IProps> {
         return maxUploadsRemaining;
     }
 
-    private canAddItems(dropEvent?): boolean {
+    private isMediaTypeAllowed(dropEvent?): boolean {
         const type = dropEvent == null ? null : getSuperdeskType(dropEvent);
         const {config} = this.props;
 
@@ -84,15 +85,13 @@ export class Editor extends React.PureComponent<IProps> {
             }
         }
 
-        const maxItems: number | undefined = this.getMaxItemsCount();
-
-        return maxItems == null ? true : this.getMaxItemsCount() > 0;
+        return true;
     }
 
     private upload(files: Array<File>): void {
         const {config} = this.props;
         const mediaItems = this.getMediaItems();
-        const maxUploadsRemaining: number | undefined = this.getMaxItemsCount();
+        const maxUploadsRemaining: number | undefined = this.getMaxRemainingItemsCount();
 
         let uploadData = {
             files: files,
@@ -121,7 +120,18 @@ export class Editor extends React.PureComponent<IProps> {
             return;
         }
 
-        if (!this.canAddItems(event)) {
+        if (config.maxItems != null && this.getMaxRemainingItemsCount() < 1) {
+            notify.error(
+                gettext(
+                    'Item not added. Maximum limit of {{n}} items exceeded.',
+                    {n: config.maxItems},
+                ),
+            );
+
+            return;
+        }
+
+        if (!this.isMediaTypeAllowed(event)) {
             const allowedMediaTypes = [];
 
             if (config.allowPicture) {
@@ -170,7 +180,7 @@ export class Editor extends React.PureComponent<IProps> {
         const Container = this.props.container;
         const {readOnly, config} = this.props;
         const mediaItems = this.getMediaItems();
-        const canAddMultipleItems = this.getMaxItemsCount() > 1;
+        const canAddMultipleItems = this.getMaxRemainingItemsCount() > 1;
         const allowedMimeTypesForUpload = this.getAllowedMimeTypes();
         const canDrop = () => true;
 
@@ -188,8 +198,10 @@ export class Editor extends React.PureComponent<IProps> {
                             <MediaCarousel
                                 mediaItems={mediaItems}
                                 onChange={this.props.onChange}
-                                showPictureCrops={config.showPictureCrops}
+                                showPictureCrops={config.showPictureCrops === true}
+                                showTitleInput={config.showTitleEditingInput === true}
                                 readOnly={readOnly}
+                                maxItemsAllowed={config.maxItems ?? maxItemsDefault}
                                 ref={(component) => {
                                     this.mediaCarouselRef = component;
                                 }}
@@ -199,7 +211,7 @@ export class Editor extends React.PureComponent<IProps> {
                 }
 
                 {
-                    mediaItems.length > 0 && (
+                    (config.maxItems ?? maxItemsDefault) > 1 && mediaItems.length > 0 && (
                         <div>
                             <SpacerBlock v gap="16" />
 
@@ -215,7 +227,7 @@ export class Editor extends React.PureComponent<IProps> {
                 }
 
                 {
-                    !readOnly && (
+                    (!readOnly && this.getMaxRemainingItemsCount() > 0) && (
                         <div>
                             <SpacerBlock v gap="16" />
 

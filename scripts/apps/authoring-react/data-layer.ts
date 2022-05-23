@@ -266,6 +266,11 @@ export const authoringStorage: IAuthoringStorage = {
                 diff.extra = _current.extra;
             }
 
+            // when object has changes, send entire object to avoid server dropping keys
+            if (diff.associations != null) {
+                diff.associations = _current.associations;
+            }
+
             diff = adapter.fromAuthoringReact(diff);
 
             const queryString = appConfig.features.publishFromPersonal === true

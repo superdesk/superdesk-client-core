@@ -1,7 +1,7 @@
 import React from 'react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {IArticle} from 'superdesk-api';
-import {mediaDetailsPadding} from './constants';
+import {mediaDetailsPadding} from '../constants';
 
 interface IProps {
     renditions: IArticle['renditions'];
