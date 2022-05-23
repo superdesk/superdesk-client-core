@@ -164,6 +164,25 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
             </Spacer>
         );
 
+        const titleInput = (
+            !readOnly && (
+                <Input
+                    type="text"
+                    label={gettext('Title')}
+                    value={item.headline ?? ''}
+                    onChange={(val) => {
+                        onChange(
+                            mediaItems.map(
+                                (_item, i) => i === currentPage
+                                    ? {..._item, headline: val}
+                                    : _item,
+                            ),
+                        );
+                    }}
+                />
+            )
+        );
+
         const descriptionInput = (
             !readOnly && (
                 <Input
@@ -214,6 +233,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     removeButton={removeButton}
                                     metadata={metadata}
                                     paginationBar={paginationBar}
+                                    titleInput={titleInput}
                                     descriptionInput={descriptionInput}
                                     showCrops={showPictureCrops}
                                     readOnly={readOnly}
@@ -227,6 +247,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     removeButton={removeButton}
                                     metadata={metadata}
                                     paginationBar={paginationBar}
+                                    titleInput={titleInput}
                                     descriptionInput={descriptionInput}
                                     readOnly={readOnly}
                                 />
@@ -239,6 +260,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                                     removeButton={removeButton}
                                     metadata={metadata}
                                     paginationBar={paginationBar}
+                                    titleInput={titleInput}
                                     descriptionInput={descriptionInput}
                                     readOnly={readOnly}
                                 />

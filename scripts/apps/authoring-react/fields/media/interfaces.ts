@@ -10,4 +10,5 @@ export interface IMediaConfig extends ICommonFieldConfig {
     allowVideo?: boolean;
     allowAudio?: boolean;
     showPictureCrops?: boolean;
+    showTitleEditingInput?: boolean;
 }

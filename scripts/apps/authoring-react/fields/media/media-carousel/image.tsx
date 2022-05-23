@@ -15,6 +15,7 @@ interface IProps {
     metadata: JSX.Element;
     paginationBar: JSX.Element;
     descriptionInput: JSX.Element;
+    titleInput: JSX.Element;
     showCrops?: boolean;
     readOnly: boolean;
 }
@@ -49,6 +50,7 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
             removeButton,
             metadata,
             paginationBar,
+            titleInput,
             descriptionInput,
             showCrops,
             readOnly,
@@ -115,9 +117,15 @@ export class MediaCarouselImage extends React.PureComponent<IProps> {
                 </div>
 
                 {
-                    (descriptionInput != null || showCrops != null) && (
+                    (descriptionInput != null || titleInput != null || showCrops != null) && (
                         <div style={{padding: mediaDetailsPadding}}>
                             <Spacer v gap="16" noWrap>
+                                {
+                                    titleInput != null && (
+                                        <div style={{width: '100%'}}>{titleInput}</div>
+                                    )
+                                }
+
                                 {
                                     descriptionInput != null && (
                                         <div style={{width: '100%'}}>{descriptionInput}</div>

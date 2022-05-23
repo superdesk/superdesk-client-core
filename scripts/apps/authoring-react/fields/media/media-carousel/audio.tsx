@@ -9,6 +9,7 @@ interface IProps {
     removeButton: JSX.Element;
     metadata: JSX.Element;
     paginationBar: JSX.Element;
+    titleInput: JSX.Element;
     descriptionInput: JSX.Element;
     readOnly: boolean;
 }
@@ -21,6 +22,7 @@ export class MediaCarouselAudio extends React.PureComponent<IProps> {
             removeButton,
             metadata,
             paginationBar,
+            titleInput,
             descriptionInput,
         } = this.props;
 
@@ -53,8 +55,22 @@ export class MediaCarouselAudio extends React.PureComponent<IProps> {
                 </div>
 
                 {
-                    descriptionInput != null && (
-                        <div style={{padding: mediaDetailsPadding}}>{descriptionInput}</div>
+                    (descriptionInput != null || titleInput != null) && (
+                        <div style={{padding: mediaDetailsPadding}}>
+                            <Spacer v gap="16" noWrap>
+                                {
+                                    titleInput != null && (
+                                        <div style={{width: '100%'}}>{titleInput}</div>
+                                    )
+                                }
+
+                                {
+                                    descriptionInput != null && (
+                                        <div style={{width: '100%'}}>{descriptionInput}</div>
+                                    )
+                                }
+                            </Spacer>
+                        </div>
                     )
                 }
             </div>

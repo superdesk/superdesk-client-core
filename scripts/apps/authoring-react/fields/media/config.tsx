@@ -68,6 +68,16 @@ export class Config extends React.PureComponent<IProps> {
                         }}
                     />
                 </div>
+
+                <div>
+                    <Checkbox
+                        label={{text: gettext('Show input for editing title')}}
+                        checked={config.showTitleEditingInput}
+                        onChange={(val) => {
+                            this.props.onChange({...config, showTitleEditingInput: val});
+                        }}
+                    />
+                </div>
             </Spacer>
         );
     }
