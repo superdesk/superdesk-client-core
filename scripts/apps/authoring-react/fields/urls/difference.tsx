@@ -7,10 +7,8 @@ type IProps = IDifferenceComponentProps<IUrlsFieldValueOperational, IUrlsFieldCo
 
 export class Difference extends React.PureComponent<IProps> {
     render() {
-        const {value1, value2} = this.props;
-
-        const value1Sorted = value1.sort((a, b) => a.url.localeCompare(b.url));
-        const value2Sorted = value2.sort((a, b) => a.url.localeCompare(b.url));
+        const value1Sorted = (this.props.value1 ?? []).sort((a, b) => a.url.localeCompare(b.url));
+        const value2Sorted = (this.props.value2 ?? []).sort((a, b) => a.url.localeCompare(b.url));
 
         const value1HtmlString =
             value1Sorted

@@ -10,8 +10,25 @@ export class DifferenceDropdownTree extends React.PureComponent<IProps> {
     render() {
         const {value1, value2, config} = this.props;
 
-        const values1 = Array.isArray(value1) ? value1 : [value1];
-        const values2 = Array.isArray(value2) ? value2 : [value2];
+        const values1 = (() => {
+            if (value1 == null) {
+                return [];
+            } else if (Array.isArray(value1)) {
+                return value1;
+            } else {
+                return [value1];
+            }
+        })();
+
+        const values2 = (() => {
+            if (value2 == null) {
+                return [];
+            } else if (Array.isArray(value2)) {
+                return value2;
+            } else {
+                return [value2];
+            }
+        })();
 
         const template = getValueTemplate(config);
 

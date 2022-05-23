@@ -14,7 +14,7 @@ import {TimeElem} from 'apps/search/components';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {store} from 'core/data';
 import {StateComponent} from 'apps/search/components/fields/state';
-import {Button, Checkbox} from 'superdesk-ui-framework/react';
+import {Button, ToggleBox} from 'superdesk-ui-framework/react';
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 import {Map} from 'immutable';
 import {sdApi} from 'api';
@@ -23,12 +23,13 @@ import {omitFields} from '../../data-layer';
 import {compareArticles} from '../../compare-articles/compare-articles';
 import {previewArticle} from '../../preview-article-modal';
 import {getArticleAdapter} from '../../article-adapter';
+import {SelectFilterable} from 'core/ui/components/select-filterable';
 
 const loadingState: IState = {
     versions: 'loading',
     desks: Map(),
     stages: Map(),
-    selectedForComparison: [],
+    selectedForComparison: {from: null, to: null},
 };
 
 type IProps = React.ComponentProps<
@@ -39,7 +40,7 @@ interface IState {
     versions: Array<IArticle> | 'loading';
     desks: Map<string, IDesk>;
     stages: Map<string, IStage>;
-    selectedForComparison: Array<IArticle>;
+    selectedForComparison?: {from: IArticle; to: IArticle};
 }
 
 export class VersionsTab extends React.PureComponent<IProps, IState> {
@@ -62,6 +63,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
             getArticleAdapter(),
         ]).then(([res, adapter]) => {
             const items = res._items.map((item) => adapter.toAuthoringReact(item));
+            const itemsReversed = items.reverse();
 
             const deskIds = uniq(items.map((item) => item.task?.desk).filter(notNullOrUndefined));
             const stageIds = uniq(items.map((item) => item.task?.stage).filter(notNullOrUndefined));
@@ -79,9 +81,13 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                 ),
             ]).then(([resDesks, resStages]) => {
                 this.setState({
-                    versions: items.reverse(),
+                    versions: itemsReversed,
                     desks: Map(resDesks._items.map((item) => [item._id, item])),
                     stages: Map(resStages._items.map((item) => [item._id, item])),
+                    selectedForComparison: {
+                        from: itemsReversed[1],
+                        to: itemsReversed[0],
+                    },
                 });
             });
         });
@@ -107,20 +113,18 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
     }
 
     compareVersions() {
-        const [item1, item2] = this.state.selectedForComparison;
+        const {from, to} = this.state.selectedForComparison;
 
         compareArticles(
             {
-                label: gettext('version {{n}}', {n: item1._current_version}),
-                article: item1,
+                label: gettext('version {{n}}', {n: from._current_version}),
+                article: from,
             },
             {
-                label: gettext('version {{n}}', {n: item2._current_version}),
-                article: item2,
+                label: gettext('version {{n}}', {n: to._current_version}),
+                article: to,
             },
         );
-
-        this.setState({selectedForComparison: []});
     }
 
     componentDidMount() {
@@ -140,34 +144,55 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
 
         return (
             <Spacer v gap="8" noWrap alignItems="stretch">
-                <Spacer h gap="8" justifyContent="space-between" noGrow>
-                    <Spacer h gap="8" justifyContent="start" noGrow>
-                        {gettext('Selected: {{n}}', {n: selectedForComparison.length})}
+                <ToggleBox title={gettext('Compare versions')} initiallyOpen margin="none">
+                    <Spacer h gap="16">
+                        <SelectFilterable
+                            items={versions}
+                            value={this.state.selectedForComparison.from}
+                            onChange={(val) => {
+                                this.setState({
+                                    selectedForComparison: {
+                                        ...this.state.selectedForComparison,
+                                        from: val,
+                                    },
+                                });
+                            }}
+                            getLabel={(item) => gettext('version: {{n}}', {n: item._current_version})}
+                            required
+                        />
 
-                        {
-                            selectedForComparison.length > 0 && (
-                                <Button
-                                    text={gettext('Clear')}
-                                    onClick={() => {
-                                        this.setState({selectedForComparison: []});
-                                    }}
-                                    style="hollow"
-                                    size="small"
-                                />
-                            )
-                        }
+                        <SelectFilterable
+                            items={versions}
+                            value={this.state.selectedForComparison.to}
+                            onChange={(val) => {
+                                this.setState({
+                                    selectedForComparison: {
+                                        ...this.state.selectedForComparison,
+                                        to: val,
+                                    },
+                                });
+                            }}
+                            getLabel={(item) => gettext('version: {{n}}', {n: item._current_version})}
+                            required
+                        />
                     </Spacer>
 
-                    <Button
-                        text={gettext('Compare')}
-                        disabled={selectedForComparison.length !== 2}
-                        onClick={() => {
-                            this.compareVersions();
-                        }}
-                        type="primary"
-                        size="small"
-                    />
-                </Spacer>
+                    <SpacerBlock v gap="8" />
+
+                    <div style={{display: 'flex', justifyContent: 'center'}}>
+                        <Button
+                            text={gettext('Compare')}
+                            disabled={selectedForComparison.from === selectedForComparison.to}
+                            onClick={() => {
+                                this.compareVersions();
+                            }}
+                            type="primary"
+                            size="small"
+                        />
+                    </div>
+
+                    <SpacerBlock v gap="8" />
+                </ToggleBox>
 
                 {
                     versions.map((item, i) => {
@@ -218,27 +243,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                                 <SpacerBlock v gap="8" />
 
                                 <Spacer h gap="8" justifyContent="space-between" alignItems="center" noGrow>
-                                    <div>
-                                        <Checkbox
-                                            label={{text: gettext('Select for comparison'), hidden: true}}
-                                            checked={selectedForComparison.includes(item)}
-                                            onChange={(val) => {
-                                                if (val === true) {
-                                                    this.setState({
-                                                        selectedForComparison:
-                                                            selectedForComparison.concat(item),
-                                                    });
-                                                } else {
-                                                    this.setState({
-                                                        selectedForComparison:
-                                                            selectedForComparison.filter(
-                                                                (_item) => _item !== item,
-                                                            ),
-                                                    });
-                                                }
-                                            }}
-                                        />
-                                    </div>
+                                    <div />
 
                                     <Spacer h gap="4" justifyContent="start" alignItems="center" noGrow>
                                         <div>

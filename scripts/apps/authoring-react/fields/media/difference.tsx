@@ -10,7 +10,8 @@ type IProps = IDifferenceComponentProps<IMediaValueOperational, IMediaConfig>;
 
 export class Difference extends React.PureComponent<IProps> {
     render() {
-        const {value1, value2} = this.props;
+        const value1 = this.props.value1 ?? [];
+        const value2 = this.props.value2 ?? [];
 
         const stats = getDifferenceStatistics(
             value1,

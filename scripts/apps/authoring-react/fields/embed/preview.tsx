@@ -8,7 +8,7 @@ type IProps = IPreviewComponentProps<IEmbedValueOperational, IEmbedConfig>;
 
 export class Preview extends React.PureComponent<IProps> {
     render() {
-        if (this.props.value?.embed?.trim().length < 1) {
+        if ((this.props.value?.embed ?? '').trim().length < 1) {
             return null;
         }
 

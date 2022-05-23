@@ -9,8 +9,16 @@ type IProps = IPreviewComponentProps<IDropdownValue, IDropdownTreeConfig>;
 export class PreviewDropdownTree extends React.PureComponent<IProps> {
     render() {
         const {config, value} = this.props;
-        const optionsToPreview =
-            (Array.isArray(value) ? value : [value]);
+
+        const optionsToPreview = (() => {
+            if (value == null) {
+                return [];
+            } else if (Array.isArray(value)) {
+                return value;
+            } else {
+                return [value];
+            }
+        })();
 
         const Template = getValueTemplate(config);
 

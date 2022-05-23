@@ -8,6 +8,10 @@ type IProps = IPreviewComponentProps<IMediaValueOperational, IMediaConfig>;
 
 export class Preview extends React.PureComponent<IProps> {
     render() {
+        if ((this.props.value?.length ?? 0) < 1) {
+            return null;
+        }
+
         return (
             <MediaCarousel
                 mediaItems={this.props.value}
