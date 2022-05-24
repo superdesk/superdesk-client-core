@@ -29,6 +29,9 @@ import {IDateFieldConfig, IDateShortcut} from '../fields/date/interfaces';
 import {IUrlsFieldConfig} from '../fields/urls/interfaces';
 import {IEmbedConfig} from '../fields/embed/interfaces';
 import {feature_media} from './feature_media';
+import {IMediaConfig, IMediaValueOperational} from '../fields/media/interfaces';
+import {applyAssociations, getRelatedMedia} from 'apps/authoring/authoring/controllers/AssociationController';
+import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -161,6 +164,47 @@ export function getFieldsAdapter(): IFieldsAdapter {
                     };
 
                     return fieldV2;
+                },
+            };
+        } else if (vocabulary.field_type === 'media') {
+            adapter[vocabulary._id] = {
+                getFieldV2: (fieldEditor, fieldSchema) => {
+                    const fieldConfig: IMediaConfig = {
+                        maxItems:
+                            vocabulary.field_options?.multiple_items?.enabled === true
+                                ? vocabulary.field_options.multiple_items.max_items
+                                : 1,
+                        allowPicture: vocabulary.field_options?.allowed_types?.picture === true,
+                        allowAudio: vocabulary.field_options?.allowed_types?.audio === true,
+                        allowVideo: vocabulary.field_options?.allowed_types?.video === true,
+                        showPictureCrops: false,
+                        showTitleEditingInput: false,
+                        allowedWorkflows: {
+                            inProgress:
+                                vocabulary.field_options?.allowed_workflows?.in_progress
+                                    ?? defaultAllowedWorkflows.in_progress,
+                            published:
+                                vocabulary.field_options?.allowed_workflows?.published
+                                    ?? defaultAllowedWorkflows.published,
+                        },
+                    };
+
+                    const fieldV2: IAuthoringFieldV2 = {
+                        id: vocabulary._id,
+                        name: vocabulary.display_name,
+                        fieldType: 'media',
+                        fieldConfig,
+                    };
+
+                    return fieldV2;
+                },
+
+                retrieveStoredValue: (item): IMediaValueOperational => {
+                    return getRelatedMedia(item.associations, vocabulary._id);
+                },
+
+                storeValue: (val: IMediaValueOperational, article) => {
+                    return applyAssociations(article, val, vocabulary._id);
                 },
             };
         }

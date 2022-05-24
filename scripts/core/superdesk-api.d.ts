@@ -451,7 +451,7 @@ declare module 'superdesk-api' {
         description_text?: string;
 
         associations?: {
-            'featuremedia': IArticle;
+            'featuremedia'?: IArticle;
 
             // IArticle is used for media galleries and IRelatedArticle for linking articles.
             [id: string]: IArticle | IRelatedArticle;
@@ -814,7 +814,11 @@ declare module 'superdesk-api' {
             | 'related_content'
             | 'custom';
         field_options?: { // Used for related content fields
-            allowed_types?: any;
+            allowed_types?: {
+                picture?: boolean;
+                audio?: boolean;
+                video?: boolean;
+            };
             allowed_workflows?: {
                 in_progress?: boolean;
                 published?: boolean;

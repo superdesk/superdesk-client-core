@@ -52,6 +52,18 @@ export function omit<T extends IOnlyStringKeys, K extends keyof T>(obj: T, ...ke
     return picked;
 }
 
+export function filterObject<T extends {}>(obj: T, filterFn: (value, key) => boolean): Partial<T> {
+    const result = {} as T;
+
+    for (const [key, value] of Object.entries(obj)) {
+        if (filterFn(value, key) === true) {
+            result[key] = value;
+        }
+    }
+
+    return result;
+}
+
 export function isImage(e: Element): e is HTMLImageElement {
     return e.tagName === 'IMG';
 }

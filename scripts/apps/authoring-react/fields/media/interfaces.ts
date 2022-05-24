@@ -11,4 +11,8 @@ export interface IMediaConfig extends ICommonFieldConfig {
     allowAudio?: boolean;
     showPictureCrops?: boolean;
     showTitleEditingInput?: boolean;
+    allowedWorkflows?: {
+        inProgress?: boolean;
+        published?: boolean;
+    };
 }

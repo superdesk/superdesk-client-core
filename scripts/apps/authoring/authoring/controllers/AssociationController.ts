@@ -1,4 +1,4 @@
-import {forEach, get, startsWith, endsWith, some} from 'lodash';
+import {forEach, startsWith, endsWith, some} from 'lodash';
 import {getSuperdeskType, gettext, gettextPlural} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {isPublished} from 'apps/archive/utils';
@@ -15,6 +15,39 @@ export function getAssociationsByFieldId(associations: IArticle['associations'],
         .filter((key) => key.startsWith(fieldId + '--') && associations[key] != null)
         .sort((key1, key2) => associations[key1].order - associations[key2].order)
         .map((key) => associations[key]);
+}
+
+export function applyAssociations(
+    article: IArticle,
+    associationItems: Array<IArticle['associations']['0']>,
+    fieldId: string,
+): IArticle {
+    const orderedNext: IArticle['associations'] =
+        associationItems
+            .map((item, i) => ({...item, order: i}))
+            .reduce((acc, item) => {
+                acc[fieldId + '--' + (item.order + 1)] = item;
+
+                return acc;
+            }, {});
+
+    // filter out items matching {fieldId}
+    const filteredCurrent: IArticle['associations'] =
+        Object.entries(article.associations ?? {})
+            .filter(([key]) => key.startsWith(fieldId + '--') !== true)
+            .reduce((acc, [key, value]) => {
+                acc[key] = value;
+
+                return acc;
+            }, {});
+
+    return {
+        ...article,
+        associations: {
+            ...filteredCurrent,
+            ...orderedNext,
+        },
+    };
 }
 
 export function getRelatedMedia(

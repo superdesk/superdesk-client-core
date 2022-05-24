@@ -10,6 +10,7 @@ import {MediaThumbnails} from './media-thumbnails';
 import {SUPERDESK_MEDIA_TYPES} from 'core/constants';
 import {notify} from 'core/notify/notify';
 import {maxItemsDefault} from './constants';
+import {validateWorkflow} from 'apps/relations/services/RelationsService';
 
 type IProps = IEditorComponentProps<IMediaValueOperational, IMediaConfig, IMediaUserPreferences>;
 
@@ -165,6 +166,19 @@ export class Editor extends React.PureComponent<IProps> {
             if (mediaItems.find((mediaItem) => mediaItem._id === __item._id) != null) {
                 notify.error(gettext('This item is already added'));
 
+                return;
+            }
+
+            const workflowValidation = validateWorkflow(
+                __item,
+                {
+                    in_progress: config.allowedWorkflows.inProgress,
+                    published: config.allowedWorkflows.published,
+                },
+            );
+
+            if (workflowValidation.result !== true) {
+                notify.error(workflowValidation.error);
                 return;
             }
 

@@ -9,6 +9,7 @@ import {noop} from 'lodash';
 import {MediaCarouselImage} from './image';
 import {MediaCarouselAudio} from './audio';
 import {MediaCarouselVideo} from './video';
+import {filterObject} from 'core/helpers/utils';
 
 interface IProps {
     mediaItems: Array<IArticle>;
@@ -257,7 +258,7 @@ export class MediaCarousel extends React.PureComponent<IProps, IState> {
                         } else if (item.type === 'audio') {
                             return (
                                 <MediaCarouselAudio
-                                    renditions={item.renditions}
+                                    renditions={filterObject(item.renditions, (value) => value != null)}
                                     title={title}
                                     removeButton={removeButton}
                                     metadata={metadata}

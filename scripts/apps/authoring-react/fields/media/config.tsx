@@ -4,15 +4,20 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {IConfigComponentProps} from 'superdesk-api';
 import {IMediaConfig} from './interfaces';
+import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 
 type IProps = IConfigComponentProps<IMediaConfig>;
 
 export class Config extends React.PureComponent<IProps> {
     render() {
-        const config = this.props.config ?? {
+        const config: IMediaConfig = this.props.config ?? {
             allowPicture: true,
             allowAudio: true,
             allowVideo: true,
+            allowedWorkflows: {
+                inProgress: defaultAllowedWorkflows.in_progress,
+                published: defaultAllowedWorkflows.published,
+            },
         };
 
         return (
@@ -42,7 +47,7 @@ export class Config extends React.PureComponent<IProps> {
                 <div>
                     <Checkbox
                         label={{text: gettext('Show crops for pictures')}}
-                        checked={config.showPictureCrops}
+                        checked={config.showPictureCrops ?? false}
                         onChange={(val) => {
                             this.props.onChange({...config, showPictureCrops: val});
                         }}
@@ -71,8 +76,40 @@ export class Config extends React.PureComponent<IProps> {
 
                 <div>
                     <Checkbox
+                        label={{text: gettext('Allow adding items that are in progress')}}
+                        checked={config.allowedWorkflows.inProgress}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...config,
+                                allowedWorkflows: {
+                                    ...config.allowedWorkflows,
+                                    inProgress: val,
+                                },
+                            });
+                        }}
+                    />
+                </div>
+
+                <div>
+                    <Checkbox
+                        label={{text: gettext('Allow adding items that are published')}}
+                        checked={config.allowedWorkflows.published}
+                        onChange={(val) => {
+                            this.props.onChange({
+                                ...config,
+                                allowedWorkflows: {
+                                    ...config.allowedWorkflows,
+                                    published: val,
+                                },
+                            });
+                        }}
+                    />
+                </div>
+
+                <div>
+                    <Checkbox
                         label={{text: gettext('Show input for editing title')}}
-                        checked={config.showTitleEditingInput}
+                        checked={config.showTitleEditingInput ?? false}
                         onChange={(val) => {
                             this.props.onChange({...config, showTitleEditingInput: val});
                         }}
