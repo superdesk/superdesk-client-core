@@ -2,6 +2,7 @@
 
 import React from 'react';
 import classNames from 'classnames';
+import {gettext} from 'core/utils';
 
 export class TopMenuDropdownButton extends React.PureComponent<{
     onClick: () => void;
@@ -20,6 +21,7 @@ export class TopMenuDropdownButton extends React.PureComponent<{
 
         return (
             <button
+                title={gettext('Marked for me')}
                 onClick={onClick}
                 className={classes}
                 data-test-id={this.props['data-test-id']}
