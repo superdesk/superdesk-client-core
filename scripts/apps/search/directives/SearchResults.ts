@@ -1,4 +1,4 @@
-import _, {debounce} from 'lodash';
+import _, {debounce, noop} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {ISearchOptions, showRefresh} from '../services/SearchService';
@@ -16,6 +16,7 @@ SearchResults.$inject = [
     '$rootScope',
     'superdeskFlags',
     'notify',
+    '$q',
 ];
 
 const HEX_REG_EXP = /[a-f0-9]{24}/;
@@ -53,6 +54,7 @@ export function SearchResults(
     $rootScope,
     superdeskFlags,
     notify,
+    $q,
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
@@ -125,6 +127,7 @@ export function SearchResults(
                     fetchInProgress = true;
 
                     _queryItems(data, Date.now())
+                        .catch(() => noop)
                         .finally(() => {
                             scope.$applyAsync(() => {
                                 fetchInProgress = false;
@@ -254,7 +257,7 @@ export function SearchResults(
 
                 return api.query(getProvider(criteria), criteria).then((items) => {
                     if (initiatedAt < cancelAllBeforeTime) {
-                        return;
+                        return $q.reject('cancelling in favor of a newer request');
                     }
 
                     if (appConfig.features.autorefreshContent && data != null) {
@@ -342,9 +345,11 @@ export function SearchResults(
                 fetchInProgress = true;
                 cancelAllBeforeTime = Date.now();
 
-                _queryItems({force: true}, cancelAllBeforeTime).finally(() => {
-                    fetchInProgress = false;
-                });
+                _queryItems({force: true}, cancelAllBeforeTime)
+                    .catch(noop)
+                    .finally(() => {
+                        fetchInProgress = false;
+                    });
 
                 if (containerElem[0].scrollTop > 0) {
                     containerElem[0].scrollTop = 0;
@@ -588,7 +593,9 @@ export function SearchResults(
 
             // init
             $rootScope.aggregations = 0;
-            _queryItems(undefined, Date.now());
+
+            _queryItems(undefined, Date.now())
+                .catch(noop);
         },
     };
 }
