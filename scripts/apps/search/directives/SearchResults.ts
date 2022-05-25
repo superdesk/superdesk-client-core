@@ -158,6 +158,8 @@ export function SearchResults(
             scope.$on('item:translate', queryItems);
             scope.$on('item:marked_desks', queryItems);
 
+            scope.autorefreshContent = appConfig.features.autorefreshContent === true;
+
             // used by superdesk-fi
             scope.showtags = attr.showtags !== 'false';
 
@@ -341,6 +343,7 @@ export function SearchResults(
 
             scope.refreshList = function() {
                 scope.showRefresh = false;
+                scope.manualRefreshInProgress = true;
 
                 fetchInProgress = true;
                 cancelAllBeforeTime = Date.now();
@@ -349,6 +352,7 @@ export function SearchResults(
                     .catch(noop)
                     .finally(() => {
                         fetchInProgress = false;
+                        scope.manualRefreshInProgress = false;
                     });
 
                 if (containerElem[0].scrollTop > 0) {
