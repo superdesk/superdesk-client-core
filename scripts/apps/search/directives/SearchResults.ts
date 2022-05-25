@@ -1,4 +1,4 @@
-import _, {debounce} from 'lodash';
+import _, {debounce, noop} from 'lodash';
 import {gettext} from 'core/utils';
 import {appConfig} from 'appConfig';
 import {ISearchOptions, showRefresh} from '../services/SearchService';
@@ -16,6 +16,7 @@ SearchResults.$inject = [
     '$rootScope',
     'superdeskFlags',
     'notify',
+    '$q',
 ];
 
 const HEX_REG_EXP = /[a-f0-9]{24}/;
@@ -53,6 +54,7 @@ export function SearchResults(
     $rootScope,
     superdeskFlags,
     notify,
+    $q,
 ) { // uff - should it use injector instead?
     var preferencesUpdate = {
         'archive:view': {
@@ -97,10 +99,15 @@ export function SearchResults(
             let fetchInProgress = false;
 
             /**
+             * When a new request is initialized, all existing requests that are still in progress need to be cancelled.
+             */
+            let cancelAllBeforeTime: ReturnType<DateConstructor['now']> = 0;
+
+            /**
              * Schedule an update
              */
             const queryItems = debounce(
-                (event?, data?) => {
+                (event, data) => {
                     if (isObjectId(scope.search.repo.search) && event != null) {
                         // external provider, don't refresh on events
                         return;
@@ -119,7 +126,8 @@ export function SearchResults(
                     scope.loading = true;
                     fetchInProgress = true;
 
-                    _queryItems(event, data)
+                    _queryItems(data, Date.now())
+                        .catch(() => noop)
                         .finally(() => {
                             scope.$applyAsync(() => {
                                 fetchInProgress = false;
@@ -150,6 +158,8 @@ export function SearchResults(
             scope.$on('item:translate', queryItems);
             scope.$on('item:marked_desks', queryItems);
 
+            scope.autorefreshContent = appConfig.features.autorefreshContent === true;
+
             // used by superdesk-fi
             scope.showtags = attr.showtags !== 'false';
 
@@ -174,7 +184,7 @@ export function SearchResults(
 
             scope.$on('broadcast:created', (event, args) => {
                 scope.previewingBroadcast = true;
-                queryItems();
+                queryItems(undefined, undefined);
                 scope.preview(args.item);
             });
 
@@ -206,11 +216,13 @@ export function SearchResults(
             }
 
             /**
-             * Function for fetching total items and filling scope for the first time.
+             * Function for fetching total items and filling scope.
              */
-            function _queryItems(event?, data?) {
+            function _queryItems(data: any | undefined, initiatedAt: ReturnType<DateConstructor['now']>) {
+                const pageSize: number = 50;
+
                 criteria = search.query(getSearch(), queryOptions).getCriteria(true);
-                criteria.source.size = 50;
+                criteria.source.size = pageSize;
                 var originalQuery;
 
                 // when forced refresh or query then keep query size default as set 50 above.
@@ -246,19 +258,22 @@ export function SearchResults(
                 }
 
                 return api.query(getProvider(criteria), criteria).then((items) => {
+                    if (initiatedAt < cancelAllBeforeTime) {
+                        return $q.reject('cancelling in favor of a newer request');
+                    }
+
                     if (appConfig.features.autorefreshContent && data != null) {
                         data.force = true;
                     }
 
                     if (!scope.showRefresh && data && !data.force && data.user !== session.identity._id) {
-                        const _data = {
-                            newItems: items,
-                            scopeItems: scope.items,
-                            scrollTop: containerElem.scrollTop(),
-                            isItemPreviewing: !!scope.selected.preview,
-                        };
-
-                        scope.showRefresh = showRefresh((scope.items?._items ?? []), items._items);
+                        scope.showRefresh =
+                            items._items.length === pageSize
+                                ? showRefresh(
+                                    (scope.items?._items ?? []),
+                                    items._items,
+                                )
+                                : false;
                     }
 
                     if (!scope.showRefresh || data && data.force) {
@@ -328,7 +343,18 @@ export function SearchResults(
 
             scope.refreshList = function() {
                 scope.showRefresh = false;
-                queryItems(null, {force: true});
+                scope.manualRefreshInProgress = true;
+
+                fetchInProgress = true;
+                cancelAllBeforeTime = Date.now();
+
+                _queryItems({force: true}, cancelAllBeforeTime)
+                    .catch(noop)
+                    .finally(() => {
+                        fetchInProgress = false;
+                        scope.manualRefreshInProgress = false;
+                    });
+
                 if (containerElem[0].scrollTop > 0) {
                     containerElem[0].scrollTop = 0;
                 }
@@ -421,7 +447,7 @@ export function SearchResults(
              */
             function itemDelete(e, data) {
                 if (session.identity._id === data.user) {
-                    queryItems();
+                    queryItems(undefined, undefined);
                 }
             }
 
@@ -571,7 +597,9 @@ export function SearchResults(
 
             // init
             $rootScope.aggregations = 0;
-            _queryItems();
+
+            _queryItems(undefined, Date.now())
+                .catch(noop);
         },
     };
 }
