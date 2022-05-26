@@ -141,7 +141,7 @@ export function getMarkedForMeComponent(superdesk: ISuperdesk) {
                             disabled={hasItemsMarked === false}
                             pulsate={hasItemsMarked}
                             data-test-id="toggle-button"
-                            title={gettext('Marked for me')}
+                            tooltip={gettext('Marked for me')}
                         >
                             <Badge
                                 type={hasItemsMarked ? 'highlight' : 'default'}
