@@ -9,6 +9,7 @@ export class TopMenuDropdownButton extends React.PureComponent<{
     active: boolean;
     pulsate: boolean;
     'data-test-id'?: string;
+    title?: string;
 }> {
     render() {
         const {onClick, active, pulsate} = this.props;
@@ -20,6 +21,7 @@ export class TopMenuDropdownButton extends React.PureComponent<{
 
         return (
             <button
+                title={this.props.title}
                 onClick={onClick}
                 className={classes}
                 data-test-id={this.props['data-test-id']}
