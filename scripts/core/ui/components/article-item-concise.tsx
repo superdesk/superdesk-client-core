@@ -32,7 +32,7 @@ class ArticleItemConciseComponent extends React.PureComponent<IProps> {
                         </div>
                     </ListItemColumn>
 
-                    <ListItemColumn noBorder ellipsisAndGrow>
+                    <ListItemColumn noBorder ellipsisAndGrow title={article.slugline || article.headline}>
                         {
                             article.slugline == null ? null : (
                                 <ListItemRow>
