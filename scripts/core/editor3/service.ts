@@ -51,8 +51,9 @@ export class EditorService {
      * @description Registers the passed redux store with the spellchecker service
      * @returns {Integer}
      */
-    addSpellcheckerStore(s) {
+    addSpellcheckerStore(s, field) {
         spellcheckerStores.push(s);
+        s.field = field;
         return spellcheckerStores.length - 1;
     }
 
@@ -251,7 +252,12 @@ export class EditorService {
 
     setEditorStateFromItem(item: IArticle, field: string) {
         if (ok()) {
-            store.dispatch(action.setEditorStateFromItem(item, field));
+            // store.dispatch(action.setEditorStateFromItem(item, field));
+            spellcheckerStores.forEach((_store) => {
+                if (_store.field === field) {
+                    _store.dispatch(action.setEditorStateFromItem(item, field));
+                }
+            });
         }
     }
 }

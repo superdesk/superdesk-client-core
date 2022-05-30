@@ -184,9 +184,9 @@ export function AuthoringDirective(
             */
             function getCurrentTemplate() {
                 if (typeof $scope.item?.template !== 'string') {
-                    logger.error(new Error('template must be present'));
                     return;
                 }
+
                 api('content_templates').getById($scope.item.template)
                     .then((result) => {
                         $scope.currentTemplate = result;
@@ -234,6 +234,7 @@ export function AuthoringDirective(
                         && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
                 }, true);
             });
+
             /**
              * `desk_stage:change` event from send and publish action.
              * If send action succeeds but publish fails then we need change item location.
