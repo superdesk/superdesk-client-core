@@ -20,7 +20,7 @@ function copyFolderSync(from, to) {
 let copied = false;
 
 const clientCoreRoot = path.join(__dirname, '../');
-const maybeParentModulePath = path.join(clientCoreRoot, '../../');
+const maybeParentModulePath = process.cwd();
 
 // If node_modules exists in `maybeParentModulePath` set it as mainDirectory where patches will be put
 const mainDirectory = fs.existsSync(path.join(maybeParentModulePath, 'node_modules'))
