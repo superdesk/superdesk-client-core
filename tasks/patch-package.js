@@ -20,12 +20,7 @@ function copyFolderSync(from, to) {
 let copied = false;
 
 const clientCoreRoot = path.join(__dirname, '../');
-const workingDirectory = process.env.INIT_CWD || process.cwd(); // https://github.com/npm/npm/issues/16990
-
-// If node_modules exists in `workingDirectory` set it as mainDirectory where patches will be put
-const mainDirectory = fs.existsSync(path.join(workingDirectory, 'node_modules'))
-    ? workingDirectory
-    : clientCoreRoot;
+const mainDirectory = process.env.INIT_CWD || process.cwd(); // either superdesk/client or superdesk-client-core
 
 const patchesCurrentDir = path.join(clientCoreRoot, 'patches');
 const patchesDestinationDir = path.join(mainDirectory, 'patches');
