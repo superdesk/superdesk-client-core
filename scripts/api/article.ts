@@ -2,7 +2,7 @@ import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage} from 'superde
 import {patchArticle} from './article-patch';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
-import {applicationState} from 'core/get-superdesk-api-implementation';
+import {applicationState, openArticle} from 'core/get-superdesk-api-implementation';
 import {ISendToDestinationDesk, ISendToDestination} from 'core/interactive-article-actions-panel/interfaces';
 import {fetchItems, fetchItemsToCurrentDesk} from './article-fetch';
 import {IPublishingDateOptions} from 'core/interactive-article-actions-panel/subcomponents/publishing-date-options';
@@ -161,6 +161,18 @@ function sendItemToNextStage(item: IArticle): Promise<void> {
     ).then(() => undefined);
 }
 
+function createNewUsingDeskTemplate(): void {
+    const desk = sdApi.desks.getDeskById(sdApi.desks.getActiveDeskId());
+
+    sdApi.templates.getById(desk.default_content_template).then((template) => {
+        ng.get('content')
+            .createItemFromTemplate(template, false)
+            .then((item) => {
+                openArticle(item._id, 'edit');
+            });
+    });
+}
+
 interface IArticleApi {
     isLocked(article: IArticle): boolean;
     isLockedInCurrentSession(article: IArticle): boolean;
@@ -212,6 +224,8 @@ interface IArticleApi {
 
     lock(itemId: IArticle['_id']): Promise<IArticle>;
     unlock(itemId: IArticle['_id']): Promise<IArticle>;
+
+    createNewUsingDeskTemplate(): void;
 }
 
 export const article: IArticleApi = {
@@ -237,4 +251,5 @@ export const article: IArticleApi = {
     canPublish,
     lock,
     unlock,
+    createNewUsingDeskTemplate,
 };

@@ -26,8 +26,6 @@ angular.module('superdesk.apps.templates', [
     .filter('templatesBy', FilterTemplatesFilter)
 
     .directive('sdTemplates', directive.TemplatesDirective)
-    .directive('sdTemplateSelect', directive.TemplateSelectDirective)
-    .directive('sdTemplateList', directive.TemplateListDirective)
     .directive('sdTemplateEditorModal', directive.TemplateEditorModal)
 
     .controller('CreateTemplateController', ctrl.CreateTemplateController)

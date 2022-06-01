@@ -4,6 +4,7 @@ import {getGenericErrorMessage} from 'core/ui/constants';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import {WorkQueueCreateNewButton} from './work-queue-create-new-button';
 
 /**
  * This file is part of Superdesk.
@@ -316,6 +317,8 @@ function WorkqueueCtrl(
             $scope.articleInEditMode = null;
         }
     });
+
+    $scope.createNewButton = WorkQueueCreateNewButton;
 }
 
 function WorkqueueListDirective() {

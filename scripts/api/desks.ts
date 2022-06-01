@@ -41,12 +41,17 @@ function getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage> 
     return stagesMap;
 }
 
+function getDeskById(id: IDesk['_id']): IDesk {
+    return getAllDesks().get(id);
+}
+
 interface IDesksApi {
     /** Desk is considered active if it is being viewed in monitoring at the moment */
     getActiveDeskId(): IDesk['_id'] | null;
     getCurrentDeskId(): IDesk['_id'] | null;
     waitTilReady(): Promise<void>;
     getAllDesks(): OrderedMap<IDesk['_id'], IDesk>;
+    getDeskById(id: IDesk['_id']): IDesk ;
     getDeskStages(deskId: IDesk['_id']): OrderedMap<IStage['_id'], IStage>;
 }
 
@@ -55,5 +60,6 @@ export const desks: IDesksApi = {
     getCurrentDeskId,
     waitTilReady,
     getAllDesks,
+    getDeskById,
     getDeskStages,
 };

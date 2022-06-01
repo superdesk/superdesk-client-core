@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {throttle, once} from 'lodash';
+import {throttle} from 'lodash';
 import {createPopper, Instance as PopperInstance, Placement} from '@popperjs/core/';
 import maxSize from 'popper-max-size-modifier';
 import {applyMaxSize} from './AutoCompleteSuggestions';
@@ -68,14 +68,23 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
         }
 
         if (this.wrapperEl != null) {
-            this.popper = createPopper(
-                this.props.referenceElement,
-                this.wrapperEl,
-                {
-                    placement: this.props.placement,
-                    modifiers: [maxSize, applyMaxSize],
-                },
-            );
+            /**
+             * Wait until referenceElement renders so createPopper
+             * can take its dimensions into account.
+             */
+            setTimeout(() => {
+                this.popper = createPopper(
+                    this.props.referenceElement,
+                    this.wrapperEl,
+                    {
+                        placement: this.props.placement,
+                        modifiers: [
+                            maxSize,
+                            applyMaxSize,
+                        ],
+                    },
+                );
+            }, 50);
         }
     }
 
@@ -111,7 +120,7 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
 export function showPopup(
     referenceElement: HTMLElement,
     placement: Placement,
-    Component: React.ComponentType<{ closePopup(): void }>,
+    Component: React.ComponentType<{closePopup(): void}>,
     zIndex?: number,
     closeOnHoverEnd?: boolean,
 ) {

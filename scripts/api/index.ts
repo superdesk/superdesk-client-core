@@ -4,6 +4,8 @@ import {time} from './time';
 import {preferences} from './preferences';
 import {user} from './user';
 import {vocabularies} from './vocabularies';
+import {navigation} from './navigation';
+import {templates} from './templates';
 
 /**
  * This is core API, not extensions API.
@@ -17,4 +19,6 @@ export const sdApi = {
     preferences,
     user,
     vocabularies,
+    navigation,
+    templates,
 };

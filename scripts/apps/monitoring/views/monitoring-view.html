@@ -131,20 +131,13 @@
                                 ></sd-monitoring-filtering-buttons>
                             </div>
 
-                            <div ng-if="disableMonitoringCreateItem == null" class="dropdown dropdown--align-right strict" sd-tooltip="{{ 'Create new item' | translate }}" flow="left" dropdown>
-                                <div ngf-drop="openUpload($files)" ngf-multiple="true">
-                                    <button
-                                        class="navbtn dropdown__toggle sd-create-btn"
-                                        dropdown__toggle
-                                        aria-label="{{ 'Create new item' | translate }}"
-                                        data-test-id="content-create"
-                                    ></button>
-                                </div>
-                                <div
-                                    sd-content-create
-                                    class="dropdown__menu dropdown__menu--has-head-foot pull-right"
-                                    data-test-id="content-create-dropdown"
-                                ></div>
+                            <div
+                                ng-if="disableMonitoringCreateItem == null"
+                                class="navbtn navbtn--white"
+                                sd-tooltip="{{ 'Create new item' | translate }}"
+                                flow="left"
+                            >
+                                <sd-content-create></sd-content-create>
                             </div>
                         </div>
                     </div>

@@ -104,6 +104,13 @@ export function ContentService(api, templates, desks, packages: IPackagesService
      * Create new item using given template
      *
      * @param {Object} template
+     *
+     * @param initializeAsUpdated
+     * If an item is created, but closed without changes, it gets removed
+     * it doesn't work well when creating item and adding as related immediately
+     * user might want to go back and update the item later.
+     * To avoid the item getting removed it is initialized with a higher version
+     *
      * @return {Promise}
      */
     this.createItemFromTemplate = function(template, initializeAsUpdated) {

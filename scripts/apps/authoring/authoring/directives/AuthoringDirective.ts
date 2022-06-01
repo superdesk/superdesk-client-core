@@ -58,6 +58,7 @@ AuthoringDirective.$inject = [
     'embedService',
     '$injector',
     'autosave',
+    'storage',
 ];
 export function AuthoringDirective(
     superdesk,
@@ -85,6 +86,7 @@ export function AuthoringDirective(
     embedService,
     $injector,
     autosave,
+    storage,
 ) {
     return {
         link: function($scope, elem, attrs) {
@@ -829,7 +831,22 @@ export function AuthoringDirective(
                     $scope.save_enabled(),
                     () => {
                         authoringWorkspace.close(true);
-                        $rootScope.$broadcast('item:close', $scope.origItem._id);
+                        const itemId = $scope.origItem._id;
+
+                        $rootScope.$broadcast('item:close', itemId);
+
+                        const storedItemId = storage.getItem(`open-item-after-related-closed--${itemId}`);
+
+                        /**
+                         * If related item was just created and saved, open the original item
+                         * that triggered the creation of this related item.
+                         */
+                        if (storedItemId != null) {
+                            return autosave.get({_id: storedItemId}).then((resulted) => {
+                                authoringWorkspace.open(resulted);
+                                storage.removeItem(`open-item-after-related-closed--${itemId}`);
+                            });
+                        }
                     },
                 );
             };

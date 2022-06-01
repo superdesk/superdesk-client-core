@@ -28,7 +28,7 @@ import ng from 'core/services/ng';
 import {sdApi} from 'api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {store} from 'core/data';
-import {SESSION_EVENTS} from 'core/auth/auth';
+import {registerGlobalKeybindings} from 'core/keyboard/keyboard';
 
 let body = angular.element('body');
 
@@ -236,6 +236,8 @@ export function startApp(
                         payload: keyBy(_items, ({qcode}) => qcode),
                     });
                 });
+
+                registerGlobalKeybindings();
             }
         });
 }

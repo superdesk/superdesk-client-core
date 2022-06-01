@@ -5,11 +5,13 @@ import {IArticle, IVocabulary, IRendition} from 'superdesk-api';
 import {IDirectiveScope} from 'types/Angular/DirectiveScope';
 import {getAssociationsByFieldId} from '../../authoring/authoring/controllers/AssociationController';
 import {getThumbnailForItem} from 'core/helpers/item';
+import {RelatedItemCreateNewButton} from './related-items-create-new-button';
 
 const ARCHIVE_TYPES = ['archive', 'published'];
 const isInArchive = (item: IArticle) => item._type != null && ARCHIVE_TYPES.includes(item._type);
 
 interface IScope extends IDirectiveScope<void> {
+    relatedItemsNewButton: typeof RelatedItemCreateNewButton;
     onCreated: (items: Array<IArticle>) => void;
     gettext: (text: any, params?: any) => string;
     field: IVocabulary;
@@ -355,6 +357,8 @@ export function RelatedItemsDirective(
             scope.$on('$destroy', () => {
                 removeEventListeners.forEach((removeFn) => removeFn());
             });
+
+            scope.relatedItemsNewButton = RelatedItemCreateNewButton;
         },
     };
 }

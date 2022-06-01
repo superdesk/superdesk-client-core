@@ -6,6 +6,7 @@ import {coreMenuGroups} from 'core/activity/activity';
 import {gettext} from 'core/utils';
 import {ContentProfilesController} from './controllers/ContentProfilesController';
 import {ContentProfileFieldsConfig} from './components/ContentProfileFieldsConfig';
+import {ContentCreateDropdown} from 'core/ui/components/content-create-dropdown/content-create-dropdown';
 
 /**
  * @ngdoc module
@@ -24,12 +25,15 @@ angular.module('superdesk.apps.workspace.content', [
 ])
     .service('content', ContentService)
 
-    .directive('sdContentCreate', directive.ContentCreateDirective)
     .directive('sdItemProfile', directive.ItemProfileDirective)
 
     .component(
         'sdContentProfileFieldsConfig',
         reactToAngular1(ContentProfileFieldsConfig, ['profile', 'profileType', 'patchContentProfile']),
+    )
+    .component(
+        'sdContentCreate',
+        reactToAngular1(ContentCreateDropdown, ['customButton', 'onCreate', 'initializeAsUpdated']),
     )
     .controller('ContentProfilesController', ContentProfilesController)
 

@@ -92,9 +92,12 @@ function getContentType(id): Promise<IContentProfile> {
 
 export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise<void> {
     const authoringWorkspace = ng.get('authoringWorkspace');
+    const {currentPathStartsWith} = sdApi.navigation;
 
-    if (document.querySelector('[sd-monitoring-view]') == null) {
-        // redirect if outside monitoring view
+    if (
+        currentPathStartsWith(['workspace']) !== true
+        && currentPathStartsWith(['search']) !== true
+    ) {
         setUrlPage('/workspace/monitoring');
     }
 
