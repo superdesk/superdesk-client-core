@@ -2,6 +2,7 @@ import {
     IArticle,
     IAuthoringFieldV2,
     ICustomFieldType,
+    IRelatedArticle,
 } from 'superdesk-api';
 import {IDropdownConfigVocabulary} from '../fields/dropdown';
 import {IEditor3Config} from '../fields/editor3/interfaces';
@@ -30,8 +31,13 @@ import {IUrlsFieldConfig} from '../fields/urls/interfaces';
 import {IEmbedConfig} from '../fields/embed/interfaces';
 import {feature_media} from './feature_media';
 import {IMediaConfig, IMediaValueOperational} from '../fields/media/interfaces';
-import {applyAssociations, getRelatedMedia} from 'apps/authoring/authoring/controllers/AssociationController';
+import {
+    applyAssociations,
+    getRelatedArticles,
+    getRelatedMedia,
+} from 'apps/authoring/authoring/controllers/AssociationController';
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
+import {ILinkedItemsConfig, ILinkedItemsValueOperational} from '../fields/linked-items/interfaces';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -205,6 +211,36 @@ export function getFieldsAdapter(): IFieldsAdapter {
 
                 storeValue: (val: IMediaValueOperational, article) => {
                     return applyAssociations(article, val, vocabulary._id);
+                },
+            };
+        } else if (vocabulary.field_type === 'related_content') {
+            adapter[vocabulary._id] = {
+                getFieldV2: (fieldEditor, fieldSchema) => {
+                    const fieldConfig: ILinkedItemsConfig = {};
+
+                    const fieldV2: IAuthoringFieldV2 = {
+                        id: vocabulary._id,
+                        name: vocabulary.display_name,
+                        fieldType: 'linked-items',
+                        fieldConfig,
+                    };
+
+                    return fieldV2;
+                },
+
+                retrieveStoredValue: (item): ILinkedItemsValueOperational => {
+                    return getRelatedArticles(item.associations, vocabulary._id)
+                        .map(({_id, type}) => ({id: _id, type}));
+                },
+
+                storeValue: (val: ILinkedItemsValueOperational, article) => {
+                    const relatedItems: Array<IRelatedArticle> = val.map(({id, type}, i) => ({
+                        _id: id,
+                        type: type,
+                        order: i,
+                    }));
+
+                    return applyAssociations(article, relatedItems, vocabulary._id);
                 },
             };
         }
