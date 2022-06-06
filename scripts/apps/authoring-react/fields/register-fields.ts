@@ -9,6 +9,7 @@ import {getDateField} from './date';
 import {getUrlsField} from './urls';
 import {getEmbedField} from './embed';
 import {getMediaField} from './media';
+import {getLinkedItemsField} from './linked-items';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
@@ -34,6 +35,7 @@ export function registerAuthoringReactFields() {
                 getUrlsField(),
                 getEmbedField(),
                 getMediaField(),
+                getLinkedItemsField(),
             ],
         },
     };

@@ -248,6 +248,15 @@ ul.list-view.list-without-items {
     }
 }
 
+
+
+:root {
+    --diff-color-addition: #e6ffe6;
+    --diff-color-removal: #ffe6e6;
+    --diff-color-modification: #fff4e6;
+    --diff-color-reordering: #ffffe6;
+}
+
 .html-diff {
     ins, del {
         text-decoration: auto;
@@ -259,15 +268,19 @@ ul.list-view.list-without-items {
 
     del.diffmod,
     del.diffdel {
-        background-color: #ffe6e6;
+        background-color: var(--diff-color-removal);
     }
 
     ins.diffmod,
     ins.diffins {
-        background-color: #e6ffe6;
+        background-color: var(--diff-color-addition);
     }
 }
 
 .sd-focusable:focus {
     outline: 2px solid #5ea9c8;
+}
+
+.dragging-in-progress {
+    z-index: 100;
 }

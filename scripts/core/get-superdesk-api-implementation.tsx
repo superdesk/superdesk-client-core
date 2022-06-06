@@ -90,18 +90,23 @@ function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
 }
 
-export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit'): Promise<void> {
+export function openArticle(id: IArticle['_id'], mode: 'view' | 'edit' | 'edit-new-window'): Promise<void> {
     const authoringWorkspace = ng.get('authoringWorkspace');
-    const {currentPathStartsWith} = sdApi.navigation;
 
-    if (
-        currentPathStartsWith(['workspace']) !== true
-        && currentPathStartsWith(['search']) !== true
-    ) {
-        setUrlPage('/workspace/monitoring');
+    if (mode === 'edit-new-window') {
+        authoringWorkspace.popupFromId(id, 'view');
+    } else {
+        const {currentPathStartsWith} = sdApi.navigation;
+
+        if (
+            currentPathStartsWith(['workspace']) !== true
+            && currentPathStartsWith(['search']) !== true
+        ) {
+            setUrlPage('/workspace/monitoring');
+        }
+
+        authoringWorkspace.edit({_id: id}, mode);
     }
-
-    authoringWorkspace.edit({_id: id}, mode);
 
     return Promise.resolve();
 }

@@ -3,12 +3,14 @@ import {IDropZoneComponentProps} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 const shellStyles: React.CSSProperties = {
-    border: '2px dashed rgba(150, 150, 150, 0.3)',
+    outline: '2px dashed rgba(94, 169, 200, 1)',
+    outlineOffset: '2px',
     backgroundColor: 'rgba(150, 150, 150, 0.06)',
 };
 
 const shellStylesOnDrag: React.CSSProperties = {
-    border: '2px dashed rgba(94, 169, 200, 1)',
+    outline: '2px dashed rgba(94, 169, 200, 1)',
+    outlineOffset: '2px',
     backgroundColor: 'rgba(94, 169, 200, 0.1)',
 };
 
@@ -87,7 +89,6 @@ export class DropZone3 extends React.PureComponent<IDropZoneComponentProps, ISta
                 } else {
                     return {
                         ...shellStylesOnDrag,
-                        padding: 8,
                     };
                 }
             } else if (childrenEmpty) {

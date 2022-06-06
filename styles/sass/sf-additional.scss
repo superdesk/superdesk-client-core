@@ -1837,6 +1837,12 @@
     }
 }
 
+.drag-and-drop--handle {
+    width: 6px;
+    height: 20px;
+    background: transparent url(~images/draggable-bg.png) repeat-y left 3px top 3px;
+}
+
 // HANDLE FOR SPLITTER
 // ----------------------------------------------
 .ui-resizable-e {

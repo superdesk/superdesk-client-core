@@ -1391,6 +1391,7 @@ declare module 'superdesk-api' {
         resource: string;
         query: ISuperdeskQuery;
         children: (result: IRestApiResponse<T>) => JSX.Element;
+        onInitialized?(): void;
     }
 
     export interface ILiveResourcesProps {

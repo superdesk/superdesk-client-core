@@ -73,6 +73,7 @@ export class AuthoringWorkspaceService {
         this.addAutosave = this.addAutosave.bind(this);
         this.update = this.update.bind(this);
         this.popup = this.popup.bind(this);
+        this.popupFromId = this.popupFromId.bind(this);
         this.sendRowViewEvents = this.sendRowViewEvents.bind(this);
 
         this.init();
@@ -248,14 +249,18 @@ export class AuthoringWorkspaceService {
      * @param {string} action
      */
     popup(item, action) {
+        this.popupFromId(item._id, action);
+    }
+
+    popupFromId(id: IArticle['_id'], action) {
         const host = this.$location.host();
         const port = this.$location.port();
         const proto = this.$location.protocol();
         const baseURL = `${proto}://${host}${port !== 80 ? ':' + port : ''}`;
 
         this.$window.open(
-            `${baseURL}/#/workspace/monitoring?item=${item._id}&action=${action}&popup`,
-            item._id,
+            `${baseURL}/#/workspace/monitoring?item=${id}&action=${action}&popup`,
+            id,
         );
     }
 

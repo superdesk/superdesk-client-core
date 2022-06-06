@@ -72,6 +72,18 @@ export const getSuperdeskType = (event, supportExternalFiles = true) => {
     );
 };
 
+export function getDroppedItem(event): IArticle | null {
+    const superdeskType = getSuperdeskType(event);
+
+    if (superdeskType == null || superdeskType === 'Files') {
+        return null;
+    }
+
+    const __item: IArticle = JSON.parse(event.dataTransfer.getData(superdeskType));
+
+    return __item;
+}
+
 /**
  * Works the same way as `gettext`, except that it's possible to also use React components
  * as placeholders, not only strings.

@@ -91,7 +91,7 @@ export class MediaThumbnails extends React.PureComponent<IProps> {
                     this.props.onChange(arrayMove(mediaItems, oldIndex, newIndex));
                 }}
                 axis="x"
-                helperClass="field--media--carousel-sortable-item"
+                helperClass="dragging-in-progress"
                 distance={10} // ensure that clicking doesn't initialize dragging
             />
         );

@@ -9,6 +9,9 @@ interface IState {
     data?: {[resource: string]: IRestApiResponse<unknown>};
 }
 
+/**
+ * Doesn't work with elastic search endpoints, only with mongo ones.
+ */
 export class WithLiveResources extends SuperdeskReactComponent<ILiveResourcesProps, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
