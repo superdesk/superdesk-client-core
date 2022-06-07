@@ -4,6 +4,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import {IExtensionModule, IPage, IWorkspaceMenuItem, IExtensionActivationResult, ISuperdesk} from 'superdesk-api';
 import {extensions as extensionsWithActivationResult} from 'appConfig';
 import {dispatchInternalEvent} from './internal-events';
+import {registerContributionsFromCustomFields} from './helpers/register-internal-extension';
 
 export interface IExtensionLoader {
     id: string;
@@ -112,6 +113,13 @@ export function registerExtensions(
                         });
                 }),
             ).then((activationResults: Array<IExtensionActivationResult>) => {
+                registerContributionsFromCustomFields(
+                    flatMap(
+                        activationResults,
+                        (activationResult) => activationResult.contributions?.customFieldTypes ?? [],
+                    ),
+                );
+
                 flatMap(
                     activationResults,
                     (activationResult) => activationResult.contributions?.pages ?? [],

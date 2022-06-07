@@ -162,7 +162,7 @@ declare module 'superdesk-api' {
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
             workspaceMenuItems?: Array<IWorkspaceMenuItem>;
-            customFieldTypes?: Array<ICustomFieldType>;
+            customFieldTypes?: Array<ICustomFieldType<unknown, unknown, unknown, unknown>>;
             notifications?: {
                 [id: string]: (notification) => {
                     body: string;
@@ -2562,6 +2562,11 @@ declare module 'superdesk-api' {
             config: IConfig,
             userPreferences: IUserPreferences,
         ): IValueStorage;
+
+        /**
+         * Allows custom fields to hook into extension points API.
+         */
+        contributions?: IExtensionActivationResult['contributions'];
     }
 
 
