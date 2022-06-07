@@ -7,11 +7,14 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {getDroppedItem, gettext} from 'core/utils';
 import {DropZone3} from 'core/ui/components/drop-zone-3';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
-import {openArticle} from 'core/get-superdesk-api-implementation';
+import {openArticle, applicationState} from 'core/get-superdesk-api-implementation';
 import {DragHandle} from 'core/ui/components/drag-handle';
 import {arrayMove} from 'core/utils';
 import {Sortable} from 'core/ui/components/sortable';
 import {WithArticles} from 'core/with-articles';
+import {ContentCreateDropdown} from 'core/ui/components/content-create-dropdown/content-create-dropdown';
+import {RelatedItemCreateNewButton} from 'apps/relations/directives/related-items-create-new-button';
+import {sdApi} from 'api';
 
 type IProps = IEditorComponentProps<ILinkedItemsValueOperational, ILinkedItemsConfig, ILinkedItemsUserPreferences>;
 
@@ -95,8 +98,28 @@ export class Editor extends React.PureComponent<IProps> {
         const linkedItemIds = linkedItems.map(({id}) => id);
         const {readOnly} = this.props;
 
+        const miniToolbar = readOnly
+            ? undefined
+            : (
+                <ContentCreateDropdown
+                    customButton={RelatedItemCreateNewButton}
+                    onCreate={(articles) => {
+                        this.props.onChange(linkedItems.concat(articles.map(({_id, type}) => ({id: _id, type}))));
+
+                        const createdTextItem = articles.find(({type}) => type === 'text');
+
+                        if (createdTextItem != null && applicationState.articleInEditMode != null) {
+                            sdApi.localStorage.setItem(
+                                `open-item-after-related-closed--${createdTextItem._id}`,
+                                applicationState.articleInEditMode,
+                            );
+                        }
+                    }}
+                />
+            );
+
         return (
-            <Container>
+            <Container miniToolbar={miniToolbar}>
                 <DropZone3
                     canDrop={() => !readOnly}
                     onDrop={(event) => {

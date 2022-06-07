@@ -3,8 +3,8 @@ import {IDropZoneComponentProps} from 'superdesk-api';
 import {gettext} from 'core/utils';
 
 const shellStyles: React.CSSProperties = {
-    outline: '2px dashed rgba(94, 169, 200, 1)',
-    outlineOffset: '2px',
+    outline: '2px dashed silver',
+    outlineOffset: '-2px',
     backgroundColor: 'rgba(150, 150, 150, 0.06)',
 };
 

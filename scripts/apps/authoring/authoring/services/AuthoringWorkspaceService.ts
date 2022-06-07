@@ -1,7 +1,8 @@
 import {includes} from 'lodash';
 import {IArticle} from 'superdesk-api';
-import {appConfig} from 'appConfig';
+import {appConfig, extensions} from 'appConfig';
 import {sdApi} from 'api';
+import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 
 export type IAuthoringAction = 'view' | 'edit' | 'kill' | 'takedown' | 'correct';
 
@@ -169,6 +170,8 @@ export class AuthoringWorkspaceService {
             window.close();
         }
 
+        const item = this.item; // save before value is cleared
+
         this.suggest.setActive(false);
         this.item = null;
         this.action = null;
@@ -178,6 +181,16 @@ export class AuthoringWorkspaceService {
 
         this.saveState();
         this.sendRowViewEvents();
+
+        // Run onCloseAfter API hook
+        setTimeout(() => {
+            Object.values(extensions)
+                .map((extension) => extension.activationResult?.contributions?.authoring?.onCloseAfter)
+                .filter(notNullOrUndefined)
+                .forEach((fn) => {
+                    fn(item);
+                });
+        });
     }
 
     kill(item) {

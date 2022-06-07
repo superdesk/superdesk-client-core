@@ -193,6 +193,8 @@ declare module 'superdesk-api' {
 
                 /** Called after the update. */
                 onUpdateAfter?(previous: IArticle, current: IArticle): void;
+
+                onCloseAfter?(item: IArticle): void;
             };
             monitoring?: {
                 getFilteringButtons?(deskId: string): Array<IMonitoringFilter>;

@@ -1,11 +1,12 @@
 import {article} from './article';
 import {desks} from './desks';
-import {time} from './time';
+import {localStorage} from './local-storage';
+import {navigation} from './navigation';
 import {preferences} from './preferences';
+import {templates} from './templates';
+import {time} from './time';
 import {user} from './user';
 import {vocabularies} from './vocabularies';
-import {navigation} from './navigation';
-import {templates} from './templates';
 
 /**
  * This is core API, not extensions API.
@@ -15,10 +16,11 @@ import {templates} from './templates';
 export const sdApi = {
     article,
     desks,
-    time,
+    localStorage,
+    navigation,
     preferences,
+    templates,
+    time,
     user,
     vocabularies,
-    navigation,
-    templates,
 };
