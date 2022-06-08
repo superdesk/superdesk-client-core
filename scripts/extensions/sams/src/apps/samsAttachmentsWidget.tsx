@@ -186,7 +186,7 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
                         <div className="form__row">
                             <div className="basic-drag-block">
                                 <i className="big-icon--upload-alt" />
-                                {(this.props.readOnly || this.props.editable === false) ? null : (
+                                {this.props.readOnly ? null : (
                                     <React.Fragment>
                                         <span className="basic-drag-block__text">
                                             {gettext('Drag files here or')}
@@ -209,7 +209,7 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
                         <div className="form__row">
                             <div className="basic-drag-block">
                                 <i className="big-icon--upload-alt" />
-                                {(this.props.readOnly || this.props.editable === false) ? null : (
+                                {this.props.readOnly ? null : (
                                     <React.Fragment>
                                         <div>
                                             <span className="basic-drag-block__text">

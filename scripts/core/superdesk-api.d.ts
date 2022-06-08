@@ -1401,23 +1401,13 @@ declare module 'superdesk-api' {
         children: (result: Array<IRestApiResponse<unknown>>) => JSX.Element;
     }
 
-    export interface IAttachmentsWrapperProps {
-        item: IArticle;
+    export interface IAttachmentsWidgetProps {
         attachments: Array<IAttachment>;
-    }
-
-    export interface IAttachmentsWidgetProps extends IAttachmentsWrapperProps {
-        // These props are passed in from the `AuthoringDirective` scope
+        readOnly?: boolean;
+        isWidget: boolean;
         addAttachments(attachments: Array<IAttachment>): void;
         removeAttachment(attachment: IAttachment): void;
         updateAttachment(attachment: IAttachment): void;
-        updateItem?(updates: Partial<IArticle>): void;
-        readOnly?: boolean;
-        isWidget: boolean;
-
-        editable: boolean;
-        isLocked: boolean;
-        isLockedByMe: boolean;
         isUploadValid(files: Array<File>): boolean;
     }
 

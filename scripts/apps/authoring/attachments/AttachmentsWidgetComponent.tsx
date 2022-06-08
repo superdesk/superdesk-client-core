@@ -79,9 +79,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
     }
 
     render() {
-        const showUpload = this.props.attachments.length < appConfig.attachments_max_files &&
-            this.props.isLockedByMe &&
-            !this.props.readOnly;
+        const showUpload = this.props.attachments.length < appConfig.attachments_max_files && !this.props.readOnly;
 
         return (
             <div
@@ -108,7 +106,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
 
                         <button
                             className="btn btn--hollow"
-                            disabled={this.props.readOnly || this.props.editable === false}
+                            disabled={this.props.readOnly}
                             onClick={this.showFileUploadModal}
                         >
                             {gettext('Attach files')}
@@ -119,7 +117,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                 {!(showUpload && this.props.isWidget === false) ? null : (
                     <button
                         className="item-association"
-                        disabled={this.props.readOnly || this.props.editable === false}
+                        disabled={this.props.readOnly}
                         onClick={this.showFileUploadModal}
                     >
                         <div className="subtext">

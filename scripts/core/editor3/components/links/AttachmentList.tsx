@@ -4,8 +4,8 @@ import classNames from 'classnames';
 
 import {FileiconFilter, FilesizeFilter} from 'core/ui/ui';
 import {gettext} from 'core/utils';
-import {IAttachment, IAttachmentsWrapperProps} from 'superdesk-api';
-import {withAttachments} from 'apps/authoring/attachments/AttachmentsWrapper';
+import {IArticle, IAttachment} from 'superdesk-api';
+import {WithAttachments} from 'apps/authoring/attachments/AttachmentsWrapper';
 
 interface IAttachmentItemProps {
     attachment: IAttachment;
@@ -44,39 +44,51 @@ export class AttachmentItem extends React.PureComponent<IAttachmentItemProps> {
     }
 }
 
-interface IProps extends IAttachmentsWrapperProps {
+interface IProps {
+    item: IArticle;
     selected: string;
     onClick: (attachment: IAttachment) => void;
 }
 
-export class AttachmentListComponent extends React.PureComponent<IProps> {
+export class AttachmentList extends React.PureComponent<IProps> {
     render() {
-        if (this.props.attachments.length === 0) {
-            return null; // wait for attachments
-        }
-
-        const publicAttachments = this.props.attachments.filter(({internal}) => !internal);
-
-        const attachments = publicAttachments
-            .map((attachement) => (
-                <AttachmentItem
-                    key={`attachment-${attachement._id}`}
-                    attachment={attachement}
-                    selected={attachement._id === this.props.selected}
-                    onClick={this.props.onClick}
-                />
-            ));
-
-        if (attachments.length) {
-            return <div>{attachments}</div>;
-        }
-
         return (
-            <p style={{padding: 20, margin: 0}}>
-                {gettext('There are no public attachments yet. Upload some first using Attachments widget.')}
-            </p>
+            <WithAttachments item={this.props.item}>
+                {(allAttachments) => {
+                    if (allAttachments.length === 0) {
+                        return null; // wait for attachments
+                    }
+
+                    const publicAttachments = allAttachments.filter(({internal}) => !internal);
+
+                    if (publicAttachments.length > 0) {
+                        return (
+                            <div>
+                                {
+                                    publicAttachments
+                                        .map((attachment) => (
+                                            <AttachmentItem
+                                                key={`attachment-${attachment._id}`}
+                                                attachment={attachment}
+                                                selected={attachment._id === this.props.selected}
+                                                onClick={this.props.onClick}
+                                            />
+                                        ))
+                                }
+                            </div>
+                        );
+                    } else {
+                        return (
+                            <p style={{padding: 20, margin: 0}}>
+                                {gettext(
+                                    'There are no public attachments yet. '
+                                    + 'Upload some first using Attachments widget.',
+                                )}
+                            </p>
+                        );
+                    }
+                }}
+            </WithAttachments>
         );
     }
 }
-
-export const AttachmentList = withAttachments(AttachmentListComponent);
