@@ -15,7 +15,7 @@ export class Editor extends React.PureComponent<IProps> {
 
         this.addAttachments = this.addAttachments.bind(this);
         this.removeAttachment = this.removeAttachment.bind(this);
-        this.updateAttachment = this.updateAttachment.bind(this);
+        this.handleAttachmentUpdated = this.handleAttachmentUpdated.bind(this);
     }
 
     addAttachments(val: Array<IAttachment>) {
@@ -30,7 +30,7 @@ export class Editor extends React.PureComponent<IProps> {
         this.props.onChange(attachments.filter(({id}) => id !== val._id));
     }
 
-    updateAttachment(val: IAttachment) {
+    handleAttachmentUpdated(val: IAttachment) {
         dispatchCustomEvent('attachmentUpdated', val);
     }
 
@@ -54,7 +54,7 @@ export class Editor extends React.PureComponent<IProps> {
                                 attachments={attachments}
                                 addAttachments={this.addAttachments}
                                 removeAttachment={this.removeAttachment}
-                                onAttachmentUpdated={this.updateAttachment}
+                                onAttachmentUpdated={this.handleAttachmentUpdated}
                                 readOnly={readOnly}
                                 isWidget={false}
                                 isUploadValid={(files) => isUploadValid(files, readOnly, attachments)}

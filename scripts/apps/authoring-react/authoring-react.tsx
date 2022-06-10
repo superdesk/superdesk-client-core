@@ -274,6 +274,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
+        this.handleFieldsDataChange = this.handleFieldsDataChange.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
         this.computeLatestArticle = this.computeLatestArticle.bind(this);
         this.setUserPreferences = this.setUserPreferences.bind(this);
@@ -403,6 +404,17 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             ...state,
             fieldsDataWithChanges: state.fieldsDataWithChanges.set(fieldId, data),
         });
+    }
+
+    handleFieldsDataChange(fieldsData: Map<string, unknown>) {
+        const {state} = this;
+
+        if (state.initialized) {
+            this.setState({
+                ...state,
+                fieldsDataWithChanges: fieldsData,
+            });
+        }
     }
 
     hasUnsavedChanges() {
@@ -1315,6 +1327,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 article={{...state.itemWithChanges}}
                                                 contentProfile={state.profile}
                                                 fieldsData={state.fieldsDataWithChanges}
+                                                onFieldsDataChange={this.handleFieldsDataChange}
                                                 readOnly={readOnly}
                                                 handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
                                             />
@@ -1329,6 +1342,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 article={{...state.itemWithChanges}}
                                                 contentProfile={state.profile}
                                                 fieldsData={state.fieldsDataWithChanges}
+                                                onFieldsDataChange={this.handleFieldsDataChange}
                                                 readOnly={readOnly}
                                                 handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
                                             />

@@ -100,7 +100,7 @@ declare module 'superdesk-api' {
     export interface IAuthoringSideWidget {
         _id: string; // required for configuring widget visibility in content profile
         label: string;
-        order: number; // Integer.
+        order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
         icon: string;
         component: React.ComponentType<{
             article: IArticle;
@@ -110,6 +110,7 @@ declare module 'superdesk-api' {
             readOnly: boolean;
             contentProfile?: IContentProfileV2;
             fieldsData?: OrderedMap<string, unknown>;
+            onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
 
             /**
              * Will prompt user to save changes. The promise will get rejected if user cancels saving.

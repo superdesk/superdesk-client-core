@@ -1,4 +1,5 @@
 
+import {noop} from 'lodash';
 import React from 'react';
 import {IArticle, IAuthoringSideWidget} from 'superdesk-api';
 
@@ -24,6 +25,7 @@ export class WidgetReact extends React.PureComponent<IProps> {
                 readOnly={undefined}
                 contentProfile={undefined}
                 fieldsData={undefined}
+                onFieldsDataChange={noop}
                 handleUnsavedChanges={undefined}
             />
         );

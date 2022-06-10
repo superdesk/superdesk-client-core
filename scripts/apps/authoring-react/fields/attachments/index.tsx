@@ -11,6 +11,7 @@ import {
 } from './interfaces';
 import {Preview} from './preview';
 import {Difference} from './difference';
+import {AuthoringAttachmentsWidget} from './authoring-widget';
 
 type IAttachmentsField = ICustomFieldType<
     IAttachmentsValueOperational,
@@ -18,6 +19,10 @@ type IAttachmentsField = ICustomFieldType<
     IAttachmentsConfig,
     IAttachmentsUserPreferences
 >;
+
+export function getWidgetLabel(): string {
+    return gettext('Attachments');
+}
 
 export function getAttachmentsField(): IAttachmentsField {
     const field: IAttachmentsField = {
@@ -31,6 +36,18 @@ export function getAttachmentsField(): IAttachmentsField {
 
         differenceComponent: Difference,
         configComponent: () => null,
+
+        contributions: {
+            authoringSideWidgets: [
+                {
+                    _id: 'attachments',
+                    label: getWidgetLabel(),
+                    component: AuthoringAttachmentsWidget,
+                    order: 5,
+                    icon: 'attachment',
+                },
+            ],
+        },
     };
 
     return field;
