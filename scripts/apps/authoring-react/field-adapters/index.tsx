@@ -38,6 +38,7 @@ import {
 } from 'apps/authoring/authoring/controllers/AssociationController';
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 import {ILinkedItemsConfig, ILinkedItemsValueOperational} from '../fields/linked-items/interfaces';
+import {attachments} from './attachments';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -68,6 +69,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter {
         abstract: abstract,
         anpa_category: anpa_category,
         anpa_take_key: anpa_take_key,
+        attachments: attachments,
         authors: authors,
         body_html: body_html,
         byline: byline,
