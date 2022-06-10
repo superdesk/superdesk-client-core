@@ -13,12 +13,13 @@ interface IState<T extends IBaseRestApiResponse> {
 }
 
 class WithLiveQueryComponent
-    <T extends IBaseRestApiResponse> extends SuperdeskReactComponent<ILiveQueryProps<T>, IState<T>> {
+    <T extends IBaseRestApiResponse>
+    extends SuperdeskReactComponent<ILiveQueryProps<T> & {onInitialized(): void}, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private handleContentChangesThrottled: (changes: Array<IResourceChange>) => void;
     private updatingRequestInProgress: boolean;
 
-    constructor(props: ILiveQueryProps<T>) {
+    constructor(props: ILiveQueryProps<T> & {onInitialized(): void}) {
         super(props);
 
         this.state = {};

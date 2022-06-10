@@ -10,6 +10,7 @@ import {getUrlsField} from './urls';
 import {getEmbedField} from './embed';
 import {getMediaField} from './media';
 import {getLinkedItemsField} from './linked-items';
+import {getAttachmentsField} from './attachments';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
@@ -36,6 +37,7 @@ export function registerAuthoringReactFields() {
                 getEmbedField(),
                 getMediaField(),
                 getLinkedItemsField(),
+                getAttachmentsField(),
             ],
         },
     };

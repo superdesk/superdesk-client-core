@@ -35,7 +35,10 @@ export class SmoothLoaderForKey extends React.PureComponent<IProps, IState> {
     }
 
     private showSnapshot() {
-        if (this.state.loading === false) {
+        if (
+            this.state.loading === false
+            && this.wrapper != null // will be null when this component unmounts
+        ) {
             this.lastSnapshotHtml = this.wrapper.innerHTML;
             this.setState({loading: true});
         }

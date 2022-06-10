@@ -98,7 +98,7 @@ class SamsAttachmentsWidgetComponent extends React.PureComponent<IProps> {
     showEditAssetModal(attachment: IAttachment) {
         showEditAttachmentModal(attachment)
             .then(([updatedAttachment, _updatedAsset]) => {
-                this.props.updateAttachment(updatedAttachment);
+                this.props.onAttachmentUpdated(updatedAttachment);
             });
     }
 

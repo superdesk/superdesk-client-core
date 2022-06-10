@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IArticle} from 'superdesk-api';
+import {IArticle, IAttachment} from 'superdesk-api';
 import {isLockedInCurrentSession, dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
@@ -15,6 +15,37 @@ interface IProps {
     updateItem(updates: Partial<IArticle>): void;
     readOnly: boolean;
     isWidget: boolean;
+}
+
+export function isUploadValid(files: Array<File>, readOnly: boolean, currentAttachments: Array<IAttachment>): boolean {
+    if (files.length === 0 || readOnly) {
+        return false;
+    } else if (files.length + currentAttachments.length >= appConfig.attachments_max_files) {
+        notify.error(gettextPlural(
+            appConfig.attachments_max_files,
+            'Too many files selected. Only 1 file is allowed',
+            'Too many files selected. Only {{count}} files are allowed',
+            {count: appConfig.attachments_max_files},
+        ));
+
+        return false;
+    }
+
+    const filenames = files.filter((file) => file.size > appConfig.attachments_max_size)
+        .map((file) => file.name);
+
+    if (filenames.length > 0) {
+        notify.error(gettext(
+            'Sorry, but some files "{{filenames}}" are bigger than limit ({{limit}})',
+            {
+                filenames: filenames.join(', '),
+                limit: filesize(appConfig.attachments_max_size),
+            },
+        ));
+        return false;
+    }
+
+    return true;
 }
 
 export class AttachmentsWidget extends React.PureComponent<IProps> {
@@ -58,38 +89,10 @@ export class AttachmentsWidget extends React.PureComponent<IProps> {
 
                                 dispatchCustomEvent('attachmentRemoved', attachment);
                             }}
-                            updateAttachment={(attachment) => {
+                            onAttachmentUpdated={(attachment) => {
                                 dispatchCustomEvent('attachmentUpdated', attachment);
                             }}
-                            isUploadValid={(files: Array<File>) => {
-                                if (files.length === 0 || readOnly) {
-                                    return false;
-                                } else if (files.length + attachments.length > appConfig.attachments_max_files) {
-                                    notify.error(gettextPlural(
-                                        appConfig.attachments_max_files,
-                                        'Too many files selected. Only 1 file is allowed',
-                                        'Too many files selected. Only {{count}} files are allowed',
-                                        {count: appConfig.attachments_max_files},
-                                    ));
-                                    return false;
-                                }
-
-                                const filenames = files.filter((file) => file.size > appConfig.attachments_max_size)
-                                    .map((file) => file.name);
-
-                                if (filenames.length > 0) {
-                                    notify.error(gettext(
-                                        'Sorry, but some files "{{filenames}}" are bigger than limit ({{limit}})',
-                                        {
-                                            filenames: filenames.join(', '),
-                                            limit: filesize(appConfig.attachments_max_size),
-                                        },
-                                    ));
-                                    return false;
-                                }
-
-                                return true;
-                            }}
+                            isUploadValid={(files: Array<File>) => isUploadValid(files, readOnly, attachments)}
                         />
                     );
                 }}

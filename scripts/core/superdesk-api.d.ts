@@ -1393,7 +1393,6 @@ declare module 'superdesk-api' {
         resource: string;
         query: ISuperdeskQuery;
         children: (result: IRestApiResponse<T>) => JSX.Element;
-        onInitialized?(): void;
     }
 
     export interface ILiveResourcesProps {
@@ -1407,8 +1406,15 @@ declare module 'superdesk-api' {
         isWidget: boolean;
         addAttachments(attachments: Array<IAttachment>): void;
         removeAttachment(attachment: IAttachment): void;
-        updateAttachment(attachment: IAttachment): void;
         isUploadValid(files: Array<File>): boolean;
+
+        /**
+         * Attachments are stored in a separate DB collections.
+         * Components implementing this interface are responsible for updating attachment resources.
+         * This method is meant for signalling the fact that an attachment has been updated,
+         * so parent component can then reload UI to reflect latest attachment data.
+         */
+        onAttachmentUpdated(attachment: IAttachment): void;
     }
 
     export interface IIgnoreCancelSaveProps {

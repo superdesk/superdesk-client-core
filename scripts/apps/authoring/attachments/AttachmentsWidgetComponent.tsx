@@ -70,7 +70,7 @@ export class AttachmentsWidgetComponent extends React.PureComponent<IAttachments
                 saveAttachment={(original, updates) => {
                     attachmentsApi.save(original, updates)
                         .then((updated) => {
-                            this.props.updateAttachment(updated);
+                            this.props.onAttachmentUpdated(updated);
                             closeModal();
                         });
                 }}
