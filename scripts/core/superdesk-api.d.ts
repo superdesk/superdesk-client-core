@@ -1201,7 +1201,15 @@ declare module 'superdesk-api' {
 
     export interface IConfigurableUiComponents {
         UserAvatar?: React.ComponentType<{user: Partial<IUser>}>;
+
+        /**
+         * // IMPROVE: it would be better to provide this as a `ICustomFieldType` from an extension
+         * and write an upgrade script for it to be used where needed.
+         * If there's an issue with colliding IDs, we could add a property in `ICustomFieldType`
+         * that would allow replacing a field with specified ID.
+         */
         AuthoringAttachmentsWidget?: React.ComponentType<IAttachmentsWidgetProps>;
+        AuthoringAttachmentsDiffView?: React.ComponentType<{attachmentsPrevious: Array<IAttachment>; attachmentsCurrent: Array<IAttachment>}>;
     }
 
     export interface IConfigurableAlgorithms {
