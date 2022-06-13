@@ -43,7 +43,7 @@ export class ListItem extends React.Component<IListItemProps> {
 
 export class ListItemColumn extends React.Component<IPropsListItemColumn> {
     render() {
-        const {noBorder, noPadding, grow, justifyContent, ellipsisAndGrow, children, bold = false} = this.props;
+        const {noBorder, noPadding, grow, justifyContent, ellipsisAndGrow, children, bold = false, title} = this.props;
         const cssClasses = [];
         var styles: CSSProperties = {};
 
@@ -64,6 +64,7 @@ export class ListItemColumn extends React.Component<IPropsListItemColumn> {
                 <div
                     className={cssClasses.concat(['sd-list-item__column', 'sd-list-item__column--grow']).join(' ')}
                     style={styles}
+                    title ={title}
                 >
                     <ListItemRow justifyContent={justifyContent}>
                         <span className="sd-overflow-ellipsis">{children}</span>

@@ -5,6 +5,7 @@ import {element, browser, by} from 'protractor';
 import {globalSearch} from './helpers/search';
 import {nav, waitForSuperdesk, login} from './helpers/utils';
 import {LoginModal} from './helpers/pages';
+import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 describe('saved_search', () => {
     beforeEach(() => {
@@ -20,8 +21,9 @@ describe('saved_search', () => {
         var priority = globalSearch.getPriorityElementByIndex(0);
 
         priority.click();
-        browser.sleep(100);
-        expect(globalSearch.getItems().count()).toBe(1);
+
+        globalSearch.waitForItemCount(1);
+
         element(by.id('save_search_init')).click();
         var searchPanel = element(by.className('save-search-panel'));
 
@@ -34,15 +36,15 @@ describe('saved_search', () => {
     });
 
     it('can save a global search and another user sees it', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
-        expect(globalSearch.getItems().count()).toBe(16);
-        expect(globalSearch.getPriorityElements().count()).toBe(3);
+        globalSearch.waitForItemCount(16);
+        browser.wait(ECE.hasElementCount(globalSearch.getPriorityElements(), 3), 2000);
         var priority = globalSearch.getPriorityElementByIndex(0);
 
         priority.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         element(by.id('save_search_init')).click();
         var searchPanel = element(by.className('save-search-panel'));
 

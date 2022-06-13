@@ -242,6 +242,7 @@ export function AuthoringDirective(
                         && !isPersonalSpace && canPublishOnDesk() && checkShortcutButtonAvailability();
                 }, true);
             });
+
             /**
              * `desk_stage:change` event from send and publish action.
              * If send action succeeds but publish fails then we need change item location.
