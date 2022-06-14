@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Input, Button, Spinner} from 'superdesk-ui-framework/react';
+import {CreateShowAfterModal} from './create-show-after-modal';
 import {CreateValidators, IValidationResult, numberValidator, stringValidator} from './form-validation';
 import {IShow, IShowBase} from './interfaces';
 
@@ -111,13 +112,20 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
         if (allValid) {
             this.setState({validationResults: {}, inProgress: true});
 
-            httpRequestJsonLocal({
+            httpRequestJsonLocal<IShow>({
                 method: 'POST',
                 path: '/rundown_shows', // TODO: update endpoint name
                 payload: this.state.show,
-            }).then(() => {
+            }).then((show) => {
                 this.setState({inProgress: false}, () => {
-                    this.props.closeModal(); // TODO: initiate rundown template creation
+                    this.props.closeModal();
+
+                    superdesk.ui.showModal(({closeModal}) => (
+                        <CreateShowAfterModal
+                            closeModal={closeModal}
+                            show={show}
+                        />
+                    ));
                 });
             });
 

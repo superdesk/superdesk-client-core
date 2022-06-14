@@ -1996,6 +1996,7 @@ declare module 'superdesk-api' {
             Spacer: React.ComponentType<IPropsSpacer>;
             SpacerBlock: React.ComponentType<ISpacerBlock>;
             SpacerInlineFlex: React.ComponentType<IPropsSpacerInlineFlex>;
+            Center: React.ComponentType;
             Editor3Html: React.ComponentType<IEditor3HtmlProps>;
             AuthoringWidgetHeading: React.ComponentType<IPropsWidgetHeading>;
             AuthoringWidgetLayout: React.ComponentType<IAuthoringWidgetLayoutProps>;
@@ -2015,8 +2016,8 @@ declare module 'superdesk-api' {
             ): JSX.Element;
         };
         localization: {
-            gettext(message: string, params?: {[key: string]: string | number}): string;
-            gettextPlural(count: number, singular: string, plural: string, params?: {[key: string]: string | number}): string;
+            gettext(message: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
+            gettextPlural(count: number, singular: string, plural: string, params?: {[placeholder: string]: string | number | React.ComponentType}): string;
             formatDate(date: Date | string): string;
             formatDateTime(date: Date): string;
             longFormatDateTime(date: Date | string): string;

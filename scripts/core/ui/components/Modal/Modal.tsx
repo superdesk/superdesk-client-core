@@ -23,7 +23,7 @@ export class Modal extends React.PureComponent<IModalProps> {
         return (
             <div data-test-id={this.props['data-test-id']}>
                 <div className="modal__backdrop fade in" />
-                <div className={'modal ' + getSizeClassName(this.props.size)} style={{display: 'block'}}>
+                <div className={'modal modal-react ' + getSizeClassName(this.props.size)} style={{display: 'block'}}>
                     <div className="modal__dialog">
                         <div className="modal__content">
                             {this.props.children}

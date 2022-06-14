@@ -85,6 +85,7 @@ import {patchArticle} from 'api/article-patch';
 import {connectCrudManagerHttp} from './helpers/crud-manager-http';
 import {GenericArrayListPageComponent} from './helpers/generic-array-list-page-component';
 import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
+import {Center} from './ui/components/Center';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -336,6 +337,7 @@ export function getSuperdeskApiImplementation(
             Icon,
             IconBig,
             getDropdownTree: () => DropdownTree,
+            Center,
             Spacer,
             SpacerBlock,
             SpacerInlineFlex,
