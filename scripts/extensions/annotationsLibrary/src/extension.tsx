@@ -1,4 +1,4 @@
-import {ISuperdesk, IExtension, IRestApiResponse} from 'superdesk-api';
+import {ISuperdesk, IExtension, IRestApiResponse, IExtensionActivationResult} from 'superdesk-api';
 import {getAnnotationInputWithKnowledgeBase} from './AnnotationInputWithKnowledgeBase';
 import {getAnnotationsLibraryPage} from './annotations-library-page';
 import {getFields} from './GetFields';
@@ -81,7 +81,7 @@ var extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const {gettext} = superdesk.localization;
 
-        return superdesk.privileges.getOwnPrivileges().then(() => ({
+        const result: IExtensionActivationResult = {
             contributions: {
                 editor3: {
                     annotationInputTabs: [
@@ -101,11 +101,12 @@ var extension: IExtension = {
                         title: gettext('Annotations Library'),
                         url: '/annotations-library',
                         component: getAnnotationsLibraryPage(superdesk),
-                        privileges: ['concept_items'],
                     },
                 ] : [],
             },
-        }));
+        };
+
+        return Promise.resolve(result);
     },
 };
 

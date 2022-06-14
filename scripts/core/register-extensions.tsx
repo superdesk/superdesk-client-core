@@ -48,6 +48,16 @@ export function registerExtensions(
             params.sideTemplateUrl = 'scripts/apps/workspace/views/workspace-sidenav.html';
         }
 
+        if (page.addToSideMenu != null) {
+            workspaceMenuProvider.item({
+                href: page.url,
+                label: page.title,
+                icon: page.addToSideMenu.icon,
+                order: page.addToSideMenu.order,
+                shortcut: page.addToSideMenu.keyBinding,
+            });
+        }
+
         superdesk.activity(page.url, params);
     }
 
@@ -59,13 +69,6 @@ export function registerExtensions(
             order: menuItem.order ?? 1000,
             shortcut: menuItem.shortcut,
         };
-
-        if (menuItem.privileges?.length > 0) {
-            // Convert array of privilege names to if statement i.e.
-            // ['sams', 'archive'] converts to
-            // 'privileges.sams && privileges.archive'
-            entry.if = 'privileges.' + menuItem.privileges.join(' && privileges.');
-        }
 
         workspaceMenuProvider.item(entry);
     }

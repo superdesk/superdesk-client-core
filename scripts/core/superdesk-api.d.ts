@@ -914,10 +914,31 @@ declare module 'superdesk-api' {
         component: React.ComponentType;
         priority?: number;
 
+        /**
+         * Controls whether top menu is shown when the page is open.
+         * Does NOT add a link to the page to the top menu.
+         */
         showTopMenu?: boolean;
+
+        /**
+         * Controls whether side menu is shown when the page is open.
+         * Does NOT add a link to the page to the side menu.
+         */
         showSideMenu?: boolean;
 
+        /**
+         * Controls whether a link to the page is added to the main menu.
+         */
         addToMainMenu?: boolean; // defaults to true
+
+        /**
+         * Controls whether a link to the page is added to the side menu.
+         */
+        addToSideMenu?: {
+            icon: string;
+            order: number;
+            keyBinding?: string;
+        };
     }>;
 
     export type IWorkspaceMenuItem = DeepReadonly<{
@@ -926,7 +947,6 @@ declare module 'superdesk-api' {
         label: string;
         order?: number;
         shortcut?: string;
-        privileges?: Array<string>;
     }>;
 
 
@@ -2008,7 +2028,6 @@ declare module 'superdesk-api' {
             ): string;
         };
         privileges: {
-            getOwnPrivileges(): Promise<any>;
             hasPrivilege(privilege: string): boolean;
         };
         preferences: {

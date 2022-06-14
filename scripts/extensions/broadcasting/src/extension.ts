@@ -1,15 +1,37 @@
-import {IExtension} from 'superdesk-api';
+import {IExtension, IExtensionActivationResult} from 'superdesk-api';
+import {Page} from './page';
+
 import {superdesk} from './superdesk';
 
 const {gettext} = superdesk.localization;
-
-const str = gettext('Hello broadcasting');
+const {privileges} = superdesk;
 
 const extension: IExtension = {
     activate: () => {
-        superdesk.ui.alert(str);
+        const result: IExtensionActivationResult = {
+            contributions: {
+                pages: privileges.hasPrivilege('rundowns')
+                    ? [
+                        {
+                            title: gettext('Broadcasting'),
+                            url: '/broadcasting',
+                            component: Page,
 
-        return Promise.resolve({});
+                            showTopMenu: false,
+                            showSideMenu: true,
+                            addToMainMenu: false,
+
+                            addToSideMenu: {
+                                icon: 'rundown',
+                                order: 1000,
+                            },
+                        },
+                    ]
+                    : [],
+            },
+        };
+
+        return Promise.resolve(result);
     },
 };
 

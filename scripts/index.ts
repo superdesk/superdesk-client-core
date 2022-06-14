@@ -175,23 +175,25 @@ export function startApp(
                 metadata,
                 preferencesService,
             ) => {
-                registerExtensions(
-                    extensions,
-                    _superdesk,
-                    modal,
-                    privileges,
-                    lock,
-                    session,
-                    authoringWorkspace,
-                    config,
-                    metadata,
-                    _workspaceMenu,
-                    preferencesService,
-                ).then(() => {
-                    if (authoringReactViewEnabled) {
-                        registerAuthoringReactWidgets();
-                        registerAuthoringReactFields();
-                    }
+                preferencesService.getPrivileges().then(() => {
+                    registerExtensions(
+                        extensions,
+                        _superdesk,
+                        modal,
+                        privileges,
+                        lock,
+                        session,
+                        authoringWorkspace,
+                        config,
+                        metadata,
+                        _workspaceMenu,
+                        preferencesService,
+                    ).then(() => {
+                        if (authoringReactViewEnabled) {
+                            registerAuthoringReactWidgets();
+                            registerAuthoringReactFields();
+                        }
+                    });
                 });
             },
         ]);

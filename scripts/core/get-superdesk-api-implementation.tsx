@@ -370,7 +370,6 @@ export function getSuperdeskApiImplementation(
             getRelativeOrAbsoluteDateTime: getRelativeOrAbsoluteDateTime,
         },
         privileges: {
-            getOwnPrivileges: () => privileges.loaded.then(() => privileges.privileges),
             hasPrivilege: (privilege: string) => sdApi.user.hasPrivilege(privilege),
         },
         preferences: {
