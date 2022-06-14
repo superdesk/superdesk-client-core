@@ -81,6 +81,45 @@ declare module 'superdesk-api' {
         component: React.ComponentType<{article: IArticle}>;
     }
 
+    export interface IIngestRule<F = any, P = any> {
+        name: string;
+        handler: string;
+        filter?: any;
+        actions: {
+            fetch?: Array<F>;
+            publish?: Array<P>;
+            exit?: boolean;
+            preserve_desk?: boolean;
+            extra?: {[key: string]: any};
+        };
+        schedule?: {
+            day_of_week: Array<'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN'>;
+            hour_of_day_from?: string;
+            hour_of_day_to?: string;
+            time_zone?: string;
+            _allDay: boolean;
+        };
+    }
+
+    export interface IIngestRuleHandler {
+        name: string;
+        label: string;
+        supportedActions: {
+            fetch_to_desk: boolean;
+            publish_from_desk: boolean;
+        };
+        supportedConfigs: {
+            exit: boolean;
+            preserveDesk: boolean;
+        };
+        getDefaults(): IIngestRule;
+        customActionComponent?: React.ComponentType<{
+            rule: IIngestRule;
+            updateRule(rule: IIngestRule): void;
+        }>;
+        customActionPreview?: React.ComponentType<{rule: IIngestRule}>;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -113,6 +152,9 @@ declare module 'superdesk-api' {
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
                     onSendBefore?(items: Array<IArticle>, desk: IDesk): Promise<void>;
+                };
+                ingest?: {
+                    getRuleHandlers?(): Array<IIngestRuleHandler>;
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;

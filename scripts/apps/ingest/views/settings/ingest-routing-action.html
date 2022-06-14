@@ -1,6 +1,6 @@
 <div class="form-block">
     <h3 class="form-block__title" translate>Actions</h3>
-    <div class="form-block__sub-section">
+    <div class="form-block__sub-section" ng-if="ruleHandler && ruleHandler.supportedActions.fetch_to_desk">
         <label class="form-label" translate>Fetch</label>
 
         <div class="list-row list-row--dotted sd-margin-b--1" ng-if="!rule.actions.fetch.length">
@@ -15,13 +15,13 @@
                 </div>
             </li>
         </ul>
-    
+
         <div class="sd-card sd-card--auto-height action-panel action-panel" ng-show="showNewFetch">
             <div class="sd-card__content">
 
                 <div sd-action-picker data-desk="newFetch.desk" data-stage="newFetch.stage" data-macro="newFetch.macro" class="split"></div>
 
-                
+
                 <div class="form__row form__row--inner sd-text__right">
                     <button class="btn" ng-click="showNewFetch = false" translate>Cancel</button>
                     <button class="btn btn--primary" ng-click="addFetch();showNewFetch = false" ng-disabled="!newFetch.desk || !newFetch.stage" translate>Add</button>
@@ -32,8 +32,8 @@
             <i class="icon-plus-sign"></i> Add Fetch action
         </a>
     </div>
-    
-    <div class="form-block__sub-section sd-margin-b--2">
+
+    <div class="form-block__sub-section sd-margin-b--2" ng-if="ruleHandler && ruleHandler.supportedActions.publish_from_desk">
         <label class="form-label" translate>Publish</label>
         <div class="list-row list-row--dotted sd-margin-b--1" ng-if="!rule.actions.publish.length">
             <span class="text-label" translate>No Publish actions defined</span>
@@ -81,14 +81,17 @@
             <i class="icon-plus-sign"></i> Add Publish action
         </a>
     </div>
-    
-    <div class="form__row form__row--s-padding">
+
+    <div class="form__row form__row--s-padding" ng-if="ruleHandler && ruleHandler.supportedConfigs.exit">
         <span sd-switch ng-model="rule.actions.exit"></span>
-        <label translate>Exit</label>    
+        <label translate>Exit</label>
     </div>
-    
-    <div class="form__row form__row--s-padding">
+
+    <div class="form__row form__row--s-padding" ng-if="ruleHandler && ruleHandler.supportedConfigs.preserveDesk">
         <span sd-switch ng-model="rule.actions.preserve_desk"></span>
         <label translate>Preserve Desk</label>
     </div>
+
+    <sd-custom-ingest-routing-action data-rule="rule" data-handler="ruleHandler" data-update-rule="updateRule">
+    </sd-custom-ingest-routing-action>
 </div>
