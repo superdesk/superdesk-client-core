@@ -23,8 +23,8 @@ function getRuleHandlers(): Promise<{[key: string]: IIngestRuleHandler}> {
         });
 }
 
-function getHandlerForIngestRule(rule: IIngestRule): IIngestRuleHandler {
-    return _ruleHandlers[rule.handler || 'desk_fetch_publish'];
+function getHandlerForIngestRule(rule: IIngestRule): IIngestRuleHandler | undefined {
+    return _ruleHandlers?.[rule.handler || 'desk_fetch_publish'];
 }
 
 function getExtensionForIngestRuleHandler(rule: IIngestRule): IIngestRuleHandlerExtension | undefined {
@@ -40,7 +40,7 @@ function getExtensionForIngestRuleHandler(rule: IIngestRule): IIngestRuleHandler
 
 interface IIngestApi {
     getRuleHandlers(): Promise<{[key: string]: IIngestRuleHandler}>;
-    getHandlerForIngestRule(rule: IIngestRule): IIngestRuleHandler;
+    getHandlerForIngestRule(rule: IIngestRule): IIngestRuleHandler | undefined;
     getExtensionForIngestRuleHandler(rule: IIngestRule): IIngestRuleHandlerExtension | undefined;
 }
 
