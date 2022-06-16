@@ -81,16 +81,16 @@ declare module 'superdesk-api' {
         component: React.ComponentType<{article: IArticle}>;
     }
 
-    export interface IIngestRule<F = any, P = any> {
+    export interface IIngestRule<ExtraAttributes = {}> {
         name: string;
         handler: string;
         filter?: any;
-        actions: {
+        actions: A & {
             fetch?: Array<F>;
             publish?: Array<P>;
             exit?: boolean;
             preserve_desk?: boolean;
-            extra?: {[key: string]: any};
+            extra?: ExtraAttributes;
         };
         schedule?: {
             day_of_week: Array<'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN'>;
@@ -101,23 +101,31 @@ declare module 'superdesk-api' {
         };
     }
 
-    export interface IIngestRuleHandler {
+    export interface IIngestRuleHandler extends IBaseRestApiResponse {
         name: string;
-        label: string;
-        supportedActions: {
+        supported_actions: {
             fetch_to_desk: boolean;
             publish_from_desk: boolean;
         };
-        supportedConfigs: {
+        supported_configs: {
             exit: boolean;
-            preserveDesk: boolean;
+            preserve_desk: boolean;
         };
-        getDefaults(): IIngestRule;
-        customActionComponent?: React.ComponentType<{
-            rule: IIngestRule;
-            updateRule(rule: IIngestRule): void;
-        }>;
-        customActionPreview?: React.ComponentType<{rule: IIngestRule}>;
+        default_values: IIngestRule;
+    }
+
+    export interface IIngestRuleHandlerEditorProps<ExtraAttributes = {}> {
+        rule: IIngestRule<ExtraAttributes>;
+        updateRule(rule: IIngestRule<ExtraAttributes>): void;
+    }
+
+    export interface IIngestRuleHandlerPreviewProps<ExtraAttributes = {}> {
+        rule: IIngestRule<ExtraAttributes>;
+    }
+
+    export interface IIngestRuleHandlerExtension {
+        editor?: React.ComponentType<IIngestRuleHandlerEditorProps>;
+        preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
     }
 
     export interface IExtensionActivationResult {
@@ -154,7 +162,7 @@ declare module 'superdesk-api' {
                     onSendBefore?(items: Array<IArticle>, desk: IDesk): Promise<void>;
                 };
                 ingest?: {
-                    getRuleHandlers?(): Array<IIngestRuleHandler>;
+                    ruleHandlers?: {[key: string]: IIngestRuleHandlerExtension};
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;

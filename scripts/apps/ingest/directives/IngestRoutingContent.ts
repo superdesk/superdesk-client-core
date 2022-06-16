@@ -106,7 +106,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              * @description Create new rule with default data
              */
             scope.addRule = (handler: IIngestRuleHandler) => {
-                const rule = angular.copy(handler.getDefaults());
+                const rule = angular.copy(handler.default_values);
 
                 scope.editScheme.rules.push(rule);
                 scope.editRule(rule);
@@ -134,12 +134,12 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
             };
 
             const setCurrentRuleHandler = (rule) => {
-                scope.ruleHandler = scope.ruleHandlers[rule.handler || 'desk_fetch_publish'];
+                scope.ruleHandler = sdApi.ingest.getHandlerForIngestRule(rule);
             };
 
             // Used to update the Rule from outside Angular components
             // (such as React, via sd-custom-ingest-routing-action)
-            scope.updateRule = (rule: Partial<IIngestRule>) => {
+            scope.updateRule = (rule: IIngestRule) => {
                 scope.$apply(() => {
                     scope.rule = _.clone(rule);
 
@@ -151,11 +151,9 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                 });
             };
 
-            scope.getRuleHandlerLabel = (rule) => {
-                const handler = scope.ruleHandlers[rule.handler || 'desk_fetch_publish'];
-
-                return handler.label;
-            };
+            scope.getRuleHandlerLabel = (rule) => (
+                sdApi.ingest.getHandlerForIngestRule(rule)?.name
+            );
 
             /**
              * @ngdoc method
@@ -256,7 +254,9 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                     scope.contentFilters = filters;
                 });
 
-                scope.ruleHandlers = sdApi.ingest.getIngestRuleHandlers();
+                sdApi.ingest.getRuleHandlers().then((handlers) => {
+                    scope.ruleHandlers = handlers;
+                });
             }
         },
     };

@@ -1,6 +1,6 @@
 <div class="form-block">
     <h3 class="form-block__title" translate>Actions</h3>
-    <div class="form-block__sub-section" ng-if="ruleHandler && ruleHandler.supportedActions.fetch_to_desk">
+    <div class="form-block__sub-section" ng-if="ruleHandler && ruleHandler.supported_actions.fetch_to_desk">
         <label class="form-label" translate>Fetch</label>
 
         <div class="list-row list-row--dotted sd-margin-b--1" ng-if="!rule.actions.fetch.length">
@@ -33,7 +33,7 @@
         </a>
     </div>
 
-    <div class="form-block__sub-section sd-margin-b--2" ng-if="ruleHandler && ruleHandler.supportedActions.publish_from_desk">
+    <div class="form-block__sub-section sd-margin-b--2" ng-if="ruleHandler && ruleHandler.supported_actions.publish_from_desk">
         <label class="form-label" translate>Publish</label>
         <div class="list-row list-row--dotted sd-margin-b--1" ng-if="!rule.actions.publish.length">
             <span class="text-label" translate>No Publish actions defined</span>
@@ -82,12 +82,12 @@
         </a>
     </div>
 
-    <div class="form__row form__row--s-padding" ng-if="ruleHandler && ruleHandler.supportedConfigs.exit">
+    <div class="form__row form__row--s-padding" ng-if="ruleHandler && ruleHandler.supported_configs.exit">
         <span sd-switch ng-model="rule.actions.exit"></span>
         <label translate>Exit</label>
     </div>
 
-    <div class="form__row form__row--s-padding" ng-if="ruleHandler && ruleHandler.supportedConfigs.preserveDesk">
+    <div class="form__row form__row--s-padding" ng-if="ruleHandler && ruleHandler.supported_configs.preserve_desk">
         <span sd-switch ng-model="rule.actions.preserve_desk"></span>
         <label translate>Preserve Desk</label>
     </div>

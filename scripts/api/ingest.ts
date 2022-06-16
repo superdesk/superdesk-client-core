@@ -1,61 +1,51 @@
-import {flatMap} from 'lodash';
-import {IIngestRuleHandler, IExtensionActivationResult} from 'superdesk-api';
+import {IIngestRuleHandler, IRestApiResponse, IIngestRule, IIngestRuleHandlerExtension} from 'superdesk-api';
 import {extensions} from 'appConfig';
-import {gettext} from 'core/utils';
+import {dataApi} from 'core/helpers/CrudManager';
 
-const DEFAULT_HANDLER: IIngestRuleHandler = {
-    name: 'desk_fetch_publish',
-    label: gettext('Desks'),
-    supportedActions: {
-        fetch_to_desk: true,
-        publish_from_desk: true,
-    },
-    supportedConfigs: {
-        exit: true,
-        preserveDesk: true,
-    },
-    getDefaults: function() {
-        return {
-            name: '',
-            handler: 'desk_fetch_publish',
-            filter: null,
-            actions: {
-                fetch: [],
-                publish: [],
-                exit: false,
-            },
-            schedule: {
-                day_of_week: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
-                hour_of_day_from: null,
-                hour_of_day_to: null,
-                _allDay: true,
-            },
-        };
-    },
-};
+let _ruleHandlers: {[key: string]: IIngestRuleHandler};
 
-function getIngestRuleHandlers() {
-    const getRuleHandlers
-        : Array<IExtensionActivationResult['contributions']['entities']['ingest']['getRuleHandlers']>
-        = [() => [DEFAULT_HANDLER]].concat(flatMap(
-            Object.values(extensions).map(({activationResult}) => (
-                activationResult.contributions?.entities?.ingest?.getRuleHandlers ?? []
-            )),
-        ));
+function getRuleHandlers(): Promise<{[key: string]: IIngestRuleHandler}> {
+    if (_ruleHandlers != null) {
+        return Promise.resolve(_ruleHandlers);
+    }
 
-    return flatMap(
-        getRuleHandlers.map((getHandlers) => getHandlers()),
-    ).reduce((handlers, handler) => {
-        handlers[handler.name] = handler;
+    return dataApi.queryRawJson<IRestApiResponse<IIngestRuleHandler>>('ingest_rule_handlers').then((response) => {
+        return response._items.reduce((handlers, handler) => {
+            handlers[handler._id] = handler;
 
-        return handlers;
-    }, {});
+            return handlers;
+        }, {});
+    })
+        .then((handlers) => {
+            _ruleHandlers = handlers;
+
+            return _ruleHandlers;
+        });
+}
+
+function getHandlerForIngestRule(rule: IIngestRule): IIngestRuleHandler {
+    return _ruleHandlers[rule.handler || 'desk_fetch_publish'];
+}
+
+function getExtensionForIngestRuleHandler(rule: IIngestRule): IIngestRuleHandlerExtension | undefined {
+    const handlerName = rule.handler || 'desk_fetch_publish';
+
+    return Object
+        .values(extensions)
+        .find(({activationResult}) => (
+            activationResult.contributions?.entities?.ingest?.ruleHandlers[handlerName] != null
+        ))
+        ?.activationResult?.contributions?.entities?.ingest?.ruleHandlers[handlerName];
 }
 
 interface IIngestApi {
-    getIngestRuleHandlers(): {[key: string]: IIngestRuleHandler};
+    getRuleHandlers(): Promise<{[key: string]: IIngestRuleHandler}>;
+    getHandlerForIngestRule(rule: IIngestRule): IIngestRuleHandler;
+    getExtensionForIngestRuleHandler(rule: IIngestRule): IIngestRuleHandlerExtension | undefined;
 }
 
 export const ingest: IIngestApi = {
-    getIngestRuleHandlers,
+    getRuleHandlers,
+    getHandlerForIngestRule,
+    getExtensionForIngestRuleHandler,
 };

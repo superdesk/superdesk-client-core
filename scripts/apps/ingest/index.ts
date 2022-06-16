@@ -13,8 +13,8 @@ import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {appConfig} from 'appConfig';
 import {reactToAngular1} from 'superdesk-ui-framework';
-import {CustomIngestRoutingAction} from './components/CustomIngestRoutingAction';
-import {CustomIngestRoutingActionPreview} from './components/CustomIngestRoutingActionPreview';
+import {CustomIngestRoutingAction} from './components/settings/CustomIngestRoutingAction';
+import {CustomIngestRoutingActionPreview} from './components/settings/CustomIngestRoutingActionPreview';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks'])
     .service('send', svc.SendService);

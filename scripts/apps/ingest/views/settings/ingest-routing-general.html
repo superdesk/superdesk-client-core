@@ -15,7 +15,7 @@
     <div class="form-block">
         <h3 class="form-block__title" translate>Action</h3>
 
-        <div class="form-block__sub-section" ng-if="!rule.actions.fetch.length && !rule.actions.publish.length">
+        <div class="form-block__sub-section" ng-if="!rule.actions.fetch.length && !rule.actions.publish.length && ruleHandler.supported_actions.fetch_to_desk && ruleHandler.supported_actions.publish_from_desk">
             <div class="list-row list-row--dotted list-row--flex">
                 <span class="text-label" translate>No fetch or publish actions defined</span>
             </div>
