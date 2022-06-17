@@ -81,14 +81,14 @@
                                                 ng-if="!rule"
                                                 ng-disabled="!editScheme.name"
                                         >
-                                            <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Rule' | translate }}" flow="right" dropdown__toggle>
+                                            <button class="btn btn--primary btn--icon-only-circle" sd-tooltip="{{ :: 'Add Rule' | translate }}" flow="right" dropdown__toggle data-test-id="add-routing-rule-button">
                                                 <i class="icon-plus-large"></i>
                                             </button>
                                             <ul class="dropdown__menu nested-menu">
                                                 <li class="main-list">
                                                     <ul>
                                                         <li ng-repeat="handler in ruleHandlers">
-                                                            <button ng-click="addRule(handler)">
+                                                            <button ng-click="addRule(handler)" data-test-id="{{'rule-handler--' + handler._id}}">
                                                                 {{handler.name}}
                                                             </button>
                                                         </li>
