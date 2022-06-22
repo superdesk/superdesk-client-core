@@ -5,6 +5,7 @@ export function IngestRoutingGeneral(weekdays, desks, macros) {
     return {
         scope: {
             rule: '=',
+            ruleHandler: '=',
         },
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-general.html',
         link: function(scope) {
