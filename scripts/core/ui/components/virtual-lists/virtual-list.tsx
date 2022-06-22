@@ -143,7 +143,6 @@ export function VirtualList<T>(props: IProps<T>) {
     return (
         <div
             ref={parentRef}
-            className="List"
             style={{
                 height: `${height}px`,
                 width: `${width}px`,

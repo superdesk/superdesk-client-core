@@ -1,9 +1,10 @@
 import * as React from 'react';
 import {noop} from 'lodash';
-import {Dropdown, CreateButton} from 'superdesk-ui-framework/react';
+import {Dropdown, CreateButton, IconButton} from 'superdesk-ui-framework/react';
 
 import {superdesk} from './superdesk';
-import {CreateShowModal} from './create-show';
+import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates';
+import {CreateShowModal} from './shows/create-show';
 
 const {gettext} = superdesk.localization;
 
@@ -35,6 +36,14 @@ export class Page extends React.PureComponent {
                         onClick={noop}
                     />
                 </Dropdown>
+
+                <IconButton
+                    ariaValue={gettext('Manage show templates')}
+                    icon="settings"
+                    onClick={() => {
+                        superdesk.ui.showModal(ManageRundownTemplates);
+                    }}
+                />
             </div>
         );
     }

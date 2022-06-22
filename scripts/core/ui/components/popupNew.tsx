@@ -97,7 +97,7 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
             this.wrapperEl.removeEventListener('mouseleave', this.closeOnMouseLeave);
         }
 
-        this.popper.destroy?.();
+        this.popper?.destroy?.();
     }
 
     render() {

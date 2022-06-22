@@ -186,7 +186,7 @@ export const gettextPlural = (
     count: number,
     text: string,
     pluralText: string,
-    params: {[key: string]: string | number} = {},
+    params: {[key: string]: string | number | React.ComponentType} = {},
 ): string => {
     if (!text) {
         return '';
@@ -367,4 +367,20 @@ export function downloadFile(data: string, mimeType: string, fileName: string) {
     a.click();
     window.URL.revokeObjectURL(url);
     a.remove();
+}
+
+export function stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T): Omit<T, keyof IBaseRestApiResponse> {
+    type IKeys = { [P in keyof Required<IBaseRestApiResponse>]: 1 };
+
+    const keysObject: IKeys = {
+        _updated: 1,
+        _created: 1,
+        _id: 1,
+        _etag: 1,
+        _links: 1,
+    };
+
+    const keysArray = Object.keys(keysObject);
+
+    return omit(entity, keysArray) as Omit<T, keyof IBaseRestApiResponse>;
 }

@@ -45,6 +45,47 @@ function toElasticFilter(q: ILogicalOperator | IComparison) {
     }
 }
 
+function toPyEveFilter(q: ILogicalOperator | IComparison) {
+    if (isLogicalOperator(q)) {
+        const r = {};
+
+        if (q['$and'] != null) {
+            r['$and'] = q['$and'].map((_q) => toPyEveFilter(_q));
+        }
+        if (q['$or'] != null) {
+            r['$or'] = q['$or'].map((_q) => toPyEveFilter(_q));
+        }
+
+        return r;
+    } else {
+        return Object.keys(q).reduce((acc, field) => {
+            const comparisonOptions = q[field];
+
+            const operator = Object.keys(comparisonOptions)[0];
+            const value = comparisonOptions[operator];
+
+            switch (operator) {
+            case '$eq':
+                return {[field]: value};
+            case '$ne':
+                return {[field]: {$ne: value}};
+            case '$gt':
+                return {[field]: {$gt: value}};
+            case '$gte':
+                return {[field]: {$gte: value}};
+            case '$lt':
+                return {[field]: {$lt: value}};
+            case '$lte':
+                return {[field]: {$lte: value}};
+            case '$in':
+                return {[field]: {$in: value}};
+            }
+
+            throw new Error(`Conversion for operator ${operator} is not defined.`);
+        }, {});
+    }
+}
+
 export function getQueryFieldsRecursive(q: ILogicalOperator | IComparison): Set<string> {
     var fields = new Set<string>();
 
@@ -93,4 +134,34 @@ export function toElasticQuery(q: ISuperdeskQuery) {
     };
 
     return query;
+}
+
+interface IPyEveQuery {
+    where?: {};
+    sort: string; // ?sort=[("lastname", -1)]
+}
+
+// Object must only have one key
+function objectToTuple<T>(obj: {[key: string]: T}): [string, T] {
+    const key = Object.keys(obj)[0];
+
+    return [key, obj[key]];
+}
+
+export function toPyEveQuery(filter: ISuperdeskQuery['filter'], sort: ISuperdeskQuery['sort']): IPyEveQuery {
+    const result: IPyEveQuery = {
+        sort: `[${
+            sort.map((sortOption) => {
+                const [fieldId, sortDirection] = objectToTuple(sortOption);
+
+                return `("${fieldId}", ${sortDirection === 'asc' ? '1' : '-1'})`;
+            }).join(',')
+        }]`,
+    };
+
+    if (filter != null) {
+        result['where'] = toPyEveFilter(filter);
+    }
+
+    return result;
 }

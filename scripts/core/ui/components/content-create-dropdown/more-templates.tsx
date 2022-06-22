@@ -10,7 +10,7 @@ import {IRestApiResponse, ITemplate} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {getPaginationInfo} from 'core/helpers/pagination';
 import {DropdownOption} from './dropdown-option';
-import {VirtualList} from '../virtual-list';
+import {VirtualList} from '../virtual-lists/virtual-list';
 import {nameof} from 'core/helpers/typescript-helpers';
 
 interface IProps {

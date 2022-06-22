@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {Input, Button, Spinner} from 'superdesk-ui-framework/react';
 import {CreateShowAfterModal} from './create-show-after-modal';
-import {CreateValidators, IValidationResult, numberValidator, stringValidator} from './form-validation';
-import {IShow, IShowBase} from './interfaces';
-
-import {superdesk} from './superdesk';
+import {CreateValidators, IValidationResult, numberValidator, stringValidator} from '../form-validation';
+import {superdesk} from '../superdesk';
+import {IShow, IShowBase} from '../interfaces';
+import {NumberInputTemp} from '../number-input-temp';
 
 const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
@@ -30,17 +30,19 @@ interface IState {
 const showValidators: CreateValidators<IShowBase> = {
     name: stringValidator,
     description: stringValidator,
-    duration: (val) => {
+    planned_duration: (val: number | null) => {
+        if (val == null) {
+            return {valid: true};
+        }
+
         const result = numberValidator(val);
 
         if (result.valid !== true) {
             return result;
+        } else if (val < 1) {
+            return {valid: false, errors: [gettext('value must be greater than zero')]};
         } else {
-            if (val < 1) {
-                return {valid: false, errors: ['value must be greater than zero']};
-            } else {
-                return {valid: true};
-            }
+            return {valid: true};
         }
     },
 };
@@ -74,7 +76,7 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
             show: {
                 name: '',
                 description: '',
-                duration: 3600,
+                planned_duration: 3600,
             },
             inProgress: false,
         };
@@ -114,7 +116,7 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
 
             httpRequestJsonLocal<IShow>({
                 method: 'POST',
-                path: '/rundown_shows', // TODO: update endpoint name
+                path: '/shows',
                 payload: this.state.show,
             }).then((show) => {
                 this.setState({inProgress: false}, () => {
@@ -128,7 +130,6 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                     ));
                 });
             });
-
         } else {
             this.setState({validationResults: validationResults});
         }
@@ -169,20 +170,12 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                             }}
                         />
 
-                        <Input
+                        <NumberInputTemp
                             label={gettext('Planned duration')}
-                            type="number"
-                            value={show.duration ?? ''} // TODO: remove default together with parseInt
-                            error={getValidationMessage('duration', validationResults)}
-                            invalid={getValidationMessage('duration', validationResults) != null}
-                            required={true}
+                            value={show.planned_duration}
+                            error={getValidationMessage('planned_duration', validationResults)}
                             onChange={(val) => {
-                                // TODO: remove parseInt
-                                if (val.length > 0) {
-                                    this.updateShowProperty({duration: parseInt(val, 10)});
-                                } else {
-                                    this.updateShowProperty({duration: undefined});
-                                }
+                                this.updateShowProperty({planned_duration: val});
                             }}
                         />
                     </Spacer>

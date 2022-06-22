@@ -8,7 +8,7 @@ import {
     IStage,
     IUser,
 } from 'superdesk-api';
-import {gettext, gettextPlural, stripHtmlTags} from 'core/utils';
+import {gettext, gettextPlural, stripBaseRestApiFields, stripHtmlTags} from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -64,7 +64,7 @@ import {AuthoringWorkspaceService} from 'apps/authoring/authoring/services/Autho
 import ng from 'core/services/ng';
 import {Spacer, SpacerBlock, SpacerInlineFlex} from './ui/components/Spacer';
 import {appConfig} from 'appConfig';
-import {httpRequestJsonLocal} from './helpers/network';
+import {httpRequestJsonLocal, httpRequestRawLocal} from './helpers/network';
 import {memoize as memoizeLocal} from './memoize';
 import {generatePatch} from './patch';
 import {getLinesCount} from 'apps/authoring/authoring/components/line-count';
@@ -86,6 +86,9 @@ import {connectCrudManagerHttp} from './helpers/crud-manager-http';
 import {GenericArrayListPageComponent} from './helpers/generic-array-list-page-component';
 import {getGenericHttpEntityListPageComponent} from 'core/ui/components/ListPage/generic-list-page';
 import {Center} from './ui/components/Center';
+import {InputLabel} from './ui/components/input-label';
+import {VirtualListFromQuery} from './ui/components/virtual-lists/virtual-list-from-query';
+import {SelectFromEndpoint} from './ui/components/virtual-lists/select';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -216,8 +219,10 @@ export function getSuperdeskApiImplementation(
             numberToString,
             notNullOrUndefined,
             nameof: nameof,
+            stripBaseRestApiFields,
         },
         httpRequestJsonLocal,
+        httpRequestRawLocal,
         getExtensionConfig: () => extensions[requestingExtensionId]?.configuration ?? {},
         entities: {
             article: {
@@ -307,6 +312,8 @@ export function getSuperdeskApiImplementation(
             getGenericHttpEntityListPageComponent,
             getGenericArrayListPageComponent: () => GenericArrayListPageComponent,
             connectCrudManagerHttp: connectCrudManagerHttp,
+            VirtualListFromQuery,
+            SelectFromEndpoint,
             ListItem,
             ListItemColumn,
             ListItemRow,
@@ -333,6 +340,7 @@ export function getSuperdeskApiImplementation(
             UserAvatar: UserAvatarFromUserId,
             ArticleItemConcise,
             GroupLabel,
+            InputLabel,
             TopMenuDropdownButton,
             Icon,
             IconBig,

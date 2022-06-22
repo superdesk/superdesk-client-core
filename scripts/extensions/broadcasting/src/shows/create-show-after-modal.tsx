@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {Button, Icon, Text} from 'superdesk-ui-framework/react';
-import {IShow} from './interfaces';
+import {IShow} from '../interfaces';
 
-import {superdesk} from './superdesk';
+import {superdesk} from '../superdesk';
+import {ManageRundownTemplates} from './rundowns/manage-rundown-templates';
 
 const {gettext} = superdesk.localization;
 const {Center, SpacerBlock} = superdesk.components;
@@ -48,7 +49,7 @@ export class CreateShowAfterModal extends React.PureComponent<IProps> {
                     </Text>
 
                     <Text align="center" size="medium">
-                        {gettext('Do you want to cretate a rundown template for this show right away?')}
+                        {gettext('Do you want to create a rundown template for this show right away?')}
                     </Text>
 
                     <SpacerBlock v gap="16" />
@@ -62,7 +63,14 @@ export class CreateShowAfterModal extends React.PureComponent<IProps> {
                     <Button
                         text={gettext('Yes, create a template')}
                         onClick={() => {
-                            // TODO: implement
+                            this.props.closeModal();
+
+                            superdesk.ui.showModal(({closeModal}) => (
+                                <ManageRundownTemplates
+                                    closeModal={closeModal}
+                                    initialShow={{id: show._id, createNewTemplate: true}}
+                                />
+                            ));
                         }}
                         type="primary"
                     />

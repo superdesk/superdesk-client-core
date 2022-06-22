@@ -974,6 +974,28 @@ declare module 'superdesk-api' {
         max_results: number;
     }
 
+    export interface IPropsVirtualListFromQuery<T> {
+        width: number;
+        height: number;
+        query: {
+            endpoint: string;
+            filter?: ILogicalOperator;
+            fullTextSearch?: string; // only works with elastic endpoints
+            sort: Array<{[field: string]: 'asc' | 'desc'}>;
+        };
+        itemTemplate: React.ComponentType<{item: T}>;
+        noItemsTemplate: React.ComponentType;
+    }
+
+    export interface IPropsSelectFromRemote<T> {
+        endpoint: string | null;
+        sort: Array<[keyof T, 'asc' | 'desc']>;
+        value?: string | null; // ID
+        onChange(value: string | null): void;
+        itemTemplate: React.ComponentType<{item: T}>;
+        noGrow?: boolean; // if true, will not expand to 100% of parent element
+    }
+
 
     // REST API
 
@@ -1870,6 +1892,7 @@ declare module 'superdesk-api' {
         };
         elasticsearch: IElasticSearchApi;
         httpRequestJsonLocal<T>(options: IHttpRequestJsonOptionsLocal): Promise<T>;
+        httpRequestRawLocal<T>(options: IHttpRequestOptionsLocal): Promise<Response>;
         state: {
             articleInEditMode?: IArticle['_id'];
         };
@@ -1942,6 +1965,7 @@ declare module 'superdesk-api' {
         };
         helpers: {
             assertNever(x: never): never;
+            stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T): Omit<T, keyof IBaseRestApiResponse>;
             filterUndefined<T>(values: Partial<T>): Partial<T>;
             filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T>;
             stringToNumber(value?: string, radix?: number): number | undefined;
@@ -1965,6 +1989,8 @@ declare module 'superdesk-api' {
                 defaultSortOption?: ISortOption,
                 formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
             ): React.ComponentType<Props>;
+            VirtualListFromQuery: React.ComponentType<IPropsVirtualListFromQuery<any>>;
+            SelectFromEndpoint: React.ComponentType<IPropsSelectFromRemote<any>>
             ListItem: React.ComponentType<IListItemProps>;
             ListItemColumn: React.ComponentType<IPropsListItemColumn>;
             ListItemRow: React.ComponentType<IPropsListItemRow>;
@@ -1987,6 +2013,7 @@ declare module 'superdesk-api' {
             UserAvatar: React.ComponentType<{userId: string}>;
             ArticleItemConcise: React.ComponentType<{article: IArticle}>;
             GroupLabel: React.ComponentType<ISpacingProps>;
+            InputLabel: React.ComponentType<{text: string}>;
             Icon: React.ComponentType<IPropsIcon>;
             IconBig: React.ComponentType<IPropsIconBig>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
