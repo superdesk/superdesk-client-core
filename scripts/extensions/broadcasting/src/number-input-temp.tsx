@@ -6,6 +6,7 @@ interface IProps {
     error?: string;
     value: number | null;
     onChange(val: number | null): void;
+    readOnly?: boolean;
 }
 
 // TODO: remove when fixed in ui-framework
@@ -27,6 +28,7 @@ export class NumberInputTemp extends React.PureComponent<IProps> {
                 }}
                 error={this.props.error}
                 invalid={this.props.error != null}
+                disabled={this.props.readOnly}
             />
         );
     }

@@ -60,12 +60,14 @@ interface IProps {
     onChange(template: Partial<IRundownTemplateBase>): void;
     onCancel(): void;
     onSave(): void;
+    initiateEditing(): void;
     saveButtonLabel: string;
+    readOnly: boolean;
 }
 
-export class RundownTemplateEdit extends React.PureComponent<IProps> {
+export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
     render() {
-        const {templateFields} = this.props;
+        const {templateFields, readOnly} = this.props;
 
         const headline_template = this.props.templateFields.headline_template ?? {
             prefix: '',
@@ -76,18 +78,32 @@ export class RundownTemplateEdit extends React.PureComponent<IProps> {
         return (
             <Layout.LayoutContainer>
                 <Layout.HeaderPanel>
-                    <Spacer h gap="8" justifyContent="end" noGrow style={{padding: '8px 16px'}}>
-                        <Button
-                            text={gettext('Cancel')}
-                            onClick={this.props.onCancel}
-                        />
+                    <div style={{display: 'flex', justifyContent: 'end', padding: '8px 16px'}}>
+                        {
+                            readOnly
+                                ? (
+                                    <Button
+                                        text={gettext('Edit')}
+                                        onClick={this.props.initiateEditing}
+                                        type="primary"
+                                    />
+                                )
+                                : (
+                                <Spacer h gap="8" noGrow>
+                                    <Button
+                                        text={gettext('Cancel')}
+                                        onClick={this.props.onCancel}
+                                    />
 
-                        <Button
-                            text={this.props.saveButtonLabel}
-                            onClick={this.props.onSave}
-                            type="primary"
-                        />
-                    </Spacer>
+                                    <Button
+                                        text={this.props.saveButtonLabel}
+                                        onClick={this.props.onSave}
+                                        type="primary"
+                                    />
+                                </Spacer>
+                                )
+                        }
+                    </div>
                 </Layout.HeaderPanel>
 
                 <Layout.MainPanel padding="none">
@@ -107,6 +123,7 @@ export class RundownTemplateEdit extends React.PureComponent<IProps> {
                                                 planned_duration: val == null ? 0 : val,
                                             });
                                         }}
+                                        readOnly={readOnly}
                                     />
                                 </Spacer>
 
@@ -121,6 +138,7 @@ export class RundownTemplateEdit extends React.PureComponent<IProps> {
                                                 airtime_time: val,
                                             });
                                         }}
+                                        disabled={readOnly}
                                     />
                                 </Spacer>
 
@@ -138,6 +156,7 @@ export class RundownTemplateEdit extends React.PureComponent<IProps> {
                                         }}
                                         inlineLabel
                                         labelHidden
+                                        disabled={readOnly}
                                     />
                                 </Spacer>
                             </Spacer>
@@ -159,6 +178,7 @@ export class RundownTemplateEdit extends React.PureComponent<IProps> {
                                             name: event.target.value,
                                         });
                                     }}
+                                    readOnly={readOnly}
                                 />
 
                                 <div>
@@ -185,6 +205,7 @@ export class RundownTemplateEdit extends React.PureComponent<IProps> {
                                                 }}
                                                 inlineLabel
                                                 labelHidden
+                                                disabled={readOnly}
                                             />
                                         </div>
 
@@ -203,6 +224,7 @@ export class RundownTemplateEdit extends React.PureComponent<IProps> {
                                                 }}
                                                 inlineLabel
                                                 labelHidden
+                                                disabled={readOnly}
                                             />
                                         </div>
 
@@ -221,6 +243,7 @@ export class RundownTemplateEdit extends React.PureComponent<IProps> {
                                                 label=""
                                                 labelHidden
                                                 inlineLabel
+                                                disabled={readOnly}
                                             >
                                                 {
                                                     dateFormatOptions.map((format) => (

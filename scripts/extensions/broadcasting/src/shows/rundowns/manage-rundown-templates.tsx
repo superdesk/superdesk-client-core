@@ -12,21 +12,19 @@ import {BoxedListItem, BoxedListContentRow} from 'superdesk-ui-framework/react/c
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {superdesk} from '../../superdesk';
 import {IRundownTemplate, IRundownTemplateBase, IShow} from '../../interfaces';
-import {RundownTemplateEdit} from './template-edit';
+import {RundownTemplateViewEdit} from './template-edit';
 
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal, httpRequestRawLocal} = superdesk;
+const {logger} = superdesk.utilities;
+const {assertNever, stripBaseRestApiFields} = superdesk.helpers;
+
 const {
     SpacerBlock,
     Spacer,
     VirtualListFromQuery,
     SelectFromEndpoint,
 } = superdesk.components;
-
-const {
-    assertNever,
-    stripBaseRestApiFields,
-} = superdesk.helpers;
 
 interface IProps {
     initialShow?: {
@@ -38,7 +36,11 @@ interface IProps {
 
 interface IState {
     showId: IShow['_id'] | null;
-    template: {type: 'edit', value: IRundownTemplate} | {type: 'create', value: Partial<IRundownTemplateBase>} | null;
+    template:
+        {type: 'preview', value: IRundownTemplate}
+        | {type: 'edit', value: IRundownTemplate}
+        | {type: 'create', value: Partial<IRundownTemplateBase>}
+        | null;
 }
 
 const showListItemStyle: React.CSSProperties = {margin: '4px 16px'};
@@ -62,7 +64,15 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                     <BoxedListItem
                         alignVertical="center"
                         density="compact"
-                        selected={this.state.template?.value === template}
+                        selected={(() => {
+                            const selectedTemplate = this.state.template;
+
+                            if (selectedTemplate == null || selectedTemplate.type === 'create') {
+                                return false;
+                            } else {
+                                return selectedTemplate.value._id === template._id;
+                            }
+                        })()}
                         clickable={false}
                         actions={(
                             <span>
@@ -105,6 +115,11 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                 </Menu>
                             </span>
                         )}
+                        onClick={() => {
+                            this.setState({
+                                template: {type: 'preview', value: template},
+                            });
+                        }}
                     >
                         <BoxedListContentRow>
                             <span>{template.name}</span>
@@ -131,102 +146,109 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                 zIndex={1050}
             >
                 <Layout.LayoutContainer>
-                    <Layout.LeftPanel open={true}>
-                        <Layout.Panel side="left" background="grey">
-                            <Layout.PanelHeader>
-                                <Layout.Container className="sd-padding-x--2">
-                                    <SelectFromEndpoint
-                                        endpoint="/shows"
-                                        sort={[['name', 'asc']]}
-                                        value={this.state.showId}
-                                        onChange={(val) => {
-                                            this.setState({showId: val});
-                                        }}
-                                        itemTemplate={({item}: {item: IShow}) => (
-                                            item == null
-                                                ? (
-                                                    <span>{gettext('Select show')}</span>
-                                                ) : (
-                                                    <span>{item.name}</span>
-                                                )
-                                        )}
-                                    />
-                                </Layout.Container>
-                            </Layout.PanelHeader>
-                            <Layout.PanelContent>
-
-                                {
-                                    this.state.showId == null
-                                        ? (
-                                            <EmptyState
-                                                size="small"
-                                                illustration="1"
-                                                title={gettext('No show selected')}
-                                                description={gettext('Select a show from the dropdown above.')}
+                    {
+                        (template == null || template.type === 'preview') && (
+                            <Layout.LeftPanel open={true}>
+                                <Layout.Panel side="left" background="grey">
+                                    <Layout.PanelHeader>
+                                        <Layout.Container className="sd-padding-x--2">
+                                            <SelectFromEndpoint
+                                                endpoint="/shows"
+                                                sort={[['name', 'asc']]}
+                                                value={this.state.showId}
+                                                onChange={(val) => {
+                                                    this.setState({showId: val});
+                                                }}
+                                                itemTemplate={({item}: {item: IShow}) => (
+                                                    item == null
+                                                        ? (
+                                                            <span>{gettext('Select show')}</span>
+                                                        ) : (
+                                                            <span>{item.name}</span>
+                                                        )
+                                                )}
                                             />
-                                        )
-                                        : (
-                                            <Spacer v gap="8" noWrap style={{height: '100%'}}>
-                                                <div
-                                                    style={{
-                                                        display: 'flex',
-                                                        width: '100%',
-                                                        justifyContent: 'end',
-                                                        paddingInlineEnd: 16,
-                                                    }}
-                                                >
-                                                    <div>
-                                                        <SpacerBlock v gap="8" />
+                                        </Layout.Container>
+                                    </Layout.PanelHeader>
 
-                                                        <Tooltip text={gettext('New template')} flow="left">
-                                                            <Button
-                                                                type="primary"
-                                                                size="small"
-                                                                icon="plus-large"
-                                                                text={gettext('Create new template')}
-                                                                shape="round"
-                                                                iconOnly={true}
-                                                                onClick={() => {
-                                                                    this.setState({
-                                                                        template: {
-                                                                            type: 'create',
-                                                                            value: {},
-                                                                        },
-                                                                    });
-                                                                }}
-                                                                disabled={this.state.template != null}
-                                                            />
-                                                        </Tooltip>
-                                                    </div>
-                                                </div>
-
-                                                <WithSizeObserver style={{display: 'flex'}}>
-                                                    {({width, height}) => (
-                                                        <VirtualListFromQuery
-                                                            width={width}
-                                                            height={height}
-                                                            query={{
-                                                                endpoint: `/shows/${showId}/templates`,
-                                                                sort: [{name: 'asc'}],
+                                    <Layout.PanelContent>
+                                        {
+                                            this.state.showId == null
+                                                ? (
+                                                    <EmptyState
+                                                        size="small"
+                                                        illustration="1"
+                                                        title={gettext('No show selected')}
+                                                        description={gettext('Select a show from the dropdown above.')}
+                                                    />
+                                                )
+                                                : (
+                                                    <Spacer v gap="8" noWrap style={{height: '100%'}}>
+                                                        <div
+                                                            style={{
+                                                                display: 'flex',
+                                                                width: '100%',
+                                                                justifyContent: 'end',
+                                                                paddingInlineEnd: 16,
                                                             }}
-                                                            itemTemplate={this.itemTemplate}
-                                                            noItemsTemplate={
-                                                                () => (
-                                                                    <div style={showListItemStyle}>
-                                                                        {gettext('No items yet')}
-                                                                    </div>
-                                                                )
-                                                            }
-                                                        />
-                                                    )}
-                                                </WithSizeObserver>
+                                                        >
+                                                            <div>
+                                                                <SpacerBlock v gap="8" />
 
-                                            </Spacer>
-                                        )
-                                }
-                            </Layout.PanelContent>
-                        </Layout.Panel>
-                    </Layout.LeftPanel>
+                                                                <Tooltip text={gettext('New template')} flow="left">
+                                                                    <Button
+                                                                        type="primary"
+                                                                        size="small"
+                                                                        icon="plus-large"
+                                                                        text={gettext('Create new template')}
+                                                                        shape="round"
+                                                                        iconOnly={true}
+                                                                        onClick={() => {
+                                                                            this.setState({
+                                                                                template: {
+                                                                                    type: 'create',
+                                                                                    value: {},
+                                                                                },
+                                                                            });
+                                                                        }}
+                                                                        disabled={!(
+                                                                            this.state.template == null
+                                                                            || this.state.template.type === 'preview'
+                                                                        )}
+                                                                    />
+                                                                </Tooltip>
+                                                            </div>
+                                                        </div>
+
+                                                        <WithSizeObserver style={{display: 'flex'}}>
+                                                            {({width, height}) => (
+                                                                <VirtualListFromQuery
+                                                                    width={width}
+                                                                    height={height}
+                                                                    query={{
+                                                                        endpoint: `/shows/${showId}/templates`,
+                                                                        sort: [{name: 'asc'}],
+                                                                    }}
+                                                                    itemTemplate={this.itemTemplate}
+                                                                    noItemsTemplate={
+                                                                        () => (
+                                                                            <div style={showListItemStyle}>
+                                                                                {gettext('No items yet')}
+                                                                            </div>
+                                                                        )
+                                                                    }
+                                                                />
+                                                            )}
+                                                        </WithSizeObserver>
+
+                                                    </Spacer>
+                                                )
+                                        }
+                                    </Layout.PanelContent>
+                                </Layout.Panel>
+                            </Layout.LeftPanel>
+                        )
+                    }
 
                     <Layout.MainPanel padding="none">
                         {
@@ -240,7 +262,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                     />
                                 )
                                 : (
-                                    <RundownTemplateEdit
+                                    <RundownTemplateViewEdit
                                         templateFields={{...template.value}}
                                         onChange={(templateData) => {
                                             if (template.type === 'edit') {
@@ -263,6 +285,8 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                         },
                                                     },
                                                 });
+                                            } else if (template.type === 'preview') {
+                                                logger.error(new Error('changes are not allowed in preview mode'));
                                             } else {
                                                 assertNever(template);
                                             }
@@ -277,6 +301,10 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                     path: `/shows/${showId}/templates`,
                                                     payload: template.value,
                                                 });
+
+                                                this.setState({
+                                                    template: null,
+                                                });
                                             } else if (template.type === 'edit') {
                                                 httpRequestJsonLocal({
                                                     method: 'PATCH',
@@ -286,6 +314,15 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                         'If-Match': template.value._etag,
                                                     },
                                                 });
+
+                                                this.setState({
+                                                    template: {
+                                                        type: 'preview',
+                                                        value: template.value,
+                                                    },
+                                                });
+                                            } else if (template.type === 'preview') {
+                                                logger.error(new Error('saving is not supported in preview mode'));
                                             } else {
                                                 assertNever(template);
                                             }
@@ -295,6 +332,17 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                 ? gettext('Create template')
                                                 : gettext('Save changes')
                                         }
+                                        readOnly={template.type === 'preview'}
+                                        initiateEditing={() => {
+                                            if (template.type === 'preview') {
+                                                this.setState({
+                                                    template: {
+                                                        type: 'edit',
+                                                        value: template.value,
+                                                    },
+                                                });
+                                            }
+                                        }}
                                     />
                                 )
                         }
