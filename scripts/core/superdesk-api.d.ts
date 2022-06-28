@@ -1971,6 +1971,11 @@ declare module 'superdesk-api' {
             stringToNumber(value?: string, radix?: number): number | undefined;
             numberToString(value?: number): string | undefined;
             notNullOrUndefined<T>(x: null | undefined | T): x is T;
+            isNullOrUndefined<T>(x: null | undefined | T): x is null | undefined;
+            mapObject<T extends {[key: string]: any}, V>(
+                obj: T,
+                mapFn: (item: T[keyof T]) => V,
+            ): {[Property in keyof T]: V};
             nameof<T>(name: keyof T): string;
         },
         components: {

@@ -4,6 +4,8 @@ import {DatePickerISO, Input, TimePicker, Select, Option, Button} from 'superdes
 import {IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
+import {CreateValidators, stringNotEmpty} from '../../form-validation';
+import {WithValidation} from '../with-validation';
 
 const {gettext} = superdesk.localization;
 
@@ -65,6 +67,10 @@ interface IProps {
     readOnly: boolean;
 }
 
+const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
+    name: stringNotEmpty,
+};
+
 export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
     render() {
         const {templateFields, readOnly} = this.props;
@@ -76,189 +82,198 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
         };
 
         return (
-            <Layout.LayoutContainer>
-                <Layout.HeaderPanel>
-                    <div style={{display: 'flex', justifyContent: 'end', padding: '8px 16px'}}>
-                        {
-                            readOnly
-                                ? (
-                                    <Button
-                                        text={gettext('Edit')}
-                                        onClick={this.props.initiateEditing}
-                                        type="primary"
-                                    />
-                                )
-                                : (
-                                <Spacer h gap="8" noGrow>
-                                    <Button
-                                        text={gettext('Cancel')}
-                                        onClick={this.props.onCancel}
-                                    />
+            <WithValidation validators={templateFieldsValidator}>
+                {(validate, validationErrors) => (
+                    <Layout.LayoutContainer>
+                        <Layout.HeaderPanel>
+                            <div style={{display: 'flex', justifyContent: 'end', padding: '8px 16px'}}>
+                                {
+                                    readOnly
+                                        ? (
+                                            <Button
+                                                text={gettext('Edit')}
+                                                onClick={this.props.initiateEditing}
+                                                type="primary"
+                                            />
+                                        )
+                                        : (
+                                            <Spacer h gap="8" noGrow>
+                                                <Button
+                                                    text={gettext('Cancel')}
+                                                    onClick={this.props.onCancel}
+                                                />
 
-                                    <Button
-                                        text={this.props.saveButtonLabel}
-                                        onClick={this.props.onSave}
-                                        type="primary"
-                                    />
-                                </Spacer>
-                                )
-                        }
-                    </div>
-                </Layout.HeaderPanel>
+                                                <Button
+                                                    text={this.props.saveButtonLabel}
+                                                    onClick={() => {
+                                                        if (validate(templateFields)) {
+                                                            this.props.onSave();
+                                                        }
+                                                    }}
+                                                    type="primary"
+                                                />
+                                            </Spacer>
+                                        )
+                                }
+                            </div>
+                        </Layout.HeaderPanel>
 
-                <Layout.MainPanel padding="none">
-                    <Layout.AuthoringMain
-                        headerPadding="medium"
-                        toolBar={<div />}
-                        authoringHeader={(
-                            <Spacer h gap="16" noGrow justifyContent="start">
-                                <Spacer v gap="4">
-                                    <InputLabel text={gettext('Planned duration')} />
+                        <Layout.MainPanel padding="none">
+                            <Layout.AuthoringMain
+                                headerPadding="medium"
+                                toolBar={<div />}
+                                authoringHeader={(
+                                    <Spacer h gap="16" noGrow justifyContent="start">
+                                        <Spacer v gap="4">
+                                            <InputLabel text={gettext('Planned duration')} />
 
-                                    <NumberInputTemp
-                                        value={templateFields.planned_duration ?? null}
-                                        onChange={(val) => {
-                                            this.props.onChange({
-                                                ...templateFields,
-                                                planned_duration: val == null ? 0 : val,
-                                            });
-                                        }}
-                                        readOnly={readOnly}
-                                    />
-                                </Spacer>
+                                            <NumberInputTemp
+                                                value={templateFields.planned_duration ?? null}
+                                                onChange={(val) => {
+                                                    this.props.onChange({
+                                                        ...templateFields,
+                                                        planned_duration: val == null ? 0 : val,
+                                                    });
+                                                }}
+                                                readOnly={readOnly}
+                                            />
+                                        </Spacer>
 
-                                <Spacer v gap="4">
-                                    <InputLabel text={gettext('Air time')} />
+                                        <Spacer v gap="4">
+                                            <InputLabel text={gettext('Air time')} />
 
-                                    <TimePicker
-                                        value={templateFields.airtime_time ?? ''}
-                                        onChange={(val) => {
-                                            this.props.onChange({
-                                                ...templateFields,
-                                                airtime_time: val,
-                                            });
-                                        }}
-                                        disabled={readOnly}
-                                    />
-                                </Spacer>
+                                            <TimePicker
+                                                value={templateFields.airtime_time ?? ''}
+                                                onChange={(val) => {
+                                                    this.props.onChange({
+                                                        ...templateFields,
+                                                        airtime_time: val,
+                                                    });
+                                                }}
+                                                disabled={readOnly}
+                                            />
+                                        </Spacer>
 
-                                <Spacer v gap="4">
-                                    <InputLabel text={gettext('Air date')} />
+                                        <Spacer v gap="4">
+                                            <InputLabel text={gettext('Air date')} />
 
-                                    <DatePickerISO
-                                        dateFormat={superdesk.instance.config.view.dateformat}
-                                        value={templateFields.airtime_date ?? ''}
-                                        onChange={(val) => {
-                                            this.props.onChange({
-                                                ...templateFields,
-                                                airtime_date: val,
-                                            });
-                                        }}
-                                        inlineLabel
-                                        labelHidden
-                                        disabled={readOnly}
-                                    />
-                                </Spacer>
-                            </Spacer>
-                        )}
-                    >
-                        <div>
-                            <SpacerBlock v gap="16" />
-
-                            {/** spacing between fields */}
-                            <Spacer v gap="16">
-                                <input
-                                    type="text"
-                                    className="sd-editor__input--title"
-                                    placeholder={gettext('Template name')}
-                                    value={templateFields.name ?? ''}
-                                    onChange={(event) => {
-                                        this.props.onChange({
-                                            ...templateFields,
-                                            name: event.target.value,
-                                        });
-                                    }}
-                                    readOnly={readOnly}
-                                />
-
+                                            <DatePickerISO
+                                                dateFormat={superdesk.instance.config.view.dateformat}
+                                                value={templateFields.airtime_date ?? ''}
+                                                onChange={(val) => {
+                                                    this.props.onChange({
+                                                        ...templateFields,
+                                                        airtime_date: val,
+                                                    });
+                                                }}
+                                                inlineLabel
+                                                labelHidden
+                                                disabled={readOnly}
+                                            />
+                                        </Spacer>
+                                    </Spacer>
+                                )}
+                            >
                                 <div>
-                                    <InputLabel
-                                        text={gettext('Generated name for created rundowns')}
-                                    />
+                                    <SpacerBlock v gap="16" />
 
-                                    <SpacerBlock v gap="4" />
-
-                                    {/** spacing for generated rundown name */}
-                                    <Spacer h gap="16" justifyContent="start" noWrap>
-                                        <div>
-                                            <Input
-                                                type="text"
-                                                value={headline_template.prefix ?? ''}
-                                                onChange={(val: string) => {
-                                                    this.props.onChange({
-                                                        ...templateFields,
-                                                        headline_template: {
-                                                            ...headline_template,
-                                                            prefix: val,
-                                                        },
-                                                    });
-                                                }}
-                                                inlineLabel
-                                                labelHidden
-                                                disabled={readOnly}
-                                            />
-                                        </div>
-
-                                        <div style={{width: 50}}>
-                                            <Input
-                                                type="text"
-                                                value={headline_template.separator}
-                                                onChange={(val) => {
-                                                    this.props.onChange({
-                                                        ...templateFields,
-                                                        headline_template: {
-                                                            ...headline_template,
-                                                            separator: val,
-                                                        },
-                                                    });
-                                                }}
-                                                inlineLabel
-                                                labelHidden
-                                                disabled={readOnly}
-                                            />
-                                        </div>
+                                    {/** spacing between fields */}
+                                    <Spacer v gap="16">
+                                        <Input
+                                            label={gettext('Template name')}
+                                            type="text"
+                                            value={templateFields.name ?? ''}
+                                            onChange={(val: string) => {
+                                                this.props.onChange({
+                                                    ...templateFields,
+                                                    name: val,
+                                                });
+                                            }}
+                                            disabled={readOnly}
+                                            error={validationErrors.name ?? undefined}
+                                            invalid={validationErrors.name != null}
+                                        />
 
                                         <div>
-                                            <Select
-                                                value={headline_template.date_format}
-                                                onChange={(val) => {
-                                                    this.props.onChange({
-                                                        ...templateFields,
-                                                        headline_template: {
-                                                            ...headline_template,
-                                                            date_format: val,
-                                                        },
-                                                    });
-                                                }}
-                                                label=""
-                                                labelHidden
-                                                inlineLabel
-                                                disabled={readOnly}
-                                            >
-                                                {
-                                                    dateFormatOptions.map((format) => (
-                                                        <Option key={format}>{format}</Option>
-                                                    ))
-                                                }
-                                            </Select>
+                                            <InputLabel
+                                                text={gettext('Generated name for created rundowns')}
+                                            />
+
+                                            <SpacerBlock v gap="4" />
+
+                                            {/** spacing for generated rundown name */}
+                                            <Spacer h gap="16" justifyContent="start" noWrap>
+                                                <div>
+                                                    <Input
+                                                        type="text"
+                                                        value={headline_template.prefix ?? ''}
+                                                        onChange={(val: string) => {
+                                                            this.props.onChange({
+                                                                ...templateFields,
+                                                                headline_template: {
+                                                                    ...headline_template,
+                                                                    prefix: val,
+                                                                },
+                                                            });
+                                                        }}
+                                                        inlineLabel
+                                                        labelHidden
+                                                        disabled={readOnly}
+                                                    />
+                                                </div>
+
+                                                <div style={{width: 50}}>
+                                                    <Input
+                                                        type="text"
+                                                        value={headline_template.separator}
+                                                        onChange={(val) => {
+                                                            this.props.onChange({
+                                                                ...templateFields,
+                                                                headline_template: {
+                                                                    ...headline_template,
+                                                                    separator: val,
+                                                                },
+                                                            });
+                                                        }}
+                                                        inlineLabel
+                                                        labelHidden
+                                                        disabled={readOnly}
+                                                    />
+                                                </div>
+
+                                                <div>
+                                                    <Select
+                                                        value={headline_template.date_format}
+                                                        onChange={(val) => {
+                                                            this.props.onChange({
+                                                                ...templateFields,
+                                                                headline_template: {
+                                                                    ...headline_template,
+                                                                    date_format: val,
+                                                                },
+                                                            });
+                                                        }}
+                                                        label=""
+                                                        labelHidden
+                                                        inlineLabel
+                                                        disabled={readOnly}
+                                                    >
+                                                        {
+                                                            dateFormatOptions.map((format) => (
+                                                                <Option key={format}>{format}</Option>
+                                                            ))
+                                                        }
+                                                    </Select>
+                                                </div>
+                                            </Spacer>
                                         </div>
                                     </Spacer>
                                 </div>
-                            </Spacer>
-                        </div>
-                    </Layout.AuthoringMain>
-                </Layout.MainPanel>
-            </Layout.LayoutContainer>
+                            </Layout.AuthoringMain>
+                        </Layout.MainPanel>
+                    </Layout.LayoutContainer>
+                )}
+            </WithValidation>
         );
     }
 }

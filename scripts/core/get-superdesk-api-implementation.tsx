@@ -31,6 +31,8 @@ import {
     numberToString,
     notNullOrUndefined,
     nameof,
+    isNullOrUndefined,
+    mapObject,
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {downloadBlob} from './helpers/utils';
@@ -218,8 +220,10 @@ export function getSuperdeskApiImplementation(
             stringToNumber,
             numberToString,
             notNullOrUndefined,
+            isNullOrUndefined,
             nameof: nameof,
             stripBaseRestApiFields,
+            mapObject,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,

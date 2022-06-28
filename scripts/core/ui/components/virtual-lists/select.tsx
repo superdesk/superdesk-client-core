@@ -3,6 +3,7 @@ import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 import {showPopup} from '../popupNew';
 import {IBaseRestApiResponse, IPropsSelectFromRemote, ISuperdeskQuery} from 'superdesk-api';
 import {VirtualListFromQuery} from './virtual-list-from-query';
+import {gettext} from 'core/utils';
 
 interface IState<T> {
     selected: 'loading' | T | null;
@@ -79,6 +80,13 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                                             <Template item={item} />
                                         </span>
                                     )}
+                                    noItemsTemplate={
+                                        () => (
+                                            <div>
+                                                {gettext('No items yet')}
+                                            </div>
+                                        )
+                                    }
                                 />
                             </div>
                         ),

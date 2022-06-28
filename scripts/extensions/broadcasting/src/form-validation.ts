@@ -2,24 +2,26 @@ import {superdesk} from './superdesk';
 
 const {gettext} = superdesk.localization;
 
-export type IValidationResult = {valid: true} | {valid: false; errors: Array<string>};
+export type IValidationResult = string | null;
 
 export type CreateValidators<T> = {
     [Property in keyof T]: (value: T[Property]) => IValidationResult;
 };
 
-export function stringValidator(value: string): IValidationResult {
+export function stringNotEmpty(value: string | null | undefined): IValidationResult {
     if ((value ?? '').trim().length > 0) {
-        return {valid: true};
+        return null;
     } else {
-        return {valid: false, errors: [gettext('field can not be empty')]};
+        return gettext('field can not be empty');
     }
 }
 
-export function numberValidator(value: number): IValidationResult {
-    if (typeof value === 'number') {
-        return {valid: true};
+export const emptyValueError = gettext('field can not be empty');
+
+export function greaterThanZero(value: number): IValidationResult {
+    if (value > 1 !== true) {
+        return gettext('value must be greater than zero');
     } else {
-        return {valid: false, errors: [gettext('field can not be empty')]};
+        return null;
     }
 }
