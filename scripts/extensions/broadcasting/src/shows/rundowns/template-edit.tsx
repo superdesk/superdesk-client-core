@@ -5,7 +5,7 @@ import {IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
 import {CreateValidators, stringNotEmpty} from '../../form-validation';
-import {WithValidation} from '../with-validation';
+
 
 const {gettext} = superdesk.localization;
 
@@ -67,6 +67,8 @@ interface IProps {
     readOnly: boolean;
 }
 
+const WithTemplateValidation = superdesk.components.getValidationHOC<Partial<IRundownTemplateBase>>();
+
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
     name: stringNotEmpty,
 };
@@ -82,7 +84,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
         };
 
         return (
-            <WithValidation validators={templateFieldsValidator}>
+            <WithTemplateValidation validators={templateFieldsValidator}>
                 {(validate, validationErrors) => (
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
@@ -273,7 +275,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                         </Layout.MainPanel>
                     </Layout.LayoutContainer>
                 )}
-            </WithValidation>
+            </WithTemplateValidation>
         );
     }
 }

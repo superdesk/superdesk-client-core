@@ -1,27 +1,31 @@
 import * as React from 'react';
-import {CreateValidators, IValidationResult} from '../form-validation';
-import {superdesk} from '../superdesk';
+import {IPropsValidationHoc, IValidationResult, IValidationResults} from 'superdesk-api';
+import {mapObject} from './helpers/typescript-helpers';
+import {gettext} from './utils';
+export function stringNotEmpty(value: string | null | undefined): IValidationResult {
+    if ((value ?? '').trim().length > 0) {
+        return null;
+    } else {
+        return gettext('field can not be empty');
+    }
+}
 
-const {mapObject} = superdesk.helpers;
+export const emptyValueError = gettext('field can not be empty');
 
-type IValidationResults<T> = {
-    [Property in keyof T]: IValidationResult;
-};
-
-interface IProps<T> {
-    validators: CreateValidators<T>;
-    children(
-        validate: (item: T) => boolean,
-        result: IValidationResults<T>,
-    ): JSX.Element;
+export function greaterThanZero(value: number): IValidationResult {
+    if (value > 1 !== true) {
+        return gettext('value must be greater than zero');
+    } else {
+        return null;
+    }
 }
 
 interface IState<T> {
     validationResult: IValidationResults<T>;
 }
 
-export class WithValidation<T> extends React.PureComponent<IProps<T>, IState<T>> {
-    constructor(props: IProps<T>) {
+export class WithValidation<T> extends React.PureComponent<IPropsValidationHoc<T>, IState<T>> {
+    constructor(props: IPropsValidationHoc<T>) {
         super(props);
 
         this.validate = this.validate.bind(this);
