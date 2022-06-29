@@ -77,10 +77,25 @@ interface IProps<T> {
     totalItemsCount: number;
     initialItems?: Map<number, T>;
     loadItems(from: number, to: number): Promise<Map<number, T>>;
+    getId(item: T): string; // needed for finding index of item that needs to be reloaded. See `IExposedFromVirtualList`
     itemTemplate: React.ComponentType<{item: T}>;
 }
 
-export function VirtualList<T>(props: IProps<T>) {
+export interface IExposedFromVirtualList {
+    /**
+     * Will not unmount the component.
+     * Will keep scroll position.
+     * Will not display visual indicators that reloading is taking place.
+     */
+    reloadAll(): void;
+
+    /**
+     * Optimized to reload only if item is visible in viewport(or preloaded)
+     */
+    reloadItem(id: string): void;
+}
+
+function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVirtualList>) {
     const {totalItemsCount, loadItems, itemTemplate, width, height, initialItems} = props;
     const parentRef = React.useRef();
 
@@ -96,34 +111,40 @@ export function VirtualList<T>(props: IProps<T>) {
     const [items, setItems] = useState(initialItems ?? Map<number, T>());
     const [loadingInProgress, setLoadingInProgress] = useState(false);
 
-    useEffect(() => {
-        if (loadingInProgress) {
-            return noop;
-        }
+    function doLoadItems(currentItems: Map<number, T>, from: number, to: number) {
+        setLoadingInProgress(true);
 
+        loadItems(from, to).then((loadedItems) => {
+            setItems(currentItems.merge(loadedItems));
+            setTimeout(() => {
+                setLoadingInProgress(false);
+            });
+        });
+    }
+
+    function loadMore(
+        /**
+         * A Parameter is accepted to support {@link IExposedFromVirtualList.reloadAll}
+         * Otherwise {@link items} that are already in scope could be used.
+         */
+        currentItems: Map<number, T>,
+    ) {
         let viewportIndexStart = rowVirtualizer.virtualItems[0].index;
         let viewportIndexEnd = viewportIndexStart + rowVirtualizer.virtualItems.length;
         const visibleItemsCount = viewportIndexEnd - viewportIndexStart;
 
         const itemsToLoad = getItemsToLoad(
-            items,
+            currentItems,
             totalItemsCount,
             viewportIndexStart,
             viewportIndexEnd,
         );
 
         if (itemsToLoad != null) {
-            setLoadingInProgress(true);
-
-            loadItems(itemsToLoad.from, itemsToLoad.to).then((more) => {
-                setItems(items.merge(more));
-                setTimeout(() => {
-                    setLoadingInProgress(false);
-                });
-            });
+            doLoadItems(currentItems, itemsToLoad.from, itemsToLoad.to);
         } else {
             // Avoid memory leaks - only store a fixed number of items in memory
-            const needsToFreeMemory = items.size > visibleItemsCount * ((pagesToCache * 2) + 1);
+            const needsToFreeMemory = currentItems.size > visibleItemsCount * ((pagesToCache * 2) + 1);
 
             if (needsToFreeMemory) {
                 let result = Map<number, T>();
@@ -132,12 +153,39 @@ export function VirtualList<T>(props: IProps<T>) {
                 const cacheTo = Math.min(totalItemsCount, viewportIndexEnd + (visibleItemsCount * pagesToCache));
 
                 for (let j = cacheFrom; j < cacheTo; j++) {
-                    result = result.set(j, items.get(j));
+                    result = result.set(j, currentItems.get(j));
                 }
 
                 setItems(result);
             }
         }
+    }
+
+    React.useImperativeHandle(ref, () => {
+        var exposed: IExposedFromVirtualList = {
+            reloadAll: () => {
+                loadMore(Map<number, T>());
+            },
+            reloadItem: (id) => {
+                const entry = items.findEntry((item) => props.getId(item) === id) as [number, T] | undefined;
+
+                if (entry != null) { // null when isn't present in cache (thus also not displayed)
+                    const index = entry[0];
+
+                    doLoadItems(items, index, index + 1);
+                }
+            },
+        };
+
+        return exposed;
+    });
+
+    useEffect(() => {
+        if (loadingInProgress) {
+            return noop;
+        }
+
+        loadMore(items);
     });
 
     return (
@@ -192,3 +240,5 @@ export function VirtualList<T>(props: IProps<T>) {
         </div>
     );
 }
+
+export const VirtualList = React.forwardRef(VirtualListComponent);

@@ -974,7 +974,7 @@ declare module 'superdesk-api' {
         max_results: number;
     }
 
-    export interface IPropsVirtualListFromQuery<T> {
+    export interface IPropsVirtualListFromQuery<T extends IBaseRestApiResponse> {
         width: number;
         height: number;
         query: {

@@ -189,6 +189,7 @@ export class MoreTemplates extends React.PureComponent<IProps, IState> {
                                     initialItems={state.templatesData}
                                     loadItems={this.loadMoreItems}
                                     itemTemplate={this.itemTemplate}
+                                    getId={(item) => item._id}
                                 />
                             );
                         }

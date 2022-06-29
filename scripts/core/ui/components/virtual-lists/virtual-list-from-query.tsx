@@ -1,14 +1,14 @@
 import React from 'react';
 import {Map} from 'immutable';
-import {omit} from 'lodash';
+import {debounce, omit} from 'lodash';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
-import {IPropsVirtualListFromQuery, IRestApiResponse} from 'superdesk-api';
+import {IBaseRestApiResponse, IPropsVirtualListFromQuery, IRestApiResponse} from 'superdesk-api';
 import {getPaginationInfo} from 'core/helpers/pagination';
 import {toPyEveQuery} from 'core/query-formatting';
-import {VirtualList} from './virtual-list';
+import {IExposedFromVirtualList, VirtualList} from './virtual-list';
 import {SmoothLoaderForKey} from 'apps/search/components/SmoothLoaderForKey';
-import {gettext} from 'core/utils';
 import {nameof} from 'core/helpers/typescript-helpers';
+import {addWebsocketEventListener} from 'core/notification/notification';
 
 interface IState {
     loading: boolean;
@@ -16,8 +16,18 @@ interface IState {
     initialData: IRestApiResponse<unknown> | 'being-initialized';
 }
 
-class VirtualListFromQueryComponent<T>
+class VirtualListFromQueryComponent<T extends IBaseRestApiResponse>
     extends SuperdeskReactComponent<IPropsVirtualListFromQuery<T> & {onInitialized(): void}, IState> {
+    private virtualListRef: IExposedFromVirtualList;
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+
+    /**
+     * Debouncing is used to reduce bandwidth usage
+     * that would otherwise be higher due to inability
+     * to check whether created/updated item matches the query.
+     */
+    private reloadAllDebounced: () => void;
+
     constructor(props: IPropsVirtualListFromQuery<T> & {onInitialized(): void}) {
         super(props);
 
@@ -29,6 +39,12 @@ class VirtualListFromQueryComponent<T>
 
         this.fetchData = this.fetchData.bind(this);
         this.loadItems = this.loadItems.bind(this);
+
+        this.eventListenersToRemoveBeforeUnmounting = [];
+
+        this.reloadAllDebounced = debounce(() => {
+            this.virtualListRef.reloadAll();
+        }, 2000, {leading: true, maxWait: 5000});
     }
 
     fetchData(pageToFetch: number, pageSize: number): Promise<IRestApiResponse<T>> {
@@ -65,6 +81,54 @@ class VirtualListFromQueryComponent<T>
                 this.props.onInitialized();
             });
         });
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener('resource:deleted', (event) => {
+                const {resource} = event.extra;
+
+                /**
+                 * // CAUTION: potential efficiency/bandwidth issues
+                 * we can't check(using websocket response) if deleted item matches the query
+                 * neither can we get the index of that item
+                 * reloading will be triggered even if deleted item didn't match the query
+                 */
+                if (resource === this.state.resourceName) {
+                    this.reloadAllDebounced();
+                }
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener('resource:created', (event) => {
+                const {resource} = event.extra;
+
+                /**
+                 * // CAUTION: potential efficiency/bandwidth issues
+                 * we can't check(using websocket response) if created item matches the query
+                 * neither can we get the index of that item
+                 * reloading will be triggered even if created item doesn't match the query
+                 */
+                if (resource === this.state.resourceName) {
+                    this.reloadAllDebounced();
+                }
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketEventListener('resource:updated', (event) => {
+                const {resource, _id} = event.extra;
+
+                if (resource === this.state.resourceName) {
+                    this.virtualListRef.reloadItem(_id);
+                }
+            }),
+        );
+    }
+
+    componentWillUnmount(): void {
+        for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
+            fn();
+        }
     }
 
     render() {
@@ -88,14 +152,19 @@ class VirtualListFromQueryComponent<T>
                 height={this.props.height}
                 itemTemplate={this.props.itemTemplate}
                 totalItemsCount={initialData._meta.total}
-                initialItems={Map(initialData._items.map((item) => [item._id, item]))}
+                initialItems={Map<number, T>(initialData._items.map((item, i) => [i, item]))}
                 loadItems={this.loadItems}
+                getId={(item) => item._id}
+                ref={(virtualListRef) => {
+                    this.virtualListRef = virtualListRef;
+                }}
             />
         );
     }
 }
 
-export class VirtualListFromQuery<T> extends React.PureComponent<IPropsVirtualListFromQuery<T>> {
+export class VirtualListFromQuery<T extends IBaseRestApiResponse>
+    extends React.PureComponent<IPropsVirtualListFromQuery<T>> {
     private smoothLoaderRef: SmoothLoaderForKey;
 
     constructor(props: IPropsVirtualListFromQuery<T>) {
