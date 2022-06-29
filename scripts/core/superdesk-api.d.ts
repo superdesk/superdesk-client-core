@@ -1051,6 +1051,7 @@ declare module 'superdesk-api' {
             self?: any;
         };
         _id: string;
+        _status?: string;
     }
 
     export interface IRestApiLink {

@@ -6,7 +6,6 @@ import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
 import {CreateValidators, stringNotEmpty} from '../../form-validation';
 
-
 const {gettext} = superdesk.localization;
 
 const {
