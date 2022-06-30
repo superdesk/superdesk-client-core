@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
-import { gettext } from 'core/utils';
+import {gettext} from 'core/utils';
 
 MediaMetadata.$inject = ['userList', 'archiveService', 'metadata', '$timeout'];
 
@@ -53,7 +53,7 @@ export function MediaMetadata(userList, archiveService, metadata, $timeout) {
 
             scope.getTermsTranslations = function(terms, scheme) {
                 const filteredTerms = terms.filter((element) => element.scheme === scheme);
-                
+
                 return filteredTerms.map((term) => {
                     if (term.translations && scope.item.language
                         && term.translations.name[scope.item.language]) {
