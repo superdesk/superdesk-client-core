@@ -7,19 +7,19 @@ import {gettext} from 'core/utils';
 
 interface IState<T> {
     selected: 'loading' | T | null;
+    searchString: string;
 }
 
-/**
- * TODO: finish
- */
 export class SelectFromEndpoint<T extends IBaseRestApiResponse>
     extends SuperdeskReactComponent<IPropsSelectFromRemote<T>, IState<T>> {
     private valueEl: HTMLDivElement;
+    private lastPopup: {close: () => void} | null;
     constructor(props: IPropsSelectFromRemote<T>) {
         super(props);
 
         this.state = {
             selected: null,
+            searchString: '',
         };
 
         this.fetchEntity = this.fetchEntity.bind(this);
@@ -54,17 +54,45 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                 ref={(el) => {
                     this.valueEl = el;
                 }}
-                onClick={(event) => {
-                    showPopup(
-                        event.target as HTMLElement,
+                onClick={() => {
+                    if (this.lastPopup != null) {
+                        this.lastPopup.close();
+                        this.lastPopup = null;
+
+                        return;
+                    }
+
+                    this.lastPopup = showPopup(
+                        this.valueEl,
                         'bottom-end',
                         ({closePopup}) => (
                             <div className="p-dropdown-panel" style={{position: 'static'}}>
+
+                                {/*
+
+                                TODO: Implement filtering;
+                                Find out how to add "regex-search on field" operator to `IComparisonOptions`
+
+                                <div className="p-dropdown-item" style={{background: 'none'}}>
+                                    <Input
+                                        type="text"
+                                        value={this.state.searchString}
+                                        onChange={(val) => {
+                                            this.setState({searchString: val.trim()});
+                                        }}
+                                        inlineLabel
+                                        labelHidden
+                                    />
+                                </div>
+
+                                */}
+
                                 <VirtualListFromQuery
                                     width={this.valueEl.offsetWidth}
                                     height={200}
                                     query={{
                                         endpoint: this.props.endpoint,
+                                        // filter: {$and: [{'field': {$eq: 'test'}}]}, // TODO: regex operator needed
                                         sort: this.props.sort.reduce<ISuperdeskQuery['sort']>(
                                             (acc, [fieldId, direction]) => acc.concat({[fieldId]: direction}), []),
                                     }}
@@ -76,6 +104,7 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                                                 this.fetchEntity(item._id);
                                                 closePopup();
                                             }}
+                                            className="p-dropdown-item"
                                         >
                                             <Template item={item} />
                                         </span>
@@ -91,6 +120,10 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                             </div>
                         ),
                         3000,
+                        undefined,
+                        () => {
+                            this.lastPopup = null;
+                        },
                     );
                 }}
                 className="p-dropdown"

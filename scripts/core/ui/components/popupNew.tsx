@@ -106,7 +106,7 @@ class PopupPositioner extends React.PureComponent<IPropsPositioner> {
                 ref={(el) => {
                     this.wrapperEl = el;
                 }}
-                style={{zIndex: this.props.zIndex ?? 1}}
+                style={{zIndex: this.props.zIndex ?? 1, position: 'absolute', left: '-100vw'}}
             >
                 {this.props.children}
             </div>
@@ -123,14 +123,16 @@ export function showPopup(
     Component: React.ComponentType<{closePopup(): void}>,
     zIndex?: number,
     closeOnHoverEnd?: boolean,
-) {
+    onClose?: () => void,
+): {close: () => void} {
     const el = document.createElement('div');
 
     document.body.appendChild(el);
 
-    const onClose = () => {
+    const closeFn = () => {
         ReactDOM.unmountComponentAtNode(el);
         el.remove();
+        onClose();
     };
 
     ReactDOM.render(
@@ -138,17 +140,17 @@ export function showPopup(
             <PopupPositioner
                 referenceElement={referenceElement}
                 placement={placement}
-                onClose={onClose}
+                onClose={closeFn}
                 zIndex={zIndex}
                 closeOnHoverEnd={closeOnHoverEnd || false}
             >
                 <Component
-                    closePopup={onClose}
+                    closePopup={closeFn}
                 />
             </PopupPositioner>
         ),
         el,
     );
 
-    return Promise.resolve();
+    return {close: closeFn};
 }
