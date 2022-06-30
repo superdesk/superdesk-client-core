@@ -13,10 +13,11 @@ import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {superdesk} from '../../superdesk';
 import {IRundownTemplate, IRundownTemplateBase, IShow} from '../../interfaces';
 import {RundownTemplateViewEdit} from './template-edit';
+import {IRestApiResponse, IUser} from 'superdesk-api';
 
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal, httpRequestRawLocal} = superdesk;
-const {logger} = superdesk.utilities;
+const {WithLiveResources, DateTime} = superdesk.components;
 const {assertNever, stripBaseRestApiFields} = superdesk.helpers;
 
 const {
@@ -133,6 +134,48 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
     render() {
         const {template, showId} = this.state;
 
+        const viewEditToolbar = template == null || template.type === 'create' ? null : (
+            <WithLiveResources
+                resources={[{resource: 'users', ids: [template.value.created_by, template.value.updated_by]}]}
+            >
+                {([users]: Array<IRestApiResponse<IUser>>) => {
+                    const userCreator = users._items.find(({_id}) => _id === template.value.created_by) as IUser;
+
+                    return (
+                        <div style={{fontSize: '1.3rem', color: 'var(--color-text-light)'}}>
+                            {
+                                gettext('Created at {{time}} by {{user}}', {
+                                    time: () => <DateTime dateTime={template.value._created} />,
+                                    user: () => <strong>{userCreator.display_name}</strong>,
+                                })
+                            }
+
+                            {
+                                template.value.updated_by != null && (() => {
+                                    const userUpdater = users._items.find(
+                                        ({_id}) => _id === template.value.updated_by,
+                                    ) as IUser;
+
+                                    return (
+                                        <span>
+                                            <span>&nbsp;|&nbsp;</span>
+
+                                            {
+                                                gettext('Modified at {{time}} by {{user}}', {
+                                                    time: () => <DateTime dateTime={template.value._updated} />,
+                                                    user: () => <strong>{userUpdater.display_name}</strong>,
+                                                })
+                                            }
+                                        </span>
+                                    );
+                                })()
+                            }
+                        </div>
+                    );
+                }}
+            </WithLiveResources>
+        );
+
         return (
             <Modal
                 visible
@@ -247,18 +290,38 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                     </Layout.LeftPanel>
 
                     <Layout.MainPanel padding="none">
-                        {
-                            template == null
-                                ? (
+                        {(() => {
+                            if (template == null) {
+                                return (
                                     <EmptyState
                                         size="large"
                                         illustration="1"
                                         title={gettext('No template selected')}
                                         description={gettext('Select a template from the sidebar.')}
                                     />
-                                )
-                                : (
+                                );
+                            } else if (template.type === 'preview') {
+                                return (
                                     <RundownTemplateViewEdit
+                                        readOnly={true}
+                                        templateFields={template.value}
+                                        initiateEditing={() => {
+                                            if (template.type === 'preview') {
+                                                this.setState({
+                                                    template: {
+                                                        type: 'edit',
+                                                        value: template.value,
+                                                    },
+                                                });
+                                            }
+                                        }}
+                                        toolbar={viewEditToolbar}
+                                    />
+                                );
+                            } else {
+                                return (
+                                    <RundownTemplateViewEdit
+                                        readOnly={false}
                                         templateFields={{...template.value}}
                                         onChange={(templateData) => {
                                             if (template.type === 'edit') {
@@ -281,12 +344,11 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                         },
                                                     },
                                                 });
-                                            } else if (template.type === 'preview') {
-                                                logger.error(new Error('changes are not allowed in preview mode'));
                                             } else {
                                                 assertNever(template);
                                             }
                                         }}
+                                        toolbar={viewEditToolbar}
                                         onCancel={() => {
                                             this.setState({template: null});
                                         }}
@@ -296,10 +358,14 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                     method: 'POST',
                                                     path: `/shows/${showId}/templates`,
                                                     payload: template.value,
-                                                });
-
-                                                this.setState({
-                                                    template: null,
+                                                }).then(() => {
+                                                    this.setState({
+                                                        template: null,
+                                                    });
+                                                }).catch((res) => {
+                                                    if (typeof res.error === 'string') {
+                                                        superdesk.ui.notify.error(res.error);
+                                                    }
                                                 });
                                             } else if (template.type === 'edit') {
                                                 httpRequestJsonLocal<IRundownTemplate>({
@@ -317,8 +383,6 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                         },
                                                     });
                                                 });
-                                            } else if (template.type === 'preview') {
-                                                logger.error(new Error('saving is not supported in preview mode'));
                                             } else {
                                                 assertNever(template);
                                             }
@@ -328,20 +392,10 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                 ? gettext('Create template')
                                                 : gettext('Save changes')
                                         }
-                                        readOnly={template.type === 'preview'}
-                                        initiateEditing={() => {
-                                            if (template.type === 'preview') {
-                                                this.setState({
-                                                    template: {
-                                                        type: 'edit',
-                                                        value: template.value,
-                                                    },
-                                                });
-                                            }
-                                        }}
                                     />
-                                )
-                        }
+                                );
+                            }
+                        })()}
                     </Layout.MainPanel>
                 </Layout.LayoutContainer>
             </Modal>

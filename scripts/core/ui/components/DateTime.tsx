@@ -1,50 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import './style.scss';
+import ng from 'core/services/ng';
+import {IPropsDateTime} from 'superdesk-api';
 
-/**
- * @ngdoc react
- * @name DateTime
- * @description DateTime component to display text formatted date and time
- */
-const DateTime: React.StatelessComponent<any> = (
-    {date, withTime, withDate, withYear, dateFormat, timeFormat, padLeft},
-) => {
-    const format = withYear ? dateFormat : dateFormat.replace(/y/gi, '');
-    const dateTimeFormat = [
-        withDate ? format : null,
-        withTime ? timeFormat : null,
-    ].filter((d) => d).join('\u00a0'); // &nbsp;
+export class DateTime extends React.PureComponent<IPropsDateTime> {
+    render() {
+        const datetimeService = ng.get('datetime');
+        const {dateTime} = this.props;
 
-    return (
-        <time
-            className={!padLeft ? 'Datetime' : null}
-            title={date.toString()}
-        >
-            {moment(date).format(dateTimeFormat)}
-        </time>
-    );
-};
-
-DateTime.defaultProps = {
-    withTime: true,
-    withDate: true,
-    withYear: true,
-    padLeft: false,
-};
-
-DateTime.propTypes = {
-    date: PropTypes.oneOfType([
-        PropTypes.object,
-        PropTypes.string,
-    ]).isRequired,
-    withTime: PropTypes.bool,
-    withYear: PropTypes.bool,
-    withDate: PropTypes.bool,
-    dateFormat: PropTypes.string.isRequired,
-    timeFormat: PropTypes.string.isRequired,
-    padLeft: PropTypes.bool,
-};
-
-export default DateTime;
+        return (
+            <time title={datetimeService.longFormat(dateTime)}>{datetimeService.shortFormat(dateTime)}</time>
+        );
+    }
+}

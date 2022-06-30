@@ -7,7 +7,6 @@ import * as Form from './Form';
 import * as ColumnBox from './ColumnBox/';
 import * as SlideInPanel from './SlideInPanel';
 import SearchBox from './SearchBox';
-import DateTime from './DateTime';
 import PanelInfo from './PanelInfo';
 import {CollapseBox} from './CollapseBox';
 import TermsList from './TermsList';
@@ -36,7 +35,6 @@ export {
     SearchBox,
     Preview,
     Form,
-    DateTime,
     PanelInfo,
     CollapseBox,
     ColumnBox,

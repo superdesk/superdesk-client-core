@@ -56,15 +56,24 @@ const dateFormatOptions = [
     getPartialDateFormat({month: true, day: true}),
 ];
 
-interface IProps {
+interface IPropsEditable {
+    readOnly: false;
     templateFields: Partial<IRundownTemplateBase>;
+    toolbar?: React.ReactNode;
     onChange(template: Partial<IRundownTemplateBase>): void;
     onCancel(): void;
     onSave(): void;
-    initiateEditing(): void;
     saveButtonLabel: string;
-    readOnly: boolean;
 }
+
+interface IPropsReadOnly {
+    readOnly: true;
+    templateFields: Partial<IRundownTemplateBase>;
+    initiateEditing(): void;
+    toolbar?: React.ReactNode;
+}
+
+type IProps = IPropsEditable | IPropsReadOnly;
 
 const WithTemplateValidation = superdesk.components.getValidationHOC<Partial<IRundownTemplateBase>>();
 
@@ -73,6 +82,18 @@ const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> =
 };
 
 export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(value: Partial<IRundownTemplateBase>) {
+        if (this.props.readOnly !== true) {
+            this.props.onChange(value);
+        }
+    }
+
     render() {
         const {templateFields, readOnly} = this.props;
 
@@ -89,7 +110,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                         <Layout.HeaderPanel>
                             <div style={{display: 'flex', justifyContent: 'end', padding: '8px 16px'}}>
                                 {
-                                    readOnly
+                                    this.props.readOnly
                                         ? (
                                             <Button
                                                 text={gettext('Edit')}
@@ -97,24 +118,28 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                 type="primary"
                                             />
                                         )
-                                        : (
-                                            <Spacer h gap="8" noGrow>
-                                                <Button
-                                                    text={gettext('Cancel')}
-                                                    onClick={this.props.onCancel}
-                                                />
+                                        : (() => {
+                                            const onSave = this.props.onSave;
 
-                                                <Button
-                                                    text={this.props.saveButtonLabel}
-                                                    onClick={() => {
-                                                        if (validate(templateFields)) {
-                                                            this.props.onSave();
-                                                        }
-                                                    }}
-                                                    type="primary"
-                                                />
-                                            </Spacer>
-                                        )
+                                            return (
+                                                <Spacer h gap="8" noGrow>
+                                                    <Button
+                                                        text={gettext('Cancel')}
+                                                        onClick={this.props.onCancel}
+                                                    />
+
+                                                    <Button
+                                                        text={this.props.saveButtonLabel}
+                                                        onClick={() => {
+                                                            if (validate(templateFields)) {
+                                                                onSave();
+                                                            }
+                                                        }}
+                                                        type="primary"
+                                                    />
+                                                </Spacer>
+                                            );
+                                        })()
                                 }
                             </div>
                         </Layout.HeaderPanel>
@@ -122,7 +147,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                         <Layout.MainPanel padding="none">
                             <Layout.AuthoringMain
                                 headerPadding="medium"
-                                toolBar={<div />}
+                                toolBar={this.props.toolbar}
                                 authoringHeader={(
                                     <Spacer h gap="16" noGrow justifyContent="start">
                                         <Spacer v gap="4">
@@ -131,7 +156,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                             <NumberInputTemp
                                                 value={templateFields.planned_duration ?? null}
                                                 onChange={(val) => {
-                                                    this.props.onChange({
+                                                    this.handleChange({
                                                         ...templateFields,
                                                         planned_duration: val == null ? 0 : val,
                                                     });
@@ -146,7 +171,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                             <TimePicker
                                                 value={templateFields.airtime_time ?? ''}
                                                 onChange={(val) => {
-                                                    this.props.onChange({
+                                                    this.handleChange({
                                                         ...templateFields,
                                                         airtime_time: val,
                                                     });
@@ -162,7 +187,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                 dateFormat={superdesk.instance.config.view.dateformat}
                                                 value={templateFields.airtime_date ?? ''}
                                                 onChange={(val) => {
-                                                    this.props.onChange({
+                                                    this.handleChange({
                                                         ...templateFields,
                                                         airtime_date: val,
                                                     });
@@ -185,7 +210,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                             type="text"
                                             value={templateFields.name ?? ''}
                                             onChange={(val: string) => {
-                                                this.props.onChange({
+                                                this.handleChange({
                                                     ...templateFields,
                                                     name: val,
                                                 });
@@ -209,7 +234,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                         type="text"
                                                         value={headline_template.prefix ?? ''}
                                                         onChange={(val: string) => {
-                                                            this.props.onChange({
+                                                            this.handleChange({
                                                                 ...templateFields,
                                                                 headline_template: {
                                                                     ...headline_template,
@@ -228,7 +253,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                         type="text"
                                                         value={headline_template.separator}
                                                         onChange={(val) => {
-                                                            this.props.onChange({
+                                                            this.handleChange({
                                                                 ...templateFields,
                                                                 headline_template: {
                                                                     ...headline_template,
@@ -246,7 +271,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                     <Select
                                                         value={headline_template.date_format}
                                                         onChange={(val) => {
-                                                            this.props.onChange({
+                                                            this.handleChange({
                                                                 ...templateFields,
                                                                 headline_template: {
                                                                     ...headline_template,

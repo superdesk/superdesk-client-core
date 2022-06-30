@@ -1296,6 +1296,10 @@ declare module 'superdesk-api' {
         'data-test-id'?: string;
     }
 
+    export interface IPropsDateTime {
+        dateTime: string;
+    }
+
     export interface IPropsListItemColumn {
         ellipsisAndGrow?: boolean;
         grow?: boolean;
@@ -1471,7 +1475,7 @@ declare module 'superdesk-api' {
 
     export interface ILiveResourcesProps {
         resources: Array<{resource: string, ids?: Array<string>}>;
-        children: (result: Array<IRestApiResponse<unknown>>) => JSX.Element;
+        children: (result: Array<IRestApiResponse<any>>) => JSX.Element;
     }
 
     export interface IAttachmentsWidgetProps {
@@ -2056,6 +2060,7 @@ declare module 'superdesk-api' {
             Editor3Html: React.ComponentType<IEditor3HtmlProps>;
             AuthoringWidgetHeading: React.ComponentType<IPropsWidgetHeading>;
             AuthoringWidgetLayout: React.ComponentType<IAuthoringWidgetLayoutProps>;
+            DateTime: React.ComponentType<IPropsDateTime>;
         };
         forms: {
             FormFieldType: typeof FormFieldType;

@@ -1,4 +1,4 @@
-import {IBaseRestApiResponse} from 'superdesk-api';
+import {IBaseRestApiResponse, IUser} from 'superdesk-api';
 
 export interface IShowBase {
     name: string;
@@ -18,6 +18,8 @@ export interface IRundownTemplateBase {
         separator: string;
         date_format: string;
     };
+    created_by: IUser['_id'];
+    updated_by: IUser['_id']; // TODO: rename to last_updated_by
 }
 
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;

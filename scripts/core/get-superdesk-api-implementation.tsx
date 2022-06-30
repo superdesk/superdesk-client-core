@@ -92,6 +92,7 @@ import {InputLabel} from './ui/components/input-label';
 import {VirtualListFromQuery} from './ui/components/virtual-lists/virtual-list-from-query';
 import {SelectFromEndpoint} from './ui/components/virtual-lists/select';
 import {WithValidation} from './with-validation';
+import {DateTime} from './ui/components/DateTime';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -360,6 +361,7 @@ export function getSuperdeskApiImplementation(
             Editor3Html,
             AuthoringWidgetHeading,
             AuthoringWidgetLayout,
+            DateTime,
         },
         forms: {
             FormFieldType,
