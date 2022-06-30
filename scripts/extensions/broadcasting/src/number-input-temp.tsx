@@ -18,13 +18,9 @@ export class NumberInputTemp extends React.PureComponent<IProps> {
                 inlineLabel={this.props.label == null}
                 labelHidden={this.props.label == null}
                 label={this.props.label}
-                value={(this.props.value ?? '').toString()}
-                onChange={(val: string) => {
-                    this.props.onChange(
-                        (val ?? '').length > 0
-                            ? parseInt(val, 10)
-                            : 0,
-                    );
+                value={this.props.value ?? 0}
+                onChange={(val) => {
+                    this.props.onChange(val);
                 }}
                 error={this.props.error}
                 invalid={this.props.error != null}
