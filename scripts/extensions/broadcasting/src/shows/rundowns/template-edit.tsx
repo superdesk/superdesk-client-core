@@ -198,6 +198,8 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                             />
                                         </Spacer>
                                     </Spacer>
+
+                                    // TODO: add schedule when frequency input is ready
                                 )}
                             >
                                 <div>
