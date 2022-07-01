@@ -119,6 +119,10 @@ export function IngestSourcesContent(ingestSources, api, $location,
                 if (_.get(privileges, 'privileges.planning')) {
                     $scope.fileTypes.push({
                         type: 'event',
+                        icon: 'icon-event',
+                    });
+                    $scope.fileTypes.push({
+                        type: 'planning',
                         icon: 'icon-calendar',
                     });
                 }

@@ -1101,14 +1101,15 @@ class Authoring {
         };
 
         this.getBoardArticle = function(index) {
-            return this.getBoard(index).all(by.css('[data-article="board.article"]'));
+            return this.getBoard(index).all(by.css('[data-article="board.article"]')).first();
         };
 
         this.getArticleHeadlineOfBoard = function(index) {
-            return this.getBoardArticle(index)
-                .all(by.css('.headline [contenteditable]'))
-                .first()
-                .getText();
+            const headline = this.getBoardArticle(index)
+                .all(by.css('[data-test-id="field--headline"]')).first();
+
+            browser.wait(ECE.visibilityOf(headline), 2000);
+            return headline.getText();
         };
 
         this.getHtmlArticleHeadlineOfBoard = function(index) {

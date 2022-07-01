@@ -180,6 +180,7 @@ class IngestSettings {
     tabs: any;
     newSchemeBtn: any;
     newRoutingRuleBtn: any;
+    newDeskRoutingRuleBtn: any;
     writeTextToSchemeName: (text: any) => void;
     writeTextToRuleName: (text: any) => void;
     getTextfromRuleName: () => wdpromise.Promise<string>;
@@ -200,7 +201,8 @@ class IngestSettings {
 
         this.newSchemeBtn = element(by.partialButtonText('Add New'));
 
-        this.newRoutingRuleBtn = element(by.partialButtonText('New Rule'));
+        this.newRoutingRuleBtn = element(by.css('[data-test-id="add-routing-rule-button"]'));
+        this.newDeskRoutingRuleBtn = element(by.css('[data-test-id="rule-handler--desk_fetch_publish"]'));
 
         var newSchemeInput = element(by.model('editScheme.name'));
 

@@ -13,6 +13,9 @@ import {gettext} from 'core/utils';
 import {isMediaEditable} from 'core/config';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {sdApi} from 'api';
+import {reactToAngular1} from 'superdesk-ui-framework';
+import {CustomIngestRoutingAction} from './components/settings/CustomIngestRoutingAction';
+import {CustomIngestRoutingActionPreview} from './components/settings/CustomIngestRoutingActionPreview';
 
 angular.module('superdesk.apps.ingest.send', ['superdesk.core.api', 'superdesk.apps.desks']);
 
@@ -51,6 +54,14 @@ angular.module('superdesk.apps.ingest', [
     .directive('sdUserIngestDashboard', directive.IngestUserDashboard)
     .directive('sdIngestProviderConfig', directive.IngestProviderConfig)
     .directive('sdIngestConfigErrors', directive.IngestConfigErrors)
+    .component(
+        'sdCustomIngestRoutingAction',
+        reactToAngular1(CustomIngestRoutingAction, ['rule', 'handler', 'updateRule']),
+    )
+    .component(
+        'sdCustomIngestRoutingActionPreview',
+        reactToAngular1(CustomIngestRoutingActionPreview, ['rule', 'handler']),
+    )
 
     .filter('insert', InsertFilter)
     .filter('scheduleFilter', ScheduleFilter)

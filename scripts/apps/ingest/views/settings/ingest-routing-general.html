@@ -1,7 +1,7 @@
 <fieldset class="">
     <div class="form-block">
         <h3 class="form-block__title" translate>Content Filter</h3>
-        
+
         <div class="list-row list-row--dotted list-row--flex" ng-if="rule.filter">
             <span class="text-label list-row__item list-row__item--grow">{{ :: 'Name' | translate }}:</span>
             <span class="list-row__item">{{rule.filterName}}</span>
@@ -15,7 +15,7 @@
     <div class="form-block">
         <h3 class="form-block__title" translate>Action</h3>
 
-        <div class="form-block__sub-section" ng-if="!rule.actions.fetch.length && !rule.actions.publish.length">
+        <div class="form-block__sub-section" ng-if="!rule.actions.fetch.length && !rule.actions.publish.length && ruleHandler.supported_actions.fetch_to_desk && ruleHandler.supported_actions.publish_from_desk">
             <div class="list-row list-row--dotted list-row--flex">
                 <span class="text-label" translate>No fetch or publish actions defined</span>
             </div>
@@ -40,6 +40,9 @@
             <span class="list-row__item" ng-show="rule.actions.exit" translate>On</span>
             <span class="list-row__item" ng-hide="rule.actions.exit" translate>Off</span>
         </div>
+
+        <sd-custom-ingest-routing-action-preview data-rule="rule" data-handler="ruleHandler">
+        </sd-custom-ingest-routing-action-preview>
     </div>
 
     <div class="form-block">
@@ -49,7 +52,7 @@
             <div class="list-row list-row--dotted">
                 <span class="list-row__item">
                     <span class="tag-label" ng-repeat="day in rule.schedule.day_of_week">
-                        {{dayLookup[day]| translate}} 
+                        {{dayLookup[day]| translate}}
                     </span>
                 </span>
             </div>
