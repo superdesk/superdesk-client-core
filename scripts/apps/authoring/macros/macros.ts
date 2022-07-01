@@ -11,6 +11,11 @@
 import {gettext} from 'core/utils';
 import _, {debounce, once} from 'lodash';
 
+interface IMacro {
+    name: string;
+    replace_type?: 'no-replace' | 'simple-replace' | 'keep-style-replace' | 'editor_state';
+}
+
 MacrosService.$inject = ['api', 'notify'];
 function MacrosService(api, notify) {
     /**
@@ -163,10 +168,10 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
      * The macros that changes the body should return diff; for other fields the entire
      * content is replaced with the value changed by macro
      */
-    $scope.call = function(macro) {
+    $scope.call = function(macro: IMacro) {
         const editor = editorResolver.get();
         const isEditor3 = editor.version() === '3';
-        const useReplace = macro.replace_type != null && macro.replace_type !== 'no-replace';
+        const useReplace = macro.replace_type === 'simple-replace' || macro.replace_type === 'keep-style-replace';
         const isSimpleReplace = macro.replace_type === 'simple-replace';
         let item = _.extend({}, $scope.origItem, $scope.item);
 
@@ -180,8 +185,10 @@ function MacrosController($scope, macros, desks, autosave, $rootScope, storage, 
 
             // ignore fields is only required for editor3
             if (isEditor3) {
-                if (useReplace && macro.replace_type === 'editor_state') {
-                    editor.setEditorStateFromItem(res.item, 'body_html');
+                if (macro.replace_type === 'editor_state') {
+                    Object.keys(res.item.fields_meta).forEach((field) => {
+                        editor.setEditorStateFromItem(res.item, field);
+                    });
                 } else {
                     ignoreFields.push('body_html');
 

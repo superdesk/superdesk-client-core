@@ -7,6 +7,7 @@ import {templates} from './templates';
 import {time} from './time';
 import {user} from './user';
 import {vocabularies} from './vocabularies';
+import {ingest} from './ingest';
 
 /**
  * This is core API, not extensions API.
@@ -23,4 +24,5 @@ export const sdApi = {
     time,
     user,
     vocabularies,
+    ingest,
 };

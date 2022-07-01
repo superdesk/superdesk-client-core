@@ -197,6 +197,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                     scope.item = JSON.parse(JSON.stringify(item));
                     scope._editable = authoring.isEditable(item);
                     scope.isMediaType = isMediaType(scope.item);
+                    scope.refreshTrigger = scope.refreshTrigger + 1 || 0;
                     if (scope.focus) {
                         $timeout(() => {
                             elem.children().focus();

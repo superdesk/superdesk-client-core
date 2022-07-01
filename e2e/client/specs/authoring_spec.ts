@@ -502,7 +502,8 @@ describe('authoring', () => {
         authoring.publish();
         monitoring.filterAction('text');
         monitoring.actionOnItem('Open', 5, 0);
-        expect(element(by.css('#body_footer [contenteditable]')).getText()).not.toContain('<br>');
+        expect(authoring.getBodyFooter()).not.toContain('<br>');
+        expect(authoring.getBodyFooter()).toContain('Readers seeking support');
     });
 
     it('maintains helpline first option always selected', () => {
