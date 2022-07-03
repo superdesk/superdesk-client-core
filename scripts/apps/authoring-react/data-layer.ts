@@ -166,7 +166,6 @@ export interface IAuthoringStorage {
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
     getUserPreferences(): Promise<any>;
     autosave: IAuthoringAutoSave;
-    hasFeature(name: string): boolean;
 }
 
 export function omitFields(
@@ -311,5 +310,4 @@ export const authoringStorage: IAuthoringStorage = {
         );
     },
     getUserPreferences: () => ng.get('preferencesService').get(),
-    hasFeature: (name) => ng.get('features')[name] != null,
 };

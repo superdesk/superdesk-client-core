@@ -19,7 +19,6 @@ const testAuthoringStorage: IAuthoringStorage = {
     getContentProfile: () => Promise.resolve(testContentProfileV2),
     getUserPreferences: () => Promise.resolve({}),
     autosave: testAutosave,
-    hasFeature: () => false,
 };
 
 export function mockAuthoringStorage() {

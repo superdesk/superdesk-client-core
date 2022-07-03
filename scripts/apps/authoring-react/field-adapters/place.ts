@@ -11,7 +11,7 @@ import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {sdApi} from 'api';
 
 export function getPlaceAdapter(): IFieldAdapter {
-    const useGeoNamesApi = authoringStorage.hasFeature('places_autocomplete');
+    const useGeoNamesApi = sdApi.config.featureEnabled('places_autocomplete');
 
     if (useGeoNamesApi) {
         return {
