@@ -2,11 +2,11 @@ import {IAuthoringFieldV2} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
 import {IDropdownConfigManualSource} from '../fields/dropdown';
-import {authoringStorage} from '../data-layer';
+import {sdApi} from 'api';
 
 export const urgency: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
-        const vocabulary = authoringStorage.getVocabularies().get('urgency');
+        const vocabulary = sdApi.vocabularies.getAll().get('urgency');
 
         // HAS TO BE SYNCED WITH styles/sass/labels.scss
         var defaultUrgencyColors = {

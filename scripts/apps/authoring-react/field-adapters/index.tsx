@@ -6,7 +6,6 @@ import {
 } from 'superdesk-api';
 import {IDropdownConfigVocabulary} from '../fields/dropdown';
 import {IEditor3Config} from '../fields/editor3/interfaces';
-import {authoringStorage} from '../data-layer';
 import {slugline} from './slugline';
 import {body_html} from './body_html';
 import {language} from './language';
@@ -248,7 +247,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
         }
     }
 
-    authoringStorage.getVocabularies()
+    sdApi.vocabularies.getAll()
         .filter((vocabulary) =>
             adapter[vocabulary._id] == null
             && sdApi.vocabularies.isSelectionVocabulary(vocabulary),

@@ -1,8 +1,8 @@
 import {getVocabularySelectionTypes} from 'apps/vocabularies/constants';
-import {authoringStorage} from 'apps/authoring-react/data-layer';
+import {sdApi} from 'api';
 
 export function isMultiple(vocabularyId) {
-    const vocabulary = authoringStorage.getVocabularies().get(vocabularyId);
+    const vocabulary = sdApi.vocabularies.getAll().get(vocabularyId);
 
     const isSingle = vocabulary.selection_type === getVocabularySelectionTypes().SINGLE_SELECTION.id;
     const _isMultiple = !isSingle;
@@ -15,7 +15,7 @@ export function isMultiple(vocabularyId) {
  * This version was only added for compatibility with existing and possibly incorrect behavior.
  */
 export function isMultipleV2(vocabularyId): boolean {
-    const vocabulary = authoringStorage.getVocabularies().get(vocabularyId);
+    const vocabulary = sdApi.vocabularies.getAll().get(vocabularyId);
 
     return vocabulary?.service?.all === 1;
 }

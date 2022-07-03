@@ -1,4 +1,4 @@
-import {authoringStorage} from 'apps/authoring-react/data-layer';
+import {sdApi} from 'api';
 import {arrayToTree} from 'core/helpers/tree';
 import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {getVocabularyItemNameTranslated} from 'core/utils';
@@ -7,7 +7,7 @@ import {IVocabulary, IVocabularyItem} from 'superdesk-api';
 import {IDropdownConfigVocabulary, IDropdownOption} from '..';
 
 function getOptionsDefault(vocabularyId: IVocabulary['_id']): Array<IVocabularyItem> {
-    return authoringStorage.getVocabularies().get(vocabularyId).items;
+    return sdApi.vocabularies.getAll().get(vocabularyId).items;
 }
 
 export function getOptions(

@@ -3,13 +3,13 @@ import {IAuthoringFieldV2, IVocabularyItem} from 'superdesk-api';
 import {IFieldAdapter} from '.';
 import {IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultiple} from './utilities';
-import {authoringStorage} from '../data-layer';
+import {sdApi} from 'api';
 
 const vocabularyId = 'categories';
 
 export const anpa_category: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
-        const vocabulary = authoringStorage.getVocabularies().get(vocabularyId);
+        const vocabulary = sdApi.vocabularies.getAll().get(vocabularyId);
         const multiple = isMultiple(vocabularyId);
 
         const fieldConfig: IDropdownConfigVocabulary = {
@@ -38,7 +38,7 @@ export const anpa_category: IFieldAdapter = {
         }
     },
     storeValue: (val: IDropdownValue, article) => {
-        const vocabulary = authoringStorage.getVocabularies().get(vocabularyId);
+        const vocabulary = sdApi.vocabularies.getAll().get(vocabularyId);
 
         const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(
             vocabulary.items.map((item) => [item.qcode, item]),

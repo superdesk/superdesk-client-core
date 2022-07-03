@@ -4,7 +4,7 @@ import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
 import {IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultipleV2} from './utilities';
-import {authoringStorage} from '../data-layer';
+import {sdApi} from 'api';
 
 export const genre: IFieldAdapter = {
     getFieldV2: (fieldEditor, fieldSchema) => {
@@ -35,7 +35,7 @@ export const genre: IFieldAdapter = {
         }
     },
     storeValue: (val: IDropdownValue, article) => {
-        const vocabulary = authoringStorage.getVocabularies().get('genre');
+        const vocabulary = sdApi.vocabularies.getAll().get('genre');
 
         const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(
             vocabulary.items.map((item) => [item.qcode, item]),

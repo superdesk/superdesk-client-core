@@ -427,7 +427,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     getVocabularyItems(vocabularyId): Array<IVocabularyItem> {
-        const vocabulary = authoringStorage.getVocabularies().get(vocabularyId);
+        const vocabulary = sdApi.vocabularies.getAll().get(vocabularyId);
 
         if (vocabularyId === ANPA_CATEGORY.vocabularyId) {
             return vocabulary.items;

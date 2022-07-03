@@ -166,7 +166,6 @@ export interface IAuthoringStorage {
     getContentProfile(item: IArticle): Promise<IContentProfileV2>;
     getUserPreferences(): Promise<any>;
     autosave: IAuthoringAutoSave;
-    getVocabularies(): OrderedMap<string, IVocabulary>;
     hasFeature(name: string): boolean;
 }
 
@@ -312,10 +311,5 @@ export const authoringStorage: IAuthoringStorage = {
         );
     },
     getUserPreferences: () => ng.get('preferencesService').get(),
-    getVocabularies: () => OrderedMap<string, IVocabulary>(
-        ng.get('vocabularies').getAllVocabulariesSync().map(
-            (vocabulary) => [vocabulary._id, vocabulary],
-        ),
-    ),
     hasFeature: (name) => ng.get('features')[name] != null,
 };
