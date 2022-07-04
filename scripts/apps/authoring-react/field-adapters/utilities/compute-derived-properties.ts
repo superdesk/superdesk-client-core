@@ -3,7 +3,7 @@ import createEditorStore, {getAnnotationsForStorage} from 'core/editor3/store';
 import {ContentState, RawDraftContentState} from 'draft-js';
 import {noop} from 'lodash';
 import {IArticle} from 'superdesk-api';
-import {IEditor3Config} from './interfaces';
+import {IEditor3Config} from 'apps/authoring-react/fields/editor3/interfaces';
 
 interface IDerivedProperties {
     stringValue: string; // HTML or plain text (depending on config)

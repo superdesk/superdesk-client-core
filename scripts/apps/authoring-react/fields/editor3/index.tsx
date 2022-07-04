@@ -18,42 +18,9 @@ import {Preview} from './preview';
 import {Config} from './config';
 import {Editor} from './editor';
 import {replaceAllForEachBlock} from 'core/editor3/helpers/find-replace';
-import {computeDerivedProperties} from './compute-derived-properties';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
-}
-
-export function storeEditor3ValueBase(
-    fieldId: string,
-    article: IArticle,
-    value: any, // IEditor3ValueStorage
-    config: IEditor3Config,
-)
-: {article: IArticle; stringValue: string; annotations: Array<any>} {
-    const rawContentState = value.rawContentState;
-
-    const {stringValue, annotations} = computeDerivedProperties(
-        rawContentState,
-        config,
-        article,
-    );
-
-    const articleUpdated: IArticle = {
-        ...article,
-        fields_meta: {
-            ...(article.fields_meta ?? {}),
-            [fieldId]: {
-                draftjsState: [rawContentState],
-            },
-        },
-    };
-
-    if (annotations.length > 0) {
-        articleUpdated.fields_meta[fieldId].annotations = annotations;
-    }
-
-    return {article: articleUpdated, stringValue, annotations};
 }
 
 export function editor3ToOperationalFormat(

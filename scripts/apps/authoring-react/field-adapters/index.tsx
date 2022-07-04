@@ -38,8 +38,8 @@ import {
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 import {ILinkedItemsConfig, ILinkedItemsValueOperational} from '../fields/linked-items/interfaces';
 import {attachments} from './attachments';
-import {storeEditor3ValueBase} from '../fields/editor3';
 import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
+import {computeDerivedProperties} from './utilities/compute-derived-properties';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -145,6 +145,38 @@ export const retrieveStoredValueEditor3Generic = (fieldId: string, article: IArt
 
     return result;
 };
+
+export function storeEditor3ValueBase(
+    fieldId: string,
+    article: IArticle,
+    value: any, // IEditor3ValueStorage
+    config: IEditor3Config,
+)
+: {article: IArticle; stringValue: string; annotations: Array<any>} {
+    const rawContentState = value.rawContentState;
+
+    const {stringValue, annotations} = computeDerivedProperties(
+        rawContentState,
+        config,
+        article,
+    );
+
+    const articleUpdated: IArticle = {
+        ...article,
+        fields_meta: {
+            ...(article.fields_meta ?? {}),
+            [fieldId]: {
+                draftjsState: [rawContentState],
+            },
+        },
+    };
+
+    if (annotations.length > 0) {
+        articleUpdated.fields_meta[fieldId].annotations = annotations;
+    }
+
+    return {article: articleUpdated, stringValue, annotations};
+}
 
 /**
  * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
