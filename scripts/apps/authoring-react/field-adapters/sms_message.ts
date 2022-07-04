@@ -1,6 +1,6 @@
-import {IAuthoringFieldV2} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
+import {IFieldAdapter, retrieveStoredValueEditor3Generic} from '.';
 import {IEditor3Config} from '../fields/editor3/interfaces';
 import {storeEditor3ValueBase} from '../fields/editor3';
 
@@ -25,6 +25,11 @@ export const sms_message: IFieldAdapter = {
 
         return fieldV2;
     },
+
+    retrieveStoredValue: (item: IArticle) => retrieveStoredValueEditor3Generic(
+        'sms_message',
+        item,
+    ),
 
     storeValue: (value, item, config) => {
         const result = storeEditor3ValueBase(

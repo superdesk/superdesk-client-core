@@ -3,7 +3,7 @@ import {
     IArticle,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
+import {convertToRaw, ContentState} from 'draft-js';
 import createEditorStore, {
     prepareEditor3StateForExport,
 } from 'core/editor3/store';
@@ -18,14 +18,18 @@ import {Preview} from './preview';
 import {Config} from './config';
 import {Editor} from './editor';
 import {replaceAllForEachBlock} from 'core/editor3/helpers/find-replace';
-import {getFieldsAdapter} from 'apps/authoring-react/field-adapters';
 import {computeDerivedProperties} from './compute-derived-properties';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
 }
 
-export function storeEditor3ValueBase(fieldId, article, value, config)
+export function storeEditor3ValueBase(
+    fieldId: string,
+    article: IArticle,
+    value: any, // IEditor3ValueStorage
+    config: IEditor3Config,
+)
 : {article: IArticle; stringValue: string; annotations: Array<any>} {
     const rawContentState = value.rawContentState;
 
@@ -135,48 +139,6 @@ export function getEditor3Field()
             article: IArticle,
         ): IEditor3ValueOperational => {
             return editor3ToOperationalFormat(value, article.language);
-        },
-
-        retrieveStoredValue: (fieldId, article) => {
-            const rawContentState: RawDraftContentState = (() => {
-                const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState'][0];
-                const fieldsAdapter = getFieldsAdapter();
-
-                if (fromFieldsMeta != null) {
-                    return fromFieldsMeta;
-                } else if (
-                    fieldsAdapter[fieldId] != null
-                    && typeof article[fieldId] === 'string'
-                    && article[fieldId].length > 0
-                ) {
-                    /**
-                     * This is only for compatibility with angular based authoring.
-                     * create raw content state in case only text value is present.
-                     */
-
-                    return convertToRaw(ContentState.createFromText(article[fieldId]));
-                } else {
-                    return convertToRaw(ContentState.createFromText(''));
-                }
-            })();
-
-            const result: IEditor3ValueStorage = {
-                rawContentState,
-            };
-
-            return result;
-        },
-
-        storeValue: (fieldId, article, value, config) => {
-            const result = storeEditor3ValueBase(fieldId, article, value, config);
-            const articleUpdated = {...result.article};
-
-            articleUpdated.extra = {
-                ...(articleUpdated.extra ?? {}),
-                [fieldId]: result.stringValue,
-            };
-
-            return articleUpdated;
         },
     };
 

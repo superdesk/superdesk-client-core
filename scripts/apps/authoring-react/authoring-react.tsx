@@ -68,13 +68,6 @@ export function getFieldsData(
         const storageValue = (() => {
             if (fieldsAdapter[field.id]?.retrieveStoredValue != null) {
                 return fieldsAdapter[field.id].retrieveStoredValue(item);
-            } else if (fieldEditor.retrieveStoredValue != null) {
-                return fieldEditor.retrieveStoredValue(
-                    field.id,
-                    item,
-                    field.fieldConfig,
-                    userPreferencesForFields[field.id],
-                );
             } else {
                 return item.extra?.[field.id] ?? null;
             }
@@ -122,14 +115,6 @@ function serializeFieldsDataAndApplyOnArticle(
 
         if (fieldsAdapter[field.id]?.storeValue != null) {
             result = fieldsAdapter[field.id].storeValue(storageValue, result, field.fieldConfig);
-        } else if (fieldEditor.storeValue != null) {
-            result = fieldEditor.storeValue(
-                field.id,
-                result,
-                storageValue,
-                field.fieldConfig,
-                userPreferencesForFields[field.id],
-            );
         } else {
             result = {
                 ...result,

@@ -2676,32 +2676,6 @@ declare module 'superdesk-api' {
         toStorageFormat?(valueOperational: IValueOperational, config: IConfig): IValueStorage;
         toOperationalFormat?(valueStorage: IValueStorage, config: IConfig, article: IArticle): IValueOperational;
 
-
-        /**
-         * Allows to customize where values are stored.
-         *
-         * Also available in field adapters.
-         *
-         * By default, custom fields are stored in IArticle['extra'].
-         * Some fields may require a different storing strategy.
-         * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
-         * HTML or plaintext version of the data in another location, and possibly annotations in third location.
-         */
-
-        storeValue?( // will only be used if IFieldAdapter['storeValue'] is not defined
-            fieldId: string,
-            article: IArticle,
-            value: IValueStorage,
-            config: IConfig,
-            userPreferences: IUserPreferences,
-        ): IArticle;
-        retrieveStoredValue?( // will only be used if IFieldAdapter['retrieveStoredValue'] is not defined
-            fieldId: string,
-            article: IArticle,
-            config: IConfig,
-            userPreferences: IUserPreferences,
-        ): IValueStorage;
-
         /**
          * Allows custom fields to hook into extension points API.
          */

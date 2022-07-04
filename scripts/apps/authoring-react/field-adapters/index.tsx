@@ -5,7 +5,7 @@ import {
     IRelatedArticle,
 } from 'superdesk-api';
 import {IDropdownConfigVocabulary} from '../fields/dropdown';
-import {IEditor3Config} from '../fields/editor3/interfaces';
+import {IEditor3Config, IEditor3ValueStorage} from '../fields/editor3/interfaces';
 import {slugline} from './slugline';
 import {body_html} from './body_html';
 import {language} from './language';
@@ -38,6 +38,8 @@ import {
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 import {ILinkedItemsConfig, ILinkedItemsValueOperational} from '../fields/linked-items/interfaces';
 import {attachments} from './attachments';
+import {storeEditor3ValueBase} from '../fields/editor3';
+import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
 
 export interface IFieldAdapter {
     getFieldV2: (
@@ -46,7 +48,12 @@ export interface IFieldAdapter {
     ) => IAuthoringFieldV2;
 
     /**
-     * If defined, {@link ICustomFieldType.storeValue} will not be used
+     * Allows to customize where values are stored.
+     *
+     * By default, custom fields are stored in IArticle['extra'].
+     * Some fields may require a different storing strategy.
+     * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
+     * HTML or plaintext version of the data in another location, and possibly annotations in third location.
      */
     storeValue?(value: unknown, article: IArticle, config: unknown): IArticle;
 
@@ -90,6 +97,56 @@ export function getBaseFieldsAdapter(): IFieldsAdapter {
 }
 
 /**
+ * Stores values in {@link IArticle.extra} field
+ */
+function storeEditor3ValueGeneric(
+    fieldId: string,
+    value: IEditor3ValueStorage,
+    article: IArticle,
+    config: IEditor3Config,
+): IArticle {
+    const result = storeEditor3ValueBase(fieldId, article, value, config);
+    const articleUpdated = {...result.article};
+
+    articleUpdated.extra = {
+        ...(articleUpdated.extra ?? {}),
+        [fieldId]: result.stringValue,
+    };
+
+    return articleUpdated;
+}
+
+export const retrieveStoredValueEditor3Generic = (fieldId: string, article: IArticle) => {
+    const rawContentState: RawDraftContentState = (() => {
+        const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState'][0];
+        const fieldsAdapter = getFieldsAdapter();
+
+        if (fromFieldsMeta != null) {
+            return fromFieldsMeta;
+        } else if (
+            fieldsAdapter[fieldId] != null
+            && typeof article[fieldId] === 'string'
+            && article[fieldId].length > 0
+        ) {
+            /**
+             * This is only for compatibility with angular based authoring.
+             * create raw content state in case only text value is present.
+             */
+
+            return convertToRaw(ContentState.createFromText(article[fieldId]));
+        } else {
+            return convertToRaw(ContentState.createFromText(''));
+        }
+    })();
+
+    const result: IEditor3ValueStorage = {
+        rawContentState,
+    };
+
+    return result;
+};
+
+/**
  * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
  * to {@link IAuthoringFieldV2}
  */
@@ -99,7 +156,9 @@ export function getFieldsAdapter(): IFieldsAdapter {
 
     for (const vocabulary of customFieldVocabularies) {
         if (vocabulary.field_type === 'text') {
-            adapter[vocabulary._id] = {
+            const fieldId = vocabulary._id;
+
+            adapter[fieldId] = {
                 getFieldV2: (fieldEditor, fieldSchema) => {
                     const fieldConfig: IEditor3Config = {
                         editorFormat: fieldEditor.formatOptions ?? [],
@@ -111,7 +170,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
                     };
 
                     const fieldV2: IAuthoringFieldV2 = {
-                        id: vocabulary._id,
+                        id: fieldId,
                         name: vocabulary.display_name,
                         fieldType: 'editor3',
                         fieldConfig,
@@ -119,6 +178,16 @@ export function getFieldsAdapter(): IFieldsAdapter {
 
                     return fieldV2;
                 },
+                retrieveStoredValue: (item: IArticle) => retrieveStoredValueEditor3Generic(
+                    fieldId,
+                    item,
+                ),
+                storeValue: (value, article, config) => storeEditor3ValueGeneric(
+                    fieldId,
+                    value as IEditor3ValueStorage,
+                    article,
+                    config,
+                ),
             };
         } else if (vocabulary.field_type === 'date') {
             adapter[vocabulary._id] = {
