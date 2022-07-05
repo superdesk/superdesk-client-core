@@ -19,7 +19,7 @@ let store = null;
  * if they are spellchecker targets
  * @private
  */
-const spellcheckerStores = [];
+let spellcheckerStores = [];
 
 /**
  * @ngdoc service
@@ -76,14 +76,8 @@ export class EditorService {
         store = null;
     }
 
-    /**
-     * @ngdoc method
-     * @name editor3#removeSpellcheckerStore
-     * @param {Integer}
-     * @description Clears a spellchecker store
-     */
-    removeSpellcheckerStore(i) {
-        spellcheckerStores.slice(i, 1);
+    removeAllSpellcheckerStores() {
+        spellcheckerStores = [];
     }
 
     /**
