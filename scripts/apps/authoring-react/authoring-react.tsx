@@ -78,7 +78,7 @@ export function getFieldsData(
                 return fieldEditor.toOperationalFormat(
                     storageValue,
                     field.fieldConfig,
-                    item,
+                    item.language,
                 );
             } else {
                 return storageValue;
@@ -983,7 +983,10 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         fieldsData: this.state.fieldsDataWithChanges,
                     }),
                 )
-            : fieldsDataWithChanges.set(fieldId, FieldEditorConfig.getEmptyValue(itemWithChanges, field.fieldConfig));
+            : fieldsDataWithChanges.set(
+                fieldId,
+                FieldEditorConfig.getEmptyValue(field.fieldConfig, itemWithChanges.language),
+            );
 
         this.setState({
             ...this.state,

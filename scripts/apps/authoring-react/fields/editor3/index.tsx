@@ -55,10 +55,10 @@ export function getEditor3Field()
 
         hasValue: (valueOperational) => valueOperational.contentState.getPlainText().trim().length > 0,
 
-        getEmptyValue: (article) => {
+        getEmptyValue: (config, language) => {
             return editor3ToOperationalFormat(
                 {rawContentState: convertToRaw(ContentState.createFromText(''))},
-                article.language,
+                language,
             );
         },
 
@@ -103,9 +103,9 @@ export function getEditor3Field()
         toOperationalFormat: (
             value: IEditor3ValueStorage,
             config: IEditor3Config,
-            article: IArticle,
+            language: string,
         ): IEditor3ValueOperational => {
-            return editor3ToOperationalFormat(value, article.language);
+            return editor3ToOperationalFormat(value, language);
         },
     };
 

@@ -2651,7 +2651,7 @@ declare module 'superdesk-api' {
         /**
          * Must return a value that will be considered empty by `hasValue` function.
          */
-        getEmptyValue(article: IArticle, config: IConfig): IValueOperational;
+        getEmptyValue(config: IConfig, language: string): IValueOperational;
 
 
         /**
@@ -2674,7 +2674,7 @@ declare module 'superdesk-api' {
          */
 
         toStorageFormat?(valueOperational: IValueOperational, config: IConfig): IValueStorage;
-        toOperationalFormat?(valueStorage: IValueStorage, config: IConfig, article: IArticle): IValueOperational;
+        toOperationalFormat?(valueStorage: IValueStorage, config: IConfig, language: string): IValueOperational;
 
         /**
          * Allows custom fields to hook into extension points API.

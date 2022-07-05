@@ -76,7 +76,7 @@ export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownVa
         hasValue: (valueOperational: IDropdownValue) => Array.isArray(valueOperational)
             ? valueOperational.length > 0
             : valueOperational != null,
-        getEmptyValue: (_article, config) => config.multiple ? [] : null,
+        getEmptyValue: (config) => config.multiple ? [] : null,
         differenceComponent: Difference,
         configComponent: Config,
     };
