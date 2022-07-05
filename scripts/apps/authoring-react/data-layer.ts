@@ -4,8 +4,9 @@ import {
     IAuthoringFieldV2,
     IFieldsV2,
     IContentProfileV2,
-    IVocabulary,
     ICommonFieldConfig,
+    IAuthoringStorage,
+    IFieldsAdapter,
 } from 'superdesk-api';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -18,11 +19,9 @@ import {AutoSaveHttp} from './auto-save-http';
 import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
-import {getFieldsAdapter} from './field-adapters';
-import {IOldCustomFieldId} from './interfaces';
 import {getArticleAdapter} from './article-adapter';
 
-function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
+function getContentProfile(item: IArticle, fieldsAdapter: IFieldsAdapter): Promise<IContentProfileV2> {
     interface IFakeScope {
         schema: any;
         editor: any;
@@ -52,7 +51,6 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
         ng.get('content').setupAuthoring(item.profile, fakeScope, item),
     ]).then((res) => {
         const [getLabelForFieldId] = res;
-        const fieldsAdapter = getFieldsAdapter();
 
         const {editor, fields, schema} = fakeScope;
 
@@ -133,41 +131,6 @@ function getContentProfile(item: IArticle): Promise<IContentProfileV2> {
     });
 }
 
-export interface IAuthoringAutoSave {
-    get(id: IArticle['_id']): Promise<IArticle>;
-    delete(id: IArticle['_id'], etag: IArticle['_etag']): Promise<void>;
-    cancel(): void;
-
-    /**
-     * A function that returns the article is used to improve performance.
-     * In order to get the latest article, data has to be serialized. Using a function
-     * allows to only do it once after timeout passes, instead of on every character change.
-     */
-    schedule(getItem: () => IArticle, callback: (autosaved: IArticle) => void): void;
-}
-
-/**
- * {@link AuthoringReact} component will use this interface
- * instead of making network calls directly.
- * Alternative implementation can be used
- * to enable offline support.
- */
-export interface IAuthoringStorage {
-    lock(itemId: IArticle['_id']): Promise<IArticle>;
-    unlock(itemId: IArticle['_id']): Promise<IArticle>;
-    getArticle(id: string): Promise<{saved: IArticle | null, autosaved: IArticle | null}>;
-    saveArticle(current: IArticle, original: IArticle): Promise<IArticle>;
-    closeAuthoring(
-        current: IArticle,
-        original: IArticle,
-        cancelAutosave: () => Promise<void>,
-        doClose: () => void,
-    ): Promise<void>;
-    getContentProfile(item: IArticle): Promise<IContentProfileV2>;
-    getUserPreferences(): Promise<any>;
-    autosave: IAuthoringAutoSave;
-}
-
 export function omitFields(
     item: Partial<IArticle>,
     omitId: boolean = false, // useful when patching
@@ -204,7 +167,7 @@ export function omitFields(
     return {...omit(item, [...customFields, ...baseApiFields])};
 }
 
-export const authoringStorage: IAuthoringStorage = {
+export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
     autosave: new AutoSaveHttp(AUTOSAVE_TIMEOUT),
     getArticle: (id) => {
         // TODO: take published items into account
@@ -218,7 +181,7 @@ export const authoringStorage: IAuthoringStorage = {
                 return {saved, autosaved: null};
             } else if (sdApi.article.isLockedInCurrentSession(saved)) {
                 return new Promise<IArticle>((resolve) => {
-                    authoringStorage.autosave.get(id)
+                    authoringStorageIArticle.autosave.get(id)
                         .then((_autosaved) => {
                             resolve(adapter.toAuthoringReact(_autosaved));
                         })
@@ -303,7 +266,7 @@ export const authoringStorage: IAuthoringStorage = {
         return authoringApiCommon.closeAuthoring(
             original,
             hasUnsavedChanges,
-            () => authoringStorage.saveArticle(current, original).then(() => undefined),
+            () => authoringStorageIArticle.saveArticle(current, original).then(() => undefined),
             () => unlockArticle(original._id),
             cancelAutosave,
             doClose,

@@ -1,7 +1,9 @@
 import {
     IArticle,
     IAuthoringFieldV2,
+    IAuthoringStorage,
     ICustomFieldType,
+    IFieldsAdapter,
     IRelatedArticle,
 } from 'superdesk-api';
 import {IDropdownConfigVocabulary} from '../fields/dropdown';
@@ -59,16 +61,15 @@ export interface IFieldAdapter {
 
     /**
      * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
+     * FINISH: convert to IAuthoringStorage<T>
      */
-    retrieveStoredValue?(item: IArticle): unknown;
+    retrieveStoredValue?(item: IArticle, authoringStorage: IAuthoringStorage<IArticle>): unknown;
 
     /**
      * Must return a value in operational format.
      */
     onToggledOn?: ICustomFieldType<unknown, unknown, unknown, unknown>['onToggledOn'];
 }
-
-type IFieldsAdapter = {[key: string]: IFieldAdapter};
 
 export function getBaseFieldsAdapter(): IFieldsAdapter {
     const adapter: IFieldsAdapter = {
@@ -116,10 +117,14 @@ function storeEditor3ValueGeneric(
     return articleUpdated;
 }
 
-export const retrieveStoredValueEditor3Generic = (fieldId: string, article: IArticle) => {
+export function retrieveStoredValueEditor3Generic<T>(
+    fieldId: string,
+    article: IArticle,
+    authoringStorage: IAuthoringStorage<T>,
+) {
     const rawContentState: RawDraftContentState = (() => {
         const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState'][0];
-        const fieldsAdapter = getFieldsAdapter();
+        const fieldsAdapter = getFieldsAdapter(authoringStorage);
 
         if (fromFieldsMeta != null) {
             return fromFieldsMeta;
@@ -144,7 +149,7 @@ export const retrieveStoredValueEditor3Generic = (fieldId: string, article: IArt
     };
 
     return result;
-};
+}
 
 export function storeEditor3ValueBase(
     fieldId: string,
@@ -182,7 +187,7 @@ export function storeEditor3ValueBase(
  * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
  * to {@link IAuthoringFieldV2}
  */
-export function getFieldsAdapter(): IFieldsAdapter {
+export function getFieldsAdapter<T>(authoringStorage: IAuthoringStorage<T>): IFieldsAdapter {
     const customFieldVocabularies = getCustomFieldVocabularies();
     const adapter: IFieldsAdapter = getBaseFieldsAdapter();
 
@@ -213,6 +218,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
                 retrieveStoredValue: (item: IArticle) => retrieveStoredValueEditor3Generic(
                     fieldId,
                     item,
+                    authoringStorage,
                 ),
                 storeValue: (value, article, config) => storeEditor3ValueGeneric(
                     fieldId,

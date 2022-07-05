@@ -4,7 +4,6 @@ import {gettext} from 'core/utils';
 import {IFieldAdapter} from '.';
 import {IDropdownConfigRemoteSource, IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultiple} from './utilities';
-import {authoringStorage} from '../data-layer';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IGeoName} from 'apps/authoring/metadata/PlacesService';
 import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';

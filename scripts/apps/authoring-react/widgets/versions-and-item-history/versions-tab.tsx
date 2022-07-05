@@ -124,6 +124,8 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                 label: gettext('version {{n}}', {n: to._current_version}),
                 article: to,
             },
+            this.props.authoringStorage,
+            this.props.fieldsAdapter,
         );
     }
 
@@ -137,7 +139,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
         }
 
         const {versions, desks, stages, selectedForComparison} = this.state;
-        const {readOnly} = this.props;
+        const {readOnly, contentProfile, fieldsData} = this.props;
 
         const userEntities =
             store.getState().entities.users;
@@ -253,6 +255,8 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                                                     previewArticle(
                                                         gettext('version {{n}}', {n: item._current_version}),
                                                         item,
+                                                        contentProfile,
+                                                        fieldsData,
                                                     );
                                                 }}
                                                 style="hollow"

@@ -43,6 +43,43 @@ declare module 'superdesk-api' {
         content: IFieldsV2;
     }
 
+    export type IFieldsAdapter = {[key: string]: IFieldAdapter};
+
+    export interface IAuthoringAutoSave<T> {
+        get(id: string): Promise<T>;
+        delete(id: string, etag: string): Promise<void>;
+        cancel(): void;
+
+        /**
+         * A function that returns the article is used to improve performance.
+         * In order to get the latest article, data has to be serialized. Using a function
+         * allows to only do it once after timeout passes, instead of on every character change.
+         */
+        schedule(getItem: () => T, callback: (autosaved: T) => void): void;
+    }
+
+    /**
+     * {@link AuthoringReact} component will use this interface
+     * instead of making network calls directly.
+     * Alternative implementation can be used
+     * to enable offline support.
+     */
+    export interface IAuthoringStorage<T> {
+        lock(itemId: string): Promise<T>;
+        unlock(itemId: string): Promise<T>;
+        getArticle(id: string): Promise<{saved: T | null, autosaved: T | null}>;
+        saveArticle(current: T, original: T): Promise<T>;
+        closeAuthoring(
+            current: T,
+            original: T,
+            cancelAutosave: () => Promise<void>,
+            doClose: () => void,
+        ): Promise<void>;
+        getContentProfile(item: T, fieldsAdapter: IFieldsAdapter): Promise<IContentProfileV2>;
+        getUserPreferences(): Promise<any>;
+        autosave: IAuthoringAutoSave<T>;
+    }
+
 
     // EXTENSIONS
 
@@ -110,6 +147,9 @@ declare module 'superdesk-api' {
             readOnly: boolean;
             contentProfile?: IContentProfileV2;
             fieldsData?: OrderedMap<string, unknown>;
+            authoringStorage: IAuthoringStorage<IArticle>;
+            fieldsAdapter: IFieldsAdapter;
+
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
 
             /**

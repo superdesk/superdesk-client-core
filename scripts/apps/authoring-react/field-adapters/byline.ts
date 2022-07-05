@@ -24,9 +24,10 @@ export const byline: IFieldAdapter = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle) => retrieveStoredValueEditor3Generic(
+    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
         'byline',
         item,
+        authoringStorage,
     ),
 
     storeValue: (value, item, config) => {

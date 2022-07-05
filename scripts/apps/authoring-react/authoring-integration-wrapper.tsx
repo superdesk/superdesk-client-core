@@ -2,6 +2,8 @@ import React from 'react';
 import {IArticle} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {AuthoringReact} from './authoring-react';
+import {authoringStorageIArticle} from './data-layer';
+import {getFieldsAdapter} from './field-adapters';
 
 interface IProps {
     itemId: IArticle['_id'];
@@ -20,6 +22,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                     ng.get('authoringWorkspace').close();
                     ng.get('$rootScope').$applyAsync();
                 }}
+                authoringStorage={authoringStorageIArticle}
+                fieldsAdapter={getFieldsAdapter(authoringStorageIArticle)}
             />
         );
     }

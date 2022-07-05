@@ -24,9 +24,10 @@ export const abstract: IFieldAdapter = {
         return fieldV2;
     },
 
-    retrieveStoredValue: (item: IArticle) => retrieveStoredValueEditor3Generic(
+    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
         'abstract',
         item,
+        authoringStorage,
     ),
 
     storeValue: (value, item, config) => {

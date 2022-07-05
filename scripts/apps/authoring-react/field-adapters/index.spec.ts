@@ -1,10 +1,10 @@
-import {mockAuthoringStorage} from 'test-data/mock-authoring-storage';
+// import {mockAuthoringStorage} from 'test-data/mock-authoring-storage';
 import {testArticle} from 'test-data/test-article';
 import {getBaseFieldsAdapter} from '.';
 
 describe('field adapters', () => {
     beforeEach(() => {
-        mockAuthoringStorage();
+        // mockAuthoringStorage(); // FINISH:
     });
 
     it('dropdown adapters can handle `null` as value', () => {

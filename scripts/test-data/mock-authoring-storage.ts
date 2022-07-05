@@ -1,16 +1,16 @@
-import {authoringStorage, IAuthoringAutoSave, IAuthoringStorage} from 'apps/authoring-react/data-layer';
 import {noop} from 'lodash';
+import {IArticle, IAuthoringAutoSave, IAuthoringStorage} from 'superdesk-api';
 import {testArticle} from 'test-data/test-article';
 import {testContentProfileV2} from 'test-data/test-content-profile-v2';
 
-const testAutosave: IAuthoringAutoSave = {
+const testAutosave: IAuthoringAutoSave<IArticle> = {
     get: () => Promise.resolve(testArticle),
     delete: () => Promise.resolve(),
     cancel: noop,
     schedule: noop,
 };
 
-const testAuthoringStorage: IAuthoringStorage = {
+const testAuthoringStorage: IAuthoringStorage<IArticle> = {
     lock: () => Promise.resolve(testArticle),
     unlock: () => Promise.resolve(testArticle),
     getArticle: () => Promise.resolve({saved: testArticle, autosaved: testArticle}),
@@ -21,6 +21,7 @@ const testAuthoringStorage: IAuthoringStorage = {
     autosave: testAutosave,
 };
 
-export function mockAuthoringStorage() {
-    Object.assign(authoringStorage, testAuthoringStorage);
-}
+// TODO: pass as props instead of overwriting
+// export function mockAuthoringStorage() {
+//     Object.assign(authoringStorage, testAuthoringStorage);
+// }

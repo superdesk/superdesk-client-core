@@ -8,6 +8,8 @@ import {
     IContentProfileV2,
     IArticleAction,
     IVocabularyItem,
+    IAuthoringStorage,
+    IFieldsAdapter,
 } from 'superdesk-api';
 import {
     Button,
@@ -20,7 +22,6 @@ import {
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {gettext} from 'core/utils';
-import {authoringStorage} from './data-layer';
 import {AuthoringSection} from './authoring-section/authoring-section';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {EditorTest} from './ui-framework-authoring-test';
@@ -53,17 +54,15 @@ import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
-import {getFieldsAdapter} from './field-adapters';
 
 export function getFieldsData(
     item: IArticle,
     fields: Map<string, IAuthoringFieldV2>,
     userPreferencesForFields: {[key: string]: unknown},
+    fieldsAdapter: IFieldsAdapter,
 ) {
     return fields.map((field) => {
         const fieldEditor = getField(field.fieldType);
-
-        const fieldsAdapter = getFieldsAdapter();
 
         const storageValue = (() => {
             if (fieldsAdapter[field.id]?.retrieveStoredValue != null) {
@@ -94,13 +93,13 @@ function serializeFieldsDataAndApplyOnArticle(
     fieldsProfile: Map<string, IAuthoringFieldV2>,
     fieldsData: Map<string, unknown>,
     userPreferencesForFields: {[key: string]: unknown},
+    fieldsAdapter: IFieldsAdapter,
 ): IArticle {
     let result: IArticle = item;
 
     fieldsProfile.forEach((field) => {
         const fieldEditor = getField(field.fieldType);
         const valueOperational = fieldsData.get(field.id);
-        const fieldsAdapter = getFieldsAdapter();
 
         const storageValue = (() => {
             if (fieldEditor.toStorageFormat != null) {
@@ -136,9 +135,11 @@ const ANPA_CATEGORY = {
     fieldId: 'anpa_category',
 };
 
-interface IProps {
+interface IProps<T> {
     itemId: IArticle['_id'];
     onClose(): void;
+    authoringStorage: IAuthoringStorage<IArticle>; // FINISH: convert to `IAuthoringStorage<T>
+    fieldsAdapter: IFieldsAdapter;
 }
 
 function getInitialState(
@@ -146,6 +147,7 @@ function getInitialState(
     profile: IContentProfileV2,
     userPreferencesForFields: IStateLoaded['userPreferencesForFields'],
     spellcheckerEnabled: boolean,
+    fieldsAdapter: IFieldsAdapter,
 ): IStateLoaded {
     const allFields = profile.header.merge(profile.content);
 
@@ -156,6 +158,7 @@ function getInitialState(
         itemOriginal,
         allFields,
         userPreferencesForFields,
+        fieldsAdapter,
     );
 
     const fieldsDataWithChanges: Map<string, unknown> = itemOriginal === itemWithChanges
@@ -164,6 +167,7 @@ function getInitialState(
             itemWithChanges,
             allFields,
             userPreferencesForFields,
+            fieldsAdapter,
         );
 
     const toggledFields = {};
@@ -244,10 +248,10 @@ function waitForCssAnimation(): Promise<void> {
     });
 }
 
-export class AuthoringReact extends React.PureComponent<IProps, IState> {
+export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
-    constructor(props: IProps) {
+    constructor(props: IProps<T>) {
         super(props);
 
         this.state = {
@@ -346,6 +350,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     cancelAutosave(): Promise<void> {
+        const {authoringStorage} = this.props;
+
         authoringStorage.autosave.cancel();
 
         if (this.state.initialized && this.state.autosaveEtag != null) {
@@ -373,6 +379,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
             allFields,
             state.fieldsDataWithChanges,
             state.userPreferencesForFields,
+            this.props.fieldsAdapter,
         );
 
         return itemWithFieldsApplied;
@@ -440,12 +447,14 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
+        const {authoringStorage} = this.props;
+
         Promise.all(
             [
                 authoringStorage.getArticle(this.props.itemId).then((item) => {
                     const itemCurrent = item.autosaved ?? item.saved;
 
-                    return authoringStorage.getContentProfile(itemCurrent).then((profile) => {
+                    return authoringStorage.getContentProfile(itemCurrent, this.props.fieldsAdapter).then((profile) => {
                         return {item, profile};
                     });
                 }),
@@ -465,6 +474,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                 profile,
                 userPreferences[AUTHORING_FIELD_PREFERENCES] ?? {},
                 spellcheckerEnabled,
+                this.props.fieldsAdapter,
             );
 
             dispatchCustomEvent('articleEditStart', initialState.itemWithChanges);
@@ -631,6 +641,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         state.profile,
                         state.userPreferencesForFields,
                         state.spellcheckerEnabled,
+                        this.props.fieldsAdapter,
                     ));
                 });
             }),
@@ -650,6 +661,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                         state.profile,
                         state.userPreferencesForFields,
                         state.spellcheckerEnabled,
+                        this.props.fieldsAdapter,
                     ));
                 });
             }),
@@ -671,6 +683,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     componentDidUpdate(_prevProps, prevState: IState) {
+        const {authoringStorage} = this.props;
         const state = this.state;
 
         if (
@@ -734,6 +747,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     save(state: IStateLoaded): Promise<IArticle> {
+        const {authoringStorage} = this.props;
+
         return this.cancelAutosave().then(() => {
             this.setState({
                 ...state,
@@ -749,6 +764,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                     state.profile,
                     state.userPreferencesForFields,
                     state.spellcheckerEnabled,
+                    this.props.fieldsAdapter,
                 );
 
                 this.setState(nextState);
@@ -763,6 +779,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
      * and locks for current user.
      */
     stealLock(state: IStateLoaded) {
+        const {authoringStorage} = this.props;
         const _id = state.itemOriginal._id;
 
         authoringStorage.unlock(_id).then(() => {
@@ -793,6 +810,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
     }
 
     handleClose(state: IStateLoaded) {
+        const {authoringStorage} = this.props;
+
         this.setState({
             ...state,
             loading: true,
@@ -958,7 +977,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
         const allFields = profile.header.merge(profile.content);
         const field = allFields.get(fieldId);
         const FieldEditorConfig = getField(field.fieldType);
-        const fieldsAdapter = getFieldsAdapter();
+        const {fieldsAdapter} = this.props;
 
         const toggledValueNext: boolean = !toggledFields[fieldId];
 
@@ -1000,6 +1019,7 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
 
     render() {
         const state = this.state;
+        const {authoringStorage, fieldsAdapter} = this.props;
 
         if (state.initialized !== true) {
             return null;
@@ -1315,6 +1335,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 article={{...state.itemWithChanges}}
                                                 contentProfile={state.profile}
                                                 fieldsData={state.fieldsDataWithChanges}
+                                                authoringStorage={authoringStorage}
+                                                fieldsAdapter={fieldsAdapter}
                                                 onFieldsDataChange={this.handleFieldsDataChange}
                                                 readOnly={readOnly}
                                                 handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
@@ -1330,6 +1352,8 @@ export class AuthoringReact extends React.PureComponent<IProps, IState> {
                                                 article={{...state.itemWithChanges}}
                                                 contentProfile={state.profile}
                                                 fieldsData={state.fieldsDataWithChanges}
+                                                authoringStorage={authoringStorage}
+                                                fieldsAdapter={fieldsAdapter}
                                                 onFieldsDataChange={this.handleFieldsDataChange}
                                                 readOnly={readOnly}
                                                 handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
