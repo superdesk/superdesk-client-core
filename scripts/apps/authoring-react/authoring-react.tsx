@@ -1098,41 +1098,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                             coreWidgets={toolbar1Widgets}
                                             extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
                                         />
-
-                                        <ButtonGroup align="end">
-                                            <ButtonGroup subgroup={true} spaces="no-space">
-                                                <NavButton
-                                                    type="highlight"
-                                                    icon="send-to"
-                                                    iconSize="big"
-                                                    text={gettext('Send to / Publish')}
-                                                    onClick={() => {
-                                                        // FINISH: port this too
-
-                                                        // if (panelState.active) {
-                                                        //     panelActions.closePanel();
-                                                        // } else {
-                                                        //     const availableTabs: Array<IArticleActionInteractive> = [
-                                                        //         'send_to',
-                                                        //     ];
-
-                                                        //     const canPublish =
-                                                        //         sdApi.article.canPublish(state.itemWithChanges);
-
-                                                        //     if (canPublish) {
-                                                        //         availableTabs.push('publish');
-                                                        //     }
-
-                                                        //     dispatchInternalEvent('interactiveArticleActionStart', {
-                                                        //         items: [state.itemWithChanges],
-                                                        //         tabs: availableTabs,
-                                                        //         activeTab: canPublish ? 'publish' : availableTabs[0],
-                                                        //     });
-                                                        // }
-                                                    }}
-                                                />
-                                            </ButtonGroup>
-                                        </ButtonGroup>
                                     </SubNav>
                                 )}
                                 main={(

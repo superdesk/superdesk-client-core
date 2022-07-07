@@ -1,8 +1,9 @@
+/* eslint-disable react/no-multi-comp */
 /* eslint-disable no-case-declarations */
 
 import React from 'react';
 import {Map} from 'immutable';
-import {Button} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
@@ -24,11 +25,17 @@ import {sdApi} from 'api';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
-import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-hoc';
+import {
+    IActionsInteractiveActionsPanelHOC,
+    IStateInteractiveActionsPanelHOC,
+    WithInteractiveArticleActionsPanel,
+} from 'core/interactive-article-actions-panel/index-hoc';
 import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
 import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {ITEM_STATE} from 'apps/archive/constants';
+import {dispatchInternalEvent} from 'core/internal-events';
+import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -59,6 +66,54 @@ interface IState {
         name: string;
         pinned: boolean;
     };
+}
+
+function getPublishToolbarWidget(
+    panelState: IStateInteractiveActionsPanelHOC,
+    panelActions: IActionsInteractiveActionsPanelHOC,
+): ITopBarWidget<IArticle> {
+    const publishWidgetButton: ITopBarWidget<IArticle> = {
+        priority: 99,
+        availableOffline: false,
+        group: 'end',
+        // eslint-disable-next-line react/display-name
+        component: (props: {entity: IArticle}) => (
+            <ButtonGroup align="end">
+                <ButtonGroup subgroup={true} spaces="no-space">
+                    <NavButton
+                        type="highlight"
+                        icon="send-to"
+                        iconSize="big"
+                        text={gettext('Send to / Publish')}
+                        onClick={() => {
+                            if (panelState.active) {
+                                panelActions.closePanel();
+                            } else {
+                                const availableTabs: Array<IArticleActionInteractive> = [
+                                    'send_to',
+                                ];
+
+                                const canPublish =
+                                    sdApi.article.canPublish(props.entity);
+
+                                if (canPublish) {
+                                    availableTabs.push('publish');
+                                }
+
+                                dispatchInternalEvent('interactiveArticleActionStart', {
+                                    items: [props.entity],
+                                    tabs: availableTabs,
+                                    activeTab: canPublish ? 'publish' : availableTabs[0],
+                                });
+                            }
+                        }}
+                    />
+                </ButtonGroup>
+            </ButtonGroup>
+        ),
+    };
+
+    return publishWidgetButton;
 }
 
 /**
@@ -281,7 +336,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                     .flatMap(({activationResult}) =>
                                         activationResult?.contributions?.authoringTopbarWidgets ?? [],
                                     )
-                                    .map((item) => {
+                                    .map((item): ITopBarWidget<IArticle> => {
                                         const Component = item.component;
 
                                         return {
@@ -291,6 +346,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                             ),
                                         };
                                     })
+                                    .concat([getPublishToolbarWidget(panelState, panelActions)])
                             }
                             getSidePanel={({
                                 item,

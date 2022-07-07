@@ -11,7 +11,8 @@ interface IStateActive {
     activeTab: IArticleActionInteractive;
 }
 
-type IState = {active: false} | IStateActive;
+export type IStateInteractiveActionsPanelHOC = {active: false} | IStateActive;
+export type IActionsInteractiveActionsPanelHOC = {closePanel(): void};
 
 interface IProps {
     /**
@@ -19,10 +20,10 @@ interface IProps {
      * `location` is added in order to be able to determine which one should be activated.
      */
     location: 'authoring' | 'list-view';
-    children: (state: IState, actions: {closePanel(): void}) => JSX.Element;
+    children: (state: IStateInteractiveActionsPanelHOC, actions: IActionsInteractiveActionsPanelHOC) => JSX.Element;
 }
 
-export class WithInteractiveArticleActionsPanel extends React.PureComponent<IProps, IState> {
+export class WithInteractiveArticleActionsPanel extends React.PureComponent<IProps, IStateInteractiveActionsPanelHOC> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
     constructor(props: IProps) {
