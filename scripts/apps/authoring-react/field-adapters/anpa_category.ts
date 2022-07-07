@@ -1,13 +1,12 @@
 import {Map} from 'immutable';
-import {IAuthoringFieldV2, IVocabularyItem} from 'superdesk-api';
-import {IFieldAdapter} from '.';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IVocabularyItem} from 'superdesk-api';
 import {IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultiple} from './utilities';
 import {sdApi} from 'api';
 
 const vocabularyId = 'categories';
 
-export const anpa_category: IFieldAdapter = {
+export const anpa_category: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const vocabulary = sdApi.vocabularies.getAll().get(vocabularyId);
         const multiple = isMultiple(vocabularyId);

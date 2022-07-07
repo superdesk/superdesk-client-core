@@ -1,7 +1,6 @@
 import {Map} from 'immutable';
-import {IAuthoringFieldV2, IRestApiResponse, ISubject, IVocabularyItem} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IRestApiResponse, ISubject, IVocabularyItem} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
 import {IDropdownConfigRemoteSource, IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultiple} from './utilities';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -9,7 +8,7 @@ import {IGeoName} from 'apps/authoring/metadata/PlacesService';
 import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {sdApi} from 'api';
 
-export function getPlaceAdapter(): IFieldAdapter {
+export function getPlaceAdapter(): IFieldAdapter<IArticle> {
     const useGeoNamesApi = sdApi.config.featureEnabled('places_autocomplete');
 
     if (useGeoNamesApi) {

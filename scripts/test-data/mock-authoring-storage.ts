@@ -19,6 +19,7 @@ const testAuthoringStorage: IAuthoringStorage<IArticle> = {
     getContentProfile: () => Promise.resolve(testContentProfileV2),
     getUserPreferences: () => Promise.resolve({}),
     autosave: testAutosave,
+    isLockedInCurrentSession: () => true,
 };
 
 // TODO: pass as props instead of overwriting

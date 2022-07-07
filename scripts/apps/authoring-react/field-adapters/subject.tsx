@@ -1,7 +1,6 @@
 import {mapValues, memoize} from 'lodash';
-import {IAuthoringFieldV2} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
 import {IDropdownTreeConfig} from '../fields/dropdown';
 import {arrayToTree, sortTree} from 'core/helpers/tree';
 import {store} from 'core/data';
@@ -9,7 +8,7 @@ import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
 
 type ISubjectCode = {qcode: string; name: string; parent?: string};
 
-export function getSubjectAdapter(): IFieldAdapter {
+export function getSubjectAdapter(): IFieldAdapter<IArticle> {
     const getItems: () => ITreeWithLookup<ISubjectCode> = memoize(() => {
         const subjectCodes = store.getState().subjectCodes;
 

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import ng from 'core/services/ng';
-import {IAuthor, IAuthoringFieldV2, IUser} from 'superdesk-api';
+import {IArticle, IAuthor, IAuthoringFieldV2, IFieldAdapter, IUser} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
 import {IDropdownTreeConfig} from '../fields/dropdown';
 import {arrayToTree} from 'core/helpers/tree';
 
@@ -28,7 +27,7 @@ function isAuthorRole(x: IUserOption | IAuthorRole): x is IAuthorRole {
     return Array.isArray(x._id);
 }
 
-export const authors: IFieldAdapter = {
+export const authors: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const fieldConfig: IDropdownTreeConfig = {
             getItems: () => {

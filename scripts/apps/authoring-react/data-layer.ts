@@ -21,7 +21,7 @@ import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
 
-function getContentProfile(item: IArticle, fieldsAdapter: IFieldsAdapter): Promise<IContentProfileV2> {
+function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
     interface IFakeScope {
         schema: any;
         editor: any;
@@ -194,6 +194,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             }
         });
     },
+    isLockedInCurrentSession: (article) => sdApi.article.isLockedInCurrentSession(article),
     lock: (id: IArticle['_id']) => {
         return sdApi.article.lock(id).then((article) => {
             const adapter = getArticleAdapter();

@@ -31,6 +31,7 @@ export class WidgetReact extends React.PureComponent<IProps> {
                 // only used in widgets compatible with authoring-react
                 authoringStorage={null}
                 fieldsAdapter={null}
+                storageAdapter={null}
             />
         );
     }

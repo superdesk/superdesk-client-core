@@ -1,5 +1,3 @@
-/* eslint-disable no-case-declarations */
-
 import React from 'react';
 import {
     IArticle,
@@ -10,6 +8,9 @@ import {
     IVocabularyItem,
     IAuthoringStorage,
     IFieldsAdapter,
+    IBaseRestApiResponse,
+    IStorageAdapter,
+    IDisplayPriority,
 } from 'superdesk-api';
 import {
     Button,
@@ -20,55 +21,47 @@ import {
     NavButton,
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {gettext} from 'core/utils';
 import {AuthoringSection} from './authoring-section/authoring-section';
-import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
 import {EditorTest} from './ui-framework-authoring-test';
-import {extensions, uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
+import {uiFrameworkAuthoringPanelTest, appConfig} from 'appConfig';
 import {widgetReactIntegration} from 'apps/authoring/widgets/widgets';
 import {AuthoringWidgetLayoutComponent} from './widget-layout-component';
 import {WidgetHeaderComponent} from './widget-header-component';
-import {ISideBarTab} from 'superdesk-ui-framework/react/components/Navigation/SideBarTabs';
 import {registerToReceivePatches, unregisterFromReceivingPatches} from 'apps/authoring-bridge/receive-patches';
-import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
+import {addInternalEventListener} from 'core/internal-events';
 import {
     showUnsavedChangesPrompt,
     IUnsavedChangesActionWithSaving,
 } from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {ITEM_STATE} from 'apps/search/interfaces';
 import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-hoc';
-import {InteractiveArticleActionsPanel} from 'core/interactive-article-actions-panel/index-ui';
 import {sdApi} from 'api';
-import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
 import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
-import {DeskAndStage} from './subcomponents/desk-and-stage';
-import {LockInfo} from './subcomponents/lock-info';
 import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
 import {ARTICLE_RELATED_RESOURCE_NAMES, AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
-import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
-import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
 
-export function getFieldsData(
-    item: IArticle,
+export function getFieldsData<T>(
+    item: T,
     fields: Map<string, IAuthoringFieldV2>,
-    userPreferencesForFields: {[key: string]: unknown},
-    fieldsAdapter: IFieldsAdapter,
+    fieldsAdapter: IFieldsAdapter<T>,
+    authoringStorage: IAuthoringStorage<T>,
+    storageAdapter: IStorageAdapter<T>,
+    language: string,
 ) {
     return fields.map((field) => {
         const fieldEditor = getField(field.fieldType);
 
         const storageValue = (() => {
             if (fieldsAdapter[field.id]?.retrieveStoredValue != null) {
-                return fieldsAdapter[field.id].retrieveStoredValue(item);
+                return fieldsAdapter[field.id].retrieveStoredValue(item, authoringStorage);
             } else {
-                return item.extra?.[field.id] ?? null;
+                return storageAdapter.retrieveStoredValue(item, field.id);
             }
         })();
 
@@ -77,7 +70,7 @@ export function getFieldsData(
                 return fieldEditor.toOperationalFormat(
                     storageValue,
                     field.fieldConfig,
-                    item.language,
+                    language,
                 );
             } else {
                 return storageValue;
@@ -88,14 +81,15 @@ export function getFieldsData(
     }).toMap();
 }
 
-function serializeFieldsDataAndApplyOnArticle(
-    item: IArticle,
+function serializeFieldsDataAndApplyOnArticle<T extends IBaseRestApiResponse>(
+    item: T,
     fieldsProfile: Map<string, IAuthoringFieldV2>,
     fieldsData: Map<string, unknown>,
     userPreferencesForFields: {[key: string]: unknown},
-    fieldsAdapter: IFieldsAdapter,
-): IArticle {
-    let result: IArticle = item;
+    fieldsAdapter: IFieldsAdapter<T>,
+    storageAdapter: IStorageAdapter<T>,
+): T {
+    let result: T = item;
 
     fieldsProfile.forEach((field) => {
         const fieldEditor = getField(field.fieldType);
@@ -115,13 +109,7 @@ function serializeFieldsDataAndApplyOnArticle(
         if (fieldsAdapter[field.id]?.storeValue != null) {
             result = fieldsAdapter[field.id].storeValue(storageValue, result, field.fieldConfig);
         } else {
-            result = {
-                ...result,
-                extra: {
-                    ...(result.extra ?? {}),
-                    [field.id]: storageValue,
-                },
-            };
+            result = storageAdapter.storeValue(storageValue, field.id, result, field.fieldConfig);
         }
     });
 
@@ -135,20 +123,50 @@ const ANPA_CATEGORY = {
     fieldId: 'anpa_category',
 };
 
-interface IProps<T> {
-    itemId: IArticle['_id'];
-    onClose(): void;
-    authoringStorage: IAuthoringStorage<IArticle>; // FINISH: convert to `IAuthoringStorage<T>
-    fieldsAdapter: IFieldsAdapter;
+export interface IExposedFromAuthoring<T> {
+    item: T;
+    contentProfile: IContentProfileV2;
+    fieldsData: Map<string, unknown>;
+    authoringStorage: IAuthoringStorage<T>;
+    storageAdapter: IStorageAdapter<T>;
+    fieldsAdapter: IFieldsAdapter<T>;
+    hasUnsavedChanges(): boolean;
+    handleUnsavedChanges(): Promise<T>;
+    handleFieldsDataChange(fieldsData: Map<string, unknown>): void;
+    save(): Promise<T>;
+    closeAuthoring(): void;
+    stealLock(): void;
 }
 
-function getInitialState(
-    item: {saved: IArticle; autosaved: IArticle},
+interface IProps<T> {
+    itemId: IArticle['_id'];
+    getLanguage(entity: T): string;
+    onClose(): void;
+    authoringStorage: IAuthoringStorage<T>;
+    storageAdapter: IStorageAdapter<T>;
+    fieldsAdapter: IFieldsAdapter<T>;
+    getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IArticleAction>>; // three dots menu actions
+    getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>; // FINISH: make optional
+    getAuthoringTopBarWidgets(
+        options: IExposedFromAuthoring<T>,
+    ): Array<ITopBarWidget<T>>;
+    onEditingStart?(item: T): void;
+    onEditingEnd?(item: T): void;
+    getSidePanel(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+    getSidebar?(item: T): JSX.Element;
+    topBar2Widgets: Array<React.ComponentType<{item: T}>>;
+}
+
+function getInitialState<T extends IBaseRestApiResponse>(
+    item: {saved: T; autosaved: T},
     profile: IContentProfileV2,
-    userPreferencesForFields: IStateLoaded['userPreferencesForFields'],
+    userPreferencesForFields: IStateLoaded<T>['userPreferencesForFields'],
     spellcheckerEnabled: boolean,
-    fieldsAdapter: IFieldsAdapter,
-): IStateLoaded {
+    fieldsAdapter: IFieldsAdapter<T>,
+    authoringStorage: IAuthoringStorage<T>,
+    storageAdapter: IStorageAdapter<T>,
+    language: string,
+): IStateLoaded<T> {
     const allFields = profile.header.merge(profile.content);
 
     const itemOriginal = item.saved;
@@ -157,8 +175,10 @@ function getInitialState(
     const fieldsOriginal = getFieldsData(
         itemOriginal,
         allFields,
-        userPreferencesForFields,
         fieldsAdapter,
+        authoringStorage,
+        storageAdapter,
+        language,
     );
 
     const fieldsDataWithChanges: Map<string, unknown> = itemOriginal === itemWithChanges
@@ -166,8 +186,10 @@ function getInitialState(
         : getFieldsData(
             itemWithChanges,
             allFields,
-            userPreferencesForFields,
             fieldsAdapter,
+            authoringStorage,
+            storageAdapter,
+            language,
         );
 
     const toggledFields = {};
@@ -182,7 +204,7 @@ function getInitialState(
             toggledFields[field.id] = FieldEditorConfig.hasValue(val);
         });
 
-    const initialState: IStateLoaded = {
+    const initialState: IStateLoaded<T> = {
         initialized: true,
         loading: false,
         itemOriginal: itemOriginal,
@@ -208,11 +230,11 @@ function getInitialState(
  */
 export type IToggledFields = {[fieldId: string]: boolean};
 
-interface IStateLoaded {
+interface IStateLoaded<T> {
     initialized: true;
-    itemOriginal: IArticle;
-    itemWithChanges: IArticle;
-    autosaveEtag: IArticle['_etag'] | null;
+    itemOriginal: T;
+    itemWithChanges: T;
+    autosaveEtag: string | null;
     fieldsDataOriginal: Map<string, unknown>;
     fieldsDataWithChanges: Map<string, unknown>;
     profile: IContentProfileV2;
@@ -230,11 +252,18 @@ interface IStateLoaded {
     loading: boolean;
 }
 
-type IState = {initialized: false} | IStateLoaded;
+type IState<T> = {initialized: false} | IStateLoaded<T>;
 
-interface IAuthoringOptions {
+export interface ITopBarWidget<T> {
+    component: React.ComponentType<{entity: T}>;
+    availableOffline: boolean;
+    priority: IDisplayPriority;
+    group: 'start' | 'middle' | 'end';
+}
+
+interface IAuthoringOptions<T> {
     readOnly: boolean;
-    actions: IExtensionActivationResult['contributions']['authoringTopbarWidgets'];
+    actions: Array<ITopBarWidget<T>>;
 }
 
 function waitForCssAnimation(): Promise<void> {
@@ -248,7 +277,15 @@ function waitForCssAnimation(): Promise<void> {
     });
 }
 
-export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
+/**
+ * See: scripts/apps/authoring/preview/fullPreviewMultiple.tsx
+ */
+function previewItem<T>(item: T) {
+    // eslint-disable-next-line no-alert
+    alert('not implemented'); // FINISH: implement
+}
+
+export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IProps<T>, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
     constructor(props: IProps<T>) {
@@ -298,7 +335,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
             const state = this.state;
 
             if (state.initialized) {
-                const nextState: IStateLoaded = {
+                const nextState: IStateLoaded<T> = {
                     ...state,
                     openWidget: {
                         ...state.openWidget,
@@ -334,7 +371,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
             const state = this.state;
 
             if (state.initialized) {
-                const nextState: IStateLoaded = {
+                const nextState: IStateLoaded<T> = {
                     ...state,
                     openWidget: undefined,
                 };
@@ -365,7 +402,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
      * This is a relatively computationally expensive operation that serializes all fields.
      * It is meant to be called when an article is to be saved/autosaved.
      */
-    computeLatestArticle(): IArticle {
+    computeLatestArticle(): T {
         const state = this.state;
 
         if (state.initialized !== true) {
@@ -380,6 +417,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
             state.fieldsDataWithChanges,
             state.userPreferencesForFields,
             this.props.fieldsAdapter,
+            this.props.storageAdapter,
         );
 
         return itemWithFieldsApplied;
@@ -398,7 +436,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         });
     }
 
-    handleFieldsDataChange(fieldsData: Map<string, unknown>) {
+    handleFieldsDataChange(fieldsData: Map<string, unknown>): void {
         const {state} = this;
 
         if (state.initialized) {
@@ -475,9 +513,12 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                 userPreferences[AUTHORING_FIELD_PREFERENCES] ?? {},
                 spellcheckerEnabled,
                 this.props.fieldsAdapter,
+                this.props.authoringStorage,
+                this.props.storageAdapter,
+                this.props.getLanguage(item.autosaved ?? item.saved),
             );
 
-            dispatchCustomEvent('articleEditStart', initialState.itemWithChanges);
+            this.props.onEditingStart?.(initialState.itemWithChanges);
 
             this.setState(initialState);
         });
@@ -627,7 +668,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                     return;
                 }
 
-                if (sdApi.article.isLockedInCurrentSession(state.itemOriginal)) {
+                if (authoringStorage.isLockedInCurrentSession(state.itemOriginal)) {
                     return;
                 }
 
@@ -642,6 +683,9 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                         state.userPreferencesForFields,
                         state.spellcheckerEnabled,
                         this.props.fieldsAdapter,
+                        this.props.authoringStorage,
+                        this.props.storageAdapter,
+                        this.props.getLanguage(item.autosaved ?? item.saved),
                     ));
                 });
             }),
@@ -662,6 +706,9 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                         state.userPreferencesForFields,
                         state.spellcheckerEnabled,
                         this.props.fieldsAdapter,
+                        this.props.authoringStorage,
+                        this.props.storageAdapter,
+                        this.props.getLanguage(item.autosaved ?? item.saved),
                     ));
                 });
             }),
@@ -672,7 +719,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         const state = this.state;
 
         if (state.initialized) {
-            dispatchCustomEvent('articleEditEnd', state.itemWithChanges);
+            this.props.onEditingEnd?.(state.itemWithChanges);
         }
 
         unregisterFromReceivingPatches();
@@ -682,14 +729,14 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         }
     }
 
-    componentDidUpdate(_prevProps, prevState: IState) {
+    componentDidUpdate(_prevProps, prevState: IState<T>) {
         const {authoringStorage} = this.props;
         const state = this.state;
 
         if (
             state.initialized
             && prevState.initialized
-            && sdApi.article.isLockedInCurrentSession(state.itemOriginal)
+            && authoringStorage.isLockedInCurrentSession(state.itemOriginal)
         ) {
             const articleChanged = (state.itemWithChanges !== prevState.itemWithChanges)
                 || (state.fieldsDataWithChanges !== prevState.fieldsDataWithChanges);
@@ -712,7 +759,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         }
     }
 
-    handleUnsavedChanges(state: IStateLoaded): Promise<IArticle> {
+    handleUnsavedChanges(state: IStateLoaded<T>): Promise<T> {
         return new Promise((resolve, reject) => {
             if (!this.hasUnsavedChanges()) {
                 resolve(state.itemOriginal);
@@ -746,7 +793,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         });
     }
 
-    save(state: IStateLoaded): Promise<IArticle> {
+    save(state: IStateLoaded<T>): Promise<T> {
         const {authoringStorage} = this.props;
 
         return this.cancelAutosave().then(() => {
@@ -758,13 +805,16 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
             return authoringStorage.saveArticle(
                 this.computeLatestArticle(),
                 state.itemOriginal,
-            ).then((item: IArticle) => {
+            ).then((item: T) => {
                 const nextState = getInitialState(
                     {saved: item, autosaved: item},
                     state.profile,
                     state.userPreferencesForFields,
                     state.spellcheckerEnabled,
                     this.props.fieldsAdapter,
+                    this.props.authoringStorage,
+                    this.props.storageAdapter,
+                    this.props.getLanguage(item),
                 );
 
                 this.setState(nextState);
@@ -778,7 +828,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
      * Unlocks article from other user that holds the lock
      * and locks for current user.
      */
-    stealLock(state: IStateLoaded) {
+    stealLock(state: IStateLoaded<T>) {
         const {authoringStorage} = this.props;
         const _id = state.itemOriginal._id;
 
@@ -793,10 +843,10 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         });
     }
 
-    discardUnsavedChanges(state: IStateLoaded): Promise<void> {
+    discardUnsavedChanges(state: IStateLoaded<T>): Promise<void> {
         return this.cancelAutosave().then(() => {
             return new Promise((resolve) => {
-                const stateNext: IStateLoaded = {
+                const stateNext: IStateLoaded<T> = {
                     ...state,
                     itemWithChanges: state.itemOriginal,
                     fieldsDataWithChanges: state.fieldsDataOriginal,
@@ -809,7 +859,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         });
     }
 
-    handleClose(state: IStateLoaded) {
+    handleClose(state: IStateLoaded<T>) {
         const {authoringStorage} = this.props;
 
         this.setState({
@@ -838,122 +888,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         });
     }
 
-    getAuthoringOptions(state: IStateLoaded): IAuthoringOptions {
-        const item = state.itemWithChanges;
-        const itemState: ITEM_STATE = item.state;
-
-        const saveButton: IExtensionActivationResult['contributions']['authoringTopbarWidgets'][0] = {
-            group: 'end',
-            priority: 0.2,
-            component: () => (
-                <Button
-                    text={gettext('Save')}
-                    style="filled"
-                    type="primary"
-                    disabled={!this.hasUnsavedChanges()}
-                    onClick={() => {
-                        this.save(state);
-                    }}
-                />
-            ),
-            availableOffline: true,
-        };
-
-        switch (itemState) {
-        case ITEM_STATE.DRAFT:
-            return {
-                readOnly: false,
-                actions: [saveButton],
-            };
-
-        case ITEM_STATE.SUBMITTED:
-        case ITEM_STATE.IN_PROGRESS:
-        case ITEM_STATE.ROUTED:
-        case ITEM_STATE.FETCHED:
-        case ITEM_STATE.UNPUBLISHED:
-            const actions: IExtensionActivationResult['contributions']['authoringTopbarWidgets'] = [];
-
-            if (sdApi.article.isLockedInCurrentSession(item)) {
-                actions.push(saveButton);
-            }
-
-            if (
-                sdApi.article.isLockedInCurrentSession(state.itemOriginal)
-                && appConfig.features.customAuthoringTopbar.toDesk === true
-                && sdApi.article.isPersonal(state.itemOriginal) !== true
-            ) {
-                actions.push({
-                    group: 'middle',
-                    priority: 0.2,
-                    component: () => (
-                        <Button
-                            text={gettext('TD')}
-                            style="filled"
-                            onClick={() => {
-                                this.handleUnsavedChanges(state)
-                                    .then(() => sdApi.article.sendItemToNextStage(state.itemOriginal))
-                                    .then(() => this.props.onClose());
-                            }}
-                        />
-                    ),
-                    availableOffline: false,
-                });
-            }
-
-            return {
-                readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
-                actions: actions,
-            };
-
-        case ITEM_STATE.INGESTED:
-            return {
-                readOnly: true,
-                actions: [], // fetch
-            };
-
-        case ITEM_STATE.SPIKED:
-            return {
-                readOnly: true,
-                actions: [], // un-spike
-            };
-
-        case ITEM_STATE.SCHEDULED:
-            return {
-                readOnly: true,
-                actions: [], // un-schedule
-            };
-
-        case ITEM_STATE.PUBLISHED:
-        case ITEM_STATE.CORRECTED:
-            return {
-                readOnly: true,
-                actions: [], // correct update kill takedown
-            };
-
-        case ITEM_STATE.BEING_CORRECTED:
-            return {
-                readOnly: true,
-                actions: [], // cancel correction
-            };
-
-        case ITEM_STATE.CORRECTION:
-            return {
-                readOnly: false,
-                actions: [], // cancel correction, save, publish
-            };
-
-        case ITEM_STATE.KILLED:
-        case ITEM_STATE.RECALLED:
-            return {
-                readOnly: true,
-                actions: [], // NONE
-            };
-        default:
-            assertNever(itemState);
-        }
-    }
-
-    setUserPreferences(val: IStateLoaded['userPreferencesForFields']) {
+    setUserPreferences(val: IStateLoaded<T>['userPreferencesForFields']) {
         const state = this.state;
 
         if (state.initialized !== true) {
@@ -977,7 +912,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
         const allFields = profile.header.merge(profile.content);
         const field = allFields.get(fieldId);
         const FieldEditorConfig = getField(field.fieldType);
-        const {fieldsAdapter} = this.props;
+        const {fieldsAdapter, getLanguage} = this.props;
 
         const toggledValueNext: boolean = !toggledFields[fieldId];
 
@@ -996,7 +931,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                 : fieldsDataWithChanges.set(
                     fieldId,
                     onToggledOn({
-                        language: this.state.itemWithChanges.language,
+                        language: getLanguage(this.state.itemWithChanges),
                         config: field.fieldConfig,
                         editorPreferences: this.state.userPreferencesForFields[field.id],
                         fieldsData: this.state.fieldsDataWithChanges,
@@ -1004,7 +939,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                 )
             : fieldsDataWithChanges.set(
                 fieldId,
-                FieldEditorConfig.getEmptyValue(field.fieldConfig, itemWithChanges.language),
+                FieldEditorConfig.getEmptyValue(field.fieldConfig, getLanguage(itemWithChanges)),
             );
 
         this.setState({
@@ -1019,7 +954,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
 
     render() {
         const state = this.state;
-        const {authoringStorage, fieldsAdapter} = this.props;
+        const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage} = this.props;
 
         if (state.initialized !== true) {
             return null;
@@ -1034,53 +969,26 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
             );
         }
 
-        const authoringOptions = this.getAuthoringOptions(state);
+        const exposed: IExposedFromAuthoring<T> = {
+            item: state.itemWithChanges,
+            contentProfile: state.profile,
+            fieldsData: state.fieldsDataWithChanges,
+            handleFieldsDataChange: this.handleFieldsDataChange,
+            hasUnsavedChanges: () => this.hasUnsavedChanges(),
+            handleUnsavedChanges: () => this.handleUnsavedChanges(state),
+            save: () => this.save(state),
+            closeAuthoring: () => this.handleClose(state),
+            stealLock: () => this.stealLock(state),
+            authoringStorage: authoringStorage,
+            storageAdapter: storageAdapter,
+            fieldsAdapter: fieldsAdapter,
+        };
+        const authoringOptions = this.props.getInlineToolbarActions(exposed);
         const readOnly = state.initialized ? authoringOptions.readOnly : false;
+        const OpenWidgetComponent = this.props.getSidePanel(exposed, readOnly);
 
-        const widgetsFromExtensions = Object.values(extensions)
-            .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
-            .filter((widget) => widget.isAllowed?.(state.itemWithChanges) ?? true)
-            .sort((a, b) => a.order - b.order);
-
-        const sidebarTabs: Array<ISideBarTab> = widgetsFromExtensions.map((widget) => ({
-            icon: widget.icon,
-            size: 'big',
-            tooltip: widget.label,
-            onClick: () => {
-                const selfToggled = state.openWidget != null && widget.label === state.openWidget?.name;
-
-                const nextState: IStateLoaded = {
-                    ...state,
-                    openWidget: selfToggled
-                        ? undefined
-                        : {name: widget.label, pinned: state.openWidget?.pinned ?? false},
-                };
-
-                this.setState(nextState);
-            },
-        }));
-
-        const toolbar1Widgets: IExtensionActivationResult['contributions']['authoringTopbarWidgets'] = [
+        const toolbar1Widgets: Array<ITopBarWidget<T>> = [
             ...authoringOptions.actions,
-            {
-                group: 'start',
-                priority: 0.1,
-                component: () => (
-                    <LockInfo
-                        article={state.itemWithChanges}
-                        unlock={() => {
-                            this.stealLock(state);
-                        }}
-                    />
-                ),
-                availableOffline: false,
-            },
-            {
-                group: 'start',
-                priority: 0.2,
-                component: DeskAndStage,
-                availableOffline: false,
-            },
             {
                 group: 'end',
                 priority: 0.1,
@@ -1116,57 +1024,58 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                 component: () => {
                     return (
                         <AuthoringActionsMenu
-                            item={state.itemWithChanges}
-                            contentProfile={state.profile}
-                            fieldsData={state.fieldsDataWithChanges}
-                            getCoreActions={() => {
-                                const coreActions: Array<IArticleAction> = [];
+                            getActions={() => {
+                                return (
+                                    this.props.getActions?.(exposed) ?? Promise.resolve([])
+                                ).then((actions) => {
+                                    const coreActions: Array<IArticleAction> = [];
 
-                                if (appConfig.features.useTansaProofing !== true) {
-                                    if (state.spellcheckerEnabled) {
-                                        const nextValue = false;
+                                    if (appConfig.features.useTansaProofing !== true) {
+                                        if (state.spellcheckerEnabled) {
+                                            const nextValue = false;
 
-                                        coreActions.push({
-                                            label: gettext('Disable spellchecker'),
-                                            onTrigger: () => {
-                                                this.setState({
-                                                    ...state,
-                                                    spellcheckerEnabled: nextValue,
-                                                });
+                                            coreActions.push({
+                                                label: gettext('Disable spellchecker'),
+                                                onTrigger: () => {
+                                                    this.setState({
+                                                        ...state,
+                                                        spellcheckerEnabled: nextValue,
+                                                    });
 
-                                                dispatchEditorEvent('spellchecker__set_status', nextValue);
+                                                    dispatchEditorEvent('spellchecker__set_status', nextValue);
 
-                                                preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                    type: 'bool',
-                                                    enabled: nextValue,
-                                                    default: true,
-                                                });
-                                            },
-                                        });
-                                    } else {
-                                        coreActions.push({
-                                            label: gettext('Enable spellchecker'),
-                                            onTrigger: () => {
-                                                const nextValue = true;
+                                                    preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                        type: 'bool',
+                                                        enabled: nextValue,
+                                                        default: true,
+                                                    });
+                                                },
+                                            });
+                                        } else {
+                                            coreActions.push({
+                                                label: gettext('Enable spellchecker'),
+                                                onTrigger: () => {
+                                                    const nextValue = true;
 
-                                                this.setState({
-                                                    ...state,
-                                                    spellcheckerEnabled: true,
-                                                });
+                                                    this.setState({
+                                                        ...state,
+                                                        spellcheckerEnabled: true,
+                                                    });
 
-                                                dispatchEditorEvent('spellchecker__set_status', nextValue);
+                                                    dispatchEditorEvent('spellchecker__set_status', nextValue);
 
-                                                preferences.update(SPELLCHECKER_PREFERENCE, {
-                                                    type: 'bool',
-                                                    enabled: nextValue,
-                                                    default: true,
-                                                });
-                                            },
-                                        });
+                                                    preferences.update(SPELLCHECKER_PREFERENCE, {
+                                                        type: 'bool',
+                                                        enabled: nextValue,
+                                                        default: true,
+                                                    });
+                                                },
+                                            });
+                                        }
                                     }
-                                }
 
-                                return coreActions;
+                                    return [...coreActions, ...actions];
+                                });
                             }}
                         />
                     );
@@ -1175,12 +1084,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
             },
         ];
 
-        const topbar2Widgets = Object.values(extensions)
-            .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbar2Widgets ?? []);
-
         const pinned = state.openWidget?.pinned === true;
-
-        const defaultToolbarItems: Array<React.ComponentType<{article: IArticle}>> = [CreatedModifiedInfo];
 
         return (
             <div className="sd-authoring-react">
@@ -1192,37 +1096,14 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
 
                 <WithInteractiveArticleActionsPanel location="authoring">
                     {(panelState, panelActions) => {
-                        const OpenWidgetComponent = (() => {
-                            if (panelState.active === true) {
-                                return () => (
-                                    <InteractiveArticleActionsPanel
-                                        items={panelState.items}
-                                        tabs={panelState.tabs}
-                                        activeTab={panelState.activeTab}
-                                        handleUnsavedChanges={
-                                            () => this.handleUnsavedChanges(state).then((res) => [res])
-                                        }
-                                        onClose={panelActions.closePanel}
-                                        markupV2
-                                    />
-                                );
-                            } else if (state.openWidget != null) {
-                                return widgetsFromExtensions.find(
-                                    ({label}) => state.openWidget.name === label,
-                                ).component;
-                            } else {
-                                return null;
-                            }
-                        })();
-
                         return (
                             <Layout.AuthoringFrame
                                 header={(
                                     <SubNav>
                                         <AuthoringToolbar
-                                            itemOriginal={state.itemOriginal}
-                                            itemWithChanges={state.itemWithChanges}
+                                            entity={state.itemWithChanges}
                                             coreWidgets={toolbar1Widgets}
+                                            extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
                                         />
 
                                         <ButtonGroup align="end">
@@ -1233,26 +1114,28 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                                                     iconSize="big"
                                                     text={gettext('Send to / Publish')}
                                                     onClick={() => {
-                                                        if (panelState.active) {
-                                                            panelActions.closePanel();
-                                                        } else {
-                                                            const availableTabs: Array<IArticleActionInteractive> = [
-                                                                'send_to',
-                                                            ];
+                                                        // FINISH: port this too
 
-                                                            const canPublish =
-                                                                sdApi.article.canPublish(state.itemWithChanges);
+                                                        // if (panelState.active) {
+                                                        //     panelActions.closePanel();
+                                                        // } else {
+                                                        //     const availableTabs: Array<IArticleActionInteractive> = [
+                                                        //         'send_to',
+                                                        //     ];
 
-                                                            if (canPublish) {
-                                                                availableTabs.push('publish');
-                                                            }
+                                                        //     const canPublish =
+                                                        //         sdApi.article.canPublish(state.itemWithChanges);
 
-                                                            dispatchInternalEvent('interactiveArticleActionStart', {
-                                                                items: [state.itemWithChanges],
-                                                                tabs: availableTabs,
-                                                                activeTab: canPublish ? 'publish' : availableTabs[0],
-                                                            });
-                                                        }
+                                                        //     if (canPublish) {
+                                                        //         availableTabs.push('publish');
+                                                        //     }
+
+                                                        //     dispatchInternalEvent('interactiveArticleActionStart', {
+                                                        //         items: [state.itemWithChanges],
+                                                        //         tabs: availableTabs,
+                                                        //         activeTab: canPublish ? 'publish' : availableTabs[0],
+                                                        //     });
+                                                        // }
                                                     }}
                                                 />
                                             </ButtonGroup>
@@ -1271,12 +1154,12 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                                                     }}
                                                 >
                                                     {
-                                                        defaultToolbarItems.concat(topbar2Widgets)
+                                                        this.props.topBar2Widgets
                                                             .map((Component, i) => {
                                                                 return (
                                                                     <Component
                                                                         key={i}
-                                                                        article={state.itemWithChanges}
+                                                                        item={state.itemWithChanges}
                                                                     />
                                                                 );
                                                             })
@@ -1288,7 +1171,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                                                         icon="preview-mode"
                                                         ariaValue={gettext('Print preview')}
                                                         onClick={() => {
-                                                            previewItems([this.computeLatestArticle()]);
+                                                            previewItem(this.computeLatestArticle());
                                                         }}
                                                     />
                                                 </ButtonGroup>
@@ -1300,7 +1183,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                                                     fields={state.profile.header}
                                                     fieldsData={state.fieldsDataWithChanges}
                                                     onChange={this.handleFieldChange}
-                                                    language={state.itemWithChanges.language}
+                                                    language={getLanguage(state.itemWithChanges)}
                                                     userPreferencesForFields={state.userPreferencesForFields}
                                                     useHeaderLayout
                                                     setUserPreferencesForFields={this.setUserPreferences}
@@ -1317,7 +1200,7 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                                                 fields={state.profile.content}
                                                 fieldsData={state.fieldsDataWithChanges}
                                                 onChange={this.handleFieldChange}
-                                                language={state.itemWithChanges.language}
+                                                language={getLanguage(state.itemWithChanges)}
                                                 userPreferencesForFields={state.userPreferencesForFields}
                                                 setUserPreferencesForFields={this.setUserPreferences}
                                                 getVocabularyItems={this.getVocabularyItems}
@@ -1328,45 +1211,11 @@ export class AuthoringReact<T> extends React.PureComponent<IProps<T>, IState> {
                                         </div>
                                     </Layout.AuthoringMain>
                                 )}
-                                sideOverlay={
-                                    !pinned && OpenWidgetComponent != null
-                                        ? (
-                                            <OpenWidgetComponent
-                                                article={{...state.itemWithChanges}}
-                                                contentProfile={state.profile}
-                                                fieldsData={state.fieldsDataWithChanges}
-                                                authoringStorage={authoringStorage}
-                                                fieldsAdapter={fieldsAdapter}
-                                                onFieldsDataChange={this.handleFieldsDataChange}
-                                                readOnly={readOnly}
-                                                handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
-                                            />
-                                        )
-                                        : undefined
-                                }
+                                sideOverlay={!pinned && OpenWidgetComponent != null && OpenWidgetComponent}
                                 sideOverlayOpen={!pinned && OpenWidgetComponent != null}
-                                sidePanel={
-                                    pinned && OpenWidgetComponent != null
-                                        ? (
-                                            <OpenWidgetComponent
-                                                article={{...state.itemWithChanges}}
-                                                contentProfile={state.profile}
-                                                fieldsData={state.fieldsDataWithChanges}
-                                                authoringStorage={authoringStorage}
-                                                fieldsAdapter={fieldsAdapter}
-                                                onFieldsDataChange={this.handleFieldsDataChange}
-                                                readOnly={readOnly}
-                                                handleUnsavedChanges={() => this.handleUnsavedChanges(state)}
-                                            />
-                                        )
-                                        : undefined
-                                }
+                                sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
                                 sidePanelOpen={pinned && OpenWidgetComponent != null}
-                                sideBar={(
-                                    <Nav.SideBarTabs
-                                        items={sidebarTabs}
-                                    />
-                                )}
+                                sideBar={this.props.getSidebar(state.itemWithChanges)}
                             />
                         );
                     }}

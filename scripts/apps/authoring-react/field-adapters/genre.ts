@@ -1,12 +1,11 @@
 import {Map} from 'immutable';
-import {IAuthoringFieldV2, IVocabularyItem} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IVocabularyItem} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
 import {IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultipleV2} from './utilities';
 import {sdApi} from 'api';
 
-export const genre: IFieldAdapter = {
+export const genre: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const multiple = isMultipleV2('genre');
 

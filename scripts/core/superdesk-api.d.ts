@@ -43,7 +43,39 @@ declare module 'superdesk-api' {
         content: IFieldsV2;
     }
 
-    export type IFieldsAdapter = {[key: string]: IFieldAdapter};
+    export interface IFieldAdapter<T> {
+        getFieldV2: (
+            fieldEditor,
+            fieldSchema,
+        ) => IAuthoringFieldV2;
+
+        /**
+         * Allows to customize where values are stored.
+         *
+         * By default, custom fields are stored in IArticle['extra'].
+         * Some fields may require a different storing strategy.
+         * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
+         * HTML or plaintext version of the data in another location, and possibly annotations in third location.
+         */
+        storeValue?(value: unknown, article: T, config: unknown): T;
+
+        /**
+         * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
+         */
+        retrieveStoredValue?(item: T, authoringStorage: IAuthoringStorage<T>): unknown;
+
+        /**
+         * Must return a value in operational format.
+         */
+        onToggledOn?: ICustomFieldType<unknown, unknown, unknown, unknown>['onToggledOn'];
+    }
+
+    export type IFieldsAdapter<T> = {[key: string]: IFieldAdapter<T>};
+
+    export interface IStorageAdapter<T> {
+        storeValue(value: unknown, fieldId: string, entity: T, config: unknown): T;
+        retrieveStoredValue(item: T, fieldId: string): unknown;
+    }
 
     export interface IAuthoringAutoSave<T> {
         get(id: string): Promise<T>;
@@ -67,6 +99,7 @@ declare module 'superdesk-api' {
     export interface IAuthoringStorage<T> {
         lock(itemId: string): Promise<T>;
         unlock(itemId: string): Promise<T>;
+        isLockedInCurrentSession(item: T): boolean;
         getArticle(id: string): Promise<{saved: T | null, autosaved: T | null}>;
         saveArticle(current: T, original: T): Promise<T>;
         closeAuthoring(
@@ -75,7 +108,7 @@ declare module 'superdesk-api' {
             cancelAutosave: () => Promise<void>,
             doClose: () => void,
         ): Promise<void>;
-        getContentProfile(item: T, fieldsAdapter: IFieldsAdapter): Promise<IContentProfileV2>;
+        getContentProfile(item: T, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2>;
         getUserPreferences(): Promise<any>;
         autosave: IAuthoringAutoSave<T>;
     }
@@ -95,7 +128,7 @@ declare module 'superdesk-api' {
      */
     export type IDisplayPriority = number;
 
-    export interface IArticleAction {
+    export interface IArticleAction { // FINISH: rename to IAuthoringAction
         groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;
@@ -148,7 +181,8 @@ declare module 'superdesk-api' {
             contentProfile?: IContentProfileV2;
             fieldsData?: OrderedMap<string, unknown>;
             authoringStorage: IAuthoringStorage<IArticle>;
-            fieldsAdapter: IFieldsAdapter;
+            fieldsAdapter: IFieldsAdapter<IArticle>;
+            storageAdapter: IStorageAdapter<IArticle>;
 
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
 
@@ -273,7 +307,7 @@ declare module 'superdesk-api' {
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
-            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
+            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps<unknown>>>;
             authoring?: {
                 /**
                  * Updates can be intercepted and modified. Return value will be used to compute a patch.
@@ -335,7 +369,7 @@ declare module 'superdesk-api' {
 
     export interface IAuthor {
         // !!! _id is optional. It will not be present in ingested items.
-        _id?: Array<string, string>; // user id, role
+        _id?: [string, string]; // user id, role
 
         name: string;
         scheme: any | null;
@@ -724,10 +758,6 @@ declare module 'superdesk-api' {
         _autosave?: any;
         _autosaved?: any;
         _locked?: boolean;
-
-        attachments?: Array<{
-            attachment: string;
-        }>;
     }
 
     export interface IDangerousArticlePatchingOptions {
@@ -964,7 +994,6 @@ declare module 'superdesk-api' {
     export interface IContentProfile {
         _id: string;
         type: keyof typeof IContentProfileType;
-        type: 'text';
         label: string;
         description: string;
         schema: Object;
@@ -2176,8 +2205,8 @@ declare module 'superdesk-api' {
             getRelativeOrAbsoluteDateTime(
                 datetimeString: string,
                 format: string,
-                relativeDuration: number = 1,
-                relativeUnit: string = 'days'
+                relativeDuration: number, // = 1
+                relativeUnit: string, // = 'days'
             ): string;
         };
         privileges: {
@@ -2237,7 +2266,7 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
-            memoize<T extends ICallable>(func: T, maxCacheEntryCount = 1): T;
+            memoize<T extends ICallable>(func: T, maxCacheEntryCount): T; // maxCacheEntryCount = 1
             generatePatch<T>(a: Partial<T>, b: Partial<T>): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
@@ -2251,7 +2280,7 @@ declare module 'superdesk-api' {
             throttleAndCombineArray<T>(
                 fn: IHandler<Array<T>>,
                 wait: number,
-                options?: ThrottleSettings,
+                options?: import('lodash').ThrottleSettings,
             );
 
             querySelectorParent(
@@ -2681,7 +2710,7 @@ declare module 'superdesk-api' {
         label: string;
 
         editorComponent: React.ComponentClass<IEditorComponentProps<IValueOperational, IConfig, IUserPreferences>>;
-        previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational>>;
+        previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational, IConfig>>;
 
         /**
          * Must return `true` if not empty.

@@ -3,7 +3,7 @@ import {Map} from 'immutable';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {IArticle, IAuthoringStorage, IContentProfileV2, IFieldsAdapter} from 'superdesk-api';
+import {IArticle, IAuthoringStorage, IContentProfileV2, IFieldsAdapter, IStorageAdapter} from 'superdesk-api';
 import {showModal} from 'core/services/modalService';
 import {getFieldsData} from '../authoring-react';
 import {Spacer} from 'core/ui/components/Spacer';
@@ -11,14 +11,13 @@ import {gettext} from 'core/utils';
 import {Button} from 'superdesk-ui-framework/react';
 import {PreviewArticle} from '../preview-article';
 import {ViewDifference} from './view-difference';
-import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
-import {preferences} from 'api/preferences';
 
 interface IProps {
     item1: {label: string; article: IArticle};
     item2: {label: string; article: IArticle};
     authoringStorage: IAuthoringStorage<IArticle>;
-    fieldsAdapter: IFieldsAdapter;
+    fieldsAdapter: IFieldsAdapter<IArticle>;
+    storageAdapter: IStorageAdapter<IArticle>;
     closeModal(): void;
 }
 
@@ -77,22 +76,25 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
         const profile2 = contentProfiles.get(article2.profile);
         const allFields1 = profile1.header.merge(profile1.content).toOrderedMap();
         const allFields2 = profile2.header.merge(profile2.content).toOrderedMap();
-        const {fieldsAdapter} = this.props;
+        const {fieldsAdapter, authoringStorage, storageAdapter} = this.props;
 
-        const userPreferencesForFields = preferences.get(AUTHORING_FIELD_PREFERENCES);
-
+        // FINISH:
         const fieldsData1 = getFieldsData(
             article1,
             allFields1,
-            userPreferencesForFields,
             fieldsAdapter,
+            authoringStorage,
+            storageAdapter,
+            article1.language,
         );
 
         const fieldsData2 = getFieldsData(
             article2,
             allFields2,
-            userPreferencesForFields,
             fieldsAdapter,
+            authoringStorage,
+            storageAdapter,
+            article2.language,
         );
 
         const scrollableColumnCss: React.CSSProperties = {
@@ -196,11 +198,13 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
     }
 }
 
+// FINISH: refactor to use generics instead of IArticle
 export function compareArticles(
     item1: {label: string; article: IArticle},
     item2: {label: string; article: IArticle},
     authoringStorage: IAuthoringStorage<IArticle>,
-    fieldsAdapter: IFieldsAdapter,
+    fieldsAdapter: IFieldsAdapter<IArticle>,
+    storageAdapter: IStorageAdapter<IArticle>,
 ) {
     showModal(({closeModal}) => (
         <CompareArticles
@@ -209,6 +213,7 @@ export function compareArticles(
             item2={item2}
             authoringStorage={authoringStorage}
             fieldsAdapter={fieldsAdapter}
+            storageAdapter={storageAdapter}
         />
     ));
 }

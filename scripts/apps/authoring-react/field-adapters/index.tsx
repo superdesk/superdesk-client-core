@@ -43,36 +43,8 @@ import {attachments} from './attachments';
 import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
 import {computeDerivedProperties} from './utilities/compute-derived-properties';
 
-export interface IFieldAdapter {
-    getFieldV2: (
-        fieldEditor,
-        fieldSchema,
-    ) => IAuthoringFieldV2;
-
-    /**
-     * Allows to customize where values are stored.
-     *
-     * By default, custom fields are stored in IArticle['extra'].
-     * Some fields may require a different storing strategy.
-     * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
-     * HTML or plaintext version of the data in another location, and possibly annotations in third location.
-     */
-    storeValue?(value: unknown, article: IArticle, config: unknown): IArticle;
-
-    /**
-     * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
-     * FINISH: convert to IAuthoringStorage<T>
-     */
-    retrieveStoredValue?(item: IArticle, authoringStorage: IAuthoringStorage<IArticle>): unknown;
-
-    /**
-     * Must return a value in operational format.
-     */
-    onToggledOn?: ICustomFieldType<unknown, unknown, unknown, unknown>['onToggledOn'];
-}
-
-export function getBaseFieldsAdapter(): IFieldsAdapter {
-    const adapter: IFieldsAdapter = {
+export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
+    const adapter: IFieldsAdapter<IArticle> = {
         abstract: abstract,
         anpa_category: anpa_category,
         anpa_take_key: anpa_take_key,
@@ -117,10 +89,13 @@ function storeEditor3ValueGeneric(
     return articleUpdated;
 }
 
-export function retrieveStoredValueEditor3Generic<T>(
+/**
+ * Universal function to retrieve stored values where field adapters are not present.
+ */
+export function retrieveStoredValueEditor3Generic(
     fieldId: string,
     article: IArticle,
-    authoringStorage: IAuthoringStorage<T>,
+    authoringStorage: IAuthoringStorage<IArticle>,
 ) {
     const rawContentState: RawDraftContentState = (() => {
         const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState'][0];
@@ -187,9 +162,9 @@ export function storeEditor3ValueBase(
  * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
  * to {@link IAuthoringFieldV2}
  */
-export function getFieldsAdapter<T>(authoringStorage: IAuthoringStorage<T>): IFieldsAdapter {
+export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>): IFieldsAdapter<IArticle> {
     const customFieldVocabularies = getCustomFieldVocabularies();
-    const adapter: IFieldsAdapter = getBaseFieldsAdapter();
+    const adapter: IFieldsAdapter<IArticle> = getBaseFieldsAdapter();
 
     for (const vocabulary of customFieldVocabularies) {
         if (vocabulary.field_type === 'text') {

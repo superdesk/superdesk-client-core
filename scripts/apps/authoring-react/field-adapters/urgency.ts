@@ -1,10 +1,9 @@
-import {IAuthoringFieldV2} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
 import {IDropdownConfigManualSource} from '../fields/dropdown';
 import {sdApi} from 'api';
 
-export const urgency: IFieldAdapter = {
+export const urgency: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const vocabulary = sdApi.vocabularies.getAll().get('urgency');
 

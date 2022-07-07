@@ -126,6 +126,7 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
             },
             this.props.authoringStorage,
             this.props.fieldsAdapter,
+            this.props.storageAdapter,
         );
     }
 
