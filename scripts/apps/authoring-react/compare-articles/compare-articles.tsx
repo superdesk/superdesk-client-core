@@ -9,7 +9,7 @@ import {getFieldsData} from '../authoring-react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {Button} from 'superdesk-ui-framework/react';
-import {PreviewArticle} from '../preview-article';
+import {PreviewAuthoringItem} from '../preview-article';
 import {ViewDifference} from './view-difference';
 
 interface IProps {
@@ -152,8 +152,7 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
                             {
                                 primaryColumnShown && (
                                     <div style={scrollableColumnCss}>
-                                        <PreviewArticle
-                                            article={article1}
+                                        <PreviewAuthoringItem
                                             profile={profile1}
                                             fieldsData={fieldsData1}
                                             fieldPadding={fieldPadding}
@@ -165,8 +164,7 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
                             {
                                 secondaryColumnShown && (
                                     <div style={scrollableColumnCss}>
-                                        <PreviewArticle
-                                            article={article2}
+                                        <PreviewAuthoringItem
                                             profile={profile2}
                                             fieldsData={fieldsData2}
                                             fieldPadding={fieldPadding}

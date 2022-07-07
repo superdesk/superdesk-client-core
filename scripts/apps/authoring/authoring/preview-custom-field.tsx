@@ -22,7 +22,6 @@ export class PreviewCustomField extends React.PureComponent<IProps> {
         return (
             <div>
                 <FieldType.previewComponent
-                    item={item}
                     value={get(item.extra, field._id)}
                     config={field.custom_field_config}
                 />

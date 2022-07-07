@@ -85,7 +85,6 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                         <div>
                                             <FieldEditorConfig.previewComponent
-                                                item={article2}
                                                 value={fieldsData2.get(field.id)}
                                                 config={field.fieldConfig}
                                             />
@@ -108,7 +107,6 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                     <div>
                                         <FieldEditorConfig.previewComponent
-                                            item={article2}
                                             value={fieldsData2.get(field.id)}
                                             config={field.fieldConfig}
                                         />
@@ -137,7 +135,6 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                 <div>
                                     <FieldEditorConfig.previewComponent
-                                        item={article1}
                                         value={fieldsData1.get(field.id)}
                                         config={field.fieldConfig}
                                     />

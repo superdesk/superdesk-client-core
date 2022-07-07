@@ -45,6 +45,7 @@ import {Map} from 'immutable';
 import {getField} from 'apps/fields';
 import {preferences} from 'api/preferences';
 import {dispatchEditorEvent, addEditorEventListener} from './authoring-react-editor-events';
+import {previewAuthoringEntity} from './preview-article-modal';
 
 export function getFieldsData<T>(
     item: T,
@@ -275,14 +276,6 @@ function waitForCssAnimation(): Promise<void> {
             500, // transition time taken from styles/sass/layouts.scss #authoring-container
         );
     });
-}
-
-/**
- * See: scripts/apps/authoring/preview/fullPreviewMultiple.tsx
- */
-function previewItem<T>(item: T) {
-    // eslint-disable-next-line no-alert
-    alert('not implemented'); // FINISH: implement
 }
 
 export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IProps<T>, IState<T>> {
@@ -1171,7 +1164,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                         icon="preview-mode"
                                                         ariaValue={gettext('Print preview')}
                                                         onClick={() => {
-                                                            previewItem(this.computeLatestArticle());
+                                                            previewAuthoringEntity(
+                                                                state.profile,
+                                                                state.fieldsDataWithChanges,
+                                                            );
                                                         }}
                                                     />
                                                 </ButtonGroup>

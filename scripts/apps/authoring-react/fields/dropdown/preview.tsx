@@ -11,14 +11,13 @@ type IProps = IPreviewComponentProps<IDropdownValue, IDropdownConfig>;
 
 export class Preview extends React.PureComponent<IProps> {
     render() {
-        const {item, value, config} = this.props;
+        const {value, config} = this.props;
         const {source} = config;
 
         switch (source) {
         case 'manual-entry':
             return (
                 <PreviewManualEntry
-                    item={item}
                     value={value}
                     config={config}
                 />
@@ -26,7 +25,6 @@ export class Preview extends React.PureComponent<IProps> {
         case 'vocabulary':
             return (
                 <PreviewVocabulary
-                    item={item}
                     value={value}
                     config={config}
                 />
@@ -34,7 +32,6 @@ export class Preview extends React.PureComponent<IProps> {
         case 'remote-source':
             return (
                 <PreviewRemoteSource
-                    item={item}
                     value={value}
                     config={config}
                 />
@@ -42,7 +39,6 @@ export class Preview extends React.PureComponent<IProps> {
         case 'dropdown-tree':
             return (
                 <PreviewDropdownTree
-                    item={item}
                     value={value}
                     config={config}
                 />

@@ -21,7 +21,7 @@ import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {omitFields} from '../../data-layer';
 import {compareArticles} from '../../compare-articles/compare-articles';
-import {previewArticle} from '../../preview-article-modal';
+import {previewAuthoringEntity} from '../../preview-article-modal';
 import {getArticleAdapter} from '../../article-adapter';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
 
@@ -253,11 +253,10 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
                                             <Button
                                                 text={gettext('Preview')}
                                                 onClick={() => {
-                                                    previewArticle(
-                                                        gettext('version {{n}}', {n: item._current_version}),
-                                                        item,
+                                                    previewAuthoringEntity(
                                                         contentProfile,
                                                         fieldsData,
+                                                        gettext('version {{n}}', {n: item._current_version}),
                                                     );
                                                 }}
                                                 style="hollow"

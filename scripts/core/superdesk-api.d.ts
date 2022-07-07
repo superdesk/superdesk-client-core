@@ -2676,7 +2676,6 @@ declare module 'superdesk-api' {
     }
 
     export interface IPreviewComponentProps<IValue, IConfig> {
-        item: IArticle;
         value: IValue;
         config: IConfig;
     }

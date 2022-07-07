@@ -1,30 +1,53 @@
 import React from 'react';
-import {IArticle, IContentProfileV2} from 'superdesk-api';
-import {showModal} from 'core/services/modalService';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {PreviewArticle} from './preview-article';
+import {IContentProfileV2} from 'superdesk-api';
+import {showPrintableModal} from 'core/services/modalService';
+import {PreviewAuthoringItem} from './preview-article';
+import {Button} from 'superdesk-ui-framework/react';
+import {gettext} from 'core/utils';
 
-export function previewArticle(
-    label: string,
-    article: IArticle,
+export function previewAuthoringEntity(
     profile: IContentProfileV2,
     fieldsData: Immutable.Map<string, any>,
+    label?: string,
 ) {
-    showModal(({closeModal}) => (
-        <Modal size="large">
-            <ModalHeader onClose={closeModal}>
-                {label}
-            </ModalHeader>
+    showPrintableModal(({closeModal, Wrapper, showPrintDialog}) => (
+        <Wrapper
+            toolbar={(
+                <React.Fragment>
+                    <div>
+                        {label != null && <div>{label}</div>}
+                    </div>
 
-            <ModalBody>
-                <PreviewArticle
-                    article={article}
+                    <div>
+                        <Button
+                            text={gettext('Print')}
+                            icon="print"
+                            iconOnly
+                            style="hollow"
+                            onClick={() => {
+                                showPrintDialog();
+                            }}
+                        />
+
+                        <Button
+                            text={gettext('Close')}
+                            icon="close-small"
+                            iconOnly
+                            style="hollow"
+                            onClick={() => {
+                                closeModal();
+                            }}
+                        />
+                    </div>
+                </React.Fragment>
+            )}
+            contentSections={[
+                <PreviewAuthoringItem
+                    key="0"
                     profile={profile}
                     fieldsData={fieldsData}
-                />
-            </ModalBody>
-        </Modal>
+                />,
+            ]}
+        />
     ));
 }

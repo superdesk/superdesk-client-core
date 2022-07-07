@@ -12,6 +12,7 @@
 
 .sd-full-preview--header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     padding: 0.8rem 1.6rem;
     border-bottom: 1px solid #c5c5c5;
@@ -34,7 +35,7 @@
 }
 
 @media print
-{    
+{
     body.prepare-to-print {
         > *:not(.print-container) {
             display: none;
