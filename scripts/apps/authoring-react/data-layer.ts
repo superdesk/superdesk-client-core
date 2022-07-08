@@ -169,7 +169,7 @@ export function omitFields(
 
 export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
     autosave: new AutoSaveHttp(AUTOSAVE_TIMEOUT),
-    getArticle: (id) => {
+    getEntity: (id) => {
         // TODO: take published items into account
 
         return dataApi.findOne<IArticle>('archive', id).then((_saved) => {
@@ -209,7 +209,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             return adapter.toAuthoringReact(article);
         });
     },
-    saveArticle: (current, original) => {
+    saveEntity: (current, original) => {
         const adapter = getArticleAdapter();
 
         return authoringApiCommon.saveBefore(current, original).then((_current) => {
@@ -267,7 +267,7 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
         return authoringApiCommon.closeAuthoring(
             original,
             hasUnsavedChanges,
-            () => authoringStorageIArticle.saveArticle(current, original).then(() => undefined),
+            () => authoringStorageIArticle.saveEntity(current, original).then(() => undefined),
             () => unlockArticle(original._id),
             cancelAutosave,
             doClose,

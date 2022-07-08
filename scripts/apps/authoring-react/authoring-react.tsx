@@ -82,7 +82,7 @@ export function getFieldsData<T>(
     }).toMap();
 }
 
-function serializeFieldsDataAndApplyOnArticle<T extends IBaseRestApiResponse>(
+function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
     item: T,
     fieldsProfile: Map<string, IAuthoringFieldV2>,
     fieldsData: Map<string, unknown>,
@@ -140,7 +140,7 @@ export interface IExposedFromAuthoring<T> {
 }
 
 interface IProps<T> {
-    itemId: IArticle['_id'];
+    itemId: string;
     getLanguage(entity: T): string;
     onClose(): void;
     authoringStorage: IAuthoringStorage<T>;
@@ -295,7 +295,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleFieldsDataChange = this.handleFieldsDataChange.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
-        this.computeLatestArticle = this.computeLatestArticle.bind(this);
+        this.computeLatestEntity = this.computeLatestEntity.bind(this);
         this.setUserPreferences = this.setUserPreferences.bind(this);
         this.cancelAutosave = this.cancelAutosave.bind(this);
         this.getVocabularyItems = this.getVocabularyItems.bind(this);
@@ -395,7 +395,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * This is a relatively computationally expensive operation that serializes all fields.
      * It is meant to be called when an article is to be saved/autosaved.
      */
-    computeLatestArticle(): T {
+    computeLatestEntity(): T {
         const state = this.state;
 
         if (state.initialized !== true) {
@@ -404,7 +404,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         const allFields = state.profile.header.merge(state.profile.content);
 
-        const itemWithFieldsApplied = serializeFieldsDataAndApplyOnArticle(
+        const itemWithFieldsApplied = serializeFieldsDataAndApplyOnEntity(
             state.itemWithChanges,
             allFields,
             state.fieldsDataWithChanges,
@@ -482,7 +482,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         Promise.all(
             [
-                authoringStorage.getArticle(this.props.itemId).then((item) => {
+                authoringStorage.getEntity(this.props.itemId).then((item) => {
                     const itemCurrent = item.autosaved ?? item.saved;
 
                     return authoringStorage.getContentProfile(itemCurrent, this.props.fieldsAdapter).then((profile) => {
@@ -596,6 +596,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 /**
                  * Only patch these fields to preserve
                  * unsaved changes.
+                 * FINISH: remove IArticle usage
                  */
                 const patch: Partial<IArticle> = {
                     _etag,
@@ -669,7 +670,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     return;
                 }
 
-                authoringStorage.getArticle(state.itemOriginal._id).then((item) => {
+                authoringStorage.getEntity(state.itemOriginal._id).then((item) => {
                     this.setState(getInitialState(
                         item,
                         state.profile,
@@ -692,7 +693,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     return;
                 }
 
-                authoringStorage.getArticle(state.itemOriginal._id).then((item) => {
+                authoringStorage.getEntity(state.itemOriginal._id).then((item) => {
                     this.setState(getInitialState(
                         item,
                         state.profile,
@@ -738,7 +739,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 if (this.hasUnsavedChanges()) {
                     authoringStorage.autosave.schedule(
                         () => {
-                            return this.computeLatestArticle();
+                            return this.computeLatestEntity();
                         },
                         (autosaved) => {
                             this.setState({
@@ -795,8 +796,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 loading: true,
             });
 
-            return authoringStorage.saveArticle(
-                this.computeLatestArticle(),
+            return authoringStorage.saveEntity(
+                this.computeLatestEntity(),
                 state.itemOriginal,
             ).then((item: T) => {
                 const nextState = getInitialState(
@@ -861,7 +862,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         });
 
         authoringStorage.closeAuthoring(
-            this.computeLatestArticle(),
+            this.computeLatestEntity(),
             state.itemOriginal,
             () => {
                 authoringStorage.autosave.cancel();

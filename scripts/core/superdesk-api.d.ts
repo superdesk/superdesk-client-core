@@ -100,8 +100,8 @@ declare module 'superdesk-api' {
         lock(itemId: string): Promise<T>;
         unlock(itemId: string): Promise<T>;
         isLockedInCurrentSession(item: T): boolean;
-        getArticle(id: string): Promise<{saved: T | null, autosaved: T | null}>;
-        saveArticle(current: T, original: T): Promise<T>;
+        getEntity(id: string): Promise<{saved: T | null, autosaved: T | null}>;
+        saveEntity(current: T, original: T): Promise<T>;
         closeAuthoring(
             current: T,
             original: T,
