@@ -20,7 +20,7 @@ import {Map} from 'immutable';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {omitFields} from '../../data-layer';
-import {compareArticles} from '../../compare-articles/compare-articles';
+import {compareAuthoringEntities} from '../../compare-articles/compare-articles';
 import {previewAuthoringEntity} from '../../preview-article-modal';
 import {getArticleAdapter} from '../../article-adapter';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
@@ -115,19 +115,20 @@ export class VersionsTab extends React.PureComponent<IProps, IState> {
     compareVersions() {
         const {from, to} = this.state.selectedForComparison;
 
-        compareArticles(
-            {
+        compareAuthoringEntities({
+            item1: {
                 label: gettext('version {{n}}', {n: from._current_version}),
-                article: from,
+                entity: from,
             },
-            {
+            item2: {
                 label: gettext('version {{n}}', {n: to._current_version}),
-                article: to,
+                entity: to,
             },
-            this.props.authoringStorage,
-            this.props.fieldsAdapter,
-            this.props.storageAdapter,
-        );
+            getLanguage: () => '',
+            authoringStorage: this.props.authoringStorage,
+            fieldsAdapter: this.props.fieldsAdapter,
+            storageAdapter: this.props.storageAdapter,
+        });
     }
 
     componentDidMount() {

@@ -3,26 +3,30 @@ import {Map} from 'immutable';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {IArticle, IAuthoringStorage, IContentProfileV2, IFieldsAdapter, IStorageAdapter} from 'superdesk-api';
+import {IAuthoringStorage, IContentProfileV2, IFieldsAdapter, IStorageAdapter} from 'superdesk-api';
 import {showModal} from 'core/services/modalService';
 import {getFieldsData} from '../authoring-react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {Button} from 'superdesk-ui-framework/react';
-import {PreviewAuthoringItem} from '../preview-article';
+import {PreviewAuthoringItem} from '../preview-authoring-item';
 import {ViewDifference} from './view-difference';
 
-interface IProps {
-    item1: {label: string; article: IArticle};
-    item2: {label: string; article: IArticle};
-    authoringStorage: IAuthoringStorage<IArticle>;
-    fieldsAdapter: IFieldsAdapter<IArticle>;
-    storageAdapter: IStorageAdapter<IArticle>;
+interface IComparisonData<T> {
+    item1: {label: string; entity: T};
+    item2: {label: string; entity: T};
+    getLanguage(entity: T): string;
+    authoringStorage: IAuthoringStorage<T>;
+    fieldsAdapter: IFieldsAdapter<T>;
+    storageAdapter: IStorageAdapter<T>;
+}
+
+interface IProps<T> extends IComparisonData<T> {
     closeModal(): void;
 }
 
-interface IState {
-    contentProfiles: Map<string, IContentProfileV2> | null;
+interface IState<T> {
+    contentProfiles: Map<T, IContentProfileV2> | null;
     primaryColumnShown: boolean;
     secondaryColumnShown: boolean;
     differenceColumnShown: boolean;
@@ -30,8 +34,8 @@ interface IState {
 
 const fieldPadding = 8;
 
-export class CompareArticles extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+export class CompareAuthoringEntities<T> extends React.PureComponent<IProps<T>, IState<T>> {
+    constructor(props: IProps<T>) {
         super(props);
 
         this.state = {
@@ -43,16 +47,21 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
     }
 
     componentDidMount() {
-        const {authoringStorage, fieldsAdapter} = this.props;
+        const {authoringStorage, fieldsAdapter, item1, item2} = this.props;
 
         Promise.all(
             [
-                this.props.item1.article,
-                this.props.item2.article,
+                item1.entity,
+                item2.entity,
             ].map((item) => authoringStorage.getContentProfile(item, fieldsAdapter)),
         ).then((res) => {
+            let profilesMap = Map<T, IContentProfileV2>();
+
+            profilesMap = profilesMap.set(item1.entity, res[0]);
+            profilesMap = profilesMap.set(item2.entity, res[1]);
+
             this.setState({
-                contentProfiles: Map(res.map((profile) => [profile.id, profile])),
+                contentProfiles: profilesMap,
             });
         });
     }
@@ -64,37 +73,39 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
             differenceColumnShown,
         } = this.state;
 
+        const {item1, item2, getLanguage, fieldsAdapter, authoringStorage, storageAdapter} = this.props;
+
         if (contentProfiles == null) {
             return null;
         }
 
-        const article1 = this.props.item1.article;
-        const article2 = this.props.item2.article;
-        const article1Label = this.props.item1.label;
-        const article2Label = this.props.item2.label;
-        const profile1 = contentProfiles.get(article1.profile);
-        const profile2 = contentProfiles.get(article2.profile);
+        const entity1 = item1.entity;
+        const entity2 = item2.entity;
+        const entity1Label = item1.label;
+        const entity2Label = item2.label;
+        const language1 = getLanguage(item1.entity);
+        const language2 = getLanguage(item2.entity);
+        const profile1 = contentProfiles.get(entity1);
+        const profile2 = contentProfiles.get(entity2);
         const allFields1 = profile1.header.merge(profile1.content).toOrderedMap();
         const allFields2 = profile2.header.merge(profile2.content).toOrderedMap();
-        const {fieldsAdapter, authoringStorage, storageAdapter} = this.props;
 
-        // FINISH:
         const fieldsData1 = getFieldsData(
-            article1,
+            entity1,
             allFields1,
             fieldsAdapter,
             authoringStorage,
             storageAdapter,
-            article1.language,
+            language1,
         );
 
         const fieldsData2 = getFieldsData(
-            article2,
+            entity2,
             allFields2,
             fieldsAdapter,
             authoringStorage,
             storageAdapter,
-            article2.language,
+            language2,
         );
 
         const scrollableColumnCss: React.CSSProperties = {
@@ -109,7 +120,7 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
         return (
             <Modal size="full-screen">
                 <ModalHeader onClose={() => this.props.closeModal()}>
-                    {gettext('Comparing "{{x}}"(primary) to "{{y}}"(secondary)', {x: article1Label, y: article2Label})}
+                    {gettext('Comparing "{{x}}"(primary) to "{{y}}"(secondary)', {x: entity1Label, y: entity2Label})}
                 </ModalHeader>
 
                 <ModalBody style={{background: '#e8eaed', padding: '8px'}}>
@@ -177,8 +188,6 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
                                 differenceColumnShown && (
                                     <div style={scrollableColumnCss}>
                                         <ViewDifference
-                                            article1={article1}
-                                            article2={article2}
                                             profile1={profile1}
                                             profile2={profile2}
                                             fieldsData1={fieldsData1}
@@ -196,22 +205,11 @@ export class CompareArticles extends React.PureComponent<IProps, IState> {
     }
 }
 
-// FINISH: refactor to use generics instead of IArticle
-export function compareArticles(
-    item1: {label: string; article: IArticle},
-    item2: {label: string; article: IArticle},
-    authoringStorage: IAuthoringStorage<IArticle>,
-    fieldsAdapter: IFieldsAdapter<IArticle>,
-    storageAdapter: IStorageAdapter<IArticle>,
-) {
+export function compareAuthoringEntities<T>(comparisonData: IComparisonData<T>) {
     showModal(({closeModal}) => (
-        <CompareArticles
+        <CompareAuthoringEntities
+            {...comparisonData}
             closeModal={closeModal}
-            item1={item1}
-            item2={item2}
-            authoringStorage={authoringStorage}
-            fieldsAdapter={fieldsAdapter}
-            storageAdapter={storageAdapter}
         />
     ));
 }
