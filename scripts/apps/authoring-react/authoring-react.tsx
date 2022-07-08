@@ -4,7 +4,7 @@ import {
     IExtensionActivationResult,
     IAuthoringFieldV2,
     IContentProfileV2,
-    IArticleAction,
+    IAuthoringAction,
     IVocabularyItem,
     IAuthoringStorage,
     IFieldsAdapter,
@@ -146,8 +146,8 @@ interface IProps<T> {
     authoringStorage: IAuthoringStorage<T>;
     storageAdapter: IStorageAdapter<T>;
     fieldsAdapter: IFieldsAdapter<T>;
-    getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IArticleAction>>; // three dots menu actions
-    getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>; // FINISH: make optional
+    getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IAuthoringAction>>; // three dots menu actions
+    getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
     getAuthoringTopBarWidgets(
         options: IExposedFromAuthoring<T>,
     ): Array<ITopBarWidget<T>>;
@@ -1021,7 +1021,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 return (
                                     this.props.getActions?.(exposed) ?? Promise.resolve([])
                                 ).then((actions) => {
-                                    const coreActions: Array<IArticleAction> = [];
+                                    const coreActions: Array<IAuthoringAction> = [];
 
                                     if (appConfig.features.useTansaProofing !== true) {
                                         if (state.spellcheckerEnabled) {

@@ -1,4 +1,4 @@
-import {IExtensionActivationResult, IArticleAction} from 'superdesk-api';
+import {IExtensionActivationResult, IAuthoringAction} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
 import {runTansa} from '../editor3-tansa-integration';
@@ -17,7 +17,7 @@ export function registerAuthoringReactFields() {
         contributions: {
             getAuthoringActions: (article, contentProfile, fieldsData) => {
                 if (appConfig.features.useTansaProofing === true) {
-                    const checkSpellingAction: IArticleAction = {
+                    const checkSpellingAction: IAuthoringAction = {
                         label: gettext('Check spelling'),
                         onTrigger: () => {
                             runTansa(contentProfile, fieldsData);

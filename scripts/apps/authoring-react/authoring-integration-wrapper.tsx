@@ -7,7 +7,7 @@ import {Button, ButtonGroup, NavButton} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
-    IArticleAction,
+    IAuthoringAction,
     IAuthoringSideWidget,
     IContentProfileV2,
     IExtensionActivationResult,
@@ -41,7 +41,7 @@ function getAuthoringActionsFromExtensions(
     item: IArticle,
     contentProfile: IContentProfileV2,
     fieldsData: Map<string, unknown>,
-): Promise<Array<IArticleAction>> {
+): Promise<Array<IAuthoringAction>> {
     const actionGetters
         : Array<IExtensionActivationResult['contributions']['getAuthoringActions']>
     = flatMap(

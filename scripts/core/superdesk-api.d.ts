@@ -128,7 +128,7 @@ declare module 'superdesk-api' {
      */
     export type IDisplayPriority = number;
 
-    export interface IArticleAction { // FINISH: rename to IAuthoringAction
+    export interface IAuthoringAction {
         groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;
@@ -279,7 +279,7 @@ declare module 'superdesk-api' {
                 article: IArticle,
                 contentProfile: IContentProfileV2,
                 fieldsData: import('immutable').Map<string, unknown>,
-            ): Promise<Array<IArticleAction>>;
+            ): Promise<Array<IAuthoringAction>>;
 
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -293,7 +293,7 @@ declare module 'superdesk-api' {
             };
             entities?: {
                 article?: {
-                    getActions?(article: IArticle): Promise<Array<IArticleAction>>;
+                    getActions?(article: IArticle): Promise<Array<IAuthoringAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
                     onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>, dangerousOptions?: IDangerousArticlePatchingOptions,): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;

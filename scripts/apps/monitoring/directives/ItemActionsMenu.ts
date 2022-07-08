@@ -1,11 +1,11 @@
 import {getAuthoringMenuGroups} from '../../authoring/authoring/constants';
-import {IArticle, IArticleAction} from 'superdesk-api';
+import {IArticle, IAuthoringAction} from 'superdesk-api';
 import {IActivity} from 'superdesk-interfaces/Activity';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {IActivityService} from 'core/activity/activity';
 
 type IAction =
-    {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IArticleAction};
+    {kind: 'activity-based'; activity: IActivity} | {kind: 'extension-action'; articleAction: IAuthoringAction};
 
 interface IAuthoringMenuGroup {
     _id: string;
@@ -152,7 +152,7 @@ export function ItemActionsMenu(
                         // actions(except viewing an item) are not allowed for items in legal archive
                         if (item._type !== 'legal_archive' && scope.allowedActions == null) {
                             // handle actions from extensions
-                            let extensionActionsByGroupName: {[groupName: string]: Array<IArticleAction>} = {};
+                            let extensionActionsByGroupName: {[groupName: string]: Array<IAuthoringAction>} = {};
 
                             for (const action of actionsFromExtensions) {
                                 const name = action.groupId ?? 'default';

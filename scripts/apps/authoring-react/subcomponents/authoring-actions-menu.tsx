@@ -1,16 +1,16 @@
 import React from 'react';
 import {groupBy} from 'lodash';
 import {Menu} from 'superdesk-ui-framework/react';
-import {IArticleAction} from 'superdesk-api';
+import {IAuthoringAction} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 
 interface IProps {
-    getActions: () => Promise<Array<IArticleAction>>;
+    getActions: () => Promise<Array<IAuthoringAction>>;
 }
 
 interface IState {
-    actions: Array<IArticleAction> | null;
+    actions: Array<IAuthoringAction> | null;
 }
 
 export class AuthoringActionsMenu extends React.PureComponent<IProps, IState> {
