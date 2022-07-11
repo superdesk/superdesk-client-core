@@ -39,6 +39,8 @@ export class ListItem extends React.PureComponent<IProps> {
 
         this.clickCount++;
         if (this.clickCount === 1) {
+            // Tell React to keep this `event` item around for processing
+            // inside the `window.setTimeout` callback function
             event.persist();
             this.singleClickTimer = window.setTimeout(() => {
                 this.clickCount = 0;
