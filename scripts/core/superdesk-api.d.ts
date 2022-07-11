@@ -113,6 +113,25 @@ declare module 'superdesk-api' {
         autosave: IAuthoringAutoSave<T>;
     }
 
+    interface IPropsAuthoring<T> {
+        itemId: string;
+        getLanguage(entity: T): string;
+        onClose(): void;
+        authoringStorage: IAuthoringStorage<T>;
+        storageAdapter: IStorageAdapter<T>;
+        fieldsAdapter: IFieldsAdapter<T>;
+        getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IAuthoringAction>>; // three dots menu actions
+        getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
+        getAuthoringTopBarWidgets(
+            options: IExposedFromAuthoring<T>,
+        ): Array<ITopBarWidget<T>>;
+        onEditingStart?(item: T): void;
+        onEditingEnd?(item: T): void;
+        getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+        getSidebar?(item: T): JSX.Element;
+        topBar2Widgets: Array<React.ComponentType<{item: T}>>;
+    }
+
 
     // EXTENSIONS
 
@@ -2169,6 +2188,7 @@ declare module 'superdesk-api' {
             Icon: React.ComponentType<IPropsIcon>;
             IconBig: React.ComponentType<IPropsIconBig>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?:string}>;
+            getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             getValidationHOC: <T>() => React.ComponentType<IPropsValidationHoc<T>>;

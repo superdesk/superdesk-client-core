@@ -93,6 +93,7 @@ import {VirtualListFromQuery} from './ui/components/virtual-lists/virtual-list-f
 import {SelectFromEndpoint} from './ui/components/virtual-lists/select';
 import {WithValidation} from './with-validation';
 import {DateTime} from './ui/components/DateTime';
+import {AuthoringReact} from 'apps/authoring-react/authoring-react';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -350,6 +351,7 @@ export function getSuperdeskApiImplementation(
             TopMenuDropdownButton,
             Icon,
             IconBig,
+            getAuthoringComponent: () => AuthoringReact,
             getDropdownTree: () => DropdownTree,
             Center,
             Spacer,

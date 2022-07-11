@@ -149,282 +149,287 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
             <WithInteractiveArticleActionsPanel location="authoring">
                 {(panelState, panelActions) => {
                     return (
-                        <AuthoringReact
-                            itemId={this.props.itemId}
-                            onClose={() => {
-                                ng.get('authoringWorkspace').close();
-                                ng.get('$rootScope').$applyAsync();
-                            }}
-                            authoringStorage={authoringStorageIArticle}
-                            fieldsAdapter={getFieldsAdapter(authoringStorageIArticle)}
-                            storageAdapter={{
-                                storeValue: (value, fieldId, article) => {
-                                    return {
-                                        ...article,
-                                        extra: {
-                                            ...(article.extra ?? {}),
-                                            [fieldId]: value,
-                                        },
-                                    };
-                                },
-                                retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
-                            }}
-                            getLanguage={(article) => article.language}
-                            onEditingStart={(article) => {
-                                dispatchCustomEvent('articleEditStart', article);
-                            }}
-                            onEditingEnd={(article) => {
-                                dispatchCustomEvent('articleEditEnd', article);
-                            }}
-                            getActions={({item, contentProfile, fieldsData}) => {
-                                return Promise.all([
-                                    getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
-                                    getArticleActionsFromExtensions(item),
-                                ]).then((res) => {
-                                    const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
+                        <div className="sd-authoring-react">
+                            <AuthoringReact
+                                itemId={this.props.itemId}
+                                onClose={() => {
+                                    ng.get('authoringWorkspace').close();
+                                    ng.get('$rootScope').$applyAsync();
+                                }}
+                                authoringStorage={authoringStorageIArticle}
+                                fieldsAdapter={getFieldsAdapter(authoringStorageIArticle)}
+                                storageAdapter={{
+                                    storeValue: (value, fieldId, article) => {
+                                        return {
+                                            ...article,
+                                            extra: {
+                                                ...(article.extra ?? {}),
+                                                [fieldId]: value,
+                                            },
+                                        };
+                                    },
+                                    retrieveStoredValue: (item: IArticle, fieldId) => item.extra?.[fieldId] ?? null,
+                                }}
+                                getLanguage={(article) => article.language}
+                                onEditingStart={(article) => {
+                                    dispatchCustomEvent('articleEditStart', article);
+                                }}
+                                onEditingEnd={(article) => {
+                                    dispatchCustomEvent('articleEditEnd', article);
+                                }}
+                                getActions={({item, contentProfile, fieldsData}) => {
+                                    return Promise.all([
+                                        getAuthoringActionsFromExtensions(item, contentProfile, fieldsData),
+                                        getArticleActionsFromExtensions(item),
+                                    ]).then((res) => {
+                                        const [authoringActionsFromExtensions, articleActionsFromExtensions] = res;
 
-                                    return [
-                                        ...authoringActionsFromExtensions,
-                                        ...articleActionsFromExtensions,
-                                    ];
-                                });
-                            }}
-                            getInlineToolbarActions={({
-                                item,
-                                hasUnsavedChanges,
-                                handleUnsavedChanges,
-                                save,
-                                closeAuthoring,
-                                stealLock,
-                            }) => {
-                                const itemState: ITEM_STATE = item.state;
-
-                                const saveButton: ITopBarWidget<IArticle> = {
-                                    group: 'end',
-                                    priority: 0.2,
-                                    component: () => (
-                                        <Button
-                                            text={gettext('Save')}
-                                            style="filled"
-                                            type="primary"
-                                            disabled={!hasUnsavedChanges()}
-                                            onClick={() => {
-                                                save();
-                                            }}
-                                        />
-                                    ),
-                                    availableOffline: true,
-                                };
-
-                                switch (itemState) {
-                                case ITEM_STATE.DRAFT:
-                                    return {
-                                        readOnly: false,
-                                        actions: [saveButton],
-                                    };
-
-                                case ITEM_STATE.SUBMITTED:
-                                case ITEM_STATE.IN_PROGRESS:
-                                case ITEM_STATE.ROUTED:
-                                case ITEM_STATE.FETCHED:
-                                case ITEM_STATE.UNPUBLISHED:
-                                    const actions: Array<ITopBarWidget<IArticle>> = [];
-
-                                    actions.push({
-                                        group: 'start',
-                                        priority: 0.2,
-                                        component: ({entity}) => <DeskAndStage article={entity} />,
-                                        availableOffline: false,
+                                        return [
+                                            ...authoringActionsFromExtensions,
+                                            ...articleActionsFromExtensions,
+                                        ];
                                     });
+                                }}
+                                getInlineToolbarActions={({
+                                    item,
+                                    hasUnsavedChanges,
+                                    handleUnsavedChanges,
+                                    save,
+                                    closeAuthoring,
+                                    stealLock,
+                                }) => {
+                                    const itemState: ITEM_STATE = item.state;
 
-                                    // FINISH: ensure locking is available in generic version of authoring
-                                    actions.push({
-                                        group: 'start',
-                                        priority: 0.1,
-                                        component: ({entity}) => (
-                                            <LockInfo
-                                                article={entity}
-                                                unlock={() => {
-                                                    stealLock();
+                                    const saveButton: ITopBarWidget<IArticle> = {
+                                        group: 'end',
+                                        priority: 0.2,
+                                        component: () => (
+                                            <Button
+                                                text={gettext('Save')}
+                                                style="filled"
+                                                type="primary"
+                                                disabled={!hasUnsavedChanges()}
+                                                onClick={() => {
+                                                    save();
                                                 }}
                                             />
                                         ),
-                                        availableOffline: false,
-                                    });
+                                        availableOffline: true,
+                                    };
 
-                                    if (sdApi.article.isLockedInCurrentSession(item)) {
-                                        actions.push(saveButton);
-                                    }
+                                    switch (itemState) {
+                                    case ITEM_STATE.DRAFT:
+                                        return {
+                                            readOnly: false,
+                                            actions: [saveButton],
+                                        };
 
-                                    if (
-                                        sdApi.article.isLockedInCurrentSession(item)
-                                        && appConfig.features.customAuthoringTopbar.toDesk === true
-                                        && sdApi.article.isPersonal(item) !== true
-                                    ) {
+                                    case ITEM_STATE.SUBMITTED:
+                                    case ITEM_STATE.IN_PROGRESS:
+                                    case ITEM_STATE.ROUTED:
+                                    case ITEM_STATE.FETCHED:
+                                    case ITEM_STATE.UNPUBLISHED:
+                                        const actions: Array<ITopBarWidget<IArticle>> = [];
+
                                         actions.push({
-                                            group: 'middle',
+                                            group: 'start',
                                             priority: 0.2,
-                                            component: () => (
-                                                <Button
-                                                    text={gettext('TD')}
-                                                    style="filled"
-                                                    onClick={() => {
-                                                        handleUnsavedChanges()
-                                                            .then(() => sdApi.article.sendItemToNextStage(item))
-                                                            .then(() => closeAuthoring());
+                                            component: ({entity}) => <DeskAndStage article={entity} />,
+                                            availableOffline: false,
+                                        });
+
+                                        // FINISH: ensure locking is available in generic version of authoring
+                                        actions.push({
+                                            group: 'start',
+                                            priority: 0.1,
+                                            component: ({entity}) => (
+                                                <LockInfo
+                                                    article={entity}
+                                                    unlock={() => {
+                                                        stealLock();
                                                     }}
                                                 />
                                             ),
                                             availableOffline: false,
                                         });
-                                    }
 
-                                    return {
-                                        readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
-                                        actions: actions,
-                                    };
+                                        if (sdApi.article.isLockedInCurrentSession(item)) {
+                                            actions.push(saveButton);
+                                        }
 
-                                case ITEM_STATE.INGESTED:
-                                    return {
-                                        readOnly: true,
-                                        actions: [], // fetch
-                                    };
-
-                                case ITEM_STATE.SPIKED:
-                                    return {
-                                        readOnly: true,
-                                        actions: [], // un-spike
-                                    };
-
-                                case ITEM_STATE.SCHEDULED:
-                                    return {
-                                        readOnly: true,
-                                        actions: [], // un-schedule
-                                    };
-
-                                case ITEM_STATE.PUBLISHED:
-                                case ITEM_STATE.CORRECTED:
-                                    return {
-                                        readOnly: true,
-                                        actions: [], // correct update kill takedown
-                                    };
-
-                                case ITEM_STATE.BEING_CORRECTED:
-                                    return {
-                                        readOnly: true,
-                                        actions: [], // cancel correction
-                                    };
-
-                                case ITEM_STATE.CORRECTION:
-                                    return {
-                                        readOnly: false,
-                                        actions: [], // cancel correction, save, publish
-                                    };
-
-                                case ITEM_STATE.KILLED:
-                                case ITEM_STATE.RECALLED:
-                                    return {
-                                        readOnly: true,
-                                        actions: [], // NONE
-                                    };
-                                default:
-                                    assertNever(itemState);
-                                }
-                            }}
-                            getAuthoringTopBarWidgets={
-                                () => Object.values(extensions)
-                                    .flatMap(({activationResult}) =>
-                                        activationResult?.contributions?.authoringTopbarWidgets ?? [],
-                                    )
-                                    .map((item): ITopBarWidget<IArticle> => {
-                                        const Component = item.component;
+                                        if (
+                                            sdApi.article.isLockedInCurrentSession(item)
+                                            && appConfig.features.customAuthoringTopbar.toDesk === true
+                                            && sdApi.article.isPersonal(item) !== true
+                                        ) {
+                                            actions.push({
+                                                group: 'middle',
+                                                priority: 0.2,
+                                                component: () => (
+                                                    <Button
+                                                        text={gettext('TD')}
+                                                        style="filled"
+                                                        onClick={() => {
+                                                            handleUnsavedChanges()
+                                                                .then(() => sdApi.article.sendItemToNextStage(item))
+                                                                .then(() => closeAuthoring());
+                                                        }}
+                                                    />
+                                                ),
+                                                availableOffline: false,
+                                            });
+                                        }
 
                                         return {
-                                            ...item,
-                                            component: (props: {entity: IArticle}) => (
-                                                <Component article={props.entity} />
-                                            ),
+                                            readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
+                                            actions: actions,
                                         };
-                                    })
-                                    .concat([getPublishToolbarWidget(panelState, panelActions)])
-                            }
-                            getSidePanel={({
-                                item,
-                                contentProfile,
-                                fieldsData,
-                                handleFieldsDataChange,
-                                fieldsAdapter,
-                                storageAdapter,
-                                authoringStorage,
-                                handleUnsavedChanges,
-                            }, readOnly) => {
-                                const OpenWidgetComponent = (() => {
-                                    if (panelState.active === true) {
-                                        return () => (
-                                            <InteractiveArticleActionsPanel
-                                                items={panelState.items}
-                                                tabs={panelState.tabs}
-                                                activeTab={panelState.activeTab}
-                                                handleUnsavedChanges={
-                                                    () => handleUnsavedChanges().then((res) => [res])
-                                                }
-                                                onClose={panelActions.closePanel}
-                                                markupV2
+
+                                    case ITEM_STATE.INGESTED:
+                                        return {
+                                            readOnly: true,
+                                            actions: [], // fetch
+                                        };
+
+                                    case ITEM_STATE.SPIKED:
+                                        return {
+                                            readOnly: true,
+                                            actions: [], // un-spike
+                                        };
+
+                                    case ITEM_STATE.SCHEDULED:
+                                        return {
+                                            readOnly: true,
+                                            actions: [], // un-schedule
+                                        };
+
+                                    case ITEM_STATE.PUBLISHED:
+                                    case ITEM_STATE.CORRECTED:
+                                        return {
+                                            readOnly: true,
+                                            actions: [], // correct update kill takedown
+                                        };
+
+                                    case ITEM_STATE.BEING_CORRECTED:
+                                        return {
+                                            readOnly: true,
+                                            actions: [], // cancel correction
+                                        };
+
+                                    case ITEM_STATE.CORRECTION:
+                                        return {
+                                            readOnly: false,
+                                            actions: [], // cancel correction, save, publish
+                                        };
+
+                                    case ITEM_STATE.KILLED:
+                                    case ITEM_STATE.RECALLED:
+                                        return {
+                                            readOnly: true,
+                                            actions: [], // NONE
+                                        };
+                                    default:
+                                        assertNever(itemState);
+                                    }
+                                }}
+                                getAuthoringTopBarWidgets={
+                                    () => Object.values(extensions)
+                                        .flatMap(({activationResult}) =>
+                                            activationResult?.contributions?.authoringTopbarWidgets ?? [],
+                                        )
+                                        .map((item): ITopBarWidget<IArticle> => {
+                                            const Component = item.component;
+
+                                            return {
+                                                ...item,
+                                                component: (props: {entity: IArticle}) => (
+                                                    <Component article={props.entity} />
+                                                ),
+                                            };
+                                        })
+                                        .concat([getPublishToolbarWidget(panelState, panelActions)])
+                                }
+                                getSidePanel={({
+                                    item,
+                                    contentProfile,
+                                    fieldsData,
+                                    handleFieldsDataChange,
+                                    fieldsAdapter,
+                                    storageAdapter,
+                                    authoringStorage,
+                                    handleUnsavedChanges,
+                                }, readOnly) => {
+                                    const OpenWidgetComponent = (() => {
+                                        if (panelState.active === true) {
+                                            return () => (
+                                                <InteractiveArticleActionsPanel
+                                                    items={panelState.items}
+                                                    tabs={panelState.tabs}
+                                                    activeTab={panelState.activeTab}
+                                                    handleUnsavedChanges={
+                                                        () => handleUnsavedChanges().then((res) => [res])
+                                                    }
+                                                    onClose={panelActions.closePanel}
+                                                    markupV2
+                                                />
+                                            );
+                                        } else if (state.openWidget != null) {
+                                            return getWidgetsFromExtensions(item).find(
+                                                ({label}) => state.openWidget.name === label,
+                                            ).component;
+                                        } else {
+                                            return null;
+                                        }
+                                    })();
+
+                                    if (OpenWidgetComponent == null) {
+                                        return null;
+                                    } else {
+                                        return (
+                                            <OpenWidgetComponent
+                                                article={item}
+                                                contentProfile={contentProfile}
+                                                fieldsData={fieldsData}
+                                                authoringStorage={authoringStorage}
+                                                fieldsAdapter={fieldsAdapter}
+                                                storageAdapter={storageAdapter}
+                                                onFieldsDataChange={handleFieldsDataChange}
+                                                readOnly={readOnly}
+                                                handleUnsavedChanges={() => handleUnsavedChanges()}
                                             />
                                         );
-                                    } else if (state.openWidget != null) {
-                                        return getWidgetsFromExtensions(item).find(
-                                            ({label}) => state.openWidget.name === label,
-                                        ).component;
-                                    } else {
-                                        return null;
                                     }
-                                })();
+                                }}
+                                getSidebar={(article) => {
+                                    const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(article)
+                                        .map((widget) => ({
+                                            icon: widget.icon,
+                                            size: 'big',
+                                            tooltip: widget.label,
+                                            onClick: () => {
+                                                const selfToggled =
+                                                    state.openWidget != null && widget.label === state.openWidget?.name;
 
-                                if (OpenWidgetComponent == null) {
-                                    return null;
-                                } else {
+                                                this.setState({
+                                                    openWidget: selfToggled
+                                                        ? undefined
+                                                        : {
+                                                            name: widget.label,
+                                                            pinned: state.openWidget?.pinned ?? false,
+                                                        },
+                                                });
+                                            },
+                                        }));
+
                                     return (
-                                        <OpenWidgetComponent
-                                            article={item}
-                                            contentProfile={contentProfile}
-                                            fieldsData={fieldsData}
-                                            authoringStorage={authoringStorage}
-                                            fieldsAdapter={fieldsAdapter}
-                                            storageAdapter={storageAdapter}
-                                            onFieldsDataChange={handleFieldsDataChange}
-                                            readOnly={readOnly}
-                                            handleUnsavedChanges={() => handleUnsavedChanges()}
+                                        <Nav.SideBarTabs
+                                            items={sidebarTabs}
                                         />
                                     );
-                                }
-                            }}
-                            getSidebar={(article) => {
-                                const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(article)
-                                    .map((widget) => ({
-                                        icon: widget.icon,
-                                        size: 'big',
-                                        tooltip: widget.label,
-                                        onClick: () => {
-                                            const selfToggled =
-                                                state.openWidget != null && widget.label === state.openWidget?.name;
-
-                                            this.setState({
-                                                openWidget: selfToggled
-                                                    ? undefined
-                                                    : {name: widget.label, pinned: state.openWidget?.pinned ?? false},
-                                            });
-                                        },
-                                    }));
-
-                                return (
-                                    <Nav.SideBarTabs
-                                        items={sidebarTabs}
-                                    />
-                                );
-                            }}
-                            topBar2Widgets={topbar2WidgetsReady}
-                        />
+                                }}
+                                topBar2Widgets={topbar2WidgetsReady}
+                            />
+                        </div>
                     );
                 }}
             </WithInteractiveArticleActionsPanel>

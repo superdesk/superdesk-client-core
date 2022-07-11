@@ -11,6 +11,7 @@ import {
     IBaseRestApiResponse,
     IStorageAdapter,
     IDisplayPriority,
+    IPropsAuthoring,
 } from 'superdesk-api';
 import {
     Button,
@@ -139,25 +140,6 @@ export interface IExposedFromAuthoring<T> {
     stealLock(): void;
 }
 
-interface IProps<T> {
-    itemId: string;
-    getLanguage(entity: T): string;
-    onClose(): void;
-    authoringStorage: IAuthoringStorage<T>;
-    storageAdapter: IStorageAdapter<T>;
-    fieldsAdapter: IFieldsAdapter<T>;
-    getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IAuthoringAction>>; // three dots menu actions
-    getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
-    getAuthoringTopBarWidgets(
-        options: IExposedFromAuthoring<T>,
-    ): Array<ITopBarWidget<T>>;
-    onEditingStart?(item: T): void;
-    onEditingEnd?(item: T): void;
-    getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
-    getSidebar?(item: T): JSX.Element;
-    topBar2Widgets: Array<React.ComponentType<{item: T}>>;
-}
-
 function getInitialState<T extends IBaseRestApiResponse>(
     item: {saved: T; autosaved: T},
     profile: IContentProfileV2,
@@ -278,10 +260,10 @@ function waitForCssAnimation(): Promise<void> {
     });
 }
 
-export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IProps<T>, IState<T>> {
+export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
 
-    constructor(props: IProps<T>) {
+    constructor(props: IPropsAuthoring<T>) {
         super(props);
 
         this.state = {
@@ -957,7 +939,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         // TODO: remove test code
         if (uiFrameworkAuthoringPanelTest) {
             return (
-                <div className="sd-authoring-react">
+                <div>
                     <EditorTest />
                 </div>
             );
@@ -1081,7 +1063,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const pinned = state.openWidget?.pinned === true;
 
         return (
-            <div className="sd-authoring-react">
+            <div>
                 {
                     state.loading && (
                         <Loader overlay />
