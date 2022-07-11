@@ -9,7 +9,7 @@ import {
     IBulkActionAssetCallback,
     IBulkAction,
 } from '../interfaces';
-import {IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
+import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 import {OrderedMap} from 'immutable';
 
 import {superdeskApi} from '../apis';
@@ -124,8 +124,8 @@ export function getDropdownItemsForActions(
         return allowedActions.map(
             (action) => ({
                 label: action.label,
-                icon: action.icon,
-                onSelect: () => action.onSelect(asset),
+                icon: `icon-${action.icon}`,
+                onClick: () => action.onSelect(asset),
             }),
         );
     }
