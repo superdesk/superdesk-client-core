@@ -73,8 +73,8 @@ declare module 'superdesk-api' {
     export type IFieldsAdapter<T> = {[key: string]: IFieldAdapter<T>};
 
     export interface IStorageAdapter<T> {
-        storeValue(value: unknown, fieldId: string, entity: T, config: unknown): T;
-        retrieveStoredValue(item: T, fieldId: string): unknown;
+        storeValue(value: unknown, fieldId: string, entity: T, config: unknown, fieldType: string): T;
+        retrieveStoredValue(item: T, fieldId: string, fieldType: string): unknown;
     }
 
     export interface IAuthoringAutoSave<T> {

@@ -132,7 +132,7 @@ export function showPopup(
     const closeFn = () => {
         ReactDOM.unmountComponentAtNode(el);
         el.remove();
-        onClose();
+        onClose?.();
     };
 
     ReactDOM.render(

@@ -3,7 +3,7 @@ import {
     IArticle,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {convertToRaw, ContentState} from 'draft-js';
+import {convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
 import createEditorStore, {
     prepareEditor3StateForExport,
 } from 'core/editor3/store';
@@ -27,9 +27,11 @@ export function editor3ToOperationalFormat(
     value: IEditor3ValueStorage,
     language: string,
 ): IEditor3ValueOperational {
+    const emptyState: RawDraftContentState = {blocks: [], entityMap: {}};
+
     const store = createEditorStore(
         {
-            editorState: value.rawContentState,
+            editorState: value?.rawContentState ?? emptyState,
             onChange: noop,
             language: language,
         },

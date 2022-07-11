@@ -138,7 +138,7 @@ export function storeEditor3ValueBase(
     const {stringValue, annotations} = computeDerivedProperties(
         rawContentState,
         config,
-        article,
+        article.language,
     );
 
     const articleUpdated: IArticle = {

@@ -62,7 +62,7 @@ export function getFieldsData<T>(
             if (fieldsAdapter[field.id]?.retrieveStoredValue != null) {
                 return fieldsAdapter[field.id].retrieveStoredValue(item, authoringStorage);
             } else {
-                return storageAdapter.retrieveStoredValue(item, field.id);
+                return storageAdapter.retrieveStoredValue(item, field.id, field.fieldType);
             }
         })();
 
@@ -110,7 +110,7 @@ function serializeFieldsDataAndApplyOnEntity<T extends IBaseRestApiResponse>(
         if (fieldsAdapter[field.id]?.storeValue != null) {
             result = fieldsAdapter[field.id].storeValue(storageValue, result, field.fieldConfig);
         } else {
-            result = storageAdapter.storeValue(storageValue, field.id, result, field.fieldConfig);
+            result = storageAdapter.storeValue(storageValue, field.id, result, field.fieldConfig, field.fieldType);
         }
     });
 
@@ -153,7 +153,7 @@ interface IProps<T> {
     ): Array<ITopBarWidget<T>>;
     onEditingStart?(item: T): void;
     onEditingEnd?(item: T): void;
-    getSidePanel(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+    getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
     getSidebar?(item: T): JSX.Element;
     topBar2Widgets: Array<React.ComponentType<{item: T}>>;
 }
@@ -948,7 +948,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
     render() {
         const state = this.state;
-        const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage} = this.props;
+        const {authoringStorage, fieldsAdapter, storageAdapter, getLanguage, getSidePanel} = this.props;
 
         if (state.initialized !== true) {
             return null;
@@ -979,7 +979,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
         const authoringOptions = this.props.getInlineToolbarActions(exposed);
         const readOnly = state.initialized ? authoringOptions.readOnly : false;
-        const OpenWidgetComponent = this.props.getSidePanel(exposed, readOnly);
+        const OpenWidgetComponent = getSidePanel == null ? null : this.props.getSidePanel(exposed, readOnly);
 
         const toolbar1Widgets: Array<ITopBarWidget<T>> = [
             ...authoringOptions.actions,
@@ -1177,7 +1177,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 sideOverlayOpen={!pinned && OpenWidgetComponent != null}
                                 sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
                                 sidePanelOpen={pinned && OpenWidgetComponent != null}
-                                sideBar={this.props.getSidebar(state.itemWithChanges)}
+                                sideBar={this.props.getSidebar?.(state.itemWithChanges) ?? undefined}
                             />
                         );
                     }}

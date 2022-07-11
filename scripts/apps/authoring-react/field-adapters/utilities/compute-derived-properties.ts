@@ -13,13 +13,13 @@ interface IDerivedProperties {
 export function computeDerivedProperties(
     rawContentState: RawDraftContentState,
     config: IEditor3Config,
-    article: IArticle,
+    language: string,
 ): IDerivedProperties {
     const contentState: ContentState = createEditorStore(
         {
             editorState: rawContentState,
             onChange: noop,
-            language: article.language,
+            language: language,
         },
         null,
         true,
