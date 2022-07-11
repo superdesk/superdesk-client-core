@@ -1,6 +1,5 @@
 import React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
-import {IUrlsFieldConfig, IUrlsFieldValueOperational} from './interfaces';
+import {IDifferenceComponentProps, IUrlsFieldConfig, IUrlsFieldValueOperational} from 'superdesk-api';
 import {generateHtmlDiff} from 'apps/authoring-react/generate-html-diff';
 
 type IProps = IDifferenceComponentProps<IUrlsFieldValueOperational, IUrlsFieldConfig>;

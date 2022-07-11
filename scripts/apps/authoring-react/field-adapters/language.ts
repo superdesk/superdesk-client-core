@@ -1,6 +1,5 @@
-import {IArticle, IAuthoringFieldV2, IFieldAdapter} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IDropdownConfigVocabulary} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IDropdownConfigVocabulary} from '../fields/dropdown';
 
 export const language: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {

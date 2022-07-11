@@ -1,7 +1,12 @@
 import React from 'react';
 import {noop} from 'lodash';
-import {IAttachment, IPreviewComponentProps, IRestApiResponse} from 'superdesk-api';
-import {IAttachmentsValueOperational, IAttachmentsConfig} from './interfaces';
+import {
+    IAttachment,
+    IPreviewComponentProps,
+    IRestApiResponse,
+    IAttachmentsValueOperational,
+    IAttachmentsConfig,
+} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {AttachmentsWidgetComponent} from 'apps/authoring/attachments/AttachmentsWidgetComponent';
 import {WithLiveResources} from 'core/with-resources';

@@ -1,6 +1,11 @@
-import {IArticle, IAuthoringFieldV2, IFieldAdapter} from 'superdesk-api';
+import {
+    IArticle,
+    IAuthoringFieldV2,
+    IFieldAdapter,
+    IAttachmentsConfig,
+    IAttachmentsValueOperational,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IAttachmentsConfig, IAttachmentsValueOperational} from '../fields/attachments/interfaces';
 
 export const attachments: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {

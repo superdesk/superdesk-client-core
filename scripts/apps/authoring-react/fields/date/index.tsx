@@ -1,9 +1,8 @@
 import {
-    ICustomFieldType,
+    ICustomFieldType, IDateFieldConfig, IDateUserPreferences, IDateValueOperational, IDateValueStorage,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Editor} from './editor';
-import {IDateFieldConfig, IDateUserPreferences, IDateValueOperational, IDateValueStorage} from './interfaces';
 import {Preview} from './preview';
 import {Difference} from './difference';
 import {Config} from './config';

@@ -113,6 +113,33 @@ declare module 'superdesk-api' {
         autosave: IAuthoringAutoSave<T>;
     }
 
+    export interface IExposedFromAuthoring<T> {
+        item: T;
+        contentProfile: IContentProfileV2;
+        fieldsData: import('immutable').Map<string, unknown>;
+        authoringStorage: IAuthoringStorage<T>;
+        storageAdapter: IStorageAdapter<T>;
+        fieldsAdapter: IFieldsAdapter<T>;
+        hasUnsavedChanges(): boolean;
+        handleUnsavedChanges(): Promise<T>;
+        handleFieldsDataChange(fieldsData: import('immutable').Map<string, unknown>): void;
+        save(): Promise<T>;
+        closeAuthoring(): void;
+        stealLock(): void;
+    }
+
+    export interface IAuthoringOptions<T> {
+        readOnly: boolean;
+        actions: Array<ITopBarWidget<T>>;
+    }
+
+    export interface ITopBarWidget<T> {
+        component: React.ComponentType<{entity: T}>;
+        availableOffline: boolean;
+        priority: IDisplayPriority;
+        group: 'start' | 'middle' | 'end';
+    }
+
     interface IPropsAuthoring<T> {
         itemId: string;
         getLanguage(entity: T): string;
@@ -131,6 +158,182 @@ declare module 'superdesk-api' {
         getSidebar?(item: T): JSX.Element;
         topBar2Widgets: Array<React.ComponentType<{item: T}>>;
     }
+
+    // AUTHORING-REACT FIELD TYPES - attachments
+
+    export type IAttachmentsValueOperational = Array<{id: IAttachment['_id']}>;
+    export type IAttachmentsValueStorage = IAttachmentsValueOperational;
+    export type IAttachmentsUserPreferences = never;
+    export type IAttachmentsConfig = ICommonFieldConfig;
+
+    // AUTHORING-REACT FIELD TYPES - date
+
+    export type IDateValueOperational = string;
+    export type IDateValueStorage = IDateValueOperational;
+    export type IDateUserPreferences = never;
+
+    export interface IDateShortcut {
+        label: string;
+        value: number;
+        term: 'days' | 'weeks' | 'months' | 'years';
+    }
+
+    export interface IDateFieldConfig extends ICommonFieldConfig {
+        shortcuts?: Array<IDateShortcut>;
+    }
+
+    // AUTHORING-REACT FIELD TYPES - dropdown
+
+    export interface ITreeWithLookup<T> {
+        nodes: Array<ITreeNode<T>>;
+        lookup: {
+            [id: string]: ITreeNode<T>;
+        };
+    }
+
+    export type IDropdownValue = unknown;
+
+    export interface IDropdownOption {
+        id: string | number;
+        label: string;
+        parent?: IDropdownOption['id'];
+        color?: string;
+    }
+
+    export interface IDropdownConfigVocabulary extends ICommonFieldConfig {
+        source: 'vocabulary';
+        vocabularyId: IVocabulary['_id'];
+        multiple: boolean;
+    }
+
+    export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
+        source: 'remote-source';
+        searchOptions(
+            searchTerm: string,
+            language: string,
+            callback: (result: ITreeWithLookup<unknown>) => void,
+        ): void;
+        getLabel(item: unknown): string;
+        getId(item: unknown): string;
+        canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
+        optionTemplate?: React.ComponentType<{item: unknown}>;
+        valueTemplate?: React.ComponentType<{item: unknown}>;
+        multiple: boolean;
+    }
+
+    export interface IDropdownTreeConfig extends ICommonFieldConfig {
+        source: 'dropdown-tree';
+        getItems(): ITreeWithLookup<unknown>;
+        getLabel(item: unknown): string;
+        getId(item: unknown): string;
+        canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
+        optionTemplate?: React.ComponentType<{item: unknown}>;
+        valueTemplate?: React.ComponentType<{item: unknown}>;
+        multiple: boolean;
+    }
+
+    export interface IDropdownConfigManualSource extends ICommonFieldConfig {
+        source: 'manual-entry';
+        type: 'text' | 'number';
+        options: Array<IDropdownOption>;
+        roundCorners: boolean;
+        multiple: boolean;
+    }
+
+    export type IDropdownConfig =
+        IDropdownConfigManualSource
+        | IDropdownConfigVocabulary
+        | IDropdownConfigRemoteSource
+        | IDropdownTreeConfig;
+
+
+    // AUTHORING-REACT FIELD TYPES - editor3
+
+    export interface IEditor3ValueOperational {
+        store: import('redux').Store<any>; // IEditorStore
+        contentState: import('draft-js').ContentState;
+    }
+
+    export interface IEditor3ValueStorage {
+        rawContentState: import('draft-js').RawDraftContentState;
+    }
+
+    export interface IEditor3Config extends ICommonFieldConfig {
+        editorFormat?: Array<RICH_FORMATTING_OPTION>;
+        minLength?: number;
+        maxLength?: number;
+        singleLine?: boolean; // also limits to plain text
+        cleanPastedHtml?: boolean;
+        disallowedCharacters?: Array<string>;
+
+        /**
+         * Value - field ID of editor3 field.
+         *
+         * When this field is toggled on, it will initialize with a value
+         * copied from a field with ID specified in this config.
+         *
+         * Only plaintext value is copied to avoid target field containing
+         * invalid formatting options that may be valid in source field.
+         */
+        copyFromFieldOnToggle?: string;
+    }
+
+    // AUTHORING-REACT FIELD TYPES - embed
+
+    export interface IEmbedValueOperational {
+        embed: string; // embed code
+        description: string;
+    }
+
+    export type IEmbedValueStorage = IEmbedValueOperational;
+    export type IEmbedUserPreferences = never;
+    export type IEmbedConfig = ICommonFieldConfig;
+
+    // AUTHORING-REACT FIELD TYPES - linked items
+
+    interface ILinkedItem {
+        id: IArticle['_id'];
+
+        // type is only needed for compatibility with angular based authoring
+        type: IArticle['type'];
+    }
+
+    export type ILinkedItemsValueOperational = Array<ILinkedItem>;
+    export type ILinkedItemsValueStorage = ILinkedItemsValueOperational;
+    export type ILinkedItemsUserPreferences = never;
+    export type ILinkedItemsConfig = ICommonFieldConfig;
+
+    // AUTHORING-REACT FIELD TYPES - media
+
+    export type IMediaValueOperational = Array<IArticle>;
+    export type IMediaValueStorage = IMediaValueOperational;
+    export type IMediaUserPreferences = never;
+
+    export interface IMediaConfig extends ICommonFieldConfig {
+        maxItems?: number;
+        allowPicture?: boolean;
+        allowVideo?: boolean;
+        allowAudio?: boolean;
+        showPictureCrops?: boolean;
+        showTitleEditingInput?: boolean;
+        allowedWorkflows?: {
+            inProgress?: boolean;
+            published?: boolean;
+        };
+    }
+
+    // AUTHORING-REACT FIELD TYPES - urls
+
+    export interface IUrlObject {
+        url: string;
+        description: string;
+    }
+
+    export type IUrlsFieldValueOperational = Array<IUrlObject>;
+    export type IUrlsFieldValueStorage = IUrlsFieldValueOperational;
+    export type IUrlsFieldUserPreferences = never;
+    export type IUrlsFieldConfig = ICommonFieldConfig;
+
 
 
     // EXTENSIONS

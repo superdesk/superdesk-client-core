@@ -1,6 +1,5 @@
 import React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
-import {ILinkedItemsConfig, ILinkedItemsValueOperational} from './interfaces';
+import {IDifferenceComponentProps, ILinkedItemsConfig, ILinkedItemsValueOperational} from 'superdesk-api';
 import {keyBy, uniq} from 'lodash';
 import {WithArticles} from 'core/with-articles';
 import {getDifferenceStatistics} from '../difference-statistics';

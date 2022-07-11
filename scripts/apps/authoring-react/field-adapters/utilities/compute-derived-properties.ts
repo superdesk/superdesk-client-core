@@ -2,8 +2,7 @@ import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 import createEditorStore, {getAnnotationsForStorage} from 'core/editor3/store';
 import {ContentState, RawDraftContentState} from 'draft-js';
 import {noop} from 'lodash';
-import {IArticle} from 'superdesk-api';
-import {IEditor3Config} from 'apps/authoring-react/fields/editor3/interfaces';
+import {IEditor3Config} from 'superdesk-api';
 
 interface IDerivedProperties {
     stringValue: string; // HTML or plain text (depending on config)

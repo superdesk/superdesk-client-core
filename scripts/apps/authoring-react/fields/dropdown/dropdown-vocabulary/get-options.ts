@@ -1,10 +1,9 @@
 import {sdApi} from 'api';
 import {arrayToTree} from 'core/helpers/tree';
-import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
+import {} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {getVocabularyItemNameTranslated} from 'core/utils';
 import {keyBy} from 'lodash';
-import {IVocabulary, IVocabularyItem} from 'superdesk-api';
-import {IDropdownConfigVocabulary, IDropdownOption} from '..';
+import {IVocabulary, IVocabularyItem, ITreeWithLookup, IDropdownConfigVocabulary, IDropdownOption} from 'superdesk-api';
 
 function getOptionsDefault(vocabularyId: IVocabulary['_id']): Array<IVocabularyItem> {
     return sdApi.vocabularies.getAll().get(vocabularyId).items;

@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     IArticle,
-    IExtensionActivationResult,
     IAuthoringFieldV2,
     IContentProfileV2,
     IAuthoringAction,
@@ -10,8 +9,9 @@ import {
     IFieldsAdapter,
     IBaseRestApiResponse,
     IStorageAdapter,
-    IDisplayPriority,
     IPropsAuthoring,
+    ITopBarWidget,
+    IExposedFromAuthoring,
 } from 'superdesk-api';
 import {
     Button,
@@ -125,21 +125,6 @@ const ANPA_CATEGORY = {
     fieldId: 'anpa_category',
 };
 
-export interface IExposedFromAuthoring<T> {
-    item: T;
-    contentProfile: IContentProfileV2;
-    fieldsData: Map<string, unknown>;
-    authoringStorage: IAuthoringStorage<T>;
-    storageAdapter: IStorageAdapter<T>;
-    fieldsAdapter: IFieldsAdapter<T>;
-    hasUnsavedChanges(): boolean;
-    handleUnsavedChanges(): Promise<T>;
-    handleFieldsDataChange(fieldsData: Map<string, unknown>): void;
-    save(): Promise<T>;
-    closeAuthoring(): void;
-    stealLock(): void;
-}
-
 function getInitialState<T extends IBaseRestApiResponse>(
     item: {saved: T; autosaved: T},
     profile: IContentProfileV2,
@@ -236,18 +221,6 @@ interface IStateLoaded<T> {
 }
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
-
-export interface ITopBarWidget<T> {
-    component: React.ComponentType<{entity: T}>;
-    availableOffline: boolean;
-    priority: IDisplayPriority;
-    group: 'start' | 'middle' | 'end';
-}
-
-interface IAuthoringOptions<T> {
-    readOnly: boolean;
-    actions: Array<ITopBarWidget<T>>;
-}
 
 function waitForCssAnimation(): Promise<void> {
     return new Promise((resolve) => {

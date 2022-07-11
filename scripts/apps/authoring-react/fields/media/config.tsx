@@ -2,8 +2,7 @@ import React from 'react';
 import {Checkbox} from 'superdesk-ui-framework/react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import {IConfigComponentProps} from 'superdesk-api';
-import {IMediaConfig} from './interfaces';
+import {IConfigComponentProps, IMediaConfig} from 'superdesk-api';
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 
 type IProps = IConfigComponentProps<IMediaConfig>;

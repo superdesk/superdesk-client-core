@@ -1,6 +1,5 @@
-import {IArticle, IAuthoringFieldV2, IFieldAdapter} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IDropdownConfigManualSource} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IDropdownConfigManualSource} from '../fields/dropdown';
 import {sdApi} from 'api';
 
 export const priority: IFieldAdapter<IArticle> = {

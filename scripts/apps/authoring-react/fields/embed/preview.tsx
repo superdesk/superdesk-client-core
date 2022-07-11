@@ -1,6 +1,5 @@
 import React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
-import {IEmbedValueOperational, IEmbedConfig} from './interfaces';
+import {IPreviewComponentProps, IEmbedValueOperational, IEmbedConfig} from 'superdesk-api';
 import {SpacerBlock} from 'core/ui/components/Spacer';
 import {EmbedPreview} from './embed-preview';
 

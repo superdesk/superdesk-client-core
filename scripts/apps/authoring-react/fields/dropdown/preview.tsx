@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
+import {IPreviewComponentProps, IDropdownValue, IDropdownConfig} from 'superdesk-api';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {IDropdownValue, IDropdownConfig} from '.';
 import {PreviewManualEntry} from './dropdown-manual-entry/preview';
 import {PreviewRemoteSource} from './dropdown-remote-source/preview';
 import {PreviewVocabulary} from './dropdown-vocabulary/preview';

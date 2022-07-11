@@ -1,6 +1,5 @@
-import {IArticle, IAuthoringFieldV2, IFieldAdapter} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IMediaConfig, IMediaValueOperational} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IMediaConfig, IMediaValueOperational} from '../fields/media/interfaces';
 
 export const feature_media: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {

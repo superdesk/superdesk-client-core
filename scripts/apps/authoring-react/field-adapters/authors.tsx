@@ -1,8 +1,7 @@
 import * as React from 'react';
 import ng from 'core/services/ng';
-import {IArticle, IAuthor, IAuthoringFieldV2, IFieldAdapter, IUser} from 'superdesk-api';
+import {IArticle, IAuthor, IAuthoringFieldV2, IFieldAdapter, IUser, IDropdownTreeConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IDropdownTreeConfig} from '../fields/dropdown';
 import {arrayToTree} from 'core/helpers/tree';
 
 function valueTemplate({item}) {

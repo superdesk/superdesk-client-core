@@ -1,7 +1,6 @@
 import React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
+import {IPreviewComponentProps, IMediaValueOperational, IMediaConfig} from 'superdesk-api';
 import {maxItemsDefault} from './constants';
-import {IMediaValueOperational, IMediaConfig} from './interfaces';
 import {MediaCarousel} from './media-carousel/media-carousel';
 
 type IProps = IPreviewComponentProps<IMediaValueOperational, IMediaConfig>;

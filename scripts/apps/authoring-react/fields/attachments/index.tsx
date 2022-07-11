@@ -1,14 +1,12 @@
 import {
     ICustomFieldType,
-} from 'superdesk-api';
-import {gettext} from 'core/utils';
-import {Editor} from './editor';
-import {
     IAttachmentsUserPreferences,
     IAttachmentsValueOperational,
     IAttachmentsValueStorage,
     IAttachmentsConfig,
-} from './interfaces';
+} from 'superdesk-api';
+import {gettext} from 'core/utils';
+import {Editor} from './editor';
 import {Preview} from './preview';
 import {Difference} from './difference';
 import {AuthoringAttachmentsWidget} from './authoring-widget';

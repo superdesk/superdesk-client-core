@@ -1,8 +1,7 @@
-import {IContentProfileV2} from 'superdesk-api';
+import {IContentProfileV2, IEditor3ValueOperational} from 'superdesk-api';
 import {Map} from 'immutable';
 import {getTansaHtml} from 'core/editor3/helpers/tansa';
 import {setHtmlFromTansa} from 'core/editor3/actions';
-import {IEditor3ValueOperational} from './fields/editor3/interfaces';
 
 const TANSA_PROOFING_ATTRIBUTE = 'tansa-proofing';
 

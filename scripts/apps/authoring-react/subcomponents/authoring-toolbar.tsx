@@ -1,5 +1,5 @@
 import React from 'react';
-import {ITopBarWidget} from '../authoring-react';
+import {ITopBarWidget} from 'superdesk-api';
 
 interface IProps<T> {
     entity: T;

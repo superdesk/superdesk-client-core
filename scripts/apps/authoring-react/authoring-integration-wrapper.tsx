@@ -11,9 +11,10 @@ import {
     IAuthoringSideWidget,
     IContentProfileV2,
     IExtensionActivationResult,
+    ITopBarWidget,
 } from 'superdesk-api';
 import ng from 'core/services/ng';
-import {AuthoringReact, ITopBarWidget} from './authoring-react';
+import {AuthoringReact} from './authoring-react';
 import {authoringStorageIArticle} from './data-layer';
 import {getFieldsAdapter} from './field-adapters';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';

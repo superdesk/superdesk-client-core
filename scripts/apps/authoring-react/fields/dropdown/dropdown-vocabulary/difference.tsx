@@ -1,9 +1,8 @@
 /* eslint-disable react/no-multi-comp */
 
 import * as React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
+import {IDifferenceComponentProps, IDropdownConfigVocabulary, IDropdownOption, IDropdownValue} from 'superdesk-api';
 import {DifferenceGeneric} from '../../difference-generic';
-import {IDropdownConfigVocabulary, IDropdownOption, IDropdownValue} from '..';
 import {getOptions} from './get-options';
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 

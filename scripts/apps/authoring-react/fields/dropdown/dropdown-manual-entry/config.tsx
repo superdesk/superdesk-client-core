@@ -1,8 +1,7 @@
 import * as React from 'react';
 import {RadioButtonGroup, Button, IconButton, Checkbox, Alert} from 'superdesk-ui-framework/react';
-import {IConfigComponentProps} from 'superdesk-api';
+import {IConfigComponentProps, IDropdownOption, IDropdownConfigManualSource} from 'superdesk-api';
 import {gettext, arrayMove} from 'core/utils';
-import {IDropdownOption, IDropdownConfigManualSource} from '..';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {assertNever, isNumeric} from 'core/helpers/typescript-helpers';
 

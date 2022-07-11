@@ -1,6 +1,5 @@
 import * as React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
-import {IDropdownValue, IDropdownConfig} from '.';
+import {IDifferenceComponentProps, IDropdownValue, IDropdownConfig} from 'superdesk-api';
 import {DifferenceManualEntry} from './dropdown-manual-entry/difference';
 import {DifferenceVocabulary} from './dropdown-vocabulary/difference';
 import {DifferenceRemoteSource} from './dropdown-remote-source/difference';

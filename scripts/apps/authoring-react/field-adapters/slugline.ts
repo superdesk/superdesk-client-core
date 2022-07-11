@@ -1,8 +1,7 @@
-import {IArticle, IAuthoringFieldV2, IFieldAdapter} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IEditor3Config} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
 import {retrieveStoredValueEditor3Generic, storeEditor3ValueBase} from '.';
-import {IEditor3Config} from '../fields/editor3/interfaces';
 
 export const slugline: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {

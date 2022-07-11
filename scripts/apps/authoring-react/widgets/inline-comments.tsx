@@ -1,12 +1,11 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IAuthoringSideWidget, IExtensionActivationResult, IUser} from 'superdesk-api';
+import {IAuthoringSideWidget, IExtensionActivationResult, IUser, IEditor3ValueOperational} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {Button, EmptyState} from 'superdesk-ui-framework/react';
-import {IEditor3ValueOperational} from '../fields/editor3/interfaces';
 import {getCustomEditor3Data, getCustomMetadataFromContentState} from 'core/editor3/helpers/editor3CustomData';
 import {getHighlightsConfig} from 'core/editor3/highlightsConfig';
 import {store} from 'core/data';

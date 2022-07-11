@@ -104,7 +104,7 @@ export const authoringStorageRundownItem: IAuthoringStorage<IRundownItem> = {
         return Promise.resolve(testEntity);
     },
     saveEntity: (current, original) => {
-        console.log('request saving', current);
+        // console.log('request saving', current);
         return Promise.resolve(testEntity);
     },
     getContentProfile: () => {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {Checkbox} from 'superdesk-ui-framework/react';
-import {IConfigComponentProps, RICH_FORMATTING_OPTION} from 'superdesk-api';
-import {IEditor3Config} from './interfaces';
+import {IConfigComponentProps, IEditor3Config, RICH_FORMATTING_OPTION} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {MultiSelect} from 'core/ui/components/MultiSelect';
 import {EDITOR3_RICH_FORMATTING_OPTIONS} from 'apps/workspace/content/components/get-content-profiles-form-config';

@@ -1,7 +1,6 @@
 import React from 'react';
 import ng from 'core/services/ng';
-import {IEditorComponentProps} from 'superdesk-api';
-import {IEmbedValueOperational, IEmbedConfig, IEmbedUserPreferences} from './interfaces';
+import {IEditorComponentProps, IEmbedValueOperational, IEmbedConfig, IEmbedUserPreferences} from 'superdesk-api';
 import {Button} from 'superdesk-ui-framework/react';
 import {SpacerBlock, Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';

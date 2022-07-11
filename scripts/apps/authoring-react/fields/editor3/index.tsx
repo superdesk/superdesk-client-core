@@ -1,6 +1,8 @@
 import {
     ICustomFieldType,
-    IArticle,
+    IEditor3ValueOperational,
+    IEditor3Config,
+    IEditor3ValueStorage,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
@@ -12,7 +14,6 @@ import {noop} from 'lodash';
 import {
     CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {IEditor3ValueOperational, IEditor3Config, IEditor3ValueStorage} from './interfaces';
 import {Difference} from './difference';
 import {Preview} from './preview';
 import {Config} from './config';

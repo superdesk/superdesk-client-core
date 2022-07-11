@@ -1,6 +1,12 @@
 import {Map} from 'immutable';
-import {IArticle, IAuthoringFieldV2, IFieldAdapter, IVocabularyItem} from 'superdesk-api';
-import {IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
+import {
+    IArticle,
+    IAuthoringFieldV2,
+    IFieldAdapter,
+    IVocabularyItem,
+    IDropdownConfigVocabulary,
+    IDropdownValue,
+} from 'superdesk-api';
 import {isMultiple} from './utilities';
 import {sdApi} from 'api';
 

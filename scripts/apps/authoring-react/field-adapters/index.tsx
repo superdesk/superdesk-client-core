@@ -2,12 +2,20 @@ import {
     IArticle,
     IAuthoringFieldV2,
     IAuthoringStorage,
-    ICustomFieldType,
     IFieldsAdapter,
     IRelatedArticle,
+    IDropdownConfigVocabulary,
+    IEditor3Config,
+    IEditor3ValueStorage,
+    IDateFieldConfig,
+    IDateShortcut,
+    IUrlsFieldConfig,
+    IEmbedConfig,
+    IMediaConfig,
+    IMediaValueOperational,
+    ILinkedItemsConfig,
+    ILinkedItemsValueOperational,
 } from 'superdesk-api';
-import {IDropdownConfigVocabulary} from '../fields/dropdown';
-import {IEditor3Config, IEditor3ValueStorage} from '../fields/editor3/interfaces';
 import {slugline} from './slugline';
 import {body_html} from './body_html';
 import {language} from './language';
@@ -27,18 +35,13 @@ import {anpa_take_key} from './anpa_take_key';
 import {byline} from './byline';
 import {sms_message} from './sms_message';
 import {usageterms} from './usageterms';
-import {IDateFieldConfig, IDateShortcut} from '../fields/date/interfaces';
-import {IUrlsFieldConfig} from '../fields/urls/interfaces';
-import {IEmbedConfig} from '../fields/embed/interfaces';
 import {feature_media} from './feature_media';
-import {IMediaConfig, IMediaValueOperational} from '../fields/media/interfaces';
 import {
     applyAssociations,
     getRelatedArticles,
     getRelatedMedia,
 } from 'apps/authoring/authoring/controllers/AssociationController';
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
-import {ILinkedItemsConfig, ILinkedItemsValueOperational} from '../fields/linked-items/interfaces';
 import {attachments} from './attachments';
 import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
 import {computeDerivedProperties} from './utilities/compute-derived-properties';

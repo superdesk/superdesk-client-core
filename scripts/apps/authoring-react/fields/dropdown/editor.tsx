@@ -1,6 +1,5 @@
 import * as React from 'react';
-import {IEditorComponentProps} from 'superdesk-api';
-import {IDropdownValue, IDropdownConfig} from '.';
+import {IEditorComponentProps, IDropdownValue, IDropdownConfig} from 'superdesk-api';
 import {EditorManualEntry} from './dropdown-manual-entry/editor';
 import {EditorRemoteSource} from './dropdown-remote-source/editor';
 import {EditorVocabulary} from './dropdown-vocabulary/editor';

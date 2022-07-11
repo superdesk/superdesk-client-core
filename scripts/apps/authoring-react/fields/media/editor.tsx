@@ -1,8 +1,13 @@
 import React from 'react';
-import {IArticle, IEditorComponentProps} from 'superdesk-api';
+import {
+    IArticle,
+    IEditorComponentProps,
+    IMediaValueOperational,
+    IMediaConfig,
+    IMediaUserPreferences,
+} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {getSuperdeskType, gettext} from 'core/utils';
-import {IMediaValueOperational, IMediaConfig, IMediaUserPreferences} from './interfaces';
 import {DropZone3} from 'core/ui/components/drop-zone-3';
 import {MediaCarousel} from './media-carousel/media-carousel';
 import {SpacerBlock} from 'core/ui/components/Spacer';

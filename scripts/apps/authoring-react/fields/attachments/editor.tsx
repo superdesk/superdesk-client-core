@@ -1,8 +1,14 @@
 import React from 'react';
-import {IAttachment, IEditorComponentProps, IRestApiResponse} from 'superdesk-api';
+import {
+    IAttachment,
+    IEditorComponentProps,
+    IRestApiResponse,
+    IAttachmentsValueOperational,
+    IAttachmentsConfig,
+    IAttachmentsUserPreferences,
+} from 'superdesk-api';
 import {CC} from 'core/ui/configurable-ui-components';
 import {AttachmentsWidgetComponent} from 'apps/authoring/attachments/AttachmentsWidgetComponent';
-import {IAttachmentsValueOperational, IAttachmentsConfig, IAttachmentsUserPreferences} from './interfaces';
 import {isUploadValid} from 'apps/authoring/attachments/AttachmentsWidget';
 import {dispatchCustomEvent} from 'core/get-superdesk-api-implementation';
 import {WithLiveResources} from 'core/with-resources';

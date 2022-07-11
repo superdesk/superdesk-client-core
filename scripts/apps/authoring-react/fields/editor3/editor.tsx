@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IEditorComponentProps} from 'superdesk-api';
+import {IEditorComponentProps, IEditor3ValueOperational, IEditor3Config} from 'superdesk-api';
 import {gettextPlural} from 'core/utils';
 import {
     initializeSpellchecker,
@@ -31,7 +31,6 @@ import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';
 import {getAutocompleteSuggestions} from 'core/helpers/editor';
-import {IEditor3ValueOperational, IEditor3Config} from './interfaces';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;

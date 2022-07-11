@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {IConfigComponentProps} from 'superdesk-api';
+import {IConfigComponentProps, IDropdownConfigVocabulary} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IDropdownConfigVocabulary} from '..';
 import {SelectFilterable} from 'core/ui/components/select-filterable';
 import {sdApi} from 'api';
 

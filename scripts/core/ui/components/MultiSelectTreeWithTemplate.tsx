@@ -7,16 +7,9 @@
 
 import {assertNever} from 'core/helpers/typescript-helpers';
 import React from 'react';
-import {ITreeNode} from 'superdesk-api';
+import {ITreeNode, ITreeWithLookup} from 'superdesk-api';
 import {MultiSelectTemplate} from './multi-select-tree-with-template-tree-only';
 import {showPopup} from './popupNew';
-
-export interface ITreeWithLookup<T> {
-    nodes: Array<ITreeNode<T>>;
-    lookup: {
-        [id: string]: ITreeNode<T>;
-    };
-}
 
 interface IPropsBase<T> {
     values: Array<T>;

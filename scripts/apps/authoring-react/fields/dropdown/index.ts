@@ -1,10 +1,9 @@
-import {ICustomFieldType, ICommonFieldConfig, IVocabulary, ITreeNode} from 'superdesk-api';
+import {ICustomFieldType, IDropdownValue, IDropdownConfig} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Editor} from './editor';
 import {Config} from './config-main';
 import {Preview} from './preview';
 import {Difference} from './difference';
-import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
 
 /**
  * Depends on dropdown source:
@@ -12,60 +11,6 @@ import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
  * vocabulary: string | Array<string>
  * remote-source (strings, numbers and plain objects are allowed): unknown | Array<unknown>
  */
-export type IDropdownValue = unknown;
-
-export interface IDropdownOption {
-    id: string | number;
-    label: string;
-    parent?: IDropdownOption['id'];
-    color?: string;
-}
-
-export interface IDropdownConfigVocabulary extends ICommonFieldConfig {
-    source: 'vocabulary';
-    vocabularyId: IVocabulary['_id'];
-    multiple: boolean;
-}
-
-export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
-    source: 'remote-source';
-    searchOptions(
-        searchTerm: string,
-        language: string,
-        callback: (result: ITreeWithLookup<unknown>) => void,
-    ): void;
-    getLabel(item: unknown): string;
-    getId(item: unknown): string;
-    canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
-    optionTemplate?: React.ComponentType<{item: unknown}>;
-    valueTemplate?: React.ComponentType<{item: unknown}>;
-    multiple: boolean;
-}
-
-export interface IDropdownTreeConfig extends ICommonFieldConfig {
-    source: 'dropdown-tree';
-    getItems(): ITreeWithLookup<unknown>;
-    getLabel(item: unknown): string;
-    getId(item: unknown): string;
-    canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
-    optionTemplate?: React.ComponentType<{item: unknown}>;
-    valueTemplate?: React.ComponentType<{item: unknown}>;
-    multiple: boolean;
-}
-
-export interface IDropdownConfigManualSource extends ICommonFieldConfig {
-    source: 'manual-entry';
-    type: 'text' | 'number';
-    options: Array<IDropdownOption>;
-    roundCorners: boolean;
-    multiple: boolean;
-}
-
-export type IDropdownConfig =
-    IDropdownConfigManualSource
-    | IDropdownConfigVocabulary
-    | IDropdownConfigRemoteSource
-    | IDropdownTreeConfig;
 
 export function getDropdownField(): ICustomFieldType<IDropdownValue, IDropdownValue, IDropdownConfig, never> {
     const field: ICustomFieldType<IDropdownValue, IDropdownValue, IDropdownConfig, never> = {
