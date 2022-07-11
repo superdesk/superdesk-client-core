@@ -19,7 +19,7 @@ import {
 import {getSelectedAsset, getSetNameForSelectedAsset} from '../../store/assets/selectors';
 
 // UI
-import {Dropdown, FormLabel, IconButton, Label} from 'superdesk-ui-framework/react';
+import {FormLabel, IconButton, Label, Menu} from 'superdesk-ui-framework/react';
 import {
     FormRow,
     PanelContent,
@@ -134,25 +134,15 @@ export class AssetPreviewPanelComponent extends React.PureComponent<IProps> {
                             <VersionUserDateLines item={this.props.asset} />
                         </PanelContentBlockInner>
                         <PanelContentBlockInner right={true}>
-                            <Dropdown
-                                align = "right"
-                                items={[
-                                    {
-                                        type: 'group',
-                                        label: gettext('Actions'),
-                                        items: [
-                                            'divider',
-                                            ...newActions,
-                                        ],
-                                    },
-                                ]}
-                            >
-                                <IconButton
-                                    ariaValue="dropdown-more-options"
-                                    icon="dots-vertical"
-                                    onClick={() => false}
-                                />
-                            </Dropdown>
+                            <Menu items={newActions}>
+                                {(toggle) => (
+                                    <IconButton
+                                        ariaValue="dropdown-more-options"
+                                        icon="dots-vertical"
+                                        onClick={toggle}
+                                    />
+                                )}
+                            </Menu>
                         </PanelContentBlockInner>
                     </PanelContentBlock>
                     {!ContentPreview ? null : (
