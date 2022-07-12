@@ -11,6 +11,9 @@ import {
     IAuthoringStorage,
     IBaseRestApiResponse,
     IContentProfileV2,
+    IDropdownConfigVocabulary,
+    IEditor3Config,
+    RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
 
 import {superdesk} from './superdesk';
@@ -47,7 +50,7 @@ export class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItem> {
 
     constructor(delay: number) {
         this.autoSaveThrottled = throttle(
-            (getItem, callback) => {
+            (getItem, _callback) => {
                 return Promise.resolve(getItem()); // FINISH:
             },
             delay,
@@ -62,7 +65,7 @@ export class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItem> {
         });
     }
 
-    delete(id: IRundownItem['_id'], etag: IRundownItem['_etag']) {
+    delete(_id: IRundownItem['_id'], _etag: IRundownItem['_etag']) {
         return Promise.resolve();
     }
 
@@ -75,8 +78,33 @@ export class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItem> {
     }
 }
 
-const fieldConfigAbstract: any = { // IEditor3Config
-    editorFormat: [],
+const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
+    'uppercase',
+    'lowercase',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'ordered list',
+    'unordered list',
+    'quote',
+    'link',
+    'embed',
+    'underline',
+    'italic',
+    'bold',
+    'annotation',
+    'comments',
+    'pre',
+    'superscript',
+    'subscript',
+    'strikethrough',
+];
+
+const editor3TestConfig: IEditor3Config = {
+    editorFormat: testEditorFormat,
     minLength: undefined,
     maxLength: undefined,
     cleanPastedHtml: false,
@@ -84,53 +112,67 @@ const fieldConfigAbstract: any = { // IEditor3Config
     disallowedCharacters: [],
 };
 
-const abstractFieldV2: IAuthoringFieldV2 = {
+const titleField: IAuthoringFieldV2 = {
     id: 'title',
     name: gettext('Title'),
     fieldType: 'editor3',
-    fieldConfig: fieldConfigAbstract,
+    fieldConfig: editor3TestConfig,
+};
+
+const contentField: IAuthoringFieldV2 = {
+    id: 'content',
+    name: gettext('Content'),
+    fieldType: 'editor3',
+    fieldConfig: editor3TestConfig,
+};
+
+const itemTypesConfig: IDropdownConfigVocabulary = {
+    source: 'vocabulary',
+    vocabularyId: 'rundown-item-types',
+    multiple: false,
+};
+
+const itemTypeField: IAuthoringFieldV2 = {
+    id: 'item_type',
+    name: 'Rundown item types', // TODO: use vocabulary name
+    fieldType: 'dropdown',
+    fieldConfig: itemTypesConfig,
 };
 
 export const authoringStorageRundownItem: IAuthoringStorage<IRundownItem> = {
     autosave: new AutoSaveRundownItem(3000),
-    getEntity: (id) => {
+    getEntity: () => {
         return Promise.resolve({saved: testEntity, autosaved: null});
     },
-    isLockedInCurrentSession: (article) => false,
-    lock: (id: IRundownItem['_id']) => {
+    isLockedInCurrentSession: () => false,
+    lock: () => {
         return Promise.resolve(testEntity);
     },
-    unlock: (id: IRundownItem['_id']) => {
+    unlock: () => {
         return Promise.resolve(testEntity);
     },
-    saveEntity: (current, original) => {
+    saveEntity: () => {
         // console.log('request saving', current);
         return Promise.resolve(testEntity);
     },
     getContentProfile: () => {
-        const fieldConfig: any = { // IDropdownConfigVocabulary
-            source: 'vocabulary',
-            vocabularyId: 'languages',
-            multiple: false,
-        };
-
-        const fieldV2: IAuthoringFieldV2 = {
-            id: 'language',
-            name: gettext('Language'),
-            fieldType: 'dropdown',
-            fieldConfig,
-        };
-
         const profile: IContentProfileV2 = {
             id: 'temp-profile',
             name: 'Temporary profile',
-            header: OrderedMap([['language', fieldV2], ['title', abstractFieldV2]]),
-            content: OrderedMap(),
+            header: OrderedMap([
+                [itemTypeField.id, itemTypeField],
+                // TODO: Show, 3 letter mark, read-only
+                // TODO: Show part - depends on show
+            ]),
+            content: OrderedMap([
+                [titleField.id, titleField],
+                [contentField.id, contentField],
+            ]),
         };
 
         return Promise.resolve(profile);
     },
-    closeAuthoring: (current, original, cancelAutosave, doClose) => {
+    closeAuthoring: () => {
         return Promise.resolve();
     },
     getUserPreferences: () => Promise.resolve({'spellchecker:status': {enabled: true}}),
@@ -147,7 +189,7 @@ export class RundownItemsAuthoring extends React.PureComponent<IProps> {
                 authoringStorage={authoringStorageRundownItem}
                 fieldsAdapter={{}}
                 storageAdapter={{
-                    storeValue: (value, fieldId, rundownItem, config, fieldType) => {
+                    storeValue: (value, fieldId, rundownItem, _config, _fieldType) => {
                         return {
                             ...rundownItem,
                             [fieldId]: value,
@@ -157,7 +199,7 @@ export class RundownItemsAuthoring extends React.PureComponent<IProps> {
                         (rundownItem as {[key: string]: any})[fieldId] ?? null,
                 }}
                 getLanguage={() => 'en'}
-                getActions={({item, contentProfile, fieldsData}) => {
+                getActions={() => {
                     return Promise.resolve([
                         {
                             label: 'Say hello',
