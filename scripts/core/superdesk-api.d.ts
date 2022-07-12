@@ -182,6 +182,13 @@ declare module 'superdesk-api' {
         shortcuts?: Array<IDateShortcut>;
     }
 
+    // AUTHORING-REACT FIELD TYPES - time
+
+    export type ITimeValueOperational = string; // ISO 8601, 13:59:01.123
+    export type ITimeValueStorage = ITimeValueOperational;
+    export type ITimeFieldConfig = never;
+    export type ITimeUserPreferences = never;
+
     // AUTHORING-REACT FIELD TYPES - dropdown
 
     export interface ITreeWithLookup<T> {

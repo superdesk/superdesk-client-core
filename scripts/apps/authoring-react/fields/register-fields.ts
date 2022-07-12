@@ -11,6 +11,7 @@ import {getEmbedField} from './embed';
 import {getMediaField} from './media';
 import {getLinkedItemsField} from './linked-items';
 import {getAttachmentsField} from './attachments';
+import {getTimeField} from './time';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
@@ -33,6 +34,7 @@ export function registerAuthoringReactFields() {
                 getEditor3Field(),
                 getDropdownField(),
                 getDateField(),
+                getTimeField(),
                 getUrlsField(),
                 getEmbedField(),
                 getMediaField(),
