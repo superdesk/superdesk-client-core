@@ -37,7 +37,7 @@ export function getFieldContainer(
                     >
                         <span className="form-label">
                             <Spacer h gap="8" noGrow>
-                                <span>{field.id}</span>
+                                <span>{field.name}</span>
                                 <span>{toggle}</span>
                             </Spacer>
                         </span>
