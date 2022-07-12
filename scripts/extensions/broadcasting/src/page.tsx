@@ -46,7 +46,12 @@ export class Page extends React.PureComponent {
                             ariaValue={gettext('Manage show templates')}
                             icon="settings"
                             onClick={() => {
-                                superdesk.ui.showModal(ManageRundownTemplates);
+                                superdesk.ui.showModal(({closeModal}) => (
+                                    <ManageRundownTemplates
+                                        dialogTitle={gettext('Manage rundown templates')}
+                                        closeModal={closeModal}
+                                    />
+                                ));
                             }}
                         />
                     </div>
