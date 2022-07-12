@@ -14,8 +14,8 @@ const {Spacer} = superdesk.components;
 export class Page extends React.PureComponent {
     render() {
         return (
-            <div style={{marginTop: 'var(--top-navigation-height)', width: '100%'}}>
-                <Spacer h gap="32" justifyContent="space-between">
+            <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
+                <Spacer h gap="32" justifyContent="space-between" noWrap style={{height: '100%'}}>
                     <div>
                         <Dropdown
                             header={[]}
@@ -51,7 +51,7 @@ export class Page extends React.PureComponent {
                         />
                     </div>
 
-                    <div>
+                    <div style={{height: '100%', overflow: 'auto'}}>
                         <RundownItemsAuthoring itemId="abc" />
                     </div>
                 </Spacer>
