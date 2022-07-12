@@ -139,6 +139,20 @@ const itemTypeField: IAuthoringFieldV2 = {
     fieldConfig: itemTypesConfig,
 };
 
+const startTimeField: IAuthoringFieldV2 = {
+    id: 'start_time',
+    name: gettext('Start time'),
+    fieldType: 'time',
+    fieldConfig: {},
+};
+
+const endTimeField: IAuthoringFieldV2 = {
+    id: 'end_time',
+    name: gettext('End time'),
+    fieldType: 'time',
+    fieldConfig: {},
+};
+
 export const authoringStorageRundownItem: IAuthoringStorage<IRundownItem> = {
     autosave: new AutoSaveRundownItem(3000),
     getEntity: () => {
@@ -163,6 +177,8 @@ export const authoringStorageRundownItem: IAuthoringStorage<IRundownItem> = {
                 [itemTypeField.id, itemTypeField],
                 // TODO: Show, 3 letter mark, read-only
                 // TODO: Show part - depends on show
+                [startTimeField.id, startTimeField],
+                [endTimeField.id, endTimeField],
             ]),
             content: OrderedMap([
                 [titleField.id, titleField],
