@@ -189,6 +189,13 @@ declare module 'superdesk-api' {
     export type ITimeFieldConfig = never;
     export type ITimeUserPreferences = never;
 
+    // AUTHORING-REACT FIELD TYPES - duration
+
+    export type IDurationValueOperational = number; // number of seconds
+    export type IDurationValueStorage = IDurationValueOperational;
+    export type IDurationFieldConfig = never;
+    export type IDurationUserPreferences = never;
+
     // AUTHORING-REACT FIELD TYPES - dropdown
 
     export interface ITreeWithLookup<T> {
