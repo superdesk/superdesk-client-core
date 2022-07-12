@@ -218,6 +218,7 @@ declare module 'superdesk-api' {
         source: 'vocabulary';
         vocabularyId: IVocabulary['_id'];
         multiple: boolean;
+        filter?(vocabulary: IVocabularyItem): boolean;
     }
 
     export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
@@ -1146,6 +1147,9 @@ declare module 'superdesk-api' {
                 [key: string]: string;
             }
         };
+
+        // vocabularies can have dynamic schema, thus field names can't be known statically
+        [key: string]: any;
     }
 
     export interface IVocabulary extends IBaseRestApiResponse {

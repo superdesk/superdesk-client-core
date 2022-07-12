@@ -211,6 +211,22 @@ const lastSentence: IAuthoringFieldV2 = {
     fieldConfig: editor3TestConfigWithoutFormatting,
 };
 
+const currentShowCode = 'ABC'; // FINISH: remove test data
+
+const showPartConfig: IDropdownConfigVocabulary = {
+    source: 'vocabulary',
+    vocabularyId: 'show_part',
+    multiple: false,
+    filter: (item) => item['show_reference'] == null || item['show_reference'] === currentShowCode,
+};
+
+const showPartField: IAuthoringFieldV2 = {
+    id: 'show_part',
+    name: gettext('Show part'),
+    fieldType: 'dropdown',
+    fieldConfig: showPartConfig,
+};
+
 export const authoringStorageRundownItem: IAuthoringStorage<IRundownItem> = {
     autosave: new AutoSaveRundownItem(3000),
     getEntity: () => {
@@ -233,6 +249,7 @@ export const authoringStorageRundownItem: IAuthoringStorage<IRundownItem> = {
             name: 'Temporary profile',
             header: OrderedMap([
                 [itemTypeField.id, itemTypeField],
+                [showPartField.id, showPartField],
                 // TODO: Show, 3 letter mark, read-only
                 // TODO: Show part - depends on show
                 [startTimeField.id, startTimeField],
