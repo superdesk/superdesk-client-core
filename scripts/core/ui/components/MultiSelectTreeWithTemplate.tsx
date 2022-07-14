@@ -72,7 +72,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                                         canSelectBranchWithChildren={canSelectBranchWithChildren}
                                     />
                                 ),
-                                999,
+                                1060,
                             );
                         }}
                     >

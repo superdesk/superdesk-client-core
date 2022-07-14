@@ -352,7 +352,11 @@ class HTMLParser {
 }
 
 export function getContentStateFromHtml(html: string, associations: object = null): ContentState {
-    return new HTMLParser(html, associations).contentState();
+    if (html.length < 1) {
+        return ContentState.createFromText('');
+    } else {
+        return new HTMLParser(html, associations).contentState();
+    }
 }
 
 /**

@@ -6,7 +6,6 @@ import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates'
 import {CreateShowModal} from './shows/create-show';
 
 import {superdesk} from './superdesk';
-import {RundownItemsAuthoring} from './rundown-items-editing-demo';
 const {gettext} = superdesk.localization;
 
 const {Spacer} = superdesk.components;
@@ -15,7 +14,7 @@ export class Page extends React.PureComponent {
     render() {
         return (
             <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
-                <Spacer h gap="32" justifyContent="space-between" noWrap style={{height: '100%'}}>
+                <Spacer h gap="32" justifyContent="space-between" alignItems="start" noWrap style={{height: '100%'}}>
                     <div>
                         <Dropdown
                             header={[]}
@@ -56,9 +55,11 @@ export class Page extends React.PureComponent {
                         />
                     </div>
 
-                    <div style={{height: '100%', overflow: 'auto'}}>
-                        <RundownItemsAuthoring itemId="abc" />
-                    </div>
+                    <div />
+
+                    {/* <div style={{height: '100%', overflow: 'auto'}}>
+                        <RundownAuthoring />
+                    </div> */}
                 </Spacer>
             </div>
         );

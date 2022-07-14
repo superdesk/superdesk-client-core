@@ -349,6 +349,13 @@ declare module 'superdesk-api' {
     export type IUrlsFieldUserPreferences = never;
     export type IUrlsFieldConfig = ICommonFieldConfig;
 
+    // EDITOR3
+
+    export interface IEditor3Output {
+        stringValue: string; // HTML or plain text (depending on config)
+        annotations: Array<any>;
+    }
+
 
 
     // EXTENSIONS
@@ -1123,8 +1130,8 @@ declare module 'superdesk-api' {
     }
 
     export interface IVocabularyItem {
-        name?: string;
-        qcode?: string;
+        name: string;
+        qcode: string;
         color?: string;
         is_active?: boolean;
 
@@ -2338,7 +2345,7 @@ declare module 'superdesk-api' {
             };
             vocabulary: {
                 getIptcSubjects(): Promise<Array<ISubject>>;
-                getVocabulary(id: string): Promise<Array<ISubject>>;
+                getVocabulary(id: string): IVocabulary;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
@@ -2364,6 +2371,12 @@ declare module 'superdesk-api' {
                 mapFn: (item: T[keyof T]) => V,
             ): {[Property in keyof T]: V};
             nameof<T>(name: keyof T): string;
+            computeEditor3Output(
+                rawContentState: import('draft-js').RawDraftContentState,
+                config: IEditor3Config,
+                language: string,
+            ): IEditor3Output;
+            getContentStateFromHtml(html: string): import('draft-js').ContentState;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -2409,7 +2422,10 @@ declare module 'superdesk-api' {
             Icon: React.ComponentType<IPropsIcon>;
             IconBig: React.ComponentType<IPropsIconBig>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?:string}>;
+
+            // TODO: move the component with all its dependencies to a separate project and use via npm package
             getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;
+
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             getValidationHOC: <T>() => React.ComponentType<IPropsValidationHoc<T>>;

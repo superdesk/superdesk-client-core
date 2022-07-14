@@ -44,7 +44,7 @@ import {
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
 import {attachments} from './attachments';
 import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
-import {computeDerivedProperties} from './utilities/compute-derived-properties';
+import {computeEditor3Output} from './utilities/compute-editor3-output';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -138,7 +138,7 @@ export function storeEditor3ValueBase(
 : {article: IArticle; stringValue: string; annotations: Array<any>} {
     const rawContentState = value.rawContentState;
 
-    const {stringValue, annotations} = computeDerivedProperties(
+    const {stringValue, annotations} = computeEditor3Output(
         rawContentState,
         config,
         article.language,

@@ -5,6 +5,7 @@ import {IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
 import {CreateValidators, stringNotEmpty} from '../../form-validation';
+import {ManageRundownItems} from './manage-rundown-items';
 
 const {gettext} = superdesk.localization;
 
@@ -102,6 +103,8 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
             separator: '//',
             date_format: dateFormatOptions[0],
         };
+
+        const rundownItems = this.props.templateFields.rundown_items ?? [];
 
         return (
             <WithTemplateValidation validators={templateFieldsValidator}>
@@ -294,6 +297,18 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                     </Select>
                                                 </div>
                                             </Spacer>
+                                        </div>
+
+                                        <div>
+                                            <ManageRundownItems
+                                                readOnly={readOnly}
+                                                items={rundownItems}
+                                                onChange={(val) => {
+                                                    this.handleChange({
+                                                        rundown_items: val,
+                                                    });
+                                                }}
+                                            />
                                         </div>
                                     </Spacer>
                                 </div>

@@ -94,6 +94,8 @@ import {SelectFromEndpoint} from './ui/components/virtual-lists/select';
 import {WithValidation} from './with-validation';
 import {DateTime} from './ui/components/DateTime';
 import {AuthoringReact} from 'apps/authoring-react/authoring-react';
+import {computeEditor3Output} from 'apps/authoring-react/field-adapters/utilities/compute-editor3-output';
+import {getContentStateFromHtml} from './editor3/html/from-html';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -227,6 +229,8 @@ export function getSuperdeskApiImplementation(
             nameof: nameof,
             stripBaseRestApiFields,
             mapObject,
+            computeEditor3Output,
+            getContentStateFromHtml: (html) => getContentStateFromHtml(html),
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
@@ -269,7 +273,7 @@ export function getSuperdeskApiImplementation(
             },
             vocabulary: {
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
-                getVocabulary: (id: string) => metadata.initialize().then(() => metadata.values[id]),
+                getVocabulary: (id: string) => sdApi.vocabularies.getAll().get(id),
             },
             attachment: attachmentsApi,
             users: {
