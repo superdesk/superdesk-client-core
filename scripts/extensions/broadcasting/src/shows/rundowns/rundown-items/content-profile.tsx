@@ -165,12 +165,10 @@ export const rundownItemContentProfile: IContentProfileV2 = {
     header: OrderedMap([
         [itemTypeField.id, itemTypeField],
         [showPartField.id, showPartField],
-        // TODO: Show, 3 letter mark, read-only
         [startTimeField.id, startTimeField],
         [endTimeField.id, endTimeField],
         [durationField.id, durationField],
         [plannedDurationField.id, plannedDurationField],
-        // TODO: add a read-only field that displays position in the list
     ]),
     content: OrderedMap([
         [titleField.id, titleField],

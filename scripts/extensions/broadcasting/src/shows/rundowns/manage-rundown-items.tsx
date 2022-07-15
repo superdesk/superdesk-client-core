@@ -250,10 +250,17 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
                                 <IconLabel
                                     text={item.duration.toString()}
                                     innerLabel={gettext('Duration')}
-                                    // FINISH: check on criteria that should be used for determining background color
                                     style="translucent"
                                     size="small"
-                                    type="warning"
+                                    type={(() => {
+                                        if (item.duration > item.planned_duration) {
+                                            return 'alert';
+                                        } else if (item.duration < item.planned_duration) {
+                                            return 'warning'
+                                        } else {
+                                            return 'success';
+                                        }
+                                    })()}
                                 />
 
                                 {
