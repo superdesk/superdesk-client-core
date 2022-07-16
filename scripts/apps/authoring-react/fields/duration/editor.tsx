@@ -18,7 +18,9 @@ export class Editor extends React.PureComponent<IProps> {
                     type="number"
                     value={this.props.value ?? 0}
                     onChange={(event) => { // TODO: use duration input
-                        this.props.onChange(parseInt(event.target.value, 10));
+                        const val = event.target.value;
+
+                        this.props.onChange(val === '' ? null : parseInt(val, 10));
                     }}
                     required
                 />

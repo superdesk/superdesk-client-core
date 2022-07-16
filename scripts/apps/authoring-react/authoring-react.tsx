@@ -378,9 +378,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             throw new Error('can not change field value when authoring is not initialized');
         }
 
+        const {onFieldChange} = this.props;
+        const fieldsDataUpdated = state.fieldsDataWithChanges.set(fieldId, data);
+
         this.setState({
             ...state,
-            fieldsDataWithChanges: state.fieldsDataWithChanges.set(fieldId, data),
+            fieldsDataWithChanges: onFieldChange == null
+                ? fieldsDataUpdated
+                : onFieldChange(fieldId, fieldsDataUpdated),
         });
     }
 

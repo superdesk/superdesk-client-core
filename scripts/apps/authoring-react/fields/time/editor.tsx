@@ -18,7 +18,7 @@ export class Editor extends React.PureComponent<IProps> {
                 <TimePicker
                     value={this.props.value ?? ''}
                     onChange={(val) => {
-                        this.props.onChange(val);
+                        this.props.onChange(val === '' ? null : val);
                     }}
                     disabled={this.props.readOnly}
                 />

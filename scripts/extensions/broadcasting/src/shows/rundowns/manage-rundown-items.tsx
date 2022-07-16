@@ -16,6 +16,7 @@ import {rundownItemContentProfile} from './rundown-items/content-profile';
 import {Map} from 'immutable';
 import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, SHOW_PART_VOCABULARY_ID} from '../../constants';
 import {IVocabularyItem} from 'superdesk-api';
+import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 const {vocabulary} = superdesk.entities;
 
 const {gettext} = superdesk.localization;
@@ -344,19 +345,9 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
                                             ],
                                         };
                                     }}
-                                    getAuthoringTopBarWidgets={() => [
-                                        {
-                                            group: 'start',
-                                            priority: 0.1,
-                                            component: () => (
-                                                <div style={{border: '1px solid red'}}>
-                                                    Show: <strong>ABC</strong>; item position: <strong>3</strong>
-                                                </div>
-                                            ),
-                                            availableOffline: false,
-                                        },
-                                    ]}
+                                    getAuthoringTopBarWidgets={() => []}
                                     topBar2Widgets={[]}
+                                    onFieldChange={syncDurationWithEndTime}
                                 />
                             </Modal>
                         )

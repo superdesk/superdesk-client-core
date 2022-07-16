@@ -113,16 +113,18 @@ declare module 'superdesk-api' {
         autosave: IAuthoringAutoSave<T>;
     }
 
+    export type IFieldsData = import('immutable').Map<string, unknown>;
+
     export interface IExposedFromAuthoring<T> {
         item: T;
         contentProfile: IContentProfileV2;
-        fieldsData: import('immutable').Map<string, unknown>;
+        fieldsData: IFieldsData;
         authoringStorage: IAuthoringStorage<T>;
         storageAdapter: IStorageAdapter<T>;
         fieldsAdapter: IFieldsAdapter<T>;
         hasUnsavedChanges(): boolean;
         handleUnsavedChanges(): Promise<T>;
-        handleFieldsDataChange(fieldsData: import('immutable').Map<string, unknown>): void;
+        handleFieldsDataChange(fieldsData: IFieldsData): void;
         save(): Promise<T>;
         closeAuthoring(): void;
         stealLock(): void;
@@ -157,6 +159,9 @@ declare module 'superdesk-api' {
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
         getSidebar?(item: T): JSX.Element;
         topBar2Widgets: Array<React.ComponentType<{item: T}>>;
+
+        // Runs before re-render.
+        onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
     }
 
     // AUTHORING-REACT FIELD TYPES - attachments
@@ -2377,6 +2382,7 @@ declare module 'superdesk-api' {
                 language: string,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
+            getTimeStringIso(date: Date): string; // ISO 8601, 13:59:01.123
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
