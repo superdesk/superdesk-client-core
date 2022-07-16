@@ -26,15 +26,15 @@ export interface IRundownTemplateBase {
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
 
 export interface IRundownItemBase {
-    title: string;
-    start_time: string;
-    end_time: string;
     item_type: string;
     show_part: string;
-    additional_notes: string;
-    live_captions: string;
-    duration: number;
-    planned_duration: number;
+    title?: string | null;
+    start_time?: string | null;
+    end_time?: string | null;
+    additional_notes?: string | null;
+    live_captions?: string | null;
+    duration?: number | null;
+    planned_duration?: number | null;
 }
 
 export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;

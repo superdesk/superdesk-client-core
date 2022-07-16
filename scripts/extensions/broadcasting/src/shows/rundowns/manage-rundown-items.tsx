@@ -3,13 +3,14 @@ import {convertToRaw} from 'draft-js';
 import {
     IAuthoringAutoSave,
     IAuthoringStorage,
+    IBaseRestApiResponse,
     IEditor3Config,
     IEditor3ValueStorage,
     IStorageAdapter,
 } from 'superdesk-api';
 import {Button, Modal, Label, IconLabel} from 'superdesk-ui-framework/react';
 import {LANGUAGE} from '../../constants';
-import {IRundownItemBase, IRundownItemTemplate} from '../../interfaces';
+import {IRundownItemBase} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
 import {rundownItemContentProfile} from './rundown-items/content-profile';
@@ -24,7 +25,7 @@ const {gettext} = superdesk.localization;
 const {getAuthoringComponent} = superdesk.components;
 const {computeEditor3Output, getContentStateFromHtml} = superdesk.helpers;
 
-const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemplate> = {
+const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemplateInitial> = {
     storeValue: (value, fieldId, rundownItem, config, fieldType) => {
         if (fieldType === 'editor3' && ((config as IEditor3Config).singleLine) === true) {
             return {
@@ -64,10 +65,10 @@ const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemplate> =
 };
 
 function getRundownItemTemplateAuthoringStorage(
-    item: IRundownItemTemplate,
-    onSave: (item: IRundownItemTemplate) => void,
-): IAuthoringStorage<IRundownItemTemplate> {
-    class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItemTemplate> {
+    item: IRundownItemTemplateInitial,
+    onSave: (item: IRundownItemTemplateInitial) => void,
+): IAuthoringStorage<IRundownItemTemplateInitial> {
+    class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItemTemplateInitial> {
         get() {
             return Promise.resolve(item);
         }
@@ -76,7 +77,10 @@ function getRundownItemTemplateAuthoringStorage(
             return Promise.resolve();
         }
 
-        schedule(getItem: () => IRundownItemTemplate, callback: (autosaved: IRundownItemTemplate) => void) {
+        schedule(
+            getItem: () => IRundownItemTemplateInitial,
+            callback: (autosaved: IRundownItemTemplateInitial) => void,
+        ) {
             callback(getItem());
         }
 
@@ -85,7 +89,7 @@ function getRundownItemTemplateAuthoringStorage(
         }
     }
 
-    const authoringStorageRundownItem: IAuthoringStorage<IRundownItemTemplate> = {
+    const authoringStorageRundownItem: IAuthoringStorage<IRundownItemTemplateInitial> = {
         autosave: new AutoSaveRundownItem(),
         getEntity: () => {
             return Promise.resolve({saved: item, autosaved: null});
@@ -115,7 +119,7 @@ function getRundownItemTemplateAuthoringStorage(
     return authoringStorageRundownItem;
 }
 
-const AuthoringReact = getAuthoringComponent<IRundownItemTemplate>();
+const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
 
 interface IProps {
     items: Array<IRundownItemBase>;
@@ -123,8 +127,21 @@ interface IProps {
     readOnly: boolean;
 }
 
-type ICreate = {type: 'create', item: IRundownItemTemplate, authoringStorage: IAuthoringStorage<IRundownItemTemplate>};
-type IEdit = {type: 'edit', item: IRundownItemTemplate, authoringStorage: IAuthoringStorage<IRundownItemTemplate>};
+interface IRundownItemTemplateInitial extends IBaseRestApiResponse {
+    data: Partial<IRundownItemBase>;
+}
+
+interface ICreate {
+    type: 'create';
+    item: IRundownItemTemplateInitial;
+    authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
+}
+
+interface IEdit {
+    type: 'edit';
+    item: IRundownItemTemplateInitial;
+    authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
+}
 
 interface IState {
     createOrEdit: ICreate | IEdit | null;
@@ -143,21 +160,13 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
     }
 
     createNewItem() {
-        const item: IRundownItemTemplate = {
+        const item: IRundownItemTemplateInitial = {
             _id: '',
             _created: '',
             _updated: '',
             _etag: '',
             _links: {},
-            data: {
-                title: '',
-                additional_notes: '',
-                live_captions: '',
-                item_type: '',
-                show_part: '',
-                duration: 0,
-                planned_duration: 0,
-            },
+            data: {},
         };
 
         const createData: ICreate = {
@@ -166,7 +175,17 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
             authoringStorage: getRundownItemTemplateAuthoringStorage(
                 item,
                 (val) => {
-                    this.props.onChange(this.props.items.concat(val.data));
+                    const {show_part, item_type} = val.data;
+
+                    if (show_part != null && item_type != null) { // TODO: handle validation
+                        const itemBase: IRundownItemBase = {
+                            ...val.data,
+                            show_part: show_part,
+                            item_type: item_type,
+                        };
+
+                        this.props.onChange(this.props.items.concat(itemBase));
+                    }
                 },
             ),
         };
@@ -177,7 +196,7 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
     }
 
     editItem(data: IRundownItemBase) {
-        const item: IRundownItemTemplate = {
+        const item: IRundownItemTemplateInitial = {
             _id: '',
             _created: '',
             _updated: '',
@@ -192,9 +211,23 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
             authoringStorage: getRundownItemTemplateAuthoringStorage(
                 item,
                 (val) => {
-                    this.props.onChange(
-                        this.props.items.map((_item) => _item === data ? val.data : _item),
-                    );
+                    const {show_part, item_type} = val.data;
+
+                    if (show_part != null && item_type != null) { // TODO: handle validation
+                        this.props.onChange(
+                            this.props.items.map(
+                                (_item) => {
+                                    const itemBase: IRundownItemBase = {
+                                        ...val.data,
+                                        show_part: show_part,
+                                        item_type: item_type,
+                                    };
+
+                                    return _item === data ? itemBase : _item;
+                                },
+                            ),
+                        );
+                    }
                 },
             ),
         };
@@ -240,29 +273,39 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
                                     // TODO: show 3 letter show symbol
                                 }
 
-                                <IconLabel
-                                    text={item.planned_duration.toString()}
-                                    innerLabel={gettext('Planned duration')}
-                                    icon="time"
-                                    style="translucent"
-                                    size="small"
-                                />
+                                {
+                                    item.planned_duration != null && (
+                                        <IconLabel
+                                            text={item.planned_duration.toString()}
+                                            innerLabel={gettext('Planned duration')}
+                                            icon="time"
+                                            style="translucent"
+                                            size="small"
+                                        />
+                                    )
+                                }
 
-                                <IconLabel
-                                    text={item.duration.toString()}
-                                    innerLabel={gettext('Duration')}
-                                    style="translucent"
-                                    size="small"
-                                    type={(() => {
-                                        if (item.duration > item.planned_duration) {
-                                            return 'alert';
-                                        } else if (item.duration < item.planned_duration) {
-                                            return 'warning'
-                                        } else {
-                                            return 'success';
-                                        }
-                                    })()}
-                                />
+                                {
+                                    item.duration != null && (
+                                        <IconLabel
+                                            text={item.duration.toString()}
+                                            innerLabel={gettext('Duration')}
+                                            style="translucent"
+                                            size="small"
+                                            type={(() => {
+                                                if (item.planned_duration == null) {
+                                                    return 'success';
+                                                } else if (item.duration > item.planned_duration) {
+                                                    return 'alert';
+                                                } else if (item.duration < item.planned_duration) {
+                                                    return 'warning';
+                                                } else {
+                                                    return 'success';
+                                                }
+                                            })()}
+                                        />
+                                    )
+                                }
 
                                 {
                                     !readOnly && (
