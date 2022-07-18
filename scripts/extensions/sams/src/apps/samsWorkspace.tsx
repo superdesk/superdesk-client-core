@@ -240,14 +240,13 @@ export class SamsWorkspaceComponent extends React.Component<IProps, IState> {
                 onSelect: this.props.previewAsset,
             },
             {
-                action: ASSET_ACTIONS.DELETE,
-                onSelect: this.onDeleteAsset,
-            },
-            {
                 action: ASSET_ACTIONS.VIEW_FULL_SCREEN,
                 onSelect: this.onAssetImagePreview,
             },
-            ];
+            {
+                action: ASSET_ACTIONS.DELETE,
+                onSelect: this.onDeleteAsset,
+            }];
 
         if (superdeskApi.privileges.hasPrivilege('sams_manage_assets')) {
             actions.push({
