@@ -134,6 +134,7 @@ function getInitialState<T extends IBaseRestApiResponse>(
     authoringStorage: IAuthoringStorage<T>,
     storageAdapter: IStorageAdapter<T>,
     language: string,
+    validationErrors: IAuthoringValidationErrors,
 ): IStateLoaded<T> {
     const allFields = profile.header.merge(profile.content);
 
@@ -184,6 +185,7 @@ function getInitialState<T extends IBaseRestApiResponse>(
         toggledFields: toggledFields,
         userPreferencesForFields,
         spellcheckerEnabled,
+        validationErrors: validationErrors,
     };
 
     return initialState;
@@ -197,6 +199,7 @@ function getInitialState<T extends IBaseRestApiResponse>(
  * `true` means field is available - `false` - hidden.
  */
 export type IToggledFields = {[fieldId: string]: boolean};
+export type IAuthoringValidationErrors = {[fieldId: string]: string};
 
 interface IStateLoaded<T> {
     initialized: true;
@@ -213,6 +216,7 @@ interface IStateLoaded<T> {
         pinned: boolean;
     };
     spellcheckerEnabled: boolean;
+    validationErrors: IAuthoringValidationErrors;
 
     /**
      * Prevents changes to state while async operation is in progress(e.g. saving).
@@ -469,6 +473,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 this.props.authoringStorage,
                 this.props.storageAdapter,
                 this.props.getLanguage(item.autosaved ?? item.saved),
+                {},
             );
 
             this.props.onEditingStart?.(initialState.itemWithChanges);
@@ -640,6 +645,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         this.props.authoringStorage,
                         this.props.storageAdapter,
                         this.props.getLanguage(item.autosaved ?? item.saved),
+                        state.validationErrors,
                     ));
                 });
             }),
@@ -663,6 +669,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         this.props.authoringStorage,
                         this.props.storageAdapter,
                         this.props.getLanguage(item.autosaved ?? item.saved),
+                        state.validationErrors,
                     ));
                 });
             }),
@@ -750,6 +757,35 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     save(state: IStateLoaded<T>): Promise<T> {
         const {authoringStorage} = this.props;
 
+        if ((this.props.validateBeforeSaving ?? true) === true) {
+            const {profile} = state;
+            const allFields = profile.header.merge(profile.content);
+
+            const validationErrors: IAuthoringValidationErrors = allFields.toArray()
+                .filter((field) => {
+                    if (field.fieldConfig.required === true) {
+                        const FieldEditorConfig = getField(field.fieldType);
+
+                        return !FieldEditorConfig.hasValue(state.fieldsDataWithChanges.get(field.id));
+                    } else {
+                        return false;
+                    }
+                }).reduce<IAuthoringValidationErrors>((acc, field) => {
+                    acc[field.id] = gettext('Field is required');
+
+                    return acc;
+                }, {});
+
+            if (Object.keys(validationErrors).length > 0) {
+                this.setState({
+                    ...state,
+                    validationErrors,
+                });
+
+                return Promise.reject('validation errors were found');
+            }
+        }
+
         return this.cancelAutosave().then(() => {
             this.setState({
                 ...state,
@@ -769,6 +805,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     this.props.authoringStorage,
                     this.props.storageAdapter,
                     this.props.getLanguage(item),
+                    {}, // clear validation errors
                 );
 
                 this.setState(nextState);
@@ -1113,6 +1150,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                     toggledFields={state.toggledFields}
                                                     toggleField={this.toggleField}
                                                     readOnly={readOnly}
+                                                    validationErrors={state.validationErrors}
                                                 />
                                             </div>
                                         )}
@@ -1129,6 +1167,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                                 toggledFields={state.toggledFields}
                                                 toggleField={this.toggleField}
                                                 readOnly={readOnly}
+                                                validationErrors={state.validationErrors}
                                             />
                                         </div>
                                     </Layout.AuthoringMain>

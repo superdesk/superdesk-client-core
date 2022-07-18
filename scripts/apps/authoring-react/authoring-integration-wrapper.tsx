@@ -429,6 +429,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                     );
                                 }}
                                 topBar2Widgets={topbar2WidgetsReady}
+                                validateBeforeSaving={false}
                             />
                         </div>
                     );

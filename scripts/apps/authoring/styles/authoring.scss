@@ -650,24 +650,24 @@ $authoring-toolbar-spacing: 10px;
     border-radius: 0 0 22px 22px;
     box-shadow: 0 -2px 0 0 var(--authoringHeaderBG), 0 1px 3px 0 rgba(0,0,0,0.3);
     @include transition(all ease-in 0.12s);
-    i { 
+    i {
         opacity: 0.75;
     }
     &:hover {
         height: 32px;
         bottom: -32px;
         padding-top: 2px;
-        i { 
+        i {
             opacity: 1;
         }
     }
-    i { 
+    i {
         height: 15px;
         @include transition(all 0.5s);
-         
+
     }
     &.active {
-        i { 
+        i {
             @include rotate(180deg);
         }
     }
@@ -1811,3 +1811,11 @@ feature-image {
     margin-left: 5px;
 }
 
+.input-field-error {
+    font-size: 1.2rem;
+    color: $errorText;
+}
+
+.form-label--invalid {
+    color: $errorText;
+}
