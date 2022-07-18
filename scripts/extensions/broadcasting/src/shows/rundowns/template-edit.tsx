@@ -6,6 +6,7 @@ import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
 import {CreateValidators, stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
+import {computeStartEndTime} from '../../utils/compute-start-end-time';
 
 const {gettext} = superdesk.localization;
 
@@ -80,6 +81,7 @@ const WithTemplateValidation = superdesk.components.getValidationHOC<Partial<IRu
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
     name: stringNotEmpty,
+    airtime_time: stringNotEmpty,
 };
 
 export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
@@ -299,17 +301,25 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                             </Spacer>
                                         </div>
 
-                                        <div>
-                                            <ManageRundownItems
-                                                readOnly={readOnly}
-                                                items={rundownItems}
-                                                onChange={(val) => {
-                                                    this.handleChange({
-                                                        rundown_items: val,
-                                                    });
-                                                }}
-                                            />
-                                        </div>
+                                        {
+                                            templateFields.airtime_time != null && (() => {
+                                                const airTime = templateFields.airtime_time;
+
+                                                return (
+                                                    <div>
+                                                        <ManageRundownItems
+                                                            readOnly={readOnly}
+                                                            items={rundownItems}
+                                                            onChange={(val) => {
+                                                                this.handleChange({
+                                                                    rundown_items: computeStartEndTime(airTime, val),
+                                                                });
+                                                            }}
+                                                        />
+                                                    </div>
+                                                );
+                                            })()
+                                        }
                                     </Spacer>
                                 </div>
                             </Layout.AuthoringMain>

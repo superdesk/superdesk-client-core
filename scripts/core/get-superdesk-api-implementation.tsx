@@ -8,7 +8,7 @@ import {
     IStage,
     IUser,
 } from 'superdesk-api';
-import {gettext, gettextPlural, getTimeStringIso, stripBaseRestApiFields, stripHtmlTags} from 'core/utils';
+import {arrayMove, gettext, gettextPlural, getTimeStringIso, stripBaseRestApiFields, stripHtmlTags} from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -232,6 +232,7 @@ export function getSuperdeskApiImplementation(
             computeEditor3Output,
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
             getTimeStringIso,
+            arrayMove,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,

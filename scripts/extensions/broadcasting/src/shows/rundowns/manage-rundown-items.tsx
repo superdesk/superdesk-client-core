@@ -23,7 +23,7 @@ const {vocabulary} = superdesk.entities;
 const {gettext} = superdesk.localization;
 
 const {getAuthoringComponent} = superdesk.components;
-const {computeEditor3Output, getContentStateFromHtml} = superdesk.helpers;
+const {computeEditor3Output, getContentStateFromHtml, arrayMove} = superdesk.helpers;
 
 const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemplateInitial> = {
     storeValue: (value, fieldId, rundownItem, config, fieldType) => {
@@ -225,6 +225,10 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
         });
     }
 
+    reorder(from: number, to: number) {
+        this.props.onChange(arrayMove(this.props.items, from, to));
+    }
+
     render() {
         const {readOnly} = this.props;
         const {createOrEdit} = this.state;
@@ -263,6 +267,28 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
                                             text={itemType.name}
                                             color={itemType.color}
                                         />
+                                    )
+                                }
+
+                                {
+                                    !readOnly && (
+                                        <div>
+                                            <button
+                                                onClick={() => {
+                                                    this.reorder(i, i - 1);
+                                                }}
+                                            >
+                                                move up
+                                            </button>
+
+                                            <button
+                                                onClick={() => {
+                                                    this.reorder(i, i + 1);
+                                                }}
+                                            >
+                                                move down
+                                            </button>
+                                        </div>
                                     )
                                 }
 
