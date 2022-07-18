@@ -175,17 +175,9 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
             authoringStorage: getRundownItemTemplateAuthoringStorage(
                 item,
                 (val) => {
-                    const {show_part, item_type} = val.data;
-
-                    if (show_part != null && item_type != null) { // TODO: handle validation
-                        const itemBase: IRundownItemBase = {
-                            ...val.data,
-                            show_part: show_part,
-                            item_type: item_type,
-                        };
-
-                        this.props.onChange(this.props.items.concat(itemBase));
-                    }
+                    this.props.onChange(this.props.items.concat(
+                        val.data as IRundownItemBase, // validation is handled by authoring component
+                    ));
                 },
             ),
         };
@@ -213,17 +205,13 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
                 (val) => {
                     const {show_part, item_type} = val.data;
 
-                    if (show_part != null && item_type != null) { // TODO: handle validation
+                    if (show_part != null && item_type != null) {
                         this.props.onChange(
                             this.props.items.map(
                                 (_item) => {
-                                    const itemBase: IRundownItemBase = {
-                                        ...val.data,
-                                        show_part: show_part,
-                                        item_type: item_type,
-                                    };
-
-                                    return _item === data ? itemBase : _item;
+                                    return _item === data
+                                        ? val.data as IRundownItemBase // validation is handled by authoring component
+                                        : _item;
                                 },
                             ),
                         );
@@ -253,21 +241,30 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
             <div>
                 {
                     this.props.items.map((item, i) => {
-                        const showPart = showParts.get(item.show_part);
-                        const itemType = rundownItemTypes.get(item.item_type);
+                        const showPart = item.show_part == null ? null : showParts.get(item.show_part);
+                        const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
 
                         return (
                             <div key={i} style={{padding: 4, margin: 4, border: '1px solid blue'}}>
                                 {item.title}
-                                <Label
-                                    text={showPart.name}
-                                    color={showPart.color}
-                                />
 
-                                <Label
-                                    text={itemType.name}
-                                    color={itemType.color}
-                                />
+                                {
+                                    showPart != null && (
+                                        <Label
+                                            text={showPart.name}
+                                            color={showPart.color}
+                                        />
+                                    )
+                                }
+
+                                {
+                                    itemType != null && (
+                                        <Label
+                                            text={itemType.name}
+                                            color={itemType.color}
+                                        />
+                                    )
+                                }
 
                                 {
                                     // TODO: show 3 letter show symbol

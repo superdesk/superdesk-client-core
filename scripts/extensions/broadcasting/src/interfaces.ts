@@ -26,15 +26,19 @@ export interface IRundownTemplateBase {
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
 
 export interface IRundownItemBase {
-    item_type: string;
-    show_part: string;
-    title?: string | null;
-    start_time?: string | null;
-    end_time?: string | null;
-    additional_notes?: string | null;
-    live_captions?: string | null;
-    duration?: number | null;
-    planned_duration?: number | null;
+    item_type?: string;
+    show_part?: string;
+    start_time?: string;
+    end_time?: string;
+    duration: number;
+    planned_duration: number;
+    title: string;
+    content?: string;
+    live_sound?: string;
+    guests?: string;
+    additional_notes?: string;
+    live_captions?: string;
+    last_sentence?: string;
 }
 
 export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;

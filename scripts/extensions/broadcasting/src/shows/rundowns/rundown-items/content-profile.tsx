@@ -57,7 +57,10 @@ const titleField: IAuthoringFieldV2 = {
     id: 'title',
     name: gettext('Title'),
     fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
+    fieldConfig: {
+        ...editor3TestConfigWithoutFormatting,
+        required: true,
+    },
 };
 
 const contentField: IAuthoringFieldV2 = {
@@ -84,7 +87,9 @@ const startTimeField: IAuthoringFieldV2 = {
     id: 'start_time',
     name: gettext('Start time'),
     fieldType: 'time',
-    fieldConfig: {},
+    fieldConfig: {
+        required: true,
+    },
 };
 
 const endTimeField: IAuthoringFieldV2 = {
@@ -98,14 +103,18 @@ const durationField: IAuthoringFieldV2 = {
     id: 'duration',
     name: gettext('Duration'),
     fieldType: 'duration',
-    fieldConfig: {},
+    fieldConfig: {
+        required: true,
+    },
 };
 
 const plannedDurationField: IAuthoringFieldV2 = {
     id: 'planned_duration',
     name: gettext('Planned duration'),
     fieldType: 'duration',
-    fieldConfig: {},
+    fieldConfig: {
+        required: true,
+    },
 };
 
 const liveSoundField: IAuthoringFieldV2 = {
