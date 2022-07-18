@@ -1,20 +1,25 @@
-import {authoringStorage} from 'apps/authoring-react/data-layer';
+import {sdApi} from 'api';
 import {arrayToTree} from 'core/helpers/tree';
-import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
+import {} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {getVocabularyItemNameTranslated} from 'core/utils';
 import {keyBy} from 'lodash';
-import {IVocabulary, IVocabularyItem} from 'superdesk-api';
-import {IDropdownConfigVocabulary, IDropdownOption} from '..';
+import {IVocabulary, IVocabularyItem, ITreeWithLookup, IDropdownConfigVocabulary, IDropdownOption} from 'superdesk-api';
 
 function getOptionsDefault(vocabularyId: IVocabulary['_id']): Array<IVocabularyItem> {
-    return authoringStorage.getVocabularies().get(vocabularyId).items;
+    return sdApi.vocabularies.getAll().get(vocabularyId).items;
 }
 
 export function getOptions(
     config: IDropdownConfigVocabulary,
     getVocabularyOptions: (vocabularyId: IVocabulary['_id']) => Array<IVocabularyItem> = getOptionsDefault,
 ): ITreeWithLookup<IDropdownOption> {
-    const options: Array<IDropdownOption> = getVocabularyOptions(config.vocabularyId).map(
+    const vocabularyItems: Array<IVocabularyItem> = getVocabularyOptions(config.vocabularyId);
+
+    const vocabularyItemsFiltered = config.filter == null
+        ? vocabularyItems
+        : vocabularyItems.filter((vocabularyItem: IVocabularyItem) => config.filter(vocabularyItem));
+
+    const dropdownOptions: Array<IDropdownOption> = vocabularyItemsFiltered.map(
         (item) => {
             const v: IDropdownOption = {id: item.qcode, label: getVocabularyItemNameTranslated(item)};
 
@@ -28,11 +33,11 @@ export function getOptions(
 
     const tree: ITreeWithLookup<IDropdownOption> = {
         nodes: arrayToTree(
-            options,
+            dropdownOptions,
             ({id}) => id.toString(),
             ({parent}) => parent?.toString(),
         ).result,
-        lookup: keyBy(options.map((opt) => ({value: opt})), (opt) => opt.value.id.toString()),
+        lookup: keyBy(dropdownOptions.map((opt) => ({value: opt})), (opt) => opt.value.id.toString()),
     };
 
     return tree;

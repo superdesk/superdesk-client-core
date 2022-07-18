@@ -1,18 +1,15 @@
 import React from 'react';
-import {IArticle, IExtensionActivationResult} from 'superdesk-api';
-import {extensions} from 'appConfig';
+import {ITopBarWidget} from 'superdesk-api';
 
-interface IProps {
-    itemOriginal: IArticle;
-    itemWithChanges: IArticle;
-    coreWidgets?: IExtensionActivationResult['contributions']['authoringTopbarWidgets'];
+interface IProps<T> {
+    entity: T;
+    coreWidgets?: Array<ITopBarWidget<T>>;
+    extraWidgets?: Array<ITopBarWidget<T>>;
 }
 
-export class AuthoringToolbar extends React.PureComponent<IProps> {
+export class AuthoringToolbar<T> extends React.PureComponent<IProps<T>> {
     render() {
-        const topbarWidgets = Object.values(extensions)
-            .flatMap(({activationResult}) => activationResult?.contributions?.authoringTopbarWidgets ?? [])
-            .concat(this.props.coreWidgets);
+        const topbarWidgets = (this.props.coreWidgets ?? []).concat(this.props.extraWidgets ?? []);
 
         const topbarWidgetsStart = topbarWidgets
             .filter(({group}) => group === 'start')
@@ -25,8 +22,6 @@ export class AuthoringToolbar extends React.PureComponent<IProps> {
         const topbarWidgetsEnd = topbarWidgets
             .filter(({group}) => group === 'end')
             .sort((a, b) => a.priority - b.priority);
-
-        const article = this.props.itemWithChanges;
 
         const toolbarGroups = [
             topbarWidgetsStart,
@@ -48,7 +43,7 @@ export class AuthoringToolbar extends React.PureComponent<IProps> {
                                     return (
                                         <Component
                                             key={_i}
-                                            article={article}
+                                            entity={this.props.entity}
                                         />
                                     );
                                 })

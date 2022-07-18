@@ -1,8 +1,13 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
 import {IconButton} from 'superdesk-ui-framework/react';
-import {IArticle, IEditorComponentProps} from 'superdesk-api';
-import {ILinkedItemsValueOperational, ILinkedItemsConfig, ILinkedItemsUserPreferences} from './interfaces';
+import {
+    IArticle,
+    IEditorComponentProps,
+    ILinkedItemsValueOperational,
+    ILinkedItemsConfig,
+    ILinkedItemsUserPreferences,
+} from 'superdesk-api';
 import {Spacer} from 'core/ui/components/Spacer';
 import {getDroppedItem, gettext} from 'core/utils';
 import {DropZone3} from 'core/ui/components/drop-zone-3';

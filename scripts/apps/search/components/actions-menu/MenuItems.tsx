@@ -1,7 +1,6 @@
 /* eslint-disable indent */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 import Label from './Label';
 import Divider from './Divider';
 import MenuItem from './Item';
@@ -9,7 +8,7 @@ import SubmenuDropdown from './SubmenuDropdown';
 import {getAuthoringMenuGroups} from '../../../authoring/authoring/constants';
 import {closeActionsMenu, menuHolderElem, positionPopup} from '../../helpers';
 import {gettext, IScopeApply} from 'core/utils';
-import {IArticle, IArticleAction, IDisplayPriority} from 'superdesk-api';
+import {IArticle, IAuthoringAction, IDisplayPriority} from 'superdesk-api';
 import {sortByDisplayPriority} from 'core/helpers/sortByDisplayPriority';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 import ng from 'core/services/ng';
@@ -23,7 +22,7 @@ interface IProps {
 }
 
 interface IState {
-    actionsFromExtensions: Array<IArticleAction> | null;
+    actionsFromExtensions: Array<IAuthoringAction> | null;
 }
 
 export default class MenuItems extends React.Component<IProps, IState> {

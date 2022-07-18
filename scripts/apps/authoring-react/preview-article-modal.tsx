@@ -1,46 +1,53 @@
 import React from 'react';
-import {IArticle} from 'superdesk-api';
-import {authoringStorage} from './data-layer';
-import {preferences} from 'api/preferences';
-import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
-import {getFieldsData} from './authoring-react';
-import {showModal} from 'core/services/modalService';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
-import {PreviewArticle} from './preview-article';
+import {IContentProfileV2} from 'superdesk-api';
+import {showPrintableModal} from 'core/services/modalService';
+import {PreviewAuthoringItem} from './preview-authoring-item';
+import {Button} from 'superdesk-ui-framework/react';
+import {gettext} from 'core/utils';
 
-function getContentProfileAndFieldsData(article: IArticle) {
-    return authoringStorage.getContentProfile(article).then((profile) => {
-        const allFields = profile.header.merge(profile.content).toOrderedMap();
-        const userPreferencesForFields = preferences.get(AUTHORING_FIELD_PREFERENCES);
-        const fieldsData = getFieldsData(
-            article,
-            allFields,
-            userPreferencesForFields,
-        );
+export function previewAuthoringEntity(
+    profile: IContentProfileV2,
+    fieldsData: Immutable.Map<string, any>,
+    label?: string,
+) {
+    showPrintableModal(({closeModal, Wrapper, showPrintDialog}) => (
+        <Wrapper
+            toolbar={(
+                <React.Fragment>
+                    <div>
+                        {label != null && <div>{label}</div>}
+                    </div>
 
-        return {
-            profile,
-            fieldsData,
-        };
-    });
-}
+                    <div>
+                        <Button
+                            text={gettext('Print')}
+                            icon="print"
+                            iconOnly
+                            style="hollow"
+                            onClick={() => {
+                                showPrintDialog();
+                            }}
+                        />
 
-export function previewArticle(label: string, article: IArticle) {
-    getContentProfileAndFieldsData(article).then(({profile, fieldsData}) => showModal(({closeModal}) => (
-        <Modal size="large">
-            <ModalHeader onClose={closeModal}>
-                {label}
-            </ModalHeader>
-
-            <ModalBody>
-                <PreviewArticle
-                    article={article}
+                        <Button
+                            text={gettext('Close')}
+                            icon="close-small"
+                            iconOnly
+                            style="hollow"
+                            onClick={() => {
+                                closeModal();
+                            }}
+                        />
+                    </div>
+                </React.Fragment>
+            )}
+            contentSections={[
+                <PreviewAuthoringItem
+                    key="0"
                     profile={profile}
                     fieldsData={fieldsData}
-                />
-            </ModalBody>
-        </Modal>
-    )));
+                />,
+            ]}
+        />
+    ));
 }

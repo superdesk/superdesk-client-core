@@ -1,7 +1,12 @@
 import * as React from 'react';
-import {IConfigComponentProps} from 'superdesk-api';
+import {
+    IConfigComponentProps,
+    IDropdownConfig,
+    IDropdownConfigManualSource,
+    IDropdownConfigVocabulary,
+    IDropdownValue,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IDropdownConfig, IDropdownConfigManualSource, IDropdownConfigVocabulary, IDropdownValue} from '.';
 import {TabList} from 'core/ui/components/tabs';
 import {ConfigManualEntry} from './dropdown-manual-entry/config';
 import {ConfigFromVocabulary} from './dropdown-vocabulary/config';

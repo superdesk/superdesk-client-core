@@ -28,6 +28,7 @@ const {
 } = superdesk.components;
 
 interface IProps {
+    dialogTitle: string;
     initialShow?: {
         id: IShow['_id'];
         createNewTemplate?: boolean;
@@ -179,7 +180,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
         return (
             <Modal
                 visible
-                headerTemplate={gettext('Create new template')}
+                headerTemplate={this.props.dialogTitle}
                 contentBg="medium"
                 contentPadding="none"
                 size="x-large"

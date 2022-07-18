@@ -1,19 +1,18 @@
 import React from 'react';
 import {Map} from 'immutable';
-import {IContentProfileV2, IArticle} from 'superdesk-api';
+import {IContentProfileV2} from 'superdesk-api';
 import {Spacer} from 'core/ui/components/Spacer';
 import {getField} from 'apps/fields';
 
 interface IProps {
-    article: IArticle;
     profile: IContentProfileV2;
     fieldsData: Map<string, any>;
     fieldPadding?: number;
 }
 
-export class PreviewArticle extends React.PureComponent<IProps> {
+export class PreviewAuthoringItem extends React.PureComponent<IProps> {
     render() {
-        const {article, profile, fieldsData, fieldPadding} = this.props;
+        const {profile, fieldsData, fieldPadding} = this.props;
         const allFields = profile.header.merge(profile.content);
 
         return (
@@ -33,7 +32,6 @@ export class PreviewArticle extends React.PureComponent<IProps> {
 
                                 <div>
                                     <FieldEditorConfig.previewComponent
-                                        item={article}
                                         value={fieldsData.get(field.id)}
                                         config={field.fieldConfig}
                                     />

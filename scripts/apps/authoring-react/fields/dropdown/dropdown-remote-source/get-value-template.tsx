@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IDropdownConfigRemoteSource} from '..';
+import {IDropdownConfigRemoteSource} from 'superdesk-api';
 
 export function getValueTemplate(config: IDropdownConfigRemoteSource): React.ComponentType<{item: unknown}> {
     function defaultTemplate({item}) {

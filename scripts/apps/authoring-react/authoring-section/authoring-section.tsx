@@ -1,7 +1,7 @@
 import React from 'react';
 import {IFieldsV2, IVocabularyItem} from 'superdesk-api';
 import {Map} from 'immutable';
-import {IToggledFields} from '../authoring-react';
+import {IAuthoringValidationErrors, IToggledFields} from '../authoring-react';
 import {AuthoringSectionField} from './authoring-section-field';
 
 export interface IPropsAuthoringSection {
@@ -16,6 +16,7 @@ export interface IPropsAuthoringSection {
     toggleField(fieldId: string): void;
     setUserPreferencesForFields(userPreferencesForFields: {[fieldId: string]: unknown}): void;
     getVocabularyItems(vocabularyId: string): Array<IVocabularyItem>;
+    validationErrors: IAuthoringValidationErrors;
 }
 
 /**
@@ -65,6 +66,7 @@ export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection
                                 onEditorPreferencesChange={this.onEditorPreferencesChange}
                                 useHeaderLayout={this.props.useHeaderLayout}
                                 getVocabularyItems={this.props.getVocabularyItems}
+                                validationError={this.props.validationErrors[field.id]}
                             />
                         );
                     }).toArray()

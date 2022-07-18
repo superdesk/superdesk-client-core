@@ -1,10 +1,48 @@
-import {mockAuthoringStorage} from 'test-data/mock-authoring-storage';
+import {sdApi} from 'api';
+import {OrderedMap} from 'immutable';
+import {IVocabulary} from 'superdesk-api';
 import {testArticle} from 'test-data/test-article';
+import {testVocabulary} from 'test-data/test-vocabulary';
 import {getBaseFieldsAdapter} from '.';
+
+let getAllVocabulariesOriginal = sdApi.vocabularies.getAll;
+
+const vocabulariesToRestore: Partial<typeof sdApi.vocabularies> = {
+    getAll: getAllVocabulariesOriginal,
+};
 
 describe('field adapters', () => {
     beforeEach(() => {
-        mockAuthoringStorage();
+        Object.assign(sdApi, {
+            ...sdApi,
+            vocabularies: {},
+        });
+
+        const vocabulariesStub: Partial<typeof sdApi.vocabularies> = {
+            getAll: () => {
+                let testVocabularies = OrderedMap<string, IVocabulary>();
+
+                const ids = [
+                    'categories',
+                    'genre',
+                    'locators',
+                    'priority',
+                    'urgency',
+                ];
+
+                for (const id of ids) {
+                    testVocabularies = testVocabularies.set(id, {...testVocabulary, _id: id});
+                }
+
+                return testVocabularies;
+            },
+        };
+
+        Object.assign(sdApi.vocabularies, vocabulariesStub);
+    });
+
+    afterEach(() => {
+        Object.assign(sdApi.vocabularies, vocabulariesToRestore);
     });
 
     it('dropdown adapters can handle `null` as value', () => {

@@ -1,7 +1,12 @@
 import React from 'react';
 import {keyBy, uniq} from 'lodash';
-import {IAttachment, IDifferenceComponentProps, IRestApiResponse} from 'superdesk-api';
-import {IAttachmentsConfig, IAttachmentsValueOperational} from './interfaces';
+import {
+    IAttachment,
+    IAttachmentsConfig,
+    IAttachmentsValueOperational,
+    IDifferenceComponentProps,
+    IRestApiResponse,
+} from 'superdesk-api';
 import {WithLiveResources} from 'core/with-resources';
 import {CC} from 'core/ui/configurable-ui-components';
 import {DifferenceDefaultImplementation} from './difference-default-implementation';

@@ -1,12 +1,21 @@
 import {
     IArticle,
     IAuthoringFieldV2,
-    ICustomFieldType,
+    IAuthoringStorage,
+    IFieldsAdapter,
     IRelatedArticle,
+    IDropdownConfigVocabulary,
+    IEditor3Config,
+    IEditor3ValueStorage,
+    IDateFieldConfig,
+    IDateShortcut,
+    IUrlsFieldConfig,
+    IEmbedConfig,
+    IMediaConfig,
+    IMediaValueOperational,
+    ILinkedItemsConfig,
+    ILinkedItemsValueOperational,
 } from 'superdesk-api';
-import {IDropdownConfigVocabulary} from '../fields/dropdown';
-import {IEditor3Config} from '../fields/editor3/interfaces';
-import {authoringStorage} from '../data-layer';
 import {slugline} from './slugline';
 import {body_html} from './body_html';
 import {language} from './language';
@@ -26,46 +35,19 @@ import {anpa_take_key} from './anpa_take_key';
 import {byline} from './byline';
 import {sms_message} from './sms_message';
 import {usageterms} from './usageterms';
-import {IDateFieldConfig, IDateShortcut} from '../fields/date/interfaces';
-import {IUrlsFieldConfig} from '../fields/urls/interfaces';
-import {IEmbedConfig} from '../fields/embed/interfaces';
 import {feature_media} from './feature_media';
-import {IMediaConfig, IMediaValueOperational} from '../fields/media/interfaces';
 import {
     applyAssociations,
     getRelatedArticles,
     getRelatedMedia,
 } from 'apps/authoring/authoring/controllers/AssociationController';
 import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService';
-import {ILinkedItemsConfig, ILinkedItemsValueOperational} from '../fields/linked-items/interfaces';
 import {attachments} from './attachments';
+import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
+import {computeEditor3Output} from './utilities/compute-editor3-output';
 
-export interface IFieldAdapter {
-    getFieldV2: (
-        fieldEditor,
-        fieldSchema,
-    ) => IAuthoringFieldV2;
-
-    /**
-     * If defined, {@link ICustomFieldType.storeValue} will not be used
-     */
-    storeValue?(value: unknown, article: IArticle, config: unknown): IArticle;
-
-    /**
-     * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
-     */
-    retrieveStoredValue?(item: IArticle): unknown;
-
-    /**
-     * Must return a value in operational format.
-     */
-    onToggledOn?: ICustomFieldType<unknown, unknown, unknown, unknown>['onToggledOn'];
-}
-
-type IFieldsAdapter = {[key: string]: IFieldAdapter};
-
-export function getBaseFieldsAdapter(): IFieldsAdapter {
-    const adapter: IFieldsAdapter = {
+export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
+    const adapter: IFieldsAdapter<IArticle> = {
         abstract: abstract,
         anpa_category: anpa_category,
         anpa_take_key: anpa_take_key,
@@ -91,16 +73,107 @@ export function getBaseFieldsAdapter(): IFieldsAdapter {
 }
 
 /**
+ * Stores values in {@link IArticle.extra} field
+ */
+function storeEditor3ValueGeneric(
+    fieldId: string,
+    value: IEditor3ValueStorage,
+    article: IArticle,
+    config: IEditor3Config,
+): IArticle {
+    const result = storeEditor3ValueBase(fieldId, article, value, config);
+    const articleUpdated = {...result.article};
+
+    articleUpdated.extra = {
+        ...(articleUpdated.extra ?? {}),
+        [fieldId]: result.stringValue,
+    };
+
+    return articleUpdated;
+}
+
+/**
+ * Universal function to retrieve stored values where field adapters are not present.
+ */
+export function retrieveStoredValueEditor3Generic(
+    fieldId: string,
+    article: IArticle,
+    authoringStorage: IAuthoringStorage<IArticle>,
+) {
+    const rawContentState: RawDraftContentState = (() => {
+        const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState'][0];
+        const fieldsAdapter = getFieldsAdapter(authoringStorage);
+
+        if (fromFieldsMeta != null) {
+            return fromFieldsMeta;
+        } else if (
+            fieldsAdapter[fieldId] != null
+            && typeof article[fieldId] === 'string'
+            && article[fieldId].length > 0
+        ) {
+            /**
+             * This is only for compatibility with angular based authoring.
+             * create raw content state in case only text value is present.
+             */
+
+            return convertToRaw(ContentState.createFromText(article[fieldId]));
+        } else {
+            return convertToRaw(ContentState.createFromText(''));
+        }
+    })();
+
+    const result: IEditor3ValueStorage = {
+        rawContentState,
+    };
+
+    return result;
+}
+
+export function storeEditor3ValueBase(
+    fieldId: string,
+    article: IArticle,
+    value: any, // IEditor3ValueStorage
+    config: IEditor3Config,
+)
+: {article: IArticle; stringValue: string; annotations: Array<any>} {
+    const rawContentState = value.rawContentState;
+
+    const {stringValue, annotations} = computeEditor3Output(
+        rawContentState,
+        config,
+        article.language,
+    );
+
+    const articleUpdated: IArticle = {
+        ...article,
+        fields_meta: {
+            ...(article.fields_meta ?? {}),
+            [fieldId]: {
+                draftjsState: [rawContentState],
+            },
+        },
+    };
+
+    if (annotations.length > 0) {
+        articleUpdated.fields_meta[fieldId].annotations = annotations;
+    }
+
+    return {article: articleUpdated, stringValue, annotations};
+}
+
+/**
  * Converts existing hardcoded fields(slugline, priority, etc.) and {@link IOldCustomFieldId}
  * to {@link IAuthoringFieldV2}
  */
-export function getFieldsAdapter(): IFieldsAdapter {
+export function getFieldsAdapter(authoringStorage: IAuthoringStorage<IArticle>): IFieldsAdapter<IArticle> {
     const customFieldVocabularies = getCustomFieldVocabularies();
-    const adapter: IFieldsAdapter = getBaseFieldsAdapter();
+    const adapter: IFieldsAdapter<IArticle> = getBaseFieldsAdapter();
 
     for (const vocabulary of customFieldVocabularies) {
         if (vocabulary.field_type === 'text') {
-            adapter[vocabulary._id] = {
+            const fieldId = vocabulary._id;
+
+            adapter[fieldId] = {
                 getFieldV2: (fieldEditor, fieldSchema) => {
                     const fieldConfig: IEditor3Config = {
                         editorFormat: fieldEditor.formatOptions ?? [],
@@ -112,7 +185,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
                     };
 
                     const fieldV2: IAuthoringFieldV2 = {
-                        id: vocabulary._id,
+                        id: fieldId,
                         name: vocabulary.display_name,
                         fieldType: 'editor3',
                         fieldConfig,
@@ -120,6 +193,17 @@ export function getFieldsAdapter(): IFieldsAdapter {
 
                     return fieldV2;
                 },
+                retrieveStoredValue: (item: IArticle) => retrieveStoredValueEditor3Generic(
+                    fieldId,
+                    item,
+                    authoringStorage,
+                ),
+                storeValue: (value, article, config) => storeEditor3ValueGeneric(
+                    fieldId,
+                    value as IEditor3ValueStorage,
+                    article,
+                    config,
+                ),
             };
         } else if (vocabulary.field_type === 'date') {
             adapter[vocabulary._id] = {
@@ -248,7 +332,7 @@ export function getFieldsAdapter(): IFieldsAdapter {
         }
     }
 
-    authoringStorage.getVocabularies()
+    sdApi.vocabularies.getAll()
         .filter((vocabulary) =>
             adapter[vocabulary._id] == null
             && sdApi.vocabularies.isSelectionVocabulary(vocabulary),

@@ -27,6 +27,11 @@ export class WidgetReact extends React.PureComponent<IProps> {
                 fieldsData={undefined}
                 onFieldsDataChange={noop}
                 handleUnsavedChanges={undefined}
+
+                // only used in widgets compatible with authoring-react
+                authoringStorage={null}
+                fieldsAdapter={null}
+                storageAdapter={null}
             />
         );
     }

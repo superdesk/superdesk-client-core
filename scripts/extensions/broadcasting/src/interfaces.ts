@@ -20,6 +20,33 @@ export interface IRundownTemplateBase {
     };
     created_by: IUser['_id'];
     updated_by: IUser['_id']; // TODO: rename to last_updated_by
+    rundown_items: Array<IRundownItemBase>;
 }
 
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
+
+export interface IRundownItemBase {
+    item_type?: string;
+    show_part?: string;
+    start_time?: string;
+    end_time?: string;
+    duration: number;
+    planned_duration: number;
+    title: string;
+    content?: string;
+    live_sound?: string;
+    guests?: string;
+    additional_notes?: string;
+    live_captions?: string;
+    last_sentence?: string;
+}
+
+export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;
+
+/**
+ * Extending from "IBaseRestApiResponse" is for compatibility reasons.
+ * Rundown item template will never be stored as a separate database record.
+ */
+export interface IRundownItemTemplate extends IBaseRestApiResponse {
+    data: IRundownItemBase;
+}

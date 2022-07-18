@@ -1,12 +1,17 @@
 import {Map} from 'immutable';
-import {IAuthoringFieldV2, IVocabularyItem} from 'superdesk-api';
+import {
+    IArticle,
+    IAuthoringFieldV2,
+    IFieldAdapter,
+    IVocabularyItem,
+    IDropdownConfigVocabulary,
+    IDropdownValue,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
-import {IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultipleV2} from './utilities';
-import {authoringStorage} from '../data-layer';
+import {sdApi} from 'api';
 
-export const genre: IFieldAdapter = {
+export const genre: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const multiple = isMultipleV2('genre');
 
@@ -35,7 +40,7 @@ export const genre: IFieldAdapter = {
         }
     },
     storeValue: (val: IDropdownValue, article) => {
-        const vocabulary = authoringStorage.getVocabularies().get('genre');
+        const vocabulary = sdApi.vocabularies.getAll().get('genre');
 
         const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(
             vocabulary.items.map((item) => [item.qcode, item]),

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IDropdownConfig, IDropdownOption} from '.';
+import {IDropdownConfig, IDropdownOption} from 'superdesk-api';
 import {getTextColor} from 'core/helpers/utils';
 
 interface IProps {

@@ -2,24 +2,18 @@ import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 import createEditorStore, {getAnnotationsForStorage} from 'core/editor3/store';
 import {ContentState, RawDraftContentState} from 'draft-js';
 import {noop} from 'lodash';
-import {IArticle} from 'superdesk-api';
-import {IEditor3Config} from './interfaces';
+import {IEditor3Config, IEditor3Output} from 'superdesk-api';
 
-interface IDerivedProperties {
-    stringValue: string; // HTML or plain text (depending on config)
-    annotations: Array<any>;
-}
-
-export function computeDerivedProperties(
+export function computeEditor3Output(
     rawContentState: RawDraftContentState,
     config: IEditor3Config,
-    article: IArticle,
-): IDerivedProperties {
+    language: string,
+): IEditor3Output {
     const contentState: ContentState = createEditorStore(
         {
             editorState: rawContentState,
             onChange: noop,
-            language: article.language,
+            language: language,
         },
         null,
         true,
@@ -33,7 +27,7 @@ export function computeDerivedProperties(
         }
     })();
 
-    const storageValue: IDerivedProperties = {
+    const storageValue: IEditor3Output = {
         stringValue: generatedValue,
         annotations: getAnnotationsForStorage(contentState),
     };

@@ -1,6 +1,5 @@
 import React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
-import {IEmbedConfig, IEmbedValueOperational} from './interfaces';
+import {IDifferenceComponentProps, IEmbedConfig, IEmbedValueOperational} from 'superdesk-api';
 import {generateHtmlDiff} from 'apps/authoring-react/generate-html-diff';
 import {Spacer} from 'core/ui/components/Spacer';
 import {escape as escapeHtml} from 'lodash';

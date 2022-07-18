@@ -1,16 +1,24 @@
 import {Map} from 'immutable';
-import {IAuthoringFieldV2, IRestApiResponse, ISubject, IVocabularyItem} from 'superdesk-api';
+import {
+    IArticle,
+    IAuthoringFieldV2,
+    IFieldAdapter,
+    IRestApiResponse,
+    ISubject,
+    IVocabularyItem,
+    IDropdownConfigRemoteSource,
+    IDropdownConfigVocabulary,
+    IDropdownValue,
+    ITreeWithLookup,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
-import {IDropdownConfigRemoteSource, IDropdownConfigVocabulary, IDropdownValue} from '../fields/dropdown';
 import {isMultiple} from './utilities';
-import {authoringStorage} from '../data-layer';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IGeoName} from 'apps/authoring/metadata/PlacesService';
-import {ITreeWithLookup} from 'core/ui/components/MultiSelectTreeWithTemplate';
+import {sdApi} from 'api';
 
-export function getPlaceAdapter(): IFieldAdapter {
-    const useGeoNamesApi = authoringStorage.hasFeature('places_autocomplete');
+export function getPlaceAdapter(): IFieldAdapter<IArticle> {
+    const useGeoNamesApi = sdApi.config.featureEnabled('places_autocomplete');
 
     if (useGeoNamesApi) {
         return {
@@ -88,7 +96,7 @@ export function getPlaceAdapter(): IFieldAdapter {
                 }
             },
             storeValue: (val: IDropdownValue, article) => {
-                const vocabulary = authoringStorage.getVocabularies().get('locators');
+                const vocabulary = sdApi.vocabularies.getAll().get('locators');
                 const vocabularyItems = Map<IVocabularyItem['qcode'], IVocabularyItem>(
                     vocabulary.items.map((item) => [item.qcode, item]),
                 );

@@ -1,9 +1,10 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
+import classNames from 'classnames';
 import {IAuthoringFieldV2, IEditorComponentContainerProps} from 'superdesk-api';
 import {Switch} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
-import {Spacer} from 'core/ui/components/Spacer';
+import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 
 export function getFieldContainer(
     useHeaderLayout: boolean,
@@ -11,6 +12,7 @@ export function getFieldContainer(
     field: IAuthoringFieldV2,
     toggledOn: boolean,
     toggleField: (fieldId: string) => void,
+    validationError?: string,
 ) {
     const toggle = canBeToggled && (
         <Switch
@@ -35,9 +37,9 @@ export function getFieldContainer(
                             alignItems: 'center',
                         }}
                     >
-                        <span className="form-label">
+                        <span className={classNames('form-label', {'form-label--invalid': validationError != null})}>
                             <Spacer h gap="8" noGrow>
-                                <span>{field.id}</span>
+                                <span>{field.name}</span>
                                 <span>{toggle}</span>
                             </Spacer>
                         </span>
@@ -48,6 +50,15 @@ export function getFieldContainer(
                             {
                                 miniToolbar != null && (
                                     <div>{miniToolbar}</div>
+                                )
+                            }
+
+                            {
+                                validationError != null && (
+                                    <div>
+                                        <SpacerBlock v gap="4" />
+                                        <div className="input-field-error">{validationError}</div>
+                                    </div>
                                 )
                             }
                         </div>
@@ -68,11 +79,15 @@ export function getFieldContainer(
                             display: 'flex',
                             justifyContent: 'space-between',
                             alignItems: 'center',
-                            marginBottom: 15,
                         }}
                     >
                         <Spacer h gap="8" noGrow>
-                            <span className="field-label--base">
+                            <span
+                                className={classNames(
+                                    'field-label--base',
+                                    {'field-label--base--invalid': validationError != null},
+                                )}
+                            >
                                 {field.name}
                             </span>
 
@@ -85,6 +100,16 @@ export function getFieldContainer(
                             )
                         }
                     </div>
+
+                    <SpacerBlock v gap="8" />
+
+                    {
+                        validationError != null && (
+                            <div className="input-field-error">{validationError}</div>
+                        )
+                    }
+
+                    <SpacerBlock v gap="8" />
 
                     {this.props.children}
                 </div>

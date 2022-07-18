@@ -1,6 +1,5 @@
 import React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
-import {IMediaConfig, IMediaValueOperational} from './interfaces';
+import {IDifferenceComponentProps, IMediaConfig, IMediaValueOperational} from 'superdesk-api';
 import {generatePatch} from 'core/patch';
 import {getDifferenceStatistics} from '../difference-statistics';
 import {gettext} from 'core/utils';

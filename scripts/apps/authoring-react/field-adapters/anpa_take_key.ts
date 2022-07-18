@@ -1,10 +1,8 @@
-import {IAuthoringFieldV2} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IEditor3Config} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
-import {IEditor3Config} from '../fields/editor3/interfaces';
-import {storeEditor3ValueBase} from '../fields/editor3';
+import {retrieveStoredValueEditor3Generic, storeEditor3ValueBase} from '.';
 
-export const anpa_take_key: IFieldAdapter = {
+export const anpa_take_key: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const fieldConfig: IEditor3Config = {
             editorFormat: [],
@@ -24,6 +22,12 @@ export const anpa_take_key: IFieldAdapter = {
 
         return fieldV2;
     },
+
+    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
+        'anpa_take_key',
+        item,
+        authoringStorage,
+    ),
 
     storeValue: (value, item, config) => {
         const result = storeEditor3ValueBase(

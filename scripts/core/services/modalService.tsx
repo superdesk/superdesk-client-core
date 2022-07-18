@@ -9,8 +9,44 @@ import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
 
-export const showModal = (Component: React.ComponentType<{closeModal(): void}>): Promise<void> => {
+function prepareAndPrint() {
+    document.body.classList.add('prepare-to-print');
+
+    const afterPrintFns: Array<() => void> = [
+        () => document.body.classList.remove('prepare-to-print'),
+    ];
+
+    const afterPrint = () => {
+        afterPrintFns.forEach((fn) => fn());
+    };
+
+    if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
+
+        const handler = (mql) => {
+            if (!mql.matches) {
+                afterPrint();
+            }
+        };
+
+        mediaQueryList.addListener(handler);
+        afterPrintFns.push(() => mediaQueryList.removeListener(handler));
+    }
+
+    window.onafterprint = afterPrint;
+
+    window.print();
+}
+
+export const showModal = (
+    Component: React.ComponentType<{closeModal(): void}>,
+    containerClass?: string,
+): Promise<void> => {
     const el = document.createElement('div');
+
+    if (containerClass != null) {
+        el.className = containerClass;
+    }
 
     document.body.appendChild(el);
 
@@ -28,6 +64,67 @@ export const showModal = (Component: React.ComponentType<{closeModal(): void}>):
 
     return Promise.resolve();
 };
+
+export interface IPropsPrintableModal {
+    closeModal(): void;
+    showPrintDialog(): void;
+    Wrapper: React.ComponentType<{toolbar: React.ReactNode, contentSections: Array<React.ReactNode>}>;
+}
+
+const pageBreak = (
+    <div>
+        <div style={{pageBreakAfter: 'always'}} />
+        <hr className="no-print" />
+    </div>
+);
+
+/*
+ * Usage example:
+    <Wrapper
+        toolbar={(
+            <button onClick={showPrintDialog}>print</button>
+        )}
+        contentSections={[
+            <div>printable content goes here</div>,
+            <div>each content section starts on a new page</div>,
+        ]}
+    />
+ */
+export function showPrintableModal(
+    Component: React.ComponentType<IPropsPrintableModal>,
+) {
+    showModal(({closeModal}) => {
+        return (
+            <Component
+                Wrapper={({toolbar, contentSections}) => (
+                    <div className="sd-full-preview">
+                        <div className="sd-full-preview--header no-print">
+                            {toolbar}
+                        </div>
+
+                        <div className="sd-full-preview--content-wrapper">
+                            {
+                                contentSections.map((section, i) => (
+                                    <div key={i}>
+                                        { // always start a new article on a new page in print mode
+                                            i > 0 && pageBreak
+                                        }
+
+                                        <div className="sd-full-preview--content">
+                                            {section}
+                                        </div>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </div>
+                )}
+                closeModal={closeModal}
+                showPrintDialog={() => prepareAndPrint()}
+            />
+        );
+    }, 'print-container');
+}
 
 function getErrorsModal(
     title: string,

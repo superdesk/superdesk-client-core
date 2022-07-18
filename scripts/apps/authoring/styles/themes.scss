@@ -97,6 +97,11 @@ body, html {
     letter-spacing: 0.1em;
 }
 
+.field-label--base--invalid {
+    background: $errorText;
+    color: white;
+}
+
 .authoring-sticky__theme-controls {
     display: flex;
     flex-direction: row;

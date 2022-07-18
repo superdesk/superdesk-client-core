@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
+import {IDifferenceComponentProps, IDropdownConfigManualSource, IDropdownOption, IDropdownValue} from 'superdesk-api';
 import {DifferenceGeneric} from '../../difference-generic';
-import {IDropdownConfigManualSource, IDropdownOption, IDropdownValue} from '..';
 import {DropdownItemTemplate} from '../dropdown-item-template';
 
 type IProps = IDifferenceComponentProps<IDropdownValue, IDropdownConfigManualSource>;

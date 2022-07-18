@@ -1,4 +1,4 @@
-import {IExtensionActivationResult, IArticleAction} from 'superdesk-api';
+import {IExtensionActivationResult, IAuthoringAction} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {gettext} from 'core/utils';
 import {runTansa} from '../editor3-tansa-integration';
@@ -11,13 +11,15 @@ import {getEmbedField} from './embed';
 import {getMediaField} from './media';
 import {getLinkedItemsField} from './linked-items';
 import {getAttachmentsField} from './attachments';
+import {getTimeField} from './time';
+import {geDurationField} from './duration';
 
 export function registerAuthoringReactFields() {
     const result: IExtensionActivationResult = {
         contributions: {
             getAuthoringActions: (article, contentProfile, fieldsData) => {
                 if (appConfig.features.useTansaProofing === true) {
-                    const checkSpellingAction: IArticleAction = {
+                    const checkSpellingAction: IAuthoringAction = {
                         label: gettext('Check spelling'),
                         onTrigger: () => {
                             runTansa(contentProfile, fieldsData);
@@ -33,6 +35,8 @@ export function registerAuthoringReactFields() {
                 getEditor3Field(),
                 getDropdownField(),
                 getDateField(),
+                getTimeField(),
+                geDurationField(),
                 getUrlsField(),
                 getEmbedField(),
                 getMediaField(),

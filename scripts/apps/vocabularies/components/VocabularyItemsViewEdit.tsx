@@ -489,7 +489,11 @@ export class VocabularyItemsViewEdit extends React.Component<IProps, IState> {
                                                                     <ManageVocabularyItemTranslations
                                                                         item={item}
                                                                         update={(_field, value) => {
-                                                                            this.updateItem(item, _field, value);
+                                                                            this.updateItem(
+                                                                                item,
+                                                                                _field as string,
+                                                                                value,
+                                                                            );
                                                                         }}
                                                                         languages={languages}
                                                                     />

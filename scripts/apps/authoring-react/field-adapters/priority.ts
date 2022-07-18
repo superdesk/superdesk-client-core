@@ -1,12 +1,10 @@
-import {IAuthoringFieldV2} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IDropdownConfigManualSource} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
-import {IDropdownConfigManualSource} from '../fields/dropdown';
-import {authoringStorage} from '../data-layer';
+import {sdApi} from 'api';
 
-export const priority: IFieldAdapter = {
+export const priority: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
-        const vocabulary = authoringStorage.getVocabularies().get('priority');
+        const vocabulary = sdApi.vocabularies.getAll().get('priority');
 
         // HAS TO BE SYNCED WITH styles/sass/labels.scss
         var defaultPriorityColors = {

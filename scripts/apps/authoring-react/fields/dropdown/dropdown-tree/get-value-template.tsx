@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IDropdownTreeConfig} from '..';
+import {IDropdownTreeConfig} from 'superdesk-api';
 
 export function getValueTemplate(config: IDropdownTreeConfig): React.ComponentType<{item: unknown}> {
     function defaultTemplate({item}) {

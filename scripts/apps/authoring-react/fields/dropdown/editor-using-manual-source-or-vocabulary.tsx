@@ -1,10 +1,18 @@
 import * as React from 'react';
-import {ITreeWithLookup, MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWithTemplate';
-import {IDropdownConfigManualSource, IDropdownConfigVocabulary, IDropdownOption, IDropdownValue} from '.';
+import {MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWithTemplate';
 import {DropdownItemTemplate} from './dropdown-item-template';
 import {getOptions} from './dropdown-vocabulary/get-options';
 import {assertNever, notNullOrUndefined} from 'core/helpers/typescript-helpers';
-import {IVocabularyItem, IVocabulary, IEditorComponentContainerProps} from 'superdesk-api';
+import {
+    IVocabularyItem,
+    IVocabulary,
+    IEditorComponentContainerProps,
+    ITreeWithLookup,
+    IDropdownConfigManualSource,
+    IDropdownConfigVocabulary,
+    IDropdownOption,
+    IDropdownValue,
+} from 'superdesk-api';
 import {arrayToTree} from 'core/helpers/tree';
 import {keyBy} from 'lodash';
 

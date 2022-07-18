@@ -1,9 +1,9 @@
 import {httpRequestJsonLocal, httpRequestRawLocal} from 'core/helpers/network';
 import {Cancelable, throttle} from 'lodash';
-import {IArticle} from 'superdesk-api';
-import {IAuthoringAutoSave, omitFields} from './data-layer';
+import {IArticle, IAuthoringAutoSave} from 'superdesk-api';
+import {omitFields} from './data-layer';
 
-export class AutoSaveHttp implements IAuthoringAutoSave {
+export class AutoSaveHttp implements IAuthoringAutoSave<IArticle> {
     autoSaveThrottled: ((getItem: () => IArticle, callback: (autosaved: IArticle) => void) => void) & Cancelable;
 
     constructor(delay: number) {

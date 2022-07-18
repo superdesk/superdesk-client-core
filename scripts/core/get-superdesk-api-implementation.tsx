@@ -8,7 +8,7 @@ import {
     IStage,
     IUser,
 } from 'superdesk-api';
-import {gettext, gettextPlural, stripBaseRestApiFields, stripHtmlTags} from 'core/utils';
+import {arrayMove, gettext, gettextPlural, getTimeStringIso, stripBaseRestApiFields, stripHtmlTags} from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -93,6 +93,9 @@ import {VirtualListFromQuery} from './ui/components/virtual-lists/virtual-list-f
 import {SelectFromEndpoint} from './ui/components/virtual-lists/select';
 import {WithValidation} from './with-validation';
 import {DateTime} from './ui/components/DateTime';
+import {AuthoringReact} from 'apps/authoring-react/authoring-react';
+import {computeEditor3Output} from 'apps/authoring-react/field-adapters/utilities/compute-editor3-output';
+import {getContentStateFromHtml} from './editor3/html/from-html';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -226,6 +229,10 @@ export function getSuperdeskApiImplementation(
             nameof: nameof,
             stripBaseRestApiFields,
             mapObject,
+            computeEditor3Output,
+            getContentStateFromHtml: (html) => getContentStateFromHtml(html),
+            getTimeStringIso,
+            arrayMove,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
@@ -268,7 +275,7 @@ export function getSuperdeskApiImplementation(
             },
             vocabulary: {
                 getIptcSubjects: () => metadata.initialize().then(() => metadata.values.subjectcodes),
-                getVocabulary: (id: string) => metadata.initialize().then(() => metadata.values[id]),
+                getVocabulary: (id: string) => sdApi.vocabularies.getAll().get(id),
             },
             attachment: attachmentsApi,
             users: {
@@ -350,6 +357,7 @@ export function getSuperdeskApiImplementation(
             TopMenuDropdownButton,
             Icon,
             IconBig,
+            getAuthoringComponent: () => AuthoringReact,
             getDropdownTree: () => DropdownTree,
             Center,
             Spacer,

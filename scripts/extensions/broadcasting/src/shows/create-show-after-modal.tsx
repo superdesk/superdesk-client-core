@@ -67,6 +67,7 @@ export class CreateShowAfterModal extends React.PureComponent<IProps> {
 
                             superdesk.ui.showModal(({closeModal}) => (
                                 <ManageRundownTemplates
+                                    dialogTitle={gettext('Create new rundown template')}
                                     closeModal={closeModal}
                                     initialShow={{id: show._id, createNewTemplate: true}}
                                 />

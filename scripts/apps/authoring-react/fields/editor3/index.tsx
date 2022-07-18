@@ -1,6 +1,8 @@
 import {
     ICustomFieldType,
-    IArticle,
+    IEditor3ValueOperational,
+    IEditor3Config,
+    IEditor3ValueStorage,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {convertToRaw, ContentState, RawDraftContentState} from 'draft-js';
@@ -12,53 +14,25 @@ import {noop} from 'lodash';
 import {
     CharacterLimitUiBehavior,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
-import {IEditor3ValueOperational, IEditor3Config, IEditor3ValueStorage} from './interfaces';
 import {Difference} from './difference';
 import {Preview} from './preview';
 import {Config} from './config';
 import {Editor} from './editor';
 import {replaceAllForEachBlock} from 'core/editor3/helpers/find-replace';
-import {getFieldsAdapter} from 'apps/authoring-react/field-adapters';
-import {computeDerivedProperties} from './compute-derived-properties';
 
 interface IUserPreferences {
     characterLimitMode?: CharacterLimitUiBehavior;
-}
-
-export function storeEditor3ValueBase(fieldId, article, value, config)
-: {article: IArticle; stringValue: string; annotations: Array<any>} {
-    const rawContentState = value.rawContentState;
-
-    const {stringValue, annotations} = computeDerivedProperties(
-        rawContentState,
-        config,
-        article,
-    );
-
-    const articleUpdated: IArticle = {
-        ...article,
-        fields_meta: {
-            ...(article.fields_meta ?? {}),
-            [fieldId]: {
-                draftjsState: [rawContentState],
-            },
-        },
-    };
-
-    if (annotations.length > 0) {
-        articleUpdated.fields_meta[fieldId].annotations = annotations;
-    }
-
-    return {article: articleUpdated, stringValue, annotations};
 }
 
 export function editor3ToOperationalFormat(
     value: IEditor3ValueStorage,
     language: string,
 ): IEditor3ValueOperational {
+    const emptyState: RawDraftContentState = {blocks: [], entityMap: {}};
+
     const store = createEditorStore(
         {
-            editorState: value.rawContentState,
+            editorState: value?.rawContentState ?? emptyState,
             onChange: noop,
             language: language,
         },
@@ -84,10 +58,10 @@ export function getEditor3Field()
 
         hasValue: (valueOperational) => valueOperational.contentState.getPlainText().trim().length > 0,
 
-        getEmptyValue: (article) => {
+        getEmptyValue: (config, language) => {
             return editor3ToOperationalFormat(
                 {rawContentState: convertToRaw(ContentState.createFromText(''))},
-                article.language,
+                language,
             );
         },
 
@@ -132,51 +106,9 @@ export function getEditor3Field()
         toOperationalFormat: (
             value: IEditor3ValueStorage,
             config: IEditor3Config,
-            article: IArticle,
+            language: string,
         ): IEditor3ValueOperational => {
-            return editor3ToOperationalFormat(value, article.language);
-        },
-
-        retrieveStoredValue: (fieldId, article) => {
-            const rawContentState: RawDraftContentState = (() => {
-                const fromFieldsMeta = article.fields_meta?.[fieldId]?.['draftjsState'][0];
-                const fieldsAdapter = getFieldsAdapter();
-
-                if (fromFieldsMeta != null) {
-                    return fromFieldsMeta;
-                } else if (
-                    fieldsAdapter[fieldId] != null
-                    && typeof article[fieldId] === 'string'
-                    && article[fieldId].length > 0
-                ) {
-                    /**
-                     * This is only for compatibility with angular based authoring.
-                     * create raw content state in case only text value is present.
-                     */
-
-                    return convertToRaw(ContentState.createFromText(article[fieldId]));
-                } else {
-                    return convertToRaw(ContentState.createFromText(''));
-                }
-            })();
-
-            const result: IEditor3ValueStorage = {
-                rawContentState,
-            };
-
-            return result;
-        },
-
-        storeValue: (fieldId, article, value, config) => {
-            const result = storeEditor3ValueBase(fieldId, article, value, config);
-            const articleUpdated = {...result.article};
-
-            articleUpdated.extra = {
-                ...(articleUpdated.extra ?? {}),
-                [fieldId]: result.stringValue,
-            };
-
-            return articleUpdated;
+            return editor3ToOperationalFormat(value, language);
         },
     };
 

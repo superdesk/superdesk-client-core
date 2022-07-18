@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
+import {IPreviewComponentProps, IDropdownValue, IDropdownTreeConfig} from 'superdesk-api';
 import {SpacerInlineFlex} from 'core/ui/components/Spacer';
-import {IDropdownValue, IDropdownTreeConfig} from '..';
 import {getValueTemplate} from './get-value-template';
 
 type IProps = IPreviewComponentProps<IDropdownValue, IDropdownTreeConfig>;

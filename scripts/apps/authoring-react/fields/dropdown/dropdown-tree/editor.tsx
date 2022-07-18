@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {IDropdownTreeConfig, IDropdownValue} from '..';
 import {MultiSelectTreeWithTemplate} from 'core/ui/components/MultiSelectTreeWithTemplate';
-import {IEditorComponentContainerProps} from 'superdesk-api';
+import {IEditorComponentContainerProps, IDropdownTreeConfig, IDropdownValue} from 'superdesk-api';
 
 interface IProps {
     container: React.ComponentType<IEditorComponentContainerProps>;

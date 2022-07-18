@@ -1,14 +1,12 @@
 import React from 'react';
 import {Map} from 'immutable';
-import {IContentProfileV2, IArticle} from 'superdesk-api';
+import {IContentProfileV2} from 'superdesk-api';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {getField} from 'apps/fields';
 import {Alert} from 'superdesk-ui-framework/react';
 import {gettext} from 'core/utils';
 
 interface IProps {
-    article1: IArticle;
-    article2: IArticle;
     profile1: IContentProfileV2;
     profile2: IContentProfileV2;
     fieldsData1: Map<string, any>;
@@ -19,8 +17,6 @@ interface IProps {
 export class ViewDifference extends React.PureComponent<IProps> {
     render() {
         const {
-            article1,
-            article2,
             profile1,
             profile2,
             fieldsData1,
@@ -85,7 +81,6 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                         <div>
                                             <FieldEditorConfig.previewComponent
-                                                item={article2}
                                                 value={fieldsData2.get(field.id)}
                                                 config={field.fieldConfig}
                                             />
@@ -108,7 +103,6 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                     <div>
                                         <FieldEditorConfig.previewComponent
-                                            item={article2}
                                             value={fieldsData2.get(field.id)}
                                             config={field.fieldConfig}
                                         />
@@ -137,7 +131,6 @@ export class ViewDifference extends React.PureComponent<IProps> {
 
                                 <div>
                                     <FieldEditorConfig.previewComponent
-                                        item={article1}
                                         value={fieldsData1.get(field.id)}
                                         config={field.fieldConfig}
                                     />

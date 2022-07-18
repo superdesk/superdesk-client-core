@@ -1,6 +1,5 @@
 import * as React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
-import {IEditor3ValueOperational, IEditor3Config} from './interfaces';
+import {IDifferenceComponentProps, IEditor3ValueOperational, IEditor3Config} from 'superdesk-api';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 import {generateHtmlDiff} from 'apps/authoring-react/generate-html-diff';
 

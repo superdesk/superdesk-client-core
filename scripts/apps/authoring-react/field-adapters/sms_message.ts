@@ -1,10 +1,8 @@
-import {IAuthoringFieldV2} from 'superdesk-api';
+import {IArticle, IAuthoringFieldV2, IFieldAdapter, IEditor3Config} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {IFieldAdapter} from '.';
-import {IEditor3Config} from '../fields/editor3/interfaces';
-import {storeEditor3ValueBase} from '../fields/editor3';
+import {retrieveStoredValueEditor3Generic, storeEditor3ValueBase} from '.';
 
-export const sms_message: IFieldAdapter = {
+export const sms_message: IFieldAdapter<IArticle> = {
     getFieldV2: (fieldEditor, fieldSchema) => {
         const fieldConfig: IEditor3Config = {
             editorFormat: fieldEditor.formatOptions ?? [],
@@ -25,6 +23,12 @@ export const sms_message: IFieldAdapter = {
 
         return fieldV2;
     },
+
+    retrieveStoredValue: (item: IArticle, authoringStorage) => retrieveStoredValueEditor3Generic(
+        'sms_message',
+        item,
+        authoringStorage,
+    ),
 
     storeValue: (value, item, config) => {
         const result = storeEditor3ValueBase(

@@ -18,6 +18,7 @@ interface IProps {
     onEditorPreferencesChange: (fieldId: string, preferences: unknown) => void;
     useHeaderLayout: IPropsAuthoringSection['useHeaderLayout'];
     getVocabularyItems: IPropsAuthoringSection['getVocabularyItems'];
+    validationError?: string;
 }
 
 export class AuthoringSectionField extends React.PureComponent<IProps> {
@@ -39,6 +40,7 @@ export class AuthoringSectionField extends React.PureComponent<IProps> {
             field,
             toggledOn,
             this.props.toggleField,
+            this.props.validationError,
         );
 
         if (canBeToggled && toggledOn === false) {

@@ -1,6 +1,11 @@
 import * as React from 'react';
-import {IEditorComponentContainerProps, IVocabulary, IVocabularyItem} from 'superdesk-api';
-import {IDropdownConfigVocabulary, IDropdownValue} from '..';
+import {
+    IEditorComponentContainerProps,
+    IVocabulary,
+    IVocabularyItem,
+    IDropdownConfigVocabulary,
+    IDropdownValue,
+} from 'superdesk-api';
 import {EditorUsingManualSourceOrVocabulary} from '../editor-using-manual-source-or-vocabulary';
 
 interface IProps {

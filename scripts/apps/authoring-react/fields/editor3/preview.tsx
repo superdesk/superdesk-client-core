@@ -1,6 +1,5 @@
 import * as React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
-import {IEditor3ValueOperational, IEditor3Config} from './interfaces';
+import {IPreviewComponentProps, IEditor3ValueOperational, IEditor3Config} from 'superdesk-api';
 import {editor3StateToHtml} from 'core/editor3/html/to-html/editor3StateToHtml';
 
 export class Preview extends React.PureComponent<IPreviewComponentProps<IEditor3ValueOperational, IEditor3Config>> {

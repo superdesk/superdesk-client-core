@@ -1,6 +1,5 @@
 import React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
-import {IUrlsFieldValueOperational, IUrlsFieldConfig} from './interfaces';
+import {IPreviewComponentProps, IUrlsFieldValueOperational, IUrlsFieldConfig} from 'superdesk-api';
 import {Spacer} from 'core/ui/components/Spacer';
 
 type IProps = IPreviewComponentProps<IUrlsFieldValueOperational, IUrlsFieldConfig>;

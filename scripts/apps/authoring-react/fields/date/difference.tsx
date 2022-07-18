@@ -1,8 +1,7 @@
 import {formatDate} from 'core/get-superdesk-api-implementation';
 import React from 'react';
-import {IDifferenceComponentProps} from 'superdesk-api';
+import {IDateFieldConfig, IDateValueOperational, IDifferenceComponentProps} from 'superdesk-api';
 import {DifferenceGeneric} from '../difference-generic';
-import {IDateFieldConfig, IDateValueOperational} from './interfaces';
 
 type IProps = IDifferenceComponentProps<IDateValueOperational, IDateFieldConfig>;
 

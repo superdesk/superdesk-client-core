@@ -1,6 +1,5 @@
 import React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
-import {ILinkedItemsValueOperational, ILinkedItemsConfig} from './interfaces';
+import {IPreviewComponentProps, ILinkedItemsValueOperational, ILinkedItemsConfig} from 'superdesk-api';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {WithArticles} from 'core/with-articles';
 

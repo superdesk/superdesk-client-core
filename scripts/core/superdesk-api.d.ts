@@ -24,6 +24,10 @@ declare module 'superdesk-api' {
 
     export type ICallable = (...args: Array<any>) => any;
 
+    // FORMATS
+
+    export type IISOTime = string; // ISO 8601, 13:59:01.123
+
 
     // AUTHORING-REACT
 
@@ -43,6 +47,327 @@ declare module 'superdesk-api' {
         content: IFieldsV2;
     }
 
+    export interface IFieldAdapter<T> {
+        getFieldV2: (
+            fieldEditor,
+            fieldSchema,
+        ) => IAuthoringFieldV2;
+
+        /**
+         * Allows to customize where values are stored.
+         *
+         * By default, custom fields are stored in IArticle['extra'].
+         * Some fields may require a different storing strategy.
+         * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
+         * HTML or plaintext version of the data in another location, and possibly annotations in third location.
+         */
+        storeValue?(value: unknown, article: T, config: unknown): T;
+
+        /**
+         * If defined, {@link ICustomFieldType.retrieveStoredValue} will not be used
+         */
+        retrieveStoredValue?(item: T, authoringStorage: IAuthoringStorage<T>): unknown;
+
+        /**
+         * Must return a value in operational format.
+         */
+        onToggledOn?: ICustomFieldType<unknown, unknown, unknown, unknown>['onToggledOn'];
+    }
+
+    export type IFieldsAdapter<T> = {[key: string]: IFieldAdapter<T>};
+
+    export interface IStorageAdapter<T> {
+        storeValue(value: unknown, fieldId: string, entity: T, config: unknown, fieldType: string): T;
+        retrieveStoredValue(item: T, fieldId: string, fieldType: string): unknown;
+    }
+
+    export interface IAuthoringAutoSave<T> {
+        get(id: string): Promise<T>;
+        delete(id: string, etag: string): Promise<void>;
+        cancel(): void;
+
+        /**
+         * A function that returns the article is used to improve performance.
+         * In order to get the latest article, data has to be serialized. Using a function
+         * allows to only do it once after timeout passes, instead of on every character change.
+         */
+        schedule(getItem: () => T, callback: (autosaved: T) => void): void;
+    }
+
+    /**
+     * {@link AuthoringReact} component will use this interface
+     * instead of making network calls directly.
+     * Alternative implementation can be used
+     * to enable offline support.
+     */
+    export interface IAuthoringStorage<T> {
+        lock(itemId: string): Promise<T>;
+        unlock(itemId: string): Promise<T>;
+        isLockedInCurrentSession(item: T): boolean;
+        getEntity(id: string): Promise<{saved: T | null, autosaved: T | null}>;
+        saveEntity(current: T, original: T): Promise<T>;
+        closeAuthoring(
+            current: T,
+            original: T,
+            cancelAutosave: () => Promise<void>,
+            doClose: () => void,
+        ): Promise<void>;
+        getContentProfile(item: T, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2>;
+        getUserPreferences(): Promise<any>;
+        autosave: IAuthoringAutoSave<T>;
+    }
+
+    export type IFieldsData = import('immutable').Map<string, unknown>;
+
+    export interface IExposedFromAuthoring<T> {
+        item: T;
+        contentProfile: IContentProfileV2;
+        fieldsData: IFieldsData;
+        authoringStorage: IAuthoringStorage<T>;
+        storageAdapter: IStorageAdapter<T>;
+        fieldsAdapter: IFieldsAdapter<T>;
+        hasUnsavedChanges(): boolean;
+        handleUnsavedChanges(): Promise<T>;
+        handleFieldsDataChange(fieldsData: IFieldsData): void;
+        save(): Promise<T>;
+        closeAuthoring(): void;
+        stealLock(): void;
+    }
+
+    export interface IAuthoringOptions<T> {
+        readOnly: boolean;
+        actions: Array<ITopBarWidget<T>>;
+    }
+
+    export interface ITopBarWidget<T> {
+        component: React.ComponentType<{entity: T}>;
+        availableOffline: boolean;
+        priority: IDisplayPriority;
+        group: 'start' | 'middle' | 'end';
+    }
+
+    interface IPropsAuthoring<T> {
+        itemId: string;
+        getLanguage(entity: T): string;
+        onClose(): void;
+        authoringStorage: IAuthoringStorage<T>;
+        storageAdapter: IStorageAdapter<T>;
+        fieldsAdapter: IFieldsAdapter<T>;
+        getActions?(options: IExposedFromAuthoring<T>): Promise<Array<IAuthoringAction>>; // three dots menu actions
+        getInlineToolbarActions(options: IExposedFromAuthoring<T>): IAuthoringOptions<T>;
+        getAuthoringTopBarWidgets(
+            options: IExposedFromAuthoring<T>,
+        ): Array<ITopBarWidget<T>>;
+        onEditingStart?(item: T): void;
+        onEditingEnd?(item: T): void;
+        getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
+        getSidebar?(item: T): JSX.Element;
+        topBar2Widgets: Array<React.ComponentType<{item: T}>>;
+
+        // Runs before re-render.
+        onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
+
+        validateBeforeSaving?: boolean; // will block saving if invalid. defaults to true
+    }
+
+    // AUTHORING-REACT FIELD TYPES - attachments
+
+    export type IAttachmentsValueOperational = Array<{id: IAttachment['_id']}>;
+    export type IAttachmentsValueStorage = IAttachmentsValueOperational;
+    export type IAttachmentsUserPreferences = never;
+    export type IAttachmentsConfig = ICommonFieldConfig;
+
+    // AUTHORING-REACT FIELD TYPES - date
+
+    export type IDateValueOperational = string;
+    export type IDateValueStorage = IDateValueOperational;
+    export type IDateUserPreferences = never;
+
+    export interface IDateShortcut {
+        label: string;
+        value: number;
+        term: 'days' | 'weeks' | 'months' | 'years';
+    }
+
+    export interface IDateFieldConfig extends ICommonFieldConfig {
+        shortcuts?: Array<IDateShortcut>;
+    }
+
+    // AUTHORING-REACT FIELD TYPES - time
+
+    export type ITimeValueOperational = string; // ISO 8601, 13:59:01.123
+    export type ITimeValueStorage = ITimeValueOperational;
+    export type ITimeFieldConfig = never;
+    export type ITimeUserPreferences = never;
+
+    // AUTHORING-REACT FIELD TYPES - duration
+
+    export type IDurationValueOperational = number; // number of seconds
+    export type IDurationValueStorage = IDurationValueOperational;
+    export type IDurationFieldConfig = never;
+    export type IDurationUserPreferences = never;
+
+    // AUTHORING-REACT FIELD TYPES - dropdown
+
+    export interface ITreeWithLookup<T> {
+        nodes: Array<ITreeNode<T>>;
+        lookup: {
+            [id: string]: ITreeNode<T>;
+        };
+    }
+
+    export type IDropdownValue = unknown;
+
+    export interface IDropdownOption {
+        id: string | number;
+        label: string;
+        parent?: IDropdownOption['id'];
+        color?: string;
+    }
+
+    export interface IDropdownConfigVocabulary extends ICommonFieldConfig {
+        source: 'vocabulary';
+        vocabularyId: IVocabulary['_id'];
+        multiple: boolean;
+        filter?(vocabulary: IVocabularyItem): boolean;
+    }
+
+    export interface IDropdownConfigRemoteSource extends ICommonFieldConfig {
+        source: 'remote-source';
+        searchOptions(
+            searchTerm: string,
+            language: string,
+            callback: (result: ITreeWithLookup<unknown>) => void,
+        ): void;
+        getLabel(item: unknown): string;
+        getId(item: unknown): string;
+        canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
+        optionTemplate?: React.ComponentType<{item: unknown}>;
+        valueTemplate?: React.ComponentType<{item: unknown}>;
+        multiple: boolean;
+    }
+
+    export interface IDropdownTreeConfig extends ICommonFieldConfig {
+        source: 'dropdown-tree';
+        getItems(): ITreeWithLookup<unknown>;
+        getLabel(item: unknown): string;
+        getId(item: unknown): string;
+        canSelectBranchWithChildren?(branch: ITreeNode<unknown>): boolean;
+        optionTemplate?: React.ComponentType<{item: unknown}>;
+        valueTemplate?: React.ComponentType<{item: unknown}>;
+        multiple: boolean;
+    }
+
+    export interface IDropdownConfigManualSource extends ICommonFieldConfig {
+        source: 'manual-entry';
+        type: 'text' | 'number';
+        options: Array<IDropdownOption>;
+        roundCorners: boolean;
+        multiple: boolean;
+    }
+
+    export type IDropdownConfig =
+        IDropdownConfigManualSource
+        | IDropdownConfigVocabulary
+        | IDropdownConfigRemoteSource
+        | IDropdownTreeConfig;
+
+
+    // AUTHORING-REACT FIELD TYPES - editor3
+
+    export interface IEditor3ValueOperational {
+        store: import('redux').Store<any>; // IEditorStore
+        contentState: import('draft-js').ContentState;
+    }
+
+    export interface IEditor3ValueStorage {
+        rawContentState: import('draft-js').RawDraftContentState;
+    }
+
+    export interface IEditor3Config extends ICommonFieldConfig {
+        editorFormat?: Array<RICH_FORMATTING_OPTION>;
+        minLength?: number;
+        maxLength?: number;
+        singleLine?: boolean; // also limits to plain text
+        cleanPastedHtml?: boolean;
+        disallowedCharacters?: Array<string>;
+
+        /**
+         * Value - field ID of editor3 field.
+         *
+         * When this field is toggled on, it will initialize with a value
+         * copied from a field with ID specified in this config.
+         *
+         * Only plaintext value is copied to avoid target field containing
+         * invalid formatting options that may be valid in source field.
+         */
+        copyFromFieldOnToggle?: string;
+    }
+
+    // AUTHORING-REACT FIELD TYPES - embed
+
+    export interface IEmbedValueOperational {
+        embed: string; // embed code
+        description: string;
+    }
+
+    export type IEmbedValueStorage = IEmbedValueOperational;
+    export type IEmbedUserPreferences = never;
+    export type IEmbedConfig = ICommonFieldConfig;
+
+    // AUTHORING-REACT FIELD TYPES - linked items
+
+    interface ILinkedItem {
+        id: IArticle['_id'];
+
+        // type is only needed for compatibility with angular based authoring
+        type: IArticle['type'];
+    }
+
+    export type ILinkedItemsValueOperational = Array<ILinkedItem>;
+    export type ILinkedItemsValueStorage = ILinkedItemsValueOperational;
+    export type ILinkedItemsUserPreferences = never;
+    export type ILinkedItemsConfig = ICommonFieldConfig;
+
+    // AUTHORING-REACT FIELD TYPES - media
+
+    export type IMediaValueOperational = Array<IArticle>;
+    export type IMediaValueStorage = IMediaValueOperational;
+    export type IMediaUserPreferences = never;
+
+    export interface IMediaConfig extends ICommonFieldConfig {
+        maxItems?: number;
+        allowPicture?: boolean;
+        allowVideo?: boolean;
+        allowAudio?: boolean;
+        showPictureCrops?: boolean;
+        showTitleEditingInput?: boolean;
+        allowedWorkflows?: {
+            inProgress?: boolean;
+            published?: boolean;
+        };
+    }
+
+    // AUTHORING-REACT FIELD TYPES - urls
+
+    export interface IUrlObject {
+        url: string;
+        description: string;
+    }
+
+    export type IUrlsFieldValueOperational = Array<IUrlObject>;
+    export type IUrlsFieldValueStorage = IUrlsFieldValueOperational;
+    export type IUrlsFieldUserPreferences = never;
+    export type IUrlsFieldConfig = ICommonFieldConfig;
+
+    // EDITOR3
+
+    export interface IEditor3Output {
+        stringValue: string; // HTML or plain text (depending on config)
+        annotations: Array<any>;
+    }
+
+
 
     // EXTENSIONS
 
@@ -58,7 +383,7 @@ declare module 'superdesk-api' {
      */
     export type IDisplayPriority = number;
 
-    export interface IArticleAction {
+    export interface IAuthoringAction {
         groupId?: string; // action lists can specify which groups they wanna render via an id
         priority?: IDisplayPriority;
         icon?: string;
@@ -110,6 +435,10 @@ declare module 'superdesk-api' {
             readOnly: boolean;
             contentProfile?: IContentProfileV2;
             fieldsData?: OrderedMap<string, unknown>;
+            authoringStorage: IAuthoringStorage<IArticle>;
+            fieldsAdapter: IFieldsAdapter<IArticle>;
+            storageAdapter: IStorageAdapter<IArticle>;
+
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
 
             /**
@@ -205,7 +534,7 @@ declare module 'superdesk-api' {
                 article: IArticle,
                 contentProfile: IContentProfileV2,
                 fieldsData: import('immutable').Map<string, unknown>,
-            ): Promise<Array<IArticleAction>>;
+            ): Promise<Array<IAuthoringAction>>;
 
             mediaActions?: Array<React.ComponentType<{article: IArticle}>>;
             pages?: Array<IPage>;
@@ -219,7 +548,7 @@ declare module 'superdesk-api' {
             };
             entities?: {
                 article?: {
-                    getActions?(article: IArticle): Promise<Array<IArticleAction>>;
+                    getActions?(article: IArticle): Promise<Array<IAuthoringAction>>;
                     getActionsBulk?(articles: Array<IArticle>): Promise<Array<IArticleActionBulk>>;
                     onPatchBefore?(id: IArticle['_id'], patch: Partial<IArticle>, dangerousOptions?: IDangerousArticlePatchingOptions,): Promise<Partial<IArticle>>; // can alter patch(immutably), can cancel patching
                     onSpike?(item: IArticle): Promise<onSpikeMiddlewareResult>;
@@ -233,7 +562,7 @@ declare module 'superdesk-api' {
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
-            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps>>;
+            searchPanelWidgets?: Array<React.ComponentType<ISearchPanelWidgetProps<unknown>>>;
             authoring?: {
                 /**
                  * Updates can be intercepted and modified. Return value will be used to compute a patch.
@@ -295,7 +624,7 @@ declare module 'superdesk-api' {
 
     export interface IAuthor {
         // !!! _id is optional. It will not be present in ingested items.
-        _id?: Array<string, string>; // user id, role
+        _id?: [string, string]; // user id, role
 
         name: string;
         scheme: any | null;
@@ -684,10 +1013,6 @@ declare module 'superdesk-api' {
         _autosave?: any;
         _autosaved?: any;
         _locked?: boolean;
-
-        attachments?: Array<{
-            attachment: string;
-        }>;
     }
 
     export interface IDangerousArticlePatchingOptions {
@@ -816,8 +1141,8 @@ declare module 'superdesk-api' {
     }
 
     export interface IVocabularyItem {
-        name?: string;
-        qcode?: string;
+        name: string;
+        qcode: string;
         color?: string;
         is_active?: boolean;
 
@@ -840,6 +1165,9 @@ declare module 'superdesk-api' {
                 [key: string]: string;
             }
         };
+
+        // vocabularies can have dynamic schema, thus field names can't be known statically
+        [key: string]: any;
     }
 
     export interface IVocabulary extends IBaseRestApiResponse {
@@ -924,7 +1252,6 @@ declare module 'superdesk-api' {
     export interface IContentProfile {
         _id: string;
         type: keyof typeof IContentProfileType;
-        type: 'text';
         label: string;
         description: string;
         schema: Object;
@@ -2029,7 +2356,7 @@ declare module 'superdesk-api' {
             };
             vocabulary: {
                 getIptcSubjects(): Promise<Array<ISubject>>;
-                getVocabulary(id: string): Promise<Array<ISubject>>;
+                getVocabulary(id: string): IVocabulary;
             };
             desk: {
                 getStagesOrdered(deskId: IDesk['_id']): Promise<Array<IStage>>;
@@ -2055,6 +2382,14 @@ declare module 'superdesk-api' {
                 mapFn: (item: T[keyof T]) => V,
             ): {[Property in keyof T]: V};
             nameof<T>(name: keyof T): string;
+            computeEditor3Output(
+                rawContentState: import('draft-js').RawDraftContentState,
+                config: IEditor3Config,
+                language: string,
+            ): IEditor3Output;
+            getContentStateFromHtml(html: string): import('draft-js').ContentState;
+            getTimeStringIso(date: Date): string; // ISO 8601, 13:59:01.123
+            arrayMove<T>(arr: Array<T>, from: number, to: number): Array<T>;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
@@ -2100,6 +2435,10 @@ declare module 'superdesk-api' {
             Icon: React.ComponentType<IPropsIcon>;
             IconBig: React.ComponentType<IPropsIconBig>;
             TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?:string}>;
+
+            // TODO: move the component with all its dependencies to a separate project and use via npm package
+            getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;
+
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             getValidationHOC: <T>() => React.ComponentType<IPropsValidationHoc<T>>;
@@ -2136,8 +2475,8 @@ declare module 'superdesk-api' {
             getRelativeOrAbsoluteDateTime(
                 datetimeString: string,
                 format: string,
-                relativeDuration: number = 1,
-                relativeUnit: string = 'days'
+                relativeDuration: number, // = 1
+                relativeUnit: string, // = 'days'
             ): string;
         };
         privileges: {
@@ -2197,7 +2536,7 @@ declare module 'superdesk-api' {
                 warn(message: string, json: {[key: string]: any}): void;
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
-            memoize<T extends ICallable>(func: T, maxCacheEntryCount = 1): T;
+            memoize<T extends ICallable>(func: T, maxCacheEntryCount): T; // maxCacheEntryCount = 1
             generatePatch<T>(a: Partial<T>, b: Partial<T>): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
@@ -2211,7 +2550,7 @@ declare module 'superdesk-api' {
             throttleAndCombineArray<T>(
                 fn: IHandler<Array<T>>,
                 wait: number,
-                options?: ThrottleSettings,
+                options?: import('lodash').ThrottleSettings,
             );
 
             querySelectorParent(
@@ -2607,7 +2946,6 @@ declare module 'superdesk-api' {
     }
 
     export interface IPreviewComponentProps<IValue, IConfig> {
-        item: IArticle;
         value: IValue;
         config: IConfig;
     }
@@ -2641,7 +2979,7 @@ declare module 'superdesk-api' {
         label: string;
 
         editorComponent: React.ComponentClass<IEditorComponentProps<IValueOperational, IConfig, IUserPreferences>>;
-        previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational>>;
+        previewComponent: React.ComponentType<IPreviewComponentProps<IValueOperational, IConfig>>;
 
         /**
          * Must return `true` if not empty.
@@ -2651,7 +2989,7 @@ declare module 'superdesk-api' {
         /**
          * Must return a value that will be considered empty by `hasValue` function.
          */
-        getEmptyValue(article: IArticle, config: IConfig): IValueOperational;
+        getEmptyValue(config: IConfig, language: string): IValueOperational;
 
 
         /**
@@ -2674,33 +3012,7 @@ declare module 'superdesk-api' {
          */
 
         toStorageFormat?(valueOperational: IValueOperational, config: IConfig): IValueStorage;
-        toOperationalFormat?(valueStorage: IValueStorage, config: IConfig, article: IArticle): IValueOperational;
-
-
-        /**
-         * Allows to customize where values are stored.
-         *
-         * Also available in field adapters.
-         *
-         * By default, custom fields are stored in IArticle['extra'].
-         * Some fields may require a different storing strategy.
-         * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
-         * HTML or plaintext version of the data in another location, and possibly annotations in third location.
-         */
-
-        storeValue?( // will only be used if IFieldAdapter['storeValue'] is not defined
-            fieldId: string,
-            article: IArticle,
-            value: IValueStorage,
-            config: IConfig,
-            userPreferences: IUserPreferences,
-        ): IArticle;
-        retrieveStoredValue?( // will only be used if IFieldAdapter['retrieveStoredValue'] is not defined
-            fieldId: string,
-            article: IArticle,
-            config: IConfig,
-            userPreferences: IUserPreferences,
-        ): IValueStorage;
+        toOperationalFormat?(valueStorage: IValueStorage, config: IConfig, language: string): IValueOperational;
 
         /**
          * Allows custom fields to hook into extension points API.

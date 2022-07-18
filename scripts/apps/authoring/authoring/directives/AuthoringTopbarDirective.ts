@@ -1,6 +1,6 @@
 import {AuthoringWorkspaceService} from '../services/AuthoringWorkspaceService';
 import {getSpellchecker} from 'core/editor3/components/spellchecker/default-spellcheckers';
-import {IArticleAction} from 'superdesk-api';
+import {IAuthoringAction} from 'superdesk-api';
 import {getArticleActionsFromExtensions} from 'core/superdesk-api-helpers';
 import {addInternalEventListener, dispatchInternalEvent} from 'core/internal-events';
 import {appConfig} from 'appConfig';
@@ -86,7 +86,7 @@ export function AuthoringTopbarDirective(
                 return TranslationService.checkAvailability(scope.item);
             };
 
-            scope.triggerActionFromExtension = (actionToTrigger: IArticleAction) => {
+            scope.triggerActionFromExtension = (actionToTrigger: IAuthoringAction) => {
                 actionToTrigger.onTrigger();
             };
 

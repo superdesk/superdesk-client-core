@@ -1,14 +1,12 @@
 import {
     ICustomFieldType,
-} from 'superdesk-api';
-import {gettext} from 'core/utils';
-import {Editor} from './editor';
-import {
     ILinkedItemsUserPreferences,
     ILinkedItemsValueOperational,
     ILinkedItemsValueStorage,
     ILinkedItemsConfig,
-} from './interfaces';
+} from 'superdesk-api';
+import {gettext} from 'core/utils';
+import {Editor} from './editor';
 import {Preview} from './preview';
 import {Difference} from './difference';
 import {sdApi} from 'api';

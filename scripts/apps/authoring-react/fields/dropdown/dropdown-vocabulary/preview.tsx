@@ -1,8 +1,7 @@
 import {notNullOrUndefined} from 'core/helpers/typescript-helpers';
 import {SpacerInlineFlex} from 'core/ui/components/Spacer';
 import * as React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
-import {IDropdownValue, IDropdownConfigVocabulary} from '..';
+import {IPreviewComponentProps, IDropdownValue, IDropdownConfigVocabulary} from 'superdesk-api';
 import {DropdownItemTemplate} from '../dropdown-item-template';
 import {getOptions} from './get-options';
 

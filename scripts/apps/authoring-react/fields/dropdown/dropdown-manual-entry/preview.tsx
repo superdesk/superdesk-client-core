@@ -1,7 +1,6 @@
 import {SpacerInlineFlex} from 'core/ui/components/Spacer';
 import * as React from 'react';
-import {IPreviewComponentProps} from 'superdesk-api';
-import {IDropdownValue, IDropdownConfigManualSource} from '..';
+import {IPreviewComponentProps, IDropdownValue, IDropdownConfigManualSource} from 'superdesk-api';
 import {DropdownItemTemplate} from '../dropdown-item-template';
 
 type IProps = IPreviewComponentProps<IDropdownValue, IDropdownConfigManualSource>;

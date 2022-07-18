@@ -1,6 +1,11 @@
 import React from 'react';
-import {IEditorComponentProps} from 'superdesk-api';
-import {IUrlsFieldValueOperational, IUrlsFieldConfig, IUrlsFieldUserPreferences, IUrlObject} from './interfaces';
+import {
+    IEditorComponentProps,
+    IUrlsFieldValueOperational,
+    IUrlsFieldConfig,
+    IUrlsFieldUserPreferences,
+    IUrlObject,
+} from 'superdesk-api';
 import {Button, IconButton, Input} from 'superdesk-ui-framework/react';
 import {SpacerBlock, Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
