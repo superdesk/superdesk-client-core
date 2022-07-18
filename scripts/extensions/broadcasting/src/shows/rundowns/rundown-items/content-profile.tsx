@@ -9,6 +9,7 @@ import {
 import {superdesk} from '../../../superdesk';
 
 const {gettext} = superdesk.localization;
+const {vocabulary} = superdesk.entities;
 
 const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
     'uppercase',
@@ -78,7 +79,7 @@ const itemTypesConfig: IDropdownConfigVocabulary = {
 
 const itemTypeField: IAuthoringFieldV2 = {
     id: 'item_type',
-    name: 'Rundown item types', // TODO: use vocabulary name
+    name: vocabulary.getVocabulary(itemTypesConfig.vocabularyId).display_name,
     fieldType: 'dropdown',
     fieldConfig: itemTypesConfig,
 };

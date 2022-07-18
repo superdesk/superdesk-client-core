@@ -165,6 +165,7 @@ export function startApp(
             'config',
             'metadata',
             'preferencesService',
+            'vocabularies',
             (
                 modal,
                 privileges,
@@ -174,8 +175,13 @@ export function startApp(
                 config,
                 metadata,
                 preferencesService,
+                vocabularies,
             ) => {
-                preferencesService.getPrivileges().then(() => {
+                Promise.all([
+                    // preload vocabularies
+                    vocabularies.getAllActiveVocabularies(),
+                    preferencesService.getPrivileges(),
+                ]).then(() => {
                     registerExtensions(
                         extensions,
                         _superdesk,
@@ -228,9 +234,6 @@ export function startApp(
                 if (appConfig.features.useTansaProofing) {
                     setupTansa();
                 }
-
-                // preload vocabularies
-                ng.get('vocabularies').getAllActiveVocabularies();
 
                 httpRequestJsonLocal({method: 'GET', path: '/subjectcodes'}).then(({_items}) => {
                     store.dispatch({
