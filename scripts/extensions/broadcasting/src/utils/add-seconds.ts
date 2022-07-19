@@ -1,7 +1,9 @@
 import * as dateFns from 'date-fns';
 import {IISOTime} from 'superdesk-api';
-import {superdesk} from '../superdesk';
-const {getTimeStringIso} = superdesk.helpers;
+
+function getTimeStringIso(date: Date): string { // ISO 8601, 13:59:01.123
+    return date.toISOString().slice(11, 23);
+}
 
 export function addSeconds(time: IISOTime, seconds: number): IISOTime {
     return getTimeStringIso(dateFns.addSeconds(
