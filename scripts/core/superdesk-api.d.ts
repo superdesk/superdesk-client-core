@@ -26,8 +26,6 @@ declare module 'superdesk-api' {
 
     // FORMATS
 
-    export type IISOTime = string; // ISO 8601, 13:59:01.123
-
 
     // AUTHORING-REACT
 
@@ -2388,7 +2386,6 @@ declare module 'superdesk-api' {
                 language: string,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
-            getTimeStringIso(date: Date): string; // ISO 8601, 13:59:01.123
             arrayMove<T>(arr: Array<T>, from: number, to: number): Array<T>;
         },
         components: {

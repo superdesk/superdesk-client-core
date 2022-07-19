@@ -385,7 +385,3 @@ export function stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T
 
     return omit(entity, keysArray) as Omit<T, keyof IBaseRestApiResponse>;
 }
-
-export function getTimeStringIso(date: Date): string { // ISO 8601, 13:59:01.123
-    return date.toISOString().slice(11, 23);
-}

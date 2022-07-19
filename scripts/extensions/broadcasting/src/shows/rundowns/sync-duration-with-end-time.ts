@@ -1,8 +1,9 @@
 import * as dateFns from 'date-fns';
 import {IFieldsData} from 'superdesk-api';
+import {getTimeStringIso} from '@superdesk/common';
 import {IRundownItemBase} from '../../interfaces';
 import {superdesk} from '../../superdesk';
-const {nameof, getTimeStringIso} = superdesk.helpers;
+const {nameof} = superdesk.helpers;
 
 export function syncDurationWithEndTime(fieldId: string, fieldsData: IFieldsData): IFieldsData {
     if (fieldId === nameof<IRundownItemBase>('duration')) {

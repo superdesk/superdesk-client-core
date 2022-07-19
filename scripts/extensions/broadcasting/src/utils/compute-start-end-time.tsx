@@ -1,6 +1,5 @@
-import {IISOTime} from 'superdesk-api';
 import {IRundownItemBase} from '../interfaces';
-import {addSeconds} from './add-seconds';
+import {addSeconds, IISOTime} from '@superdesk/common';
 
 export function computeStartEndTime(
     showStartTime: IISOTime,
