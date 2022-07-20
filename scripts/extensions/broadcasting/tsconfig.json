@@ -4,6 +4,6 @@
         "files": true // needed for mocha to recognize src/typings/refs.d.ts
     },
     "compilerOptions": {
-        "outDir": "../dist/src"
+        "outDir": "./dist/src"
     }
 }
