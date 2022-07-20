@@ -968,7 +968,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             hasUnsavedChanges: () => this.hasUnsavedChanges(),
             handleUnsavedChanges: () => this.handleUnsavedChanges(state),
             save: () => this.save(state),
-            closeAuthoring: () => this.handleClose(state),
+            discardChangesAndClose: () => this.handleClose(state),
+            keepChangesAndClose: () => this.props.onClose(),
             stealLock: () => this.stealLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
@@ -990,21 +991,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         onClick={() => {
                             this.handleClose(state);
                         }}
-                    />
-                ),
-                availableOffline: true,
-            },
-            {
-                group: 'end',
-                priority: 0.3,
-                component: () => (
-                    <NavButton
-                        text={gettext('Minimize')}
-                        onClick={() => {
-                            this.props.onClose();
-                        }}
-                        icon="minimize"
-                        iconSize="big"
                     />
                 ),
                 availableOffline: true,

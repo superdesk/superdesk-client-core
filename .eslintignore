@@ -5,6 +5,7 @@ scripts/extensions/*/node_modules
 scripts/extensions/**/dist
 end-to-end-testing-helpers/dist
 end-to-end-testing-helpers/node_modules
+superdesk-common/node_modules
 e2e/client/node_modules
 e2e/client/dist
 e2e/client/**/*.js

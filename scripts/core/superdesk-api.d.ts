@@ -128,7 +128,8 @@ declare module 'superdesk-api' {
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
         save(): Promise<T>;
-        closeAuthoring(): void;
+        discardChangesAndClose(): void;
+        keepChangesAndClose(): void;
         stealLock(): void;
     }
 

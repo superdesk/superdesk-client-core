@@ -196,7 +196,8 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                     hasUnsavedChanges,
                                     handleUnsavedChanges,
                                     save,
-                                    closeAuthoring,
+                                    discardChangesAndClose,
+                                    keepChangesAndClose,
                                     stealLock,
                                 }) => {
                                     const itemState: ITEM_STATE = item.state;
@@ -218,11 +219,27 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                         availableOffline: true,
                                     };
 
+                                    const minimizeButton: ITopBarWidget<IArticle> = {
+                                        group: 'end',
+                                        priority: 0.3,
+                                        component: () => (
+                                            <NavButton
+                                                text={gettext('Minimize')}
+                                                onClick={() => {
+                                                    keepChangesAndClose();
+                                                }}
+                                                icon="minimize"
+                                                iconSize="big"
+                                            />
+                                        ),
+                                        availableOffline: true,
+                                    };
+
                                     switch (itemState) {
                                     case ITEM_STATE.DRAFT:
                                         return {
                                             readOnly: false,
-                                            actions: [saveButton],
+                                            actions: [saveButton, minimizeButton],
                                         };
 
                                     case ITEM_STATE.SUBMITTED:
@@ -230,7 +247,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                     case ITEM_STATE.ROUTED:
                                     case ITEM_STATE.FETCHED:
                                     case ITEM_STATE.UNPUBLISHED:
-                                        const actions: Array<ITopBarWidget<IArticle>> = [];
+                                        const actions: Array<ITopBarWidget<IArticle>> = [
+                                            minimizeButton,
+                                        ];
 
                                         actions.push({
                                             group: 'start',
@@ -273,7 +292,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                                         onClick={() => {
                                                             handleUnsavedChanges()
                                                                 .then(() => sdApi.article.sendItemToNextStage(item))
-                                                                .then(() => closeAuthoring());
+                                                                .then(() => discardChangesAndClose());
                                                         }}
                                                     />
                                                 ),
