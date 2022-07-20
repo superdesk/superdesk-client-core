@@ -368,6 +368,7 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
                                     this.setState({createOrEdit: null});
                                 }}
                                 zIndex={1051}
+                                size="large"
                             >
                                 <AuthoringReact
                                     itemId=""
@@ -378,29 +379,18 @@ export class ManageRundownItems extends React.PureComponent<IProps, IState> {
                                     authoringStorage={createOrEdit.authoringStorage}
                                     storageAdapter={rundownTemplateItemStorageAdapter}
                                     getLanguage={() => LANGUAGE}
-                                    getActions={() => {
-                                        return Promise.resolve([
-                                            {
-                                                label: 'Test action',
-                                                onTrigger: () => {
-                                                    // eslint-disable-next-line no-alert
-                                                    alert('test');
-                                                },
-                                            },
-                                        ]);
-                                    }}
                                     getInlineToolbarActions={({save}) => {
                                         return {
                                             readOnly: false,
                                             actions: [
                                                 {
-                                                    label: gettext('Save'),
+                                                    label: gettext('Apply'),
                                                     availableOffline: false,
                                                     group: 'end',
                                                     priority: 0.1,
                                                     component: () => (
                                                         <Button
-                                                            text={gettext('Save')}
+                                                            text={gettext('Apply')}
                                                             onClick={() => {
                                                                 save();
                                                             }}
