@@ -1,9 +1,10 @@
 import * as React from 'react';
 import {RadioButtonGroup, Button, IconButton, Checkbox, Alert} from 'superdesk-ui-framework/react';
 import {IConfigComponentProps, IDropdownOption, IDropdownConfigManualSource} from 'superdesk-api';
-import {gettext, arrayMove} from 'core/utils';
+import {gettext} from 'core/utils';
 import {Spacer, SpacerBlock} from 'core/ui/components/Spacer';
 import {assertNever, isNumeric} from 'core/helpers/typescript-helpers';
+import {arrayMove} from '@superdesk/common';
 
 const newItemTemplate: IDropdownOption = {
     id: null,

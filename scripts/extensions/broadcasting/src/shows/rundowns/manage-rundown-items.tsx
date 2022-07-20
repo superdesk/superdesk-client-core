@@ -18,12 +18,13 @@ import {Map} from 'immutable';
 import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, SHOW_PART_VOCABULARY_ID} from '../../constants';
 import {IVocabularyItem} from 'superdesk-api';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
+import {arrayMove} from '@superdesk/common';
 const {vocabulary} = superdesk.entities;
 
 const {gettext} = superdesk.localization;
 
 const {getAuthoringComponent} = superdesk.components;
-const {computeEditor3Output, getContentStateFromHtml, arrayMove} = superdesk.helpers;
+const {computeEditor3Output, getContentStateFromHtml} = superdesk.helpers;
 
 const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemplateInitial> = {
     storeValue: (value, fieldId, rundownItem, config, fieldType) => {

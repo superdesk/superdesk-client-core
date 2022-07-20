@@ -8,7 +8,7 @@ import {
     IVocabulary,
 } from 'superdesk-api';
 
-import {gettext, arrayMove} from 'core/utils';
+import {gettext} from 'core/utils';
 import {IContentProfileType} from '../controllers/ContentProfilesController';
 import {assertNever, nameof} from 'core/helpers/typescript-helpers';
 import {SortableContainer, SortableElement} from 'react-sortable-hoc';
@@ -22,6 +22,7 @@ import {getEditorConfig} from './get-editor-config';
 import {WidgetsConfig} from './WidgetsConfig';
 import {NewFieldSelect} from './new-field-select';
 import {GenericArrayListPageComponent} from 'core/helpers/generic-array-list-page-component';
+import {arrayMove} from '@superdesk/common';
 
 // should be stored in schema rather than editor section of the content profile
 // but the fields should be editable via GUI

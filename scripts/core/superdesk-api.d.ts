@@ -2387,7 +2387,6 @@ declare module 'superdesk-api' {
                 language: string,
             ): IEditor3Output;
             getContentStateFromHtml(html: string): import('draft-js').ContentState;
-            arrayMove<T>(arr: Array<T>, from: number, to: number): Array<T>;
         },
         components: {
             UserHtmlSingleLine: React.ComponentType<{html: string}>;
