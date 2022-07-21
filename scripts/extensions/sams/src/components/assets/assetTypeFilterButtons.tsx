@@ -13,7 +13,7 @@ import {updateAssetSearchParamsAndListItems} from '../../store/assets/actions';
 import {getAssetSearchParams} from '../../store/assets/selectors';
 
 // UI
-import {CheckButtonGroup, RadioButton} from 'superdesk-ui-framework/react';
+import {CheckButtonGroup, RadioGroup} from 'superdesk-ui-framework/react';
 
 interface IProps {
     searchParams: IAssetSearchParams;
@@ -49,7 +49,7 @@ export class AssetTypeFilterButtonsComponent extends React.PureComponent<IProps>
 
         return (
             <CheckButtonGroup padded={true}>
-                <RadioButton
+                <RadioGroup
                     value={this.props.searchParams.mimetypes}
                     onChange={this.changeFilter}
                     options={[

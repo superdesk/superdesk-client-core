@@ -186,9 +186,10 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                     <FormGroup>
                         <FormRow>
                             <Input
+                                type="text"
                                 label={gettext('Name')}
                                 required={true}
-                                value={this.props.asset.name}
+                                value={this.props.asset.name ?? ''}
                                 onChange={this.onChange.name}
                                 disabled={this.props.disabled === true}
                             />
@@ -199,8 +200,9 @@ class AssetEditorComponent extends React.PureComponent<IProps, IState> {
                     <FormGroup>
                         <FormRow>
                             <Input
+                                type="text"
                                 label={gettext('Description')}
-                                value={this.props.asset.description}
+                                value={this.props.asset.description ?? ''}
                                 onChange={this.onChange.description}
                                 disabled={this.props.disabled === true}
                             />

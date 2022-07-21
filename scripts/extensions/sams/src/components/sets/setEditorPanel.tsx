@@ -264,8 +264,8 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                             {this.props.original == null ? null : (
                                 <FormGroup>
                                     <FormRow>
-                                        <label>{gettext('Enabled')}</label>
                                         <Switch
+                                            label={{text: gettext('Enabled')}}
                                             value={updates.state === SET_STATE.USABLE}
                                             onChange={this.onChange.state}
                                         />
@@ -275,8 +275,9 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                             <FormGroup>
                                 <FormRow>
                                     <Input
+                                        type="text"
                                         label={gettext('Name')}
-                                        value={updates.name}
+                                        value={updates.name ?? ''}
                                         required={true}
                                         onChange={this.onChange.name}
                                         disabled={false}
@@ -286,8 +287,9 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                             <FormGroup>
                                 <FormRow>
                                     <Input
+                                        type="text"
                                         label={gettext('Description')}
-                                        value={updates.description}
+                                        value={updates.description ?? ''}
                                         onChange={this.onChange.description}
                                         disabled={false}
                                     />
@@ -296,6 +298,7 @@ export class SetEditorPanelComponent extends React.Component<IProps, IState> {
                             <FormGroup>
                                 <FormRow>
                                     <Input
+                                        type="text"
                                         label={gettext('Maximum Asset Size')}
                                         value={(updates.maximum_asset_size || 0).toString()}
                                         info={gettext('value of 0 will disable this restriction')}

@@ -2472,8 +2472,8 @@ declare module 'superdesk-api' {
             getRelativeOrAbsoluteDateTime(
                 datetimeString: string,
                 format: string,
-                relativeDuration: number, // = 1
-                relativeUnit: string, // = 'days'
+                relativeDuration?: number, // = 1
+                relativeUnit?: string, // = 'days'
             ): string;
         };
         privileges: {

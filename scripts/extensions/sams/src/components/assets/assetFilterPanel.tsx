@@ -239,8 +239,9 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
+                                        type="text"
                                         label={gettext('Name')}
-                                        value={this.state.localSearchParams.name}
+                                        value={this.state.localSearchParams.name ?? ''}
                                         onChange={this.onChange.name}
                                     />
                                 </FormItem>
@@ -248,8 +249,9 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
+                                        type="text"
                                         label={gettext('Filename')}
-                                        value={this.state.localSearchParams.filename}
+                                        value={this.state.localSearchParams.filename ?? ''}
                                         onChange={this.onChange.filename}
                                     />
                                 </FormItem>
@@ -257,8 +259,9 @@ export class AssetFilterPanel extends React.PureComponent<IProps, IState> {
                             <FormGroup>
                                 <FormItem>
                                     <Input
+                                        type="text"
                                         label={gettext('Description')}
-                                        value={this.state.localSearchParams.description}
+                                        value={this.state.localSearchParams.description ?? ''}
                                         onChange={this.onChange.description}
                                     />
                                 </FormItem>
