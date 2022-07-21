@@ -1,16 +1,16 @@
-import {ISuperdesk, IArticle, IArticleAction} from 'superdesk-api';
+import {ISuperdesk, IArticle, IAuthoringAction} from 'superdesk-api';
 import {manageMarkedUserForSingleArticle} from './managed-marked-user';
 import {updateMarkedUser, canChangeMarkedUser} from './common';
 
 export function getActionsInitialize(superdesk: ISuperdesk) {
     const {gettext} = superdesk.localization;
 
-    return function getActions(article: IArticle): Promise<Array<IArticleAction>> {
+    return function getActions(article: IArticle): Promise<Array<IAuthoringAction>> {
         if (!canChangeMarkedUser(superdesk, article)) {
             return Promise.resolve([]);
         }
 
-        const markForUser: IArticleAction = {
+        const markForUser: IAuthoringAction = {
             label: gettext('Mark for user'),
             icon: 'icon-assign',
             groupId: 'highlights',
@@ -19,7 +19,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             },
         };
 
-        const unmark: IArticleAction = {
+        const unmark: IAuthoringAction = {
             label: gettext('Unmark user'),
             icon: 'icon-assign',
             groupId: 'highlights',
@@ -28,7 +28,7 @@ export function getActionsInitialize(superdesk: ISuperdesk) {
             },
         };
 
-        const markForOtherUser: IArticleAction = {
+        const markForOtherUser: IAuthoringAction = {
             label: gettext('Mark for other user'),
             groupId: 'highlights',
             icon: 'icon-assign',
