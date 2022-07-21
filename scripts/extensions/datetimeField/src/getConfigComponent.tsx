@@ -2,12 +2,13 @@
 
 import * as React from 'react';
 import {ISuperdesk, IConfigComponentProps} from 'superdesk-api';
-import {IDateTimeFieldConfig, defaultDateTimeConfig} from './extension';
+import {defaultDateTimeConfig} from './extension';
 import {Button, FormLabel, IconButton} from 'superdesk-ui-framework/react';
+import {IDateTimeFieldConfig} from './getDateTimeField';
 
 export function getConfigComponent(superdesk: ISuperdesk) {
     const gettext = superdesk.localization.gettext;
-    const {Spacer, SpacerInline} = superdesk.components;
+    const {Spacer, SpacerBlock} = superdesk.components;
 
     return class DateTimeFieldConfig extends React.PureComponent<IConfigComponentProps<IDateTimeFieldConfig>> {
         render() {
@@ -19,7 +20,7 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                     <div>
                         <FormLabel text={gettext('Initial time offset')} />
 
-                        <SpacerInline v gap="8" />
+                        <SpacerBlock v gap="8" />
 
                         <Spacer h gap="8" justifyContent="start" noGrow>
                             <div className="sd-line-input sd-line-input--no-margin sd-line-input--no-label">
@@ -40,11 +41,11 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                         </Spacer>
                     </div>
 
-                    <SpacerInline v gap="16" />
+                    <SpacerBlock v gap="16" />
 
                     <FormLabel text={gettext('Time increment steps')} />
 
-                    <SpacerInline v gap="8" />
+                    <SpacerBlock v gap="8" />
 
                     <Spacer v gap="8">
                         {
@@ -91,7 +92,7 @@ export function getConfigComponent(superdesk: ISuperdesk) {
                         }
                     </Spacer>
 
-                    <SpacerInline v gap="16" />
+                    <SpacerBlock v gap="16" />
 
                     <Button
                         text={gettext('Add step')}

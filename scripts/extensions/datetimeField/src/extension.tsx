@@ -5,8 +5,9 @@ import {
     IExtension,
     IExtensionActivationResult,
     IPreviewComponentProps,
+    ICustomFieldType,
 } from 'superdesk-api';
-import {getDateTimeField} from './getDateTimeField';
+import {getDateTimeField, IDateTimeFieldConfig, IUserPreferences, IValueOperational, IValueStorage} from './getDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
 import {getToggleDateTimeField} from './getToggleTemplateDateTimeField';
 
@@ -21,7 +22,7 @@ export function isDateValue(value: string | undefined | null) {
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {
     const {formatDateTime} = superdesk.localization;
 
-    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps<string>> {
+    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps<IValueOperational, IDateTimeFieldConfig>> {
         render() {
             if (this.props.value == null) {
                 return null;
@@ -30,11 +31,6 @@ function getDateTimePreviewComponent(superdesk: ISuperdesk) {
             }
         }
     };
-}
-
-export interface IDateTimeFieldConfig {
-    initial_offset_minutes: number;
-    increment_steps: Array<number>;
 }
 
 export const defaultDateTimeConfig: IDateTimeFieldConfig = {
@@ -56,18 +52,22 @@ const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
 
+        const dateTimeField: ICustomFieldType<IValueOperational, IValueStorage, IDateTimeFieldConfig, IUserPreferences> = {
+            id: 'datetime',
+            label: gettext('Datetime'),
+            editorComponent: getDateTimeField(superdesk),
+            previewComponent: getDateTimePreviewComponent(superdesk),
+            configComponent: getConfigComponent(superdesk),
+            templateEditorComponent: getToggleDateTimeField(superdesk),
+            onTemplateCreate: onTemplateCreate,
+            hasValue: (val) => val === null || typeof val === 'string',
+            getEmptyValue: () => null,
+        };
+
         const result: IExtensionActivationResult = {
             contributions: {
                 customFieldTypes: [
-                    {
-                        id: 'datetime',
-                        label: gettext('Datetime'),
-                        editorComponent: getDateTimeField(superdesk),
-                        previewComponent: getDateTimePreviewComponent(superdesk),
-                        configComponent: getConfigComponent(superdesk),
-                        templateEditorComponent: getToggleDateTimeField(superdesk),
-                        onTemplateCreate: onTemplateCreate,
-                    },
+                    dateTimeField as unknown as ICustomFieldType<unknown, unknown, unknown, unknown>,
                 ],
             },
         };
