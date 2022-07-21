@@ -2919,6 +2919,8 @@ declare module 'superdesk-api' {
         language: string;
         config: IConfig;
 
+        fieldsData: IFieldsData;
+
         /**
          * Allow persisting editor-specific settings,
          * for example whether to highlight characters that exceed the limit or block further typing.

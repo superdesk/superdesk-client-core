@@ -1,8 +1,9 @@
 import React from 'react';
+import {Map} from 'immutable';
 import {get, throttle, Cancelable} from 'lodash';
 
 import {getField} from 'apps/fields';
-import {IArticle, IVocabulary, ITemplate} from 'superdesk-api';
+import {IArticle, IVocabulary, ITemplate, IFieldsData} from 'superdesk-api';
 import ng from 'core/services/ng';
 import {preferences} from 'api/preferences';
 import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
@@ -26,6 +27,10 @@ interface IState {
 
 function getValue(props: IProps) {
     return get(props.item.extra, props.field._id);
+}
+
+function getFieldsData(props: IProps): IFieldsData {
+    return Map<string, any>(Object.entries(props.item.extra));
 }
 
 export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
@@ -97,6 +102,7 @@ export class AuthoringCustomField extends React.PureComponent<IProps, IState> {
                             editorId={field._id}
                             language={item.language}
                             value={this.state.value}
+                            fieldsData={getFieldsData(this.props)}
                             onChange={(value) => this.setValue(value)}
                             readOnly={!editable}
                             config={field.custom_field_config}

@@ -7,7 +7,13 @@ import {
     IPreviewComponentProps,
     ICustomFieldType,
 } from 'superdesk-api';
-import {getDateTimeField, IDateTimeFieldConfig, IUserPreferences, IValueOperational, IValueStorage} from './getDateTimeField';
+import {
+    getDateTimeField,
+    IDateTimeFieldConfig,
+    IUserPreferences,
+    IValueOperational,
+    IValueStorage,
+} from './getDateTimeField';
 import {getConfigComponent} from './getConfigComponent';
 import {getToggleDateTimeField} from './getToggleTemplateDateTimeField';
 
@@ -19,10 +25,12 @@ export function isDateValue(value: string | undefined | null) {
     }
 }
 
+type IProps = IPreviewComponentProps<IValueOperational, IDateTimeFieldConfig>;
+
 function getDateTimePreviewComponent(superdesk: ISuperdesk) {
     const {formatDateTime} = superdesk.localization;
 
-    return class DateTimePreview extends React.PureComponent<IPreviewComponentProps<IValueOperational, IDateTimeFieldConfig>> {
+    return class DateTimePreview extends React.PureComponent<IProps> {
         render() {
             if (this.props.value == null) {
                 return null;
@@ -52,7 +60,12 @@ const extension: IExtension = {
     activate: (superdesk: ISuperdesk) => {
         const gettext = superdesk.localization.gettext;
 
-        const dateTimeField: ICustomFieldType<IValueOperational, IValueStorage, IDateTimeFieldConfig, IUserPreferences> = {
+        const dateTimeField: ICustomFieldType<
+            IValueOperational,
+            IValueStorage,
+            IDateTimeFieldConfig,
+            IUserPreferences
+        > = {
             id: 'datetime',
             label: gettext('Datetime'),
             editorComponent: getDateTimeField(superdesk),

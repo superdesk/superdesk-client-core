@@ -17,8 +17,9 @@ export interface IDateTimeFieldConfig extends ICommonFieldConfig {
 }
 export type IUserPreferences = never;
 
-
-export function getDateTimeField(superdesk: ISuperdesk): React.ComponentClass<IEditorComponentProps<IValueOperational, IDateTimeFieldConfig, IUserPreferences>> {
+export function getDateTimeField(
+    superdesk: ISuperdesk,
+): React.ComponentClass<IEditorComponentProps<IValueOperational, IDateTimeFieldConfig, IUserPreferences>> {
     const {gettext, gettextPlural} = superdesk.localization;
     const {getLocaleForDatePicker} = superdesk.ui.framework;
     const {Spacer} = superdesk.components;
@@ -177,5 +178,5 @@ export function getDateTimeField(superdesk: ISuperdesk): React.ComponentClass<IE
                 );
             }
         }
-    }
+    };
 }

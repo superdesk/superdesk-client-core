@@ -53,7 +53,7 @@ export class AuthoringSection extends React.PureComponent<IPropsAuthoringSection
                             <AuthoringSectionField
                                 key={field.id}
                                 field={field}
-                                value={this.props.fieldsData.get(field.id)}
+                                fieldsData={this.props.fieldsData}
                                 onChange={this.props.onChange}
                                 readOnly={this.props.readOnly}
                                 language={this.props.language}

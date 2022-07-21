@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAuthoringFieldV2} from 'superdesk-api';
+import {IAuthoringFieldV2, IFieldsData} from 'superdesk-api';
 import {getField} from 'apps/fields';
 import {getFieldContainer} from './get-field-container';
 import {IPropsAuthoringSection} from './authoring-section';
@@ -7,7 +7,7 @@ import {memoize} from 'core/memoize';
 
 interface IProps {
     field: IAuthoringFieldV2;
-    value: unknown;
+    fieldsData: IFieldsData;
     onChange: IPropsAuthoringSection['onChange'];
     readOnly: boolean;
     language: string;
@@ -31,7 +31,7 @@ export class AuthoringSectionField extends React.PureComponent<IProps> {
     }
 
     render() {
-        const {field, value, canBeToggled, toggledOn} = this.props;
+        const {field, fieldsData, canBeToggled, toggledOn} = this.props;
         const FieldEditorConfig = getField(field.fieldType);
 
         const Container = this.getFieldContainer(
@@ -54,7 +54,8 @@ export class AuthoringSectionField extends React.PureComponent<IProps> {
                     editorId={field.id}
                     container={Container}
                     language={this.props.language}
-                    value={value}
+                    value={fieldsData.get(field.id)}
+                    fieldsData={fieldsData}
                     onChange={(val) => {
                         this.props.onChange(field.id, val);
                     }}
