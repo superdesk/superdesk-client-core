@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {get} from 'lodash';
-import {IEditorComponentProps, IArticle} from 'superdesk-api';
-import {IPredefinedFieldConfig, IExtensionConfigurationOptions} from './interfaces';
+import {IEditorComponentProps, IFieldsData} from 'superdesk-api';
+import {IConfig, IExtensionConfigurationOptions, IValueOperational, IUserPreferences} from './interfaces';
 import {Select, Option, Icon} from 'superdesk-ui-framework/react';
 
 import {superdesk} from './superdesk';
@@ -9,19 +8,19 @@ import {superdesk} from './superdesk';
 const {Editor3Html} = superdesk.components;
 const {gettext} = superdesk.localization;
 
-type IProps = IEditorComponentProps<string, IPredefinedFieldConfig>;
+type IProps = IEditorComponentProps<IValueOperational, IConfig, IUserPreferences>;
 
 interface IState {
     freeText: boolean;
 }
 
-function applyPlaceholders(definition: string, article: IArticle): string {
+function applyPlaceholders(definition: string, fieldsData: IFieldsData): string {
     const extensionConfig: IExtensionConfigurationOptions = superdesk.getExtensionConfig();
 
     let result = definition;
 
-    for (let [placeholderName, pathToValue] of Object.entries(extensionConfig.placeholderMapping ?? {})) {
-        result = result.replace(`{{${placeholderName}}}`, get(article, pathToValue, ''));
+    for (let [placeholderName, fieldId] of Object.entries(extensionConfig.placeholderMapping ?? {})) {
+        result = result.replace(`{{${placeholderName}}}`, (fieldsData.get(fieldId) as string) ?? '');
     }
 
     return result;
@@ -42,7 +41,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
         const allowSwitchingToFreeText = this.props.config.allowSwitchingToFreeText ?? false;
 
         const selectedOption = options.find(({definition}) =>
-            applyPlaceholders(definition, this.props.item) === this.props.value);
+            applyPlaceholders(definition, this.props.fieldsData) === this.props.value);
 
         const freeTextMode = this.state.freeText === true || selectedOption == null;
 
@@ -57,13 +56,13 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
                     value={selectedOption?.title ?? ''}
                     onChange={(title) => {
                         if (title === '' && !freeTextMode) {
-                            this.props.setValue('');
+                            this.props.onChange('');
                         } else {
                             const selected = options.find((option) => option.title === title);
 
                             if (selected != null) {
                                 this.setState({freeText: false});
-                                this.props.setValue(applyPlaceholders(selected.definition, this.props.item));
+                                this.props.onChange(applyPlaceholders(selected.definition, this.props.fieldsData));
                             }
                         }
                     }}
@@ -84,7 +83,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
                     }
 
                     const value = typeof selectedOption?.definition === 'string'
-                        ? applyPlaceholders(selectedOption.definition, this.props.item)
+                        ? applyPlaceholders(selectedOption.definition, this.props.fieldsData)
                         : this.props.value;
 
                     return (
@@ -111,7 +110,7 @@ export class PredefinedFieldEditor extends React.PureComponent<IProps, IState> {
                                     <Editor3Html
                                         value={value}
                                         onChange={(val) => {
-                                            this.props.setValue(val);
+                                            this.props.onChange(val);
                                         }}
                                         readOnly={fieldReadOnly || freeTextMode !== true}
                                     />
