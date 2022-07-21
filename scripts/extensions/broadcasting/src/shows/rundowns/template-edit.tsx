@@ -7,6 +7,7 @@ import {superdesk} from '../../superdesk';
 import {CreateValidators, stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
+import {getPartialDateFormat} from '../../utils/get-partial-date-format';
 
 const {gettext} = superdesk.localization;
 
@@ -15,42 +16,6 @@ const {
     Spacer,
     InputLabel,
 } = superdesk.components;
-
-function getPartialDateFormat(parts: {year?: boolean; month?: boolean; day?: boolean}) {
-    const separator = superdesk.instance.config.view.dateformat
-        .replace('YYYY', '')
-        .replace('MM', '')
-        .replace('DD', '')[0];
-
-    const removeSegment = (dateFormat: string, segment: 'YYYY' | 'MM' | 'DD'): string => {
-        const segmentIndex = dateFormat.indexOf(segment);
-        const separatorBefore: boolean = dateFormat[segmentIndex - 1] === separator;
-        const separatorAfter: boolean = dateFormat[segmentIndex + segment.length] === separator;
-
-        const toRemove = dateFormat.slice(
-            segmentIndex + (separatorBefore ? -1 : 0),
-            segmentIndex + segment.length + (separatorAfter ? 1 : 0),
-        );
-
-        return dateFormat.replace(toRemove, '');
-    };
-
-    let result = superdesk.instance.config.view.dateformat;
-
-    if (parts.year !== true) {
-        result = removeSegment(result, 'YYYY');
-    }
-
-    if (parts.month !== true) {
-        result = removeSegment(result, 'MM');
-    }
-
-    if (parts.day !== true) {
-        result = removeSegment(result, 'DD');
-    }
-
-    return result;
-}
 
 const dateFormatOptions = [
     getPartialDateFormat({year: true, month: true, day: true}),
