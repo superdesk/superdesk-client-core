@@ -6,6 +6,7 @@ import {
     IEditor3Config,
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
+import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID} from '../../../constants';
 import {superdesk} from '../../../superdesk';
 
 const {gettext} = superdesk.localization;
@@ -73,7 +74,7 @@ const contentField: IAuthoringFieldV2 = {
 
 const itemTypesConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
-    vocabularyId: 'rundown-item-types',
+    vocabularyId: RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     multiple: false,
 };
 
