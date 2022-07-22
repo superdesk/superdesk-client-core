@@ -8,18 +8,18 @@ export function getTimeStringIso(date: Date): IISOTime {
     const seconds = date.getSeconds();
     const milliseconds = date.getMilliseconds();
 
-    let output = '';
+    let result = '';
 
-    output += padStart(hours.toString(), 2, '0');
-    output += ':' + padStart(minutes.toString(), 2, '0');
+    result += padStart(hours.toString(), 2, '0');
+    result += ':' + padStart(minutes.toString(), 2, '0');
 
     if (seconds > 0) {
-        output += ':' + padStart(seconds.toString(), 2, '0');
+        result += ':' + padStart(seconds.toString(), 2, '0');
     }
 
     if (milliseconds > 0) {
-        output += '.' + padStart(milliseconds.toString(), 3, '0');
+        result += '.' + padStart(milliseconds.toString(), 3, '0');
     }
 
-    return output;
+    return result;
 }
