@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Input, Button, Spinner} from 'superdesk-ui-framework/react';
+import {showModal} from '@superdesk/common';
 import {CreateShowAfterModal} from './create-show-after-modal';
 import {CreateValidators, stringNotEmpty} from '../form-validation';
 import {superdesk} from '../superdesk';
@@ -74,7 +75,7 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
             this.setState({inProgress: false}, () => {
                 this.props.closeModal();
 
-                superdesk.ui.showModal(({closeModal}) => (
+                showModal(({closeModal}) => (
                     <CreateShowAfterModal
                         closeModal={closeModal}
                         show={show}

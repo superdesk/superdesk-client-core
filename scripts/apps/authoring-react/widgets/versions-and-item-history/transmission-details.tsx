@@ -5,7 +5,7 @@ import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IPublishQueueItem} from 'superdesk-interfaces/PublishQueueItem';
 import {gettext} from 'core/utils';
 import {IconButton} from 'superdesk-ui-framework/react';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';

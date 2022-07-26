@@ -4,7 +4,7 @@ import {IIgnoreCancelSaveProps, IIgnoreCancelSaveResponse} from 'superdesk-api';
 
 import {gettext} from 'core/utils';
 
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {Button, ButtonGroup, Icon} from 'superdesk-ui-framework/react';
 
 import {Modal} from 'core/ui/components/Modal/Modal';

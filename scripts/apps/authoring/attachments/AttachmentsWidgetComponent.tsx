@@ -5,7 +5,7 @@ import * as React from 'react';
 import {AttachmentsList} from './AttachmentsList';
 import {AttachmentsEditorModal} from './AttachmentsEditorModal';
 
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 
 import {gettext} from 'core/utils';
 import {IAttachment, IAttachmentsWidgetProps} from 'superdesk-api';

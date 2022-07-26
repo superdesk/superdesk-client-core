@@ -4,7 +4,7 @@ import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {IAuthoringStorage, IContentProfileV2, IFieldsAdapter, IStorageAdapter} from 'superdesk-api';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {getFieldsData} from '../authoring-react';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';

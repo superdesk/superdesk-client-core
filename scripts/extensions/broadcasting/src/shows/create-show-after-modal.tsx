@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {Button, Icon, Text} from 'superdesk-ui-framework/react';
+import {showModal} from '@superdesk/common';
 import {IShow} from '../interfaces';
 
 import {superdesk} from '../superdesk';
@@ -65,7 +66,7 @@ export class CreateShowAfterModal extends React.PureComponent<IProps> {
                         onClick={() => {
                             this.props.closeModal();
 
-                            superdesk.ui.showModal(({closeModal}) => (
+                            showModal(({closeModal}) => (
                                 <ManageRundownTemplates
                                     dialogTitle={gettext('Create new rundown template')}
                                     closeModal={closeModal}

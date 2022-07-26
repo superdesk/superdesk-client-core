@@ -15,5 +15,8 @@
   },
   "peerDependencies": {
     "react": "16.8.6"
+  },
+  "dependencies": {
+    "@superdesk/common": "0.0.4"
   }
 }

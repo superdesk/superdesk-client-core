@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {gettext, gettextPlural} from 'core/utils';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';

@@ -1,5 +1,5 @@
 import React from 'react';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';

@@ -8,6 +8,7 @@ import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
+import {showModal} from '@superdesk/common';
 
 function prepareAndPrint() {
     document.body.classList.add('prepare-to-print');
@@ -37,33 +38,6 @@ function prepareAndPrint() {
 
     window.print();
 }
-
-export const showModal = (
-    Component: React.ComponentType<{closeModal(): void}>,
-    containerClass?: string,
-): Promise<void> => {
-    const el = document.createElement('div');
-
-    if (containerClass != null) {
-        el.className = containerClass;
-    }
-
-    document.body.appendChild(el);
-
-    const closeModal = () => {
-        ReactDOM.unmountComponentAtNode(el);
-        el.remove();
-    };
-
-    ReactDOM.render(
-        (
-            <Component closeModal={closeModal} />
-        ),
-        el,
-    );
-
-    return Promise.resolve();
-};
 
 export interface IPropsPrintableModal {
     closeModal(): void;

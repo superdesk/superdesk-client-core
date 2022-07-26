@@ -26,7 +26,7 @@ import {
     CharacterCountConfigModal,
 } from 'apps/authoring/authoring/components/CharacterCountConfigButton';
 import {CharacterCount2} from 'apps/authoring/authoring/components/CharacterCount';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {countWords} from 'core/count-words';
 import {getReadingTimeText} from 'apps/authoring/authoring/directives/ReadingTime';
 import {addEditorEventListener, dispatchEditorEvent} from '../../authoring-react-editor-events';

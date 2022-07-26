@@ -3,7 +3,7 @@ import {IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {ISendToDestinationDesk} from 'core/interactive-article-actions-panel/interfaces';
 import {httpRequestJsonLocal} from 'core/helpers/network';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {IModalSimpleAction, ModalSimple} from 'core/ui/components/modal-simple';
 import {gettext, gettextPlural} from 'core/utils';
 import {sdApi} from 'api';

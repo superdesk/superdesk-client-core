@@ -2,6 +2,7 @@ import * as React from 'react';
 import {OrderedMap, OrderedSet, Map} from 'immutable';
 import {Switch, Button, ButtonGroup, EmptyState, Autocomplete} from 'superdesk-ui-framework/react';
 import {ToggleBoxNext} from 'superdesk-ui-framework';
+import {showModal} from '@superdesk/common';
 
 import {IArticle, IAuthoringSideWidget, ISuperdesk} from 'superdesk-api';
 
@@ -93,7 +94,6 @@ export function getAutoTaggingData(data: IEditableData, iMatricsConfig: any) {
 
 function showImatricsServiceErrorModal(superdesk: ISuperdesk, errors: Array<ITagUi>) {
     const {gettext} = superdesk.localization;
-    const {showModal} = superdesk.ui;
     const {Modal, ModalHeader, ModalBody, ModalFooter} = superdesk.components;
 
     showModal(({closeModal}) => (

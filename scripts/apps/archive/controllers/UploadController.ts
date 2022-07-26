@@ -7,7 +7,7 @@ import {extensions} from 'appConfig';
 import {IPTCMetadata, IUser, IArticle} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {fileUploadErrorModal} from './file-upload-error-modal';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 
 const isNotEmptyString = (value: any) => value != null && value !== '';
 

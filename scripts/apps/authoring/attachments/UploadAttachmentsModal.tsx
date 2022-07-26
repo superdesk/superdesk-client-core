@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 import {IAttachment} from 'superdesk-api';
 import {attachmentsApi} from './attachmentsService';
 

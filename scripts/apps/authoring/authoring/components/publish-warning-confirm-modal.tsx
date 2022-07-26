@@ -6,7 +6,7 @@ import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalFooter} from 'core/ui/components/Modal/ModalFooter';
-import {showModal} from 'core/services/modalService';
+import {showModal} from '@superdesk/common';
 
 interface IProps {
     closeModal(): void;

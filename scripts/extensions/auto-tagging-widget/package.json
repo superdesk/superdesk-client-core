@@ -13,5 +13,8 @@
     "superdesk-code-style": "1.3.0",
     "typescript": "4.4.2",
     "react-bootstrap": "1.6.0"
+  },
+  "dependencies": {
+    "@superdesk/common": "0.0.4"
   }
 }

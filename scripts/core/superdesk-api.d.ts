@@ -2324,7 +2324,6 @@ declare module 'superdesk-api' {
             alert(message: string): Promise<void>;
             confirm(message: string, title?: string): Promise<boolean>;
             showIgnoreCancelSaveDialog(props: IIgnoreCancelSaveProps): Promise<IIgnoreCancelSaveResponse>;
-            showModal(component: React.ComponentType<{closeModal(): void}>): Promise<void>;
             notify: {
                 info(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;
                 success(text: string, displayDuration?: number, options?: INotifyMessageOptions): void;

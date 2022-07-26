@@ -5,6 +5,8 @@ import {Dropdown, CreateButton, IconButton} from 'superdesk-ui-framework/react';
 import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates';
 import {CreateShowModal} from './shows/create-show';
 
+import {showModal} from '@superdesk/common';
+
 import {superdesk} from './superdesk';
 const {gettext} = superdesk.localization;
 
@@ -63,7 +65,7 @@ export class Page extends React.PureComponent {
                                             icon: 'rundown',
                                             label: gettext('Create new Show'),
                                             onSelect: () => {
-                                                superdesk.ui.showModal(CreateShowModal);
+                                                showModal(CreateShowModal);
                                             },
                                         },
                                     ],
@@ -81,7 +83,7 @@ export class Page extends React.PureComponent {
                             ariaValue={gettext('Manage show templates')}
                             icon="settings"
                             onClick={() => {
-                                superdesk.ui.showModal(({closeModal}) => (
+                                showModal(({closeModal}) => (
                                     <ManageRundownTemplates
                                         dialogTitle={gettext('Manage rundown templates')}
                                         closeModal={closeModal}
