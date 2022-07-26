@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import {DatePickerISO, Input, TimePicker, Select, Option, Button} from 'superdesk-ui-framework/react';
+import {DatePickerISO, Input, TimePicker, Select, Option, Button, IconButton} from 'superdesk-ui-framework/react';
 import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
@@ -376,9 +376,10 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 authoringStorage={this.state.createOrEdit.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
-                                                getInlineToolbarActions={({save}) => {
+                                                getInlineToolbarActions={({save, discardChangesAndClose}) => {
                                                     return {
                                                         readOnly: false,
+                                                        toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
                                                         actions: [
                                                             {
                                                                 label: gettext('Apply'),
@@ -392,6 +393,21 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                                             save();
                                                                         }}
                                                                         type="primary"
+                                                                    />
+                                                                ),
+                                                            },
+                                                            {
+                                                                label: gettext('Close'),
+                                                                availableOffline: true,
+                                                                group: 'start',
+                                                                priority: 0.1,
+                                                                component: () => (
+                                                                    <IconButton
+                                                                        ariaValue={gettext('Close')}
+                                                                        icon="close-small"
+                                                                        onClick={() => {
+                                                                            discardChangesAndClose();
+                                                                        }}
                                                                     />
                                                                 ),
                                                             },

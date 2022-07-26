@@ -983,20 +983,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             ...authoringOptions.actions,
             {
                 group: 'end',
-                priority: 0.1,
-                component: () => (
-                    <Button
-                        text={gettext('Close')}
-                        style="hollow"
-                        onClick={() => {
-                            this.handleClose(state);
-                        }}
-                    />
-                ),
-                availableOffline: true,
-            },
-            {
-                group: 'end',
                 priority: 0.4,
                 component: () => {
                     return (
@@ -1081,6 +1067,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                             entity={state.itemWithChanges}
                                             coreWidgets={toolbar1Widgets}
                                             extraWidgets={this.props.getAuthoringTopBarWidgets(exposed)}
+                                            backgroundColor={authoringOptions.toolbarBgColor}
                                         />
                                     </SubNav>
                                 )}

@@ -219,6 +219,21 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                         availableOffline: true,
                                     };
 
+                                    const closeButton: ITopBarWidget<IArticle> = {
+                                        group: 'end',
+                                        priority: 0.1,
+                                        component: () => (
+                                            <Button
+                                                text={gettext('Close')}
+                                                style="hollow"
+                                                onClick={() => {
+                                                    discardChangesAndClose();
+                                                }}
+                                            />
+                                        ),
+                                        availableOffline: true,
+                                    };
+
                                     const minimizeButton: ITopBarWidget<IArticle> = {
                                         group: 'end',
                                         priority: 0.3,
@@ -249,6 +264,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                     case ITEM_STATE.UNPUBLISHED:
                                         const actions: Array<ITopBarWidget<IArticle>> = [
                                             minimizeButton,
+                                            closeButton,
                                         ];
 
                                         actions.push({

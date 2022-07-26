@@ -5,6 +5,7 @@ interface IProps<T> {
     entity: T;
     coreWidgets?: Array<ITopBarWidget<T>>;
     extraWidgets?: Array<ITopBarWidget<T>>;
+    backgroundColor?: React.CSSProperties['backgroundColor'];
 }
 
 export class AuthoringToolbar<T> extends React.PureComponent<IProps<T>> {
@@ -30,7 +31,7 @@ export class AuthoringToolbar<T> extends React.PureComponent<IProps<T>> {
         ];
 
         return (
-            <div className="authoring-toolbar-1">
+            <div className="authoring-toolbar-1" style={{backgroundColor: this.props.backgroundColor}}>
                 {
                     toolbarGroups.map((items, i) => (
                         <div

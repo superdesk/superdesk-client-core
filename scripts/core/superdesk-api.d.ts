@@ -136,6 +136,7 @@ declare module 'superdesk-api' {
     export interface IAuthoringOptions<T> {
         readOnly: boolean;
         actions: Array<ITopBarWidget<T>>;
+        toolbarBgColor?: React.CSSProperties['backgroundColor'];
     }
 
     export interface ITopBarWidget<T> {
