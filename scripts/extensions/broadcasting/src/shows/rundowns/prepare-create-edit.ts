@@ -1,4 +1,4 @@
-
+import {isEqual} from 'lodash';
 import {rundownItemContentProfile} from './rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
@@ -6,6 +6,7 @@ import {
 } from 'superdesk-api';
 import {IRundownItemBase, IRundownItemTemplateInitial} from '../../interfaces';
 import {ICreate, IEdit} from './template-edit';
+import {superdesk} from '../../superdesk';
 
 function getRundownItemTemplateAuthoringStorage(
     item: IRundownItemTemplateInitial,
@@ -52,8 +53,18 @@ function getRundownItemTemplateAuthoringStorage(
         getContentProfile: () => {
             return Promise.resolve(rundownItemContentProfile);
         },
-        closeAuthoring: (_1, _2, _3, doClose) => {
-            doClose();
+        closeAuthoring: (current, original, _3, doClose) => {
+            const isCreationMode = Object.keys(original.data).length < 1;
+            const warnAboutLosingChanges = isCreationMode || !isEqual(current.data, original.data);
+
+            if (warnAboutLosingChanges) {
+                return superdesk.ui.confirm('Discard unsaved changes?').then((confirmed) => {
+                    if (confirmed) {
+                        doClose();
+                    }
+                });
+            }
+
             return Promise.resolve();
         },
         getUserPreferences: () => Promise.resolve({'spellchecker:status': {enabled: true}}), // FINISH: remove test data

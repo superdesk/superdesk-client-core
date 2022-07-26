@@ -17,7 +17,43 @@ export class Page extends React.PureComponent {
                 <Spacer h gap="32" justifyContent="space-between" alignItems="start" noWrap style={{height: '100%'}}>
                     <div>
                         <Dropdown
-                            header={[]}
+                            header={[
+                                {
+                                    type: 'group',
+                                    label: gettext('Create new'),
+                                    items: [
+                                        {
+                                            type: 'submenu',
+                                            label: gettext('Rundown'),
+                                            icon: 'plus-sign',
+                                            items: [
+                                                {
+                                                    type: 'submenu',
+                                                    label: gettext('Show 1'),
+                                                    icon: 'plus-sign',
+                                                    items: [
+                                                        {
+                                                            icon: 'plus-sign',
+                                                            label: 'Template 1', onSelect: () => 1,
+                                                        },
+                                                    ],
+                                                },
+                                                {
+                                                    type: 'submenu',
+                                                    label: gettext('Show 2'),
+                                                    icon: 'plus-sign',
+                                                    items: [
+                                                        {
+                                                            icon: 'plus-sign',
+                                                            label: 'Template 2', onSelect: () => 1,
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            ]}
                             items={[]}
                             footer={[
                                 {
@@ -25,7 +61,7 @@ export class Page extends React.PureComponent {
                                     items: [
                                         {
                                             icon: 'rundown',
-                                            label: 'Create new Show',
+                                            label: gettext('Create new Show'),
                                             onSelect: () => {
                                                 superdesk.ui.showModal(CreateShowModal);
                                             },

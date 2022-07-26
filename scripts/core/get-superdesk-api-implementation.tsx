@@ -307,7 +307,7 @@ export function getSuperdeskApiImplementation(
             },
             alert: (message: string) => modal.alert({bodyText: message}),
             confirm: (message: string, title?: string) => new Promise((resolve) => {
-                modal.confirm(message, title ?? gettext('Cancel'))
+                modal.confirm(message, title ?? gettext('Confirm'))
                     .then(() => resolve(true))
                     .catch(() => resolve(false));
             }),
