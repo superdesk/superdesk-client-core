@@ -50,3 +50,10 @@ export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;
 export interface IRundownItemTemplate extends IBaseRestApiResponse {
     data: IRundownItemBase;
 }
+
+/**
+ * All properties in data are optional
+ */
+export interface IRundownItemTemplateInitial extends IBaseRestApiResponse {
+    data: Partial<IRundownItemBase>;
+}

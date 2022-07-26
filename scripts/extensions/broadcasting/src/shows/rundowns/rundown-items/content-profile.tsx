@@ -89,9 +89,7 @@ const startTimeField: IAuthoringFieldV2 = {
     id: 'start_time',
     name: gettext('Start time'),
     fieldType: 'time',
-    fieldConfig: {
-        required: true,
-    },
+    fieldConfig: {},
 };
 
 const endTimeField: IAuthoringFieldV2 = {
@@ -105,9 +103,7 @@ const durationField: IAuthoringFieldV2 = {
     id: 'duration',
     name: gettext('Duration'),
     fieldType: 'duration',
-    fieldConfig: {
-        required: true,
-    },
+    fieldConfig: {},
 };
 
 const plannedDurationField: IAuthoringFieldV2 = {

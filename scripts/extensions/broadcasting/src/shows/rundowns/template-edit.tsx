@@ -1,13 +1,23 @@
 import * as React from 'react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {DatePickerISO, Input, TimePicker, Select, Option, Button} from 'superdesk-ui-framework/react';
-import {IRundownTemplateBase} from '../../interfaces';
+import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
 import {CreateValidators, stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
 import {getPartialDateFormat} from '../../utils/get-partial-date-format';
+import {IAuthoringStorage} from 'superdesk-api';
+import {prepareForCreation, prepareForEditing} from './prepare-create-edit';
+
+import {syncDurationWithEndTime} from './sync-duration-with-end-time';
+import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
+import {LANGUAGE} from '../../constants';
+
+const {getAuthoringComponent} = superdesk.components;
+
+const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
 
 const {gettext} = superdesk.localization;
 
@@ -22,6 +32,18 @@ const dateFormatOptions = [
     getPartialDateFormat({year: true, month: true}),
     getPartialDateFormat({month: true, day: true}),
 ];
+
+export interface ICreate {
+    type: 'create';
+    item: IRundownItemTemplateInitial;
+    authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
+}
+
+export interface IEdit {
+    type: 'edit';
+    item: IRundownItemTemplateInitial;
+    authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
+}
 
 interface IPropsEditable {
     readOnly: false;
@@ -42,6 +64,10 @@ interface IPropsReadOnly {
 
 type IProps = IPropsEditable | IPropsReadOnly;
 
+interface IState {
+    createOrEdit: ICreate | IEdit | null;
+}
+
 const WithTemplateValidation = superdesk.components.getValidationHOC<Partial<IRundownTemplateBase>>();
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
@@ -49,17 +75,60 @@ const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> =
     airtime_time: stringNotEmpty,
 };
 
-export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
+export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
+        this.state = {
+            createOrEdit: null,
+        };
+
         this.handleChange = this.handleChange.bind(this);
+        this.initiateCreation = this.initiateCreation.bind(this);
+        this.initiateEditing = this.initiateEditing.bind(this);
+        this.getRundownItems = this.getRundownItems.bind(this);
+    }
+
+    getRundownItems() {
+        return this.props.templateFields.rundown_items ?? [];
     }
 
     handleChange(value: Partial<IRundownTemplateBase>) {
         if (this.props.readOnly !== true) {
             this.props.onChange(value);
         }
+    }
+
+    initiateCreation() {
+        this.setState({
+            createOrEdit: prepareForCreation((val) => {
+                if (!this.props.readOnly) {
+                    const itemWithDuration: Partial<IRundownItemBase> = {
+                        ...val.data,
+                        duration: val.data.planned_duration,
+                    };
+
+                    this.props.onChange({
+                        rundown_items: this.getRundownItems().concat(
+                            // validated in authoring view using content profile
+                            itemWithDuration as unknown as IRundownItemBase,
+                        ),
+                    });
+                }
+            }),
+        });
+    }
+
+    initiateEditing(item: IRundownItemBase) {
+        this.setState({
+            createOrEdit: prepareForEditing(item, (val) => {
+                if (!this.props.readOnly) {
+                    this.props.onChange({
+                        rundown_items: this.getRundownItems().map((_item) => _item === item ? val : _item),
+                    });
+                }
+            }),
+        });
     }
 
     render() {
@@ -71,7 +140,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
             date_format: dateFormatOptions[0],
         };
 
-        const rundownItems = this.props.templateFields.rundown_items ?? [];
+        const rundownItems = this.getRundownItems();
 
         return (
             <WithTemplateValidation validators={templateFieldsValidator}>
@@ -275,6 +344,9 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                         <ManageRundownItems
                                                             readOnly={readOnly}
                                                             items={rundownItems}
+                                                            createOrEdit={this.state.createOrEdit}
+                                                            initiateCreation={this.initiateCreation}
+                                                            initiateEditing={this.initiateEditing}
                                                             onChange={(val) => {
                                                                 this.handleChange({
                                                                     rundown_items: computeStartEndTime(airTime, val),
@@ -289,6 +361,52 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                 </div>
                             </Layout.AuthoringMain>
                         </Layout.MainPanel>
+
+                        <Layout.RightPanel open={this.state.createOrEdit != null}>
+                            <Layout.Panel side="right" background="grey">
+                                <Layout.PanelContent>
+                                    {
+                                        this.state.createOrEdit != null && (
+                                            <AuthoringReact
+                                                itemId=""
+                                                onClose={() => {
+                                                    this.setState({createOrEdit: null});
+                                                }}
+                                                fieldsAdapter={{}}
+                                                authoringStorage={this.state.createOrEdit.authoringStorage}
+                                                storageAdapter={rundownTemplateItemStorageAdapter}
+                                                getLanguage={() => LANGUAGE}
+                                                getInlineToolbarActions={({save}) => {
+                                                    return {
+                                                        readOnly: false,
+                                                        actions: [
+                                                            {
+                                                                label: gettext('Apply'),
+                                                                availableOffline: false,
+                                                                group: 'end',
+                                                                priority: 0.1,
+                                                                component: () => (
+                                                                    <Button
+                                                                        text={gettext('Apply')}
+                                                                        onClick={() => {
+                                                                            save();
+                                                                        }}
+                                                                        type="primary"
+                                                                    />
+                                                                ),
+                                                            },
+                                                        ],
+                                                    };
+                                                }}
+                                                getAuthoringTopBarWidgets={() => []}
+                                                topBar2Widgets={[]}
+                                                onFieldChange={syncDurationWithEndTime}
+                                            />
+                                        )
+                                    }
+                                </Layout.PanelContent>
+                            </Layout.Panel>
+                        </Layout.RightPanel>
                     </Layout.LayoutContainer>
                 )}
             </WithTemplateValidation>

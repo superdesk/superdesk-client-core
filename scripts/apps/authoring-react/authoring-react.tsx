@@ -1064,7 +1064,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const pinned = state.openWidget?.pinned === true;
 
         return (
-            <div>
+            <React.Fragment>
                 {
                     state.loading && (
                         <Loader overlay />
@@ -1167,7 +1167,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                         );
                     }}
                 </WithInteractiveArticleActionsPanel>
-            </div>
+            </React.Fragment>
         );
     }
 }
