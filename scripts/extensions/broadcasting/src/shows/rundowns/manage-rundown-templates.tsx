@@ -185,7 +185,15 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                 contentPadding="none"
                 size="x-large"
                 onHide={() => {
-                    this.props.closeModal();
+                    if (template != null && (template.type === 'create' || template.type === 'edit')) {
+                        superdesk.ui.confirm(gettext('Discard unsaved changes?')).then((confirmed) => {
+                            if (confirmed) {
+                                this.props.closeModal();
+                            }
+                        });
+                    } else {
+                        this.props.closeModal();
+                    }
                 }}
                 zIndex={1050}
             >

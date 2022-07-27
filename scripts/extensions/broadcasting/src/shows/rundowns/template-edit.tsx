@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {isEqual} from 'lodash';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {DatePickerISO, Input, TimePicker, Select, Option, Button, IconButton} from 'superdesk-ui-framework/react';
 import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
@@ -65,7 +66,7 @@ interface IPropsReadOnly {
 type IProps = IPropsEditable | IPropsReadOnly;
 
 interface IState {
-    createOrEdit: ICreate | IEdit | null;
+    createOrEditRundownItem: ICreate | IEdit | null;
 }
 
 const WithTemplateValidation = superdesk.components.getValidationHOC<Partial<IRundownTemplateBase>>();
@@ -76,17 +77,22 @@ const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> =
 };
 
 export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState> {
+    private templateFieldsInitial: Partial<IRundownTemplateBase>;
+    
     constructor(props: IProps) {
         super(props);
 
         this.state = {
-            createOrEdit: null,
+            createOrEditRundownItem: null,
         };
 
         this.handleChange = this.handleChange.bind(this);
         this.initiateCreation = this.initiateCreation.bind(this);
         this.initiateEditing = this.initiateEditing.bind(this);
         this.getRundownItems = this.getRundownItems.bind(this);
+        this.handleCancelling = this.handleCancelling.bind(this);
+
+        this.templateFieldsInitial = {};
     }
 
     getRundownItems() {
@@ -101,7 +107,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
     initiateCreation() {
         this.setState({
-            createOrEdit: prepareForCreation((val) => {
+            createOrEditRundownItem: prepareForCreation((val) => {
                 if (!this.props.readOnly) {
                     const itemWithDuration: Partial<IRundownItemBase> = {
                         ...val.data,
@@ -121,7 +127,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
     initiateEditing(item: IRundownItemBase) {
         this.setState({
-            createOrEdit: prepareForEditing(item, (val) => {
+            createOrEditRundownItem: prepareForEditing(item, (val) => {
                 if (!this.props.readOnly) {
                     this.props.onChange({
                         rundown_items: this.getRundownItems().map((_item) => _item === item ? val : _item),
@@ -129,6 +135,27 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                 }
             }),
         });
+    }
+
+    handleCancelling() {
+        if (!this.props.readOnly) {
+            const {onCancel} = this.props;
+            const unsavedChangesPresent = !isEqual(this.templateFieldsInitial, this.props.templateFields);
+
+            if (unsavedChangesPresent) {
+                superdesk.ui.confirm(gettext('Discard unsaved changes?')).then((confirmed) => {
+                    if (confirmed) {
+                        onCancel();
+                    }
+                });
+            } else {
+                onCancel();
+            }
+        }
+    }
+
+    componentDidMount() {
+        this.templateFieldsInitial = this.props.templateFields;
     }
 
     render() {
@@ -164,7 +191,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 <Spacer h gap="8" noGrow>
                                                     <Button
                                                         text={gettext('Cancel')}
-                                                        onClick={this.props.onCancel}
+                                                        onClick={this.handleCancelling}
                                                     />
 
                                                     <Button
@@ -344,7 +371,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         <ManageRundownItems
                                                             readOnly={readOnly}
                                                             items={rundownItems}
-                                                            createOrEdit={this.state.createOrEdit}
+                                                            createOrEdit={this.state.createOrEditRundownItem}
                                                             initiateCreation={this.initiateCreation}
                                                             initiateEditing={this.initiateEditing}
                                                             onChange={(val) => {
@@ -362,18 +389,18 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                             </Layout.AuthoringMain>
                         </Layout.MainPanel>
 
-                        <Layout.RightPanel open={this.state.createOrEdit != null}>
+                        <Layout.RightPanel open={this.state.createOrEditRundownItem != null}>
                             <Layout.Panel side="right" background="grey">
                                 <Layout.PanelContent>
                                     {
-                                        this.state.createOrEdit != null && (
+                                        this.state.createOrEditRundownItem != null && (
                                             <AuthoringReact
                                                 itemId=""
                                                 onClose={() => {
-                                                    this.setState({createOrEdit: null});
+                                                    this.setState({createOrEditRundownItem: null});
                                                 }}
                                                 fieldsAdapter={{}}
-                                                authoringStorage={this.state.createOrEdit.authoringStorage}
+                                                authoringStorage={this.state.createOrEditRundownItem.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
                                                 getInlineToolbarActions={({save, discardChangesAndClose}) => {
