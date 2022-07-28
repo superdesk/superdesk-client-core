@@ -133,8 +133,30 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
         let diff: any = {};
 
         each(this.state.currentContact, (value, key) => {
-            if (!isEqual(origContact[key], value)) {
-                extend(diff, {[key]: value});
+            let sanitizedValue = value;
+
+            if (typeof sanitizedValue === 'string') {
+                sanitizedValue = sanitizedValue.trim();
+
+                if (origContact[key] === undefined && sanitizedValue.length === 0) {
+                    return;
+                }
+            } else if (
+                sanitizedValue instanceof Array &&
+                sanitizedValue.length > 0 &&
+                typeof sanitizedValue[0] === 'string'
+            ) {
+                sanitizedValue = (sanitizedValue as Array<string>)
+                    .map((arrayValue: string) => arrayValue.trim())
+                    .filter((arrayValue: string) => arrayValue.length);
+
+                if (origContact[key] === undefined && sanitizedValue.length === 0) {
+                    return;
+                }
+            }
+
+            if (!isEqual(origContact[key], sanitizedValue)) {
+                extend(diff, {[key]: sanitizedValue});
             }
         });
 
