@@ -16,6 +16,14 @@ export function stringNotEmpty(value: string | null | undefined): IValidationRes
     }
 }
 
+export function fieldNotNull(value: any): IValidationResult {
+    if (value != null) {
+        return null;
+    } else {
+        return gettext('field can not be empty');
+    }
+}
+
 export const emptyValueError = gettext('field can not be empty');
 
 export function greaterThanZero(value: number): IValidationResult {

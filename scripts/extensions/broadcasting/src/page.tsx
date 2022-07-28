@@ -8,6 +8,7 @@ import {CreateShowModal} from './shows/create-show';
 import {showModal} from '@superdesk/common';
 
 import {superdesk} from './superdesk';
+import {CreateRundownFromTemplate} from './shows/rundowns/create-rundown-from-template';
 const {gettext} = superdesk.localization;
 
 const {Spacer} = superdesk.components;
@@ -25,33 +26,15 @@ export class Page extends React.PureComponent {
                                     label: gettext('Create new'),
                                     items: [
                                         {
-                                            type: 'submenu',
+                                            icon: 'rundown',
                                             label: gettext('Rundown'),
-                                            icon: 'plus-sign',
-                                            items: [
-                                                {
-                                                    type: 'submenu',
-                                                    label: gettext('Show 1'),
-                                                    icon: 'plus-sign',
-                                                    items: [
-                                                        {
-                                                            icon: 'plus-sign',
-                                                            label: 'Template 1', onSelect: () => 1,
-                                                        },
-                                                    ],
-                                                },
-                                                {
-                                                    type: 'submenu',
-                                                    label: gettext('Show 2'),
-                                                    icon: 'plus-sign',
-                                                    items: [
-                                                        {
-                                                            icon: 'plus-sign',
-                                                            label: 'Template 2', onSelect: () => 1,
-                                                        },
-                                                    ],
-                                                },
-                                            ],
+                                            onSelect: () => {
+                                                showModal(({closeModal}) => (
+                                                    <CreateRundownFromTemplate
+                                                        onClose={closeModal}
+                                                    />
+                                                ));
+                                            },
                                         },
                                     ],
                                 },

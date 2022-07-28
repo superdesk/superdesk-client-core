@@ -1365,12 +1365,14 @@ declare module 'superdesk-api' {
     }
 
     export interface IPropsSelectFromRemote<T> {
+        label?: string;
         endpoint: string | null;
         sort: Array<[keyof T, 'asc' | 'desc']>;
         value?: string | null; // ID
         onChange(value: string | null): void;
         itemTemplate: React.ComponentType<{item: T}>;
         readOnly?: boolean;
+        validationError?: string | null | undefined;
         noGrow?: boolean; // if true, will not expand to 100% of parent element
     }
 

@@ -9,6 +9,7 @@ export interface IShowBase {
 export type IShow = IShowBase & IBaseRestApiResponse;
 
 export interface IRundownTemplateBase {
+    show: IShow['_id'];
     name: string;
     planned_duration: number; // seconds
     airtime_time: string; // ISO 8601 time
@@ -57,3 +58,7 @@ export interface IRundownItemTemplate extends IBaseRestApiResponse {
 export interface IRundownItemTemplateInitial extends IBaseRestApiResponse {
     data: Partial<IRundownItemBase>;
 }
+
+type IRundownBase = IRundownTemplateBase;
+
+export type IRundown = IRundownBase & IBaseRestApiResponse;
