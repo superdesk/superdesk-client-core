@@ -1370,6 +1370,7 @@ declare module 'superdesk-api' {
         value?: string | null; // ID
         onChange(value: string | null): void;
         itemTemplate: React.ComponentType<{item: T}>;
+        readOnly?: boolean;
         noGrow?: boolean; // if true, will not expand to 100% of parent element
     }
 
