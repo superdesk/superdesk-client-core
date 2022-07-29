@@ -68,6 +68,13 @@ module.exports = function makeConfig(grunt) {
                 'angular-embedly': 'angular-embedly/em-minified/angular-embedly.min',
                 'jquery-gridster': 'gridster/dist/jquery.gridster.min',
                 'external-apps': path.join(process.cwd(), 'dist', 'app-importer.generated.js'),
+                /**
+                 * Ensure that react is loaded only once.
+                 * external apps(planning, analytics, ui-framework) may try loading their own react,
+                 * especially when linked with npm in development mode.
+                 */
+                react: getModuleDir('react'),
+                'react-dom': getModuleDir('react-dom'),
             },
             extensions: ['.js', '.jsx', '.ts', '.tsx'],
         },
