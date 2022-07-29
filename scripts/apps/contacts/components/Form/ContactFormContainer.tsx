@@ -132,8 +132,8 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
 
         let diff: any = {};
 
-        each(this.state.currentContact, (value, key) => {
-            let sanitizedValue = value;
+        each(this.state.currentContact, (value: IContact[keyof IContact], key: keyof IContact) => {
+            let sanitizedValue = cloneDeep(value);
 
             if (typeof sanitizedValue === 'string') {
                 sanitizedValue = sanitizedValue.trim();
@@ -144,11 +144,11 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
             } else if (
                 sanitizedValue instanceof Array &&
                 sanitizedValue.length > 0 &&
-                typeof sanitizedValue[0] === 'string'
+                sanitizedValue.every((val) => typeof val === 'string')
             ) {
                 sanitizedValue = (sanitizedValue as Array<string>)
                     .map((arrayValue: string) => arrayValue.trim())
-                    .filter((arrayValue: string) => arrayValue.length);
+                    .filter((arrayValue: string) => arrayValue.length > 0);
 
                 if (origContact[key] === undefined && sanitizedValue.length === 0) {
                     return;
