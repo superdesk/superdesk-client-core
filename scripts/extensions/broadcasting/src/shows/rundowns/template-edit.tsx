@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {isEqual} from 'lodash';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import {DatePickerISO, Input, TimePicker, Select, Option, Button, IconButton} from 'superdesk-ui-framework/react';
+import {DatePickerISO, Input, TimePicker, Select, Option, Button, IconButton, SubNav, ButtonGroup} from 'superdesk-ui-framework/react';
 import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
@@ -174,40 +174,42 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                 {(validate, validationErrors) => (
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
-                            <div style={{display: 'flex', justifyContent: 'end', padding: '8px 16px'}}>
-                                {
-                                    this.props.readOnly
-                                        ? (
-                                            <Button
-                                                text={gettext('Edit')}
-                                                onClick={this.props.initiateEditing}
-                                                type="primary"
-                                            />
-                                        )
-                                        : (() => {
-                                            const onSave = this.props.onSave;
-
-                                            return (
-                                                <Spacer h gap="8" noGrow>
+                            <SubNav>
+                                <ButtonGroup align='end' padded>
+                                        {
+                                            this.props.readOnly
+                                                ? (
                                                     <Button
-                                                        text={gettext('Cancel')}
-                                                        onClick={this.handleCancelling}
-                                                    />
-
-                                                    <Button
-                                                        text={this.props.saveButtonLabel}
-                                                        onClick={() => {
-                                                            if (validate(templateFields)) {
-                                                                onSave();
-                                                            }
-                                                        }}
+                                                        text={gettext('Edit')}
+                                                        onClick={this.props.initiateEditing}
                                                         type="primary"
                                                     />
-                                                </Spacer>
-                                            );
-                                        })()
-                                }
-                            </div>
+                                                )
+                                                : (() => {
+                                                    const onSave = this.props.onSave;
+
+                                                    return (
+                                                        <React.Fragment>
+                                                            <Button
+                                                                text={gettext('Cancel')}
+                                                                onClick={this.handleCancelling}
+                                                            />
+
+                                                            <Button
+                                                                text={this.props.saveButtonLabel}
+                                                                onClick={() => {
+                                                                    if (validate(templateFields)) {
+                                                                        onSave();
+                                                                    }
+                                                                }}
+                                                                type="primary"
+                                                            />
+                                                        </React.Fragment>
+                                                    );
+                                                })()
+                                        }
+                                    </ButtonGroup>
+                            </SubNav>
                         </Layout.HeaderPanel>
 
                         <Layout.MainPanel padding="none">
