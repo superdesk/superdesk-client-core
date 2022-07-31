@@ -59,7 +59,9 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
         const Template = this.props.itemTemplate;
 
         return (
-            <div>
+            <div
+                style={{width: this.props.noGrow === true ? undefined : '100%'}}
+            >
                 {
                     this.props.label != null && (
                         <div>
