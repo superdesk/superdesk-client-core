@@ -1,7 +1,18 @@
 import * as React from 'react';
 import {isEqual} from 'lodash';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import {DatePickerISO, Input, TimePicker, Select, Option, Button, IconButton, SubNav, ButtonGroup} from 'superdesk-ui-framework/react';
+import * as Form from 'superdesk-ui-framework/react/components/Form';
+import {
+    DatePickerISO,
+    Input,
+    TimePicker,
+    Select,
+    Option,
+    Button,
+    IconButton,
+    SubNav,
+    ButtonGroup,
+} from 'superdesk-ui-framework/react';
 import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
@@ -217,55 +228,57 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                 headerPadding="medium"
                                 toolBar={this.props.toolbar}
                                 authoringHeader={(
-                                    <Spacer h gap="16" noGrow justifyContent="start">
-                                        <Spacer v gap="4">
-                                            <InputLabel text={gettext('Planned duration')} />
+                                    <React.Fragment>
+                                        <Form.FormGroup inlineLabel={false}>
+                                            <Form.FormItem>
+                                                <Spacer v gap="4">
+                                                    <InputLabel text={gettext('Planned duration')} />
 
-                                            <NumberInputTemp
-                                                value={templateFields.planned_duration ?? null}
-                                                onChange={(val) => {
-                                                    this.handleChange({
-                                                        ...templateFields,
-                                                        planned_duration: val == null ? 0 : val,
-                                                    });
-                                                }}
-                                                readOnly={readOnly}
-                                            />
-                                        </Spacer>
+                                                    <NumberInputTemp
+                                                        value={templateFields.planned_duration ?? null}
+                                                        onChange={(val) => {
+                                                            this.handleChange({
+                                                                ...templateFields,
+                                                                planned_duration: val == null ? 0 : val,
+                                                            });
+                                                        }}
+                                                        readOnly={readOnly}
+                                                    />
+                                                </Spacer>
+                                            </Form.FormItem>
 
-                                        <Spacer v gap="4">
-                                            <InputLabel text={gettext('Air time')} />
+                                            <Form.FormItem>
+                                                <TimePicker
+                                                    label={gettext('Air time')}
+                                                    value={templateFields.airtime_time ?? ''}
+                                                    onChange={(val) => {
+                                                        this.handleChange({
+                                                            ...templateFields,
+                                                            airtime_time: val,
+                                                        });
+                                                    }}
+                                                    disabled={readOnly}
+                                                />
+                                            </Form.FormItem>
 
-                                            <TimePicker
-                                                value={templateFields.airtime_time ?? ''}
-                                                onChange={(val) => {
-                                                    this.handleChange({
-                                                        ...templateFields,
-                                                        airtime_time: val,
-                                                    });
-                                                }}
-                                                disabled={readOnly}
-                                            />
-                                        </Spacer>
-
-                                        <Spacer v gap="4">
-                                            <InputLabel text={gettext('Air date')} />
-
-                                            <DatePickerISO
-                                                dateFormat={superdesk.instance.config.view.dateformat}
-                                                value={templateFields.airtime_date ?? ''}
-                                                onChange={(val) => {
-                                                    this.handleChange({
-                                                        ...templateFields,
-                                                        airtime_date: val,
-                                                    });
-                                                }}
-                                                inlineLabel
-                                                labelHidden
-                                                disabled={readOnly}
-                                            />
-                                        </Spacer>
-                                    </Spacer>
+                                            <Form.FormItem>
+                                                <DatePickerISO
+                                                    label={gettext('Air date')}
+                                                    dateFormat={superdesk.instance.config.view.dateformat}
+                                                    value={templateFields.airtime_date ?? ''}
+                                                    onChange={(val) => {
+                                                        this.handleChange({
+                                                            ...templateFields,
+                                                            airtime_date: val,
+                                                        });
+                                                    }}
+                                                    inlineLabel
+                                                    labelHidden
+                                                    disabled={readOnly}
+                                                />
+                                            </Form.FormItem>
+                                        </Form.FormGroup>
+                                    </React.Fragment>
 
                                     // TODO: add schedule when frequency input is ready
                                 )}
