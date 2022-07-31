@@ -192,7 +192,7 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
         <div
             ref={parentRef}
             style={{
-                height: `${height}px`,
+                maxHeight: `${height}px`,
                 width: `${width}px`,
                 overflow: 'auto',
             }}
