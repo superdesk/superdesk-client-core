@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IconLabel, Input, Modal, Button, DatePickerISO, toasted} from 'superdesk-ui-framework/react';
-import { CreateValidators, fieldNotNull, stringNotEmpty } from '../../form-validation';
+import {CreateValidators, fieldNotNull, stringNotEmpty} from '../../form-validation';
 import {IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
@@ -50,7 +50,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
             airTime: new Date().toISOString().slice(0, 10),
         };
     }
-    
+
     render() {
         const {showId, rundownName, template} = this.state;
 
@@ -82,7 +82,10 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                         }).then(() => {
                                             this.props.onClose();
 
-                                            toasted.notify(gettext('Rundown created'), {type: 'success', duration: 2000});
+                                            toasted.notify(
+                                                gettext('Rundown created'),
+                                                {type: 'success', duration: 2000},
+                                            );
                                         });
                                     }
                                 }}
@@ -99,8 +102,8 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                             onHide={this.props.onClose}
                             footerTemplate={footerTemplate}
                             visible
-                        >   
-                            <Spacer v gap="16">       
+                        >
+                            <Spacer v gap="16">
                                 <SelectFromEndpoint
                                     label={gettext('Show')}
                                     endpoint="/shows"
@@ -120,7 +123,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                     readOnly={this.state.loading}
                                     validationError={validationResults.showId}
                                 />
-            
+
                                 {
                                     showId != null && (
                                         <SelectFromEndpoint
@@ -130,14 +133,14 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                             value={template?._id ?? null}
                                             onChange={(templateId) => {
                                                 this.setState({loading: true});
-        
+
                                                 httpRequestJsonLocal<IRundownTemplate>({
                                                     method: 'GET',
                                                     path: `/shows/${showId}/templates/${templateId}`,
-                                                }).then((template) => {
+                                                }).then((_template) => {
                                                     this.setState({
-                                                        rundownName: template.headline_template.prefix,
-                                                        template: template,
+                                                        rundownName: _template.headline_template.prefix,
+                                                        template: _template,
                                                         loading: false,
                                                     });
                                                 });
@@ -155,7 +158,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                         />
                                     )
                                 }
-            
+
                                 {
                                     rundownName != null && (
                                         <Input
@@ -171,7 +174,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                         />
                                     )
                                 }
-            
+
                                 {
                                     template != null && (
                                         <DatePickerISO
@@ -186,23 +189,23 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                         />
                                     )
                                 }
-            
+
                                 {
                                     template != null && (
                                         <div>
                                             <InputLabel text={gettext('Template based settings')} />
-            
+
                                             <SpacerBlock v gap="4" />
-            
+
                                             <IconLabel
                                                 type="default"
                                                 text={template.planned_duration.toString()}
                                                 innerLabel={gettext('Planned duration')}
                                                 style="translucent"
                                             />
-            
+
                                             <SpacerBlock h gap="4" />
-            
+
                                             <IconLabel
                                                 type="primary"
                                                 text={template.airtime_time.toString()}

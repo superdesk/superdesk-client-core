@@ -89,7 +89,7 @@ const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> =
 
 export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState> {
     private templateFieldsInitial: Partial<IRundownTemplateBase>;
-    
+
     constructor(props: IProps) {
         super(props);
 
@@ -186,40 +186,40 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
                             <SubNav>
-                                <ButtonGroup align='end' padded>
-                                        {
-                                            this.props.readOnly
-                                                ? (
-                                                    <Button
-                                                        text={gettext('Edit')}
-                                                        onClick={this.props.initiateEditing}
-                                                        type="primary"
-                                                    />
-                                                )
-                                                : (() => {
-                                                    const onSave = this.props.onSave;
+                                <ButtonGroup align="end" padded>
+                                    {
+                                        this.props.readOnly
+                                            ? (
+                                                <Button
+                                                    text={gettext('Edit')}
+                                                    onClick={this.props.initiateEditing}
+                                                    type="primary"
+                                                />
+                                            )
+                                            : (() => {
+                                                const onSave = this.props.onSave;
 
-                                                    return (
-                                                        <React.Fragment>
-                                                            <Button
-                                                                text={gettext('Cancel')}
-                                                                onClick={this.handleCancelling}
-                                                            />
+                                                return (
+                                                    <React.Fragment>
+                                                        <Button
+                                                            text={gettext('Cancel')}
+                                                            onClick={this.handleCancelling}
+                                                        />
 
-                                                            <Button
-                                                                text={this.props.saveButtonLabel}
-                                                                onClick={() => {
-                                                                    if (validate(templateFields)) {
-                                                                        onSave();
-                                                                    }
-                                                                }}
-                                                                type="primary"
-                                                            />
-                                                        </React.Fragment>
-                                                    );
-                                                })()
-                                        }
-                                    </ButtonGroup>
+                                                        <Button
+                                                            text={this.props.saveButtonLabel}
+                                                            onClick={() => {
+                                                                if (validate(templateFields)) {
+                                                                    onSave();
+                                                                }
+                                                            }}
+                                                            type="primary"
+                                                        />
+                                                    </React.Fragment>
+                                                );
+                                            })()
+                                    }
+                                </ButtonGroup>
                             </SubNav>
                         </Layout.HeaderPanel>
 

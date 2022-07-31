@@ -44,7 +44,7 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
         this.fetchEntity(this.props.value ?? null);
     }
 
-    componentDidUpdate(prevProps: Readonly<IPropsSelectFromRemote<T>>, prevState: Readonly<IState<T>>, snapshot?: any): void {
+    componentDidUpdate() {
         if (this.props.value == null && this.state.selected != null) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.setState({selected: null});
@@ -119,7 +119,8 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                                         height={200}
                                         query={{
                                             endpoint: this.props.endpoint,
-                                            // filter: {$and: [{'field': {$eq: 'test'}}]}, // TODO: regex operator needed
+                                            // TODO: regex operator needed
+                                            // filter: {$and: [{'field': {$eq: 'test'}}]},
                                             sort: this.props.sort.reduce<ISuperdeskQuery['sort']>(
                                                 (acc, [fieldId, direction]) => acc.concat({[fieldId]: direction}), []),
                                         }}
