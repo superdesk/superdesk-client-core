@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {Input, Button, Spinner} from 'superdesk-ui-framework/react';
-import {showModal, WithValidation} from '@superdesk/common';
+import {CreateValidators, showModal, WithValidation} from '@superdesk/common';
 import {CreateShowAfterModal} from './create-show-after-modal';
-import {CreateValidators, stringNotEmpty} from '../form-validation';
+import {stringNotEmpty} from '../form-validation';
 import {superdesk} from '../superdesk';
 import {IShow, IShowBase} from '../interfaces';
 import {NumberInputTemp} from '../number-input-temp';

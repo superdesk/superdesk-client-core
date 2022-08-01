@@ -13,11 +13,11 @@ import {
     SubNav,
     ButtonGroup,
 } from 'superdesk-ui-framework/react';
-import {WithValidation} from '@superdesk/common';
+import {CreateValidators, WithValidation} from '@superdesk/common';
 import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
-import {CreateValidators, stringNotEmpty} from '../../form-validation';
+import {stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
 import {getPartialDateFormat} from '../../utils/get-partial-date-format';
