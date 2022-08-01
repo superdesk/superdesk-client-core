@@ -132,9 +132,31 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
 
         let diff: any = {};
 
-        each(this.state.currentContact, (value, key) => {
-            if (!isEqual(origContact[key], value)) {
-                extend(diff, {[key]: value});
+        each(this.state.currentContact, (value: IContact[keyof IContact], key: keyof IContact) => {
+            let sanitizedValue = cloneDeep(value);
+
+            if (typeof sanitizedValue === 'string') {
+                sanitizedValue = sanitizedValue.trim();
+
+                if (origContact[key] === undefined && sanitizedValue.length === 0) {
+                    return;
+                }
+            } else if (
+                sanitizedValue instanceof Array &&
+                sanitizedValue.length > 0 &&
+                sanitizedValue.every((val) => typeof val === 'string')
+            ) {
+                sanitizedValue = (sanitizedValue as Array<string>)
+                    .map((arrayValue: string) => arrayValue.trim())
+                    .filter((arrayValue: string) => arrayValue.length > 0);
+
+                if (origContact[key] === undefined && sanitizedValue.length === 0) {
+                    return;
+                }
+            }
+
+            if (!isEqual(origContact[key], sanitizedValue)) {
+                extend(diff, {[key]: sanitizedValue});
             }
         });
 
