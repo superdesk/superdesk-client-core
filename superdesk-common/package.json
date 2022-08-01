@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "files": [
@@ -12,7 +12,7 @@
   "scripts": {
     "build": "tsc",
     "test": "mocha",
-    "prepublish": "rm -rf dist && npm run build"
+    "prepublish": "rm -rf dist && npm run build && npm run test"
   },
   "devDependencies": {
     "@types/enzyme-adapter-react-16": "1.0.6",
