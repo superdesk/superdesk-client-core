@@ -1376,27 +1376,6 @@ declare module 'superdesk-api' {
         noGrow?: boolean; // if true, will not expand to 100% of parent element
     }
 
-    // VALIDATION
-
-
-    export type IValidationResult = string | null; // null means validation w
-
-    export type IValidatorsForType<T> = {
-        [Property in keyof T]: (value: T[Property]) => IValidationResult;
-    };
-
-    export type IValidationResults<T> = {
-        [Property in keyof T]: IValidationResult;
-    };
-
-    export interface IPropsValidationHoc<T> {
-        validators: IValidatorsForType<T>;
-        children(
-            validate: (item: T) => boolean,
-            result: IValidationResults<T>,
-        ): JSX.Element;
-    }
-
 
 
     // REST API
@@ -2379,10 +2358,6 @@ declare module 'superdesk-api' {
             numberToString(value?: number): string | undefined;
             notNullOrUndefined<T>(x: null | undefined | T): x is T;
             isNullOrUndefined<T>(x: null | undefined | T): x is null | undefined;
-            mapObject<T extends {[key: string]: any}, V>(
-                obj: T,
-                mapFn: (item: T[keyof T]) => V,
-            ): {[Property in keyof T]: V};
             nameof<T>(name: keyof T): string;
             computeEditor3Output(
                 rawContentState: import('draft-js').RawDraftContentState,
@@ -2441,7 +2416,6 @@ declare module 'superdesk-api' {
 
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
-            getValidationHOC: <T>() => React.ComponentType<IPropsValidationHoc<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
             Spacer: React.ComponentType<IPropsSpacer>;
             SpacerBlock: React.ComponentType<ISpacerBlock>;

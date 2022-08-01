@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {IconLabel, Input, Modal, Button, DatePickerISO, toasted} from 'superdesk-ui-framework/react';
+import {WithValidation} from '@superdesk/common';
 import {CreateValidators, fieldNotNull, stringNotEmpty} from '../../form-validation';
 import {IRundownTemplate, IShow} from '../../interfaces';
 
@@ -15,9 +16,6 @@ interface INewRundownData {
     rundownName: string | null;
     airTime: string | null;
 }
-
-// TODO: move getValidationHOC to superdesk-common
-const WithRundownValidation = superdesk.components.getValidationHOC<INewRundownData>();
 
 interface IProps {
     onClose(): void;
@@ -55,7 +53,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
         const {showId, rundownName, template} = this.state;
 
         return (
-            <WithRundownValidation validators={rundownValidators}>
+            <WithValidation validators={rundownValidators}>
                 {(validate, validationResults) => {
                     const footerTemplate = (
                         <Spacer h gap="4" noGrow>
@@ -220,7 +218,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                         </Modal>
                     );
                 }}
-            </WithRundownValidation>
+            </WithValidation>
         );
     }
 }

@@ -13,6 +13,7 @@ import {
     SubNav,
     ButtonGroup,
 } from 'superdesk-ui-framework/react';
+import {WithValidation} from '@superdesk/common';
 import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
@@ -79,8 +80,6 @@ type IProps = IPropsEditable | IPropsReadOnly;
 interface IState {
     createOrEditRundownItem: ICreate | IEdit | null;
 }
-
-const WithTemplateValidation = superdesk.components.getValidationHOC<Partial<IRundownTemplateBase>>();
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
     name: stringNotEmpty,
@@ -181,7 +180,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
         const rundownItems = this.getRundownItems();
 
         return (
-            <WithTemplateValidation validators={templateFieldsValidator}>
+            <WithValidation validators={templateFieldsValidator}>
                 {(validate, validationErrors) => (
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
@@ -467,7 +466,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                         </Layout.RightPanel>
                     </Layout.LayoutContainer>
                 )}
-            </WithTemplateValidation>
+            </WithValidation>
         );
     }
 }

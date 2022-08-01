@@ -17,6 +17,6 @@
     "react": "16.8.6"
   },
   "dependencies": {
-    "@superdesk/common": "0.0.4"
+    "@superdesk/common": "0.0.5"
   }
 }

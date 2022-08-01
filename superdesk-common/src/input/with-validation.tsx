@@ -1,23 +1,23 @@
 import * as React from 'react';
-import {IPropsValidationHoc, IValidationResult, IValidationResults} from 'superdesk-api';
-import {mapObject} from './helpers/typescript-helpers';
-import {gettext} from './utils';
-export function stringNotEmpty(value: string | null | undefined): IValidationResult {
-    if ((value ?? '').trim().length > 0) {
-        return null;
-    } else {
-        return gettext('field can not be empty');
-    }
-}
+import {mapObject} from '../utils';
 
-export const emptyValueError = gettext('field can not be empty');
+// null means validation was successful and no errors were found
+export type IValidationResult = string | null;
 
-export function greaterThanZero(value: number): IValidationResult {
-    if (value > 1 !== true) {
-        return gettext('value must be greater than zero');
-    } else {
-        return null;
-    }
+export type IValidatorsForType<T> = {
+    [Property in keyof T]: (value: T[Property]) => IValidationResult;
+};
+
+export type IValidationResults<T> = {
+    [Property in keyof T]: IValidationResult;
+};
+
+export interface IPropsValidationHoc<T> {
+    validators: IValidatorsForType<T>;
+    children(
+        validate: (item: T) => boolean,
+        result: IValidationResults<T>,
+    ): JSX.Element;
 }
 
 interface IState<T> {

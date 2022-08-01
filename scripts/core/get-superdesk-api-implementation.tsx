@@ -32,7 +32,6 @@ import {
     notNullOrUndefined,
     nameof,
     isNullOrUndefined,
-    mapObject,
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {downloadBlob} from './helpers/utils';
@@ -90,7 +89,6 @@ import {Center} from './ui/components/Center';
 import {InputLabel} from './ui/components/input-label';
 import {VirtualListFromQuery} from './ui/components/virtual-lists/virtual-list-from-query';
 import {SelectFromEndpoint} from './ui/components/virtual-lists/select';
-import {WithValidation} from './with-validation';
 import {DateTime} from './ui/components/DateTime';
 import {AuthoringReact} from 'apps/authoring-react/authoring-react';
 import {computeEditor3Output} from 'apps/authoring-react/field-adapters/utilities/compute-editor3-output';
@@ -227,7 +225,6 @@ export function getSuperdeskApiImplementation(
             isNullOrUndefined,
             nameof: nameof,
             stripBaseRestApiFields,
-            mapObject,
             computeEditor3Output,
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
         },
@@ -360,7 +357,6 @@ export function getSuperdeskApiImplementation(
             SpacerBlock,
             SpacerInlineFlex,
             getLiveQueryHOC: () => WithLiveQuery,
-            getValidationHOC: () => WithValidation,
             WithLiveResources,
             Editor3Html,
             AuthoringWidgetHeading,

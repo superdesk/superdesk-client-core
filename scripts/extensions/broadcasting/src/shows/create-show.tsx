@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Input, Button, Spinner} from 'superdesk-ui-framework/react';
-import {showModal} from '@superdesk/common';
+import {showModal, WithValidation} from '@superdesk/common';
 import {CreateShowAfterModal} from './create-show-after-modal';
 import {CreateValidators, stringNotEmpty} from '../form-validation';
 import {superdesk} from '../superdesk';
@@ -10,7 +10,6 @@ import {NumberInputTemp} from '../number-input-temp';
 const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
 const {httpRequestJsonLocal} = superdesk;
-const WithShowValidation = superdesk.components.getValidationHOC<Partial<IShowBase>>();
 
 const {
     Modal,
@@ -89,7 +88,7 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
         const {show} = this.state;
 
         return (
-            <WithShowValidation validators={showValidators}>
+            <WithValidation validators={showValidators}>
                 {(validate, validationResults) => (
                     <Modal>
                         <ModalHeader onClose={this.props.closeModal}>
@@ -168,7 +167,7 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                         </ModalFooter>
                     </Modal>
                 )}
-            </WithShowValidation>
+            </WithValidation>
         );
     }
 }
