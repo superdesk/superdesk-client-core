@@ -109,7 +109,11 @@ $warningText:          #c09853;
 $warningBackground:    #fcf8e3;
 $warningBorder:        darken(adjust-hue($warningBackground, -10), 3%);
 
-$errorText:            #E51C23;
+:root {
+    --error-text-color: #E51C23;
+}
+
+$errorText:            var(--error-text-color);
 $errorBackground:      #f2dede;
 $errorBorder:          darken(adjust-hue($errorBackground, -10), 3%);
 

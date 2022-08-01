@@ -2383,7 +2383,7 @@ declare module 'superdesk-api' {
                 formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
             ): React.ComponentType<Props>;
             VirtualListFromQuery: React.ComponentType<IPropsVirtualListFromQuery<any>>;
-            SelectFromEndpoint: React.ComponentType<IPropsSelectFromRemote<any>>
+            SelectFromEndpoint: React.ComponentClass<IPropsSelectFromRemote<any>>
             ListItem: React.ComponentType<IListItemProps>;
             ListItemColumn: React.ComponentType<IPropsListItemColumn>;
             ListItemRow: React.ComponentType<IPropsListItemRow>;

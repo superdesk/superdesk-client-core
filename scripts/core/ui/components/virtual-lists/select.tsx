@@ -175,10 +175,10 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                 </div>
 
                 {
-                    this.props.validationError != null && ( // FINISH: use appropriate color for error message
+                    this.props.validationError != null && (
                         <div>
                             <SpacerBlock v gap="4" />
-                            <div>{this.props.validationError}</div>
+                            <span className="input-error">{this.props.validationError}</span>
                         </div>
                     )
                 }

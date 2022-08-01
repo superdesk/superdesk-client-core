@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {IconLabel, Input, Modal, Button, DatePickerISO, toasted} from 'superdesk-ui-framework/react';
-import {WithValidation} from '@superdesk/common';
-import {CreateValidators, fieldNotNull, stringNotEmpty} from '../../form-validation';
+import {CreateValidators, WithValidation} from '@superdesk/common';
+import {fieldNotNull, stringNotEmpty} from '../../form-validation';
 import {IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
@@ -53,8 +53,8 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
         const {showId, rundownName, template} = this.state;
 
         return (
-            <WithValidation validators={rundownValidators}>
-                {(validate, validationResults) => {
+            <WithValidation dynamic validators={rundownValidators}>
+                {(validate, validationResults, refs) => {
                     const footerTemplate = (
                         <Spacer h gap="4" noGrow>
                             <Button
@@ -120,6 +120,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                     )}
                                     readOnly={this.state.loading}
                                     validationError={validationResults.showId}
+                                    ref={refs.showId}
                                 />
 
                                 {
@@ -153,6 +154,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                             )}
                                             readOnly={this.state.loading}
                                             validationError={validationResults.template}
+                                            ref={refs.template}
                                         />
                                     )
                                 }
@@ -169,6 +171,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                             disabled={this.state.loading}
                                             error={validationResults.rundownName ?? undefined}
                                             invalid={validationResults.rundownName != null}
+                                            ref={refs.rundownName}
                                         />
                                     )
                                 }
@@ -184,6 +187,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                             }}
                                             error={validationResults.airTime ?? undefined}
                                             invalid={validationResults.airTime != null}
+                                            ref={refs.airTime}
                                         />
                                     )
                                 }

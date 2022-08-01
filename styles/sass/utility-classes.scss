@@ -223,7 +223,7 @@ ul.list-view.list-without-items {
 }
 
 @media print
-{    
+{
     .no-print
     {
         display: none!important;
@@ -287,4 +287,10 @@ ul.list-view.list-without-items {
 
 .modal.modal-react p {
     margin: 0;
+}
+
+.input-error {
+    font-size: 1.2rem;
+    font-style: italic;
+    color: $errorText;
 }
