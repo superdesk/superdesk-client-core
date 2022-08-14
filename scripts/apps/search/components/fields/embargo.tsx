@@ -22,7 +22,7 @@ class EmbargoComponent extends React.PureComponent<IPropsItemListInfo> {
             <span
                 key="embargo"
                 className="state-label state_embargo"
-                title={embargo != null ? (
+                title={embargoed != null ? (
                     gettext('Embargo until {{date}}', {date: longFormat(embargoed)})
                 ) : (
                     gettext('Embargo: {{text}}', {text: embargoedText})
