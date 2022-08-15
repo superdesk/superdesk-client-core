@@ -377,7 +377,12 @@ declare module 'superdesk-api' {
         lines_count?: number;
         version_creator: string;
         state: ITEM_STATE;
-        embargo?: any;
+        /** Internal embargoed datetime. */
+        embargo?: string;
+        /** Ingested embargoed datetime. */
+        embargoed?: string;
+        /** Ingested embargoed info. */
+        embargoed_text?: string;
         signal?: Array<{
             name?: string;
             qcode: string;
