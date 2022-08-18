@@ -66,17 +66,15 @@ export class DropZone extends React.PureComponent<IDropZoneComponentProps, IStat
                 }}
             >
                 {this.props.children ? this.props.children : (
-                    <div>
-                        <div><i className="big-icon--upload-alt icon" /></div>
-                        <span className="item-association__text-label">
+                    <>
+                        <i className="big-icon--upload-alt sd-file-upload__icon" />
+                        <p>
                             {gettext(this.props.label)}
-                        </span>
-                        <div>
-                            <button className="btn btn--hollow btn--primary">
-                                {gettext('Select Files')}
-                            </button>
-                        </div>
-                    </div>
+                        </p>
+                        <button className="btn btn--hollow btn--primary">
+                            {gettext('Select Files')}
+                        </button>
+                    </>
                 )}
                 {this.props.onFileSelect != null && (
                     <input

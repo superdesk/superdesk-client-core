@@ -212,18 +212,20 @@ export class LazyLoader<T> extends React.Component<IProps<T>, IState<T>> {
                         } else if (this.allItemsLoaded()) {
                             if (this.getLoadedItemsCount() === 0) {
                                 return (
-                                    // <div style={messageStyles}>
-                                    //     <div className='label label--large label--translucent label--no-transform'>{gettext('There are currently no items.')}</div>
-                                    // </div>
-                                    <div className="content-state__empty-container content-state__empty-container--absolute">
-                                    <div className="content-state__empty-info">
-                                        <figure className="content-state__image content-state__image--large">
-                                            <img src="./node_modules/superdesk-ui-framework/app/img/empty_states/empty-state--large-3.svg" alt="" />
-                                        </figure>
-                                        <h3 className="content-state__heading">{gettext('There are currently no items')}</h3>
-                                    </div>
-                                </div>
 
+                                //     <div className="content-state__empty-container content-state__empty-container--absolute">
+                                //     <div className="content-state__empty-info">
+                                //         <figure className="content-state__image content-state__image--large">
+                                //             <img src="./node_modules/superdesk-ui-framework/app/img/empty_states/empty-state--large-3.svg" alt="" />
+                                //         </figure>
+                                //         <h3 className="content-state__heading">{gettext('There are currently no items')}</h3>
+                                //     </div>
+                                // </div>
+                                <EmptyState
+                                    title={gettext('There are currently no items')}
+                                    size="large"
+                                    absolutePositioned
+                                    illustration='3' />
                                 );
                             } else {
                                 return (
