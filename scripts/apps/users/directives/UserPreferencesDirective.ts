@@ -69,6 +69,7 @@ export function UserPreferencesDirective(
 
                 scope.datelineSource = session.identity.dateline_source;
                 scope.datelinePreview = scope.preferences['dateline:located'].located;
+                scope.featurePreview = scope.preferences['feature:preview'];
             });
 
             scope.cancel = function() {

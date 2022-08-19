@@ -25,13 +25,11 @@
                     <h3 id="feature-preview" class="sd-heading sd-text-align--left sd-text--sans sd-heading--h3">Feature preview</h3>
                     <div class="sd-container sd-container--flex sd-container--gap-none sd-container--direction-column sd-radius--medium sd-panel-bg--000 sd-shadow--z2 sd-padding--3 sd-state--focus sd-margin-b--1">
                         <ul class="simple-list simple-list--comfortable simple-list--dotted simple-list--no-border-b simple-list--no-border-t sd-padding--2">
-                            <li class="simple-list__item simple-list__item--stacked"
-                                ng-repeat="(id, p) in preferences track by id"
-                                ng-if="showCategory(p) && (p.allowed || id === 'feature:preview' || id === 'singleline:view')">
+                            <li class="simple-list__item simple-list__item--stacked">
                                 <div sd-info-item>
-                                    <div class="form__row form__row--s-padding" ng-show="id === 'feature:preview' || id === 'singleline:view'">
-                                        <span sd-switch ng-hide="p.allowed" ng-model="p.enabled"></span>
-                                        <label class="form-label">{{ :: p.label | translate }}</label>
+                                    <div class="form__row form__row--s-padding">
+                                        <span sd-switch ng-hide="featurePreview.allowed" ng-model="featurePreview.enabled"></span>
+                                        <label class="form-label">{{ :: featurePreview.label | translate }}</label>
                                     </div>
                                 </div>
                             </li>
@@ -47,7 +45,7 @@
                         <ul class="simple-list simple-list--compact simple-list--dotted  sd-margin-t--3 sd-margin-b--0 sd-padding-b--0">
                             <li class="simple-list__item simple-list__item--stacked simple-list__item--justify-flex-start"
                                 ng-repeat="(id, p) in preferences track by id"
-                                ng-if="showCategory(p) && (p.allowed || id === 'feature:preview' || id === 'singleline:view')">
+                                ng-if="showCategory(p) && (p.allowed || id === 'singleline:view')">
                                 <h4 class="sd-heading sd-text-align--left sd-text--sans sd-heading--h4 sd-margin-b--0-5">{{ p.category }}</h4>
                                 <div sd-info-item>
                                     <span ng-show="p.allowed">
