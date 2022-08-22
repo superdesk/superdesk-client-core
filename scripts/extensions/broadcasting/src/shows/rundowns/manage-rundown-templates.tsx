@@ -124,7 +124,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                         }}
                     >
                         <BoxedListContentRow>
-                            <span>{template.name}</span>
+                            <span>{template.title}</span>
                         </BoxedListContentRow>
                     </BoxedListItem>
                 </div>
@@ -214,7 +214,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                 ? (
                                                     <span>{gettext('Select show')}</span>
                                                 ) : (
-                                                    <span>{item.name}</span>
+                                                    <span>{item.title}</span>
                                                 )
                                         )}
                                     />

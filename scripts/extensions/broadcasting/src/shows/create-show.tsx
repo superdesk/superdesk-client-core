@@ -28,7 +28,7 @@ interface IState {
 }
 
 const showValidators: CreateValidators<Partial<IShowBase>> = {
-    name: stringNotEmpty,
+    title: stringNotEmpty,
 };
 
 export class CreateShowModal extends React.PureComponent<IProps, IState> {
@@ -37,7 +37,7 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
 
         this.state = {
             show: {
-                name: '',
+                title: '',
                 description: '',
                 planned_duration: 3600,
             },
@@ -100,12 +100,12 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                                 <Input
                                     label={gettext('Show name')}
                                     type="text"
-                                    value={show.name}
-                                    error={validationResults.name ?? undefined}
-                                    invalid={validationResults.name != null}
+                                    value={show.title}
+                                    error={validationResults.title ?? undefined}
+                                    invalid={validationResults.title != null}
                                     required={true}
                                     onChange={(val) => {
-                                        this.updateShowProperty({name: val});
+                                        this.updateShowProperty({title: val});
                                     }}
                                 />
 

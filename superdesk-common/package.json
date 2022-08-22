@@ -12,6 +12,7 @@
   "scripts": {
     "build": "tsc",
     "test": "mocha",
+    "debug-tests": "mocha --inspect-brk",
     "prepublish": "rm -rf dist && npm run build && npm run test"
   },
   "devDependencies": {

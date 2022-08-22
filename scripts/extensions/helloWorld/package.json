@@ -5,7 +5,8 @@
     "compile": "tsc -p src",
     "compile-e2e": "echo 'No end-to-end tests defined'",
     "watch": "tsc -watch -p src",
-    "test": "mocha"
+    "test": "mocha",
+    "debug-tests": "mocha --inspect-brk"
   },
   "devDependencies": {
     "@types/mocha": "9.1.1",

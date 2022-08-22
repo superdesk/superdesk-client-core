@@ -13,7 +13,7 @@ const {httpRequestJsonLocal} = superdesk;
 interface INewRundownData {
     showId: IShow['_id'] | null;
     template: IRundownTemplate | null;
-    rundownName: string | null;
+    rundownTitle: string | null;
     airTime: string | null;
 }
 
@@ -25,14 +25,14 @@ interface IState {
     loading: boolean;
     showId: IShow['_id'] | null;
     template: IRundownTemplate | null;
-    rundownName: string | null;
+    rundownTitle: string | null;
     airTime: string | null;
 }
 
 const rundownValidators: CreateValidators<INewRundownData> = {
     showId: stringNotEmpty,
     template: fieldNotNull,
-    rundownName: stringNotEmpty,
+    rundownTitle: stringNotEmpty,
     airTime: stringNotEmpty,
 };
 
@@ -44,13 +44,13 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
             loading: false,
             showId: null,
             template: null,
-            rundownName: null,
+            rundownTitle: null,
             airTime: new Date().toISOString().slice(0, 10),
         };
     }
 
     render() {
-        const {showId, rundownName, template} = this.state;
+        const {showId, rundownTitle, template} = this.state;
 
         return (
             <WithValidation dynamic validators={rundownValidators}>
@@ -72,10 +72,12 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                     if (this.state.template != null && valid) {
                                         httpRequestJsonLocal<IRundownTemplate>({
                                             method: 'POST',
-                                            path: `/shows/${showId}/rundowns`,
+                                            path: '/rundowns',
                                             payload: {
+                                                show: showId,
                                                 template: this.state.template._id,
                                                 airtime_date: this.state.airTime,
+                                                title: this.state.rundownTitle,
                                             },
                                         }).then(() => {
                                             this.props.onClose();
@@ -108,14 +110,14 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                     sort={[['name', 'asc']]}
                                     value={showId}
                                     onChange={(val) => {
-                                        this.setState({showId: val, template: null, rundownName: null});
+                                        this.setState({showId: val, template: null, rundownTitle: null});
                                     }}
                                     itemTemplate={({item}: {item: IShow}) => (
                                         item == null
                                             ? (
                                                 <span>{gettext('Select show')}</span>
                                             ) : (
-                                                <span>{item.name}</span>
+                                                <span>{item.title}</span>
                                             )
                                     )}
                                     readOnly={this.state.loading}
@@ -138,7 +140,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                                     path: `/shows/${showId}/templates/${templateId}`,
                                                 }).then((_template) => {
                                                     this.setState({
-                                                        rundownName: _template.headline_template.prefix,
+                                                        rundownTitle: _template.title_template.prefix,
                                                         template: _template,
                                                         loading: false,
                                                     });
@@ -149,7 +151,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                                     ? (
                                                         <span>{gettext('Select template')}</span>
                                                     ) : (
-                                                        <span>{item.name}</span>
+                                                        <span>{item.title}</span>
                                                     )
                                             )}
                                             readOnly={this.state.loading}
@@ -160,18 +162,18 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                 }
 
                                 {
-                                    rundownName != null && (
+                                    rundownTitle != null && (
                                         <Input
                                             type="text"
                                             label={gettext('Rundown name')}
-                                            value={rundownName}
+                                            value={rundownTitle}
                                             onChange={(val) => {
-                                                this.setState({rundownName: val});
+                                                this.setState({rundownTitle: val});
                                             }}
                                             disabled={this.state.loading}
-                                            error={validationResults.rundownName ?? undefined}
-                                            invalid={validationResults.rundownName != null}
-                                            ref={refs.rundownName}
+                                            error={validationResults.rundownTitle ?? undefined}
+                                            invalid={validationResults.rundownTitle != null}
+                                            ref={refs.rundownTitle}
                                         />
                                     )
                                 }

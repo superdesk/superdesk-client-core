@@ -43,7 +43,7 @@ export class CreateShowAfterModal extends React.PureComponent<IProps> {
                             gettext(
                                 'The show {{name}} has been successfully created',
                                 {
-                                    name: () => <strong>{show.name}</strong>,
+                                    name: () => <strong>{show.title}</strong>,
                                 },
                             )
                         }

@@ -111,27 +111,42 @@ export function getQueryFieldsRecursive(q: ILogicalOperator | IComparison): Set<
     }
 }
 
+// The result should be passed as "source" query parameter when sending over network
 export function toElasticQuery(q: ISuperdeskQuery) {
-    const filtered = {filter: toElasticFilter(q.filter)};
-
-    if (q.fullTextSearch != null) {
-        filtered['query'] = {
-            query_string: {
-                query: q.fullTextSearch,
-                lenient: true,
-                default_operator: 'AND',
-            },
+    interface IQuery {
+        query?: {
+            filtered: {
+                filter: {};
+            };
         };
+        sort: ISuperdeskQuery['sort'];
+        size: number;
+        from: number;
     }
 
-    const query = {
-        query: {
-            filtered: filtered,
-        },
+    const query: IQuery = {
         sort: q.sort,
         size: q.max_results,
-        from: q.page * q.max_results,
+        from: (q.page - 1) * q.max_results,
     };
+
+    if (q.filter != null) {
+        const filtered = {filter: toElasticFilter(q.filter)};
+
+        if (q.fullTextSearch != null) {
+            filtered['query'] = {
+                query_string: {
+                    query: q.fullTextSearch,
+                    lenient: true,
+                    default_operator: 'AND',
+                },
+            };
+        }
+
+        query['query'] = {
+            filtered: filtered,
+        };
+    }
 
     return query;
 }

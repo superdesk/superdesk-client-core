@@ -360,6 +360,8 @@ export function stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T
         _etag: 1,
         _links: 1,
         _status: 1,
+        _current_version: 1,
+        _latest_version: 1,
     };
 
     const keysArray = Object.keys(keysObject);

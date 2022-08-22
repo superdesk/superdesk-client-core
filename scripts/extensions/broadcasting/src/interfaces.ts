@@ -1,7 +1,7 @@
 import {IBaseRestApiResponse, IUser} from 'superdesk-api';
 
 export interface IShowBase {
-    name: string;
+    title: string;
     description: string;
     planned_duration: number | null;
 }
@@ -10,11 +10,11 @@ export type IShow = IShowBase & IBaseRestApiResponse;
 
 export interface IRundownTemplateBase {
     show: IShow['_id'];
-    name: string;
+    title: string;
     planned_duration: number; // seconds
     airtime_time: string; // ISO 8601 time
     airtime_date: string; // ISO 8601 date without timezone
-    headline_template: {
+    title_template: {
         prefix: string;
         separator: string;
         date_format: string;
@@ -59,6 +59,15 @@ export interface IRundownItemTemplateInitial extends IBaseRestApiResponse {
     data: Partial<IRundownItemBase>;
 }
 
-type IRundownBase = IRundownTemplateBase;
+interface IRundownItemReference {
+    _id: string;
+}
+
+interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 'rundown_items'> {
+    readonly planned_duration: number;
+    readonly duration: number;
+    title: string;
+    items: Array<IRundownItemReference>;
+}
 
 export type IRundown = IRundownBase & IBaseRestApiResponse;

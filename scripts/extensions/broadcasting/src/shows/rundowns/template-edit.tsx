@@ -82,7 +82,7 @@ interface IState {
 }
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
-    name: stringNotEmpty,
+    title: stringNotEmpty,
     airtime_time: stringNotEmpty,
 };
 
@@ -171,7 +171,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
     render() {
         const {templateFields, readOnly} = this.props;
 
-        const headline_template = this.props.templateFields.headline_template ?? {
+        const headline_template = this.props.templateFields.title_template ?? {
             prefix: '',
             separator: '//',
             date_format: dateFormatOptions[0],
@@ -290,16 +290,16 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                         <Input
                                             label={gettext('Template name')}
                                             type="text"
-                                            value={templateFields.name ?? ''}
+                                            value={templateFields.title ?? ''}
                                             onChange={(val: string) => {
                                                 this.handleChange({
                                                     ...templateFields,
-                                                    name: val,
+                                                    title: val,
                                                 });
                                             }}
                                             disabled={readOnly}
-                                            error={validationErrors.name ?? undefined}
-                                            invalid={validationErrors.name != null}
+                                            error={validationErrors.title ?? undefined}
+                                            invalid={validationErrors.title != null}
                                         />
 
                                         <div>
@@ -318,7 +318,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         onChange={(val: string) => {
                                                             this.handleChange({
                                                                 ...templateFields,
-                                                                headline_template: {
+                                                                title_template: {
                                                                     ...headline_template,
                                                                     prefix: val,
                                                                 },
@@ -337,7 +337,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         onChange={(val) => {
                                                             this.handleChange({
                                                                 ...templateFields,
-                                                                headline_template: {
+                                                                title_template: {
                                                                     ...headline_template,
                                                                     separator: val,
                                                                 },
@@ -355,7 +355,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         onChange={(val) => {
                                                             this.handleChange({
                                                                 ...templateFields,
-                                                                headline_template: {
+                                                                title_template: {
                                                                     ...headline_template,
                                                                     date_format: val,
                                                                 },

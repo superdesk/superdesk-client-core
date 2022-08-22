@@ -76,6 +76,7 @@ const itemTypesConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     multiple: false,
+    required: true,
 };
 
 const itemTypeField: IAuthoringFieldV2 = {
@@ -156,6 +157,7 @@ const showPartConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: 'show_part',
     multiple: false,
+    required: true,
     filter: (item) => item['show_reference'] == null || item['show_reference'] === currentShowCode,
 };
 

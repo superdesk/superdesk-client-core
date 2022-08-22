@@ -2,9 +2,9 @@ import React from 'react';
 import {Map} from 'immutable';
 import {debounce, omit} from 'lodash';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
-import {IBaseRestApiResponse, IPropsVirtualListFromQuery, IRestApiResponse} from 'superdesk-api';
+import {IBaseRestApiResponse, IPropsVirtualListFromQuery, IRestApiResponse, ISuperdeskQuery} from 'superdesk-api';
 import {getPaginationInfo} from 'core/helpers/pagination';
-import {toPyEveQuery} from 'core/query-formatting';
+import {prepareSuperdeskQuery} from 'core/helpers/universal-query';
 import {IExposedFromVirtualList, VirtualList} from './virtual-list';
 import {SmoothLoaderForKey} from 'apps/search/components/SmoothLoaderForKey';
 import {nameof} from 'core/helpers/typescript-helpers';
@@ -48,15 +48,17 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse>
     }
 
     fetchData(pageToFetch: number, pageSize: number): Promise<IRestApiResponse<T>> {
-        return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<T>>({
-            method: 'GET',
-            path: this.props.query.endpoint,
-            urlParams: {
-                max_results: pageSize,
-                page: pageToFetch,
-                ...toPyEveQuery(this.props.query.filter, this.props.query.sort),
-            },
-        });
+        const query: ISuperdeskQuery = {
+            filter: this.props.query.filter,
+            fullTextSearch: this.props.query.fullTextSearch,
+            sort: this.props.query.sort,
+            page: pageToFetch,
+            max_results: pageSize,
+        };
+
+        return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<T>>(
+            prepareSuperdeskQuery(this.props.query.endpoint, query),
+        );
     }
 
     loadItems(fromIndex: number, toIndex: number): Promise<Map<number, T>> {

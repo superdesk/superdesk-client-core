@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {Button, Label, IconLabel} from 'superdesk-ui-framework/react';
-import {IRundownItemBase} from '../../interfaces';
+import {Button, Label} from 'superdesk-ui-framework/react';
+import {IRundownItem, IRundownItemBase} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
 import {Map} from 'immutable';
@@ -8,21 +8,23 @@ import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, SHOW_PART_VOCABULARY_ID} from '../../c
 import {IVocabularyItem} from 'superdesk-api';
 import {arrayMove} from '@superdesk/common';
 import {ICreate, IEdit} from './template-edit';
+import {DurationLabel} from './components/duration-label';
+import {PlannedDurationLabel} from './components/planned-duration-label';
 const {vocabulary} = superdesk.entities;
 
 const {gettext} = superdesk.localization;
 
-interface IProps {
-    items: Array<IRundownItemBase>;
-    onChange(items: Array<IRundownItemBase>): void;
+interface IProps<T> {
+    items: Array<T>;
+    onChange(items: Array<T>): void;
     createOrEdit: ICreate | IEdit | null;
     initiateCreation(): void;
-    initiateEditing(item: IRundownItemBase): void;
+    initiateEditing(item: T): void;
     readOnly: boolean;
 }
 
-export class ManageRundownItems extends React.PureComponent<IProps> {
-    constructor(props: IProps) {
+export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> extends React.PureComponent<IProps<T>> {
+    constructor(props: IProps<T>) {
         super(props);
 
         this.reorder = this.reorder.bind(this);
@@ -100,34 +102,15 @@ export class ManageRundownItems extends React.PureComponent<IProps> {
 
                                 {
                                     item.planned_duration != null && (
-                                        <IconLabel
-                                            text={item.planned_duration.toString()}
-                                            innerLabel={gettext('Planned duration')}
-                                            icon="time"
-                                            style="translucent"
-                                            size="small"
-                                        />
+                                        <PlannedDurationLabel planned_duration={item.planned_duration} />
                                     )
                                 }
 
                                 {
                                     item.duration != null && (
-                                        <IconLabel
-                                            text={item.duration.toString()}
-                                            innerLabel={gettext('Duration')}
-                                            style="translucent"
-                                            size="small"
-                                            type={(() => {
-                                                if (item.planned_duration == null) {
-                                                    return 'success';
-                                                } else if (item.duration > item.planned_duration) {
-                                                    return 'alert';
-                                                } else if (item.duration < item.planned_duration) {
-                                                    return 'warning';
-                                                } else {
-                                                    return 'success';
-                                                }
-                                            })()}
+                                        <DurationLabel
+                                            duration={item.duration}
+                                            planned_duration={item.planned_duration}
                                         />
                                     )
                                 }

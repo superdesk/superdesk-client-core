@@ -1343,12 +1343,22 @@ declare module 'superdesk-api' {
     export type IOrOperator = {$or: Array<IComparison | ILogicalOperator>};
     export type ILogicalOperator = IAndOperator | IOrOperator;
 
+    /**
+     * Universal query format that works with both - Elasticsearch and pyeve endpoints
+     */
     export interface ISuperdeskQuery {
         filter: ILogicalOperator;
         fullTextSearch?: string;
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
         page: number;
         max_results: number;
+    }
+
+    export interface ISuperdeskQueryWithoutPaging {
+        endpoint: string,
+        filter: ILogicalOperator;
+        fullTextSearch?: string;
+        sort: Array<{[field: string]: 'asc' | 'desc'}>;
     }
 
     export interface IPropsVirtualListFromQuery<T extends IBaseRestApiResponse> {
@@ -1411,6 +1421,8 @@ declare module 'superdesk-api' {
         };
         _id: string;
         _status?: string;
+        _current_version?: number;
+        _latest_version?: number;
     }
 
     export interface IRestApiLink {

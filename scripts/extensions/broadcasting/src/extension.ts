@@ -1,5 +1,5 @@
 import {IExtension, IExtensionActivationResult} from 'superdesk-api';
-import {Page} from './page';
+import {RundownsPage} from './page';
 
 import {superdesk} from './superdesk';
 
@@ -15,7 +15,7 @@ const extension: IExtension = {
                         {
                             title: gettext('Broadcasting'),
                             url: '/broadcasting',
-                            component: Page,
+                            component: RundownsPage,
 
                             showTopMenu: false,
                             showSideMenu: true,

@@ -132,6 +132,10 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
 
         let diff: any = {};
 
+        function isNonEmptyStringArray(x: any): x is Array<string> {
+            return x instanceof Array && x.every((val) => typeof val === 'string') && x.length > 0;
+        }
+
         each(this.state.currentContact, (value: IContact[keyof IContact], key: keyof IContact) => {
             let sanitizedValue = cloneDeep(value);
 
@@ -141,12 +145,8 @@ export class ContactFormContainer extends React.PureComponent<IProps, IState> {
                 if (origContact[key] === undefined && sanitizedValue.length === 0) {
                     return;
                 }
-            } else if (
-                sanitizedValue instanceof Array &&
-                sanitizedValue.length > 0 &&
-                sanitizedValue.every((val) => typeof val === 'string')
-            ) {
-                sanitizedValue = (sanitizedValue as Array<string>)
+            } else if (isNonEmptyStringArray(sanitizedValue)) {
+                sanitizedValue = sanitizedValue
                     .map((arrayValue: string) => arrayValue.trim())
                     .filter((arrayValue: string) => arrayValue.length > 0);
 

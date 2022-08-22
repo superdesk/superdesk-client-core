@@ -11,7 +11,7 @@ interface IFormData {
 
 function notEmptyValidator(val: string) {
     if (val.length < 1) {
-        return 'value can not be empty'
+        return 'value can not be empty';
     } else {
         return null;
     }

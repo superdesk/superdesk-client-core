@@ -1,11 +1,18 @@
 import React from 'react';
 import {groupBy, omit} from 'lodash';
-import {IBaseRestApiResponse, ILiveResourcesProps, IResourceChange, IRestApiResponse} from 'superdesk-api';
+import {
+    IBaseRestApiResponse,
+    ILiveResourcesProps,
+    IResourceChange,
+    IRestApiResponse,
+    ISuperdeskQuery,
+} from 'superdesk-api';
 import {fetchChangedResources} from './helpers/CrudManager';
 import {throttleAndCombineArray} from './itemList/throttleAndCombine';
 import {addWebsocketEventListener} from './notification/notification';
 import {SuperdeskReactComponent} from './SuperdeskReactComponent';
 import {SmoothLoaderForKey} from 'apps/search/components/SmoothLoaderForKey';
+import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 interface IState {
     data?: {[resource: string]: IRestApiResponse<unknown>};
@@ -92,12 +99,20 @@ class WithLiveResourcesComponent
 
         return Promise.all(
             resources.map(({resource, ids}) => {
-                return this.asyncHelpers.httpRequestJsonLocal({
-                    method: 'GET',
-                    path: ids != null
-                        ? `/${resource}?where=${JSON.stringify({_id: {$in: ids}})}`
-                        : `/${resource}`,
-                }).then((res) => toPair(resource, res));
+                const query: ISuperdeskQuery = {
+                    filter: {
+                        $and: [
+                            {_id: {$in: ids}},
+                        ],
+                    },
+                    sort: [{_updated: 'asc'}],
+                    page: 1,
+                    max_results: 200,
+                };
+
+                return this.asyncHelpers.httpRequestJsonLocal(
+                    prepareSuperdeskQuery(`/${resource}`, query),
+                ).then((res) => toPair(resource, res));
             }),
         ).then((pairs) => {
             var data = {};
