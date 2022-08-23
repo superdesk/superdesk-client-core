@@ -1,4 +1,5 @@
 import React from 'react';
+import {DurationInput} from 'superdesk-ui-framework/react';
 import {
     IDurationValueOperational,
     IDurationFieldConfig,
@@ -14,15 +15,15 @@ export class Editor extends React.PureComponent<IProps> {
 
         return (
             <Container>
-                <input
-                    type="number"
-                    value={this.props.value ?? 0}
-                    onChange={(event) => { // TODO: use duration input
-                        const val = event.target.value;
-
-                        this.props.onChange(val === '' ? null : parseInt(val, 10));
+                <DurationInput
+                    label=""
+                    inlineLabel
+                    labelHidden
+                    seconds={this.props.value ?? 0}
+                    onChange={(val) => {
+                        this.props.onChange(val);
                     }}
-                    required
+                    disabled={this.props.readOnly}
                 />
             </Container>
         );

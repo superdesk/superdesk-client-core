@@ -8,7 +8,7 @@ export class Difference extends React.PureComponent<IProps> {
     render() {
         const {value1, value2} = this.props;
 
-        // TODO: format to user friendly format before showing the diff
+        // TODO: format to user friendly format before showing the diff; duration
 
         return (
             <DifferenceGeneric

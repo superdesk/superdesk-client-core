@@ -1,11 +1,10 @@
 import * as React from 'react';
-import {Input, Button, Spinner} from 'superdesk-ui-framework/react';
+import {Input, Button, Spinner, DurationInput} from 'superdesk-ui-framework/react';
 import {CreateValidators, showModal, WithValidation} from '@superdesk/common';
 import {CreateShowAfterModal} from './create-show-after-modal';
 import {stringNotEmpty} from '../form-validation';
 import {superdesk} from '../superdesk';
 import {IShow, IShowBase} from '../interfaces';
-import {NumberInputTemp} from '../number-input-temp';
 
 const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
@@ -121,13 +120,14 @@ export class CreateShowModal extends React.PureComponent<IProps, IState> {
                                     }}
                                 />
 
-                                <NumberInputTemp
+                                <DurationInput
                                     label={gettext('Planned duration')}
-                                    value={show.planned_duration}
-                                    error={validationResults.planned_duration ?? undefined}
+                                    seconds={show.planned_duration ?? 0}
                                     onChange={(val) => {
                                         this.updateShowProperty({planned_duration: val});
                                     }}
+                                    error={validationResults.planned_duration ?? undefined}
+                                    invalid={validationResults.planned_duration != null}
                                 />
                             </Spacer>
                         </ModalBody>

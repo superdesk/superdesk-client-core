@@ -9,7 +9,7 @@ export class Preview extends React.PureComponent<IProps> {
             return null;
         }
 
-        // TODO: format before displaying
+        // TODO: format before displaying; duration
 
         return (
             <div>{this.props.value}</div>

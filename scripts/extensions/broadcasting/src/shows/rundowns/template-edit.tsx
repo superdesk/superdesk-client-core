@@ -12,10 +12,10 @@ import {
     IconButton,
     SubNav,
     ButtonGroup,
+    DurationInput,
 } from 'superdesk-ui-framework/react';
 import {CreateValidators, WithValidation} from '@superdesk/common';
 import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
-import {NumberInputTemp} from '../../number-input-temp';
 import {superdesk} from '../../superdesk';
 import {stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
@@ -230,20 +230,19 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                     <React.Fragment>
                                         <Form.FormGroup inlineLabel={false}>
                                             <Form.FormItem>
-                                                <Spacer v gap="4">
-                                                    <InputLabel text={gettext('Planned duration')} />
-
-                                                    <NumberInputTemp
-                                                        value={templateFields.planned_duration ?? null}
-                                                        onChange={(val) => {
-                                                            this.handleChange({
-                                                                ...templateFields,
-                                                                planned_duration: val == null ? 0 : val,
-                                                            });
-                                                        }}
-                                                        readOnly={readOnly}
-                                                    />
-                                                </Spacer>
+                                                <DurationInput
+                                                    label={gettext('Planned duration')}
+                                                    seconds={templateFields.planned_duration ?? 0}
+                                                    onChange={(val) => {
+                                                        this.handleChange({
+                                                            ...templateFields,
+                                                            planned_duration: val,
+                                                        });
+                                                    }}
+                                                    disabled={readOnly}
+                                                    error={validationErrors.planned_duration ?? undefined}
+                                                    invalid={validationErrors.planned_duration != null}
+                                                />
                                             </Form.FormItem>
 
                                             <Form.FormItem>
