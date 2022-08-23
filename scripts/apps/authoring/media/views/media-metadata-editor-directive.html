@@ -19,6 +19,12 @@
             spellcheck="true"
             language="item.language"
         />
+        <sd-character-count
+            ng-if="field.maxlength"
+            class="sd-line-input__char-count"
+            data-item="item[field.field]"
+            data-limit="field.maxlength"
+        ></sd-character-count>
     </div>
 
     <sd-line-input

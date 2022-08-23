@@ -131,6 +131,8 @@ export const CORE_PROJECTED_FIELDS = {
         '_type',
         'state',
         'embargo',
+        'embargoed',
+        'embargoed_text',
         'publish_schedule',
         'broadcast',
         'flags',
