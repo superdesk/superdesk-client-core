@@ -1,21 +1,13 @@
-/**
- * FIXME: THIS IS A PLACEHOLDER COMPONENT FOR TESTING ONLY
- *
- * It should be replaced by a proper implementation before merging to develop
- * https://github.com/superdesk/superdesk-ui-framework/issues/597
- */
-
 import {assertNever} from 'core/helpers/typescript-helpers';
 import React from 'react';
 import {ITreeNode, ITreeWithLookup} from 'superdesk-api';
-import {MultiSelectTemplate} from './multi-select-tree-with-template-tree-only';
-import {showPopup} from './popupNew';
+import {TreeSelect} from 'superdesk-ui-framework/react';
 
 interface IPropsBase<T> {
     values: Array<T>;
     onChange(values: Array<T>): void;
     optionTemplate?: React.ComponentType<{item: T}>;
-    valueTemplate?: React.ComponentType<{item: T}>; // not required, it should fallback `optionTemplate` if not provided
+    valueTemplate?: React.ComponentType<{item: T}>;
     getId(item: T): string;
     getLabel(item: T): string;
     canSelectBranchWithChildren?(branch: ITreeNode<T>): boolean;
@@ -46,97 +38,59 @@ type IProps<T> = IPropsSync<T> | IPropsAsync<T>;
 export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T>> {
     render() {
         const {props} = this;
-        const {onChange, getId, getLabel, canSelectBranchWithChildren} = props;
+        const {getId, getLabel} = props;
         const optionTemplateDefault: React.ComponentType<{item: T}> = ({item}) => (<span>{getLabel(item)}</span>);
         const OptionTemplate = this.props.optionTemplate ?? optionTemplateDefault;
         const ValueTemplate = this.props.valueTemplate ?? OptionTemplate;
         const values = Array.isArray(this.props.values) ? this.props.values : [];
 
-        const input = (() => {
-            if (props.kind === 'synchronous') {
-                return (
-                    <button
-                        onClick={(event) => {
-                            showPopup(
-                                event.target as HTMLElement,
-                                'bottom-start',
-                                ({closePopup}) => (
-                                    <MultiSelectTemplate
-                                        options={props.getOptions().nodes}
-                                        values={values}
-                                        onChange={(val) => {
-                                            this.props.onChange(val);
-                                            closePopup();
-                                        }}
-                                        optionTemplate={OptionTemplate}
-                                        canSelectBranchWithChildren={canSelectBranchWithChildren}
-                                    />
-                                ),
-                                1060,
-                            );
-                        }}
-                    >
-                        +
-                    </button>
-                );
-            } else if (props.kind === 'asynchronous') {
-                return (
-                    <button
-                        onClick={(event) => {
-                            const {target} = event;
-
-                            props.searchOptions('paris', (result) => {
-                                showPopup(
-                                    target as HTMLElement,
-                                    'bottom-start',
-                                    ({closePopup}) => (
-                                        <div>
-                                            <MultiSelectTemplate
-                                                options={result.nodes}
-                                                values={values}
-                                                onChange={(val) => {
-                                                    this.props.onChange(val);
-                                                    closePopup();
-                                                }}
-                                                optionTemplate={OptionTemplate}
-                                                canSelectBranchWithChildren={canSelectBranchWithChildren}
-                                            />
-                                        </div>
-                                    ),
-                                    999,
-                                );
-                            });
-                        }}
-                    >
-                        +
-                    </button>
-                );
-            } else {
-                assertNever(props);
-            }
-        })();
-
-        return (
-            <div>
-                {input}
-
-                {
-                    values.map((item, i) => (
-                        <span key={i}>
-                            <ValueTemplate item={item} />
-                            <button
-                                onClick={() => {
-                                    onChange(
-                                        values.filter((_value) => getId(_value) !== getId(item)),
-                                    );
-                                }}
-                            >
-                                x
-                            </button>
-                        </span>
-                    ))
-                }
-            </div>
-        );
+        if (props.kind === 'synchronous') {
+            return (
+                <TreeSelect
+                    kind="synchronous"
+                    label=""
+                    inlineLabel
+                    labelHidden
+                    getOptions={() => props.getOptions().nodes}
+                    value={values}
+                    onChange={(val) => {
+                        this.props.onChange(val);
+                    }}
+                    getLabel={getLabel}
+                    getId={getId}
+                    selectBranchWithChildren={false}
+                    optionTemplate={(item) => <OptionTemplate item={item} />}
+                    valueTemplate={(item) => <ValueTemplate item={item} />}
+                    allowMultiple={this.props.allowMultiple}
+                    singleLevelSearch
+                />
+            );
+        } else if (props.kind === 'asynchronous') {
+            return (
+                <TreeSelect
+                    kind="asynchronous"
+                    label=""
+                    inlineLabel
+                    labelHidden
+                    searchOptions={(term, callback) => {
+                        props.searchOptions(term, (res) => {
+                            callback(res.nodes);
+                        });
+                    }}
+                    value={values}
+                    onChange={(val) => {
+                        this.props.onChange(val);
+                    }}
+                    getLabel={getLabel}
+                    getId={getId}
+                    selectBranchWithChildren={false}
+                    optionTemplate={(item) => <OptionTemplate item={item} />}
+                    valueTemplate={(item) => <ValueTemplate item={item} />}
+                    allowMultiple={this.props.allowMultiple}
+                />
+            );
+        } else {
+            return assertNever(props);
+        }
     }
 }
