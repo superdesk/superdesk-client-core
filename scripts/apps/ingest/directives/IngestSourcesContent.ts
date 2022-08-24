@@ -579,7 +579,8 @@ export function IngestSourcesContent(ingestSources, api, $location,
                     const contentTypes = provider.content_types;
                     const length = provider.content_types.includes('preformatted') ? 2 : 1;
 
-                    if (contentTypes.length === length && contentTypes.includes('event')) {
+                    if (contentTypes.length === length && (
+                        contentTypes.includes('event') || contentTypes.includes('planning'))) {
                         const searchParams = {
                             page: 1,
                             noCalendarAssigned: false,
@@ -594,8 +595,16 @@ export function IngestSourcesContent(ingestSources, api, $location,
                             fulltext: '',
                         };
 
+                        var filter_value = '';
+
+                        if (contentTypes.includes('event')) {
+                            filter_value = 'EVENT';
+                        }
+                        if (contentTypes.includes('planning')) {
+                            filter_value = 'PLANNING';
+                        }
                         $location.path('/planning').search({
-                            filter: 'EVENTS',
+                            filter: filter_value,
                             isNewSearch: true,
                             searchParams: angular.toJson(searchParams),
                             calendar: 'ALL_CALENDARS',
