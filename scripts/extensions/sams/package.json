@@ -7,7 +7,7 @@
     "watch": "tsc -watch -p src"
   },
   "dependencies": {
-    "@superdesk/common": "0.0.6",
+    "@superdesk/common": "^0.0.8",
     "reselect": "~4.0.0"
   },
   "devDependencies": {

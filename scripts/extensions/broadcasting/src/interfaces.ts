@@ -1,5 +1,17 @@
 import {IBaseRestApiResponse, IUser} from 'superdesk-api';
 
+/**
+ * Recurrence Rule
+ * https://icalendar.org/iCalendar-RFC-5545/3-8-5-3-recurrence-rule.html
+ */
+export interface IRRule {
+    freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
+    interval: number;
+    byMonth?: Array<number>; // [1, 12]
+    byWeek?: Array<number>; // [-31, 31]
+    byDay?: Array<number>; // [0, 6] ; 0 is Monday
+}
+
 export interface IShowBase {
     title: string;
     description: string;
@@ -22,6 +34,7 @@ export interface IRundownTemplateBase {
     created_by: IUser['_id'];
     updated_by: IUser['_id']; // TODO: rename to last_updated_by
     rundown_items: Array<IRundownItemBase>;
+    repeat?: IRRule | null;
 }
 
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;

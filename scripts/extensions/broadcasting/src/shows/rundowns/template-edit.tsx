@@ -12,10 +12,10 @@ import {
     IconButton,
     SubNav,
     ButtonGroup,
-    DurationInput,
+    Checkbox,
 } from 'superdesk-ui-framework/react';
 import {CreateValidators, WithValidation} from '@superdesk/common';
-import {IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
+import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {superdesk} from '../../superdesk';
 import {stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
@@ -27,6 +27,7 @@ import {prepareForCreation, prepareForEditing} from './prepare-create-edit';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
+import {FrequencySimple} from './components/FrequencySimple';
 
 const {getAuthoringComponent} = superdesk.components;
 
@@ -229,7 +230,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                 authoringHeader={(
                                     <React.Fragment>
                                         <Form.FormGroup inlineLabel={false}>
-                                            <Form.FormItem>
+                                            {/* <Form.FormItem> // TODO: uncomment when crashing is fixed
                                                 <DurationInput
                                                     label={gettext('Planned duration')}
                                                     seconds={templateFields.planned_duration ?? 0}
@@ -243,7 +244,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                     error={validationErrors.planned_duration ?? undefined}
                                                     invalid={validationErrors.planned_duration != null}
                                                 />
-                                            </Form.FormItem>
+                                            </Form.FormItem> */}
 
                                             <Form.FormItem>
                                                 <TimePicker
@@ -276,9 +277,52 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 />
                                             </Form.FormItem>
                                         </Form.FormGroup>
-                                    </React.Fragment>
 
-                                    // TODO: add schedule when frequency input is ready
+                                        <Spacer h gap="16" justifyContent="start" alignItems="center" noWrap>
+                                            <Checkbox
+                                                checked={templateFields.repeat != null}
+                                                label={{text: gettext('Repeat')}}
+                                                onChange={(val) => {
+                                                    if (val === true) {
+                                                        const initialValue: IRRule = {
+                                                            freq: 'WEEKLY',
+                                                            interval: 1,
+                                                            byDay: [0, 1, 2, 3, 4], // weekdays
+                                                        };
+
+                                                        this.handleChange({
+                                                            ...templateFields,
+                                                            repeat: initialValue,
+                                                        });
+                                                    } else {
+                                                        this.handleChange({
+                                                            ...templateFields,
+                                                            repeat: null,
+                                                        });
+                                                    }
+                                                }}
+                                                disabled={this.props.readOnly}
+                                            />
+
+                                            {
+                                                templateFields.repeat != null && (
+                                                    <div>
+                                                        <FrequencySimple
+                                                            value={templateFields.repeat}
+                                                            onChange={(val) => {
+                                                                this.handleChange({
+                                                                    ...templateFields,
+                                                                    repeat: val,
+                                                                });
+                                                            }}
+                                                            firstDayOfWeek={superdesk.instance.config.startingDay}
+                                                            readOnly={this.props.readOnly}
+                                                        />
+                                                    </div>
+                                                )
+                                            }
+                                        </Spacer>
+                                    </React.Fragment>
                                 )}
                             >
                                 <div>

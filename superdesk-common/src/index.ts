@@ -3,4 +3,6 @@ export * from './time/get-time-string-iso';
 export * from './data-structures/array-move';
 export * from './ui/show-modal';
 export * from './utils/index';
+export * from './utils/array-spin';
 export * from './input/with-validation';
+export * from './localization/get-weekday-names';
