@@ -577,7 +577,8 @@ export function IngestSourcesContent(ingestSources, api, $location,
 
                 $scope.gotoIngest = function(provider) {
                     const contentTypes = provider.content_types;
-                    const length = provider.content_types.includes('preformatted') ? 2 : 1;
+                    const length = provider.content_types.includes('preformatted') || (
+                        contentTypes.includes('planning') && contentTypes.includes('event')) ? 2 : 1;
 
                     if (contentTypes.length === length && (
                         contentTypes.includes('event') || contentTypes.includes('planning'))) {
@@ -594,14 +595,16 @@ export function IngestSourcesContent(ingestSources, api, $location,
                             spikeState: 'draft',
                             fulltext: '',
                         };
-
                         var filter_value = '';
 
                         if (contentTypes.includes('event')) {
-                            filter_value = 'EVENT';
+                            filter_value = 'EVENTS';
                         }
                         if (contentTypes.includes('planning')) {
                             filter_value = 'PLANNING';
+                        }
+                        if (contentTypes.includes('planning') && contentTypes.includes('event')) {
+                            filter_value = 'COMBINED';
                         }
                         $location.path('/planning').search({
                             filter: filter_value,
