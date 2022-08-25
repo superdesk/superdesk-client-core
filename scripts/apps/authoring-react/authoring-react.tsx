@@ -239,6 +239,7 @@ function waitForCssAnimation(): Promise<void> {
 
 export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+    private _mounted: boolean;
 
     constructor(props: IPropsAuthoring<T>) {
         super(props);
@@ -442,6 +443,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     }
 
     componentDidMount() {
+        this._mounted = true;
+
         const {authoringStorage} = this.props;
 
         Promise.all(
@@ -677,6 +680,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     }
 
     componentWillUnmount() {
+        this._mounted = false;
+
         const state = this.state;
 
         if (state.initialized) {
@@ -872,10 +877,12 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
              * The promise will also resolve
              * if user decides to cancel closing.
              */
-            this.setState({
-                ...state,
-                loading: false,
-            });
+            if (this._mounted) {
+                this.setState({
+                    ...state,
+                    loading: false,
+                });
+            }
         });
     }
 
