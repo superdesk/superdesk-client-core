@@ -8,6 +8,7 @@ import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 interface IProps {
     rundownId: string;
     readOnly: boolean;
+    onClose(): void;
 }
 
 interface IState {
@@ -23,7 +24,7 @@ import {ICreate, IEdit} from './template-edit';
 import {prepareForCreation, prepareForEditing} from './prepare-create-edit';
 import {CreateValidators, WithValidation} from '@superdesk/common';
 import {stringNotEmpty} from '../../form-validation';
-import {noop} from 'lodash';
+import {isEqual, noop} from 'lodash';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
@@ -52,6 +53,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         this.initiateCreation = this.initiateCreation.bind(this);
         this.initiateEditing = this.initiateEditing.bind(this);
         this.save = this.save.bind(this);
+        this.close = this.close.bind(this);
     }
 
     setRundownField(data: Partial<IRundown>) {
@@ -87,6 +89,18 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                 rundownWithChanges: rundown,
             });
         });
+    }
+
+    close() {
+        if (!isEqual(this.state.rundown, this.state.rundownWithChanges)) {
+            superdesk.ui.confirm(gettext('Discard unsaved changes?')).then((confirmed) => {
+                if (confirmed) {
+                    this.props.onClose();
+                }
+            });
+        } else {
+            this.props.onClose();
+        }
     }
 
     initiateCreation() {
@@ -202,7 +216,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 <React.Fragment>
                                                     <Button
                                                         text={gettext('Cancel')}
-                                                        onClick={noop} // TODO: implement
+                                                        onClick={this.close}
                                                     />
 
                                                     <Button

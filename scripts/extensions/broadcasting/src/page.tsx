@@ -435,7 +435,13 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                     <Layout.AuthoringContainer open={this.state.rundownIdInEditMode != null}>
                         {
                             this.state.rundownIdInEditMode != null && (
-                                <RundownViewEdit rundownId={this.state.rundownIdInEditMode} readOnly={false} />
+                                <RundownViewEdit
+                                    rundownId={this.state.rundownIdInEditMode}
+                                    onClose={() => {
+                                        this.setState({rundownIdInEditMode: null});
+                                    }}
+                                    readOnly={false}
+                                />
                             )
                         }
                     </Layout.AuthoringContainer>
