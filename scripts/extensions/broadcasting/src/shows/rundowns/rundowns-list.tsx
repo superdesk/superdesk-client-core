@@ -49,8 +49,15 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                         <React.Fragment>
                                                             <span className="sd-list-item__slugline">
                                                                 {item.airtime_time}
+                                                                &nbsp;
                                                                 -
-                                                                {addSeconds(item.airtime_time, item.duration)}
+                                                                &nbsp;
+                                                                {
+                                                                    addSeconds(
+                                                                        item.airtime_time,
+                                                                        (item.duration ?? item.planned_duration),
+                                                                    )
+                                                                }
                                                             </span>
 
                                                             {
