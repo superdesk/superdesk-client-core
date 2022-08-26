@@ -23,9 +23,11 @@ const {assertNever, stripBaseRestApiFields} = superdesk.helpers;
 const {
     SpacerBlock,
     Spacer,
-    VirtualListFromQuery,
+    getVirtualListFromQuery,
     SelectFromEndpoint,
 } = superdesk.components;
+
+const VirtualListFromQuery = getVirtualListFromQuery<IRundownTemplate, never>();
 
 interface IProps {
     dialogTitle: string;
@@ -48,7 +50,7 @@ interface IState {
 const showListItemStyle: React.CSSProperties = {margin: '4px 16px'};
 
 export class ManageRundownTemplates extends React.PureComponent<IProps, IState> {
-    private itemTemplate: React.ComponentType<{item: IRundownTemplate}>;
+    private itemTemplate: React.ComponentType<{entity: IRundownTemplate; joined: never}>;
 
     constructor(props: IProps) {
         super(props);
@@ -59,7 +61,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
         };
 
         this.itemTemplate = (templateProps) => {
-            const template = templateProps.item;
+            const template = templateProps.entity;
 
             return (
                 <div style={showListItemStyle}>
@@ -209,12 +211,12 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                         onChange={(val) => {
                                             this.setState({showId: val});
                                         }}
-                                        itemTemplate={({item}: {item: IShow}) => (
-                                            item == null
+                                        itemTemplate={({entity: show}: {entity: IShow}) => (
+                                            show == null
                                                 ? (
                                                     <span>{gettext('Select show')}</span>
                                                 ) : (
-                                                    <span>{item.title}</span>
+                                                    <span>{show.title}</span>
                                                 )
                                         )}
                                     />

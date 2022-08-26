@@ -1,4 +1,4 @@
-import {IArticle, IListViewFieldWithOptions, IRestApiResponse, IResourceChange} from 'superdesk-api';
+import {IArticle, IListViewFieldWithOptions, IRestApiResponse, IResourceChange, ISuperdeskQuery} from 'superdesk-api';
 import {appConfig} from 'appConfig';
 import {DEFAULT_LIST_CONFIG} from 'apps/search/constants';
 import {flatMap} from 'lodash';
@@ -7,12 +7,13 @@ import {httpRequestJsonLocal} from './helpers/network';
 import {Set, Map} from 'immutable';
 import {notNullOrUndefined} from './helpers/typescript-helpers';
 import {ignoreAbortError} from './SuperdeskReactComponent';
+import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 /**
  * Holds Maps of entities keyed by IDs.
  */
 export type IRelatedEntities = {[collectionName: string]: Map<string, any>};
-type IEntitiesToFetch = {[collectionName: string]: Set<string>};
+export type IEntitiesToFetch = {[collectionName: string]: Set<string>};
 
 function mergeRelatedEntities(a: IRelatedEntities, b: IRelatedEntities): IRelatedEntities {
     const next: IRelatedEntities = {...a};
@@ -108,10 +109,22 @@ export function fetchRelatedEntities(
             Object.keys(entitiesToFetch).map((collection) => {
                 const ids: Array<string> = entitiesToFetch[collection].toJS();
 
+                const byIdQuery: ISuperdeskQuery = {
+                    filter: {
+                        $and: [
+                            {
+                                _id: {$in: ids},
+                            },
+                        ],
+                    },
+                    page: 1,
+                    max_results: 200,
+                    sort: [{'_created': 'desc'}], // doesn't matter
+                };
+
                 return ignoreAbortError(
                     httpRequestJsonLocal<IRestApiResponse<unknown>>({
-                        method: 'GET',
-                        path: `/${collection}?where=${JSON.stringify({_id: {$in: ids}})}`,
+                        ...prepareSuperdeskQuery(`/${collection}`, byIdQuery),
                         abortSignal,
                     }),
                 ).then((response) => {

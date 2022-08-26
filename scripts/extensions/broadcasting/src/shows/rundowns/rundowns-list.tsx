@@ -1,15 +1,17 @@
 import * as React from 'react';
 
 import {WithSizeObserver, ContentListItem, Label, IconButton} from 'superdesk-ui-framework/react';
-import {IRundown} from '../../interfaces';
+import {IRundown, IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {addSeconds} from '@superdesk/common';
 
-const {VirtualListFromQuery, DateTime} = superdesk.components;
+const {getVirtualListFromQuery, DateTime} = superdesk.components;
 const {gettext} = superdesk.localization;
+
+const VirtualListFromQuery = getVirtualListFromQuery<IRundown, {show: IShow; template: IRundownTemplate}>();
 
 interface IProps {
     inEditMode: IRundown['_id'] | null;
@@ -27,8 +29,18 @@ export class RundownsList extends React.PureComponent<IProps> {
                         query={{
                             endpoint: '/rundowns',
                             sort: [{_updated: 'desc'}],
+                            join: {
+                                show: {
+                                    endpoint: 'shows',
+                                    getId: (rundown) => rundown.show,
+                                },
+                                template: {
+                                    endpoint: (rundown) => `shows/${rundown.show}/templates`,
+                                    getId: (rundown) => rundown.template,
+                                },
+                            },
                         }}
-                        itemTemplate={({item}: {item: IRundown}) => (
+                        itemTemplate={({entity: rundown, joined}) => (
                             <div style={{margin: 4}}>
                                 <ContentListItem
                                     itemColum={[
@@ -48,46 +60,54 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                     content: (
                                                         <React.Fragment>
                                                             <span className="sd-list-item__slugline">
-                                                                {item.airtime_time}
+                                                                {rundown.airtime_time}
                                                                 &nbsp;
                                                                 -
                                                                 &nbsp;
                                                                 {
                                                                     addSeconds(
-                                                                        item.airtime_time,
-                                                                        (item.duration ?? item.planned_duration),
+                                                                        rundown.airtime_time,
+                                                                        (rundown.duration ?? rundown.planned_duration),
                                                                     )
                                                                 }
                                                             </span>
 
                                                             {
-                                                                item.duration != null && (
+                                                                rundown.duration != null && (
                                                                     <DurationLabel
-                                                                        duration={item.duration}
-                                                                        planned_duration={item.planned_duration}
+                                                                        duration={rundown.duration}
+                                                                        planned_duration={rundown.planned_duration}
                                                                     />
                                                                 )
                                                             }
 
                                                             <PlannedDurationLabel
-                                                                planned_duration={item.planned_duration}
+                                                                planned_duration={rundown.planned_duration}
                                                             />
 
-                                                            <DateTime dateTime={item._updated ?? item._created} />
+                                                            <DateTime dateTime={rundown._updated ?? rundown._created} />
                                                         </React.Fragment>
                                                     ),
                                                 },
                                                 {
                                                     content:
                                                     <React.Fragment>
-                                                        <Label text="[show name]" color="blue--800" />
+                                                        {
+                                                            joined.show != null && (
+                                                                <Label text={joined.show.title} color="blue--800" />
+                                                            )
+                                                        }
 
-                                                        <span className="sd-list-item__compound-text">
-                                                            <span className="sd-list-item__text-label">
-                                                                {gettext('Template')}
-                                                            </span>
-                                                            <span>[template-name]</span>
-                                                        </span>
+                                                        {
+                                                            joined.template != null && (
+                                                                <span className="sd-list-item__compound-text">
+                                                                    <span className="sd-list-item__text-label">
+                                                                        {gettext('Template')}
+                                                                    </span>
+                                                                    <span>{joined.template.title}</span>
+                                                                </span>
+                                                            )
+                                                        }
 
                                                         <span
                                                             className={[
@@ -96,7 +116,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                                 'sd-list-item__headline',
                                                             ].join(' ')}
                                                         >
-                                                            {item.title}
+                                                            {rundown.title}
                                                         </span>
 
                                                         <span>[status]</span>
@@ -119,7 +139,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     selected={false}
                                     archived={false}
                                     onClick={() => {
-                                        this.props.onEditModeChange(item._id);
+                                        this.props.onEditModeChange(rundown._id);
                                     }}
                                 />
                             </div>

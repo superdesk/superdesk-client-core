@@ -112,12 +112,12 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                     onChange={(val) => {
                                         this.setState({showId: val, template: null, rundownTitle: null});
                                     }}
-                                    itemTemplate={({item}: {item: IShow}) => (
-                                        item == null
+                                    itemTemplate={({entity: show}: {entity: IShow}) => (
+                                        show == null
                                             ? (
                                                 <span>{gettext('Select show')}</span>
                                             ) : (
-                                                <span>{item.title}</span>
+                                                <span>{show.title}</span>
                                             )
                                     )}
                                     readOnly={this.state.loading}
@@ -146,12 +146,12 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                                     });
                                                 });
                                             }}
-                                            itemTemplate={({item}: {item: IShow}) => (
-                                                item == null
+                                            itemTemplate={({entity: rundownTemplate}: {entity: IRundownTemplate}) => (
+                                                rundownTemplate == null
                                                     ? (
                                                         <span>{gettext('Select template')}</span>
                                                     ) : (
-                                                        <span>{item.title}</span>
+                                                        <span>{rundownTemplate.title}</span>
                                                     )
                                             )}
                                             readOnly={this.state.loading}

@@ -1366,16 +1366,35 @@ declare module 'superdesk-api' {
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
     }
 
-    export interface IPropsVirtualListFromQuery<T extends IBaseRestApiResponse> {
+
+    /**
+     * Collection name and a function that resolves to an ID string need to be provided.
+     */
+    export type JoinInstructions<IEntity, IEntitiesToJoin> = {
+        [Property in keyof IEntitiesToJoin]: {
+            endpoint: string | ((entity: IEntity) => string);
+            getId: (entity: IEntity) => string;
+        };
+    };
+
+    export interface IVirtualListQueryBase {
+        endpoint: string;
+        filter?: ILogicalOperator;
+        fullTextSearch?: string; // only works with elastic endpoints
+        sort: Array<{[field: string]: 'asc' | 'desc'}>;
+    }
+
+    export interface IVirtualListQueryWithJoins<T, IToJoin> extends IVirtualListQueryBase {
+        join: JoinInstructions<T, IToJoin>;
+    }
+
+    type IsNeverType<T> = [T] extends [never] ? true : false; // TODO: move to superdesk-common
+
+    export interface IPropsVirtualListFromQuery<T extends IBaseRestApiResponse, IToJoin extends {[key: string]: any}> {
         width: number;
         height: number;
-        query: {
-            endpoint: string;
-            filter?: ILogicalOperator;
-            fullTextSearch?: string; // only works with elastic endpoints
-            sort: Array<{[field: string]: 'asc' | 'desc'}>;
-        };
-        itemTemplate: React.ComponentType<{item: T}>;
+        query: IsNeverType<IToJoin> extends true ? IVirtualListQueryBase : IVirtualListQueryWithJoins<T, IToJoin>;
+        itemTemplate: React.ComponentType<{entity: T; joined: Partial<IToJoin>}>;
         noItemsTemplate: React.ComponentType;
     }
 
@@ -1385,7 +1404,7 @@ declare module 'superdesk-api' {
         sort: Array<[keyof T, 'asc' | 'desc']>;
         value?: string | null; // ID
         onChange(value: string | null): void;
-        itemTemplate: React.ComponentType<{item: T}>;
+        itemTemplate: React.ComponentType<{entity: T}>;
         readOnly?: boolean;
         validationError?: string | null | undefined;
         noGrow?: boolean; // if true, will not expand to 100% of parent element
@@ -2399,7 +2418,7 @@ declare module 'superdesk-api' {
                 defaultSortOption?: ISortOption,
                 formatFiltersForServer?: (filters: ICrudManagerFilters) => ICrudManagerFilters,
             ): React.ComponentType<Props>;
-            VirtualListFromQuery: React.ComponentType<IPropsVirtualListFromQuery<any>>;
+            getVirtualListFromQuery<IEntity extends IBaseRestApiResponse, IEntitiesToJoin>(): React.ComponentType<IPropsVirtualListFromQuery<IEntity, IEntitiesToJoin>>;
             SelectFromEndpoint: React.ComponentClass<IPropsSelectFromRemote<any>>
             ListItem: React.ComponentType<IListItemProps>;
             ListItemColumn: React.ComponentType<IPropsListItemColumn>;

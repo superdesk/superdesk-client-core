@@ -116,7 +116,7 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
 
                                     */}
 
-                                    <VirtualListFromQuery
+                                    <VirtualListFromQuery<T, never>
                                         width={this.valueEl.offsetWidth}
                                         height={200}
                                         query={{
@@ -126,21 +126,21 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                                             sort: this.props.sort.reduce<ISuperdeskQuery['sort']>(
                                                 (acc, [fieldId, direction]) => acc.concat({[fieldId]: direction}), []),
                                         }}
-                                        itemTemplate={({item}: {item: T}) => (
+                                        itemTemplate={({entity}) => (
                                             <span
                                                 onClick={() => {
                                                     if (this.props.readOnly === true) {
                                                         return;
                                                     }
 
-                                                    this.props.onChange(item._id);
+                                                    this.props.onChange(entity._id);
 
-                                                    this.fetchEntity(item._id);
+                                                    this.fetchEntity(entity._id);
                                                     closePopup();
                                                 }}
                                                 className="p-dropdown-item"
                                             >
-                                                <Template item={item} />
+                                                <Template entity={entity} />
                                             </span>
                                         )}
                                         noItemsTemplate={
@@ -168,7 +168,7 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                         opacity: this.props.readOnly === true ? 0.6 : undefined,
                     }}
                 >
-                    <Template item={this.state.selected} />
+                    <Template entity={this.state.selected} />
                     <span className="p-dropdown-trigger">
                         <span className="p-dropdown-trigger-icon pi pi-chevron-down p-clickable " />
                     </span>

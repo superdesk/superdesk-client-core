@@ -318,7 +318,7 @@ export function getSuperdeskApiImplementation(
             getGenericHttpEntityListPageComponent,
             getGenericArrayListPageComponent: () => GenericArrayListPageComponent,
             connectCrudManagerHttp: connectCrudManagerHttp,
-            VirtualListFromQuery,
+            getVirtualListFromQuery: () => VirtualListFromQuery,
             SelectFromEndpoint,
             ListItem,
             ListItemColumn,
