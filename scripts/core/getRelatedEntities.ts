@@ -12,8 +12,8 @@ import {prepareSuperdeskQuery} from './helpers/universal-query';
 /**
  * Holds Maps of entities keyed by IDs.
  */
-export type IRelatedEntities = {[collectionName: string]: Map<string, any>};
-export type IEntitiesToFetch = {[collectionName: string]: Set<string>};
+export type IRelatedEntities = {[endpointName: string]: Map<string, any>};
+export type IEntitiesToFetch = {[endpointName: string]: Set<string>};
 
 function mergeRelatedEntities(a: IRelatedEntities, b: IRelatedEntities): IRelatedEntities {
     const next: IRelatedEntities = {...a};
@@ -49,18 +49,18 @@ export function getAndMergeRelatedEntitiesForArticles(
         return component?.getRelatedEntities;
     }).filter(notNullOrUndefined);
 
-    // ids indexed by collection name
+    // ids indexed by endpoint name
     const entitiesToFetch: IEntitiesToFetch = {};
 
     items.forEach((item) => {
         relatedEntitiesConfigGetterFunctions.forEach((fn) => {
-            fn(item).forEach(({collection, id}) => {
-                if (id != null && !alreadyFetched[collection]?.has(id)) {
-                    if (entitiesToFetch[collection] == null) {
-                        entitiesToFetch[collection] = Set<string>();
+            fn(item).forEach(({endpoint, id}) => {
+                if (id != null && !alreadyFetched[endpoint]?.has(id)) {
+                    if (entitiesToFetch[endpoint] == null) {
+                        entitiesToFetch[endpoint] = Set<string>();
                     }
 
-                    entitiesToFetch[collection] = entitiesToFetch[collection].add(id);
+                    entitiesToFetch[endpoint] = entitiesToFetch[endpoint].add(id);
                 }
             });
         });
@@ -106,8 +106,8 @@ export function fetchRelatedEntities(
         const result: IRelatedEntities = {};
 
         Promise.all(
-            Object.keys(entitiesToFetch).map((collection) => {
-                const ids: Array<string> = entitiesToFetch[collection].toJS();
+            Object.keys(entitiesToFetch).map((endpoint) => {
+                const ids: Array<string> = entitiesToFetch[endpoint].toJS();
 
                 const byIdQuery: ISuperdeskQuery = {
                     filter: {
@@ -124,14 +124,14 @@ export function fetchRelatedEntities(
 
                 return ignoreAbortError(
                     httpRequestJsonLocal<IRestApiResponse<unknown>>({
-                        ...prepareSuperdeskQuery(`/${collection}`, byIdQuery),
+                        ...prepareSuperdeskQuery(endpoint, byIdQuery),
                         abortSignal,
                     }),
                 ).then((response) => {
-                    result[collection] = Map<string, any>();
+                    result[endpoint] = Map<string, any>();
 
                     response._items.forEach((entity) => {
-                        result[collection] = result[collection].set(entity._id, entity);
+                        result[endpoint] = result[endpoint].set(entity._id, entity);
                     });
                 });
             }),

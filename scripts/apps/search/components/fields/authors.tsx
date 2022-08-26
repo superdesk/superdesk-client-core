@@ -9,6 +9,9 @@ import {getVocabularyItemNameTranslated, gettext} from 'core/utils';
 import {Popover} from 'superdesk-ui-framework/react';
 import {IRelatedEntitiesToFetch} from '.';
 
+const endpointUsers = '/users';
+const endpointVocabularies = '/vocabularies';
+
 const SEPARATOR = <span style={{opacity: 0.5, marginLeft: 4, marginRight: 4}}>/</span>;
 const AUTHORS_TO_SHOW_AT_ONCE: number = 2;
 
@@ -19,11 +22,11 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
         } else {
             const userIds = item.authors
                 .filter(({_id}) => _id != null) // _id is not present in ingested items
-                .map((author) => ({collection: 'users', id: author._id[0]}));
+                .map((author) => ({endpoint: endpointUsers, id: author._id[0]}));
 
             return [
                 ...userIds,
-                {collection: 'vocabularies', id: 'author_roles'},
+                {endpoint: endpointVocabularies, id: 'author_roles'},
             ];
         }
     }
@@ -37,9 +40,9 @@ export class Authors extends SuperdeskReactComponent<IPropsItemListInfo> {
         super(props);
 
         this.related = {
-            getUser: (id) => this.props.relatedEntities['users'].get(id),
+            getUser: (id) => this.props.relatedEntities[endpointUsers].get(id),
             getAuthorRole: (qcode: string) => {
-                const authorRoles: IVocabulary = this.props.relatedEntities['vocabularies'].get('author_roles');
+                const authorRoles: IVocabulary = this.props.relatedEntities[endpointVocabularies].get('author_roles');
 
                 return authorRoles.items.find((role) => role.qcode === qcode);
             },

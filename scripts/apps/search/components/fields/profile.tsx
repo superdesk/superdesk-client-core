@@ -3,13 +3,15 @@ import {IPropsItemListInfo} from '../ListItemInfo';
 import {IContentProfile, IArticle} from 'superdesk-api';
 import {IRelatedEntitiesToFetch} from '.';
 
+const endpoint = '/content_types';
+
 class ProfileComponent extends React.Component<IPropsItemListInfo> {
     public static getRelatedEntities(item: IArticle): IRelatedEntitiesToFetch {
         if (item.profile == null) {
             return [];
         } else {
             return [
-                {collection: 'content_types', id: item.profile},
+                {endpoint: endpoint, id: item.profile},
             ];
         }
     }
@@ -21,7 +23,7 @@ class ProfileComponent extends React.Component<IPropsItemListInfo> {
             return null;
         }
 
-        const contentProfile: IContentProfile = relatedEntities['content_types'].get(item.profile);
+        const contentProfile: IContentProfile = relatedEntities[endpoint].get(item.profile);
 
         if (contentProfile == null || contentProfile.label == null) {
             return null;

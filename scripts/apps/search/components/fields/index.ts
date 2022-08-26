@@ -44,7 +44,7 @@ interface IFieldProps extends Partial<IPropsItemListInfo> {
     item: IPropsItemListInfo['item']; // this one not nullable
 }
 
-export type IRelatedEntitiesToFetch = Array<{collection: string; id: string}>;
+export type IRelatedEntitiesToFetch = Array<{endpoint: string; id: string}>;
 
 interface IReactFieldComponentClass<P> extends React.ComponentClass<P> {
     getRelatedEntities?(item: IArticle): IRelatedEntitiesToFetch;

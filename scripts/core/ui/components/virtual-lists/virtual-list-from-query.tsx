@@ -1,7 +1,7 @@
 /* eslint-disable max-depth */
 import React from 'react';
 import {Map} from 'immutable';
-import {debounce, omit} from 'lodash';
+import {debounce, omit, trimStart} from 'lodash';
 import {Set} from 'immutable';
 import {SuperdeskReactComponent} from 'core/SuperdeskReactComponent';
 import {
@@ -86,7 +86,7 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
             prepareSuperdeskQuery(this.props.query.endpoint, query),
         ).then((resEntities) => {
             const resourceName = resEntities._links == null
-                ? this.props.query.endpoint // TODO: strip first forward slash
+                ? trimStart(this.props.query.endpoint, '/')
                 : resEntities._links.self.title;
 
             const relatedEntitiesToFetch: IEntitiesToFetch = {};

@@ -31,11 +31,11 @@ export class RundownsList extends React.PureComponent<IProps> {
                             sort: [{_updated: 'desc'}],
                             join: {
                                 show: {
-                                    endpoint: 'shows',
+                                    endpoint: '/shows',
                                     getId: (rundown) => rundown.show,
                                 },
                                 template: {
-                                    endpoint: (rundown) => `shows/${rundown.show}/templates`,
+                                    endpoint: (rundown) => `/shows/${rundown.show}/templates`,
                                     getId: (rundown) => rundown.template,
                                 },
                             },
