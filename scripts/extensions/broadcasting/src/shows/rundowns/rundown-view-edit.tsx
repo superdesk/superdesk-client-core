@@ -39,6 +39,19 @@ const rundownValidator: CreateValidators<Partial<IRundown>> = {
     title: stringNotEmpty,
 };
 
+function prepareForSaving(item: Partial<IRundownItemBase>): Partial<IRundownItemBase> {
+    const copy = {...item};
+
+    /**
+     * start/end times are generated from duration
+     * they are present in the form only for making it easier for users to enter duration
+     */
+    delete copy['start_time'];
+    delete copy['end_time'];
+
+    return copy;
+}
+
 export class RundownViewEditComponent extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -119,9 +132,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                     delete itemWithDuration['start_time'];
                     delete itemWithDuration['end_time'];
 
-                    // TODO: remove test data & adjust back-end to allow saving `rawContentState`
-                    itemWithDuration.content = 'test content';
-
                     const {rundown, rundownWithChanges} = this.state;
 
                     if (rundown == null || rundownWithChanges == null) {
@@ -131,7 +141,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                     httpRequestJsonLocal<IRundownItem>({
                         method: 'POST',
                         path: '/rundown_items',
-                        payload: itemWithDuration,
+                        payload: prepareForSaving(itemWithDuration),
                     }).then((res) => {
                         httpRequestJsonLocal<IRundown>({
                             method: 'PATCH',
@@ -162,16 +172,18 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         });
     }
 
-    initiateEditing(item: IRundownItemBase) {
+    initiateEditing(item: IRundownItem) {
         this.setState({
             createOrEditRundownItem: prepareForEditing(item, (val) => {
                 if (!this.props.readOnly) {
-                    // this.setRundownField({
-                    //     rundown_items: this.getRundownItems().map((_item) => _item === item ? val : _item),
-                    // });
-
-                    // eslint-disable-next-line no-console
-                    console.log(val); // TODO: implement saving changes
+                    httpRequestJsonLocal<IRundownItem>({
+                        method: 'PATCH',
+                        path: `/rundown_items/${item._id}`,
+                        payload: prepareForSaving(generatePatch(item, val)),
+                        headers: {
+                            'If-Match': item._etag,
+                        },
+                    });
                 }
             }),
         });

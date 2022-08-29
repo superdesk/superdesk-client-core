@@ -140,6 +140,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                     label: gettext('Delete'),
                                                     onClick: () => {
                                                         // TODO: implement when API endpoint supports deletion
+                                                        // eslint-disable-next-line no-alert
                                                         alert('not implemented');
                                                     },
                                                 },

@@ -925,7 +925,7 @@ declare module 'superdesk-api' {
         format: any;
         fields_meta?: {
             [key: string]: {
-                draftjsState?: [any]; // [RawDraftContentState] - can't import it here
+                draftjsState?: [import('draft-js').RawDraftContentState];
                 annotations?: Array<any>;
             }
         };

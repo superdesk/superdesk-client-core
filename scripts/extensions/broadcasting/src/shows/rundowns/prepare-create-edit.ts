@@ -53,7 +53,7 @@ function getRundownItemTemplateAuthoringStorage(
         getContentProfile: () => {
             return Promise.resolve(rundownItemContentProfile);
         },
-        closeAuthoring: (current, original, _3, doClose) => {
+        closeAuthoring: (current, original, _cancelAutosave, doClose) => {
             const isCreationMode = Object.keys(original.data).length < 1;
             const warnAboutLosingChanges = isCreationMode || !isEqual(current.data, original.data);
 
@@ -63,6 +63,8 @@ function getRundownItemTemplateAuthoringStorage(
                         doClose();
                     }
                 });
+            } else {
+                doClose();
             }
 
             return Promise.resolve();

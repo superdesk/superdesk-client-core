@@ -1,3 +1,4 @@
+import {RawDraftContentState} from 'draft-js';
 import {IBaseRestApiResponse, IUser} from 'superdesk-api';
 
 /**
@@ -53,6 +54,12 @@ export interface IRundownItemBase {
     additional_notes?: string;
     live_captions?: string;
     last_sentence?: string;
+    fields_meta?: {
+        [key: string]: {
+            draftjsState?: [RawDraftContentState];
+            annotations?: Array<any>;
+        }
+    };
 }
 
 export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;
