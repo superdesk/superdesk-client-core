@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {WithSizeObserver, ContentListItem, Label, IconButton} from 'superdesk-ui-framework/react';
+import {WithSizeObserver, ContentListItem, Label, IconButton, Menu} from 'superdesk-ui-framework/react';
 import {IRundown, IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
@@ -128,11 +128,31 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     ]}
                                     locked={false}
                                     action={(
-                                        <IconButton
-                                            icon="dots-vertical"
-                                            ariaValue={gettext('Actions')}
-                                            onClick={() => false} // TODO: implement actions
-                                        />
+                                        <Menu // TODO: verify that ui-framework#667 is fixed
+                                            items={[
+                                                {
+                                                    label: gettext('Edit'),
+                                                    onClick: () => {
+                                                        this.props.onEditModeChange(rundown._id);
+                                                    },
+                                                },
+                                                {
+                                                    label: gettext('Delete'),
+                                                    onClick: () => {
+                                                        // TODO: implement when API endpoint supports deletion
+                                                        alert('not implemented');
+                                                    },
+                                                },
+                                            ]}
+                                        >
+                                            {(toggle) => (
+                                                <IconButton
+                                                    icon="dots-vertical"
+                                                    ariaValue={gettext('Actions')}
+                                                    onClick={toggle}
+                                                />
+                                            )}
+                                        </Menu>
                                     )}
                                     loading={false}
                                     activated={false}
