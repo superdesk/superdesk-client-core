@@ -14,8 +14,7 @@ import {DropZone3} from 'core/ui/components/drop-zone-3';
 import {ArticleItemConcise} from 'core/ui/components/article-item-concise';
 import {openArticle, applicationState} from 'core/get-superdesk-api-implementation';
 import {DragHandle} from 'core/ui/components/drag-handle';
-import {arrayMove} from '@superdesk/common';
-import {Sortable} from 'core/ui/components/sortable';
+import {arrayMove, WithSortable} from '@superdesk/common';
 import {WithArticles} from 'core/with-articles';
 import {ContentCreateDropdown} from 'core/ui/components/content-create-dropdown/content-create-dropdown';
 import {RelatedItemCreateNewButton} from 'apps/relations/directives/related-items-create-new-button';
@@ -139,7 +138,7 @@ export class Editor extends React.PureComponent<IProps> {
                         linkedItemIds.length > 0 && (
                             <WithArticles ids={linkedItemIds}>
                                 {(items) => (
-                                    <Sortable
+                                    <WithSortable
                                         items={items}
                                         itemTemplate={this.itemTemplate}
                                         getId={(item) => item._id}

@@ -1,5 +1,5 @@
 /* eslint-disable react/no-multi-comp */
-import React from 'react';
+import * as React from 'react';
 import {SortableContainer, SortableContainerProps, SortableElement} from 'react-sortable-hoc';
 
 interface IPropsSortableItem<T> {
@@ -18,7 +18,7 @@ interface IProps<T> {
     options?: SortableContainerProps;
 }
 
-export class Sortable<T> extends React.PureComponent<IProps<T>> {
+export class WithSortable<T> extends React.PureComponent<IProps<T>> {
     private SortableList: React.ComponentType<IPropsSortableContainer<T> & SortableContainerProps>;
 
     constructor(props: IProps<T>) {

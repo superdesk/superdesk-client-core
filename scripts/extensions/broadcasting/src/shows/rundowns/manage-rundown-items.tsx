@@ -6,7 +6,7 @@ import {superdesk} from '../../superdesk';
 import {Map} from 'immutable';
 import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, SHOW_PART_VOCABULARY_ID} from '../../constants';
 import {IVocabularyItem} from 'superdesk-api';
-import {arrayMove} from '@superdesk/common';
+import {arrayMove, WithSortable} from '@superdesk/common';
 import {ICreate, IEdit} from './template-edit';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
@@ -47,13 +47,14 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
 
         return (
             <div>
-                {
-                    this.props.items.map((item, i) => {
+                <WithSortable
+                    items={this.props.items}
+                    itemTemplate={({item}) => {
                         const showPart = item.show_part == null ? null : showParts.get(item.show_part);
                         const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
 
                         return (
-                            <div key={i} style={{padding: 4, margin: 4, border: '1px solid blue'}}>
+                            <div style={{padding: 4, margin: 4, border: '1px solid blue'}}>
                                 {item.title}
 
                                 {
@@ -71,28 +72,6 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                             text={itemType.name}
                                             color={itemType.color}
                                         />
-                                    )
-                                }
-
-                                {
-                                    !readOnly && (
-                                        <div>
-                                            <button
-                                                onClick={() => {
-                                                    this.reorder(i, i - 1);
-                                                }}
-                                            >
-                                                move up
-                                            </button>
-
-                                            <button
-                                                onClick={() => {
-                                                    this.reorder(i, i + 1);
-                                                }}
-                                            >
-                                                move down
-                                            </button>
-                                        </div>
                                     )
                                 }
 
@@ -117,13 +96,26 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
 
                                 {
                                     !readOnly && (
-                                        <span onClick={() => this.props.initiateEditing(item)}>EDIT</span>
+                                        <span onClick={() => this.props.initiateEditing(item)}>{gettext('Edit')}</span>
                                     )
                                 }
                             </div>
                         );
-                    })
-                }
+                    }}
+                    getId={(item) => item.title}
+                    options={{
+                        shouldCancelStart: () => readOnly,
+                        onSortEnd: ({oldIndex, newIndex}) => {
+                            if (this.props.readOnly !== true) {
+                                this.props.onChange(
+                                    arrayMove(this.props.items, oldIndex, newIndex),
+                                );
+                            }
+                        },
+                        distance: 10,
+                        helperClass: 'dragging-in-progress',
+                    }}
+                />
 
                 {
                     !readOnly && (
