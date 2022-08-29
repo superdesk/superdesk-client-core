@@ -1,5 +1,5 @@
 import React from 'react';
-import {groupBy, omit} from 'lodash';
+import {groupBy, keyBy, omit} from 'lodash';
 import {
     IBaseRestApiResponse,
     ILiveResourcesProps,
@@ -110,9 +110,21 @@ class WithLiveResourcesComponent
                     max_results: 200,
                 };
 
-                return this.asyncHelpers.httpRequestJsonLocal(
+                return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<unknown>>(
                     prepareSuperdeskQuery(`/${resource}`, query),
-                ).then((res) => toPair(resource, res));
+                ).then((res) => {
+                    const itemsById = keyBy(res._items, (item) => item._id);
+
+                    return toPair(
+                        resource,
+
+                        /**
+                         * Fix ordering: `query` sorts the result by `_updated`
+                         * while we need it sorted exactly in the same order as `ids` were provided
+                         */
+                        {...res, _items: ids.map((id) => itemsById[id])},
+                    );
+                });
             }),
         ).then((pairs) => {
             var data = {};
