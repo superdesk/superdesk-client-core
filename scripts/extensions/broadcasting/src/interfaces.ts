@@ -8,9 +8,10 @@ import {IBaseRestApiResponse, IUser} from 'superdesk-api';
 export interface IRRule {
     freq: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'YEARLY';
     interval: number;
-    byMonth?: Array<number>; // [1, 12]
-    byWeek?: Array<number>; // [-31, 31]
-    byDay?: Array<number>; // [0, 6] ; 0 is Monday
+    by_month?: Array<number>; // [1, 12]
+    by_month_day?: Array<number>; // [-31, 31]
+    by_day?: Array<number>; // [0, 6] ; 0 is Monday
+    by_week_no?: Array<number>; // numbers from 1 to 52
 }
 
 export interface IShowBase {

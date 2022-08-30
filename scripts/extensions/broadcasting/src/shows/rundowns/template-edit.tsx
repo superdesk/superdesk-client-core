@@ -287,7 +287,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         const initialValue: IRRule = {
                                                             freq: 'WEEKLY',
                                                             interval: 1,
-                                                            byDay: [0, 1, 2, 3, 4], // weekdays
+                                                            by_day: [0, 1, 2, 3, 4], // weekdays
                                                         };
 
                                                         this.handleChange({

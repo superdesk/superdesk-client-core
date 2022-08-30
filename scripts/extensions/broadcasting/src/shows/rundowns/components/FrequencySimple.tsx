@@ -26,12 +26,12 @@ export class FrequencySimple extends React.PureComponent<IProps> {
         const rrule: IRRule = this.props.value ?? {
             freq: 'WEEKLY',
             interval: 1,
-            byDay: [],
+            by_day: [],
         };
 
         const daysObj: {[key: number]: boolean} = {};
 
-        for (const dayIndex of rrule.byDay ?? []) {
+        for (const dayIndex of rrule.by_day ?? []) {
             daysObj[dayIndex] = true;
         }
 
@@ -47,12 +47,12 @@ export class FrequencySimple extends React.PureComponent<IProps> {
                                 if (val === true) {
                                     this.props.onChange({
                                         ...rrule,
-                                        byDay: (rrule.byDay ?? []).concat(index).sort((a, b) => a - b),
+                                        by_day: (rrule.by_day ?? []).concat(index).sort((a, b) => a - b),
                                     });
                                 } else {
                                     this.props.onChange({
                                         ...rrule,
-                                        byDay: (rrule.byDay ?? []).filter((_val) => _val !== index),
+                                        by_day: (rrule.by_day ?? []).filter((_val) => _val !== index),
                                     });
                                 }
                             }}
