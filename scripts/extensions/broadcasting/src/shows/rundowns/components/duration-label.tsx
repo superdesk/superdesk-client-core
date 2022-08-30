@@ -17,12 +17,12 @@ export class DurationLabel extends React.PureComponent<IProps> {
 
         return (
             <IconLabel
-                text={duration.toString()}
+                text={(duration ?? planned_duration).toString()}
                 innerLabel={gettext('Duration')}
                 style="translucent"
                 size={this.props.size}
                 type={(() => {
-                    if (planned_duration == null) {
+                    if (duration == null || planned_duration == null) {
                         return 'success';
                     } else if (duration > planned_duration) {
                         return 'alert';
