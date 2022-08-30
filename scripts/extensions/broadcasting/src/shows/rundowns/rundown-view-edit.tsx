@@ -30,7 +30,7 @@ import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage
 import {LANGUAGE} from '../../constants';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
-const {getAuthoringComponent, WithLiveResources} = superdesk.components;
+const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
 const {generatePatch} = superdesk.utilities;
 
 const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
@@ -267,6 +267,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                         invalid={validationErrors.title != null}
                                     />
 
+                                    <SpacerBlock v gap="8" />
+
                                     <WithLiveResources
                                         resources={[
                                             {
@@ -280,6 +282,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                             return (
                                                 <ManageRundownItems
+                                                    rundown={rundown}
                                                     readOnly={this.props.readOnly}
                                                     items={rundownItems}
                                                     createOrEdit={this.state.createOrEditRundownItem}

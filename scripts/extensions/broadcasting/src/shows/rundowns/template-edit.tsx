@@ -426,6 +426,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 return (
                                                     <div>
                                                         <ManageRundownItems
+                                                            rundown={null}
                                                             readOnly={readOnly}
                                                             items={rundownItems}
                                                             createOrEdit={this.state.createOrEditRundownItem}

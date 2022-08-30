@@ -77,12 +77,14 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                                     <DurationLabel
                                                                         duration={rundown.duration}
                                                                         planned_duration={rundown.planned_duration}
+                                                                        size="small"
                                                                     />
                                                                 )
                                                             }
 
                                                             <PlannedDurationLabel
                                                                 planned_duration={rundown.planned_duration}
+                                                                size="small"
                                                             />
 
                                                             <DateTime dateTime={rundown._updated ?? rundown._created} />

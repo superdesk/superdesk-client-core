@@ -1,20 +1,22 @@
 import * as React from 'react';
-import {Button, Label} from 'superdesk-ui-framework/react';
-import {IRundownItem, IRundownItemBase} from '../../interfaces';
+import {Button, IconLabel, Label} from 'superdesk-ui-framework/react';
+import {IRundown, IRundownItem, IRundownItemBase} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
 import {Map} from 'immutable';
 import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, SHOW_PART_VOCABULARY_ID} from '../../constants';
 import {IVocabularyItem} from 'superdesk-api';
-import {arrayMove, WithSortable} from '@superdesk/common';
+import {addSeconds, arrayMove, WithSortable} from '@superdesk/common';
 import {ICreate, IEdit} from './template-edit';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 const {vocabulary} = superdesk.entities;
+const {Spacer, SpacerBlock} = superdesk.components;
 
 const {gettext} = superdesk.localization;
 
 interface IProps<T> {
+    rundown: IRundown | null;
     items: Array<T>;
     onChange(items: Array<T>): void;
     createOrEdit: ICreate | IEdit | null;
@@ -35,7 +37,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
     }
 
     render() {
-        const {readOnly} = this.props;
+        const {readOnly, rundown} = this.props;
 
         const showParts = Map<string, IVocabularyItem>(
             vocabulary.getVocabulary(SHOW_PART_VOCABULARY_ID).items.map((item) => [item.qcode, item]),
@@ -47,6 +49,41 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
 
         return (
             <div>
+                {
+                    (() => {
+                        if (rundown == null) {
+                            return null;
+                        }
+
+                        const airTimeEnd = addSeconds(
+                            rundown.airtime_time,
+                            rundown.duration ?? rundown.planned_duration,
+                        );
+
+                        return (
+                            <div>
+                                <Spacer h gap="4" justifyContent="start" noGrow>
+                                    <IconLabel
+                                        type="primary"
+                                        text={`${rundown.airtime_time} - ${airTimeEnd}`}
+                                        innerLabel={gettext('Airtime')}
+                                        style="translucent"
+                                    />
+
+                                    <DurationLabel
+                                        duration={rundown.duration}
+                                        planned_duration={rundown.planned_duration}
+                                    />
+
+                                    <PlannedDurationLabel planned_duration={rundown.planned_duration} />
+                                </Spacer>
+
+                                <SpacerBlock v gap="16" />
+                            </div>
+                        );
+                    })()
+                }
+
                 <WithSortable
                     items={this.props.items}
                     itemTemplate={({item}) => {
@@ -81,7 +118,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
 
                                 {
                                     item.planned_duration != null && (
-                                        <PlannedDurationLabel planned_duration={item.planned_duration} />
+                                        <PlannedDurationLabel planned_duration={item.planned_duration} size="small" />
                                     )
                                 }
 

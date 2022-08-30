@@ -7,6 +7,7 @@ const {gettext} = superdesk.localization;
 
 interface IProps {
     planned_duration: number;
+    size?: React.ComponentProps<typeof IconLabel>['size'];
 }
 
 export class PlannedDurationLabel extends React.PureComponent<IProps> {
@@ -19,7 +20,7 @@ export class PlannedDurationLabel extends React.PureComponent<IProps> {
                 innerLabel={gettext('Planned duration')}
                 icon="time"
                 style="translucent"
-                size="small"
+                size={this.props.size}
             />
         );
     }

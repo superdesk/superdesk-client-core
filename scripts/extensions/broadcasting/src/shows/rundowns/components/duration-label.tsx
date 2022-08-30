@@ -8,6 +8,7 @@ const {gettext} = superdesk.localization;
 interface IProps {
     duration: number;
     planned_duration: number;
+    size?: React.ComponentProps<typeof IconLabel>['size'];
 }
 
 export class DurationLabel extends React.PureComponent<IProps> {
@@ -19,7 +20,7 @@ export class DurationLabel extends React.PureComponent<IProps> {
                 text={duration.toString()}
                 innerLabel={gettext('Duration')}
                 style="translucent"
-                size="small"
+                size={this.props.size}
                 type={(() => {
                     if (planned_duration == null) {
                         return 'success';
