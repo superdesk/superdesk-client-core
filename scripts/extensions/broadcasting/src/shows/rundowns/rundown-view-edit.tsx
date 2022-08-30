@@ -84,7 +84,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         }, callback);
     }
 
-    save() {
+    save(): void {
         if (this.state.rundownWithChanges == null || this.state.rundown == null) {
             throw new Error('invalid state'); // TODO: log error ?
         }
@@ -294,19 +294,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         });
                                                     }}
                                                     onDelete={(_item) => {
-                                                        this.setRundownField(
-                                                            {
-                                                                items: rundown.items.filter(
-                                                                    ({_id}) => _id !== _item._id,
-                                                                ),
-                                                            },
-                                                            () => {
-                                                                httpRequestRawLocal({
-                                                                    method: 'DELETE',
-                                                                    path: `/rundown_items/${_item._id}`,
-                                                                });
-                                                            },
-                                                        );
+                                                        this.setRundownField({
+                                                            items: rundown.items.filter(
+                                                                ({_id}) => _id !== _item._id,
+                                                            ),
+                                                        });
                                                     }}
                                                 />
                                             );
