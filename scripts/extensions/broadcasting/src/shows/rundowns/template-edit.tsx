@@ -106,17 +106,17 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
         this.templateFieldsInitial = {};
     }
 
-    getRundownItems() {
+    private getRundownItems() {
         return this.props.templateFields.rundown_items ?? [];
     }
 
-    handleChange(value: Partial<IRundownTemplateBase>) {
+    private handleChange(value: Partial<IRundownTemplateBase>) {
         if (this.props.readOnly !== true) {
             this.props.onChange(value);
         }
     }
 
-    initiateCreation() {
+    private initiateCreation() {
         this.setState({
             createOrEditRundownItem: prepareForCreation((val) => {
                 if (!this.props.readOnly) {
@@ -136,7 +136,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
         });
     }
 
-    initiateEditing(item: IRundownItemBase) {
+    private initiateEditing(item: IRundownItemBase) {
         this.setState({
             createOrEditRundownItem: prepareForEditing(item, (val) => {
                 if (!this.props.readOnly) {
@@ -148,7 +148,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
         });
     }
 
-    handleCancelling() {
+    private handleCancelling() {
         if (!this.props.readOnly) {
             const {onCancel} = this.props;
             const unsavedChangesPresent = !isEqual(this.templateFieldsInitial, this.props.templateFields);
@@ -435,6 +435,13 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                             onChange={(val) => {
                                                                 this.handleChange({
                                                                     rundown_items: computeStartEndTime(airTime, val),
+                                                                });
+                                                            }}
+                                                            onDelete={(item) => {
+                                                                this.handleChange({
+                                                                    rundown_items: rundownItems.filter(
+                                                                        (_item) => _item !== item,
+                                                                    ),
                                                                 });
                                                             }}
                                                         />

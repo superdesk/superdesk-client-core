@@ -29,7 +29,7 @@ import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
 const {gettext} = superdesk.localization;
-const {httpRequestJsonLocal} = superdesk;
+const {httpRequestJsonLocal, httpRequestRawLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
 const {generatePatch} = superdesk.utilities;
 
@@ -69,7 +69,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         this.close = this.close.bind(this);
     }
 
-    setRundownField(data: Partial<IRundown>) {
+    setRundownField(data: Partial<IRundown>, callback?: () => void) {
         const {rundownWithChanges} = this.state;
 
         if (rundownWithChanges == null) {
@@ -81,7 +81,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                 ...rundownWithChanges,
                 ...data,
             },
-        });
+        }, callback);
     }
 
     save() {
@@ -292,6 +292,21 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         this.setRundownField({
                                                             items: val.map(({_id}) => ({_id: _id})),
                                                         });
+                                                    }}
+                                                    onDelete={(_item) => {
+                                                        this.setRundownField(
+                                                            {
+                                                                items: rundown.items.filter(
+                                                                    ({_id}) => _id !== _item._id,
+                                                                ),
+                                                            },
+                                                            () => {
+                                                                httpRequestRawLocal({
+                                                                    method: 'DELETE',
+                                                                    path: `/rundown_items/${_item._id}`,
+                                                                });
+                                                            },
+                                                        );
                                                     }}
                                                 />
                                             );

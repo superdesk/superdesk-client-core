@@ -19,6 +19,7 @@ interface IProps<T> {
     rundown: IRundown | null;
     items: Array<T>;
     onChange(items: Array<T>): void;
+    onDelete(item: T): void;
     createOrEdit: ICreate | IEdit | null;
     initiateCreation(): void;
     initiateEditing(item: T): void;
@@ -32,7 +33,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
         this.reorder = this.reorder.bind(this);
     }
 
-    reorder(from: number, to: number) {
+    private reorder(from: number, to: number) {
         this.props.onChange(arrayMove(this.props.items, from, to));
     }
 
@@ -134,6 +135,12 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                 {
                                     !readOnly && (
                                         <span onClick={() => this.props.initiateEditing(item)}>{gettext('Edit')}</span>
+                                    )
+                                }
+
+                                {
+                                    !readOnly && (
+                                        <span onClick={() => this.props.onDelete(item)}>{gettext('Delete')}</span>
                                     )
                                 }
                             </div>
