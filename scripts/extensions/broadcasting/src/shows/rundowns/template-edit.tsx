@@ -13,6 +13,7 @@ import {
     SubNav,
     ButtonGroup,
     Checkbox,
+    DurationInput,
 } from 'superdesk-ui-framework/react';
 import {CreateValidators, WithValidation} from '@superdesk/common';
 import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
@@ -230,7 +231,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                 authoringHeader={(
                                     <React.Fragment>
                                         <Form.FormGroup inlineLabel={false}>
-                                            {/* <Form.FormItem> // TODO: uncomment when crashing is fixed
+                                            <Form.FormItem>
                                                 <DurationInput
                                                     label={gettext('Planned duration')}
                                                     seconds={templateFields.planned_duration ?? 0}
@@ -244,7 +245,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                     error={validationErrors.planned_duration ?? undefined}
                                                     invalid={validationErrors.planned_duration != null}
                                                 />
-                                            </Form.FormItem> */}
+                                            </Form.FormItem>
 
                                             <Form.FormItem>
                                                 <TimePicker

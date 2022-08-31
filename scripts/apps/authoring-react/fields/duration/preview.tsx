@@ -1,5 +1,6 @@
 import React from 'react';
 import {IDurationFieldConfig, IDurationValueOperational, IPreviewComponentProps} from 'superdesk-api';
+import {getDurationString} from 'superdesk-ui-framework/react/components/DurationInput';
 
 type IProps = IPreviewComponentProps<IDurationValueOperational, IDurationFieldConfig>;
 
@@ -9,10 +10,8 @@ export class Preview extends React.PureComponent<IProps> {
             return null;
         }
 
-        // TODO: format before displaying; duration
-
         return (
-            <div>{this.props.value}</div>
+            <div>{getDurationString(this.props.value)}</div>
         );
     }
 }
