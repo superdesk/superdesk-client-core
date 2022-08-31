@@ -8,6 +8,7 @@ import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {addSeconds} from '@superdesk/common';
 
+const {httpRequestRawLocal} = superdesk;
 const {getVirtualListFromQuery, DateTime} = superdesk.components;
 const {gettext} = superdesk.localization;
 
@@ -141,9 +142,13 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                 {
                                                     label: gettext('Delete'),
                                                     onClick: () => {
-                                                        // TODO: implement when API endpoint supports deletion
-                                                        // eslint-disable-next-line no-alert
-                                                        alert('not implemented');
+                                                        httpRequestRawLocal({
+                                                            method: 'DELETE',
+                                                            path: `/rundowns/${rundown._id}`,
+                                                            headers: {
+                                                                'If-Match': rundown._etag,
+                                                            },
+                                                        });
                                                     },
                                                 },
                                             ]}

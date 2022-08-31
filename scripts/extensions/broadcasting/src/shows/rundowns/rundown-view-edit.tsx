@@ -29,7 +29,7 @@ import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
 const {gettext} = superdesk.localization;
-const {httpRequestJsonLocal, httpRequestRawLocal} = superdesk;
+const {httpRequestJsonLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
 const {generatePatch} = superdesk.utilities;
 
