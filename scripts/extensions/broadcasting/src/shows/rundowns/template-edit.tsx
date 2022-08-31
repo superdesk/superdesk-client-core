@@ -469,7 +469,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 authoringStorage={this.state.createOrEditRundownItem.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
-                                                getInlineToolbarActions={({save, discardChangesAndClose}) => {
+                                                getInlineToolbarActions={({hasUnsavedChanges, save, discardChangesAndClose}) => {
                                                     return {
                                                         readOnly: false,
                                                         toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
@@ -486,6 +486,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                                             save();
                                                                         }}
                                                                         type="primary"
+                                                                        disabled={hasUnsavedChanges() !== true}
                                                                     />
                                                                 ),
                                                             },
