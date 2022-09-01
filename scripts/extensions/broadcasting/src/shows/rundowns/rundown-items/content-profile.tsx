@@ -6,7 +6,7 @@ import {
     IEditor3Config,
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
-import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID} from '../../../constants';
+import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, RUNDOWN_SUBITEM_TYPES, SHOW_PART_VOCABULARY_ID} from '../../../constants';
 import {superdesk} from '../../../superdesk';
 
 const {gettext} = superdesk.localization;
@@ -155,7 +155,7 @@ const currentShowCode = 'ABC'; // FINISH: remove test data
 
 const showPartConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
-    vocabularyId: 'show_part',
+    vocabularyId: SHOW_PART_VOCABULARY_ID,
     multiple: false,
     required: true,
     filter: (item) => item['show_reference'] == null || item['show_reference'] === currentShowCode,
@@ -168,12 +168,27 @@ const showPartField: IAuthoringFieldV2 = {
     fieldConfig: showPartConfig,
 };
 
+const subitemsConfig: IDropdownConfigVocabulary = {
+    source: 'vocabulary',
+    vocabularyId: RUNDOWN_SUBITEM_TYPES,
+    multiple: false,
+    required: false,
+};
+
+const subItemsField: IAuthoringFieldV2 = {
+    id: 'subitems',
+    name: gettext('Subitems'),
+    fieldType: 'dropdown',
+    fieldConfig: subitemsConfig,
+};
+
 export const rundownItemContentProfile: IContentProfileV2 = {
     id: 'temp-profile',
     name: 'Temporary profile',
     header: OrderedMap([
         [itemTypeField.id, itemTypeField],
         [showPartField.id, showPartField],
+        // [subItemsField.id, subItemsField],
         [startTimeField.id, startTimeField],
         [endTimeField.id, endTimeField],
         [durationField.id, durationField],
