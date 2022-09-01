@@ -856,6 +856,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
     }
 
     handleClose(state: IStateLoaded<T>) {
+        if (this.hasUnsavedChanges() !== true) {
+            this.props.onClose();
+            return;
+        }
+
         const {authoringStorage} = this.props;
 
         this.setState({

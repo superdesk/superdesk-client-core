@@ -240,7 +240,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                 this.save();
                                                             }
                                                         }}
-                                                        disabled={isEqual(this.state.rundown, this.state.rundownWithChanges)}
+                                                        disabled={
+                                                            isEqual(this.state.rundown, this.state.rundownWithChanges)
+                                                        }
                                                         type="primary"
                                                     />
                                                 </React.Fragment>
@@ -325,7 +327,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 authoringStorage={this.state.createOrEditRundownItem.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
-                                                getInlineToolbarActions={({hasUnsavedChanges, save, discardChangesAndClose}) => {
+                                                getInlineToolbarActions={({
+                                                    hasUnsavedChanges,
+                                                    save,
+                                                    discardChangesAndClose,
+                                                }) => {
                                                     return {
                                                         readOnly: false,
                                                         toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
