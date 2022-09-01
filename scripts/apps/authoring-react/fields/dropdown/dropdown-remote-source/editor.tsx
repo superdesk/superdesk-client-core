@@ -41,6 +41,7 @@ export class EditorRemoteSource extends React.PureComponent<IProps> {
                     getId={(option) => config.getId(option)}
                     getLabel={(option) => config.getLabel(option)}
                     allowMultiple={config.multiple}
+                    readOnly={config.readOnly}
                 />
             </Container>
         );

@@ -31,6 +31,7 @@ export class EditorDropdownTree extends React.PureComponent<IProps> {
                     optionTemplate={config.optionTemplate}
                     valueTemplate={config.valueTemplate}
                     allowMultiple={config.multiple}
+                    readOnly={config.readOnly}
                 />
             </Container>
         );

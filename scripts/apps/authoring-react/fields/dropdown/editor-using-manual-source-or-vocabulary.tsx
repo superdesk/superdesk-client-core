@@ -101,6 +101,7 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
                     getId={(option) => option.id.toString()}
                     getLabel={(option) => option.label}
                     allowMultiple={config.multiple}
+                    readOnly={config.readOnly}
                 />
             </Container>
         );

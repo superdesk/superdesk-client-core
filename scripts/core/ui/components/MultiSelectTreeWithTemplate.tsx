@@ -63,6 +63,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                     valueTemplate={(item) => <ValueTemplate item={item} />}
                     allowMultiple={this.props.allowMultiple}
                     singleLevelSearch
+                    readOnly={this.props.readOnly}
                 />
             );
         } else if (props.kind === 'asynchronous') {
@@ -87,6 +88,7 @@ export class MultiSelectTreeWithTemplate<T> extends React.PureComponent<IProps<T
                     optionTemplate={(item) => <OptionTemplate item={item} />}
                     valueTemplate={(item) => <ValueTemplate item={item} />}
                     allowMultiple={this.props.allowMultiple}
+                    readOnly={this.props.readOnly}
                 />
             );
         } else {
