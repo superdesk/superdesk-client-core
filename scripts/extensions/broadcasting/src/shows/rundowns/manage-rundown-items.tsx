@@ -7,7 +7,7 @@ import {Map} from 'immutable';
 import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, SHOW_PART_VOCABULARY_ID} from '../../constants';
 import {IVocabularyItem} from 'superdesk-api';
 import {addSeconds, arrayMove, WithSortable} from '@superdesk/common';
-import {ICreate, IEdit} from './template-edit';
+import {ICreate, IEdit, IPreview} from './template-edit';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 const {vocabulary} = superdesk.entities;
@@ -20,9 +20,10 @@ interface IProps<T> {
     items: Array<T>;
     onChange(items: Array<T>): void;
     onDelete(item: T): void;
-    createOrEdit: ICreate | IEdit | null;
+    createOrEdit: ICreate | IEdit | IPreview | null;
     initiateCreation(): void;
     initiateEditing(item: T): void;
+    initiatePreview(item: T): void;
     readOnly: boolean;
 }
 
@@ -137,6 +138,12 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                         <span onClick={() => this.props.initiateEditing(item)}>{gettext('Edit')}</span>
                                     )
                                 }
+
+                                <SpacerBlock h gap="4" />
+
+                                <span onClick={() => this.props.initiatePreview(item)}>{gettext('Preview')}</span>
+
+                                <SpacerBlock h gap="4" />
 
                                 {
                                     !readOnly && (

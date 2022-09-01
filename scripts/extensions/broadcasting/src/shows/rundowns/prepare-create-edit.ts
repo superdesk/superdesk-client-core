@@ -1,15 +1,16 @@
-import {isEqual} from 'lodash';
-import {rundownItemContentProfile} from './rundown-items/content-profile';
+import {isEqual, noop} from 'lodash';
+import {getRundownItemContentProfile} from './rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
     IAuthoringStorage,
 } from 'superdesk-api';
 import {IRundownItemBase, IRundownItemTemplateInitial} from '../../interfaces';
-import {ICreate, IEdit} from './template-edit';
+import {ICreate, IEdit, IPreview} from './template-edit';
 import {superdesk} from '../../superdesk';
 
 function getRundownItemTemplateAuthoringStorage(
     item: IRundownItemTemplateInitial,
+    readOnly: boolean,
     onSave: (item: IRundownItemTemplateInitial) => void,
 ): IAuthoringStorage<IRundownItemTemplateInitial> {
     class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItemTemplateInitial> {
@@ -51,7 +52,7 @@ function getRundownItemTemplateAuthoringStorage(
             return Promise.resolve(current);
         },
         getContentProfile: () => {
-            return Promise.resolve(rundownItemContentProfile);
+            return Promise.resolve(getRundownItemContentProfile(readOnly));
         },
         closeAuthoring: (current, original, _cancelAutosave, doClose) => {
             const isCreationMode = Object.keys(original.data).length < 1;
@@ -92,6 +93,7 @@ export function prepareForCreation(
         item: item,
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
+            false,
             onSave,
         ),
     };
@@ -115,9 +117,33 @@ export function prepareForEditing(
         item: item,
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
+            false,
             (res) => onSave(
                 res.data as IRundownItemBase, // validated by the authoring component
             ),
+        ),
+    };
+}
+
+export function prepareForPreview(
+    data: IRundownItemBase,
+): IPreview {
+    const item: IRundownItemTemplateInitial = {
+        _id: '',
+        _created: '',
+        _updated: '',
+        _etag: '',
+        _links: {},
+        data,
+    };
+
+    return {
+        type: 'preview',
+        item: item,
+        authoringStorage: getRundownItemTemplateAuthoringStorage(
+            item,
+            true,
+            noop,
         ),
     };
 }

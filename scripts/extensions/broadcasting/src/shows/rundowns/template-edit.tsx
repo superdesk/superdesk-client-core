@@ -23,7 +23,7 @@ import {ManageRundownItems} from './manage-rundown-items';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
 import {getPartialDateFormat} from '../../utils/get-partial-date-format';
 import {IAuthoringStorage} from 'superdesk-api';
-import {prepareForCreation, prepareForEditing} from './prepare-create-edit';
+import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
 
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
@@ -60,6 +60,12 @@ export interface IEdit {
     authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
 }
 
+export interface IPreview {
+    type: 'preview';
+    item: IRundownItemTemplateInitial;
+    authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
+}
+
 interface IPropsEditable {
     readOnly: false;
     templateFields: Partial<IRundownTemplateBase>;
@@ -80,7 +86,7 @@ interface IPropsReadOnly {
 type IProps = IPropsEditable | IPropsReadOnly;
 
 interface IState {
-    createOrEditRundownItem: ICreate | IEdit | null;
+    createOrEditRundownItem: ICreate | IEdit | IPreview | null;
 }
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
@@ -101,6 +107,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
         this.handleChange = this.handleChange.bind(this);
         this.initiateCreation = this.initiateCreation.bind(this);
         this.initiateEditing = this.initiateEditing.bind(this);
+        this.initiatePreview = this.initiatePreview.bind(this);
         this.getRundownItems = this.getRundownItems.bind(this);
         this.handleCancelling = this.handleCancelling.bind(this);
 
@@ -146,6 +153,12 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                     });
                 }
             }),
+        });
+    }
+
+    private initiatePreview(item: IRundownItemBase) {
+        this.setState({
+            createOrEditRundownItem: prepareForPreview(item),
         });
     }
 
@@ -433,6 +446,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                             createOrEdit={this.state.createOrEditRundownItem}
                                                             initiateCreation={this.initiateCreation}
                                                             initiateEditing={this.initiateEditing}
+                                                            initiatePreview={this.initiatePreview}
                                                             onChange={(val) => {
                                                                 this.handleChange({
                                                                     rundown_items: computeStartEndTime(airTime, val),
@@ -469,7 +483,11 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 authoringStorage={this.state.createOrEditRundownItem.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
-                                                getInlineToolbarActions={({hasUnsavedChanges, save, discardChangesAndClose}) => {
+                                                getInlineToolbarActions={({
+                                                    hasUnsavedChanges,
+                                                    save,
+                                                    discardChangesAndClose,
+                                                }) => {
                                                     return {
                                                         readOnly: false,
                                                         toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',

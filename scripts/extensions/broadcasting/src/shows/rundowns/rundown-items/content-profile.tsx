@@ -6,7 +6,11 @@ import {
     IEditor3Config,
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
-import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, RUNDOWN_SUBITEM_TYPES, SHOW_PART_VOCABULARY_ID} from '../../../constants';
+import {
+    RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
+    // RUNDOWN_SUBITEM_TYPES,
+    SHOW_PART_VOCABULARY_ID,
+} from '../../../constants';
 import {superdesk} from '../../../superdesk';
 
 const {gettext} = superdesk.localization;
@@ -168,39 +172,63 @@ const showPartField: IAuthoringFieldV2 = {
     fieldConfig: showPartConfig,
 };
 
-const subitemsConfig: IDropdownConfigVocabulary = {
-    source: 'vocabulary',
-    vocabularyId: RUNDOWN_SUBITEM_TYPES,
-    multiple: false,
-    required: false,
-};
+// const subitemsConfig: IDropdownConfigVocabulary = {
+//     source: 'vocabulary',
+//     vocabularyId: RUNDOWN_SUBITEM_TYPES,
+//     multiple: false,
+//     required: false,
+// };
 
-const subItemsField: IAuthoringFieldV2 = {
-    id: 'subitems',
-    name: gettext('Subitems'),
-    fieldType: 'dropdown',
-    fieldConfig: subitemsConfig,
-};
+// const subItemsField: IAuthoringFieldV2 = {
+//     id: 'subitems',
+//     name: gettext('Subitems'),
+//     fieldType: 'dropdown',
+//     fieldConfig: subitemsConfig,
+// };
 
-export const rundownItemContentProfile: IContentProfileV2 = {
-    id: 'temp-profile',
-    name: 'Temporary profile',
-    header: OrderedMap([
-        [itemTypeField.id, itemTypeField],
-        [showPartField.id, showPartField],
-        // [subItemsField.id, subItemsField],
-        [startTimeField.id, startTimeField],
-        [endTimeField.id, endTimeField],
-        [durationField.id, durationField],
-        [plannedDurationField.id, plannedDurationField],
-    ]),
-    content: OrderedMap([
-        [titleField.id, titleField],
-        [contentField.id, contentField],
-        [liveSoundField.id, liveSoundField],
-        [guestsField.id, guestsField],
-        [additionalNotesField.id, additionalNotesField],
-        [liveCaptionsField.id, liveCaptionsField],
-        [lastSentence.id, lastSentence],
-    ]),
-};
+export function getRundownItemContentProfile(readOnly: boolean) {
+    const profile: IContentProfileV2 = {
+        id: 'temp-profile',
+        name: 'Temporary profile',
+        header: OrderedMap([
+            [itemTypeField.id, itemTypeField],
+            [showPartField.id, showPartField],
+            // [subItemsField.id, subItemsField],
+            [startTimeField.id, startTimeField],
+            [endTimeField.id, endTimeField],
+            [durationField.id, durationField],
+            [plannedDurationField.id, plannedDurationField],
+        ]),
+        content: OrderedMap([
+            [titleField.id, titleField],
+            [contentField.id, contentField],
+            [liveSoundField.id, liveSoundField],
+            [guestsField.id, guestsField],
+            [additionalNotesField.id, additionalNotesField],
+            [liveCaptionsField.id, liveCaptionsField],
+            [lastSentence.id, lastSentence],
+        ]),
+    };
+
+    profile.header = profile.header.map((field) => {
+        return {
+            ...field,
+            fieldConfig: {
+                ...field.fieldConfig,
+                readOnly,
+            },
+        };
+    }).toOrderedMap();
+
+    profile.content = profile.content.map((field) => {
+        return {
+            ...field,
+            fieldConfig: {
+                ...field.fieldConfig,
+                readOnly,
+            },
+        };
+    }).toOrderedMap();
+
+    return profile;
+}

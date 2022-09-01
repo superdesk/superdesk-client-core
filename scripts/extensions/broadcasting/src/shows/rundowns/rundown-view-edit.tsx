@@ -14,20 +14,21 @@ interface IProps {
 interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
-    createOrEditRundownItem: ICreate | IEdit | null;
+    createOrEditRundownItem: ICreate | IEdit | IPreview | null;
 }
 
 import {superdesk} from '../../superdesk';
 
 import {ManageRundownItems} from './manage-rundown-items';
-import {ICreate, IEdit} from './template-edit';
-import {prepareForCreation, prepareForEditing} from './prepare-create-edit';
+import {ICreate, IEdit, IPreview} from './template-edit';
+import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
 import {CreateValidators, WithValidation} from '@superdesk/common';
 import {stringNotEmpty} from '../../form-validation';
 import {isEqual, noop} from 'lodash';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
+import {ITopBarWidget} from 'superdesk-api';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
@@ -65,6 +66,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         this.setRundownField = this.setRundownField.bind(this);
         this.initiateCreation = this.initiateCreation.bind(this);
         this.initiateEditing = this.initiateEditing.bind(this);
+        this.initiatePreview = this.initiatePreview.bind(this);
         this.save = this.save.bind(this);
         this.close = this.close.bind(this);
     }
@@ -189,6 +191,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         });
     }
 
+    initiatePreview(item: IRundownItem) {
+        this.setState({
+            createOrEditRundownItem: prepareForPreview(item),
+        });
+    }
+
     componentDidMount() {
         httpRequestJsonLocal<IRundown>({
             method: 'GET',
@@ -207,6 +215,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         if (rundown == null) {
             return null;
         }
+
+        const rundownAction = this.state.createOrEditRundownItem;
 
         return (
             <WithValidation validators={rundownValidator}>
@@ -288,9 +298,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     rundown={rundown}
                                                     readOnly={this.props.readOnly}
                                                     items={rundownItems}
-                                                    createOrEdit={this.state.createOrEditRundownItem}
+                                                    createOrEdit={rundownAction}
                                                     initiateCreation={this.initiateCreation}
                                                     initiateEditing={this.initiateEditing}
+                                                    initiatePreview={this.initiatePreview}
                                                     onChange={(val) => {
                                                         this.setRundownField({
                                                             items: val.map(({_id}) => ({_id: _id})),
@@ -311,11 +322,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                             </Layout.AuthoringMain>
                         </Layout.MainPanel>
 
-                        <Layout.RightPanel open={this.state.createOrEditRundownItem != null}>
+                        <Layout.RightPanel open={rundownAction != null}>
                             <Layout.Panel side="right" background="grey">
                                 <Layout.PanelContent>
                                     {
-                                        this.state.createOrEditRundownItem != null && (
+                                        rundownAction != null && (
                                             <AuthoringReact
                                                 // ID is not needed because authoringStorage is operating on array items
                                                 // and not on database items via HTTP API
@@ -324,7 +335,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     this.setState({createOrEditRundownItem: null});
                                                 }}
                                                 fieldsAdapter={{}}
-                                                authoringStorage={this.state.createOrEditRundownItem.authoringStorage}
+                                                authoringStorage={rundownAction.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
                                                 getInlineToolbarActions={({
@@ -332,42 +343,46 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     save,
                                                     discardChangesAndClose,
                                                 }) => {
+                                                    const actions: Array<ITopBarWidget<IRundownItemTemplateInitial>> = [
+                                                        {
+                                                            availableOffline: true,
+                                                            group: 'start',
+                                                            priority: 0.1,
+                                                            component: () => (
+                                                                <IconButton
+                                                                    ariaValue={gettext('Close')}
+                                                                    icon="close-small"
+                                                                    onClick={() => {
+                                                                        discardChangesAndClose();
+                                                                    }}
+                                                                />
+                                                            ),
+                                                        },
+                                                    ];
+
+                                                    if (rundownAction != null && rundownAction.type !== 'preview') {
+                                                        actions.push({
+                                                            availableOffline: false,
+                                                            group: 'end',
+                                                            priority: 0.1,
+                                                            component: () => (
+                                                                <Button
+                                                                    text={gettext('Apply')}
+                                                                    onClick={() => {
+                                                                        save();
+                                                                    }}
+                                                                    type="primary"
+                                                                    disabled={hasUnsavedChanges() !== true}
+                                                                />
+                                                            ),
+                                                        });
+                                                    }
+
                                                     return {
-                                                        readOnly: false,
+                                                        readOnly: rundownAction != null
+                                                            && rundownAction.type === 'preview',
                                                         toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
-                                                        actions: [
-                                                            {
-                                                                label: gettext('Apply'),
-                                                                availableOffline: false,
-                                                                group: 'end',
-                                                                priority: 0.1,
-                                                                component: () => (
-                                                                    <Button
-                                                                        text={gettext('Apply')}
-                                                                        onClick={() => {
-                                                                            save();
-                                                                        }}
-                                                                        type="primary"
-                                                                        disabled={hasUnsavedChanges() !== true}
-                                                                    />
-                                                                ),
-                                                            },
-                                                            {
-                                                                label: gettext('Close'),
-                                                                availableOffline: true,
-                                                                group: 'start',
-                                                                priority: 0.1,
-                                                                component: () => (
-                                                                    <IconButton
-                                                                        ariaValue={gettext('Close')}
-                                                                        icon="close-small"
-                                                                        onClick={() => {
-                                                                            discardChangesAndClose();
-                                                                        }}
-                                                                    />
-                                                                ),
-                                                            },
-                                                        ],
+                                                        actions: actions,
                                                     };
                                                 }}
                                                 getAuthoringTopBarWidgets={() => []}
