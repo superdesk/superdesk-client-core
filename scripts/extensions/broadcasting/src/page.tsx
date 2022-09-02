@@ -40,11 +40,10 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     render() {
         return (
             <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
-                <div style={{height: '100%', display: 'flex'}}>
+                <div className="sd-content sd-content-wrapper">
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
                             <SubNav zIndex={2}>
-                                <div style={{width: 600}} /> {/** FIXME: use automatic width */}
                                 {/* <SearchBar placeholder='Search media'></SearchBar> */}
                                 <ButtonGroup align="end" spaces="no-space">
                                     <Dropdown
@@ -431,7 +430,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
 
                         <Layout.OverlayPanel />
                     </Layout.LayoutContainer>
-                    <Layout.ContentSplitter visible={true} />
+                    <Layout.ContentSplitter visible={this.state.rundownIdInEditMode != null} />
                     <Layout.AuthoringContainer open={this.state.rundownIdInEditMode != null}>
                         {
                             this.state.rundownIdInEditMode != null && (
