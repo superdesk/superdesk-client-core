@@ -1,5 +1,6 @@
 import {OrderedMap} from 'immutable';
 import {
+    IAttachmentsConfig,
     IAuthoringFieldV2,
     IContentProfileV2,
     IDropdownConfigVocabulary,
@@ -186,6 +187,15 @@ const showPartField: IAuthoringFieldV2 = {
 //     fieldConfig: subitemsConfig,
 // };
 
+const subitemAttachmentsConfig: IAttachmentsConfig = {};
+
+const subitemAttachments: IAuthoringFieldV2 = {
+    id: 'subitems',
+    name: gettext('Subitem attachments'),
+    fieldType: 'attachments',
+    fieldConfig: subitemAttachmentsConfig,
+};
+
 export function getRundownItemContentProfile(readOnly: boolean) {
     const profile: IContentProfileV2 = {
         id: 'temp-profile',
@@ -201,6 +211,7 @@ export function getRundownItemContentProfile(readOnly: boolean) {
         ]),
         content: OrderedMap([
             [titleField.id, titleField],
+            [subitemAttachments.id, subitemAttachments],
             [contentField.id, contentField],
             [liveSoundField.id, liveSoundField],
             [guestsField.id, guestsField],
