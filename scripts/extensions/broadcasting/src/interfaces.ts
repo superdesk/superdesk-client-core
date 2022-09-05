@@ -1,5 +1,5 @@
 import {RawDraftContentState} from 'draft-js';
-import {IBaseRestApiResponse, IUser} from 'superdesk-api';
+import {IBaseRestApiResponse, IUser, IVocabularyItem} from 'superdesk-api';
 
 /**
  * Recurrence Rule
@@ -61,6 +61,7 @@ export interface IRundownItemBase {
             annotations?: Array<any>;
         }
     };
+    subitems?: Array<IVocabularyItem['qcode']>;
 }
 
 export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;

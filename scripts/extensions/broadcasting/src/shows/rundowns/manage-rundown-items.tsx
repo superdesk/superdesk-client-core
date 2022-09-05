@@ -4,7 +4,7 @@ import {IRundown, IRundownItem, IRundownItemBase} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
 import {Map} from 'immutable';
-import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, SHOW_PART_VOCABULARY_ID} from '../../constants';
+import {RUNDOWN_ITEM_TYPES_VOCABULARY_ID, RUNDOWN_SUBITEM_TYPES, SHOW_PART_VOCABULARY_ID} from '../../constants';
 import {IVocabularyItem} from 'superdesk-api';
 import {addSeconds, arrayMove, WithSortable} from '@superdesk/common';
 import {ICreate, IEdit, IPreview} from './template-edit';
@@ -49,6 +49,10 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
             vocabulary.getVocabulary(RUNDOWN_ITEM_TYPES_VOCABULARY_ID).items.map((item) => [item.qcode, item]),
         );
 
+        const subitemTypes = Map<string, IVocabularyItem>(
+            vocabulary.getVocabulary(RUNDOWN_SUBITEM_TYPES).items.map((item) => [item.qcode, item]),
+        );
+
         return (
             <div>
                 {
@@ -91,6 +95,11 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                     itemTemplate={({item}) => {
                         const showPart = item.show_part == null ? null : showParts.get(item.show_part);
                         const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
+                        const subitems = item.subitems == null
+                            ? null
+                            : item.subitems
+                                .map((qcode) => subitemTypes.get(qcode))
+                                .filter((x) => x != null);
 
                         return (
                             <div style={{padding: 4, margin: 4, border: '1px solid blue'}}>
@@ -150,6 +159,27 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                         <span onClick={() => this.props.onDelete(item)}>{gettext('Delete')}</span>
                                     )
                                 }
+
+                                {
+                                    subitems != null && (
+                                        <span>
+                                            <SpacerBlock h gap="4" />
+
+                                            {
+                                                subitems.map(({name}, i) => (
+                                                    <Label
+                                                        key={i}
+                                                        text={name}
+                                                        style="translucent"
+                                                        size="small"
+                                                    />
+                                                ))
+                                            }
+                                        </span>
+                                    )
+                                }
+
+                                {item.additional_notes}
                             </div>
                         );
                     }}
