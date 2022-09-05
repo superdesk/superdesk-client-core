@@ -81,7 +81,6 @@ const itemTypesConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     multiple: false,
-    required: true,
 };
 
 const itemTypeField: IAuthoringFieldV2 = {
