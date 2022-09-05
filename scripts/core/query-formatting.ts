@@ -116,7 +116,7 @@ export function toElasticQuery(q: ISuperdeskQuery) {
     interface IQuery {
         query?: {
             filtered: {
-                filter: {};
+                filter?: {};
             };
         };
         sort: ISuperdeskQuery['sort'];
@@ -130,19 +130,23 @@ export function toElasticQuery(q: ISuperdeskQuery) {
         from: (q.page - 1) * q.max_results,
     };
 
+    const filtered = {};
+
     if (q.filter != null) {
-        const filtered = {filter: toElasticFilter(q.filter)};
+        filtered['filter'] = toElasticFilter(q.filter);
+    }
 
-        if (q.fullTextSearch != null) {
-            filtered['query'] = {
-                query_string: {
-                    query: q.fullTextSearch,
-                    lenient: true,
-                    default_operator: 'AND',
-                },
-            };
-        }
+    if (q.fullTextSearch != null) {
+        filtered['query'] = {
+            query_string: {
+                query: q.fullTextSearch,
+                lenient: true,
+                default_operator: 'AND',
+            },
+        };
+    }
 
+    if (Object.keys(filtered).length > 0) {
         query['query'] = {
             filtered: filtered,
         };

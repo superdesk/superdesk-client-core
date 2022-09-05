@@ -1342,6 +1342,7 @@ declare module 'superdesk-api' {
         | {$lt: any}
         | {$lte: any}
         | {$in: any};
+        // consider adding $inString for matching substrings
 
     export type IComparison = {[field: string]: IComparisonOptions};
     export type IAndOperator = {$and: Array<IComparison | ILogicalOperator>};
@@ -1379,7 +1380,7 @@ declare module 'superdesk-api' {
 
     export interface IVirtualListQueryBase {
         endpoint: string;
-        filter?: ILogicalOperator;
+        filter?: ILogicalOperator | undefined;
         fullTextSearch?: string; // only works with elastic endpoints
         sort: Array<{[field: string]: 'asc' | 'desc'}>;
     }

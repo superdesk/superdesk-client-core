@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import {WithSizeObserver, ContentListItem, Label, IconButton, Menu} from 'superdesk-ui-framework/react';
+import {WithSizeObserver, ContentListItem, Label, IconButton, Menu, Alert} from 'superdesk-ui-framework/react';
 import {IRundown, IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
@@ -15,6 +15,7 @@ const {gettext} = superdesk.localization;
 const VirtualListFromQuery = getVirtualListFromQuery<IRundown, {show: IShow; template: IRundownTemplate}>();
 
 interface IProps {
+    searchString: string;
     inEditMode: IRundown['_id'] | null;
     onEditModeChange(inEditMode: IRundown['_id'] | null): void;
 }
@@ -29,6 +30,9 @@ export class RundownsList extends React.PureComponent<IProps> {
                         height={height}
                         query={{
                             endpoint: '/rundowns',
+                            fullTextSearch: this.props.searchString.trim().length < 1
+                                ? undefined
+                                : this.props.searchString,
                             sort: [{_updated: 'desc'}],
                             join: {
                                 show: {
@@ -172,7 +176,24 @@ export class RundownsList extends React.PureComponent<IProps> {
                                 />
                             </div>
                         )}
-                        noItemsTemplate={() => <span>{gettext('There are no rundowns yet')}</span>}
+                        noItemsTemplate={() => {
+                            if (this.props.searchString == null) {
+                                return (
+                                    <Alert>{gettext('There are no rundowns yet')}</Alert>
+                                );
+                            } else {
+                                return (
+                                    <Alert>
+                                        {
+                                            gettext(
+                                                'No items found matching search keyword "{{x}}"',
+                                                {x: this.props.searchString},
+                                            )
+                                        }
+                                    </Alert>
+                                );
+                            }
+                        }}
                     />
                 )}
             </WithSizeObserver>

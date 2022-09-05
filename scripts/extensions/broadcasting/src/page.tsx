@@ -21,11 +21,14 @@ import {RundownsList} from './shows/rundowns/rundowns-list';
 import {RundownViewEdit} from './shows/rundowns/rundown-view-edit';
 
 const {gettext} = superdesk.localization;
+const {Spacer} = superdesk.components;
 
 type IProps = {};
 
 interface IState {
     rundownIdInEditMode: string | null;
+    searchString: string;
+    searchStringApplied: string;
 }
 
 export class RundownsPage extends React.PureComponent<IProps, IState> {
@@ -34,6 +37,8 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
 
         this.state = {
             rundownIdInEditMode: null,
+            searchString: '',
+            searchStringApplied: '',
         };
     }
 
@@ -44,7 +49,34 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
                             <SubNav zIndex={2}>
-                                {/* <SearchBar placeholder='Search media'></SearchBar> */}
+                                {/* <SearchBar
+                                    placeholder={gettext('Search')}
+                                    onSubmit={() => {
+
+                                    }}
+                                /> */}
+
+                                <Spacer h gap="8" justifyContent="start" noGrow style={{paddingLeft: 20}}>
+                                    <input
+                                        type="text"
+                                        value={this.state.searchString}
+                                        onChange={(event) => {
+                                            this.setState({searchString: event.target.value});
+                                        }}
+                                    />
+
+                                    <button
+                                        type="submit"
+                                        onClick={() => {
+                                            this.setState({
+                                                searchStringApplied: this.state.searchString,
+                                            });
+                                        }}
+                                    >
+                                        {gettext('Submit')}
+                                    </button>
+                                </Spacer>
+
                                 <ButtonGroup align="end" spaces="no-space">
                                     <Dropdown
                                         items={[
@@ -349,6 +381,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                 onEditModeChange={(rundownIdInEditMode) => {
                                     this.setState({rundownIdInEditMode});
                                 }}
+                                searchString={this.state.searchStringApplied}
                             />
 
                         </Layout.MainPanel>
