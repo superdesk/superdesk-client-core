@@ -189,7 +189,7 @@ const showPartField: IAuthoringFieldV2 = {
 const subitemAttachmentsConfig: IAttachmentsConfig = {};
 
 const subitemAttachments: IAuthoringFieldV2 = {
-    id: 'subitems',
+    id: 'subitem_attachments',
     name: gettext('Subitem attachments'),
     fieldType: 'attachments',
     fieldConfig: subitemAttachmentsConfig,

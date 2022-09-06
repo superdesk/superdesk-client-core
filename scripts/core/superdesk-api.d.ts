@@ -2307,6 +2307,14 @@ declare module 'superdesk-api' {
         getMediaId(attachment: IAttachment): IMedia['_id'];
     }
 
+    export interface IPatchingOptions {
+        /**
+         * If current value is `undefined` and next value is `null`,
+         * treat it as equal.
+         */
+        undefinedEqNull: boolean;
+    }
+
     export type ISuperdesk = DeepReadonly<{
         dataApi: IDataApi,
         dataApiByEntity: {
@@ -2548,7 +2556,7 @@ declare module 'superdesk-api' {
             };
             dateToServerString(date: Date): string; // outputs a string for parsing by the server
             memoize<T extends ICallable>(func: T, maxCacheEntryCount?: number): T; // maxCacheEntryCount = 1
-            generatePatch<T>(a: Partial<T>, b: Partial<T>): Partial<T>;
+            generatePatch<T>(a: Partial<T>, b: Partial<T>, options?: IPatchingOptions): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
             downloadBlob(data: BinaryType, mimetype: string, filename: string): void;

@@ -94,7 +94,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         httpRequestJsonLocal<IRundown>({
             method: 'PATCH',
             path: `/rundowns/${this.props.rundownId}`,
-            payload: generatePatch(this.state.rundown, this.state.rundownWithChanges),
+            payload: generatePatch(this.state.rundown, this.state.rundownWithChanges, {undefinedEqNull: true}),
             headers: {
                 'If-Match': this.state.rundown._etag,
             },
@@ -181,7 +181,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                     httpRequestJsonLocal<IRundownItem>({
                         method: 'PATCH',
                         path: `/rundown_items/${item._id}`,
-                        payload: prepareForSaving(generatePatch(item, val)),
+                        payload: prepareForSaving(generatePatch(item, val, {undefinedEqNull: true})),
                         headers: {
                             'If-Match': item._etag,
                         },

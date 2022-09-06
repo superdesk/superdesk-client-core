@@ -1,14 +1,7 @@
 import {generate} from 'json-merge-patch';
+import {IPatchingOptions} from 'superdesk-api';
 
-interface IOptions {
-    /**
-     * If current value is `undefined` and next value is `null`,
-     * treat it as equal.
-     */
-    undefinedEqNull: boolean;
-}
-
-export function generatePatch<T>(a: Partial<T>, b: Partial<T>, options?: IOptions): Partial<T> {
+export function generatePatch<T>(a: Partial<T>, b: Partial<T>, options?: IPatchingOptions): Partial<T> {
     const result = (generate(a, b) ?? {}) as Partial<T>;
 
     if (options?.undefinedEqNull === true) {
