@@ -1,4 +1,4 @@
-import {isEqual, noop} from 'lodash';
+import {isEqual} from 'lodash';
 import {getRundownItemContentProfile} from './rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
@@ -11,7 +11,7 @@ import {superdesk} from '../../superdesk';
 function getRundownItemTemplateAuthoringStorage(
     item: IRundownItemTemplateInitial,
     readOnly: boolean,
-    onSave: (item: IRundownItemTemplateInitial) => void,
+    onSave: (item: IRundownItemTemplateInitial) => Promise<IRundownItemTemplateInitial>,
 ): IAuthoringStorage<IRundownItemTemplateInitial> {
     class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItemTemplateInitial> {
         get() {
@@ -47,9 +47,7 @@ function getRundownItemTemplateAuthoringStorage(
             return Promise.resolve(item);
         },
         saveEntity: (current) => {
-            onSave(current);
-
-            return Promise.resolve(current);
+            return onSave(current);
         },
         getContentProfile: () => {
             return Promise.resolve(getRundownItemContentProfile(readOnly));
@@ -77,7 +75,7 @@ function getRundownItemTemplateAuthoringStorage(
 }
 
 export function prepareForCreation(
-    onSave: (item: IRundownItemTemplateInitial) => void,
+    onSave: (item: IRundownItemTemplateInitial) => Promise<IRundownItemTemplateInitial>,
 ): ICreate {
     const item: IRundownItemTemplateInitial = {
         _id: '',
@@ -101,7 +99,7 @@ export function prepareForCreation(
 
 export function prepareForEditing(
     data: IRundownItemBase,
-    onSave: (item: IRundownItemBase) => void,
+    onSave: (item: IRundownItemBase) => Promise<IRundownItemBase>,
 ): IEdit {
     const item: IRundownItemTemplateInitial = {
         _id: '',
@@ -120,7 +118,18 @@ export function prepareForEditing(
             false,
             (res) => onSave(
                 res.data as IRundownItemBase, // validated by the authoring component
-            ),
+            ).then((dataSaved) => {
+                const saved: IRundownItemTemplateInitial = {
+                    _id: '',
+                    _created: '',
+                    _updated: '',
+                    _etag: '',
+                    _links: {},
+                    data: dataSaved,
+                };
+
+                return saved;
+            }),
         ),
     };
 }
@@ -143,7 +152,7 @@ export function prepareForPreview(
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
             true,
-            noop,
+            (_) => Promise.resolve(_),
         ),
     };
 }

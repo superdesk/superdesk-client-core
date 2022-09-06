@@ -28,11 +28,12 @@ import {isEqual, noop} from 'lodash';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
-import {ITopBarWidget} from 'superdesk-api';
+import {IPatchExtraFields, ITopBarWidget} from 'superdesk-api';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
 const {generatePatch} = superdesk.utilities;
+const {fixPatchResponse} = superdesk.helpers;
 
 const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
 
@@ -137,15 +138,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                     const {rundown, rundownWithChanges} = this.state;
 
                     if (rundown == null || rundownWithChanges == null) {
-                        return;
+                        throw new Error('disallowed state');
                     }
 
-                    httpRequestJsonLocal<IRundownItem>({
+                    return httpRequestJsonLocal<IRundownItem>({
                         method: 'POST',
                         path: '/rundown_items',
                         payload: prepareForSaving(itemWithDuration),
                     }).then((res) => {
-                        httpRequestJsonLocal<IRundown>({
+                        return httpRequestJsonLocal<IRundown>({
                             method: 'PATCH',
                             path: `/rundowns/${this.props.rundownId}`,
                             payload: {
@@ -167,8 +168,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     _etag: rundownNext._etag,
                                 },
                             });
+
+                            return val;
                         });
                     });
+                } else {
+                    return Promise.resolve(val);
                 }
             }),
         });
@@ -178,14 +183,23 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         this.setState({
             createOrEditRundownItem: prepareForEditing(item, (val) => {
                 if (!this.props.readOnly) {
-                    httpRequestJsonLocal<IRundownItem>({
+                    return httpRequestJsonLocal<IRundownItem & IPatchExtraFields>({
                         method: 'PATCH',
                         path: `/rundown_items/${item._id}`,
                         payload: prepareForSaving(generatePatch(item, val, {undefinedEqNull: true})),
                         headers: {
                             'If-Match': item._etag,
                         },
+                    }).then((patchRes) => {
+                        const nextItem = fixPatchResponse(patchRes);
+
+                        // needed so correct _etag can be used on next save
+                        this.initiateEditing(nextItem);
+
+                        return nextItem;
                     });
+                } else {
+                    return Promise.resolve(item);
                 }
             }),
         });

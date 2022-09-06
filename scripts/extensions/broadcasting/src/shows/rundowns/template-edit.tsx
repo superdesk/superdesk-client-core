@@ -140,6 +140,8 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                         ),
                     });
                 }
+
+                return Promise.resolve(val);
             }),
         });
     }
@@ -152,6 +154,8 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                         rundown_items: this.getRundownItems().map((_item) => _item === item ? val : _item),
                     });
                 }
+
+                return Promise.resolve(val);
             }),
         });
     }

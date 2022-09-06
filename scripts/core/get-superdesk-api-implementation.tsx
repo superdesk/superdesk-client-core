@@ -7,6 +7,8 @@ import {
     IEvents,
     IStage,
     IUser,
+    IBaseRestApiResponse,
+    IPatchExtraFields,
 } from 'superdesk-api';
 import {gettext, gettextPlural, stripBaseRestApiFields, stripHtmlTags} from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
@@ -36,7 +38,7 @@ import {
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
 import {downloadBlob} from './helpers/utils';
 import {getLocaleForDatePicker} from './helpers/ui-framework';
-import {memoize} from 'lodash';
+import {memoize, omit} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
 import {ModalHeader} from './ui/components/Modal/ModalHeader';
 import {ModalBody} from './ui/components/Modal/ModalBody';
@@ -198,6 +200,12 @@ export function getRelativeOrAbsoluteDateTime(
         .format(format);
 }
 
+export function fixPatchResponse<T extends IBaseRestApiResponse>(
+    entity: T & IPatchExtraFields,
+): T {
+    return omit(entity, ['_status']) as unknown as T;
+}
+
 // imported from planning
 export function getSuperdeskApiImplementation(
     requestingExtensionId: string,
@@ -225,6 +233,7 @@ export function getSuperdeskApiImplementation(
             isNullOrUndefined,
             nameof: nameof,
             stripBaseRestApiFields,
+            fixPatchResponse,
             computeEditor3Output,
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
         },

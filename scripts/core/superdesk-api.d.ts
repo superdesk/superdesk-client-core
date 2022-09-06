@@ -1472,6 +1472,10 @@ declare module 'superdesk-api' {
         };
     }
 
+    export interface IPatchExtraFields {
+        _status: string;
+    }
+
     export interface IQueryElasticParameters {
         endpoint: string;
         page: {
@@ -2397,6 +2401,7 @@ declare module 'superdesk-api' {
         helpers: {
             assertNever(x: never): never;
             stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T): Omit<T, keyof IBaseRestApiResponse>;
+            fixPatchResponse<T extends IBaseRestApiResponse>(entity: T & {_status: string}): T;
             filterUndefined<T>(values: Partial<T>): Partial<T>;
             filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T>;
             stringToNumber(value?: string, radix?: number): number | undefined;
