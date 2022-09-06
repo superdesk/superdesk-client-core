@@ -5,6 +5,7 @@ import {fieldNotNull, stringNotEmpty} from '../../form-validation';
 import {IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
+import {PlannedDurationLabel} from './components/planned-duration-label';
 
 const {gettext} = superdesk.localization;
 const {SelectFromEndpoint, Spacer, SpacerBlock, InputLabel} = superdesk.components;
@@ -202,12 +203,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
 
                                             <SpacerBlock v gap="4" />
 
-                                            <IconLabel
-                                                type="default"
-                                                text={template.planned_duration.toString()}
-                                                innerLabel={gettext('Planned duration')}
-                                                style="translucent"
-                                            />
+                                            <PlannedDurationLabel planned_duration={template.planned_duration} />
 
                                             <SpacerBlock h gap="4" />
 

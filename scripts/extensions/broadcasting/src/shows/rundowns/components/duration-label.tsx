@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {IconLabel} from 'superdesk-ui-framework/react';
+import {IconLabel, getDurationString} from 'superdesk-ui-framework/react';
 
 import {superdesk} from '../../../superdesk';
 
@@ -17,7 +17,7 @@ export class DurationLabel extends React.PureComponent<IProps> {
 
         return (
             <IconLabel
-                text={(duration ?? planned_duration).toString()}
+                text={getDurationString(duration ?? planned_duration)}
                 innerLabel={gettext('Duration')}
                 style="translucent"
                 size={this.props.size}
