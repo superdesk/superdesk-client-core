@@ -1,7 +1,13 @@
 /* eslint-disable react/no-multi-comp */
 
 import * as React from 'react';
-import {IRundown, IRundownItem, IRundownItemBase, IRundownItemTemplateInitial} from '../../interfaces';
+import {
+    IRundown,
+    IRundownItem,
+    IRundownItemBase,
+    IRundownItemTemplateInitial,
+    IRundownTemplateBase,
+} from '../../interfaces';
 import {Button, ButtonGroup, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
@@ -41,7 +47,32 @@ const rundownValidator: CreateValidators<Partial<IRundown>> = {
     title: stringNotEmpty,
 };
 
-function prepareForSaving(item: Partial<IRundownItemBase>): Partial<IRundownItemBase> {
+export function prepareRundownTemplateForSaving<T extends IRundownTemplateBase | Partial<IRundownTemplateBase>>(
+    template: T,
+): T {
+    const copy = {...template};
+
+    const items = copy.items ?? [];
+
+    if (items.length > 0) {
+        copy.items = items.map((item) => {
+            const itemCopy = {...item};
+
+            /**
+             * start/end times are generated from duration
+             * they are present in the form only for making it easier for users to enter duration
+             */
+            delete itemCopy['start_time'];
+            delete itemCopy['end_time'];
+
+            return itemCopy;
+        });
+    }
+
+    return copy;
+}
+
+function prepareRundownItemForSaving(item: Partial<IRundownItemBase>): Partial<IRundownItemBase> {
     const copy = {...item};
 
     /**
@@ -144,7 +175,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                     return httpRequestJsonLocal<IRundownItem>({
                         method: 'POST',
                         path: '/rundown_items',
-                        payload: prepareForSaving(itemWithDuration),
+                        payload: prepareRundownItemForSaving(itemWithDuration),
                     }).then((res) => {
                         return httpRequestJsonLocal<IRundown>({
                             method: 'PATCH',
@@ -186,7 +217,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                     return httpRequestJsonLocal<IRundownItem & IPatchExtraFields>({
                         method: 'PATCH',
                         path: `/rundown_items/${item._id}`,
-                        payload: prepareForSaving(generatePatch(item, val, {undefinedEqNull: true})),
+                        payload: prepareRundownItemForSaving(generatePatch(item, val, {undefinedEqNull: true})),
                         headers: {
                             'If-Match': item._etag,
                         },

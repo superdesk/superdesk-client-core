@@ -14,6 +14,7 @@ import {superdesk} from '../../superdesk';
 import {IRundownTemplate, IRundownTemplateBase, IShow} from '../../interfaces';
 import {RundownTemplateViewEdit} from './template-edit';
 import {IRestApiResponse, IUser} from 'superdesk-api';
+import {prepareRundownTemplateForSaving} from './rundown-view-edit';
 
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal, httpRequestRawLocal} = superdesk;
@@ -371,7 +372,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                 httpRequestJsonLocal({
                                                     method: 'POST',
                                                     path: `/shows/${showId}/templates`,
-                                                    payload: template.value,
+                                                    payload: prepareRundownTemplateForSaving(template.value),
                                                 }).then(() => {
                                                     this.setState({
                                                         template: null,
@@ -385,7 +386,9 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                 httpRequestJsonLocal<IRundownTemplate>({
                                                     method: 'PATCH',
                                                     path: `/shows/${showId}/templates/${template.value._id}`,
-                                                    payload: stripBaseRestApiFields(template.value),
+                                                    payload: prepareRundownTemplateForSaving(
+                                                        stripBaseRestApiFields(template.value),
+                                                    ),
                                                     headers: {
                                                         'If-Match': template.value._etag,
                                                     },
