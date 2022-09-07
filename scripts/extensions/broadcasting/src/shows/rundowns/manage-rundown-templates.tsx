@@ -15,6 +15,7 @@ import {IRundownTemplate, IRundownTemplateBase, IShow} from '../../interfaces';
 import {RundownTemplateViewEdit} from './template-edit';
 import {IRestApiResponse, IUser} from 'superdesk-api';
 import {prepareRundownTemplateForSaving} from './rundown-view-edit';
+import {SelectShow} from './components/select-show';
 
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal, httpRequestRawLocal} = superdesk;
@@ -25,7 +26,6 @@ const {
     SpacerBlock,
     Spacer,
     getVirtualListFromQuery,
-    SelectFromEndpoint,
 } = superdesk.components;
 
 const VirtualListFromQuery = getVirtualListFromQuery<IRundownTemplate, never>();
@@ -208,21 +208,12 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                         <Layout.Panel side="left" background="grey">
                             <Layout.PanelHeader>
                                 <Layout.Container className="sd-padding-x--2">
-                                    <SelectFromEndpoint
-                                        endpoint="/shows"
-                                        sort={[['name', 'asc']]}
+                                    <SelectShow
                                         value={this.state.showId}
                                         onChange={(val) => {
                                             this.setState({showId: val});
                                         }}
-                                        itemTemplate={({entity: show}: {entity: IShow}) => (
-                                            show == null
-                                                ? (
-                                                    <span>{gettext('Select show')}</span>
-                                                ) : (
-                                                    <span>{show.title}</span>
-                                                )
-                                        )}
+                                        required={true}
                                     />
                                 </Layout.Container>
                             </Layout.PanelHeader>

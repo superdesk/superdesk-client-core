@@ -94,3 +94,7 @@ interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 
 }
 
 export type IRundown = IRundownBase & IBaseRestApiResponse;
+
+export interface IRundownFilters {
+    show?: IShow['_id'] | null;
+}

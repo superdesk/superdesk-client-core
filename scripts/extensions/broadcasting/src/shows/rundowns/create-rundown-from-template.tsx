@@ -6,6 +6,7 @@ import {IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
 import {PlannedDurationLabel} from './components/planned-duration-label';
+import {SelectShow} from './components/select-show';
 
 const {gettext} = superdesk.localization;
 const {SelectFromEndpoint, Spacer, SpacerBlock, InputLabel} = superdesk.components;
@@ -106,22 +107,12 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                             zIndex={1051}
                         >
                             <Spacer v gap="16">
-                                <SelectFromEndpoint
-                                    label={gettext('Show')}
-                                    endpoint="/shows"
-                                    sort={[['name', 'asc']]}
+                                <SelectShow
                                     value={showId}
                                     onChange={(val) => {
                                         this.setState({showId: val, template: null, rundownTitle: null});
                                     }}
-                                    itemTemplate={({entity: show}: {entity: IShow}) => (
-                                        show == null
-                                            ? (
-                                                <span>{gettext('Select show')}</span>
-                                            ) : (
-                                                <span>{show.title}</span>
-                                            )
-                                    )}
+                                    required={true}
                                     readOnly={this.state.loading}
                                     validationError={validationResults.showId}
                                     ref={refs.showId}

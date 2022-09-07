@@ -6,6 +6,7 @@ import {VirtualListFromQuery} from './virtual-list-from-query';
 import {gettext} from 'core/utils';
 import {InputLabel} from '../input-label';
 import {SpacerBlock} from '../Spacer';
+import {IconButton} from 'superdesk-ui-framework';
 
 interface IState<T> {
     selected: 'loading' | T | null;
@@ -170,6 +171,20 @@ export class SelectFromEndpoint<T extends IBaseRestApiResponse>
                 >
                     <Template entity={this.state.selected} />
                     <span className="p-dropdown-trigger">
+                        {
+                            (this.props.required !== true && this.props.value !== null) && (
+                                <IconButton
+                                    icon="remove-sign"
+                                    ariaValue={gettext('clear')}
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        event.stopPropagation();
+
+                                        this.props.onChange(null);
+                                    }}
+                                />
+                            )
+                        }
                         <span className="p-dropdown-trigger-icon pi pi-chevron-down p-clickable " />
                     </span>
                 </div>

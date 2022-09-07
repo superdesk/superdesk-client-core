@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {WithSizeObserver, ContentListItem, Label, IconButton, Menu, Alert} from 'superdesk-ui-framework/react';
-import {IRundown, IRundownTemplate, IShow} from '../../interfaces';
+import {IRundown, IRundownFilters, IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
 import {DurationLabel} from './components/duration-label';
@@ -18,6 +18,7 @@ interface IProps {
     searchString: string;
     inEditMode: IRundown['_id'] | null;
     onEditModeChange(inEditMode: IRundown['_id'] | null): void;
+    filters?: IRundownFilters;
 }
 
 export class RundownsList extends React.PureComponent<IProps> {
@@ -34,6 +35,19 @@ export class RundownsList extends React.PureComponent<IProps> {
                                 ? undefined
                                 : this.props.searchString,
                             sort: [{_updated: 'desc'}],
+                            filter: (() => {
+                                const {filters} = this.props;
+
+                                if (filters?.show == null) {
+                                    return undefined;
+                                } else {
+                                    return {
+                                        $and: [
+                                            {show: {$eq: filters.show}},
+                                        ],
+                                    };
+                                }
+                            })(),
                             join: {
                                 show: {
                                     endpoint: '/shows',
@@ -185,10 +199,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                 return (
                                     <Alert>
                                         {
-                                            gettext(
-                                                'No items found matching search keyword "{{x}}"',
-                                                {x: this.props.searchString},
-                                            )
+                                            gettext('No items found matching search criteria')
                                         }
                                     </Alert>
                                 );

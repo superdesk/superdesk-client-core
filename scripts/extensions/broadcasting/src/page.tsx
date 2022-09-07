@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {noop} from 'lodash';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
+import * as Form from 'superdesk-ui-framework/react/components/Form';
 
 import {
     ButtonGroup,
@@ -8,6 +9,7 @@ import {
     SubNav,
     Dropdown,
     CreateButton,
+    Button,
 } from 'superdesk-ui-framework/react';
 
 import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates';
@@ -19,6 +21,9 @@ import {superdesk} from './superdesk';
 import {CreateRundownFromTemplate} from './shows/rundowns/create-rundown-from-template';
 import {RundownsList} from './shows/rundowns/rundowns-list';
 import {RundownViewEdit} from './shows/rundowns/rundown-view-edit';
+import {IRundownFilters} from './interfaces';
+import {SelectShow} from './shows/rundowns/components/select-show';
+import {AppliedFilters} from './shows/rundowns/components/applied-filters';
 
 const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
@@ -29,6 +34,9 @@ interface IState {
     rundownIdInEditMode: string | null;
     searchString: string;
     searchStringApplied: string;
+    filtersOpen: boolean;
+    filters: IRundownFilters;
+    filtersApplied: IRundownFilters;
 }
 
 export class RundownsPage extends React.PureComponent<IProps, IState> {
@@ -39,10 +47,24 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
             rundownIdInEditMode: null,
             searchString: '',
             searchStringApplied: '',
+            filtersOpen: false,
+            filters: {},
+            filtersApplied: {},
         };
     }
 
+    setFilter(filters: Partial<IState['filters']>) {
+        this.setState({
+            filters: {
+                ...this.state.filters,
+                ...filters,
+            },
+        });
+    }
+
     render() {
+        const {filters} = this.state;
+
         return (
             <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
                 <div className="sd-content sd-content-wrapper">
@@ -148,16 +170,34 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                     </Dropdown>
                                 </ButtonGroup>
                             </SubNav>
-                            {/* <SubNav zIndex={1}>
+                            <SubNav zIndex={1}>
                                 <ButtonGroup align="start">
-                                    <NavButton icon="filter-large" onClick={noop} />
+                                    <NavButton
+                                        icon="filter-large"
+                                        onClick={() => {
+                                            this.setState({
+                                                filtersOpen: !this.state.filtersOpen,
+                                            });
+                                        }}
+                                    />
+
+                                    <AppliedFilters
+                                        filters={this.state.filtersApplied}
+                                        onChange={(val) => {
+                                            this.setState({
+                                                filters: val,
+                                                filtersApplied: val,
+                                            });
+                                        }}
+                                    />
                                 </ButtonGroup>
-                                <ButtonGroup align="end">
+                                {/* <ButtonGroup align="end">
                                     <ButtonGroup align="sub" padded={true} >
                                         <Button
                                             size="normal"
                                             icon="chevron-left-thin"
-                                            text="Previous" shape="round"
+                                            text="Previous"
+                                            shape="round"
                                             iconOnly={true}
                                             disabled onClick={() => false}
                                         />
@@ -215,100 +255,57 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                             <NavButton icon="dots-vertical" onClick={() => false} />
                                         </Dropdown>
                                     </ButtonGroup>
-                                </ButtonGroup>
-                            </SubNav> */}
+                                </ButtonGroup> */}
+                            </SubNav>
                         </Layout.HeaderPanel>
                         {/* TOOLBAR HEADER */}
 
-                        {/* <Layout.LeftPanel open={true}>
+                        <Layout.LeftPanel open={this.state.filtersOpen}>
                             <Layout.Panel side="left" background="grey">
-                                <Layout.PanelHeader title="Advanced filters" onClose={noop} />
+                                <Layout.PanelHeader
+                                    title="Advanced filters"
+                                    onClose={() => {
+                                        this.setState({filtersOpen: false});
+                                    }}
+                                />
+
                                 <Layout.PanelContent>
                                     <Layout.PanelContentBlock>
                                         <Form.FormGroup>
                                             <Form.FormItem>
-                                                <Select
-                                                    label="Shows"
-                                                    labelHidden={true}
-                                                    value="This is some value"
-                                                    error="This is error message"
-                                                    info="This is some hint message"
-                                                    required={true}
-                                                    disabled={false}
-                                                    invalid={false}
-                                                    onChange={noop}>
-                                                    <Option>Marker</Option>
-                                                    <Option>Tabu</Option>
-                                                </Select>
+                                                <SelectShow
+                                                    value={filters.show ?? null}
+                                                    onChange={(val) => {
+                                                        this.setFilter({show: val});
+                                                    }}
+                                                    required={false}
+                                                />
                                             </Form.FormItem>
                                         </Form.FormGroup>
-                                        <div className="form__group">
-                                            <div className="form__item">
-                                                <Input label="Title"
-                                                    error="This is error message"
-                                                    type="text"
-                                                    value="Title"
-                                                    inlineLabel={false}
-                                                    disabled={false}
-                                                    invalid={false}
-                                                    onChange={noop} />
-                                            </div>
-                                        </div>
-                                        <div className="form__group">
-                                            <div className="form__item">
-                                                <Select label="Source"
-                                                    value="Select ingest source..."
-                                                    error="This is error message"
-                                                    inlineLabel={false}
-                                                    disabled={false}
-                                                    invalid={false}
-                                                    onChange={noop}>
-                                                    <Option value="option-1">Select ingest source...</Option>
-                                                    <Option value="option-2">Associated Press</Option>
-                                                    <Option value="option-3">Reuters</Option>
-                                                </Select>
-                                            </div>
-                                        </div>
-
-                                        <div className="form__group">
-                                            <div className="form__item">
-                                                <Input label="Keyword"
-                                                    error="This is error message"
-                                                    type="text"
-                                                    value="Keyword"
-                                                    inlineLabel={false}
-                                                    disabled={false}
-                                                    invalid={false}
-                                                    onChange={noop} />
-                                            </div>
-                                        </div>
-
-                                        <div className="form__group">
-                                            <div className="form__item">
-                                                <Select label="Usage right"
-                                                    value="--- Not selected ---"
-                                                    error="This is error message"
-                                                    info="Dolor in hendrerit."
-                                                    inlineLabel={false}
-                                                    disabled={false}
-                                                    invalid={false}
-                                                    onChange={noop}>
-                                                    <Option value="">--- Not selected ---</Option>
-                                                    <Option value="single">Single usage</Option>
-                                                    <Option value="time">Time restricted</Option>
-                                                    <Option value="bananas">Indefinite usage</Option>
-                                                    <Option value="indefinite">Pears</Option>
-                                                </Select>
-                                            </div>
-                                        </div>
                                     </Layout.PanelContentBlock>
                                 </Layout.PanelContent>
                                 <Layout.PanelFooter>
-                                    <Button text="Clear" style="hollow" onClick={() => false} />
-                                    <Button text="Submit" type="primary" onClick={() => false} />
+                                    <Button
+                                        text={gettext('Clear')}
+                                        style="hollow"
+                                        onClick={() => {
+                                            this.setState({
+                                                filters: {},
+                                                filtersApplied: {},
+                                            });
+                                        }}
+                                    />
+
+                                    <Button
+                                        text={gettext('Filter')}
+                                        type="primary"
+                                        onClick={() => {
+                                            this.setState({filtersApplied: this.state.filters});
+                                        }}
+                                    />
                                 </Layout.PanelFooter>
                             </Layout.Panel>
-                        </Layout.LeftPanel> */}
+                        </Layout.LeftPanel>
 
                         <Layout.MainPanel>
 
@@ -382,6 +379,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                     this.setState({rundownIdInEditMode});
                                 }}
                                 searchString={this.state.searchStringApplied}
+                                filters={this.state.filtersApplied}
                             />
 
                         </Layout.MainPanel>
