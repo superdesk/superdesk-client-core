@@ -115,7 +115,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
     }
 
     private getRundownItems() {
-        return this.props.templateFields.rundown_items ?? [];
+        return this.props.templateFields.items ?? [];
     }
 
     private handleChange(value: Partial<IRundownTemplateBase>) {
@@ -134,7 +134,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                     };
 
                     this.props.onChange({
-                        rundown_items: this.getRundownItems().concat(
+                        items: this.getRundownItems().concat(
                             // validated in authoring view using content profile
                             itemWithDuration as unknown as IRundownItemBase,
                         ),
@@ -151,7 +151,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
             createOrEditRundownItem: prepareForEditing(item, (val) => {
                 if (!this.props.readOnly) {
                     this.props.onChange({
-                        rundown_items: this.getRundownItems().map((_item) => _item === item ? val : _item),
+                        items: this.getRundownItems().map((_item) => _item === item ? val : _item),
                     });
                 }
 
@@ -453,12 +453,12 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                             initiatePreview={this.initiatePreview}
                                                             onChange={(val) => {
                                                                 this.handleChange({
-                                                                    rundown_items: computeStartEndTime(airTime, val),
+                                                                    items: computeStartEndTime(airTime, val),
                                                                 });
                                                             }}
                                                             onDelete={(item) => {
                                                                 this.handleChange({
-                                                                    rundown_items: rundownItems.filter(
+                                                                    items: rundownItems.filter(
                                                                         (_item) => _item !== item,
                                                                     ),
                                                                 });

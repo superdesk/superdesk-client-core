@@ -35,7 +35,7 @@ export interface IRundownTemplateBase {
     };
     created_by: IUser['_id'];
     updated_by: IUser['_id']; // TODO: rename to last_updated_by
-    rundown_items: Array<IRundownItemBase>;
+    items: Array<IRundownItemBase>;
     repeat?: IRRule | null;
 }
 
@@ -85,7 +85,7 @@ interface IRundownItemReference {
     _id: string;
 }
 
-interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 'rundown_items'> {
+interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 'items'> {
     readonly planned_duration: number;
     readonly duration: number;
     title: string;
