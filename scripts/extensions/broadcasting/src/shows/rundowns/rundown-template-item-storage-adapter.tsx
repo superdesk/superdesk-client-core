@@ -47,7 +47,7 @@ export const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemp
         }
     },
     retrieveStoredValue: (rundownItem, fieldId, fieldType) => {
-        const value = (rundownItem.data as {[key: string]: any})[fieldId] ?? null;
+        const value = (rundownItem.data as {[key: string]: any})[fieldId] ?? undefined;
 
         if (fieldType === 'editor3') {
             const storedDraftJsState = rundownItem.data?.fields_meta?.[fieldId]?.draftjsState;
