@@ -139,7 +139,10 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
 
         const viewEditToolbar = template == null || template.type === 'create' ? null : (
             <WithLiveResources
-                resources={[{resource: 'users', ids: [template.value.created_by, template.value.updated_by]}]}
+                resources={[{
+                    resource: 'users',
+                    ids: [template.value.created_by, template.value.updated_by].filter((x) => x != null),
+                }]}
             >
                 {([users]: Array<IRestApiResponse<IUser>>) => {
                     const userCreator = users._items.find(({_id}) => _id === template.value.created_by) as IUser;
