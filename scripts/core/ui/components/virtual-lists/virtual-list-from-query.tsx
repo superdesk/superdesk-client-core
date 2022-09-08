@@ -24,6 +24,7 @@ interface IState<T, IToJoin> {
     loading: boolean;
     resourceName: string;
     initialData: IFetchedData<T, IToJoin> | 'being-initialized';
+    totalItems: number;
 }
 
 interface IFetchedItem<T, IToJoin> {
@@ -61,6 +62,7 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
             initialData: 'being-initialized',
             resourceName: null,
             loading: true,
+            totalItems: 0,
         };
 
         this.fetchData = this.fetchData.bind(this);
@@ -84,80 +86,97 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
 
         return this.asyncHelpers.httpRequestJsonLocal<IRestApiResponse<T>>(
             prepareSuperdeskQuery(this.props.query.endpoint, query),
-        ).then((resEntities) => {
-            const resourceName = resEntities._links == null
-                ? trimStart(this.props.query.endpoint, '/')
-                : resEntities._links.self.title;
+        )
+            .then((resEntities): Promise<IFetchedData<T, IToJoin>> => {
+                const resourceName = resEntities._links == null
+                    ? trimStart(this.props.query.endpoint, '/')
+                    : resEntities._links.self.title;
 
-            const relatedEntitiesToFetch: IEntitiesToFetch = {};
+                const relatedEntitiesToFetch: IEntitiesToFetch = {};
 
-            function hasJoins(
-                x: IVirtualListQueryBase | IVirtualListQueryWithJoins<T, IToJoin>,
-            ): x is IVirtualListQueryWithJoins<T, IToJoin> {
-                return x[nameof<IVirtualListQueryWithJoins<T, IToJoin>>('join')] != null;
-            }
-
-            function getStringEndpoint(endpoint: string | ((entity: T) => string), entity: T) {
-                if (typeof endpoint === 'string') {
-                    return endpoint;
-                } else {
-                    return endpoint(entity);
+                function hasJoins(
+                    x: IVirtualListQueryBase | IVirtualListQueryWithJoins<T, IToJoin>,
+                ): x is IVirtualListQueryWithJoins<T, IToJoin> {
+                    return x[nameof<IVirtualListQueryWithJoins<T, IToJoin>>('join')] != null;
                 }
-            }
 
-            if (hasJoins(this.props.query)) {
-                const {join} = this.props.query;
-
-                for (const {endpoint, getId} of Object.values(join)) {
-                    for (const entity of resEntities._items) {
-                        if (relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] == null) {
-                            relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] = Set([]);
-                        }
-
-                        relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] =
-                            relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)].add(getId(entity));
+                function getStringEndpoint(endpoint: string | ((entity: T) => string), entity: T) {
+                    if (typeof endpoint === 'string') {
+                        return endpoint;
+                    } else {
+                        return endpoint(entity);
                     }
                 }
 
-                return fetchRelatedEntities(relatedEntitiesToFetch, this.abortController.signal).then((rel) => {
-                    const listWithJoined = resEntities._items.map((entity) => {
-                        const entityInclJoined: IFetchedItem<T, IToJoin> = {
-                            entity: entity,
-                            joined: {},
-                        };
+                if (hasJoins(this.props.query)) {
+                    const {join} = this.props.query;
 
-                        for (const entry of Object.entries(join)) {
-                            const key = entry[0] as unknown as keyof IToJoin;
-                            const {endpoint, getId} = entry[1];
-                            const referencedEntityId = getId(entity);
-
-                            if (referencedEntityId != null) {
-                                entityInclJoined.joined[key] =
-                                    rel[getStringEndpoint(endpoint, entity)].get(referencedEntityId);
+                    for (const {endpoint, getId} of Object.values(join)) {
+                        for (const entity of resEntities._items) {
+                            if (relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] == null) {
+                                relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] = Set([]);
                             }
+
+                            relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)] =
+                                relatedEntitiesToFetch[getStringEndpoint(endpoint, entity)].add(getId(entity));
                         }
+                    }
 
-                        return entityInclJoined;
+                    return fetchRelatedEntities(relatedEntitiesToFetch, this.abortController.signal).then((rel) => {
+                        const listWithJoined = resEntities._items.map((entity) => {
+                            const entityInclJoined: IFetchedItem<T, IToJoin> = {
+                                entity: entity,
+                                joined: {},
+                            };
+
+                            for (const entry of Object.entries(join)) {
+                                const key = entry[0] as unknown as keyof IToJoin;
+                                const {endpoint, getId} = entry[1];
+                                const referencedEntityId = getId(entity);
+
+                                if (referencedEntityId != null) {
+                                    entityInclJoined.joined[key] =
+                                        rel[getStringEndpoint(endpoint, entity)].get(referencedEntityId);
+                                }
+                            }
+
+                            return entityInclJoined;
+                        });
+
+                        return {
+                            items: listWithJoined,
+                            _meta: {
+                                total: resEntities._meta.total,
+                                resourceName: resourceName,
+                            },
+                        };
                     });
-
-                    return {
-                        items: listWithJoined,
+                } else {
+                    return Promise.resolve({
+                        items: resEntities._items.map((entity) => ({entity, joined: {}})),
                         _meta: {
                             total: resEntities._meta.total,
                             resourceName: resourceName,
                         },
-                    };
+                    });
+                }
+            })
+            .then((fetchedData) => {
+                return new Promise<IFetchedData<T, IToJoin>>((resolve) => {
+                    const initialData =
+                        this.state.initialData === 'being-initialized' || this.state.initialData.items.length < 1
+                            ? fetchedData
+                            : this.state.initialData;
+
+                    this.setState({
+                        totalItems: fetchedData._meta.total,
+                        resourceName: fetchedData._meta.resourceName,
+                        initialData: initialData,
+                    }, () => {
+                        resolve(fetchedData);
+                    });
                 });
-            } else {
-                return {
-                    items: resEntities._items.map((entity) => ({entity, joined: {}})),
-                    _meta: {
-                        total: resEntities._meta.total,
-                        resourceName: resourceName,
-                    },
-                };
-            }
-        });
+            });
     }
 
     loadItems(fromIndex: number, toIndex: number): Promise<Map<number, IFetchedItem<T, IToJoin>>> {
@@ -178,7 +197,7 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
 
     componentDidMount() {
         this.fetchData(1, 50).then((res) => {
-            this.setState({loading: false, initialData: res, resourceName: res._meta.resourceName}, () => {
+            this.setState({loading: false, initialData: res}, () => {
                 this.props.onInitialized();
             });
         });
@@ -235,18 +254,10 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
     }
 
     render() {
-        const {initialData} = this.state;
+        const {initialData, totalItems} = this.state;
 
         if (initialData === 'being-initialized') {
             return null;
-        }
-
-        if (initialData._meta.total < 1) {
-            const NoItemsTemplate = this.props.noItemsTemplate;
-
-            return (
-                <NoItemsTemplate />
-            );
         }
 
         return (
@@ -260,7 +271,7 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
                         <Template entity={item.entity} joined={item.joined} />
                     );
                 }}
-                totalItemsCount={initialData._meta.total}
+                totalItemsCount={totalItems}
                 initialItems={Map<number, IFetchedItem<T, IToJoin>>(initialData.items.map((item, i) => [i, item]))}
                 loadItems={this.loadItems}
                 getId={(item) => item.entity._id}

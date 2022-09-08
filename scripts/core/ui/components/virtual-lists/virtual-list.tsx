@@ -1,9 +1,10 @@
+/* eslint-disable react/no-multi-comp */
 import React, {useEffect, useState} from 'react';
 import {useVirtual} from 'react-virtual';
 import {Map} from 'immutable';
 
 import {gettext} from 'core/utils';
-import {noop} from 'lodash';
+import {Alert} from 'superdesk-ui-framework/react';
 
 /**
  * TERMS:
@@ -79,6 +80,7 @@ interface IProps<T> {
     loadItems(from: number, to: number): Promise<Map<number, T>>;
     getId(item: T): string; // needed for finding index of item that needs to be reloaded. See `IExposedFromVirtualList`
     itemTemplate: React.ComponentType<{item: T}>;
+    noItemsTemplate?: React.ComponentType;
 }
 
 export interface IExposedFromVirtualList {
@@ -104,10 +106,6 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
         parentRef,
     });
 
-    if (rowVirtualizer.virtualItems.length < 1) {
-        return null;
-    }
-
     const [items, setItems] = useState(initialItems ?? Map<number, T>());
     const [loadingInProgress, setLoadingInProgress] = useState(false);
 
@@ -129,16 +127,31 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
          */
         currentItems: Map<number, T>,
     ) {
-        let viewportIndexStart = rowVirtualizer.virtualItems[0].index;
-        let viewportIndexEnd = viewportIndexStart + rowVirtualizer.virtualItems.length;
+        let viewportIndexStart = rowVirtualizer.virtualItems.length < 1
+            ? 0
+            : rowVirtualizer.virtualItems[0].index;
+
+        let viewportIndexEnd = rowVirtualizer.virtualItems.length < 1
+            ? 0
+            : viewportIndexStart + rowVirtualizer.virtualItems.length;
+
         const visibleItemsCount = viewportIndexEnd - viewportIndexStart;
 
-        const itemsToLoad = getItemsToLoad(
-            currentItems,
-            totalItemsCount,
-            viewportIndexStart,
-            viewportIndexEnd,
-        );
+        const itemsToLoad: {
+            from: number;
+            to: number;
+        } = (() => {
+            if (rowVirtualizer.virtualItems.length < 1) {
+                return {from: 0, to: minBatchSize};
+            } else {
+                return getItemsToLoad(
+                    currentItems,
+                    totalItemsCount,
+                    viewportIndexStart,
+                    viewportIndexEnd,
+                );
+            }
+        })();
 
         if (itemsToLoad != null) {
             doLoadItems(currentItems, itemsToLoad.from, itemsToLoad.to);
@@ -181,12 +194,24 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
     });
 
     useEffect(() => {
-        if (loadingInProgress) {
-            return noop;
+        if (!loadingInProgress && props.totalItemsCount > 0) {
+            loadMore(items);
         }
-
-        loadMore(items);
     });
+
+    if (props.totalItemsCount < 1) {
+        const defaultTemplate: React.ComponentType = () => (
+            <div style={{padding: 8}}>
+                <Alert size="small">{gettext('There are no items yet')}</Alert>
+            </div>
+        );
+
+        const NoItemsTemplate = props.noItemsTemplate ?? defaultTemplate;
+
+        return (
+            <NoItemsTemplate />
+        );
+    }
 
     return (
         <div
