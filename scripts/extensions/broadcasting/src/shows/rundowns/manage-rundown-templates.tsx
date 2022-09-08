@@ -214,6 +214,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                             this.setState({showId: val});
                                         }}
                                         required={true}
+                                        showLabel={false}
                                     />
                                 </Layout.Container>
                             </Layout.PanelHeader>

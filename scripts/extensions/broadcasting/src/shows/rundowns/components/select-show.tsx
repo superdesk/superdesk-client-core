@@ -13,6 +13,7 @@ interface IPropsRequired {
     onChange(val: IShow['_id']): void;
     readOnly?: boolean;
     validationError?: IValidationResult;
+    showLabel?: boolean;
     required: true;
 }
 
@@ -21,6 +22,7 @@ interface IPropsOptional {
     onChange(val: IShow['_id'] | null): void;
     readOnly?: boolean;
     validationError?: string;
+    showLabel?: boolean;
     required: false;
 }
 
@@ -30,7 +32,7 @@ export class SelectShow extends React.PureComponent<IProps> {
     render() {
         return (
             <SelectFromEndpoint
-                label={gettext('Show')}
+                label={this.props.showLabel !== false ? gettext('Show') : undefined}
                 endpoint="/shows"
                 sort={[['name', 'asc']]}
                 value={this.props.value}
