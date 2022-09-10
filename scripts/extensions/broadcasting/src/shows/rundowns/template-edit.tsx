@@ -275,6 +275,8 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         });
                                                     }}
                                                     disabled={readOnly}
+                                                    error={validationErrors.airtime_time ?? undefined}
+                                                    invalid={validationErrors.airtime_time != null}
                                                 />
                                             </Form.FormItem>
 
