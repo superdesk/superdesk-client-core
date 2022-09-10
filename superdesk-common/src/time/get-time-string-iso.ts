@@ -1,8 +1,8 @@
 import {padStart} from 'lodash';
 
-export type IISOTime = string; // ISO 8601, 13:59:01.123
+export type ITimeISO = string; // ISO 8601, 13:59:01.123
 
-export function getTimeStringIso(date: Date): IISOTime {
+export function getTimeStringIso(date: Date): ITimeISO {
     const hours = date.getHours();
     const minutes = date.getMinutes();
     const seconds = date.getSeconds();

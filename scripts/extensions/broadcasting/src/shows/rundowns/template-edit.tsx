@@ -450,7 +450,12 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                         <ManageRundownItems
                                                             rundown={null}
                                                             readOnly={readOnly}
-                                                            items={rundownItems}
+                                                            items={
+                                                                computeStartEndTime(
+                                                                    templateFields.airtime_time,
+                                                                    rundownItems,
+                                                                )
+                                                            }
                                                             createOrEdit={this.state.createOrEditRundownItem}
                                                             initiateCreation={this.initiateCreation}
                                                             initiateEditing={this.initiateEditing}

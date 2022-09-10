@@ -35,6 +35,7 @@ import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
 import {IPatchExtraFields, ITopBarWidget} from 'superdesk-api';
+import {computeStartEndTime} from '../../utils/compute-start-end-time';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
@@ -336,13 +337,13 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                         ]}
                                     >
                                         {(res) => {
-                                            const rundownItems: Array<IRundown> = res[0]._items;
+                                            const rundownItems: Array<IRundownItem> = res[0]._items;
 
                                             return (
                                                 <ManageRundownItems
                                                     rundown={rundown}
                                                     readOnly={this.props.readOnly}
-                                                    items={rundownItems}
+                                                    items={computeStartEndTime(rundown.airtime_time, rundownItems)}
                                                     createOrEdit={rundownAction}
                                                     initiateCreation={this.initiateCreation}
                                                     initiateEditing={this.initiateEditing}

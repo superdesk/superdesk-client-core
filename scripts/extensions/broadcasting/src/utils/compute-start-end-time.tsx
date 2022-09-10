@@ -1,10 +1,10 @@
-import {IRundownItemBase} from '../interfaces';
-import {addSeconds, IISOTime} from '@superdesk/common';
+import {IRundownItem, IRundownItemBase} from '../interfaces';
+import {addSeconds, ITimeISO} from '@superdesk/common';
 
-export function computeStartEndTime(
-    showStartTime: IISOTime,
-    items: Array<IRundownItemBase>,
-): Array<IRundownItemBase> {
+export function computeStartEndTime<T extends IRundownItemBase | IRundownItem>(
+    showStartTime: ITimeISO,
+    items: Array<T>,
+): Array<T> {
     let lastTime = showStartTime;
 
     return items.map((item) => {
