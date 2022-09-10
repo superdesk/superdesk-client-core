@@ -300,7 +300,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
                                         <Spacer h gap="16" justifyContent="start" alignItems="center" noWrap>
                                             <Checkbox
-                                                checked={templateFields.repeat != null}
+                                                checked={templateFields.schedule != null}
                                                 label={{text: gettext('Repeat')}}
                                                 onChange={(val) => {
                                                     if (val === true) {
@@ -312,12 +312,14 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
                                                         this.handleChange({
                                                             ...templateFields,
-                                                            repeat: initialValue,
+                                                            repeat: true,
+                                                            schedule: initialValue,
                                                         });
                                                     } else {
                                                         this.handleChange({
                                                             ...templateFields,
-                                                            repeat: null,
+                                                            repeat: false,
+                                                            schedule: null,
                                                         });
                                                     }
                                                 }}
@@ -325,14 +327,14 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                             />
 
                                             {
-                                                templateFields.repeat != null && (
+                                                templateFields.schedule != null && (
                                                     <div>
                                                         <FrequencySimple
-                                                            value={templateFields.repeat}
+                                                            value={templateFields.schedule}
                                                             onChange={(val) => {
                                                                 this.handleChange({
                                                                     ...templateFields,
-                                                                    repeat: val,
+                                                                    schedule: val,
                                                                 });
                                                             }}
                                                             firstDayOfWeek={superdesk.instance.config.startingDay}

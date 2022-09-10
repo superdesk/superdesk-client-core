@@ -36,7 +36,8 @@ export interface IRundownTemplateBase {
     created_by: IUser['_id'];
     updated_by: IUser['_id']; // TODO: rename to last_updated_by
     items: Array<IRundownItemBase>;
-    repeat?: IRRule | null;
+    repeat: boolean;
+    schedule?: IRRule | null;
 }
 
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
