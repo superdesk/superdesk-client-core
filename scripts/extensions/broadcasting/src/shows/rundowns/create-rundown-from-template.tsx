@@ -150,6 +150,7 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                             readOnly={this.state.loading}
                                             validationError={validationResults.template}
                                             ref={refs.template}
+                                            required={true}
                                         />
                                     )
                                 }
