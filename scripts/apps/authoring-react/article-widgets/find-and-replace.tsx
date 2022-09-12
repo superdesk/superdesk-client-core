@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAuthoringSideWidget, IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {IArticleSideWidget, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -164,7 +164,7 @@ class FindAndReplaceWidget extends React.PureComponent<IProps, IState> {
 }
 
 export function getFindAndReplaceWidget() {
-    const metadataWidget: IAuthoringSideWidget = {
+    const metadataWidget: IArticleSideWidget = {
         _id: 'find-and-replace-widget',
         label: getLabel(),
         order: 1,

@@ -8,7 +8,7 @@ import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import {
     IArticle,
     IAuthoringAction,
-    IAuthoringSideWidget,
+    IArticleSideWidget,
     IContentProfileV2,
     IExtensionActivationResult,
     ITopBarWidget,
@@ -131,7 +131,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
     render() {
         const {state} = this;
 
-        function getWidgetsFromExtensions(article: IArticle): Array<IAuthoringSideWidget> {
+        function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {
             return Object.values(extensions)
                 .flatMap((extension) => extension.activationResult?.contributions?.authoringSideWidgets ?? [])
                 .filter((widget) => widget.isAllowed?.(article) ?? true)

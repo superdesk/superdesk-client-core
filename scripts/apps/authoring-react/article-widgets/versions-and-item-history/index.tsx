@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    IAuthoringSideWidget,
+    IArticleSideWidget,
     IExtensionActivationResult,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
@@ -72,7 +72,7 @@ class VersionsAndItemHistoryWidget extends React.PureComponent<IProps, IState> {
 }
 
 export function getVersionsAndItemHistoryWidget() {
-    const widget: IAuthoringSideWidget = {
+    const widget: IArticleSideWidget = {
         _id: 'versions-and-item-history',
         label: getLabel(),
         order: 4,

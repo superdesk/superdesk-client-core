@@ -1,12 +1,12 @@
 import {registerInternalExtension} from 'core/helpers/register-internal-extension';
 // import {getDemoWidget} from './widgets/demo-widget';
-import {getFindAndReplaceWidget} from './widgets/find-and-replace';
-import {getInlineCommentsWidget} from './widgets/inline-comments';
-import {getCommentsWidget} from './widgets/comments';
+import {getFindAndReplaceWidget} from './article-widgets/find-and-replace';
+import {getInlineCommentsWidget} from './article-widgets/inline-comments';
+import {getCommentsWidget} from './article-widgets/comments';
 import {IExtensionActivationResult} from 'superdesk-api';
 import {appConfig} from 'appConfig';
-import {getSuggestionsWidget} from './widgets/suggestions';
-import {getVersionsAndItemHistoryWidget} from './widgets/versions-and-item-history';
+import {getSuggestionsWidget} from './article-widgets/suggestions';
+import {getVersionsAndItemHistoryWidget} from './article-widgets/versions-and-item-history';
 
 const authoringReactWidgetsExtension = 'authoring-react-widgets';
 

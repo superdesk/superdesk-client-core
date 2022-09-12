@@ -1,10 +1,10 @@
 
 import {noop} from 'lodash';
 import React from 'react';
-import {IArticle, IAuthoringSideWidget} from 'superdesk-api';
+import {IArticle, IArticleSideWidget} from 'superdesk-api';
 
 interface IProps {
-    widget: IAuthoringSideWidget;
+    widget: IArticleSideWidget;
     article: IArticle;
 }
 

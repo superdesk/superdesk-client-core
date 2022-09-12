@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IAuthoringSideWidget, IExtensionActivationResult, IUser, IEditor3ValueOperational} from 'superdesk-api';
+import {IArticleSideWidget, IExtensionActivationResult, IUser, IEditor3ValueOperational} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
@@ -229,7 +229,7 @@ class SuggestionsWidget extends React.PureComponent<IProps> {
 }
 
 export function getSuggestionsWidget() {
-    const metadataWidget: IAuthoringSideWidget = {
+    const metadataWidget: IArticleSideWidget = {
         _id: 'editor3-suggestions-widget',
         label: getLabel(),
         order: 3,

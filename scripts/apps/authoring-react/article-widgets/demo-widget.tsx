@@ -1,5 +1,5 @@
 import React from 'react';
-import {IAuthoringSideWidget, IArticle, IExtensionActivationResult} from 'superdesk-api';
+import {IArticleSideWidget, IArticle, IExtensionActivationResult} from 'superdesk-api';
 import {Button} from 'superdesk-ui-framework';
 import {sdApi} from 'api';
 import {gettext} from 'core/utils';
@@ -46,7 +46,7 @@ class DemoWidget extends React.PureComponent<IProps> {
 }
 
 export function getDemoWidget() {
-    const metadataWidget: IAuthoringSideWidget = {
+    const metadataWidget: IArticleSideWidget = {
         _id: 'demo-widget',
         label: getLabel(),
         order: 2,

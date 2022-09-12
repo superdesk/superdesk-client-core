@@ -422,7 +422,7 @@ declare module 'superdesk-api' {
         background?: 'light' | 'grey';
     }
 
-    export interface IAuthoringSideWidget {
+    export interface IArticleSideWidget {
         _id: string; // required for configuring widget visibility in content profile
         label: string;
         order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
@@ -527,7 +527,7 @@ declare module 'superdesk-api' {
              */
             authoringTopbar2Widgets?: Array<React.ComponentType<{article: IArticle}>>;
 
-            authoringSideWidgets?: Array<IAuthoringSideWidget>;
+            authoringSideWidgets?: Array<IArticleSideWidget>;
             authoringHeaderComponents?: Array<AuthoringHeaderItem>;
 
             getAuthoringActions?(
