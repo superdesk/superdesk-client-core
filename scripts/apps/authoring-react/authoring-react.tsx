@@ -186,6 +186,7 @@ function getInitialState<T extends IBaseRestApiResponse>(
         userPreferencesForFields,
         spellcheckerEnabled,
         validationErrors: validationErrors,
+        openWidget: null,
     };
 
     return initialState;
