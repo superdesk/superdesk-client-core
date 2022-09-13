@@ -119,6 +119,8 @@ declare module 'superdesk-api' {
 
     export interface IExposedFromAuthoring<T> {
         item: T;
+        sideWidget: string | null; // side widget name
+        toggleSideWidget(name: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
         authoringStorage: IAuthoringStorage<T>;
@@ -161,7 +163,7 @@ declare module 'superdesk-api' {
         onEditingStart?(item: T): void;
         onEditingEnd?(item: T): void;
         getSidePanel?(options: IExposedFromAuthoring<T>, readOnly: boolean): React.ReactNode;
-        getSidebar?(item: T): JSX.Element;
+        getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element;
         topBar2Widgets: Array<React.ComponentType<{item: T}>>;
 
         // Runs before re-render.

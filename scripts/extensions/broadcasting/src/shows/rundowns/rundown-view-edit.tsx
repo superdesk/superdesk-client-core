@@ -22,7 +22,6 @@ interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
     createOrEditRundownItem: ICreate | IEdit | IPreview | null;
-    sideWidget: string | null;
 }
 
 import {superdesk} from '../../superdesk';
@@ -97,7 +96,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             rundown: null,
             rundownWithChanges: null,
             createOrEditRundownItem: null,
-            sideWidget: null,
         };
 
         this.setRundownField = this.setRundownField.bind(this);
@@ -438,7 +436,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 getAuthoringTopBarWidgets={() => []}
                                                 topBar2Widgets={[]}
                                                 onFieldChange={syncDurationWithEndTime}
-                                                getSidebar={() => {
+                                                getSidebar={({toggleSideWidget}) => {
                                                     if (sideWidgets.length < 1) {
                                                         return <span />;
                                                     }
@@ -449,11 +447,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                 size: 'big',
                                                                 icon,
                                                                 onClick: () => {
-                                                                    if (_id === this.state.sideWidget) {
-                                                                        this.setState({sideWidget: null});
-                                                                    } else {
-                                                                        this.setState({sideWidget: _id});
-                                                                    }
+                                                                    toggleSideWidget(_id);
                                                                 },
                                                             }))}
                                                         />
@@ -467,13 +461,14 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     storageAdapter,
                                                     authoringStorage,
                                                     handleUnsavedChanges,
+                                                    sideWidget,
                                                 }) => {
-                                                    if (this.state.sideWidget == null) {
+                                                    if (sideWidget == null) {
                                                         return null;
                                                     }
 
                                                     const widget = sideWidgets.find(
-                                                        ({_id}) => _id === this.state.sideWidget,
+                                                        ({_id}) => _id === sideWidget,
                                                     );
 
                                                     if (widget == null) {

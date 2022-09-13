@@ -62,13 +62,6 @@ interface IProps {
     itemId: IArticle['_id'];
 }
 
-interface IState {
-    openWidget?: {
-        name: string;
-        pinned: boolean;
-    };
-}
-
 function getPublishToolbarWidget(
     panelState: IStateInteractiveActionsPanelHOC,
     panelActions: IActionsInteractiveActionsPanelHOC,
@@ -121,7 +114,7 @@ function getPublishToolbarWidget(
  * The purpose of the wrapper is to handle integration with the angular part of the application.
  * The main component will not know about angular.
  */
-export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, IState> {
+export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
     constructor(props: IProps) {
         super(props);
 
@@ -394,6 +387,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                     storageAdapter,
                                     authoringStorage,
                                     handleUnsavedChanges,
+                                    sideWidget,
                                 }, readOnly) => {
                                     const OpenWidgetComponent = (() => {
                                         if (panelState.active === true) {
@@ -409,9 +403,9 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                                     markupV2
                                                 />
                                             );
-                                        } else if (state.openWidget != null) {
+                                        } else if (sideWidget != null) {
                                             return getWidgetsFromExtensions(item).find(
-                                                ({label}) => state.openWidget.name === label,
+                                                ({label}) => sideWidget === label,
                                             ).component;
                                         } else {
                                             return null;
@@ -436,24 +430,14 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps, ISt
                                         );
                                     }
                                 }}
-                                getSidebar={(article) => {
-                                    const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(article)
+                                getSidebar={({item, toggleSideWidget}) => {
+                                    const sidebarTabs: Array<ISideBarTab> = getWidgetsFromExtensions(item)
                                         .map((widget) => ({
                                             icon: widget.icon,
                                             size: 'big',
                                             tooltip: widget.label,
                                             onClick: () => {
-                                                const selfToggled =
-                                                    state.openWidget != null && widget.label === state.openWidget?.name;
-
-                                                this.setState({
-                                                    openWidget: selfToggled
-                                                        ? undefined
-                                                        : {
-                                                            name: widget.label,
-                                                            pinned: state.openWidget?.pinned ?? false,
-                                                        },
-                                                });
+                                                toggleSideWidget(widget.label);
                                             },
                                         }));
 

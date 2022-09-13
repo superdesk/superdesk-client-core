@@ -211,7 +211,7 @@ interface IStateLoaded<T> {
     profile: IContentProfileV2;
     userPreferencesForFields: {[key: string]: unknown};
     toggledFields: IToggledFields;
-    openWidget?: {
+    openWidget: null | {
         name: string;
         pinned: boolean;
     };
@@ -986,6 +986,23 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,
+            sideWidget: state.openWidget?.name ?? null,
+            toggleSideWidget: (name) => {
+                if (name == null || state.openWidget?.name === name) {
+                    this.setState({
+                        ...state,
+                        openWidget: null,
+                    });
+                } else {
+                    this.setState({
+                        ...state,
+                        openWidget: {
+                            name,
+                            pinned: false,
+                        },
+                    });
+                }
+            },
         };
         const authoringOptions = this.props.getInlineToolbarActions(exposed);
         const readOnly = state.initialized ? authoringOptions.readOnly : false;
@@ -1161,7 +1178,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                                 sideOverlayOpen={!pinned && OpenWidgetComponent != null}
                                 sidePanel={pinned && OpenWidgetComponent != null && OpenWidgetComponent}
                                 sidePanelOpen={pinned && OpenWidgetComponent != null}
-                                sideBar={this.props.getSidebar?.(state.itemWithChanges) ?? undefined}
+                                sideBar={this.props.getSidebar?.(exposed)}
                             />
                         );
                     }}
