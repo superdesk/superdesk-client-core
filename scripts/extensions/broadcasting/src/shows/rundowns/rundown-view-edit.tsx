@@ -22,6 +22,12 @@ interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
     createOrEditRundownItem: ICreate | IEdit | IPreview | null;
+
+    /**
+     * authoring-react doesn't remount if `authoringStorage` changes
+     * key is used to instruct authoring-react when to remount
+     */
+     authoringReactKey: number;
 }
 
 import {superdesk} from '../../superdesk';
@@ -37,6 +43,7 @@ import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage
 import {LANGUAGE} from '../../constants';
 import {IPatchExtraFields, ITopBarWidget} from 'superdesk-api';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
+import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
@@ -96,6 +103,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             rundown: null,
             rundownWithChanges: null,
             createOrEditRundownItem: null,
+            authoringReactKey: 0,
         };
 
         this.setRundownField = this.setRundownField.bind(this);
@@ -154,94 +162,103 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
     }
 
     initiateCreation() {
-        this.setState({
-            createOrEditRundownItem: prepareForCreation((val) => {
-                if (!this.props.readOnly) {
-                    const itemWithDuration: Partial<IRundownItemBase> = {
-                        ...val.data,
-                        duration: val.data.planned_duration, // TODO: copied code, move into function?
-                    };
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+            this.setState({
+                authoringReactKey: this.state.authoringReactKey + 1,
+                createOrEditRundownItem: prepareForCreation((val) => {
+                    if (!this.props.readOnly) {
+                        const itemWithDuration: Partial<IRundownItemBase> = {
+                            ...val.data,
+                            duration: val.data.planned_duration, // TODO: copied code, move into function?
+                        };
 
-                    /**
-                     * start/end times are generated from duration
-                     * they are present in the form only for making it easier for users to enter duration
-                     */
-                    delete itemWithDuration['start_time'];
-                    delete itemWithDuration['end_time'];
+                        /**
+                         * start/end times are generated from duration
+                         * they are present in the form only for making it easier for users to enter duration
+                         */
+                        delete itemWithDuration['start_time'];
+                        delete itemWithDuration['end_time'];
 
-                    const {rundown, rundownWithChanges} = this.state;
+                        const {rundown, rundownWithChanges} = this.state;
 
-                    if (rundown == null || rundownWithChanges == null) {
-                        throw new Error('disallowed state');
-                    }
+                        if (rundown == null || rundownWithChanges == null) {
+                            throw new Error('disallowed state');
+                        }
 
-                    return httpRequestJsonLocal<IRundownItem>({
-                        method: 'POST',
-                        path: '/rundown_items',
-                        payload: prepareRundownItemForSaving(itemWithDuration),
-                    }).then((res) => {
-                        return httpRequestJsonLocal<IRundown>({
-                            method: 'PATCH',
-                            path: `/rundowns/${this.props.rundownId}`,
-                            payload: {
-                                items: (rundown.items ?? []).concat({_id: res._id}),
-                            },
-                            headers: {
-                                'If-Match': rundown._etag,
-                            },
-                        }).then((rundownNext) => {
-                            this.setState({
-                                rundown: {
-                                    ...rundown,
-                                    items: rundownNext.items,
-                                    _etag: rundownNext._etag,
+                        return httpRequestJsonLocal<IRundownItem>({
+                            method: 'POST',
+                            path: '/rundown_items',
+                            payload: prepareRundownItemForSaving(itemWithDuration),
+                        }).then((res) => {
+                            return httpRequestJsonLocal<IRundown>({
+                                method: 'PATCH',
+                                path: `/rundowns/${this.props.rundownId}`,
+                                payload: {
+                                    items: (rundown.items ?? []).concat({_id: res._id}),
                                 },
-                                rundownWithChanges: {
-                                    ...rundownWithChanges,
-                                    items: rundownNext.items,
-                                    _etag: rundownNext._etag,
+                                headers: {
+                                    'If-Match': rundown._etag,
                                 },
+                            }).then((rundownNext) => {
+                                this.setState({
+                                    rundown: {
+                                        ...rundown,
+                                        items: rundownNext.items,
+                                        _etag: rundownNext._etag,
+                                    },
+                                    rundownWithChanges: {
+                                        ...rundownWithChanges,
+                                        items: rundownNext.items,
+                                        _etag: rundownNext._etag,
+                                    },
+                                });
+
+                                return val;
                             });
-
-                            return val;
                         });
-                    });
-                } else {
-                    return Promise.resolve(val);
-                }
-            }),
+                    } else {
+                        return Promise.resolve(val);
+                    }
+                }),
+            });
         });
     }
 
     initiateEditing(item: IRundownItem) {
-        this.setState({
-            createOrEditRundownItem: prepareForEditing(item, (val) => {
-                if (!this.props.readOnly) {
-                    return httpRequestJsonLocal<IRundownItem & IPatchExtraFields>({
-                        method: 'PATCH',
-                        path: `/rundown_items/${item._id}`,
-                        payload: prepareRundownItemForSaving(generatePatch(item, val, {undefinedEqNull: true})),
-                        headers: {
-                            'If-Match': item._etag,
-                        },
-                    }).then((patchRes) => {
-                        const nextItem = fixPatchResponse(patchRes);
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+            this.setState({
+                authoringReactKey: this.state.authoringReactKey + 1,
+                createOrEditRundownItem: prepareForEditing(item, (val) => {
+                    if (!this.props.readOnly) {
+                        return httpRequestJsonLocal<IRundownItem & IPatchExtraFields>({
+                            method: 'PATCH',
+                            path: `/rundown_items/${item._id}`,
+                            payload: prepareRundownItemForSaving(generatePatch(item, val, {undefinedEqNull: true})),
+                            headers: {
+                                'If-Match': item._etag,
+                            },
+                        }).then((patchRes) => {
+                            const nextItem = fixPatchResponse(patchRes);
 
-                        // needed so correct _etag can be used on next save
-                        this.initiateEditing(nextItem);
+                            // needed so correct _etag can be used on next save
+                            this.initiateEditing(nextItem);
 
-                        return nextItem;
-                    });
-                } else {
-                    return Promise.resolve(item);
-                }
-            }),
+                            return nextItem;
+                        });
+                    } else {
+                        return Promise.resolve(item);
+                    }
+                }),
+            });
         });
     }
 
     initiatePreview(item: IRundownItem) {
-        this.setState({
-            createOrEditRundownItem: prepareForPreview(item),
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+            this.setState({
+                authoringReactKey: this.state.authoringReactKey + 1,
+                createOrEditRundownItem: prepareForPreview(item),
+            });
         });
     }
 
@@ -376,6 +393,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     {
                                         rundownAction != null && (
                                             <AuthoringReact
+                                                key={this.state.authoringReactKey}
                                                 // ID is not needed because authoringStorage is operating on array items
                                                 // and not on database items via HTTP API
                                                 itemId=""

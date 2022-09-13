@@ -29,6 +29,7 @@ import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
 import {FrequencySimple} from './components/FrequencySimple';
+import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
 
 const {getAuthoringComponent} = superdesk.components;
 
@@ -87,6 +88,12 @@ type IProps = IPropsEditable | IPropsReadOnly;
 
 interface IState {
     createOrEditRundownItem: ICreate | IEdit | IPreview | null;
+
+    /**
+     * authoring-react doesn't remount if `authoringStorage` changes
+     * key is used to instruct authoring-react when to remount
+     */
+    authoringReactKey: number;
 }
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
@@ -102,6 +109,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
         this.state = {
             createOrEditRundownItem: null,
+            authoringReactKey: 0,
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -125,44 +133,53 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
     }
 
     private initiateCreation() {
-        this.setState({
-            createOrEditRundownItem: prepareForCreation((val) => {
-                if (!this.props.readOnly) {
-                    const itemWithDuration: Partial<IRundownItemBase> = {
-                        ...val.data,
-                        duration: val.data.planned_duration,
-                    };
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+            this.setState({
+                authoringReactKey: this.state.authoringReactKey + 1,
+                createOrEditRundownItem: prepareForCreation((val) => {
+                    if (!this.props.readOnly) {
+                        const itemWithDuration: Partial<IRundownItemBase> = {
+                            ...val.data,
+                            duration: val.data.planned_duration,
+                        };
 
-                    this.props.onChange({
-                        items: this.getRundownItems().concat(
-                            // validated in authoring view using content profile
-                            itemWithDuration as unknown as IRundownItemBase,
-                        ),
-                    });
-                }
+                        this.props.onChange({
+                            items: this.getRundownItems().concat(
+                                // validated in authoring view using content profile
+                                itemWithDuration as unknown as IRundownItemBase,
+                            ),
+                        });
+                    }
 
-                return Promise.resolve(val);
-            }),
+                    return Promise.resolve(val);
+                }),
+            });
         });
     }
 
     private initiateEditing(item: IRundownItemBase) {
-        this.setState({
-            createOrEditRundownItem: prepareForEditing(item, (val) => {
-                if (!this.props.readOnly) {
-                    this.props.onChange({
-                        items: this.getRundownItems().map((_item) => _item === item ? val : _item),
-                    });
-                }
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+            this.setState({
+                authoringReactKey: this.state.authoringReactKey + 1,
+                createOrEditRundownItem: prepareForEditing(item, (val) => {
+                    if (!this.props.readOnly) {
+                        this.props.onChange({
+                            items: this.getRundownItems().map((_item) => _item === item ? val : _item),
+                        });
+                    }
 
-                return Promise.resolve(val);
-            }),
+                    return Promise.resolve(val);
+                }),
+            });
         });
     }
 
     private initiatePreview(item: IRundownItemBase) {
-        this.setState({
-            createOrEditRundownItem: prepareForPreview(item),
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+            this.setState({
+                authoringReactKey: this.state.authoringReactKey + 1,
+                createOrEditRundownItem: prepareForPreview(item),
+            });
         });
     }
 
@@ -488,6 +505,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                     {
                                         this.state.createOrEditRundownItem != null && (
                                             <AuthoringReact
+                                                key={this.state.authoringReactKey}
                                                 itemId=""
                                                 onClose={() => {
                                                     this.setState({createOrEditRundownItem: null});
