@@ -227,17 +227,6 @@ interface IStateLoaded<T> {
 
 type IState<T> = {initialized: false} | IStateLoaded<T>;
 
-function waitForCssAnimation(): Promise<void> {
-    return new Promise((resolve) => {
-        setTimeout(
-            () => {
-                resolve();
-            },
-            500, // transition time taken from styles/sass/layouts.scss #authoring-container
-        );
-    });
-}
-
 export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureComponent<IPropsAuthoring<T>, IState<T>> {
     private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
     private _mounted: boolean;
@@ -458,7 +447,6 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     });
                 }),
                 authoringStorage.getUserPreferences(),
-                waitForCssAnimation(),
             ],
         ).then((res) => {
             const [{item, profile}, userPreferences] = res;
