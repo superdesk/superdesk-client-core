@@ -95,6 +95,7 @@ import {DateTime} from './ui/components/DateTime';
 import {AuthoringReact} from 'apps/authoring-react/authoring-react';
 import {computeEditor3Output} from 'apps/authoring-react/field-adapters/utilities/compute-editor3-output';
 import {getContentStateFromHtml} from './editor3/html/from-html';
+import {getInlineCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/inline-comments';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -379,6 +380,11 @@ export function getSuperdeskApiImplementation(
             isIFormGroup,
             isIFormField,
             getFormFieldPreviewComponent,
+        },
+        authoringGeneric: {
+            getSideWidgets: () => [
+                getInlineCommentsWidgetGeneric(),
+            ],
         },
         localization: {
             gettext: (message, params) => gettext(message, params),

@@ -9,6 +9,7 @@ import {
     IRundownTemplateBase,
 } from '../../interfaces';
 import {Button, ButtonGroup, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
+import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
 interface IProps {
@@ -21,6 +22,7 @@ interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
     createOrEditRundownItem: ICreate | IEdit | IPreview | null;
+    sideWidget: string | null;
 }
 
 import {superdesk} from '../../superdesk';
@@ -43,6 +45,7 @@ const {generatePatch} = superdesk.utilities;
 const {fixPatchResponse} = superdesk.helpers;
 
 const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
+const sideWidgets = superdesk.authoringGeneric.getSideWidgets<IRundownItemTemplateInitial>();
 
 const rundownValidator: CreateValidators<Partial<IRundown>> = {
     title: stringNotEmpty,
@@ -94,6 +97,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             rundown: null,
             rundownWithChanges: null,
             createOrEditRundownItem: null,
+            sideWidget: null,
         };
 
         this.setRundownField = this.setRundownField.bind(this);
@@ -434,6 +438,63 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 getAuthoringTopBarWidgets={() => []}
                                                 topBar2Widgets={[]}
                                                 onFieldChange={syncDurationWithEndTime}
+                                                getSidebar={() => {
+                                                    if (sideWidgets.length < 1) {
+                                                        return <span />;
+                                                    }
+
+                                                    return (
+                                                        <Nav.SideBarTabs
+                                                            items={sideWidgets.map(({icon, _id}) => ({
+                                                                size: 'big',
+                                                                icon,
+                                                                onClick: () => {
+                                                                    if (_id === this.state.sideWidget) {
+                                                                        this.setState({sideWidget: null});
+                                                                    } else {
+                                                                        this.setState({sideWidget: _id});
+                                                                    }
+                                                                },
+                                                            }))}
+                                                        />
+                                                    );
+                                                }}
+                                                getSidePanel={({
+                                                    contentProfile,
+                                                    fieldsData,
+                                                    handleFieldsDataChange,
+                                                    fieldsAdapter,
+                                                    storageAdapter,
+                                                    authoringStorage,
+                                                    handleUnsavedChanges,
+                                                }) => {
+                                                    if (this.state.sideWidget == null) {
+                                                        return null;
+                                                    }
+
+                                                    const widget = sideWidgets.find(
+                                                        ({_id}) => _id === this.state.sideWidget,
+                                                    );
+
+                                                    if (widget == null) {
+                                                        return null;
+                                                    }
+
+                                                    const Component = widget.component;
+
+                                                    return (
+                                                        <Component
+                                                            readOnly={this.props.readOnly}
+                                                            contentProfile={contentProfile}
+                                                            fieldsData={fieldsData}
+                                                            authoringStorage={authoringStorage}
+                                                            fieldsAdapter={fieldsAdapter}
+                                                            storageAdapter={storageAdapter}
+                                                            handleUnsavedChanges={handleUnsavedChanges}
+                                                            onFieldsDataChange={handleFieldsDataChange}
+                                                        />
+                                                    );
+                                                }}
                                             />
                                         )
                                     }
