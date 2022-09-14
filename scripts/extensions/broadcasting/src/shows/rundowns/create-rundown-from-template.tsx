@@ -7,6 +7,7 @@ import {IRundownTemplate, IShow} from '../../interfaces';
 import {superdesk} from '../../superdesk';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {SelectShow} from './components/select-show';
+import {IRestApiResponse} from 'superdesk-api';
 
 const {gettext} = superdesk.localization;
 const {SelectFromEndpoint, Spacer, SpacerBlock, InputLabel} = superdesk.components;
@@ -110,7 +111,15 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                 <SelectShow
                                     value={showId}
                                     onChange={(val) => {
-                                        this.setState({showId: val, template: null, rundownTitle: null});
+                                        httpRequestJsonLocal<IRestApiResponse<IRundownTemplate>>({
+                                            method: 'GET',
+                                            path: `/shows/${val}/templates`,
+                                        }).then(({_items}) => {
+                                            const _template: IRundownTemplate | null =
+                                                _items.length === 1 ? _items[0] : null;
+
+                                            this.setState({showId: val, template: _template, rundownTitle: null});
+                                        });
                                     }}
                                     required={true}
                                     readOnly={this.state.loading}
