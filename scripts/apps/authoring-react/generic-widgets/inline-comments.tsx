@@ -88,7 +88,7 @@ class Comment extends React.PureComponent<{comment: IInlineComment}> {
     }
 }
 
-class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
+export class InlineCommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
     constructor(props: IProps<T>) {
         super(props);
 
