@@ -27,8 +27,18 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
                     },
                 };
 
-                api.ingest.query(criteria).then((result) => {
-                    scope.ingested_count = result._meta.total;
+                scope.item.content_types.map((types) => {
+                    if (types === 'event' || types === 'planning') {
+                        const param = types === 'event' ? 'events' : types;
+
+                        return api.query(param, criteria).then((result) => {
+                            scope.ingested_count = result._meta.total;
+                        });
+                    } else {
+                        return api.ingest.query(criteria).then((result) => {
+                            scope.ingested_count = result._meta.total;
+                        });
+                    }
                 });
             }
 
