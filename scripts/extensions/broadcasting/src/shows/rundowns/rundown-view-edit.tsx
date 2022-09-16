@@ -497,6 +497,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     return (
                                                         <Component
+                                                            entityId={this.props.rundownId}
                                                             readOnly={this.props.readOnly}
                                                             contentProfile={contentProfile}
                                                             fieldsData={fieldsData}

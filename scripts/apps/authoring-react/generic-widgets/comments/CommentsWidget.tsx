@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IExtensionActivationResult, IUser, IArticle, IDesk, IRestApiResponse} from 'superdesk-api';
+import {IUser, IDesk, IRestApiResponse, IGenericSidebarComponentProps} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -24,10 +24,12 @@ import {IComment, IDeskSuggestion, IUserSuggestion, IUserSuggestionData} from '.
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Comments');
 
-type IProps = React.ComponentProps<IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']>;
+interface IProps<T> extends IGenericSidebarComponentProps<T> {
+    getComments: () => Promise<Array<IComment>>;
+    addComment(comment: string): Promise<void>;
+}
 
 interface IState {
-    itemId: IArticle['_id'] | null;
     comments: Array<IComment> | null;
     newCommentMessage: string;
     saveOnEnter: boolean;
@@ -48,12 +50,11 @@ function renderSuggestion(item: IDeskSuggestion | IUserSuggestion, search, highl
     );
 }
 
-class CommentsWidget extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+class CommentsWidget<T> extends React.PureComponent<IProps<T>, IState> {
+    constructor(props: IProps<T>) {
         super(props);
 
         this.state = {
-            itemId: props.article?._id || null,
             comments: null,
             newCommentMessage: '',
             saveOnEnter: false,
@@ -112,22 +113,7 @@ class CommentsWidget extends React.PureComponent<IProps, IState> {
     }
 
     loadComments = (): Promise<Array<IComment>> => {
-        if (this.state.itemId == null) {
-            return Promise.resolve([]);
-        }
-
-        const criteria = {
-            where: {
-                item: this.state.itemId,
-            },
-            embedded: {user: 1},
-        };
-
-        return httpRequestJsonLocal<IRestApiResponse<IComment>>({
-            method: 'GET',
-            path: '/item_comments',
-            urlParams: criteria,
-        }).then(({_items}) => _items);
+        return this.props.getComments();
     }
 
     reload = (): void => {
@@ -149,16 +135,7 @@ class CommentsWidget extends React.PureComponent<IProps, IState> {
         newCommentMessage = newCommentMessage.replace(userRegex, '@$1');
         newCommentMessage = newCommentMessage.replace(deskRegex, '#$1');
 
-        const comment = {
-            item: this.state.itemId,
-            text: newCommentMessage,
-        };
-
-        httpRequestJsonLocal({
-            method: 'POST',
-            path: '/item_comments',
-            payload: comment,
-        }).then(() => {
+        this.props.addComment(newCommentMessage).then(() => {
             this.setState({newCommentMessage: ''});
             this.reload();
         });
@@ -191,7 +168,7 @@ class CommentsWidget extends React.PureComponent<IProps, IState> {
                 />
             );
 
-        const widgetFooter: JSX.Element = this.state.itemId ? (
+        const widgetFooter: JSX.Element = (
             <Spacer v gap="8" >
                 <MentionsInput
                     value={this.state.newCommentMessage}
@@ -239,7 +216,7 @@ class CommentsWidget extends React.PureComponent<IProps, IState> {
                     />
                 </Spacer>
             </Spacer>
-        ) : null;
+        );
 
         return (
             <AuthoringWidgetLayout

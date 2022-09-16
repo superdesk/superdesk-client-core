@@ -16,6 +16,7 @@ class InlineCommentsWidgetWrapper extends React.PureComponent<IProps> {
     render() {
         return (
             <InlineCommentsWidget<IArticle>
+                entityId={this.props.article._id}
                 readOnly={this.props.readOnly}
                 contentProfile={this.props.contentProfile}
                 fieldsData={this.props.fieldsData}

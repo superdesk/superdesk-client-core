@@ -424,26 +424,29 @@ declare module 'superdesk-api' {
         background?: 'light' | 'grey';
     }
 
+    export interface IGenericSidebarComponentProps<T> {
+        entityId: string;
+        readOnly: boolean;
+        contentProfile: IContentProfileV2;
+        fieldsData: OrderedMap<string, unknown>;
+        authoringStorage: IAuthoringStorage<T>;
+        fieldsAdapter: IFieldsAdapter<T>;
+        storageAdapter: IStorageAdapter<T>;
+
+        onFieldsDataChange(fieldsData?: OrderedMap<string, unknown>): void;
+
+        /**
+         * Will prompt user to save changes. The promise will get rejected if user cancels saving.
+         */
+        handleUnsavedChanges(): Promise<T>;
+    }
+
     export interface IGenericSideWidget<T> {
         _id: string; // required for configuring widget visibility in content profile
         label: string;
         order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
         icon: string;
-        component: React.ComponentType<{
-            readOnly: boolean;
-            contentProfile: IContentProfileV2;
-            fieldsData: OrderedMap<string, unknown>;
-            authoringStorage: IAuthoringStorage<T>;
-            fieldsAdapter: IFieldsAdapter<T>;
-            storageAdapter: IStorageAdapter<T>;
-
-            onFieldsDataChange(fieldsData?: OrderedMap<string, unknown>): void;
-
-            /**
-             * Will prompt user to save changes. The promise will get rejected if user cancels saving.
-             */
-            handleUnsavedChanges(): Promise<T>;
-        }>;
+        component: React.ComponentType<IGenericSidebarComponentProps<T>>;
     }
 
     /**

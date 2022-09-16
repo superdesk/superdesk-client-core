@@ -1,22 +1,17 @@
-/* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IArticleSideWidget, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import CommentsWidget from '../../generic-widgets/comments/CommentsWidget';
+import {IGenericSideWidget, IRestApiResponse} from 'superdesk-api';
+import CommentsWidget from './CommentsWidget';
+import {IComment} from './interfaces';
 import {httpRequestJsonLocal} from 'core/helpers/network';
-import {IComment} from '../../generic-widgets/comments/interfaces';
-// Can't call `gettext` in the top level
-const getLabel = () => gettext('Comments');
 
-type IProps = React.ComponentProps<
-    IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
->;
+type IProps<T> = React.ComponentProps<IGenericSideWidget<T>['component']>;
 
-class Component extends React.PureComponent<IProps> {
+class Component<T> extends React.PureComponent<IProps<T>> {
     render() {
         return (
             <CommentsWidget
-                entityId={this.props.article._id}
+                entityId={this.props.entityId}
                 readOnly={this.props.readOnly}
                 contentProfile={this.props.contentProfile}
                 fieldsData={this.props.fieldsData}
@@ -26,7 +21,7 @@ class Component extends React.PureComponent<IProps> {
                 onFieldsDataChange={this.props.onFieldsDataChange}
                 handleUnsavedChanges={this.props.handleUnsavedChanges}
                 getComments={() => {
-                    const itemId = this.props.article?._id;
+                    const itemId = this.props.entityId;
 
                     if (itemId == null) {
                         return Promise.resolve([]);
@@ -41,16 +36,16 @@ class Component extends React.PureComponent<IProps> {
 
                     return httpRequestJsonLocal<IRestApiResponse<IComment>>({
                         method: 'GET',
-                        path: '/item_comments',
+                        path: '/comments', // TODO: Update endpoint
                         urlParams: criteria,
                     }).then(({_items}) => _items);
                 }}
                 addComment={(text) => {
                     return httpRequestJsonLocal({
                         method: 'POST',
-                        path: '/item_comments',
+                        path: '/comments', // TODO: Update endpoint
                         payload: {
-                            item: this.props.article._id,
+                            item: this.props.entityId,
                             text: text,
                         },
                     });
@@ -60,14 +55,13 @@ class Component extends React.PureComponent<IProps> {
     }
 }
 
-export function getCommentsWidget() {
-    const widget: IArticleSideWidget = {
-        _id: 'comments-widget',
-        label: getLabel(),
-        order: 3,
+export function getCommentsWidgetGeneric<T>() {
+    const widget: IGenericSideWidget<T> = {
+        _id: 'comments-widget-generic',
+        label: gettext('Comments'),
+        order: 2,
         icon: 'chat',
         component: Component,
-        isAllowed: (item) => item._type !== 'legal_archive',
     };
 
     return widget;
