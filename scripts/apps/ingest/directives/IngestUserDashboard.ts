@@ -27,19 +27,17 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
                     },
                 };
 
-                scope.item.content_types.map((types) => {
-                    if (types === 'event' || types === 'planning') {
-                        const param = types === 'event' ? 'events' : types;
+                if (scope.item.content_types.includes('event') || scope.item.content_types.includes('planning')) {
+                    const param = scope.item.content_types.includes('event') ? 'events' : 'planning';
 
-                        return api.query(param, criteria).then((result) => {
-                            scope.ingested_count = result._meta.total;
-                        });
-                    } else {
-                        return api.ingest.query(criteria).then((result) => {
-                            scope.ingested_count = result._meta.total;
-                        });
-                    }
-                });
+                    api.query(param, criteria).then((result) => {
+                        scope.ingested_count = result._meta.total;
+                    });
+                } else {
+                    api.ingest.query(criteria).then((result) => {
+                        scope.ingested_count = result._meta.total;
+                    });
+                }
             }
 
             function updateProvider() {
