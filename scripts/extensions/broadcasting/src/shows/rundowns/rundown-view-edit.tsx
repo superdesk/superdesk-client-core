@@ -75,6 +75,10 @@ export function prepareRundownTemplateForSaving<T extends IRundownTemplateBase |
             delete itemCopy['start_time'];
             delete itemCopy['end_time'];
 
+            if (item.duration == null) {
+                item.duration = item.planned_duration;
+            }
+
             return itemCopy;
         });
     }
@@ -91,6 +95,10 @@ function prepareRundownItemForSaving(item: Partial<IRundownItemBase>): Partial<I
      */
     delete copy['start_time'];
     delete copy['end_time'];
+
+    if (item.duration == null) {
+        item.duration = item.planned_duration;
+    }
 
     return copy;
 }
@@ -161,23 +169,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         }
     }
 
-    initiateCreation(initialData: Partial<IRundownItemBase>) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+    initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
                 createOrEditRundownItem: prepareForCreation(initialData, (val) => {
                     if (!this.props.readOnly) {
                         const itemWithDuration: Partial<IRundownItemBase> = {
                             ...val.data,
-                            duration: val.data.planned_duration, // TODO: copied code, move into function?
                         };
-
-                        /**
-                         * start/end times are generated from duration
-                         * they are present in the form only for making it easier for users to enter duration
-                         */
-                        delete itemWithDuration['start_time'];
-                        delete itemWithDuration['end_time'];
 
                         const {rundown, rundownWithChanges} = this.state;
 
@@ -213,6 +213,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     },
                                 });
 
+                                // needed so correct _etag can be used on next save
+                                // also to exit creation mode so saving again wouldn't create another item
+                                this.initiateEditing(res, true);
+
                                 return val;
                             });
                         });
@@ -224,8 +228,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         });
     }
 
-    initiateEditing(item: IRundownItem) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+    initiateEditing(item: IRundownItem, skipUnsavedChangesCheck?: boolean) {
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
                 createOrEditRundownItem: prepareForEditing(item, (val) => {
@@ -241,7 +245,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                             const nextItem = fixPatchResponse(patchRes);
 
                             // needed so correct _etag can be used on next save
-                            this.initiateEditing(nextItem);
+                            this.initiateEditing(nextItem, true);
 
                             return nextItem;
                         });
@@ -253,8 +257,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         });
     }
 
-    initiatePreview(item: IRundownItem) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+    initiatePreview(item: IRundownItem, skipUnsavedChangesCheck?: boolean) {
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
                 createOrEditRundownItem: prepareForPreview(item),

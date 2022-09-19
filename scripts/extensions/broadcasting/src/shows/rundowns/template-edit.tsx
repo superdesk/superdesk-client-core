@@ -132,8 +132,8 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
         }
     }
 
-    private initiateCreation(initialData: Partial<IRundownItemBase>) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+    private initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
                 createOrEditRundownItem: prepareForCreation(initialData, (val) => {
@@ -151,14 +151,17 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                         });
                     }
 
+                    // need to exit creation mode so saving again wouldn't create another item
+                    this.initiateEditing(val.data as unknown as IRundownItemBase, true);
+
                     return Promise.resolve(val);
                 }),
             });
         });
     }
 
-    private initiateEditing(item: IRundownItemBase) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+    private initiateEditing(item: IRundownItemBase, skipUnsavedChangesCheck?: boolean) {
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
                 createOrEditRundownItem: prepareForEditing(item, (val) => {
@@ -168,14 +171,16 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                         });
                     }
 
+                    this.initiateEditing(val, true);
+
                     return Promise.resolve(val);
                 }),
             });
         });
     }
 
-    private initiatePreview(item: IRundownItemBase) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
+    private initiatePreview(item: IRundownItemBase, skipUnsavedChangesCheck?: boolean) {
+        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
                 createOrEditRundownItem: prepareForPreview(item),
