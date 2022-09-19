@@ -161,11 +161,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         }
     }
 
-    initiateCreation() {
+    initiateCreation(initialData: Partial<IRundownItemBase>) {
         handleUnsavedRundownChanges(this.state.createOrEditRundownItem, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForCreation((val) => {
+                createOrEditRundownItem: prepareForCreation(initialData, (val) => {
                     if (!this.props.readOnly) {
                         const itemWithDuration: Partial<IRundownItemBase> = {
                             ...val.data,

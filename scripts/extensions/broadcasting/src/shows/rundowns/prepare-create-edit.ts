@@ -75,6 +75,7 @@ function getRundownItemTemplateAuthoringStorage(
 }
 
 export function prepareForCreation(
+    initialValue: Partial<IRundownItemBase>,
     onSave: (item: IRundownItemTemplateInitial) => Promise<IRundownItemTemplateInitial>,
 ): ICreate {
     const item: IRundownItemTemplateInitial = {
@@ -83,7 +84,7 @@ export function prepareForCreation(
         _updated: '',
         _etag: '',
         _links: {},
-        data: {},
+        data: initialValue,
     };
 
     return {
