@@ -165,11 +165,11 @@ export class CreateRundownFromTemplate extends React.PureComponent<IProps, IStat
                                 }
 
                                 {
-                                    rundownTitle != null && (
+                                    template != null && (
                                         <Input
                                             type="text"
                                             label={gettext('Rundown name')}
-                                            value={rundownTitle}
+                                            value={rundownTitle ?? ''}
                                             onChange={(val) => {
                                                 this.setState({rundownTitle: val});
                                             }}
