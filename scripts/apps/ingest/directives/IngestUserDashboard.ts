@@ -27,17 +27,14 @@ export function IngestUserDashboard(api, userList, privileges, moment) {
                     },
                 };
 
-                if (scope.item.content_types.includes('event') || scope.item.content_types.includes('planning')) {
-                    const param = scope.item.content_types.includes('event') ? 'events' : 'planning';
+                var resource = 'ingest';
 
-                    api.query(param, criteria).then((result) => {
-                        scope.ingested_count = result._meta.total;
-                    });
-                } else {
-                    api.ingest.query(criteria).then((result) => {
-                        scope.ingested_count = result._meta.total;
-                    });
+                if (scope.item.content_types.includes('event') || scope.item.content_types.includes('planning')) {
+                    resource = scope.item.content_types.includes('event') ? 'events' : 'planning';
                 }
+                api.query(resource, criteria).then((result) => {
+                    scope.ingested_count = result._meta.total;
+                });
             }
 
             function updateProvider() {
