@@ -10,6 +10,7 @@ import {
     Dropdown,
     CreateButton,
     Button,
+    SearchBar,
 } from 'superdesk-ui-framework/react';
 
 import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates';
@@ -26,14 +27,12 @@ import {SelectShow} from './shows/rundowns/components/select-show';
 import {AppliedFilters} from './shows/rundowns/components/applied-filters';
 
 const {gettext} = superdesk.localization;
-const {Spacer} = superdesk.components;
 
 type IProps = {};
 
 interface IState {
     rundownIdInEditMode: string | null;
     searchString: string;
-    searchStringApplied: string;
     filtersOpen: boolean;
     filters: IRundownFilters;
     filtersApplied: IRundownFilters;
@@ -46,7 +45,6 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         this.state = {
             rundownIdInEditMode: null,
             searchString: '',
-            searchStringApplied: '',
             filtersOpen: false,
             filters: {},
             filtersApplied: {},
@@ -71,33 +69,18 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
                             <SubNav zIndex={2}>
-                                {/* <SearchBar
+                                <SearchBar
                                     placeholder={gettext('Search')}
-                                    onSubmit={() => {
+                                    onSubmit={(val) => {
+                                        if (typeof val === 'number') {
+                                            throw new Error('invalid state');
+                                        }
 
+                                        this.setState({
+                                            searchString: val,
+                                        });
                                     }}
-                                /> */}
-
-                                <Spacer h gap="8" justifyContent="start" noGrow style={{paddingLeft: 20}}>
-                                    <input
-                                        type="text"
-                                        value={this.state.searchString}
-                                        onChange={(event) => {
-                                            this.setState({searchString: event.target.value});
-                                        }}
-                                    />
-
-                                    <button
-                                        type="submit"
-                                        onClick={() => {
-                                            this.setState({
-                                                searchStringApplied: this.state.searchString,
-                                            });
-                                        }}
-                                    >
-                                        {gettext('Submit')}
-                                    </button>
-                                </Spacer>
+                                />
 
                                 <ButtonGroup align="end" spaces="no-space">
                                     <Dropdown
@@ -378,7 +361,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                 onEditModeChange={(rundownIdInEditMode) => {
                                     this.setState({rundownIdInEditMode});
                                 }}
-                                searchString={this.state.searchStringApplied}
+                                searchString={this.state.searchString}
                                 filters={this.state.filtersApplied}
                             />
 
