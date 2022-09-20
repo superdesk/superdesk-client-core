@@ -8,3 +8,4 @@ export * from './utils/array-spin';
 export * from './input/with-validation';
 export * from './localization/get-weekday-names';
 export * from './downloads/download-blob';
+export * from './downloads/download-file-attachment';

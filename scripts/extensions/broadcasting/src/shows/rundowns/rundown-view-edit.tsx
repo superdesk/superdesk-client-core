@@ -38,7 +38,7 @@ import {superdesk} from '../../superdesk';
 import {ManageRundownItems} from './manage-rundown-items';
 import {ICreate, IEdit, IPreview} from './template-edit';
 import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
-import {CreateValidators, WithValidation} from '@superdesk/common';
+import {CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
 import {stringNotEmpty} from '../../form-validation';
 import {isEqual, noop} from 'lodash';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
@@ -362,10 +362,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                                                 format: exportOption._id,
                                                                             },
                                                                         }).then((res) => {
-                                                                            const link = document.createElement('a');
-
-                                                                            link.href = res.href;
-                                                                            link.click();
+                                                                            downloadFileAttachment(res.href);
                                                                         });
                                                                     },
                                                                 })),
