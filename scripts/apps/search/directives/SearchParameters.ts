@@ -241,19 +241,8 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              */
             function fetchProviders() {
                 ingestSources.fetchAllIngestProviders().then((items) => {
-                    const filteredItems = items.filter((item) => {
-                        const content_type = item.content_types.find((type, index) => {
-                            if (type !== 'event' && type !== 'planning') {
-                                return type;
-                            } else {
-                                return null;
-                            }
-                        });
-
-                        return item.content_types.includes(content_type);
-                    });
-
-                    scope.providers = filteredItems;
+                    scope.providers = items.filter((provider) =>
+                        provider.content_types.some((type) => type !== 'event' && type !== 'planning'));
                     initializeProviders();
                 });
             }
