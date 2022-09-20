@@ -385,7 +385,18 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                         </Layout.HeaderPanel>
 
                         <Layout.MainPanel padding="none">
-                            <Layout.AuthoringMain headerPadding="medium">
+                            <Layout.AuthoringMain
+                                headerPadding="medium"
+                                authoringHeader={(
+                                    <AiringInfoBlock
+                                        value={rundown}
+                                        onChange={this.setRundownField}
+                                        readOnly={this.props.readOnly}
+                                        validationErrors={validationErrors}
+                                    />
+                                )}
+                                headerCollapsed={true}
+                            >
                                 <div>
                                     <Input
                                         type="text"
@@ -403,15 +414,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     />
 
                                     <SpacerBlock v gap="16" />
-
-                                    <AiringInfoBlock
-                                        value={rundown}
-                                        onChange={this.setRundownField}
-                                        readOnly={this.props.readOnly}
-                                        validationErrors={validationErrors}
-                                    />
-
-                                    <SpacerBlock v gap="8" />
 
                                     <WithLiveResources
                                         resources={[
