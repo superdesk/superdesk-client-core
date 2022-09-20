@@ -3,12 +3,14 @@
 import * as React from 'react';
 import {
     IRundown,
+    IRundownExportOption,
+    IRundownExportResponse,
     IRundownItem,
     IRundownItemBase,
     IRundownItemTemplateInitial,
     IRundownTemplateBase,
 } from '../../interfaces';
-import {Button, ButtonGroup, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
+import {Button, ButtonGroup, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
@@ -22,12 +24,13 @@ interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
     createOrEditRundownItem: ICreate | IEdit | IPreview | null;
+    exportOptions: Array<IRundownExportOption>;
 
     /**
      * authoring-react doesn't remount if `authoringStorage` changes
      * key is used to instruct authoring-react when to remount
      */
-     authoringReactKey: number;
+    authoringReactKey: number;
 }
 
 import {superdesk} from '../../superdesk';
@@ -41,7 +44,7 @@ import {isEqual, noop} from 'lodash';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
-import {IPatchExtraFields, ITopBarWidget} from 'superdesk-api';
+import {IPatchExtraFields, IRestApiResponse, ITopBarWidget} from 'superdesk-api';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
 import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
 const {gettext} = superdesk.localization;
@@ -112,6 +115,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             rundownWithChanges: null,
             createOrEditRundownItem: null,
             authoringReactKey: 0,
+            exportOptions: [],
         };
 
         this.setRundownField = this.setRundownField.bind(this);
@@ -276,6 +280,23 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                 rundownWithChanges: rundown,
             });
         });
+
+        Promise.all([
+            httpRequestJsonLocal<IRundown>({
+                method: 'GET',
+                path: `/rundowns/${this.props.rundownId}`,
+            }),
+            httpRequestJsonLocal<IRestApiResponse<IRundownExportOption>>({
+                method: 'GET',
+                path: '/rundown_export',
+            }),
+        ]).then(([rundown, exportOptions]) => {
+            this.setState({
+                rundown: rundown,
+                rundownWithChanges: rundown,
+                exportOptions: exportOptions._items,
+            });
+        });
     }
 
     render() {
@@ -324,6 +345,40 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         }
                                                         type="primary"
                                                     />
+
+                                                    <Dropdown
+                                                        items={[
+                                                            {
+                                                                type: 'submenu',
+                                                                label: gettext('Export'),
+                                                                items: this.state.exportOptions.map((exportOption) => ({
+                                                                    label: exportOption.name,
+                                                                    onSelect: () => {
+                                                                        httpRequestJsonLocal<IRundownExportResponse>({
+                                                                            method: 'POST',
+                                                                            path: '/rundown_export',
+                                                                            payload: {
+                                                                                rundown: rundown._id,
+                                                                                format: exportOption._id,
+                                                                            },
+                                                                        }).then((res) => {
+                                                                            const link = document.createElement('a');
+
+                                                                            link.href = res.href;
+                                                                            link.click();
+                                                                        });
+                                                                    },
+                                                                })),
+                                                            },
+                                                        ]}
+                                                    >
+
+                                                        <IconButton
+                                                            ariaValue={gettext('Actions')}
+                                                            icon="dots-vertical"
+                                                            onClick={noop}
+                                                        />
+                                                    </Dropdown>
                                                 </React.Fragment>
                                             )
                                     }

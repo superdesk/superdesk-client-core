@@ -99,3 +99,13 @@ export type IRundown = IRundownBase & IBaseRestApiResponse;
 export interface IRundownFilters {
     show?: IShow['_id'] | null;
 }
+
+export interface IRundownExportOption extends IBaseRestApiResponse {
+    name: string;
+}
+
+export interface IRundownExportResponse extends IBaseRestApiResponse {
+    format: string;
+    href: string;
+    rundown: IRundown['_id'];
+}
