@@ -241,7 +241,8 @@ export function SearchParameters($location, asset, tags, metadata, common, desks
              */
             function fetchProviders() {
                 ingestSources.fetchAllIngestProviders().then((items) => {
-                    scope.providers = items;
+                    scope.providers = items.filter((provider) =>
+                        provider.content_types.some((type) => type !== 'event' && type !== 'planning'));
                     initializeProviders();
                 });
             }
