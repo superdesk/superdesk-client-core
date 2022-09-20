@@ -36,7 +36,6 @@ import {
     isNullOrUndefined,
 } from './helpers/typescript-helpers';
 import {getUrlPage, setUrlPage, urlParams} from './helpers/url';
-import {downloadBlob} from './helpers/utils';
 import {getLocaleForDatePicker} from './helpers/ui-framework';
 import {memoize, omit} from 'lodash';
 import {Modal} from './ui/components/Modal/Modal';
@@ -451,7 +450,6 @@ export function getSuperdeskApiImplementation(
             generatePatch,
             stripHtmlTags,
             getLinesCount,
-            downloadBlob,
             throttleAndCombineArray,
             querySelectorParent,
             arrayToTree,

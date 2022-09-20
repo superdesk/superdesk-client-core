@@ -2598,7 +2598,6 @@ declare module 'superdesk-api' {
             generatePatch<T>(a: Partial<T>, b: Partial<T>, options?: IPatchingOptions): Partial<T>;
             stripHtmlTags(htmlString: string): string;
             getLinesCount(plainText: string): number | null;
-            downloadBlob(data: BinaryType, mimetype: string, filename: string): void;
 
             /**
              * When throttled function is called more frequently than specified via `wait` param,

@@ -40,6 +40,8 @@ const COMPRESSED_BINARY_RESOURCE = `${RESOURCE}/compressed_binary/`;
 const LOCK_ASSET = `${RESOURCE}/lock`;
 const UNLOCK_ASSET = `${RESOURCE}/unlock`;
 
+import {downloadBlob} from '@superdesk/common';
+
 export function uploadAsset(
     data: FormData,
     onProgress: (event: ProgressEvent) => void,
@@ -514,7 +516,6 @@ export function getAssetDownloadUrl(assetId: IAssetItem['_id']): string {
 export function getAssetBinary(asset: IAssetItem): Promise<void | Response> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
-    const {downloadBlob} = superdeskApi.utilities;
 
     return superdeskApi.dataApi.queryRaw<void | Response>(
         BINARY_RESOURCE + asset._id,
@@ -537,7 +538,6 @@ export function getAssetBinary(asset: IAssetItem): Promise<void | Response> {
 export function getAssetsCompressedBinary(asset_ids: Array<string>): Promise<void | Response> {
     const {gettext} = superdeskApi.localization;
     const {notify} = superdeskApi.ui;
-    const {downloadBlob} = superdeskApi.utilities;
 
     return superdeskApi.dataApi.queryRaw<void | Response>(
         COMPRESSED_BINARY_RESOURCE + JSON.stringify(asset_ids),
