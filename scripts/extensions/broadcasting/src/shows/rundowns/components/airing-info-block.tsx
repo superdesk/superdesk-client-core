@@ -50,6 +50,7 @@ export class AiringInfoBlock<T extends Partial<IRundownTemplateBase> | IRundown>
                                 airtime_time: val,
                             });
                         }}
+                        allowSeconds
                         disabled={readOnly}
                         error={validationErrors.airtime_time ?? undefined}
                         invalid={validationErrors.airtime_time != null}
