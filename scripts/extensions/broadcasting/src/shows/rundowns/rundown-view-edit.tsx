@@ -47,6 +47,7 @@ import {LANGUAGE} from '../../constants';
 import {IPatchExtraFields, IRestApiResponse, ITopBarWidget} from 'superdesk-api';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
 import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
+import {AiringInfoBlock} from './components/airing-info-block';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
@@ -399,6 +400,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                         boxedStyle
                                         error={validationErrors.title ?? undefined}
                                         invalid={validationErrors.title != null}
+                                    />
+
+                                    <SpacerBlock v gap="16" />
+
+                                    <AiringInfoBlock
+                                        value={rundown}
+                                        onChange={this.setRundownField}
+                                        readOnly={this.props.readOnly}
+                                        validationErrors={validationErrors}
                                     />
 
                                     <SpacerBlock v gap="8" />

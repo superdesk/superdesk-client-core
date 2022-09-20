@@ -87,8 +87,10 @@ interface IRundownItemReference {
 }
 
 interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 'items'> {
-    readonly planned_duration: number;
     readonly duration: number;
+    planned_duration: number;
+    airtime_time: string; // ISO 8601 time
+    airtime_date: string; // ISO 8601 date without timezone
     title: string;
     items: Array<IRundownItemReference>;
     template: IRundownTemplate['_id'];
