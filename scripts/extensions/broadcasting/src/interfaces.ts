@@ -99,7 +99,23 @@ interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 
 export type IRundown = IRundownBase & IBaseRestApiResponse;
 
 export interface IRundownFilters {
+    /**
+     * Don't forget to update {@see AppliedFilters} and {@see FilteringInputs} when fields are added or removed.
+     */
+
     show?: IShow['_id'] | null;
+    airtime_time?: {
+        gt?: string;
+        lt?: string;
+    };
+    airtime_date?: {
+        gt?: string;
+        lt?: string;
+    };
+    duration?: {
+        gt?: number;
+        lt?: number;
+    };
 }
 
 export interface IRundownExportOption extends IBaseRestApiResponse {

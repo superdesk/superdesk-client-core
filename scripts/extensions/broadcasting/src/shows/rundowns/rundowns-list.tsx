@@ -7,6 +7,7 @@ import {superdesk} from '../../superdesk';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {addSeconds} from '@superdesk/common';
+import {IAndOperator} from 'superdesk-api';
 
 const {httpRequestRawLocal} = superdesk;
 const {getVirtualListFromQuery, DateTime} = superdesk.components;
@@ -38,13 +39,41 @@ export class RundownsList extends React.PureComponent<IProps> {
                             filter: (() => {
                                 const {filters} = this.props;
 
-                                if (filters?.show == null) {
+                                const queryFilters: IAndOperator['$and'] = [];
+
+                                if (filters?.show != null) {
+                                    queryFilters.push({show: {$eq: filters.show}});
+                                }
+
+                                if (filters?.airtime_time?.gt != null) {
+                                    queryFilters.push({airtime_time: {$gt: filters.airtime_time.gt}});
+                                }
+
+                                if (filters?.airtime_time?.lt != null) {
+                                    queryFilters.push({airtime_time: {$lt: filters.airtime_time.lt}});
+                                }
+
+                                if (filters?.airtime_date?.gt != null) {
+                                    queryFilters.push({airtime_date: {$gt: filters.airtime_date.gt}});
+                                }
+
+                                if (filters?.airtime_date?.lt != null) {
+                                    queryFilters.push({airtime_date: {$lt: filters.airtime_date.lt}});
+                                }
+
+                                if (filters?.duration?.gt != null && filters.duration.gt !== 0) {
+                                    queryFilters.push({duration: {$gt: filters.duration.gt}});
+                                }
+
+                                if (filters?.duration?.lt != null && filters.duration.lt !== 0) {
+                                    queryFilters.push({duration: {$lt: filters.duration.lt}});
+                                }
+
+                                if (queryFilters.length < 1) {
                                     return undefined;
                                 } else {
                                     return {
-                                        $and: [
-                                            {show: {$eq: filters.show}},
-                                        ],
+                                        $and: queryFilters,
                                     };
                                 }
                             })(),

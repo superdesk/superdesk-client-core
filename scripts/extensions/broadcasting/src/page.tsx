@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {noop} from 'lodash';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import * as Form from 'superdesk-ui-framework/react/components/Form';
 
 import {
     ButtonGroup,
@@ -18,13 +17,14 @@ import {CreateShowModal} from './shows/create-show';
 
 import {showModal} from '@superdesk/common';
 
-import {superdesk} from './superdesk';
 import {CreateRundownFromTemplate} from './shows/rundowns/create-rundown-from-template';
 import {RundownsList} from './shows/rundowns/rundowns-list';
 import {RundownViewEdit} from './shows/rundowns/rundown-view-edit';
 import {IRundownFilters} from './interfaces';
-import {SelectShow} from './shows/rundowns/components/select-show';
+import {FilteringInputs} from './shows/rundowns/components/filtering-inputs';
 import {AppliedFilters} from './shows/rundowns/components/applied-filters';
+
+import {superdesk} from './superdesk';
 
 const {gettext} = superdesk.localization;
 
@@ -49,9 +49,11 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
             filters: {},
             filtersApplied: {},
         };
+
+        this.setFilter = this.setFilter.bind(this);
     }
 
-    setFilter(filters: Partial<IState['filters']>) {
+    private setFilter(filters: Partial<IState['filters']>) {
         this.setState({
             filters: {
                 ...this.state.filters,
@@ -61,8 +63,6 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {filters} = this.state;
-
         return (
             <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
                 <div className="sd-content sd-content-wrapper">
@@ -164,15 +164,17 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                         }}
                                     />
 
-                                    <AppliedFilters
-                                        filters={this.state.filtersApplied}
-                                        onChange={(val) => {
-                                            this.setState({
-                                                filters: val,
-                                                filtersApplied: val,
-                                            });
-                                        }}
-                                    />
+                                    <div>
+                                        <AppliedFilters
+                                            filters={this.state.filtersApplied}
+                                            onChange={(val) => {
+                                                this.setState({
+                                                    filters: val,
+                                                    filtersApplied: val,
+                                                });
+                                            }}
+                                        />
+                                    </div>
                                 </ButtonGroup>
                                 {/* <ButtonGroup align="end">
                                     <ButtonGroup align="sub" padded={true} >
@@ -254,17 +256,10 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
 
                                 <Layout.PanelContent>
                                     <Layout.PanelContentBlock>
-                                        <Form.FormGroup>
-                                            <Form.FormItem>
-                                                <SelectShow
-                                                    value={filters.show ?? null}
-                                                    onChange={(val) => {
-                                                        this.setFilter({show: val});
-                                                    }}
-                                                    required={false}
-                                                />
-                                            </Form.FormItem>
-                                        </Form.FormGroup>
+                                        <FilteringInputs
+                                            filters={this.state.filters}
+                                            onChange={this.setFilter}
+                                        />
                                     </Layout.PanelContentBlock>
                                 </Layout.PanelContent>
                                 <Layout.PanelFooter>
