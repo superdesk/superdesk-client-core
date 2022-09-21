@@ -52,6 +52,7 @@ const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
 const {generatePatch} = superdesk.utilities;
+const {addWebsocketMessageListener} = superdesk;
 const {fixPatchResponse} = superdesk.helpers;
 
 const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
@@ -108,6 +109,8 @@ function prepareRundownItemForSaving(item: Partial<IRundownItemBase>): Partial<I
 }
 
 export class RundownViewEditComponent extends React.PureComponent<IProps, IState> {
+    private eventListenersToRemoveBeforeUnmounting: Array<() => void>;
+
     constructor(props: IProps) {
         super(props);
 
@@ -125,6 +128,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         this.initiatePreview = this.initiatePreview.bind(this);
         this.save = this.save.bind(this);
         this.close = this.close.bind(this);
+        this.initializeData = this.initializeData.bind(this);
+
+        this.eventListenersToRemoveBeforeUnmounting = [];
     }
 
     setRundownField(data: Partial<IRundown>, callback?: () => void) {
@@ -271,17 +277,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         });
     }
 
-    componentDidMount() {
-        httpRequestJsonLocal<IRundown>({
-            method: 'GET',
-            path: `/rundowns/${this.props.rundownId}`,
-        }).then((rundown) => {
-            this.setState({
-                rundown: rundown,
-                rundownWithChanges: rundown,
-            });
-        });
-
+    private initializeData() {
         Promise.all([
             httpRequestJsonLocal<IRundown>({
                 method: 'GET',
@@ -298,6 +294,28 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                 exportOptions: exportOptions._items,
             });
         });
+    }
+
+    componentDidMount() {
+        this.initializeData();
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addWebsocketMessageListener('resource:updated', ({detail}) => {
+                if (
+                    detail.event === 'resource:updated'
+                    && detail.extra.resource === 'rundowns'
+                    && detail.extra._id === this.state.rundown?._id
+                ) {
+                    this.initializeData();
+                }
+            }),
+        );
+    }
+
+    componentWillUnmount(): void {
+        for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
+            fn();
+        }
     }
 
     render() {
