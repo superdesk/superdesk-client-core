@@ -135,7 +135,27 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                                 size="small"
                                                             />
 
-                                                            <DateTime dateTime={rundown._updated ?? rundown._created} />
+                                                            {
+                                                                rundown._updated !== rundown._created
+                                                                    ? (
+                                                                        <DateTime
+                                                                            dateTime={rundown._updated}
+                                                                            tooltip={(dateLong) => gettext(
+                                                                                'Updated at {{date}}',
+                                                                                {date: dateLong},
+                                                                            )}
+                                                                        />
+                                                                    )
+                                                                    : (
+                                                                        <DateTime
+                                                                            dateTime={rundown._created}
+                                                                            tooltip={(dateLong) => gettext(
+                                                                                'Created at {{date}}',
+                                                                                {date: dateLong},
+                                                                            )}
+                                                                        />
+                                                                    )
+                                                            }
                                                         </React.Fragment>
                                                     ),
                                                 },

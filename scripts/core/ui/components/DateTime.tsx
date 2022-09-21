@@ -7,8 +7,12 @@ export class DateTime extends React.PureComponent<IPropsDateTime> {
         const datetimeService = ng.get('datetime');
         const {dateTime} = this.props;
 
+        const dateShort = datetimeService.shortFormat(dateTime);
+        const dateLong = datetimeService.longFormat(dateTime);
+        const tooltip = this.props.tooltip == null ? dateLong : this.props.tooltip(dateLong, dateShort);
+
         return (
-            <time title={datetimeService.longFormat(dateTime)}>{datetimeService.shortFormat(dateTime)}</time>
+            <time title={tooltip}>{dateShort}</time>
         );
     }
 }

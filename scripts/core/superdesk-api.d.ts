@@ -1729,6 +1729,7 @@ declare module 'superdesk-api' {
 
     export interface IPropsDateTime {
         dateTime: string;
+        tooltip?: (dateLong: string, dateShort: string) => string;
     }
 
     export interface IPropsListItemColumn {
