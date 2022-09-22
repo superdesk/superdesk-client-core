@@ -105,16 +105,16 @@ export interface IRundownFilters {
 
     show?: IShow['_id'] | null;
     airtime_time?: {
-        gt?: string;
-        lt?: string;
+        gte?: string;
+        lte?: string;
     };
     airtime_date?: {
-        gt?: string;
-        lt?: string;
+        gte?: string;
+        lte?: string;
     };
     duration?: {
-        gt?: number;
-        lt?: number;
+        gte?: number;
+        lte?: number;
     };
 }
 

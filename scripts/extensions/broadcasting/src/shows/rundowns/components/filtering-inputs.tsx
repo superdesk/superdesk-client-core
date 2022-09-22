@@ -41,12 +41,12 @@ export class FilteringInputs extends React.PureComponent<IProps> {
                         <Spacer h gap="4" justifyContent="space-between">
                             <TimePicker
                                 label={gettext('Airtime time from')}
-                                value={filters.airtime_date?.gt ?? ''}
+                                value={filters.airtime_date?.gte ?? ''}
                                 onChange={(val) => {
                                     this.props.onChange({
                                         airtime_time: {
                                             ...filters.airtime_time,
-                                            gt: val,
+                                            gte: val,
                                         },
                                     });
                                 }}
@@ -54,12 +54,12 @@ export class FilteringInputs extends React.PureComponent<IProps> {
 
                             <TimePicker
                                 label={gettext('Airtime time to')}
-                                value={filters.airtime_date?.lt ?? ''}
+                                value={filters.airtime_date?.lte ?? ''}
                                 onChange={(val) => {
                                     this.props.onChange({
                                         airtime_time: {
                                             ...filters.airtime_time,
-                                            lt: val,
+                                            lte: val,
                                         },
                                     });
                                 }}
@@ -74,12 +74,12 @@ export class FilteringInputs extends React.PureComponent<IProps> {
                             <DatePickerISO
                                 label={gettext('Airtime date from')}
                                 dateFormat={superdesk.instance.config.view.dateformat}
-                                value={filters.airtime_date?.gt ?? ''}
+                                value={filters.airtime_date?.gte ?? ''}
                                 onChange={(val) => {
                                     this.props.onChange({
                                         airtime_date: {
                                             ...filters.airtime_date,
-                                            gt: val,
+                                            gte: val,
                                         },
                                     });
                                 }}
@@ -88,12 +88,12 @@ export class FilteringInputs extends React.PureComponent<IProps> {
                             <DatePickerISO
                                 label={gettext('Airtime date to')}
                                 dateFormat={superdesk.instance.config.view.dateformat}
-                                value={filters.airtime_date?.lt ?? ''}
+                                value={filters.airtime_date?.lte ?? ''}
                                 onChange={(val) => {
                                     this.props.onChange({
                                         airtime_date: {
                                             ...filters.airtime_date,
-                                            lt: val,
+                                            lte: val,
                                         },
                                     });
                                 }}
@@ -107,12 +107,12 @@ export class FilteringInputs extends React.PureComponent<IProps> {
                         <Spacer h gap="4" justifyContent="space-between">
                             <DurationInput
                                 label={gettext('Duration from')}
-                                seconds={filters.duration?.gt ?? 0}
+                                seconds={filters.duration?.gte ?? 0}
                                 onChange={(val) => {
                                     this.props.onChange({
                                         duration: {
                                             ...filters.duration,
-                                            gt: val,
+                                            gte: val,
                                         },
                                     });
                                 }}
@@ -120,12 +120,12 @@ export class FilteringInputs extends React.PureComponent<IProps> {
 
                             <DurationInput
                                 label={gettext('Duration to')}
-                                seconds={filters.duration?.lt ?? 0}
+                                seconds={filters.duration?.lte ?? 0}
                                 onChange={(val) => {
                                     this.props.onChange({
                                         duration: {
                                             ...filters.duration,
-                                            lt: val,
+                                            lte: val,
                                         },
                                     });
                                 }}

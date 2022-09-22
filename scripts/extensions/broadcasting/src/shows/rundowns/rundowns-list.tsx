@@ -45,28 +45,28 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     queryFilters.push({show: {$eq: filters.show}});
                                 }
 
-                                if (filters?.airtime_time?.gt != null) {
-                                    queryFilters.push({airtime_time: {$gt: filters.airtime_time.gt}});
+                                if (filters?.airtime_time?.gte != null) {
+                                    queryFilters.push({airtime_time: {$gte: filters.airtime_time.gte}});
                                 }
 
-                                if (filters?.airtime_time?.lt != null) {
-                                    queryFilters.push({airtime_time: {$lt: filters.airtime_time.lt}});
+                                if (filters?.airtime_time?.lte != null) {
+                                    queryFilters.push({airtime_time: {$lte: filters.airtime_time.lte}});
                                 }
 
-                                if (filters?.airtime_date?.gt != null) {
-                                    queryFilters.push({airtime_date: {$gt: filters.airtime_date.gt}});
+                                if (filters?.airtime_date?.gte != null) {
+                                    queryFilters.push({airtime_date: {$gte: filters.airtime_date.gte}});
                                 }
 
-                                if (filters?.airtime_date?.lt != null) {
-                                    queryFilters.push({airtime_date: {$lt: filters.airtime_date.lt}});
+                                if (filters?.airtime_date?.lte != null) {
+                                    queryFilters.push({airtime_date: {$lte: filters.airtime_date.lte}});
                                 }
 
-                                if (filters?.duration?.gt != null && filters.duration.gt !== 0) {
-                                    queryFilters.push({duration: {$gt: filters.duration.gt}});
+                                if (filters?.duration?.gte != null && filters.duration.gte !== 0) {
+                                    queryFilters.push({duration: {$gte: filters.duration.gte}});
                                 }
 
-                                if (filters?.duration?.lt != null && filters.duration.lt !== 0) {
-                                    queryFilters.push({duration: {$lt: filters.duration.lt}});
+                                if (filters?.duration?.lte != null && filters.duration.lte !== 0) {
+                                    queryFilters.push({duration: {$lte: filters.duration.lte}});
                                 }
 
                                 if (queryFilters.length < 1) {

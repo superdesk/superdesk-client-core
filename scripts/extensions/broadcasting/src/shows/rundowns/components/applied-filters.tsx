@@ -44,15 +44,15 @@ export class AppliedFilters extends React.PureComponent<IProps> {
                 }
 
                 {
-                    filters.airtime_time?.gt != null && (
+                    filters.airtime_time?.gte != null && (
                         <Tag
-                            text={filters.airtime_time.gt}
+                            text={filters.airtime_time.gte}
                             label={gettext('Airtime time from')}
                             onClick={() => {
                                 const copy = {...filters};
 
-                                if (copy.airtime_time?.gt != null) {
-                                    delete copy.airtime_time.gt;
+                                if (copy.airtime_time?.gte != null) {
+                                    delete copy.airtime_time.gte;
 
                                     this.props.onChange(copy);
                                 }
@@ -62,15 +62,15 @@ export class AppliedFilters extends React.PureComponent<IProps> {
                 }
 
                 {
-                    filters.airtime_time?.lt != null && (
+                    filters.airtime_time?.lte != null && (
                         <Tag
-                            text={filters.airtime_time.lt}
+                            text={filters.airtime_time.lte}
                             label={gettext('Airtime time to')}
                             onClick={() => {
                                 const copy = {...filters};
 
-                                if (copy.airtime_time?.lt != null) {
-                                    delete copy.airtime_time.lt;
+                                if (copy.airtime_time?.lte != null) {
+                                    delete copy.airtime_time.lte;
 
                                     this.props.onChange(copy);
                                 }
@@ -80,15 +80,15 @@ export class AppliedFilters extends React.PureComponent<IProps> {
                 }
 
                 {
-                    filters.airtime_date?.gt != null && (
+                    filters.airtime_date?.gte != null && (
                         <Tag
-                            text={filters.airtime_date.gt}
+                            text={filters.airtime_date.gte}
                             label={gettext('Airtime date from')}
                             onClick={() => {
                                 const copy = {...filters};
 
-                                if (copy.airtime_date?.gt != null) {
-                                    delete copy.airtime_date.gt;
+                                if (copy.airtime_date?.gte != null) {
+                                    delete copy.airtime_date.gte;
 
                                     this.props.onChange(copy);
                                 }
@@ -98,15 +98,15 @@ export class AppliedFilters extends React.PureComponent<IProps> {
                 }
 
                 {
-                    filters.airtime_date?.lt != null && (
+                    filters.airtime_date?.lte != null && (
                         <Tag
-                            text={filters.airtime_date.lt}
+                            text={filters.airtime_date.lte}
                             label={gettext('Airtime date to')}
                             onClick={() => {
                                 const copy = {...filters};
 
-                                if (copy.airtime_date?.lt != null) {
-                                    delete copy.airtime_date.lt;
+                                if (copy.airtime_date?.lte != null) {
+                                    delete copy.airtime_date.lte;
 
                                     this.props.onChange(copy);
                                 }
@@ -116,15 +116,15 @@ export class AppliedFilters extends React.PureComponent<IProps> {
                 }
 
                 {
-                    filters.duration?.gt != null && (
+                    filters.duration?.gte != null && (
                         <Tag
-                            text={getDurationString(filters.duration.gt)}
+                            text={getDurationString(filters.duration.gte)}
                             label={gettext('Duration from')}
                             onClick={() => {
                                 const copy = {...filters};
 
-                                if (copy.duration?.gt != null) {
-                                    delete copy.duration.gt;
+                                if (copy.duration?.gte != null) {
+                                    delete copy.duration.gte;
 
                                     this.props.onChange(copy);
                                 }
@@ -134,15 +134,15 @@ export class AppliedFilters extends React.PureComponent<IProps> {
                 }
 
                 {
-                    filters.duration?.lt != null && (
+                    filters.duration?.lte != null && (
                         <Tag
-                            text={getDurationString(filters.duration.lt)}
+                            text={getDurationString(filters.duration.lte)}
                             label={gettext('Duration to')}
                             onClick={() => {
                                 const copy = {...filters};
 
-                                if (copy.duration?.lt != null) {
-                                    delete copy.duration.lt;
+                                if (copy.duration?.lte != null) {
+                                    delete copy.duration.lte;
 
                                     this.props.onChange(copy);
                                 }
