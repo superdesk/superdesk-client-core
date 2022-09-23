@@ -21,7 +21,14 @@ export function getOptions(
 
     const dropdownOptions: Array<IDropdownOption> = vocabularyItemsFiltered.map(
         (item) => {
-            const v: IDropdownOption = {id: item.qcode, label: getVocabularyItemNameTranslated(item)};
+            const v: IDropdownOption = {
+                id: item.qcode,
+                label: getVocabularyItemNameTranslated(item),
+            };
+
+            if (item.color != null) {
+                v.color = item.color;
+            }
 
             if (item.parent != null) {
                 v.parent = item.parent;

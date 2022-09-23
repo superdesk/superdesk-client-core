@@ -111,7 +111,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                         showPart != null && (
                                             <Label
                                                 text={showPart.name}
-                                                color={showPart.color}
+                                                hexColor={showPart.color}
                                                 size="normal"
                                             />
                                         )
@@ -121,7 +121,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                         itemType != null && (
                                             <Label
                                                 text={itemType.name}
-                                                color={itemType.color}
+                                                hexColor={itemType.color}
                                                 size="normal"
                                             />
                                         )
