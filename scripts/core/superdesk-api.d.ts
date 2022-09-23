@@ -199,7 +199,9 @@ declare module 'superdesk-api' {
 
     export type ITimeValueOperational = string; // ISO 8601, 13:59:01.123
     export type ITimeValueStorage = ITimeValueOperational;
-    export type ITimeFieldConfig = never;
+    export interface ITimeFieldConfig extends ICommonFieldConfig {
+        allowSeconds?: boolean;
+    };
     export type ITimeUserPreferences = never;
 
     // AUTHORING-REACT FIELD TYPES - duration

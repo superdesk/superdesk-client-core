@@ -21,6 +21,7 @@ export class Editor extends React.PureComponent<IProps> {
                         this.props.onChange(val === '' ? null : val);
                     }}
                     disabled={this.props.readOnly}
+                    allowSeconds={this.props.config.allowSeconds}
                 />
             </Container>
         );

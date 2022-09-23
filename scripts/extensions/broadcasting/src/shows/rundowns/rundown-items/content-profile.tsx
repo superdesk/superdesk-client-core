@@ -5,6 +5,7 @@ import {
     IContentProfileV2,
     IDropdownConfigVocabulary,
     IEditor3Config,
+    ITimeFieldConfig,
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
 import {
@@ -90,18 +91,26 @@ const itemTypeField: IAuthoringFieldV2 = {
     fieldConfig: itemTypesConfig,
 };
 
+const startTimeConfig: ITimeFieldConfig = {
+    allowSeconds: true,
+};
+
+const endTimeConfig: ITimeFieldConfig = {
+    allowSeconds: true,
+};
+
 const startTimeField: IAuthoringFieldV2 = {
     id: 'start_time',
     name: gettext('Start time'),
     fieldType: 'time',
-    fieldConfig: {},
+    fieldConfig: startTimeConfig,
 };
 
 const endTimeField: IAuthoringFieldV2 = {
     id: 'end_time',
     name: gettext('End time'),
     fieldType: 'time',
-    fieldConfig: {},
+    fieldConfig: endTimeConfig,
 };
 
 const durationField: IAuthoringFieldV2 = {
