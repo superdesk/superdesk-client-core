@@ -1,10 +1,9 @@
 /* eslint-disable react/no-multi-comp */
 import React from 'react';
-import {IArticleSideWidget, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
+import {IArticleSideWidget, IComment, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import CommentsWidget from '../../generic-widgets/comments/CommentsWidget';
 import {httpRequestJsonLocal} from 'core/helpers/network';
-import {IComment} from '../../generic-widgets/comments/interfaces';
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Comments');
 

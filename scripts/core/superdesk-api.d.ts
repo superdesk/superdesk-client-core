@@ -447,6 +447,7 @@ declare module 'superdesk-api' {
         order: number; // Integer. // NICE-TO-HAVE: manage order in the UI instead of here
         icon: string;
         component: React.ComponentType<IGenericSidebarComponentProps<T>>;
+        isAllowed: (entity: T) => boolean;
     }
 
     /**
@@ -478,6 +479,17 @@ declare module 'superdesk-api' {
         }>;
         isAllowed?(article: IArticle): boolean; // enables limiting widgets depending on article data
     }
+
+    export type IComment = {
+        _id: string;
+        text: string;
+        item: string;
+        user?: IUser;
+        mentioned_users?: {[key: string]: IUser['_id']};
+        mentioned_desks?: {[key: string]: IDesk['_id']};
+        _updated?: string;
+        _created: string;
+    };
 
     export interface AuthoringHeaderItem {
         _id: string;
@@ -2509,7 +2521,14 @@ declare module 'superdesk-api' {
             DateTime: React.ComponentType<IPropsDateTime>;
         };
         authoringGeneric: {
-            getSideWidgets: <T>() => Array<IGenericSideWidget<T>>;
+            sideWidgets: {
+                comments: <T>(
+                    getComments: (entityId: string) => Promise<Array<IComment>>,
+                    addComment: (entityId: string, text: string) => Promise<void>,
+                    isAllowed: (entity: T) => boolean,
+                ) => IGenericSideWidget<T>;
+                inlineComments: IGenericSideWidget<T>;
+            };
         };
         forms: {
             FormFieldType: typeof FormFieldType;

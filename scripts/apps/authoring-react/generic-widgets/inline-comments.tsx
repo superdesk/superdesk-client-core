@@ -238,6 +238,7 @@ export function getInlineCommentsWidgetGeneric<T>() {
         order: 2,
         icon: 'comments',
         component: InlineCommentsWidget,
+        isAllowed: () => true,
     };
 
     return metadataWidget;

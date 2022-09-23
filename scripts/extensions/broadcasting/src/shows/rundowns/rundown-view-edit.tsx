@@ -48,6 +48,7 @@ import {IPatchExtraFields, IRestApiResponse, ITopBarWidget} from 'superdesk-api'
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
 import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
 import {AiringInfoBlock} from './components/airing-info-block';
+import {commentsWidget} from './rundown-items/widgets/comments';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
 const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
@@ -56,7 +57,11 @@ const {addWebsocketMessageListener} = superdesk;
 const {fixPatchResponse} = superdesk.helpers;
 
 const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
-const sideWidgets = superdesk.authoringGeneric.getSideWidgets<IRundownItemTemplateInitial>();
+
+const sideWidgets = [
+    superdesk.authoringGeneric.sideWidgets.inlineComments,
+    commentsWidget,
+];
 
 const rundownValidator: CreateValidators<Partial<IRundown>> = {
     title: stringNotEmpty,
@@ -243,7 +248,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForEditing(item, (val) => {
+                createOrEditRundownItem: prepareForEditing(item._id, item, (val) => {
                     if (!this.props.readOnly) {
                         return httpRequestJsonLocal<IRundownItem & IPatchExtraFields>({
                             method: 'PATCH',
@@ -272,7 +277,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForPreview(item),
+                createOrEditRundownItem: prepareForPreview(item._id, item),
             });
         });
     }
@@ -541,13 +546,17 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 topBar2Widgets={[]}
                                                 onFieldChange={syncDurationWithEndTime}
                                                 getSidebar={({toggleSideWidget}) => {
-                                                    if (sideWidgets.length < 1) {
+                                                    const sideWidgetsAllowed = sideWidgets.filter(
+                                                        ({isAllowed}) => isAllowed(rundownAction.item),
+                                                    );
+
+                                                    if (sideWidgetsAllowed.length < 1) {
                                                         return <span />;
                                                     }
 
                                                     return (
                                                         <Nav.SideBarTabs
-                                                            items={sideWidgets.map(({icon, _id}) => ({
+                                                            items={sideWidgetsAllowed.map(({icon, _id}) => ({
                                                                 size: 'big',
                                                                 icon,
                                                                 onClick: () => {
@@ -571,9 +580,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         return null;
                                                     }
 
-                                                    const widget = sideWidgets.find(
-                                                        ({_id}) => _id === sideWidget,
-                                                    );
+                                                    const widget = sideWidgets.find(({_id}) => _id === sideWidget);
 
                                                     if (widget == null) {
                                                         return null;
@@ -583,7 +590,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     return (
                                                         <Component
-                                                            entityId={this.props.rundownId}
+                                                            entityId={rundownAction.item._id}
                                                             readOnly={this.props.readOnly}
                                                             contentProfile={contentProfile}
                                                             fieldsData={fieldsData}

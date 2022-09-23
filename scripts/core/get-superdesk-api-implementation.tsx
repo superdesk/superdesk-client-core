@@ -382,10 +382,14 @@ export function getSuperdeskApiImplementation(
             getFormFieldPreviewComponent,
         },
         authoringGeneric: {
-            getSideWidgets: () => [
-                getCommentsWidgetGeneric(),
-                getInlineCommentsWidgetGeneric(),
-            ],
+            sideWidgets: {
+                inlineComments: getInlineCommentsWidgetGeneric(),
+                comments: (
+                    getComments,
+                    addComment,
+                    isAllowed,
+                ) => getCommentsWidgetGeneric(getComments, addComment, isAllowed),
+            },
         },
         localization: {
             gettext: (message, params) => gettext(message, params),

@@ -3,11 +3,10 @@ import {
     BoxedListItem,
     BoxedListContentRow,
 } from 'superdesk-ui-framework/react';
-import {IUser} from 'superdesk-api';
+import {IComment, IUser} from 'superdesk-api';
 import {TimeElem} from 'apps/search/components';
 import {UserPopup} from 'core/ui/components';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
-import {IComment} from './interfaces';
 
 export class Comment extends React.PureComponent<{ comment: IComment, users: { [key: string]: IUser } }> {
     getMessageText = () => {

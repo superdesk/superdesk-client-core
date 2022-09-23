@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React from 'react';
-import {IUser, IDesk, IRestApiResponse, IGenericSidebarComponentProps} from 'superdesk-api';
+import {IUser, IDesk, IRestApiResponse, IGenericSidebarComponentProps, IComment} from 'superdesk-api';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -10,7 +10,6 @@ import {
     Button,
     EmptyState,
     Checkbox,
-    ButtonGroup,
     BoxedList,
 } from 'superdesk-ui-framework/react';
 import {store} from 'core/data';
@@ -19,7 +18,7 @@ import {Spacer} from 'core/ui/components/Spacer';
 import {MentionsInput, Mention} from 'react-mentions';
 import mentionsStyle from './mention.style';
 import {Comment} from './Comment';
-import {IComment, IDeskSuggestion, IUserSuggestion, IUserSuggestionData} from './interfaces';
+import {IDeskSuggestion, IUserSuggestion, IUserSuggestionData} from './interfaces';
 
 // Can't call `gettext` in the top level
 const getLabel = () => gettext('Comments');

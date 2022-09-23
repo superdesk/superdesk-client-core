@@ -99,11 +99,12 @@ export function prepareForCreation(
 }
 
 export function prepareForEditing(
+    id: string | null,
     data: IRundownItemBase,
     onSave: (item: IRundownItemBase) => Promise<IRundownItemBase>,
 ): IEdit {
     const item: IRundownItemTemplateInitial = {
-        _id: '',
+        _id: id ?? '',
         _created: '',
         _updated: '',
         _etag: '',
@@ -136,10 +137,11 @@ export function prepareForEditing(
 }
 
 export function prepareForPreview(
+    id: string | null,
     data: IRundownItemBase,
 ): IPreview {
     const item: IRundownItemTemplateInitial = {
-        _id: '',
+        _id: id ?? '',
         _created: '',
         _updated: '',
         _etag: '',

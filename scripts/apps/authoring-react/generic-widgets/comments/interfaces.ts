@@ -17,14 +17,3 @@ export interface IUserSuggestionData {
     users: {[_id: string]: IUser};
     mentionInputDataUsers: Array<IUserSuggestion>;
 }
-
-export type IComment = {
-    _id: string;
-    text: string;
-    item: string;
-    user?: IUser;
-    mentioned_users?: {[key: string]: IUser['_id']};
-    mentioned_desks?: {[key: string]: IDesk['_id']};
-    _updated?: string;
-    _created: string;
-};

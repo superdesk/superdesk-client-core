@@ -161,7 +161,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
         handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForEditing(item, (val) => {
+                createOrEditRundownItem: prepareForEditing(null, item, (val) => {
                     if (!this.props.readOnly) {
                         this.props.onChange({
                             items: this.getRundownItems().map((_item) => _item === item ? val : _item),
@@ -180,7 +180,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
         handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
             this.setState({
                 authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForPreview(item),
+                createOrEditRundownItem: prepareForPreview(null, item),
             });
         });
     }
