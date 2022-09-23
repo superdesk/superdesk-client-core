@@ -213,7 +213,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                 actions.push(deleteAction);
 
                                 return (
-                                    <Dropdown items={actions}>
+                                    <Dropdown items={actions} append>
                                         <IconButton
                                             ariaValue={gettext('Actions')}
                                             icon="dots-vertical"
