@@ -585,7 +585,7 @@
            id="sign_off"
            ng-model="item.sign_off"
            ng-change="autosave(item)"
-           ng-disabled="!_editable || editSignOff == null || schema.sign_off.readonly === true"
+           ng-disabled="!editSignOff"
            placeholder="Sign off"
            sd-focus-element
            data-append-element=".field"
