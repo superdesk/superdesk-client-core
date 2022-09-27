@@ -224,9 +224,10 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             })(),
                         });
                     })}
-                    itemsDropdown={rundownItemTypes.size < 1
-                        ? undefined
-                        : rundownItemTypes.toArray()
+                    itemsDropdown={(() => {
+                        type IDropdownItems = React.ComponentProps<typeof TableList>['itemsDropdown'];
+
+                        const result: IDropdownItems = rundownItemTypes.toArray()
                             .map((rundownType) => ({
                                 label: rundownType.name,
                                 onSelect: () => {
@@ -234,8 +235,21 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                         item_type: rundownType.qcode,
                                     });
                                 },
-                            }))
-                    }
+                            }));
+
+                        if (rundownItemTypes.size > 0) {
+                            result.push('divider');
+                        }
+
+                        result.push({
+                            label: gettext('(empty)'),
+                            onSelect: () => {
+                                this.props.initiateCreation({});
+                            },
+                        });
+
+                        return result;
+                    })()}
                     onDrag={(oldIndex, newIndex) => {
                         if (this.props.readOnly !== true) {
                             this.props.onChange(
