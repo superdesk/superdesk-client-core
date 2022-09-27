@@ -5,7 +5,7 @@ import {createPopper, Instance as PopperInstance, Placement} from '@popperjs/cor
 import maxSize from 'popper-max-size-modifier';
 import {applyMaxSize} from './AutoCompleteSuggestions';
 
-interface IPropsPositioner {
+export interface IPropsPositioner {
     referenceElement: HTMLElement;
     placement: Placement;
     zIndex?: number;
@@ -13,7 +13,7 @@ interface IPropsPositioner {
     closeOnHoverEnd?: boolean;
 }
 
-class PopupPositioner extends React.PureComponent<IPropsPositioner> {
+export class PopupPositioner extends React.PureComponent<IPropsPositioner> {
     private wrapperEl: HTMLDivElement;
     private popper: PopperInstance;
 
