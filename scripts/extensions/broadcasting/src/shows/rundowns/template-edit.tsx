@@ -518,6 +518,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                 getAuthoringTopBarWidgets={() => []}
                                                 topBar2Widgets={[]}
                                                 onFieldChange={syncDurationWithEndTime}
+                                                disableWidgetPinning
                                             />
                                         )
                                     }

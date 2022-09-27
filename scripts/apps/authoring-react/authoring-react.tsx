@@ -326,6 +326,8 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         widgetReactIntegration.WidgetHeaderComponent = WidgetHeaderComponent;
         widgetReactIntegration.WidgetLayoutComponent = AuthoringWidgetLayoutComponent;
 
+        widgetReactIntegration.disableWidgetPinning = props.disableWidgetPinning ?? false;
+
         this.eventListenersToRemoveBeforeUnmounting = [];
     }
 

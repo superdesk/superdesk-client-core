@@ -602,6 +602,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         />
                                                     );
                                                 }}
+                                                disableWidgetPinning
                                             />
                                         )
                                     }

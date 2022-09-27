@@ -166,6 +166,8 @@ declare module 'superdesk-api' {
         getSidebar?(options: IExposedFromAuthoring<T>): JSX.Element;
         topBar2Widgets: Array<React.ComponentType<{item: T}>>;
 
+        disableWidgetPinning?: boolean; // defaults to false
+
         // Runs before re-render.
         onFieldChange?(fieldId: string, fieldsData: IFieldsData): IFieldsData;
 

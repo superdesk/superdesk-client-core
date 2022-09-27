@@ -124,6 +124,7 @@ interface IWidgetIntegration {
     getPinnedWidget(): any;
     WidgetHeaderComponent: React.ComponentType<IWidgetIntegrationComponentProps>;
     WidgetLayoutComponent: React.ComponentType<IAuthoringWidgetLayoutProps>;
+    disableWidgetPinning: boolean;
 }
 
 export const widgetReactIntegration: IWidgetIntegration = {
@@ -133,6 +134,7 @@ export const widgetReactIntegration: IWidgetIntegration = {
     closeActiveWidget: noop,
     WidgetHeaderComponent: () => null,
     WidgetLayoutComponent: () => null,
+    disableWidgetPinning: false,
 };
 
 WidgetsManagerCtrl.$inject = ['$scope', '$routeParams', 'authoringWidgets', 'archiveService', 'authoringWorkspace',
