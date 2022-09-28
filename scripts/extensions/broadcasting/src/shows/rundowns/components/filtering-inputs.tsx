@@ -41,7 +41,7 @@ export class FilteringInputs extends React.PureComponent<IProps> {
                         <Spacer h gap="4" justifyContent="space-between">
                             <TimePicker
                                 label={gettext('Airtime time from')}
-                                value={filters.airtime_date?.gte ?? ''}
+                                value={filters.airtime_time?.gte ?? ''}
                                 onChange={(val) => {
                                     this.props.onChange({
                                         airtime_time: {
@@ -54,7 +54,7 @@ export class FilteringInputs extends React.PureComponent<IProps> {
 
                             <TimePicker
                                 label={gettext('Airtime time to')}
-                                value={filters.airtime_date?.lte ?? ''}
+                                value={filters.airtime_time?.lte ?? ''}
                                 onChange={(val) => {
                                     this.props.onChange({
                                         airtime_time: {
