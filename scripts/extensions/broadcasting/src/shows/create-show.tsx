@@ -1,28 +1,27 @@
 import * as React from 'react';
-import {Input, Button, Spinner, DurationInput} from 'superdesk-ui-framework/react';
-import {CreateValidators, showModal, WithValidation} from '@superdesk/common';
-import {CreateShowAfterModal} from './create-show-after-modal';
+import {Input, DurationInput} from 'superdesk-ui-framework/react';
+import {CreateValidators, WithValidation} from '@superdesk/common';
 import {stringNotEmpty} from '../form-validation';
 import {superdesk} from '../superdesk';
 import {IShow, IShowBase} from '../interfaces';
 
 const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
+const {generatePatch} = superdesk.utilities;
 const {httpRequestJsonLocal} = superdesk;
 
-const {
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-} = superdesk.components;
+function isShow(x: IShow | Partial<IShowBase>): x is IShow {
+    return (x as unknown as any)['_id'] != null;
+}
 
-interface IProps {
-    closeModal(): void;
+interface IProps<T extends IShow | Partial<IShowBase>> {
+    show: T;
+    readOnly?: boolean;
+    children: (form: JSX.Element, save: () => Promise<IShow>) => JSX.Element;
 }
 
 interface IState {
-    show: IShowBase;
+    showUpdated: Partial<IShowBase>;
     inProgress: boolean;
 }
 
@@ -30,143 +29,109 @@ const showValidators: CreateValidators<Partial<IShowBase>> = {
     title: stringNotEmpty,
 };
 
-export class CreateShowModal extends React.PureComponent<IProps, IState> {
-    constructor(props: IProps) {
+export class WithShow<T extends IShow | Partial<IShowBase>> extends React.PureComponent<IProps<T>, IState> {
+    constructor(props: IProps<T>) {
         super(props);
 
         this.state = {
-            show: {
-                title: '',
-                description: '',
-                planned_duration: 3600,
-            },
+            showUpdated: {...props.show},
             inProgress: false,
         };
 
         this.updateShowProperty = this.updateShowProperty.bind(this);
-        this.cancel = this.cancel.bind(this);
         this.doSave = this.doSave.bind(this);
     }
 
     private updateShowProperty(update: Partial<IShow>) {
         this.setState({
             ...this.state,
-            show: {
-                ...this.state.show,
+            showUpdated: {
+                ...this.state.showUpdated,
                 ...update,
             },
         });
     }
 
-    private cancel() {
-        this.props.closeModal();
-    }
-
-    private doSave() {
+    private doSave(): Promise<IShow> {
         this.setState({inProgress: true});
 
-        httpRequestJsonLocal<IShow>({
-            method: 'POST',
-            path: '/shows',
-            payload: this.state.show,
-        }).then((show) => {
-            this.setState({inProgress: false}, () => {
-                this.props.closeModal();
-
-                showModal(({closeModal}) => (
-                    <CreateShowAfterModal
-                        closeModal={closeModal}
-                        show={show}
-                    />
-                ));
+        if (isShow(this.props.show)) {
+            return httpRequestJsonLocal<IShow>({
+                method: 'PATCH',
+                path: `/shows/${this.props.show._id}`,
+                payload: generatePatch(this.props.show, this.state.showUpdated, {undefinedEqNull: true}),
+                headers: {
+                    'If-Match': this.props.show._etag,
+                },
             });
-        });
+        } else {
+            return httpRequestJsonLocal<IShow>({
+                method: 'POST',
+                path: '/shows',
+                payload: this.state.showUpdated,
+            });
+        }
     }
 
     render() {
-        const {show} = this.state;
+        const show = this.state.showUpdated;
 
         return (
             <WithValidation validators={showValidators}>
-                {(validate, validationResults) => (
-                    <Modal>
-                        <ModalHeader onClose={this.props.closeModal}>
-                            {gettext('Create new show')}
-                        </ModalHeader>
+                {(validate, validationResults) => {
+                    const handleSave = () => {
+                        const valid = validate(show);
 
-                        <ModalBody>
-                            <Spacer v gap="16">
-                                <Input
-                                    label={gettext('Show name')}
-                                    type="text"
-                                    value={show.title}
-                                    error={validationResults.title ?? undefined}
-                                    invalid={validationResults.title != null}
-                                    required={true}
-                                    onChange={(val) => {
-                                        this.updateShowProperty({title: val});
-                                    }}
-                                />
+                        if (valid) {
+                            return this.doSave();
+                        } else {
+                            return Promise.reject();
+                        }
+                    };
 
-                                <Input
-                                    label={gettext('Description')}
-                                    type="text"
-                                    value={show.description}
-                                    error={validationResults.description ?? undefined}
-                                    invalid={validationResults.description != null}
-                                    required={true}
-                                    onChange={(val) => {
-                                        this.updateShowProperty({description: val});
-                                    }}
-                                />
+                    const form = (
+                        <Spacer v gap="16">
+                            <Input
+                                label={gettext('Show name')}
+                                type="text"
+                                value={show.title ?? ''}
+                                error={validationResults.title ?? undefined}
+                                invalid={validationResults.title != null}
+                                required={true}
+                                onChange={(val) => {
+                                    this.updateShowProperty({title: val});
+                                }}
+                                disabled={this.props.readOnly}
+                            />
 
-                                <DurationInput
-                                    label={gettext('Planned duration')}
-                                    seconds={show.planned_duration ?? 0}
-                                    onChange={(val) => {
-                                        this.updateShowProperty({planned_duration: val});
-                                    }}
-                                    error={validationResults.planned_duration ?? undefined}
-                                    invalid={validationResults.planned_duration != null}
-                                />
-                            </Spacer>
-                        </ModalBody>
+                            <Input
+                                label={gettext('Description')}
+                                type="text"
+                                value={show.description ?? ''}
+                                error={validationResults.description ?? undefined}
+                                invalid={validationResults.description != null}
+                                required={false}
+                                onChange={(val) => {
+                                    this.updateShowProperty({description: val});
+                                }}
+                                disabled={this.props.readOnly}
+                            />
 
-                        <ModalFooter flex>
-                            <Spacer h gap="32" justifyContent="space-between" noWrap>
-                                <div>
-                                    {
-                                        this.state.inProgress && (
-                                            <Spinner />
-                                        )
-                                    }
-                                </div>
+                            <DurationInput
+                                label={gettext('Planned duration')}
+                                seconds={show.planned_duration ?? 3600}
+                                onChange={(val) => {
+                                    this.updateShowProperty({planned_duration: val});
+                                }}
+                                error={validationResults.planned_duration ?? undefined}
+                                invalid={validationResults.planned_duration != null}
+                                disabled={this.props.readOnly}
+                            />
+                        </Spacer>
+                    );
 
-                                <div>
-                                    <Spacer h gap="8" noWrap>
-                                        <Button
-                                            text={gettext('Cancel')}
-                                            onClick={this.cancel}
-                                            disabled={this.state.inProgress}
-                                        />
-                                        <Button
-                                            text={gettext('Save')}
-                                            onClick={() => {
-                                                const valid = validate(show);
-
-                                                if (valid) {
-                                                    this.doSave();
-                                                }
-                                            }}
-                                            type="primary"
-                                            disabled={this.state.inProgress}
-                                        />
-                                    </Spacer>
-                                </div>
-                            </Spacer>
-                        </ModalFooter>
-                    </Modal>
-                )}
+                    return this.props.children(form, handleSave);
+                }}
             </WithValidation>
         );
     }

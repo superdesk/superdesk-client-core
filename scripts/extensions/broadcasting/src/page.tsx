@@ -13,7 +13,7 @@ import {
 } from 'superdesk-ui-framework/react';
 
 import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates';
-import {CreateShowModal} from './shows/create-show';
+import {CreateShowModal} from './shows/create-show-modal';
 
 import {showModal} from '@superdesk/common';
 
@@ -25,6 +25,7 @@ import {FilteringInputs} from './shows/rundowns/components/filtering-inputs';
 import {AppliedFilters} from './shows/rundowns/components/applied-filters';
 
 import {superdesk} from './superdesk';
+import {ManageShows} from './shows/manage-shows';
 
 const {gettext} = superdesk.localization;
 
@@ -97,6 +98,18 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                                             showModal(({closeModal}) => (
                                                                 <ManageRundownTemplates
                                                                     dialogTitle={gettext('Manage rundown templates')}
+                                                                    closeModal={closeModal}
+                                                                />
+                                                            ));
+                                                        },
+                                                    },
+                                                    {
+                                                        icon: 'switches',
+                                                        label: gettext('Manage Shows'),
+                                                        onSelect: () => {
+                                                            showModal(({closeModal}) => (
+                                                                <ManageShows
+                                                                    dialogTitle={gettext('Manage Shows')}
                                                                     closeModal={closeModal}
                                                                 />
                                                             ));
