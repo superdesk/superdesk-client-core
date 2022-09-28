@@ -189,7 +189,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                             {rundown.title}
                                                         </span>
 
-                                                        <span>[status]</span>
+                                                        {/* TODO: restore <span>[status]</span> */}
                                                     </React.Fragment>,
                                                 },
                                             ],
