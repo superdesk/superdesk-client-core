@@ -16,6 +16,7 @@ function getTestFieldConfig(type: FormFieldType): IFormField {
     case FormFieldType.plainText:
     case FormFieldType.textEditor3:
     case FormFieldType.number:
+    case FormFieldType.duration:
     case FormFieldType.checkbox:
     case FormFieldType.contentFilterSingleValue:
     case FormFieldType.deskSingleValue:
@@ -61,6 +62,10 @@ describe('generic form', () => {
     beforeEach(mockDataApi);
     beforeEach(window.module('superdesk.apps.desks'));
 
+    const exceptionalClassNamesForInvalidFields = {
+        [FormFieldType.duration]: '.sd-input--invalid',
+    };
+
     getAllInputTypes()
         .filter((type) => type !== FormFieldType.checkbox) // checkbox doesn't have error messages
         .forEach((type: FormFieldType) => {
@@ -85,7 +90,9 @@ describe('generic form', () => {
 
                 setTimeout(() => { // wait for data fetching (only used by some input types)
                     wrapper.update();
-                    expect(wrapper.find('.sd-line-input--invalid').length).toBe(1);
+                    const classNameSelector = exceptionalClassNamesForInvalidFields[type] ?? '.sd-line-input--invalid';
+
+                    expect(wrapper.find(classNameSelector).length).toBe(1);
                     expect(wrapper.html()).toContain(message);
 
                     done();
@@ -93,10 +100,14 @@ describe('generic form', () => {
             }));
         });
 
+    const exceptionalClassNamesForRequiredFields = {
+        [FormFieldType.duration]: '.sd-input--required',
+    };
+
     getAllInputTypes()
         .filter((type) => type !== FormFieldType.checkbox) // checkbox can't be required
         .forEach((type: FormFieldType) => {
-            it(`${type} should add a classname for required fields`, (done) => inject((desks) => {
+            it(`${type} should add a className for required fields`, (done) => inject((desks) => {
                 desks.desks = {_items: []};
 
                 const Component = getFormFieldComponent(type);
@@ -117,7 +128,11 @@ describe('generic form', () => {
 
                 setTimeout(() => { // wait for data fetching (only used by some input types)
                     wrapper.update();
-                    expect(wrapper.find('.sd-line-input--required').length).toBe(1);
+
+                    const classNameSelector =
+                        exceptionalClassNamesForRequiredFields[type] ?? '.sd-line-input--required';
+
+                    expect(wrapper.find(classNameSelector).length).toBe(1);
 
                     done();
                 });

@@ -20,6 +20,7 @@ function getInitialValueForFieldType(fieldConfig: IFormField): {readonly [field:
     case FormFieldType.select:
     case FormFieldType.selectMultiple:
     case FormFieldType.number:
+    case FormFieldType.duration:
         return {[field]: undefined};
     case FormFieldType.checkbox:
         return {[field]: false};

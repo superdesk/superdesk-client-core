@@ -17,6 +17,7 @@ import {SelectMultipleValues} from './input-types/select_multiple_values';
 import {SelectSingleValue} from './input-types/select_single_value_static';
 import {NumberComponent} from './input-types/number';
 import {Select} from './input-types/select';
+import {DurationComponent} from './input-types/duration';
 
 export function getFormFieldComponent(type: FormFieldType): React.ComponentType<IInputType<any>> {
     switch (type) {
@@ -26,6 +27,8 @@ export function getFormFieldComponent(type: FormFieldType): React.ComponentType<
         return TextEditor3;
     case FormFieldType.number:
         return NumberComponent;
+    case FormFieldType.duration:
+        return DurationComponent;
     case FormFieldType.vocabularySingleValue:
         return VocabularySingleValue;
     case FormFieldType.checkbox:

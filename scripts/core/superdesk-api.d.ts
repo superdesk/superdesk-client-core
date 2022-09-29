@@ -1618,6 +1618,7 @@ declare module 'superdesk-api' {
 
     export enum FormFieldType {
         plainText = 'plainText',
+        duration = 'duration',
         textEditor3 = 'textEditor3',
         number = 'number',
         vocabularySingleValue = 'vocabularySingleValue',

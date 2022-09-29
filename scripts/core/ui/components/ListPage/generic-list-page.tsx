@@ -560,6 +560,9 @@ export class GenericListPageComponent<T, P>
                                                     issues={{}}
                                                     handleFieldChange={this.handleFilterFieldChange}
                                                 />
+
+                                                <br />
+
                                                 <button
                                                     className="btn btn--primary btn--expanded"
                                                     type="submit"

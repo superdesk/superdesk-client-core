@@ -11,6 +11,7 @@ export function hasValue(fieldConfig: IFormField, value: any): boolean {
         return typeof value === 'string' && value.trim().length > 0;
 
     case FormFieldType.number:
+    case FormFieldType.duration:
         return typeof value === 'number';
 
     case FormFieldType.textEditor3:

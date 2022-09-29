@@ -10,8 +10,10 @@ function getFieldTypeForFiltering(type: FormFieldType): FormFieldType {
     case FormFieldType.textEditor3:
         // even though textEditor3 outputs HTML, plaintext has to be used for filtering
         return FormFieldType.plainText;
-    case FormFieldType.number:
+    case FormFieldType.number: // should be a range
         return FormFieldType.number;
+    case FormFieldType.duration: // should be a range
+        return FormFieldType.duration;
     case FormFieldType.vocabularySingleValue:
         return FormFieldType.vocabularySingleValue;
     case FormFieldType.checkbox:

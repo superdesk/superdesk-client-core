@@ -18,6 +18,7 @@ export function generateFilterForServer(type: FormFieldType, value: any): any {
     case FormFieldType.select:
     case FormFieldType.selectMultiple:
     case FormFieldType.number:
+    case FormFieldType.duration:
         return value;
 
     case FormFieldType.textEditor3:

@@ -10,6 +10,7 @@ import {
     CreateButton,
     Button,
     SearchBar,
+    Modal,
 } from 'superdesk-ui-framework/react';
 
 import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates';
@@ -108,10 +109,19 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                                         label: gettext('Manage Shows'),
                                                         onSelect: () => {
                                                             showModal(({closeModal}) => (
-                                                                <ManageShows
-                                                                    dialogTitle={gettext('Manage Shows')}
-                                                                    closeModal={closeModal}
-                                                                />
+                                                                <Modal
+                                                                    visible
+                                                                    headerTemplate={gettext('Manage Shows')}
+                                                                    contentBg="medium"
+                                                                    contentPadding="none"
+                                                                    size="large"
+                                                                    onHide={() => {
+                                                                        closeModal();
+                                                                    }}
+                                                                    zIndex={1050}
+                                                                >
+                                                                    <ManageShows />
+                                                                </Modal>
                                                             ));
                                                         },
                                                     },
