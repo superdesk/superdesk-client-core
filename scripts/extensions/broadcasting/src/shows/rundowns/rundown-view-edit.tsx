@@ -16,6 +16,8 @@ import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
 interface IProps {
     rundownId: string;
+    rundownItemAction: ICreate | IEdit | IPreview | null;
+    onRundownActionChange(action: ICreate | IEdit | IPreview | null): void;
     readOnly: boolean;
     onClose(): void;
 }
@@ -23,7 +25,6 @@ interface IProps {
 interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
-    createOrEditRundownItem: ICreate | IEdit | IPreview | null;
     exportOptions: Array<IRundownExportOption>;
 
     /**
@@ -122,7 +123,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         this.state = {
             rundown: null,
             rundownWithChanges: null,
-            createOrEditRundownItem: null,
             authoringReactKey: 0,
             exportOptions: [],
         };
@@ -186,10 +186,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
     }
 
     initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
-            this.setState({
-                authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForCreation(initialData, (val) => {
+        handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
+            this.props.onRundownActionChange(
+                prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
                     if (!this.props.readOnly) {
                         const itemWithDuration: Partial<IRundownItemBase> = {
                             ...val.data,
@@ -240,15 +239,14 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                         return Promise.resolve(val);
                     }
                 }),
-            });
+            );
         });
     }
 
     initiateEditing(item: IRundownItem, skipUnsavedChangesCheck?: boolean) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
-            this.setState({
-                authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForEditing(item._id, item, (val) => {
+        handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
+            this.props.onRundownActionChange(
+                prepareForEditing(this.props.rundownItemAction, item._id, item, (val) => {
                     if (!this.props.readOnly) {
                         return httpRequestJsonLocal<IRundownItem & IPatchExtraFields>({
                             method: 'PATCH',
@@ -269,16 +267,13 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                         return Promise.resolve(item);
                     }
                 }),
-            });
+            );
         });
     }
 
     initiatePreview(item: IRundownItem, skipUnsavedChangesCheck?: boolean) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
-            this.setState({
-                authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForPreview(item._id, item),
-            });
+        handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
+            this.props.onRundownActionChange(prepareForPreview(this.props.rundownItemAction, item._id, item));
         });
     }
 
@@ -330,7 +325,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             return null;
         }
 
-        const rundownAction = this.state.createOrEditRundownItem;
+        const {rundownItemAction} = this.props;
 
         return (
             <WithValidation validators={rundownValidator}>
@@ -454,7 +449,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     rundown={rundown}
                                                     readOnly={this.props.readOnly}
                                                     items={computeStartEndTime(rundown.airtime_time, rundownItems)}
-                                                    createOrEdit={rundownAction}
+                                                    createOrEdit={rundownItemAction}
                                                     initiateCreation={this.initiateCreation}
                                                     initiateEditing={this.initiateEditing}
                                                     initiatePreview={this.initiatePreview}
@@ -478,21 +473,21 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                             </Layout.AuthoringMain>
                         </Layout.MainPanel>
 
-                        <Layout.RightPanel open={rundownAction != null}>
+                        <Layout.RightPanel open={rundownItemAction != null}>
                             <Layout.Panel side="right" background="grey">
                                 <Layout.PanelContent>
                                     {
-                                        rundownAction != null && (
+                                        rundownItemAction != null && (
                                             <AuthoringReact
                                                 key={this.state.authoringReactKey}
                                                 // ID is not needed because authoringStorage is operating on array items
                                                 // and not on database items via HTTP API
                                                 itemId=""
                                                 onClose={() => {
-                                                    this.setState({createOrEditRundownItem: null});
+                                                    this.props.onRundownActionChange(null);
                                                 }}
                                                 fieldsAdapter={{}}
-                                                authoringStorage={rundownAction.authoringStorage}
+                                                authoringStorage={rundownItemAction.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
                                                 getInlineToolbarActions={({
@@ -517,7 +512,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         },
                                                     ];
 
-                                                    if (rundownAction != null && rundownAction.type !== 'preview') {
+                                                    if (
+                                                        rundownItemAction != null
+                                                        && rundownItemAction.type !== 'preview'
+                                                    ) {
                                                         actions.push({
                                                             availableOffline: false,
                                                             group: 'end',
@@ -536,8 +534,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     }
 
                                                     return {
-                                                        readOnly: rundownAction != null
-                                                            && rundownAction.type === 'preview',
+                                                        readOnly: rundownItemAction != null
+                                                            && rundownItemAction.type === 'preview',
                                                         toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
                                                         actions: actions,
                                                     };
@@ -547,7 +545,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 onFieldChange={syncDurationWithEndTime}
                                                 getSidebar={({toggleSideWidget}) => {
                                                     const sideWidgetsAllowed = sideWidgets.filter(
-                                                        ({isAllowed}) => isAllowed(rundownAction.item),
+                                                        ({isAllowed}) => isAllowed(rundownItemAction.item),
                                                     );
 
                                                     if (sideWidgetsAllowed.length < 1) {
@@ -590,7 +588,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     return (
                                                         <Component
-                                                            entityId={rundownAction.item._id}
+                                                            entityId={rundownItemAction.item._id}
                                                             readOnly={this.props.readOnly}
                                                             contentProfile={contentProfile}
                                                             fieldsData={fieldsData}

@@ -5,7 +5,7 @@ import {
     IAuthoringStorage,
 } from 'superdesk-api';
 import {IRundownItemBase, IRundownItemTemplateInitial} from '../../interfaces';
-import {ICreate, IEdit, IPreview} from './template-edit';
+import {ICreate, IEdit, IPreview, IRundownItemAction} from './template-edit';
 import {superdesk} from '../../superdesk';
 
 function getRundownItemTemplateAuthoringStorage(
@@ -75,6 +75,7 @@ function getRundownItemTemplateAuthoringStorage(
 }
 
 export function prepareForCreation(
+    currentAction: IRundownItemAction,
     initialValue: Partial<IRundownItemBase>,
     onSave: (item: IRundownItemTemplateInitial) => Promise<IRundownItemTemplateInitial>,
 ): ICreate {
@@ -95,10 +96,12 @@ export function prepareForCreation(
             false,
             onSave,
         ),
+        authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
     };
 }
 
 export function prepareForEditing(
+    currentAction: IRundownItemAction,
     id: string | null,
     data: IRundownItemBase,
     onSave: (item: IRundownItemBase) => Promise<IRundownItemBase>,
@@ -133,10 +136,12 @@ export function prepareForEditing(
                 return saved;
             }),
         ),
+        authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
     };
 }
 
 export function prepareForPreview(
+    currentAction: IRundownItemAction,
     id: string | null,
     data: IRundownItemBase,
 ): IPreview {
@@ -157,5 +162,6 @@ export function prepareForPreview(
             true,
             (_) => Promise.resolve(_),
         ),
+        authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
     };
 }

@@ -12,7 +12,7 @@ import {BoxedListItem, BoxedListContentRow} from 'superdesk-ui-framework/react/c
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {superdesk} from '../../superdesk';
 import {IRundownTemplate, IRundownTemplateBase, IShow} from '../../interfaces';
-import {RundownTemplateViewEdit} from './template-edit';
+import {IRundownItemAction, RundownTemplateViewEdit} from './template-edit';
 import {IRestApiResponse, IUser} from 'superdesk-api';
 import {prepareRundownTemplateForSaving} from './rundown-view-edit';
 import {SelectShow} from './components/select-show';
@@ -41,6 +41,7 @@ interface IProps {
 
 interface IState {
     showId: IShow['_id'] | null;
+    rundownItemAction: IRundownItemAction;
     template:
         {type: 'preview', value: IRundownTemplate}
         | {type: 'edit', value: IRundownTemplate}
@@ -59,6 +60,7 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
         this.state = {
             showId: props.initialShow?.id ?? null,
             template: props.initialShow?.createNewTemplate === true ? {type: 'create', value: {}} : null,
+            rundownItemAction: null,
         };
 
         this.itemTemplate = (templateProps) => {
@@ -323,6 +325,10 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                             }
                                         }}
                                         toolbar={viewEditToolbar}
+                                        rundownItemAction={this.state.rundownItemAction}
+                                        onRundownItemActionChange={(rundownItemAction) => {
+                                            this.setState({rundownItemAction});
+                                        }}
                                     />
                                 );
                             } else {
@@ -401,6 +407,10 @@ export class ManageRundownTemplates extends React.PureComponent<IProps, IState> 
                                                 ? gettext('Create template')
                                                 : gettext('Save changes')
                                         }
+                                        rundownItemAction={this.state.rundownItemAction}
+                                        onRundownItemActionChange={(rundownItemAction) => {
+                                            this.setState({rundownItemAction});
+                                        }}
                                     />
                                 );
                             }

@@ -46,19 +46,27 @@ const dateFormatOptions = [
     getPartialDateFormat({month: true, day: true}),
 ];
 
-export interface ICreate {
+interface IWithAuthoringReactKey {
+    /**
+     * authoring-react doesn't remount if `authoringStorage` changes
+     * key is used to instruct authoring-react when to remount
+     */
+    authoringReactKey: number;
+}
+
+export interface ICreate extends IWithAuthoringReactKey {
     type: 'create';
     item: IRundownItemTemplateInitial;
     authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
 }
 
-export interface IEdit {
+export interface IEdit extends IWithAuthoringReactKey {
     type: 'edit';
     item: IRundownItemTemplateInitial;
     authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
 }
 
-export interface IPreview {
+export interface IPreview extends IWithAuthoringReactKey {
     type: 'preview';
     item: IRundownItemTemplateInitial;
     authoringStorage: IAuthoringStorage<IRundownItemTemplateInitial>;
@@ -67,6 +75,8 @@ export interface IPreview {
 interface IPropsEditable {
     readOnly: false;
     templateFields: Partial<IRundownTemplateBase>;
+    rundownItemAction: IRundownItemAction;
+    onRundownItemActionChange(action: IRundownItemAction): void;
     toolbar?: React.ReactNode;
     onChange(template: Partial<IRundownTemplateBase>): void;
     onCancel(): void;
@@ -77,37 +87,26 @@ interface IPropsEditable {
 interface IPropsReadOnly {
     readOnly: true;
     templateFields: Partial<IRundownTemplateBase>;
+    rundownItemAction: IRundownItemAction;
+    onRundownItemActionChange(action: IRundownItemAction): void;
     initiateEditing(): void;
     toolbar?: React.ReactNode;
 }
 
 type IProps = IPropsEditable | IPropsReadOnly;
 
-interface IState {
-    createOrEditRundownItem: ICreate | IEdit | IPreview | null;
-
-    /**
-     * authoring-react doesn't remount if `authoringStorage` changes
-     * key is used to instruct authoring-react when to remount
-     */
-    authoringReactKey: number;
-}
+export type IRundownItemAction = ICreate | IEdit | IPreview | null;
 
 const templateFieldsValidator: CreateValidators<Partial<IRundownTemplateBase>> = {
     title: stringNotEmpty,
     airtime_time: stringNotEmpty,
 };
 
-export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState> {
+export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
     private templateFieldsInitial: Partial<IRundownTemplateBase>;
 
     constructor(props: IProps) {
         super(props);
-
-        this.state = {
-            createOrEditRundownItem: null,
-            authoringReactKey: 0,
-        };
 
         this.handleChange = this.handleChange.bind(this);
         this.initiateCreation = this.initiateCreation.bind(this);
@@ -130,10 +129,9 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
     }
 
     private initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
-            this.setState({
-                authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForCreation(initialData, (val) => {
+        handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
+            this.props.onRundownItemActionChange(
+                prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
                     if (!this.props.readOnly) {
                         const itemWithDuration: Partial<IRundownItemBase> = {
                             ...val.data,
@@ -153,15 +151,14 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
                     return Promise.resolve(val);
                 }),
-            });
+            );
         });
     }
 
     private initiateEditing(item: IRundownItemBase, skipUnsavedChangesCheck?: boolean) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
-            this.setState({
-                authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForEditing(null, item, (val) => {
+        handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
+            this.props.onRundownItemActionChange(
+                prepareForEditing(this.props.rundownItemAction, null, item, (val) => {
                     if (!this.props.readOnly) {
                         this.props.onChange({
                             items: this.getRundownItems().map((_item) => _item === item ? val : _item),
@@ -172,16 +169,13 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
 
                     return Promise.resolve(val);
                 }),
-            });
+            );
         });
     }
 
     private initiatePreview(item: IRundownItemBase, skipUnsavedChangesCheck?: boolean) {
-        handleUnsavedRundownChanges(this.state.createOrEditRundownItem, skipUnsavedChangesCheck ?? false, () => {
-            this.setState({
-                authoringReactKey: this.state.authoringReactKey + 1,
-                createOrEditRundownItem: prepareForPreview(null, item),
-            });
+        handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
+            this.props.onRundownItemActionChange(prepareForPreview(this.props.rundownItemAction, null, item));
         });
     }
 
@@ -431,7 +425,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                                                                     rundownItems,
                                                                 )
                                                             }
-                                                            createOrEdit={this.state.createOrEditRundownItem}
+                                                            createOrEdit={this.props.rundownItemAction}
                                                             initiateCreation={this.initiateCreation}
                                                             initiateEditing={this.initiateEditing}
                                                             initiatePreview={this.initiatePreview}
@@ -457,19 +451,19 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps, IState>
                             </Layout.AuthoringMain>
                         </Layout.MainPanel>
 
-                        <Layout.RightPanel open={this.state.createOrEditRundownItem != null}>
+                        <Layout.RightPanel open={this.props.rundownItemAction != null}>
                             <Layout.Panel side="right" background="grey">
                                 <Layout.PanelContent>
                                     {
-                                        this.state.createOrEditRundownItem != null && (
+                                        this.props.rundownItemAction != null && (
                                             <AuthoringReact
-                                                key={this.state.authoringReactKey}
+                                                key={this.props.rundownItemAction.authoringReactKey}
                                                 itemId=""
                                                 onClose={() => {
-                                                    this.setState({createOrEditRundownItem: null});
+                                                    this.props.onRundownItemActionChange(null);
                                                 }}
                                                 fieldsAdapter={{}}
-                                                authoringStorage={this.state.createOrEditRundownItem.authoringStorage}
+                                                authoringStorage={this.props.rundownItemAction.authoringStorage}
                                                 storageAdapter={rundownTemplateItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
                                                 getInlineToolbarActions={({
