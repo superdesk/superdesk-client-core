@@ -10,6 +10,7 @@ import {
 } from 'superdesk-api';
 import {
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
+    RUNDOWN_SUBITEM_TYPES,
     // RUNDOWN_SUBITEM_TYPES,
     SHOW_PART_VOCABULARY_ID,
 } from '../../../constants';
@@ -180,18 +181,18 @@ const showPartField: IAuthoringFieldV2 = {
     fieldConfig: showPartConfig,
 };
 
-// const subitemsConfig: IDropdownConfigVocabulary = {
-//     source: 'vocabulary',
-//     vocabularyId: RUNDOWN_SUBITEM_TYPES,
-//     multiple: false,
-// };
+const subitemsConfig: IDropdownConfigVocabulary = {
+    source: 'vocabulary',
+    vocabularyId: RUNDOWN_SUBITEM_TYPES,
+    multiple: true,
+};
 
-// const subItemsField: IAuthoringFieldV2 = {
-//     id: 'subitems',
-//     name: gettext('Subitems'),
-//     fieldType: 'dropdown',
-//     fieldConfig: subitemsConfig,
-// };
+const subItemsField: IAuthoringFieldV2 = {
+    id: 'subitems',
+    name: gettext('Subitems'),
+    fieldType: 'dropdown',
+    fieldConfig: subitemsConfig,
+};
 
 const subitemAttachmentsConfig: IAttachmentsConfig = {};
 
@@ -209,7 +210,7 @@ export function getRundownItemContentProfile(readOnly: boolean) {
         header: OrderedMap([
             [itemTypeField.id, itemTypeField],
             [showPartField.id, showPartField],
-            // [subItemsField.id, subItemsField],
+            [subItemsField.id, subItemsField],
             [startTimeField.id, startTimeField],
             [endTimeField.id, endTimeField],
             [durationField.id, durationField],

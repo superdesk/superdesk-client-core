@@ -131,25 +131,6 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                         // TODO: show 3 letter show symbol
                                     }
 
-                                    {
-                                        subitems != null && (
-                                            <span>
-                                                <SpacerBlock h gap="4" />
-
-                                                {
-                                                    subitems.map(({name}, i) => (
-                                                        <Label
-                                                            key={i}
-                                                            text={name}
-                                                            style="translucent"
-                                                            size="normal"
-                                                        />
-                                                    ))
-                                                }
-                                            </span>
-                                        )
-                                    }
-
                                     {item.additional_notes}
                                 </Spacer>
                             ),
@@ -160,6 +141,23 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             ),
                             end: (
                                 <Spacer h gap="4" justifyContent="start" noGrow>
+                                    {
+                                        subitems != null && (
+                                            <Spacer h gap="4" justifyContent="start" noGrow>
+                                                {
+                                                    subitems.map(({name}, i) => (
+                                                        <Label
+                                                            key={i}
+                                                            text={name}
+                                                            style="translucent"
+                                                            size="normal"
+                                                        />
+                                                    ))
+                                                }
+                                            </Spacer>
+                                        )
+                                    }
+
                                     {
                                         item.planned_duration != null && (
                                             <PlannedDurationLabel
