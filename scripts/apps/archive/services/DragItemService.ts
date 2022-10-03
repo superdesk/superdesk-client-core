@@ -51,14 +51,14 @@ export function DragItemService() {
 
         dt.effectAllowed = 'link';
 
-        if (item.renditions && item.renditions.thumbnail) {
-            const img = document.createElement('img');
-            const div = getThumbnailPlaceholder();
-            const rendition = item.renditions.thumbnail;
+        // if (item.renditions && item.renditions.thumbnail) {
+        //     const img = document.createElement('img');
+        //     const div = getThumbnailPlaceholder();
+        //     const rendition = item.renditions.thumbnail;
 
-            img.src = rendition.href;
-            div.appendChild(img);
-            dt.setDragImage(div, 5, 5);
-        }
+        //     img.src = rendition.href;
+        //     div.appendChild(img);
+        //     dt.setDragImage(div, 5, 5);
+        // }
     };
 }
