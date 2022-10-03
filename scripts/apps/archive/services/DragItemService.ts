@@ -51,6 +51,7 @@ export function DragItemService() {
 
         dt.effectAllowed = 'link';
 
+        // DOESN'T WORK ON CHROME 106
         // if (item.renditions && item.renditions.thumbnail) {
         //     const img = document.createElement('img');
         //     const div = getThumbnailPlaceholder();
