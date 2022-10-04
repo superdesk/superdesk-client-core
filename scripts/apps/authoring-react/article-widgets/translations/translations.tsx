@@ -157,7 +157,11 @@ class Translations extends React.Component<IProps, IState> {
                                                     {
                                                         translation.translated_from == null
                                                             ? (
-                                                                <Label style="hollow" color="blue--400" text={gettext('Original')} />
+                                                                <Label
+                                                                    style="hollow"
+                                                                    color="blue--400"
+                                                                    text={gettext('Original')}
+                                                                />
                                                             )
                                                             : (
                                                                 <div className="flex-row sibling-spacer-4">
