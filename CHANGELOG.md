@@ -1,5 +1,11 @@
 # Superdesk Client Changelog
 
+## [1.33.8] 2022-10-04
+
+### Fixed
+
+- Fix drag&drop of image items not working in Chrome 106.
+
 ## [1.33.7] 2021-04-20
 
 ### Fixed
