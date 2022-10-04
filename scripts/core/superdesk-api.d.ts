@@ -2649,6 +2649,11 @@ declare module 'superdesk-api' {
                 getParentId: (item: T) => string | undefined | null,
             ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
+
+            prepareSuperdeskQuery(
+                endpoint: string,
+                query: ISuperdeskQuery,
+            ): IHttpRequestOptionsLocal & {method: 'GET'}
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

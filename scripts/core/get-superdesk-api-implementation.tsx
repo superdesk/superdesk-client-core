@@ -96,6 +96,7 @@ import {computeEditor3Output} from 'apps/authoring-react/field-adapters/utilitie
 import {getContentStateFromHtml} from './editor3/html/from-html';
 import {getInlineCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/inline-comments';
 import {getCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/comments';
+import {prepareSuperdeskQuery} from './helpers/universal-query';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -458,6 +459,7 @@ export function getSuperdeskApiImplementation(
             querySelectorParent,
             arrayToTree,
             treeToArray,
+            prepareSuperdeskQuery,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(
