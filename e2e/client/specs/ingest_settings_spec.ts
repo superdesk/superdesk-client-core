@@ -22,6 +22,7 @@ describe('ingest_settings', () => {
 
         ruleSettings = ingestSettings.routingRuleSettings;
         ingestSettings.newRoutingRuleBtn.click();
+        ingestSettings.newDeskRoutingRuleBtn.click();
         ruleSettings.ruleNameInput.sendKeys('Routing Rule 1');
 
         // one the Schedule tab now, set a few scheduling options...
@@ -53,6 +54,7 @@ describe('ingest_settings', () => {
         ingestSettings.newSchemeBtn.click();
         ingestSettings.writeTextToSchemeName('Test Scheme');
         ingestSettings.newRoutingRuleBtn.click();
+        ingestSettings.newDeskRoutingRuleBtn.click();
 
         expect(ingestSettings.getTextfromRuleName()).toBe('');
         expect(ingestSettings.saveBtn.getAttribute('disabled')).toBeTruthy();

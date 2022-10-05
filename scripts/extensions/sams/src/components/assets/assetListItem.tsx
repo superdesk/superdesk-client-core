@@ -6,7 +6,7 @@ import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Checkbox, Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
+import {Checkbox, Icon, IconButton, Menu} from 'superdesk-ui-framework/react';
 import {
     ListItem,
     ListItemBorder,
@@ -41,6 +41,13 @@ export class AssetListItem extends React.PureComponent<IProps> {
 
     onItemClick(event: React.MouseEvent<HTMLDivElement>) {
         if (this.props.onClick) {
+            const {querySelectorParent} = superdeskApi.utilities;
+
+            // Don't trigger preview if click went to a three dot menu or other button inside the list item
+            if (querySelectorParent(event.target as HTMLElement, 'button', {self: true})) {
+                return;
+            }
+
             event.stopPropagation();
             this.props.onClick(this.props.asset);
         }
@@ -134,26 +141,21 @@ export class AssetListItem extends React.PureComponent<IProps> {
                     </ListItemRow>
                 </ListItemColumn>
                 {actions.length === 0 ? null : (
-                    <div className="sd-list-item__action-menu" onClick={this.stopClickPropagation}>
-                        <Dropdown
-                            align = "right"
-                            append = {true}
-                            items={[{
-                                type: 'group',
-                                label: gettext('Actions'),
-                                items: [
-                                    'divider',
-                                    ...actions,
-                                ],
-                            }]}
-                        >
-                            <IconButton
-                                ariaValue="dropdown-more-options"
-                                icon="dots-vertical"
-                                onClick={() => false}
-                            />
-                        </Dropdown>
-                    </div>
+                    <Menu items={actions}>
+                        {(toggle) => (
+                            <div
+                                style={{display: 'flex', height: '100%'}}
+                                className="sd-list-item__action-menu sd-list-item__action-menu--direction-row"
+                                onClick={this.stopClickPropagation}
+                            >
+                                <IconButton
+                                    ariaValue="dropdown-more-options"
+                                    icon="dots-vertical"
+                                    onClick={toggle}
+                                />
+                            </div>
+                        )}
+                    </Menu>
                 )}
             </ListItem>
         );

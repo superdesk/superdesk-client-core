@@ -378,12 +378,12 @@ class Editor3Directive {
                 };
 
                 // Expose the store in the editor3 spellchecker service
-                const storeIndex = editor3.addSpellcheckerStore(store, this.pathToValue);
+                editor3.addSpellcheckerStore(store, this.pathToValue);
 
                 initListeners();
 
                 $scope.$on('$destroy', () => {
-                    editor3.removeSpellcheckerStore(storeIndex);
+                    editor3.removeAllSpellcheckerStores();
                     removeListeners();
                 });
 

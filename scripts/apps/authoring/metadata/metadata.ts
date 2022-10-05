@@ -643,6 +643,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             setLanguage: '@',
             helperText: '@',
             disableEntireCategory: '@',
+            ignoreScheme: '@',
 
             /**
              * Placeholder is used in multi-editing.
@@ -658,6 +659,7 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
             const includeParent = scope.includeParent === 'true';
             const searchUnique = scope.searchUnique === 'true';
             const disabledChildrenSearch = DISABLE_CHILDREN_SEARCH_FIELDS.includes(scope.field);
+            const ignoreScheme = scope.ignoreScheme === 'true';
 
             scope.allowEntireCat = scope.disableEntireCategory !== 'true';
 
@@ -730,7 +732,9 @@ function MetaTermsDirective(metadata, $filter, $timeout, preferencesService, des
                 if (_.get(scope, 'cv._id')) { // filter out items from current cv
                     scope.selectedItems = selected.filter((term) => term.scheme === (scope.cv._id || scope.cv.id));
                 } else {
-                    scope.selectedItems = selected.filter((term) => !term.scheme || term.scheme === scope.field);
+                    scope.selectedItems = selected.filter(
+                        (term) => ignoreScheme === true || !term.scheme || term.scheme === scope.field,
+                    );
                 }
             }, true);
 

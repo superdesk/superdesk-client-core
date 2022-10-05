@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {appConfig} from 'appConfig';
 import {getLabelNameResolver} from 'apps/workspace/helpers/getLabelForFieldId';
+import {gettext} from 'core/utils';
 
 MediaMetadata.$inject = ['userList', 'archiveService', 'metadata', '$timeout'];
 
@@ -50,19 +51,16 @@ export function MediaMetadata(userList, archiveService, metadata, $timeout) {
                 }
             }
 
-            scope.getLocaleName = function(terms, scheme) {
-                const term = terms.find((element) => element.scheme === scheme);
+            scope.getTermsTranslations = function(terms, scheme) {
+                const filteredTerms = terms.filter((element) => element.scheme === scheme);
 
-                if (!term) {
-                    return 'None';
-                }
-
-                if (term.translations && scope.item.language
-                    && term.translations.name[scope.item.language]) {
-                    return term.translations.name[scope.item.language];
-                }
-
-                return term.name;
+                return filteredTerms.map((term) => {
+                    if (term.translations && scope.item.language
+                        && term.translations.name[scope.item.language]) {
+                        return term.translations.name[scope.item.language];
+                    }
+                    return term.name;
+                });
             };
         },
     };

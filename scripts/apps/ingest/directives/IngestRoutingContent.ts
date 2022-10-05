@@ -1,5 +1,7 @@
 import _ from 'lodash';
+import {IIngestRule, IIngestRuleHandler} from 'superdesk-api';
 import {gettext} from 'core/utils';
+import {sdApi} from 'api';
 
 /**
  * @ngdoc directive
@@ -16,27 +18,12 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
         link: function(scope) {
             let _orig = null, _origRule = null, _new = false;
 
-            const DEFAULT_DATA = {
-                name: null,
-                filter: null,
-                actions: {
-                    fetch: [],
-                    publish: [],
-                    exit: false,
-                },
-                schedule: {
-                    day_of_week: ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'],
-                    hour_of_day_from: null,
-                    hour_of_day_to: null,
-                    _allDay: true,
-                },
-            };
-
             scope.editScheme = null;
             scope.selectedRule = null;
             scope.rule = null;
             scope.schemes = [];
             scope.contentFilters = [];
+            scope.ruleHandler = null;
 
             initSchemes();
 
@@ -79,6 +66,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
 
                 scope.editScheme = null;
                 scope.selectedRule = null;
+                scope.ruleHandler = null;
                 scope.rule = null;
                 scope.schemes = [];
                 scope.contentFilters = [];
@@ -109,6 +97,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                     _.get(rule, 'schedule.hour_of_day_to', false));
 
                 scope.selectedRule = rule;
+                setCurrentRuleHandler(rule);
             };
 
             /**
@@ -116,8 +105,8 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
              * @name sdIngestRoutingContent#addRule
              * @description Create new rule with default data
              */
-            scope.addRule = () => {
-                let rule = angular.copy(DEFAULT_DATA);
+            scope.addRule = (handler: IIngestRuleHandler) => {
+                const rule = angular.copy(handler.default_values);
 
                 scope.editScheme.rules.push(rule);
                 scope.editRule(rule);
@@ -140,7 +129,31 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                     : null;
                 scope.rule.schedule._allDay = !(_.get(scope.rule, 'schedule.hour_of_day_from', false) ||
                     _.get(scope.rule, 'schedule.hour_of_day_to', false));
+
+                setCurrentRuleHandler(rule);
             };
+
+            const setCurrentRuleHandler = (rule) => {
+                scope.ruleHandler = sdApi.ingest.getHandlerForIngestRule(rule);
+            };
+
+            // Used to update the Rule from outside Angular components
+            // (such as React, via sd-custom-ingest-routing-action)
+            scope.updateRule = (rule: IIngestRule) => {
+                scope.$apply(() => {
+                    scope.rule = _.clone(rule);
+
+                    const index = scope.editScheme.rules.findIndex((r) => r.name === scope.rule.name);
+
+                    if (index >= 0) {
+                        scope.editScheme.rules[index] = scope.rule;
+                    }
+                });
+            };
+
+            scope.getRuleHandlerLabel = (rule) => (
+                sdApi.ingest.getHandlerForIngestRule(rule)?.name
+            );
 
             /**
              * @ngdoc method
@@ -186,6 +199,7 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
                 _.remove(scope.editScheme.rules, rule);
                 scope.selectedRule = null;
                 scope.rule = null;
+                scope.ruleHandler = null;
             });
 
             /**
@@ -238,6 +252,10 @@ export function IngestRoutingContent(api, notify, modal, contentFilters, $filter
 
                 contentFilters.getAllContentFilters(1, scope.contentFilters).then((filters) => {
                     scope.contentFilters = filters;
+                });
+
+                sdApi.ingest.getRuleHandlers().then((handlers) => {
+                    scope.ruleHandlers = handlers;
                 });
             }
         },

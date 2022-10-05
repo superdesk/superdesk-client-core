@@ -14,7 +14,7 @@ jobs:
 
     - uses: actions/setup-node@v1
       with:
-        node-version: '10.x'
+        node-version: '14.x'
 
     # avoid file watch limit error
     - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
@@ -35,7 +35,7 @@ jobs:
 
     - uses: actions/setup-node@v1
       with:
-        node-version: '10.x'
+        node-version: '14.x'
 
 
     - name: Start e2e server
@@ -48,7 +48,7 @@ jobs:
     - name: Build client
       run: npm install && npm run build && npm run specs--compile && npm run start-client-server
       working-directory: e2e/client
-    
+
     - name: Protractor
       run: ./node_modules/.bin/protractor protractor.conf.js --suite=${{ matrix.suite }}
       env:
