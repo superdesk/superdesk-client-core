@@ -180,7 +180,7 @@ export function AuthoringHeaderDirective(
 
             function isMissingLink() {
                 const isUpdated = !scope.item.rewrite_of && !scope.item.rewritten_by;
-                const isCorrection = scope.action !== 'correct' && !scope.isCorrection
+                const isCorrection = scope.action !== 'correct' && !scope.isCorrection(scope.item)
                     && !scope.item.correction_sequence;
 
                 return isUpdated && isCorrection;

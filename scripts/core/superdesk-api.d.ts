@@ -358,13 +358,13 @@ declare module 'superdesk-api' {
 
         /**
          * Published.
-         * 
+         *
          * update - creates a copy -> IN_PROGRESS
          * correct - creates a new item with state CORRECTED, can only publish correction, can't get it back to workflow
          * takedown -> RECALLED
          * kill -> KILLED
          * unpublish -> UNPUBLISHED will go in workflow and become IN_PROGRESS when edited
-         * 
+         *
          */
         PUBLISHED = 'published',
 
@@ -533,7 +533,12 @@ declare module 'superdesk-api' {
         lines_count?: number;
         version_creator: string;
         state: ITEM_STATE;
+        /** Internal embargoed datetime. */
         embargo?: string;
+        /** Ingested embargoed datetime. */
+        embargoed?: string;
+        /** Ingested embargoed info. */
+        embargoed_text?: string;
         signal?: Array<{
             name?: string;
             qcode: string;
@@ -1198,7 +1203,7 @@ declare module 'superdesk-api' {
     export interface IPropsGenericArrayListPage<T, P> extends IPropsGenericForm<T, P> {
         value: Array<T>;
         onChange(value: Array<T>): void;
-        
+
         newItemIndex?: number;
     }
 
@@ -2468,7 +2473,7 @@ declare module 'superdesk-api' {
         template_type: 'create' | 'kill' | string,
         user: IUser['_id']
     }
-    
+
 
     // CUSTOM FIELD TYPES
 
@@ -2575,7 +2580,7 @@ declare module 'superdesk-api' {
 
         /**
          * Enables initializing with a custom value when field visibility is toggled from "off" to "on".
-         * 
+         *
          * Also available in field adapters.
          */
         onToggledOn?(options: ICustomFieldRuntimeData<IConfig, IUserPreferences>): IValueOperational;
@@ -2586,7 +2591,7 @@ declare module 'superdesk-api' {
 
         // may intercept template creation and return modified value
         onTemplateCreate?(value: any, config: IConfig): any;
-        
+
         /**
          * Allows to use different formats for storage and operation.
          * For example, draft-js uses EditorState for operation, and RawDraftContentState for storage.
@@ -2598,9 +2603,9 @@ declare module 'superdesk-api' {
 
         /**
          * Allows to customize where values are stored.
-         * 
+         *
          * Also available in field adapters.
-         * 
+         *
          * By default, custom fields are stored in IArticle['extra'].
          * Some fields may require a different storing strategy.
          * For example, editor3 fields need to store `RawDraftContentState` in `IArticle['fields_meta']`
