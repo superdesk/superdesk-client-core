@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Dropdown, IconButton, IconLabel, Label, TableList} from 'superdesk-ui-framework/react';
+import {Dropdown, IconButton, IconLabel, Label, TableList} from 'superdesk-ui-framework/react';
 import {IRundown, IRundownItem, IRundownItemBase} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
@@ -257,26 +257,6 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         }
                     }}
                 />
-
-                {
-                    // TODO: remove when ui-framework component is adjusted to show plus button with empty list
-                    (!readOnly && this.props.items.length < 1) && (
-                        <div>
-                            <Button
-                                type="primary"
-                                size="small"
-                                icon="plus-large"
-                                text={gettext('New rundown item template')}
-                                shape="round"
-                                iconOnly={true}
-                                disabled={this.props.createOrEdit != null}
-                                onClick={() => {
-                                    this.props.initiateCreation({});
-                                }}
-                            />
-                        </div>
-                    )
-                }
             </div>
         );
     }
