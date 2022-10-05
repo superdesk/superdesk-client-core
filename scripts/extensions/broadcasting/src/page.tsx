@@ -72,7 +72,12 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
 
         return (
             <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
-                <div className={classnames('sd-content sd-content-wrapper', {'sd-content-wrapper--editor-full': rundownsListVisible !== true})}>
+                <div
+                    className={classnames(
+                        'sd-content sd-content-wrapper',
+                        {'sd-content-wrapper--editor-full': rundownsListVisible !== true},
+                    )}
+                >
                     {
                         rundownsListVisible && (
                             <React.Fragment>

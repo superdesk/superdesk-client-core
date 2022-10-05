@@ -1,6 +1,6 @@
 /* eslint-disable no-redeclare */
 
-function getActiveClassNames(obj: {[className: string]: boolean}) {
+function getActiveClassNames(obj: {[className: string]: boolean}): Array<string> {
     return Object.entries(obj).filter(([_key, value]) => value === true).map(([key]) => key);
 }
 
@@ -12,10 +12,10 @@ export function classnames(obj: {[className: string]: boolean}): string;
 /**
  * Specifying conditional class names using a cleaner syntax.
  * Usage:
- *  classnames({one: true, two: true, three: false, four: false, five: true}) // outputs: "one two five"
- *  classnames('static-1 static-2', {one: true, two: true, three: false, four: false, five: true}) // outputs: "static-1 static-2 one two five"
+ *  classnames({one: true, two: false}) // outputs: "one"
+ *  classnames('static-1', {one: true, two: true}) // outputs: "static-1 one two"
  */
-export function classnames(a: any, b? :any): string {
+export function classnames(a: any, b?: any): string {
     if (typeof a === 'string') {
         if (b == null) {
             return a;
