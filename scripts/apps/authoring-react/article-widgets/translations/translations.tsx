@@ -65,13 +65,6 @@ class Translations extends React.Component<IProps, IState> {
                                                         'field': 'task.user',
                                                     },
                                                 },
-                                                {
-                                                    'not': {
-                                                        'term': {
-                                                            'task.user': '633c15504c223837c798f738',
-                                                        },
-                                                    },
-                                                },
                                             ],
                                         },
                                     },
@@ -193,7 +186,7 @@ class Translations extends React.Component<IProps, IState> {
     }
 }
 
-export function getTranslationWidget() {
+export function getTranslationsWidget() {
     const metadataWidget: IArticleSideWidget = {
         _id: 'translation-widget',
         label: getLabel(),

@@ -65,7 +65,6 @@ function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>):
 
                     return result;
                 })
-                .filter((z) => z.editorItem != null)
                 .sort((a, b) => a.editorItem.order - b.editorItem.order);
 
         let headerFields: IFieldsV2 = OrderedMap<string, IAuthoringFieldV2>();
@@ -97,11 +96,6 @@ function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>):
                     };
                 } else { // custom fields
                     const field = fields.find(({_id}) => _id === fieldId);
-
-                    if (field == null) {
-                        console.log(fieldId);
-                        debugger
-                    }
 
                     const f: IAuthoringFieldV2 = {
                         id: fieldId,
