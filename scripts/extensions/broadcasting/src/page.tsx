@@ -16,7 +16,7 @@ import {
 import {ManageRundownTemplates} from './shows/rundowns/manage-rundown-templates';
 import {CreateShowModal} from './shows/create-show-modal';
 
-import {showModal} from '@superdesk/common';
+import {classnames, showModal} from '@superdesk/common';
 
 import {CreateRundownFromTemplate} from './shows/rundowns/create-rundown-from-template';
 import {RundownsList} from './shows/rundowns/rundowns-list';
@@ -68,11 +68,13 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     }
 
     render() {
+        const rundownsListVisible = !(this.state.rundownIdInEditMode != null && this.state.rundownItemAction != null);
+
         return (
             <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
-                <div className="sd-content sd-content-wrapper">
+                <div className={classnames('sd-content sd-content-wrapper', {'sd-content-wrapper--editor-full': rundownsListVisible !== true})}>
                     {
-                        !(this.state.rundownIdInEditMode != null && this.state.rundownItemAction != null) && (
+                        rundownsListVisible && (
                             <React.Fragment>
                                 <Layout.LayoutContainer>
                                     <Layout.HeaderPanel>
