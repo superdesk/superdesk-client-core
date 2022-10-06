@@ -93,7 +93,7 @@ class WithLiveQueryComponent
                 urlParams: {
                     aggregations: 0,
                     es_highlight: 1,
-                    source: JSON.stringify(toElasticQuery(query)),
+                    ...toElasticQuery(query),
                 },
             },
         ).then((data) => {

@@ -111,8 +111,8 @@ export function getQueryFieldsRecursive(q: ILogicalOperator | IComparison): Set<
     }
 }
 
-// The result should be passed as "source" query parameter when sending over network
-export function toElasticQuery(q: ISuperdeskQuery) {
+// The result should be used as URL parameters for HTTP request
+export function toElasticQuery(q: ISuperdeskQuery): {q?: string; source: string} {
     interface IQuery {
         query?: {
             filtered: {
@@ -136,23 +136,21 @@ export function toElasticQuery(q: ISuperdeskQuery) {
         filtered['filter'] = toElasticFilter(q.filter);
     }
 
-    if (q.fullTextSearch != null) {
-        filtered['query'] = {
-            query_string: {
-                query: q.fullTextSearch,
-                lenient: true,
-                default_operator: 'AND',
-            },
-        };
-    }
-
     if (Object.keys(filtered).length > 0) {
         query['query'] = {
             filtered: filtered,
         };
     }
 
-    return query;
+    const result: ReturnType<typeof toElasticQuery> = {
+        source: JSON.stringify(query),
+    };
+
+    if (q.fullTextSearch != null) {
+        result.q = q.fullTextSearch;
+    }
+
+    return result;
 }
 
 interface IPyEveQuery {
