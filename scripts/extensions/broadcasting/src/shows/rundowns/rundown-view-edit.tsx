@@ -474,7 +474,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                         </Layout.MainPanel>
 
                         <Layout.RightPanel open={rundownItemAction != null}>
-                            <Layout.Panel side="right" background="grey">
+                            <Layout.Panel side="right" background="grey" size="x-large">
                                 <Layout.PanelContent>
                                     {
                                         rundownItemAction != null && (

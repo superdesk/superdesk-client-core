@@ -231,7 +231,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     )}
                                     loading={false}
                                     activated={false}
-                                    selected={false}
+                                    selected={rundown._id === this.props.inEditMode}
                                     archived={false}
                                     onClick={() => {
                                         this.props.onEditModeChange(rundown._id);
