@@ -97,7 +97,7 @@ export function prepareRundownTemplateForSaving<T extends IRundownTemplateBase |
     return copy;
 }
 
-function prepareRundownItemForSaving(item: Partial<IRundownItemBase>): Partial<IRundownItemBase> {
+export function prepareRundownItemForSaving(item: Partial<IRundownItemBase>): Partial<IRundownItemBase> {
     const copy = {...item};
 
     /**

@@ -17,7 +17,7 @@ const {Spacer, SpacerBlock} = superdesk.components;
 
 const {gettext} = superdesk.localization;
 
-interface IProps<T> {
+interface IProps<T extends IRundownItemBase | IRundownItem> {
     rundown: IRundown | null;
     items: Array<T>;
     onChange(items: Array<T>): void;
