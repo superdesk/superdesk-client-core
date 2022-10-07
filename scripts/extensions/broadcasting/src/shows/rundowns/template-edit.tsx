@@ -279,10 +279,10 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                             validationErrors={validationErrors}
                                         />
 
-                                        <Spacer h gap="16" justifyContent="start" alignItems="center" noWrap>
+                                        <Spacer v gap="16" justifyContent="start" noWrap>
                                             <Checkbox
                                                 checked={templateFields.schedule != null}
-                                                label={{text: gettext('Repeat')}}
+                                                label={{text: gettext('Create rundowns automatically')}}
                                                 onChange={(val) => {
                                                     if (val === true) {
                                                         const initialValue: IRRule = {
@@ -318,7 +318,10 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                                     schedule: val,
                                                                 });
                                                             }}
-                                                            firstDayOfWeek={superdesk.instance.config.startingDay}
+
+                                                            // firstDayOfWeek starts from Monday
+                                                            // - config.startingDay from Sunday
+                                                            firstDayOfWeek={superdesk.instance.config.startingDay - 1}
                                                             readOnly={this.props.readOnly}
                                                         />
                                                     </div>
