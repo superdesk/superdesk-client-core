@@ -449,7 +449,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     rundown={rundown}
                                                     readOnly={this.props.readOnly}
                                                     items={computeStartEndTime(rundown.airtime_time, rundownItems)}
-                                                    createOrEdit={rundownItemAction}
                                                     initiateCreation={this.initiateCreation}
                                                     initiateEditing={this.initiateEditing}
                                                     initiatePreview={this.initiatePreview}

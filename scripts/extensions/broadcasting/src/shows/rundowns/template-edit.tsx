@@ -440,7 +440,6 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                                     rundownItems,
                                                                 )
                                                             }
-                                                            createOrEdit={this.props.rundownItemAction}
                                                             initiateCreation={this.initiateCreation}
                                                             initiateEditing={this.initiateEditing}
                                                             initiatePreview={this.initiatePreview}
