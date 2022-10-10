@@ -94,6 +94,7 @@ interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 
     title: string;
     items: Array<IRundownItemReference>;
     template: IRundownTemplate['_id'];
+    matching_items: Array<IRundownItem>;
 }
 
 export type IRundown = IRundownBase & IBaseRestApiResponse;

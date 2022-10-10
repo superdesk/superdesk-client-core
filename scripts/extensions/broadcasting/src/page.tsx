@@ -400,11 +400,15 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
 
                                         <RundownsList
                                             inEditMode={this.state.rundownIdInEditMode}
-                                            onEditModeChange={(rundownIdInEditMode) => {
-                                                this.setState({rundownIdInEditMode});
+                                            onEditModeChange={(rundownIdInEditMode, rundownItemAction) => {
+                                                this.setState({
+                                                    rundownIdInEditMode,
+                                                    rundownItemAction: rundownItemAction ?? null,
+                                                });
                                             }}
                                             searchString={this.state.searchString}
                                             filters={this.state.filtersApplied}
+                                            rundownItemAction={this.state.rundownItemAction}
                                         />
 
                                     </Layout.MainPanel>

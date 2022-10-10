@@ -7,7 +7,12 @@ import {superdesk} from '../../superdesk';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {addSeconds} from '@superdesk/common';
-import {IAndOperator} from 'superdesk-api';
+import {IAndOperator, ILogicalOperator} from 'superdesk-api';
+import {RundownItems} from './components/rundown-items';
+import {prepareForPreview} from './prepare-create-edit';
+import {IRundownItemAction} from './template-edit';
+import {Dropdown, IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
+import {noop} from 'lodash';
 
 const {httpRequestRawLocal} = superdesk;
 const {getVirtualListFromQuery, DateTime} = superdesk.components;
@@ -18,8 +23,49 @@ const VirtualListFromQuery = getVirtualListFromQuery<IRundown, {show: IShow; tem
 interface IProps {
     searchString: string;
     inEditMode: IRundown['_id'] | null;
-    onEditModeChange(inEditMode: IRundown['_id'] | null): void;
+    onEditModeChange(inEditMode: IRundown['_id'] | null, rundownItemAction?: IRundownItemAction): void;
     filters?: IRundownFilters;
+    rundownItemAction: IRundownItemAction;
+}
+
+function getFilters(filters: IRundownFilters | undefined): ILogicalOperator | undefined {
+    const queryFilters: IAndOperator['$and'] = [];
+
+    if (filters?.show != null) {
+        queryFilters.push({show: {$eq: filters.show}});
+    }
+
+    if (filters?.airtime_time?.gte != null) {
+        queryFilters.push({airtime_time: {$gte: filters.airtime_time.gte}});
+    }
+
+    if (filters?.airtime_time?.lte != null) {
+        queryFilters.push({airtime_time: {$lte: filters.airtime_time.lte}});
+    }
+
+    if (filters?.airtime_date?.gte != null) {
+        queryFilters.push({airtime_date: {$gte: filters.airtime_date.gte}});
+    }
+
+    if (filters?.airtime_date?.lte != null) {
+        queryFilters.push({airtime_date: {$lte: filters.airtime_date.lte}});
+    }
+
+    if (filters?.duration?.gte != null && filters.duration.gte !== 0) {
+        queryFilters.push({duration: {$gte: filters.duration.gte}});
+    }
+
+    if (filters?.duration?.lte != null && filters.duration.lte !== 0) {
+        queryFilters.push({duration: {$lte: filters.duration.lte}});
+    }
+
+    if (queryFilters.length < 1) {
+        return undefined;
+    } else {
+        return {
+            $and: queryFilters,
+        };
+    }
 }
 
 export class RundownsList extends React.PureComponent<IProps> {
@@ -36,47 +82,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                 ? undefined
                                 : this.props.searchString,
                             sort: [{_updated: 'desc'}],
-                            filter: (() => {
-                                const {filters} = this.props;
-
-                                const queryFilters: IAndOperator['$and'] = [];
-
-                                if (filters?.show != null) {
-                                    queryFilters.push({show: {$eq: filters.show}});
-                                }
-
-                                if (filters?.airtime_time?.gte != null) {
-                                    queryFilters.push({airtime_time: {$gte: filters.airtime_time.gte}});
-                                }
-
-                                if (filters?.airtime_time?.lte != null) {
-                                    queryFilters.push({airtime_time: {$lte: filters.airtime_time.lte}});
-                                }
-
-                                if (filters?.airtime_date?.gte != null) {
-                                    queryFilters.push({airtime_date: {$gte: filters.airtime_date.gte}});
-                                }
-
-                                if (filters?.airtime_date?.lte != null) {
-                                    queryFilters.push({airtime_date: {$lte: filters.airtime_date.lte}});
-                                }
-
-                                if (filters?.duration?.gte != null && filters.duration.gte !== 0) {
-                                    queryFilters.push({duration: {$gte: filters.duration.gte}});
-                                }
-
-                                if (filters?.duration?.lte != null && filters.duration.lte !== 0) {
-                                    queryFilters.push({duration: {$lte: filters.duration.lte}});
-                                }
-
-                                if (queryFilters.length < 1) {
-                                    return undefined;
-                                } else {
-                                    return {
-                                        $and: queryFilters,
-                                    };
-                                }
-                            })(),
+                            filter: getFilters(this.props.filters),
                             join: {
                                 show: {
                                     endpoint: '/shows',
@@ -237,6 +243,44 @@ export class RundownsList extends React.PureComponent<IProps> {
                                         this.props.onEditModeChange(rundown._id);
                                     }}
                                 />
+                                {
+                                    rundown.matching_items && (
+                                        <div style={{paddingInlineStart: 20}}>
+                                            <RundownItems
+                                                readOnly={true}
+                                                items={rundown.matching_items}
+                                                getActions={((rundownItem) => {
+                                                    const preview: IMenuItem = {
+                                                        label: gettext('Preview'),
+                                                        onSelect: () => {
+                                                            this.props.onEditModeChange(
+                                                                rundown._id,
+                                                                prepareForPreview(
+                                                                    this.props.rundownItemAction,
+                                                                    rundownItem._id,
+                                                                    rundownItem,
+                                                                ),
+                                                            );
+                                                        },
+                                                    };
+
+                                                    return (
+                                                        <Dropdown
+                                                            items={[preview]}
+                                                            append
+                                                        >
+                                                            <IconButton
+                                                                ariaValue={gettext('Actions')}
+                                                                icon="dots-vertical"
+                                                                onClick={noop}
+                                                            />
+                                                        </Dropdown>
+                                                    );
+                                                })}
+                                            />
+                                        </div>
+                                    )
+                                }
                             </div>
                         )}
                         noItemsTemplate={() => {
