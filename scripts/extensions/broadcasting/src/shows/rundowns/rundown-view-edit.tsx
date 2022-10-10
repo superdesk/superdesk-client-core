@@ -26,12 +26,6 @@ interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
     exportOptions: Array<IRundownExportOption>;
-
-    /**
-     * authoring-react doesn't remount if `authoringStorage` changes
-     * key is used to instruct authoring-react when to remount
-     */
-    authoringReactKey: number;
 }
 
 import {superdesk} from '../../superdesk';
@@ -123,7 +117,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         this.state = {
             rundown: null,
             rundownWithChanges: null,
-            authoringReactKey: 0,
             exportOptions: [],
         };
 
@@ -478,7 +471,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     {
                                         rundownItemAction != null && (
                                             <AuthoringReact
-                                                key={this.state.authoringReactKey}
+                                                key={rundownItemAction.authoringReactKey}
                                                 // ID is not needed because authoringStorage is operating on array items
                                                 // and not on database items via HTTP API
                                                 itemId=""
