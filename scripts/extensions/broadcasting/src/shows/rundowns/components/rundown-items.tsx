@@ -95,10 +95,11 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                             subitems != null && (
                                 <Spacer h gap="4" justifyContent="start" noGrow>
                                     {
-                                        subitems.map(({name}, i) => (
+                                        subitems.map(({name, color}, i) => (
                                             <Label
                                                 key={i}
                                                 text={name}
+                                                hexColor={color}
                                                 style="translucent"
                                                 size="normal"
                                             />
