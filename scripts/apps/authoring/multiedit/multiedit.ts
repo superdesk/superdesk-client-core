@@ -221,6 +221,7 @@ function MultieditArticleDirective(authoring, content, multiEdit, lock, $timeout
                         () => {
                             scope.$applyAsync(() => {
                                 InitializeMedia.initMedia(scope);
+                                scope.save();
                             });
                         });
             };
