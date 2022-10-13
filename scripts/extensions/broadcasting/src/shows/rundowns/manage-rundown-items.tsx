@@ -84,13 +84,17 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                 }
 
                 <RundownItems
-                    readOnly={false}
+                    readOnly={readOnly}
                     dragAndDrop
                     addItem
                     items={this.props.items}
                     onChange={this.props.onChange}
                     onDelete={this.props.onDelete}
                     getActions={((item) => {
+                        if (readOnly) {
+                            return undefined;
+                        }
+
                         const actions: Array<IMenuItem> = [];
 
                         if (!readOnly) {

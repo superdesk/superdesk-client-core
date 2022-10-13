@@ -21,7 +21,7 @@ import {classnames, showModal} from '@superdesk/common';
 import {CreateRundownFromTemplate} from './shows/rundowns/create-rundown-from-template';
 import {RundownsList} from './shows/rundowns/rundowns-list';
 import {RundownViewEdit} from './shows/rundowns/rundown-view-edit';
-import {IRundownFilters} from './interfaces';
+import {IRundown, IRundownFilters} from './interfaces';
 import {FilteringInputs} from './shows/rundowns/components/filtering-inputs';
 import {AppliedFilters} from './shows/rundowns/components/applied-filters';
 
@@ -30,11 +30,12 @@ import {ManageShows} from './shows/manage-shows';
 import {IRundownItemAction} from './shows/rundowns/template-edit';
 
 const {gettext} = superdesk.localization;
+const {httpRequestJsonLocal} = superdesk;
 
 type IProps = {};
 
 interface IState {
-    rundownIdInEditMode: string | null;
+    rundownViewEdit: null | {mode: 'view'; id: string} | {mode: 'edit'; id: string};
     rundownItemAction: IRundownItemAction;
     searchString: string;
     filtersOpen: boolean;
@@ -47,7 +48,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            rundownIdInEditMode: null,
+            rundownViewEdit: null,
             rundownItemAction: null,
             searchString: '',
             filtersOpen: false,
@@ -56,6 +57,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         };
 
         this.setFilter = this.setFilter.bind(this);
+        this.initiateRundownEditing = this.initiateRundownEditing.bind(this);
     }
 
     private setFilter(filters: Partial<IState['filters']>) {
@@ -67,11 +69,54 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         });
     }
 
+    private initiateRundownEditing(id: IRundown['_id']): Promise<void> {
+        return new Promise<void>((resolve) => {
+            httpRequestJsonLocal<IRundown>({
+                method: 'GET',
+                path: `/rundowns/${id}`,
+            }).then((rundown) => {
+                const locked = rundown._lock === true;
+                const lockedInCurrentSession =
+                    locked && rundown._lock_session === superdesk.session.getSessionId();
+                const lockedInAnotherSession =
+                    locked && rundown._lock_session !== superdesk.session.getSessionId();
+
+                if (lockedInCurrentSession) {
+                    this.setState({rundownViewEdit: {mode: 'edit', id}}, resolve);
+                } else if (lockedInAnotherSession) {
+                    this.setState({rundownViewEdit: {mode: 'view', id}}, resolve);
+                } else if (locked !== true) {
+                    const payload: Partial<IRundown> = {
+                        _lock_action: 'lock',
+                    };
+
+                    httpRequestJsonLocal<IRundown>({
+                        method: 'PATCH',
+                        path: `/rundowns/${id}`,
+                        payload,
+                        headers: {
+                            'If-Match': rundown._etag,
+                        },
+                    }).then(() => {
+                        this.setState({rundownViewEdit: {mode: 'edit', id}}, resolve);
+                    });
+                }
+            });
+        });
+    }
+
     render() {
-        const rundownsListVisible = !(this.state.rundownIdInEditMode != null && this.state.rundownItemAction != null);
+        const {rundownViewEdit} = this.state;
+        const rundownsListVisible = !(rundownViewEdit != null && this.state.rundownItemAction != null);
 
         return (
-            <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
+            <div
+                style={{
+                    marginTop: 'var(--top-navigation-height)',
+                    width: '100%',
+                    height: 'calc(100% - var(--top-navigation-height))',
+                }}
+            >
                 <div
                     className={classnames(
                         'sd-content sd-content-wrapper',
@@ -399,11 +444,12 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                         </GridList> */}
 
                                         <RundownsList
-                                            inEditMode={this.state.rundownIdInEditMode}
-                                            onEditModeChange={(rundownIdInEditMode, rundownItemAction) => {
-                                                this.setState({
-                                                    rundownIdInEditMode,
-                                                    rundownItemAction: rundownItemAction ?? null,
+                                            inEditMode={rundownViewEdit?.id ?? null}
+                                            onEditModeChange={(id, rundownItemAction) => {
+                                                this.initiateRundownEditing(id).then(() => {
+                                                    this.setState({
+                                                        rundownItemAction: rundownItemAction ?? null,
+                                                    });
                                                 });
                                             }}
                                             searchString={this.state.searchString}
@@ -513,19 +559,38 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
 
                                     <Layout.OverlayPanel />
                                 </Layout.LayoutContainer>
-                                <Layout.ContentSplitter visible={this.state.rundownIdInEditMode != null} />
+                                <Layout.ContentSplitter visible={true} />
                             </React.Fragment>
                         )
                     }
-                    <Layout.AuthoringContainer open={this.state.rundownIdInEditMode != null}>
+                    <Layout.AuthoringContainer open={rundownViewEdit != null}>
                         {
-                            this.state.rundownIdInEditMode != null && (
+                            rundownViewEdit != null && (
                                 <RundownViewEdit
-                                    rundownId={this.state.rundownIdInEditMode}
-                                    onClose={() => {
-                                        this.setState({rundownIdInEditMode: null});
+                                    rundownId={rundownViewEdit.id}
+                                    onClose={(rundown: IRundown) => {
+                                        const doUnlock = rundown._lock === true
+                                            ? httpRequestJsonLocal<IRundown>({
+                                                method: 'PATCH',
+                                                path: `/rundowns/${rundown._id}`,
+                                                payload: (() => {
+                                                    const payload: Partial<IRundown> = {
+                                                        _lock_action: 'unlock',
+                                                    };
+
+                                                    return payload;
+                                                })(),
+                                                headers: {
+                                                    'If-Match': rundown._etag,
+                                                },
+                                            })
+                                            : Promise.resolve();
+
+                                        doUnlock.finally(() => {
+                                            this.setState({rundownViewEdit: null});
+                                        });
                                     }}
-                                    readOnly={false}
+                                    readOnly={rundownViewEdit == null || rundownViewEdit.mode === 'view'}
                                     rundownItemAction={this.state.rundownItemAction}
                                     onRundownActionChange={(rundownItemAction) => {
                                         this.setState({rundownItemAction});

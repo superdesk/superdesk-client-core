@@ -96,6 +96,10 @@ import {computeEditor3Output} from 'apps/authoring-react/field-adapters/utilitie
 import {getContentStateFromHtml} from './editor3/html/from-html';
 import {getInlineCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/inline-comments';
 import {getCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/comments';
+import {
+    isLockedInOtherSession,
+    LockInfo,
+} from 'apps/authoring-react/subcomponents/lock-info-generic';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -168,10 +172,6 @@ addEventListener('articleEditEnd', () => {
 
 export function isLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
-}
-
-export function isLockedInOtherSession(article: IArticle): boolean {
-    return sdApi.article.isLocked(article) && !isLockedInCurrentSession(article);
 }
 
 export const formatDate = (date: Date | string) => (
@@ -361,6 +361,7 @@ export function getSuperdeskApiImplementation(
             Icon,
             IconBig,
             getAuthoringComponent: () => AuthoringReact,
+            getLockInfoComponent: () => LockInfo,
             getDropdownTree: () => DropdownTree,
             Center,
             Spacer,
@@ -458,6 +459,7 @@ export function getSuperdeskApiImplementation(
             querySelectorParent,
             arrayToTree,
             treeToArray,
+            isLockedInOtherSession,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

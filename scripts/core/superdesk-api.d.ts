@@ -813,6 +813,26 @@ declare module 'superdesk-api' {
         video_editor_id?: string;
     };
 
+    export interface ILockInfo {
+        _lock: boolean;
+
+        // write-only, used to update `_lock`
+        _lock_action?: 'unlock' | 'lock' | 'force-lock'
+
+        _lock_session?: string;
+        _lock_time?: string;
+        _lock_user?: IUser['_id'];
+    }
+
+    export interface IPropsLockInfo<T extends ILockInfo> {
+        entity: T;
+
+        /**
+         * Relative path; will be used for unlocking
+         */
+        endpoint: string;
+    }
+
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
@@ -2513,6 +2533,7 @@ declare module 'superdesk-api' {
             // TODO: move the component with all its dependencies to a separate project and use via npm package
             getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;
 
+            getLockInfoComponent: <T>() => React.ComponentType<IPropsLockInfo<T>>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;
@@ -2649,6 +2670,9 @@ declare module 'superdesk-api' {
                 getParentId: (item: T) => string | undefined | null,
             ): {result: Array<ITreeNode<T>>, errors: Array<T>};
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
+
+            // generic method - works on all enabled endpoints
+            isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean;
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

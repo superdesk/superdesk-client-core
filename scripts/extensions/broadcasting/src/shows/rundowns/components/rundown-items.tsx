@@ -11,14 +11,17 @@ import {IMenuItem, ISubmenu, IMenuGroup} from 'superdesk-ui-framework/react/comp
 const {vocabulary} = superdesk.entities;
 const {Spacer} = superdesk.components;
 
+/**
+ * Simpler interface - allows to pass fewer props
+ */
 interface IPropsReadOnly<T extends IRundownItem | IRundownItemBase> {
-    readOnly: true;
+    readOnly: 'yes';
     items: Array<T>;
     getActions(item: T): JSX.Element;
 }
 
 interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
-    readOnly: false;
+    readOnly: boolean;
     items: Array<T>;
     onChange(items: Array<T>): void;
     onDelete(item: T): void;
@@ -26,7 +29,7 @@ interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
     dragAndDrop: boolean;
     addItem: boolean;
     itemsDropdown: Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
-    getActions(item: T): JSX.Element;
+    getActions(item: T): JSX.Element | undefined;
 }
 
 type IProps<T extends IRundownItem | IRundownItemBase> = IPropsReadOnly<T> | IPropsEditable<T>;

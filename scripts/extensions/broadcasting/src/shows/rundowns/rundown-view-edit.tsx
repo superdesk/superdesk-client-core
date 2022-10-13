@@ -10,7 +10,7 @@ import {
     IRundownItemTemplateInitial,
     IRundownTemplateBase,
 } from '../../interfaces';
-import {Button, ButtonGroup, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
+import {Button, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
@@ -19,7 +19,7 @@ interface IProps {
     rundownItemAction: ICreate | IEdit | IPreview | null;
     onRundownActionChange(action: ICreate | IEdit | IPreview | null): void;
     readOnly: boolean;
-    onClose(): void;
+    onClose(rundown: IRundown): void;
 }
 
 interface IState {
@@ -46,12 +46,13 @@ import {AiringInfoBlock} from './components/airing-info-block';
 import {commentsWidget} from './rundown-items/widgets/comments';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
-const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
-const {generatePatch} = superdesk.utilities;
+const {getAuthoringComponent, getLockInfoComponent, WithLiveResources, SpacerBlock, Spacer} = superdesk.components;
+const {generatePatch, isLockedInOtherSession} = superdesk.utilities;
 const {addWebsocketMessageListener} = superdesk;
 const {fixPatchResponse} = superdesk.helpers;
 
 const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
+const LockInfo = getLockInfoComponent<IRundown>();
 
 const sideWidgets = [
     superdesk.authoringGeneric.sideWidgets.inlineComments,
@@ -166,15 +167,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         });
     }
 
-    close() {
-        if (!isEqual(this.state.rundown, this.state.rundownWithChanges)) {
+    close(rundown: IRundown) {
+        if (!isEqual(rundown, this.state.rundownWithChanges)) {
             superdesk.ui.confirm(gettext('Discard unsaved changes?')).then((confirmed) => {
                 if (confirmed) {
-                    this.props.onClose();
+                    this.props.onClose(rundown);
                 }
             });
         } else {
-            this.props.onClose();
+            this.props.onClose(rundown);
         }
     }
 
@@ -313,6 +314,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
     render() {
         const rundown = this.state.rundownWithChanges;
+        const lockedInOtherSession = rundown == null ? true : isLockedInOtherSession(rundown);
+        const editingDisallowed = lockedInOtherSession || this.props.readOnly;
 
         if (rundown == null) {
             return null;
@@ -326,7 +329,24 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
                             <SubNav>
-                                <ButtonGroup align="end" padded>
+                                <Spacer
+                                    h
+                                    gap="16"
+                                    justifyContent="space-between"
+                                    noWrap
+                                    style={{paddingLeft: 16, paddingRight: 16}}
+                                >
+                                    {
+                                        lockedInOtherSession
+                                            ? (
+                                                <LockInfo
+                                                    entity={rundown}
+                                                    endpoint={`/rundowns/${rundown._id}`}
+                                                />
+                                            )
+                                            : (<span />) // needed for spacer
+                                    }
+
                                     {
                                         this.props.readOnly
                                             ? (
@@ -337,10 +357,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 />
                                             )
                                             : (
-                                                <React.Fragment>
+                                                <Spacer h gap="4" noGrow justifyContent="start">
                                                     <Button
                                                         text={gettext('Close')}
-                                                        onClick={this.close}
+                                                        onClick={() => {
+                                                            this.close(rundown);
+                                                        }}
                                                     />
 
                                                     <Button
@@ -388,10 +410,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             onClick={noop}
                                                         />
                                                     </Dropdown>
-                                                </React.Fragment>
+                                                </Spacer>
                                             )
                                     }
-                                </ButtonGroup>
+                                </Spacer>
                             </SubNav>
                         </Layout.HeaderPanel>
 
@@ -402,7 +424,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     <AiringInfoBlock
                                         value={rundown}
                                         onChange={this.setRundownField}
-                                        readOnly={this.props.readOnly}
+                                        readOnly={editingDisallowed}
                                         validationErrors={validationErrors}
                                     />
                                 )}
@@ -416,6 +438,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                             this.setRundownField({title: val});
                                         }}
                                         label={gettext('Headline')}
+                                        disabled={editingDisallowed}
                                         labelHidden
                                         inlineLabel
                                         size="large"
@@ -440,7 +463,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                             return (
                                                 <ManageRundownItems
                                                     rundown={rundown}
-                                                    readOnly={this.props.readOnly}
+                                                    readOnly={editingDisallowed}
                                                     items={computeStartEndTime(rundown.airtime_time, rundownItems)}
                                                     initiateCreation={this.initiateCreation}
                                                     initiateEditing={this.initiateEditing}
@@ -581,7 +604,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     return (
                                                         <Component
                                                             entityId={rundownItemAction.item._id}
-                                                            readOnly={this.props.readOnly}
+                                                            readOnly={editingDisallowed}
                                                             contentProfile={contentProfile}
                                                             fieldsData={fieldsData}
                                                             authoringStorage={authoringStorage}
