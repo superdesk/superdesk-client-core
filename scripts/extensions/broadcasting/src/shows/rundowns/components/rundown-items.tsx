@@ -48,7 +48,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
             vocabulary.getVocabulary(RUNDOWN_SUBITEM_TYPES).items.map((item) => [item.qcode, item]),
         );
 
-        const array = this.props.items.map((item) => {
+        const array: React.ComponentProps<typeof TableList>['array'] = this.props.items.map((item) => {
             const showPart = item.show_part == null ? null : showParts.get(item.show_part);
             const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
             const subitems = item.subitems == null
