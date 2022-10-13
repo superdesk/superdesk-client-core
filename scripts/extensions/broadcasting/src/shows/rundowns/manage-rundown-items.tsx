@@ -137,30 +137,30 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         );
                     })}
                     itemsDropdown={(() => {
-                            type IDropdownItems = React.ComponentProps<typeof TableList>['itemsDropdown'];
+                        type IDropdownItems = React.ComponentProps<typeof TableList>['itemsDropdown'];
 
-                            const result: IDropdownItems = rundownItemTypes.toArray()
-                                .map((rundownType) => ({
-                                    label: rundownType.name,
-                                    onSelect: () => {
-                                        this.props.initiateCreation({
-                                            item_type: rundownType.qcode,
-                                        });
-                                    },
-                                }));
-
-                            if (rundownItemTypes.size > 0) {
-                                result.push('divider');
-                            }
-
-                            result.push({
-                                label: gettext('(empty)'),
+                        const result: IDropdownItems = rundownItemTypes.toArray()
+                            .map((rundownType) => ({
+                                label: rundownType.name,
                                 onSelect: () => {
-                                    this.props.initiateCreation({});
+                                    this.props.initiateCreation({
+                                        item_type: rundownType.qcode,
+                                    });
                                 },
-                            });
+                            }));
 
-                            return result;
+                        if (rundownItemTypes.size > 0) {
+                            result.push('divider');
+                        }
+
+                        result.push({
+                            label: gettext('(empty)'),
+                            onSelect: () => {
+                                this.props.initiateCreation({});
+                            },
+                        });
+
+                        return result;
                     })()}
                     onDrag={(oldIndex, newIndex) => {
                         if (this.props.readOnly !== true) {
