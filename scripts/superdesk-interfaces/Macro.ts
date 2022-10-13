@@ -10,4 +10,6 @@ export interface IMacro extends IBaseRestApiResponse {
     name: string;
     replace_type: string;
     item?: Partial<IArticle>;
+    group?: string;
+    order?: number;
 }

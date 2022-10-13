@@ -1,20 +1,26 @@
 import React from 'react';
-import {IArticle, IArticleSideWidget, IBaseRestApiResponse, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
+import {
+    IArticle,
+    IArticleSideWidget,
+    IExtensionActivationResult,
+    IFieldsV2,
+    IRestApiResponse,
+} from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
 import {AuthoringWidgetLayout} from 'apps/dashboard/widget-layout';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {IMacro} from 'superdesk-interfaces/Macro';
-import _, {extend, filter, forEach, forOwn, groupBy, isEmpty, isString, sortBy} from 'lodash';
+import {groupBy} from 'lodash';
 import {Button} from 'superdesk-ui-framework/react/components/Button';
-import {convertFromRaw} from 'draft-js';
-import {OrderedMap} from 'immutable';
-import {setHtmlFromTansa} from 'core/editor3/actions/editor3';
 import {sdApi} from 'api';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {generatePatch} from 'core/patch';
 import {ToggleBox} from 'superdesk-ui-framework/react/components/Togglebox';
 import {Switch} from 'superdesk-ui-framework/react/components/Switch';
+import {omitFields} from '../data-layer';
+import {Spacer} from 'core/ui/components/Spacer';
+import {nameof} from 'core/helpers/typescript-helpers';
 
 type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
@@ -23,29 +29,34 @@ type IProps = React.ComponentProps<
 const getLabel = () => gettext('Macros widget');
 
 interface IState {
-    macros: IMacro[] | null;
+    macros: Array<IMacro> | null;
     article: {
         saved: IArticle | null,
         autosaved: IArticle | null,
-    },
-    displayGrouped: boolean;
+    };
+    displayGrouped: boolean | null;
 }
 
-const META_FIELD_NAME = 'fields_meta';
-const fieldsMetaKeys = {
-    draftjsState: 'draftjsState',
-};
+const EDITOR_3_FIELD_TYPE = 'editor3';
 
-function overwriteArticle(currentArticle: IArticle, patch: Partial<IArticle>): Promise<void> {
-    patch.fields_meta = {};
+function overwriteArticle(
+    currentArticle: IArticle,
+    patch: Partial<IArticle>,
+    contentProfileFields: IFieldsV2,
+): Promise<void> {
+    const patchCopy = omitFields({...patch, fields_meta: {}});
 
-    Object.keys(patch).filter((x) => x !== '_links' && x !== '_status' && x !== 'fields_meta').map((value) => value).forEach((val) => {
-        patch.fields_meta[val] = {};
+    Object.keys(patchCopy).forEach((fieldKey) => {
+        const currentField = contentProfileFields.get(fieldKey);
+
+        if (currentField != null && currentField.fieldType === EDITOR_3_FIELD_TYPE) {
+            patchCopy.fields_meta[currentField.name.toLowerCase()] = {};
+        }
     });
 
     return sdApi.article.patch(
         currentArticle,
-        patch,
+        patchCopy,
         {patchDirectlyAndOverwriteAuthoringValues: true},
     ).then(() => {
         dispatchInternalEvent('dangerouslyForceReloadAuthoring', null);
@@ -71,33 +82,14 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             this.getAllMacros(),
             this.props.authoringStorage.getEntity(this.props.article._id),
         ]).then(([macros, article]) => {
+            const groupedMacros = groupBy(macros._items.filter((x) => x.group != null), nameof<IMacro>('group'));
+
             this.setState({
                 macros: macros._items,
                 article: article,
+                displayGrouped: Object.keys(groupedMacros).length > 0 ? true : null,
             });
         });
-    }
-
-    prepareMacrosList(macros: IMacro[]) {
-        // TODO: test on CP instance to see if groups work
-        const groupedMacros = groupBy(filter(macros, 'group'), 'group');
-
-        groupedMacros ?? this.setState({displayGrouped: true});
-        const quickList = filter(macros, 'order');
-        const miscMacros = filter(macros, (o) => o.group === undefined);
-
-        let ordered = {};
-
-        Object.keys(groupedMacros)
-            .sort().forEach((key) => {
-                ordered[key] = sortBy(groupedMacros[key], 'label');
-            });
-
-        return {
-            quickList,
-            miscMacros,
-            groupedMacros,
-        };
     }
 
     getAllMacros(page = 1): Promise<IRestApiResponse<IMacro>> {
@@ -106,90 +98,28 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             path: '/macros',
             urlParams: {
                 backend: false,
-                desk: 'desk1', // TODO: Remove hardcoded stuff
+                desk: sdApi.desks.getCurrentDeskId(),
                 max_results: 200,
-                page: 1,
+                page: page,
             },
         });
     }
 
-    getFieldMetadata(item: IArticle, fieldKey, contentKey) {
-        if (Object.keys(fieldsMetaKeys).includes(contentKey) === false) {
-            throw new Error(`Invalid key '${contentKey}'`);
-        }
-
-        if (item == null || item[META_FIELD_NAME] == null || item[META_FIELD_NAME][fieldKey] == null) {
-            return null;
-        }
-
-        if (Array.isArray(item[META_FIELD_NAME][fieldKey][contentKey]) === false) {
-            return null;
-        }
-
-        return item[META_FIELD_NAME][fieldKey][contentKey][0];
-    }
-
     runMacro(macro: IMacro) {
-        const useReplace = macro.replace_type === 'simple-replace' || macro.replace_type === 'keep-style-replace';
-        const isSimpleReplace = macro.replace_type === 'simple-replace';
-        const item = extend({}, this.state.article.saved);
-
         return httpRequestJsonLocal({
             method: 'POST',
             path: '/macros',
             payload: {
                 macro: macro.name,
-                item,
+                item: this.state.article.saved,
             },
         }).then((res: IMacro) => {
-            let ignoreFields = ['_etag', 'fields_meta'];
-            const fieldsState = OrderedMap<string, unknown>();
             const patch = generatePatch(this.props.article, res.item);
+            const isEmpty = Object.keys(patch).length < 1;
 
-            overwriteArticle(this.props.article, patch);
-
-            // return res;
-
-            // if (macro.replace_type === 'editor_state') {
-            //     // overwriteArticle(patch);
-
-            //     Object.keys(res.item.fields_meta).forEach((field) => {
-            //         // add these fields to fieldsState
-            //         // fieldsState.set(convertFromRaw(this.getFieldMetadata(item, field, fieldsMetaKeys.draftjsState)))
-
-            //         const asd = convertFromRaw(this.getFieldMetadata(item, field, fieldsMetaKeys.draftjsState));
-
-            //         console.log(asd);
-            //         return convertFromRaw(this.getFieldMetadata(item, field, fieldsMetaKeys.draftjsState));
-            //     });
-            // } else {
-            //     ignoreFields.push('body_html');
-
-            //     if (res.diff == null && useReplace === true && item.body_html !== res.item.body_html) {
-            //         // move this method here
-            //         setHtmlFromTansa(res.item.body_html, isSimpleReplace);
-            //     }
-
-            //     Object.keys(res.item || {}).forEach((field) => {
-            //         if (isString(res.item[field]) === false || field === 'body_html') {
-            //             return;
-            //         }
-            //         ignoreFields.push(field);
-            //         if (res.item[field] !== item[field]) {
-            //             (field, res.item[field]);
-            //         }
-            //     });
-            // }
-
-            // if (isEditor3 || res.diff == null) {
-            //     angular.extend($scope.item, _.omit(res.item, ignoreFields));
-            //     $scope.autosave($scope.item);
-            // }
-
-            // if (res.diff != null) {
-            //     $rootScope.$broadcast('macro:diff', res.diff);
-            // }
-            // return res;
+            if (!isEmpty) {
+                overwriteArticle(this.props.article, patch, this.props.contentProfile.content);
+            }
         });
     }
 
@@ -198,10 +128,32 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             return null;
         }
 
-        const {groupedMacros, miscMacros, quickList} = this.prepareMacrosList(this.state.macros);
+        const groupedOrdered: Dictionary<string, Array<IMacro>> = {};
+
+        if (this.state.displayGrouped != null) {
+            groupedOrdered['Quick List'] = this.state.macros.filter((m) => m.order != null);
+            const groupedMacros = groupBy(this.state.macros.filter((m) => m.group != null), nameof<IMacro>('group'));
+
+            Object.keys(groupedMacros).sort().forEach((key) => {
+                groupedOrdered[key] = groupedMacros[key].sort((a, b) => a.label.localeCompare(b.label));
+            });
+            groupedOrdered['Miscallaneous'] = this.state.macros.filter((x) => x.group == null);
+        }
+
+        const RunMacroButton = (macro: IMacro) => {
+            return (
+                <div key={macro.name} style={{paddingTop: 4}}>
+                    <Button
+                        expand
+                        style="hollow"
+                        onClick={() => this.runMacro(macro)}
+                        text={macro.label}
+                    />
+                </div>
+            );
+        };
 
         return (
-
             <AuthoringWidgetLayout
                 header={(
                     <AuthoringWidgetHeading
@@ -210,43 +162,38 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                     />
                 )}
                 body={(
-                    <>
-                        {/* TODO: display switch only when this.state.groupedMacros are not null */}
-                        <Switch label={{text: gettext('Group Macros')}} value={this.state.displayGrouped} onChange={() => this.setState({displayGrouped: !this.state.displayGrouped})} />
-                        {/* TODO: make if else based on this.state.displayGrouped */}
-                        <ul>
-                            {
-                                quickList ? (
-                                    <ToggleBox initiallyOpen title={'Quck list'}>
-                                        {
-                                            quickList?.map((x) => {
-                                                return (
-                                                    <div key={x.name} style={{paddingTop: 4}}>
-                                                        <Button style="hollow" onClick={() => this.runMacro(x)} text={x.label} />
-                                                    </div>
-                                                );
-                                            })
-                                        }
-                                    </ToggleBox>
-                                ) : null
-                            }
-                            {
-                                miscMacros ? (
-                                    <ToggleBox title={'Misc'}>
-                                        {
-                                            miscMacros?.map((x) => {
-                                                return (
-                                                    <div key={x.name} style={{paddingTop: 4}}>
-                                                        <Button style="hollow" onClick={() => this.runMacro(x)} text={x.label} />
-                                                    </div>
-                                                );
-                                            })
-                                        }
-                                    </ToggleBox>
-                                ) : null
-                            }
-                        </ul>
-                    </>
+                    <Spacer v gap="8">
+                        {this.state.displayGrouped != null && (
+                            <Switch
+                                label={{text: gettext('Group Macros')}}
+                                value={this.state.displayGrouped != null ? this.state.displayGrouped : null}
+                                onChange={() => this.setState({displayGrouped: !this.state.displayGrouped})}
+                            />
+                        )}
+                        {
+                            this.state.displayGrouped ? (
+                                <React.Fragment>
+                                    {
+                                        Object.entries(groupedOrdered).map((entry, i) => {
+                                            return (
+                                                <ToggleBox
+                                                    key={i}
+                                                    initiallyOpen={entry[0] === 'Quick List' && true}
+                                                    title={entry[0]}
+                                                >
+                                                    {entry[1].map((macro) => RunMacroButton(macro))}
+                                                </ToggleBox>
+                                            );
+                                        })
+                                    }
+                                </React.Fragment>
+                            ) : (
+                                <React.Fragment>
+                                    {this.state.macros.map((macro) => RunMacroButton(macro))}
+                                </React.Fragment>
+                            )
+                        }
+                    </Spacer>
                 )}
             />
         );
@@ -258,7 +205,7 @@ export function getMacrosWidget() {
         _id: 'macros-widget',
         label: getLabel(),
         order: 2,
-        icon: 'unspike',
+        icon: 'macro',
         component: MacrosWidget,
     };
 
