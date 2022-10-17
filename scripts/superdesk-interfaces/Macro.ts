@@ -4,12 +4,15 @@ import {IArticle, IBaseRestApiResponse} from 'superdesk-api';
 // I'm still extending to make it compatible with other types depending on IBaseRestApiResponse
 export interface IMacro extends IBaseRestApiResponse {
     access_type: string;
-    action_type: string;
+    action_type: 'interactive' | string;
     description?: string;
     label: string;
     name: string;
-    replace_type: string;
+
+    // Replace type only applies to non-interactive macros
+    replace_type?: 'simple-replace' | 'keep-style-replace' | 'editor_state' | 'no-replace';
     item?: Partial<IArticle>;
     group?: string;
     order?: number;
+    diff?: {[key: string]: string};
 }

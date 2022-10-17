@@ -19,9 +19,14 @@ import {generatePatch} from 'core/patch';
 import {ToggleBox} from 'superdesk-ui-framework/react/components/Togglebox';
 import {Switch} from 'superdesk-ui-framework/react/components/Switch';
 import {omitFields} from '../data-layer';
-import {Spacer} from 'core/ui/components/Spacer';
 import {nameof} from 'core/helpers/typescript-helpers';
 import {EDITOR_3_FIELD_TYPE} from '../fields/editor3';
+import {dispatchEditorEvent} from '../authoring-react-editor-events';
+import {InteractiveMacrosDisplay} from './interactive-macros-display';
+import {editorId} from '../article-widgets/find-and-replace';
+
+// POTENTIAL-IMPROVEMENTS: don't allow replacing the same thing twice
+// -> body_html: $101 (CAD 13) -> click replace again -> $101 (CAD 13) (CAD 13)
 
 type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
@@ -34,6 +39,7 @@ interface IState {
 
     // not-supported when there are no groups
     displayGrouped: boolean | 'not-supported';
+    currentMacro: IMacro | null;
 }
 
 interface IMacroGroup {
@@ -55,6 +61,15 @@ function getAllMacros(): Promise<IRestApiResponse<IMacro>> {
     });
 }
 
+export function highlightDistinctMatches(diff: {[key: string]: string}) {
+    dispatchEditorEvent('find_and_replace__find_distinct', {
+        editorId,
+        matches: Object.keys(diff),
+        caseSensitive: false,
+    });
+}
+
+// TODO: Reimplement overwriting
 function overwriteArticle(
     currentArticle: IArticle,
     patch: Partial<IArticle>,
@@ -87,6 +102,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
         this.state = {
             macros: null,
             displayGrouped: false,
+            currentMacro: null,
         };
     }
 
@@ -119,6 +135,20 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
         });
     }
 
+    runInteractiveMacro(macro: IMacro) {
+        return httpRequestJsonLocal({
+            method: 'POST',
+            path: '/macros',
+            payload: {
+                macro: macro.name,
+                item: this.props.article,
+            },
+        }).then((res: IMacro) => {
+            this.setState({currentMacro: {...res, label: macro.label}});
+            highlightDistinctMatches(res.diff);
+        });
+    }
+
     render() {
         if (this.state.macros == null) {
             return null;
@@ -134,7 +164,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             });
             const groupedMacros = groupBy(this.state.macros.filter((m) => m.group != null), nameof<IMacro>('group'));
 
-            Object.entries(groupedMacros).forEach(([groupName, macros]) => {
+            Object.entries(groupedMacros).forEach(([groupName, _]) => {
                 groupedOrdered.push({
                     groupName: groupName,
                     initiallyOpen: false,
@@ -156,7 +186,11 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                     <Button
                         expand
                         style="hollow"
-                        onClick={() => this.runMacro(macro)}
+                        onClick={() => {
+                            macro.action_type !== 'interactive'
+                                ? this.runMacro(macro)
+                                : this.runInteractiveMacro(macro);
+                        }}
                         text={macro.label}
                     />
                 </div>
@@ -172,35 +206,55 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                     />
                 )}
                 body={(
-                    <Spacer v gap="8">
-                        {this.state.displayGrouped !== 'not-supported' && (
-                            <Switch
-                                label={{text: gettext('Group Macros')}}
-                                value={this.state.displayGrouped}
-                                onChange={() => this.setState({displayGrouped: !this.state.displayGrouped})}
-                            />
-                        )}
+                    <>
                         {
-                            this.state.displayGrouped ? (
-                                groupedOrdered.map((group, i) => {
-                                    return (
-                                        <ToggleBox
-                                            key={i}
-                                            initiallyOpen={group.initiallyOpen}
-                                            title={group.groupName}
-                                        >
-                                            {group.macros.map((macro) => (
+                            this.state.currentMacro?.diff == null ?
+                                (
+                                    <>
+                                        {this.state.displayGrouped !== 'not-supported' && (
+                                            <Switch
+                                                label={{text: gettext('Group Macros')}}
+                                                value={this.state.displayGrouped}
+                                                onChange={() =>
+                                                    this.setState({displayGrouped: !this.state.displayGrouped})
+                                                }
+                                            />
+                                        )}
+                                        {
+                                            this.state.displayGrouped ? (
+                                                groupedOrdered.map((group, i) => {
+                                                    return (
+                                                        <ToggleBox
+                                                            key={i}
+                                                            initiallyOpen={group.initiallyOpen}
+                                                            title={group.groupName}
+                                                        >
+                                                            {group.macros.map((macro) => (
+                                                                <RunMacroButton
+                                                                    key={macro.name}
+                                                                    macro={macro}
+                                                                />
+                                                            ))}
+                                                        </ToggleBox>
+                                                    );
+                                                })
+                                            ) : this.state.macros.map((macro) => (
                                                 <RunMacroButton
                                                     key={macro.name}
                                                     macro={macro}
                                                 />
-                                            ))}
-                                        </ToggleBox>
-                                    );
-                                })
-                            ) : this.state.macros.map((macro) => (<RunMacroButton key={macro.name} macro={macro} />))
+                                            ))
+                                        }
+                                    </>
+                                ) : (
+                                    <>
+                                        <InteractiveMacrosDisplay
+                                            currentMacro={this.state.currentMacro}
+                                        />
+                                    </>
+                                )
                         }
-                    </Spacer>
+                    </>
                 )}
             />
         );

@@ -5,6 +5,21 @@ interface IAuthoringReactEditorEvents {
         caseSensitive: boolean;
     };
 
+    find_and_replace__request_for_current_selection_index: null;
+
+    find_and_replace__receive_current_selection_index: {
+        selectionIndex: number;
+        editorId: string;
+    };
+
+    find_and_replace__find_distinct: {
+        editorId: string;
+
+        // strings that we want to highlight in the editor
+        matches: Array<string>;
+        caseSensitive: boolean;
+    };
+
     find_and_replace__find_prev: {
         editorId: string;
     };
