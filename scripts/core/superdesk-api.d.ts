@@ -820,6 +820,7 @@ declare module 'superdesk-api' {
         _lock_action?: 'unlock' | 'lock' | 'force-lock'
 
         _lock_session?: string;
+        _lock_expiry?: string;
         _lock_time?: string;
         _lock_user?: IUser['_id'];
     }
