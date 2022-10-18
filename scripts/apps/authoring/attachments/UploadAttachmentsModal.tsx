@@ -139,6 +139,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                             <div className="other-info">
                                                 <div className="form__row">
                                                     <Switch
+                                                        label={{text: gettext('Internal'), hidden: true}}
                                                         value={item.meta.internal}
                                                         onChange={(value) => {
                                                             this.updateItemMeta(index, 'internal', value);
@@ -150,6 +151,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                 <div className="form__row">
                                                     <Input
                                                         label={gettext('Title')}
+                                                        type="text"
                                                         required={true}
                                                         value={item.meta.title}
                                                         onChange={(value) => {
@@ -160,6 +162,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
+                                                        type="text"
                                                         label={gettext('Description')}
                                                         required={true}
                                                         value={item.meta.description}
@@ -171,6 +174,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
+                                                        type="text"
                                                         label={gettext('File Name')}
                                                         required={true}
                                                         value={item.file.name}
@@ -180,6 +184,7 @@ export class UploadAttachmentsModal extends React.PureComponent<IProps, IState> 
                                                 </div>
                                                 <div className="form__row">
                                                     <Input
+                                                        type="text"
                                                         label={gettext('File Size')}
                                                         required={true}
                                                         value={item.file.size.toString()}

@@ -245,7 +245,7 @@ angular.module('superdesk.core.menu', [
                         scope.theme ?
                             body.attr('data-theme', scope.theme) :
                             body.removeAttr('data-theme');
-                    }
+                    };
 
                     scope.toggleMenu = function() {
                         ctrl.flags.menu = !ctrl.flags.menu;

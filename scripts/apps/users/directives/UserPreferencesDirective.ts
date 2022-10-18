@@ -81,15 +81,15 @@ export function UserPreferencesDirective(
 
             scope.goTo = function(id) {
                 document.getElementById(id).scrollIntoView({
-                    behavior: 'smooth'
+                    behavior: 'smooth',
                 });
 
                 scope.activeNavigation = id;
-            }
+            };
 
             scope.checkNavigation = function(id) {
                 return scope.activeNavigation === id;
-            }
+            };
 
             userList.getUser(scope.user._id, true).then((u) => {
                 scope.user = u;

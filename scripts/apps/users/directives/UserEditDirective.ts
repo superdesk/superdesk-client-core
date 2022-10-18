@@ -112,15 +112,15 @@ export function UserEditDirective(api, notify, usersService, userList, session, 
 
             scope.goTo = function(id) {
                 document.getElementById(id).scrollIntoView({
-                    behavior: 'smooth'
+                    behavior: 'smooth',
                 });
 
                 scope.activeNavigation = id;
-            }
+            };
 
             scope.checkNavigation = function(id) {
                 return scope.activeNavigation === id;
-            }
+            };
 
             function validateField(response, field) {
                 if (scope.userForm?.[field]) {
