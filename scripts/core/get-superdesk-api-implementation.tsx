@@ -98,6 +98,7 @@ import {getInlineCommentsWidgetGeneric} from 'apps/authoring-react/generic-widge
 import {getCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/comments';
 import {
     isLockedInOtherSession,
+    isLockedInCurrentSession,
     LockInfo,
 } from 'apps/authoring-react/subcomponents/lock-info-generic';
 
@@ -170,7 +171,7 @@ addEventListener('articleEditEnd', () => {
     delete applicationState['articleInEditMode'];
 });
 
-export function isLockedInCurrentSession(article: IArticle): boolean {
+export function isArticleLockedInCurrentSession(article: IArticle): boolean {
     return ng.get('lock').isLockedInCurrentSession(article);
 }
 
@@ -460,6 +461,7 @@ export function getSuperdeskApiImplementation(
             arrayToTree,
             treeToArray,
             isLockedInOtherSession,
+            isLockedInCurrentSession,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

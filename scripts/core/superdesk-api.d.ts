@@ -2673,6 +2673,7 @@ declare module 'superdesk-api' {
             treeToArray<T>(tree: Array<ITreeNode<T>>): Array<T>;
 
             // generic method - works on all enabled endpoints
+            isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;
             isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean;
         };
         addWebsocketMessageListener<T extends string>(

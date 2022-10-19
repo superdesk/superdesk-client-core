@@ -323,6 +323,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
         const {rundownItemAction} = this.props;
 
+        const closeBtn = (
+            <Button
+                text={gettext('Close')}
+                onClick={() => {
+                    this.close(rundown);
+                }}
+            />
+        );
+
         return (
             <WithValidation validators={rundownValidator}>
                 {(validate, validationErrors) => (
@@ -347,72 +356,86 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                             : (<span />) // needed for spacer
                                     }
 
-                                    {
-                                        this.props.readOnly
-                                            ? (
-                                                <Button
-                                                    text={gettext('Edit')}
-                                                    onClick={noop}
-                                                    type="primary"
-                                                />
-                                            )
-                                            : (
-                                                <Spacer h gap="4" noGrow justifyContent="start">
-                                                    <Button
-                                                        text={gettext('Close')}
-                                                        onClick={() => {
-                                                            this.close(rundown);
-                                                        }}
-                                                    />
+                                    <Spacer h gap="4" noGrow justifyContent="start" noWrap>
+                                        {(() => {
+                                            if (lockedInOtherSession) {
+                                                return closeBtn;
+                                            } else if (this.props.readOnly) {
+                                                return (
+                                                    <React.Fragment>
+                                                        <div>
+                                                            <Button
+                                                                text={gettext('Edit')}
+                                                                onClick={noop}
+                                                                type="primary"
+                                                            />
+                                                        </div>
 
-                                                    <Button
-                                                        text={gettext('Save')}
-                                                        onClick={() => {
-                                                            const valid = validate(rundown);
+                                                        <div>
+                                                            {closeBtn}
+                                                        </div>
+                                                    </React.Fragment>
+                                                );
+                                            } else {
+                                                return (
+                                                    <React.Fragment>
+                                                        <div>
+                                                            <Button
+                                                                text={gettext('Save')}
+                                                                onClick={() => {
+                                                                    const valid = validate(rundown);
 
-                                                            if (valid) {
-                                                                this.save();
-                                                            }
-                                                        }}
-                                                        disabled={
-                                                            isEqual(this.state.rundown, this.state.rundownWithChanges)
-                                                        }
-                                                        type="primary"
-                                                    />
+                                                                    if (valid) {
+                                                                        this.save();
+                                                                    }
+                                                                }}
+                                                                disabled={
+                                                                    isEqual(
+                                                                        this.state.rundown,
+                                                                        this.state.rundownWithChanges,
+                                                                    )
+                                                                }
+                                                                type="primary"
+                                                            />
+                                                        </div>
 
-                                                    <Dropdown
-                                                        items={[
-                                                            {
-                                                                type: 'submenu',
-                                                                label: gettext('Export'),
-                                                                items: this.state.exportOptions.map((exportOption) => ({
-                                                                    label: exportOption.name,
-                                                                    onSelect: () => {
-                                                                        httpRequestJsonLocal<IRundownExportResponse>({
-                                                                            method: 'POST',
-                                                                            path: '/rundown_export',
-                                                                            payload: {
-                                                                                rundown: rundown._id,
-                                                                                format: exportOption._id,
-                                                                            },
-                                                                        }).then((res) => {
-                                                                            downloadFileAttachment(res.href);
-                                                                        });
-                                                                    },
-                                                                })),
-                                                            },
-                                                        ]}
-                                                    >
+                                                        <div>{closeBtn}</div>
+                                                    </React.Fragment>
+                                                );
+                                            }
+                                        })()}
 
-                                                        <IconButton
-                                                            ariaValue={gettext('Actions')}
-                                                            icon="dots-vertical"
-                                                            onClick={noop}
-                                                        />
-                                                    </Dropdown>
-                                                </Spacer>
-                                            )
-                                    }
+                                        <Dropdown
+                                            items={[
+                                                {
+                                                    type: 'submenu',
+                                                    label: gettext('Export'),
+                                                    items: this.state.exportOptions.map((exportOption) => ({
+                                                        label: exportOption.name,
+                                                        onSelect: () => {
+                                                            httpRequestJsonLocal<IRundownExportResponse>({
+                                                                method: 'POST',
+                                                                path: '/rundown_export',
+                                                                payload: {
+                                                                    rundown: rundown._id,
+                                                                    format: exportOption._id,
+                                                                },
+                                                            }).then((res) => {
+                                                                downloadFileAttachment(res.href);
+                                                            });
+                                                        },
+                                                    })),
+                                                },
+                                            ]}
+                                        >
+
+                                            <IconButton
+                                                ariaValue={gettext('Actions')}
+                                                icon="dots-vertical"
+                                                onClick={noop}
+                                            />
+                                        </Dropdown>
+                                    </Spacer>
                                 </Spacer>
                             </SubNav>
                         </Layout.HeaderPanel>

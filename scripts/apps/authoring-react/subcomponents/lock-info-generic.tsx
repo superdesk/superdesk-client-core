@@ -6,6 +6,16 @@ import {gettext} from 'core/utils';
 import {store} from 'core/data';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 
+export function isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean {
+    if (entity._lock !== true) {
+        return false;
+    }
+
+    const currentSessionId = ng.get('session').sessionId;
+
+    return entity._lock_session === currentSessionId;
+}
+
 export function isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean {
     if (entity._lock !== true) {
         return false;

@@ -31,6 +31,7 @@ import {IRundownItemAction} from './shows/rundowns/template-edit';
 
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
+const {isLockedInCurrentSession} = superdesk.utilities;
 
 type IProps = {};
 
@@ -570,7 +571,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                 <RundownViewEdit
                                     rundownId={rundownViewEdit.id}
                                     onClose={(rundown: IRundown) => {
-                                        const doUnlock = rundown._lock === true
+                                        const doUnlock = isLockedInCurrentSession(rundown)
                                             ? httpRequestJsonLocal<IRundown>({
                                                 method: 'PATCH',
                                                 path: `/rundowns/${rundown._id}`,
