@@ -138,10 +138,12 @@
 
             <div ng-if="selected.preview.type === 'audio'">
                 <audio controls="controls" sd-sources data-renditions="selected.preview.renditions"></audio>
+                <p class="nav-space description-text" ng-if="selected.preview.description_text" sd-html-preview="selected.preview.description_text" item="selected.preview"></p>
             </div>
 
             <div ng-if="selected.preview.type === 'video'">
                 <sd-video item="selected.preview"></sd-video>
+                <p class="nav-space description-text" ng-if= "selected.preview.description_text" sd-html-preview="selected.preview.description_text" item="selected.preview"></p>
             </div>
 
             <div class="text abstract" order="{{editor['abstract'].order}}" ng-show="selected.preview.abstract && (selected.preview.type !== 'picture' || !selected.preview.description_text)"
@@ -150,8 +152,6 @@
             <div class="text byline" order="{{editor['byline'].order}}" ng-show="selected.preview.byline" sd-html-preview="selected.preview.byline"></div>
 
             <div class="text dateline" order="{{editor['dateline'].order}}" ng-show="selected.preview.dateline" sd-html-preview="selected.preview.dateline.text"></div>
-
-            <div class="text body-text" order="{{editor['media_description'].order}}" ng-show="selected.preview.description_text" sd-html-preview="selected.preview.description_text" item="selected.preview"></div>
 
             <div class="text body-text" order="{{editor['body_html'].order}}" ng-show="selected.preview.body_html" sd-html-preview="selected.preview.body_html" item="selected.preview"></div>
 
