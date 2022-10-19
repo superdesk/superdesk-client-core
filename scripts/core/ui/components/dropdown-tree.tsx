@@ -89,7 +89,7 @@ export class DropdownTree<T> extends React.PureComponent<IPropsDropdownTree<T>, 
                             }}
                         >
                             <div
-                                className='custom-dropdown__menu'
+                                className="custom-dropdown__menu"
                                 style={{
                                     ...(this.props.wrapperStyles || {}),
                                 }}

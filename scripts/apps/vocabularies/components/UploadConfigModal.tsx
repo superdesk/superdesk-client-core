@@ -77,7 +77,11 @@ export function UploadConfig(updateVocabulary) {
                             {this.state.files.length === 0 ? (
                                 <DropZone
                                     label={dropZoneLabel}
-                                    className={'sd-file-upload__drop-target sd-file-upload__drop-target--height-l sd-margin-t--2'}
+                                    className={[
+                                        'sd-file-upload__drop-target',
+                                        'sd-file-upload__drop-target--height-l',
+                                        'sd-margin-t--2',
+                                    ].join(' ')}
                                     fileAccept="application/json"
                                     onFileSelect={(files) => this.onAddFiles(files)}
                                     canDrop={(event) => {

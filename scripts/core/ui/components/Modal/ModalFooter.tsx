@@ -15,7 +15,7 @@ export class ModalFooter extends React.PureComponent<IModalFooterProps> {
             : {justifyContent: 'flex-end'};
 
         const classes = classNames('modal__footer', {
-            'modal__footer--flex' : flex,
+            'modal__footer--flex': flex,
         });
 
         return (

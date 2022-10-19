@@ -202,7 +202,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
             return (
                 <div className="sd-display--contents">
-                    <ButtonGroup padded={true} align='start'>
+                    <ButtonGroup padded={true} align="start">
                         {options.map(({label, icon, selected, onSelect}) => (
                             <button
                                 key={label}
@@ -307,7 +307,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
                             <ResizeObserverComponent>
                                 {(dimensions) => (
                                     <div className="sliding-toolbar sliding-toolbar--static">
-                                        <div className='sliding-toolbar__inner'>
+                                        <div className="sliding-toolbar__inner">
                                             <Button
                                                 text={gettext('Cancel')}
                                                 onClick={() => {
@@ -363,7 +363,7 @@ export class ArticlesListByQueryWithFilters extends React.PureComponent<IProps, 
 
                                     {
                                         extraButtons == null ? null : (
-                                            <ButtonGroup padded={true} align='end'>
+                                            <ButtonGroup padded={true} align="end">
                                                 {
                                                     extraButtons.map(({label, onClick}) => (
                                                         <Button
