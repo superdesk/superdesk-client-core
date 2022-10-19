@@ -19,7 +19,7 @@ interface IState {
 
 export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState> {
     private eventListenerToRemoveBeforeUnmounting: () => void;
-    private isAwaitingSelectionIndex = false;
+    private isAwaitingSelectionIndex: boolean;
 
     constructor(props: IProps) {
         super(props);
@@ -30,6 +30,11 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
         };
         this.eventListenerToRemoveBeforeUnmounting = () => null;
         this.replaceMatch = this.replaceMatch.bind(this);
+        this.goToNextMatchingValue = this.goToNextMatchingValue.bind(this);
+        this.goToPrevMatchingValue = this.goToPrevMatchingValue.bind(this);
+        this.requestSelectionIndex = this.requestSelectionIndex.bind(this);
+
+        this.isAwaitingSelectionIndex = false;
     }
 
     goToNextMatchingValue() {
@@ -47,21 +52,26 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
         dispatchEditorEvent('find_and_replace__request_for_current_selection_index', null);
     }
 
-    replaceMatch() {
+    replaceMatch(callback) {
         dispatchEditorEvent('find_and_replace__replace', {
             editorId,
             replaceWith: this.state.replaceValue,
             replaceAllMatches: false,
         });
+        setTimeout(callback);
     }
 
     componentDidMount(): void {
         this.eventListenerToRemoveBeforeUnmounting =
             addEditorEventListener('find_and_replace__receive_current_selection_index', (event) => {
+                // we only request selection index when we want to do the replacing
+                // the `if` below also checks if the same class instance requested the replacing
                 if (event.detail.editorId === editorId && this.isAwaitingSelectionIndex) {
                     this.setState({
                         replaceValue: Object.values(this.props.currentMacro.diff).at(event.detail.selectionIndex),
                         replaceTarget: Object.keys(this.props.currentMacro.diff).at(event.detail.selectionIndex),
+                    }, () => {
+                        this.goToNextMatchingValue();
                     });
 
                     this.isAwaitingSelectionIndex = false;
@@ -85,7 +95,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                     <Label
                         style="translucent"
                         size="large"
-                        text={`Number of matches: ${Object.keys(this.props.currentMacro.diff ?? {}).length}`}
+                        text={`Number of matches: ${Object.keys(this.props.currentMacro.diff).length}`}
                     />
                 </Spacer>
                 {
@@ -108,14 +118,11 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                             <Button
                                 text={gettext('Replace')}
                                 onClick={() => {
-                                    this.replaceMatch();
-                                    setTimeout(() => {
-                                        highlightDistinctMatches(this.props.currentMacro.diff);
-                                    });
+                                    this.replaceMatch(highlightDistinctMatches(this.props.currentMacro.diff));
                                 }}
                             />
                         </Spacer>
-                        {this.state.replaceTarget && (
+                        {this.state.replaceTarget != null && (
                             <Spacer h gap="8" noGrow justifyContent="start">
                                 <Label size="large" text={this.state.replaceTarget} />
                                 <Icon name="arrow-right" />

@@ -48,6 +48,34 @@ interface IMacroGroup {
     groupName: string;
 }
 
+function getGroupedOrdered(macros: Array<IMacro>): Array<IMacroGroup> {
+    const groupedOrdered: Array<IMacroGroup> = [];
+
+    groupedOrdered.push({
+        groupName: gettext('Quick List'),
+        initiallyOpen: true,
+        macros: macros.filter((m) => m.order != null),
+    });
+    const groupedMacros = groupBy(macros.filter((m) => m.group != null), nameof<IMacro>('group'));
+
+    Object.keys(groupedMacros).forEach((groupName) => {
+        groupedOrdered.push({
+            groupName: groupName,
+            initiallyOpen: false,
+            macros: groupedMacros[groupName].sort((a, b) => a.label.localeCompare(b.label)),
+        });
+    });
+    groupedOrdered.push({
+        groupName: gettext('Miscellaneous'),
+        initiallyOpen: false,
+        macros: macros
+            .filter((m) => m.group == null)
+            .sort((a, b) => a.label.localeCompare(b.label)),
+    });
+
+    return groupedOrdered;
+}
+
 function getAllMacros(): Promise<IRestApiResponse<IMacro>> {
     return httpRequestJsonLocal<IRestApiResponse<IMacro>>({
         method: 'GET',
@@ -117,8 +145,8 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
         });
     }
 
-    runMacro(macro: IMacro) {
-        return httpRequestJsonLocal({
+    runMacro(macro: IMacro): void {
+        httpRequestJsonLocal({
             method: 'POST',
             path: '/macros',
             payload: {
@@ -135,8 +163,8 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
         });
     }
 
-    runInteractiveMacro(macro: IMacro) {
-        return httpRequestJsonLocal({
+    runInteractiveMacro(macro: IMacro): void {
+        httpRequestJsonLocal({
             method: 'POST',
             path: '/macros',
             payload: {
@@ -152,32 +180,6 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
     render() {
         if (this.state.macros == null) {
             return null;
-        }
-
-        const groupedOrdered: Array<IMacroGroup> = [];
-
-        if (this.state.displayGrouped !== 'not-supported') {
-            groupedOrdered.push({
-                groupName: gettext('Quick List'),
-                initiallyOpen: true,
-                macros: this.state.macros.filter((m) => m.order != null),
-            });
-            const groupedMacros = groupBy(this.state.macros.filter((m) => m.group != null), nameof<IMacro>('group'));
-
-            Object.entries(groupedMacros).forEach(([groupName, _]) => {
-                groupedOrdered.push({
-                    groupName: groupName,
-                    initiallyOpen: false,
-                    macros: groupedMacros[groupName].sort((a, b) => a.label.localeCompare(b.label)),
-                });
-            });
-            groupedOrdered.push({
-                groupName: gettext('Miscellaneous'),
-                initiallyOpen: false,
-                macros: this.state.macros
-                    .filter((m) => m.group == null)
-                    .sort((a, b) => a.label.localeCompare(b.label)),
-            });
         }
 
         const RunMacroButton: React.ComponentType<{macro: IMacro}> = ({macro}) => {
@@ -196,6 +198,8 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                 </div>
             );
         };
+
+        const groupedOrdered = this.state.displayGrouped !== 'not-supported' ? getGroupedOrdered(this.state.macros) : [];
 
         return (
             <AuthoringWidgetLayout
@@ -246,13 +250,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                                             ))
                                         }
                                     </>
-                                ) : (
-                                    <>
-                                        <InteractiveMacrosDisplay
-                                            currentMacro={this.state.currentMacro}
-                                        />
-                                    </>
-                                )
+                                ) : (<InteractiveMacrosDisplay currentMacro={this.state.currentMacro} />)
                         }
                     </>
                 )}
