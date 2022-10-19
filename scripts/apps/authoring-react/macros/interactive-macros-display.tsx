@@ -52,7 +52,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
         dispatchEditorEvent('find_and_replace__request_for_current_selection_index', null);
     }
 
-    replaceMatch(callback) {
+    replaceMatch(callback: () => void) {
         dispatchEditorEvent('find_and_replace__replace', {
             editorId,
             replaceWith: this.state.replaceValue,
@@ -118,7 +118,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                             <Button
                                 text={gettext('Replace')}
                                 onClick={() => {
-                                    this.replaceMatch(highlightDistinctMatches(this.props.currentMacro.diff));
+                                    this.replaceMatch(() => highlightDistinctMatches(this.props.currentMacro.diff));
                                 }}
                             />
                         </Spacer>
