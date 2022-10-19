@@ -81,6 +81,53 @@ declare module 'superdesk-api' {
         component: React.ComponentType<{article: IArticle}>;
     }
 
+    export interface IIngestRule<ExtraAttributes = {}> {
+        name: string;
+        handler: string;
+        filter?: any;
+        actions: A & {
+            fetch?: Array<F>;
+            publish?: Array<P>;
+            exit?: boolean;
+            preserve_desk?: boolean;
+            extra?: ExtraAttributes;
+        };
+        schedule?: {
+            day_of_week: Array<'MON' | 'TUE' | 'WED' | 'THU' | 'FRI' | 'SAT' | 'SUN'>;
+            hour_of_day_from?: string;
+            hour_of_day_to?: string;
+            time_zone?: string;
+            _allDay: boolean;
+        };
+    }
+
+    export interface IIngestRuleHandler extends IBaseRestApiResponse {
+        name: string;
+        supported_actions: {
+            fetch_to_desk: boolean;
+            publish_from_desk: boolean;
+        };
+        supported_configs: {
+            exit: boolean;
+            preserve_desk: boolean;
+        };
+        default_values: IIngestRule;
+    }
+
+    export interface IIngestRuleHandlerEditorProps<ExtraAttributes = {}> {
+        rule: IIngestRule<ExtraAttributes>;
+        updateRule(rule: IIngestRule<ExtraAttributes>): void;
+    }
+
+    export interface IIngestRuleHandlerPreviewProps<ExtraAttributes = {}> {
+        rule: IIngestRule<ExtraAttributes>;
+    }
+
+    export interface IIngestRuleHandlerExtension {
+        editor?: React.ComponentType<IIngestRuleHandlerEditorProps>;
+        preview?: React.ComponentType<IIngestRuleHandlerPreviewProps>;
+    }
+
     export interface IExtensionActivationResult {
         contributions?: {
             globalMenuHorizontal?: Array<React.ComponentType>;
@@ -113,6 +160,9 @@ declare module 'superdesk-api' {
                     onPublish?(item: IArticle): Promise<onPublishMiddlewareResult>;
                     onRewriteAfter?(item: IArticle): Promise<IArticle>;
                     onSendBefore?(items: Array<IArticle>, desk: IDesk): Promise<void>;
+                };
+                ingest?: {
+                    ruleHandlers?: {[key: string]: IIngestRuleHandlerExtension};
                 };
             };
             iptcMapping?(data: Partial<IPTCMetadata>, item: Partial<IArticle>, parent?: IArticle): Promise<Partial<IArticle>>;
@@ -377,7 +427,12 @@ declare module 'superdesk-api' {
         lines_count?: number;
         version_creator: string;
         state: ITEM_STATE;
-        embargo?: any;
+        /** Internal embargoed datetime. */
+        embargo?: string;
+        /** Ingested embargoed datetime. */
+        embargoed?: string;
+        /** Ingested embargoed info. */
+        embargoed_text?: string;
         signal?: Array<{
             name?: string;
             qcode: string;
@@ -1025,6 +1080,7 @@ declare module 'superdesk-api' {
         noPadding?: boolean;
         justifyContent?: string;
         bold?: boolean;
+        title?: string;
     }
 
     export interface IPropsListItemRow {
@@ -1721,7 +1777,7 @@ declare module 'superdesk-api' {
             GroupLabel: React.ComponentType<ISpacingProps>;
             Icon: React.ComponentType<IPropsIcon>;
             IconBig: React.ComponentType<IPropsIconBig>;
-            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string;}>;
+            TopMenuDropdownButton: React.ComponentType<{onClick: () => void; disabled?: boolean; active: boolean; pulsate?: boolean; 'data-test-id'?: string; tooltip?:string}>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;
             WithLiveResources: React.ComponentType<ILiveResourcesProps>;

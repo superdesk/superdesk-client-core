@@ -38,12 +38,13 @@ function getItemsCount(items: Array<any>): number {
         .length;
 }
 
-function isOrderChanged(items: Array<any>, prevItems: Array<any>): boolean {
+function isOrderOrItemsChanged(items: Array<any>, prevItems: Array<any>): boolean {
     return !!items.filter((_item, index) => {
         const fieldId = _item.fieldId;
 
         return items[index][fieldId] != null && prevItems[index][fieldId] != null
-        && items[index][fieldId].order !== prevItems[index][fieldId].order;
+        && (items[index][fieldId]._id !== prevItems[index][fieldId]._id
+            || items[index][fieldId].order !== prevItems[index][fieldId].order);
     }).length;
 }
 
@@ -152,7 +153,7 @@ export function ItemCarouselDirective(notify) {
             scope.$watchCollection('items', (items: Array<any>) => {
                 // Don't execute if there are no items or their length is same as before and their order is unchanged
                 if (items == null || previousItems && getItemsCount(items) === getItemsCount(previousItems)
-                    && !isOrderChanged(items, previousItems)) {
+                    && !isOrderOrItemsChanged(items, previousItems)) {
                     return false;
                 }
 

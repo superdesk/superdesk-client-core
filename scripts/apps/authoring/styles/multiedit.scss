@@ -20,9 +20,7 @@ $top-offset: 48px;
 }
 
 .multiedit-screen {
-    &.main-section {
-        top: $top-offset * 2;
-    }
+
     .boards-list {
         position: absolute;
         top: 0;
@@ -117,6 +115,11 @@ $top-offset: 48px;
                     }
                 }
             }
+            .multiedit-screen__selection {
+                position: absolute;
+                top: 0;
+                opacity: 1;
+            }
             &:hover {
                 .multiedit-screen__selection {
                     opacity: 1;
@@ -151,4 +154,8 @@ $top-offset: 48px;
 
 .subnav--multiedit-screen {
     top: 0;
+}
+
+#workspace-container .main-article .owl-stage-outer.owl-height{
+    width: 577px  !important;
 }

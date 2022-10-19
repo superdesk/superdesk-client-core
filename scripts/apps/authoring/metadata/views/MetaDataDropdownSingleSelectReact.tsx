@@ -1,6 +1,6 @@
 import React from 'react';
 import {IVocabularyItem} from 'superdesk-api';
-import {getVocabularyItemNameTranslated} from 'core/utils';
+import {gettext, getVocabularyItemNameTranslated} from 'core/utils';
 
 interface IProps {
     selectedItemLabel: string;
@@ -35,6 +35,7 @@ export class MetaDataDropdownSingleSelectReact extends React.PureComponent<IProp
                     tabIndex={tabIndex}
                     className="sd-line-input__select"
                 >
+                    <option value="" disabled selected hidden>{gettext('-- Choose --')}</option>
                     {
                         optionsWithTranslations.map(({label, value}) => (
                             <option key={value} value={value}>{label}</option>

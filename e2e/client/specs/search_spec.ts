@@ -7,6 +7,7 @@ import {globalSearch} from './helpers/search';
 import {content} from './helpers/content';
 import {authoring} from './helpers/authoring';
 import {nav, scrollToView} from './helpers/utils';
+import {ECE} from '@superdesk/end-to-end-testing-helpers';
 
 describe('search', () => {
     beforeEach(() => {
@@ -14,7 +15,7 @@ describe('search', () => {
     });
 
     it('can search by search field', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.searchInput.click();
         globalSearch.searchInput.clear();
         globalSearch.searchInput.sendKeys('item3');
@@ -22,12 +23,12 @@ describe('search', () => {
 
         expect(globalSearch.searchInput.getAttribute('id')).toEqual(focused);
         element(by.id('search-button')).click();
-        expect(globalSearch.getItems().count()).toBe(3);
+        globalSearch.waitForItemCount(3);
         globalSearch.openFilterPanel();
         globalSearch.clickClearFilters();
 
         // can navigate/filter subject field and search by selected subject term
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.toggleSearchTabs('parameters');
         globalSearch.toggleSubjectMetadata(); // opens subject drop-down
         browser.sleep(100);
@@ -38,80 +39,80 @@ describe('search', () => {
         browser.sleep(200);
         globalSearch.goButton.click();
         // expect selected term in filter pane
-        expect(globalSearch.getSelectedSubjectsInFilter().count()).toBe(1);
+        browser.wait(ECE.hasElementCount(globalSearch.getSelectedSubjectsInFilter(), 1), 2000);
         // expect selected term in tag list, at top of search list
-        expect(globalSearch.getSelectedTags().count()).toBe(1);
+        browser.wait(ECE.hasElementCount(globalSearch.getSelectedTags(), 1), 2000);
         // expect some search result returned
         expect(globalSearch.getItems().count()).toBeGreaterThan(0);
         globalSearch.clickClearFilters();
 
         // can search by priority field
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.toggleSearchTabs('filters');
-        expect(globalSearch.getPriorityElements().count()).toBe(3);
+        browser.wait(ECE.hasElementCount(globalSearch.getPriorityElements(), 3), 2000);
         var priority = globalSearch.getPriorityElementByIndex(0);
 
         priority.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         globalSearch.clickClearFilters();
 
         // can search by byline field
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.openParameters();
         var bylineTextbox = element(by.id('search-byline'));
 
         bylineTextbox.clear();
         bylineTextbox.sendKeys('Billy The Fish');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         globalSearch.clickClearFilters();
 
         // can search by slugline
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.openParameters();
         bylineTextbox = element(by.id('search-slugline'));
         bylineTextbox.clear();
         bylineTextbox.sendKeys('one/two');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         globalSearch.clickClearFilters();
 
         // can search by slugline with parenthesis and clear by tag
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.openParameters();
         bylineTextbox = element(by.id('search-slugline'));
         bylineTextbox.clear();
         bylineTextbox.sendKeys('(one/two)');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         expect(element.all(by.repeater('parameter in tags.selectedParameters')).count()).toBe(1);
         element(by.css('.tag-label__remove')).click();
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
 
         // can search by original creator
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.openParameters();
         globalSearch.selectCreator('search-creator', 'first name last name');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(12);
+        globalSearch.waitForItemCount(12);
         globalSearch.clickClearFilters();
 
         // can search by ingest provider
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.openParameters();
         globalSearch.selectProvider('search-ingest-provider', 'aap');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         globalSearch.clickClearFilters();
 
         // can search by genre field
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.toggleSearchTabs('filters');
         expect(globalSearch.getGenreElements().count()).toBe(2);
         var genre = globalSearch.getGenreElementByIndex(0);
 
         genre.click();
-        expect(globalSearch.getItems().count()).toBe(12);
+        globalSearch.waitForItemCount(12);
         globalSearch.clickClearFilters();
 
         // initialize for search by from desk field and company
@@ -130,24 +131,24 @@ describe('search', () => {
         // search by from desk field
         globalSearch.openGlobalSearch();
         globalSearch.setListView();
-        expect(globalSearch.getItems().count()).toBe(17);
+        globalSearch.waitForItemCount(17);
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
         globalSearch.selectDesk('from-desk', 'Sports Desk');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         expect(globalSearch.getHeadlineElement(0).getText()).toBe('From-Sports-To-Politics');
         globalSearch.selectDesk('to-desk', 'Politic Desk');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         expect(globalSearch.getHeadlineElement(0).getText()).toBe('From-Sports-To-Politics');
         globalSearch.selectDesk('from-desk', '');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         expect(globalSearch.getHeadlineElement(0).getText()).toBe('From-Sports-To-Politics');
         globalSearch.selectDesk('to-desk', '');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(17);
+        globalSearch.waitForItemCount(17);
     });
 
     it('can dynamically update items in related tab when item duplicated', () => {
@@ -166,14 +167,11 @@ describe('search', () => {
     it('can search with different repos', () => {
         globalSearch.openParameters();
         globalSearch.ingestRepo.click();
-        browser.sleep(200);
-        expect(globalSearch.getItems().count()).toBe(15);
+        globalSearch.waitForItemCount(15);
         globalSearch.archiveRepo.click();
-        browser.sleep(200);
-        expect(globalSearch.getItems().count()).toBe(3);
+        globalSearch.waitForItemCount(3);
         globalSearch.archivedRepo.click();
-        browser.sleep(200);
-        expect(globalSearch.getItems().count()).toBe(0);
+        globalSearch.waitForItemCount(0);
 
         // can do a boolean search in the raw panel
         globalSearch.clickClearFilters();
@@ -185,27 +183,26 @@ describe('search', () => {
         rawTextbox.clear();
         rawTextbox.sendKeys('type:text AND (item1 OR item4)');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(3);
+        globalSearch.waitForItemCount(3);
         globalSearch.closeFilterPanel();
 
         // search spiked content
         globalSearch.openGlobalSearch();
         globalSearch.setListView();
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         content.actionOnItem('Spike Item', 2, null, true);
         content.actionOnItem('Spike Item', 1, null, true);
         content.actionOnItem('Spike Item', 0, null, true);
-        browser.sleep(200);
-        expect(globalSearch.getItems().count()).toBe(13);
+        globalSearch.waitForItemCount(13);
         globalSearch.openFilterPanel();
         globalSearch.openParameters();
         globalSearch.selectDesk('spike-options', 'Include spiked content');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         expect(globalSearch.getSelectedTags().count()).toBe(1);
         globalSearch.selectDesk('spike-options', 'Spiked only content');
         globalSearch.goButton.click();
-        expect(globalSearch.getItems().count()).toBe(3);
+        globalSearch.waitForItemCount(3);
         expect(globalSearch.getSelectedTags().count()).toBe(1);
     });
 
@@ -293,7 +290,7 @@ describe('search', () => {
     });
 
     it('can search scheduled', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.actionOnItem('Edit', 'item9');
         authoring.schedule(false);
         globalSearch.openFilterPanel();
@@ -310,27 +307,26 @@ describe('search', () => {
         scrollToView(dateScheduled);
         dateScheduled.click();
 
-        expect(globalSearch.getItems().count()).toBe(1);
+        globalSearch.waitForItemCount(1);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).isDisplayed()).toBe(true);
         expect(globalSearch.getItem(0).element(by.className('state-scheduled')).getText()).toEqual('SCHEDULED');
         expect(element.all(by.repeater('key in keys')).count()).toBe(1);
         element(by.css('.tag-label__remove')).click();
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
     });
 
     it('can search by facet and exclude facet', () => {
-        expect(globalSearch.getItems().count()).toBe(16);
+        globalSearch.waitForItemCount(16);
         globalSearch.openFilterPanel();
         globalSearch.toggleSearchTabs('filters');
-        browser.sleep(200);
-        expect(globalSearch.getDeskElements().count()).toBe(2);
+        browser.wait(ECE.hasElementCount(globalSearch.getDeskElements(), 2), 2000);
         globalSearch.excludeDeskFacet(0);
-        expect(globalSearch.getDeskElements().count()).toBe(1);
-        expect(globalSearch.getItems().count()).toBe(8);
-        expect(globalSearch.getExcludedFacetTags().count()).toBe(1);
+        browser.wait(ECE.hasElementCount(globalSearch.getDeskElements(), 1), 2000);
+        globalSearch.waitForItemCount(8);
+        browser.wait(ECE.hasElementCount(globalSearch.getExcludedFacetTags(), 1), 2000);
         globalSearch.deleteExcludedFacetTagByIndex(0);
-        expect(globalSearch.getExcludedFacetTags().count()).toBe(0);
-        expect(globalSearch.getDeskElements().count()).toBe(2);
-        expect(globalSearch.getItems().count()).toBe(16);
+        browser.wait(ECE.hasElementCount(globalSearch.getExcludedFacetTags(), 0), 2000);
+        browser.wait(ECE.hasElementCount(globalSearch.getDeskElements(), 2), 2000);
+        globalSearch.waitForItemCount(16);
     });
 });

@@ -4,7 +4,11 @@ import {gettext} from 'core/utils';
 IngestRoutingAction.$inject = ['desks', 'macros', 'subscribersService', 'metadata'];
 export function IngestRoutingAction(desks, macros, subscribersService, metadata) {
     return {
-        scope: {rule: '='},
+        scope: {
+            rule: '=',
+            ruleHandler: '=',
+            updateRule: '=',
+        },
         templateUrl: 'scripts/apps/ingest/views/settings/ingest-routing-action.html',
         link: function(scope) {
             scope.newFetch = {};

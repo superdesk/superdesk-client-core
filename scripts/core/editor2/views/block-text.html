@@ -12,9 +12,10 @@
         data-append-element=".field"
         data-append-class="active"
         placeholder="{{ ::'Add content here' | translate }}"
-        ng-show="!readOnly && type=='text' || !type"
+        ng-show="type == 'text' || !type"
         spellcheck="false">
     </div>
+
     <code class="text-editor-info" ng-if="!readOnly && cursor.line && type == 'preformatted'">
         <small translate>Line: {{cursor.line}}, Column: {{cursor.column}}</small>
     </code>

@@ -1281,6 +1281,12 @@ $lightbox-composite-condensed : 100px;
             white-space: nowrap;
             @include text-overflow();
         }
+        .tag-main{
+            display: inline;
+        }
+}
+.preview-header .preview-header__flex-row div span:first-child br{
+    display: none;
 }
 
 // Preview image overlay

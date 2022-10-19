@@ -6,7 +6,7 @@ import {IAssetItem, IAssetCallback} from '../../interfaces';
 import {superdeskApi} from '../../apis';
 
 // UI
-import {Icon, Dropdown, IconButton} from 'superdesk-ui-framework/react';
+import {Icon, IconButton, Menu} from 'superdesk-ui-framework/react';
 import {GridItem} from '../../ui/grid/GridItem';
 import {GridItemFooter} from '../../ui/grid/GridItemFooter';
 import {GridItemFooterBlock} from '../../ui/grid/GridItemFooterBlock';
@@ -58,7 +58,14 @@ export class AssetGridItem extends React.PureComponent<IProps> {
         }
     }
 
-    onItemClick() {
+    onItemClick(event: React.MouseEvent) {
+        const {querySelectorParent} = superdeskApi.utilities;
+
+        // Don't trigger preview if click went to a three dot menu or other button inside the grid item
+        if (querySelectorParent(event.target as HTMLElement, 'button', {self: true})) {
+            return;
+        }
+
         this.props.onClick(this.props.asset);
     }
 
@@ -162,28 +169,19 @@ export class AssetGridItem extends React.PureComponent<IProps> {
                         </GridItemFooterBlock>
                     )}
                     {actions.length === 0 ? null : (
-                        <GridItemFooterBlock singleR={true}>
-                            <div className="sd-grid-item__actions" onClick={this.stopClickPropagation}>
-                                <Dropdown
-                                    align = "right"
-                                    append = {true}
-                                    items={[{
-                                        type: 'group',
-                                        label: gettext('Actions'),
-                                        items: [
-                                            'divider',
-                                            ...actions,
-                                        ],
-                                    }]}
-                                >
-                                    <IconButton
-                                        ariaValue="dropdown-more-options"
-                                        icon="dots-vertical"
-                                        onClick={() => false}
-                                    />
-                                </Dropdown>
-                            </div>
-                        </GridItemFooterBlock>
+                        <Menu items={actions}>
+                            {(toggle) => (
+                                <GridItemFooterBlock singleR={true}>
+                                    <div className="sd-grid-item__actions" onClick={this.stopClickPropagation}>
+                                        <IconButton
+                                            ariaValue="dropdown-more-options"
+                                            icon="dots-vertical"
+                                            onClick={toggle}
+                                        />
+                                    </div>
+                                </GridItemFooterBlock>
+                            )}
+                        </Menu>
                     )}
                 </GridItemFooter>
                 <div className="sd-grid-item__state-border" />

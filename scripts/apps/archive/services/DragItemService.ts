@@ -37,23 +37,29 @@ export function DragItemService() {
      */
     this.start = function(event, item) {
         const dt = event.dataTransfer || event.originalEvent.dataTransfer;
+        const mimetypes = ['application/superdesk.item.' + item.type];
 
         // search providers can specify custom mimetype
-        // which we use for filtering on drop
-        const mimetype = item.mimetype && item.mimetype.includes('application') ?
-            item.mimetype : 'application/superdesk.item.' + item.type;
+        // which we use for filtering on drop event
+        if (item.mimetype && item.mimetype.includes('application')) {
+            mimetypes.push(item.mimetype);
+        }
 
-        dt.setData(mimetype, angular.toJson(item));
+        mimetypes.forEach((mimetype) => {
+            dt.setData(mimetype, angular.toJson(item));
+        });
+
         dt.effectAllowed = 'link';
 
-        if (item.renditions && item.renditions.thumbnail) {
-            const img = document.createElement('img');
-            const div = getThumbnailPlaceholder();
-            const rendition = item.renditions.thumbnail;
+        // DOESN'T WORK ON CHROME 106
+        // if (item.renditions && item.renditions.thumbnail) {
+        //     const img = document.createElement('img');
+        //     const div = getThumbnailPlaceholder();
+        //     const rendition = item.renditions.thumbnail;
 
-            img.src = rendition.href;
-            div.appendChild(img);
-            dt.setDragImage(div, 5, 5);
-        }
+        //     img.src = rendition.href;
+        //     div.appendChild(img);
+        //     dt.setDragImage(div, 5, 5);
+        // }
     };
 }

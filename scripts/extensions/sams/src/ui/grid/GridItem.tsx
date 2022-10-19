@@ -3,7 +3,7 @@ import classNames from 'classnames';
 
 interface IProps {
     children: React.ReactNode;
-    onClick?(): void;
+    onClick?(e: React.MouseEvent): void;
     onDoubleClick?(): void;
     selected?: boolean;
     locked?: boolean;
@@ -19,17 +19,20 @@ export class GridItem extends React.PureComponent<IProps> {
         this.handleClicks = this.handleClicks.bind(this);
     }
 
-    handleClicks() {
+    handleClicks(event: React.MouseEvent) {
         if (this.props.onDoubleClick == null) {
-            this.props.onClick!();
+            this.props.onClick!(event);
             return;
         }
 
         this.clickCount++;
         if (this.clickCount === 1) {
+            // Tell React to keep this `event` item around for processing
+            // inside the `window.setTimeout` callback function
+            event.persist();
             this.singleClickTimer = window.setTimeout(() => {
                 this.clickCount = 0;
-                this.props.onClick!();
+                this.props.onClick!(event);
             }, 300);
         } else if (this.clickCount === 2) {
             window.clearTimeout(this.singleClickTimer);
