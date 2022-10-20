@@ -569,6 +569,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                         {
                             rundownViewEdit != null && (
                                 <RundownViewEdit
+                                    key={rundownViewEdit.id + rundownViewEdit.mode}
                                     rundownId={rundownViewEdit.id}
                                     onClose={(rundown: IRundown) => {
                                         const doUnlock = isLockedInCurrentSession(rundown)
@@ -596,6 +597,15 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                     rundownItemAction={this.state.rundownItemAction}
                                     onRundownActionChange={(rundownItemAction) => {
                                         this.setState({rundownItemAction});
+                                    }}
+                                    switchToEditMode={() => {
+                                        this.setState({
+                                            ...this.state,
+                                            rundownViewEdit: {
+                                                ...rundownViewEdit,
+                                                mode: 'edit',
+                                            },
+                                        });
                                     }}
                                 />
                             )

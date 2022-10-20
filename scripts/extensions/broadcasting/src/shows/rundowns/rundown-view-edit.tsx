@@ -20,6 +20,7 @@ interface IProps {
     onRundownActionChange(action: ICreate | IEdit | IPreview | null): void;
     readOnly: boolean;
     onClose(rundown: IRundown): void;
+    switchToEditMode(): void;
 }
 
 interface IState {
@@ -376,7 +377,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         <div>
                                                             <Button
                                                                 text={gettext('Edit')}
-                                                                onClick={noop}
+                                                                onClick={() => {
+                                                                    this.props.switchToEditMode();
+                                                                }}
                                                                 type="primary"
                                                             />
                                                         </div>
