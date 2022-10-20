@@ -61,20 +61,20 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                 start: (
                     <Spacer h gap="4" justifyContent="start" noGrow>
                         {
-                            showPart != null && (
+                            itemType != null && (
                                 <Label
-                                    text={showPart.name}
-                                    hexColor={showPart.color}
+                                    text={itemType.name}
+                                    hexColor={itemType.color}
                                     size="normal"
                                 />
                             )
                         }
 
                         {
-                            itemType != null && (
+                            showPart != null && (
                                 <Label
-                                    text={itemType.name}
-                                    hexColor={itemType.color}
+                                    text={showPart.name}
+                                    hexColor={showPart.color}
                                     size="normal"
                                 />
                             )
