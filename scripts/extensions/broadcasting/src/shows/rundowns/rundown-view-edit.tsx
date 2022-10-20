@@ -33,7 +33,7 @@ import {superdesk} from '../../superdesk';
 import {ManageRundownItems} from './manage-rundown-items';
 import {ICreate, IEdit, IPreview} from './template-edit';
 import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
-import {CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
+import {arrayInsertAtIndex, CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
 import {stringNotEmpty} from '../../form-validation';
 import {isEqual, noop} from 'lodash';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
@@ -179,7 +179,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         }
     }
 
-    initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
+    initiateCreation(
+        initialData: Partial<IRundownItemBase>,
+        insertAtIndex?: number,
+        skipUnsavedChangesCheck?: boolean,
+    ) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
             this.props.onRundownActionChange(
                 prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
@@ -199,11 +203,17 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                             path: '/rundown_items',
                             payload: prepareRundownItemForSaving(itemWithDuration),
                         }).then((res) => {
+                            const currentItems = rundown.items ?? [];
+
                             return httpRequestJsonLocal<IRundown>({
                                 method: 'PATCH',
                                 path: `/rundowns/${this.props.rundownId}`,
                                 payload: {
-                                    items: (rundown.items ?? []).concat({_id: res._id}),
+                                    items: arrayInsertAtIndex(
+                                        currentItems,
+                                        {_id: res._id},
+                                        insertAtIndex ?? currentItems.length,
+                                    ),
                                 },
                                 headers: {
                                     'If-Match': rundown._etag,
@@ -488,7 +498,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     rundown={rundown}
                                                     readOnly={editingDisallowed}
                                                     items={computeStartEndTime(rundown.airtime_time, rundownItems)}
-                                                    initiateCreation={this.initiateCreation}
+                                                    initiateCreation={(initialData, insertAtIndex) => {
+                                                        this.initiateCreation(initialData, insertAtIndex);
+                                                    }}
                                                     initiateEditing={this.initiateEditing}
                                                     initiatePreview={this.initiatePreview}
                                                     onChange={(val) => {

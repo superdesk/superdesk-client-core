@@ -28,7 +28,7 @@ interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
     onDrag(start: number, end: number): void;
     dragAndDrop: boolean;
     addItem: boolean;
-    itemsDropdown: Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
+    itemsDropdown: (index?: number) => Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
     getActions(item: T): JSX.Element | undefined;
 }
 

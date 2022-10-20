@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Dropdown, IconButton, IconLabel, TableList} from 'superdesk-ui-framework/react';
+import {Dropdown, IconButton, IconLabel} from 'superdesk-ui-framework/react';
 import {IRundown, IRundownItem, IRundownItemBase} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
@@ -9,7 +9,7 @@ import {IVocabularyItem} from 'superdesk-api';
 import {addSeconds, arrayMove} from '@superdesk/common';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
-import {IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
+import {IMenuGroup, IMenuItem, ISubmenu} from 'superdesk-ui-framework/react/components/Dropdown';
 import {noop} from 'lodash';
 import {RundownItems} from './components/rundown-items';
 const {vocabulary} = superdesk.entities;
@@ -22,7 +22,7 @@ interface IProps<T extends IRundownItemBase | IRundownItem> {
     items: Array<T>;
     onChange(items: Array<T>): void;
     onDelete(item: T): void;
-    initiateCreation(initialData: Partial<IRundownItemBase>): void;
+    initiateCreation(initialData: Partial<IRundownItemBase>, insertAtIndex?: number): void;
     initiateEditing(item: T): void;
     initiatePreview(item: T): void;
     readOnly: boolean;
@@ -136,16 +136,20 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             </Dropdown>
                         );
                     })}
-                    itemsDropdown={(() => {
-                        type IDropdownItems = React.ComponentProps<typeof TableList>['itemsDropdown'];
+                    itemsDropdown={((insertAfterIndex?: number) => {
+                        const insertAtIndex: number | undefined =
+                            insertAfterIndex == null ? undefined : insertAfterIndex + 1;
+
+                        type IDropdownItems = Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
 
                         const result: IDropdownItems = rundownItemTypes.toArray()
                             .map((rundownType) => ({
                                 label: rundownType.name,
                                 onSelect: () => {
-                                    this.props.initiateCreation({
-                                        item_type: rundownType.qcode,
-                                    });
+                                    this.props.initiateCreation(
+                                        {item_type: rundownType.qcode},
+                                        insertAtIndex,
+                                    );
                                 },
                             }));
 
@@ -156,12 +160,12 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         result.push({
                             label: gettext('(empty)'),
                             onSelect: () => {
-                                this.props.initiateCreation({});
+                                this.props.initiateCreation({}, insertAtIndex);
                             },
                         });
 
                         return result;
-                    })()}
+                    })}
                     onDrag={(oldIndex, newIndex) => {
                         if (this.props.readOnly !== true) {
                             this.props.onChange(

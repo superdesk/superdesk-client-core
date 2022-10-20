@@ -11,7 +11,7 @@ import {
     ButtonGroup,
     Checkbox,
 } from 'superdesk-ui-framework/react';
-import {CreateValidators, WithValidation} from '@superdesk/common';
+import {arrayInsertAtIndex, CreateValidators, WithValidation} from '@superdesk/common';
 import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {superdesk} from '../../superdesk';
 import {stringNotEmpty} from '../../form-validation';
@@ -129,7 +129,11 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
         }
     }
 
-    private initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
+    private initiateCreation(
+        initialData: Partial<IRundownItemBase>,
+        insertAtIndex?: number,
+        skipUnsavedChangesCheck?: boolean,
+    ) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
             this.props.onRundownItemActionChange(
                 prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
@@ -139,10 +143,13 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                             duration: val.data.planned_duration,
                         };
 
+                        const currentItems = this.getRundownItems();
+
                         this.props.onChange({
-                            items: this.getRundownItems().concat(
-                                // validated in authoring view using content profile
+                            items: arrayInsertAtIndex(
+                                currentItems,
                                 itemWithDuration as unknown as IRundownItemBase,
+                                insertAtIndex ?? currentItems.length,
                             ),
                         });
                     }
@@ -440,7 +447,12 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                                     rundownItems,
                                                                 )
                                                             }
-                                                            initiateCreation={this.initiateCreation}
+                                                            initiateCreation={(initialData, insertAtIndex) => {
+                                                                this.initiateCreation(
+                                                                    initialData,
+                                                                    insertAtIndex,
+                                                                );
+                                                            }}
                                                             initiateEditing={this.initiateEditing}
                                                             initiatePreview={this.initiatePreview}
                                                             onChange={(val) => {
