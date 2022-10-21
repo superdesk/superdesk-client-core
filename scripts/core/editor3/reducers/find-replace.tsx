@@ -15,6 +15,8 @@ const findReplace = (state = {}, action) => {
         return findPrev(state);
     case 'HIGHLIGHTS_REPLACE':
         return replaceHighlight(state, action.payload);
+    case 'HIGHLIGHTS_REPLACE_MULTIPLE':
+        return replaceMultipleHighlights(state, action.payload);
     case 'HIGHLIGHTS_REPLACE_ALL':
         return replaceHighlight(state, action.payload, true);
     case 'HIGHLIGHTS_RENDER':
@@ -34,8 +36,8 @@ const findReplace = (state = {}, action) => {
  * only the current one.
  * @description Replaces highlights with the given text.
  */
-const replaceHighlight = (state, txt, all = false) => {
-    const {index, pattern, caseSensitive, diff} = state.searchTerm;
+const replaceHighlightCustom = (state, txt, searchTerm, all = false) => {
+    const {index, pattern, caseSensitive, diff} = searchTerm;
     const es = state.editorState;
 
     let contentChanged = false;
@@ -78,11 +80,26 @@ const replaceHighlight = (state, txt, all = false) => {
     return {
         ...editorStateChanged,
         searchTerm: {
-            ...state.searchTerm,
+            ...searchTerm,
             // if we replaced the occurrence, index decreases
             index: contentChanged && !all ? index - 1 : index,
         },
     };
+};
+
+const replaceHighlight = (state, txt, all = false) => {
+    return replaceHighlightCustom(state, txt, state.searchTerm, all);
+};
+
+const replaceMultipleHighlights = (state, diff: {[key: string]: string}) => {
+    let newState = state;
+
+    for (const [key, value] of Object.entries(diff)) {
+        newState = setCriteria(newState, {diff: {[key]: value}, caseSensitive: true});
+        newState = replaceHighlight(newState, value, true);
+    }
+
+    return newState;
 };
 
 /**
@@ -144,6 +161,7 @@ const setCriteria = (state, payload: IPayloadSetHighlightsCriteria) => {
     // If a new pattern is entered, the FindReplaceDirective calls selectNext, so the
     // index needs to become -1. See apps/authoring/editor/find-replace.js.
     // Otherwise, if only the sensitivity is changed, we reset to 0.
+
     const pattern = diff == null ? '' : Object.keys(diff || {})[0] || '';
     const index = pattern !== state.searchTerm.pattern ? -1 : 0;
 

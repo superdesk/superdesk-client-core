@@ -34,6 +34,13 @@ export function replace(withTxt) {
     };
 }
 
+export function multiReplace(diff) {
+    return {
+        type: 'HIGHLIGHTS_REPLACE_MULTIPLE',
+        payload: diff,
+    };
+}
+
 export function replaceAll(replaceText: string) {
     return {
         type: 'HIGHLIGHTS_REPLACE_ALL',

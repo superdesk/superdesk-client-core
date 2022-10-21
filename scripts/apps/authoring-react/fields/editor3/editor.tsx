@@ -18,6 +18,7 @@ import {
     replaceAll,
     setSpellcheckerStatus,
     changeLimitConfig,
+    multiReplace,
 } from 'core/editor3/actions';
 import {ReactContextForEditor3} from 'core/editor3/directive';
 import {
@@ -205,6 +206,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
             addEditorEventListener('find_and_replace__find_prev', (event) => {
                 const {editorId} = event.detail;
 
+                debugger;
                 if (editorId !== this.props.editorId) {
                     return;
                 }
@@ -229,6 +231,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
             addEditorEventListener('find_and_replace__replace', (event) => {
                 const {editorId, replaceWith, replaceAllMatches} = event.detail;
 
+                debugger;
                 if (editorId !== this.props.editorId) {
                     return;
                 }
@@ -238,6 +241,18 @@ export class Editor extends React.PureComponent<IProps, IState> {
                 } else {
                     this.props.value.store.dispatch(replace(replaceWith));
                 }
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addEditorEventListener('find_and_replace__multi_replace', (event) => {
+                const {editorId, replaceWith} = event.detail;
+
+                if (editorId !== this.props.editorId) {
+                    return;
+                }
+
+                this.props.value.store.dispatch(multiReplace(replaceWith));
             }),
         );
 

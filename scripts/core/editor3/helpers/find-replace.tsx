@@ -159,10 +159,13 @@ const forEachMatchInParagraph = (content, block, pattern, caseSensitive, _matchI
 
     let newContent = content;
     let matchIndex = _matchIndex;
-    let match;
+
+    const doTheMatching = () => re.exec(text);
+
+    let match = doTheMatching();
 
     // eslint-disable-next-line no-cond-assign
-    while (match = re.exec(text)) {
+    while (match != null) {
         newContent = cb(
             ++matchIndex,
             createSelection(key, match.index, match.index + match[0].length),
@@ -170,6 +173,8 @@ const forEachMatchInParagraph = (content, block, pattern, caseSensitive, _matchI
             newContent,
             match[0],
         );
+
+        match = doTheMatching();
     }
 
     return {newContent, matchIndex};

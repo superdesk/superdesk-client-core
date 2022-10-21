@@ -1,6 +1,7 @@
 import React from 'react';
 import {IconButton} from 'superdesk-ui-framework/react/components/IconButton';
-import {Button, Icon, Label} from 'superdesk-ui-framework';
+import {Button, Icon, Label, Text, Container} from 'superdesk-ui-framework/react';
+import {ContentDivider} from 'superdesk-ui-framework/react/components/ContentDivider';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import {IMacro} from 'superdesk-interfaces/Macro';
@@ -15,6 +16,7 @@ interface IProps {
 interface IState {
     replaceTarget: string | null;
     replaceValue: string | null;
+    currentSelectionIndex: number | null;
 }
 
 export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState> {
@@ -27,6 +29,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
         this.state = {
             replaceTarget: null,
             replaceValue: null,
+            currentSelectionIndex: null,
         };
         this.eventListenerToRemoveBeforeUnmounting = () => null;
         this.replaceMatch = this.replaceMatch.bind(this);
@@ -68,15 +71,16 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                 // the `if` below also checks if the same class instance requested the replacing
                 if (event.detail.editorId === editorId && this.isAwaitingSelectionIndex) {
                     this.setState({
+                        currentSelectionIndex: event.detail.selectionIndex + 1,
                         replaceValue: Object.values(this.props.currentMacro.diff).at(event.detail.selectionIndex),
                         replaceTarget: Object.keys(this.props.currentMacro.diff).at(event.detail.selectionIndex),
-                    }, () => {
-                        this.goToNextMatchingValue();
                     });
-
                     this.isAwaitingSelectionIndex = false;
                 }
             });
+
+        highlightDistinctMatches(this.props.currentMacro.diff);
+        this.goToNextMatchingValue();
     }
 
     componentWillUnmount() {
@@ -85,53 +89,72 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
 
     render(): React.ReactNode {
         return (
-            <Spacer v gap="16" noGrow>
-                <Spacer v gap="4">
-                    <Label
+            <Container>
+                <Spacer v gap="8">
+                    <Button
+                        expand
+                        onClick={() => null}
+                        disabled
                         text={this.props.currentMacro.label}
                         size="large"
                         style="hollow"
                     />
-                    <Label
-                        style="translucent"
-                        size="large"
-                        text={`Number of matches: ${Object.keys(this.props.currentMacro.diff).length}`}
-                    />
-                </Spacer>
-                {
-                    <Spacer v gap="16">
-                        <Spacer h gap="4" noGrow justifyContent="start">
-                            <IconButton
-                                ariaValue={gettext('Previous match')}
-                                onClick={() => {
-                                    this.goToPrevMatchingValue();
-                                }}
-                                icon="chevron-left-thin"
-                            />
+                    <Spacer h gap="64" justifyContent="start">
+                        <Text weight="medium">
+                            {gettext(
+                                '{{current}} of {{total}} matches',
+                                {
+                                    current: this.state.currentSelectionIndex,
+                                    total: Object.keys(this.props.currentMacro.diff).length,
+                                })}
+                        </Text>
+                        <Spacer h gap="4" justifyContent="end" noGrow>
                             <IconButton
                                 ariaValue={gettext('Next match')}
                                 onClick={() => {
                                     this.goToNextMatchingValue();
                                 }}
-                                icon="chevron-right-thin"
+                                size="default"
+                                icon="chevron-down-thin"
                             />
-                            <Button
-                                text={gettext('Replace')}
+                            <IconButton
+                                ariaValue={gettext('Previous match')}
                                 onClick={() => {
-                                    this.replaceMatch(() => highlightDistinctMatches(this.props.currentMacro.diff));
+                                    this.goToPrevMatchingValue();
                                 }}
+                                size="default"
+                                icon="chevron-up-thin"
                             />
                         </Spacer>
-                        {this.state.replaceTarget != null && (
-                            <Spacer h gap="8" noGrow justifyContent="start">
-                                <Label size="large" text={this.state.replaceTarget} />
-                                <Icon name="arrow-right" />
-                                <Label size="large" text={this.state.replaceValue} />
-                            </Spacer>
-                        )}
                     </Spacer>
-                }
-            </Spacer>
+                    {this.state.replaceTarget != null && (
+                        <>
+                            <ContentDivider type="dotted" />
+                            <Label size="large" text={this.state.replaceTarget} />
+                            <Icon name="arrow-right" />
+                            <Label size="large" text={this.state.replaceValue} />
+                            <ContentDivider type="dotted" />
+                        </>
+                    )}
+                    <Spacer h gap="4" justifyContent="end" noGrow>
+                        <Button
+                            style="hollow"
+                            text={gettext('Cancel')}
+                            onClick={() => {
+                                this.replaceMatch(() => highlightDistinctMatches({}));
+                            }}
+                        />
+                        <Button
+                            style="hollow"
+                            type="primary"
+                            text={gettext('Replace')}
+                            onClick={() => {
+                                this.replaceMatch(() => highlightDistinctMatches(this.props.currentMacro.diff));
+                            }}
+                        />
+                    </Spacer>
+                </Spacer>
+            </Container>
         );
     }
 }

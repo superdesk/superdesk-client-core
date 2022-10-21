@@ -211,7 +211,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                 )}
                 body={(
                     <>
-                        {
+                        {// TODO: Fix this so it doesn't render an empty <InteractiveMacrosDisplay />
                             this.state.currentMacro?.diff == null ?
                                 (
                                     <>

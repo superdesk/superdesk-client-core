@@ -33,6 +33,11 @@ interface IAuthoringReactEditorEvents {
         replaceAllMatches: boolean;
     };
 
+    find_and_replace__multi_replace: {
+        editorId: string;
+        replaceWith: {[key: string]: string};
+    };
+
     spellchecker__request_status: null;
     spellchecker__set_status: boolean;
 }
