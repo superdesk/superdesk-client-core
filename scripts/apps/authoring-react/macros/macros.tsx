@@ -199,7 +199,9 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             );
         };
 
-        const groupedOrdered = this.state.displayGrouped !== 'not-supported' ? getGroupedOrdered(this.state.macros) : [];
+        const groupedOrdered = this.state.displayGrouped !== 'not-supported'
+            ? getGroupedOrdered(this.state.macros)
+            : [];
 
         return (
             <AuthoringWidgetLayout
@@ -210,49 +212,45 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                     />
                 )}
                 body={(
-                    <>
-                        {// TODO: Fix this so it doesn't render an empty <InteractiveMacrosDisplay />
-                            this.state.currentMacro?.diff == null ?
-                                (
-                                    <>
-                                        {this.state.displayGrouped !== 'not-supported' && (
-                                            <Switch
-                                                label={{text: gettext('Group Macros')}}
-                                                value={this.state.displayGrouped}
-                                                onChange={() =>
-                                                    this.setState({displayGrouped: !this.state.displayGrouped})
-                                                }
-                                            />
-                                        )}
-                                        {
-                                            this.state.displayGrouped ? (
-                                                groupedOrdered.map((group, i) => {
-                                                    return (
-                                                        <ToggleBox
-                                                            key={i}
-                                                            initiallyOpen={group.initiallyOpen}
-                                                            title={group.groupName}
-                                                        >
-                                                            {group.macros.map((macro) => (
-                                                                <RunMacroButton
-                                                                    key={macro.name}
-                                                                    macro={macro}
-                                                                />
-                                                            ))}
-                                                        </ToggleBox>
-                                                    );
-                                                })
-                                            ) : this.state.macros.map((macro) => (
-                                                <RunMacroButton
-                                                    key={macro.name}
-                                                    macro={macro}
-                                                />
-                                            ))
+                    Object.keys(this.state.currentMacro?.diff ?? {}).length < 1 ?
+                        (
+                            <>
+                                {this.state.displayGrouped !== 'not-supported' && (
+                                    <Switch
+                                        label={{text: gettext('Group Macros')}}
+                                        value={this.state.displayGrouped}
+                                        onChange={() =>
+                                            this.setState({displayGrouped: !this.state.displayGrouped})
                                         }
-                                    </>
-                                ) : (<InteractiveMacrosDisplay currentMacro={this.state.currentMacro} />)
-                        }
-                    </>
+                                    />
+                                )}
+                                {
+                                    this.state.displayGrouped ? (
+                                        groupedOrdered.map((group, i) => {
+                                            return (
+                                                <ToggleBox
+                                                    key={i}
+                                                    initiallyOpen={group.initiallyOpen}
+                                                    title={group.groupName}
+                                                >
+                                                    {group.macros.map((macro) => (
+                                                        <RunMacroButton
+                                                            key={macro.name}
+                                                            macro={macro}
+                                                        />
+                                                    ))}
+                                                </ToggleBox>
+                                            );
+                                        })
+                                    ) : this.state.macros.map((macro) => (
+                                        <RunMacroButton
+                                            key={macro.name}
+                                            macro={macro}
+                                        />
+                                    ))
+                                }
+                            </>
+                        ) : (<InteractiveMacrosDisplay currentMacro={this.state.currentMacro} />)
                 )}
             />
         );

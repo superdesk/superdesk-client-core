@@ -4,7 +4,7 @@ import {IArticle, IBaseRestApiResponse} from 'superdesk-api';
 // I'm still extending to make it compatible with other types depending on IBaseRestApiResponse
 export interface IMacro extends IBaseRestApiResponse {
     access_type: string;
-    action_type: 'interactive' | string;
+    action_type: 'interactive' | 'direct';
     description?: string;
     label: string;
     name: string;

@@ -99,12 +99,12 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                         size="large"
                         style="hollow"
                     />
-                    <Spacer h gap="64" justifyContent="start">
+                    <Spacer h gap="4" justifyContent="start">
                         <Text weight="medium">
                             {gettext(
-                                '{{current}} of {{total}} matches',
+                                '{{n}} of {{total}} matches',
                                 {
-                                    current: this.state.currentSelectionIndex,
+                                    n: this.state.currentSelectionIndex,
                                     total: Object.keys(this.props.currentMacro.diff).length,
                                 })}
                         </Text>
@@ -130,9 +130,11 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                     {this.state.replaceTarget != null && (
                         <>
                             <ContentDivider type="dotted" />
-                            <Label size="large" text={this.state.replaceTarget} />
-                            <Icon name="arrow-right" />
-                            <Label size="large" text={this.state.replaceValue} />
+                            <Spacer h gap="4" justifyContent="start" noGrow alignItems="center">
+                                <Label size="large" text={this.state.replaceTarget} />
+                                <Icon name="arrow-right" size="small" />
+                                <Label size="large" text={this.state.replaceValue} />
+                            </Spacer>
                             <ContentDivider type="dotted" />
                         </>
                     )}

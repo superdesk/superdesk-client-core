@@ -206,7 +206,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
             addEditorEventListener('find_and_replace__find_prev', (event) => {
                 const {editorId} = event.detail;
 
-                debugger;
                 if (editorId !== this.props.editorId) {
                     return;
                 }
@@ -231,7 +230,6 @@ export class Editor extends React.PureComponent<IProps, IState> {
             addEditorEventListener('find_and_replace__replace', (event) => {
                 const {editorId, replaceWith, replaceAllMatches} = event.detail;
 
-                debugger;
                 if (editorId !== this.props.editorId) {
                     return;
                 }

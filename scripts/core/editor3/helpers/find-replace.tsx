@@ -159,13 +159,10 @@ const forEachMatchInParagraph = (content, block, pattern, caseSensitive, _matchI
 
     let newContent = content;
     let matchIndex = _matchIndex;
-
-    const doTheMatching = () => re.exec(text);
-
-    let match = doTheMatching();
+    let match;
 
     // eslint-disable-next-line no-cond-assign
-    while (match != null) {
+    while (match = re.exec(text)) {
         newContent = cb(
             ++matchIndex,
             createSelection(key, match.index, match.index + match[0].length),
@@ -173,8 +170,6 @@ const forEachMatchInParagraph = (content, block, pattern, caseSensitive, _matchI
             newContent,
             match[0],
         );
-
-        match = doTheMatching();
     }
 
     return {newContent, matchIndex};
@@ -220,7 +215,7 @@ const forEachMatchInTable = (content, block, pattern, caseSensitive, _matchIndex
     return {newContent, matchIndex};
 };
 
-// create reg exp from pattern if neede
+// create reg exp from pattern if needed
 const getRegExp = ({pattern, caseSensitive}) =>
     typeof pattern === 'string' ? new RegExp(escapeRegExp(pattern), 'g' + (caseSensitive ? '' : 'i')) : pattern;
 
