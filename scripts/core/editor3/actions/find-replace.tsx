@@ -41,6 +41,20 @@ export function multiReplace(diff) {
     };
 }
 
+export function patchHTMLonEditorState(payload) {
+    return {
+        type: 'PATCH_HTML_ON_EDITOR_STATE',
+        payload,
+    };
+}
+
+export function updateEditorState(payload) {
+    return {
+        type: 'UPDATE_EDITOR_STATE',
+        payload,
+    };
+}
+
 export function replaceAll(replaceText: string) {
     return {
         type: 'HIGHLIGHTS_REPLACE_ALL',

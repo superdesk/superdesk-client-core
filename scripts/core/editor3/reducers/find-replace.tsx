@@ -4,6 +4,8 @@ import {Modifier, EditorState} from 'draft-js';
 import {clearHighlights, forEachMatch} from '../helpers/find-replace';
 import {onChange} from './editor3';
 import {escapeRegExp} from 'core/utils';
+import {patchHTMLonTopOfEditorState} from '../helpers/tansa';
+import {setEditorStateFromItem} from '../actions/editor3';
 
 interface IDiff { [s: string]: string; }
 
@@ -19,6 +21,10 @@ const findReplace = (state = {}, action) => {
         return replaceMultipleHighlights(state, action.payload);
     case 'HIGHLIGHTS_REPLACE_ALL':
         return replaceHighlight(state, action.payload, true);
+    case 'PATCH_HTML_ON_EDITOR_STATE':
+        return patchHtmloNEditorState(state, action.payload);
+    case 'UPDATE_EDITOR_STATE':
+        return updateEditorState(state, action.payload);
     case 'HIGHLIGHTS_RENDER':
         return render(state);
     case 'HIGHLIGHTS_CRITERIA':
@@ -27,6 +33,20 @@ const findReplace = (state = {}, action) => {
         return state;
     }
 };
+
+function updateEditorState(state, payload) {
+    return {
+        ...state,
+        editorState: setEditorStateFromItem(payload.article, payload.fieldId),
+    };
+}
+
+function patchHtmloNEditorState(state, payload) {
+    return {
+        ...state,
+        editorState: patchHTMLonTopOfEditorState(state, payload.html, payload.simpleReplace),
+    };
+}
 
 /**
  * @name replaceHighlight

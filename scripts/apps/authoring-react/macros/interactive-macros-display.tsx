@@ -11,6 +11,7 @@ import {editorId} from '../article-widgets/find-and-replace';
 
 interface IProps {
     currentMacro: IMacro;
+    onClose(): void;
 }
 
 interface IState {
@@ -144,6 +145,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                             text={gettext('Cancel')}
                             onClick={() => {
                                 this.replaceMatch(() => highlightDistinctMatches({}));
+                                this.props.onClose();
                             }}
                         />
                         <Button

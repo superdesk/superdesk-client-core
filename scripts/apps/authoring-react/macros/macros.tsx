@@ -3,6 +3,7 @@ import {
     IArticle,
     IArticleSideWidget,
     IContentProfileV2,
+    IEditor3ValueOperational,
     IExtensionActivationResult,
     IRestApiResponse,
 } from 'superdesk-api';
@@ -24,6 +25,9 @@ import {EDITOR_3_FIELD_TYPE} from '../fields/editor3';
 import {dispatchEditorEvent} from '../authoring-react-editor-events';
 import {InteractiveMacrosDisplay} from './interactive-macros-display';
 import {editorId} from '../article-widgets/find-and-replace';
+import {getTansaHtml, patchHTMLonTopOfEditorState} from 'core/editor3/helpers/tansa';
+import {EditorState} from 'draft-js';
+import {OrderedMap} from 'immutable';
 
 // POTENTIAL-IMPROVEMENTS: don't allow replacing the same thing twice
 // -> body_html: $101 (CAD 13) -> click replace again -> $101 (CAD 13) (CAD 13)
@@ -123,6 +127,99 @@ function overwriteArticle(
     });
 }
 
+function handleKeepStyleReplaceMacro(
+    article: IArticle,
+    contentProfile: IContentProfileV2,
+    fieldsData: OrderedMap<string, unknown>,
+): IMacroProcessor {
+    return {
+        beforePatch: () => {
+            const fields = contentProfile.header.merge(contentProfile.content)
+                .filter((value) => value.fieldType === 'editor3');
+
+            fields.forEach((field) => {
+                const valueOperational = fieldsData.get(field.id) as IEditor3ValueOperational;
+                const html = getTansaHtml(valueOperational.store.getState().editorState);
+
+                article[field.id] = html;
+            });
+            return article;
+        },
+        afterPatch: (resArticle: IArticle) => {
+            const patch = generatePatch(article, resArticle);
+            const fields = contentProfile.header.merge(contentProfile.content)
+                .filter((value) => value.fieldType === 'editor3' && Object.keys(patch).includes(value.id));
+
+            fields.forEach((field) => {
+                const editorStateCurrent = (fieldsData.get(field.id) as IEditor3ValueOperational)
+                    .store.getState().editorState;
+                const editorStateNext: EditorState = patchHTMLonTopOfEditorState(editorStateCurrent, patch[field.id]);
+
+                dispatchEditorEvent('macros__patch_html', {
+                    editorId: field.id,
+                    editorState: editorStateNext,
+                    html: patch[field.id],
+                });
+            });
+        },
+    };
+}
+
+function handleNoReplaceMacro(article: IArticle, contentProfile: IContentProfileV2): IMacroProcessor {
+    return {
+        beforePatch: () => {
+            return article;
+        },
+        afterPatch: (resArticle: IArticle) => {
+            const patch = generatePatch(article, resArticle);
+            const isEmpty = Object.keys(patch).length < 1;
+
+            if (!isEmpty) {
+                overwriteArticle(article, patch, contentProfile);
+            }
+        },
+    };
+}
+
+function handleUpdateStateMacro(article: IArticle, contentProfile: IContentProfileV2): IMacroProcessor {
+    return {
+        beforePatch: () => {
+            return article;
+        },
+        afterPatch: (resArticle: IArticle) => {
+            const fields = contentProfile.header.merge(contentProfile.content)
+                .filter((value) => value.fieldType === 'editor3');
+
+            fields.forEach((field) => {
+                dispatchEditorEvent('macros__update_state', {
+                    editorId: field.id,
+                    article: resArticle,
+                });
+            });
+        },
+    };
+}
+
+interface IMacroProcessor {
+    beforePatch(): IArticle;
+    afterPatch(response: IArticle): void;
+}
+
+function getMacroProcessor(
+    macro: IMacro,
+    article: IArticle,
+    contentProfile: IContentProfileV2,
+    fieldsData: OrderedMap<string, unknown>,
+) {
+    if (macro.replace_type === 'keep-style-replace') {
+        return handleKeepStyleReplaceMacro(article, contentProfile, fieldsData);
+    } else if (macro.replace_type === 'editor_state') {
+        return handleUpdateStateMacro(article, contentProfile);
+    } else if (macro.replace_type === 'no-replace') {
+        return handleNoReplaceMacro(article, contentProfile);
+    }
+}
+
 class MacrosWidget extends React.PureComponent<IProps, IState> {
     constructor(props: IProps) {
         super(props);
@@ -146,20 +243,21 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
     }
 
     runMacro(macro: IMacro): void {
-        httpRequestJsonLocal({
+        const macroProcessor: IMacroProcessor = getMacroProcessor(
+            macro, this.props.article,
+            this.props.contentProfile,
+            this.props.fieldsData,
+        );
+
+        httpRequestJsonLocal<IMacro>({
             method: 'POST',
             path: '/macros',
             payload: {
                 macro: macro.name,
-                item: this.props.article,
+                item: macroProcessor.beforePatch(),
             },
-        }).then((res: IMacro) => {
-            const patch = generatePatch(this.props.article, res.item);
-            const isEmpty = Object.keys(patch).length < 1;
-
-            if (!isEmpty) {
-                overwriteArticle(this.props.article, patch, this.props.contentProfile);
-            }
+        }).then((res) => {
+            macroProcessor.afterPatch(res.item as IArticle);
         });
     }
 
@@ -250,7 +348,12 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
                                     ))
                                 }
                             </>
-                        ) : (<InteractiveMacrosDisplay currentMacro={this.state.currentMacro} />)
+                        ) : (
+                            <InteractiveMacrosDisplay
+                                onClose={() => this.setState({currentMacro: null})}
+                                currentMacro={this.state.currentMacro}
+                            />
+                        )
                 )}
             />
         );

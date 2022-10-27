@@ -19,6 +19,8 @@ import {
     setSpellcheckerStatus,
     changeLimitConfig,
     multiReplace,
+    patchHTMLonEditorState,
+    setEditorStateFromItem,
 } from 'core/editor3/actions';
 import {ReactContextForEditor3} from 'core/editor3/directive';
 import {
@@ -251,6 +253,30 @@ export class Editor extends React.PureComponent<IProps, IState> {
                 }
 
                 this.props.value.store.dispatch(multiReplace(replaceWith));
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addEditorEventListener('macros__patch_html', (event) => {
+                const {editorId, editorState, html} = event.detail;
+
+                if (editorId !== this.props.editorId) {
+                    return;
+                }
+
+                this.props.value.store.dispatch(patchHTMLonEditorState({editorState, html, simpleReplace: false}));
+            }),
+        );
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addEditorEventListener('macros__update_state', (event) => {
+                const {editorId, article} = event.detail;
+
+                if (editorId !== this.props.editorId) {
+                    return;
+                }
+
+                this.props.value.store.dispatch(setEditorStateFromItem(article, editorId));
             }),
         );
 

@@ -1,3 +1,6 @@
+import {EditorState} from 'draft-js';
+import {IArticle} from 'superdesk-api';
+
 interface IAuthoringReactEditorEvents {
     find_and_replace__find: {
         editorId: string;
@@ -36,6 +39,17 @@ interface IAuthoringReactEditorEvents {
     find_and_replace__multi_replace: {
         editorId: string;
         replaceWith: {[key: string]: string};
+    };
+
+    macros__patch_html: {
+        editorId: string;
+        editorState: EditorState;
+        html: string;
+    };
+
+    macros__update_state: {
+        editorId: string;
+        article: IArticle;
     };
 
     spellchecker__request_status: null;
