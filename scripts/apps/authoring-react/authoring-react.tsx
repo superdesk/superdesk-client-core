@@ -14,12 +14,10 @@ import {
     IExposedFromAuthoring,
 } from 'superdesk-api';
 import {
-    Button,
     ButtonGroup,
     Loader,
     SubNav,
     IconButton,
-    NavButton,
 } from 'superdesk-ui-framework/react';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 import {gettext} from 'core/utils';
@@ -966,6 +964,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         const exposed: IExposedFromAuthoring<T> = {
             item: state.itemWithChanges,
             contentProfile: state.profile,
+            getLatestItem: this.computeLatestEntity,
             fieldsData: state.fieldsDataWithChanges,
             handleFieldsDataChange: this.handleFieldsDataChange,
             hasUnsavedChanges: () => this.hasUnsavedChanges(),

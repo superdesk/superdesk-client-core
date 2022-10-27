@@ -380,6 +380,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                 }
                                 getSidePanel={({
                                     item,
+                                    getLatestItem,
                                     contentProfile,
                                     fieldsData,
                                     handleFieldsDataChange,
@@ -417,6 +418,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                                     } else {
                                         return (
                                             <OpenWidgetComponent
+                                                getLatestArticle={getLatestItem}
                                                 article={item}
                                                 contentProfile={contentProfile}
                                                 fieldsData={fieldsData}

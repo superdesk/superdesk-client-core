@@ -120,6 +120,14 @@ declare module 'superdesk-api' {
     export interface IExposedFromAuthoring<T> {
         item: T;
         sideWidget: string | null; // side widget name
+
+        /**
+         * Computes the latest entity from fields data. `item` property in
+         * this interface holds a bit of an older version of the item.
+         * It is expensive to compute it on every render, that's why
+         * we are passing a function instead.
+         */
+        getLatestItem(): T;
         toggleSideWidget(name: string | null): void;
         contentProfile: IContentProfileV2;
         fieldsData: IFieldsData;
@@ -465,6 +473,9 @@ declare module 'superdesk-api' {
         component: React.ComponentType<{
             article: IArticle;
 
+
+            getLatestArticle(): IArticle;
+
             // other props below are specific to authoring-react implementation
 
             readOnly: boolean;
@@ -475,7 +486,6 @@ declare module 'superdesk-api' {
             storageAdapter: IStorageAdapter<IArticle>;
 
             onFieldsDataChange?(fieldsData?: OrderedMap<string, unknown>): void;
-
             /**
              * Will prompt user to save changes. The promise will get rejected if user cancels saving.
              */

@@ -244,7 +244,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
 
     runMacro(macro: IMacro): void {
         const macroProcessor: IMacroProcessor = getMacroProcessor(
-            macro, this.props.article,
+            macro, this.props.getLatestArticle(),
             this.props.contentProfile,
             this.props.fieldsData,
         );
@@ -267,7 +267,7 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             path: '/macros',
             payload: {
                 macro: macro.name,
-                item: this.props.article,
+                item: this.props.getLatestArticle(),
             },
         }).then((res: IMacro) => {
             this.setState({currentMacro: {...res, label: macro.label}});
