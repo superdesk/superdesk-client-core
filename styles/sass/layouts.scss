@@ -244,12 +244,11 @@ a:hover, .link:hover {
     top: -96px;
     left: 0; right: 0;
     height: 48px;
-    background: #fff;
+    background: transparent;
     z-index: 1;
-    @include border-box();
     padding: 10px;
-    @include transition(all ease 0.35s);
-    border-bottom: 1px solid #dfdfdf;
+    transition: all ease 0.35s;
+    border-bottom: 1px solid var(--sd-colour-line--light);
     &.show {
         top: -48px;
     }
@@ -286,7 +285,7 @@ a:hover, .link:hover {
         top: 0;
         right: 0;
         left: 0; bottom:0;
-        border-right: 1px solid #d0d0d0;
+        border-right: 1px solid hsl(0, 0%, 0%);
         z-index: 1;
         @include transition(right ease 0.2s);
         .shadow-list-holder {

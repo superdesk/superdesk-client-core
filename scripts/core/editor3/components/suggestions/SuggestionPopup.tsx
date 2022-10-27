@@ -128,9 +128,13 @@ class Suggestion extends React.Component<any, any> {
                 <FluidRows>
                     <FluidRow scrollable={false}>
                         <EditorHighlightsHeader availableActions={[]}>
-                            <UserAvatar user={author} />
-                            <p className="editor-popup__author-name">{author.display_name}</p>
-                            <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
+                            <div className='sd-display--flex sd-gap--small'>
+                                <UserAvatar user={author} />
+                                <div>
+                                    <p className="editor-popup__author-name">{author.display_name}</p>
+                                    <time className="editor-popup__time" title={relativeDateString}>{absoluteDateString}</time>
+                                </div>
+                            </div>
                         </EditorHighlightsHeader>
                     </FluidRow>
 
@@ -141,7 +145,7 @@ class Suggestion extends React.Component<any, any> {
                     </FluidRow>
 
                     <FluidRow scrollable={true} className="editor-popup__secondary-content">
-                        <div className="editor-popup__content-block">
+                        <div className="button-group button-group--end button-group--comfort sd-flex--justify-end sd-padding--2">
                             <button className="btn btn--small btn--hollow" onClick={this.onAccept}>
                                 {gettext('Accept')}
                             </button>

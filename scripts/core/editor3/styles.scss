@@ -384,6 +384,7 @@ $editor-styleButton-size: 			3rem;
 	font-size: 16px;
 	line-height: 140%;
     word-break: break-word;
+	border: 1px solid var(--sd-editor-colour__controls-border);
 }
 
 .Editor3-editor-single-line {

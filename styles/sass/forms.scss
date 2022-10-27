@@ -10,6 +10,8 @@
 .p-datepicker {
     z-index: 1060 !important;
 }
+$input-width-mini: 4.4rem;
+$input-number-width-mini: 6rem;
 
 // GENERAL STYLES
 // --------------
@@ -1196,21 +1198,30 @@ textarea {
 input {
     &.line-input--inline-mini {
         text-align: center;
-        width: 40px;
-
+        width: $input-width-mini;
+    }
+    &[type="number"] {
+        &.line-input--inline-mini {
+            width: $input-number-width-mini;
+            padding-inline-end: 4px;
+        }
     }
 }
 
 .sd-line-input {
     input.sd-line-input__input.sd-line-input__input--mini {
         text-align: center;
-        width: 40px;
+        width: $input-width-mini;
+    }
+    input[type="number"].sd-line-input__input.sd-line-input__input--mini {
+        width: $input-number-width-mini;
+        padding-inline-end: 4px;
     }
 }
 .sd-line-input {
     select.sd-line-input__select.sd-line-input__select--mini {
         text-align: center;
-        width: 45px;
+        width: $input-width-mini;
     }
 }
 

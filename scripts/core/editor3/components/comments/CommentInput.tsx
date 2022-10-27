@@ -86,7 +86,7 @@ class CommentInputBody extends React.Component<any, any> {
                         value={msg}
                         onChange={this.onChange}
                     />
-                    <div className="pull-right" style={{paddingTop: 20}}>
+                    <div className="button-group button-group--end button-group--comfort sd-flex--justify-end" style={{paddingTop: 20}}>
                         <button className="btn btn--cancel" onClick={(ev) => this.onCancel(ev)}>
                             {gettext('Cancel')}
                         </button>
