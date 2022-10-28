@@ -1,6 +1,6 @@
 
 import {IComment, IRestApiResponse} from 'superdesk-api';
-import {IRundownItemTemplateInitial} from '../../../../interfaces';
+import {IRundownItem} from '../../../../interfaces';
 import {superdesk} from '../../../../superdesk';
 
 const {httpRequestJsonLocal} = superdesk;
@@ -28,7 +28,7 @@ function addComment(entityId: string, text: string) {
     }).then(() => undefined);
 }
 
-export const commentsWidget = superdesk.authoringGeneric.sideWidgets.comments<IRundownItemTemplateInitial>(
+export const commentsWidget = superdesk.authoringGeneric.sideWidgets.comments<IRundownItem>(
     getComments,
     addComment,
 

@@ -47,7 +47,7 @@ const dateFormatOptions = [
     getPartialDateFormat({month: true, day: true}),
 ];
 
-interface IWithAuthoringReactKey {
+export interface IWithAuthoringReactKey {
     /**
      * authoring-react doesn't remount if `authoringStorage` changes
      * key is used to instruct authoring-react when to remount
@@ -485,6 +485,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                             <AuthoringReact
                                                 key={this.props.rundownItemAction.authoringReactKey}
                                                 itemId=""
+                                                resourceNames={[]} // isn't applicable to embedded items
                                                 onClose={() => {
                                                     this.props.onRundownItemActionChange(null);
                                                 }}

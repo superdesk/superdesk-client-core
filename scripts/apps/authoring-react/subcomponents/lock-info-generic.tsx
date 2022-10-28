@@ -1,5 +1,7 @@
+/* eslint-disable react/no-multi-comp */
+
 import React from 'react';
-import {IUser, ILockInfo, IPropsLockInfo, IBaseRestApiResponse} from 'superdesk-api';
+import {IUser, ILockInfo, IPropsLockInfoHttp, IBaseRestApiResponse, IPropsLockInfo} from 'superdesk-api';
 import {UserAvatar} from 'apps/users/components/UserAvatar';
 import ng from 'core/services/ng';
 import {gettext} from 'core/utils';
@@ -49,23 +51,37 @@ export class LockInfo<T extends ILockInfo & IBaseRestApiResponse> extends React.
                 <button
                     className="locked-info__button"
                     onClick={() => {
-                        const payload: Partial<ILockInfo> = {
-                            _lock_action: 'force-lock',
-                        };
-
-                        httpRequestJsonLocal({
-                            method: 'PATCH',
-                            path: this.props.endpoint,
-                            payload,
-                            headers: {
-                                'If-Match': this.props.entity._etag,
-                            },
-                        });
+                        this.props.forceUnlock();
                     }}
                 >
                     {gettext('Unlock')}
                 </button>
             </div>
+        );
+    }
+}
+
+export class LockInfoHttp<T extends ILockInfo & IBaseRestApiResponse>
+    extends React.PureComponent<IPropsLockInfoHttp<T>> {
+    render() {
+        return (
+            <LockInfo
+                entity={this.props.entity}
+                forceUnlock={() => {
+                    const payload: Partial<ILockInfo> = {
+                        _lock_action: 'force-lock',
+                    };
+
+                    httpRequestJsonLocal({
+                        method: 'PATCH',
+                        path: this.props.endpoint,
+                        payload,
+                        headers: {
+                            'If-Match': this.props.entity._etag,
+                        },
+                    });
+                }}
+            />
         );
     }
 }

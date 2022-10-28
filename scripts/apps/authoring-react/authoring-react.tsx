@@ -237,7 +237,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         };
 
         this.save = this.save.bind(this);
-        this.stealLock = this.stealLock.bind(this);
+        this.forceLock = this.forceLock.bind(this);
         this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
@@ -613,7 +613,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 }
 
                 if (
-                    ARTICLE_RELATED_RESOURCE_NAMES.includes(resource) !== true
+                    this.props.resourceNames.includes(resource) !== true
                     || state.itemOriginal._id !== _id
                 ) {
                     return;
@@ -815,19 +815,10 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
      * Unlocks article from other user that holds the lock
      * and locks for current user.
      */
-    stealLock(state: IStateLoaded<T>) {
+    forceLock(state: IStateLoaded<T>): void {
         const {authoringStorage} = this.props;
-        const _id = state.itemOriginal._id;
 
-        authoringStorage.unlock(_id).then(() => {
-            authoringStorage.lock(_id).then((res) => {
-                this.setState({
-                    ...state,
-                    itemOriginal: res,
-                    itemWithChanges: res,
-                });
-            });
-        });
+        authoringStorage.forceLock(state.itemOriginal);
     }
 
     discardUnsavedChanges(state: IStateLoaded<T>): Promise<void> {
@@ -973,7 +964,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             save: () => this.save(state),
             discardChangesAndClose: () => this.handleClose(state),
             keepChangesAndClose: () => this.props.onClose(),
-            stealLock: () => this.stealLock(state),
+            stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,
             storageAdapter: storageAdapter,
             fieldsAdapter: fieldsAdapter,

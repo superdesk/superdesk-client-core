@@ -99,8 +99,7 @@ declare module 'superdesk-api' {
      * to enable offline support.
      */
     export interface IAuthoringStorage<T> {
-        lock(itemId: string): Promise<T>;
-        unlock(itemId: string): Promise<T>;
+        forceLock(entity: T): Promise<T>;
         isLockedInCurrentSession(item: T): boolean;
         getEntity(id: string): Promise<{saved: T | null, autosaved: T | null}>;
         saveEntity(current: T, original: T): Promise<T>;
@@ -150,6 +149,13 @@ declare module 'superdesk-api' {
 
     interface IPropsAuthoring<T> {
         itemId: string;
+
+        /**
+         * Used for listening for updates via web sockets.
+         * An empty array may be passed if updates do not apply i.e. when an editing an item embedded inside another DB record
+         */
+        resourceNames: Array<string>;
+
         getLanguage(entity: T): string;
         onClose(): void;
         authoringStorage: IAuthoringStorage<T>;
@@ -825,13 +831,18 @@ declare module 'superdesk-api' {
         _lock_user?: IUser['_id'];
     }
 
-    export interface IPropsLockInfo<T extends ILockInfo> {
+    export interface IPropsLockInfoHttp<T extends ILockInfo> {
         entity: T;
 
         /**
          * Relative path; will be used for unlocking
          */
         endpoint: string;
+    }
+
+    export interface IPropsLockInfo<T extends ILockInfo> {
+        entity: T;
+        forceUnlock: () => void;
     }
 
     export interface IArticle extends IBaseRestApiResponse {
@@ -1540,7 +1551,7 @@ declare module 'superdesk-api' {
         };
     }
 
-    export interface IPatchExtraFields {
+    export interface IPatchResponseExtraFields {
         _status: string;
     }
 
@@ -2472,6 +2483,7 @@ declare module 'superdesk-api' {
             assertNever(x: never): never;
             stripBaseRestApiFields<T extends IBaseRestApiResponse>(entity: T): Omit<T, keyof IBaseRestApiResponse>;
             fixPatchResponse<T extends IBaseRestApiResponse>(entity: T & {_status: string}): T;
+            fixPatchRequest<T extends {}>(entity: T): T;
             filterUndefined<T>(values: Partial<T>): Partial<T>;
             filterKeys<T>(original: T, keys: Array<keyof T>): Partial<T>;
             stringToNumber(value?: string, radix?: number): number | undefined;
@@ -2479,6 +2491,15 @@ declare module 'superdesk-api' {
             notNullOrUndefined<T>(x: null | undefined | T): x is T;
             isNullOrUndefined<T>(x: null | undefined | T): x is null | undefined;
             nameof<T>(name: keyof T): string;
+            tryLocking<T extends ILockInfo & IBaseRestApiResponse>(
+                endpoint: string,
+                entityId: string,
+                force: boolean = false,
+            ): Promise<{success: boolean; latestEntity: T}>;
+            tryUnlocking<T extends ILockInfo & IBaseRestApiResponse>(
+                endpoint: string,
+                entityId: string,
+            ): Promise<void>;
             computeEditor3Output(
                 rawContentState: import('draft-js').RawDraftContentState,
                 config: IEditor3Config,
@@ -2534,6 +2555,7 @@ declare module 'superdesk-api' {
             // TODO: move the component with all its dependencies to a separate project and use via npm package
             getAuthoringComponent: <T extends IBaseRestApiResponse>() => React.ComponentType<IPropsAuthoring<T>>;
 
+            getLockInfoHttpComponent: <T>() => React.ComponentType<IPropsLockInfoHttp<T>>;
             getLockInfoComponent: <T>() => React.ComponentType<IPropsLockInfo<T>>;
             getDropdownTree: <T>() => React.ComponentType<IPropsDropdownTree<T>>;
             getLiveQueryHOC: <T extends IBaseRestApiResponse>() => React.ComponentType<ILiveQueryProps<T>>;

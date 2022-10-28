@@ -91,22 +91,16 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                     onChange={this.props.onChange}
                     onDelete={this.props.onDelete}
                     getActions={((item) => {
-                        if (readOnly) {
-                            return undefined;
-                        }
-
                         const actions: Array<IMenuItem> = [];
 
-                        if (!readOnly) {
-                            const edit: IMenuItem = {
-                                label: gettext('Edit'),
-                                onSelect: () => {
-                                    this.props.initiateEditing(item);
-                                },
-                            };
+                        const edit: IMenuItem = {
+                            label: gettext('Edit'),
+                            onSelect: () => {
+                                this.props.initiateEditing(item);
+                            },
+                        };
 
-                            actions.push(edit);
-                        }
+                        actions.push(edit);
 
                         const preview: IMenuItem = {
                             label: gettext('Preview'),
@@ -124,7 +118,15 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             },
                         };
 
-                        actions.push(deleteAction);
+                        if (!readOnly) {
+                            /**
+                             * rundown item is a separate entity that we can edit
+                             * even when the rundown itself is in read-only mode.
+                             * BUT deleting rundown item requires to update references in the rundown itself,
+                             * thus is not allowed in read-only mode.
+                             */
+                            actions.push(deleteAction);
+                        }
 
                         return (
                             <Dropdown items={actions} append>

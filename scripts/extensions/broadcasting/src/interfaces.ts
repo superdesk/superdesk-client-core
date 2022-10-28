@@ -65,7 +65,7 @@ export interface IRundownItemBase {
     subitems?: Array<IVocabularyItem['qcode']>;
 }
 
-export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;
+export type IRundownItem = IRundownItemBase & IBaseRestApiResponse & ILockInfo;
 
 /**
  * Extending from "IBaseRestApiResponse" is for compatibility reasons.

@@ -8,9 +8,9 @@ import {
     IStage,
     IUser,
     IBaseRestApiResponse,
-    IPatchExtraFields,
+    IPatchResponseExtraFields,
 } from 'superdesk-api';
-import {gettext, gettextPlural, stripBaseRestApiFields, stripHtmlTags} from 'core/utils';
+import {gettext, gettextPlural, stripBaseRestApiFields, stripHtmlTags, stripLockingFields} from 'core/utils';
 import {ListItem, ListItemColumn, ListItemRow, ListItemActionsMenu} from './components/ListItem';
 import {getFormFieldPreviewComponent} from './ui/components/generic-form/form-field';
 import {
@@ -99,8 +99,10 @@ import {getCommentsWidgetGeneric} from 'apps/authoring-react/generic-widgets/com
 import {
     isLockedInOtherSession,
     isLockedInCurrentSession,
+    LockInfoHttp,
     LockInfo,
 } from 'apps/authoring-react/subcomponents/lock-info-generic';
+import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -202,8 +204,12 @@ export function getRelativeOrAbsoluteDateTime(
         .format(format);
 }
 
+export function fixPatchRequest<T extends {}>(entity: T): T {
+    return stripLockingFields(stripBaseRestApiFields(entity)) as unknown as T;
+}
+
 export function fixPatchResponse<T extends IBaseRestApiResponse>(
-    entity: T & IPatchExtraFields,
+    entity: T & IPatchResponseExtraFields,
 ): T {
     return omit(entity, ['_status']) as unknown as T;
 }
@@ -235,9 +241,12 @@ export function getSuperdeskApiImplementation(
             isNullOrUndefined,
             nameof: nameof,
             stripBaseRestApiFields,
+            fixPatchRequest,
             fixPatchResponse,
             computeEditor3Output,
             getContentStateFromHtml: (html) => getContentStateFromHtml(html),
+            tryLocking,
+            tryUnlocking,
         },
         httpRequestJsonLocal,
         httpRequestRawLocal,
@@ -362,6 +371,7 @@ export function getSuperdeskApiImplementation(
             Icon,
             IconBig,
             getAuthoringComponent: () => AuthoringReact,
+            getLockInfoHttpComponent: () => LockInfoHttp,
             getLockInfoComponent: () => LockInfo,
             getDropdownTree: () => DropdownTree,
             Center,

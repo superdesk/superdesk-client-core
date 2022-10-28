@@ -195,19 +195,14 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
         });
     },
     isLockedInCurrentSession: (article) => sdApi.article.isLockedInCurrentSession(article),
-    lock: (id: IArticle['_id']) => {
-        return sdApi.article.lock(id).then((article) => {
-            const adapter = getArticleAdapter();
+    forceLock(entity) {
+        return sdApi.article.unlock(entity._id)
+            .then(() => sdApi.article.lock(entity._id))
+            .then((article) => {
+                const adapter = getArticleAdapter();
 
-            return adapter.toAuthoringReact(article);
-        });
-    },
-    unlock: (id: IArticle['_id']) => {
-        return sdApi.article.unlock(id).then((article) => {
-            const adapter = getArticleAdapter();
-
-            return adapter.toAuthoringReact(article);
-        });
+                return adapter.toAuthoringReact(article);
+            });
     },
     saveEntity: (current, original) => {
         const adapter = getArticleAdapter();
