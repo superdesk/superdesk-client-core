@@ -7,7 +7,7 @@ import DiffMatchPatch from 'diff-match-patch';
  * @param {EditorState} editorState
  * @returns {String}
  */
-export function getTansaHtml(editorState) {
+export function prepareHtml(editorState) {
     const content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
@@ -46,17 +46,17 @@ export function getTansaHtml(editorState) {
  * If the simpleReplace is true try to preserve the existing inline styles and entities
  *
  * @param {EditorState} editorState
- * @param {String} html
+ * @param {String} preparedHtml
  * @param {String} simpleReplace
  * @returns {EditorState}
  */
-export function patchHTMLonTopOfEditorState(editorState: EditorState, html, simpleReplace?): EditorState {
+export function patchHTMLonTopOfEditorState(editorState: EditorState, preparedHtml, simpleReplace?): EditorState {
     let content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
     const htmlElement = document.createElement('div');
     const diffMatchPatch = new DiffMatchPatch();
 
-    htmlElement.innerHTML = html;
+    htmlElement.innerHTML = preparedHtml;
 
     blockMap.forEach((block) => {
         const key = block.getKey();

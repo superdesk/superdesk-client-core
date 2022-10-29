@@ -1,5 +1,5 @@
 import * as Setup from '../../reducers/tests/suggestion_setup';
-import {getTansaHtml, patchHTMLonTopOfEditorState} from '../tansa';
+import {prepareHtml, patchHTMLonTopOfEditorState} from '../tansa';
 
 describe('editor3.helpers.tansa', () => {
     it('should generate the tansa custom html', () => {
@@ -13,7 +13,7 @@ describe('editor3.helpers.tansa', () => {
 
         const editorState = Setup.getInitialEditorState(rawContent);
 
-        expect(getTansaHtml(editorState)).toEqual(
+        expect(prepareHtml(editorState)).toEqual(
             '<p id="text-4vu4i">paragraph1 foo&amp;amp;bar</p>\n<p id="text-9d99u">paragraph2</p>');
     });
 
@@ -94,7 +94,7 @@ describe('editor3.helpers.tansa', () => {
             '<p id="headline-4vu4i">headline</p>\n' +
             '<p id="text-9d99u">paragraph2</p>';
 
-        expect(getTansaHtml(editorState)).toEqual(tansaHtml);
+        expect(prepareHtml(editorState)).toEqual(tansaHtml);
     });
 
     it('should update the description of media', () => {

@@ -20,12 +20,12 @@ import {generatePatch} from 'core/patch';
 import {ToggleBox} from 'superdesk-ui-framework/react/components/Togglebox';
 import {Switch} from 'superdesk-ui-framework/react/components/Switch';
 import {omitFields} from '../data-layer';
-import {nameof} from 'core/helpers/typescript-helpers';
+import {assertNever, nameof} from 'core/helpers/typescript-helpers';
 import {EDITOR_3_FIELD_TYPE} from '../fields/editor3';
 import {dispatchEditorEvent} from '../authoring-react-editor-events';
 import {InteractiveMacrosDisplay} from './interactive-macros-display';
 import {editorId} from '../article-widgets/find-and-replace';
-import {getTansaHtml, patchHTMLonTopOfEditorState} from 'core/editor3/helpers/tansa';
+import {prepareHtml, patchHTMLonTopOfEditorState} from 'core/editor3/helpers/tansa';
 import {EditorState} from 'draft-js';
 import {OrderedMap} from 'immutable';
 
@@ -101,20 +101,25 @@ export function highlightDistinctMatches(diff: {[key: string]: string}) {
     });
 }
 
-// TODO: Reimplement overwriting
-function overwriteArticle(
+export function overwriteArticle(
     currentArticle: IArticle,
     patch: Partial<IArticle>,
     profile: IContentProfileV2,
 ): Promise<void> {
-    const patchCopy = omitFields({...patch, fields_meta: {}});
+    const patchCopy = omitFields(patch);
+
+    patchCopy.fields_meta = {
+        ...(currentArticle.fields_meta ?? {}),
+        ...(patchCopy.fields_meta ?? {}),
+    };
+
     const allFields = profile.header.merge(profile.content);
 
     Object.keys(patchCopy).forEach((fieldKey) => {
         const currentField = allFields.get(fieldKey);
 
         if (currentField != null && currentField.fieldType === EDITOR_3_FIELD_TYPE) {
-            patchCopy.fields_meta[currentField.name.toLowerCase()] = {};
+            delete patchCopy.fields_meta[currentField.id];
         }
     });
 
@@ -123,7 +128,7 @@ function overwriteArticle(
         patchCopy,
         {patchDirectlyAndOverwriteAuthoringValues: true},
     ).then(() => {
-        dispatchInternalEvent('dangerouslyForceReloadAuthoring', null);
+        dispatchInternalEvent('forceReloadAuthoringData', patchCopy);
     });
 }
 
@@ -134,28 +139,27 @@ function handleKeepStyleReplaceMacro(
 ): IMacroProcessor {
     return {
         beforePatch: () => {
-            const fields = contentProfile.header.merge(contentProfile.content)
+            const editor3fields = contentProfile.header.merge(contentProfile.content)
                 .filter((value) => value.fieldType === 'editor3');
 
-            fields.forEach((field) => {
+            editor3fields.forEach((field) => {
                 const valueOperational = fieldsData.get(field.id) as IEditor3ValueOperational;
-                const html = getTansaHtml(valueOperational.store.getState().editorState);
 
-                article[field.id] = html;
+                article[field.id] = prepareHtml(valueOperational.store.getState().editorState);
             });
             return article;
         },
         afterPatch: (resArticle: IArticle) => {
             const patch = generatePatch(article, resArticle);
-            const fields = contentProfile.header.merge(contentProfile.content)
+            const editor3fields = contentProfile.header.merge(contentProfile.content)
                 .filter((value) => value.fieldType === 'editor3' && Object.keys(patch).includes(value.id));
 
-            fields.forEach((field) => {
-                const editorStateCurrent = (fieldsData.get(field.id) as IEditor3ValueOperational)
+            editor3fields.forEach((field) => {
+                const editorStateCurrent: EditorState = (fieldsData.get(field.id) as IEditor3ValueOperational)
                     .store.getState().editorState;
-                const editorStateNext: EditorState = patchHTMLonTopOfEditorState(editorStateCurrent, patch[field.id]);
+                const editorStateNext = patchHTMLonTopOfEditorState(editorStateCurrent, patch[field.id]);
 
-                dispatchEditorEvent('macros__patch_html', {
+                dispatchEditorEvent('authoring__patch_html', {
                     editorId: field.id,
                     editorState: editorStateNext,
                     html: patch[field.id],
@@ -165,7 +169,7 @@ function handleKeepStyleReplaceMacro(
     };
 }
 
-function handleNoReplaceMacro(article: IArticle, contentProfile: IContentProfileV2): IMacroProcessor {
+function handleSimpleReplaceMacro(article: IArticle, contentProfile: IContentProfileV2): IMacroProcessor {
     return {
         beforePatch: () => {
             return article;
@@ -181,7 +185,7 @@ function handleNoReplaceMacro(article: IArticle, contentProfile: IContentProfile
     };
 }
 
-function handleUpdateStateMacro(article: IArticle, contentProfile: IContentProfileV2): IMacroProcessor {
+function handleUpdateEditorStateMacro(article: IArticle, contentProfile: IContentProfileV2): IMacroProcessor {
     return {
         beforePatch: () => {
             return article;
@@ -191,7 +195,7 @@ function handleUpdateStateMacro(article: IArticle, contentProfile: IContentProfi
                 .filter((value) => value.fieldType === 'editor3');
 
             fields.forEach((field) => {
-                dispatchEditorEvent('macros__update_state', {
+                dispatchEditorEvent('authoring__update_editor_state', {
                     editorId: field.id,
                     article: resArticle,
                 });
@@ -211,12 +215,16 @@ function getMacroProcessor(
     contentProfile: IContentProfileV2,
     fieldsData: OrderedMap<string, unknown>,
 ) {
-    if (macro.replace_type === 'keep-style-replace') {
+    if (macro.replace_type === 'simple-replace' || macro.name === 'populate_abstract') {
+        return handleSimpleReplaceMacro(article, contentProfile);
+    } else if (macro.replace_type === 'keep-style-replace') {
         return handleKeepStyleReplaceMacro(article, contentProfile, fieldsData);
     } else if (macro.replace_type === 'editor_state') {
-        return handleUpdateStateMacro(article, contentProfile);
+        return handleUpdateEditorStateMacro(article, contentProfile);
     } else if (macro.replace_type === 'no-replace') {
-        return handleNoReplaceMacro(article, contentProfile);
+        throw new Error('No replace is not supported via UI: ' + macro);
+    } else {
+        assertNever(macro.replace_type);
     }
 }
 
@@ -244,7 +252,8 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
 
     runMacro(macro: IMacro): void {
         const macroProcessor: IMacroProcessor = getMacroProcessor(
-            macro, this.props.getLatestArticle(),
+            macro,
+            this.props.getLatestArticle(),
             this.props.contentProfile,
             this.props.fieldsData,
         );

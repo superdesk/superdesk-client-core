@@ -23,8 +23,6 @@ const findReplace = (state = {}, action) => {
         return replaceHighlight(state, action.payload, true);
     case 'PATCH_HTML_ON_EDITOR_STATE':
         return patchHtmloNEditorState(state, action.payload);
-    case 'UPDATE_EDITOR_STATE':
-        return updateEditorState(state, action.payload);
     case 'HIGHLIGHTS_RENDER':
         return render(state);
     case 'HIGHLIGHTS_CRITERIA':
@@ -34,17 +32,10 @@ const findReplace = (state = {}, action) => {
     }
 };
 
-function updateEditorState(state, payload) {
-    return {
-        ...state,
-        editorState: setEditorStateFromItem(payload.article, payload.fieldId),
-    };
-}
-
 function patchHtmloNEditorState(state, payload) {
     return {
         ...state,
-        editorState: patchHTMLonTopOfEditorState(state, payload.html, payload.simpleReplace),
+        editorState: patchHTMLonTopOfEditorState(state.editorState, payload.html, payload.simpleReplace),
     };
 }
 

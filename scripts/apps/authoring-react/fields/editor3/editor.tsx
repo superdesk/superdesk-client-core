@@ -257,7 +257,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addEditorEventListener('macros__patch_html', (event) => {
+            addEditorEventListener('authoring__patch_html', (event) => {
                 const {editorId, editorState, html} = event.detail;
 
                 if (editorId !== this.props.editorId) {
@@ -269,7 +269,7 @@ export class Editor extends React.PureComponent<IProps, IState> {
         );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
-            addEditorEventListener('macros__update_state', (event) => {
+            addEditorEventListener('authoring__update_editor_state', (event) => {
                 const {editorId, article} = event.detail;
 
                 if (editorId !== this.props.editorId) {

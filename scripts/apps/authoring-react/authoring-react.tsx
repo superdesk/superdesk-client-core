@@ -248,6 +248,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.cancelAutosave = this.cancelAutosave.bind(this);
         this.getVocabularyItems = this.getVocabularyItems.bind(this);
         this.toggleField = this.toggleField.bind(this);
+        this.updateItemWithChanges = this.updateItemWithChanges.bind(this);
 
         const setStateOriginal = this.setState.bind(this);
 
@@ -492,6 +493,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                 dispatchEditorEvent('spellchecker__set_status', this.state.spellcheckerEnabled);
             }
         }));
+
+        this.eventListenersToRemoveBeforeUnmounting.push(
+            addInternalEventListener(
+                'forceReloadAuthoringData',
+                (event) => {
+                    const {state} = this;
+                    const article = event.detail;
+
+                    if (state.initialized) {
+                        this.setState(this.updateItemWithChanges(state, article));
+                    }
+                },
+            ),
+        );
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addInternalEventListener(
@@ -942,6 +957,31 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             },
             fieldsDataWithChanges: fieldValuesNext,
         });
+    }
+
+    updateItemWithChanges(state: IStateLoaded<T>, itemPartial: Partial<T>): IStateLoaded<T> {
+        const {profile} = state;
+        const fields = profile.header.merge(profile.content);
+
+        const itemPatched = {
+            ...state.itemWithChanges,
+            ...itemPartial,
+        };
+
+        const fieldsDataNext = getFieldsData(
+            itemPatched,
+            fields,
+            this.props.fieldsAdapter,
+            this.props.authoringStorage,
+            this.props.storageAdapter,
+            this.props.getLanguage(itemPatched),
+        );
+
+        return {
+            ...state,
+            itemWithChanges: itemPatched,
+            fieldsDataWithChanges: fieldsDataNext,
+        };
     }
 
     render() {

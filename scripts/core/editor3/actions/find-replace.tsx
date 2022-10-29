@@ -1,10 +1,11 @@
+import {EditorState} from 'draft-js';
 import {IPayloadSetHighlightsCriteria} from '../reducers/find-replace';
 
 /**
  * @ngdoc method
  * @name findNext
  * @param {String} txt Text to find
- * @description Creates the action to find the next occurence of txt.
+ * @description Creates the action to find the next occurrence of txt.
  */
 export function findNext() {
     return {type: 'HIGHLIGHTS_FIND_NEXT'};
@@ -14,7 +15,7 @@ export function findNext() {
  * @ngdoc method
  * @name findPrev
  * @param {String} txt Text to find
- * @description Creates the action to find the previous occurence of txt.
+ * @description Creates the action to find the previous occurrence of txt.
  */
 export function findPrev() {
     return {type: 'HIGHLIGHTS_FIND_PREV'};
@@ -41,16 +42,9 @@ export function multiReplace(diff) {
     };
 }
 
-export function patchHTMLonEditorState(payload) {
+export function patchHTMLonEditorState(payload: {editorState: EditorState, html: string, simpleReplace: boolean}) {
     return {
         type: 'PATCH_HTML_ON_EDITOR_STATE',
-        payload,
-    };
-}
-
-export function updateEditorState(payload) {
-    return {
-        type: 'UPDATE_EDITOR_STATE',
         payload,
     };
 }

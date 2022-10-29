@@ -41,13 +41,13 @@ interface IAuthoringReactEditorEvents {
         replaceWith: {[key: string]: string};
     };
 
-    macros__patch_html: {
+    authoring__patch_html: {
         editorId: string;
         editorState: EditorState;
         html: string;
     };
 
-    macros__update_state: {
+    authoring__update_editor_state: {
         editorId: string;
         article: IArticle;
     };
