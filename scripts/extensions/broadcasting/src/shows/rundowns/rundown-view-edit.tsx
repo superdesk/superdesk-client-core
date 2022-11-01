@@ -26,6 +26,7 @@ interface IState {
     rundown: IRundown | null;
     rundownWithChanges: IRundown | null;
     exportOptions: Array<IRundownExportOption>;
+    rundownItems: Array<IRundownItem> | null;
 }
 
 import {superdesk} from '../../superdesk';
@@ -118,6 +119,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
             rundown: null,
             rundownWithChanges: null,
             exportOptions: [],
+            rundownItems: null,
         };
 
         this.setRundownField = this.setRundownField.bind(this);
@@ -179,6 +181,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
     }
 
     initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
+        this.preventNoUnlock();
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
             this.props.onRundownActionChange(
                 prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
@@ -237,6 +240,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
     }
 
     initiateEditing(item: IRundownItem, skipUnsavedChangesCheck?: boolean) {
+        this.preventNoUnlock();
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
             this.props.onRundownActionChange(
                 prepareForEditing(this.props.rundownItemAction, item._id, item, (val) => {
@@ -265,6 +269,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
     }
 
     initiatePreview(item: IRundownItem, skipUnsavedChangesCheck?: boolean) {
+        this.preventNoUnlock();
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
             this.props.onRundownActionChange(prepareForPreview(this.props.rundownItemAction, item._id, item));
         });
@@ -308,6 +313,20 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
     componentWillUnmount(): void {
         for (const fn of this.eventListenersToRemoveBeforeUnmounting) {
             fn();
+        }
+    }
+
+    lock(itemId: string, lock: boolean) {
+        const itemToLock = this.state.rundownItems?.find((x) => x._id === itemId);
+
+        if (itemToLock) {
+            itemToLock._locked = lock;
+        }
+    }
+
+    preventNoUnlock() {
+        if (this.props.rundownItemAction) {
+            this.lock(this.props.rundownItemAction?.item._id, false);
         }
     }
 
@@ -436,7 +455,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     >
                                         {(res) => {
                                             const rundownItems: Array<IRundownItem> = res[0]._items;
-
+                                            this.setState({rundownItems});
                                             return (
                                                 <ManageRundownItems
                                                     rundown={rundown}
@@ -457,6 +476,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             ),
                                                         });
                                                     }}
+                                                    lock={(item) => {
+                                                        this.lock(item._id, true)
+                                                    }}
                                                 />
                                             );
                                         }}
@@ -476,6 +498,9 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 // and not on database items via HTTP API
                                                 itemId=""
                                                 onClose={() => {
+                                                    if (this.props.rundownItemAction) {
+                                                        this.lock(this.props.rundownItemAction?.item._id, false);
+                                                    }
                                                     this.props.onRundownActionChange(null);
                                                 }}
                                                 fieldsAdapter={{}}

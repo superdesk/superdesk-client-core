@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Dropdown, IconButton, IconLabel, TableList} from 'superdesk-ui-framework/react';
+import {Dropdown, IconButton, IconLabel} from 'superdesk-ui-framework';
 import {IRundown, IRundownItem, IRundownItemBase} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
@@ -9,7 +9,7 @@ import {IVocabularyItem} from 'superdesk-api';
 import {addSeconds, arrayMove} from '@superdesk/common';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
-import {IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
+import {IMenuGroup, IMenuItem, ISubmenu} from 'superdesk-ui-framework/react/components/Dropdown';
 import {noop} from 'lodash';
 import {RundownItems} from './components/rundown-items';
 const {vocabulary} = superdesk.entities;
@@ -26,6 +26,7 @@ interface IProps<T extends IRundownItemBase | IRundownItem> {
     initiateEditing(item: T): void;
     initiatePreview(item: T): void;
     readOnly: boolean;
+    lock?(item: T): void;
 }
 
 export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> extends React.PureComponent<IProps<T>> {
@@ -98,6 +99,9 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                 label: gettext('Edit'),
                                 onSelect: () => {
                                     this.props.initiateEditing(item);
+                                    if (this.props.lock) {
+                                        this.props.lock(item);
+                                    }
                                 },
                             };
 
@@ -133,9 +137,8 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         );
                     })}
                     itemsDropdown={(() => {
-                            type IDropdownItems = React.ComponentProps<typeof TableList>['itemsDropdown'];
-
-                            const result: IDropdownItems = rundownItemTypes.toArray()
+                        const result: Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'> =
+                            rundownItemTypes.toArray()
                                 .map((rundownType) => ({
                                     label: rundownType.name,
                                     onSelect: () => {
@@ -145,19 +148,19 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                                     },
                                 }));
 
-                            if (rundownItemTypes.size > 0) {
-                                result.push('divider');
-                            }
+                        if (rundownItemTypes.size > 0) {
+                            result.push('divider');
+                        }
 
-                            result.push({
-                                label: gettext('(empty)'),
-                                onSelect: () => {
-                                    this.props.initiateCreation({});
-                                },
-                            });
+                        result.push({
+                            label: gettext('(empty)'),
+                            onSelect: () => {
+                                this.props.initiateCreation({});
+                            },
+                        });
 
-                            return result;
-                    })()}
+                        return result;
+                    })}
                     onDrag={(oldIndex, newIndex) => {
                         if (this.props.readOnly !== true) {
                             this.props.onChange(
