@@ -17,7 +17,7 @@ import {superdesk} from '../../superdesk';
 import {stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
-import {getPartialDateFormat} from '../../utils/get-partial-date-format';
+import {getPartialDateFormat, toPythonDateFormat, toSuperdeskDateFormat} from '../../utils/get-partial-date-format';
 import {IAuthoringStorage} from 'superdesk-api';
 import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
 
@@ -407,13 +407,13 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
 
                                                 <div>
                                                     <Select
-                                                        value={headline_template.date_format}
+                                                        value={toSuperdeskDateFormat(headline_template.date_format)}
                                                         onChange={(val) => {
                                                             this.handleChange({
                                                                 ...templateFields,
                                                                 title_template: {
                                                                     ...headline_template,
-                                                                    date_format: val,
+                                                                    date_format: toPythonDateFormat(val),
                                                                 },
                                                             });
                                                         }}

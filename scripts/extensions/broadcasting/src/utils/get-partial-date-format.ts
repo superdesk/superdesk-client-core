@@ -1,6 +1,33 @@
 import {superdesk} from '../superdesk';
 
-export function getPartialDateFormat(parts: {year?: boolean; month?: boolean; day?: boolean}) {
+/**
+ * https://docs.python.org/3/library/datetime.html#strftime-and-strptime-format-codes
+ */
+export function toPythonDateFormat(
+    dateTemplate: string, // superdesk format from config.view.dateformat
+) {
+    let result = dateTemplate;
+
+    result = result.replace('YYYY', '%Y');
+    result = result.replace('MM', '%m');
+    result = result.replace('DD', '%d');
+
+    return result;
+}
+
+export function toSuperdeskDateFormat(
+    dateTemplate: string, // python format
+): string { // returns superdesk format from config.view.dateformat
+    let result = dateTemplate;
+
+    result = result.replace('%Y', 'YYYY');
+    result = result.replace('%m', 'MM');
+    result = result.replace('%d', 'DD');
+
+    return result;
+}
+
+export function getPartialDateFormat(parts: {year?: boolean; month?: boolean; day?: boolean}): string {
     const separator = superdesk.instance.config.view.dateformat
         .replace('YYYY', '')
         .replace('MM', '')
