@@ -6,7 +6,7 @@ import {
     SelectionState,
     ContentBlock,
 } from 'draft-js';
-import {patchHTMLonTopOfEditorState} from '../helpers/tansa';
+import {patchHTMLonTopOfEditorState} from '../helpers/patch-editor-3-html';
 import {addMedia} from './toolbar';
 import {getDecorators, IEditorStore} from '../store';
 import {replaceWord} from './spellchecker';

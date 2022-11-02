@@ -1,6 +1,6 @@
 import {IContentProfileV2, IEditor3ValueOperational} from 'superdesk-api';
 import {Map} from 'immutable';
-import {prepareHtml} from 'core/editor3/helpers/tansa';
+import {prepareHtmlForPatching} from 'core/editor3/helpers/patch-editor-3-html';
 import {setHtmlFromTansa} from 'core/editor3/actions';
 
 const TANSA_PROOFING_ATTRIBUTE = 'tansa-proofing';
@@ -29,7 +29,7 @@ export function runTansa(contentProfile: IContentProfileV2, fieldsData: Map<stri
         const {store} = fieldsData.get(field.id) as IEditor3ValueOperational;
         const editorState = store.getState().editorState;
 
-        textByField = textByField.set(field.id, prepareHtml(editorState));
+        textByField = textByField.set(field.id, prepareHtmlForPatching(editorState));
     }
 
     tansaEl.innerHTML = textByField.map((value, key) => `<div data-field-id="${key}">${value}</div>`).join('');

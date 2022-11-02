@@ -4,8 +4,7 @@ import {Modifier, EditorState} from 'draft-js';
 import {clearHighlights, forEachMatch} from '../helpers/find-replace';
 import {onChange} from './editor3';
 import {escapeRegExp} from 'core/utils';
-import {patchHTMLonTopOfEditorState} from '../helpers/tansa';
-import {setEditorStateFromItem} from '../actions/editor3';
+import {patchHTMLonTopOfEditorState} from '../helpers/patch-editor-3-html';
 
 interface IDiff { [s: string]: string; }
 

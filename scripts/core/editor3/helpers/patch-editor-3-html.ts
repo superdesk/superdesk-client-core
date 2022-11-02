@@ -1,13 +1,10 @@
-import {EditorState, Modifier} from 'draft-js';
+import {ContentBlock, ContentState, Editor, EditorState, Modifier, SelectionState} from 'draft-js';
 import DiffMatchPatch from 'diff-match-patch';
 
 /**
- * Create a custom html for Tansa
- *
- * @param {EditorState} editorState
- * @returns {String}
+ * Create custom html with IDs
  */
-export function prepareHtml(editorState) {
+export function prepareHtmlForPatching(editorState: EditorState): string {
     const content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
 
@@ -42,15 +39,14 @@ export function prepareHtml(editorState) {
 }
 
 /**
- * Update the editor with the changes performed by Tansa
- * If the simpleReplace is true try to preserve the existing inline styles and entities
- *
- * @param {EditorState} editorState
- * @param {String} preparedHtml
- * @param {String} simpleReplace
- * @returns {EditorState}
+ * Update the editor with html changes
+ * If simpleReplace is true try to preserve the existing inline styles and entities
  */
-export function patchHTMLonTopOfEditorState(editorState: EditorState, preparedHtml, simpleReplace?): EditorState {
+export function patchHTMLonTopOfEditorState(
+    editorState: EditorState,
+    preparedHtml: string,
+    simpleReplace?: boolean,
+): EditorState {
     let content = editorState.getCurrentContent();
     const blockMap = content.getBlockMap();
     const htmlElement = document.createElement('div');
@@ -79,59 +75,46 @@ export function patchHTMLonTopOfEditorState(editorState: EditorState, preparedHt
 
 /**
  * Find the tag and extract the text
- *
- * @param {HtmlDom} htmlElement
- * @param {String} field
- * @param {String} key
- * @returns {String}
  */
-function getTextFromTag(htmlElement, field, key) {
-    const tagElement = htmlElement.querySelector('#' + getHtmlId(field, key));
+function getTextFromTag(htmlElement: HTMLDivElement, field: string, key: string) {
+    const tagElement: HTMLElement = htmlElement.querySelector('#' + getHtmlId(field, key));
 
-    return tagElement != null ? tansaDecode(tagElement.innerText) : null;
+    return tagElement != null ? decode(tagElement.innerText) : null;
 }
 
 /**
  * Generate an id for html tag
- *
- * @param {String} field
- * @param {String} key
- * @returns {String}
  */
-function getHtmlId(field, key) {
+function getHtmlId(field: string, key: string): string {
     return field + '-' + key;
 }
 
 /**
  * Generate the tag
- *
- * @param {String} field
- * @param {String} key
- * @param {String} text
- * @returns {String}
  */
-function getBlockHtml(field, key, text) {
+function getBlockHtml(field: string, key: string, text: string): string {
     const p = document.createElement('p');
 
     p.id = getHtmlId(field, key);
-    p.innerText = tansaEncode(text);
+    p.innerText = encode(text);
 
     return p.outerHTML;
 }
 
 /**
  * Update the description of the media block
- *
- * @param {ContentState} contentState
- * @param {Block} block
- * @param {String} text
- * @returns {ContentState}
  */
-function updateMedia(content, block, newDescription, newAlt, newHeadline) {
+function updateMedia(
+    contentState: ContentState,
+    block: ContentBlock,
+    newDescription: string,
+    newAlt: string,
+    newHeadline: string,
+): ContentState {
     const entityKey = block.getEntityAt(0);
-    const entity = content.getEntity(entityKey);
+    const entity = contentState.getEntity(entityKey);
     const data = (entity != null && entity.getData() != null) ? entity.getData() : null;
-    let newContent = content;
+    let newContent = contentState;
 
     if (data != null) {
         if (newDescription) {
@@ -146,7 +129,7 @@ function updateMedia(content, block, newDescription, newAlt, newHeadline) {
             data.media.headline = newHeadline;
         }
 
-        newContent = content.mergeEntityData(entityKey, data);
+        newContent = contentState.mergeEntityData(entityKey, data);
     }
 
     return newContent;
@@ -155,18 +138,17 @@ function updateMedia(content, block, newDescription, newAlt, newHeadline) {
 /**
  * Update the text in the block
  * If the simpleReplace is true try to preserve the existing inline styles and entities
- *
- * @param {EditorState} editorState
- * @param {ContentState} content
- * @param {Block} block
- * @param {String} newText
- * @param {Object} diffMatchPatch
- * @param {boolean} simpleReplace
- * @returns {ContentState}
  */
-function updateText(editorState, content, block, newText, diffMatchPatch, simpleReplace) {
+function updateText(
+    editorState: EditorState,
+    contentState: ContentState,
+    block: ContentBlock,
+    newText: string,
+    diffMatchPatch,
+    simpleReplace: boolean,
+) {
     const text = block.getText();
-    let newContent = content;
+    let newContent = contentState;
     let offset = 0;
     let diffs;
     let previousDiff;
@@ -221,7 +203,13 @@ function updateText(editorState, content, block, newText, diffMatchPatch, simple
  * @param {String} text
  * @returns {ContentState, Integer}
  */
-function insertText(editorState, content, block, offset, text) {
+function insertText(
+    editorState: EditorState,
+    content: ContentState,
+    block: ContentBlock,
+    offset: number,
+    text: string,
+): {newContent: ContentState, offset: number} {
     const selection = createSelectionForBlock(editorState, block, offset);
     const newContent = Modifier.insertText(content, selection, text);
 
@@ -231,17 +219,16 @@ function insertText(editorState, content, block, offset, text) {
 }
 
 /**
- * Replate text with newText and preserve the existing inline styles and entities
- *
- * @param {EditorState} editorState
- * @param {ContentState} content
- * @param {Block} block
- * @param {Integer} offset
- * @param {String} text
- * @param {String} newText
- * @returns {ContentState, Integer}
+ * Replace text with newText and preserve the existing inline styles and entities
  */
-function replaceText(editorState, content, block, offset, text, newText) {
+function replaceText(
+    editorState: EditorState,
+    content: ContentState,
+    block: ContentBlock,
+    offset: number,
+    text: string,
+    newText: string,
+): {newContent: ContentState, offset: number} {
     const overlapLength = text.length < newText.length ? text.length : newText.length;
     let newContent = content;
 
@@ -279,29 +266,29 @@ function replaceText(editorState, content, block, offset, text, newText) {
 
 /**
  * Remove the 'text' at offset position
- *
- * @param {EditorState} editorState
- * @param {ContentState} content
- * @param {Block} block
- * @param {Integer} offset
- * @param {String} text
- * @returns {ContentState}
  */
-function removeText(editorState, content, block, offset, text) {
+function removeText(
+    editorState: EditorState,
+    contentState: ContentState,
+    block: ContentBlock,
+    offset: number,
+    text: string,
+): ContentState {
     const selection = createSelectionForBlock(editorState, block, offset, text.length);
-    const newContent = Modifier.removeRange(content, selection, 'forward');
+    const newContent = Modifier.removeRange(contentState, selection, 'forward');
 
     return newContent;
 }
 
 /**
  * Create a selection in block at the offset
- *
- * @param {EditorState} editorState
- * @param {Block} block
- * @returns {SelectionState}
  */
-function createSelectionForBlock(editorState, block, offset, size = 0) {
+function createSelectionForBlock(
+    editorState: EditorState,
+    block: ContentBlock,
+    offset: number,
+    size = 0,
+): SelectionState {
     const selection = editorState.getSelection();
 
     return selection.merge({
@@ -318,7 +305,7 @@ function createSelectionForBlock(editorState, block, offset, size = 0) {
  * but then it parses entities in it so those must be
  * escaped.
  */
-function tansaEncode(text: string): string {
+function encode(text: string): string {
     const div = document.createElement('div');
 
     div.innerText = text;
@@ -329,7 +316,7 @@ function tansaEncode(text: string): string {
 /**
  * Decode encoded tansa output.
  */
-function tansaDecode(text: string): string {
+function decode(text: string): string {
     const div = document.createElement('div');
 
     div.innerHTML = text;

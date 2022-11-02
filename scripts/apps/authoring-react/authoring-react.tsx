@@ -496,7 +496,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
         this.eventListenersToRemoveBeforeUnmounting.push(
             addInternalEventListener(
-                'forceReloadAuthoringData',
+                'replaceAuthoringDataWithChanges',
                 (event) => {
                     const {state} = this;
                     const article = event.detail;

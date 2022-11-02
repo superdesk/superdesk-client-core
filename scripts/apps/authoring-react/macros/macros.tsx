@@ -25,7 +25,7 @@ import {EDITOR_3_FIELD_TYPE} from '../fields/editor3';
 import {dispatchEditorEvent} from '../authoring-react-editor-events';
 import {InteractiveMacrosDisplay} from './interactive-macros-display';
 import {editorId} from '../article-widgets/find-and-replace';
-import {prepareHtml, patchHTMLonTopOfEditorState} from 'core/editor3/helpers/tansa';
+import {prepareHtmlForPatching, patchHTMLonTopOfEditorState} from 'core/editor3/helpers/patch-editor-3-html';
 import {EditorState} from 'draft-js';
 import {OrderedMap} from 'immutable';
 
@@ -128,7 +128,7 @@ export function overwriteArticle(
         patchCopy,
         {patchDirectlyAndOverwriteAuthoringValues: true},
     ).then(() => {
-        dispatchInternalEvent('forceReloadAuthoringData', patchCopy);
+        dispatchInternalEvent('replaceAuthoringDataWithChanges', patchCopy);
     });
 }
 
@@ -145,7 +145,7 @@ function handleKeepStyleReplaceMacro(
             editor3fields.forEach((field) => {
                 const valueOperational = fieldsData.get(field.id) as IEditor3ValueOperational;
 
-                article[field.id] = prepareHtml(valueOperational.store.getState().editorState);
+                article[field.id] = prepareHtmlForPatching(valueOperational.store.getState().editorState);
             });
             return article;
         },
@@ -241,10 +241,11 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
 
     componentDidMount(): void {
         getAllMacros().then((macros) => {
-            const groupedMacros = groupBy(macros._items.filter((x) => x.group != null), nameof<IMacro>('group'));
+            const filteredMacros = macros._items.filter((x) => x.access_type === 'frontend');
+            const groupedMacros = groupBy(filteredMacros.filter((x) => x.group != null), nameof<IMacro>('group'));
 
             this.setState({
-                macros: macros._items,
+                macros: filteredMacros,
                 displayGrouped: Object.keys(groupedMacros).length > 0 ? true : null,
             });
         });
