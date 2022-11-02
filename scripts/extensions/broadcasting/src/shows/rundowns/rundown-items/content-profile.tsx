@@ -9,7 +9,7 @@ import {
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
 import {
-    CAMERA,
+    // CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     RUNDOWN_SUBITEM_TYPES,
     // RUNDOWN_SUBITEM_TYPES,
@@ -74,15 +74,15 @@ const titleField: IAuthoringFieldV2 = {
     },
 };
 
-const technicalTitle: IAuthoringFieldV2 = {
-    id: 'tech_title',
-    name: gettext('Tech. title'),
-    fieldType: 'editor3',
-    fieldConfig: {
-        ...editor3TestConfigWithoutFormatting,
-        readOnly: true,
-    },
-};
+// const technicalTitle: IAuthoringFieldV2 = {
+//     id: 'tech_title',
+//     name: gettext('Tech. title'),
+//     fieldType: 'editor3',
+//     fieldConfig: {
+//         ...editor3TestConfigWithoutFormatting,
+//         readOnly: true,
+//     },
+// };
 
 const contentField: IAuthoringFieldV2 = {
     id: 'content',
@@ -104,18 +104,18 @@ const itemTypeField: IAuthoringFieldV2 = {
     fieldConfig: itemTypesConfig,
 };
 
-const cameraConfig: IDropdownConfigVocabulary = {
-    source: 'vocabulary',
-    vocabularyId: CAMERA,
-    multiple: false,
-};
+// const cameraConfig: IDropdownConfigVocabulary = {
+//     source: 'vocabulary',
+//     vocabularyId: CAMERA,
+//     multiple: false,
+// };
 
-const cameraField: IAuthoringFieldV2 = {
-    id: 'camera',
-    name: gettext('Camera'),
-    fieldType: 'dropdown',
-    fieldConfig: cameraConfig,
-};
+// const cameraField: IAuthoringFieldV2 = {
+//     id: 'camera',
+//     name: gettext('Camera'),
+//     fieldType: 'dropdown',
+//     fieldConfig: cameraConfig,
+// };
 
 const startTimeConfig: ITimeFieldConfig = {
     allowSeconds: true,
@@ -218,10 +218,10 @@ export function getRundownItemContentProfile(readOnly: boolean) {
         id: 'temp-profile',
         name: 'Temporary profile',
         header: OrderedMap([
-            [technicalTitle.id, technicalTitle],
+            // [technicalTitle.id, technicalTitle], // TODO: restore when back-end is ready
             [itemTypeField.id, itemTypeField],
             [showPartField.id, showPartField],
-            [cameraField.id, cameraField],
+            // [cameraField.id, cameraField], // TODO: restore when back-end is ready
             [subItemsField.id, subItemsField],
             [statusField.id, statusField],
             [startTimeField.id, startTimeField],
