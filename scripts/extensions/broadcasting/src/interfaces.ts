@@ -48,6 +48,7 @@ export interface IRundownItemBase {
     start_time?: string;
     end_time?: string;
     duration: number;
+    status?: string;
     planned_duration: number;
     title: string;
     content?: string;

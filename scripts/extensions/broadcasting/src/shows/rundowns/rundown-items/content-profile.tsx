@@ -14,6 +14,7 @@ import {
     RUNDOWN_SUBITEM_TYPES,
     // RUNDOWN_SUBITEM_TYPES,
     SHOW_PART_VOCABULARY_ID,
+    STATUS_VOCABULARY_ID,
 } from '../../../constants';
 import {superdesk} from '../../../superdesk';
 
@@ -199,6 +200,19 @@ const subitemAttachments: IAuthoringFieldV2 = {
     fieldConfig: subitemAttachmentsConfig,
 };
 
+const statusConfig: IDropdownConfigVocabulary = {
+    source: 'vocabulary',
+    vocabularyId: STATUS_VOCABULARY_ID,
+    multiple: false,
+};
+
+const statusField: IAuthoringFieldV2 = {
+    id: 'status',
+    name: gettext('Status'),
+    fieldType: 'dropdown',
+    fieldConfig: statusConfig,
+};
+
 export function getRundownItemContentProfile(readOnly: boolean) {
     const profile: IContentProfileV2 = {
         id: 'temp-profile',
@@ -209,6 +223,7 @@ export function getRundownItemContentProfile(readOnly: boolean) {
             [showPartField.id, showPartField],
             [cameraField.id, cameraField],
             [subItemsField.id, subItemsField],
+            [statusField.id, statusField],
             [startTimeField.id, startTimeField],
             [endTimeField.id, endTimeField],
             [durationField.id, durationField],
