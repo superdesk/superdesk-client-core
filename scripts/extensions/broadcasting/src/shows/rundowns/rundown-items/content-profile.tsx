@@ -130,37 +130,9 @@ const plannedDurationField: IAuthoringFieldV2 = {
     },
 };
 
-const liveSoundField: IAuthoringFieldV2 = {
-    id: 'live_sound',
-    name: gettext('Live sound'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
-const guestsField: IAuthoringFieldV2 = {
-    id: 'guests',
-    name: gettext('Guests'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
 const additionalNotesField: IAuthoringFieldV2 = {
     id: 'additional_notes',
     name: gettext('Additional notes'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
-const liveCaptionsField: IAuthoringFieldV2 = {
-    id: 'live_captions',
-    name: gettext('Live captions'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
-const lastSentence: IAuthoringFieldV2 = {
-    id: 'last_sentence',
-    name: gettext('Last sentence'),
     fieldType: 'editor3',
     fieldConfig: editor3TestConfigWithoutFormatting,
 };
@@ -220,11 +192,7 @@ export function getRundownItemContentProfile(readOnly: boolean) {
             [titleField.id, titleField],
             [subitemAttachments.id, subitemAttachments],
             [contentField.id, contentField],
-            [liveSoundField.id, liveSoundField],
-            [guestsField.id, guestsField],
             [additionalNotesField.id, additionalNotesField],
-            [liveCaptionsField.id, liveCaptionsField],
-            [lastSentence.id, lastSentence],
         ]),
     };
 
