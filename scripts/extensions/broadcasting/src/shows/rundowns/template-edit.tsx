@@ -11,13 +11,13 @@ import {
     ButtonGroup,
     Checkbox,
 } from 'superdesk-ui-framework/react';
-import {CreateValidators, WithValidation} from '@superdesk/common';
+import {arrayInsertAtIndex, CreateValidators, WithValidation} from '@superdesk/common';
 import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
 import {superdesk} from '../../superdesk';
 import {stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
-import {getPartialDateFormat} from '../../utils/get-partial-date-format';
+import {getPartialDateFormat, toPythonDateFormat, toSuperdeskDateFormat} from '../../utils/get-partial-date-format';
 import {IAuthoringStorage} from 'superdesk-api';
 import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
 
@@ -47,7 +47,7 @@ const dateFormatOptions = [
     getPartialDateFormat({month: true, day: true}),
 ];
 
-interface IWithAuthoringReactKey {
+export interface IWithAuthoringReactKey {
     /**
      * authoring-react doesn't remount if `authoringStorage` changes
      * key is used to instruct authoring-react when to remount
@@ -129,7 +129,11 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
         }
     }
 
-    private initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
+    private initiateCreation(
+        initialData: Partial<IRundownItemBase>,
+        insertAtIndex?: number,
+        skipUnsavedChangesCheck?: boolean,
+    ) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
             this.props.onRundownItemActionChange(
                 prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
@@ -139,10 +143,13 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                             duration: val.data.planned_duration,
                         };
 
+                        const currentItems = this.getRundownItems();
+
                         this.props.onChange({
-                            items: this.getRundownItems().concat(
-                                // validated in authoring view using content profile
+                            items: arrayInsertAtIndex(
+                                currentItems,
                                 itemWithDuration as unknown as IRundownItemBase,
+                                insertAtIndex ?? currentItems.length,
                             ),
                         });
                     }
@@ -400,13 +407,13 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
 
                                                 <div>
                                                     <Select
-                                                        value={headline_template.date_format}
+                                                        value={toSuperdeskDateFormat(headline_template.date_format)}
                                                         onChange={(val) => {
                                                             this.handleChange({
                                                                 ...templateFields,
                                                                 title_template: {
                                                                     ...headline_template,
-                                                                    date_format: val,
+                                                                    date_format: toPythonDateFormat(val),
                                                                 },
                                                             });
                                                         }}
@@ -440,7 +447,12 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                                     rundownItems,
                                                                 )
                                                             }
-                                                            initiateCreation={this.initiateCreation}
+                                                            initiateCreation={(initialData, insertAtIndex) => {
+                                                                this.initiateCreation(
+                                                                    initialData,
+                                                                    insertAtIndex,
+                                                                );
+                                                            }}
                                                             initiateEditing={this.initiateEditing}
                                                             initiatePreview={this.initiatePreview}
                                                             onChange={(val) => {
@@ -473,6 +485,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                             <AuthoringReact
                                                 key={this.props.rundownItemAction.authoringReactKey}
                                                 itemId=""
+                                                resourceNames={[]} // isn't applicable to embedded items
                                                 onClose={() => {
                                                     this.props.onRundownItemActionChange(null);
                                                 }}

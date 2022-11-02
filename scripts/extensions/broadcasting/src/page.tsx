@@ -21,21 +21,23 @@ import {classnames, showModal} from '@superdesk/common';
 import {CreateRundownFromTemplate} from './shows/rundowns/create-rundown-from-template';
 import {RundownsList} from './shows/rundowns/rundowns-list';
 import {RundownViewEdit} from './shows/rundowns/rundown-view-edit';
-import {IRundownFilters} from './interfaces';
+import {IRundown, IRundownFilters} from './interfaces';
 import {FilteringInputs} from './shows/rundowns/components/filtering-inputs';
 import {AppliedFilters} from './shows/rundowns/components/applied-filters';
 
 import {superdesk} from './superdesk';
 import {ManageShows} from './shows/manage-shows';
-import {IRundownItemAction} from './shows/rundowns/template-edit';
+import {IRundownItemActionNext} from './shows/rundowns/prepare-create-edit-rundown-item';
 
 const {gettext} = superdesk.localization;
+const {isLockedInCurrentSession} = superdesk.utilities;
+const {tryLocking, tryUnlocking} = superdesk.helpers;
 
 type IProps = {};
 
 interface IState {
-    rundownIdInEditMode: string | null;
-    rundownItemAction: IRundownItemAction;
+    rundownViewEdit: null | {mode: 'view'; id: string} | {mode: 'edit'; id: string};
+    rundownItemAction: IRundownItemActionNext;
     searchString: string;
     filtersOpen: boolean;
     filters: IRundownFilters;
@@ -47,7 +49,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            rundownIdInEditMode: null,
+            rundownViewEdit: null,
             rundownItemAction: null,
             searchString: '',
             filtersOpen: false,
@@ -56,6 +58,8 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         };
 
         this.setFilter = this.setFilter.bind(this);
+        this.prepareRundownEditing = this.prepareRundownEditing.bind(this);
+        this.prepareNextRundownItemAction = this.prepareNextRundownItemAction.bind(this);
     }
 
     private setFilter(filters: Partial<IState['filters']>) {
@@ -67,11 +71,38 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         });
     }
 
+    private prepareRundownEditing(id: IRundown['_id']): Promise<IState['rundownViewEdit']> {
+        return tryLocking<IRundown>('/rundowns', id).then(({success}) => {
+            if (success) {
+                return {mode: 'edit', id};
+            } else {
+                return {mode: 'view', id};
+            }
+        });
+    }
+
+    private prepareNextRundownItemAction(actionNext: IRundownItemActionNext): Promise<IState['rundownItemAction']> {
+        if (actionNext != null && actionNext.type === 'edit') {
+            return tryLocking('/rundown_items', actionNext.itemId).then(() => {
+                return actionNext;
+            });
+        } else {
+            return Promise.resolve(actionNext);
+        }
+    }
+
     render() {
-        const rundownsListVisible = !(this.state.rundownIdInEditMode != null && this.state.rundownItemAction != null);
+        const {rundownViewEdit} = this.state;
+        const rundownsListVisible = !(rundownViewEdit != null && this.state.rundownItemAction != null);
 
         return (
-            <div style={{marginTop: 'var(--top-navigation-height)', width: '100%', height: 'calc(100% - 32px)'}}>
+            <div
+                style={{
+                    marginTop: 'var(--top-navigation-height)',
+                    width: '100%',
+                    height: 'calc(100% - var(--top-navigation-height))',
+                }}
+            >
                 <div
                     className={classnames(
                         'sd-content sd-content-wrapper',
@@ -86,6 +117,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                         <SubNav zIndex={2}>
                                             <SearchBar
                                                 placeholder={gettext('Search')}
+                                                value={this.state.searchString}
                                                 onSubmit={(val) => {
                                                     if (typeof val === 'number') {
                                                         throw new Error('invalid state');
@@ -399,11 +431,16 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                         </GridList> */}
 
                                         <RundownsList
-                                            inEditMode={this.state.rundownIdInEditMode}
-                                            onEditModeChange={(rundownIdInEditMode, rundownItemAction) => {
-                                                this.setState({
-                                                    rundownIdInEditMode,
-                                                    rundownItemAction: rundownItemAction ?? null,
+                                            inEditMode={rundownViewEdit?.id ?? null}
+                                            onEditModeChange={(id, rundownItemAction) => {
+                                                Promise.all([
+                                                    this.prepareRundownEditing(id),
+                                                    this.prepareNextRundownItemAction(rundownItemAction ?? null),
+                                                ]).then(([rundownViewEditNext, rundownItemActionNext]) => {
+                                                    this.setState({
+                                                        rundownViewEdit: rundownViewEditNext,
+                                                        rundownItemAction: rundownItemActionNext,
+                                                    });
                                                 });
                                             }}
                                             searchString={this.state.searchString}
@@ -513,22 +550,40 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
 
                                     <Layout.OverlayPanel />
                                 </Layout.LayoutContainer>
-                                <Layout.ContentSplitter visible={this.state.rundownIdInEditMode != null} />
+                                <Layout.ContentSplitter visible={true} />
                             </React.Fragment>
                         )
                     }
-                    <Layout.AuthoringContainer open={this.state.rundownIdInEditMode != null}>
+                    <Layout.AuthoringContainer open={rundownViewEdit != null}>
                         {
-                            this.state.rundownIdInEditMode != null && (
+                            rundownViewEdit != null && (
                                 <RundownViewEdit
-                                    rundownId={this.state.rundownIdInEditMode}
-                                    onClose={() => {
-                                        this.setState({rundownIdInEditMode: null});
+                                    key={rundownViewEdit.id + rundownViewEdit.mode}
+                                    rundownId={rundownViewEdit.id}
+                                    onClose={(rundown: IRundown) => {
+                                        const doUnlock = isLockedInCurrentSession(rundown)
+                                            ? tryUnlocking('/rundowns', rundown._id)
+                                            : Promise.resolve();
+
+                                        doUnlock.finally(() => {
+                                            this.setState({rundownViewEdit: null});
+                                        });
                                     }}
-                                    readOnly={false}
+                                    readOnly={rundownViewEdit == null || rundownViewEdit.mode === 'view'}
                                     rundownItemAction={this.state.rundownItemAction}
                                     onRundownActionChange={(rundownItemAction) => {
-                                        this.setState({rundownItemAction});
+                                        this.prepareNextRundownItemAction(rundownItemAction).then((next) => {
+                                            this.setState({rundownItemAction: next});
+                                        });
+                                    }}
+                                    switchRundownToEditMode={() => {
+                                        this.setState({
+                                            ...this.state,
+                                            rundownViewEdit: {
+                                                ...rundownViewEdit,
+                                                mode: 'edit',
+                                            },
+                                        });
                                     }}
                                 />
                             )

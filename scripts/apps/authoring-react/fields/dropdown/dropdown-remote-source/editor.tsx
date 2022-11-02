@@ -7,6 +7,7 @@ interface IProps {
     config: IDropdownConfigRemoteSource;
     value: IDropdownValue;
     language: string;
+    readOnly: boolean;
     onChange(value: IDropdownValue): void;
 }
 
@@ -41,7 +42,7 @@ export class EditorRemoteSource extends React.PureComponent<IProps> {
                     getId={(option) => config.getId(option)}
                     getLabel={(option) => config.getLabel(option)}
                     allowMultiple={config.multiple}
-                    readOnly={config.readOnly}
+                    readOnly={this.props.readOnly || config.readOnly}
                 />
             </Container>
         );

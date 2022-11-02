@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Dropdown, IconButton, IconLabel} from 'superdesk-ui-framework';
+import {Dropdown, IconButton, IconLabel} from 'superdesk-ui-framework/react';
 import {IRundown, IRundownItem, IRundownItemBase} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
@@ -22,7 +22,7 @@ interface IProps<T extends IRundownItemBase | IRundownItem> {
     items: Array<T>;
     onChange(items: Array<T>): void;
     onDelete(item: T): void;
-    initiateCreation(initialData: Partial<IRundownItemBase>): void;
+    initiateCreation(initialData: Partial<IRundownItemBase>, insertAtIndex?: number): void;
     initiateEditing(item: T): void;
     initiatePreview(item: T): void;
     readOnly: boolean;
@@ -85,7 +85,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                 }
 
                 <RundownItems
-                    readOnly={false}
+                    readOnly={readOnly}
                     dragAndDrop
                     addItem
                     items={this.props.items}
@@ -94,19 +94,14 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                     getActions={((item) => {
                         const actions: Array<IMenuItem> = [];
 
-                        if (!readOnly) {
-                            const edit: IMenuItem = {
-                                label: gettext('Edit'),
-                                onSelect: () => {
-                                    this.props.initiateEditing(item);
-                                    if (this.props.lock) {
-                                        this.props.lock(item);
-                                    }
-                                },
-                            };
+                        const edit: IMenuItem = {
+                            label: gettext('Edit'),
+                            onSelect: () => {
+                                this.props.initiateEditing(item);
+                            },
+                        };
 
-                            actions.push(edit);
-                        }
+                        actions.push(edit);
 
                         const preview: IMenuItem = {
                             label: gettext('Preview'),
@@ -124,7 +119,15 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             },
                         };
 
-                        actions.push(deleteAction);
+                        if (!readOnly) {
+                            /**
+                             * rundown item is a separate entity that we can edit
+                             * even when the rundown itself is in read-only mode.
+                             * BUT deleting rundown item requires to update references in the rundown itself,
+                             * thus is not allowed in read-only mode.
+                             */
+                            actions.push(deleteAction);
+                        }
 
                         return (
                             <Dropdown items={actions} append>
@@ -136,17 +139,22 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             </Dropdown>
                         );
                     })}
-                    itemsDropdown={(() => {
-                        const result: Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'> =
-                            rundownItemTypes.toArray()
-                                .map((rundownType) => ({
-                                    label: rundownType.name,
-                                    onSelect: () => {
-                                        this.props.initiateCreation({
-                                            item_type: rundownType.qcode,
-                                        });
-                                    },
-                                }));
+                    itemsDropdown={((insertAfterIndex?: number) => {
+                        const insertAtIndex: number | undefined =
+                            insertAfterIndex == null ? undefined : insertAfterIndex + 1;
+
+                        type IDropdownItems = Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
+
+                        const result: IDropdownItems = rundownItemTypes.toArray()
+                            .map((rundownType) => ({
+                                label: rundownType.name,
+                                onSelect: () => {
+                                    this.props.initiateCreation(
+                                        {item_type: rundownType.qcode},
+                                        insertAtIndex,
+                                    );
+                                },
+                            }));
 
                         if (rundownItemTypes.size > 0) {
                             result.push('divider');
@@ -155,7 +163,7 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                         result.push({
                             label: gettext('(empty)'),
                             onSelect: () => {
-                                this.props.initiateCreation({});
+                                this.props.initiateCreation({}, insertAtIndex);
                             },
                         });
 

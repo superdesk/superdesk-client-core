@@ -9,8 +9,7 @@ import {PlannedDurationLabel} from './components/planned-duration-label';
 import {addSeconds} from '@superdesk/common';
 import {IAndOperator, ILogicalOperator} from 'superdesk-api';
 import {RundownItems} from './components/rundown-items';
-import {prepareForPreview} from './prepare-create-edit';
-import {IRundownItemAction} from './template-edit';
+import {IRundownItemActionNext, prepareForEditing, prepareForPreview} from './prepare-create-edit-rundown-item';
 import {Dropdown, IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
 import {noop} from 'lodash';
 
@@ -23,9 +22,9 @@ const VirtualListFromQuery = getVirtualListFromQuery<IRundown, {show: IShow; tem
 interface IProps {
     searchString: string;
     inEditMode: IRundown['_id'] | null;
-    onEditModeChange(inEditMode: IRundown['_id'] | null, rundownItemAction?: IRundownItemAction): void;
+    onEditModeChange(inEditMode: IRundown['_id'], rundownItemAction?: IRundownItemActionNext): void;
     filters?: IRundownFilters;
-    rundownItemAction: IRundownItemAction;
+    rundownItemAction: IRundownItemActionNext;
 }
 
 function getFilters(filters: IRundownFilters | undefined): ILogicalOperator | undefined {
@@ -245,9 +244,9 @@ export class RundownsList extends React.PureComponent<IProps> {
                                 />
                                 {
                                     rundown.matching_items && (
-                                        <div style={{paddingInlineStart: 20}}>
+                                        <div style={{paddingInlineStart: 20, paddingTop: 8}}>
                                             <RundownItems
-                                                readOnly={true}
+                                                readOnly="yes"
                                                 items={rundown.matching_items}
                                                 getActions={((rundownItem) => {
                                                     const preview: IMenuItem = {
@@ -258,7 +257,19 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                                 prepareForPreview(
                                                                     this.props.rundownItemAction,
                                                                     rundownItem._id,
-                                                                    rundownItem,
+                                                                ),
+                                                            );
+                                                        },
+                                                    };
+
+                                                    const edit: IMenuItem = {
+                                                        label: gettext('Edit'),
+                                                        onSelect: () => {
+                                                            this.props.onEditModeChange(
+                                                                rundown._id,
+                                                                prepareForEditing(
+                                                                    this.props.rundownItemAction,
+                                                                    rundownItem._id,
                                                                 ),
                                                             );
                                                         },
@@ -266,7 +277,7 @@ export class RundownsList extends React.PureComponent<IProps> {
 
                                                     return (
                                                         <Dropdown
-                                                            items={[preview]}
+                                                            items={[preview, edit]}
                                                             append
                                                         >
                                                             <IconButton

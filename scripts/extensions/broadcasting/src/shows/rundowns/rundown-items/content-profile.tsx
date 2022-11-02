@@ -9,6 +9,7 @@ import {
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
 import {
+    CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     RUNDOWN_SUBITEM_TYPES,
     // RUNDOWN_SUBITEM_TYPES,
@@ -73,6 +74,16 @@ const titleField: IAuthoringFieldV2 = {
     },
 };
 
+const technicalTitle: IAuthoringFieldV2 = {
+    id: 'tech_title',
+    name: gettext('Tech. title'),
+    fieldType: 'editor3',
+    fieldConfig: {
+        ...editor3TestConfigWithoutFormatting,
+        readOnly: true,
+    },
+};
+
 const contentField: IAuthoringFieldV2 = {
     id: 'content',
     name: gettext('Content'),
@@ -91,6 +102,19 @@ const itemTypeField: IAuthoringFieldV2 = {
     name: vocabulary.getVocabulary(itemTypesConfig.vocabularyId).display_name,
     fieldType: 'dropdown',
     fieldConfig: itemTypesConfig,
+};
+
+const cameraConfig: IDropdownConfigVocabulary = {
+    source: 'vocabulary',
+    vocabularyId: CAMERA,
+    multiple: false,
+};
+
+const cameraField: IAuthoringFieldV2 = {
+    id: 'camera',
+    name: gettext('Camera'),
+    fieldType: 'dropdown',
+    fieldConfig: cameraConfig,
 };
 
 const startTimeConfig: ITimeFieldConfig = {
@@ -131,37 +155,9 @@ const plannedDurationField: IAuthoringFieldV2 = {
     },
 };
 
-const liveSoundField: IAuthoringFieldV2 = {
-    id: 'live_sound',
-    name: gettext('Live sound'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
-const guestsField: IAuthoringFieldV2 = {
-    id: 'guests',
-    name: gettext('Guests'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
 const additionalNotesField: IAuthoringFieldV2 = {
     id: 'additional_notes',
     name: gettext('Additional notes'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
-const liveCaptionsField: IAuthoringFieldV2 = {
-    id: 'live_captions',
-    name: gettext('Live captions'),
-    fieldType: 'editor3',
-    fieldConfig: editor3TestConfigWithoutFormatting,
-};
-
-const lastSentence: IAuthoringFieldV2 = {
-    id: 'last_sentence',
-    name: gettext('Last sentence'),
     fieldType: 'editor3',
     fieldConfig: editor3TestConfigWithoutFormatting,
 };
@@ -222,8 +218,10 @@ export function getRundownItemContentProfile(readOnly: boolean) {
         id: 'temp-profile',
         name: 'Temporary profile',
         header: OrderedMap([
+            [technicalTitle.id, technicalTitle],
             [itemTypeField.id, itemTypeField],
             [showPartField.id, showPartField],
+            [cameraField.id, cameraField],
             [subItemsField.id, subItemsField],
             [statusField.id, statusField],
             [startTimeField.id, startTimeField],
@@ -235,11 +233,7 @@ export function getRundownItemContentProfile(readOnly: boolean) {
             [titleField.id, titleField],
             [subitemAttachments.id, subitemAttachments],
             [contentField.id, contentField],
-            [liveSoundField.id, liveSoundField],
-            [guestsField.id, guestsField],
             [additionalNotesField.id, additionalNotesField],
-            [liveCaptionsField.id, liveCaptionsField],
-            [lastSentence.id, lastSentence],
         ]),
     };
 

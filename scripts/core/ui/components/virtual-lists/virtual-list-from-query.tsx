@@ -240,7 +240,22 @@ class VirtualListFromQueryComponent<T extends IBaseRestApiResponse, IToJoin exte
             addWebsocketEventListener('resource:updated', (event) => {
                 const {resource, _id} = event.extra;
 
-                if (resource === this.state.resourceName) {
+                const sortFields: Array<string> = this.props.query.sort.reduce((acc, item) => {
+                    for (const key of Object.keys(item)) {
+                        acc.push(key);
+                    }
+
+                    return acc;
+                }, []);
+
+                if (sortFields.some((field) => event.extra.fields[field] != null || field === '_updated')) {
+                    // When a field user for sorting is updated, sorting order will most likely change.
+                    this.virtualListRef.reloadAll();
+                } else if (resource === this.state.resourceName) {
+                    /**
+                     * !!! may not be used when sorting order is not up to date.
+                     * Relies on index based updates under the hood.
+                     */
                     this.virtualListRef.reloadItem(_id);
                 }
             }),

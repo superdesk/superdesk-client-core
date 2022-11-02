@@ -7,19 +7,19 @@ import {
     IRundownExportResponse,
     IRundownItem,
     IRundownItemBase,
-    IRundownItemTemplateInitial,
     IRundownTemplateBase,
 } from '../../interfaces';
-import {Button, ButtonGroup, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
+import {Button, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framework/react';
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
 interface IProps {
     rundownId: string;
-    rundownItemAction: ICreate | IEdit | IPreview | null;
-    onRundownActionChange(action: ICreate | IEdit | IPreview | null): void;
+    rundownItemAction: IRundownItemActionNext;
+    onRundownActionChange(action: IRundownItemActionNext): void;
     readOnly: boolean;
-    onClose(): void;
+    onClose(rundown: IRundown): void;
+    switchRundownToEditMode(): void;
 }
 
 interface IState {
@@ -32,27 +32,63 @@ interface IState {
 import {superdesk} from '../../superdesk';
 
 import {ManageRundownItems} from './manage-rundown-items';
-import {ICreate, IEdit, IPreview} from './template-edit';
-import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
-import {CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
+import {arrayInsertAtIndex, CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
 import {stringNotEmpty} from '../../form-validation';
 import {isEqual, noop} from 'lodash';
 import {syncDurationWithEndTime} from './sync-duration-with-end-time';
-import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
+import {rundownItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
-import {IPatchExtraFields, IRestApiResponse, ITopBarWidget} from 'superdesk-api';
+import {IRestApiResponse, ITopBarWidget} from 'superdesk-api';
 import {computeStartEndTime} from '../../utils/compute-start-end-time';
-import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
 import {AiringInfoBlock} from './components/airing-info-block';
 import {commentsWidget} from './rundown-items/widgets/comments';
+import {
+    IRundownItemActionNext,
+    prepareForCreation,
+    prepareForEditing,
+    prepareForPreview,
+} from './prepare-create-edit-rundown-item';
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal} = superdesk;
-const {getAuthoringComponent, WithLiveResources, SpacerBlock} = superdesk.components;
-const {generatePatch} = superdesk.utilities;
+const {
+    getAuthoringComponent,
+    getLockInfoHttpComponent,
+    getLockInfoComponent,
+    WithLiveResources,
+    SpacerBlock,
+    Spacer,
+} = superdesk.components;
+const {generatePatch, isLockedInOtherSession} = superdesk.utilities;
 const {addWebsocketMessageListener} = superdesk;
-const {fixPatchResponse} = superdesk.helpers;
+const {tryUnlocking, tryLocking} = superdesk.helpers;
 
-const AuthoringReact = getAuthoringComponent<IRundownItemTemplateInitial>();
+const AuthoringReact = getAuthoringComponent<IRundownItem>();
+const RundownLockInfo = getLockInfoHttpComponent<IRundown>();
+const RundownItemLockInfo = getLockInfoComponent<IRundownItem>();
+
+function handleUnsavedRundownChanges(
+    mode: IRundownItemActionNext,
+    skipUnsavedChangesCheck: boolean,
+    onSuccess: () => void,
+) {
+    if (skipUnsavedChangesCheck === true) {
+        onSuccess();
+
+        return;
+    }
+
+    if (mode == null) {
+        onSuccess();
+    } else if (mode.type === 'preview') {
+        onSuccess();
+    } else {
+        superdesk.ui.confirm(gettext('There is an item open in editing mode. Discard changes?')).then((confirmed) => {
+            if (confirmed) {
+                onSuccess();
+            }
+        });
+    }
+}
 
 const sideWidgets = [
     superdesk.authoringGeneric.sideWidgets.inlineComments,
@@ -150,7 +186,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
     save(): void {
         if (this.state.rundownWithChanges == null || this.state.rundown == null) {
-            throw new Error('invalid state'); // TODO: log error ?
+            throw new Error('invalid state');
         }
 
         httpRequestJsonLocal<IRundown>({
@@ -168,110 +204,96 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
         });
     }
 
-    close() {
-        if (!isEqual(this.state.rundown, this.state.rundownWithChanges)) {
+    close(rundown: IRundown) {
+        if (!isEqual(rundown, this.state.rundownWithChanges)) {
             superdesk.ui.confirm(gettext('Discard unsaved changes?')).then((confirmed) => {
                 if (confirmed) {
-                    this.props.onClose();
+                    this.props.onClose(rundown);
                 }
             });
         } else {
-            this.props.onClose();
+            this.props.onClose(rundown);
         }
     }
 
-    initiateCreation(initialData: Partial<IRundownItemBase>, skipUnsavedChangesCheck?: boolean) {
-        this.preventNoUnlock();
+    initiateCreation(
+        initialData: Partial<IRundownItemBase>,
+        insertAtIndex?: number,
+        skipUnsavedChangesCheck?: boolean,
+    ) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
             this.props.onRundownActionChange(
                 prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
-                    if (!this.props.readOnly) {
-                        const itemWithDuration: Partial<IRundownItemBase> = {
-                            ...val.data,
-                        };
+                    const itemWithDuration: Partial<IRundownItemBase> = val;
 
-                        const {rundown, rundownWithChanges} = this.state;
+                    const {rundown, rundownWithChanges} = this.state;
 
-                        if (rundown == null || rundownWithChanges == null) {
-                            throw new Error('disallowed state');
-                        }
-
-                        return httpRequestJsonLocal<IRundownItem>({
-                            method: 'POST',
-                            path: '/rundown_items',
-                            payload: prepareRundownItemForSaving(itemWithDuration),
-                        }).then((res) => {
-                            return httpRequestJsonLocal<IRundown>({
-                                method: 'PATCH',
-                                path: `/rundowns/${this.props.rundownId}`,
-                                payload: {
-                                    items: (rundown.items ?? []).concat({_id: res._id}),
-                                },
-                                headers: {
-                                    'If-Match': rundown._etag,
-                                },
-                            }).then((rundownNext) => {
-                                this.setState({
-                                    rundown: {
-                                        ...rundown,
-                                        items: rundownNext.items,
-                                        _etag: rundownNext._etag,
-                                    },
-                                    rundownWithChanges: {
-                                        ...rundownWithChanges,
-                                        items: rundownNext.items,
-                                        _etag: rundownNext._etag,
-                                    },
-                                });
-
-                                // needed so correct _etag can be used on next save
-                                // also to exit creation mode so saving again wouldn't create another item
-                                this.initiateEditing(res, true);
-
-                                return val;
-                            });
-                        });
-                    } else {
-                        return Promise.resolve(val);
+                    if (rundown == null || rundownWithChanges == null) {
+                        throw new Error('disallowed state');
                     }
-                }),
-            );
-        });
-    }
 
-    initiateEditing(item: IRundownItem, skipUnsavedChangesCheck?: boolean) {
-        this.preventNoUnlock();
-        handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
-            this.props.onRundownActionChange(
-                prepareForEditing(this.props.rundownItemAction, item._id, item, (val) => {
-                    if (!this.props.readOnly) {
-                        return httpRequestJsonLocal<IRundownItem & IPatchExtraFields>({
+                    return httpRequestJsonLocal<IRundownItem>({
+                        method: 'POST',
+                        path: '/rundown_items',
+                        payload: prepareRundownItemForSaving(itemWithDuration),
+                    }).then((res) => {
+                        const currentItems = rundown.items ?? [];
+
+                        return httpRequestJsonLocal<IRundown>({
                             method: 'PATCH',
-                            path: `/rundown_items/${item._id}`,
-                            payload: prepareRundownItemForSaving(generatePatch(item, val, {undefinedEqNull: true})),
-                            headers: {
-                                'If-Match': item._etag,
+                            path: `/rundowns/${this.props.rundownId}`,
+                            payload: {
+                                items: arrayInsertAtIndex(
+                                    currentItems,
+                                    {_id: res._id},
+                                    insertAtIndex ?? currentItems.length,
+                                ),
                             },
-                        }).then((patchRes) => {
-                            const nextItem = fixPatchResponse(patchRes);
+                            headers: {
+                                'If-Match': rundown._etag,
+                            },
+                        }).then((rundownNext) => {
+                            this.setState({
+                                rundown: {
+                                    ...rundown,
+                                    items: rundownNext.items,
+                                    _etag: rundownNext._etag,
+                                },
+                                rundownWithChanges: {
+                                    ...rundownWithChanges,
+                                    items: rundownNext.items,
+                                    _etag: rundownNext._etag,
+                                },
+                            });
 
-                            // needed so correct _etag can be used on next save
-                            this.initiateEditing(nextItem, true);
+                            // needed to exit creation mode so saving again wouldn't create another item
+                            this.initiateEditing(res._id, true);
 
-                            return nextItem;
+                            return val;
                         });
-                    } else {
-                        return Promise.resolve(item);
-                    }
+                    });
                 }),
             );
         });
     }
 
-    initiatePreview(item: IRundownItem, skipUnsavedChangesCheck?: boolean) {
-        this.preventNoUnlock();
+    initiateEditing(id: IRundownItem['_id'], skipUnsavedChangesCheck?: boolean) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
-            this.props.onRundownActionChange(prepareForPreview(this.props.rundownItemAction, item._id, item));
+            tryLocking<IRundownItem>('/rundown_items', id).then(() => {
+                /**
+                 * Starting editing even if item can't be locked at the moment.
+                 * There will be a button in the UI to force-unlock.
+                 */
+                this.props.onRundownActionChange(
+                    prepareForEditing(this.props.rundownItemAction, id),
+                );
+            });
+        });
+    }
+
+    initiatePreview(id: IRundownItem['_id'], skipUnsavedChangesCheck?: boolean) {
+        handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
+            this.props.onRundownActionChange(prepareForPreview(this.props.rundownItemAction, id));
         });
     }
 
@@ -332,6 +354,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
     render() {
         const rundown = this.state.rundownWithChanges;
+        const lockedInOtherSession = rundown == null ? true : isLockedInOtherSession(rundown);
+        const editingDisallowed = lockedInOtherSession || this.props.readOnly;
 
         if (rundown == null) {
             return null;
@@ -339,78 +363,122 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
         const {rundownItemAction} = this.props;
 
+        const closeBtn = (
+            <Button
+                text={gettext('Close')}
+                onClick={() => {
+                    this.close(rundown);
+                }}
+            />
+        );
+
         return (
             <WithValidation validators={rundownValidator}>
                 {(validate, validationErrors) => (
                     <Layout.LayoutContainer>
                         <Layout.HeaderPanel>
                             <SubNav>
-                                <ButtonGroup align="end" padded>
+                                <Spacer
+                                    h
+                                    gap="16"
+                                    justifyContent="space-between"
+                                    noWrap
+                                    style={{paddingLeft: 16, paddingRight: 16}}
+                                >
                                     {
-                                        this.props.readOnly
+                                        lockedInOtherSession
                                             ? (
-                                                <Button
-                                                    text={gettext('Edit')}
-                                                    onClick={noop}
-                                                    type="primary"
+                                                <RundownLockInfo
+                                                    entity={rundown}
+                                                    endpoint={`/rundowns/${rundown._id}`}
                                                 />
                                             )
-                                            : (
-                                                <React.Fragment>
-                                                    <Button
-                                                        text={gettext('Close')}
-                                                        onClick={this.close}
-                                                    />
-
-                                                    <Button
-                                                        text={gettext('Save')}
-                                                        onClick={() => {
-                                                            const valid = validate(rundown);
-
-                                                            if (valid) {
-                                                                this.save();
-                                                            }
-                                                        }}
-                                                        disabled={
-                                                            isEqual(this.state.rundown, this.state.rundownWithChanges)
-                                                        }
-                                                        type="primary"
-                                                    />
-
-                                                    <Dropdown
-                                                        items={[
-                                                            {
-                                                                type: 'submenu',
-                                                                label: gettext('Export'),
-                                                                items: this.state.exportOptions.map((exportOption) => ({
-                                                                    label: exportOption.name,
-                                                                    onSelect: () => {
-                                                                        httpRequestJsonLocal<IRundownExportResponse>({
-                                                                            method: 'POST',
-                                                                            path: '/rundown_export',
-                                                                            payload: {
-                                                                                rundown: rundown._id,
-                                                                                format: exportOption._id,
-                                                                            },
-                                                                        }).then((res) => {
-                                                                            downloadFileAttachment(res.href);
-                                                                        });
-                                                                    },
-                                                                })),
-                                                            },
-                                                        ]}
-                                                    >
-
-                                                        <IconButton
-                                                            ariaValue={gettext('Actions')}
-                                                            icon="dots-vertical"
-                                                            onClick={noop}
-                                                        />
-                                                    </Dropdown>
-                                                </React.Fragment>
-                                            )
+                                            : (<span />) // needed for spacer
                                     }
-                                </ButtonGroup>
+
+                                    <Spacer h gap="4" noGrow justifyContent="start" noWrap>
+                                        {(() => {
+                                            if (lockedInOtherSession) {
+                                                return closeBtn;
+                                            } else if (this.props.readOnly) {
+                                                return (
+                                                    <React.Fragment>
+                                                        <div>
+                                                            <Button
+                                                                text={gettext('Edit')}
+                                                                onClick={() => {
+                                                                    this.props.switchRundownToEditMode();
+                                                                }}
+                                                                type="primary"
+                                                            />
+                                                        </div>
+
+                                                        <div>
+                                                            {closeBtn}
+                                                        </div>
+                                                    </React.Fragment>
+                                                );
+                                            } else {
+                                                return (
+                                                    <React.Fragment>
+                                                        <div>
+                                                            <Button
+                                                                text={gettext('Save')}
+                                                                onClick={() => {
+                                                                    const valid = validate(rundown);
+
+                                                                    if (valid) {
+                                                                        this.save();
+                                                                    }
+                                                                }}
+                                                                disabled={
+                                                                    isEqual(
+                                                                        this.state.rundown,
+                                                                        this.state.rundownWithChanges,
+                                                                    )
+                                                                }
+                                                                type="primary"
+                                                            />
+                                                        </div>
+
+                                                        <div>{closeBtn}</div>
+                                                    </React.Fragment>
+                                                );
+                                            }
+                                        })()}
+
+                                        <Dropdown
+                                            items={[
+                                                {
+                                                    type: 'submenu',
+                                                    label: gettext('Export'),
+                                                    items: this.state.exportOptions.map((exportOption) => ({
+                                                        label: exportOption.name,
+                                                        onSelect: () => {
+                                                            httpRequestJsonLocal<IRundownExportResponse>({
+                                                                method: 'POST',
+                                                                path: '/rundown_export',
+                                                                payload: {
+                                                                    rundown: rundown._id,
+                                                                    format: exportOption._id,
+                                                                },
+                                                            }).then((res) => {
+                                                                downloadFileAttachment(res.href);
+                                                            });
+                                                        },
+                                                    })),
+                                                },
+                                            ]}
+                                        >
+
+                                            <IconButton
+                                                ariaValue={gettext('Actions')}
+                                                icon="dots-vertical"
+                                                onClick={noop}
+                                            />
+                                        </Dropdown>
+                                    </Spacer>
+                                </Spacer>
                             </SubNav>
                         </Layout.HeaderPanel>
 
@@ -421,7 +489,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                     <AiringInfoBlock
                                         value={rundown}
                                         onChange={this.setRundownField}
-                                        readOnly={this.props.readOnly}
+                                        readOnly={editingDisallowed}
                                         validationErrors={validationErrors}
                                     />
                                 )}
@@ -435,6 +503,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                             this.setRundownField({title: val});
                                         }}
                                         label={gettext('Headline')}
+                                        disabled={editingDisallowed}
                                         labelHidden
                                         inlineLabel
                                         size="large"
@@ -459,11 +528,13 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                             return (
                                                 <ManageRundownItems
                                                     rundown={rundown}
-                                                    readOnly={this.props.readOnly}
+                                                    readOnly={editingDisallowed}
                                                     items={computeStartEndTime(rundown.airtime_time, rundownItems)}
-                                                    initiateCreation={this.initiateCreation}
-                                                    initiateEditing={this.initiateEditing}
-                                                    initiatePreview={this.initiatePreview}
+                                                    initiateCreation={(initialData, insertAtIndex) => {
+                                                        this.initiateCreation(initialData, insertAtIndex);
+                                                    }}
+                                                    initiateEditing={({_id}) => this.initiateEditing(_id)}
+                                                    initiatePreview={({_id}) => this.initiatePreview(_id)}
                                                     onChange={(val) => {
                                                         this.setRundownField({
                                                             items: val.map(({_id}) => ({_id: _id})),
@@ -494,25 +565,30 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                         rundownItemAction != null && (
                                             <AuthoringReact
                                                 key={rundownItemAction.authoringReactKey}
-                                                // ID is not needed because authoringStorage is operating on array items
-                                                // and not on database items via HTTP API
                                                 itemId=""
+                                                resourceNames={['rundown_items']}
                                                 onClose={() => {
-                                                    if (this.props.rundownItemAction) {
-                                                        this.lock(this.props.rundownItemAction?.item._id, false);
+                                                    if (rundownItemAction.type !== 'create') {
+                                                        tryUnlocking<IRundown>(
+                                                            '/rundown_items',
+                                                            rundownItemAction.itemId,
+                                                        );
                                                     }
+
                                                     this.props.onRundownActionChange(null);
                                                 }}
                                                 fieldsAdapter={{}}
                                                 authoringStorage={rundownItemAction.authoringStorage}
-                                                storageAdapter={rundownTemplateItemStorageAdapter}
+                                                storageAdapter={rundownItemStorageAdapter}
                                                 getLanguage={() => LANGUAGE}
                                                 getInlineToolbarActions={({
+                                                    item,
                                                     hasUnsavedChanges,
                                                     save,
                                                     discardChangesAndClose,
+                                                    stealLock,
                                                 }) => {
-                                                    const actions: Array<ITopBarWidget<IRundownItemTemplateInitial>> = [
+                                                    const actions: Array<ITopBarWidget<IRundownItem>> = [
                                                         {
                                                             availableOffline: true,
                                                             group: 'start',
@@ -529,17 +605,26 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         },
                                                     ];
 
-                                                    if (
-                                                        rundownItemAction != null
-                                                        && rundownItemAction.type !== 'preview'
-                                                    ) {
+                                                    if (rundownItemAction.type !== 'preview') {
+                                                        actions.push({
+                                                            availableOffline: false,
+                                                            group: 'start',
+                                                            priority: 0.2,
+                                                            component: () => (
+                                                                <RundownItemLockInfo
+                                                                    entity={item}
+                                                                    forceUnlock={stealLock}
+                                                                />
+                                                            ),
+                                                        });
+
                                                         actions.push({
                                                             availableOffline: false,
                                                             group: 'end',
                                                             priority: 0.1,
                                                             component: () => (
                                                                 <Button
-                                                                    text={gettext('Apply')}
+                                                                    text={gettext('Save')}
                                                                     onClick={() => {
                                                                         save();
                                                                     }}
@@ -550,9 +635,26 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         });
                                                     }
 
+                                                    if (rundownItemAction.type === 'preview') {
+                                                        actions.push({
+                                                            availableOffline: false,
+                                                            group: 'end',
+                                                            priority: 0.1,
+                                                            component: () => (
+                                                                <Button
+                                                                    text={gettext('Edit')}
+                                                                    onClick={() => {
+                                                                        this.initiateEditing(item._id);
+                                                                    }}
+                                                                    type="primary"
+                                                                />
+                                                            ),
+                                                        });
+                                                    }
+
                                                     return {
-                                                        readOnly: rundownItemAction != null
-                                                            && rundownItemAction.type === 'preview',
+                                                        readOnly: rundownItemAction.type === 'preview'
+                                                            || isLockedInOtherSession(item),
                                                         toolbarBgColor: 'var(--sd-colour-bg__sliding-toolbar)',
                                                         actions: actions,
                                                     };
@@ -560,9 +662,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 getAuthoringTopBarWidgets={() => []}
                                                 topBar2Widgets={[]}
                                                 onFieldChange={syncDurationWithEndTime}
-                                                getSidebar={({toggleSideWidget}) => {
+                                                getSidebar={({item, toggleSideWidget}) => {
                                                     const sideWidgetsAllowed = sideWidgets.filter(
-                                                        ({isAllowed}) => isAllowed(rundownItemAction.item),
+                                                        ({isAllowed}) => isAllowed(
+                                                            item,
+                                                        ),
                                                     );
 
                                                     if (sideWidgetsAllowed.length < 1) {
@@ -582,6 +686,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     );
                                                 }}
                                                 getSidePanel={({
+                                                    item,
                                                     contentProfile,
                                                     fieldsData,
                                                     handleFieldsDataChange,
@@ -591,7 +696,12 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     handleUnsavedChanges,
                                                     sideWidget,
                                                 }) => {
-                                                    if (sideWidget == null) {
+                                                    if (
+                                                        sideWidget == null
+
+                                                        // TODO: allow widgets in creation mode?
+                                                        || item._id == null
+                                                    ) {
                                                         return null;
                                                     }
 
@@ -605,8 +715,8 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
                                                     return (
                                                         <Component
-                                                            entityId={rundownItemAction.item._id}
-                                                            readOnly={this.props.readOnly}
+                                                            entityId={item._id}
+                                                            readOnly={editingDisallowed}
                                                             contentProfile={contentProfile}
                                                             fieldsData={fieldsData}
                                                             authoringStorage={authoringStorage}

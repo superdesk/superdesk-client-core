@@ -11,22 +11,25 @@ import {IMenuItem, ISubmenu, IMenuGroup} from 'superdesk-ui-framework/react/comp
 const {vocabulary} = superdesk.entities;
 const {Spacer} = superdesk.components;
 
+/**
+ * Simpler interface - allows to pass fewer props
+ */
 interface IPropsReadOnly<T extends IRundownItem | IRundownItemBase> {
-    readOnly: true;
+    readOnly: 'yes';
     items: Array<T>;
     getActions(item: T): JSX.Element;
 }
 
 interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
-    readOnly: false;
+    readOnly: boolean;
     items: Array<T>;
     onChange(items: Array<T>): void;
     onDelete(item: T): void;
     onDrag(start: number, end: number): void;
     dragAndDrop: boolean;
     addItem: boolean;
-    itemsDropdown(index: number | undefined): Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
-    getActions(item: T): JSX.Element;
+    itemsDropdown: (index?: number) => Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
+    getActions(item: T): JSX.Element | undefined;
 }
 
 type IProps<T extends IRundownItem | IRundownItemBase> = IPropsReadOnly<T> | IPropsEditable<T>;
@@ -49,7 +52,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
             vocabulary.getVocabulary(RUNDOWN_SUBITEM_TYPES).items.map((item) => [item.qcode, item]),
         );
 
-        const array = this.props.items.map((item) => {
+        const array: React.ComponentProps<typeof TableList>['array'] = this.props.items.map((item) => {
             const statusColor = item.status == null ? undefined : statuses.get(item.status)?.color ?? undefined;
             const showPart = item.show_part == null ? null : showParts.get(item.show_part);
             const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
@@ -66,19 +69,19 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                 start: (
                     <Spacer h gap="4" justifyContent="start" noGrow>
                         {
-                            showPart != null && (
+                            itemType != null && (
                                 <Label
-                                    text={showPart.name}
-                                    hexColor={showPart.color}
+                                    text={itemType.name}
+                                    hexColor={itemType.color}
                                     size="normal"
                                 />
                             )
                         }
                         {
-                            itemType != null && (
+                            showPart != null && (
                                 <Label
-                                    text={itemType.name}
-                                    hexColor={itemType.color}
+                                    text={showPart.name}
+                                    hexColor={showPart.color}
                                     size="normal"
                                 />
                             )

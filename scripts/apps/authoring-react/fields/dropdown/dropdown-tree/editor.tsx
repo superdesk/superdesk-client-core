@@ -7,6 +7,7 @@ interface IProps {
     config: IDropdownTreeConfig;
     value: IDropdownValue;
     language: string;
+    readOnly: boolean;
     onChange(value: IDropdownValue): void;
 }
 
@@ -31,7 +32,7 @@ export class EditorDropdownTree extends React.PureComponent<IProps> {
                     optionTemplate={config.optionTemplate}
                     valueTemplate={config.valueTemplate}
                     allowMultiple={config.multiple}
-                    readOnly={config.readOnly}
+                    readOnly={this.props.readOnly || config.readOnly}
                 />
             </Container>
         );

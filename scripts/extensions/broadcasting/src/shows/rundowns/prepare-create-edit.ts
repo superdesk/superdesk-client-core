@@ -40,11 +40,12 @@ function getRundownItemTemplateAuthoringStorage(
             return Promise.resolve({saved: item, autosaved: null});
         },
         isLockedInCurrentSession: () => false,
-        lock: () => {
-            return Promise.resolve(item);
-        },
-        unlock: () => {
-            return Promise.resolve(item);
+
+        /**
+         * Locking is not supported for embedded items that don't have _id's
+         */
+        forceLock: (entity) => {
+            return Promise.resolve(entity);
         },
         saveEntity: (current) => {
             return onSave(current);

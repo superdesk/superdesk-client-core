@@ -1,5 +1,5 @@
 import {RawDraftContentState} from 'draft-js';
-import {IBaseRestApiResponse, IUser, IVocabularyItem} from 'superdesk-api';
+import {IBaseRestApiResponse, ILockInfo, IUser, IVocabularyItem} from 'superdesk-api';
 
 /**
  * Recurrence Rule
@@ -67,7 +67,7 @@ export interface IRundownItemBase {
     _locked?: boolean;
 }
 
-export type IRundownItem = IRundownItemBase & IBaseRestApiResponse;
+export type IRundownItem = IRundownItemBase & IBaseRestApiResponse & ILockInfo;
 
 /**
  * Extending from "IBaseRestApiResponse" is for compatibility reasons.
@@ -99,7 +99,7 @@ interface IRundownBase extends Omit<IRundownTemplateBase, 'headline_template' | 
     matching_items: Array<IRundownItem>;
 }
 
-export type IRundown = IRundownBase & IBaseRestApiResponse;
+export type IRundown = IRundownBase & ILockInfo & IBaseRestApiResponse;
 
 export interface IRundownFilters {
     /**

@@ -21,6 +21,7 @@ interface IProps {
     config: IDropdownConfigManualSource | IDropdownConfigVocabulary;
     value: IDropdownValue;
     language: string;
+    readOnly: boolean;
     getVocabularyItems(vocabulary: IVocabulary['_id']): Array<IVocabularyItem>;
     onChange(value: IDropdownValue): void;
 }
@@ -101,7 +102,7 @@ export class EditorUsingManualSourceOrVocabulary extends React.PureComponent<IPr
                     getId={(option) => option.id.toString()}
                     getLabel={(option) => option.label}
                     allowMultiple={config.multiple}
-                    readOnly={config.readOnly}
+                    readOnly={this.props.readOnly || config.readOnly}
                 />
             </Container>
         );
