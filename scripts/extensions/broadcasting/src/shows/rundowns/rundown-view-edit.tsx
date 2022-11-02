@@ -277,7 +277,15 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
     initiateEditing(id: IRundownItem['_id'], skipUnsavedChangesCheck?: boolean) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
-            tryLocking<IRundownItem>('/rundown_items', id).then(() => {
+            const action = this.props.rundownItemAction;
+            const rundownItemIdToUnlock = action != null && action.type === 'edit' ? action.itemId : null;
+
+            Promise.all([
+                rundownItemIdToUnlock != null
+                    ? tryUnlocking<IRundownItem>('/rundown_items', rundownItemIdToUnlock)
+                    : Promise.resolve(),
+                tryLocking<IRundownItem>('/rundown_items', id),
+            ]).then(() => {
                 /**
                  * Starting editing even if item can't be locked at the moment.
                  * There will be a button in the UI to force-unlock.
