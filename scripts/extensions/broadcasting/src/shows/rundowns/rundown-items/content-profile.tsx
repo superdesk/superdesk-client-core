@@ -72,6 +72,16 @@ const titleField: IAuthoringFieldV2 = {
     },
 };
 
+const technicalTitle: IAuthoringFieldV2 = {
+    id: 'tech_title',
+    name: gettext('Tech. title'),
+    fieldType: 'editor3',
+    fieldConfig: {
+        ...editor3TestConfigWithoutFormatting,
+        readOnly: true,
+    },
+};
+
 const contentField: IAuthoringFieldV2 = {
     id: 'content',
     name: gettext('Content'),
@@ -180,6 +190,7 @@ export function getRundownItemContentProfile(readOnly: boolean) {
         id: 'temp-profile',
         name: 'Temporary profile',
         header: OrderedMap([
+            [technicalTitle.id, technicalTitle],
             [itemTypeField.id, itemTypeField],
             [showPartField.id, showPartField],
             [subItemsField.id, subItemsField],
