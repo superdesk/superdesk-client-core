@@ -9,6 +9,7 @@ import {
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
 import {
+    CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     RUNDOWN_SUBITEM_TYPES,
     // RUNDOWN_SUBITEM_TYPES,
@@ -102,6 +103,19 @@ const itemTypeField: IAuthoringFieldV2 = {
     fieldConfig: itemTypesConfig,
 };
 
+const cameraConfig: IDropdownConfigVocabulary = {
+    source: 'vocabulary',
+    vocabularyId: CAMERA,
+    multiple: false,
+};
+
+const cameraField: IAuthoringFieldV2 = {
+    id: 'camera',
+    name: gettext('Camera'),
+    fieldType: 'dropdown',
+    fieldConfig: cameraConfig,
+};
+
 const startTimeConfig: ITimeFieldConfig = {
     allowSeconds: true,
 };
@@ -193,6 +207,7 @@ export function getRundownItemContentProfile(readOnly: boolean) {
             [technicalTitle.id, technicalTitle],
             [itemTypeField.id, itemTypeField],
             [showPartField.id, showPartField],
+            [cameraField.id, cameraField],
             [subItemsField.id, subItemsField],
             [startTimeField.id, startTimeField],
             [endTimeField.id, endTimeField],
