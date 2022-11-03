@@ -38,6 +38,7 @@ export interface IRundownTemplateBase {
     items: Array<IRundownItemBase>;
     repeat: boolean;
     schedule?: IRRule | null;
+    autocreate_before_seconds?: number;
 }
 
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;

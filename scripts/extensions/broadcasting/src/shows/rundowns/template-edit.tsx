@@ -10,6 +10,7 @@ import {
     SubNav,
     ButtonGroup,
     Checkbox,
+    DurationInput,
 } from 'superdesk-ui-framework/react';
 import {arrayInsertAtIndex, CreateValidators, WithValidation} from '@superdesk/common';
 import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
@@ -314,7 +315,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
 
                                             {
                                                 templateFields.schedule != null && (
-                                                    <div>
+                                                    <Spacer v gap="16" noGrow>
                                                         <FrequencySimple
                                                             value={templateFields.schedule}
                                                             onChange={(val) => {
@@ -329,7 +330,19 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                             firstDayOfWeek={superdesk.instance.config.startingDay - 1}
                                                             readOnly={this.props.readOnly}
                                                         />
-                                                    </div>
+
+                                                        <DurationInput
+                                                            label={gettext('Before airtime')}
+                                                            seconds={templateFields.autocreate_before_seconds ?? 0}
+                                                            onChange={(val) => {
+                                                                this.handleChange({
+                                                                    ...templateFields,
+                                                                    autocreate_before_seconds: val,
+                                                                });
+                                                            }}
+                                                            disabled={this.props.readOnly}
+                                                        />
+                                                    </Spacer>
                                                 )
                                             }
                                         </Spacer>
