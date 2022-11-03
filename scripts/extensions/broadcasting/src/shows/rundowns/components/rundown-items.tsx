@@ -14,6 +14,7 @@ import {
 } from '../../../constants';
 import {IMenuItem, ISubmenu, IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 const {vocabulary} = superdesk.entities;
+const {gettext} = superdesk.localization;
 const {Spacer} = superdesk.components;
 
 /**
@@ -130,6 +131,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                         {
                             item.planned_duration != null && (
                                 <PlannedDurationLabel
+                                    label={gettext('Planned')}
                                     planned_duration={item.planned_duration}
                                     size="default"
                                 />
