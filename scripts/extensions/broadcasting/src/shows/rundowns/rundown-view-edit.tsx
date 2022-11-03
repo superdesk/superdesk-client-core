@@ -34,11 +34,9 @@ import {ManageRundownItems} from './manage-rundown-items';
 import {arrayInsertAtIndex, CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
 import {stringNotEmpty} from '../../form-validation';
 import {isEqual, noop} from 'lodash';
-import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
 import {IRestApiResponse, ITopBarWidget} from 'superdesk-api';
-import {computeStartEndTime} from '../../utils/compute-start-end-time';
 import {AiringInfoBlock} from './components/airing-info-block';
 import {commentsWidget} from './rundown-items/widgets/comments';
 import {
@@ -109,13 +107,6 @@ export function prepareRundownTemplateForSaving<T extends IRundownTemplateBase |
         copy.items = items.map((item) => {
             const itemCopy = {...item};
 
-            /**
-             * start/end times are generated from duration
-             * they are present in the form only for making it easier for users to enter duration
-             */
-            delete itemCopy['start_time'];
-            delete itemCopy['end_time'];
-
             if (item.duration == null) {
                 item.duration = item.planned_duration;
             }
@@ -129,13 +120,6 @@ export function prepareRundownTemplateForSaving<T extends IRundownTemplateBase |
 
 export function prepareRundownItemForSaving(item: Partial<IRundownItemBase>): Partial<IRundownItemBase> {
     const copy = {...item};
-
-    /**
-     * start/end times are generated from duration
-     * they are present in the form only for making it easier for users to enter duration
-     */
-    delete copy['start_time'];
-    delete copy['end_time'];
 
     if (item.duration == null) {
         item.duration = item.planned_duration;
@@ -521,7 +505,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 <ManageRundownItems
                                                     rundown={rundown}
                                                     readOnly={editingDisallowed}
-                                                    items={computeStartEndTime(rundown.airtime_time, rundownItems)}
+                                                    items={rundownItems}
                                                     initiateCreation={(initialData, insertAtIndex) => {
                                                         this.initiateCreation(initialData, insertAtIndex);
                                                     }}
@@ -650,7 +634,6 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                 }}
                                                 getAuthoringTopBarWidgets={() => []}
                                                 topBar2Widgets={[]}
-                                                onFieldChange={syncDurationWithEndTime}
                                                 getSidebar={({item, toggleSideWidget}) => {
                                                     const sideWidgetsAllowed = sideWidgets.filter(
                                                         ({isAllowed}) => isAllowed(

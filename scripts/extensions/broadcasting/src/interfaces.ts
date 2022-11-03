@@ -45,8 +45,6 @@ export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
 export interface IRundownItemBase {
     item_type?: string;
     show_part?: string;
-    start_time?: string;
-    end_time?: string;
     duration: number;
     status?: string;
     planned_duration: number;

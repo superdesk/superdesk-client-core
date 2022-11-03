@@ -16,12 +16,10 @@ import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateB
 import {superdesk} from '../../superdesk';
 import {stringNotEmpty} from '../../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
-import {computeStartEndTime} from '../../utils/compute-start-end-time';
 import {getPartialDateFormat, toPythonDateFormat, toSuperdeskDateFormat} from '../../utils/get-partial-date-format';
 import {IAuthoringStorage} from 'superdesk-api';
 import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
 
-import {syncDurationWithEndTime} from './sync-duration-with-end-time';
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../../constants';
 import {FrequencySimple} from './components/FrequencySimple';
@@ -434,19 +432,12 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
 
                                         {
                                             templateFields.airtime_time != null && (() => {
-                                                const airTime = templateFields.airtime_time;
-
                                                 return (
                                                     <div>
                                                         <ManageRundownItems
                                                             rundown={null}
                                                             readOnly={readOnly}
-                                                            items={
-                                                                computeStartEndTime(
-                                                                    templateFields.airtime_time,
-                                                                    rundownItems,
-                                                                )
-                                                            }
+                                                            items={rundownItems}
                                                             initiateCreation={(initialData, insertAtIndex) => {
                                                                 this.initiateCreation(
                                                                     initialData,
@@ -457,7 +448,7 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                             initiatePreview={this.initiatePreview}
                                                             onChange={(val) => {
                                                                 this.handleChange({
-                                                                    items: computeStartEndTime(airTime, val),
+                                                                    items: val,
                                                                 });
                                                             }}
                                                             onDelete={(item) => {
@@ -538,7 +529,6 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                                                 }}
                                                 getAuthoringTopBarWidgets={() => []}
                                                 topBar2Widgets={[]}
-                                                onFieldChange={syncDurationWithEndTime}
                                                 disableWidgetPinning
                                             />
                                         )
