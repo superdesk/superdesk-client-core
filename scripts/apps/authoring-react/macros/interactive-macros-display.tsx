@@ -130,13 +130,20 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                     </Spacer>
                     {this.state.replaceTarget != null && (
                         <>
-                            <ContentDivider type="dotted" />
-                            <Spacer h gap="4" justifyContent="start" noGrow alignItems="center">
+                            <ContentDivider type="dotted" margin="x-small" />
+                            <Spacer
+                                h
+                                gap="4"
+                                justifyContent="start"
+                                noGrow
+                                alignItems="center"
+                                style={{flexWrap: 'wrap'}}
+                            >
                                 <Label size="large" text={this.state.replaceTarget} />
                                 <Icon name="arrow-right" size="small" />
                                 <Label size="large" text={this.state.replaceValue} />
                             </Spacer>
-                            <ContentDivider type="dotted" />
+                            <ContentDivider type="dotted" margin="x-small" />
                         </>
                     )}
                     <Spacer h gap="4" justifyContent="end" noGrow>
@@ -144,7 +151,7 @@ export class InteractiveMacrosDisplay extends React.PureComponent<IProps, IState
                             style="hollow"
                             text={gettext('Cancel')}
                             onClick={() => {
-                                this.replaceMatch(() => highlightDistinctMatches({}));
+                                highlightDistinctMatches({});
                                 this.props.onClose();
                             }}
                         />

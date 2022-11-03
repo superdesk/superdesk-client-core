@@ -28,6 +28,7 @@ import {editorId} from '../article-widgets/find-and-replace';
 import {prepareHtmlForPatching, patchHTMLonTopOfEditorState} from 'core/editor3/helpers/patch-editor-3-html';
 import {EditorState} from 'draft-js';
 import {OrderedMap} from 'immutable';
+import {notify} from 'core/notify/notify';
 
 // POTENTIAL-IMPROVEMENTS: don't allow replacing the same thing twice
 // -> body_html: $101 (CAD 13) -> click replace again -> $101 (CAD 13) (CAD 13)
@@ -204,6 +205,15 @@ function handleUpdateEditorStateMacro(article: IArticle, contentProfile: IConten
     };
 }
 
+function handleNoReplaceMacro(article: IArticle): IMacroProcessor {
+    return {
+        beforePatch: () => {
+            return article;
+        },
+        afterPatch: (_resArticle: IArticle) => null,
+    };
+}
+
 interface IMacroProcessor {
     beforePatch(): IArticle;
     afterPatch(response: IArticle): void;
@@ -214,7 +224,7 @@ function getMacroProcessor(
     article: IArticle,
     contentProfile: IContentProfileV2,
     fieldsData: OrderedMap<string, unknown>,
-) {
+): IMacroProcessor {
     if (macro.replace_type === 'simple-replace' || macro.name === 'populate_abstract') {
         return handleSimpleReplaceMacro(article, contentProfile);
     } else if (macro.replace_type === 'keep-style-replace') {
@@ -222,7 +232,7 @@ function getMacroProcessor(
     } else if (macro.replace_type === 'editor_state') {
         return handleUpdateEditorStateMacro(article, contentProfile);
     } else if (macro.replace_type === 'no-replace') {
-        throw new Error('No replace is not supported via UI: ' + macro);
+        return handleNoReplaceMacro(article);
     } else {
         assertNever(macro.replace_type);
     }
@@ -268,6 +278,8 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
             },
         }).then((res) => {
             macroProcessor.afterPatch(res.item as IArticle);
+        }).catch((err) => {
+            notify.error(err._message);
         });
     }
 
