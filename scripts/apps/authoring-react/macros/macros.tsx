@@ -251,11 +251,11 @@ class MacrosWidget extends React.PureComponent<IProps, IState> {
 
     componentDidMount(): void {
         getAllMacros().then((macros) => {
-            const filteredMacros = macros._items.filter((x) => x.access_type === 'frontend');
-            const groupedMacros = groupBy(filteredMacros.filter((x) => x.group != null), nameof<IMacro>('group'));
+            const frontendMacros = macros._items.filter((x) => x.access_type === 'frontend');
+            const groupedMacros = groupBy(frontendMacros.filter((x) => x.group != null), nameof<IMacro>('group'));
 
             this.setState({
-                macros: filteredMacros,
+                macros: frontendMacros,
                 displayGrouped: Object.keys(groupedMacros).length > 0 ? true : null,
             });
         });

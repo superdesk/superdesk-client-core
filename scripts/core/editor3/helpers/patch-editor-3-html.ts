@@ -2,7 +2,8 @@ import {ContentBlock, ContentState, Editor, EditorState, Modifier, SelectionStat
 import DiffMatchPatch from 'diff-match-patch';
 
 /**
- * Create custom html with IDs
+ * Create custom html which includes DraftJS block IDs that will be used later to
+ * patch html on top of editor state.
  */
 export function prepareHtmlForPatching(editorState: EditorState): string {
     const content = editorState.getCurrentContent();
@@ -79,7 +80,7 @@ export function patchHTMLonTopOfEditorState(
 function getTextFromTag(htmlElement: HTMLDivElement, field: string, key: string) {
     const tagElement: HTMLElement = htmlElement.querySelector('#' + getHtmlId(field, key));
 
-    return tagElement != null ? decode(tagElement.innerText) : null;
+    return tagElement != null ? stripHtml(tagElement.innerText) : null;
 }
 
 /**
@@ -303,7 +304,7 @@ function createSelectionForBlock(
 /**
  * Tansa uses text from selected element for proofing
  * but then it parses entities in it so those must be
- * escaped.
+ * escaped. Also used in macros.
  */
 function encode(text: string): string {
     const div = document.createElement('div');
@@ -313,13 +314,10 @@ function encode(text: string): string {
     return div.innerHTML;
 }
 
-/**
- * Decode encoded tansa output.
- */
-function decode(text: string): string {
+function stripHtml(htmlString: string): string {
     const div = document.createElement('div');
 
-    div.innerHTML = text;
+    div.innerHTML = htmlString;
 
     return div.innerText;
 }
