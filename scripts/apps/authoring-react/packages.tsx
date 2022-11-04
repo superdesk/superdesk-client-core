@@ -83,32 +83,33 @@ class PackagesWidget extends React.Component<IProps, IState> {
                         editMode={false}
                     />
                 )}
-                body={this.state.packages !== 'no-packages'
-                    ? (
-                        <BoxedList>
-                            {
-                                this.state.packages.map((packageItem) => (
-                                    <BoxedListItem key={packageItem._id}>
-                                        <Spacer h gap="16" noWrap>
-                                            <Icon icon="big-icon--package" />
-                                            <Spacer v gap="4">
-                                                <DateTime dateTime={packageItem.versioncreated} />
-                                                <Text>
-                                                    {packageItem.headline || packageItem.slugline}
-                                                </Text>
+                body={
+                    this.state.packages !== 'no-packages'
+                        ? (
+                            <BoxedList>
+                                {
+                                    this.state.packages.map((packageItem) => (
+                                        <BoxedListItem key={packageItem._id}>
+                                            <Spacer h gap="16" noWrap>
+                                                <Icon icon="big-icon--package" />
+                                                <Spacer v gap="4">
+                                                    <DateTime dateTime={packageItem.versioncreated} />
+                                                    <Text>
+                                                        {packageItem.headline || packageItem.slugline}
+                                                    </Text>
+                                                </Spacer>
+                                                <IconButton
+                                                    ariaValue={gettext('Open package')}
+                                                    icon="pencil"
+                                                    onClick={() => openPackage(packageItem)}
+                                                />
                                             </Spacer>
-                                            <IconButton
-                                                ariaValue={gettext('Open package')}
-                                                icon="pencil"
-                                                onClick={() => openPackage(packageItem)}
-                                            />
-                                        </Spacer>
-                                    </BoxedListItem>
-                                ))
-                            }
-                        </BoxedList>
-                    )
-                    : <Label text={gettext('Article is not linked to any packages')} />
+                                        </BoxedListItem>
+                                    ))
+                                }
+                            </BoxedList>
+                        )
+                        : <Label text={gettext('Article is not linked to any packages')} />
                 }
             />
         );
