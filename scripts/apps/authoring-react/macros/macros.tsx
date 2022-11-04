@@ -225,7 +225,7 @@ function getMacroProcessor(
     contentProfile: IContentProfileV2,
     fieldsData: OrderedMap<string, unknown>,
 ): IMacroProcessor {
-    if (macro.replace_type === 'simple-replace' || macro.name === 'populate_abstract') {
+    if (macro.replace_type === 'simple-replace') {
         return handleSimpleReplaceMacro(article, contentProfile);
     } else if (macro.replace_type === 'keep-style-replace') {
         return handleKeepStyleReplaceMacro(article, contentProfile, fieldsData);
