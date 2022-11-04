@@ -1,7 +1,6 @@
 import React from 'react';
 import {gettext} from 'core/utils';
 import {IArticle, IArticleSideWidget, IExtensionActivationResult, IRestApiResponse} from 'superdesk-api';
-import {Button} from 'superdesk-ui-framework/react/components/Button';
 import {httpRequestJsonLocal} from 'core/helpers/network';
 import {openArticle} from 'core/get-superdesk-api-implementation';
 import {AuthoringWidgetHeading} from 'apps/dashboard/widget-heading';
@@ -19,7 +18,15 @@ type IProps = React.ComponentProps<
     IExtensionActivationResult['contributions']['authoringSideWidgets'][0]['component']
 >;
 
-const getLabel = () => gettext('Packages widget');
+const getLabel = () => gettext('Packages');
+
+function openPackage(packageItem: IArticle): void {
+    if (packageItem._type === 'published') {
+        openArticle(packageItem._id, 'view');
+    } else {
+        openArticle(packageItem._id, 'edit');
+    }
+}
 
 class PackagesWidget extends React.Component<IProps, IState> {
     constructor(props) {
@@ -35,11 +42,7 @@ class PackagesWidget extends React.Component<IProps, IState> {
     }
 
     fetchPackages(): void {
-        var filter = new Array<string>();
-
-        this.props.article.linked_in_packages?.forEach((x) => {
-            filter.push(x.package);
-        });
+        const filter: Array<string> = (this.props.article.linked_in_packages ?? []).map((x) => x.package);
 
         httpRequestJsonLocal<IRestApiResponse<IArticle>>({
             method: 'GET',
@@ -47,14 +50,10 @@ class PackagesWidget extends React.Component<IProps, IState> {
             urlParams: {
                 repo: 'archive,published',
                 source: {
-                    'query':
-                    {
-                        'filtered':
-                        {
-                            'filter':
-                            {
-                                'and':
-                                [{
+                    'query': {
+                        'filtered': {
+                            'filter': {
+                                'and': [{
                                     'terms': {'guid': filter},
                                 }],
                             },
@@ -70,16 +69,8 @@ class PackagesWidget extends React.Component<IProps, IState> {
         });
     }
 
-    openPackage(packageItem: IArticle): void {
-        if (packageItem._type === 'published') {
-            openArticle(packageItem._id, 'view');
-        } else {
-            openArticle(packageItem._id, 'edit');
-        }
-    }
-
     render(): JSX.Element {
-        // if the component hasn't yet tried to fetch packages we don't render anything
+        // loading
         if (this.state.packages == null) {
             return null;
         }
@@ -92,36 +83,33 @@ class PackagesWidget extends React.Component<IProps, IState> {
                         editMode={false}
                     />
                 )}
-                body={(
-                    <>
-                        {
-                            this.state.packages != 'no-packages' ? (
-                                <BoxedList>
-                                    {
-                                        this.state.packages.map((packageItem) => (
-                                            <BoxedListItem key={packageItem._id}>
-                                                <Spacer h gap="16" noWrap>
-                                                    <Icon icon="big-icon--package" />
-                                                    <Spacer v gap="4">
-                                                        <DateTime dateTime={packageItem.versioncreated} />
-                                                        <Text>
-                                                            {packageItem.headline || packageItem.slugline}
-                                                        </Text>
-                                                    </Spacer>
-                                                    <IconButton
-                                                        ariaValue={gettext('Open package')}
-                                                        icon="pencil"
-                                                        onClick={() => this.openPackage(packageItem)}
-                                                    />
-                                                </Spacer>
-                                            </BoxedListItem>
-                                        ))
-                                    }
-                                </BoxedList>
-                            ) : <Label text="Article isn't linked to any packages" />
-                        }
-                    </>
-                )}
+                body={this.state.packages !== 'no-packages'
+                    ? (
+                        <BoxedList>
+                            {
+                                this.state.packages.map((packageItem) => (
+                                    <BoxedListItem key={packageItem._id}>
+                                        <Spacer h gap="16" noWrap>
+                                            <Icon icon="big-icon--package" />
+                                            <Spacer v gap="4">
+                                                <DateTime dateTime={packageItem.versioncreated} />
+                                                <Text>
+                                                    {packageItem.headline || packageItem.slugline}
+                                                </Text>
+                                            </Spacer>
+                                            <IconButton
+                                                ariaValue={gettext('Open package')}
+                                                icon="pencil"
+                                                onClick={() => openPackage(packageItem)}
+                                            />
+                                        </Spacer>
+                                    </BoxedListItem>
+                                ))
+                            }
+                        </BoxedList>
+                    )
+                    : <Label text={gettext('Article is not linked to any packages')} />
+                }
             />
         );
     }
