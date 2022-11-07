@@ -251,6 +251,7 @@ $bottom-bar-item-border-color-active: transparent;
         text-overflow: ellipsis;
         white-space: nowrap;
         transition: all 0.2s ease-in-out;
+        gap: $sd-base-increment / 2;
         .opened-articles-bar__item-close {
             height: 2.2rem;
             width: 2.2rem;
@@ -264,10 +265,10 @@ $bottom-bar-item-border-color-active: transparent;
             margin-left: 0.4rem;
             opacity: 0.2;
             transition: all 0.2s ease-in-out;
-            background-color: rgba(255, 255, 255, 0);
+            background-color: hsla(214, 13%, 100%, 0);
             &:hover {
                 opacity: 0.6;
-                background-color: rgba(255, 255, 255, 0.08);
+                background-color: hsla(214, 13%, 100%, 0.08);
             }
             &:active {
                 opacity: 1;
@@ -284,6 +285,7 @@ $bottom-bar-item-border-color-active: transparent;
             font-size: 1.2rem;
             transition: color 0.2s ease-in-out;
             opacity: 0.75;
+            gap: $sd-base-increment / 2;
             i {
                 margin-right: 0.4rem;
             }
@@ -293,11 +295,8 @@ $bottom-bar-item-border-color-active: transparent;
                 opacity: 1;
             }
         }
-        // &:active {
-        //     background: #333;
-        // }
         &.opened-articles-bar__item--active {
-            background: var(--sd-colour-bg--00);
+            background: var(--sd-colour-interactive--alpha-20);
             color: var(--sd-colour-interactive);
             box-shadow: inset 0 1px 0 0 var(--sd-colour-interactive);
             &:hover {
@@ -333,6 +332,9 @@ $bottom-bar-item-border-color-active: transparent;
                     background: hsl(174, 100%, 25%);
                 }
             }
+        }
+        .icn-mix .icn-mix__sub-icn {
+            background-color: var(--sd-colour-bottom-bar) !important;
         }
     }
     .opened-articles-bar__quick-actions {
@@ -1517,6 +1519,7 @@ $authoring-toolbar-spacing: 10px;
 .item-association {
     border: 2px dashed hsla(0, 0%, 60%, 0.3);
     background-color:  hsla(0, 0%, 60%, 0.06);
+    border-radius: var(--b-radius--small);
     color: inherit;
     &:focus {
         border-color: var(--sd-colour-interactive--active);
@@ -1524,6 +1527,7 @@ $authoring-toolbar-spacing: 10px;
     width: 100%;
     min-height: 65px;
     position: relative;
+    text-align: center;
     video {
         max-width: 100%;
     }

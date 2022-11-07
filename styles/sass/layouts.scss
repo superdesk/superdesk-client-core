@@ -246,9 +246,11 @@ a:hover, .link:hover {
     height: 48px;
     background: transparent;
     z-index: 1;
-    padding: 10px;
+    padding: $sd-base-increment $sd-base-increment * 1.5;
     transition: all ease 0.35s;
     border-bottom: 1px solid var(--sd-colour-line--light);
+    display: flex;
+    align-items: center;
     &.show {
         top: -48px;
     }

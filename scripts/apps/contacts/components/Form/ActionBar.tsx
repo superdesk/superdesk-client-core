@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import {gettext} from 'core/utils';
 
 export const ActionBar: React.StatelessComponent<any> = ({svc, readOnly, dirty, valid, onSave, onCancel}) => (
-    <div className="action-bar clearfix show">
-        <span className="pull-right">
+    <div className="action-bar show">
+        <div className="button-group button-group--end button-group--comfort">
             <button
                 id="cancel-edit-btn"
                 type="button"
@@ -25,7 +25,7 @@ export const ActionBar: React.StatelessComponent<any> = ({svc, readOnly, dirty, 
                     {gettext('Save')}
                 </button>
             )}
-        </span>
+        </div>
     </div>
 );
 

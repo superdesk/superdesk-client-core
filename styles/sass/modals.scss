@@ -365,7 +365,7 @@ $sd-leftNavBtn-transition: background-color 0.2s ease-out, color 0.1s ease-out;
 
         .table-list {
             height: calc(100% - 96px);
-            overflow: auto;
+            overflow: auto !important;
         }
 
         table {

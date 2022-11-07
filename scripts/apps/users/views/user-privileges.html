@@ -1,12 +1,14 @@
 <form name="userPrivileges">
-    <div class="action-bar clearfix" ng-class="{
+    <div class="action-bar" ng-class="{
         show: userPrivileges.$dirty
         }">
-        <button class="btn btn--primary pull-right" ng-disabled="!userPrivileges.$dirty" ng-click="save()" translate>Save</button>
-        <button
-            class="btn pull-right"
-            ng-click="cancel()"
-            ng-disabled="!userPrivileges.$dirty" translate>Cancel</button>
+        <div class="button-group button-group--end button-group--comfort">
+            <button
+                class="btn"
+                ng-click="cancel()"
+                ng-disabled="!userPrivileges.$dirty" translate>Cancel</button>
+            <button class="btn btn--primary" ng-disabled="!userPrivileges.$dirty" ng-click="save()" translate>Save</button>
+        </div>
     </div>
     <div class="privileges-settings form-flat inner-content">
         <table class="table table--fixed-header">
