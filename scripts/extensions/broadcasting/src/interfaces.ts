@@ -44,6 +44,7 @@ export interface IRundownTemplateBase {
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
 
 export interface IRundownItemBase {
+    readonly rundown: IRundown['_id'];
     item_type?: string;
     show_part?: string;
     duration: number;

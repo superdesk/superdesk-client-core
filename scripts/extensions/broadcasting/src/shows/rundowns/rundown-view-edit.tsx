@@ -199,13 +199,14 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
     }
 
     initiateCreation(
+        rundownId: IRundown['_id'],
         initialData: Partial<IRundownItemBase>,
         insertAtIndex?: number,
         skipUnsavedChangesCheck?: boolean,
     ) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
             this.props.onRundownActionChange(
-                prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
+                prepareForCreation(rundownId, this.props.rundownItemAction, initialData, (val) => {
                     const itemWithDuration: Partial<IRundownItemBase> = val;
 
                     const {rundown, rundownWithChanges} = this.state;
@@ -507,7 +508,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     readOnly={editingDisallowed}
                                                     items={rundownItems}
                                                     initiateCreation={(initialData, insertAtIndex) => {
-                                                        this.initiateCreation(initialData, insertAtIndex);
+                                                        this.initiateCreation(
+                                                            this.props.rundownId,
+                                                            initialData,
+                                                            insertAtIndex,
+                                                        );
                                                     }}
                                                     initiateEditing={({_id}) => this.initiateEditing(_id)}
                                                     initiatePreview={({_id}) => this.initiatePreview(_id)}

@@ -8,10 +8,9 @@ import {
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
 import {
-    // CAMERA,
+    CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     RUNDOWN_SUBITEM_TYPES,
-    // RUNDOWN_SUBITEM_TYPES,
     SHOW_PART_VOCABULARY_ID,
     STATUS_VOCABULARY_ID,
 } from '../../../constants';
@@ -73,15 +72,15 @@ const titleField: IAuthoringFieldV2 = {
     },
 };
 
-// const technicalTitle: IAuthoringFieldV2 = {
-//     id: 'tech_title',
-//     name: gettext('Tech. title'),
-//     fieldType: 'editor3',
-//     fieldConfig: {
-//         ...editor3TestConfigWithoutFormatting,
-//         readOnly: true,
-//     },
-// };
+const technicalTitle: IAuthoringFieldV2 = {
+    id: 'technical_title',
+    name: gettext('Tech. title'),
+    fieldType: 'editor3',
+    fieldConfig: {
+        ...editor3TestConfigWithoutFormatting,
+        readOnly: true,
+    },
+};
 
 const contentField: IAuthoringFieldV2 = {
     id: 'content',
@@ -103,18 +102,18 @@ const itemTypeField: IAuthoringFieldV2 = {
     fieldConfig: itemTypesConfig,
 };
 
-// const cameraConfig: IDropdownConfigVocabulary = {
-//     source: 'vocabulary',
-//     vocabularyId: CAMERA,
-//     multiple: false,
-// };
+const cameraConfig: IDropdownConfigVocabulary = {
+    source: 'vocabulary',
+    vocabularyId: CAMERA,
+    multiple: false,
+};
 
-// const cameraField: IAuthoringFieldV2 = {
-//     id: 'camera',
-//     name: gettext('Camera'),
-//     fieldType: 'dropdown',
-//     fieldConfig: cameraConfig,
-// };
+const cameraField: IAuthoringFieldV2 = {
+    id: 'camera',
+    name: gettext('Camera'),
+    fieldType: 'dropdown',
+    fieldConfig: cameraConfig,
+};
 
 const durationField: IAuthoringFieldV2 = {
     id: 'duration',
@@ -190,47 +189,23 @@ const statusField: IAuthoringFieldV2 = {
     fieldConfig: statusConfig,
 };
 
-export function getRundownItemContentProfile(readOnly: boolean) {
-    const profile: IContentProfileV2 = {
-        id: 'temp-profile',
-        name: 'Temporary profile',
-        header: OrderedMap([
-            // [technicalTitle.id, technicalTitle], // TODO: restore when back-end is ready
-            [itemTypeField.id, itemTypeField],
-            [showPartField.id, showPartField],
-            // [cameraField.id, cameraField], // TODO: restore when back-end is ready
-            [subItemsField.id, subItemsField],
-            [statusField.id, statusField],
-            [durationField.id, durationField],
-            [plannedDurationField.id, plannedDurationField],
-        ]),
-        content: OrderedMap([
-            [titleField.id, titleField],
-            [subitemAttachments.id, subitemAttachments],
-            [contentField.id, contentField],
-            [additionalNotesField.id, additionalNotesField],
-        ]),
-    };
-
-    profile.header = profile.header.map((field) => {
-        return {
-            ...field,
-            fieldConfig: {
-                ...field.fieldConfig,
-                readOnly,
-            },
-        };
-    }).toOrderedMap();
-
-    profile.content = profile.content.map((field) => {
-        return {
-            ...field,
-            fieldConfig: {
-                ...field.fieldConfig,
-                readOnly,
-            },
-        };
-    }).toOrderedMap();
-
-    return profile;
-}
+export const rundownItemContentProfile: IContentProfileV2 = {
+    id: 'temp-profile',
+    name: 'Temporary profile',
+    header: OrderedMap([
+        [technicalTitle.id, technicalTitle],
+        [itemTypeField.id, itemTypeField],
+        [showPartField.id, showPartField],
+        [cameraField.id, cameraField],
+        [subItemsField.id, subItemsField],
+        [statusField.id, statusField],
+        [durationField.id, durationField],
+        [plannedDurationField.id, plannedDurationField],
+    ]),
+    content: OrderedMap([
+        [titleField.id, titleField],
+        [subitemAttachments.id, subitemAttachments],
+        [contentField.id, contentField],
+        [additionalNotesField.id, additionalNotesField],
+    ]),
+};
