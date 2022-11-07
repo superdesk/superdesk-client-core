@@ -52,11 +52,7 @@ export interface IRundownItemBase {
     planned_duration: number;
     title: string;
     content?: string;
-    live_sound?: string;
-    guests?: string;
     additional_notes?: string;
-    live_captions?: string;
-    last_sentence?: string;
     fields_meta?: {
         [key: string]: {
             draftjsState?: [RawDraftContentState];
