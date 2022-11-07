@@ -18,7 +18,7 @@ export class PlannedDurationLabel extends React.PureComponent<IProps> {
 
         return (
             <IconLabel
-                text={getDurationString(planned_duration)}
+                text={getDurationString(planned_duration, 2)}
                 innerLabel={label ?? gettext('Planned duration')}
                 icon="time"
                 style="translucent"
