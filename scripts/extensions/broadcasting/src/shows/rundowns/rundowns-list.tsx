@@ -12,6 +12,7 @@ import {RundownItems} from './components/rundown-items';
 import {IRundownItemActionNext, prepareForEditing, prepareForPreview} from './prepare-create-edit-rundown-item';
 import {Dropdown, IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
 import {noop} from 'lodash';
+import {IRundownAction} from './rundown-view-edit';
 
 const {httpRequestRawLocal} = superdesk;
 const {getVirtualListFromQuery, DateTime} = superdesk.components;
@@ -21,8 +22,9 @@ const VirtualListFromQuery = getVirtualListFromQuery<IRundown, {show: IShow; tem
 
 interface IProps {
     searchString: string;
-    inEditMode: IRundown['_id'] | null;
+    rundownAction: IRundownAction;
     onEditModeChange(inEditMode: IRundown['_id'], rundownItemAction?: IRundownItemActionNext): void;
+    preview(id: IRundown['_id']): void;
     filters?: IRundownFilters;
     rundownItemAction: IRundownItemActionNext;
 }
@@ -236,9 +238,12 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     )}
                                     loading={false}
                                     activated={false}
-                                    selected={rundown._id === this.props.inEditMode}
+                                    selected={rundown._id === this.props.rundownAction?.id}
                                     archived={false}
                                     onClick={() => {
+                                        this.props.preview(rundown._id);
+                                    }}
+                                    onDoubleClick={() => {
                                         this.props.onEditModeChange(rundown._id);
                                     }}
                                 />
