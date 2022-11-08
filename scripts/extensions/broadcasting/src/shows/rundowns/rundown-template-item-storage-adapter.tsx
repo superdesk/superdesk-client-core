@@ -33,7 +33,6 @@ export const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemp
                 : {
                     ...fieldsMetaCurrent,
                     [fieldId]: {
-                        ...(rundownItem.data.fields_meta?.[fieldId] ?? {}),
                         draftjsState: [rawState],
                         annotations: computed.annotations,
                     },
@@ -98,9 +97,8 @@ export const rundownItemStorageAdapter: IStorageAdapter<IRundownItem> = {
                 editor3Config.readOnly === true
                     ? fieldsMetaCurrent
                     : {
-                        ...(rundownItem.fields_meta ?? {}),
+                        ...fieldsMetaCurrent,
                         [fieldId]: {
-                            ...fieldsMetaCurrent,
                             draftjsState: [rawState],
                             annotations: computed.annotations,
                         },

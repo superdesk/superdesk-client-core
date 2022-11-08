@@ -76,11 +76,14 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
                 .then((res) => res.success ? res.latestEntity : entity);
         },
         saveEntity: (current, original) => {
-            const patch = fixPatchRequest(
-                prepareRundownItemForSaving(
-                    generatePatch(original, current, {undefinedEqNull: true}),
+            const patch: Partial<IRundownItem> = {
+                ...fixPatchRequest(
+                    prepareRundownItemForSaving(
+                        generatePatch(original, current, {undefinedEqNull: true}),
+                    ),
                 ),
-            );
+                fields_meta: current.fields_meta ?? {}, // maintain fields_meta; attempting to patch would drop fields
+            };
 
             return httpRequestJsonLocal<IRundownItem & IPatchResponseExtraFields>({
                 method: 'PATCH',
