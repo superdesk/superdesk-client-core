@@ -99,8 +99,15 @@
             }
             .nav-tabs {
                 padding: 0 6px;
-                background-color: var(--sd-colour-panel-bg--100);
+                background-color: var(--sd-item__main-Bg);
                 box-shadow: 0 1px 0 0 var(--sd-colour-line--light);
+                grid-row: 1 / 2;
+                position: relative;
+                z-index: 1;
+            }
+            .content {
+                grid-row: 2 / 3;
+                overflow-y: auto;
             }
             .widget-content-padding {
                 padding: 10px;
@@ -155,6 +162,10 @@
     sd-widget-react > div {
         display: contents;
     }
+}
+.tabpane .sd-widget .widget-content .content {
+    grid-row: 2 / 3;
+    overflow-y: auto;
 }
 
 /*

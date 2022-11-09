@@ -139,7 +139,7 @@ class Suggestion extends React.Component<any, any> {
                     </FluidRow>
 
                     <FluidRow scrollable={true} className="editor-popup__secondary-content">
-                        <div style={{background: '#fff', padding: '1.6rem', paddingBottom: '1rem'}}>
+                        <div className='editor-popup__content-block'>
                             {content}
                         </div>
                     </FluidRow>

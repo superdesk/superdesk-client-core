@@ -2342,7 +2342,6 @@ sd-multi-image-edit {
     text-align: start;
 }
 
-
 .sd-toggle + label {
     letter-spacing: 0;
     color: var(--color-text);
@@ -2363,5 +2362,14 @@ sd-multi-image-edit {
     margin-bottom: $sd-base-increment * 2;
     &.toggle-box--no-margin {
         margin-bottom: 0;
+    }
+}
+
+.dropdown__menu-footer {
+    &.dropdown__menu-footer--align-right{
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: var(--gap--small);
     }
 }

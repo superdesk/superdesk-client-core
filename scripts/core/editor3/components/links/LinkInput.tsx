@@ -165,7 +165,7 @@ export class LinkInputComponent extends React.Component<any, any> {
                 className="link-input"
                 onKeyUp={this.onKeyUp}
             >
-                <div style={{padding: '3.4rem 2rem'}}>
+                <div style={{padding: '3.2rem 1.6rem'}}>
                     <input
                         type="url"
                         ref={(el) => {
@@ -180,15 +180,17 @@ export class LinkInputComponent extends React.Component<any, any> {
                     />
                 </div>
                 <div className="dropdown__menu-footer dropdown__menu-footer--align-right">
-                    <button
-                        className="btn btn--cancel"
-                        onClick={this.props.hidePopups}
-                    >
-                        {gettext('Cancel')}
-                    </button>
-                    <button className="btn btn--primary" type="submit" disabled={this.state.url.length < 1}>
-                        {gettext('Insert')}
-                    </button>
+                    <div className="button-group button-group--end button-group--comfort" role="group">
+                        <button
+                            className="btn btn--cancel"
+                            onClick={this.props.hidePopups}
+                        >
+                            {gettext('Cancel')}
+                        </button>
+                        <button className="btn btn--primary" type="submit" disabled={this.state.url.length < 1}>
+                            {gettext('Insert')}
+                        </button>
+                    </div>
                 </div>
             </form>
         );
