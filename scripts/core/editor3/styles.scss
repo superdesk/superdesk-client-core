@@ -23,6 +23,8 @@ $editor-styleButton-size: 			3rem;
 	min-height: auto;
 	opacity: 0;
 	transition: all .2s ease;
+	display: block;
+    font-weight: 300;
 
 	&.is-link {
 		height: 26px;
