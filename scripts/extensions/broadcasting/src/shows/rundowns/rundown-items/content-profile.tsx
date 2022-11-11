@@ -105,7 +105,7 @@ const itemTypeField: IAuthoringFieldV2 = {
 const cameraConfig: IDropdownConfigVocabulary = {
     source: 'vocabulary',
     vocabularyId: CAMERA,
-    multiple: false,
+    multiple: true,
 };
 
 const cameraField: IAuthoringFieldV2 = {
