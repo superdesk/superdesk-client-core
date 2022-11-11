@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {WithSizeObserver, ContentListItem, Label, IconButton, Menu, Alert} from 'superdesk-ui-framework/react';
-import {IRundown, IRundownFilters, IRundownTemplate, IShow} from '../../interfaces';
+import {IRundown, IRundownFilters, IRundownItem, IRundownTemplate, IShow} from '../../interfaces';
 
 import {superdesk} from '../../superdesk';
 import {DurationLabel} from './components/duration-label';
@@ -70,6 +70,22 @@ function getFilters(filters: IRundownFilters | undefined): ILogicalOperator | un
 }
 
 export class RundownsList extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.doPreview = this.doPreview.bind(this);
+    }
+
+    doPreview(rundownId: IRundown['_id'], rundownItemId: IRundownItem['_id']) {
+        this.props.onEditModeChange(
+            rundownId,
+            prepareForPreview(
+                this.props.rundownItemAction,
+                rundownItemId,
+            ),
+        );
+    }
+
     render() {
         return (
             <WithSizeObserver style={{display: 'flex', margin: -4}}>
@@ -257,13 +273,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                     const preview: IMenuItem = {
                                                         label: gettext('Preview'),
                                                         onSelect: () => {
-                                                            this.props.onEditModeChange(
-                                                                rundown._id,
-                                                                prepareForPreview(
-                                                                    this.props.rundownItemAction,
-                                                                    rundownItem._id,
-                                                                ),
-                                                            );
+                                                            this.doPreview(rundown._id, rundownItem._id);
                                                         },
                                                     };
 
@@ -293,6 +303,9 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                         </Dropdown>
                                                     );
                                                 })}
+                                                preview={(rundownItem) => {
+                                                    this.doPreview(rundown._id, rundownItem._id);
+                                                }}
                                             />
                                         </div>
                                     )

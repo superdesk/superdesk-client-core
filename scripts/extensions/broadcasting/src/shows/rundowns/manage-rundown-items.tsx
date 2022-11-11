@@ -138,6 +138,12 @@ export class ManageRundownItems<T extends IRundownItemBase | IRundownItem> exten
                             </Dropdown>
                         );
                     })}
+                    preview={(item) => {
+                        this.props.initiatePreview(item);
+                    }}
+                    edit={(item) => {
+                        this.props.initiateEditing(item);
+                    }}
                     itemsDropdown={((insertAfterIndex?: number) => {
                         const insertAtIndex: number | undefined =
                             insertAfterIndex == null ? undefined : insertAfterIndex + 1;
