@@ -11,8 +11,10 @@ import {isOpenItemType} from '../directives/MultiActionBar';
 import {showModal} from '@superdesk/common';
 import {getModalForMultipleHighlights} from 'apps/highlights/components/SetHighlightsForMultipleArticlesModal';
 import {dataApi} from 'core/helpers/CrudManager';
-import {appConfig} from 'appConfig';
+import {appConfig, authoringReactViewEnabled} from 'appConfig';
 import {previewItems} from 'apps/authoring/preview/fullPreviewMultiple';
+import React from 'react';
+import {MultiEditModal} from 'apps/authoring-react/multi-edit-modal';
 
 export function getBulkActions(
     articles: Array<IArticle>,
@@ -27,9 +29,10 @@ export function getBulkActions(
     const desks = ng.get('desks');
     const privileges = ng.get('privileges');
 
-    const {isLocked, isLockedByOtherUser, isPublished} = sdApi.article;
+    const {isLockedInCurrentSession, isLocked, isLockedByOtherUser, isPublished} = sdApi.article;
 
-    const noneLocked = articles.every((article) => !isLocked(article));
+    const notLockedInOtherSession = articles.every((article) => isLockedInCurrentSession(article));
+    const locked = articles.every((article) => isLocked(article));
     const nonePublished = articles.every((article) => !isPublished(article));
 
     if (articles.every(({state}) => state === ITEM_STATE.INGESTED)) {
@@ -81,7 +84,7 @@ export function getBulkActions(
             },
             canAutocloseMultiActionBar: false,
         });
-    } else if (noneLocked && articles.every((article) => article.state === ITEM_STATE.SPIKED)) {
+    } else if (notLockedInOtherSession && articles.every((article) => article.state === ITEM_STATE.SPIKED)) {
         if (privileges.userHasPrivileges({unspike: 1})) {
             actions.push({
                 label: gettext('Unspike'),
@@ -94,7 +97,7 @@ export function getBulkActions(
             });
         }
     } else {
-        if (noneLocked && multiActions.canEditMetadata()) {
+        if (notLockedInOtherSession && multiActions.canEditMetadata()) {
             actions.push({
                 label: gettext('Edit metadata'),
                 icon: 'icon-edit-line',
@@ -117,13 +120,33 @@ export function getBulkActions(
             });
         }
 
-        if (noneLocked && articles.every((article) => authoring.itemActions(article).edit === true)) {
+        if (
+            (notLockedInOtherSession || !locked)
+            && articles.every((article) => authoring.itemActions(article).edit === true)
+        ) {
             actions.push({
-                label: gettext('Multiedit'),
+                label: gettext('Multi-edit'),
                 icon: 'icon-multiedit',
                 onTrigger: () => {
-                    multiActions.multiedit();
-                    scopeApply?.();
+                    if (authoringReactViewEnabled) {
+                        Promise.all(getSelectedItems().map((article) => {
+                            if (isLockedInCurrentSession(article)) {
+                                return article;
+                            } else {
+                                return sdApi.article.lock(article._id);
+                            }
+                        })).then((articlesLocked) => {
+                            showModal(({closeModal}) => (
+                                <MultiEditModal
+                                    initiallySelectedArticles={articlesLocked}
+                                    onClose={closeModal}
+                                />
+                            ));
+                        });
+                    } else {
+                        multiActions.multiedit();
+                        scopeApply?.();
+                    }
                 },
                 canAutocloseMultiActionBar: false,
             });
@@ -147,7 +170,7 @@ export function getBulkActions(
             });
         }
 
-        if (noneLocked && nonePublished) {
+        if (notLockedInOtherSession && nonePublished) {
             actions.push({
                 label: gettext('Send to'),
                 icon: 'icon-expand-thin',
@@ -171,7 +194,7 @@ export function getBulkActions(
             }
         }
 
-        if (noneLocked) {
+        if (notLockedInOtherSession) {
             actions.push({
                 label: gettext('Duplicate To'),
                 icon: 'icon-copy',

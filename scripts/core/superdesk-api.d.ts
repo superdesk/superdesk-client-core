@@ -90,6 +90,9 @@ declare module 'superdesk-api' {
          * allows to only do it once after timeout passes, instead of on every character change.
          */
         schedule(getItem: () => T, callback: (autosaved: T) => void): void;
+
+        // TODO: add a comment on how flush works
+        flush(): Promise<void>;
     }
 
     /**
@@ -129,7 +132,7 @@ declare module 'superdesk-api' {
         handleUnsavedChanges(): Promise<T>;
         handleFieldsDataChange(fieldsData: IFieldsData): void;
         save(): Promise<T>;
-        discardChangesAndClose(): void;
+        initiateClosing(): void;
         keepChangesAndClose(): void;
         stealLock(): void;
     }

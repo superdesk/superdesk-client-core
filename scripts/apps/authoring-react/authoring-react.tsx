@@ -38,7 +38,7 @@ import {WithInteractiveArticleActionsPanel} from 'core/interactive-article-actio
 import {sdApi} from 'api';
 import {AuthoringToolbar} from './subcomponents/authoring-toolbar';
 import {addInternalWebsocketEventListener, addWebsocketEventListener} from 'core/notification/notification';
-import {ARTICLE_RELATED_RESOURCE_NAMES, AUTHORING_FIELD_PREFERENCES} from 'core/constants';
+import {AUTHORING_FIELD_PREFERENCES} from 'core/constants';
 import {AuthoringActionsMenu} from './subcomponents/authoring-actions-menu';
 import {Map} from 'immutable';
 import {getField} from 'apps/fields';
@@ -239,7 +239,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.save = this.save.bind(this);
         this.forceLock = this.forceLock.bind(this);
         this.discardUnsavedChanges = this.discardUnsavedChanges.bind(this);
-        this.handleClose = this.handleClose.bind(this);
+        this.initiateClosing = this.initiateClosing.bind(this);
         this.handleFieldChange = this.handleFieldChange.bind(this);
         this.handleFieldsDataChange = this.handleFieldsDataChange.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
@@ -327,6 +327,14 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         widgetReactIntegration.disableWidgetPinning = props.disableWidgetPinning ?? false;
 
         this.eventListenersToRemoveBeforeUnmounting = [];
+    }
+
+    prepareForUnmounting(): Promise<void> {
+        if (!this.state.initialized) {
+            return Promise.resolve();
+        } else {
+            return this.props.authoringStorage.autosave.flush();
+        }
     }
 
     cancelAutosave(): Promise<void> {
@@ -837,7 +845,11 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         });
     }
 
-    handleClose(state: IStateLoaded<T>) {
+    /**
+     * Closing is initiated, the logic to handle unsaved changes runs
+     * and unless closing is cancelled by user action in the UI this.props.onClose is called.
+     */
+    initiateClosing(state: IStateLoaded<T>) {
         if (this.hasUnsavedChanges() !== true) {
             this.props.onClose();
             return;
@@ -962,7 +974,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
             hasUnsavedChanges: () => this.hasUnsavedChanges(),
             handleUnsavedChanges: () => this.handleUnsavedChanges(state),
             save: () => this.save(state),
-            discardChangesAndClose: () => this.handleClose(state),
+            initiateClosing: () => this.initiateClosing(state),
             keepChangesAndClose: () => this.props.onClose(),
             stealLock: () => this.forceLock(state),
             authoringStorage: authoringStorage,

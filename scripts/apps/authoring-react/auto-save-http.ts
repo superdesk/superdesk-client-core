@@ -5,17 +5,19 @@ import {omitFields} from './data-layer';
 
 export class AutoSaveHttp implements IAuthoringAutoSave<IArticle> {
     autoSaveThrottled: ((getItem: () => IArticle, callback: (autosaved: IArticle) => void) => void) & Cancelable;
+    private autosavePromise: Promise<void> | null;
 
     constructor(delay: number) {
         this.autoSaveThrottled = throttle(
             (getItem, callback) => {
                 const item = getItem();
 
-                httpRequestJsonLocal<IArticle>({
+                this.autosavePromise = httpRequestJsonLocal<IArticle>({
                     method: 'POST',
                     path: '/archive_autosave',
                     payload: omitFields(item),
                 }).then((res) => {
+                    this.autosavePromise = null;
                     callback(res);
                 });
             },
@@ -43,6 +45,14 @@ export class AutoSaveHttp implements IAuthoringAutoSave<IArticle> {
 
     schedule(getItem: () => IArticle, callback: (autosaved: IArticle) => void) {
         this.autoSaveThrottled(getItem, callback);
+    }
+
+    flush(): Promise<void> {
+        if (this.autosavePromise == null) {
+            return Promise.resolve();
+        } else {
+            return this.autosavePromise.then(() => undefined);
+        }
     }
 
     cancel() {

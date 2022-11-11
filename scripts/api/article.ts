@@ -1,4 +1,4 @@
-import {IArticle, IDangerousArticlePatchingOptions, IDesk, IStage} from 'superdesk-api';
+import {IArticle, IBaseRestApiResponse, IDangerousArticlePatchingOptions, IDesk, IStage} from 'superdesk-api';
 import {patchArticle} from './article-patch';
 import ng from 'core/services/ng';
 import {httpRequestJsonLocal} from 'core/helpers/network';
@@ -173,6 +173,10 @@ function createNewUsingDeskTemplate(): void {
     });
 }
 
+function getWorkQueueItems(): Array<IArticle> {
+    return ng.get('workqueue').items;
+}
+
 interface IArticleApi {
     isLocked(article: IArticle): boolean;
     isLockedInCurrentSession(article: IArticle): boolean;
@@ -226,6 +230,7 @@ interface IArticleApi {
     unlock(itemId: IArticle['_id']): Promise<IArticle>;
 
     createNewUsingDeskTemplate(): void;
+    getWorkQueueItems(): Array<IArticle>;
 }
 
 export const article: IArticleApi = {
@@ -252,4 +257,5 @@ export const article: IArticleApi = {
     lock,
     unlock,
     createNewUsingDeskTemplate,
+    getWorkQueueItems,
 };

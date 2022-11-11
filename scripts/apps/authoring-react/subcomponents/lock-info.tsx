@@ -43,6 +43,14 @@ class LockInfoComponent extends React.PureComponent<IProps, IState> {
                 <div className="locked-info__avatar">
                     <UserAvatar user={user} size="medium" />
                 </div>
+                {/* TODO: REMOVE */}
+                <div>
+                    {this.props.article._etag}
+                </div>
+
+                <div>
+                    {this.props.article.lock_session}
+                </div>
 
                 <div className="locked-info__label">{gettext('Locked by')}</div>
 

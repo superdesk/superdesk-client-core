@@ -30,7 +30,7 @@ import {HeaderComponentField} from './header-component-field';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
-import {AuthoringIntegrationWrapper} from 'apps/authoring-react/authoring-integration-wrapper';
+import {AuthoringAngularIntegration} from 'apps/authoring-react/authoring-integration-wrapper';
 import {InteractiveArticleActionsPanelCombined} from 'core/interactive-article-actions-panel/index-combined';
 import {dispatchInternalEvent} from 'core/internal-events';
 
@@ -100,7 +100,7 @@ angular.module('superdesk.apps.authoring', [
     .directive('html5vfix', directive.Html5vfix)
     .directive('sdDashboardCard', directive.DashboardCard)
     .component('sdCharacterCount', reactToAngular1(CharacterCount, ['item', 'html', 'limit'], [], 'display: inline'))
-    .component('sdAuthoringIntegrationWrapper', reactToAngular1(AuthoringIntegrationWrapper, ['itemId'], []))
+    .component('sdAuthoringIntegrationWrapper', reactToAngular1(AuthoringAngularIntegration, ['itemId'], []))
     .component(
         'sdInteractiveArticleActionsPanelCombined',
         reactToAngular1(InteractiveArticleActionsPanelCombined, ['handleUnsavedChanges', 'location'], []),
