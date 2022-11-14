@@ -31,7 +31,7 @@ const shortCode: IFormField = {
     label: gettext('Show code'),
     type: FormFieldType.plainText,
     field: nameof<IShow>('shortcode'),
-    required: true,
+    required: false,
 };
 const descriptionField: IFormField = {
     label: gettext('Description'),
