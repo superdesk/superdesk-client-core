@@ -25,6 +25,7 @@ interface IProvider extends IBaseRestApiResponse {
     feed_parser?: string;
     content_types?: Array<any>;
     allow_remove_ingested?: boolean;
+    disable_item_updates?: boolean;
     content_expiry?: number;
     config?: {};
     private?: {};

@@ -30,7 +30,6 @@
   "dependencies": {
     "@metadata/exif": "github:superdesk/exif#431066d",
     "@popperjs/core": "2.10.2",
-    "@superdesk/primereact": "5.0.2-4",
     "@types/angular": "1.6.50",
     "@types/draft-js": "0.11.5",
     "@types/enzyme": "3.9.1",
