@@ -18,27 +18,32 @@ const {computeEditor3Output, getContentStateFromHtml} = superdesk.helpers;
 export const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemplateInitial> = {
     storeValue: (value, fieldId, rundownItem, config, fieldType) => {
         if (fieldType === 'editor3') {
+            const editor3Config = config as IEditor3Config;
             const rawState = (value as IEditor3ValueStorage).rawContentState;
 
             const computed = computeEditor3Output(
                 rawState,
-                config as IEditor3Config,
+                editor3Config,
                 LANGUAGE,
             );
+
+            const fieldsMetaCurrent: IRundownItem['fields_meta'] = (rundownItem.data.fields_meta ?? {});
+            const fieldsDataNext: IRundownItem['fields_meta'] = editor3Config.readOnly === true
+                ? fieldsMetaCurrent
+                : {
+                    ...fieldsMetaCurrent,
+                    [fieldId]: {
+                        draftjsState: [rawState],
+                        annotations: computed.annotations,
+                    },
+                };
 
             return {
                 ...rundownItem,
                 data: {
                     ...(rundownItem.data ?? {}),
                     [fieldId]: computed.stringValue,
-                    fields_meta: {
-                        ...(rundownItem.data.fields_meta ?? {}),
-                        [fieldId]: {
-                            ...(rundownItem.data.fields_meta?.[fieldId] ?? {}),
-                            draftjsState: [rawState],
-                            annotations: computed.annotations,
-                        },
-                    },
+                    fields_meta: fieldsDataNext,
                 },
             };
         } else {
@@ -78,25 +83,31 @@ export const rundownTemplateItemStorageAdapter: IStorageAdapter<IRundownItemTemp
 export const rundownItemStorageAdapter: IStorageAdapter<IRundownItem> = {
     storeValue: (value, fieldId, rundownItem, config, fieldType) => {
         if (fieldType === 'editor3') {
+            const editor3Config = config as IEditor3Config;
             const rawState = (value as IEditor3ValueStorage).rawContentState;
 
             const computed = computeEditor3Output(
                 rawState,
-                config as IEditor3Config,
+                editor3Config,
                 LANGUAGE,
             );
+
+            const fieldsMetaCurrent: IRundownItem['fields_meta'] = rundownItem.fields_meta ?? {};
+            const fieldsMetaNext: IRundownItem['fields_meta'] =
+                editor3Config.readOnly === true
+                    ? fieldsMetaCurrent
+                    : {
+                        ...fieldsMetaCurrent,
+                        [fieldId]: {
+                            draftjsState: [rawState],
+                            annotations: computed.annotations,
+                        },
+                    };
 
             return {
                 ...(rundownItem ?? {}),
                 [fieldId]: computed.stringValue,
-                fields_meta: {
-                    ...(rundownItem.fields_meta ?? {}),
-                    [fieldId]: {
-                        ...(rundownItem.fields_meta?.[fieldId] ?? {}),
-                        draftjsState: [rawState],
-                        annotations: computed.annotations,
-                    },
-                },
+                fields_meta: fieldsMetaNext,
             };
         } else {
             return {

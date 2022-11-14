@@ -20,7 +20,7 @@ import {classnames, showModal} from '@superdesk/common';
 
 import {CreateRundownFromTemplate} from './shows/rundowns/create-rundown-from-template';
 import {RundownsList} from './shows/rundowns/rundowns-list';
-import {RundownViewEdit} from './shows/rundowns/rundown-view-edit';
+import {IRundownAction, RundownViewEdit} from './shows/rundowns/rundown-view-edit';
 import {IRundown, IRundownFilters} from './interfaces';
 import {FilteringInputs} from './shows/rundowns/components/filtering-inputs';
 import {AppliedFilters} from './shows/rundowns/components/applied-filters';
@@ -36,7 +36,7 @@ const {tryLocking, tryUnlocking} = superdesk.helpers;
 type IProps = {};
 
 interface IState {
-    rundownViewEdit: null | {mode: 'view'; id: string} | {mode: 'edit'; id: string};
+    rundownAction: IRundownAction;
     rundownItemAction: IRundownItemActionNext;
     searchString: string;
     filtersOpen: boolean;
@@ -49,7 +49,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         super(props);
 
         this.state = {
-            rundownViewEdit: null,
+            rundownAction: null,
             rundownItemAction: null,
             searchString: '',
             filtersOpen: false,
@@ -71,7 +71,7 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
         });
     }
 
-    private prepareRundownEditing(id: IRundown['_id']): Promise<IState['rundownViewEdit']> {
+    private prepareRundownEditing(id: IRundown['_id']): Promise<IState['rundownAction']> {
         return tryLocking<IRundown>('/rundowns', id).then(({success}) => {
             if (success) {
                 return {mode: 'edit', id};
@@ -92,8 +92,8 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
     }
 
     render() {
-        const {rundownViewEdit} = this.state;
-        const rundownsListVisible = !(rundownViewEdit != null && this.state.rundownItemAction != null);
+        const {rundownAction} = this.state;
+        const rundownsListVisible = !(rundownAction != null && this.state.rundownItemAction != null);
 
         return (
             <div
@@ -431,14 +431,22 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                                         </GridList> */}
 
                                         <RundownsList
-                                            inEditMode={rundownViewEdit?.id ?? null}
+                                            rundownAction={rundownAction}
+                                            preview={(id) => {
+                                                this.setState({
+                                                    rundownAction: {
+                                                        mode: 'view',
+                                                        id,
+                                                    },
+                                                });
+                                            }}
                                             onEditModeChange={(id, rundownItemAction) => {
                                                 Promise.all([
                                                     this.prepareRundownEditing(id),
                                                     this.prepareNextRundownItemAction(rundownItemAction ?? null),
                                                 ]).then(([rundownViewEditNext, rundownItemActionNext]) => {
                                                     this.setState({
-                                                        rundownViewEdit: rundownViewEditNext,
+                                                        rundownAction: rundownViewEditNext,
                                                         rundownItemAction: rundownItemActionNext,
                                                     });
                                                 });
@@ -554,35 +562,29 @@ export class RundownsPage extends React.PureComponent<IProps, IState> {
                             </React.Fragment>
                         )
                     }
-                    <Layout.AuthoringContainer open={rundownViewEdit != null}>
+                    <Layout.AuthoringContainer open={rundownAction != null}>
                         {
-                            rundownViewEdit != null && (
+                            rundownAction != null && (
                                 <RundownViewEdit
-                                    key={rundownViewEdit.id + rundownViewEdit.mode}
-                                    rundownId={rundownViewEdit.id}
+                                    key={rundownAction.id + rundownAction.mode}
+                                    rundownId={rundownAction.id}
                                     onClose={(rundown: IRundown) => {
                                         const doUnlock = isLockedInCurrentSession(rundown)
                                             ? tryUnlocking('/rundowns', rundown._id)
                                             : Promise.resolve();
 
                                         doUnlock.finally(() => {
-                                            this.setState({rundownViewEdit: null});
+                                            this.setState({rundownAction: null});
                                         });
                                     }}
-                                    readOnly={rundownViewEdit == null || rundownViewEdit.mode === 'view'}
+                                    readOnly={rundownAction == null || rundownAction.mode === 'view'}
                                     rundownItemAction={this.state.rundownItemAction}
-                                    onRundownActionChange={(rundownItemAction) => {
+                                    onRundownActionChange={(actionNext) => {
+                                        this.setState({rundownAction: actionNext});
+                                    }}
+                                    onRundownItemActionChange={(rundownItemAction) => {
                                         this.prepareNextRundownItemAction(rundownItemAction).then((next) => {
                                             this.setState({rundownItemAction: next});
-                                        });
-                                    }}
-                                    switchRundownToEditMode={() => {
-                                        this.setState({
-                                            ...this.state,
-                                            rundownViewEdit: {
-                                                ...rundownViewEdit,
-                                                mode: 'edit',
-                                            },
                                         });
                                     }}
                                 />

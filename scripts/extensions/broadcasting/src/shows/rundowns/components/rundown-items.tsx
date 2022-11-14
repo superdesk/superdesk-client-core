@@ -24,6 +24,7 @@ interface IPropsReadOnly<T extends IRundownItem | IRundownItemBase> {
     readOnly: 'yes';
     items: Array<T>;
     getActions(item: T): JSX.Element;
+    preview(item: T): void;
 }
 
 interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
@@ -36,6 +37,8 @@ interface IPropsEditable<T extends IRundownItem | IRundownItemBase> {
     addItem: boolean;
     itemsDropdown: (index?: number) => Array<IMenuItem | ISubmenu | IMenuGroup | 'divider'>;
     getActions(item: T): JSX.Element | undefined;
+    preview(item: T): void;
+    edit(item: T): void;
 }
 
 type IProps<T extends IRundownItem | IRundownItemBase> = IPropsReadOnly<T> | IPropsEditable<T>;
@@ -149,6 +152,14 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     </Spacer>
                 ),
                 action: this.props.getActions(item),
+                onClick: () => {
+                    this.props.preview(item);
+                },
+                onDoubleClick: () => {
+                    if (!this.props.readOnly) {
+                        this.props.edit(item);
+                    }
+                },
             });
         });
 

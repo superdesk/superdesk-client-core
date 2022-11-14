@@ -16,8 +16,9 @@ export interface IRRule {
 
 export interface IShowBase {
     title: string;
+    shortcode?: string;
     description: string;
-    planned_duration: number | null;
+    planned_duration?: number;
 }
 
 export type IShow = IShowBase & IBaseRestApiResponse;
@@ -44,6 +45,7 @@ export interface IRundownTemplateBase {
 export type IRundownTemplate = IRundownTemplateBase & IBaseRestApiResponse;
 
 export interface IRundownItemBase {
+    readonly rundown: IRundown['_id'];
     item_type?: string;
     show_part?: string;
     duration: number;
@@ -51,11 +53,7 @@ export interface IRundownItemBase {
     planned_duration: number;
     title: string;
     content?: string;
-    live_sound?: string;
-    guests?: string;
     additional_notes?: string;
-    live_captions?: string;
-    last_sentence?: string;
     fields_meta?: {
         [key: string]: {
             draftjsState?: [RawDraftContentState];

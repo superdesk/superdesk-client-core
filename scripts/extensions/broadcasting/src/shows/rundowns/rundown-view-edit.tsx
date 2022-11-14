@@ -13,13 +13,15 @@ import {Button, Dropdown, IconButton, Input, SubNav} from 'superdesk-ui-framewor
 import * as Nav from 'superdesk-ui-framework/react/components/Navigation';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
 
+export type IRundownAction = null | {mode: 'view'; id: string} | {mode: 'edit'; id: string};
+
 interface IProps {
     rundownId: string;
     rundownItemAction: IRundownItemActionNext;
-    onRundownActionChange(action: IRundownItemActionNext): void;
+    onRundownItemActionChange(action: IRundownItemActionNext): void;
+    onRundownActionChange(action: IRundownAction): void;
     readOnly: boolean;
     onClose(rundown: IRundown): void;
-    switchRundownToEditMode(): void;
 }
 
 interface IState {
@@ -199,13 +201,14 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
     }
 
     initiateCreation(
+        rundownId: IRundown['_id'],
         initialData: Partial<IRundownItemBase>,
         insertAtIndex?: number,
         skipUnsavedChangesCheck?: boolean,
     ) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
-            this.props.onRundownActionChange(
-                prepareForCreation(this.props.rundownItemAction, initialData, (val) => {
+            this.props.onRundownItemActionChange(
+                prepareForCreation(rundownId, this.props.rundownItemAction, initialData, (val) => {
                     const itemWithDuration: Partial<IRundownItemBase> = val;
 
                     const {rundown, rundownWithChanges} = this.state;
@@ -274,7 +277,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                  * Starting editing even if item can't be locked at the moment.
                  * There will be a button in the UI to force-unlock.
                  */
-                this.props.onRundownActionChange(
+                this.props.onRundownItemActionChange(
                     prepareForEditing(this.props.rundownItemAction, id),
                 );
             });
@@ -283,7 +286,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
 
     initiatePreview(id: IRundownItem['_id'], skipUnsavedChangesCheck?: boolean) {
         handleUnsavedRundownChanges(this.props.rundownItemAction, skipUnsavedChangesCheck ?? false, () => {
-            this.props.onRundownActionChange(prepareForPreview(this.props.rundownItemAction, id));
+            this.props.onRundownItemActionChange(prepareForPreview(this.props.rundownItemAction, id));
         });
     }
 
@@ -383,7 +386,10 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                             <Button
                                                                 text={gettext('Edit')}
                                                                 onClick={() => {
-                                                                    this.props.switchRundownToEditMode();
+                                                                    this.props.onRundownActionChange({
+                                                                        id: this.props.rundownId,
+                                                                        mode: 'edit',
+                                                                    });
                                                                 }}
                                                                 type="primary"
                                                             />
@@ -507,7 +513,11 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                     readOnly={editingDisallowed}
                                                     items={rundownItems}
                                                     initiateCreation={(initialData, insertAtIndex) => {
-                                                        this.initiateCreation(initialData, insertAtIndex);
+                                                        this.initiateCreation(
+                                                            this.props.rundownId,
+                                                            initialData,
+                                                            insertAtIndex,
+                                                        );
                                                     }}
                                                     initiateEditing={({_id}) => this.initiateEditing(_id)}
                                                     initiatePreview={({_id}) => this.initiatePreview(_id)}
@@ -548,7 +558,7 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         );
                                                     }
 
-                                                    this.props.onRundownActionChange(null);
+                                                    this.props.onRundownItemActionChange(null);
                                                 }}
                                                 fieldsAdapter={{}}
                                                 authoringStorage={rundownItemAction.authoringStorage}

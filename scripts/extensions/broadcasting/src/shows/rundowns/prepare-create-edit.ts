@@ -1,5 +1,5 @@
 import {isEqual} from 'lodash';
-import {getRundownItemContentProfile} from './rundown-items/content-profile';
+import {rundownItemContentProfile} from './rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
     IAuthoringStorage,
@@ -10,7 +10,6 @@ import {superdesk} from '../../superdesk';
 
 function getRundownItemTemplateAuthoringStorage(
     item: IRundownItemTemplateInitial,
-    readOnly: boolean,
     onSave: (item: IRundownItemTemplateInitial) => Promise<IRundownItemTemplateInitial>,
 ): IAuthoringStorage<IRundownItemTemplateInitial> {
     class AutoSaveRundownItem implements IAuthoringAutoSave<IRundownItemTemplateInitial> {
@@ -51,7 +50,7 @@ function getRundownItemTemplateAuthoringStorage(
             return onSave(current);
         },
         getContentProfile: () => {
-            return Promise.resolve(getRundownItemContentProfile(readOnly));
+            return Promise.resolve(rundownItemContentProfile);
         },
         closeAuthoring: (current, original, _cancelAutosave, doClose) => {
             const isCreationMode = Object.keys(original.data).length < 1;
@@ -94,7 +93,6 @@ export function prepareForCreation(
         item: item,
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
-            false,
             onSave,
         ),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
@@ -121,7 +119,6 @@ export function prepareForEditing(
         item: item,
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
-            false,
             (res) => onSave(
                 res.data as IRundownItemBase, // validated by the authoring component
             ).then((dataSaved) => {
@@ -160,7 +157,6 @@ export function prepareForPreview(
         item: item,
         authoringStorage: getRundownItemTemplateAuthoringStorage(
             item,
-            true,
             (_) => Promise.resolve(_),
         ),
         authoringReactKey: currentAction == null ? 0 : currentAction.authoringReactKey + 1,
