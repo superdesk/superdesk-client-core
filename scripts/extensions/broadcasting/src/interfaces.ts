@@ -16,8 +16,9 @@ export interface IRRule {
 
 export interface IShowBase {
     title: string;
+    shortcode?: string;
     description: string;
-    planned_duration: number | null;
+    planned_duration?: number;
 }
 
 export type IShow = IShowBase & IBaseRestApiResponse;
