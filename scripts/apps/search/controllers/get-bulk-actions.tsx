@@ -131,7 +131,11 @@ export function getBulkActions(
                     if (authoringReactViewEnabled) {
                         Promise.all(getSelectedItems().map((article) => {
                             if (isLockedInCurrentSession(article)) {
-                                return article;
+                                /**
+                                 * using article doesn't work because it is missing properties
+                                 * (at least slugline)
+                                 */
+                                return sdApi.article.get(article._id);
                             } else {
                                 return sdApi.article.lock(article._id);
                             }

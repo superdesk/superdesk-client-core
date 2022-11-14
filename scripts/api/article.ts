@@ -11,6 +11,7 @@ import {duplicateItems} from './article-duplicate';
 import {sdApi} from 'api';
 import {appConfig} from 'appConfig';
 import {KILLED_STATES, ITEM_STATE, PUBLISHED_STATES} from 'apps/archive/constants';
+import {dataApi} from 'core/helpers/CrudManager';
 
 const isLocked = (_article: IArticle) => _article.lock_session != null;
 const isLockedInCurrentSession = (_article: IArticle) => _article.lock_session === ng.get('session').sessionId;
@@ -177,7 +178,12 @@ function getWorkQueueItems(): Array<IArticle> {
     return ng.get('workqueue').items;
 }
 
+function get(id: IArticle['_id']): Promise<IArticle> {
+    return dataApi.findOne<IArticle>('archive', id);
+}
+
 interface IArticleApi {
+    get(id: IArticle['_id']): Promise<IArticle>;
     isLocked(article: IArticle): boolean;
     isLockedInCurrentSession(article: IArticle): boolean;
     isLockedInOtherSession(article: IArticle): boolean;
@@ -258,4 +264,5 @@ export const article: IArticleApi = {
     unlock,
     createNewUsingDeskTemplate,
     getWorkQueueItems,
+    get,
 };

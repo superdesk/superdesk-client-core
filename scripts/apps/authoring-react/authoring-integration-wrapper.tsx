@@ -12,7 +12,8 @@ import {
     IContentProfileV2,
     IExtensionActivationResult,
     ITopBarWidget,
-    IBaseRestApiResponse,
+    IExposedFromAuthoring,
+    IAuthoringOptions,
 } from 'superdesk-api';
 import ng from 'core/services/ng';
 import {AuthoringReact} from './authoring-react';
@@ -124,15 +125,16 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
         ng.get('$rootScope').$applyAsync();
     }
 
-    getInlineToolbarActions(
-        item,
-        hasUnsavedChanges: () => boolean,
-        handleUnsavedChanges: () => Promise<IArticle>,
-        save: () => Promise<IArticle>,
-        discardChangesAndClose: () => void,
-        keepChangesAndClose: () => void,
-        stealLock: () => void,
-    ) {
+    getInlineToolbarActions(options: IExposedFromAuthoring<IArticle>): IAuthoringOptions<IArticle> {
+        const {
+            item,
+            hasUnsavedChanges,
+            handleUnsavedChanges,
+            save,
+            initiateClosing,
+            keepChangesAndClose,
+            stealLock,
+        } = options;
         const itemState: ITEM_STATE = item.state;
 
         const saveButton: ITopBarWidget<IArticle> = {
@@ -160,7 +162,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                     text={gettext('Close')}
                     style="hollow"
                     onClick={() => {
-                        discardChangesAndClose();
+                        initiateClosing();
                     }}
                 />
             ),
@@ -241,7 +243,7 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
                             onClick={() => {
                                 handleUnsavedChanges()
                                     .then(() => sdApi.article.sendItemToNextStage(item))
-                                    .then(() => discardChangesAndClose());
+                                    .then(() => initiateClosing());
                             }}
                         />
                     ),
@@ -315,18 +317,11 @@ export class AuthoringAngularIntegration extends React.PureComponent<IProps> {
     }
 }
 
-interface IPropsWrapper<T> extends IProps {
+interface IPropsWrapper extends IProps {
     onClose?(): void;
-    getInlineToolbarActions?(
-        item: any, hasUnsavedChanges: () => boolean,
-        handleUnsavedChanges: () => Promise<T>,
-        save: () => Promise<T>,
-        discardChangesAndClose: () => void,
-        keepChangesAndClose: () => void,
-        stealLock: () => void,
-    ): {
+    getInlineToolbarActions?(options: IExposedFromAuthoring<IArticle>): {
         readOnly: boolean;
-        actions: Array<ITopBarWidget<T>>;
+        actions: Array<ITopBarWidget<IArticle>>;
     };
 }
 
@@ -334,10 +329,10 @@ interface IPropsWrapper<T> extends IProps {
  * The purpose of the wrapper is to handle integration with the angular part of the application.
  * The main component will not know about angular.
  */
-export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper<IArticle>> {
+export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapper> {
     private authoringReactRef: AuthoringReact<IArticle> | null;
 
-    constructor(props: IPropsWrapper<IArticle>) {
+    constructor(props: IPropsWrapper) {
         super(props);
 
         this.state = {};
@@ -426,23 +421,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
                                     ];
                                 });
                             }}
-                            getInlineToolbarActions={({
-                                item,
-                                hasUnsavedChanges,
-                                handleUnsavedChanges,
-                                save,
-                                initiateClosing: discardChangesAndClose,
-                                keepChangesAndClose,
-                                stealLock,
-                            }) => this.props.getInlineToolbarActions(
-                                item,
-                                hasUnsavedChanges,
-                                handleUnsavedChanges,
-                                save,
-                                discardChangesAndClose,
-                                keepChangesAndClose,
-                                stealLock,
-                            )}
+                            getInlineToolbarActions={(x) => this.props.getInlineToolbarActions(x)}
                             getAuthoringTopBarWidgets={
                                 () => Object.values(extensions)
                                     .flatMap(({activationResult}) =>

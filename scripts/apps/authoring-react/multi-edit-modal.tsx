@@ -8,9 +8,9 @@ import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
 import React, {ReactNode} from 'react';
-import {IArticle, ITopBarWidget} from 'superdesk-api';
-import {Button} from 'superdesk-ui-framework/react';
-import {MultiSelect} from 'superdesk-ui-framework/react/components/MultiSelect';
+import {IArticle, IAuthoringOptions, ITopBarWidget} from 'superdesk-api';
+import {Button, IconButton, Menu} from 'superdesk-ui-framework/react';
+import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
@@ -39,14 +39,15 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         this.componentRefs = {};
     }
 
-    getInlineToolbarActions(
-        item: IArticle,
-        hasUnsavedChanges: () => boolean,
-        handleUnsavedChanges: () => Promise<IArticle>,
-        save: () => Promise<IArticle>,
-        initiateClosing: () => void,
-        stealLock: () => void,
-    ) {
+    getInlineToolbarActions({
+        item,
+        hasUnsavedChanges,
+        handleUnsavedChanges,
+        save,
+        initiateClosing,
+        keepChangesAndClose,
+        stealLock,
+    }, articles: Array<IArticle>): IAuthoringOptions<IArticle> {
         const itemState: ITEM_STATE = item.state;
 
         const saveButton: ITopBarWidget<IArticle> = {
@@ -81,11 +82,18 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             availableOffline: true,
         };
 
+        const hamburgerMenu: ITopBarWidget<IArticle> = {
+            group: 'start',
+            priority: 0.1,
+            component: () => <this.MenuItems articles={articles} id={item._id} />,
+            availableOffline: true,
+        };
+
         switch (itemState) {
         case ITEM_STATE.DRAFT:
             return {
                 readOnly: false,
-                actions: [saveButton],
+                actions: [saveButton, hamburgerMenu],
             };
 
         case ITEM_STATE.SUBMITTED:
@@ -96,6 +104,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             // eslint-disable-next-line no-case-declarations
             const actions: Array<ITopBarWidget<IArticle>> = [
                 closeButton,
+                hamburgerMenu,
             ];
 
             actions.push({
@@ -209,6 +218,12 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         });
     }
 
+    add(id: string): void {
+        this.setState({
+            articleIds: [...this.state.articleIds, id],
+        });
+    }
+
     waitForAutosave(id: string) {
         this.componentRefs[id].prepareForUnmounting().then(() => {
             this.setState({
@@ -221,61 +236,75 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         this.componentRefs[id].handleUnsavedChanges();
     }
 
+    MenuItems: React.ComponentType<{articles: Array<IArticle>, id?: string}> = ({articles, id}) => {
+        return (
+            <Menu
+                zIndex={2000}
+                items={
+                    articles.map((a) => {
+                        const leaf: IMenuItem = {
+                            onClick: () => id ? this.switchTo(id, a._id) : this.add(a._id),
+                            label: a.slugline,
+                        };
+
+                        return leaf;
+                    })}
+            >
+                {(toggle) => (
+                    <IconButton
+                        ariaValue="articles"
+                        icon={id ? 'list-menu' : 'plus-large'}
+                        onClick={(event) => {
+                            toggle(event);
+                        }}
+                    />
+                )}
+            </Menu>
+        );
+    }
+
     render(): ReactNode {
+        const articles = [
+            ...this.state.workQueueItems.filter(
+                (item) => this.props.initiallySelectedArticles
+                    .map((article) => article._id)
+                    .includes(item._id) !== true,
+            ),
+            ...this.props.initiallySelectedArticles,
+        ].filter((article) => !this.state.articleIds.includes(article._id));
+
         return (
             <Modal size="full-screen">
-                <ModalHeader onClose={() => this.props.onClose()}>
-                    <div style={{height: 150, zIndex: 2000}}>
-                        <MultiSelect
-                            placeholder="Select articles"
-                            showSelectAll
-                            fullWidth
-                            options={[{label: '1a'}, {label: '2a'}]}
-                            value={[]}
-                            onChange={(e: any) => {
-                                //
-                            }}
-                            optionLabel="label"
-                        />
-                    </div>
-                </ModalHeader>
+                <ModalHeader onClose={this.props.onClose} />
                 <ModalBody>
                     <Spacer h gap="32" justifyContent="start" alignItems="start" noWrap>
                         {
                             this.state.articleIds.map((_id) => {
                                 return (
-                                    <div key={_id}>
-                                        <div>
-                                            {
-                                                [...this.state.workQueueItems, ...this.props.initiallySelectedArticles]
-                                                    .filter((article) => !this.state.articleIds.includes(article._id))
-                                                    .map((article) => (
-                                                        <button
-                                                            key={article._id}
-                                                            onClick={() => {
-                                                                this.switchTo(_id, article._id);
-                                                            }}
-                                                        >
-                                                            {article.slugline}
-                                                        </button>
-                                                    ))
-                                            }
-                                        </div>
-                                        <AuthoringIntegrationWrapper
-                                            ref={(component) => {
-                                                this.componentRefs[_id] = component;
-                                            }}
-                                            onClose={() => {
-                                                this.setState({
-                                                    articleIds: this.state.articleIds.filter((id) => id !== _id),
-                                                });
-                                            }}
-                                            itemId={_id}
-                                            getInlineToolbarActions={this.getInlineToolbarActions}
-                                        />
-                                    </div>
+                                    <AuthoringIntegrationWrapper
+                                        key={_id}
+                                        ref={(component) => {
+                                            this.componentRefs[_id] = component;
+                                        }}
+                                        onClose={() => {
+                                            this.setState({
+                                                articleIds: this.state.articleIds.filter((id) => id !== _id),
+                                            });
+                                        }}
+                                        itemId={_id}
+                                        getInlineToolbarActions={(options) =>
+                                            this.getInlineToolbarActions(options, articles)
+                                        }
+                                    />
                                 );
                             })
+                        }
+                        {
+                            articles.length > 0 && (
+                                <div style={{width: 20, alignItems: 'center'}}>
+                                    <this.MenuItems articles={articles} />
+                                </div>
+                            )
                         }
                     </Spacer>
                 </ModalBody>

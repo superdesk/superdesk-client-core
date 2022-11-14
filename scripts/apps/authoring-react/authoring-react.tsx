@@ -571,7 +571,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
                     lock_action: 'edit',
                 };
 
-                if (state.initialized) {
+                if (state.initialized && (state.itemOriginal._id === data.extra.item)) {
                     if (!this.hasUnsavedChanges()) {
                         /**
                          * if object references are the same before patching
