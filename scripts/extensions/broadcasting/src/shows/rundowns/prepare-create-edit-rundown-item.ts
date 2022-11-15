@@ -164,6 +164,7 @@ function getRundownItemCreationAuthoringStorage(
                 rundown: rundownId, // read-only, but needs to be sent when creating an item
             };
 
+            // same logic is applied when creating a rundown item inside the template
             readOnlyFields.forEach((field) => {
                 /**
                  * Remove read-only fields to avoid getting an error from the server.

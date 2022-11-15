@@ -27,6 +27,7 @@ import {FrequencySimple} from './components/FrequencySimple';
 import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
 import {AiringInfoBlock} from './components/airing-info-block';
 import {prepareRundownItemForSaving} from './rundown-view-edit';
+import {rundownItemContentProfile} from './rundown-items/content-profile';
 
 const {getAuthoringComponent} = superdesk.components;
 
@@ -141,6 +142,19 @@ export class RundownTemplateViewEdit extends React.PureComponent<IProps> {
                             ...val.data,
                             duration: val.data.planned_duration,
                         };
+
+                        const contentProfile = rundownItemContentProfile;
+                        const allFields = contentProfile.header.merge(contentProfile.content);
+                        const readOnlyFields = allFields.filter((field) => field.fieldConfig.readOnly === true);
+
+                        // same logic is applied when creating a standalone rundown (not part of a template)
+                        readOnlyFields.forEach((field) => {
+                            /**
+                             * Remove read-only fields to avoid getting an error from the server.
+                             * Since it's read-only it would contain an empty value anyway.
+                             */
+                            delete (itemWithDuration as {[key: string]: any})[field.id];
+                        });
 
                         const currentItems = this.getRundownItems();
 
