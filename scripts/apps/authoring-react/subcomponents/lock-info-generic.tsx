@@ -48,14 +48,24 @@ export class LockInfo<T extends ILockInfo & IBaseRestApiResponse> extends React.
 
                 <div className="locked-info__name">{lockOwner.display_name}</div>
 
-                <button
-                    className="locked-info__button"
-                    onClick={() => {
-                        this.props.forceUnlock();
-                    }}
-                >
-                    {gettext('Unlock')}
-                </button>
+                {(() => {
+                    if (this.props.allowUnlocking) {
+                        const {forceUnlock} = this.props;
+
+                        return (
+                            <button
+                                className="locked-info__button"
+                                onClick={() => {
+                                    forceUnlock();
+                                }}
+                            >
+                                {gettext('Unlock')}
+                            </button>
+                        );
+                    } else {
+                        return null;
+                    }
+                })()}
             </div>
         );
     }
@@ -66,6 +76,7 @@ export class LockInfoHttp<T extends ILockInfo & IBaseRestApiResponse>
     render() {
         return (
             <LockInfo
+                allowUnlocking={true}
                 entity={this.props.entity}
                 forceUnlock={() => {
                     const payload: Partial<ILockInfo> = {
