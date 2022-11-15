@@ -588,19 +588,20 @@ export class RundownViewEditComponent extends React.PureComponent<IProps, IState
                                                         },
                                                     ];
 
-                                                    if (rundownItemAction.type !== 'preview') {
-                                                        actions.push({
-                                                            availableOffline: false,
-                                                            group: 'start',
-                                                            priority: 0.2,
-                                                            component: () => (
-                                                                <RundownItemLockInfo
-                                                                    entity={item}
-                                                                    forceUnlock={stealLock}
-                                                                />
-                                                            ),
-                                                        });
+                                                    actions.push({
+                                                        availableOffline: false,
+                                                        group: 'start',
+                                                        priority: 0.2,
+                                                        component: () => (
+                                                            <RundownItemLockInfo
+                                                                allowUnlocking={rundownItemAction.type === 'edit'}
+                                                                entity={item}
+                                                                forceUnlock={stealLock}
+                                                            />
+                                                        ),
+                                                    });
 
+                                                    if (rundownItemAction.type !== 'preview') {
                                                         actions.push({
                                                             availableOffline: false,
                                                             group: 'end',
