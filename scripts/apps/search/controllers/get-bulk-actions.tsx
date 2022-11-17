@@ -31,8 +31,8 @@ export function getBulkActions(
 
     const {isLockedInCurrentSession, isLocked, isLockedByOtherUser, isPublished} = sdApi.article;
 
-    const notLockedInOtherSession = articles.every((article) => isLockedInCurrentSession(article));
-    const locked = articles.every((article) => isLocked(article));
+    const noneLockedInOtherSessions = articles.every((article) => !isLockedInCurrentSession(article));
+    const noneLocked = articles.every((article) => !isLocked(article));
     const nonePublished = articles.every((article) => !isPublished(article));
 
     if (articles.every(({state}) => state === ITEM_STATE.INGESTED)) {
@@ -84,7 +84,7 @@ export function getBulkActions(
             },
             canAutocloseMultiActionBar: false,
         });
-    } else if (notLockedInOtherSession && articles.every((article) => article.state === ITEM_STATE.SPIKED)) {
+    } else if (noneLocked && articles.every((article) => article.state === ITEM_STATE.SPIKED)) {
         if (privileges.userHasPrivileges({unspike: 1})) {
             actions.push({
                 label: gettext('Unspike'),
@@ -97,7 +97,7 @@ export function getBulkActions(
             });
         }
     } else {
-        if (notLockedInOtherSession && multiActions.canEditMetadata()) {
+        if (noneLocked && multiActions.canEditMetadata()) {
             actions.push({
                 label: gettext('Edit metadata'),
                 icon: 'icon-edit-line',
@@ -121,7 +121,7 @@ export function getBulkActions(
         }
 
         if (
-            (notLockedInOtherSession || !locked)
+            (!noneLockedInOtherSessions || noneLocked)
             && articles.every((article) => authoring.itemActions(article).edit === true)
         ) {
             actions.push({
@@ -174,7 +174,7 @@ export function getBulkActions(
             });
         }
 
-        if (notLockedInOtherSession && nonePublished) {
+        if (noneLocked && nonePublished) {
             actions.push({
                 label: gettext('Send to'),
                 icon: 'icon-expand-thin',
@@ -198,7 +198,7 @@ export function getBulkActions(
             }
         }
 
-        if (notLockedInOtherSession) {
+        if (noneLocked) {
             actions.push({
                 label: gettext('Duplicate To'),
                 icon: 'icon-copy',

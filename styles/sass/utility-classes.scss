@@ -294,3 +294,12 @@ ul.list-view.list-without-items {
     font-style: italic;
     color: $errorText;
 }
+
+.multi-edit-add-button {
+    background-color: var(--sd-colour-bg--06);
+    height: 100%;
+    align-items: center;
+    display: flex;
+    width: 46px;
+    justify-content: center;
+}

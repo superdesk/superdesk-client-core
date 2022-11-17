@@ -329,7 +329,7 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
         this.eventListenersToRemoveBeforeUnmounting = [];
     }
 
-    prepareForUnmounting(): Promise<void> {
+    initiateUnmounting(): Promise<void> {
         if (!this.state.initialized) {
             return Promise.resolve();
         } else {
@@ -558,20 +558,20 @@ export class AuthoringReact<T extends IBaseRestApiResponse> extends React.PureCo
 
                 const state = this.state;
 
-                /**
-                 * Only patch these fields to preserve
-                 * unsaved changes.
-                 * FINISH: remove IArticle usage
-                 */
-                const patch: Partial<IArticle> = {
-                    _etag,
-                    lock_session,
-                    lock_time,
-                    lock_user: user,
-                    lock_action: 'edit',
-                };
-
                 if (state.initialized && (state.itemOriginal._id === data.extra.item)) {
+                    /**
+                     * Only patch these fields to preserve
+                     * unsaved changes.
+                     * FINISH: remove IArticle usage
+                     */
+                    const patch: Partial<IArticle> = {
+                        _etag,
+                        lock_session,
+                        lock_time,
+                        lock_user: user,
+                        lock_action: 'edit',
+                    };
+
                     if (!this.hasUnsavedChanges()) {
                         /**
                          * if object references are the same before patching

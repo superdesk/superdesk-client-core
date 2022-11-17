@@ -1,5 +1,4 @@
 import {sdApi} from 'api';
-import {appConfig} from 'appConfig';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {Modal} from 'core/ui/components/Modal/Modal';
@@ -7,16 +6,18 @@ import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {Spacer} from 'core/ui/components/Spacer';
 import {gettext} from 'core/utils';
-import React, {ReactNode} from 'react';
+import React from 'react';
 import {IArticle, IAuthoringOptions, ITopBarWidget} from 'superdesk-api';
-import {Button, IconButton, Menu} from 'superdesk-ui-framework/react';
-import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
+import {Button, IconButton, Menu, NavButton} from 'superdesk-ui-framework/react';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
-import {DeskAndStage} from './subcomponents/desk-and-stage';
 import {LockInfo} from './subcomponents/lock-info';
+import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
 
 interface IProps {
     onClose(): void;
+
+    // Changing props won't affect the component, because we assign this.state.articleIds
+    // to initiallySelectedArticles only initial props matter
     initiallySelectedArticles: Array<IArticle>;
 }
 
@@ -67,13 +68,46 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             availableOffline: true,
         };
 
-        const closeButton: ITopBarWidget<IArticle> = {
-            group: 'end',
+        const hamburgerMenu: ITopBarWidget<IArticle> = {
+            group: 'start',
             priority: 0.1,
             component: () => (
-                <Button
-                    text={gettext('Close')}
-                    style="hollow"
+                <Menu
+                    zIndex={2000}
+                    items={
+                        articles.map((a) => {
+                            const leaf: IMenuItem = {
+                                onClick: () => this.switchTo(item._id, a._id),
+                                label: a.slugline,
+                            };
+
+                            return leaf;
+                        })}
+                >
+                    {(toggle) => (
+                        <Button
+                            type="primary"
+                            icon="list-menu"
+                            text={gettext('Switch article')}
+                            style="filled"
+                            shape="round"
+                            iconOnly={true}
+                            onClick={(event) => toggle(event)}
+                        />
+                    )}
+                </Menu>
+            ),
+            availableOffline: true,
+        };
+
+        const closeButton: ITopBarWidget<IArticle> = {
+            group: 'start',
+            priority: 0.2,
+            component: () => (
+                <IconButton
+                    ariaValue={gettext('Remove article')}
+                    icon="close-small"
+                    size="small"
                     onClick={() => {
                         initiateClosing();
                     }}
@@ -82,10 +116,17 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             availableOffline: true,
         };
 
-        const hamburgerMenu: ITopBarWidget<IArticle> = {
-            group: 'start',
-            priority: 0.1,
-            component: () => <this.MenuItems articles={articles} id={item._id} />,
+        const collapseButton: ITopBarWidget<IArticle> = {
+            group: 'end',
+            priority: 100,
+            component: () => (
+                <NavButton
+                    icon={this.componentRefs[item._id].state.isSidebarCollapsed ? 'chevron-left' : 'chevron-right'}
+                    iconSize="big"
+                    text={gettext('Collapse widgets')}
+                    onClick={() => this.componentRefs[item._id].toggleSidebar()}
+                />
+            ),
             availableOffline: true,
         };
 
@@ -93,7 +134,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         case ITEM_STATE.DRAFT:
             return {
                 readOnly: false,
-                actions: [saveButton, hamburgerMenu],
+                actions: [saveButton, hamburgerMenu, collapseButton],
             };
 
         case ITEM_STATE.SUBMITTED:
@@ -105,14 +146,8 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             const actions: Array<ITopBarWidget<IArticle>> = [
                 closeButton,
                 hamburgerMenu,
+                collapseButton,
             ];
-
-            actions.push({
-                group: 'start',
-                priority: 0.2,
-                component: ({entity}) => <DeskAndStage article={entity} />,
-                availableOffline: false,
-            });
 
             // FINISH: ensure locking is available in generic version of authoring
             actions.push({
@@ -131,29 +166,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
 
             if (sdApi.article.isLockedInCurrentSession(item)) {
                 actions.push(saveButton);
-            }
-
-            if (
-                sdApi.article.isLockedInCurrentSession(item)
-                && appConfig.features.customAuthoringTopbar.toDesk === true
-                && sdApi.article.isPersonal(item) !== true
-            ) {
-                actions.push({
-                    group: 'middle',
-                    priority: 0.2,
-                    component: () => (
-                        <Button
-                            text={gettext('TD')}
-                            style="filled"
-                            onClick={() => {
-                                handleUnsavedChanges()
-                                    .then(() => sdApi.article.sendItemToNextStage(item))
-                                    .then(() => initiateClosing());
-                            }}
-                        />
-                    ),
-                    availableOffline: false,
-                });
             }
 
             return {
@@ -210,7 +222,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
     }
 
     switchTo(currentId: string, nextId: string) {
-        this.componentRefs[currentId].prepareForUnmounting().then(() => {
+        (this.componentRefs[currentId])?.prepareForUnmounting().then(() => {
             this.setState({
                 // setting nextId in place of currentId
                 articleIds: this.state.articleIds.map((id) => id === currentId ? nextId : id),
@@ -224,46 +236,13 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         });
     }
 
-    waitForAutosave(id: string) {
-        this.componentRefs[id].prepareForUnmounting().then(() => {
-            this.setState({
-                articleIds: this.state.articleIds.map((x) => x === id ? null : id),
-            });
-        });
-    }
-
-    handleUnsavedChanges(id: string) {
-        this.componentRefs[id].handleUnsavedChanges();
-    }
-
-    MenuItems: React.ComponentType<{articles: Array<IArticle>, id?: string}> = ({articles, id}) => {
-        return (
-            <Menu
-                zIndex={2000}
-                items={
-                    articles.map((a) => {
-                        const leaf: IMenuItem = {
-                            onClick: () => id ? this.switchTo(id, a._id) : this.add(a._id),
-                            label: a.slugline,
-                        };
-
-                        return leaf;
-                    })}
-            >
-                {(toggle) => (
-                    <IconButton
-                        ariaValue="articles"
-                        icon={id ? 'list-menu' : 'plus-large'}
-                        onClick={(event) => {
-                            toggle(event);
-                        }}
-                    />
-                )}
-            </Menu>
-        );
-    }
-
-    render(): ReactNode {
+    render(): JSX.Element {
+        /**
+         * From workQueueItems remove articles which were
+         * initially selected so they don't repeat the same
+         * article twice, then filter if the result
+         * contains articles which the user is currently editing.
+         */
         const articles = [
             ...this.state.workQueueItems.filter(
                 (item) => this.props.initiallySelectedArticles
@@ -275,34 +254,63 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
 
         return (
             <Modal size="full-screen">
-                <ModalHeader onClose={this.props.onClose} />
-                <ModalBody>
-                    <Spacer h gap="32" justifyContent="start" alignItems="start" noWrap>
-                        {
-                            this.state.articleIds.map((_id) => {
-                                return (
-                                    <AuthoringIntegrationWrapper
-                                        key={_id}
-                                        ref={(component) => {
-                                            this.componentRefs[_id] = component;
-                                        }}
-                                        onClose={() => {
-                                            this.setState({
-                                                articleIds: this.state.articleIds.filter((id) => id !== _id),
-                                            });
-                                        }}
-                                        itemId={_id}
-                                        getInlineToolbarActions={(options) =>
-                                            this.getInlineToolbarActions(options, articles)
-                                        }
-                                    />
-                                );
-                            })
-                        }
+                <ModalHeader onClose={this.props.onClose} >
+                    {gettext('Multi Edit')}
+                </ModalHeader>
+                <ModalBody style={{padding: 0}}>
+                    <Spacer h gap="0" justifyContent="stretch" noWrap>
+                        <Spacer h gap="4">
+                            {
+                                this.state.articleIds.map((_id) => {
+                                    return (
+                                        <React.Fragment key={_id}>
+                                            <div />
+                                            <AuthoringIntegrationWrapper
+                                                ref={(component) => {
+                                                    this.componentRefs[_id] = component;
+                                                }}
+                                                onClose={() => {
+                                                    this.setState({
+                                                        articleIds: this.state.articleIds.filter((id) => id !== _id),
+                                                    });
+                                                }}
+                                                itemId={_id}
+                                                getInlineToolbarActions={(options) =>
+                                                    this.getInlineToolbarActions(options, articles)
+                                                }
+                                            />
+                                        </React.Fragment>
+                                    );
+                                })
+                            }
+                        </Spacer>
                         {
                             articles.length > 0 && (
-                                <div style={{width: 20, alignItems: 'center'}}>
-                                    <this.MenuItems articles={articles} />
+                                <div className="multi-edit-add-button">
+                                    <Menu
+                                        zIndex={2000}
+                                        items={articles.map((a) => {
+                                            const leaf: IMenuItem = {
+                                                onClick: () => this.add(a._id),
+                                                label: a.slugline,
+                                            };
+
+                                            return leaf;
+                                        })}
+                                    >
+                                        {(toggle) => (
+                                            <Button
+                                                type="primary"
+                                                icon="plus-large"
+                                                text={gettext('Add article')}
+                                                style="filled"
+                                                size="small"
+                                                shape="round"
+                                                iconOnly={true}
+                                                onClick={(event) => toggle(event)}
+                                            />
+                                        )}
+                                    </Menu>
                                 </div>
                             )
                         }

@@ -91,7 +91,10 @@ declare module 'superdesk-api' {
          */
         schedule(getItem: () => T, callback: (autosaved: T) => void): void;
 
-        // TODO: add a comment on how flush works
+        /**
+         * A function which executes the call in the scheduled function without throttling it,
+         * removes the call from the schedule after execution, so we don't autosave more than required.
+         */
         flush(): Promise<void>;
     }
 
@@ -119,6 +122,9 @@ declare module 'superdesk-api' {
 
     export type IFieldsData = import('immutable').Map<string, unknown>;
 
+    /**
+     * Check authoring-react.tsx for comments on individual methods.
+     */
     export interface IExposedFromAuthoring<T> {
         item: T;
         sideWidget: string | null; // side widget name
@@ -1936,7 +1942,7 @@ declare module 'superdesk-api' {
     export interface IPropsSpacer {
         h?: boolean; // horizontal
         v?: boolean; // vertical
-        gap: '4' | '8' | '16' | '32' | '64';
+        gap: '0' | '4' | '8' | '16' | '32' | '64';
         justifyContent?: 'start' | 'end' | 'center' | 'space-around' | 'space-between' | 'space-evenly' | 'stretch';
         alignItems?: 'start' | 'end' | 'center' | 'stretch';
         noGrow?: boolean;

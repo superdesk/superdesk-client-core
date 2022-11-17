@@ -30,7 +30,7 @@ import {HeaderComponentField} from './header-component-field';
 import {AuthoringTopbar2React} from './authoring-topbar2-react';
 import {appConfig} from 'appConfig';
 import {sdApi} from 'api';
-import {AuthoringAngularIntegration} from 'apps/authoring-react/authoring-integration-wrapper';
+import {AuthoringAngularIntegration} from 'apps/authoring-react/authoring-angular-integration';
 import {InteractiveArticleActionsPanelCombined} from 'core/interactive-article-actions-panel/index-combined';
 import {dispatchInternalEvent} from 'core/internal-events';
 
