@@ -103,8 +103,6 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                         {
                         // TODO: show 3 letter show symbol
                         }
-
-                        {item.additional_notes}
                     </Spacer>
                 ),
                 center: (

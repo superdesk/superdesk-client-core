@@ -211,8 +211,6 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                         >
                                                             {rundown.title}
                                                         </span>
-
-                                                        {/* TODO: restore <span>[status]</span> */}
                                                     </React.Fragment>,
                                                 },
                                             ],
@@ -221,7 +219,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     ]}
                                     locked={false}
                                     action={(
-                                        <Menu // TODO: verify that ui-framework#667 is fixed
+                                        <Menu
                                             items={[
                                                 {
                                                     label: gettext('Edit'),

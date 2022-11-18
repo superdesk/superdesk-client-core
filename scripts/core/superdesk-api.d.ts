@@ -849,10 +849,20 @@ declare module 'superdesk-api' {
         endpoint: string;
     }
 
-    export interface IPropsLockInfo<T extends ILockInfo> {
+
+
+    export interface IPropsLockInfoCanUnlock<T extends ILockInfo> {
+        allowUnlocking: true;
         entity: T;
         forceUnlock: () => void;
     }
+
+    export interface IPropsLockInfoReadOnly<T extends ILockInfo> {
+        allowUnlocking: false;
+        entity: T;
+    }
+
+    export type IPropsLockInfo<T extends ILockInfo> = IPropsLockInfoReadOnly<T> | IPropsLockInfoCanUnlock<T>;
 
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
