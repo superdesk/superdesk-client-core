@@ -1791,6 +1791,12 @@ declare module 'superdesk-api' {
         tooltip?: (dateLong: string, dateShort: string) => string;
     }
 
+    export interface IPropsCard {
+        background?: import('react').CSSProperties['background'];
+        padding?: import('react').CSSProperties['padding'];
+        borderRadius?: import('react').CSSProperties['borderRadius'];
+    }
+
     export interface IPropsListItemColumn {
         ellipsisAndGrow?: boolean;
         grow?: boolean;
@@ -2578,6 +2584,15 @@ declare module 'superdesk-api' {
             AuthoringWidgetHeading: React.ComponentType<IPropsWidgetHeading>;
             AuthoringWidgetLayout: React.ComponentType<IAuthoringWidgetLayoutProps>;
             DateTime: React.ComponentType<IPropsDateTime>;
+            Card: React.ComponentType<IPropsCard>;
+            showPopup(
+                referenceElement: HTMLElement,
+                placement: import('@popperjs/core').Placement,
+                Component: React.ComponentType<{closePopup(): void}>,
+                zIndex?: number,
+                closeOnHoverEnd?: boolean,
+                onClose?: () => void,
+            ): {close: () => void};
         };
         authoringGeneric: {
             sideWidgets: {
@@ -2707,6 +2722,10 @@ declare module 'superdesk-api' {
             // generic method - works on all enabled endpoints
             isLockedInCurrentSession<T extends ILockInfo>(entity: T): boolean;
             isLockedInOtherSession<T extends ILockInfo>(entity: T): boolean;
+
+            getTextColor(
+                background: string, // HEX color
+            ): 'black' | 'white';
         };
         addWebsocketMessageListener<T extends string>(
             eventName: T,

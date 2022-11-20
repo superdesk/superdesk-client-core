@@ -103,6 +103,9 @@ import {
     LockInfo,
 } from 'apps/authoring-react/subcomponents/lock-info-generic';
 import {tryLocking, tryUnlocking} from './helpers/locking-helpers';
+import {showPopup} from './ui/components/popupNew';
+import {Card} from './ui/components/Card';
+import {getTextColor} from './helpers/utils';
 
 function getContentType(id): Promise<IContentProfile> {
     return dataApi.findOne('content_types', id);
@@ -384,6 +387,8 @@ export function getSuperdeskApiImplementation(
             AuthoringWidgetHeading,
             AuthoringWidgetLayout,
             DateTime,
+            Card,
+            showPopup,
         },
         forms: {
             FormFieldType,
@@ -472,6 +477,7 @@ export function getSuperdeskApiImplementation(
             treeToArray,
             isLockedInOtherSession,
             isLockedInCurrentSession,
+            getTextColor,
         },
         addWebsocketMessageListener: (eventName, handler) => {
             const eventNameFinal = getWebsocketMessageEventName(

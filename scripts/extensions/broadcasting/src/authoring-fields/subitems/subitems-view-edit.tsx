@@ -6,6 +6,7 @@ import {ISubitem} from '.';
 import {RUNDOWN_SUBITEM_TYPES} from '../../constants';
 
 import {superdesk} from '../../superdesk';
+import {SubitemLabel} from './subitem-label';
 
 const {vocabulary} = superdesk.entities;
 const {gettext} = superdesk.localization;
@@ -61,9 +62,13 @@ export class SubitemsViewEdit extends React.PureComponent<IProps> {
                                     subitems.map((subitem) => (
                                         <div key={subitem.qcode}>
                                             <Spacer h gap="4" justifyContent="space-between" noGrow>
-                                                <h1>
-                                                    {subitemTypes.find((item) => item?.qcode === subitem.qcode).name}
-                                                </h1>
+                                                <div>
+                                                    <SubitemLabel
+                                                        subitem={subitemTypes.find(
+                                                            (item) => item?.qcode === subitem.qcode,
+                                                        )}
+                                                    />
+                                                </div>
 
                                                 {
                                                     !this.props.readOnly && (() => {
