@@ -1,14 +1,11 @@
 import {sdApi} from 'api';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {assertNever} from 'core/helpers/typescript-helpers';
-import {Modal} from 'core/ui/components/Modal/Modal';
-import {ModalBody} from 'core/ui/components/Modal/ModalBody';
-import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {Spacer} from 'core/ui/components/Spacer';
 import {getItemLabel, gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, IAuthoringOptions, ITopBarWidget} from 'superdesk-api';
-import {Button, IconButton, Menu, NavButton} from 'superdesk-ui-framework/react';
+import {Button, IconButton, Menu, Modal, NavButton} from 'superdesk-ui-framework/react';
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {LockInfo} from './subcomponents/lock-info';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
@@ -128,7 +125,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                 } else {
                     return (
                         <NavButton
-                            icon={(this.componentRefs[item._id])?.isSideBarCollapsed() ? 'chevron-left' : 'chevron-right'}
+                            icon={(this.componentRefs[item._id])?.isSidebarCollapsed() ? 'chevron-left' : 'chevron-right'}
                             iconSize="big"
                             text={gettext('Collapse widgets')}
                             onClick={() => (this.componentRefs[item._id])?.toggleSidebar()}
@@ -272,11 +269,8 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         ].filter((article) => !this.state.articleIds.includes(article._id));
 
         return (
-            <Modal size="full-screen">
-                <ModalHeader onClose={this.props.onClose} >
-                    {gettext('Multi Edit')}
-                </ModalHeader>
-                <ModalBody style={{padding: 0}}>
+            <Modal contentPadding="none" zIndex={1050} maximized onHide={this.props.onClose} visible headerTemplate={gettext('Multi Edit')} >
+                <div style={{display: 'flex', width: '100%', height: '100%'}}>
                     <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}}>
                         <Spacer h gap="0" noWrap style={{height: '100%'}}>
                             {
@@ -335,7 +329,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                             )
                         }
                     </Spacer>
-                </ModalBody>
+                </div>
             </Modal>
         );
     }

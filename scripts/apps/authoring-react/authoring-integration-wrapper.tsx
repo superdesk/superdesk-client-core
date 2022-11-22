@@ -140,7 +140,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         this.setState({isSidebarCollapsed: !this.state.isSidebarCollapsed});
     }
 
-    public isSideBarCollapsed() {
+    public isSidebarCollapsed() {
         return this.state.isSidebarCollapsed;
     }
 
