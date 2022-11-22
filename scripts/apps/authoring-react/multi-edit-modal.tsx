@@ -270,66 +270,64 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
 
         return (
             <Modal contentPadding="none" zIndex={1050} maximized onHide={this.props.onClose} visible headerTemplate={gettext('Multi Edit')} >
-                <div style={{display: 'flex', width: '100%', height: '100%'}}>
-                    <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}}>
-                        <Spacer h gap="0" noWrap style={{height: '100%'}}>
-                            {
-                                this.state.articleIds.map((_id, i) => {
-                                    return (
-                                        <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
-                                            {i !== 0 && (<div style={{width: 4, background: 'var(--sd-colour-bg--10)'}} />) /** divider */ }
-                                            <AuthoringIntegrationWrapper
-                                                sidebarInitiallyVisible={true}
-                                                ref={(component) => {
-                                                    this.componentRefs[_id] = component;
-                                                }}
-                                                onClose={() => {
-                                                    this.setState({
-                                                        articleIds: this.state.articleIds.filter((id) => id !== _id),
-                                                    });
-                                                }}
-                                                itemId={_id}
-                                                getInlineToolbarActions={(options) =>
-                                                    this.getInlineToolbarActions(options, availableArticles)
-                                                }
-                                            />
-                                        </Spacer>
-                                    );
-                                })
-                            }
-                        </Spacer>
+                <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}}>
+                    <Spacer h gap="0" noWrap style={{height: '100%'}}>
                         {
-                            availableArticles.length > 0 && (
-                                <div className="multi-edit-add-button">
-                                    <Menu
-                                        zIndex={1050}
-                                        items={availableArticles.map((a) => {
-                                            const leaf: IMenuItem = {
-                                                onClick: () => this.add(a._id),
-                                                label: getItemLabel(a),
-                                            };
-
-                                            return leaf;
-                                        })}
-                                    >
-                                        {(toggle) => (
-                                            <Button
-                                                type="primary"
-                                                icon="plus-large"
-                                                text={gettext('Add article')}
-                                                style="filled"
-                                                size="small"
-                                                shape="round"
-                                                iconOnly={true}
-                                                onClick={(event) => toggle(event)}
-                                            />
-                                        )}
-                                    </Menu>
-                                </div>
-                            )
+                            this.state.articleIds.map((_id, i) => {
+                                return (
+                                    <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
+                                        {i !== 0 && (<div style={{width: 4, background: 'var(--sd-colour-bg--10)'}} />) /** divider */ }
+                                        <AuthoringIntegrationWrapper
+                                            sidebarInitiallyVisible={true}
+                                            ref={(component) => {
+                                                this.componentRefs[_id] = component;
+                                            }}
+                                            onClose={() => {
+                                                this.setState({
+                                                    articleIds: this.state.articleIds.filter((id) => id !== _id),
+                                                });
+                                            }}
+                                            itemId={_id}
+                                            getInlineToolbarActions={(options) =>
+                                                this.getInlineToolbarActions(options, availableArticles)
+                                            }
+                                        />
+                                    </Spacer>
+                                );
+                            })
                         }
                     </Spacer>
-                </div>
+                    {
+                        availableArticles.length > 0 && (
+                            <div className="multi-edit-add-button">
+                                <Menu
+                                    zIndex={1050}
+                                    items={availableArticles.map((a) => {
+                                        const leaf: IMenuItem = {
+                                            onClick: () => this.add(a._id),
+                                            label: getItemLabel(a),
+                                        };
+
+                                        return leaf;
+                                    })}
+                                >
+                                    {(toggle) => (
+                                        <Button
+                                            type="primary"
+                                            icon="plus-large"
+                                            text={gettext('Add article')}
+                                            style="filled"
+                                            size="small"
+                                            shape="round"
+                                            iconOnly={true}
+                                            onClick={(event) => toggle(event)}
+                                        />
+                                    )}
+                                </Menu>
+                            </div>
+                        )
+                    }
+                </Spacer>
             </Modal>
         );
     }
