@@ -44,10 +44,8 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         {
             item,
             hasUnsavedChanges,
-            handleUnsavedChanges,
             save,
             initiateClosing,
-            keepChangesAndClose,
             stealLock,
         },
         availableArticles: Array<IArticle>,
@@ -122,19 +120,31 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         const collapseSidebarButton: ITopBarWidget<IArticle> = {
             group: 'end',
             priority: 100,
-            component: () => (
-                <NavButton
-                    icon={(this.componentRefs[item._id])?.state.isSidebarCollapsed ? 'chevron-left' : 'chevron-right'}
-                    iconSize="big"
-                    text={gettext('Collapse widgets')}
-                    onClick={() => (this.componentRefs[item._id])?.toggleSidebar()}
-                />
-            ),
+            component: () => {
+                const reference = this.componentRefs[item._id];
+
+                if (reference == null) {
+                    return null;
+                } else {
+                    return (
+                        <NavButton
+                            icon={(this.componentRefs[item._id])?.isSideBarCollapsed() ? 'chevron-left' : 'chevron-right'}
+                            iconSize="big"
+                            text={gettext('Collapse widgets')}
+                            onClick={() => (this.componentRefs[item._id])?.toggleSidebar()}
+                        />
+                    );
+                }
+            },
             availableOffline: true,
         };
 
         const topBarWidgets: Array<ITopBarWidget<IArticle>> = [collapseSidebarButton];
 
+        /**
+         * If there are items in the workQueueItems which are not
+         * present in the multi edit view we display the hamburgerMenu.
+         */
         if (availableArticles.length > 0) {
             topBarWidgets.push(hamburgerMenu);
         }
