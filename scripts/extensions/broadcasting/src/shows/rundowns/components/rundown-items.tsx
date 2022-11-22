@@ -175,6 +175,7 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                     array={array}
                     itemsDropdown={this.props.itemsDropdown}
                     onDrag={this.props.onDrag}
+                    append={true}
                 />
             );
         }
