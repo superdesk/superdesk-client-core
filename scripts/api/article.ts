@@ -175,7 +175,7 @@ function createNewUsingDeskTemplate(): void {
 }
 
 /**
- * Gets locked items from your workspace.
+ * Gets opened items from your workspace.
  */
 function getWorkQueueItems(): Array<IArticle> {
     return ng.get('workqueue').items;

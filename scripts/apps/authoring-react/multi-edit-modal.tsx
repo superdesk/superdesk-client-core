@@ -5,7 +5,7 @@ import {Modal} from 'core/ui/components/Modal/Modal';
 import {ModalBody} from 'core/ui/components/Modal/ModalBody';
 import {ModalHeader} from 'core/ui/components/Modal/ModalHeader';
 import {Spacer} from 'core/ui/components/Spacer';
-import {gettext} from 'core/utils';
+import {getItemLabel, gettext} from 'core/utils';
 import React from 'react';
 import {IArticle, IAuthoringOptions, ITopBarWidget} from 'superdesk-api';
 import {Button, IconButton, Menu, NavButton} from 'superdesk-ui-framework/react';
@@ -40,15 +40,18 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         this.componentRefs = {};
     }
 
-    getInlineToolbarActions({
-        item,
-        hasUnsavedChanges,
-        handleUnsavedChanges,
-        save,
-        initiateClosing,
-        keepChangesAndClose,
-        stealLock,
-    }, articles: Array<IArticle>): IAuthoringOptions<IArticle> {
+    getInlineToolbarActions(
+        {
+            item,
+            hasUnsavedChanges,
+            handleUnsavedChanges,
+            save,
+            initiateClosing,
+            keepChangesAndClose,
+            stealLock,
+        },
+        availableArticles: Array<IArticle>,
+    ): IAuthoringOptions<IArticle> {
         const itemState: ITEM_STATE = item.state;
 
         const saveButton: ITopBarWidget<IArticle> = {
@@ -73,12 +76,12 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             priority: 0.1,
             component: () => (
                 <Menu
-                    zIndex={2000}
+                    zIndex={1050}
                     items={
-                        articles.map((a) => {
+                        availableArticles.map((article) => {
                             const leaf: IMenuItem = {
-                                onClick: () => this.switchTo(item._id, a._id),
-                                label: a.slugline,
+                                onClick: () => this.switchTo(item._id, article._id),
+                                label: getItemLabel(article),
                             };
 
                             return leaf;
@@ -116,25 +119,38 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             availableOffline: true,
         };
 
-        const collapseButton: ITopBarWidget<IArticle> = {
+        const collapseSidebarButton: ITopBarWidget<IArticle> = {
             group: 'end',
             priority: 100,
             component: () => (
                 <NavButton
-                    icon={this.componentRefs[item._id].state.isSidebarCollapsed ? 'chevron-left' : 'chevron-right'}
+                    icon={(this.componentRefs[item._id])?.state.isSidebarCollapsed ? 'chevron-left' : 'chevron-right'}
                     iconSize="big"
                     text={gettext('Collapse widgets')}
-                    onClick={() => this.componentRefs[item._id].toggleSidebar()}
+                    onClick={() => (this.componentRefs[item._id])?.toggleSidebar()}
                 />
             ),
             availableOffline: true,
         };
 
+        const topBarWidgets: Array<ITopBarWidget<IArticle>> = [collapseSidebarButton];
+
+        if (availableArticles.length > 0) {
+            topBarWidgets.push(hamburgerMenu);
+        }
+
+        /**
+         * Don't show close button if only two panes are present in the view.
+         */
+        if (this.state.articleIds.length > 1) {
+            topBarWidgets.push(closeButton);
+        }
+
         switch (itemState) {
         case ITEM_STATE.DRAFT:
             return {
                 readOnly: false,
-                actions: [saveButton, hamburgerMenu, collapseButton],
+                actions: [saveButton, ...topBarWidgets],
             };
 
         case ITEM_STATE.SUBMITTED:
@@ -142,15 +158,8 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         case ITEM_STATE.ROUTED:
         case ITEM_STATE.FETCHED:
         case ITEM_STATE.UNPUBLISHED:
-            // eslint-disable-next-line no-case-declarations
-            const actions: Array<ITopBarWidget<IArticle>> = [
-                closeButton,
-                hamburgerMenu,
-                collapseButton,
-            ];
-
             // FINISH: ensure locking is available in generic version of authoring
-            actions.push({
+            topBarWidgets.push({
                 group: 'start',
                 priority: 0.1,
                 component: ({entity}) => (
@@ -165,12 +174,12 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             });
 
             if (sdApi.article.isLockedInCurrentSession(item)) {
-                actions.push(saveButton);
+                topBarWidgets.push(saveButton);
             }
 
             return {
                 readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
-                actions: actions,
+                actions: topBarWidgets,
             };
 
         case ITEM_STATE.INGESTED:
@@ -243,7 +252,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
          * article twice, then filter if the result
          * contains articles which the user is currently editing.
          */
-        const articles = [
+        const availableArticles = [
             ...this.state.workQueueItems.filter(
                 (item) => this.props.initiallySelectedArticles
                     .map((article) => article._id)
@@ -266,6 +275,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                         <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
                                             {i !== 0 && (<div style={{width: 4, background: '#818181'}} />) /** divider */ }
                                             <AuthoringIntegrationWrapper
+                                                sidebarInitiallyVisible={true}
                                                 ref={(component) => {
                                                     this.componentRefs[_id] = component;
                                                 }}
@@ -276,7 +286,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                                 }}
                                                 itemId={_id}
                                                 getInlineToolbarActions={(options) =>
-                                                    this.getInlineToolbarActions(options, articles)
+                                                    this.getInlineToolbarActions(options, availableArticles)
                                                 }
                                             />
                                         </Spacer>
@@ -285,14 +295,14 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                             }
                         </Spacer>
                         {
-                            articles.length > 0 && (
+                            availableArticles.length > 0 && (
                                 <div className="multi-edit-add-button">
                                     <Menu
-                                        zIndex={2000}
-                                        items={articles.map((a) => {
+                                        zIndex={1050}
+                                        items={availableArticles.map((a) => {
                                             const leaf: IMenuItem = {
                                                 onClick: () => this.add(a._id),
-                                                label: a.slugline,
+                                                label: getItemLabel(a),
                                             };
 
                                             return leaf;

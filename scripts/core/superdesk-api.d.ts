@@ -92,9 +92,9 @@ declare module 'superdesk-api' {
         schedule(getItem: () => T, callback: (autosaved: T) => void): void;
 
         /**
-         * A function which executes the call in the scheduled function without throttling it,
-         * removes the call from the schedule after execution, so we don't autosave more than required.
-         */
+        * Immediately autosaves without a delay if there is anything to autosave.
+        * Is meant to be used before unmounting the component.
+        */
         flush(): Promise<void>;
     }
 

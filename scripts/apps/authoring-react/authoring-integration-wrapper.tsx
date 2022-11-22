@@ -109,6 +109,7 @@ interface IPropsWrapper extends IProps {
         readOnly: boolean;
         actions: Array<ITopBarWidget<IArticle>>;
     };
+    sidebarInitiallyVisible?: boolean;
 }
 
 /**
@@ -127,11 +128,12 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
         super(props);
 
         this.state = {
-            isSidebarCollapsed: false,
+            isSidebarCollapsed: this.props.sidebarInitiallyVisible ?? false,
         };
 
         this.prepareForUnmounting = this.prepareForUnmounting.bind(this);
         this.handleUnsavedChanges = this.handleUnsavedChanges.bind(this);
+        this.toggleSidebar = this.toggleSidebar.bind(this);
     }
 
     public toggleSidebar() {
@@ -155,7 +157,6 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IPropsWrapp
             return Promise.reject();
         }
     }
-
 
     render() {
         function getWidgetsFromExtensions(article: IArticle): Array<IArticleSideWidget> {

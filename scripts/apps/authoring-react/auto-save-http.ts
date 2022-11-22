@@ -48,11 +48,15 @@ export class AutoSaveHttp implements IAuthoringAutoSave<IArticle> {
     }
 
     flush(): Promise<void> {
-        if (this.autosavePromise == null) {
-            return Promise.resolve();
-        } else {
-            return this.autosavePromise.then(() => undefined);
-        }
+        this.autoSaveThrottled.flush();
+
+        return new Promise((resolve) => {
+            if (this.autosavePromise == null) {
+                resolve();
+            } else {
+                this.autosavePromise.then(() => resolve());
+            }
+        });
     }
 
     cancel() {
