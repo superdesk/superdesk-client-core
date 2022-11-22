@@ -283,7 +283,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                 this.state.articleIds.map((_id, i) => {
                                     return (
                                         <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
-                                            {i !== 0 && (<div style={{width: 4, background: '#818181'}} />) /** divider */ }
+                                            {i !== 0 && (<div style={{width: 4, background: 'var(--sd-colour-bg--10)'}} />) /** divider */ }
                                             <AuthoringIntegrationWrapper
                                                 sidebarInitiallyVisible={true}
                                                 ref={(component) => {
