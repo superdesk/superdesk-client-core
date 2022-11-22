@@ -258,13 +258,13 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                     {gettext('Multi Edit')}
                 </ModalHeader>
                 <ModalBody style={{padding: 0}}>
-                    <Spacer h gap="0" justifyContent="stretch" noWrap>
-                        <Spacer h gap="4">
+                    <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}}>
+                        <Spacer h gap="0" noWrap style={{height: '100%'}}>
                             {
-                                this.state.articleIds.map((_id) => {
+                                this.state.articleIds.map((_id, i) => {
                                     return (
-                                        <React.Fragment key={_id}>
-                                            <div />
+                                        <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
+                                            {i !== 0 && (<div style={{width: 4, background: '#818181'}} />) /** divider */ }
                                             <AuthoringIntegrationWrapper
                                                 ref={(component) => {
                                                     this.componentRefs[_id] = component;
@@ -279,7 +279,7 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                                     this.getInlineToolbarActions(options, articles)
                                                 }
                                             />
-                                        </React.Fragment>
+                                        </Spacer>
                                     );
                                 })
                             }
