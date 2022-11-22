@@ -69,10 +69,10 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
             const statusColor = item.status == null ? undefined : statuses.get(item.status)?.color ?? undefined;
             const showPart = item.show_part == null ? null : showParts.get(item.show_part);
             const itemType = item.item_type == null ? null : rundownItemTypes.get(item.item_type);
-            const subitems = item.subitems == null
+            const subitemVocabularies = item.subitems == null
                 ? null
                 : item.subitems
-                    .map((qcode) => subitemTypes.get(qcode))
+                    .map(({qcode}) => subitemTypes.get(qcode))
                     .filter((x) => x != null);
 
             return ({
@@ -113,10 +113,10 @@ export class RundownItems<T extends IRundownItem | IRundownItemBase> extends Rea
                 end: (
                     <Spacer h gap="4" justifyContent="start" noGrow>
                         {
-                            subitems != null && (
+                            subitemVocabularies != null && (
                                 <Spacer h gap="4" justifyContent="start" noGrow>
                                     {
-                                        subitems.map(({name, color}, i) => (
+                                        subitemVocabularies.map(({name, color}, i) => (
                                             <Label
                                                 key={i}
                                                 text={name}
