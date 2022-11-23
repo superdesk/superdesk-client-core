@@ -13,8 +13,8 @@ import {
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     SHOW_PART_VOCABULARY_ID,
     STATUS_VOCABULARY_ID,
-} from '../../../constants';
-import {superdesk} from '../../../superdesk';
+} from '../constants';
+import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;
 const {vocabulary} = superdesk.entities;

@@ -1,5 +1,5 @@
 import {isEqual} from 'lodash';
-import {rundownItemContentProfile} from './rundown-items/content-profile';
+import {rundownItemContentProfile} from '../../rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
     IAuthoringStorage,

@@ -27,7 +27,7 @@ import {FrequencySimple} from './components/FrequencySimple';
 import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
 import {AiringInfoBlock} from './components/airing-info-block';
 import {prepareRundownItemForSaving} from './rundown-view-edit';
-import {rundownItemContentProfile} from './rundown-items/content-profile';
+import {rundownItemContentProfile} from '../../rundown-items/content-profile';
 
 const {getAuthoringComponent} = superdesk.components;
 const {assertNever} = superdesk.helpers;

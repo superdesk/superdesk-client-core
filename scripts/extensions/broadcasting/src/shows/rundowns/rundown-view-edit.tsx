@@ -40,7 +40,7 @@ import {rundownItemStorageAdapter} from './rundown-template-item-storage-adapter
 import {LANGUAGE} from '../../constants';
 import {IRestApiResponse, ITopBarWidget} from 'superdesk-api';
 import {AiringInfoBlock} from './components/airing-info-block';
-import {commentsWidget} from './rundown-items/widgets/comments';
+import {commentsWidget} from '../../rundown-items/widgets/comments';
 import {
     IRundownItemActionNext,
     prepareForCreation,
