@@ -58,6 +58,10 @@ function getRundownItemAuthoringStorage(id: IRundownItem['_id']): IAuthoringStor
         cancel() {
             // noop
         }
+
+        flush(): Promise<void> {
+            return Promise.resolve();
+        }
     }
 
     const authoringStorageRundownItem: IAuthoringStorage<IRundownItem> = {
@@ -141,6 +145,10 @@ function getRundownItemCreationAuthoringStorage(
 
         cancel() {
             // noop
+        }
+
+        flush(): Promise<void> {
+            return Promise.resolve();
         }
     }
 
