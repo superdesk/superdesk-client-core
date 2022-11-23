@@ -36,7 +36,7 @@ import {ManageRundownItems} from './manage-rundown-items';
 import {arrayInsertAtIndex, CreateValidators, downloadFileAttachment, WithValidation} from '@superdesk/common';
 import {stringNotEmpty} from '../form-validation';
 import {isEqual, noop} from 'lodash';
-import {rundownItemStorageAdapter} from './rundown-template-item-storage-adapter';
+import {rundownItemStorageAdapter} from '../rundown-templates/rundown-template-item-storage-adapter';
 import {LANGUAGE} from '../constants';
 import {IRestApiResponse, ITopBarWidget} from 'superdesk-api';
 import {AiringInfoBlock} from './components/airing-info-block';

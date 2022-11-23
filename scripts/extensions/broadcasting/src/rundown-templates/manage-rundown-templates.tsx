@@ -14,8 +14,8 @@ import {superdesk} from '../superdesk';
 import {IRundownTemplate, IRundownTemplateBase, IShow} from '../interfaces';
 import {IRundownItemAction, RundownTemplateViewEdit} from './template-edit';
 import {IRestApiResponse, IUser} from 'superdesk-api';
-import {prepareRundownTemplateForSaving} from './rundown-view-edit';
-import {SelectShow} from './components/select-show';
+import {prepareRundownTemplateForSaving} from '../rundowns/rundown-view-edit';
+import {SelectShow} from '../rundowns/components/select-show';
 
 const {gettext} = superdesk.localization;
 const {httpRequestJsonLocal, httpRequestRawLocal} = superdesk;

@@ -7,7 +7,7 @@ import {
     IEditor3Config,
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
-import {SUBITEMS_FIELD_TYPE} from '../../../authoring-fields/subitems';
+import {SUBITEMS_FIELD_TYPE} from '../authoring-fields/subitems';
 import {
     CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,

@@ -7,7 +7,7 @@ import {
 } from 'superdesk-api';
 import {IRundown, IRundownItem} from '../interfaces';
 import {superdesk} from '../superdesk';
-import {IWithAuthoringReactKey} from './template-edit';
+import {IWithAuthoringReactKey} from '../rundown-templates/template-edit';
 import {prepareRundownItemForSaving} from './rundown-view-edit';
 
 const {tryLocking, fixPatchResponse, fixPatchRequest} = superdesk.helpers;

@@ -5,7 +5,7 @@ import {
     IAuthoringStorage,
 } from 'superdesk-api';
 import {IRundownItemBase, IRundownItemTemplateInitial} from '../interfaces';
-import {ICreate, IEdit, IPreview, IRundownItemAction} from './template-edit';
+import {ICreate, IEdit, IPreview, IRundownItemAction} from '../rundown-templates/template-edit';
 import {superdesk} from '../superdesk';
 
 function getRundownItemTemplateAuthoringStorage(
@@ -30,6 +30,10 @@ function getRundownItemTemplateAuthoringStorage(
 
         cancel() {
             // noop
+        }
+
+        flush(): Promise<void> {
+            return Promise.resolve();
         }
     }
 

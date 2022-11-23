@@ -13,7 +13,7 @@ import {
     Modal,
 } from 'superdesk-ui-framework/react';
 
-import {ManageRundownTemplates} from './rundowns/manage-rundown-templates';
+import {ManageRundownTemplates} from './rundown-templates/manage-rundown-templates';
 import {CreateShowModal} from './shows/create-show-modal';
 
 import {classnames, showModal} from '@superdesk/common';
