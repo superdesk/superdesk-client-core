@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import {WithSizeObserver, ContentListItem, Label, IconButton, Menu, Alert} from 'superdesk-ui-framework/react';
-import {IRundown, IRundownFilters, IRundownItem, IRundownTemplate, IShow} from '../../interfaces';
+import {IRundown, IRundownFilters, IRundownItem, IRundownTemplate, IShow} from '../interfaces';
 
-import {superdesk} from '../../superdesk';
+import {superdesk} from '../superdesk';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {addSeconds} from '@superdesk/common';

@@ -13,21 +13,21 @@ import {
     DurationInput,
 } from 'superdesk-ui-framework/react';
 import {arrayInsertAtIndex, CreateValidators, WithValidation} from '@superdesk/common';
-import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../../interfaces';
-import {superdesk} from '../../superdesk';
-import {stringNotEmpty} from '../../form-validation';
+import {IRRule, IRundownItemBase, IRundownItemTemplateInitial, IRundownTemplateBase} from '../interfaces';
+import {superdesk} from '../superdesk';
+import {stringNotEmpty} from '../form-validation';
 import {ManageRundownItems} from './manage-rundown-items';
 import {getPartialDateFormat, toPythonDateFormat, toSuperdeskDateFormat} from '../../utils/get-partial-date-format';
 import {IAuthoringStorage, ITopBarWidget} from 'superdesk-api';
 import {prepareForCreation, prepareForEditing, prepareForPreview} from './prepare-create-edit';
 
 import {rundownTemplateItemStorageAdapter} from './rundown-template-item-storage-adapter';
-import {LANGUAGE} from '../../constants';
+import {LANGUAGE} from '../constants';
 import {FrequencySimple} from './components/FrequencySimple';
-import {handleUnsavedRundownChanges} from '../../utils/handle-unsaved-rundown-changes';
+import {handleUnsavedRundownChanges} from '../utils/handle-unsaved-rundown-changes';
 import {AiringInfoBlock} from './components/airing-info-block';
 import {prepareRundownItemForSaving} from './rundown-view-edit';
-import {rundownItemContentProfile} from '../../rundown-items/content-profile';
+import {rundownItemContentProfile} from '../rundown-items/content-profile';
 
 const {getAuthoringComponent} = superdesk.components;
 const {assertNever} = superdesk.helpers;

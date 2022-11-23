@@ -4,9 +4,9 @@ import {
     IEditor3ValueStorage,
     IStorageAdapter,
 } from 'superdesk-api';
-import {LANGUAGE} from '../../constants';
-import {IRundownItem, IRundownItemTemplateInitial} from '../../interfaces';
-import {superdesk} from '../../superdesk';
+import {LANGUAGE} from '../constants';
+import {IRundownItem, IRundownItemTemplateInitial} from '../interfaces';
+import {superdesk} from '../superdesk';
 
 const {computeEditor3Output, getContentStateFromHtml} = superdesk.helpers;
 

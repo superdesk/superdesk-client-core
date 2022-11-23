@@ -4,7 +4,7 @@ import {showModal} from '@superdesk/common';
 import {IShow} from '../interfaces';
 
 import {superdesk} from '../superdesk';
-import {ManageRundownTemplates} from './rundowns/manage-rundown-templates';
+import {ManageRundownTemplates} from '../rundowns/manage-rundown-templates';
 
 const {gettext} = superdesk.localization;
 const {Center, SpacerBlock} = superdesk.components;

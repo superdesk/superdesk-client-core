@@ -1,12 +1,12 @@
 import {isEqual} from 'lodash';
-import {rundownItemContentProfile} from '../../rundown-items/content-profile';
+import {rundownItemContentProfile} from '../rundown-items/content-profile';
 import {
     IAuthoringAutoSave,
     IAuthoringStorage,
     IPatchResponseExtraFields,
 } from 'superdesk-api';
-import {IRundown, IRundownItem} from '../../interfaces';
-import {superdesk} from '../../superdesk';
+import {IRundown, IRundownItem} from '../interfaces';
+import {superdesk} from '../superdesk';
 import {IWithAuthoringReactKey} from './template-edit';
 import {prepareRundownItemForSaving} from './rundown-view-edit';
 

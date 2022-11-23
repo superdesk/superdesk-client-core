@@ -1,5 +1,5 @@
 
-import {ICreate, IEdit, IPreview} from '../shows/rundowns/template-edit';
+import {ICreate, IEdit, IPreview} from '../rundowns/template-edit';
 import {superdesk} from '../superdesk';
 
 const {gettext} = superdesk.localization;

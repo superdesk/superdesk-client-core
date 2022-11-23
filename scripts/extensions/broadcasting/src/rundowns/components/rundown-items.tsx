@@ -1,17 +1,17 @@
 import * as React from 'react';
 import {TableList, Label} from 'superdesk-ui-framework/react';
-import {IRundownItem, IRundownItemBase} from '../../../interfaces';
+import {IRundownItem, IRundownItemBase} from '../../interfaces';
 import {DurationLabel} from './duration-label';
 import {Map} from 'immutable';
 import {PlannedDurationLabel} from './planned-duration-label';
-import {superdesk} from '../../../superdesk';
+import {superdesk} from '../../superdesk';
 import {IVocabularyItem} from 'superdesk-api';
 import {
     SHOW_PART_VOCABULARY_ID,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
     RUNDOWN_SUBITEM_TYPES,
     STATUS_VOCABULARY_ID,
-} from '../../../constants';
+} from '../../constants';
 import {IMenuItem, ISubmenu, IMenuGroup} from 'superdesk-ui-framework/react/components/Dropdown';
 const {vocabulary} = superdesk.entities;
 const {gettext} = superdesk.localization;

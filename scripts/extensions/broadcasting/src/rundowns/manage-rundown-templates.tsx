@@ -10,8 +10,8 @@ import {
 } from 'superdesk-ui-framework/react';
 import {BoxedListItem, BoxedListContentRow} from 'superdesk-ui-framework/react/components/Lists';
 import * as Layout from 'superdesk-ui-framework/react/components/Layouts';
-import {superdesk} from '../../superdesk';
-import {IRundownTemplate, IRundownTemplateBase, IShow} from '../../interfaces';
+import {superdesk} from '../superdesk';
+import {IRundownTemplate, IRundownTemplateBase, IShow} from '../interfaces';
 import {IRundownItemAction, RundownTemplateViewEdit} from './template-edit';
 import {IRestApiResponse, IUser} from 'superdesk-api';
 import {prepareRundownTemplateForSaving} from './rundown-view-edit';
