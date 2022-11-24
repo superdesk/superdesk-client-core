@@ -33,23 +33,24 @@
               font-weight: 300;
             }
             .round-box {
-              display: block;
-              box-sizing: border-box;
-              padding-top: 16px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
               height: 90px;
               width: 90px;
-              background-color: #fff;
-              border-radius: 50%;
+              background-color: var(--sd-item__main-Bg);
+              border-radius: 9999px;
               margin: 0 auto;
-              box-shadow: 0 0 6px 1px rgba(0,0,0,0.08);
+              box-shadow: 0 0 6px 1px hsla(0, 0%, 0%, 0.12);
             }
             i {
               display: block;
-              width: 56px;
-              height: 48px;
+              width: 52px;
+              height: 52px;
               opacity: 0.2;
-              margin: 1.4rem auto 0 auto;
+              margin: 0;
               font-size: 5.2rem;
+              line-height: 1;
             }
           }
           &.loading-info {
