@@ -2141,6 +2141,7 @@ declare module 'superdesk-api' {
         setValue: (value: IValue) => void;
         readOnly: boolean;
         config: IConfig;
+        field_id: string;
     }
 
     export interface ITemplateEditorComponentProps<IValue, IConfig> {
@@ -2154,6 +2155,7 @@ declare module 'superdesk-api' {
     export interface IPreviewComponentProps {
         item: IArticle;
         value: any;
+        field: IVocabulary;
     }
 
     // IConfig must be a plain object
