@@ -706,12 +706,11 @@
     position: absolute;
     top: 0; left: 0;
     z-index: 2000;
-    background: #fff;
-    padding: 10px;
-    @include box-shadow(0 0 5px 0 rgba(0,0,0,0.45));
-    @include border-radius(3px);
-    width: 260px;
-    @include border-box();
+    background-color: var(--color-dropdown-menu-Bg);
+    box-shadow: 0 2px 10px hsla(0, 0%, 0%, 0.4), 0 3px 1px -2px hsla(0, 0%, 0%, 0.1);
+    padding: 12px;
+    border-radius: var(--b-radius--small);
+    width: 280px;
 
     .btn {
         &:hover {
@@ -734,24 +733,33 @@
         }
     }
     .datepicker-additional {
-        margin-bottom: 5px;
-        table {
-            width: 100%;
-        }
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: var(--gap--x-small);
+        margin-bottom: 8px;
         .btn {
-            width: 100%;
+            min-height: 24px;
+            flex-grow: 1;
         }
     }
     .datepicker-core {
+        margin-top: 4px;
+        margin-bottom: 12px;
+        border-bottom: 1px solid var(--sd-colour-line--light) !important;
         table {
+            margin: 8px 0 12px;
             width: 100%;
-
             thead {
+                margin-bottom: 8px;
                 tr {
                     th {
+                        padding-bottom: 8px;
                         .btn {
                             background: none;
                             padding: 0;
+                            display: flex;
+                            align-items: center;
                         }
                     }
                     &:last-child {
@@ -796,24 +804,28 @@
                         width: 100% !important;
                         min-width: 28px !important;
                         padding: 0;
-                        background: none;
-                        color: #333;
-                        @include box-shadow(none);
+                        background-color: transparent;
+                        color: var(--color-text);
+                        box-shadow: none;
+                        border-radius: var(--b-radius--small);
                         .text-muted {
-                            color: #999;
+                            color: var(--color-text-lighter);
                         }
-                        &:hover, &.active {
-                            color: #333;
-                            @include box-shadow(inset 0 0 1px 0 $sd-blue);
-                            background: $sd-hover;
+                        &:hover {
+                            box-shadow: 0 0 0 1px var(--sd-colour-interactive) !important;
+                            background: transparent;
+                        }
+                        &.active {
+                            color: white !important;
+                            background-color: var(--sd-colour-interactive);
                         }
 
                         &.btn--primary, &.btn--primary.active {
                             //selected date
-                            color: #fff;
-                            background: $sd-blue;
+                            color: white;
+                            background: ver(--sd-colour-interactive);
                             .text-muted {
-                                color: #fff;
+                                color: white;
                             }
                         }
 
@@ -829,44 +841,40 @@
     position: absolute;
     top: 0; left: 0;
     z-index: 2000;
-    background: #fff;
-    padding: 10px;
-    @include box-shadow(0 0 5px 0 rgba(0,0,0,0.45));
-    @include border-radius(3px);
+    background-color: var(--color-dropdown-menu-Bg);
+    box-shadow: 0 2px 10px hsla(0, 0%, 0%, 0.4), 0 3px 1px -2px hsla(0, 0%, 0%, 0.1);
+    padding: 12px;
+    border-radius: var(--b-radius--small);
     width: 200px;
     min-height: 310px;
-    @include border-box();
     .timepicker-additional {
-        margin-bottom: 5px;
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 0;
-            td, th {
-                padding: 1px;
-            }
-        }
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: var(--gap--x-small);
+        margin-bottom: 18px;
         .btn {
-            width: 100%;
-            letter-spacing: 0;
-        }
-        .btn--mini {
-            padding: 4px 6px;
+            height: 24px;
+            flex-grow: 1;
             font-size: 11px;
-            line-height: 11px!important;
-            height: 20px;
+            letter-spacing: 0;
+            padding-inline: 4px;
+            box-shadow: none;
+            &:hover {
+                box-shadow: none;
+            }
         }
     }
     .timepicker-core {
         .select-area {
             margin-top: 15px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid var(--sd-colour-line--medium);
             .header {
                 margin-top: -10px;
                 float: left;
-                background: $white;
+                background-color: var(--color-dropdown-menu-Bg);
                 text-transform: uppercase;
-                color: #adadad;
+                color: var(--color-text-light);
                 font-size: 11px;
                 padding-right: 10px;
             }
@@ -875,24 +883,33 @@
                 @include clearfix();
                 > li {
                     float: left;
-                    @include border-box();
                     width: 28px;
                     height: 28px;
                     line-height: 28px;
                     text-align: center;
-                    margin: 0 2px 2px 0;
+                    margin: 0 1px 2px 0;
+                    color: var(--color-text);
+                    background-color: transparent;
+                    box-shadow: none;
                     @include user-select(none);
-                    @include border-radius(2px);
+                    border-radius: var(--b-radius--small);
                     &:hover {
-                        background: $sd-hover;
-                        cursor: pointer;
+                        box-shadow: 0 0 0 1px var(--sd-colour-interactive) !important;
+                        background: transparent;
                     }
                     &.active {
-                        background: $sd-blue;
-                        color: $white;
+                        color: white !important;
+                        background-color: var(--sd-colour-interactive);
                     }
                 }
             }
+        }
+        .timepicker-popup__foter {
+            padding: 8px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: var(--gap--small);
         }
     }
 }
@@ -1063,8 +1080,8 @@
         width: 100%;
         min-height: 48px;
         margin: $sd-base-increment * 2 0;
-        box-shadow: 0 1px 4px 0 hsla(0, 0%, 0%, 0.5), 0 0 0 1px var(--sd-colour-line--light);
-        border: 1px solid transparent;
+        box-shadow: 0 0 0 1px var(--sd-colour--shadow-line), 0 0 1px hsla(0, 0%, 0%, 0.1), 0 1px 3px hsla(0, 0%, 0%, 0.16);
+        border: none;
 
         .content {
             padding-left: 40px;
@@ -1096,39 +1113,8 @@
             border: 1px solid hsla(0, 99%, 33%, 0.8) !important;
             box-shadow: inset 0px 0px 1px 1px hsla(0, 25%, 12%, 0.3) !important;
         }
-        // &.personal, &.important {
-        //     border: 1px solid #c8c8c8;
-        //     background: #fff;
-        //     padding: 5px;
-        //     margin-bottom: 7px;
-        //     @include box-shadow(0px 2px 2px 0 #d8d8d8);
-        //     + li {
-        //         border-top-width: 0;
-        //         &.personal, &.important {
-        //             border-top-width: 1px;
-        //         }
-        //     }
-        // }
         .info {
             color: var(--color-text-light);
-        }
-    }
-
-    //bright version
-    &.white {
-        li {
-            background: #fff;
-            border-color: #dedede;
-            @include box-shadow(0 1px 3px 0 rgba(0,0,0,0.12));
-            .content {
-                .text {
-                    color: #333;
-                }
-            }
-            &.active {
-                border-color: #999;
-                @include box-shadow(0 1px 2px 0 #666);
-            }
         }
     }
 }

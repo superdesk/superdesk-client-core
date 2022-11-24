@@ -1,14 +1,8 @@
 <div class="datepicker-wrapper" ng-show="open" ng-keydown="keydown($event)">
     <div class="datepicker-additional" ng-if="shortcuts">
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td ng-repeat="b in shortcuts">
-                        <button class="btn btn--mini" ng-click="selectShortcut(b.value, b.term)">{{ b.label }}</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="sd-display--contents" ng-repeat="b in shortcuts">
+            <button class="btn btn--mini" ng-click="selectShortcut(b.value, b.term)">{{ b.label }}</button>
+        </div>
     </div>
     <div class="datepicker-core" ng-transclude></div>
     <button class="btn btn--primary btn--small pull-right" ng-click="dateSelection()" translate>Confirm</button>

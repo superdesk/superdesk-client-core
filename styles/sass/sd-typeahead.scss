@@ -13,10 +13,10 @@
         overflow-x: hidden;
         background: var(--color-dropdown-menu-Bg);
         color: var(--color-text);
-        //box-shadow: var(--sd-shadow__dropdown);
+        box-shadow: var(--sd-shadow__dropdown);
         border-radius: 0 0 3px 3px;
         position: absolute;
-        top:28px;
+        top: 28px;
         li {
             width: 100%;
             font-size: 1.3rem;
