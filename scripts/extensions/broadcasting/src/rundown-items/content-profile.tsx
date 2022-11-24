@@ -7,7 +7,7 @@ import {
     IEditor3Config,
     RICH_FORMATTING_OPTION,
 } from 'superdesk-api';
-import {SUBITEMS_FIELD_TYPE} from '../authoring-fields/subitems';
+import {SUBITEMS_FIELD_TYPE} from '../authoring-fields/subitems/constants';
 import {
     CAMERA,
     RUNDOWN_ITEM_TYPES_VOCABULARY_ID,
@@ -19,7 +19,7 @@ import {superdesk} from '../superdesk';
 const {gettext} = superdesk.localization;
 const {vocabulary} = superdesk.entities;
 
-const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
+export const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
     'uppercase',
     'lowercase',
     'h1',
@@ -33,6 +33,7 @@ const testEditorFormat: Array<RICH_FORMATTING_OPTION> = [
     'quote',
     'link',
     'embed',
+    'media',
     'underline',
     'italic',
     'bold',

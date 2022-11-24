@@ -1,5 +1,6 @@
 import {ICustomFieldType} from 'superdesk-api';
 import {superdesk} from '../../superdesk';
+import {SUBITEMS_FIELD_TYPE} from './constants';
 import {Difference} from './difference';
 import {Editor} from './editor';
 import {Preview} from './preview';
@@ -16,8 +17,6 @@ export type ISubitemsValueOperational = Array<ISubitem>;
 export type ISubitemsValueStorage = ISubitemsValueOperational;
 export type ISubitemsFieldConfig = never;
 export type ISubitemsUserPreferences = never;
-
-export const SUBITEMS_FIELD_TYPE = 'rundown_subitems';
 
 export function getSubItemsField()
 : ICustomFieldType<ISubitemsValueOperational, ISubitemsValueStorage, ISubitemsFieldConfig, ISubitemsUserPreferences> {
