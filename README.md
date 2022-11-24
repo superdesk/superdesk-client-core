@@ -1,4 +1,5 @@
 # Superdesk Client
+test
 
 ![CI](https://github.com/superdesk/superdesk-client-core/workflows/CI/badge.svg)
 [![Code Climate](https://codeclimate.com/github/superdesk/superdesk-client-core/badges/gpa.svg)](https://codeclimate.com/github/superdesk/superdesk-client-core)
