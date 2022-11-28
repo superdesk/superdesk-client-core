@@ -20,8 +20,10 @@ import {omit} from 'lodash';
 import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
+import {gettext} from 'core/utils';
+import {ARTICLES_IN_PACKAGE_FIELD_TYPE} from './fields/package-items';
 
-function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
+function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
     interface IFakeScope {
         schema: any;
         editor: any;
@@ -128,6 +130,39 @@ function getContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>):
         };
 
         return profile;
+    });
+}
+
+function getPackagesContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
+    const headlineField: IAuthoringFieldV2 = {
+        id: 'headline',
+        name: gettext('Headline'),
+        fieldType: 'editor3',
+        fieldConfig: {
+            required: true,
+        },
+    };
+
+    const articlesInPackageField: IAuthoringFieldV2 = {
+        id: ARTICLES_IN_PACKAGE_FIELD_TYPE,
+        fieldConfig: {
+            required: true,
+            readOnly: false,
+            allow_toggling: false,
+        },
+        fieldType: ARTICLES_IN_PACKAGE_FIELD_TYPE,
+        name: gettext('Articles in package'),
+    };
+
+    return Promise.resolve<IContentProfileV2>({
+        id: 'packages-profile',
+        name: 'Packages profile',
+        header: OrderedMap([
+            [headlineField.id, headlineField],
+        ]),
+        content: OrderedMap([
+            [articlesInPackageField.id, articlesInPackageField],
+        ]),
     });
 }
 
@@ -248,7 +283,13 @@ export const authoringStorageIArticle: IAuthoringStorage<IArticle> = {
             });
         });
     },
-    getContentProfile,
+    getContentProfile: (item, fieldsAdapter) => {
+        if (item.type === 'composite') {
+            return getPackagesContentProfile(item, fieldsAdapter);
+        } else {
+            return getArticleContentProfile(item, fieldsAdapter);
+        }
+    },
     closeAuthoring: (current, original, cancelAutosave, doClose) => {
         const diff = generatePatch(original, current);
         const hasUnsavedChanges = Object.keys(diff).length > 0;

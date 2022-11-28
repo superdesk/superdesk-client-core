@@ -341,6 +341,24 @@ declare module 'superdesk-api' {
     export type ILinkedItemsUserPreferences = never;
     export type ILinkedItemsConfig = ICommonFieldConfig;
 
+    // AUTHORING-REACT FIELD TYPES - packages
+
+    interface IPackageItem {
+        type: IArticle['type'];
+        headline: string,
+        residRef: string,
+        location: string,
+        slugline: string,
+        renditions: {},
+        itemClass: string,
+        guid: string
+    }
+
+    export type IPackageItemsValueOperational = Array<IPackageItem>;
+    export type IPackageItemsValueStorage = IPackageItemsValueOperational;
+    export type IPackageItemsUserPreferences = never;
+    export type IPackageItemsConfig = ICommonFieldConfig;
+
     // AUTHORING-REACT FIELD TYPES - media
 
     export type IMediaValueOperational = Array<IArticle>;
@@ -858,7 +876,7 @@ declare module 'superdesk-api' {
     export interface IArticle extends IBaseRestApiResponse {
         _id: string;
         _current_version: number;
-        _type?: 'ingest' | 'archive' | 'archived' | 'published' | 'archived' | 'legal_archive' | 'externalsource' | string;
+        _type?: 'ingest' | 'archive' | 'archived' | 'published' | 'archived' | 'legal_archive' | 'externalsource' | 'composite' | string;
         uri?: string; // uri is external id which stays when image is fetched from provider/ingest
         guid: string;
         family_id: string;

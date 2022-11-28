@@ -1,43 +1,44 @@
 import {
     ICustomFieldType,
-    ILinkedItemsUserPreferences,
-    ILinkedItemsValueOperational,
-    ILinkedItemsValueStorage,
-    ILinkedItemsConfig,
+    IPackageItemsUserPreferences,
+    IPackageItemsValueOperational,
+    IPackageItemsValueStorage,
+    IPackageItemsConfig,
 } from 'superdesk-api';
 import {gettext} from 'core/utils';
 import {Editor} from './editor';
 import {Preview} from './preview';
-import {Difference} from './difference';
 import {sdApi} from 'api';
 import {openArticle} from 'core/get-superdesk-api-implementation';
+import {Difference} from './difference';
 
-type ILinkedItemsField = ICustomFieldType<
-    ILinkedItemsValueOperational,
-    ILinkedItemsValueStorage,
-    ILinkedItemsConfig,
-    ILinkedItemsUserPreferences
+type IPackageItemsField = ICustomFieldType<
+    IPackageItemsValueOperational,
+    IPackageItemsValueStorage,
+    IPackageItemsConfig,
+    IPackageItemsUserPreferences
 >;
 
-export const LINKED_ITEMS_FIELD_TYPE = 'linked-items';
+export const ARTICLES_IN_PACKAGE_FIELD_TYPE = 'articles-in-package';
 
-export function getLinkedItemsField(): ILinkedItemsField {
-    const field: ILinkedItemsField = {
-        id: LINKED_ITEMS_FIELD_TYPE,
-        label: gettext('Linked items (authoring-react)'),
+export function getArticlesInPackageField(): IPackageItemsField {
+    const field: IPackageItemsField = {
+        id: ARTICLES_IN_PACKAGE_FIELD_TYPE,
+        label: gettext('Articles in package (authoring-react)'),
+
         editorComponent: Editor,
         previewComponent: Preview,
+        differenceComponent: Difference,
 
         hasValue: (valueOperational) => valueOperational != null && valueOperational.length > 0,
         getEmptyValue: () => [],
 
-        differenceComponent: Difference,
         configComponent: () => null,
 
         contributions: {
             authoring: {
                 onCloseAfter: (item) => {
-                    const itemId = item._id;
+                    const itemId = item.guid;
                     const storedItemId = sdApi.localStorage.getItem(`open-item-after-related-closed--${itemId}`);
 
                     /**
