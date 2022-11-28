@@ -1,13 +1,13 @@
 import {IArticle, IAuthoringFieldV2, IFieldAdapter, IEditor3Config, IPackageItemsValueOperational} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {ARTICLES_IN_PACKAGE_FIELD_TYPE} from '../fields/package-items';
+import {PACKAGE_ITEMS_FIELD_TYPE} from '../fields/package-items';
 
-export const articles_in_package: IFieldAdapter<IArticle> = {
+export const package_items: IFieldAdapter<IArticle> = {
     getFieldV2: () => {
         const fieldV2: IAuthoringFieldV2 = {
             id: 'groups',
-            name: gettext('Related articles'),
-            fieldType: ARTICLES_IN_PACKAGE_FIELD_TYPE,
+            name: gettext('Package items'),
+            fieldType: PACKAGE_ITEMS_FIELD_TYPE,
             fieldConfig: {},
         };
 
@@ -32,7 +32,7 @@ export const articles_in_package: IFieldAdapter<IArticle> = {
                 },
                 {
                     refs: value,
-                    id: 'main',
+                    'id': 'main',
                     'role': 'grpRole:main',
                 },
             ],

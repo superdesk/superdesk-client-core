@@ -45,8 +45,7 @@ import {defaultAllowedWorkflows} from 'apps/relations/services/RelationsService'
 import {attachments} from './attachments';
 import {ContentState, convertToRaw, RawDraftContentState} from 'draft-js';
 import {computeEditor3Output} from './utilities/compute-editor3-output';
-import {ARTICLES_IN_PACKAGE_FIELD_TYPE} from '../fields/package-items';
-import {articles_in_package} from './articlesInPackage';
+import {package_items} from './package_items';
 
 export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
     const adapter: IFieldsAdapter<IArticle> = {
@@ -69,7 +68,7 @@ export function getBaseFieldsAdapter(): IFieldsAdapter<IArticle> {
         subject: getSubjectAdapter(),
         urgency: urgency,
         usageterms: usageterms,
-        [ARTICLES_IN_PACKAGE_FIELD_TYPE]: articles_in_package,
+        groups: package_items,
     };
 
     return adapter;
