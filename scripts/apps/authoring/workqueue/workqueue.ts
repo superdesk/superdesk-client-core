@@ -218,8 +218,7 @@ function WorkqueueCtrl(
                             break;
 
                         case IUnsavedChangesAction.openItem:
-                            _reOpenItem(item);
-                            closePromptFn();
+                            _reOpenItem(item, closePromptFn);
                             break;
 
                         default:
@@ -233,7 +232,7 @@ function WorkqueueCtrl(
         });
     };
 
-    function _reOpenItem(item) {
+    function _reOpenItem(item, closePromptFn) {
         if (
             $scope.articleInEditMode
             && $scope.articleInEditMode._id !== item._id || !$scope.articleInEditMode && item
@@ -241,6 +240,7 @@ function WorkqueueCtrl(
             authoringWorkspace.edit(item);
             $scope.articleInEditMode = item;
         }
+        closePromptFn();
         $scope.dashboardActive = false;
     }
 
