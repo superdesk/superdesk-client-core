@@ -1,6 +1,4 @@
 import {sdApi} from 'api';
-import {ITEM_STATE} from 'apps/archive/constants';
-import {assertNever} from 'core/helpers/typescript-helpers';
 import {Spacer} from 'core/ui/components/Spacer';
 import {getItemLabel, gettext} from 'core/utils';
 import React from 'react';
@@ -9,7 +7,6 @@ import {Button, IconButton, Menu, Modal, NavButton} from 'superdesk-ui-framework
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {LockInfo} from './subcomponents/lock-info';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
-import {article} from 'api/article';
 
 interface IProps {
     onClose(): void;
@@ -121,7 +118,11 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                 } else {
                     return (
                         <NavButton
-                            icon={(this.componentRefs[item._id])?.isSidebarCollapsed() ? 'chevron-left' : 'chevron-right'}
+                            icon={
+                                (this.componentRefs[item._id])?.isSidebarCollapsed()
+                                    ? 'chevron-left'
+                                    : 'chevron-right'
+                            }
                             iconSize="big"
                             text={gettext('Collapse widgets')}
                             onClick={() => (this.componentRefs[item._id])?.toggleSidebar()}
@@ -199,14 +200,27 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         ].filter((article) => !this.state.articleIds.includes(article._id));
 
         return (
-            <Modal contentPadding="none" zIndex={1050} maximized onHide={this.props.onClose} visible headerTemplate={gettext('Multi Edit')} >
+            <Modal
+                contentPadding="none"
+                zIndex={1050}
+                maximized
+                onHide={this.props.onClose}
+                visible
+                headerTemplate={gettext('Multi Edit')}
+            >
                 <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}}>
                     <Spacer h gap="0" noWrap style={{height: '100%'}}>
                         {
                             this.state.articleIds.map((_id, i) => {
                                 return (
                                     <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
-                                        {i !== 0 && (<div style={{width: 4, background: 'var(--sd-colour-bg--10)'}} />) /** divider */ }
+                                        {
+                                            i !== 0 && (
+                                                <div
+                                                    style={{width: 4, background: 'var(--sd-colour-bg--10)'}}
+                                                />
+                                            )
+                                        }
                                         <div style={{width: '100%'}}>
                                             <AuthoringIntegrationWrapper
                                                 sidebarInitiallyVisible={true}

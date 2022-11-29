@@ -186,19 +186,18 @@ function get(id: IArticle['_id']): Promise<IArticle> {
     return dataApi.findOne<IArticle>('archive', id);
 }
 
-function isEditable(article: IArticle): boolean {
-    const itemState: ITEM_STATE = article.state;
+function isEditable(_article: IArticle): boolean {
+    const itemState: ITEM_STATE = _article.state;
 
     switch (itemState) {
     case ITEM_STATE.DRAFT:
     case ITEM_STATE.CORRECTION:
-        return true;
     case ITEM_STATE.SUBMITTED:
     case ITEM_STATE.IN_PROGRESS:
     case ITEM_STATE.ROUTED:
     case ITEM_STATE.FETCHED:
     case ITEM_STATE.UNPUBLISHED:
-        return isLockedInCurrentSession(article) || isLocked(article) === false;
+        return isLockedInCurrentSession(_article) || isLocked(_article) === false;
     case ITEM_STATE.INGESTED:
     case ITEM_STATE.SPIKED:
     case ITEM_STATE.SCHEDULED:
