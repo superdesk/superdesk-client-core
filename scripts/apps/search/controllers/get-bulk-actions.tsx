@@ -29,11 +29,12 @@ export function getBulkActions(
     const desks = ng.get('desks');
     const privileges = ng.get('privileges');
 
-    const {isLockedInCurrentSession, isLocked, isLockedByOtherUser, isPublished} = sdApi.article;
+    const {isLockedInCurrentSession, isLocked, isLockedByOtherUser, isPublished, isEditable} = sdApi.article;
 
-    const noneLockedInOtherSessions = articles.every((article) => !isLockedInCurrentSession(article));
+    const noneLockedInOtherSessions = articles.every((article) => isLockedInCurrentSession(article));
     const noneLocked = articles.every((article) => !isLocked(article));
     const nonePublished = articles.every((article) => !isPublished(article));
+    const allAreEditable = articles.every((article) => isEditable(article));
 
     if (articles.every(({state}) => state === ITEM_STATE.INGESTED)) {
         actions.push({
@@ -121,7 +122,7 @@ export function getBulkActions(
         }
 
         if (
-            (!noneLockedInOtherSessions || noneLocked)
+            (noneLockedInOtherSessions || noneLocked) && allAreEditable
             && articles.every((article) => authoring.itemActions(article).edit === true)
         ) {
             actions.push({

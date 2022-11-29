@@ -9,6 +9,7 @@ import {Button, IconButton, Menu, Modal, NavButton} from 'superdesk-ui-framework
 import {AuthoringIntegrationWrapper} from './authoring-integration-wrapper';
 import {LockInfo} from './subcomponents/lock-info';
 import {IMenuItem} from 'superdesk-ui-framework/react/components/Menu';
+import {article} from 'api/article';
 
 interface IProps {
     onClose(): void;
@@ -47,8 +48,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         },
         availableArticles: Array<IArticle>,
     ): IAuthoringOptions<IArticle> {
-        const itemState: ITEM_STATE = item.state;
-
         const saveButton: ITopBarWidget<IArticle> = {
             group: 'end',
             priority: 0.2,
@@ -65,7 +64,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             ),
             availableOffline: true,
         };
-
         const hamburgerMenu: ITopBarWidget<IArticle> = {
             group: 'start',
             priority: 0.1,
@@ -97,7 +95,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             ),
             availableOffline: true,
         };
-
         const closeButton: ITopBarWidget<IArticle> = {
             group: 'start',
             priority: 0.2,
@@ -113,7 +110,6 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             ),
             availableOffline: true,
         };
-
         const collapseSidebarButton: ITopBarWidget<IArticle> = {
             group: 'end',
             priority: 100,
@@ -135,8 +131,20 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
             },
             availableOffline: true,
         };
-
-        const topBarWidgets: Array<ITopBarWidget<IArticle>> = [collapseSidebarButton];
+        const lockButton: ITopBarWidget<IArticle> = {
+            group: 'start',
+            priority: 0.1,
+            component: ({entity}) => (
+                <LockInfo
+                    article={entity}
+                    unlock={() => {
+                        stealLock();
+                    }}
+                />
+            ),
+            availableOffline: false,
+        };
+        const topBarWidgets: Array<ITopBarWidget<IArticle>> = [collapseSidebarButton, lockButton, saveButton];
 
         /**
          * If there are items in the workQueueItems which are not
@@ -149,92 +157,14 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
         /**
          * Don't show close button if only two panes are present in the view.
          */
-        if (this.state.articleIds.length > 1) {
+        if (this.state.articleIds.length > 2) {
             topBarWidgets.push(closeButton);
         }
 
-        switch (itemState) {
-        case ITEM_STATE.DRAFT:
-            return {
-                readOnly: false,
-                actions: [saveButton, ...topBarWidgets],
-            };
-
-        case ITEM_STATE.SUBMITTED:
-        case ITEM_STATE.IN_PROGRESS:
-        case ITEM_STATE.ROUTED:
-        case ITEM_STATE.FETCHED:
-        case ITEM_STATE.UNPUBLISHED:
-            // FINISH: ensure locking is available in generic version of authoring
-            topBarWidgets.push({
-                group: 'start',
-                priority: 0.1,
-                component: ({entity}) => (
-                    <LockInfo
-                        article={entity}
-                        unlock={() => {
-                            stealLock();
-                        }}
-                    />
-                ),
-                availableOffline: false,
-            });
-
-            if (sdApi.article.isLockedInCurrentSession(item)) {
-                topBarWidgets.push(saveButton);
-            }
-
-            return {
-                readOnly: sdApi.article.isLockedInCurrentSession(item) !== true,
-                actions: topBarWidgets,
-            };
-
-        case ITEM_STATE.INGESTED:
-            return {
-                readOnly: true,
-                actions: [], // fetch
-            };
-
-        case ITEM_STATE.SPIKED:
-            return {
-                readOnly: true,
-                actions: [], // un-spike
-            };
-
-        case ITEM_STATE.SCHEDULED:
-            return {
-                readOnly: true,
-                actions: [], // un-schedule
-            };
-
-        case ITEM_STATE.PUBLISHED:
-        case ITEM_STATE.CORRECTED:
-            return {
-                readOnly: true,
-                actions: [], // correct update kill takedown
-            };
-
-        case ITEM_STATE.BEING_CORRECTED:
-            return {
-                readOnly: true,
-                actions: [], // cancel correction
-            };
-
-        case ITEM_STATE.CORRECTION:
-            return {
-                readOnly: false,
-                actions: [], // cancel correction, save, publish
-            };
-
-        case ITEM_STATE.KILLED:
-        case ITEM_STATE.RECALLED:
-            return {
-                readOnly: true,
-                actions: [], // NONE
-            };
-        default:
-            assertNever(itemState);
-        }
+        return {
+            readOnly: false,
+            actions: topBarWidgets,
+        };
     }
 
     switchTo(currentId: string, nextId: string) {
@@ -277,21 +207,23 @@ export class MultiEditModal extends React.PureComponent<IProps, IState> {
                                 return (
                                     <Spacer h gap="0" alignItems="stretch" noWrap style={{height: '100%'}} key={_id}>
                                         {i !== 0 && (<div style={{width: 4, background: 'var(--sd-colour-bg--10)'}} />) /** divider */ }
-                                        <AuthoringIntegrationWrapper
-                                            sidebarInitiallyVisible={true}
-                                            ref={(component) => {
-                                                this.componentRefs[_id] = component;
-                                            }}
-                                            onClose={() => {
-                                                this.setState({
-                                                    articleIds: this.state.articleIds.filter((id) => id !== _id),
-                                                });
-                                            }}
-                                            itemId={_id}
-                                            getInlineToolbarActions={(options) =>
-                                                this.getInlineToolbarActions(options, availableArticles)
-                                            }
-                                        />
+                                        <div style={{width: '100%'}}>
+                                            <AuthoringIntegrationWrapper
+                                                sidebarInitiallyVisible={true}
+                                                ref={(component) => {
+                                                    this.componentRefs[_id] = component;
+                                                }}
+                                                onClose={() => {
+                                                    this.setState({
+                                                        articleIds: this.state.articleIds.filter((id) => id !== _id),
+                                                    });
+                                                }}
+                                                itemId={_id}
+                                                getInlineToolbarActions={(options) =>
+                                                    this.getInlineToolbarActions(options, availableArticles)
+                                                }
+                                            />
+                                        </div>
                                     </Spacer>
                                 );
                             })
