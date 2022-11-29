@@ -4,6 +4,8 @@ import {getGenericErrorMessage} from 'core/ui/constants';
 import {AuthoringWorkspaceService} from '../authoring/services/AuthoringWorkspaceService';
 import {showUnsavedChangesPrompt, IUnsavedChangesAction} from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
+import ng from 'core/services/ng';
+import {applicationState} from 'core/get-superdesk-api-implementation';
 
 /**
  * This file is part of Superdesk.
@@ -218,7 +220,8 @@ function WorkqueueCtrl(
                             break;
 
                         case IUnsavedChangesAction.openItem:
-                            _reOpenItem(item, closePromptFn);
+                            closePromptFn();
+                            _reOpenItem(item);
                             break;
 
                         default:
@@ -232,16 +235,14 @@ function WorkqueueCtrl(
         });
     };
 
-    function _reOpenItem(item, closePromptFn) {
-        if (
-            $scope.articleInEditMode
-            && $scope.articleInEditMode._id !== item._id || !$scope.articleInEditMode && item
-        ) {
+    function _reOpenItem(item) {
+        $scope.$applyAsync(() => {
+            $scope.closeDashboard();
+        });
+        if (applicationState.articleInEditMode !== item?._id || !$scope.articleInEditMode) {
             authoringWorkspace.edit(item);
             $scope.articleInEditMode = item;
         }
-        closePromptFn();
-        $scope.dashboardActive = false;
     }
 
     function _closeItem(item) {
