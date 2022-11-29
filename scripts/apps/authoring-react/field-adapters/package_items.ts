@@ -1,13 +1,13 @@
 import {IArticle, IAuthoringFieldV2, IFieldAdapter, IEditor3Config, IPackageItemsValueOperational} from 'superdesk-api';
 import {gettext} from 'core/utils';
-import {PACKAGE_ITEMS_FIELD_TYPE} from '../fields/package-items';
+import {PACKAGE_ITEMS_FIELD_ID} from '../fields/package-items';
 
 export const package_items: IFieldAdapter<IArticle> = {
     getFieldV2: () => {
         const fieldV2: IAuthoringFieldV2 = {
             id: 'groups',
             name: gettext('Package items'),
-            fieldType: PACKAGE_ITEMS_FIELD_TYPE,
+            fieldType: PACKAGE_ITEMS_FIELD_ID,
             fieldConfig: {},
         };
 

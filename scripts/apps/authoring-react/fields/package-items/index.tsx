@@ -17,11 +17,11 @@ type IPackageItemsField = ICustomFieldType<
     IPackageItemsUserPreferences
 >;
 
-export const PACKAGE_ITEMS_FIELD_TYPE = 'package_items';
+export const PACKAGE_ITEMS_FIELD_ID = 'package_items';
 
 export function getArticlesInPackageField(): IPackageItemsField {
     const field: IPackageItemsField = {
-        id: PACKAGE_ITEMS_FIELD_TYPE,
+        id: PACKAGE_ITEMS_FIELD_ID,
         label: gettext('Package items (authoring-react)'),
 
         editorComponent: Editor,

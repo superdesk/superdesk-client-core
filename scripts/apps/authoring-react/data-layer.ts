@@ -21,8 +21,7 @@ import {AUTOSAVE_TIMEOUT} from 'core/constants';
 import {sdApi} from 'api';
 import {getArticleAdapter} from './article-adapter';
 import {gettext} from 'core/utils';
-import {package_items} from './field-adapters/package_items';
-import {PACKAGE_ITEMS_FIELD_TYPE} from './fields/package-items';
+import {PACKAGE_ITEMS_FIELD_ID} from './fields/package-items';
 
 function getArticleContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdapter<T>): Promise<IContentProfileV2> {
     interface IFakeScope {
@@ -146,7 +145,7 @@ function getPackagesContentProfile<T>(item: IArticle, fieldsAdapter: IFieldsAdap
     const articlesInPackageField: IAuthoringFieldV2 = {
         id: 'groups',
         name: gettext('Package items'),
-        fieldType: PACKAGE_ITEMS_FIELD_TYPE,
+        fieldType: PACKAGE_ITEMS_FIELD_ID,
         fieldConfig: {
             readOnly: false,
             allow_toggling: false,
