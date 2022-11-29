@@ -31,7 +31,6 @@ export function getBulkActions(
 
     const {isLockedInCurrentSession, isLocked, isLockedByOtherUser, isPublished, isEditable} = sdApi.article;
 
-    const noneLockedInOtherSessions = articles.every((article) => isLockedInCurrentSession(article));
     const noneLocked = articles.every((article) => !isLocked(article));
     const nonePublished = articles.every((article) => !isPublished(article));
     const allAreEditable = articles.every((article) => isEditable(article));
@@ -121,10 +120,7 @@ export function getBulkActions(
             });
         }
 
-        if (
-            (noneLockedInOtherSessions || noneLocked) && allAreEditable
-            && articles.every((article) => authoring.itemActions(article).edit === true)
-        ) {
+        if (allAreEditable && articles.every((article) => authoring.itemActions(article).edit === true)) {
             actions.push({
                 label: gettext('Multi-edit'),
                 icon: 'icon-multiedit',
