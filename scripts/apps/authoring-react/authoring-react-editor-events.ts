@@ -1,7 +1,25 @@
+import {EditorState} from 'draft-js';
+import {IArticle} from 'superdesk-api';
+
 interface IAuthoringReactEditorEvents {
     find_and_replace__find: {
         editorId: string;
         text: string;
+        caseSensitive: boolean;
+    };
+
+    find_and_replace__request_for_current_selection_index: null;
+
+    find_and_replace__receive_current_selection_index: {
+        selectionIndex: number;
+        editorId: string;
+    };
+
+    find_and_replace__find_distinct: {
+        editorId: string;
+
+        // strings that we want to highlight in the editor
+        matches: Array<string>;
         caseSensitive: boolean;
     };
 
@@ -16,6 +34,22 @@ interface IAuthoringReactEditorEvents {
         editorId: string;
         replaceWith: string;
         replaceAllMatches: boolean;
+    };
+
+    find_and_replace__multi_replace: {
+        editorId: string;
+        replaceWith: {[key: string]: string};
+    };
+
+    authoring__patch_html: {
+        editorId: string;
+        editorState: EditorState;
+        html: string;
+    };
+
+    authoring__update_editor_state: {
+        editorId: string;
+        article: IArticle;
     };
 
     spellchecker__request_status: null;
