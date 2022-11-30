@@ -5,10 +5,10 @@ import {
     DatePickerISO,
 } from 'superdesk-ui-framework/react';
 import * as Form from 'superdesk-ui-framework/react/components/Form';
-import {IRundownFilters} from '../../../interfaces';
+import {IRundownFilters} from '../../interfaces';
 import {SelectShow} from './select-show';
 
-import {superdesk} from '../../../superdesk';
+import {superdesk} from '../../superdesk';
 
 const {Spacer} = superdesk.components;
 const {gettext} = superdesk.localization;

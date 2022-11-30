@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {getDurationString, Tag} from 'superdesk-ui-framework/react';
-import {IRundownFilters, IShow} from '../../../interfaces';
+import {IRundownFilters, IShow} from '../../interfaces';
 
-import {superdesk} from '../../../superdesk';
+import {superdesk} from '../../superdesk';
 
 const {WithLiveResources, Spacer} = superdesk.components;
 

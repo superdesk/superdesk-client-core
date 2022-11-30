@@ -185,6 +185,7 @@ function VirtualListComponent<T>(props: IProps<T>, ref: React.Ref<IExposedFromVi
                 if (entry != null) { // null when isn't present in cache (thus also not displayed)
                     const index = entry[0];
 
+                    // IMPROVE: reloading by index is error-prone. Consider reimplementing to reload by ID.
                     doLoadItems(items, index, index + 1);
                 }
             },

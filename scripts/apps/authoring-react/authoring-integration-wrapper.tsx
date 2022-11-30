@@ -37,6 +37,7 @@ import {CreatedModifiedInfo} from './subcomponents/created-modified-info';
 import {ITEM_STATE} from 'apps/archive/constants';
 import {dispatchInternalEvent} from 'core/internal-events';
 import {IArticleActionInteractive} from 'core/interactive-article-actions-panel/interfaces';
+import {ARTICLE_RELATED_RESOURCE_NAMES} from 'core/constants';
 
 function getAuthoringActionsFromExtensions(
     item: IArticle,
@@ -146,6 +147,7 @@ export class AuthoringIntegrationWrapper extends React.PureComponent<IProps> {
                         <div className="sd-authoring-react">
                             <AuthoringReact
                                 itemId={this.props.itemId}
+                                resourceNames={ARTICLE_RELATED_RESOURCE_NAMES}
                                 onClose={() => {
                                     ng.get('authoringWorkspace').close();
                                     ng.get('$rootScope').$applyAsync();

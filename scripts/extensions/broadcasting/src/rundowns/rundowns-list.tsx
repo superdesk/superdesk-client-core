@@ -1,13 +1,18 @@
 import * as React from 'react';
 
 import {WithSizeObserver, ContentListItem, Label, IconButton, Menu, Alert} from 'superdesk-ui-framework/react';
-import {IRundown, IRundownFilters, IRundownTemplate, IShow} from '../../interfaces';
+import {IRundown, IRundownFilters, IRundownItem, IRundownTemplate, IShow} from '../interfaces';
 
-import {superdesk} from '../../superdesk';
+import {superdesk} from '../superdesk';
 import {DurationLabel} from './components/duration-label';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {addSeconds} from '@superdesk/common';
-import {IAndOperator} from 'superdesk-api';
+import {IAndOperator, ILogicalOperator} from 'superdesk-api';
+import {RundownItems} from './components/rundown-items';
+import {IRundownItemActionNext, prepareForEditing, prepareForPreview} from './prepare-create-edit-rundown-item';
+import {Dropdown, IMenuItem} from 'superdesk-ui-framework/react/components/Dropdown';
+import {noop} from 'lodash';
+import {IRundownAction} from './rundown-view-edit';
 
 const {httpRequestRawLocal} = superdesk;
 const {getVirtualListFromQuery, DateTime} = superdesk.components;
@@ -17,12 +22,70 @@ const VirtualListFromQuery = getVirtualListFromQuery<IRundown, {show: IShow; tem
 
 interface IProps {
     searchString: string;
-    inEditMode: IRundown['_id'] | null;
-    onEditModeChange(inEditMode: IRundown['_id'] | null): void;
+    rundownAction: IRundownAction;
+    onEditModeChange(inEditMode: IRundown['_id'], rundownItemAction?: IRundownItemActionNext): void;
+    preview(id: IRundown['_id']): void;
     filters?: IRundownFilters;
+    rundownItemAction: IRundownItemActionNext;
+}
+
+function getFilters(filters: IRundownFilters | undefined): ILogicalOperator | undefined {
+    const queryFilters: IAndOperator['$and'] = [];
+
+    if (filters?.show != null) {
+        queryFilters.push({show: {$eq: filters.show}});
+    }
+
+    if (filters?.airtime_time?.gte != null) {
+        queryFilters.push({airtime_time: {$gte: filters.airtime_time.gte}});
+    }
+
+    if (filters?.airtime_time?.lte != null) {
+        queryFilters.push({airtime_time: {$lte: filters.airtime_time.lte}});
+    }
+
+    if (filters?.airtime_date?.gte != null) {
+        queryFilters.push({airtime_date: {$gte: filters.airtime_date.gte}});
+    }
+
+    if (filters?.airtime_date?.lte != null) {
+        queryFilters.push({airtime_date: {$lte: filters.airtime_date.lte}});
+    }
+
+    if (filters?.duration?.gte != null && filters.duration.gte !== 0) {
+        queryFilters.push({duration: {$gte: filters.duration.gte}});
+    }
+
+    if (filters?.duration?.lte != null && filters.duration.lte !== 0) {
+        queryFilters.push({duration: {$lte: filters.duration.lte}});
+    }
+
+    if (queryFilters.length < 1) {
+        return undefined;
+    } else {
+        return {
+            $and: queryFilters,
+        };
+    }
 }
 
 export class RundownsList extends React.PureComponent<IProps> {
+    constructor(props: IProps) {
+        super(props);
+
+        this.doPreview = this.doPreview.bind(this);
+    }
+
+    doPreview(rundownId: IRundown['_id'], rundownItemId: IRundownItem['_id']) {
+        this.props.onEditModeChange(
+            rundownId,
+            prepareForPreview(
+                this.props.rundownItemAction,
+                rundownItemId,
+            ),
+        );
+    }
+
     render() {
         return (
             <WithSizeObserver style={{display: 'flex', margin: -4}}>
@@ -36,47 +99,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                 ? undefined
                                 : this.props.searchString,
                             sort: [{_updated: 'desc'}],
-                            filter: (() => {
-                                const {filters} = this.props;
-
-                                const queryFilters: IAndOperator['$and'] = [];
-
-                                if (filters?.show != null) {
-                                    queryFilters.push({show: {$eq: filters.show}});
-                                }
-
-                                if (filters?.airtime_time?.gte != null) {
-                                    queryFilters.push({airtime_time: {$gte: filters.airtime_time.gte}});
-                                }
-
-                                if (filters?.airtime_time?.lte != null) {
-                                    queryFilters.push({airtime_time: {$lte: filters.airtime_time.lte}});
-                                }
-
-                                if (filters?.airtime_date?.gte != null) {
-                                    queryFilters.push({airtime_date: {$gte: filters.airtime_date.gte}});
-                                }
-
-                                if (filters?.airtime_date?.lte != null) {
-                                    queryFilters.push({airtime_date: {$lte: filters.airtime_date.lte}});
-                                }
-
-                                if (filters?.duration?.gte != null && filters.duration.gte !== 0) {
-                                    queryFilters.push({duration: {$gte: filters.duration.gte}});
-                                }
-
-                                if (filters?.duration?.lte != null && filters.duration.lte !== 0) {
-                                    queryFilters.push({duration: {$lte: filters.duration.lte}});
-                                }
-
-                                if (queryFilters.length < 1) {
-                                    return undefined;
-                                } else {
-                                    return {
-                                        $and: queryFilters,
-                                    };
-                                }
-                            })(),
+                            filter: getFilters(this.props.filters),
                             join: {
                                 show: {
                                     endpoint: '/shows',
@@ -188,8 +211,6 @@ export class RundownsList extends React.PureComponent<IProps> {
                                                         >
                                                             {rundown.title}
                                                         </span>
-
-                                                        {/* TODO: restore <span>[status]</span> */}
                                                     </React.Fragment>,
                                                 },
                                             ],
@@ -198,7 +219,7 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     ]}
                                     locked={false}
                                     action={(
-                                        <Menu // TODO: verify that ui-framework#667 is fixed
+                                        <Menu
                                             items={[
                                                 {
                                                     label: gettext('Edit'),
@@ -231,12 +252,62 @@ export class RundownsList extends React.PureComponent<IProps> {
                                     )}
                                     loading={false}
                                     activated={false}
-                                    selected={false}
+                                    selected={rundown._id === this.props.rundownAction?.id}
                                     archived={false}
                                     onClick={() => {
+                                        this.props.preview(rundown._id);
+                                    }}
+                                    onDoubleClick={() => {
                                         this.props.onEditModeChange(rundown._id);
                                     }}
                                 />
+                                {
+                                    rundown.matching_items && (
+                                        <div style={{paddingInlineStart: 20, paddingTop: 8}}>
+                                            <RundownItems
+                                                readOnly="yes"
+                                                items={rundown.matching_items}
+                                                getActions={((rundownItem) => {
+                                                    const preview: IMenuItem = {
+                                                        label: gettext('Preview'),
+                                                        onSelect: () => {
+                                                            this.doPreview(rundown._id, rundownItem._id);
+                                                        },
+                                                    };
+
+                                                    const edit: IMenuItem = {
+                                                        label: gettext('Edit'),
+                                                        onSelect: () => {
+                                                            this.props.onEditModeChange(
+                                                                rundown._id,
+                                                                prepareForEditing(
+                                                                    this.props.rundownItemAction,
+                                                                    rundownItem._id,
+                                                                ),
+                                                            );
+                                                        },
+                                                    };
+
+                                                    return (
+                                                        <Dropdown
+                                                            items={[preview, edit]}
+                                                            append
+                                                        >
+                                                            <IconButton
+                                                                ariaValue={gettext('Actions')}
+                                                                icon="dots-vertical"
+                                                                onClick={noop}
+                                                            />
+                                                        </Dropdown>
+                                                    );
+                                                })}
+                                                preview={(rundownItem) => {
+                                                    this.doPreview(rundown._id, rundownItem._id);
+                                                }}
+                                            />
+                                        </div>
+                                    )
+                                }
                             </div>
                         )}
                         noItemsTemplate={() => {

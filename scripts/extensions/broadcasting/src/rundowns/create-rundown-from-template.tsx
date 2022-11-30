@@ -1,10 +1,10 @@
 import * as React from 'react';
 import {IconLabel, Input, Modal, Button, DatePickerISO, toasted} from 'superdesk-ui-framework/react';
 import {CreateValidators, WithValidation} from '@superdesk/common';
-import {fieldNotNull, stringNotEmpty} from '../../form-validation';
-import {IRundownTemplate, IShow} from '../../interfaces';
+import {fieldNotNull, stringNotEmpty} from '../form-validation';
+import {IRundownTemplate, IShow} from '../interfaces';
 
-import {superdesk} from '../../superdesk';
+import {superdesk} from '../superdesk';
 import {PlannedDurationLabel} from './components/planned-duration-label';
 import {SelectShow} from './components/select-show';
 import {IRestApiResponse} from 'superdesk-api';

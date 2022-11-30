@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {CheckboxButton, CheckButtonGroup} from 'superdesk-ui-framework/react';
-import {IRRule} from '../../../interfaces';
+import {IRRule} from '../../interfaces';
 import {getWeekdayNames} from '@superdesk/common';
 
 interface IProps {

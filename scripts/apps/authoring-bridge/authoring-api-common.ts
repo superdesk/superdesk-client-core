@@ -2,7 +2,7 @@ import {IArticle} from 'superdesk-api';
 import {showUnsavedChangesPrompt, IUnsavedChangesActionWithSaving} from 'core/ui/components/prompt-for-unsaved-changes';
 import {assertNever} from 'core/helpers/typescript-helpers';
 import {ITEM_STATE} from 'apps/archive/constants';
-import {isLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
+import {isArticleLockedInCurrentSession} from 'core/get-superdesk-api-implementation';
 import ng from 'core/services/ng';
 import {runBeforeUpdateMiddlware, runAfterUpdateEvent} from 'apps/authoring/authoring/services/authoring-helpers';
 
@@ -36,7 +36,7 @@ export const authoringApiCommon: IAuthoringApiCommon = {
         runAfterUpdateEvent(original, current);
     },
     closeAuthoring: (original: IArticle, hasUnsavedChanges, save, unlock, cancelAutoSave, doClose) => {
-        if (!isLockedInCurrentSession(original)) {
+        if (!isArticleLockedInCurrentSession(original)) {
             return Promise.resolve().then(() => doClose());
         }
 
